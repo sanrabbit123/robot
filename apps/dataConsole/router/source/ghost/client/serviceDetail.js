@@ -2265,12 +2265,14 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
 
 ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
   const instance = this;
-  const { ea, media, standardWidth } = this;
+  const { ea, media, standardWidth, mode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker, uniqueValue } = GeneralJs;
+  const reviewBlockClassName = "reviewBlockClassName";
+  const imageRatio = (210 / 297);
   let blankBlock;
   let setBlock;
   let contents;
@@ -2286,6 +2288,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
   let tagTongHeight;
   let tagBetween;
   let tagTextTop, tagSize, tagWeight, tagPaddingLeft;
+  let blockId;
 
   startBlankHeight = <%% 110, 110, 110, 110, 24 %%>;
 
@@ -2329,90 +2332,331 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
     }
   });
 
-  contents = [
-    {
-      image: ServiceDetailJs.binaryPath + "/review_f_0.jpg",
-      position: "50% 100%",
-      title: "DMC SK view 33py 아파트",
-      description: [
-        "임차 공간이라 시공도 어려운 상황인데 배치만으로도 확실한 변화가 있었어요.",
-        "예산도 중요했고, 결혼 준비 해보신 분들은 아실거에요.",
-        "정말 알아볼 것도 많고 준비할 것도 많은데 시간을 잘 아꼈죠.",
-        "결과적으로 디자이너님 덕에 저의 시간과 기회비용을 아낄 수 있었어요.",
-      ],
-      tag: [
-        "깔끔",
-        "심플",
-        "전체 구매",
-        "2,000 만원 초",
-        "새입주",
-        "33py",
-        "홈오피스",
-        "재택 근무",
-        "맞벌이",
-        "신혼집",
-        "신혼 부부",
-        "임차 공간",
-        "30대",
-      ],
-    },
-    {
-      image: ServiceDetailJs.binaryPath + "/review_f_1.jpg",
-      position: "50% 50%",
-      title: "광주 헤스티아 35py 빌라",
-      description: [
-        "일하면서 시간이 정말 없었어요, 솔직히 가서 보고 사도 배송 와서 보면,",
-        "잘 맞지 않을 때도 있잖아요, 디자이너님께서 주신 도면과 자료만 보고 믿고",
-        "구매했는데, 배치했을 때 마음에 들더라고요! 디자이너님이 시각화 작업을",
-        "잘하시는 편이라 자료를 토대로 믿고 구매하기 더 원활했어요. ",
-      ],
-      tag: [
-        "깔끔",
-        "심플",
-        "전체 구매",
-        "2,000 만원 초",
-        "새입주",
-        "33py",
-        "홈오피스",
-        "재택 근무",
-        "맞벌이",
-        "신혼집",
-        "신혼 부부",
-        "임차 공간",
-        "30대",
-      ],
-    },
-    {
-      image: ServiceDetailJs.binaryPath + "/review_f_2.jpg",
-      position: "50% 50%",
-      title: "서울숲 트리마제 64py 아파트",
-      description: [
-        "제가 일을 하다보니 시간이 정말 부족했어요, 그래서 디자이너님과 함께 한",
-        "과정이 정말 신의 한 수였죠. 제가 미처 생각하지 못한 부분까지 챙겨주셔서",
-        "확실히 전문가는 다르다는 것을 느끼게 되었어요. 시간이 부족한 분들에게",
-        "정말 추천하고 싶어요. 확실히 인테리어 수월해지는 것 같거든요.",
-      ],
-      tag: [
-        "깔끔",
-        "심플",
-        "전체 구매",
-        "2,000 만원 초",
-        "새입주",
-        "33py",
-        "홈오피스",
-        "재택 근무",
-        "맞벌이",
-        "신혼집",
-        "신혼 부부",
-        "임차 공간",
-        "30대",
-      ],
-    },
-  ];
+  if (mode === "furnishing") {
+    contents = [
+      {
+        images: [
+          ServiceDetailJs.binaryPath + "/review/f00.jpg",
+          ServiceDetailJs.binaryPath + "/review/f01.jpg",
+          ServiceDetailJs.binaryPath + "/review/f02.jpg",
+        ],
+        position: [
+          27,
+          47,
+          44
+        ],
+        title: "DMC SK view 33py 아파트",
+        description: [
+          "임차 공간이라 시공도 어려운 상황인데 배치만으로도 확실한 변화가 있었어요.",
+          "예산도 중요했고, 결혼 준비 해보신 분들은 아실거에요.",
+          "정말 알아볼 것도 많고 준비할 것도 많은데 시간을 잘 아꼈죠.",
+          "결과적으로 디자이너님 덕에 저의 시간과 기회비용을 아낄 수 있었어요.",
+        ],
+        tag: [
+          "깔끔",
+          "심플",
+          "전체 구매",
+          "2,000 만원 초",
+          "새입주",
+          "33py",
+          "홈오피스",
+          "재택 근무",
+          "맞벌이",
+          "신혼집",
+          "신혼 부부",
+          "임차 공간",
+          "30대",
+        ],
+      },
+      {
+        images: [
+          ServiceDetailJs.binaryPath + "/review/f10.jpg",
+          ServiceDetailJs.binaryPath + "/review/f11.jpg",
+          ServiceDetailJs.binaryPath + "/review/f12.jpg",
+        ],
+        position: [
+          40,
+          31,
+          42
+        ],
+        title: "광주 헤스티아 35py 빌라",
+        description: [
+          "일하면서 시간이 정말 없었어요, 솔직히 가서 보고 사도 배송 와서 보면,",
+          "잘 맞지 않을 때도 있잖아요, 디자이너님께서 주신 도면과 자료만 보고 믿고",
+          "구매했는데, 배치했을 때 마음에 들더라고요! 디자이너님이 시각화 작업을",
+          "잘하시는 편이라 자료를 토대로 믿고 구매하기 더 원활했어요. ",
+        ],
+        tag: [
+          "전체 구매",
+          "2,000 만원 초",
+          "새입주",
+          "35py",
+          "홈오피스",
+          "재택 근무",
+          "반려견",
+          "전문직",
+          "여성",
+          "1인 가구",
+          "자가",
+          "30대",
+          "컬러풀한",
+          "컬러풀",
+        ],
+      },
+      {
+        images: [
+          ServiceDetailJs.binaryPath + "/review/f20.jpg",
+          ServiceDetailJs.binaryPath + "/review/f21.jpg",
+          ServiceDetailJs.binaryPath + "/review/f22.jpg",
+        ],
+        position: [
+          44,
+          43,
+          36
+        ],
+        title: "서울숲 트리마제 64py 아파트",
+        description: [
+          "제가 일을 하다보니 시간이 정말 부족했어요, 그래서 디자이너님과 함께 한",
+          "과정이 정말 신의 한 수였죠. 제가 미처 생각하지 못한 부분까지 챙겨주셔서",
+          "확실히 전문가는 다르다는 것을 느끼게 되었어요. 시간이 부족한 분들에게",
+          "정말 추천하고 싶어요. 확실히 인테리어 수월해지는 것 같거든요.",
+        ],
+        tag: [
+          "시크 모던",
+          "전체 구매",
+          "5,000 만원 대",
+          "64py",
+          "맞춤 가구",
+          "뚜렷한 취향",
+          "컬렉터",
+          "남성",
+          "1인 가구",
+          "임차 공간",
+          "30대",
+          "모던",
+          "서울숲",
+        ],
+      },
+    ];
+  } else if (mode === "styling") {
+    contents = [
+      {
+        images: [
+          ServiceDetailJs.binaryPath + "/review/f00.jpg",
+          ServiceDetailJs.binaryPath + "/review/f01.jpg",
+          ServiceDetailJs.binaryPath + "/review/f02.jpg",
+        ],
+        position: [
+          27,
+          47,
+          44
+        ],
+        title: "DMC SK view 33py 아파트",
+        description: [
+          "임차 공간이라 시공도 어려운 상황인데 배치만으로도 확실한 변화가 있었어요.",
+          "예산도 중요했고, 결혼 준비 해보신 분들은 아실거에요.",
+          "정말 알아볼 것도 많고 준비할 것도 많은데 시간을 잘 아꼈죠.",
+          "결과적으로 디자이너님 덕에 저의 시간과 기회비용을 아낄 수 있었어요.",
+        ],
+        tag: [
+          "깔끔",
+          "심플",
+          "전체 구매",
+          "2,000 만원 초",
+          "새입주",
+          "33py",
+          "홈오피스",
+          "재택 근무",
+          "맞벌이",
+          "신혼집",
+          "신혼 부부",
+          "임차 공간",
+          "30대",
+        ],
+      },
+      {
+        images: [
+          ServiceDetailJs.binaryPath + "/review/f10.jpg",
+          ServiceDetailJs.binaryPath + "/review/f11.jpg",
+          ServiceDetailJs.binaryPath + "/review/f12.jpg",
+        ],
+        position: [
+          40,
+          31,
+          42
+        ],
+        title: "광주 헤스티아 35py 빌라",
+        description: [
+          "일하면서 시간이 정말 없었어요, 솔직히 가서 보고 사도 배송 와서 보면,",
+          "잘 맞지 않을 때도 있잖아요, 디자이너님께서 주신 도면과 자료만 보고 믿고",
+          "구매했는데, 배치했을 때 마음에 들더라고요! 디자이너님이 시각화 작업을",
+          "잘하시는 편이라 자료를 토대로 믿고 구매하기 더 원활했어요. ",
+        ],
+        tag: [
+          "전체 구매",
+          "2,000 만원 초",
+          "새입주",
+          "35py",
+          "홈오피스",
+          "재택 근무",
+          "반려견",
+          "전문직",
+          "여성",
+          "1인 가구",
+          "자가",
+          "30대",
+          "컬러풀한",
+          "컬러풀",
+        ],
+      },
+      {
+        images: [
+          ServiceDetailJs.binaryPath + "/review/f20.jpg",
+          ServiceDetailJs.binaryPath + "/review/f21.jpg",
+          ServiceDetailJs.binaryPath + "/review/f22.jpg",
+        ],
+        position: [
+          44,
+          43,
+          36
+        ],
+        title: "서울숲 트리마제 64py 아파트",
+        description: [
+          "제가 일을 하다보니 시간이 정말 부족했어요, 그래서 디자이너님과 함께 한",
+          "과정이 정말 신의 한 수였죠. 제가 미처 생각하지 못한 부분까지 챙겨주셔서",
+          "확실히 전문가는 다르다는 것을 느끼게 되었어요. 시간이 부족한 분들에게",
+          "정말 추천하고 싶어요. 확실히 인테리어 수월해지는 것 같거든요.",
+        ],
+        tag: [
+          "시크 모던",
+          "전체 구매",
+          "5,000 만원 대",
+          "64py",
+          "맞춤 가구",
+          "뚜렷한 취향",
+          "컬렉터",
+          "남성",
+          "1인 가구",
+          "임차 공간",
+          "30대",
+          "모던",
+          "서울숲",
+        ],
+      },
+    ];
+  } else if (mode === "total") {
+    contents = [
+      {
+        images: [
+          ServiceDetailJs.binaryPath + "/review/f00.jpg",
+          ServiceDetailJs.binaryPath + "/review/f01.jpg",
+          ServiceDetailJs.binaryPath + "/review/f02.jpg",
+        ],
+        position: [
+          27,
+          47,
+          44
+        ],
+        title: "DMC SK view 33py 아파트",
+        description: [
+          "임차 공간이라 시공도 어려운 상황인데 배치만으로도 확실한 변화가 있었어요.",
+          "예산도 중요했고, 결혼 준비 해보신 분들은 아실거에요.",
+          "정말 알아볼 것도 많고 준비할 것도 많은데 시간을 잘 아꼈죠.",
+          "결과적으로 디자이너님 덕에 저의 시간과 기회비용을 아낄 수 있었어요.",
+        ],
+        tag: [
+          "깔끔",
+          "심플",
+          "전체 구매",
+          "2,000 만원 초",
+          "새입주",
+          "33py",
+          "홈오피스",
+          "재택 근무",
+          "맞벌이",
+          "신혼집",
+          "신혼 부부",
+          "임차 공간",
+          "30대",
+        ],
+      },
+      {
+        images: [
+          ServiceDetailJs.binaryPath + "/review/f10.jpg",
+          ServiceDetailJs.binaryPath + "/review/f11.jpg",
+          ServiceDetailJs.binaryPath + "/review/f12.jpg",
+        ],
+        position: [
+          40,
+          31,
+          42
+        ],
+        title: "광주 헤스티아 35py 빌라",
+        description: [
+          "일하면서 시간이 정말 없었어요, 솔직히 가서 보고 사도 배송 와서 보면,",
+          "잘 맞지 않을 때도 있잖아요, 디자이너님께서 주신 도면과 자료만 보고 믿고",
+          "구매했는데, 배치했을 때 마음에 들더라고요! 디자이너님이 시각화 작업을",
+          "잘하시는 편이라 자료를 토대로 믿고 구매하기 더 원활했어요. ",
+        ],
+        tag: [
+          "전체 구매",
+          "2,000 만원 초",
+          "새입주",
+          "35py",
+          "홈오피스",
+          "재택 근무",
+          "반려견",
+          "전문직",
+          "여성",
+          "1인 가구",
+          "자가",
+          "30대",
+          "컬러풀한",
+          "컬러풀",
+        ],
+      },
+      {
+        images: [
+          ServiceDetailJs.binaryPath + "/review/f20.jpg",
+          ServiceDetailJs.binaryPath + "/review/f21.jpg",
+          ServiceDetailJs.binaryPath + "/review/f22.jpg",
+        ],
+        position: [
+          44,
+          43,
+          36
+        ],
+        title: "서울숲 트리마제 64py 아파트",
+        description: [
+          "제가 일을 하다보니 시간이 정말 부족했어요, 그래서 디자이너님과 함께 한",
+          "과정이 정말 신의 한 수였죠. 제가 미처 생각하지 못한 부분까지 챙겨주셔서",
+          "확실히 전문가는 다르다는 것을 느끼게 되었어요. 시간이 부족한 분들에게",
+          "정말 추천하고 싶어요. 확실히 인테리어 수월해지는 것 같거든요.",
+        ],
+        tag: [
+          "시크 모던",
+          "전체 구매",
+          "5,000 만원 대",
+          "64py",
+          "맞춤 가구",
+          "뚜렷한 취향",
+          "컬렉터",
+          "남성",
+          "1인 가구",
+          "임차 공간",
+          "30대",
+          "모던",
+          "서울숲",
+        ],
+      },
+    ];
+  }
 
-  setBlock = ({ image, position, title, description, tag }) => {
+  setBlock = ({ images, position, title, description, tag }) => {
+
     createNode({
       mother: baseTong,
+      class: [ reviewBlockClassName ],
       style: {
         display: "flex",
         flexDirection: "row",
@@ -2430,12 +2674,25 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
             width: String(imageWidth) + ea,
             height: String(imageHeight) + ea,
             marginRight: String(imageBetween) + ea,
-            backgroundImage: "url('" + image + "')",
-            backgroundSize: "100% auto",
-            backgroundPosition: position,
             borderRadius: String(5) + "px",
             boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          }
+            overflow: "hidden",
+          },
+          children: images.map((src, index) => {
+            return {
+              mode: "img",
+              attribute: { src, toggle: (index === 0 ? "on" : "off") },
+              style: {
+                position: "absolute",
+                left: String(0),
+                width: String(imageWidth) + ea,
+                height: String(imageWidth * imageRatio) + ea,
+                top: withOut(position[index], ((imageWidth * imageRatio) / 2), ea),
+                transition: "all 0.5s ease",
+                opacity: index === 0 ? String(1) : String(0),
+              }
+            }
+          })
         },
         {
           style: {
@@ -2534,9 +2791,43 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
         }
       ]
     });
+
   }
 
   contents.forEach(setBlock);
+
+  setInterval(() => {
+    const targets = [ ...document.querySelectorAll('.' + reviewBlockClassName) ];
+    let target, images;
+    let index, toggle;
+    for (let dom of targets) {
+      target = dom.firstChild;
+      images = [ ...target.children ];
+      index = null;
+      for (let i = 0; i < images.length; i++) {
+        if (images[i].getAttribute("toggle") === "off") {
+          index = i;
+          break;
+        }
+      }
+      if (index === null) {
+        for (let i = 0; i < images.length; i++) {
+          if (i === 0) {
+            images[i].setAttribute("toggle", "on");
+            images[i].style.opacity = String(1);
+          } else {
+            images[i].setAttribute("toggle", "off");
+            images[i].style.opacity = String(0);
+          }
+        }
+      } else {
+        for (let i = 0; i < index + 1; i++) {
+          images[i].setAttribute("toggle", "on");
+          images[i].style.opacity = String(1);
+        }
+      }
+    }
+  }, 5000);
 
 }
 
