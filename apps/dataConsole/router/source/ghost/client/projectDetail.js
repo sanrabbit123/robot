@@ -869,7 +869,7 @@ ProjectDetailJs.prototype.insertUploadBox = function () {
                 } while (typeof memo !== "string");
 
                 loading = instance.mother.grayLoading();
-                await ajaxJson({ proid, desid, key, link: window.encodeURIComponent(link.trim()), memo: memo.trim() }, BACKHOST + "/ghostPass_linkSave");
+                await ajaxJson({ proid, desid, key, link: window.encodeURIComponent(link.trim()), memo: memo.trim() }, BRIDGEHOST + "/middleLinkSave");
               }
 
               await instance.setPanBlocks();

@@ -1411,10 +1411,7 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
       throw new Error("결과 없음");
     }
     obj = raw;
-    return ajaxJson({
-      images: obj[cliid].image
-    }, BACKHOST + "/ghostPass_photoParsing");
-  }).then((raw) => {
+
     curation = obj[cliid];
     images = curation.image.map((image) => {
       const imageLink = "/corePortfolio/listImage";
