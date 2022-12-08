@@ -133,7 +133,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await ghostRequest("print", { cliid: "c2212_aa34s" })
+
 
 
 

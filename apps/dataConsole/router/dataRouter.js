@@ -2418,7 +2418,6 @@ DataRouter.prototype.rou_post_sendSheets = function () {
         throw new Error("must be sheetName, parentId");
       }
       let sheetsId, response, values, sheetsTargets, tempArr, async;
-      let asyncFunc;
 
       if (req.body.multiple === undefined) {
         async = false;

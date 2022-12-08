@@ -2356,7 +2356,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
           "깔끔",
           "심플",
           "전체 구매",
-          "2,000 만원 초",
+          "2,000만원대",
           "새입주",
           "33py",
           "홈오피스",
@@ -2388,7 +2388,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
         ],
         tag: [
           "전체 구매",
-          "2,000 만원 초",
+          "2,000만원대",
           "새입주",
           "35py",
           "홈오피스",
@@ -2424,7 +2424,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
         tag: [
           "시크 모던",
           "전체 구매",
-          "5,000 만원 대",
+          "5,000만원대",
           "64py",
           "맞춤 가구",
           "뚜렷한 취향",
@@ -2442,105 +2442,107 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
     contents = [
       {
         images: [
-          ServiceDetailJs.binaryPath + "/review/f00.jpg",
-          ServiceDetailJs.binaryPath + "/review/f01.jpg",
-          ServiceDetailJs.binaryPath + "/review/f02.jpg",
+          ServiceDetailJs.binaryPath + "/review/s00.jpg",
+          ServiceDetailJs.binaryPath + "/review/s01.jpg",
+          ServiceDetailJs.binaryPath + "/review/s02.jpg",
         ],
         position: [
-          27,
-          47,
-          44
+          38,
+          44,
+          47
         ],
-        title: "DMC SK view 33py 아파트",
+        title: "일산 자이 3차 34py 아파트",
         description: [
-          "임차 공간이라 시공도 어려운 상황인데 배치만으로도 확실한 변화가 있었어요.",
-          "예산도 중요했고, 결혼 준비 해보신 분들은 아실거에요.",
-          "정말 알아볼 것도 많고 준비할 것도 많은데 시간을 잘 아꼈죠.",
-          "결과적으로 디자이너님 덕에 저의 시간과 기회비용을 아낄 수 있었어요.",
+          "디자이너님이 시공 내역을 당장 꼭 해야하는 것과 추후에 해도",
+          "괜찮은 부분으로 나누어주셔서 예산에 맞게 시공할 수 있었어요.",
+          "당장 불필요한 시공은 줄이고, 스타일링으로 보완할 수 있는 방안을 제시해",
+          "주셔서 원래 예상했던 것보다 훨씬 비용을 아낄 수 있었어요.",
         ],
         tag: [
           "깔끔",
           "심플",
           "전체 구매",
-          "2,000 만원 초",
+          "3,000만원대",
           "새입주",
-          "33py",
-          "홈오피스",
-          "재택 근무",
+          "34py",
+          "톤보정",
+          "가벽철거",
+          "알파룸",
           "맞벌이",
-          "신혼집",
-          "신혼 부부",
-          "임차 공간",
-          "30대",
-        ],
-      },
-      {
-        images: [
-          ServiceDetailJs.binaryPath + "/review/f10.jpg",
-          ServiceDetailJs.binaryPath + "/review/f11.jpg",
-          ServiceDetailJs.binaryPath + "/review/f12.jpg",
-        ],
-        position: [
-          40,
-          31,
-          42
-        ],
-        title: "광주 헤스티아 35py 빌라",
-        description: [
-          "일하면서 시간이 정말 없었어요, 솔직히 가서 보고 사도 배송 와서 보면,",
-          "잘 맞지 않을 때도 있잖아요, 디자이너님께서 주신 도면과 자료만 보고 믿고",
-          "구매했는데, 배치했을 때 마음에 들더라고요! 디자이너님이 시각화 작업을",
-          "잘하시는 편이라 자료를 토대로 믿고 구매하기 더 원활했어요. ",
-        ],
-        tag: [
-          "전체 구매",
-          "2,000 만원 초",
-          "새입주",
-          "35py",
-          "홈오피스",
-          "재택 근무",
-          "반려견",
-          "전문직",
-          "여성",
-          "1인 가구",
+          "내집마련",
+          "부부",
+          "자녀",
           "자가",
           "30대",
-          "컬러풀한",
-          "컬러풀",
         ],
       },
       {
         images: [
-          ServiceDetailJs.binaryPath + "/review/f20.jpg",
-          ServiceDetailJs.binaryPath + "/review/f21.jpg",
-          ServiceDetailJs.binaryPath + "/review/f22.jpg",
+          ServiceDetailJs.binaryPath + "/review/s10.jpg",
+          ServiceDetailJs.binaryPath + "/review/s11.jpg",
+          ServiceDetailJs.binaryPath + "/review/s12.jpg",
         ],
         position: [
-          44,
-          43,
-          36
+          38,
+          29,
+          40
         ],
-        title: "서울숲 트리마제 64py 아파트",
+        title: "신길 파크 자이 35py 아파트",
         description: [
-          "제가 일을 하다보니 시간이 정말 부족했어요, 그래서 디자이너님과 함께 한",
-          "과정이 정말 신의 한 수였죠. 제가 미처 생각하지 못한 부분까지 챙겨주셔서",
-          "확실히 전문가는 다르다는 것을 느끼게 되었어요. 시간이 부족한 분들에게",
-          "정말 추천하고 싶어요. 확실히 인테리어 수월해지는 것 같거든요.",
+          "전반적으로 홈스타일링 과정이 엄청 만족스러웠어요.",
+          "우리가 부분 부분 직접 선택한다 하더라도 이게 다 어떻게 보여질 지 ",
+          "상상을 못하잖아요. 디자이너님은 아무것도 없을 때부터 이 정도를 생각하시는",
+          "분이시고, 어떻게 나올지를 보여주시니까 완전 신뢰할 수 있었죠.",
         ],
         tag: [
-          "시크 모던",
+          "첫 내집",
+          "톤보정",
           "전체 구매",
-          "5,000 만원 대",
-          "64py",
-          "맞춤 가구",
-          "뚜렷한 취향",
-          "컬렉터",
-          "남성",
-          "1인 가구",
-          "임차 공간",
+          "4,000만원대",
+          "새입주",
+          "35py",
+          "거실의 서재화",
+          "서재",
+          "서재형 거실",
+          "수납공간",
+          "전문직",
+          "부부",
+          "자가",
           "30대",
           "모던",
-          "서울숲",
+        ],
+      },
+      {
+        images: [
+          ServiceDetailJs.binaryPath + "/review/s20.jpg",
+          ServiceDetailJs.binaryPath + "/review/s21.jpg",
+          ServiceDetailJs.binaryPath + "/review/s22.jpg",
+        ],
+        position: [
+          42,
+          41,
+          40
+        ],
+        title: "호반 써밋 2차 41py 아파트",
+        description: [
+          "가장 신경 쓴 공간은 아이방이에요. 코로나 이슈로 밖에 나가서 뛰어놀기",
+          "힘들었는데 집에서라도 놀이터를 즐기라고 만들어줬어요. 그리고 확실하게 주방은",
+          "어둡고, 거실은 밝게 무드를 잡고 싶었는데 디자이너님께선 제가 원하는대로",
+          "맞춰 제안해주셨죠. 덕분에 제가 딱 원하던 집이 완성되었어요.",
+        ],
+        tag: [
+          "밝은 거실",
+          "어두운 주방",
+          "아이방 ",
+          "전체 구매",
+          "4,000만원대",
+          "41py",
+          "뚜렷한 취향",
+          "부부",
+          "자녀",
+          "자가",
+          "30대",
+          "화이트 모던",
         ],
       },
     ];
@@ -2548,105 +2550,109 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
     contents = [
       {
         images: [
-          ServiceDetailJs.binaryPath + "/review/f00.jpg",
-          ServiceDetailJs.binaryPath + "/review/f01.jpg",
-          ServiceDetailJs.binaryPath + "/review/f02.jpg",
+          ServiceDetailJs.binaryPath + "/review/t00.jpg",
+          ServiceDetailJs.binaryPath + "/review/t01.jpg",
+          ServiceDetailJs.binaryPath + "/review/t02.jpg",
         ],
         position: [
-          27,
-          47,
-          44
+          29,
+          26,
+          45
         ],
-        title: "DMC SK view 33py 아파트",
+        title: "보문 파크뷰 자이 35py 아파트",
         description: [
-          "임차 공간이라 시공도 어려운 상황인데 배치만으로도 확실한 변화가 있었어요.",
-          "예산도 중요했고, 결혼 준비 해보신 분들은 아실거에요.",
-          "정말 알아볼 것도 많고 준비할 것도 많은데 시간을 잘 아꼈죠.",
-          "결과적으로 디자이너님 덕에 저의 시간과 기회비용을 아낄 수 있었어요.",
+          "저희가 의류 사업을 하다보니 옷도 정말 많고, 또 가족 취미가 캠핑이라 ",
+          "전체적으로 수납이 정말 중요했어요. 거실을 촬영 공간으로 사용하고 싶었고요.",
+          "디자이너님은 저희들의 니즈와 취향에 잘 맞게 이 모든걸 제안해주셨어요. ",
+          "덕분에 우리 가족에게 적합한 딱 맞는 집이 되었어요. ",
         ],
         tag: [
+          "구조 변경",
           "깔끔",
           "심플",
           "전체 구매",
-          "2,000 만원 초",
-          "새입주",
-          "33py",
-          "홈오피스",
-          "재택 근무",
-          "맞벌이",
-          "신혼집",
-          "신혼 부부",
-          "임차 공간",
-          "30대",
-        ],
-      },
-      {
-        images: [
-          ServiceDetailJs.binaryPath + "/review/f10.jpg",
-          ServiceDetailJs.binaryPath + "/review/f11.jpg",
-          ServiceDetailJs.binaryPath + "/review/f12.jpg",
-        ],
-        position: [
-          40,
-          31,
-          42
-        ],
-        title: "광주 헤스티아 35py 빌라",
-        description: [
-          "일하면서 시간이 정말 없었어요, 솔직히 가서 보고 사도 배송 와서 보면,",
-          "잘 맞지 않을 때도 있잖아요, 디자이너님께서 주신 도면과 자료만 보고 믿고",
-          "구매했는데, 배치했을 때 마음에 들더라고요! 디자이너님이 시각화 작업을",
-          "잘하시는 편이라 자료를 토대로 믿고 구매하기 더 원활했어요. ",
-        ],
-        tag: [
-          "전체 구매",
-          "2,000 만원 초",
+          "1억대 ",
           "새입주",
           "35py",
-          "홈오피스",
-          "재택 근무",
-          "반려견",
-          "전문직",
-          "여성",
-          "1인 가구",
+          "전체시공",
+          "취미",
+          "수납공간",
+          "맞벌이",
+          "스튜디오",
+          "부부",
+          "자녀",
           "자가",
           "30대",
-          "컬러풀한",
-          "컬러풀",
         ],
       },
       {
         images: [
-          ServiceDetailJs.binaryPath + "/review/f20.jpg",
-          ServiceDetailJs.binaryPath + "/review/f21.jpg",
-          ServiceDetailJs.binaryPath + "/review/f22.jpg",
+          ServiceDetailJs.binaryPath + "/review/t10.jpg",
+          ServiceDetailJs.binaryPath + "/review/t11.jpg",
+          ServiceDetailJs.binaryPath + "/review/t12.jpg",
         ],
         position: [
-          44,
-          43,
-          36
+          48,
+          51,
+          42
         ],
-        title: "서울숲 트리마제 64py 아파트",
+        title: "경희궁의 아침 45py 아파트",
         description: [
-          "제가 일을 하다보니 시간이 정말 부족했어요, 그래서 디자이너님과 함께 한",
-          "과정이 정말 신의 한 수였죠. 제가 미처 생각하지 못한 부분까지 챙겨주셔서",
-          "확실히 전문가는 다르다는 것을 느끼게 되었어요. 시간이 부족한 분들에게",
-          "정말 추천하고 싶어요. 확실히 인테리어 수월해지는 것 같거든요.",
+          "디자이너님께서 저의 라이프 스타일을 고려해 만들어주셨어요. ",
+          "저희 집 맞춤형 공간이다보니 집에 놀러 오는 사람들이 모두 탐내더라고요, ",
+          "기존의 집보다 훨씬 높고 넓어 보여서 엄청 만족스러워요.",
+          "바빠서 집에 있을 시간이 많이 없지만, 얼른 집에 오고 싶어져요.",
         ],
         tag: [
-          "시크 모던",
+          "첫 내집",
+          "구조 변경",
           "전체 구매",
-          "5,000 만원 대",
-          "64py",
-          "맞춤 가구",
-          "뚜렷한 취향",
-          "컬렉터",
-          "남성",
-          "1인 가구",
-          "임차 공간",
+          "1억대 ",
+          "45py",
+          "맞춤가구",
+          "수납공간",
+          "전문직",
+          "1인가구",
+          "자가",
+          "40대",
+          "제작 가구",
+          "화이트우드",
+          "라탄",
+          "우드",
+        ],
+      },
+      {
+        images: [
+          ServiceDetailJs.binaryPath + "/review/t20.jpg",
+          ServiceDetailJs.binaryPath + "/review/t21.jpg",
+          ServiceDetailJs.binaryPath + "/review/t22.jpg",
+        ],
+        position: [
+          39,
+          39,
+          45
+        ],
+        title: "파크 푸르지오 35py 아파트",
+        description: [
+          "유튜브 편집할 수 있는 오픈된 공간을 원했어요.",
+          "변경된 주방에서 주방에서 가족끼리 티타임도 가질 수 있고요,",
+          "확실히 바뀌고 나니 가족들이 함께할 수 있는 시간이 늘어났어요.",
+          "쾌적한 공간이 마련되니까 자연스럽게 모이게 되더라고요.",
+        ],
+        tag: [
+          "전문직",
+          "4,000만원대",
+          "자가",
+          "밝은 거실",
+          "구조 변경",
+          "취미 공간",
+          "거실의 서재화",
+          "알파룸 철거",
+          "부부",
+          "자녀",
           "30대",
-          "모던",
-          "서울숲",
+          "알파룸",
+          "따뜻한",
         ],
       },
     ];
@@ -4285,7 +4291,6 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   });
 
 
-
   // 2
 
   whiteBlock1 = createNode({
@@ -4533,9 +4538,9 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   });
 
 
-
   // 3
 
+  /*
   whiteBlock2 = createNode({
     mother: baseTong,
     style: {
@@ -4672,7 +4677,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
       }
     ]
   })
-
+  */
 
   return [ newBaseTong, baseTong ];
 }
@@ -5166,8 +5171,9 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   const desktop = !mobile;
   const big = (media[0] || media[1]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker, selfHref } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker, selfHref, cleanChildren } = GeneralJs;
   const newBaseTong = pastBaseTong.cloneNode(false);
+  const box1ButtonTargetsClassName = "box1ButtonTargetsClassName";
   let topMargin;
   let bottomMargin;
   let margin;
@@ -5206,6 +5212,8 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   let buttonBaseHeight;
   let finalButtonWidth, finalButtonHeight;
   let buttonSize, buttonWeight, finalButtonTextTop;
+  let box0, box1, box2;
+  let box2Set0, box2Set1, box2Set2, box2Set3;
 
   topMargin = <%% 160, 160, 160, 120, 50 %%>;
   bottomMargin = <%% 180, 180, 180, 180, 50 %%>;
@@ -5277,6 +5285,12 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
   finalButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
+  box2 = {};
+  box2Set0 = () => {}
+  box2Set1 = () => {}
+  box2Set2 = () => {}
+  box2Set3 = () => {}
+
   pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
   newBaseTong.style.left = String(0);
   newBaseTong.style.width = withOut(0, ea);
@@ -5297,16 +5311,54 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
       "촬영 / 현장 인터뷰",
     ],
     box2: {
-      button: "홈리에종에 상담 신청 하기",
-      description: [
-        "홈페이지 간편 상담 신청 접수 후,",
-        "홈리에종 전담 매니저가 1-2일 내 유선 상담을 진행합니다.",
-      ],
-      detail: [
-        "나와 Fit 이 맞는 디자이너 추천",
-        "서비스 계약 안내,  디자이너 미팅 어레인지",
-        "off - 디자이너 현장 미팅, 실측 / on - 비대면 미팅, 고객 직접 실측",
-      ]
+      set0: {
+        button: "홈리에종에 상담 신청 하기",
+        description: [
+          "홈페이지 간편 상담 신청 접수 후,",
+          "홈리에종 전담 매니저가 1-2일 내 유선 상담을 진행합니다.",
+        ],
+        detail: [
+          "나와 Fit 이 맞는 디자이너 추천",
+          "서비스 계약 안내,  디자이너 미팅 어레인지",
+          "off - 디자이너 현장 미팅, 실측 / on - 비대면 미팅, 고객 직접 실측",
+        ]
+      },
+      set1: {
+        button: "디자이너와 홈스타일링",
+        description: [
+          "디자이너와 현장 미팅을 진행한 후,",
+          "디자이너가 디자인을 진행하는 단계입니다. 1 ~ 3주의 시간이 소요됩니다.",
+        ],
+        detail: [
+          "현장 미팅 이후, 작업 기간 및 프로세스 안내",
+          "컨셉 제안서, 디자인 제안서, 배치도, 구매 리스트, 시공 디자인 제안",
+          "제안서 수정 및 추가 추천, 필요에 따라 대면 미팅 진행",
+        ]
+      },
+      set2: {
+        button: "시공, 제안 가구 구매 진행",
+        description: [
+          "디자이너와 시공 범위 조정 및 디자인을 마친 후,",
+          "실질적으로 시공을 진행하고 가구를 구매하는 과정입니다.",
+        ],
+        detail: [
+          "시공사 시공 준비 및 진행 및 시공 감리",
+          "추천 가구 리스트를 보며 가구 및 소품을 고객 직접 구입",
+          "구입한 가구 및 소품, 제품 배치도에 따라 1차 직접 배치",
+        ]
+      },
+      set3: {
+        button: "촬영 및 홈리에종 인터뷰",
+        description: [
+          "시공과 제품 구매 및 배치가 모두 완료되고",
+          "홈리에종이 현장을 확인하고 촬영과 인터뷰를 진행하는 단계입니다.",
+        ],
+        detail: [
+          "디자이너의 현장 방문 및 최종 배치, 마무리",
+          "홈리에종 현장 방문 점검 및 고객 인터뷰",
+          "전문 사진 작가와 함께 가장 예쁜 순간의 우리집 촬영본 남기기",
+        ]
+      }
     }
   };
 
@@ -5392,7 +5444,6 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
     ]
   });
 
-
   // white blocks
 
   baseBlock = createNode({
@@ -5405,7 +5456,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
       width: withOut(0 * 2, ea),
     }
   });
-  createNode({
+  box0 = createNode({
     mother: baseBlock,
     style: {
       display: "inline-flex",
@@ -5433,7 +5484,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
       }
     }
   })
-  createNode({
+  box1 = createNode({
     mother: baseBlock,
     style: {
       width: String(box1Width) + ea,
@@ -5444,6 +5495,37 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
     },
     children: contents.box1.map((str, index) => {
       return {
+        class: [ box1ButtonTargetsClassName ],
+        attribute: {
+          index: String(index),
+        },
+        event: {
+          click: function (e) {
+            const index = Number(this.getAttribute("index"));
+            const targets = document.querySelectorAll('.' + box1ButtonTargetsClassName);
+            for (let dom of targets) {
+              if (dom === this) {
+                dom.firstChild.firstChild.style.color = colorChip.white;
+                dom.firstChild.lastChild.style.color = colorChip.white;
+                dom.style.background = colorChip.softGreen;
+              } else {
+                dom.firstChild.firstChild.style.color = colorChip.black;
+                dom.firstChild.lastChild.style.color = colorChip.black;
+                dom.style.background = colorChip.white;
+              }
+            }
+
+            if (index === 0) {
+              box2Set0();
+            } else if (index === 1) {
+              box2Set1();
+            } else if (index === 2) {
+              box2Set2();
+            } else {
+              box2Set3();
+            }
+          }
+        },
         style: {
           width: withOut(0, ea),
           height: "calc(calc(100% - " + String(boxBetween * (contents.box1.length - 1)) + ea + ") / " + String(contents.box1.length) + ")",
@@ -5454,6 +5536,8 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
           justifyContent: "center",
           alignItems: "center",
           display: "flex",
+          cursor: "pointer",
+          transition: "all 0.3s ease",
         },
         child: {
           style: {
@@ -5471,6 +5555,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
               fontWeight: String(box1Weight),
               color: colorChip.black,
               position: "relative",
+              transition: "all 0.3s ease",
             },
             previous: {
               text: String(index + 1),
@@ -5481,6 +5566,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
                 position: "absolute",
                 top: String(0),
                 left: String(0),
+                transition: "all 0.3s ease",
               },
             }
           }
@@ -5488,7 +5574,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
       }
     })
   })
-  createNode({
+  box2 = createNode({
     mother: baseBlock,
     style: {
       display: "inline-flex",
@@ -5501,7 +5587,12 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
       justifyContent: "center",
       alignItems: "center",
     },
-    child: {
+  });
+
+  box2Set0 = () => {
+    cleanChildren(box2);
+    createNode({
+      mother: box2,
       style: {
         width: withOut(innerMargin * 2, ea),
         height: withOut(innerMargin * 2, ea),
@@ -5521,7 +5612,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
             alignItems: "center",
           },
           child: {
-            text: contents.box2.button,
+            text: contents.box2.set0.button,
             style: {
               display: "inline-block",
               position: "relative",
@@ -5533,7 +5624,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
           }
         },
         {
-          text: contents.box2.description.join("\n"),
+          text: contents.box2.set0.description.join("\n"),
           style: {
             display: "block",
             position: "relative",
@@ -5553,7 +5644,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
             width: withOut(0, ea),
             paddingTop: String(box2DetailPaddingTop) + ea,
           },
-          children: contents.box2.detail.map((str, index) => {
+          children: contents.box2.set0.detail.map((str, index) => {
             return {
               style: {
                 display: "flex",
@@ -5588,9 +5679,289 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
           })
         }
       ]
-    }
-  })
+    })
+  }
 
+  box2Set1 = () => {
+    cleanChildren(box2);
+    createNode({
+      mother: box2,
+      style: {
+        width: withOut(innerMargin * 2, ea),
+        height: withOut(innerMargin * 2, ea),
+        display: "flex",
+        position: "relative",
+        flexDirection: "column",
+      },
+      children: [
+        {
+          style: {
+            display: "flex",
+            width: String(buttonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorChip.black,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            text: contents.box2.set1.button,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(box2Size) + ea,
+              fontWeight: String(box2Weight),
+              color: colorChip.white,
+              top: String(buttonTextTop) + ea,
+            }
+          }
+        },
+        {
+          text: contents.box2.set1.description.join("\n"),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(box2Size) + ea,
+            fontWeight: String(box2DescriptionWeight),
+            lineHeight: String(box2DescriptionLineHeight),
+            color: colorChip.black,
+            paddingTop: String(box2LineTop) + ea,
+            paddingBottom: String(box2LineBottom) + ea,
+            borderBottom: "1px solid " + colorChip.black,
+          }
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            paddingTop: String(box2DetailPaddingTop) + ea,
+          },
+          children: contents.box2.set1.detail.map((str, index) => {
+            return {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0, ea),
+                marginTop: String(box2DetailBetween) + ea,
+              },
+              children: [
+                {
+                  text: String(index + 1),
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(box2Size) + ea,
+                    fontWeight: String(box2NumberWeight),
+                    fontFamily: "graphik",
+                    fontStyle: "italic",
+                    color: colorChip.green,
+                    width: String(box2NumberWidth) + ea,
+                  }
+                },
+                {
+                  text: str,
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(box2Size) + ea,
+                    fontWeight: String(box2DetailWeight),
+                    color: colorChip.black,
+                  }
+                },
+              ]
+            };
+          })
+        }
+      ]
+    })
+  }
+
+  box2Set2 = () => {
+    cleanChildren(box2);
+    createNode({
+      mother: box2,
+      style: {
+        width: withOut(innerMargin * 2, ea),
+        height: withOut(innerMargin * 2, ea),
+        display: "flex",
+        position: "relative",
+        flexDirection: "column",
+      },
+      children: [
+        {
+          style: {
+            display: "flex",
+            width: String(buttonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorChip.black,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            text: contents.box2.set2.button,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(box2Size) + ea,
+              fontWeight: String(box2Weight),
+              color: colorChip.white,
+              top: String(buttonTextTop) + ea,
+            }
+          }
+        },
+        {
+          text: contents.box2.set2.description.join("\n"),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(box2Size) + ea,
+            fontWeight: String(box2DescriptionWeight),
+            lineHeight: String(box2DescriptionLineHeight),
+            color: colorChip.black,
+            paddingTop: String(box2LineTop) + ea,
+            paddingBottom: String(box2LineBottom) + ea,
+            borderBottom: "1px solid " + colorChip.black,
+          }
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            paddingTop: String(box2DetailPaddingTop) + ea,
+          },
+          children: contents.box2.set2.detail.map((str, index) => {
+            return {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0, ea),
+                marginTop: String(box2DetailBetween) + ea,
+              },
+              children: [
+                {
+                  text: String(index + 1),
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(box2Size) + ea,
+                    fontWeight: String(box2NumberWeight),
+                    fontFamily: "graphik",
+                    fontStyle: "italic",
+                    color: colorChip.green,
+                    width: String(box2NumberWidth) + ea,
+                  }
+                },
+                {
+                  text: str,
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(box2Size) + ea,
+                    fontWeight: String(box2DetailWeight),
+                    color: colorChip.black,
+                  }
+                },
+              ]
+            };
+          })
+        }
+      ]
+    })
+  }
+
+  box2Set3 = () => {
+    cleanChildren(box2);
+    createNode({
+      mother: box2,
+      style: {
+        width: withOut(innerMargin * 2, ea),
+        height: withOut(innerMargin * 2, ea),
+        display: "flex",
+        position: "relative",
+        flexDirection: "column",
+      },
+      children: [
+        {
+          style: {
+            display: "flex",
+            width: String(buttonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            borderRadius: String(8) + "px",
+            background: colorChip.black,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            text: contents.box2.set3.button,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(box2Size) + ea,
+              fontWeight: String(box2Weight),
+              color: colorChip.white,
+              top: String(buttonTextTop) + ea,
+            }
+          }
+        },
+        {
+          text: contents.box2.set3.description.join("\n"),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(box2Size) + ea,
+            fontWeight: String(box2DescriptionWeight),
+            lineHeight: String(box2DescriptionLineHeight),
+            color: colorChip.black,
+            paddingTop: String(box2LineTop) + ea,
+            paddingBottom: String(box2LineBottom) + ea,
+            borderBottom: "1px solid " + colorChip.black,
+          }
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            paddingTop: String(box2DetailPaddingTop) + ea,
+          },
+          children: contents.box2.set3.detail.map((str, index) => {
+            return {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0, ea),
+                marginTop: String(box2DetailBetween) + ea,
+              },
+              children: [
+                {
+                  text: String(index + 1),
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(box2Size) + ea,
+                    fontWeight: String(box2NumberWeight),
+                    fontFamily: "graphik",
+                    fontStyle: "italic",
+                    color: colorChip.green,
+                    width: String(box2NumberWidth) + ea,
+                  }
+                },
+                {
+                  text: str,
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(box2Size) + ea,
+                    fontWeight: String(box2DetailWeight),
+                    color: colorChip.black,
+                  }
+                },
+              ]
+            };
+          })
+        }
+      ]
+    })
+  }
+
+  box1.firstChild.click();
 
   // final button
 
