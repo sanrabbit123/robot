@@ -781,6 +781,7 @@ GraphicBot.prototype.startWork = function () {
 
 GraphicBot.prototype.botRouter = function () {
   const instance = this;
+  const fs = require("fs");
   const back = this.back;
   const chromeGhost = this.chromeGhost;
   const staticHomeFolder = this.staticHomeFolder;
@@ -1397,10 +1398,9 @@ GraphicBot.prototype.botRouter = function () {
         await fileSystem(`write`, [ `${staticHomeFolder}/${htmlName}`, htmlString ]);
 
         await chromeGhost.pdfPrint(`http://127.0.0.1/${htmlName}`, `${staticHomeFolder}/${pdfName}`, false);
+
+        fs.createReadStream(`${staticHomeFolder}/${pdfName}`).pipe(res);
         
-
-
-        res.send("");
       } catch (e) {
         console.log(e);
         res.send("error");
