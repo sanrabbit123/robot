@@ -1405,7 +1405,7 @@ GraphicBot.prototype.botRouter = function () {
         await shellExec(`rm`, [ `-rf`, `${staticHomeFolder}/${pdfName}` ]);
 
         res.send(JSON.stringify({
-          url: global.encodeURIComponent("https://" + address.officeinfo.ghost.host + "/" + pdfName);
+          url: global.encodeURIComponent("https://" + address.officeinfo.ghost.host + "/" + pdfName),
         }));
 
       } catch (e) {
