@@ -30,12 +30,15 @@ const GraphicBot = function () {
   if (/Linux/gi.test(thisOs)) {
     this.bot = require(`${process.cwd()}/apps/graphicBot/os/linux/build/Release/robotjs.node`);
     this.os = "linux";
+    this.staticHomeFolder = "/";
   } else if (/Darwin/gi.test(thisOs)) {
     this.bot = require(`${process.cwd()}/apps/graphicBot/os/mac/build/Release/robotjs.node`);
     this.os = "mac";
+    this.staticHomeFolder = "/Users/graphic/Sites";
   } else if (/Windows/gi.test(thisOs)) {
     this.bot = require(`${process.cwd()}/apps/graphicBot/os/windows/build/Release/robotjs.node`);
     this.os = "windows";
+    this.staticHomeFolder = "/";
   } else {
     throw new Error("unknown os");
   }
@@ -780,7 +783,8 @@ GraphicBot.prototype.botRouter = function () {
   const instance = this;
   const back = this.back;
   const chromeGhost = this.chromeGhost;
-  const { fileSystem, shell, shellExec, shellLink, equalJson, requestSystem, sleep, stringToDate, getDateMatrix, setQueue } = this.mother;
+  const staticHomeFolder = this.staticHomeFolder;
+  const { fileSystem, shell, shellExec, shellLink, equalJson, requestSystem, sleep, stringToDate, getDateMatrix, setQueue, uniqueValue } = this.mother;
   const orderConst = 'g';
   const tong = this.tong;
   const address = this.address;
@@ -1364,6 +1368,42 @@ GraphicBot.prototype.botRouter = function () {
       } catch (e) {
         console.log(e);
         res.send({ error: e.message });
+      }
+    }
+  };
+
+  funcObj.post_pageToPdf = {
+    link: [ "/pageToPdf" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/pdf",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      try {
+        if (typeof req.body.url !== "string") {
+          throw new Error("invaild post : url must be string");
+        }
+
+        const imageName = `pagePrint_${uniqueValue("string")}.png`;
+        const htmlName = imageName.replace(/\.png$/i, ".html");
+        const pdfName = imageName.replace(/\.png$/i, ".pdf");
+        let htmlString;
+
+        await chromeGhost.pageToPng(global.decodeURIComponent(req.body.url), staticHomeFolder + "/" + imageName, true);
+
+        htmlString = `<html><head><style>*{margin:0;padding:0}</style></head><body><img src="http://127.0.0.1/${imageName}" style="width:100%"></body></html>`;
+        await fileSystem(`write`, [ `${staticHomeFolder}/${htmlName}`, htmlString ]);
+
+        await chromeGhost.pdfPrint(`http://127.0.0.1/${htmlName}`, `${staticHomeFolder}/${pdfName}`, false);
+        
+
+
+        res.send("");
+      } catch (e) {
+        console.log(e);
+        res.send("error");
       }
     }
   };

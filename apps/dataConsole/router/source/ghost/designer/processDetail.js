@@ -2442,7 +2442,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
             event: {
               click: function (e) {
                 const loading = instance.mother.grayLoading();
-                ajaxJson({ url: window.encodeURIComponent(FRONTHOST + "/designer/process.php?proid=" + instance.project.proid + "&mode=request") }, "/ghostPass_pageToPdf").then((res) => {
+                ajaxJson({ url: window.encodeURIComponent(FRONTHOST + "/designer/process.php?proid=" + instance.project.proid + "&mode=request&green=deactive") }, "/ghostPass_pageToPdf").then((res) => {
                   return downloadFile(window.decodeURIComponent(res.url));
                 }).then(() => {
                   loading.remove();
@@ -5283,7 +5283,9 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             instance.insertProcessBox();
             instance.insertUploadBox();
             instance.insertNoticeBox();
-            instance.insertGreenButtons();
+            if (getObj.green !== "deactive") {
+              instance.insertGreenButtons();
+            }
           } else {
             instance.insertInitBox();
             instance.insertProcessBox();
