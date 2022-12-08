@@ -786,6 +786,40 @@ SecondRouter.prototype.rou_post_pageToPdf = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_printClient = function () {
+  const instance = this;
+  const back = this.back;
+  const { secondHost } = this;
+  const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/printClient" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.cliid === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongo;
+      const { cliid } = req.body;
+      const client = await back.getClientById(cliid, { selfMongo, withTools: true });
+
+      requestSystem("https://" + secondHost + "/printText", { text: client.toPrint() }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+
+      res.send(JSON.stringify({ message: "will do" }));
+
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_printClient): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 SecondRouter.prototype.getAll = function () {
