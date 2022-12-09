@@ -149,7 +149,11 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       const { text, channel, collection } = req.body;
       let voice;
 
-      await instance.slack_bot.chat.postMessage({ text, channel });
+      if (channel === "silent") {
+        await instance.slack_bot.chat.postMessage({ text, channel: "#error_log" });
+      } else {
+        await instance.slack_bot.chat.postMessage({ text, channel });
+      }
 
       if (req.body.voice === true || req.body.voice === "true") {
         voice = true;
