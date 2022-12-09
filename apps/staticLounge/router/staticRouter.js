@@ -351,8 +351,6 @@ StaticRouter.prototype.rou_post_photoParsing = function () {
       } else {
         res.send(JSON.stringify([]));
       }
-
-      res.send(JSON.stringify({}));
     } catch (e) {
       console.log(e);
       errorLog("Static lounge 서버 문제 생김 (rou_post_photoParsing): " + e.message).catch((e) => { console.log(e); });
