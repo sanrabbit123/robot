@@ -4207,7 +4207,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         obj = raw;
         return ajaxJson({
           images: obj[thisCase[standard[1]]].image
-        }, "/ghostPass_photoParsing");
+        }, S3HOST + ":3000" + "/photoParsing");
 
       }).then((raw) => {
         let imageNothing;
@@ -4451,7 +4451,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                   obj = raw;
                   return ajaxJson({
                     images: obj[cliid].image
-                  }, "/ghostPass_photoParsing");
+                  }, S3HOST + ":3000" + "/photoParsing");
                 }).then((raw) => {
 
                   imageNothing = false;
@@ -4819,7 +4819,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                             obj = raw;
                             return ajaxJson({
                               images: obj[cliid].image
-                            }, "/ghostPass_photoParsing");
+                            }, S3HOST + ":3000" + "/photoParsing");
                           }).then((raw) => {
 
                             imageNothing = false;
