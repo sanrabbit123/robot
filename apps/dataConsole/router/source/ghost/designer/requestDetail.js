@@ -639,7 +639,7 @@ RequestDetailJs.prototype.insertInformationBox = function (indexNumber) {
             event: {
               click: function (e) {
                 const loading = instance.mother.grayLoading();
-                ajaxJson({ url: window.encodeURIComponent(window.location.href) }, "/ghostPass_pageToPdf").then((res) => {
+                ajaxJson({ url: window.encodeURIComponent(window.location.href) }, SECONDHOST + "/pageToPdf").then((res) => {
                   return downloadFile(window.decodeURIComponent(res.url));
                 }).then(() => {
                   loading.remove();
@@ -1430,7 +1430,7 @@ RequestDetailJs.prototype.insertPhotoBox = function (indexNumber) {
     obj = raw;
     return ajaxJson({
       images: obj[cliid].image
-    }, BACKHOST + "/ghostPass_photoParsing");
+    }, S3HOST + ":3000" + "/photoParsing");
   }).then((raw) => {
     curation = obj[cliid];
     images = curation.image.map((image) => {

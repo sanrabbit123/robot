@@ -1626,7 +1626,7 @@ DesignManualJs.prototype.insertButtonBox = function () {
       click: async function (e) {
         try {
           const loading = instance.mother.grayLoading();
-          const res = await ajaxJson({ url: window.encodeURIComponent(window.location.href + "&mode=styling") }, "/ghostPass_pageToPdf");
+          const res = await ajaxJson({ url: window.encodeURIComponent(window.location.href + "&mode=styling") }, SECONDHOST + "/pageToPdf");
           downloadFile(window.decodeURIComponent(res.url));
           loading.remove();
         } catch (e) {
@@ -2602,7 +2602,7 @@ DesignManualJs.prototype.insertContractButtonBox = function () {
       click: async function (e) {
         try {
           const loading = instance.mother.grayLoading();
-          const res = await ajaxJson({ url: window.encodeURIComponent(window.location.href + "&mode=contract") }, "/ghostPass_pageToPdf");
+          const res = await ajaxJson({ url: window.encodeURIComponent(window.location.href + "&mode=contract") }, SECONDHOST + "/pageToPdf");
           downloadFile(window.decodeURIComponent(res.url));
           loading.remove();
         } catch (e) {

@@ -678,96 +678,9 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       const mother = this;
       let folderName, fileName;
 
-      GeneralJs.ajaxJson({ aspid: parent.id, mode: "list" }, "/ghostPass_designerPhoto").then((data) => {
-        let photoList;
-        let whiteBase, whiteTong;
-        let whiteBaseMargin;
-        let zIndex;
-        let paddingLeft;
-        let paddingBottom;
-        let innerMargin;
-        let columnsLength;
-        let imageWidth;
+      // dev
+      console.log("dev needs")
 
-        if (Array.isArray(data.list)) {
-          photoList = data.list;
-        } else {
-          photoList = [];
-        }
-
-        whiteBaseMargin = 40;
-        zIndex = 100;
-        paddingLeft = 30;
-        paddingBottom = 300;
-        innerMargin = 8;
-        columnsLength = 5;
-        imageWidth = (window.innerWidth - (whiteBaseMargin * 2) - (paddingLeft * 2) - (innerMargin * (columnsLength - 1))) / columnsLength;
-
-        cancelBox.style.background = colorChip.black;
-        cancelBox.style.animation = "justfadein 0.3s ease forwards";
-        cancelBox.style.zIndex = String(zIndex);
-        whiteBase = createNode({
-          mother,
-          mode: "aside",
-          style: {
-            position: "fixed",
-            top: String(whiteBaseMargin) + ea,
-            left: String(whiteBaseMargin) + ea,
-            width: withOut(whiteBaseMargin * 2, ea),
-            height: withOut((whiteBaseMargin * 2) + instance.belowHeight, ea),
-            background: colorChip.white,
-            zIndex: String(zIndex),
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            animation: "fadeuporiginal 0.3s ease forwards",
-            overflow: "scroll",
-          },
-          children: [
-            {
-              style: {
-                position: "relative",
-                padding: String(paddingLeft) + ea,
-                paddingBottom: String(paddingBottom) + ea,
-                width: String(100) + '%',
-              }
-            }
-          ]
-        });
-        whiteTong = whiteBase.firstChild;
-
-        for (let i = 0; i < photoList.length; i++) {
-          createNode({
-            mother: whiteTong,
-            mode: "img",
-            attribute: { src: photoList[i] },
-            style: {
-              display: "inline-block",
-              position: "relative",
-              verticalAlign: "top",
-              width: String(imageWidth) + ea,
-              marginLeft: String(i % columnsLength === 0 ? 0 : innerMargin) + ea,
-              marginBottom: String(innerMargin) + ea,
-            }
-          });
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-        // cancelBox.parentNode.removeChild(cancelBox);
-        // resetWidthEvent();
-
-      }).catch((err) => {
-        console.log(err);
-      });
     });
 
     stringArr.push(textMaker(map["web"].title, web.map((str) => { return str.replace(/https?\:?\/\//gi, '').trim().replace(/\/$/, ''); }).join(token), "black", "web"));

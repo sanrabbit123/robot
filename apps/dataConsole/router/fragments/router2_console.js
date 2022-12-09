@@ -356,7 +356,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
 DataRouter.prototype.rou_post_updateDocument = function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, pythonExecute, shell, shellLink, equalJson, dateToString } = this.mother;
+  const { fileSystem, pythonExecute, shellExec, shellLink, equalJson, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents" ];
   obj.func = async function (req, res) {
@@ -551,7 +551,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           }
         }
         if (fileTarget !== null) {
-          shell.exec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
+          await shellExec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
         }
         await fileSystem(`write`, [ `${instance.dir}/log/${thisId}__name__${thisPerson}`, `0` ]);
       }
@@ -590,7 +590,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
 DataRouter.prototype.rou_post_updateLog = function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink, equalJson } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/updateLog" ];
   obj.func = async function (req, res) {
@@ -655,7 +655,7 @@ DataRouter.prototype.rou_post_updateLog = function () {
         }
       }
       if (fileTarget !== null) {
-        shell.exec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
+        await shellExec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
       }
       await fileSystem(`write`, [ `${logDir}/${thisId}__name__${thisPerson}`, `0` ]);
 
@@ -1390,7 +1390,7 @@ DataRouter.prototype.rou_post_getHistory = function () {
 
 DataRouter.prototype.rou_post_updateHistory = function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, equalJson } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
   const back = this.back;
   const members = this.members;
   let obj = {};
@@ -1507,7 +1507,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
           }
         }
         if (fileTarget !== null) {
-          shell.exec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
+          await shellExec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
         }
         await fileSystem(`write`, [ `${instance.dir}/log/${id}__name__${thisPerson}`, `0` ]);
       }
@@ -3883,38 +3883,6 @@ DataRouter.prototype.rou_post_pythonPass = function () {
       }
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_pythonPass): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_ghostPass = function () {
-  const instance = this;
-  const back = this.back;
-  const address = this.address;
-  const { ghostRequest, equalJson } = this.mother;
-  let obj = {};
-  obj.link = [ "/ghostPass_photoParsing", "/ghostPass_listFiles", "/ghostPass_deliveryFiles", "/ghostPass_searchFiles", "/ghostPass_dirParsing", "/ghostPass_pdfPrint", "/ghostPass_pageToPng", "/ghostPass_pageToPdf", "/ghostPass_staticDelete", "/ghostPass_designerPhoto", "/ghostPass_userPhoto", "/ghostPass_userKey", "/ghostPass_readDir", "/ghostPass_linkParsing", "/ghostPass_linkSave" ];
-  obj.func = async function (req, res) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      const url = req.url.replace(/^\//gi, '');
-      if (url.split('_').length < 2) {
-        res.send(JSON.stringify({ message: "OK" }));
-      } else {
-        const path = url.split('_')[1].trim();
-        let ghostResponse;
-        ghostResponse = await ghostRequest(path, equalJson(req.body));
-        res.send(JSON.stringify(ghostResponse));
-      }
-    } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_ghostPass): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }

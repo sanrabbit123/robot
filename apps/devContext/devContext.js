@@ -133,7 +133,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
 
 
 
@@ -191,7 +190,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await findCode("ghostPass")
+
 
 
 

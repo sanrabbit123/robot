@@ -51,7 +51,7 @@ const PortfolioFilter = function (clientName = "", apartName = "", designer = ""
 
 PortfolioFilter.prototype.static_setting = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   try {
     let staticFolderBoo, staticFolderBootr;
     let order;
@@ -72,7 +72,7 @@ PortfolioFilter.prototype.static_setting = async function () {
       order += `mkdir ${shellLink(this.options.home_dir)}/script;`;
       order += `mkdir ${shellLink(this.options.home_dir)}/result;`;
       order += `mkdir ${shellLink(this.options.home_dir)}/resource;`;
-      shell.exec(order);
+      await shellExec(order);
     } else {
       staticFolderscriptBoo = await fileSystem(`readDir`, [ this.options.home_dir ]);
       staticFolderscriptBootr = false;
@@ -82,7 +82,7 @@ PortfolioFilter.prototype.static_setting = async function () {
         }
       }
       if (!staticFolderscriptBootr) {
-        shell.exec(`mkdir ${shellLink(this.options.home_dir)}/script`);
+        await shellExec(`mkdir ${shellLink(this.options.home_dir)}/script`);
       }
       staticFolderresultBootr = false;
       for (let i of staticFolderscriptBoo) {
@@ -91,7 +91,7 @@ PortfolioFilter.prototype.static_setting = async function () {
         }
       }
       if (!staticFolderresultBootr) {
-        shell.exec(`mkdir ${shellLink(this.options.home_dir)}/result`);
+        await shellExec(`mkdir ${shellLink(this.options.home_dir)}/result`);
       }
       staticFolderresourceBootr = false;
       for (let i of staticFolderscriptBoo) {
@@ -100,13 +100,13 @@ PortfolioFilter.prototype.static_setting = async function () {
         }
       }
       if (!staticFolderresourceBootr) {
-        shell.exec(`mkdir ${shellLink(this.options.home_dir)}/resource`);
+        await shellExec(`mkdir ${shellLink(this.options.home_dir)}/resource`);
       }
     }
 
     folderList = [ "factory" ];
     for (let f of folderList) {
-      shell.exec(`cp -r ${shellLink(process.cwd())}/apps/portfolioFilter/${f} ${shellLink(this.options.home_dir)}`);
+      await shellExec(`cp -r ${shellLink(process.cwd())}/apps/portfolioFilter/${f} ${shellLink(this.options.home_dir)}`);
     }
 
   } catch (e) {
@@ -229,8 +229,6 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
       shell.exec(`osascript ${this.options.home_dir}/factory/applescript/to_png.scpt`);
     }
 
-    // shell.exec(`osascript ${this.options.home_dir}/factory/applescript/return_terminal.scpt`);
-
     return resultFolder;
 
   } catch (e) {
@@ -297,7 +295,7 @@ PortfolioFilter.prototype.parsing_fileList = async function (resultFolder, liteM
 
 PortfolioFilter.prototype.ghost_filter = async function (start_num) {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   let options = {
     home_dir: this.options.home_dir,
     photo_dir: this.options.photo_dir,
@@ -311,7 +309,7 @@ PortfolioFilter.prototype.ghost_filter = async function (start_num) {
 
     past_list = await fileSystem(`readDir`, [ this.options.result_dir ]);
     for (let i of past_list) {
-      shell.exec(`rm -rf ${shellLink(this.options.result_dir)}/${i};`)
+      await shellExec(`rm -rf ${shellLink(this.options.result_dir)}/${i};`)
     }
 
     file_list = await fileSystem(`readDir`, [ this.options.photo_dir ]);
@@ -331,7 +329,7 @@ PortfolioFilter.prototype.ghost_filter = async function (start_num) {
 
     options.photo_list = file_list;
     await fileSystem(`write`, [ `${shellLink(this.options.home_dir)}/script/ghostFilter.js`, this.generator.factory.ghostFilter({}, options) ]);
-    shell.exec(`osascript ${shellLink(this.options.home_dir)}/factory/applescript/ghostFilter.scpt`);
+    await shellExec(`osascript ${shellLink(this.options.home_dir)}/factory/applescript/ghostFilter.scpt`);
 
     return { result_folder: `${this.options.home_dir}/result`, script_folder: `${this.options.home_dir}/factory/applescript` };
 
@@ -342,7 +340,7 @@ PortfolioFilter.prototype.ghost_filter = async function (start_num) {
 
 PortfolioFilter.prototype.total_make = async function (liteMode = false) {
   const instance = this;
-  const { fileSystem, shell, shellLink, ghostFileUpload, ghostRequest, sleep, messageSend } = this.mother;
+  const { fileSystem, shell, shellLink, ghostFileUpload, ghostRequest, sleep, messageSend, requestSystem } = this.mother;
   const photoRequest = ghostRequest().bind("photo");
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const drive = new GoogleDrive();
@@ -444,7 +442,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
 
 PortfolioFilter.prototype.image_ready = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   try {
     await this.static_setting();
 
@@ -470,7 +468,7 @@ PortfolioFilter.prototype.image_ready = async function () {
 
     fileList.sort((a, b) => { return Number(instance.just_filter(a)) - Number(instance.just_filter(b)); });
     for (let i = 0; i < fileList.length; i++) {
-      shell.exec(`mv ${shellLink(resourceFolder + "/" + fileList[i])} ${shellLink(resourceFolder)}/photo${String(i + 1)}.jpg`);
+      await shellExec(`mv ${shellLink(resourceFolder + "/" + fileList[i])} ${shellLink(resourceFolder)}/photo${String(i + 1)}.jpg`);
       fileList[i] = "photo" + String(i + 1) + ".jpg";
     }
 
@@ -483,14 +481,14 @@ PortfolioFilter.prototype.image_ready = async function () {
 
     resultFolderList = await fileSystem(`readDir`, [ resultFolder ]);
     for (let i of resultFolderList) {
-      shell.exec(`rm -rf ${shellLink(resultFolder)}/${i};`);
+      await shellExec(`rm -rf ${shellLink(resultFolder)}/${i};`);
     }
-    shell.exec(`mkdir ${shellLink(resultFolder)}/A`);
+    await shellExec(`mkdir ${shellLink(resultFolder)}/A`);
 
     await fileSystem(`write`, [ `${this.options.home_dir}/script/white.js`, this.generator.factory.whiteFilter(fullFileList, this.options) ]);
-    shell.exec(`osascript ${this.options.home_dir}/factory/applescript/white.scpt`);
+    await shellExec(`osascript ${this.options.home_dir}/factory/applescript/white.scpt`);
 
-    shell.exec(`open ${shellLink(resultFolder)}`);
+    await shellExec(`open ${shellLink(resultFolder)}`);
     console.log(`done`);
 
   } catch (e) {
@@ -501,7 +499,7 @@ PortfolioFilter.prototype.image_ready = async function () {
 PortfolioFilter.prototype.ghost_make = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink, consoleQ, ghostFileUpload } = this.mother;
+  const { fileSystem, shellExec, shellLink, consoleQ, ghostFileUpload } = this.mother;
   const getNumber = function (obj) {
     let link = obj.link;
     let tempArr;
@@ -553,7 +551,7 @@ PortfolioFilter.prototype.ghost_make = async function () {
       if (file !== ".DS_Store") {
         fromArr.push(result_folder + "/" + file);
         toArr.push(`${ghostStatic.slice(1)}/${targetDesigner.desid}/${file}`);
-        dimensions = shell.exec(`osascript ${shellLink(script_folder)}/photo_sg.scpt ${shellLink(result_folder)}/${file}`);
+        dimensions = await shellExec(`osascript ${shellLink(script_folder)}/photo_sg.scpt ${shellLink(result_folder)}/${file}`);
         ghostArray.unshift({
           link: `${ghostStatic}/${targetDesigner.desid}/${file}`,
           sgTrue: dimensions.replace(/[^gs]/g, ''),

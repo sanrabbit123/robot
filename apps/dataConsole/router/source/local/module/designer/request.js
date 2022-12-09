@@ -1477,9 +1477,6 @@ DesignerJs.prototype.requestStaticHtml = function (designer, project, client, cl
 
       document.body.removeChild(document.body.lastChild);
 
-      const { pdf } = await ajaxJson({ html, name: client.name + "_고객님_의뢰서" }, "/ghostPass_pdfPrint");
-      await downloadFile(pdf);
-
       console.log("done");
 
       loading.remove();
