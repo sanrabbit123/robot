@@ -132,6 +132,9 @@ StaticRouter.prototype.rou_post_listFiles = function () {
       console.log(target);
 
       list = await leafParsing(target);
+
+      console.log(list);
+
       list = list.map((i) => {
         i.absolute = i.absolute.replace(new RegExp("^" + staticConst, "i"), "__samba__");
       }).filter((i) => {
