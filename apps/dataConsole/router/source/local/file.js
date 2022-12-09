@@ -24,42 +24,58 @@ FileJs.staticSvg = {
 
 FileJs.prototype.staticSvg = FileJs.staticSvg;
 
+FileJs.prototype.absoluteParsing = function (str) {
+  if (typeof str !== "string") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  str = str.replace(/__samba__/gi, S3HOST);
+  return str;
+}
+
 FileJs.prototype.baseMaker = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm } = GeneralJs;
+  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile } = GeneralJs;
   const fileBaseClassName = "fileBase";
   const contextmenuClassName = "contextmenuFactor";
   const contextmenuItems = [
     {
       text: "다운로드",
-      event: function (e) {
-        const selected = instance.selected;
-        const who = instance.mother.member.name;
-        const targets = document.querySelectorAll('.' + contextmenuClassName);
-        let files;
-        let absolute;
-        let directory;
-        files = [];
-        if (selected.length > 0) {
-          for (let dom of selected) {
-            absolute = dom.getAttribute("absolute");
-            directory = (dom.getAttribute("directory") === "true");
-            files.push({ absolute, type: (directory ? "folder" : "file") });
-          }
-          ajaxJson({ files, who }, "/ghostPass_deliveryFiles").then(() => {
-            window.alert("배달 요청이 완료되었습니다! 슬렉의 #file에서 배송이 도착하면 받으시면 됩니다! 유효 시간은 지금부터 3시간입니다.");
+      event: async function (e) {
+        try {
+          const selected = instance.selected;
+          const who = instance.mother.member.name;
+          const targets = document.querySelectorAll('.' + contextmenuClassName);
+          let files;
+          let absolute;
+          let directory;
+          files = [];
+          if (selected.length > 0) {
+            for (let dom of selected) {
+              absolute = dom.getAttribute("absolute");
+              directory = (dom.getAttribute("directory") === "true");
+              files.push({ absolute, type: (directory ? "folder" : "file") });
+            }
+
+            for (let { absolute, type } of files) {
+              if (type === "file") {
+                await downloadFile(instance.absoluteParsing(absolute))
+              }
+            }
+
+            if (files.some(({ type }) => { return type === "folder" })) {
+              window.alert("폴더는 통으로 다운로드 받을 수 없습니다!");
+            }
+
+          } else {
+            window.alert("다운로드 받을 파일을 먼저 선택해주세요!");
             for (let dom of targets) {
               dom.parentNode.removeChild(dom);
             }
-          }).catch((err) => {
-            console.log(err);
-          });
-        } else {
-          window.alert("다운로드 받을 파일을 먼저 선택해주세요!");
-          for (let dom of targets) {
-            dom.parentNode.removeChild(dom);
           }
+        } catch (e) {
+          console.log(e);
         }
       }
     },
@@ -75,7 +91,6 @@ FileJs.prototype.baseMaker = function () {
         let num;
         let imageMargin;
         let columnsLength;
-        let parsingLinks;
         try {
           imageMargin = 3;
           columnsLength = 5;
@@ -88,9 +103,8 @@ FileJs.prototype.baseMaker = function () {
             }
           }
 
-          parsingLinks = await ajaxJson({ targets: images.map((i) => { return i.image }), frontMode: true }, "/ghostPass_dirParsing");
-          images = images.map((obj, index) => {
-            obj.image = fileServerAddress + parsingLinks[index].split('/').map((i) => { return window.encodeURIComponent(i); }).join('/');
+          images = images.map((obj) => {
+            obj.image = instance.absoluteParsing(obj.image);
             return obj;
           });
 
@@ -416,6 +430,7 @@ FileJs.prototype.baseMaker = function () {
             });
             num++;
           }
+
         } catch (e) {
           console.log(e);
         }
@@ -879,16 +894,13 @@ FileJs.prototype.baseMaker = function () {
                       formData.append("upload" + String(i), files[i]);
                     }
 
-                    ajaxJson({ targets: [ instance.path ], frontMode: true }, "/ghostPass_dirParsing").then((data) => {
-                      let [ path ] = data;
-                      path = path.replace(/\/$/, '');
-                      toArr = [];
-                      for (let i = 0; i < fileNames.length; i++) {
-                        toArr.push(path + "/" + fileNames[i]);
-                      }
-                      formData.append("toArr", JSON.stringify(toArr));
-                      return ajaxForm(formData, S3HOST + ":3000" + "/fileUpload");
-                    }).then(() => {
+                    toArr = [];
+                    for (let i = 0; i < fileNames.length; i++) {
+                      toArr.push(instance.path.replace(/__samba__/gi, "").replace(/\/$/, '') + "/" + fileNames[i]);
+                    }
+                    formData.append("toArr", JSON.stringify(toArr));
+
+                    ajaxForm(formData, S3HOST + ":3000" + "/generalFileUpload").then(() => {
                       instance.fileLoad(instance.path);
                     }).catch((e) => {
                       console.log(e);
@@ -1026,11 +1038,9 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
     files.parentNode.appendChild(loading);
 
     if (!searchMode) {
-      console.log(path);
       thisFolderFiles = await ajaxJson({ path }, S3HOST + ":3000" + "/listFiles");
-      console.log(thisFolderFiles);
     } else {
-      thisFolderFiles = await ajaxJson({ path: this.path, keyword: path }, "/ghostPass_searchFiles");
+      thisFolderFiles = await ajaxJson({ path: this.path, keyword: path }, S3HOST + ":3000" + "/searchFiles");
     }
     thisFolderFiles.sort((a, b) => {
       return a.fileName >= b.fileName ? 1 : -1;
