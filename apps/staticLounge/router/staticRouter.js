@@ -93,13 +93,13 @@ StaticRouter.prototype.rou_get_First = function () {
 
 //POST ---------------------------------------------------------------------------------------------
 
-StaticRouter.prototype.rou_post_readDir = function () {
+StaticRouter.prototype.rou_post_listFiles = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { errorLog, fileSystem, shellExec, shellLink, leafParsing } = this.mother;
   const { staticConst } = this;
   let obj;
   obj = {};
-  obj.link = [ "/readDir" ];
+  obj.link = [ "/listFiles" ];
   obj.func = async function (req, res) {
     res.set({
       "Content-Type": "application/json",
@@ -111,29 +111,34 @@ StaticRouter.prototype.rou_post_readDir = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      if (req.body.target === undefined) {
+      if (req.body.path === undefined) {
         throw new Error("invaild post");
       }
       let target;
       let result;
+      let list;
 
-      target = req.body.target;
-
-      if (/^__samba__/i.test(target)) {
-        target = staticConst + target.replace(/__samba__/gi, '');
-      } else if (!/^\//.test(target)) {
-        target = staticConst + '/' + target;
-      } else {
-        target = staticConst + target;
+      target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
+      if (target.trim() === '') {
+        target = "__samba__";
+      }
+      if (!/^__/.test(target)) {
+        target = "__samba__" + "/" + target;
       }
 
-      result = (await fileSystem("readDir", [ target ])).filter((str) => {
-        return !/^\._/.test(str) && !/DS_Store/gi.test(str);
+      target = target.replace(/__samba__/gi, staticConst);
+      list = await leafParsing(target);
+      list = list.map((i) => {
+        i.absolute = i.absolute.replace(new RegExp("^" + staticConst, "i"), "__samba__");
+      }).filter((i) => {
+        return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
+      }).filter((i) => {
+        return i.absolute.split("/")[i.absolute.split("/").length - 1] !== ".DS_Store";
       });
 
-      res.send(JSON.stringify(result));
+      res.send(JSON.stringify(list));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_readDir): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Static lounge 서버 문제 생김 (rou_post_listFiles): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

@@ -1296,7 +1296,7 @@ DesignerBoardJs.prototype.insertCommentsBox = function (whiteBlock) {
               {
                 event: {
                   click: function (e) {
-                    downloadFile("https://" + FILEHOST + "/photo/sample/commentsSample.docx").catch((err) => {
+                    downloadFile(S3HOST + "/photo/sample/commentsSample.docx").catch((err) => {
                       console.log(err);
                     });
                   }

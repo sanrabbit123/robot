@@ -675,7 +675,7 @@ FlowJs.prototype.launchingDiagram = function (svgName) {
 
     graphic = window.archer.create(base);
 
-    graphic.loadUrl("https://" + FILEHOST + "/" + svgName + ".svg", "https://" + FILEHOST + "/archer.config.json");
+    graphic.loadUrl(S3HOST + "/" + svgName + ".svg", S3HOST + "/archer.config.json");
     graphic.on("ready", () => {
         graphic.view.zoomToFit(200, true);
         graphic.view.enableMouse(true, true);

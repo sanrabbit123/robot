@@ -23,7 +23,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
   const LOGHOST = "https://" + this.address.testinfo.host + ":3000";
   const FRONTHOST = "https://" + this.address.frontinfo.host;
-  const OFFICEHOST = "https://" + this.address.officeinfo.ghost.host + ":" + String(this.address.officeinfo.ghost.port);
   const BACKHOST = "https://" + this.address.backinfo.host + ":3000";
   const SECONDHOST = "https://" + this.address.secondinfo.host + ":3000";
   const classException = {
@@ -135,7 +134,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     frontWebString = "const FRONTHOST = \"" + FRONTHOST + "\";";
     backString = "const BACKHOST = \"" + BACKHOST + "\";";
     secondString = "const SECONDHOST = \"" + SECONDHOST + "\";";
-    officeString = "const OFFICEHOST = \"" + OFFICEHOST + "\";\n" + "const FILEHOST = \"" + FILEHOST + "\";";
+    officeString = "const FILEHOST = \"" + FILEHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
@@ -229,7 +228,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const BRIDGEHOST = "https://" + this.address.transinfo.host + ":3000";
   const LOGHOST = "https://" + this.address.testinfo.host + ":3000";
   const FRONTHOST = "https://" + this.address.frontinfo.host;
-  const OFFICEHOST = "https://" + this.address.officeinfo.ghost.host + ":" + String(this.address.officeinfo.ghost.port);
   const BACKHOST = "https://" + this.address.backinfo.host + ":3000";
   const SECONDHOST = "https://" + this.address.secondinfo.host + ":3000";
   try {
@@ -346,7 +344,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     backString = "const BACKHOST = \"" + BACKHOST + "\";";
     secondString = "const SECONDHOST = \"" + SECONDHOST + "\";";
     frontWebString = "const FRONTHOST = \"" + FRONTHOST + "\";";
-    officeString = "const OFFICEHOST = \"" + OFFICEHOST + "\";\n" + "const FILEHOST = \"" + FILEHOST + "\";";
+    officeString = "const FILEHOST = \"" + FILEHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
     polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);

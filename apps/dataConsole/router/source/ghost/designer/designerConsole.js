@@ -2669,9 +2669,6 @@ DesignerConsoleJs.prototype.consoleView = async function () {
         instance.clients = clients;
         instance.designers.setProjects(instance.projects);
         instance.designers.setClients(instance.clients);
-        return ajaxJson({ channel: "001_designer_notice" }, "https://" + FILEHOST + "/slackMessages", { equal: true });
-      }).then((slackNotices) => {
-        instance.slackNotices = slackNotices;
         loading.parentNode.removeChild(loading);
         this.consoleDashboard(this.desid);
       }).catch((err) => {
@@ -2680,11 +2677,6 @@ DesignerConsoleJs.prototype.consoleView = async function () {
 
     } else {
 
-      ajaxJson({ channel: "001_designer_notice" }, "https://" + FILEHOST + "/slackMessages", { equal: true }).then((slackNotices) => {
-        instance.slackNotices = slackNotices;
-      }).catch((err) => {
-        console.log(err);
-      });
 
       this.projects = await ajaxJson({ noFlat: true, whereQuery: { desid: this.desid } }, "/getProjects", { equal: true });
       if (this.projects.length === 0) {

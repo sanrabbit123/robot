@@ -67,7 +67,7 @@ FileJs.prototype.baseMaker = function () {
       text: "미리보기",
       event: async function (e) {
         const previewClassName = "previewWhiteBase";
-        const fileServerAddress = OFFICEHOST.split(':').slice(0, -1).join(':');
+        const fileServerAddress = S3HOST;
         const base = document.querySelector('.' + fileBaseClassName);
         const targets = document.querySelectorAll('.' + contextmenuClassName);
         let images, tong;
@@ -887,7 +887,7 @@ FileJs.prototype.baseMaker = function () {
                         toArr.push(path + "/" + fileNames[i]);
                       }
                       formData.append("toArr", JSON.stringify(toArr));
-                      return ajaxForm(formData, OFFICEHOST + "/fileUpload");
+                      return ajaxForm(formData, S3HOST + ":3000" + "/fileUpload");
                     }).then(() => {
                       instance.fileLoad(instance.path);
                     }).catch((e) => {
@@ -1026,7 +1026,9 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
     files.parentNode.appendChild(loading);
 
     if (!searchMode) {
+      console.log(path);
       thisFolderFiles = await ajaxJson({ path }, "/ghostPass_listFiles");
+      console.log(thisFolderFiles);
     } else {
       thisFolderFiles = await ajaxJson({ path: this.path, keyword: path }, "/ghostPass_searchFiles");
     }

@@ -2747,7 +2747,6 @@ GeneralJs.prototype.memberView = function () {
       let secondButtonIndent;
       let between;
       let size;
-      let memberStatus;
       let tempDom, tong;
       let buttonSize;
       let firstButtonIndent;
@@ -2776,9 +2775,9 @@ GeneralJs.prototype.memberView = function () {
       tong = [];
 
       allMembers = (await ajaxJson({ type: "get" }, "/getMembers", { equal: true })).filter((obj) => { return obj.alive });
-      memberStatus = await ajaxJson({}, "https://" + FILEHOST + "/officeMonitor/status", { equal: true });
+      // dev needs
       for (let member of allMembers) {
-        member.online = memberStatus[member.id];
+        member.online = false;
       }
 
       instance.memberBox = {};
