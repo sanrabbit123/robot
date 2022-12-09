@@ -275,6 +275,38 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_photoParsing = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { staticConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/photoParsing" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+
+      
+
+
+
+      res.send(JSON.stringify({}));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_photoParsing): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.getAll = function () {
