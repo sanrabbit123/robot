@@ -163,7 +163,7 @@ SecondRouter.prototype.rou_post_messageLog = function () {
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_messageLog): " + e.message).catch((e) => { console.log(e); });
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_messageLog): " + JSON.stringify(req.body) + " " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
