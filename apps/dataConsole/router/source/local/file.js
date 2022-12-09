@@ -1027,7 +1027,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
 
     if (!searchMode) {
       console.log(path);
-      thisFolderFiles = await ajaxJson({ path }, "/ghostPass_listFiles");
+      thisFolderFiles = await ajaxJson({ path }, S3HOST + ":3000" + "/listFiles");
       console.log(thisFolderFiles);
     } else {
       thisFolderFiles = await ajaxJson({ path: this.path, keyword: path }, "/ghostPass_searchFiles");
