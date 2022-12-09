@@ -1580,6 +1580,8 @@ Ghost.prototype.ghostRouter = function (needs) {
         }
         if (target.replace(/\/$/, '') !== "__samba__") {
           target = instance.dirParsing(target);
+
+          
           leafParsing(target, true, req.body.keyword).then((list) => {
             res.send(JSON.stringify(list.map((i) => {
               i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__");

@@ -147,6 +147,60 @@ StaticRouter.prototype.rou_post_listFiles = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_searchFiles = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink, leafParsing } = this.mother;
+  const { staticConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/searchFiles" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.path === undefined || req.body.keyword === undefined) {
+        throw new Error("invaild post");
+      }
+      let target;
+      let result;
+      let list;
+
+      target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
+      if (target.trim() === '') {
+        target = "__samba__";
+      }
+      if (!/^__/.test(target)) {
+        target = "__samba__" + "/" + target;
+      }
+
+      target = target.replace(/__samba__/gi, staticConst);
+      list = await leafParsing(target, true, req.body.keyword);
+
+      list = list.map((i) => {
+        i.absolute = i.absolute.replace(new RegExp("^" + staticConst, "i"), "__samba__");
+        return i;
+      }).filter((i) => {
+        return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
+      }).filter((i) => {
+        return i.absolute.split("/")[i.absolute.split("/").length - 1] !== ".DS_Store";
+      });
+
+      res.send(JSON.stringify(list));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_searchFiles): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_generalFileUpload = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
