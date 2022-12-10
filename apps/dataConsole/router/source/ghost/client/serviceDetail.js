@@ -252,12 +252,12 @@ ServiceDetailJs.prototype.insertStartBox = function () {
   let subSize, subWeight, subLineHeight;
   let rightImagePosition;
 
-  blockHeight = <%% 294, 294, 273, 226, 129.5 %%>;
+  blockHeight = <%% 294, 230, 200, 290, 129.5 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
-  margin = <%% 52, 50, 40, 32, 52 %%>;
-  marginTop = <%% 52, 50, 40, 32, 52 %%>;
+  margin = <%% 52, 45, 40, 32, 52 %%>;
+  marginTop = <%% 52, 42, 40, 32, 52 %%>;
 
-  titleSize = <%% 22, 22, 22, 22, 22 %%>;
+  titleSize = <%% 22, 19, 18, 17, 4 %%>;
   titleWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
@@ -267,8 +267,8 @@ ServiceDetailJs.prototype.insertStartBox = function () {
   titleLineLength = <%% 54, 54, 54, 54, 54 %%>;
   titleLineMarginRight = <%% 20, 20, 20, 20, 20 %%>;
 
-  subBlockMarginTop = <%% 70, 70, 70, 70, 70 %%>;
-  subSize = <%% 15, 15, 15, 15, 15 %%>;
+  subBlockMarginTop = <%% 70, 40, 36, 24, 7 %%>;
+  subSize = <%% 15, 14, 14, 13, 3 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
   subLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
@@ -281,7 +281,7 @@ ServiceDetailJs.prototype.insertStartBox = function () {
           "우리집 무드를 변화시켜주는 스타일링",
         ],
         sub: [
-          "홈퍼니싱은 시공 없이 스타일링만으로 완성하는 인테리어 서비스입니다.",
+          "홈퍼니싱은 시공 없이 스타일링만으로 완성하는 인테리어입니다.",
           "내 집의 컨디션에 적합한 스타일링 서비스를 경험해보세요.",
         ]
       },
@@ -361,7 +361,7 @@ ServiceDetailJs.prototype.insertStartBox = function () {
         children: [
           {
             style: {
-              display: "inline-block",
+              display: media[0] ? "inline-block" : "none",
               verticalAlign: "top",
               position: "relative",
               top: String(titleLineTop) + ea,
@@ -466,18 +466,18 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 10, 10, 10, 10, 10 %%>;
 
-  middleTitleLineTop = <%% 68, 68, 68, 68, 68 %%>;
+  middleTitleLineTop = <%% 68, 65, 64, 63, 6 %%>;
 
-  middleTitleSize = <%% 23, 23, 21, 18, 4.2 %%>;
+  middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 14, 14, 14, 13, 3 %%>;
+  middleInfoSize = <%% 14, 13, 13, 12, 3 %%>;
 
   threeBetween = <%% 10, 10, 10, 10, 1 %%>;
-  threeHeight = <%% 170, 170, 170, 170, 170 %%>;
+  threeHeight = <%% 170, 120, 120, 120, 120 %%>;
   threeVisualPaddingBottom = <%% 2, 2, 2, 2, 2 %%>;
   threeBlockMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
@@ -489,13 +489,13 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
     threeWidth1 = <%% 330, 330, 330, 330, 330 %%>;
   }
 
-  threeSize = <%% 20, 20, 20, 20, 20 %%>;
+  threeSize = <%% 20, 16, 16, 15, 20 %%>;
   threeWeight = <%% 800, 800, 800, 800, 800 %%>;
-  threeSmallSize = <%% 13, 13, 13, 13, 13 %%>;
+  threeSmallSize = <%% 13, 12, 11, 10, 13 %%>;
 
-  blackCircleWidth = <%% 40, 40, 40, 40, 40 %%>;
+  blackCircleWidth = <%% 40, 36, 36, 36, 36 %%>;
 
-  arrowWidth = <%% 22, 22, 22, 22, 22 %%>;
+  arrowWidth = <%% 22, 20, 18, 16, 4 %%>;
   arrowHeight = <%% 8, 8, 8, 8, 8 %%>;
 
   numberTop = <%% 14, 14, 14, 14, 14 %%>;
@@ -518,7 +518,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
         first: {
           up: "빈 집을 취향대로 꾸미고 싶다면",
           upSub: "(새입주)",
-          down: "가구 일부를 바꿔 분위기 변화를 주고 싶다면",
+          down: media[0] ? "가구 일부를 바꿔 분위기 변화를 주고 싶다면" : "일부를 바꿔 분위기 변화를 주고 싶다면",
           downSub: "(거주중)",
         },
         second: {
@@ -971,25 +971,25 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
   let feeBarTongHeight;
 
   bottomMargin = <%% 180, 180, 180, 180, 180 %%>;
-  slideTongHeight = <%% 340, 340, 340, 340, 340 %%>;
-  blockWidth = <%% 240, 240, 240, 240, 240 %%>;
-  blockBetween = <%% 12, 12, 12, 12, 12 %%>;
+  slideTongHeight = <%% 340, 290, 340, 340, 340 %%>;
+  blockWidth = <%% 240, 200, 190, 180, 240 %%>;
+  blockBetween = <%% 12, 10, 8, 6, 12 %%>;
 
   margin = <%% 52, 50, 40, 32, 52 %%>;
   finalMarginBottom = <%% 72, 72, 72, 72, 72 %%>;
 
-  whitePaddingTop = <%% 68, 68, 68, 68, 68 %%>;
+  whitePaddingTop = <%% 68, 64, 68, 68, 68 %%>;
 
-  slideLeft = <%% -680, -680, -680, -680, -680 %%>;
+  slideLeft = <%% -680, -515, -515, -515, -515 %%>;
   slideWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
 
-  arrowWidth = <%% 762, 762, 762, 762, 762 %%>;
+  arrowWidth = <%% 762, 450, 460, 460, 460 %%>;
   arrowHeight = <%% 10, 10, 10, 10, 10 %%>;
 
   arrowMargin = <%% 18, 18, 18, 18, 18 %%>;
   arrowTop = <%% 6, 6, 6, 6, 6 %%>;
 
-  descriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  descriptionSize = <%% 15, 14, 14, 14, 14 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -1000,21 +1000,21 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
   circleBoxMarginTop = <%% 16, 16, 16, 16, 16 %%>;
   circleBoxPaddingLeft = <%% 1, 1, 1, 1, 1 %%>;
 
-  feeTongMarginTop = <%% 100, 100, 100, 100, 100 %%>;
-  feeTitleTongHeight = <%% 50, 50, 50, 50, 50 %%>;
+  feeTongMarginTop = <%% 100, 96, 90, 84, 10 %%>;
+  feeTitleTongHeight = <%% 50, 48, 45, 43, 50 %%>;
 
-  feeTitleSize = <%% 20, 20, 20, 20, 20 %%>;
+  feeTitleSize = <%% 20, 19, 18, 17, 4 %%>;
   feeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   feeTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  feeDescriptionTongHeight = <%% 60, 60, 60, 60, 60 %%>;
+  feeDescriptionTongHeight = <%% 60, 56, 52, 48, 6 %%>;
   feeDescriptionLineTop = <%% 9, 9, 9, 9, 9 %%>;
-  feeDescriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  feeDescriptionSize = <%% 15, 14, 14, 13, 3 %%>;
   feeDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   feeDescriptionWeightBold = <%% 600, 600, 600, 600, 600 %%>;
   feeDescriptionPadding = <%% 20, 20, 20, 20, 20 %%>;
 
-  barWidth0 = <%% 360, 360, 360, 360, 360 %%>;
+  barWidth0 = <%% 360, 240, 200, 160, 36 %%>;
   barBetween = <%% 5, 5, 5, 5, 5 %%>;
 
   barHeight = <%% 20, 20, 20, 20, 20 %%>;
@@ -2032,25 +2032,25 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   margin = <%% 52, 50, 40, 32, 52 %%>;
 
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
-  middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
+  middleTitleMarginBottom = <%% 60, 50, 48, 42, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 68, 68, 68, 68 %%>;
+  middleTitleLineTop = <%% 68, 65, 64, 63, 6 %%>;
 
-  middleTitleSize = <%% 23, 23, 21, 18, 4.2 %%>;
+  middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 14, 14, 14, 13, 3 %%>;
+  middleInfoSize = <%% 14, 13, 13, 12, 3 %%>;
 
-  peopleSize = <%% 14, 14, 13, 12, 3 %%>;
+  peopleSize = <%% 14, 13, 12, 11, 3 %%>;
   peopleWeight = <%% 400, 400, 400, 400, 400 %%>;
   peopleBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
   peopleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
   peopleBetween = <%% 8, 8, 8, 8, 8 %%>;
-  peopleMarginBottom = <%% 40, 40, 40, 40, 40 %%>;
+  peopleMarginBottom = <%% 40, 36, 32, 28, 4 %%>;
 
   pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
   newBaseTong.style.left = String(0);
@@ -2290,37 +2290,37 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
   let tagTextTop, tagSize, tagWeight, tagPaddingLeft;
   let blockId;
 
-  startBlankHeight = <%% 110, 110, 110, 110, 24 %%>;
+  startBlankHeight = <%% 110, 100, 90, 80, 24 %%>;
 
   blockBetween = <%% 40, 40, 40, 40, 40 %%>;
 
-  imageHeight = <%% 420, 420, 420, 420, 420 %%>;
-  imageWidth = <%% 890, 890, 890, 890, 890 %%>;
-  imageBetween = <%% 40, 40, 40, 40, 40 %%>;
+  imageHeight = <%% 420, 290, 290, 290, 420 %%>;
+  imageWidth = <%% 890, 620, 640, 640, 640 %%>;
+  imageBetween = <%% 40, 36, 36, 36, 36 %%>;
 
-  titleSize = <%% 17, 17, 16, 15, 4 %%>;
+  titleSize = <%% 17, 16, 15, 14, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   textLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  quoteWidth = <%% 13, 13, 13, 13, 13 %%>;
+  quoteWidth = <%% 13, 12, 12, 11, 4 %%>;
   quoteMarginTop = <%% 14, 14, 14, 14, 14 %%>;
   quoteMarginBottom = <%% 8, 8, 8, 8, 8 %%>;
   quoteVisual = <%% 1, 1, 1, 1, 1 %%>;
 
-  descriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  descriptionSize = <%% 14, 13, 13, 12, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   lineTop = <%% 20, 20, 20, 20, 20 %%>;
   lineBottom = <%% 22, 22, 22, 22, 22 %%>;
 
-  tagTongHeight = <%% 26, 26, 26, 26, 26 %%>;
+  tagTongHeight = <%% 26, 24, 24, 24, 26 %%>;
 
-  tagBetween = <%% 4, 4, 4, 4, 4 %%>;
+  tagBetween = <%% 4, 3, 3, 2, 4 %%>;
 
   tagTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  tagSize = <%% 11, 11, 11, 11, 11 %%>;
+  tagSize = <%% 11, 10, 10, 10, 11 %%>;
   tagWeight = <%% 600, 600, 600, 600, 600 %%>;
-  tagPaddingLeft = <%% 12, 12, 12, 12, 12 %%>;
+  tagPaddingLeft = <%% 12, 10, 10, 10, 12 %%>;
 
   blankBlock = createNode({
     mother: baseTong,
@@ -2888,15 +2888,15 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 68, 68, 68, 68 %%>;
+  middleTitleLineTop = <%% 68, 65, 64, 63, 6 %%>;
 
-  middleTitleSize = <%% 23, 23, 21, 18, 4.2 %%>;
+  middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 14, 14, 14, 13, 3 %%>;
+  middleInfoSize = <%% 14, 13, 13, 12, 3 %%>;
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
@@ -3377,15 +3377,15 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 68, 68, 68, 68 %%>;
+  middleTitleLineTop = <%% 68, 65, 64, 63, 6 %%>;
 
-  middleTitleSize = <%% 23, 23, 21, 18, 4.2 %%>;
+  middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 14, 14, 14, 13, 3 %%>;
+  middleInfoSize = <%% 14, 13, 13, 12, 3 %%>;
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
@@ -3928,15 +3928,15 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 68, 68, 68, 68 %%>;
+  middleTitleLineTop = <%% 68, 65, 64, 63, 6 %%>;
 
-  middleTitleSize = <%% 23, 23, 21, 18, 4.2 %%>;
+  middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 14, 14, 14, 13, 3 %%>;
+  middleInfoSize = <%% 14, 13, 13, 12, 3 %%>;
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
@@ -4870,15 +4870,15 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 68, 68, 68, 68 %%>;
+  middleTitleLineTop = <%% 68, 65, 64, 63, 6 %%>;
 
-  middleTitleSize = <%% 23, 23, 21, 18, 4.2 %%>;
+  middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 14, 14, 14, 13, 3 %%>;
+  middleInfoSize = <%% 14, 13, 13, 12, 3 %%>;
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
@@ -5363,15 +5363,15 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 68, 68, 68, 68 %%>;
+  middleTitleLineTop = <%% 68, 65, 64, 63, 6 %%>;
 
-  middleTitleSize = <%% 23, 23, 21, 18, 4.2 %%>;
+  middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 14, 14, 14, 13, 3 %%>;
+  middleInfoSize = <%% 14, 13, 13, 12, 3 %%>;
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
@@ -6218,9 +6218,9 @@ ServiceDetailJs.prototype.launching = async function (loading) {
             [ newBaseTong, baseTong ] = instance.insertToneBox(newBaseTong, baseTong);
           }
 
-          if (instance.mode !== "furnishing") {
+          // if (instance.mode !== "furnishing") {
             [ newBaseTong, baseTong ] = instance.insertConstructBox(newBaseTong, baseTong);
-          }
+          // }
           [ newBaseTong, baseTong ] = instance.insertCareBox(newBaseTong, baseTong);
           instance.insertWithBox(newBaseTong, baseTong);
 
@@ -6234,7 +6234,7 @@ ServiceDetailJs.prototype.launching = async function (loading) {
 
     this.totalContents.children[0].style.background = colorChip.gray1;
     this.totalContents.children[1].style.transition = "all 0s ease";
-    this.totalContents.children[1].style.height = String(<&& 560 | 540 | 460 | 400 | 118 &&>) + this.ea;
+    this.totalContents.children[1].style.height = String(<&& 560 | 490 | 460 | 400 | 118 &&>) + this.ea;
 
   } catch (err) {
     console.log(err);
