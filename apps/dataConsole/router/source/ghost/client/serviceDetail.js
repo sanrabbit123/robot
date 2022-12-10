@@ -2032,7 +2032,7 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   margin = <%% 52, 50, 40, 32, 52 %%>;
 
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
-  middleTitleMarginBottom = <%% 60, 50, 48, 42, 60 %%>;
+  middleTitleMarginBottom = <%% 60, 56, 52, 48, 60 %%>;
 
   middleTitleLineTop = <%% 68, 65, 64, 63, 6 %%>;
 
@@ -2900,11 +2900,11 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
-  imageWidth = <%% 680, 680, 680, 680, 680 %%>;
-  imageHeight = <%% 400, 400, 400, 400, 400 %%>;
+  imageWidth = <%% 680, 480, 480, 480, 480 %%>;
+  imageHeight = <%% 400, 280, 280, 280, 2280 %%>;
   imageBetween = <%% 12, 12, 12, 12, 12 %%>;
 
-  titleSize = <%% 14, 14, 14, 14, 14 %%>;
+  titleSize = <%% 14, 13, 13, 13, 13 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
@@ -2912,21 +2912,21 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   titleMarginBottom = <%% 6, 6, 6, 6, 6 %%>;
 
   factorTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  factorSize = <%% 13, 13, 13, 13, 13 %%>;
+  factorSize = <%% 13, 11, 11, 10, 2.8 %%>;
   factorWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  factorTongHeight = <%% 36, 36, 36, 36, 36 %%>;
-  factorTongWidth = <%% 96, 96, 96, 96, 96 %%>;
+  factorTongHeight = <%% 36, 28, 28, 28, 28 %%>;
+  factorTongWidth = <%% 96, 80, 80, 80, 80 %%>;
 
   lineStart = <%% 20, 20, 20, 20, 20 %%>;
   lineWidth = <%% 74, 74, 74, 74, 74 %%>;
-  lineHeight = <%% 94, 94, 94, 94, 94 %%>;
+  lineHeight = <%% 94, 64, 64, 64, 64 %%>;
   lineEnd = <%% 2, 2, 2, 2, 2 %%>;
 
   arrowWidth = <%% 10, 10, 10, 10, 10 %%>;
 
-  boxWidth = <%% 150, 150, 150, 150, 150 %%>;
-  boxHeight = <%% 80, 80, 80, 80, 80 %%>;
+  boxWidth = <%% 150, 108, 120, 120, 150 %%>;
+  boxHeight = <%% 80, 66, 80, 80, 80 %%>;
 
   pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
   newBaseTong.style.left = String(0);
@@ -3942,25 +3942,25 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
 
   whiteBetween = <%% 12, 12, 12, 12, 12 %%>;
 
-  leftBlockWidth = <%% 302, 302, 302, 302, 302 %%>;
+  leftBlockWidth = <%% 302, 256, 256, 256, 302 %%>;
   leftBlockMarginRight = <%% 12, 12, 12, 12, 12 %%>;
 
-  titleSize = <%% 14, 14, 14, 14, 14 %%>;
+  titleSize = <%% 14, 13, 13, 12, 14 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  descriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  descriptionSize = <%% 14, 13, 13, 12, 14 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   descriptionMarginTop = <%% 6, 6, 6, 6, 6 %%>;
 
-  blockBetween = <%% 12, 12, 12, 12, 12 %%>;
+  blockBetween = <%% 12, 10, 10, 10, 12 %%>;
   blockBetweenBottom = <%% 3, 3, 3, 3, 3 %%>;
   imageMarginBottom = <%% 20, 20, 20, 20, 20 %%>;
-  grayBoxHeight = <%% 120, 120, 120, 120, 120 %%>;
+  grayBoxHeight = <%% 120, 96, 96, 96, 96 %%>;
 
-  innerTitleSize = <%% 15, 15, 15, 15, 15 %%>;
+  innerTitleSize = <%% 15, 14, 13, 13, 15 %%>;
   innerTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   innerTitleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  innerDescriptionSize = <%% 13, 13, 13, 13, 13 %%>;
+  innerDescriptionSize = <%% 13, 11, 11, 10, 13 %%>;
   innerDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   innerDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   innerDescriptionMarginTop = <%% 4, 4, 4, 4, 4 %%>;
@@ -3968,7 +3968,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
 
   freeWidth = <%% 180, 180, 180, 180, 180 %%>;
   freeHeight = <%% 42, 42, 42, 42, 42 %%>;
-  freeTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  freeTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
   linesTongHeight = <%% 48, 48, 48, 48, 48 %%>;
   linesWidth = <%% 660, 660, 660, 660, 660 %%>;
