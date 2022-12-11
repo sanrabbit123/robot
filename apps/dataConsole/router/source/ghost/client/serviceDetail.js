@@ -255,9 +255,9 @@ ServiceDetailJs.prototype.insertStartBox = function () {
   blockHeight = <%% 294, 230, 200, 290, 129.5 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 45, 40, 32, 52 %%>;
-  marginTop = <%% 52, 42, 40, 32, 52 %%>;
+  marginTop = <%% 52, 42, 36, 32, 52 %%>;
 
-  titleSize = <%% 22, 19, 18, 17, 4 %%>;
+  titleSize = <%% 22, 19, 17, 16, 4 %%>;
   titleWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
@@ -267,8 +267,8 @@ ServiceDetailJs.prototype.insertStartBox = function () {
   titleLineLength = <%% 54, 54, 54, 54, 54 %%>;
   titleLineMarginRight = <%% 20, 20, 20, 20, 20 %%>;
 
-  subBlockMarginTop = <%% 70, 40, 36, 24, 7 %%>;
-  subSize = <%% 15, 14, 14, 13, 3 %%>;
+  subBlockMarginTop = <%% 70, 40, 30, 24, 7 %%>;
+  subSize = <%% 15, 14, 13, 12, 3 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
   subLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
@@ -466,7 +466,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 10, 10, 10, 10, 10 %%>;
 
-  middleTitleLineTop = <%% 68, 65, 64, 63, 6 %%>;
+  middleTitleLineTop = <%% 68, 65, 56, 48, 6 %%>;
 
   middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -474,7 +474,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 14, 13, 13, 12, 3 %%>;
+  middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
 
   threeBetween = <%% 10, 10, 10, 10, 1 %%>;
   threeHeight = <%% 170, 120, 120, 120, 120 %%>;
@@ -2034,7 +2034,7 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 56, 52, 48, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 65, 64, 63, 6 %%>;
+  middleTitleLineTop = <%% 68, 65, 56, 48, 6 %%>;
 
   middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -2042,7 +2042,7 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 14, 13, 13, 12, 3 %%>;
+  middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
 
   peopleSize = <%% 14, 13, 12, 11, 3 %%>;
   peopleWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -2888,7 +2888,7 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 65, 64, 63, 6 %%>;
+  middleTitleLineTop = <%% 68, 65, 56, 48, 6 %%>;
 
   middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -2896,7 +2896,7 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 14, 13, 13, 12, 3 %%>;
+  middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
@@ -3377,7 +3377,7 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 65, 64, 63, 6 %%>;
+  middleTitleLineTop = <%% 68, 65, 56, 48, 6 %%>;
 
   middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -3385,7 +3385,7 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 14, 13, 13, 12, 3 %%>;
+  middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
@@ -3928,7 +3928,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 65, 64, 63, 6 %%>;
+  middleTitleLineTop = <%% 68, 65, 56, 48, 6 %%>;
 
   middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -3936,7 +3936,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 14, 13, 13, 12, 3 %%>;
+  middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
@@ -4870,7 +4870,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 65, 64, 63, 6 %%>;
+  middleTitleLineTop = <%% 68, 65, 56, 48, 6 %%>;
 
   middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -4878,7 +4878,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 14, 13, 13, 12, 3 %%>;
+  middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
@@ -5363,7 +5363,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 65, 64, 63, 6 %%>;
+  middleTitleLineTop = <%% 68, 65, 56, 48, 6 %%>;
 
   middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -5371,7 +5371,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 14, 13, 13, 12, 3 %%>;
+  middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
