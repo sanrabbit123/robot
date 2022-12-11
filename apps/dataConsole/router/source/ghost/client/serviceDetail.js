@@ -4865,7 +4865,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
   topMargin = <%% 160, 160, 160, 120, 50 %%>;
   bottomMargin = <%% 180, 180, 180, 180, 50 %%>;
   margin = <%% 52, 50, 40, 32, 52 %%>;
-  marginTop = <%% 56, 56, 56, 56, 56 %%>;
+  marginTop = <%% 56, 54, 52, 50, 6 %%>;
 
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
@@ -4882,40 +4882,40 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
-  leftWidth = <%% 390, 390, 390, 390, 390 %%>;
+  leftWidth = <%% 390, 265, 265, 265, 265 %%>;
 
-  grayBetween = <%% 10, 10, 10, 10, 10 %%>;
+  grayBetween = <%% 10, 6, 4, 2, 10 %%>;
 
   grayBoxNumbers = <%% 5, 5, 5, 5, 5 %%>;
 
-  grayHeight0 = <%% 56, 56, 56, 56, 56 %%>;
-  grayHeight1 = <%% 240, 240, 240, 240, 240 %%>;
+  grayHeight0 = <%% 56, 50, 48, 42, 6 %%>;
+  grayHeight1 = <%% 240, 200, 200, 180, 240 %%>;
 
-  box0Size = <%% 15, 15, 15, 15, 15 %%>;
+  box0Size = <%% 15, 13, 12, 11, 4 %%>;
   box0Weight = <%% 700, 700, 700, 700, 700 %%>;
   box0TextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  circleWidth = <%% 108, 108, 108, 108, 108 %%>;
+  circleWidth = <%% 108, 84, 84, 84, 8 %%>;
 
-  titleSize = <%% 17, 17, 17, 17, 17 %%>;
+  titleSize = <%% 17, 16, 16, 15, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  descriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  descriptionSize = <%% 14, 13, 13, 12, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionMarginTop = <%% 12, 12, 12, 12, 12 %%>;
 
-  box1Size0 = <%% 14, 14, 14, 14, 14 %%>;
+  box1Size0 = <%% 14, 13, 13, 12, 11 %%>;
   box1Weight0 = <%% 800, 800, 800, 800, 800 %%>;
 
-  box1Size1 = <%% 12, 12, 12, 12, 12 %%>;
+  box1Size1 = <%% 12, 11, 11, 10, 2.5 %%>;
   box1Weight1 = <%% 400, 400, 400, 400, 400 %%>;
 
   box1TitleMarginTop = <%% 16, 16, 16, 16, 16 %%>;
   box1TitleMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
   box1DescriptionBottomVisual = <%% 1, 1, 1, 1, 1 %%>;
 
-  box2LineWidth = <%% 684, 684, 684, 684, 684 %%>;
+  box2LineWidth = <%% 684, 500, 480, 480, 100 %%>;
   box2LineMargin = <%% 20, 20, 20, 20, 20 %%>;
 
   pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
@@ -5090,7 +5090,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
     mother: whiteBlock,
     mode: "img",
     attribute: {
-      src: ServiceDetailJs.binaryPath + "/careBox.svg",
+      src: (<&& ServiceDetailJs.binaryPath + "/careBox.svg" | ServiceDetailJs.binaryPath + "/careBox2.svg" | ServiceDetailJs.binaryPath + "/careBox2.svg" | ServiceDetailJs.binaryPath + "/careBox2.svg" | ServiceDetailJs.binaryPath + "/careBox2.svg" &&>),
     },
     style: {
       display: "block",
@@ -5382,33 +5382,33 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
 
   boxBetween = <%% 10, 10, 10, 10, 10 %%>;
 
-  totalHeight = <%% 400, 400, 400, 400, 400 %%>;
+  totalHeight = <%% 400, 342, 320, 300, 280 %%>;
 
-  innerMargin = <%% 48, 48, 48, 48, 48 %%>;
+  innerMargin = <%% 48, 36, 24, 20, 48 %%>;
 
-  box0Size = <%% 19, 19, 19, 19, 19 %%>;
+  box0Size = <%% 19, 18, 17, 16, 5 %%>;
   box0Weight = <%% 800, 800, 800, 800, 800 %%>;
   box0TextTop = <%% -1, -1, -1, -1, -1 %%>;
   box0LineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
   box1TextTop = <%% -1, -1, -1, -1, -1 %%>;
-  box1Size = <%% 18, 18, 18, 18, 18 %%>;
+  box1Size = <%% 18, 16, 16, 15, 14 %%>;
   box1Weight = <%% 700, 700, 700, 700, 700 %%>;
   box1LightWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  buttonWidth = <%% 190, 190, 190, 190, 190 %%>;
-  buttonHeight = <%% 40, 40, 40, 40, 40 %%>;
+  buttonWidth = <%% 190, 170, 170, 170, 170 %%>;
+  buttonHeight = <%% 40, 36, 36, 36, 36 %%>;
 
-  box2Size = <%% 15, 15, 15, 15, 15 %%>;
+  box2Size = <%% 15, 13, 12, 12, 15 %%>;
   buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  box2LineTop = <%% 36, 36, 36, 36, 36 %%>;
+  box2LineTop = <%% 36, 30, 30, 30, 36 %%>;
   box2LineBottom = <%% 16, 16, 16, 16, 16 %%>;
 
-  box2DetailPaddingTop = <%% 22, 22, 22, 22, 22 %%>;
+  box2DetailPaddingTop = <%% 22, 12, 10, 12, 22 %%>;
 
   box2DetailBetween = <%% 24, 24, 24, 24, 24 %%>;
-  box2NumberWidth = <%% 48, 48, 48, 48, 48 %%>;
+  box2NumberWidth = <%% 48, 40, 40, 40, 40 %%>;
 
   box2Weight = <%% 800, 800, 800, 800, 800 %%>;
 
@@ -5419,9 +5419,9 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   box2DetailWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   buttonBaseHeight = <%% 150, 150, 150, 150, 150 %%>;
-  finalButtonWidth = <%% 140, 140, 140, 140, 140 %%>;
-  finalButtonHeight = <%% 48, 48, 48, 48, 48 %%>;
-  buttonSize = <%% 18, 18, 18, 18, 18 %%>;
+  finalButtonWidth = <%% 140, 124, 120, 120, 120 %%>;
+  finalButtonHeight = <%% 48, 44, 42, 36, 48 %%>;
+  buttonSize = <%% 18, 17, 17, 16, 4 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
   finalButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
