@@ -19,6 +19,8 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
 
   this.staticConst = process.env.HOME + "/samba";
   this.sambaToken = "__samba__";
+  this.homeliaisonOfficeConst = this.address.officeinfo.ghost.file.office;
+  this.designerPhotoConst = "사진_등록_포트폴리오";
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -415,6 +417,102 @@ StaticRouter.prototype.rou_post_makeFolder = function () {
   }
   return obj;
 }
+
+StaticRouter.prototype.rou_post_zipPhoto = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink, dateToString, sleep } = this.mother;
+  const { staticConst, sambaToken, homeliaisonOfficeConst, designerPhotoConst } = this;
+  const drive = this.drive;
+  let obj;
+  obj = {};
+  obj.link = [ "/zipPhoto" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.pid === undefined) {
+        throw new Error("invaild post");
+      }
+      const targetFolderId = "1rSIKIL-jjmXU-D2Zdmf9ElXFmH2Htycl";
+      const { pid } = req.body;
+      const c780 = "780";
+      const c1500 = "1500";
+      const c3508 = pid;
+      const targetDir = staticConst + homeliaisonOfficeConst + "/" + designerPhotoConst;
+      const list = await fileSystem(`readDir`, [ targetDir ]);
+      const homeFolder = await fileSystem(`readDir`, [ process.env.HOME ]);
+      const tempFolderName = "temp";
+      let folderName;
+      let shareClientName, shareDesignerName;
+      let tempArr;
+      let command;
+      let zipIdClient, zipIdDesigner;
+      let zipLinkClient, zipLinkDesigner;
+      let commands;
+
+      if (!homeFolder.includes(tempFolderName)) {
+        await shellExec(`mkdir`, [ `${process.env.HOME}/${tempFolderName}` ]);
+      }
+
+      folderName = list_refined.find((i) => { return (new RegExp('^' + pid)).test(i); });
+      tempArr = folderName.split('_');
+      shareClientName = "HL_";
+      shareDesignerName = "HL_";
+      if (tempArr.length === 4) {
+        shareClientName += tempArr[2] + "_고객님_";
+        shareClientName += tempArr[1] + "_디자이너님";
+        shareDesignerName += tempArr[1] + "_디자이너님_";
+        shareDesignerName += tempArr[2] + "_고객님";
+      } else if (tempArr.length === 3) {
+        shareDesignerName += tempArr[1] + "_디자이너님";
+      } else {
+        throw new Error("invaild post");
+      }
+      shareClientName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
+      shareDesignerName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
+
+      commands = "";
+      commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c3508)};`;
+      commands += `zip ${shellLink(process.env.HOME)}/${shellLink(tempFolderName)}/${shellLink(shareDesignerName)} ./*;`;
+      commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c780)};`;
+      commands += `zip ${shellLink(process.env.HOME)}/${shellLink(tempFolderName)}/${shellLink(shareClientName)} ./*;`;
+
+      await shellExec(commands);
+
+      zipIdDesigner = await drive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)}`);
+      await sleep(1000);
+      zipLinkDesigner = await drive.read_webView_inPython(zipIdDesigner);
+
+      if (tempArr.length === 3) {
+        zipLinkClient = null;
+      } else {
+        zipIdClient = await drive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareClientName)}`);
+        await sleep(1000);
+        zipLinkClient = await drive.read_webView_inPython(zipIdClient);
+      }
+
+      await shellExec([
+        [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareClientName}` ] ],
+        [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareDesignerName}` ] ],
+      ]);
+
+      res.send(JSON.stringify({ designer: zipLinkDesigner, client: zipLinkClient }));
+
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_zipPhoto): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 
 //ROUTING ----------------------------------------------------------------------
 

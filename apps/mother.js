@@ -1229,76 +1229,33 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
   const fs = require("fs");
   const FormData = require("form-data");
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const shell = require("shelljs");
-  const shellLink = (path) => {
-    let targetLink;
-    targetLink = '';
-    for (let i of path.split('/')) {
-      if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
-        targetLink += i + '/';
-      } else if (!/'/g.test(i)) {
-        targetLink += "'" + i + "'" + '/';
-      } else if (!/"/g.test(i)) {
-        targetLink += '"' + i + '"' + '/';
-      } else {
-        targetLink += i + '/';
+  let num, form, formHeaders, toList;
+  return new Promise((resolve, reject) => {
+
+    form = new FormData();
+    num = 0;
+    for (let i = 0; i < toArr.length; i++) {
+      if (/^\//.test(toArr[i])) {
+        toArr[i] = toArr[i].slice(1);
       }
     }
-    targetLink = targetLink.slice(0, -1);
-    return targetLink;
-  }
-  const modulePath = process.cwd() + "/apps/mother.py";
-  const bridgeFile = process.cwd() + "/temp/motherPythonBridge.json";
-  const crypto = require("crypto");
-  const algorithm = "aes-192-cbc";
-  let num, form, formHeaders, toList;
-  return new Promise(function (resolve, reject) {
-    crypto.scrypt("homeliaison", "salt", 24, function (err, key) {
-      if (err) {
-        reject(err);
-      } else {
-        const cipher = crypto.createCipheriv(algorithm, key, Buffer.alloc(16, 0));
-        let encrypted = '';
-        cipher.setEncoding('hex');
-        cipher.on('data', function (chunk) {
-          encrypted += chunk;
-        });
-        cipher.on('end', function () {
-          form = new FormData();
-          num = 0;
-          for (let i = 0; i < toArr.length; i++) {
-            if (/^\//.test(toArr[i])) {
-              toArr[i] = toArr[i].slice(1);
-            }
-          }
-          toList = toArr;
-          form.append("toArr", JSON.stringify(toList));
-          for (let fileName of fromArr) {
-            form.append("file" + String(num), fs.createReadStream(fileName));
-            num++;
-          }
-          formHeaders = form.getHeaders();
-          axios.post(`https://${ADDRESS.officeinfo.ghost.host}:${String(8080)}/file`, form, {
-            headers: { ...formHeaders },
-            maxContentLength: Infinity,
-            maxBodyLength: Infinity,
-          }).then((response) => {
-            fs.writeFile(bridgeFile, JSON.stringify({ fromList: fromArr, toList: toArr }, null, 2), "utf8", (err) => {
-              if (err) {
-                reject(err);
-              }
-              let child;
-              child = shell.exec(`python3 ${shellLink(modulePath)} fileUpload`, { silent: true });
-              resolve(JSON.parse(child.stdout.replace(/\n$/, '')).message);
-            });
-          }).catch((error) => {
-            reject(error);
-          });
-        });
-        cipher.write(ADDRESS.s3info.boto3.key);
-        cipher.end();
-      }
+    toList = toArr;
+    form.append("toArr", JSON.stringify(toList));
+    for (let fileName of fromArr) {
+      form.append("file" + String(num), fs.createReadStream(fileName));
+      num++;
+    }
+    formHeaders = form.getHeaders();
+    axios.post(`https://${ADDRESS.officeinfo.ghost.host}:${String(3000)}/generalFileUpload`, form, {
+      headers: { ...formHeaders },
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
+    }).then((response) => {
+      resolve({ message: "done" });
+    }).catch((error) => {
+      reject(error);
     });
+
   });
 }
 

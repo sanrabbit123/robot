@@ -1581,7 +1581,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         if (target.replace(/\/$/, '') !== "__samba__") {
           target = instance.dirParsing(target);
 
-          
+
           leafParsing(target, true, req.body.keyword).then((list) => {
             res.send(JSON.stringify(list.map((i) => {
               i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__");
@@ -2931,10 +2931,10 @@ Ghost.prototype.photoRouter = function (needs) {
             zipLinkClient = await googleDrive.read_webView_inPython(zipIdClient);
           }
 
-          // await shellExec([
-          //   [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareClientName}` ] ],
-          //   [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareDesignerName}` ] ],
-          // ]);
+          await shellExec([
+            [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareClientName}` ] ],
+            [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareDesignerName}` ] ],
+          ]);
 
           res.send(JSON.stringify({ designer: zipLinkDesigner, client: zipLinkClient }));
 

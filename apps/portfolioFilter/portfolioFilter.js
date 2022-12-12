@@ -356,7 +356,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
   }
   try {
     const photoFolderConst = "사진_등록_포트폴리오";
-    const sambaPhotoPath = this.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + this.folderName;
+    const sambaPhotoPath = instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + this.folderName;
     await this.static_setting();
 
     let thisFolderId, folderId_780, folderId_original;
@@ -371,11 +371,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     if (liteMode) {
       await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/makeFolder", { path: sambaPhotoPath }, { headers: { "Content-Type": "application/json" } });
     } else {
-      ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/listFiles", {
-        path: "/drive/HomeLiaisonServer/" + photoFolderConst
-      }, {
-        headers: { "Content-Type": "application/json" }
-      })).data.map(({ fileName }) => { return fileName });
+      ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst }, { headers: { "Content-Type": "application/json" } })).data.map(({ fileName }) => { return fileName });
       ghostPhotosTarget = null;
       for (let folder of ghostPhotos) {
         if ((new RegExp("^" + this.pid)).test(folder)) {
@@ -649,14 +645,13 @@ PortfolioFilter.prototype.additionalRepair = async function (pid, tNumber) {
 PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink, consoleQ, appleScript, sleep, ghostRequest, messageSend } = this.mother;
+  const { fileSystem, shellExec, shellLink, consoleQ, appleScript, sleep, ghostRequest, messageSend, requestSystem, ghostFileUpload } = this.mother;
   const photoRequest = ghostRequest().bind("photo");
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
   const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
   const errorMessage = `argument must be => [ { client: "", designer: "", link: "" } ... ]`;
   const photoFolderConst = "사진_등록_포트폴리오";
-  const sambaPhotoPath = `${this.address.officeinfo.ghost.file.static}${this.address.officeinfo.ghost.file.office}/${photoFolderConst}`;
   const foreCastContant = `/corePortfolio/forecast`;
   const forecastPath = this.address.officeinfo.ghost.file.static + foreCastContant;
   class RawArray extends Array {
@@ -690,7 +685,6 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     let folderPathList_raw, folderPathList;
     let forecast, garoseroParser;
     let finalObj;
-    let ghostPhotos;
     let foreRows;
     let nextPid;
     let note;
@@ -703,6 +697,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     let consoleQInput;
     let photoshopScript;
     let contentsRows;
+    let fromArr, toArr;
 
     tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
     adobe = null;
@@ -769,13 +764,9 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         await note.createNote(`${designer} 실장님 ${client} 고객님`);
 
         folderPath = await drive.get_folder_inPython(link, nextPid, true);
-        folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
-        folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
 
-        console.log(folderPath);
-
-        shell.exec(`rm -rf ${shellLink(this.options.photo_dir)};`);
-        shell.exec(`cp -r ${shellLink(folderPath)} ${shellLink(this.options.photo_dir)};`);
+        await shellExec(`rm -rf ${shellLink(this.options.photo_dir)};`);
+        await shellExec(`cp -r ${shellLink(folderPath)} ${shellLink(this.options.photo_dir)};`);
 
         this.clientName = client;
         this.designer = designer;
@@ -784,16 +775,15 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         totalMakeResult = await this.total_make(true);
         googleFolderName = totalMakeResult.folderName;
 
-        ghostPhotos = await photoRequest("ls");
-        while (!ghostPhotos.includes(googleFolderName)) {
-          for (let z = 0; z < 5; z++) {
-            console.log(`file server waiting... ${String(5 - z)}s`);
-            await sleep(1000);
-          }
-          ghostPhotos = await photoRequest("ls");
+        folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
+        folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
+        fromArr = [];
+        toArr = [];
+        for (let f of folderPathList) {
+          fromArr.push(`${folderPath}/${f}`);
+          toArr.push(`${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}/${f}`);
         }
-
-        shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + googleFolderName)}/`);
+        await ghostFileUpload(fromArr, toArr);
         console.log(`original copy done`);
 
         for (let item of folderPathList) {
@@ -803,11 +793,19 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         for (let obj of forecast) {
           obj.file = foreCastContant + "/" + obj.file.split("/").slice(-2).join("/");
         }
-
         finalObj = { pid: nextPid, desid: targetDesigner.desid, client, forecast };
         await back.mongoCreate("foreContents", finalObj, { console: true });
 
-        shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(forecastPath)}/`);
+        folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
+        folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
+        fromArr = [];
+        toArr = [];
+        for (let f of folderPathList) {
+          fromArr.push(`${folderPath}/${f}`);
+          toArr.push(`${foreCastContant}/${this.pid}/${f}`);
+        }
+        await ghostFileUpload(fromArr, toArr);
+        console.log(`forecast copy done`);
 
         await sleep(1000);
 
@@ -819,7 +817,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         }
         shareGoogleIdDesigner = drive.parsingId(shareLinkDeginer);
 
-        shell.exec(`rm -rf ${shellLink(folderPath)};`);
+        await shellExec(`rm -rf ${shellLink(folderPath)};`);
 
         projects = await back.getProjectsByNames([ client.trim(), designer.trim() ]);
         if (projects.length > 0) {
@@ -868,13 +866,9 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         await note.createNote(`${designer} 실장님`);
 
         folderPath = await drive.get_folder_inPython(link, nextPid, true);
-        folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
-        folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
 
-        console.log(folderPath);
-
-        shell.exec(`rm -rf ${shellLink(this.options.photo_dir)};`);
-        shell.exec(`cp -r ${shellLink(folderPath)} ${shellLink(this.options.photo_dir)};`);
+        await shellExec(`rm -rf ${shellLink(this.options.photo_dir)};`);
+        await shellExec(`cp -r ${shellLink(folderPath)} ${shellLink(this.options.photo_dir)};`);
 
         this.clientName = "없음";
         this.designer = designer;
@@ -883,16 +877,15 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         totalMakeResult = await this.total_make(true);
         googleFolderName = totalMakeResult.folderName;
 
-        ghostPhotos = await photoRequest("ls");
-        while (!ghostPhotos.includes(googleFolderName)) {
-          for (let z = 0; z < 5; z++) {
-            console.log(`file server waiting... ${String(5 - z)}s`);
-            await sleep(1000);
-          }
-          ghostPhotos = await photoRequest("ls");
+        folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
+        folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
+        fromArr = [];
+        toArr = [];
+        for (let f of folderPathList) {
+          fromArr.push(`${folderPath}/${f}`);
+          toArr.push(`${this.address.officeinfo.ghost.file.office}/${photoFolderConst}/${googleFolderName}/${this.pid}/${f}`);
         }
-
-        shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + googleFolderName)}/`);
+        await ghostFileUpload(fromArr, toArr);
         console.log(`original copy done`);
 
         await sleep(1000);
@@ -900,7 +893,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         zipLinks = await photoRequest("zip", { pid: nextPid, pay: (pay ? 1 : 0) });
         shareLinkDeginer = zipLinks.designer;
         shareGoogleIdDesigner = drive.general.parsingId(shareLinkDeginer);
-        shell.exec(`rm -rf ${shellLink(folderPath)};`);
+        await shellExec(`rm -rf ${shellLink(folderPath)};`);
 
         consoleQInput = await consoleQ(`Is it OK? (press "OK")\ndesigner : https://drive.google.com/file/d/${shareGoogleIdDesigner}/view?usp=sharing\n`);
         if (/OK/gi.test(consoleQInput.trim())) {
