@@ -111,9 +111,14 @@ GoogleDrive.prototype.upload_inPython = async function (folder_id, file) {
   const mother = this.mother;
   try {
     let result = await mother.pythonExecute(this.pythonApp, [ "drive", "fileUpload" ], { folder_id, file });
-    return result.id;
+    if (typeof result === "object" && result.id !== undefined) {
+      return result.id;
+    } else {
+      return null;
+    }
   } catch (e) {
-    console.log(e.message);
+    console.log(e);
+    return null;
   }
 }
 

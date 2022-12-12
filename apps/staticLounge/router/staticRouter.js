@@ -486,23 +486,29 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
 
       await shellExec(commands);
 
-      zipIdDesigner = await drive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)}`);
-      console.log(zipIdDesigner);
-      await sleep(1000);
+      do {
+        zipIdDesigner = await drive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)}`);
+        await sleep(500);
+      } while (zipIdDesigner === null);
+      await sleep(500);
       zipLinkDesigner = await drive.read_webView_inPython(zipIdDesigner);
 
       if (tempArr.length === 3) {
         zipLinkClient = null;
       } else {
-        zipIdClient = await drive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareClientName)}`);
-        await sleep(1000);
+
+        do {
+          zipIdClient = await drive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareClientName)}`);
+          await sleep(500);
+        } while (zipIdClient === null);
+        await sleep(500);
         zipLinkClient = await drive.read_webView_inPython(zipIdClient);
       }
 
-      // await shellExec([
-      //   [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareClientName}` ] ],
-      //   [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareDesignerName}` ] ],
-      // ]);
+      await shellExec([
+        [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareClientName}` ] ],
+        [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareDesignerName}` ] ],
+      ]);
 
       res.send(JSON.stringify({ designer: zipLinkDesigner, client: zipLinkClient }));
 
