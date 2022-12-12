@@ -132,9 +132,9 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const res = await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: "p251" }, { headers: { "Content-Type": "application/json" } });
 
-
-
+    console.log(res.data);
 
 
     // designer career

@@ -461,7 +461,7 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
         await shellExec(`mkdir`, [ `${process.env.HOME}/${tempFolderName}` ]);
       }
 
-      folderName = list_refined.find((i) => { return (new RegExp('^' + pid)).test(i); });
+      folderName = list.find((i) => { return (new RegExp('^' + pid)).test(i); });
       tempArr = folderName.split('_');
       shareClientName = "HL_";
       shareDesignerName = "HL_";
