@@ -130,13 +130,13 @@ ServiceDetailJs.prototype.insertInitBox = function () {
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
   if (mode === "furnishing") {
-    titleWording = "홈리에종 홈퍼니싱";
+    titleWording = "홈퍼니싱";
     subTitleContents = "우리집 무드 체인지, 홈퍼니싱";
   } else if (mode === "styling") {
-    titleWording = "홈리에종 홈스타일링";
+    titleWording = "홈스타일링";
     subTitleContents = "부분 시공과 스타일링의 조합";
   } else if (mode === "total") {
-    titleWording = "시그니처 스타일링";
+    titleWording = "토탈 스타일링";
     subTitleContents = "전체 시공부터 전체 스타일링까지";
   }
 
