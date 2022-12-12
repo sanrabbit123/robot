@@ -1528,8 +1528,8 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
     barWidth0 = <%% 200, 150, 130, 100, 20 %%>;
     barWidth1 = <%% 400, 280, 240, 200, 40 %%>;
   } else {
-    barWidth0 = <%% 160, 150, 160, 160, 160 %%>;
-    barWidth1 = <%% 640, 600, 640, 640, 640 %%>;
+    barWidth0 = <%% 160, 150, 120, 110, 160 %%>;
+    barWidth1 = <%% 640, 600, 480, 400, 640 %%>;
   }
   barBetween = <%% 5, 5, 5, 5, 5 %%>;
 
@@ -1541,7 +1541,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   if (styling) {
     diagramImageHeight = <%% 680, 520, 426, 354, 52 %%>;
   } else {
-    diagramImageHeight = <%% 520, 420, 520, 520, 520 %%>;
+    diagramImageHeight = <%% 520, 420, 365, 280, 520 %%>;
   }
 
   diagramEnglishSize = <%% 27, 23, 21, 18, 4 %%>;
@@ -1564,10 +1564,10 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
     diagramThirdTop = <%% 532, 400, 316, 260, 400 %%>;
     diagramThirdLeft = <%% 100, 60, 60, 28, 60 %%>;
   } else {
-    diagramSecondTop = <%% 229, 188, 229, 229, 229 %%>;
-    diagramSecondLeft = <%% 110, 50, 110, 110, 110 %%>;
-    diagramThirdTop = <%% 229, 188, 229, 229, 229 %%>;
-    diagramThirdLeft = <%% 100, 40, 100, 100, 100 %%>;
+    diagramSecondTop = <%% 229, 188, 160, 140, 229 %%>;
+    diagramSecondLeft = <%% 110, 50, 38, 32, 110 %%>;
+    diagramThirdTop = <%% 229, 188, 160, 140, 229 %%>;
+    diagramThirdLeft = <%% 100, 40, 30, 24, 100 %%>;
   }
 
   contents = {
@@ -1576,7 +1576,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
       "<b%내 집의 컨디션에 맞는 디자인 컨셉을 디자이너가 대신 고민해줄거예요.%b>",
     ],
     diagram: {
-      image: ServiceDetailJs.binaryPath + (styling ? ((media[0] || media[1]) ? "/styling_diagram.png" : "/styling_diagram2.png") : "/total_diagram.png"),
+      image: ServiceDetailJs.binaryPath + (styling ? ((media[0] || media[1]) ? "/styling_diagram.png" : "/styling_diagram2.png") : ((media[0] || media[1]) ? "/total_diagram.png" : "/total_diagram2.png")),
       first: {
         english: "Design",
         title: "디자인 기획",
