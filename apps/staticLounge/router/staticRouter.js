@@ -487,6 +487,7 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
       await shellExec(commands);
 
       zipIdDesigner = await drive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)}`);
+      console.log(zipIdDesigner);
       await sleep(1000);
       zipLinkDesigner = await drive.read_webView_inPython(zipIdDesigner);
 
