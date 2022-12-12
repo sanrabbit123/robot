@@ -63,7 +63,7 @@ DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
-  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone } = this.mother;
+  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -84,8 +84,6 @@ DevContext.prototype.launching = async function () {
     // const count = (await this.findCode("count")).scripts
     // const realtimeDesigner = (await this.findCode("realtimeDesigner")).scripts
     // console.log(count.filter((p) => { return realtimeDesigner.includes(p); }));
-
-    // await this.passiveAddressSync("c2110_aa14s");
 
 
     // facebook token
@@ -128,7 +126,7 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-    
+
 
 
 
@@ -3545,18 +3543,6 @@ DevContext.prototype.launching = async function () {
     // await drive.get_folder_inPython("https://drive.google.com/drive/folders/1RD8A65ghQe4oPruXYJ4Koieny0n3jYO9", "test");
 
 
-    // spell check
-    // await this.spellCheck("p247");
-
-
-    // get rawPortfolio by pid
-    // await this.getRawPortfolio("p240");
-
-
-    // get corePortfolio by pid
-    // await this.getCorePortfolio("p247");
-
-
     // aspirant to designer
     // await this.aspirantToDesigner([
     //   [ "오정언", "2022-07-15" ],
@@ -4094,22 +4080,6 @@ DevContext.prototype.pureScan = async function () {
     }
 
     return onoff;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-DevContext.prototype.passiveAddressSync = async function (cliid) {
-  const instance = this;
-  const back = this.back;
-  const { ghostRequest } = this.mother;
-  try {
-    const addr = new AddressParser();
-    const client = await back.getClientById(cliid);
-    const data = await addr.apartNameSearch(client.requests[0].request.space.address.value);
-    data.cliid = client.cliid;
-    console.log(data);
-    await ghostRequest("/apartment", { data });
   } catch (e) {
     console.log(e);
   }
@@ -4800,7 +4770,7 @@ DevContext.prototype.aspirantToDesigner = async function (nameList) {
   const back = new BackMaker();
   const report = new BackReport();
   const work = new BackWorker();
-  const { fileSystem, shell, shellLink, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
+  const { fileSystem, shell, shellLink, ghostFileUpload, requestSystem, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
   try {
     const stringToDate = function (str) {
       let temp = str.split('-');
@@ -4828,7 +4798,7 @@ DevContext.prototype.sendChecklist = async function () {
   const back = new BackMaker();
   const report = new BackReport();
   const work = new BackWorker();
-  const { fileSystem, shell, shellLink, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
+  const { fileSystem, shell, shellLink, ghostFileUpload, requestSystem, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
   try {
     const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
     const kakao = new KakaoTalk();
@@ -4891,65 +4861,6 @@ DevContext.prototype.sendChecklist = async function () {
         desid: desid,
       });
     }
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-DevContext.prototype.getCorePortfolio = async function (pid) {
-  const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
-  try {
-    if (pid === undefined) {
-      throw new Error("must be pid");
-    }
-    const nameConst = "samba";
-    const staticConst = "/home/" + this.address.officeinfo.ghost.user + "/" + nameConst;
-    const portfolioConst = "/corePortfolio/original";
-    let scpFrom, scpTo;
-    scpFrom = this.address.officeinfo.ghost.user + "@" + this.address.officeinfo.ghost.host + ":" + shellLink(staticConst + portfolioConst + "/" + pid);
-    scpTo = shellLink(process.cwd() + "/temp");
-    shell.exec(`scp -r ${scpFrom} ${scpTo}`);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-DevContext.prototype.getRawPortfolio = async function (pid) {
-  const instance = this;
-  const { ghostRequest, shell, shellLink } = this.mother;
-  try {
-    if (pid === undefined) {
-      throw new Error("must be pid");
-    }
-    const photoRequest = ghostRequest().bind("photo");
-    let photoList, tempArr;
-    let target;
-    let targetLink;
-    let scpFrom, scpTo;
-
-    photoList = await photoRequest("ls");
-    photoList = photoList.filter((f) => { return /^[ap]/.test(f) && /_/gi.test(f); });
-
-    target = null;
-    for (let fileName of photoList) {
-      tempArr = fileName.split('_').map((f => { return f.trim(); }));
-      if (pid === tempArr[0]) {
-        target = fileName;
-        break;
-      }
-    }
-
-    if (target !== null) {
-      photoList = await photoRequest("ls", { target });
-      if (photoList.includes(pid)) {
-        targetLink = shellLink((await photoRequest("pwd", { target })).absolute + "/" + pid);
-        scpFrom = this.address.officeinfo.ghost.user + "@" + this.address.officeinfo.ghost.host + ":" + targetLink;
-        scpTo = shellLink(process.cwd() + "/temp");
-        shell.exec(`scp -r ${scpFrom} ${scpTo}`);
-      }
-    }
-
   } catch (e) {
     console.log(e);
   }
