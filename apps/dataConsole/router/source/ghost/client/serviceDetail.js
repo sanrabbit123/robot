@@ -296,8 +296,8 @@ ServiceDetailJs.prototype.insertStartBox = function () {
     contents = {
       left: {
         title: [
-          "<b%우리집과 예산에 맞는 범위의 시공을 진행하여%b>",
-          "원하던 컨셉에 맞게 변화시켜주는 스타일링",
+          big ? "<b%우리집과 예산에 맞게 시공 범위를 조절하여%b>" : "<b%예산에 맞게 시공 범위를 조절하여%b>",
+          big ? "원하던 컨셉으로 진행하는 스타일링" : "컨셉에 맞게 진행하는 스타일링",
         ],
         sub: [
           "홈스타일링 기반으로 컨셉과 니즈에 맞게, 효율적인 부분 시공으로",
@@ -314,7 +314,7 @@ ServiceDetailJs.prototype.insertStartBox = function () {
       left: {
         title: [
           "<b%원하는 스타일과 라이프 패턴에 맞게 기획된%b>",
-          "디자인의 구조로 변경하는 스타일링 서비스",
+          "디자인으로 구조까지 변경하는 스타일링 서비스",
         ],
         sub: [
           "시공부터 스타일링까지 완성하는 토탈 스타일링을 소개해드립니다.",
@@ -1525,8 +1525,8 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   feeDescriptionPadding = <%% 20, 20, 20, 20, 20 %%>;
 
   if (styling) {
-    barWidth0 = <%% 200, 150, 160, 160, 20 %%>;
-    barWidth1 = <%% 400, 280, 300, 300, 40 %%>;
+    barWidth0 = <%% 200, 150, 130, 100, 20 %%>;
+    barWidth1 = <%% 400, 280, 240, 200, 40 %%>;
   } else {
     barWidth0 = <%% 160, 160, 160, 160, 160 %%>;
     barWidth1 = <%% 640, 640, 640, 640, 640 %%>;
@@ -1539,12 +1539,12 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   feeBarTongHeight = <%% 60, 60, 60, 52, 60 %%>;
 
   if (styling) {
-    diagramImageHeight = <%% 680, 520, 426, 426, 52 %%>;
+    diagramImageHeight = <%% 680, 520, 426, 354, 52 %%>;
   } else {
     diagramImageHeight = <%% 520, 520, 520, 520, 520 %%>;
   }
 
-  diagramEnglishSize = <%% 27, 23, 21, 19, 4 %%>;
+  diagramEnglishSize = <%% 27, 23, 21, 18, 4 %%>;
   diagramEnglishWeight = <%% 500, 500, 500, 500, 500 %%>;
   diagramTitleSize = <%% 17, 15, 13, 12, 17 %%>;
   diagramTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -1553,16 +1553,16 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   diagramTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   diagramDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  diagramTitleMarginTop = <%% 8, 8, 8, 8, 8 %%>;
-  diagramTitleMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
+  diagramTitleMarginTop = <%% 8, 8, 8, 6, 8 %%>;
+  diagramTitleMarginBottom = <%% 4, 4, 4, 2, 4 %%>;
 
-  diagramFirstTop = <%% 360, 271, 220, 270, 270 %%>;
-  diagramFirstLeft = <%% 98, 66, 62, 66, 66 %%>;
+  diagramFirstTop = <%% 360, 271, 220, 180, 270 %%>;
+  diagramFirstLeft = <%% 98, 66, 62, 38, 66 %%>;
   if (styling) {
-    diagramSecondTop = <%% 110, 106, 90, 106, 106 %%>;
-    diagramSecondLeft = <%% 180, 114, 94, 114, 114 %%>;
-    diagramThirdTop = <%% 532, 400, 316, 316, 400 %%>;
-    diagramThirdLeft = <%% 100, 60, 60, 60, 60 %%>;
+    diagramSecondTop = <%% 110, 106, 90, 76, 106 %%>;
+    diagramSecondLeft = <%% 180, 114, 94, 60, 114 %%>;
+    diagramThirdTop = <%% 532, 400, 316, 260, 400 %%>;
+    diagramThirdLeft = <%% 100, 60, 60, 28, 60 %%>;
   } else {
     diagramSecondTop = <%% 229, 229, 229, 229, 229 %%>;
     diagramSecondLeft = <%% 110, 110, 110, 110, 110 %%>;
@@ -2503,7 +2503,6 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
           "4,000만원대",
           "새입주",
           "35py",
-          "거실의 서재화",
           "서재",
           "서재형 거실",
           "수납공간",
@@ -2570,7 +2569,6 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
         ],
         tag: [
           "구조 변경",
-          "깔끔",
           "심플",
           "전체 구매",
           "1억대 ",
@@ -2620,7 +2618,6 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
           "제작 가구",
           "화이트우드",
           "라탄",
-          "우드",
         ],
       },
       {
@@ -2963,10 +2960,10 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
         {
           title: "토탈 비포 에프터",
           description: [
-            "고객의 라이프 스타일에 맞게 설계된",
-            "구조 변경, 모든 자재 선택, 제작 가구 등",
-            "모두가 사용하기에 일반적인 집의 형태",
-            "대신 나에게 맞는 공간으로 확실하게",
+            "라이프 스타일에 맞게 설계된",
+            "구조 변경, 자재 변경, 제작 가구 등",
+            "일반적이고 평범한 집의 형태 대신",
+            "나에게 맞는 공간으로 확실하게",
             "달라진 사례입니다.",
           ],
           factors: [
@@ -3407,8 +3404,8 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
-  imageWidth = <%% 960, 660, 560, 460, 960 %%>;
-  imageHeight = <%% 540, 420, 360, 320, 540 %%>;
+  imageWidth = <%% 960, 660, 560, 430, 960 %%>;
+  imageHeight = <%% 540, 420, 360, 300, 540 %%>;
   imageBetween = <%% 12, 12, 12, 12, 12 %%>;
 
   titleSize = <%% 14, 13, 12, 11, 13 %%>;
@@ -3437,8 +3434,8 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
 
   markTop = <%% 16, 16, 12, 10, 16 %%>;
   markLeft = <%% 16, 16, 12, 10, 16 %%>;
-  markWidth = <%% 70, 70, 62, 60, 70 %%>;
-  markHeight = <%% 32, 32, 30, 28, 32 %%>;
+  markWidth = <%% 70, 70, 62, 58, 70 %%>;
+  markHeight = <%% 32, 32, 30, 26, 32 %%>;
   markSize = <%% 14, 14, 12, 11, 14 %%>;
   makrWeight = <%% 500, 500, 500, 500, 500 %%>;
   markTextTop = <%% -1, -1, -1, -1, -1 %%>;
@@ -3457,10 +3454,10 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
   subDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   subDescriptionBottom = <%% 16, 16, 16, 16, 16 %%>;
 
-  toneBoxPaddingLeft = <%% 20, 20, 16, 14, 20 %%>;
-  toneBoxPaddingTop = <%% 18, 18, 14, 12, 18 %%>;
+  toneBoxPaddingLeft = <%% 20, 20, 16, 16, 20 %%>;
+  toneBoxPaddingTop = <%% 18, 18, 14, 14, 18 %%>;
 
-  toneTitleSize = <%% 13, 13, 12, 11, 13 %%>;
+  toneTitleSize = <%% 13, 13, 12, 10, 13 %%>;
   toneDescriptionSize = <%% 12, 12, 11, 10, 12 %%>;
 
   pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
@@ -3702,7 +3699,7 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
           },
           {
             style: {
-              display: "inline-flex",
+              display: big ? "inline-flex" : "none",
               position: "relative",
               height: String(imageHeight) + ea,
               width: withOut(singleImageWidth * 2, ea),
