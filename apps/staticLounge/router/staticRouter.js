@@ -498,10 +498,10 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
         zipLinkClient = await drive.read_webView_inPython(zipIdClient);
       }
 
-      await shellExec([
-        [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareClientName}` ] ],
-        [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareDesignerName}` ] ],
-      ]);
+      // await shellExec([
+      //   [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareClientName}` ] ],
+      //   [ `rm`, [ `-rf`, `${process.env.HOME}/${tempFolderName}/${shareDesignerName}` ] ],
+      // ]);
 
       res.send(JSON.stringify({ designer: zipLinkDesigner, client: zipLinkClient }));
 
