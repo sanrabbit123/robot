@@ -300,7 +300,7 @@ ServiceDetailJs.prototype.insertStartBox = function () {
           "원하던 컨셉에 맞게 변화시켜주는 스타일링",
         ],
         sub: [
-          "홈스타일링을 기반으로 컨셉과 니즈에 맞게, 효율적인 부분 시공으로",
+          "홈스타일링 기반으로 컨셉과 니즈에 맞게, 효율적인 부분 시공으로",
           "공간을 효과적으로 변화시키는 홈스타일링을 경험해보세요.",
         ]
       },
@@ -1481,74 +1481,74 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   styling = (mode === "styling");
 
   bottomMargin = <%% 180, 180, 150, 130, 50 %%>;
-  slideTongHeight = <%% 340, 340, 340, 340, 340 %%>;
-  blockWidth = <%% 240, 240, 240, 240, 240 %%>;
-  blockBetween = <%% 12, 12, 12, 12, 12 %%>;
+  slideTongHeight = <%% 340, 290, 220, 180, 340 %%>;
+  blockWidth = <%% 240, 200, 150, 120, 240 %%>;
+  blockBetween = <%% 12, 10, 8, 6, 12 %%>;
 
   margin = <%% 52, 50, 40, 32, 52 %%>;
-  finalMarginBottom = <%% 72, 72, 72, 72, 72 %%>;
+  finalMarginBottom = <%% 72, 72, 68, 50, 72 %%>;
 
-  whitePaddingTop = <%% 68, 68, 68, 68, 68 %%>;
+  whitePaddingTop = <%% 68, 64, 56, 42, 6 %%>;
 
-  slideLeft = <%% -680, -680, -680, -680, -680 %%>;
+  slideLeft = <%% -680, -515, -413, -518, -515 %%>;
   slideWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
 
-  arrowWidth = <%% 762, 762, 762, 762, 762 %%>;
-  arrowHeight = <%% 10, 10, 10, 10, 10 %%>;
+  arrowWidth = <%% 762, 450, 352, 260, 460 %%>;
+  arrowHeight = <%% 10, 10, 10, 8, 10 %%>;
 
-  arrowMargin = <%% 18, 18, 18, 18, 18 %%>;
-  arrowTop = <%% 6, 6, 6, 6, 6 %%>;
+  arrowMargin = <%% 18, 18, 16, 12, 18 %%>;
+  arrowTop = <%% 6, 6, 5, 4, 6 %%>;
 
-  descriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  descriptionSize = <%% 15, 14, 13, 11, 2.5 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  circleWidth = <%% 6, 6, 6, 6, 6 %%>;
-  circleBetween = <%% 4, 4, 4, 4, 4 %%>;
+  circleWidth = <%% 6, 6, 6, 5, 6 %%>;
+  circleBetween = <%% 4, 4, 4, 3, 4 %%>;
 
-  circleBoxMarginTop = <%% 16, 16, 16, 16, 16 %%>;
+  circleBoxMarginTop = <%% 16, 16, 16, 10, 16 %%>;
   circleBoxPaddingLeft = <%% 1, 1, 1, 1, 1 %%>;
 
-  feeTongMarginTop = <%% 100, 100, 100, 100, 100 %%>;
-  feeTitleTongHeight = <%% 50, 50, 50, 50, 50 %%>;
+  feeTongMarginTop = <%% 100, 96, 84, 64, 10 %%>;
+  feeTitleTongHeight = <%% 50, 48, 40, 32, 50 %%>;
 
-  feeTitleSize = <%% 20, 20, 20, 20, 20 %%>;
+  feeTitleSize = <%% 20, 19, 17, 15, 4 %%>;
   feeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   feeTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  feeDescriptionTongHeight = <%% 60, 60, 60, 60, 60 %%>;
-  feeDescriptionLineTop = <%% 9, 9, 9, 9, 9 %%>;
-  feeDescriptionSize = <%% 15, 15, 15, 15, 15 %%>;
+  feeDescriptionTongHeight = <%% 60, 56, 45, 30, 6 %%>;
+  feeDescriptionLineTop = <%% 9, 9, 9, 7, 9 %%>;
+  feeDescriptionSize = <%% 15, 14, 13, 12, 3 %%>;
   feeDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   feeDescriptionWeightBold = <%% 600, 600, 600, 600, 600 %%>;
   feeDescriptionPadding = <%% 20, 20, 20, 20, 20 %%>;
 
   if (styling) {
-    barWidth0 = <%% 200, 200, 200, 200, 200 %%>;
-    barWidth1 = <%% 400, 400, 400, 400, 400 %%>;
+    barWidth0 = <%% 200, 150, 160, 160, 20 %%>;
+    barWidth1 = <%% 400, 280, 300, 300, 40 %%>;
   } else {
     barWidth0 = <%% 160, 160, 160, 160, 160 %%>;
     barWidth1 = <%% 640, 640, 640, 640, 640 %%>;
   }
   barBetween = <%% 5, 5, 5, 5, 5 %%>;
 
-  barHeight = <%% 20, 20, 20, 20, 20 %%>;
+  barHeight = <%% 20, 20, 16, 12, 20 %%>;
   barMarginBottom = <%% 8, 8, 8, 8, 8 %%>;
 
-  feeBarTongHeight = <%% 60, 60, 60, 60, 60 %%>;
+  feeBarTongHeight = <%% 60, 60, 60, 52, 60 %%>;
 
   if (styling) {
-    diagramImageHeight = <%% 680, 680, 680, 680, 680 %%>;
+    diagramImageHeight = <%% 680, 520, 426, 426, 52 %%>;
   } else {
     diagramImageHeight = <%% 520, 520, 520, 520, 520 %%>;
   }
 
-  diagramEnglishSize = <%% 27, 27, 27, 27, 27 %%>;
+  diagramEnglishSize = <%% 27, 23, 21, 19, 4 %%>;
   diagramEnglishWeight = <%% 500, 500, 500, 500, 500 %%>;
-  diagramTitleSize = <%% 17, 17, 17, 17, 17 %%>;
+  diagramTitleSize = <%% 17, 15, 13, 12, 17 %%>;
   diagramTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  diagramDescriptionSize = <%% 14, 14, 14, 14, 14 %%>;
+  diagramDescriptionSize = <%% 14, 12, 11, 10, 14 %%>;
   diagramDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   diagramTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   diagramDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
@@ -1556,13 +1556,13 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   diagramTitleMarginTop = <%% 8, 8, 8, 8, 8 %%>;
   diagramTitleMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
 
-  diagramFirstTop = <%% 360, 360, 360, 360, 360 %%>;
-  diagramFirstLeft = <%% 98, 98, 98, 98, 98 %%>;
+  diagramFirstTop = <%% 360, 271, 220, 270, 270 %%>;
+  diagramFirstLeft = <%% 98, 66, 62, 66, 66 %%>;
   if (styling) {
-    diagramSecondTop = <%% 110, 110, 110, 110, 110 %%>;
-    diagramSecondLeft = <%% 180, 180, 180, 180, 180 %%>;
-    diagramThirdTop = <%% 532, 532, 532, 532, 532 %%>;
-    diagramThirdLeft = <%% 100, 100, 100, 100, 100 %%>;
+    diagramSecondTop = <%% 110, 106, 90, 106, 106 %%>;
+    diagramSecondLeft = <%% 180, 114, 94, 114, 114 %%>;
+    diagramThirdTop = <%% 532, 400, 316, 316, 400 %%>;
+    diagramThirdLeft = <%% 100, 60, 60, 60, 60 %%>;
   } else {
     diagramSecondTop = <%% 229, 229, 229, 229, 229 %%>;
     diagramSecondLeft = <%% 110, 110, 110, 110, 110 %%>;
@@ -1576,7 +1576,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
       "<b%내 집의 컨디션에 맞는 디자인 컨셉을 디자이너가 대신 고민해줄거예요.%b>",
     ],
     diagram: {
-      image: ServiceDetailJs.binaryPath + (styling ? "/styling_diagram.png" : "/total_diagram.png"),
+      image: ServiceDetailJs.binaryPath + (styling ? ((media[0] || media[1]) ? "/styling_diagram.png" : "/styling_diagram2.png") : "/total_diagram.png"),
       first: {
         english: "Design",
         title: "디자인 기획",
@@ -2082,7 +2082,7 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   } else if (mode === "styling") {
     contents = {
       title: "필요한 시공만, 부분 시공 + 스타일링",
-      image: ServiceDetailJs.binaryPath + "/people_s.svg",
+      image: (<&& ServiceDetailJs.binaryPath + "/people_s.svg" | ServiceDetailJs.binaryPath + "/people_s.svg" | ServiceDetailJs.binaryPath + "/people_s2.svg" | ServiceDetailJs.binaryPath + "/people_s4.svg" | ServiceDetailJs.binaryPath + "/people_s.svg" &&>),
       description: [
         "전체 시공은 부담스럽고, 적은 시공이라 개별로 맡기기는 어렵잖아요.",
         "<b%디자이너를 통해 시공 범위 조정을 먼저 진행해보세요!%b>",
@@ -2101,7 +2101,7 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   } else if (mode === "total") {
     contents = {
       title: "디자이너의 시그니처 스타일링",
-      image: ServiceDetailJs.binaryPath + "/people_t.svg",
+      image: (<&& ServiceDetailJs.binaryPath + "/people_t.svg" | ServiceDetailJs.binaryPath + "/people_t.svg" | ServiceDetailJs.binaryPath + "/people_t2.svg" | ServiceDetailJs.binaryPath + "/people_t4.svg" | ServiceDetailJs.binaryPath + "/people_t.svg" &&>),
       description: [
         "인테리어에 대한 전체적인 도움이 필요하신가요?",
         "<b%디자이너와 처음부터 끝까지 한번에 진행해보세요!%b>",
@@ -3407,11 +3407,11 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
-  imageWidth = <%% 960, 960, 960, 960, 960 %%>;
-  imageHeight = <%% 540, 540, 540, 540, 540 %%>;
+  imageWidth = <%% 960, 660, 560, 460, 960 %%>;
+  imageHeight = <%% 540, 420, 360, 320, 540 %%>;
   imageBetween = <%% 12, 12, 12, 12, 12 %%>;
 
-  titleSize = <%% 14, 14, 14, 14, 14 %%>;
+  titleSize = <%% 14, 13, 12, 11, 13 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
@@ -3419,7 +3419,7 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
   titleMarginBottom = <%% 6, 6, 6, 6, 6 %%>;
 
   factorTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  factorSize = <%% 13, 13, 13, 13, 13 %%>;
+  factorSize = <%% 13, 11, 10, 10, 2.8 %%>;
   factorWeight = <%% 700, 700, 700, 700, 700 %%>;
 
   factorTongHeight = <%% 36, 36, 36, 36, 36 %%>;
@@ -3433,20 +3433,20 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
   boxWidth = <%% 150, 150, 150, 150, 150 %%>;
   boxHeight = <%% 80, 80, 80, 80, 80 %%>;
 
-  singleImageWidth = <%% 390, 390, 390, 390, 390 %%>;
+  singleImageWidth = <%% 390, 300, 256, 240, 390 %%>;
 
-  markTop = <%% 16, 16, 16, 16, 16 %%>;
-  markLeft = <%% 16, 16, 16, 16, 16 %%>;
-  markWidth = <%% 70, 70, 70, 70, 70 %%>;
-  markHeight = <%% 32, 32, 32, 32, 32 %%>;
-  markSize = <%% 14, 14, 14, 14, 14 %%>;
+  markTop = <%% 16, 16, 12, 10, 16 %%>;
+  markLeft = <%% 16, 16, 12, 10, 16 %%>;
+  markWidth = <%% 70, 70, 62, 60, 70 %%>;
+  markHeight = <%% 32, 32, 30, 28, 32 %%>;
+  markSize = <%% 14, 14, 12, 11, 14 %%>;
   makrWeight = <%% 500, 500, 500, 500, 500 %%>;
   markTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  centerCircleWidth = <%% 60, 60, 60, 60, 60 %%>;
+  centerCircleWidth = <%% 60, 32, 24, 20, 6 %%>;
 
-  arrowWidth = <%% 38, 38, 38, 38, 38 %%>;
-  arrowHeight = <%% 12, 12, 12, 12, 12 %%>;
+  arrowWidth = <%% 38, 20, 16, 15, 38 %%>;
+  arrowHeight = <%% 12, 8, 6, 4, 12 %%>;
 
   subBoxMargin = <%% 24, 24, 24, 24, 24 %%>;
 
@@ -3457,11 +3457,11 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
   subDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   subDescriptionBottom = <%% 16, 16, 16, 16, 16 %%>;
 
-  toneBoxPaddingLeft = <%% 20, 20, 20, 20, 20 %%>;
-  toneBoxPaddingTop = <%% 18, 18, 18, 18, 18 %%>;
+  toneBoxPaddingLeft = <%% 20, 20, 16, 14, 20 %%>;
+  toneBoxPaddingTop = <%% 18, 18, 14, 12, 18 %%>;
 
-  toneTitleSize = <%% 13, 13, 13, 13, 13 %%>;
-  toneDescriptionSize = <%% 12, 12, 12, 12, 12 %%>;
+  toneTitleSize = <%% 13, 13, 12, 11, 13 %%>;
+  toneDescriptionSize = <%% 12, 12, 11, 10, 12 %%>;
 
   pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
   newBaseTong.style.left = String(0);
@@ -3658,6 +3658,7 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
           alignItems: "center",
           justifyContent: "center",
           background: colorChip.gray1,
+          borderRadius: String(8) + "px",
         },
         children: [
           {
@@ -3731,7 +3732,7 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
               },
               next: {
                 style: {
-                  display: "inline-flex",
+                  display: media[0] ? "inline-flex" : "none",
                   flexDirection: "column",
                   position: "absolute",
                   bottom: String(subBoxMargin) + ea,
