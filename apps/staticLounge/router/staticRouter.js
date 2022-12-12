@@ -4,6 +4,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   const ImageReader = require(process.cwd() + "/apps/imageReader/imageReader.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
+  const GoogleDocs = require(process.cwd() + "/apps/googleAPIs/googleDocs.js");
 
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -16,11 +17,13 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   this.imageReader = new ImageReader(this.mother, this.back, this.address);
   this.hangul = new ParsingHangul();
   this.drive = new GoogleDrive();
+  this.docs = new GoogleDocs();
 
   this.staticConst = process.env.HOME + "/samba";
   this.sambaToken = "__samba__";
   this.homeliaisonOfficeConst = this.address.officeinfo.ghost.file.office;
   this.designerPhotoConst = "사진_등록_포트폴리오";
+  this.designerFolderConst = "디자이너";
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -520,6 +523,76 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_designerFolder = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink, dateToString, sleep } = this.mother;
+  const { staticConst, sambaToken, homeliaisonOfficeConst, designerFolderConst } = this;
+  const drive = this.drive;
+  const docs = this.docs;
+  let obj;
+  obj = {};
+  obj.link = [ "/designerFolder" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.name === undefined || req.body.subid === undefined) {
+        throw new Error("invaild post");
+      }
+      const designerFolderId = "1-xcQct5wXg8am57W1e8xXKwSQyLWAsMP";
+      const sambaDir = staticConst + homeliaisonOfficeConst + "/" + designerFolderConst;
+      let basicList = [
+        "포트폴리오",
+        "등록서류",
+        "고객안내및제안문서"
+      ];
+      let id, subid;
+      let folderName;
+      let folderId, docsId;
+      let num;
+
+      folderName = req.body.subid + "_" + req.body.name;
+
+      folderId = await drive.makeFolder_inPython(folderName);
+      await drive.moveFolder_inPython(folderId, designerFolderId);
+
+      await sleep(2000);
+      num = 0;
+      while ((!(await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}` ]))) && (num < 10)) {
+        await sleep(2000);
+        num++;
+      }
+
+      if (await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}` ])) {
+        for (let b of basicList) {
+          if (!(await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}/${b}` ]))) {
+            await fileSystem(`mkdir`, [ `${sambaDir}/partnership/${folderName}/${b}` ]);
+          }
+        }
+      }
+
+      docsId = await docs.create_newDocs_inPython(folderName + '_' + "docs", folderId);
+
+      res.send(JSON.stringify({
+        folderName: folderName,
+        drive: `https://drive.google.com/drive/folders/${folderId}`,
+        docs: `https://docs.google.com/document/d/${docsId}`,
+      }));
+
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_designerFolder): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
 
 //ROUTING ----------------------------------------------------------------------
 

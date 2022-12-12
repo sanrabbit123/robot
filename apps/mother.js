@@ -1259,52 +1259,6 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
   });
 }
 
-Mother.prototype.ghostFileList = function (dir) {
-  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const crypto = require('crypto');
-  const { exec } = require('child_process');
-  const algorithm = 'aes-192-cbc';
-  let url, order, data;
-  let ddns, port, protocol;
-  data = { target: dir };
-  ddns = ADDRESS.officeinfo.ghost.ddns;
-  port = ADDRESS.officeinfo.ghost.file.port;
-  protocol = ADDRESS.officeinfo.ghost.protocol;
-  return new Promise(function (resolve, reject) {
-    crypto.scrypt("homeliaison", 'salt', 24, function (err, key) {
-      if (err) {
-        reject(err);
-      } else {
-        const cipher = crypto.createCipheriv(algorithm, key, Buffer.alloc(16, 0));
-        let encrypted = '';
-        cipher.setEncoding('hex');
-        cipher.on('data', function (chunk) {
-          encrypted += chunk;
-        });
-        cipher.on('end', function () {
-          data.hash = encrypted;
-          data.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle = "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs";
-          url = `${protocol}://${ddns}:${String(port)}/list`;
-          order = "curl -d '" + JSON.stringify(data) + "' -H \"Content-Type: application/json\" -X POST " + url;
-          exec(order, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (err, stdout, stderr) => {
-            if (err) {
-              reject(err);
-            } else {
-              if (/^[\[\{]/.test(stdout.trim())) {
-                resolve(JSON.parse(stdout.trim()));
-              } else {
-                resolve(stdout.trim());
-              }
-            }
-          });
-        });
-        cipher.write(ADDRESS.s3info.boto3.key);
-        cipher.end();
-      }
-    });
-  });
-}
-
 Mother.prototype.generalFileUpload = async function (url, fromArr, toArr) {
   if (typeof url !== "string" || !Array.isArray(fromArr) || !Array.isArray(toArr)) {
     throw new Error("input must be url, from array, to array");

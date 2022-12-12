@@ -137,7 +137,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
   }
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, ghostRequest, messageSend } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, messageSend } = this.mother;
   const toUpdateQuery = async function (aspirant, contractDay) {
     const today = new Date();
     const thisDesigner = aspirant.designer + " (" + aspirant.aspid + ")";
@@ -239,7 +239,6 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
 
     return updateQuery;
   }
-  const designerRequest = ghostRequest().bindPath("designer");
   try {
     if (!Array.isArray(aspidArr)) {
       throw new Error("argument must be aspid arr");
@@ -271,7 +270,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
         newDesid = await back.createDesigner(updateQuery, { selfMongo: MONGOC });
         console.log("create designer success");
         newDesigner = await back.getDesignerById(newDesid, { selfMongo: MONGOC });
-        designerFolderResponse = await designerRequest("create", { name: newDesigner.designer, subid: newDesigner.information.did });
+        designerFolderResponse = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/designerFolder", { name: newDesigner.designer, subid: newDesigner.information.did }, { headers: { "Content-Type": "application/json" } })).data;
         designerFolderResponse.desid = newDesid;
         designerFolderResponse.date = new Date();
         console.log(designerFolderResponse);

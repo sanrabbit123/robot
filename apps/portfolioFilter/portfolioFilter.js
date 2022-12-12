@@ -645,8 +645,7 @@ PortfolioFilter.prototype.additionalRepair = async function (pid, tNumber) {
 PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shellExec, shellLink, consoleQ, appleScript, sleep, ghostRequest, messageSend, requestSystem, ghostFileUpload } = this.mother;
-  const photoRequest = ghostRequest().bind("photo");
+  const { fileSystem, shellExec, shellLink, consoleQ, appleScript, sleep, messageSend, requestSystem, ghostFileUpload } = this.mother;
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
   const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
@@ -732,7 +731,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
     await this.static_setting();
 
-    for (let { client, designer, link, pay } of arr) {
+    for (let { client, designer, link } of arr) {
 
       designers = await back.getDesignersByQuery({ designer: designer });
       if (designers.length > 1) {
@@ -809,7 +808,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         await sleep(1000);
 
-        zipLinks = await photoRequest("zip", { pid: nextPid, pay: (pay ? 1 : 0) });
+        zipLinks = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: nextPid }, { headers: { "Content-Type": "application/json" } })).data;
         shareLinkClient = zipLinks.client;
         shareLinkDeginer = zipLinks.designer;
         if (shareLinkClient !== null) {
@@ -890,7 +889,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         await sleep(1000);
 
-        zipLinks = await photoRequest("zip", { pid: nextPid, pay: (pay ? 1 : 0) });
+        zipLinks = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: nextPid }, { headers: { "Content-Type": "application/json" } })).data;
         shareLinkDeginer = zipLinks.designer;
         shareGoogleIdDesigner = drive.general.parsingId(shareLinkDeginer);
         await shellExec(`rm -rf ${shellLink(folderPath)};`);

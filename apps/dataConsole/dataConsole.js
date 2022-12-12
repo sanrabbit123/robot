@@ -750,47 +750,6 @@ DataConsole.prototype.mergeRouter = async function (middle = true) {
   }
 }
 
-DataConsole.prototype.setBinary = async function () {
-  const instance = this;
-  const { fileSystem, shell, shellLink, ghostFileList, binaryRequest } = this.mother;
-  const address = this.address;
-  const staticFolder = process.env.HOME + "/static";
-  const FILEHOST = address.officeinfo.ghost.host;
-  try {
-
-    const targetName = "dataConsole";
-    let res;
-    let resFolders, resFiles;
-    let tempObject, tempArray;
-    let resultFromArr;
-
-    res = await ghostFileList(targetName);
-    resFiles = res.filter((i) => { return !/\/$/.test(i); });
-    resFolders = res.filter((i) => { return /\/$/.test(i); });
-    resFolders.sort((a, b) => { return a.split('/').length - b.split('/').length; });
-    resFolders = resFolders.map((i) => { return i.slice(targetName.length + 1); });
-    resFolders = resFolders.map((i) => { return i.slice(0, -1); });
-    resFolders = resFolders.filter((i) => { return i !== '' });
-
-    for (let f of resFolders) {
-      if (!(await fileSystem(`exist`, [ staticFolder + f ]))) {
-        shell.exec(`mkdir ${shellLink(staticFolder)}/${shellLink(f)}`);
-      }
-    }
-    resultFromArr = [];
-    for (let f of resFiles) {
-      tempObject = await binaryRequest("https://" + FILEHOST + f);
-      await fileSystem(`writeBinary`, [ staticFolder + f.slice(targetName.length + 1), tempObject ]);
-      resultFromArr.push(staticFolder + f.slice(targetName.length + 1));
-      console.log(`${f} download done`);
-    }
-
-    return resultFromArr;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 DataConsole.prototype.readGhostPatch = async function () {
   const instance = this;
   const { fileSystem } = this.mother;
@@ -1024,9 +983,6 @@ DataConsole.prototype.connect = async function () {
     }).catch((err) => {
       console.log(err);
     });
-
-    //set binary
-    // await this.setBinary();
 
     //server on
     https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });

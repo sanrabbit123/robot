@@ -87,9 +87,6 @@ DevContext.prototype.launching = async function () {
 
     // await this.passiveAddressSync("c2110_aa14s");
 
-    // const pastProposal = equalJson(JSON.stringify(await ghostRequest("pastProposal", { proid: "p2202_aa43s" })));
-    // console.log(pastProposal[0].project.detail);
-
 
     // facebook token
     // const facebook = new FacebookAPIs();
@@ -131,10 +128,8 @@ DevContext.prototype.launching = async function () {
     // }
 
 
+    
 
-    const res = await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: "p251" }, { headers: { "Content-Type": "application/json" } });
-
-    console.log(res.data);
 
 
     // designer career
@@ -3433,21 +3428,6 @@ DevContext.prototype.launching = async function () {
 
     // certbot
     // await this.certRefreshing();
-
-
-    // get sheets
-    // console.log(await ghostRequest(`getSheets`, {
-    //   id: "1tZjTtDO1GmQ4hWKItGLtnZW4JPrBOY1mUHTaFCzW9Co",
-    //   range: "A1:D2"
-    // }));
-
-
-    // update sheets
-    // console.log(await ghostRequest(`updateSheets`, {
-    //   id: "1z6QgrhFKbKnrMCdiuyQwSOnytCA0yRZ5pXdVjPr0YsM",
-    //   values: [ [ "안녕?", "안녕?", "안녕?", "안녕?", ], [ "안녕?", "안녕?", "안녕?", "안녕?", ] ],
-    //   cleanView: true
-    // }));
 
 
     // convert svg to js
