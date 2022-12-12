@@ -340,8 +340,7 @@ PortfolioFilter.prototype.ghost_filter = async function (start_num) {
 
 PortfolioFilter.prototype.total_make = async function (liteMode = false) {
   const instance = this;
-  const { fileSystem, shell, shellLink, ghostFileUpload, ghostRequest, sleep, messageSend, requestSystem } = this.mother;
-  const photoRequest = ghostRequest().bind("photo");
+  const { fileSystem, shellExec, shellLink, ghostFileUpload, sleep, messageSend, requestSystem } = this.mother;
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const drive = new GoogleDrive();
   const idFilterNum = function (past) {
@@ -357,56 +356,74 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
   }
   try {
     const photoFolderConst = "사진_등록_포트폴리오";
-    const sambaPhotoPath = `${this.address.officeinfo.ghost.file.static}${this.address.officeinfo.ghost.file.office}/${photoFolderConst}`;
+    const sambaPhotoPath = this.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + this.folderName;
     await this.static_setting();
 
     let thisFolderId, folderId_780, folderId_original;
     let pidFolder, fromArr, toArr;
     let resultFolder;
     let ghostPhotos, ghostPhotosTarget;
-    let scpTarget;
 
     resultFolder = await this.to_portfolio(liteMode);
     const { fileList_780, fileList_1500, fileList_original, fileList_png } = await this.parsing_fileList(resultFolder, liteMode);
     console.log(fileList_780, fileList_1500, fileList_original, fileList_png);
 
     if (liteMode) {
-      console.log(await photoRequest("mkdir", { name: this.folderName }));
+      await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/makeFolder", { path: sambaPhotoPath }, { headers: { "Content-Type": "application/json" } });
     } else {
       ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/listFiles", {
         path: "/drive/HomeLiaisonServer/" + photoFolderConst
       }, {
         headers: { "Content-Type": "application/json" }
       })).data.map(({ fileName }) => { return fileName });
-
       ghostPhotosTarget = null;
       for (let folder of ghostPhotos) {
         if ((new RegExp("^" + this.pid)).test(folder)) {
           ghostPhotosTarget = folder;
         }
       }
-
       if (ghostPhotosTarget === null) {
         throw new Error("there is no folder in server");
       } else {
         this.folderName = ghostPhotosTarget;
       }
-
     }
-
-    scpTarget = `${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + this.folderName)}/`;
 
     if (!liteMode) {
-      shell.exec(`scp -r ${shellLink(fileList_original[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
-      for (let f of fileList_png) {
-        shell.exec(`scp ${shellLink(f)} ${scpTarget}`);
-      }
-    } else {
-      shell.exec(`scp -r ${shellLink(fileList_780[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
-      shell.exec(`scp -r ${shellLink(fileList_1500[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
-    }
 
-    console.log(await ghostRequest("/fixDir", { target: sambaPhotoPath + "/" + this.folderName }));
+      fromArr = [];
+      toArr = [];
+
+      for (let f of fileList_original) {
+        fromArr.push(f);
+        toArr.push(sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/" + f.split("/").slice(-2).join("/"));
+      }
+
+      for (let f of fileList_png) {
+        fromArr.push(f);
+        toArr.push(sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/" + f.split("/").slice(-1)[0]);
+      }
+
+      await ghostFileUpload(fromArr, toArr);
+
+    } else {
+
+      fromArr = [];
+      toArr = [];
+
+      for (let f of fileList_780) {
+        fromArr.push(f);
+        toArr.push(sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/" + f.split("/").slice(-2).join("/"));
+      }
+
+      for (let f of fileList_1500) {
+        fromArr.push(f);
+        toArr.push(sambaPhotoPath.replace(/^\//i, '').replace(/\/$/i, '') + "/" + f.split("/").slice(-2).join("/"));
+      }
+
+      await ghostFileUpload(fromArr, toArr);
+
+    }
 
     do {
       console.log("search id...");
@@ -419,7 +436,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
 
     //ghost upload
     if (!liteMode) {
-      shell.exec(`mv ${shellLink(this.resultFolder)}/3508 ${shellLink(this.resultFolder)}/${this.pid}`);
+      await shellExec(`mv ${shellLink(this.resultFolder)}/3508 ${shellLink(this.resultFolder)}/${this.pid}`);
       pidFolder = await fileSystem(`readDir`, [ this.resultFolder + "/" + this.pid ]);
       fromArr = [];
       toArr = [];
@@ -428,7 +445,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
 
       for (let i of pidFolder) {
         if (i !== `.DS_Store`) {
-          shell.exec(`mv ${shellLink(this.resultFolder + "/" + this.pid + "/" + i)} ${shellLink(this.resultFolder + "/" + this.pid)}/i${idFilter(i)}${this.pid}.jpg`);
+          await shellExec(`mv ${shellLink(this.resultFolder + "/" + this.pid + "/" + i)} ${shellLink(this.resultFolder + "/" + this.pid)}/i${idFilter(i)}${this.pid}.jpg`);
           fromArr.push(`${shellLink(this.resultFolder + "/" + this.pid)}/i${idFilter(i)}${this.pid}.jpg`);
           toArr.push(`corePortfolio/original/${this.pid}/i${idFilter(i)}${this.pid}.jpg`);
         }
@@ -792,10 +809,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(forecastPath)}/`);
 
-        for (let z = 0; z < 5; z++) {
-          console.log(`scp waiting... ${String(5 - z)}s`);
-          await sleep(1000);
-        }
+        await sleep(1000);
 
         zipLinks = await photoRequest("zip", { pid: nextPid, pay: (pay ? 1 : 0) });
         shareLinkClient = zipLinks.client;
@@ -881,10 +895,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + googleFolderName)}/`);
         console.log(`original copy done`);
 
-        for (let z = 0; z < 5; z++) {
-          console.log(`scp waiting... ${String(5 - z)}s`);
-          await sleep(1000);
-        }
+        await sleep(1000);
 
         zipLinks = await photoRequest("zip", { pid: nextPid, pay: (pay ? 1 : 0) });
         shareLinkDeginer = zipLinks.designer;
