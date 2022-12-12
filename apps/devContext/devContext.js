@@ -132,8 +132,18 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const photoFolderConst = "사진_등록_포트폴리오";
 
-    
+
+    const res = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/makeFolder", {
+      path: "/drive/HomeLiaisonServer/" + photoFolderConst + "/test"
+    }, {
+      headers: { "Content-Type": "application/json" }
+    }));
+
+
+    console.log(res);
+
 
 
 

@@ -397,10 +397,12 @@ StaticRouter.prototype.rou_post_makeFolder = function () {
 
       target = target.replace(new RegExp(sambaToken, "gi"), '');
       targetList = target.split("/");
+      console.log(targetList)
       tempString = staticConst;
       for (let i = 0; i < targetList.length; i++) {
         tempDir = await fileSystem(`readDir`, [ tempString ]);
         if (!tempDir.includes(targetList[i]) && targetList[i] !== "") {
+          console.log(targetList[i]);
           await shellExec(`mkdir`, [ tempString + "/" + targetList[i] ]);
         }
         tempString += '/';
