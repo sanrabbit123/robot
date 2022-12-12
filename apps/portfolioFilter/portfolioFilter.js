@@ -373,18 +373,25 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     if (liteMode) {
       console.log(await photoRequest("mkdir", { name: this.folderName }));
     } else {
-      ghostPhotos = await photoRequest("ls");
+      ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/listFiles", {
+        path: "/drive/HomeLiaisonServer/" + photoFolderConst
+      }, {
+        headers: { "Content-Type": "application/json" }
+      })).data.map(({ fileName }) => { return fileName });
+
       ghostPhotosTarget = null;
       for (let folder of ghostPhotos) {
         if ((new RegExp("^" + this.pid)).test(folder)) {
           ghostPhotosTarget = folder;
         }
       }
+
       if (ghostPhotosTarget === null) {
         throw new Error("there is no folder in server");
       } else {
         this.folderName = ghostPhotosTarget;
       }
+
     }
 
     scpTarget = `${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + this.folderName)}/`;

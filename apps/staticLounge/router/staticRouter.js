@@ -18,6 +18,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   this.drive = new GoogleDrive();
 
   this.staticConst = process.env.HOME + "/samba";
+  this.sambaToken = "__samba__";
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -96,7 +97,7 @@ StaticRouter.prototype.rou_get_First = function () {
 StaticRouter.prototype.rou_post_listFiles = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink, leafParsing } = this.mother;
-  const { staticConst } = this;
+  const { staticConst, sambaToken } = this;
   let obj;
   obj = {};
   obj.link = [ "/listFiles" ];
@@ -120,13 +121,13 @@ StaticRouter.prototype.rou_post_listFiles = function () {
 
       target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
       if (target.trim() === '') {
-        target = "__samba__";
+        target = sambaToken;
       }
       if (!/^__/.test(target)) {
-        target = "__samba__" + "/" + target;
+        target = sambaToken + "/" + target;
       }
 
-      target = target.replace(/__samba__/gi, staticConst);
+      target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
       list = await leafParsing(target);
 
       list = list.map((i) => {
@@ -251,7 +252,7 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
               for (let i = 0; i < tempArr.length - 1; i++) {
                 tempDir = await fileSystem(`readDir`, [ tempString ]);
                 if (!tempDir.includes(tempArr[i]) && tempArr[i] !== "") {
-                  await shellExec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
+                  await shellExec(`mkdir`, [ tempString + "/" + tempArr[i] ]);
                 }
                 tempString += '/';
                 tempString += tempArr[i];
@@ -354,6 +355,61 @@ StaticRouter.prototype.rou_post_photoParsing = function () {
     } catch (e) {
       console.log(e);
       errorLog("Static lounge 서버 문제 생김 (rou_post_photoParsing): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_makeFolder = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { staticConst, sambaToken } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/makeFolder" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.path === undefined) {
+        throw new Error("invaild post");
+      }
+      let target;
+      let targetList;
+      let tempString;
+      let tempDir;
+
+      target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
+      if (target.trim() === '') {
+        target = sambaToken;
+      }
+      if (!/^__/.test(target)) {
+        target = sambaToken + "/" + target;
+      }
+
+      target = target.replace(new RegExp(sambaToken, "gi"), '');
+      targetList = target.split("/");
+      tempString = staticConst;
+      for (let i = 0; i < targetList.length; i++) {
+        tempDir = await fileSystem(`readDir`, [ tempString ]);
+        if (!tempDir.includes(targetList[i]) && targetList[i] !== "") {
+          await shellExec(`mkdir`, [ tempString + "/" + targetList[i] ]);
+        }
+        tempString += '/';
+        tempString += targetList[i];
+      }
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_makeFolder): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
