@@ -237,6 +237,8 @@ ServiceDetailJs.prototype.insertStartBox = function () {
   const { ea, media, baseTong, mode } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const small = (media[3] || media[4]);
+  const big = !small;
   let whiteBlock;
   let blockHeight;
   let bottomMargin;
@@ -252,12 +254,12 @@ ServiceDetailJs.prototype.insertStartBox = function () {
   let subSize, subWeight, subLineHeight;
   let rightImagePosition;
 
-  blockHeight = <%% 294, 230, 200, 290, 129.5 %%>;
+  blockHeight = <%% 294, 230, 200, 156, 129.5 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 45, 40, 32, 52 %%>;
-  marginTop = <%% 52, 42, 36, 32, 52 %%>;
+  marginTop = <%% 52, 42, 36, 27, 52 %%>;
 
-  titleSize = <%% 22, 19, 17, 16, 4 %%>;
+  titleSize = <%% 22, 19, 17, 15, 4 %%>;
   titleWeight = <%% 400, 400, 400, 400, 400 %%>;
   titleBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
@@ -267,8 +269,8 @@ ServiceDetailJs.prototype.insertStartBox = function () {
   titleLineLength = <%% 54, 54, 54, 54, 54 %%>;
   titleLineMarginRight = <%% 20, 20, 20, 20, 20 %%>;
 
-  subBlockMarginTop = <%% 70, 40, 30, 24, 7 %%>;
-  subSize = <%% 15, 14, 13, 12, 3 %%>;
+  subBlockMarginTop = <%% 70, 40, 30, 21, 7 %%>;
+  subSize = <%% 15, 14, 13, 10, 3 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
   subLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
@@ -277,8 +279,8 @@ ServiceDetailJs.prototype.insertStartBox = function () {
     contents = {
       left: {
         title: [
-          "<b%인테리어 시공 없이 가구, 패브릭, 소품만으로%b>",
-          "우리집 무드를 변화시켜주는 스타일링",
+          big ? "<b%인테리어 시공 없이 가구, 패브릭, 소품만으로%b>" : "<b%시공 없이 가구, 패브릭, 소품만으로%b>",
+          big ? "우리집 무드를 변화시켜주는 스타일링" : "집 무드를 변화시켜주는 스타일링",
         ],
         sub: [
           "홈퍼니싱은 시공 없이 스타일링만으로 완성하는 인테리어입니다.",
@@ -432,7 +434,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
   const baseTong = this.baseTong;
   const mobile = media[4];
   const desktop = !mobile;
-  const big = (media[0] || media[1]);
+  const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   let contents;
@@ -466,7 +468,7 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 10, 10, 10, 10, 10 %%>;
 
-  middleTitleLineTop = <%% 68, 65, 56, 48, 6 %%>;
+  middleTitleLineTop = <%% 68, 65, 56, 49, 6 %%>;
 
   middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -477,9 +479,9 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
   middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
 
   threeBetween = <%% 10, 10, 6, 4, 1 %%>;
-  threeHeight = <%% 170, 120, 110, 100, 120 %%>;
+  threeHeight = <%% 170, 120, 110, 84, 120 %%>;
   threeVisualPaddingBottom = <%% 2, 2, 2, 2, 2 %%>;
-  threeBlockMarginTop = <%% 48, 48, 48, 48, 48 %%>;
+  threeBlockMarginTop = <%% 48, 48, 48, 40, 8 %%>;
 
   if (total) {
     threeWidth0 = <%% 600, 600, 600, 600, 600 %%>;
@@ -493,14 +495,14 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
   threeWeight = <%% 800, 800, 800, 800, 800 %%>;
   threeSmallSize = <%% 13, 12, 10, 10, 13 %%>;
 
-  blackCircleWidth = <%% 40, 36, 32, 36, 36 %%>;
+  blackCircleWidth = <%% 40, 36, 32, 28, 36 %%>;
 
   arrowWidth = <%% 22, 20, 18, 16, 4 %%>;
   arrowHeight = <%% 8, 8, 8, 8, 8 %%>;
 
   numberTop = <%% 14, 14, 12, 10, 14 %%>;
-  numberLeft = <%% 22, 22, 20, 18, 22 %%>;
-  numberSize = <%% 13, 13, 12, 11, 13 %%>;
+  numberLeft = <%% 22, 22, 20, 16, 22 %%>;
+  numberSize = <%% 13, 13, 12, 10, 13 %%>;
   numberWeight = <%% 500, 500, 500, 500, 500 %%>;
 
   mainBetween = <%% 4, 4, 2, 2, 1 %%>;
@@ -928,7 +930,7 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
   const baseTong = this.baseTong;
   const mobile = media[4];
   const desktop = !mobile;
-  const big = (media[0] || media[1]);
+  const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   let whiteBlock;
@@ -971,44 +973,44 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
   let feeBarTongHeight;
 
   bottomMargin = <%% 180, 180, 150, 130, 50 %%>;
-  slideTongHeight = <%% 340, 290, 220, 200, 340 %%>;
+  slideTongHeight = <%% 340, 290, 220, 180, 340 %%>;
   blockWidth = <%% 240, 200, 150, 120, 240 %%>;
   blockBetween = <%% 12, 10, 8, 6, 12 %%>;
 
   margin = <%% 52, 50, 40, 32, 52 %%>;
-  finalMarginBottom = <%% 72, 72, 72, 72, 72 %%>;
+  finalMarginBottom = <%% 72, 72, 68, 50, 72 %%>;
 
-  whitePaddingTop = <%% 68, 64, 56, 54, 6 %%>;
+  whitePaddingTop = <%% 68, 64, 56, 42, 6 %%>;
 
-  slideLeft = <%% -680, -515, -413, -515, -515 %%>;
+  slideLeft = <%% -680, -515, -413, -518, -515 %%>;
   slideWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
 
-  arrowWidth = <%% 762, 450, 352, 460, 460 %%>;
-  arrowHeight = <%% 10, 10, 10, 10, 10 %%>;
+  arrowWidth = <%% 762, 450, 352, 260, 460 %%>;
+  arrowHeight = <%% 10, 10, 10, 8, 10 %%>;
 
   arrowMargin = <%% 18, 18, 16, 12, 18 %%>;
   arrowTop = <%% 6, 6, 5, 4, 6 %%>;
 
-  descriptionSize = <%% 15, 14, 13, 12, 2.5 %%>;
+  descriptionSize = <%% 15, 14, 13, 11, 2.5 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  circleWidth = <%% 6, 6, 6, 6, 6 %%>;
-  circleBetween = <%% 4, 4, 4, 4, 4 %%>;
+  circleWidth = <%% 6, 6, 6, 5, 6 %%>;
+  circleBetween = <%% 4, 4, 4, 3, 4 %%>;
 
-  circleBoxMarginTop = <%% 16, 16, 16, 16, 16 %%>;
+  circleBoxMarginTop = <%% 16, 16, 16, 10, 16 %%>;
   circleBoxPaddingLeft = <%% 1, 1, 1, 1, 1 %%>;
 
-  feeTongMarginTop = <%% 100, 96, 84, 72, 10 %%>;
-  feeTitleTongHeight = <%% 50, 48, 40, 36, 50 %%>;
+  feeTongMarginTop = <%% 100, 96, 84, 64, 10 %%>;
+  feeTitleTongHeight = <%% 50, 48, 40, 32, 50 %%>;
 
   feeTitleSize = <%% 20, 19, 17, 15, 4 %%>;
   feeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   feeTitleTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  feeDescriptionTongHeight = <%% 60, 56, 45, 40, 6 %%>;
-  feeDescriptionLineTop = <%% 9, 9, 9, 9, 9 %%>;
+  feeDescriptionTongHeight = <%% 60, 56, 45, 30, 6 %%>;
+  feeDescriptionLineTop = <%% 9, 9, 9, 7, 9 %%>;
   feeDescriptionSize = <%% 15, 14, 13, 12, 3 %%>;
   feeDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   feeDescriptionWeightBold = <%% 600, 600, 600, 600, 600 %%>;
@@ -1020,7 +1022,7 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
   barHeight = <%% 20, 20, 16, 12, 20 %%>;
   barMarginBottom = <%% 8, 8, 8, 8, 8 %%>;
 
-  feeBarTongHeight = <%% 60, 60, 60, 60, 60 %%>;
+  feeBarTongHeight = <%% 60, 60, 60, 52, 60 %%>;
 
   contents = {
     images: [
@@ -1423,7 +1425,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   const baseTong = this.baseTong;
   const mobile = media[4];
   const desktop = !mobile;
-  const big = (media[0] || media[1]);
+  const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   let whiteBlock;
@@ -2003,7 +2005,7 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   const pastBaseTong = this.baseTong;
   const mobile = media[4];
   const desktop = !mobile;
-  const big = (media[0] || media[1]);
+  const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   const newBaseTong = pastBaseTong.cloneNode(false);
@@ -2032,9 +2034,9 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   margin = <%% 52, 50, 40, 32, 52 %%>;
 
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
-  middleTitleMarginBottom = <%% 60, 56, 48, 40, 60 %%>;
+  middleTitleMarginBottom = <%% 60, 56, 48, 36, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 65, 56, 48, 6 %%>;
+  middleTitleLineTop = <%% 68, 65, 56, 49, 6 %%>;
 
   middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -2044,7 +2046,7 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
   middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
 
-  peopleSize = <%% 14, 13, 11, 10, 3 %%>;
+  peopleSize = <%% 14, 13, 11, 11, 3 %%>;
   peopleWeight = <%% 400, 400, 400, 400, 400 %%>;
   peopleBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
   peopleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
@@ -2061,7 +2063,7 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   if (mode === "furnishing") {
     contents = {
       title: "바쁜 1, 2인 가구가 선택한 홈퍼니싱",
-      image: (<&& ServiceDetailJs.binaryPath + "/people_f.svg" | ServiceDetailJs.binaryPath + "/people_f.svg" | ServiceDetailJs.binaryPath + "/people_f2.svg" | ServiceDetailJs.binaryPath + "/people_f2.svg" | ServiceDetailJs.binaryPath + "/people_f.svg" &&>),
+      image: (<&& ServiceDetailJs.binaryPath + "/people_f.svg" | ServiceDetailJs.binaryPath + "/people_f.svg" | ServiceDetailJs.binaryPath + "/people_f2.svg" | ServiceDetailJs.binaryPath + "/people_f4.svg" | ServiceDetailJs.binaryPath + "/people_f.svg" &&>),
       description: [
         "시간은 없고, 선택할 것은 많잖아요.",
         "<b%디자이너가 함께하면 시간은 줄이고 확실한 변화를 느낄 수 있어요.%b>",
@@ -2268,7 +2270,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
   const { ea, media, standardWidth, mode } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const big = (media[0] || media[1]);
+  const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker, uniqueValue } = GeneralJs;
   const reviewBlockClassName = "reviewBlockClassName";
@@ -2290,12 +2292,12 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
   let tagTextTop, tagSize, tagWeight, tagPaddingLeft;
   let blockId;
 
-  startBlankHeight = <%% 110, 100, 80, 80, 24 %%>;
+  startBlankHeight = <%% 110, 100, 80, 50, 24 %%>;
 
   blockBetween = <%% 40, 40, 30, 24, 40 %%>;
 
-  imageHeight = <%% 420, 290, 245, 290, 420 %%>;
-  imageWidth = <%% 890, 620, 510, 640, 640 %%>;
+  imageHeight = <%% 420, 290, 245, 230, 420 %%>;
+  imageWidth = <%% 890, 620, 510, 350, 640 %%>;
   imageBetween = <%% 40, 36, 30, 24, 36 %%>;
 
   titleSize = <%% 17, 16, 14, 13, 4 %%>;
@@ -2313,7 +2315,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
   lineTop = <%% 20, 20, 12, 10, 20 %%>;
   lineBottom = <%% 22, 22, 14, 12, 22 %%>;
 
-  tagTongHeight = <%% 26, 24, 23, 22, 26 %%>;
+  tagTongHeight = <%% 26, 24, 23, 21, 26 %%>;
 
   tagBetween = <%% 4, 3, 2, 2, 4 %%>;
 
@@ -2685,17 +2687,33 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
             overflow: "hidden",
           },
           children: images.map((src, index) => {
-            return {
-              mode: "img",
-              attribute: { src, toggle: (index === 0 ? "on" : "off") },
-              style: {
-                position: "absolute",
-                left: String(0),
-                width: String(imageWidth) + ea,
-                height: String(imageWidth * imageRatio) + ea,
-                top: withOut(position[index], ((imageWidth * imageRatio) / 2), ea),
-                transition: "all 0.5s ease",
-                opacity: index === 0 ? String(1) : String(0),
+            if (!media[3]) {
+              return {
+                mode: "img",
+                attribute: { src, toggle: (index === 0 ? "on" : "off") },
+                style: {
+                  position: "absolute",
+                  left: String(0),
+                  width: String(imageWidth) + ea,
+                  height: String(imageWidth * imageRatio) + ea,
+                  top: withOut(position[index], ((imageWidth * imageRatio) / 2), ea),
+                  transition: "all 0.5s ease",
+                  opacity: index === 0 ? String(1) : String(0),
+                }
+              }
+            } else {
+              return {
+                mode: "img",
+                attribute: { src, toggle: (index === 0 ? "on" : "off") },
+                style: {
+                  position: "absolute",
+                  left: String(0),
+                  width: String(imageWidth) + ea,
+                  height: String(imageWidth * imageRatio) + ea,
+                  top: withOut(50, ((imageWidth * imageRatio) / 2), ea),
+                  transition: "all 0.5s ease",
+                  opacity: index === 0 ? String(1) : String(0),
+                }
               }
             }
           })
@@ -2842,7 +2860,7 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   const { ea, media, standardWidth, mode } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const big = (media[0] || media[1]);
+  const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   const newBaseTong = pastBaseTong.cloneNode(false);
@@ -2888,7 +2906,7 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 65, 56, 48, 6 %%>;
+  middleTitleLineTop = <%% 68, 65, 56, 49, 6 %%>;
 
   middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -2900,8 +2918,8 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
-  imageWidth = <%% 680, 480, 410, 410, 480 %%>;
-  imageHeight = <%% 400, 280, 240, 240, 2280 %%>;
+  imageWidth = <%% 680, 480, 410, 320, 480 %%>;
+  imageHeight = <%% 400, 280, 240, 180, 2280 %%>;
   imageBetween = <%% 12, 12, 12, 12, 12 %%>;
 
   titleSize = <%% 14, 13, 12, 11, 13 %%>;
@@ -2915,18 +2933,18 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   factorSize = <%% 13, 11, 10, 10, 2.8 %%>;
   factorWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  factorTongHeight = <%% 36, 28, 24, 24, 28 %%>;
-  factorTongWidth = <%% 96, 80, 72, 72, 80 %%>;
+  factorTongHeight = <%% 36, 28, 24, 22, 28 %%>;
+  factorTongWidth = <%% 96, 80, 72, 70, 80 %%>;
 
-  lineStart = <%% 20, 20, 20, 20, 20 %%>;
+  lineStart = <%% 20, 20, 20, 8, 20 %%>;
   lineWidth = <%% 74, 74, 70, 64, 74 %%>;
-  lineHeight = <%% 94, 64, 54, 54, 64 %%>;
+  lineHeight = <%% 94, 64, 54, 39, 64 %%>;
   lineEnd = <%% 2, 2, 2, 2, 2 %%>;
 
   arrowWidth = <%% 10, 10, 8, 6, 10 %%>;
 
-  boxWidth = <%% 150, 108, 120, 120, 150 %%>;
-  boxHeight = <%% 80, 66, 56, 56, 80 %%>;
+  boxWidth = <%% 150, 108, 120, 90, 150 %%>;
+  boxHeight = <%% 80, 66, 56, 52, 80 %%>;
 
   pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
   newBaseTong.style.left = String(0);
@@ -3323,7 +3341,7 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const big = (media[0] || media[1]);
+  const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   const newBaseTong = pastBaseTong.cloneNode(false);
@@ -3377,7 +3395,7 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 65, 56, 48, 6 %%>;
+  middleTitleLineTop = <%% 68, 65, 56, 49, 6 %%>;
 
   middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -3877,7 +3895,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const big = (media[0] || media[1]);
+  const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   const newBaseTong = pastBaseTong.cloneNode(false);
@@ -3929,7 +3947,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 65, 56, 48, 6 %%>;
+  middleTitleLineTop = <%% 68, 65, 56, 49, 6 %%>;
 
   middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -3943,7 +3961,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
 
   whiteBetween = <%% 12, 12, 12, 12, 12 %%>;
 
-  leftBlockWidth = <%% 302, 256, 230, 220, 302 %%>;
+  leftBlockWidth = <%% 302, 256, 230, 200, 302 %%>;
   leftBlockMarginRight = <%% 12, 12, 10, 8, 12 %%>;
 
   titleSize = <%% 14, 13, 12, 11, 14 %%>;
@@ -3956,7 +3974,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   blockBetween = <%% 12, 10, 10, 10, 12 %%>;
   blockBetweenBottom = <%% 3, 3, 3, 3, 3 %%>;
   imageMarginBottom = <%% 20, 20, 20, 20, 20 %%>;
-  grayBoxHeight = <%% 120, 96, 90, 84, 96 %%>;
+  grayBoxHeight = <%% 120, 96, 90, 76, 96 %%>;
 
   innerTitleSize = <%% 15, 14, 13, 11, 15 %%>;
   innerTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -3964,7 +3982,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   innerDescriptionSize = <%% 13, 11, 10, 10, 13 %%>;
   innerDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   innerDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  innerDescriptionMarginTop = <%% 4, 4, 4, 4, 4 %%>;
+  innerDescriptionMarginTop = <%% 4, 4, 4, 1, 4 %%>;
   innerDescriptionTextVisual = <%% 2, 2, 2, 2, 2 %%>;
 
   freeWidth = <%% 180, 180, 180, 180, 180 %%>;
@@ -3974,8 +3992,8 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   linesTongHeight = <%% 48, 48, 48, 48, 48 %%>;
   linesWidth = <%% 660, 464, 396, 396, 66 %%>;
 
-  blackTongHeight = <%% 52, 52, 42, 40, 52 %%>;
-  blackTongHeight2 = <%% 42, 42, 40, 38, 42 %%>;
+  blackTongHeight = <%% 52, 52, 42, 32, 52 %%>;
+  blackTongHeight2 = <%% 42, 42, 40, 32, 42 %%>;
 
   blackGrayPaddingTop = <%% 20, 20, 14, 12, 20 %%>;
   blackGrayPaddingLeft = <%% 25, 25, 20, 16, 25 %%>;
@@ -3992,7 +4010,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
 
   white2StandardPercentage = <%% 11, 11, 11, 11, 11 %%>;
 
-  innerDescriptionFactorWidth = <%% 100, 100, 80, 72, 10 %%>;
+  innerDescriptionFactorWidth = <%% 100, 100, 80, 64, 10 %%>;
 
   pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
   newBaseTong.style.left = String(0);
@@ -4019,24 +4037,24 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
           image: ServiceDetailJs.binaryPath + "/constructure0.png",
           title: "적극적인 소통",
           description: [
-            "홈리에종과 직영 시공사, 디자이너가",
-            "참여된 단톡방을 만들어 체크합니다.",
+            big ? "홈리에종과 직영 시공사, 디자이너가" : "홈리에종, 시공사, 디자이너가",
+            big ? "참여된 단톡방을 만들어 체크합니다." : "참여된 단톡방을 만듭니다.",
           ]
         },
         {
           image: ServiceDetailJs.binaryPath + "/constructure1.png",
           title: "안심 AS",
           description: [
-            "홈리에종 시공사는 1년 무상 책임 AS과",
-            "확실한 사후 처리를 해드립니다.",
+            big ? "홈리에종 시공사는 1년 무상 책임 AS과" : "시공사는 1년 무상 책임 AS과",
+            big ? "확실한 사후 처리를 해드립니다." : "사후 처리를 해드립니다.",
           ]
         },
         {
           image: ServiceDetailJs.binaryPath + "/constructure2.png",
           title: "안정적인 결제",
           description: [
-            "홈리에종을 거쳐 프로젝트 완료 확인 시",
-            "시스템을 통한 결제가 이루어집니다.",
+            big ? "홈리에종을 거쳐 프로젝트 완료 확인 시" : "홈리에종을 거쳐 완료 확인 시",
+            big ? "시스템을 통한 결제가 이루어집니다." : "안전한 결제가 이뤄집니다.",
           ]
         },
       ]
@@ -4068,11 +4086,11 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
     white2: {
       title: "서비스별 시공 정도",
       description: [
-        "홈리에종의 스타일링 서비스 유형은 3가지로",
-        "나뉘어집니다. 각 유형 별 구분은 시공의",
-        "정도와 범위에 따라 구분되며, 서비스 별",
+        "홈리에종의 서비스 유형은 3가지로",
+        "나뉘어집니다. 유형 별 구분은 시공의",
+        "정도와 범위에 따라 구분되며, 각각",
         "발생하는 비용에 차이가 있습니다. ",
-        "우리 집에 필요한 시공은 어느정도일까요? ",
+        "우리 집에 필요한 서비스는 무엇일까요?",
       ],
       standard: [
         "철거",
@@ -4830,7 +4848,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const big = (media[0] || media[1]);
+  const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
   const newBaseTong = pastBaseTong.cloneNode(false);
@@ -4873,7 +4891,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 65, 56, 48, 6 %%>;
+  middleTitleLineTop = <%% 68, 65, 56, 49, 6 %%>;
 
   middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -4885,22 +4903,22 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
-  leftWidth = <%% 390, 265, 221, 265, 265 %%>;
+  leftWidth = <%% 390, 265, 221, 162, 265 %%>;
 
   grayBetween = <%% 10, 6, 4, 2, 10 %%>;
 
   grayBoxNumbers = <%% 5, 5, 5, 5, 5 %%>;
 
-  grayHeight0 = <%% 56, 50, 45, 42, 6 %%>;
-  grayHeight1 = <%% 240, 200, 170, 160, 240 %%>;
+  grayHeight0 = <%% 56, 50, 45, 38, 6 %%>;
+  grayHeight1 = <%% 240, 200, 170, 144, 240 %%>;
 
   box0Size = <%% 15, 13, 12, 11, 4 %%>;
   box0Weight = <%% 700, 700, 700, 700, 700 %%>;
   box0TextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  circleWidth = <%% 108, 84, 76, 72, 8 %%>;
+  circleWidth = <%% 108, 84, 76, 62, 8 %%>;
 
-  titleSize = <%% 17, 16, 14, 13, 4 %%>;
+  titleSize = <%% 17, 16, 14, 12, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -4918,8 +4936,8 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
   box1TitleMarginBottom = <%% 4, 4, 4, 3, 4 %%>;
   box1DescriptionBottomVisual = <%% 1, 1, 1, 1, 1 %%>;
 
-  box2LineWidth = <%% 684, 500, 426, 426, 100 %%>;
-  box2LineMargin = <%% 20, 20, 20, 20, 20 %%>;
+  box2LineWidth = <%% 684, 500, 426, 348, 100 %%>;
+  box2LineMargin = <%% 20, 20, 20, 12, 20 %%>;
 
   pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
   newBaseTong.style.left = String(0);
@@ -4936,8 +4954,8 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
     work: {
       title: "디자이너는 진행 단계별\n‘이렇게’ 제공해요.",
       description: [
-        "디자이너는 다음과 같은 단계별",
-        "페이퍼워크 제공을 통해 소통합니다.",
+        big ? "디자이너는 다음과 같은 단계별" : "디자이너는 단계별",
+        big ? "페이퍼워크 제공을 통해 소통합니다." : "제공을 통해 소통합니다.",
       ],
       box0: [
         "STEP 1. 프로젝트 기획",
@@ -4947,7 +4965,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
       box1: [
         {
           image: ServiceDetailJs.binaryPath + "/workPaper0.svg",
-          title: "디자인 제안서",
+          title: "일정표",
           description: [
             "계약 기간 기준의",
             "전체 일정 캘린더",
@@ -4966,7 +4984,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
           title: "배치도",
           description: [
             "시공 포함된",
-            "서비스 진행 시 해당",
+            "서비스시 해당",
           ],
         },
         {
@@ -4974,15 +4992,15 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
           title: "컨셉 제안서",
           description: [
             "공간별 구성 및",
-            "가구/소품 배치 도면",
+            "가구 배치 도면",
           ],
         },
         {
           image: ServiceDetailJs.binaryPath + "/workPaper4.svg",
-          title: "일정표",
+          title: "디자인 제안",
           description: [
-            "기존 제품 활용 제안 및",
-            "새 제품 구매 리스트",
+            "기존 제품 활용 및",
+            "제품 구매 리스트",
           ],
         },
       ],
@@ -5093,7 +5111,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
     mother: whiteBlock,
     mode: "img",
     attribute: {
-      src: (<&& ServiceDetailJs.binaryPath + "/careBox.svg" | ServiceDetailJs.binaryPath + "/careBox2.svg" | ServiceDetailJs.binaryPath + "/careBox3.svg" | ServiceDetailJs.binaryPath + "/careBox2.svg" | ServiceDetailJs.binaryPath + "/careBox2.svg" &&>),
+      src: (<&& ServiceDetailJs.binaryPath + "/careBox.svg" | ServiceDetailJs.binaryPath + "/careBox2.svg" | ServiceDetailJs.binaryPath + "/careBox3.svg" | ServiceDetailJs.binaryPath + "/careBox4.svg" | ServiceDetailJs.binaryPath + "/careBox2.svg" &&>),
     },
     style: {
       display: "block",
@@ -5312,7 +5330,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const big = (media[0] || media[1]);
+  const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker, selfHref, cleanChildren } = GeneralJs;
   const newBaseTong = pastBaseTong.cloneNode(false);
@@ -5366,7 +5384,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
 
-  middleTitleLineTop = <%% 68, 65, 56, 48, 6 %%>;
+  middleTitleLineTop = <%% 68, 65, 56, 49, 6 %%>;
 
   middleTitleSize = <%% 23, 21, 19, 17, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -5378,39 +5396,39 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
 
   whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
 
-  box0Width = <%% 170, 170, 140, 120, 170 %%>;
-  box1Width = <%% 410, 410, 300, 240, 410 %%>;
+  box0Width = <%% 170, 170, 140, 110, 170 %%>;
+  box1Width = <%% 410, 410, 300, 220, 410 %%>;
 
-  box1InnerMargin = <%% 45, 45, 30, 45, 45 %%>;
+  box1InnerMargin = <%% 45, 45, 30, 24, 45 %%>;
 
-  boxBetween = <%% 10, 10, 10, 10, 10 %%>;
+  boxBetween = <%% 10, 10, 10, 5, 10 %%>;
 
-  totalHeight = <%% 400, 342, 300, 260, 280 %%>;
+  totalHeight = <%% 400, 342, 300, 240, 280 %%>;
 
   innerMargin = <%% 48, 36, 30, 24, 48 %%>;
 
-  box0Size = <%% 19, 18, 16, 15, 5 %%>;
+  box0Size = <%% 19, 18, 16, 14, 5 %%>;
   box0Weight = <%% 800, 800, 800, 800, 800 %%>;
   box0TextTop = <%% -1, -1, -1, -1, -1 %%>;
   box0LineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
   box1TextTop = <%% -1, -1, -1, -1, -1 %%>;
-  box1Size = <%% 18, 16, 15, 14, 14 %%>;
+  box1Size = <%% 18, 16, 15, 13, 14 %%>;
   box1Weight = <%% 700, 700, 700, 700, 700 %%>;
   box1LightWeight = <%% 300, 300, 300, 300, 300 %%>;
 
   buttonWidth = <%% 190, 170, 150, 140, 170 %%>;
-  buttonHeight = <%% 40, 36, 36, 36, 36 %%>;
+  buttonHeight = <%% 40, 36, 36, 30, 36 %%>;
 
-  box2Size = <%% 15, 13, 12, 12, 15 %%>;
+  box2Size = <%% 15, 13, 12, 11, 15 %%>;
   buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
   box2LineTop = <%% 36, 30, 24, 20, 36 %%>;
-  box2LineBottom = <%% 16, 16, 8, 12, 16 %%>;
+  box2LineBottom = <%% 16, 16, 8, 8, 16 %%>;
 
-  box2DetailPaddingTop = <%% 22, 12, 10, 12, 22 %%>;
+  box2DetailPaddingTop = <%% 22, 12, 10, 10, 22 %%>;
 
-  box2DetailBetween = <%% 24, 24, 24, 24, 24 %%>;
+  box2DetailBetween = <%% 24, 24, 24, 12, 24 %%>;
   box2NumberWidth = <%% 48, 40, 40, 40, 40 %%>;
 
   box2Weight = <%% 800, 800, 800, 800, 800 %%>;
@@ -5422,9 +5440,9 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   box2DetailWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   buttonBaseHeight = <%% 150, 150, 150, 150, 150 %%>;
-  finalButtonWidth = <%% 140, 124, 120, 120, 120 %%>;
+  finalButtonWidth = <%% 140, 124, 120, 108, 120 %%>;
   finalButtonHeight = <%% 48, 44, 42, 36, 48 %%>;
-  buttonSize = <%% 18, 17, 17, 16, 4 %%>;
+  buttonSize = <%% 18, 17, 17, 15, 4 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
   finalButtonTextTop = <%% -2, -1, -1, -1, -0.3 %%>;
 
@@ -6237,7 +6255,10 @@ ServiceDetailJs.prototype.launching = async function (loading) {
 
     this.totalContents.children[0].style.background = colorChip.gray1;
     this.totalContents.children[1].style.transition = "all 0s ease";
-    this.totalContents.children[1].style.height = String(<&& 560 | 490 | 460 | 400 | 118 &&>) + this.ea;
+    this.totalContents.children[1].style.height = String(<&& 560 | 490 | 460 | 360 | 118 &&>) + this.ea;
+    if (this.media[3]) {
+      this.totalContents.children[1].style.backgroundSize = "100% auto";
+    }
 
   } catch (err) {
     console.log(err);
