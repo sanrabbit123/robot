@@ -252,7 +252,7 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
               for (let i = 0; i < tempArr.length - 1; i++) {
                 tempDir = await fileSystem(`readDir`, [ tempString ]);
                 if (!tempDir.includes(tempArr[i]) && tempArr[i] !== "") {
-                  await shellExec(`mkdir`, [ tempString + "/" + tempArr[i] ]);
+                  await shellExec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
                 }
                 tempString += '/';
                 tempString += tempArr[i];
@@ -397,13 +397,11 @@ StaticRouter.prototype.rou_post_makeFolder = function () {
 
       target = target.replace(new RegExp(sambaToken, "gi"), '');
       targetList = target.split("/");
-      console.log(targetList)
       tempString = staticConst;
       for (let i = 0; i < targetList.length; i++) {
         tempDir = await fileSystem(`readDir`, [ tempString ]);
         if (!tempDir.includes(targetList[i]) && targetList[i] !== "") {
-          console.log(targetList[i]);
-          await shellExec(`mkdir`, [ tempString + "/" + targetList[i] ]);
+          await shellExec(`mkdir ${shellLink(tempString + "/" + targetList[i])}`);
         }
         tempString += '/';
         tempString += targetList[i];

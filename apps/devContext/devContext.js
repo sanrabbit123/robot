@@ -136,7 +136,7 @@ DevContext.prototype.launching = async function () {
 
 
     const res = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/makeFolder", {
-      path: "/drive/HomeLiaisonServer/" + photoFolderConst + "/test"
+      path: "/drive/HomeLiaisonServer/" + photoFolderConst + "/이것은_테스트입니다"
     }, {
       headers: { "Content-Type": "application/json" }
     }));
