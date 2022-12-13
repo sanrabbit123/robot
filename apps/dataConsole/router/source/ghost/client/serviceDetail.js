@@ -1344,7 +1344,7 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
         borderRight: "1px solid " + colorChip.gray4,
         borderTopLeftRadius: String(8) + "px",
         borderTopRightRadius: String(8) + "px",
-        height: String(4) + ea,
+        height: String(6) + ea,
         marginTop: String(6) + ea,
         marginBottom: String(1.5) + ea,
         boxSizing: "border-box",
