@@ -24,110 +24,39 @@ const HumanPacket = function () {
   this.webmailSmtpPwd = "hlofwis83!";
 }
 
-HumanPacket.prototype.sendPacket = async function (toObj, subject, contents) {
-  const instance = this;
-  const { requestSystem } = this.mother;
-  try {
-    if (typeof toObj === "object" && !Array.isArray(toObj) && subject === undefined && contents === undefined) {
-      if (toObj.to === undefined || toObj.subject === undefined || toObj.contents === undefined) {
-        throw new Error("invaild arguments : object type => { to: string or array, subject: string, contents: string }");
-      } else {
-        if ((typeof toObj.to === "string" || Array.isArray(toObj.to)) && typeof toObj.subject === "string" && typeof toObj.contents === "string") {
-          subject = toObj.subject;
-          contents = toObj.contents;
-          toObj = toObj.to;
-        } else {
-          throw new Error("invaild arguments : object type => { to: string or array, subject: string, contents: string }");
-        }
-      }
-    } else if (toObj === undefined || subject === undefined || contents === undefined) {
-      throw new Error("invaild arguments");
-    }
-
-    const user = this.user.sms;
-    const apiKey = this.apiKey.sms;
-    const sender = this.sender.sms;
-
-    let to = [];
-    let postData, headers;
-    let responseRaw, response;
-
-    if (Array.isArray(toObj)) {
-      for (let i of toObj) {
-        if (typeof i !== "string") {
-          throw new Error("invaild to argument");
-        }
-        to.push(i);
-      }
-    } else if (typeof toObj === "string") {
-      to.push(toObj);
-    }
-
-    for (let i = 0; i < to.length; i++) {
-      postData = {
-        user_id: user,
-        key: apiKey,
-        msg: contents,
-        receiver: to[i].split('_')[0].replace(/\-/g, ''),
-        destination: to[i].split('_')[1],
-        sender: sender,
-        rdate: "",
-        rtime: "",
-        testmode_yn: "N",
-        title: subject,
-        msg_type: "LMS",
-      };
-      responseRaw = await requestSystem(this.url.sms, postData);
-      response = responseRaw.data;
-      if (response.result_code !== '1') {
-        throw new Error("fail sms : " + to[i]);
-      } else {
-        console.log("send sms success : " + to[i]);
-      }
-    }
-
-    return true;
-
-  } catch (e) {
-    console.log(e);
+HumanPacket.prototype.sendSms = async function (obj) {
+  if (typeof obj !== "object" || obj === null) {
+    throw new Error("invaild input");
   }
-}
-
-HumanPacket.prototype.sendSms = async function (name, phone, subject, contents) {
+  if (obj.to === undefined || obj.body === undefined) {
+    throw new Error("invaild input");
+  }
   const instance = this;
+  const { autoHypenPhone, requestSystem, errorLog, sleep } = this.mother;
+  const url = "https://centrex.uplus.co.kr/RestApi/smssend";
+  const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
   try {
-    if (typeof name === "object" && !Array.isArray(name) && phone === undefined && subject === undefined && contents === undefined) {
-      if (name.name === undefined || name.phone === undefined || name.subject === undefined || name.contents === undefined) {
-        throw new Error("invaild arguments : object type => { name: string, phone: string, subject: string, contents: string }");
-      } else {
-        if (typeof name.name === "string" && typeof name.phone === "string" && typeof name.subject === "string" && typeof name.contents === "string") {
-          subject = name.subject;
-          contents = name.contents;
-          phone = name.phone;
-          name = name.name;
-        } else {
-          throw new Error("invaild arguments : object type => { name: string, phone: string, subject: string, contents: string }");
-        }
-      }
-    } else if (name === undefined || phone === undefined || subject === undefined || contents === undefined) {
-      throw new Error("invaild arguments");
-    }
+    let id;
+    let destnumber;
+    let smsmsg;
+    let res;
+    let safeNum;
+    let finalResult;
 
-    if (typeof name !== "string") {
-      throw new Error("invaild arguments in name");
-    }
-    if (typeof phone !== "string") {
-      throw new Error("invaild arguments in phone");
-    }
-    if (typeof subject !== "string") {
-      throw new Error("invaild arguments in subject");
-    }
-    if (typeof contents !== "string") {
-      throw new Error("invaild arguments in contents");
-    }
+    id = phoneNumbers[0];
+    destnumber = obj.to.replace(/[^0-9]/gi, '');
+    smsmsg = "[제목없음]\n\n" + obj.body;
 
-    const toObj = phone.replace(/\-/g, '') + "_" + name;
-    return (await this.sendPacket(toObj, subject, contents));
+    safeNum = 0;
+    do {
+      res = ((await requestSystem(url + "?id=" + id + "&pass=" + pass + "&destnumber=" + destnumber + "&smsmsg=" + global.encodeURIComponent(smsmsg), { id, pass, destnumber, smsmsg }, { headers: { "Content-Type": "application/json" } })).data);
+      safeNum++;
+    } while (res["SVC_RT"] !== "0000" && safeNum < 5);
+
+    errorLog("sms remain num : " + res["DATAS"]["RESTCOUNT"]).catch((err) => { console.log(err); });
+    finalResult = (res["SVC_RT"] === "0000");
+
+    return finalResult;
   } catch (e) {
     console.log(e);
   }

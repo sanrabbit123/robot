@@ -2222,44 +2222,6 @@ DataRouter.prototype.rou_post_alimTalk = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_humanPacket = function () {
-  const instance = this;
-  const back = this.back;
-  const human = this.human;
-  let obj = {};
-  obj.link = [ "/sendSms", "/sendEmail", "/sendMail" ];
-  obj.func = async function (req, res) {
-    try {
-      if (req.url === "/sendSms") {
-        if (req.body.subject === undefined || req.body.contents === undefined || req.body.name === undefined || req.body.phone === undefined) {
-          throw new Error("must be subject, contents, name, phone");
-        }
-        await human.sendSms({
-          name: req.body.name,
-          phone: req.body.phone,
-          subject: req.body.subject,
-          contents: req.body.contents
-        });
-      } else if (req.url === "/sendEmail" || req.url === "/sendMail") {
-        if (req.body.subject === undefined || req.body.contents === undefined || req.body.to === undefined) {
-          throw new Error("must be subject, contents, to");
-        }
-        await human.sendEmail({
-          to: req.body.to,
-          subject: req.body.subject,
-          contents: req.body.contents
-        });
-      }
-      res.set({ "Content-Type": "application/json" });
-      res.send(JSON.stringify({ message: "success" }));
-    } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_humanPacket): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
 DataRouter.prototype.rou_post_sendCertification = function () {
   const instance = this;
   const back = this.back;
@@ -2281,10 +2243,8 @@ DataRouter.prototype.rou_post_sendCertification = function () {
       errorLog("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
 
       human.sendSms({
-        name,
-        phone,
-        subject: "휴대폰 인증",
-        contents: "[홈리에종] 안녕하세요! " + name + "님,\n휴대폰 인증번호를 보내드립니다.\n\n인증번호 : " + certification + "\n\n인증번호를 팝업창에 입력해주세요!"
+        to: phone,
+        body: "[홈리에종] 안녕하세요! " + name + "님,\n휴대폰 인증번호를 보내드립니다.\n\n인증번호 : " + certification + "\n\n인증번호를 팝업창에 입력해주세요!"
       }).then(() => {
         return errorLog("인증번호 문자 전송 완료");
       }).catch((e) => { console.log(e); });
@@ -5601,7 +5561,7 @@ DataRouter.prototype.rou_post_pushClient = function () {
           path: "curation",
           cliid: request.cliid,
         });
-        await messageSend({ text: request.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
+        await messageSend({ text: request.name + " 고객님께 신청 완료해달라고 부탁했어요.", channel: "#404_curation", voice: true });
         await sleep(1000);
       }
 

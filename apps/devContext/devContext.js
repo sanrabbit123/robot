@@ -78,6 +78,7 @@ DevContext.prototype.launching = async function () {
     const findCode = this.findCode.bind(this);
     const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
     const print = async (cliid) => { await requestSystem("https://" + address.secondinfo.host + "/printClient", { cliid }, { headers: { "Content-Type": "application/json" } }); }
+    const human = new HumanPacket();
 
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
@@ -125,9 +126,6 @@ DevContext.prototype.launching = async function () {
     //   console.log(whereQuery, updateQuery);
     // }
 
-
-
-    
 
 
 

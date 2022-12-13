@@ -356,19 +356,20 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
   }
   try {
     const photoFolderConst = "사진_등록_포트폴리오";
-    const sambaPhotoPath = instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + this.folderName;
     await this.static_setting();
 
     let thisFolderId, folderId_780, folderId_original;
     let pidFolder, fromArr, toArr;
     let resultFolder;
     let ghostPhotos, ghostPhotosTarget;
+    let sambaPhotoPath;
 
     resultFolder = await this.to_portfolio(liteMode);
     const { fileList_780, fileList_1500, fileList_original, fileList_png } = await this.parsing_fileList(resultFolder, liteMode);
     console.log(fileList_780, fileList_1500, fileList_original, fileList_png);
 
     if (liteMode) {
+      sambaPhotoPath = instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + this.folderName;
       await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/makeFolder", { path: sambaPhotoPath }, { headers: { "Content-Type": "application/json" } });
     } else {
       ghostPhotos = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/listFiles", { path: instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst }, { headers: { "Content-Type": "application/json" } })).data.map(({ fileName }) => { return fileName });
@@ -383,6 +384,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
       } else {
         this.folderName = ghostPhotosTarget;
       }
+      sambaPhotoPath = instance.address.officeinfo.ghost.file.office + "/" + photoFolderConst + "/" + this.folderName;
     }
 
     if (!liteMode) {
