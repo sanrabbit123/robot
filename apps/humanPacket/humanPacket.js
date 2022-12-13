@@ -45,7 +45,7 @@ HumanPacket.prototype.sendSms = async function (obj) {
 
     id = phoneNumbers[0];
     destnumber = obj.to.replace(/[^0-9]/gi, '');
-    smsmsg = "[제목없음]\n\n" + obj.body;
+    smsmsg = "[제목없음]\n\n" + (/^\[홈리에종\]/i.test(obj.body.trim()) ? obj.body.trim() : "[홈리에종] " + obj.body.trim());
 
     safeNum = 0;
     do {

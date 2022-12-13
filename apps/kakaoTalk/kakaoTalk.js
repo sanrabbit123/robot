@@ -2,8 +2,10 @@ const KakaoTalk = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const address = require(`${process.cwd()}/apps/infoObj.js`);
+  const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.human = new HumanPacket();
   this.userid = "hliaison";
   this.apikey = "mnpm8c1h078n2gtpoqgzck6gpfvg0dq2";
   this.senderkey = "dd2f3f0b034a044b16531e5171cbcc764fb716eb";
@@ -1225,11 +1227,32 @@ KakaoTalk.prototype.setTalk = async function (method, name, phone, option = {}) 
 
 KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj = {}) {
   const instance = this;
+  const human = this.human;
   const { requestSystem } = this.mother;
   try {
-    let options;
+    let options, boo, data;
+
     options = await this.setTalk(method, name, phone, convertObj);
-    const { data } = await requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options);
+
+    try {
+      ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options));
+    } catch (e) {
+      data = null;
+    }
+
+    if (typeof data.message === "string" && /성공/gi.test(data.message)) {
+      boo = true;
+    } else {
+      boo = false;
+    }
+
+    if (!boo) {
+      await human.sendSms({
+        to: phone,
+        body: options.message_1
+      });
+    }
+
     return data;
   } catch (e) {
     console.log(e);
