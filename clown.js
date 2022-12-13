@@ -179,8 +179,6 @@ Clown.prototype.proposalMaker = function (button, arg) {
       }
 
       kakaoInstance = new KakaoTalk();
-      return kakaoInstance.ready();
-    }).then(() => {
       return kakaoInstance.sendTalk("designerProposal", name, phone, { client: name, host, path, proid });
     }).then(() => {
       return back.updateProject([ { proid }, { "proposal.status": "완료", "proposal.date": now } ]);

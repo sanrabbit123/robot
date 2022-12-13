@@ -18,7 +18,6 @@ CronGhost.prototype.aliveTest = async function () {
   const address = this.address;
   const { requestSystem, messageLog, errorLog } = this.mother;
   const generalPort = 3000;
-  const ghostPort = 8080;
   const controlPath = "/ssl";
   const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
   const bill = new BillMaker();
@@ -31,7 +30,7 @@ CronGhost.prototype.aliveTest = async function () {
       { name: "log", protocol: "https:", host: address.testinfo.host, port: generalPort, },
       { name: "second", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
       { name: "trans", protocol: "https:", host: address.transinfo.host, port: generalPort, },
-      { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
+      { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: generalPort, },
     ];
 
     targetNumber = targets.length;

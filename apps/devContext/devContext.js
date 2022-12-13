@@ -129,7 +129,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // await findCode("ready(")
 
 
 
@@ -1971,7 +1970,6 @@ DevContext.prototype.launching = async function () {
     // push client
     // const cliid = "c2208_aa13s";
     // const kakao = new KakaoTalk();
-    // await kakao.ready();
     // const client = await back.getClientById(cliid, { selfMongo: this.MONGOC });
     // if (client.requests[0].analytics.response.status.value === "응대중" && client.requests[0].analytics.response.action.value === "1차 응대 예정") {
     //   await kakao.sendTalk("pushClient", client.name, client.phone, {
@@ -3749,22 +3747,25 @@ DevContext.prototype.launching = async function () {
 
 
     // kakao test
+    const kakao = new KakaoTalk();
+    await kakao.sendTalk("curationComplete", "배창규", "010-2747-3403", {
+      client: "배창규",
+      host: instance.address.frontinfo.host,
+      path: "curation",
+      cliid: "c1801_aa01s",
+    });
+
+
+
+
+
+
+
+
+
+
+
     // const kakao = new KakaoTalk();
-    // await kakao.ready();
-    // await kakao.sendTalk("curationComplete", "배창규", "010-2747-3403", {
-    //   client: "배창규",
-    //   host: instance.address.frontinfo.host,
-    //   path: "curation",
-    //   cliid: "c1801_aa01s",
-    // });
-
-
-
-
-
-
-    // const kakao = new KakaoTalk();
-    // await kakao.ready();
     // await kakao.sendTalk("firstMeetingDayAgo", "리에종", "010-5543-2039", {
     //   client: "리에종",
     //   date: "12월 26일",
@@ -3792,7 +3793,6 @@ DevContext.prototype.launching = async function () {
     // when rawtoraw fail
 
     // const kakaoInstance = new KakaoTalk();
-    // await kakaoInstance.ready();
     // let projects;
     // let clientObj;
     // let designerObj;
@@ -5098,7 +5098,6 @@ DevContext.prototype.sendChecklist = async function () {
   try {
     const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
     const kakao = new KakaoTalk();
-    await kakao.ready();
     const method = "designerCheckList";
     const designers = await back.getDesignersByQuery({ desid: "d2103_aa21s" });
 

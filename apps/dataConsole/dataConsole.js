@@ -860,7 +860,6 @@ DataConsole.prototype.connect = async function () {
     //set kakao
     const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
     const kakaoInstance = new KakaoTalk();
-    await kakaoInstance.ready();
 
     //set human
     const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);

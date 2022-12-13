@@ -630,7 +630,6 @@ AiContents.prototype.to_google = async function (pid) {
     let project;
 
     await selfMongo.connect();
-    await kakaoInstance.ready();
 
     contentsArr = await back.getContentsArrByQuery({ "contents.portfolio.pid": pid }, { selfMongo });
     contents = contentsArr[0];

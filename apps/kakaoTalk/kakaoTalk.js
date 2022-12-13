@@ -6,6 +6,7 @@ const KakaoTalk = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
   this.human = new HumanPacket();
+  this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.userid = "hliaison";
   this.apikey = "mnpm8c1h078n2gtpoqgzck6gpfvg0dq2";
   this.senderkey = "dd2f3f0b034a044b16531e5171cbcc764fb716eb";
@@ -18,11 +19,11 @@ const KakaoTalk = function () {
     test: address.testinfo.ip.outer,
   };
   this.ipRegExp = {
-    office: new RegExp(this.ip.office + "\n", 'g'),
-    console: new RegExp(this.ip.console + "\n", 'g'),
-    front: new RegExp(this.ip.front + "\n", 'g'),
-    python: new RegExp(this.ip.python + "\n", 'g'),
-    test: new RegExp(this.ip.test + "\n", 'g'),
+    office: new RegExp(this.ip.office, 'gi'),
+    console: new RegExp(this.ip.console, 'gi'),
+    front: new RegExp(this.ip.front, 'gi'),
+    python: new RegExp(this.ip.python, 'gi'),
+    test: new RegExp(this.ip.test, 'gi'),
   };
   this.token = {
     office: '7c3384dd3b6e943f8128adb61f537bc316124b2eb2b0f03b81e76db1ccaa3e1ce057594fc9df213004416f9d049d685c8bb0675d4db0b4fdde3610085179cde3ciwCIj/6sre3xiXz5V4aCDIdUvW1oRBjGUbrPgrbNFX2XYIhQzLLtEcMxKSxRXKZztHRlWBIYBJlbOsKNUAMkA==',
@@ -31,7 +32,6 @@ const KakaoTalk = function () {
     test: '4e8e135049172aa7c2a6df73f93e97da14a44ae587a38dc5ad528d6392301aea364391ab92849acd22f583e5ab342f98b906c22d2b27648de4d880cdd4c4e467Y2Q2mND3WGO2LKixCNvwCOrwvJOoXD3Q6/UD0G7nKK3neoTxlqXG5mvlyVbs8gnWAgEafYfhLx3ZtymgnX4E7g==',
   };
   this.authObj = {};
-  this.templates = {};
   this.message = {};
   this.dir = process.cwd() + "/kakaoTalk";
 }
@@ -50,189 +50,514 @@ KakaoTalk.prototype.generateToken = async function () {
 
 KakaoTalk.prototype.setAuth = async function () {
   const instance = this;
+  const address = this.address;
+  const { requestSystem } = this.mother;
   try {
     this.authObj.apikey = this.apikey;
     this.authObj.userid = this.userid;
     this.authObj.senderkey = this.senderkey;
 
-    const { data } = await this.mother.requestSystem("https://icanhazip.com");
+    const { data } = await requestSystem("https://" + address.pythoninfo.host + ":3000");
 
-    if (this.ipRegExp.office.test(data)) {
+    if (this.ipRegExp.office.test(data.trim())) {
       this.authObj.token = this.token.office;
-    } else if (this.ipRegExp.console.test(data)) {
+    } else if (this.ipRegExp.console.test(data.trim())) {
       this.authObj.token = this.token.console;
-    } else if (this.ipRegExp.python.test(data)) {
+    } else if (this.ipRegExp.python.test(data.trim())) {
       this.authObj.token = this.token.python;
-    } else if (this.ipRegExp.test.test(data)) {
+    } else if (this.ipRegExp.test.test(data.trim())) {
       this.authObj.token = this.token.test;
     }
-
+    return true;
   } catch (e) {
     console.log(e);
+    return false;
   }
 }
 
-KakaoTalk.prototype.setTemplate = async function () {
+KakaoTalk.prototype.getTemplate = async function () {
   const instance = this;
   const { requestSystem } = this.mother;
   try {
+
+    await this.setAuth();
+
     const response = await requestSystem("https://kakaoapi.aligo.in/akv10/template/list/", this.authObj);
     const { data } = response;
     const { list } = data;
+    let tong;
+    tong = {};
     for (let i of list) {
-      this.templates[i.templtCode] = {};
+      tong[i.templtCode] = {};
       for (let j in i) {
-        this.templates[i.templtCode][j] = i[j];
+        tong[i.templtCode][j] = i[j];
       }
     }
+    return tong;
   } catch (e) {
     console.log(e);
+    return null;
   }
 }
 
 KakaoTalk.prototype.templateTong = function (target) {
   const tong = {
-    photo: {
-      name: "사진 전송 완료 안내",
-      id: "TC_1179",
-      needs: [],
-      convert: null
+    "photo": {
+      "name": "사진 전송 완료 안내",
+      "id": "TC_1179",
+      "needs": [],
+      "convert": "function (obj) {\n        return []\n      }",
+      "raw": {
+        "templtContent": "안녕하세요 #{고객명}님!\n보내주신 사진은 #{고객명}님 이름으로 등록 완료되었습니다 :)\n\n해당 사진 확인 후, 영업일 기준 2일 안에 전화드리겠습니다. 감사합니다!",
+        "templtName": "사진 전송 완료 안내",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2020-09-03 12:06:21",
+        "templtCode": "TC_1179",
+        "comments": [
+          {
+            "cdate": "2020-09-03 14:13:41",
+            "name": "검수자",
+            "id": "1009053",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2020-09-03 14:13:41",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    complete: {
-      name: "신청 완료 안내",
-      id: "TC_1244",
-      needs: [],
-      convert: null
+    "complete": {
+      "name": "신청 완료 안내",
+      "id": "TC_1244",
+      "needs": [],
+      "convert": "function (obj) {\n        return []\n      }"
     },
-    certification: {
-      name: "인증카톡",
-      id: "TC_9600",
-      needs: [
+    "certification": {
+      "name": "인증카톡",
+      "id": "TC_9600",
+      "needs": [
         "company",
         "certification"
       ],
-      convert: function (obj) {
-        return [
-          { from: "회사명", to: obj.company },
-          { from: "고객명", to: obj.name },
-          { from: "인증번호", to: obj.certification }
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"회사명\", to: obj.company },\n          { from: \"고객명\", to: obj.name },\n          { from: \"인증번호\", to: obj.certification }\n        ];\n      }",
+      "raw": {
+        "templtContent": "[#{회사명}] 안녕하세요! #{고객명}님,\n휴대폰 인증번호를 보내드립니다.\n\n인증번호 : #{인증번호}\n\n인증번호를 팝업창에 입력해주세요!",
+        "templtName": "인증카톡",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2020-12-16 01:49:51",
+        "templtCode": "TC_9600",
+        "comments": [
+          {
+            "cdate": "2020-12-16 10:29:15",
+            "name": "검수자",
+            "id": "1133488",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2020-12-16 10:29:15",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    stylingForm: {
-      name: "스타일링 계약 서명 요청",
-      id: "TG_5277",
-      needs: [
+    "stylingForm": {
+      "name": "스타일링 계약 서명 요청",
+      "id": "TG_5277",
+      "needs": [
         "client"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client }
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client }\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{client}님, 홈스타일링 계약서를 widsign을 통해 보내드렸습니다!\n\n체크박스가 있는 내용은 꼭 확인해주시고, 마지막 서명까지 부탁드립니다.\n보시다 문의사항 있으시면 알려주시고요!\n\n감사합니다 :)",
+        "templtName": "스타일링 계약 서명 요청",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-11-19 14:19:02",
+        "templtCode": "TG_5277",
+        "comments": [
+          {
+            "cdate": "2021-11-19 16:04:42",
+            "name": "검수자",
+            "id": "1639422",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-11-19 16:04:42",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    constructForm: {
-      name: "시공 계약 서명 요청",
-      id: "TG_5279",
-      needs: [
+    "constructForm": {
+      "name": "시공 계약 서명 요청",
+      "id": "TG_5279",
+      "needs": [
         "client"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client }
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client }\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{client}님, 홈리에종 시공 계약서를 widsign을 통해 보내드렸습니다!\n\n체크박스가 있는 내용은 꼭 확인해주시고, 마지막 서명까지 부탁드립니다.\n보시다 문의사항 있으시면 알려주시고요!\n\n감사합니다 :)",
+        "templtName": "시공 계약 서명 요청",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-11-19 14:19:53",
+        "templtCode": "TG_5279",
+        "comments": [
+          {
+            "cdate": "2021-11-19 16:04:56",
+            "name": "검수자",
+            "id": "1639426",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-11-19 16:04:56",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    designerPartnership: {
-      name: "파트너십 신청",
-      id: "TD_5890",
-      needs: [],
-      convert: null
+    "designerPartnership": {
+      "name": "파트너십 신청",
+      "id": "TD_5890",
+      "needs": [],
+      "convert": "function (obj) {\n        return []\n      }",
+      "raw": {
+        "templtContent": "안녕하세요 #{고객명}님!\n작성하신 파트너십 신청서는 접수 완료되었습니다 :)\n\n추가적인 포트폴리오 발송은\n아래 링크에서 성함과 전화번호와 함께 보내주시면, 검토 후 확인 연락드리겠습니다.",
+        "templtName": "파트너십 신청",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [
+          {
+            "ordering": "1",
+            "name": "포트폴리오 전송",
+            "linkType": "WL",
+            "linkTypeName": "웹링크",
+            "linkMo": "https://home-liaison.com/desevent.php?mode=portfolio",
+            "linkPc": "https://home-liaison.com/desevent.php?mode=portfolio",
+            "linkIos": "",
+            "linkAnd": ""
+          }
+        ],
+        "cdate": "2021-02-16 10:24:04",
+        "templtCode": "TD_5890",
+        "comments": [
+          {
+            "cdate": "2021-02-16 14:29:15",
+            "name": "검수자",
+            "id": "1210765",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-02-16 14:29:15",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    designerPresentation: {
-      name: "설명회 신청 수정",
-      id: "TD_5891",
-      needs: [],
-      convert: null
+    "designerPresentation": {
+      "name": "설명회 신청 수정",
+      "id": "TD_5891",
+      "needs": [],
+      "convert": "function (obj) {\n        return []\n      }",
+      "raw": {
+        "templtContent": "안녕하세요 #{고객명}님!\n홈리에종 디자이너 파트너십 설명회에 신청해주셔서 감사합니다 :)\n\n추가적인 포트폴리오 발송은\n아래 링크에서 성함과 전화번호와 함께 보내주시면, 검토 후 확인 연락드리겠습니다.",
+        "templtName": "설명회 신청 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [
+          {
+            "ordering": "1",
+            "name": "포트폴리오 전송",
+            "linkType": "WL",
+            "linkTypeName": "웹링크",
+            "linkMo": "https://home-liaison.com/desevent.php?mode=portfolio",
+            "linkPc": "https://home-liaison.com/desevent.php?mode=portfolio",
+            "linkIos": "",
+            "linkAnd": ""
+          }
+        ],
+        "cdate": "2021-02-16 10:25:04",
+        "templtCode": "TD_5891",
+        "comments": [
+          {
+            "cdate": "2021-02-16 14:29:07",
+            "name": "검수자",
+            "id": "1210763",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-02-16 14:29:07",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    designerPresentationAlarm: {
-      name: "신청자 미팅 안내",
-      id: "TG_4335",
-      needs: [
+    "designerPresentationAlarm": {
+      "name": "신청자 미팅 안내",
+      "id": "TG_4335",
+      "needs": [
         "designer",
         "date"
       ],
-      convert: function (obj) {
-        return [
-          { from: "designer", to: obj.designer },
-          { from: "date", to: obj.date }
-        ];
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"date\", to: obj.date }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 디자이너님! 홈리에종입니다. 디자이너 미팅 시간과 주소 안내차 연락을 드렸어요.\n\n- 일시 : #{date}\n- 장소 : 서울 창업허브 성수 (서울 성동구 성수이로 22길 37 4층)\n\n※ 지하에 1~2시간 무료 주차가 가능합니다. 미팅을 마치신 후, 주차권을 전달드리겠습니다.\n※ 혹시 참석여부에 변동 사항이 있으시면 꼭! 연락을 부탁드려요. 감사합니다 :)\n\nP : 02-2039-2252\nK : @홈리에종\nE : help@home-liaison.com\nH : home-liaison.com",
+        "templtName": "신청자 미팅 안내",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-11-11 22:28:15",
+        "templtCode": "TG_4335",
+        "comments": [
+          {
+            "cdate": "2021-11-12 11:38:16",
+            "name": "검수자",
+            "id": "1627056",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-11-12 11:38:16",
+            "status": "APR"
+          }
+        ]
       }
     },
-    portfolioFail: {
-      name: "포트폴리오 전송 실패 안내",
-      id: "TD_7334",
-      needs: [],
-      convert: null
+    "portfolioFail": {
+      "name": "포트폴리오 전송 실패 안내",
+      "id": "TD_7334",
+      "needs": [],
+      "convert": "function (obj) {\n        return []\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{고객명} 디자이너님.\n홈리에종입니다!\n\n전송해주신 포트폴리오 파일이 너무 커 파일 전송에 실패하였습니다. 100MB 이하의 pdf로 정리해주셔서 다시 보내주시거나,\n\n클라우드에 저장 후 링크로 공유해주시면 감사드리겠습니다 :)",
+        "templtName": "포트폴리오 전송 실패 안내",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [
+          {
+            "ordering": "1",
+            "name": "포트폴리오 전송",
+            "linkType": "WL",
+            "linkTypeName": "웹링크",
+            "linkMo": "https://home-liaison.com/desevent.php?mode=portfolio",
+            "linkPc": "https://home-liaison.com/desevent.php?mode=portfolio",
+            "linkIos": "",
+            "linkAnd": ""
+          }
+        ],
+        "cdate": "2021-03-02 10:05:10",
+        "templtCode": "TD_7334",
+        "comments": [
+          {
+            "cdate": "2021-03-02 15:31:17",
+            "name": "검수자",
+            "id": "1231909",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-03-02 15:31:17",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    designerCheckList: {
-      name: "체크리스트 진짜 최종 수정",
-      id: "TJ_8591",
-      needs: [
+    "designerCheckList": {
+      "name": "체크리스트 진짜 최종 수정",
+      "id": "TJ_8591",
+      "needs": [
         "designer",
         "host",
         "path",
         "desid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "designer", to: obj.name },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "desid", to: obj.desid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.name },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"desid\", to: obj.desid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 디자이너님. 홈리에종입니다 :)\n\n홈리에종이 실장님들을 더 잘 이해하고, \n더 적합한 고객을 연결시켜드리기 위해, 체크리스트를 전송해드리고자 합니다.\n\n아래 첨부한 링크를 통해 들어가실 수 있으며, 설명드렸던 항목만 간단히 체크해주시면 됩니다 :)\n\n* 체크리스트 페이지\nhttps://#{host}/designer/#{path}.php?desid=#{desid}",
+        "templtName": "체크리스트 진짜 최종 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-08-31 11:59:26",
+        "templtCode": "TJ_8591",
+        "comments": []
+      }
     },
-    designerProposal: {
-      name: "제안서 발송 수정 수정 수정 수정",
-      id: "TJ_3701",
-      needs: [
+    "designerProposal": {
+      "name": "제안서 발송 수정 수정 수정 수정",
+      "id": "TJ_3701",
+      "needs": [
         "client",
         "host",
         "path",
         "proid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "proid", to: obj.proid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"proid\", to: obj.proid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님! 디자이너 추천서 보내드립니다.\n\n고객님께서 기입해주신 정보 [주소, 일정, 서비스 유형 등] 를 기준으로 현재 시점에서 적합한 디자이너를 큐레이션하였습니다.\n\n영업일 기준 2일 이내로 홈리에종 담당자가 디자이너 추천서 리뷰를 위해 전화를 드릴 예정이오니 잠시만 기다려주세요 :)\n\n* 디자이너 추천서\nhttps://#{host}/#{path}.php?proid=#{proid}",
+        "templtName": "제안서 발송 수정 수정 수정 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-07-15 08:50:57",
+        "templtCode": "TJ_3701",
+        "comments": []
+      }
     },
-    outOfDesignerProposal: {
-      name: "제안서 발송 부재중 수정",
-      id: "TJ_3702",
-      needs: [
+    "outOfDesignerProposal": {
+      "name": "제안서 발송 부재중 수정",
+      "id": "TJ_3702",
+      "needs": [
         "client",
         "host",
         "path",
         "proid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "proid", to: obj.proid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"proid\", to: obj.proid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님 :)\n발송해드린 디자이너 추천서에 대한 안내를 위해 연락드렸으나, 통화가 어려우신 듯하여 메세지 남겨 드립니다.\n\n제안서 피드백 통화를 통해 궁금한 정보를 확인하고, 나에게 더 적합한 디자이너를 함께 선택할 수 있어요~!\n\n02-2039-2252로 전화주시거나, 홈리에종 카카오 채널을 통해 통화 가능 시간을 남겨주시면, 확인 후 연락드리겠습니다!\n\n* 디자이너 추천서\nhttps://#{host}/#{path}.php?proid=#{proid}",
+        "templtName": "제안서 발송 부재중 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-07-15 08:52:20",
+        "templtCode": "TJ_3702",
+        "comments": []
+      }
     },
-    designerSelect: {
-      name: "고객 디자이너 선택 최종 수정",
-      id: "TF_7147",
-      needs: [
+    "designerSelect": {
+      "name": "고객 디자이너 선택 최종 수정",
+      "id": "TF_7147",
+      "needs": [
         "client",
         "designer",
         "host",
@@ -240,127 +565,367 @@ KakaoTalk.prototype.templateTong = function (target) {
         "cliid",
         "needs"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "designer", to: obj.designer },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "cliid", to: obj.cliid },
-          { from: "needs", to: obj.needs },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n          { from: \"needs\", to: obj.needs },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님.\n#{designer} 디자이너를 선택하셨군요!\n\n디자이너와 함께하면 내 마음에 쏙 드는 우리 집을 만나게 되실 거에요! 프로젝트 진행을 위해 계약금 안내드립니다 :)\n\n계약금은 전체 디자이너 비용에 포함되는 금액으로, 디자이너와의 현장 미팅 및 디자이너 일정 예약을 위해 정가제로 운영되고 있습니다.\n\n계약금을 입금해 주시면 디자이너와의 미팅 일정을 조정합니다.\n\n* 유의사항\n1. 계약자명과 입금자명이 같게 보내주셔야 합니다.\n2. 현장미팅 후 서비스를 진행하지 않더라도 계약금은 환불되지 않습니다.\n3. 현장미팅 후 계약금을 제외한 잔금을 입금하시면 서비스가 계속 진행됩니다.\n\n감사합니다 :)\n\n* 계약금 안내\nhttps://#{host}/middle/#{path}?cliid=#{cliid}&needs=#{needs}",
+        "templtName": "고객 디자이너 선택 최종 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-09-03 10:59:23",
+        "templtCode": "TF_7147",
+        "comments": [
+          {
+            "cdate": "2021-09-03 14:36:25",
+            "name": "검수자",
+            "id": "1519565",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-09-03 14:36:25",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    contentsShareClient: {
-      name: "컨텐츠 공유 고객",
-      id: "TF_0642",
-      needs: [
+    "contentsShareClient": {
+      "name": "컨텐츠 공유 고객",
+      "id": "TF_0642",
+      "needs": [
         "client",
         "rid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "rid", to: obj.rid }
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"rid\", to: obj.rid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{client} 고객님 안녕하세요 :) 고객 후기 콘텐츠가 오픈되어 연락드려요~\n\n고객 후기 : https://home-liaison.com/revdetail.php?qqq=#{rid}\n\n#{client}님이 처음 문의주신 때부터 실제로 만나뵙고 인터뷰를 진행하던 순간까지 저희 홈리에종에게도 너무나 소중한 시간이었습니다! 저희는 고객 후기 공유를 끝으로 마지막 인사를 드리며, 앞으로도 항상 행복하고 건강하시기를 바랍니다! \n\n홈리에종의 서비스가 만족스러우셨다면, 주변 분들에게 살포시 추천도 부탁드릴게요 :) 감사합니다!\n\n- 홈리에종 드림.",
+        "templtName": "컨텐츠 공유 고객",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-07-07 14:30:27",
+        "templtCode": "TF_0642",
+        "comments": [
+          {
+            "cdate": "2021-07-07 16:14:07",
+            "name": "검수자",
+            "id": "1430887",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-07-07 16:14:07",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    contentsShareDesigner: {
-      name: "컨텐츠 공유 디자이너",
-      id: "TF_0643",
-      needs: [
+    "contentsShareDesigner": {
+      "name": "컨텐츠 공유 디자이너",
+      "id": "TF_0643",
+      "needs": [
         "client",
         "designer",
         "pid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "designer", to: obj.designer },
-          { from: "pid", to: obj.pid }
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"pid\", to: obj.pid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{designer} 실장님, 안녕하세요 :) #{client} 고객님 디자이너 포트폴리오 콘텐츠가 오픈되었어요!\n\n포트폴리오 : https://home-liaison.com/portdetail.php?qqq=#{pid}\n\n현장미팅 시작부터 촬영까지 #{client} 고객님께 좋은 집꾸미기 경험을 선물해드릴 수 있도록, 홈리에종과 함께 해주셔서 감사합니다 :) 실장님께도 즐거운 추억이 되셨기를 바라며, 콘텐츠 공유를 끝으로 #{client} 고객님 건 최종 마무리하겠습니다!",
+        "templtName": "컨텐츠 공유 디자이너",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-07-07 14:31:03",
+        "templtCode": "TF_0643",
+        "comments": [
+          {
+            "cdate": "2021-07-07 16:14:38",
+            "name": "검수자",
+            "id": "1430892",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-07-07 16:14:38",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    photoShareClient: {
-      name: "사진 공유 고객",
-      id: "TF_1248",
-      needs: [
+    "photoShareClient": {
+      "name": "사진 공유 고객",
+      "id": "TF_1248",
+      "needs": [
         "client",
         "file"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "file", to: obj.file }
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"file\", to: obj.file }\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{client} 고객님 안녕하세요 :) 촬영한 사진이 나와서 연락드려요!\n\n#{client}님만의 매력과 취향이 묻어나는 아름다운 집이네요 :) #{client}님의 소중한 집을 꾸미는 일에 저희 홈리에종과 함께 해주셔서 감사했습니다! 편안하고 아름다운 집에서 늘 행복한 일상을 이어나가시기를 바랄게요!\n\n고객 후기 콘텐츠는 순차 발행 중이라 나오면 추후에 링크 보내드리겠습니다!\n\n사진 공유 : https://drive.google.com/file/d/#{file}/view?usp=sharing",
+        "templtName": "사진 공유 고객",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-07-13 15:52:04",
+        "templtCode": "TF_1248",
+        "comments": [
+          {
+            "cdate": "2021-07-13 16:46:18",
+            "name": "검수자",
+            "id": "1440268",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-07-13 16:46:18",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    photoShareDesigner: {
-      name: "사진 공유 디자이너",
-      id: "TF_1158",
-      needs: [
+    "photoShareDesigner": {
+      "name": "사진 공유 디자이너",
+      "id": "TF_1158",
+      "needs": [
         "client",
         "designer",
         "file"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "designer", to: obj.designer },
-          { from: "file", to: obj.file }
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"file\", to: obj.file }\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{designer} 실장님, 안녕하세요 :) #{client} 고객님 원본 사진이 나와서 연락드려요!\n\n이번 프로젝트도 너무 수고 많으셨습니다! #{client}님만의 매력과 취향이 묻어나는 아름다운 집을 완성해주셔서 감사드려요~\n\n포트폴리오 콘텐츠는 순차 발행중이라 나오면 추후에 링크 공유드리겠습니다! \n\n※ 그리고 마지막에 첨부해드린 포트폴리오 활용 가이드 라인도 체크 부탁드려요 :) \n\n사진 공유 : https://drive.google.com/file/d/#{file}/view?usp=sharing",
+        "templtName": "사진 공유 디자이너",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [
+          {
+            "ordering": "1",
+            "name": "포트폴리오 활용 가이드",
+            "linkType": "WL",
+            "linkTypeName": "웹링크",
+            "linkMo": "https://docs.google.com/document/d/1Zovq4JhIxSUrcYTm-3kS0wasPsAEJOX9UIm6cGjDcwc/edit?usp=sharing",
+            "linkPc": "https://docs.google.com/document/d/1Zovq4JhIxSUrcYTm-3kS0wasPsAEJOX9UIm6cGjDcwc/edit?usp=sharing",
+            "linkIos": "",
+            "linkAnd": ""
+          },
+          {
+            "ordering": "2",
+            "name": "디자이너글 작성 가이드",
+            "linkType": "WL",
+            "linkTypeName": "웹링크",
+            "linkMo": "https://docs.google.com/document/d/1swz4pvjEosv6Pfq8pDcsa5IrttbythDt0aFlE-IRtqA/edit?usp=sharing",
+            "linkPc": "https://docs.google.com/document/d/1swz4pvjEosv6Pfq8pDcsa5IrttbythDt0aFlE-IRtqA/edit?usp=sharing",
+            "linkIos": "",
+            "linkAnd": ""
+          }
+        ],
+        "cdate": "2021-07-13 10:03:35",
+        "templtCode": "TF_1158",
+        "comments": [
+          {
+            "cdate": "2021-07-13 14:23:51",
+            "name": "검수자",
+            "id": "1439358",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-07-13 14:23:51",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    preferPhoto: {
-      name: "선호 사진 요청 수정",
-      id: "TF_3616",
-      needs: [
+    "preferPhoto": {
+      "name": "선호 사진 요청 수정",
+      "id": "TF_3616",
+      "needs": [
         "client"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요 #{client}님, 홈리에종입니다!\n선호하시는 스타일 및 참고 사진을 보내주세요 :)\n\n선호사진 / 현장사진(이사 가실 곳, 현재 거주하시는 곳 등)을 아래 버튼으로 보내주시거나, 홈리에종 카카오 채널을 통해 보내주시면 참고하여 고객님께 딱! 맞는 좋은 디자이너 분들로 제안드릴게요.\n\n*선호사진 1~2장만으로도 적합한 디자이너 추천과 빠른 제안서 발송에 큰 도움이 됩니다!",
+        "templtName": "선호 사진 요청 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [
+          {
+            "ordering": "1",
+            "name": "사진 전송 하기",
+            "linkType": "WL",
+            "linkTypeName": "웹링크",
+            "linkMo": "https://home-liaison.com/login.php",
+            "linkPc": "https://home-liaison.com/login.php",
+            "linkIos": "",
+            "linkAnd": ""
+          }
+        ],
+        "cdate": "2021-07-30 16:28:57",
+        "templtCode": "TF_3616",
+        "comments": [
+          {
+            "cdate": "2021-07-30 17:05:21",
+            "name": "검수자",
+            "id": "1469294",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-07-30 17:05:21",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    outOfClient: {
-      name: "부재중 알림 수정",
-      id: "TF_3881",
-      needs: [
+    "outOfClient": {
+      "name": "부재중 알림 수정",
+      "id": "TF_3881",
+      "needs": [
         "client",
         "host",
         "path",
         "cliid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "cliid", to: obj.cliid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님 :) 홈스타일링 문의주신 홈리에종입니다. 상담을 위해 연락드렸으나 통화가 어려우신 듯하여 메세지 남겨 드립니다.\n\n02-2039-2252로 전화주시거나, 홈리에종 카카오 채널을 통해 통화 가능 시간을 남겨주시면, 확인 후 연락드리겠습니다!\n\n만약 통화가 어려우시다면, 다음 진행을 위해 상세 큐레이션 페이지를 작성 부탁드리겠습니다.\n\n상세 큐레이션 페이지에 응답해주시면, 고객님께 맞는 서비스와 디자이너를 추천드릴 수 있게 되며, 큐레이팅 결과가 반영된 홈리에종 제안서가 발송됩니다.\n\n좋은 하루 되세요. 감사합니다!\n\n* 큐레이션 페이지\nhttps://#{host}/middle/#{path}?cliid=#{cliid}",
+        "templtName": "부재중 알림 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-08-02 16:55:12",
+        "templtCode": "TF_3881",
+        "comments": [
+          {
+            "cdate": "2021-08-03 10:43:02",
+            "name": "검수자",
+            "id": "1471986",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-08-03 10:43:02",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    pureOutOfClient: {
-      name: "순수 부재중 알림",
-      id: "TF_6196",
-      needs: [
+    "pureOutOfClient": {
+      "name": "순수 부재중 알림",
+      "id": "TF_6196",
+      "needs": [
         "client",
         "emoji0",
-        "emoji1",
+        "emoji1"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "emoji0", to: obj.emoji0 },
-          { from: "emoji1", to: obj.emoji1 },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"emoji0\", to: obj.emoji0 },\n          { from: \"emoji1\", to: obj.emoji1 },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님 #{emoji0} 홈스타일링 문의주신 홈리에종입니다. 상담을 위해 연락드렸으나 통화가 어려우신 듯하여 메세지 남겨 드립니다.\n\n#{emoji1} 02-2039-2252로 전화주시거나, 홈리에종 카카오 채널을 통해 통화 가능 시간을 남겨주시면, 확인 후 연락드리겠습니다!",
+        "templtName": "순수 부재중 알림",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-08-25 18:31:01",
+        "templtCode": "TF_6196",
+        "comments": [
+          {
+            "cdate": "2021-08-26 11:02:05",
+            "name": "검수자",
+            "id": "1506353",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-08-26 11:02:05",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    clientCuration: {
-      name: "스타일 찾기 전송",
-      id: "TF_6198",
-      needs: [
+    "clientCuration": {
+      "name": "스타일 찾기 전송",
+      "id": "TF_6198",
+      "needs": [
         "client",
         "emoji0",
         "emoji1",
@@ -369,172 +934,361 @@ KakaoTalk.prototype.templateTong = function (target) {
         "cliid",
         "mode"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "emoji0", to: obj.emoji0 },
-          { from: "emoji1", to: obj.emoji1 },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "cliid", to: obj.cliid },
-          { from: "mode", to: obj.mode },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"emoji0\", to: obj.emoji0 },\n          { from: \"emoji1\", to: obj.emoji1 },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n          { from: \"mode\", to: obj.mode },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님 #{emoji0}\n\nStep 1 : CX팀과의 상담을 잘 진행하셨나요?\n\nStep 2 #{emoji1} : 30초 간단 스타일 찾기를 보내드리오니, 작성 부탁드리겠습니다!\n\n스타일 찾기에 응답해주시면, 고객님께 맞는 서비스와 디자이너를 추천드릴 수 있게 되며, 큐레이팅 결과가 반영된 홈리에종 제안서가 발송됩니다.\n\n좋은 하루 되세요. 감사합니다!\n\n* 큐레이션 페이지 https://#{host}/middle/#{path}?cliid=#{cliid}&mode=#{mode}",
+        "templtName": "스타일 찾기 전송",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-08-25 18:39:25",
+        "templtCode": "TF_6198",
+        "comments": [
+          {
+            "cdate": "2021-08-26 11:02:18",
+            "name": "검수자",
+            "id": "1506355",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-08-26 11:02:18",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    outClientCuration: {
-      name: "부재중 큐레이션 전송",
-      id: "TF_3540",
-      needs: [
+    "outClientCuration": {
+      "name": "부재중 큐레이션 전송",
+      "id": "TF_3540",
+      "needs": [
         "client",
         "host",
         "path",
         "cliid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "cliid", to: obj.cliid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님 :) 홈스타일링 문의주신 홈리에종입니다. 상담을 위해 연락드렸으나 통화가 어려우신 듯하여 메세지 남겨 드립니다.\n\n다음 진행을 위해 아래 상세 큐레이션 페이지를 보내드리오니, 작성 부탁드리겠습니다!\n\n상세 큐레이션 페이지에 응답해주시면, 고객님께 맞는 서비스와 디자이너를 추천드릴 수 있게 되며, 큐레이팅 결과가 반영된 홈리에종 제안서가 발송됩니다.\n\n좋은 하루 되세요. 감사합니다!\n\n* 큐레이션 페이지\nhttps://#{host}/middle/#{path}?cliid=#{cliid}",
+        "templtName": "부재중 큐레이션 전송",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-07-30 10:59:51",
+        "templtCode": "TF_3540",
+        "comments": [
+          {
+            "cdate": "2021-07-30 14:08:41",
+            "name": "검수자",
+            "id": "1468420",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-07-30 14:08:41",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    curationComplete: {
-      name: "큐레이션 완료 수정 수정 수정 링크 없는 버전",
-      id: "TJ_0535",
-      needs: [
-        "client",
+    "curationComplete": {
+      "name": "큐레이션 완료 수정 수정 수정 링크 없는 버전",
+      "id": "TJ_0535",
+      "needs": [
+        "client"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님!\n작성하신 내용은 모두 전달되었습니다.\n고객님의 요청 사항을 토대로 더 상세한 상담을 위해, 영업일 기준 2일 안에 전화드리겠습니다 :)\n\n감사합니다!",
+        "templtName": "큐레이션 완료 수정 수정 수정 링크 없는 버전",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-06-16 16:12:31",
+        "templtCode": "TJ_0535",
+        "comments": []
+      }
     },
-    paymentAndChannel: {
-      name: "계약금 입금 및 등록 수정",
-      id: "TJ_8587",
-      needs: [
+    "paymentAndChannel": {
+      "name": "계약금 입금 및 등록 수정",
+      "id": "TJ_8587",
+      "needs": [
         "client",
         "designer",
         "host",
-        "path",
+        "path"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "designer", to: obj.designer },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님 :)\n#{designer} 디자이너님을 선택하시고\n계약금 넣어주신 것 잘 확인되었습니다.\n\n현장 미팅 및 홈스타일링 계약에 앞서,\n서비스에 관련된 유의 사항 안내 페이지를 보내드립니다.\n\n꼭 한 번 읽어봐 주시고, 앞으로의 진행은 홈리에종 채널을 통해 소통이 이루어질 예정입니다. 감사합니다 :)\n\n* 서비스 유의 사항\nhttps://#{host}/#{path}.php",
+        "templtName": "계약금 입금 및 등록 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-08-31 11:51:25",
+        "templtCode": "TJ_8587",
+        "comments": []
+      }
     },
-    remainPaymentAndChannel: {
-      name: "잔금 입금 완료 수정",
-      id: "TF_9757",
-      needs: [
+    "remainPaymentAndChannel": {
+      "name": "잔금 입금 완료 수정",
+      "id": "TF_9757",
+      "needs": [
         "client",
         "designer",
         "emoji"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "designer", to: obj.designer },
-          { from: "emoji", to: obj.emoji },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"emoji\", to: obj.emoji },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님!\n#{designer} 디자이너님과의 프로젝트에 대한 잔금 입금이 잘 확인되었고, 계약서 서명이 완료된 경우, 계약된 기간에 맞추어 디자이너님께 디자인 작업 시작을 요청드릴 예정입니다 :)\n\n진행하시면서 궁금하신 점이나 어려움이 있으시면 언제든 편하게 홈리에종으로 연락주세요! 즐거운 집꾸미기 과정이 되시도록 저희가 동행하겠습니다 #{emoji}\n\n좋은 하루 보내세요! 감사합니다.",
+        "templtName": "잔금 입금 완료 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-09-28 09:40:32",
+        "templtCode": "TF_9757",
+        "comments": [
+          {
+            "cdate": "2021-09-28 12:04:20",
+            "name": "검수자",
+            "id": "1552325",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-09-28 12:04:20",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    virtualAccount: {
-      name: "가상계좌 안내 수정",
-      id: "TF_5485",
-      needs: [
+    "virtualAccount": {
+      "name": "가상계좌 안내 수정",
+      "id": "TF_5485",
+      "needs": [
         "client",
         "goodName",
         "bankName",
         "account",
         "to",
         "amount",
-        "date",
+        "date"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "goodName", to: obj.goodName },
-          { from: "bankName", to: obj.bankName },
-          { from: "account", to: obj.account },
-          { from: "to", to: obj.to },
-          { from: "amount", to: obj.amount },
-          { from: "date", to: obj.date },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"goodName\", to: obj.goodName },\n          { from: \"bankName\", to: obj.bankName },\n          { from: \"account\", to: obj.account },\n          { from: \"to\", to: obj.to },\n          { from: \"amount\", to: obj.amount },\n          { from: \"date\", to: obj.date },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님! #{goodName}을 입금해주실 가상계좌 안내드립니다.\n\n은행명 : #{bankName}\n계좌번호 : #{account}\n수취인 : #{to}\n금액 : #{amount}원\n\n#{date} 까지 위 가상계좌를 통해 #{amount}원을 입금해주시면 결제가 완료됩니다!\n\n감사합니다 :)",
+        "templtName": "가상계좌 안내 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-08-19 13:53:51",
+        "templtCode": "TF_5485",
+        "comments": [
+          {
+            "cdate": "2021-08-19 16:15:19",
+            "name": "검수자",
+            "id": "1496264",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-08-19 16:15:19",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    realAccount: {
-      name: "홈리에종 계좌 안내 수정",
-      id: "TJ_9111",
-      needs: [
+    "realAccount": {
+      "name": "홈리에종 계좌 안내 수정",
+      "id": "TJ_9111",
+      "needs": [
         "client",
         "goodName",
         "bankName",
         "account",
         "to",
-        "amount",
+        "amount"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "goodName", to: obj.goodName },
-          { from: "bankName", to: obj.bankName },
-          { from: "account", to: obj.account },
-          { from: "to", to: obj.to },
-          { from: "amount", to: obj.amount },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"goodName\", to: obj.goodName },\n          { from: \"bankName\", to: obj.bankName },\n          { from: \"account\", to: obj.account },\n          { from: \"to\", to: obj.to },\n          { from: \"amount\", to: obj.amount },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님! #{goodName}을 입금해주실 계좌 안내드립니다.\n\n은행명 : #{bankName}\n계좌번호 : #{account}\n수취인 : #{to}\n금액 : #{amount}원\n\n위 계좌를 통해 #{amount}원을 입금해주시면 결제가 완료됩니다!\n\n감사합니다 :)",
+        "templtName": "홈리에종 계좌 안내 수정 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-09-05 18:42:44",
+        "templtCode": "TJ_9111",
+        "comments": []
+      }
     },
-    firstPayment: {
-      name: "계약금 안내 수정 수정",
-      id: "TK_4108",
-      needs: [
+    "firstPayment": {
+      "name": "계약금 안내 수정 수정",
+      "id": "TK_4108",
+      "needs": [
         "client",
         "host",
         "path",
         "cliid",
         "needs"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "cliid", to: obj.cliid },
-          { from: "needs", to: obj.needs },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n          { from: \"needs\", to: obj.needs },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님~\n디자이너와 함께하면 내 마음에 쏙 드는 우리 집을 만나게 되실 거에요! 프로젝트 진행을 위해 계약금 안내드립니다 :)\n\n계약금은 전체 디자이너 비용에 포함되는 금액으로, 디자이너와의 현장 미팅 및 디자이너 일정 예약을 위해 정가제로 운영되고 있습니다.\n\n계약금을 입금해 주시면 디자이너와의 미팅 일정을 조정합니다.\n\n* 유의사항\n1. 계약자명과 입금자명이 같게 보내주셔야 합니다.\n2. 현장미팅 후 서비스를 진행하지 않더라도 계약금은 환불되지 않습니다.\n3. 현장미팅 후 계약금을 제외한 잔금을 입금하시면 서비스가 계속 진행됩니다.\n\n감사합니다 :)\n\n* 계약금 안내\nhttps://#{host}/#{path}.php?cliid=#{cliid}&needs=#{needs}",
+        "templtName": "계약금 안내 수정 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-10-26 15:02:07",
+        "templtCode": "TK_4108",
+        "comments": [
+          {
+            "cdate": "2022-10-26 16:56:05",
+            "name": "검수자",
+            "id": "2201788",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2022-10-26 16:56:05",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    secondPayment: {
-      name: "잔금 안내 수정 수정 수정 수정",
-      id: "TK_4109",
-      needs: [
+    "secondPayment": {
+      "name": "잔금 안내 수정 수정 수정 수정",
+      "id": "TK_4109",
+      "needs": [
         "client",
         "host",
         "path",
         "cliid",
         "needs"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "cliid", to: obj.cliid },
-          { from: "needs", to: obj.needs },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n          { from: \"needs\", to: obj.needs },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님~ 프로젝트 진행을 위해 잔금 안내 드립니다 :)\n\n잔금은 전체 디자이너 비용에서 계약금을 제외한 금액으로, 입금해주시면 디자이너가 홈스타일링 서비스를 계속 진행하게 됩니다.\n\n* 유의사항\n1. 입금하신 서비스비는 디자이너에게 진행 단계에 따라 정산합니다.\n2. 계약금 결제시 요청하신 증빙 방식으로 발행됩니다.\n\n* 계좌 이체시 유의사항\n1. 입금자명은 반드시 신청자명으로 보내주셔야 합니다.\n2. 현금 영수증 발행을 위해 안내 페이지 하단의 '계좌 이체' 버튼을 반드시 눌러주세요!\n\n감사합니다 :)\n\n* 잔금 안내\nhttps://#{host}/#{path}.php?cliid=#{cliid}&needs=#{needs}",
+        "templtName": "잔금 안내 수정 수정 수정 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-10-26 15:03:52",
+        "templtCode": "TK_4109",
+        "comments": [
+          {
+            "cdate": "2022-10-26 17:00:09",
+            "name": "검수자",
+            "id": "2201821",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2022-10-26 17:00:09",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    travelPayment: {
-      name: "출장비 안내 수정",
-      id: "TK_4111",
-      needs: [
+    "travelPayment": {
+      "name": "출장비 안내 수정",
+      "id": "TK_4111",
+      "needs": [
         "client",
         "unit",
         "total",
@@ -543,22 +1297,34 @@ KakaoTalk.prototype.templateTong = function (target) {
         "cliid",
         "needs"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "unit", to: obj.unit },
-          { from: "total", to: obj.total },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "cliid", to: obj.cliid },
-          { from: "needs", to: obj.needs },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"unit\", to: obj.unit },\n          { from: \"total\", to: obj.total },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n          { from: \"needs\", to: obj.needs },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님! 말씀드렸던 출장비 안내드립니다.\n\n출장비는 디자이너가 고객님의 집까지 이동하는 데에 발생하는 비용으로, 도달 거리와 시간을 측정하여 계산되며, 왕복 비용으로 청구됩니다.\n\n* 1회 출장비(왕복) : #{unit}원 (VAT포함)\n* 총 금액 : #{total}원 (VAT포함)\n\n감사합니다 :)\n\n* 출장비 안내\nhttps://#{host}/#{path}.php?cliid=#{cliid}&needs=#{needs}",
+        "templtName": "출장비 안내 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-10-26 15:04:39",
+        "templtCode": "TK_4111",
+        "comments": []
+      }
     },
-    plusDesignFee: {
-      name: "서비스 변경 추가 금액 안내",
-      id: "TF_6757",
-      needs: [
+    "plusDesignFee": {
+      "name": "서비스 변경 추가 금액 안내",
+      "id": "TF_6757",
+      "needs": [
         "client",
         "pastservice",
         "newservice",
@@ -568,23 +1334,44 @@ KakaoTalk.prototype.templateTong = function (target) {
         "cliid",
         "needs"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "pastservice", to: obj.pastservice },
-          { from: "newservice", to: obj.newservice },
-          { from: "total", to: obj.total },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "cliid", to: obj.cliid },
-          { from: "needs", to: obj.needs },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"pastservice\", to: obj.pastservice },\n          { from: \"newservice\", to: obj.newservice },\n          { from: \"total\", to: obj.total },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n          { from: \"needs\", to: obj.needs },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님! 디자이너 서비스 변경으로 인한 추가 디자인비 안내드립니다.\n\n* 변경 전 서비스명 : #{pastservice}\n* 변경 후 서비스명 : #{newservice}\n* 추가 금액 : #{total}원 (VAT포함)\n\n감사합니다 :)\n\n* 결제 안내\nhttps://#{host}/middle/#{path}?cliid=#{cliid}&needs=#{needs}",
+        "templtName": "서비스 변경 추가 금액 안내",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-08-31 16:17:35",
+        "templtCode": "TF_6757",
+        "comments": [
+          {
+            "cdate": "2021-08-31 16:43:28",
+            "name": "검수자",
+            "id": "1513740",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-08-31 16:43:28",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    plusDesignerFee: {
-      name: "디자이너 변경 추가 견적",
-      id: "TF_7173",
-      needs: [
+    "plusDesignerFee": {
+      "name": "디자이너 변경 추가 견적",
+      "id": "TF_7173",
+      "needs": [
         "client",
         "pastdesigner",
         "newdesigner",
@@ -594,115 +1381,230 @@ KakaoTalk.prototype.templateTong = function (target) {
         "cliid",
         "needs"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "pastdesigner", to: obj.pastdesigner },
-          { from: "newdesigner", to: obj.newdesigner },
-          { from: "total", to: obj.total },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "cliid", to: obj.cliid },
-          { from: "needs", to: obj.needs },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"pastdesigner\", to: obj.pastdesigner },\n          { from: \"newdesigner\", to: obj.newdesigner },\n          { from: \"total\", to: obj.total },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n          { from: \"needs\", to: obj.needs },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님! 디자이너 변경으로 인한 추가 디자인비 안내드립니다.\n\n* 변경 전 디자이너 : #{pastdesigner}\n* 변경 후 디자이너 : #{newdesigner}\n* 추가 금액 : #{total}원 (VAT포함)\n\n감사합니다 :)\n\n* 추가 디자인비 견적서\nhttps://#{host}/middle/#{path}?cliid=#{cliid}&needs=#{needs}",
+        "templtName": "디자이너 변경 추가 견적",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-09-03 11:53:15",
+        "templtCode": "TF_7173",
+        "comments": [
+          {
+            "cdate": "2021-09-03 14:51:53",
+            "name": "검수자",
+            "id": "1519663",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-09-03 14:51:53",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    refundCard: {
-      name: "환불 신청 완료 카드",
-      id: "TF_7403",
-      needs: [
+    "refundCard": {
+      "name": "환불 신청 완료 카드",
+      "id": "TF_7403",
+      "needs": [
         "client",
         "designer",
         "percentage",
-        "amount",
+        "amount"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "designer", to: obj.designer },
-          { from: "percentage", to: obj.percentage },
-          { from: "amount", to: obj.amount },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"percentage\", to: obj.percentage },\n          { from: \"amount\", to: obj.amount },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님!\n#{designer} 디자이너님과의 프로젝트에 대한 카드 환불 신청이 완료되었습니다.\n\n환불 비율 : #{percentage}%\n환불 금액 : #{amount}원\n\n환불 신청 접수 완료 후 영업일 기준으로 3~7일 정도 소요됩니다. 카드사의 사정에 따라 7일 이상 경과될 수 있습니다.\n\n정확한 카드 환불 일정은 해당 카드사에 문의하시기 바랍니다.\n\n문의해주시고, 이용해주셔서 감사합니다 :)",
+        "templtName": "환불 신청 완료 카드",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-09-06 10:47:42",
+        "templtCode": "TF_7403",
+        "comments": [
+          {
+            "cdate": "2021-09-06 14:36:27",
+            "name": "검수자",
+            "id": "1521539",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-09-06 14:36:27",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    refundVAccount: {
-      name: "환불 신청 완료 가상계좌",
-      id: "TF_7406",
-      needs: [
+    "refundVAccount": {
+      "name": "환불 신청 완료 가상계좌",
+      "id": "TF_7406",
+      "needs": [
         "client",
         "designer",
         "percentage",
-        "amount",
+        "amount"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "designer", to: obj.designer },
-          { from: "percentage", to: obj.percentage },
-          { from: "amount", to: obj.amount },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"percentage\", to: obj.percentage },\n          { from: \"amount\", to: obj.amount },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님!\n#{designer} 디자이너님과의 프로젝트에 대한 환불 신청이 완료되었습니다.\n\n환불 비율 : #{percentage}%\n환불 금액 : #{amount}원\n\n환불은 환불 계좌 접수 후 영업일 기준 5~7일 내에 접수된 계좌로 취소/환불수수료를 공제한 금액으로 입금됩니다.\n\n접수 계좌 오류, 증빙서류 미접수 등의 사유로 환불이 유보 또는 지연될 수 있으며, 이 경우 이메일 등을 통해 별도 안내합니다.\n\n문의해주시고, 이용해주셔서 감사합니다 :)",
+        "templtName": "환불 신청 완료 가상계좌",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-09-06 11:01:21",
+        "templtCode": "TF_7406",
+        "comments": [
+          {
+            "cdate": "2021-09-06 14:37:15",
+            "name": "검수자",
+            "id": "1521545",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-09-06 14:37:15",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    designerConsole: {
-      name: "디자이너 콘솔 전송 수정 수정",
-      id: "TJ_8643",
-      needs: [
+    "designerConsole": {
+      "name": "디자이너 콘솔 전송 수정 수정",
+      "id": "TJ_8643",
+      "needs": [
         "designer",
         "host",
         "path",
         "desid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "designer", to: obj.designer },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "desid", to: obj.desid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"desid\", to: obj.desid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 디자이너님!\n\n홈리에종 파트너 디자이너 전용, 관리자 콘솔 링크를 보내드립니다!\n\n기타 문의 사항은 전화 또는 홈리에종 채널로 문의 부탁드리겠습니다. 감사합니다!\n\n* 디자이너 콘솔 링크\nhttps://#{host}/designer/#{path}.php?desid=#{desid}",
+        "templtName": "디자이너 콘솔 전송 수정 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-08-31 16:25:49",
+        "templtCode": "TJ_8643",
+        "comments": []
+      }
     },
-    finalPush: {
-      name: "드랍시 서비스 안내",
-      id: "TJ_5864",
-      needs: [
+    "finalPush": {
+      "name": "드랍시 서비스 안내",
+      "id": "TJ_5864",
+      "needs": [
         "client",
         "host",
-        "path",
+        "path"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님!\n홈리에종에 문의주셔서 감사드립니다 :)\n\n유선으로 말씀드린 자세한 서비스 안내 페이지 보내드립니다. 확인해보시고 궁금하신 내용은 문의주세요!\n\n* 홈리에종 서비스 안내\nhttps://#{host}/#{path}.php\n\n\n정해진 시간 내 할 것 많고 알 것 많은 인테리어,\n\n1. 시공부터 스타일링까지 한 번에\n2. 전문 디자이너가 우리 집 맞춤으로 한땀한땀 정성스럽게\n3. 홈리에종의 시스템과 케어로 안정감 있게\n4. 실제 우리 집에 만족스러운 변화를 가져오는\n\n홈리에종과 함께 하세요!",
+        "templtName": "드랍시 서비스 안내",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-08-04 12:53:50",
+        "templtCode": "TJ_5864",
+        "comments": []
+      }
     },
-    designerConsoleRequest: {
-      name: "홈스타일링 의뢰서 전송 수정 수정",
-      id: "TK_7798",
-      needs: [
+    "designerConsoleRequest": {
+      "name": "홈스타일링 의뢰서 전송 수정 수정",
+      "id": "TK_7798",
+      "needs": [
         "designer",
         "client",
         "host",
         "path",
         "desid",
-        "proid",
+        "proid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "designer", to: obj.designer },
-          { from: "client", to: obj.client },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "desid", to: obj.desid },
-          { from: "proid", to: obj.proid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"desid\", to: obj.desid },\n          { from: \"proid\", to: obj.proid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 디자이너님!\n#{client} 고객님 현장의 홈스타일링 의뢰서를 보내드립니다.\n\n기타 문의 사항은 전화 또는 홈리에종 채널로 문의 부탁드리겠습니다. 감사합니다 :)\n\n* 홈스타일링 의뢰서\nhttps://#{host}/designer/#{path}.php?desid=#{desid}&proid=#{proid}&mode=request",
+        "templtName": "홈스타일링 의뢰서 전송 수정 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-11-23 13:00:01",
+        "templtCode": "TK_7798",
+        "comments": []
+      }
     },
-    designerConsoleRequestFirstMeeting: {
-      name: "홈스타일링 의뢰서 현장 미팅 수정 수정",
-      id: "TK_7775",
-      needs: [
+    "designerConsoleRequestFirstMeeting": {
+      "name": "홈스타일링 의뢰서 현장 미팅 수정 수정",
+      "id": "TK_7775",
+      "needs": [
         "designer",
         "client",
         "date",
@@ -711,40 +1613,77 @@ KakaoTalk.prototype.templateTong = function (target) {
         "minute",
         "host",
         "path",
-        "proid",
+        "proid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "designer", to: obj.designer },
-          { from: "client", to: obj.client },
-          { from: "date", to: obj.date },
-          { from: "day", to: obj.day },
-          { from: "hour", to: obj.hour },
-          { from: "minute", to: obj.minute },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "proid", to: obj.proid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"client\", to: obj.client },\n          { from: \"date\", to: obj.date },\n          { from: \"day\", to: obj.day },\n          { from: \"hour\", to: obj.hour },\n          { from: \"minute\", to: obj.minute },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"proid\", to: obj.proid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 디자이너님!\n#{client} 고객님과의 첫 현장 미팅이 다가옵니다!\n\n* 현장미팅 일정\n#{date} #{day}요일 #{hour}시 #{minute}분\n\n* 홈스타일링 의뢰서\nhttps://#{host}/designer/#{path}.php?proid=#{proid}&mode=request\n\n의뢰서를 꼭 검토하여 미팅을 준비해주세요. 현장 사진을 찍을 수 있는 경우, 의뢰서를 통해 현장 사진을 업로드해주시길 바랍니다.\n\n미팅 3일 전 꼭 고객님께 인사 메시지를 남겨주세요. 고객님도 동일한 안내를 받고 기다리고 계십니다.",
+        "templtName": "홈스타일링 의뢰서 현장 미팅 수정 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-11-23 11:51:37",
+        "templtCode": "TK_7775",
+        "comments": []
+      }
     },
-    photoShareAKeywordDesigner: {
-      name: "디자이너 개인 포트폴리오 공유",
-      id: "TG_0998",
-      needs: [
+    "photoShareAKeywordDesigner": {
+      "name": "디자이너 개인 포트폴리오 공유",
+      "id": "TG_0998",
+      "needs": [
         "designer",
         "file"
       ],
-      convert: function (obj) {
-        return [
-          { from: "designer", to: obj.designer },
-          { from: "file", to: obj.file }
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"file\", to: obj.file }\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{designer} 실장님, 안녕하세요 :) 촬영한 현장의 원본 사진이 나와서 연락드려요!\n\n포트폴리오 콘텐츠는 순차 발행중이라 나오면 추후에 링크 공유드리겠습니다!\n\n감사합니다 :)\n\n사진 공유 : https://drive.google.com/file/d/#{file}/view?usp=sharing",
+        "templtName": "디자이너 개인 포트폴리오 공유",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-10-12 14:56:32",
+        "templtCode": "TG_0998",
+        "comments": [
+          {
+            "cdate": "2021-10-12 15:54:58",
+            "name": "검수자",
+            "id": "1573765",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-10-12 15:54:58",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    firstMeetingWeekAgo: {
-      name: "현장 미팅 안내 일주일 수정",
-      id: "TJ_3907",
-      needs: [
+    "firstMeetingWeekAgo": {
+      "name": "현장 미팅 안내 일주일 수정",
+      "id": "TJ_3907",
+      "needs": [
         "client",
         "date",
         "day",
@@ -754,23 +1693,34 @@ KakaoTalk.prototype.templateTong = function (target) {
         "path",
         "proid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "date", to: obj.date },
-          { from: "day", to: obj.day },
-          { from: "hour", to: obj.hour },
-          { from: "minute", to: obj.minute },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "proid", to: obj.proid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"date\", to: obj.date },\n          { from: \"day\", to: obj.day },\n          { from: \"hour\", to: obj.hour },\n          { from: \"minute\", to: obj.minute },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"proid\", to: obj.proid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{client}님, 안녕하세요 :)\n디자이너님과의 첫 미팅이 다가옵니다!\n\n* 현장미팅 일정 :\n#{date} #{day}요일 #{hour}시 #{minute}분\n\n이제부터 디자이너는 고객님의 문제를 함께 고민하고 해결해 나갑니다. 원하시는 것, 궁금하신 것이 있으시면 현장에서 솔직하고 구체적으로 말씀해주시는 것이 가장 좋습니다 :)\n\n미팅 준비를 위한 문의가 있다면 연락주세요!\n\n* 현장 미팅 안내\nhttps://#{host}/#{path}.php?proid=#{proid}",
+        "templtName": "현장 미팅 안내 일주일 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-07-18 09:41:57",
+        "templtCode": "TJ_3907",
+        "comments": []
+      }
     },
-    firstMeetingDayAgo: {
-      name: "현장 미팅 안내 하루전 수정",
-      id: "TJ_3908",
-      needs: [
+    "firstMeetingDayAgo": {
+      "name": "현장 미팅 안내 하루전 수정",
+      "id": "TJ_3908",
+      "needs": [
         "client",
         "date",
         "day",
@@ -780,145 +1730,259 @@ KakaoTalk.prototype.templateTong = function (target) {
         "path",
         "proid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "date", to: obj.date },
-          { from: "day", to: obj.day },
-          { from: "hour", to: obj.hour },
-          { from: "minute", to: obj.minute },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "proid", to: obj.proid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"date\", to: obj.date },\n          { from: \"day\", to: obj.day },\n          { from: \"hour\", to: obj.hour },\n          { from: \"minute\", to: obj.minute },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"proid\", to: obj.proid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님!\n현장 미팅 일정 재알림드려요!\n\n* 현장미팅 일정 :\n#{date} #{day}요일 #{hour}시 #{minute}분\n\n이제부터 디자이너는 고객님의 문제를 함께 고민하고 해결해 나갑니다. 원하시는 것, 궁금하신 것이 있으시면 현장에서 솔직하고 구체적으로 말씀해주시는 것이 가장 좋습니다 :)\n\n그럼 저희는 미팅 완료 후 전화드릴게요 :)\n\n* 현장 미팅 안내\nhttps://#{host}/#{path}.php?proid=#{proid}",
+        "templtName": "현장 미팅 안내 하루전 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-07-18 09:42:30",
+        "templtCode": "TJ_3908",
+        "comments": []
+      }
     },
-    constructFirst: {
-      name: "시공 계약금 수정 수정 수정 수정",
-      id: "TK_4112",
-      needs: [
+    "constructFirst": {
+      "name": "시공 계약금 수정 수정 수정 수정",
+      "id": "TK_4112",
+      "needs": [
         "client",
         "amount",
         "host",
         "path",
         "cliid",
-        "needs",
+        "needs"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "amount", to: obj.amount },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "cliid", to: obj.cliid },
-          { from: "needs", to: obj.needs },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"amount\", to: obj.amount },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n          { from: \"needs\", to: obj.needs },\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{client}님! 시공 계약금 안내드립니다 :) 다음 링크를 통해 계약금 #{amount}원을 입금해주시면, 시공이 다음 단계로 진행됩니다.\n\n* 유의사항\n1. 입금자명은 반드시 신청자명으로 보내주셔야 합니다.\n2. 계좌 이체시, 현금 영수증 발행을 위해 안내 페이지 하단의 '계좌 이체' 버튼을 반드시 눌러주세요!\n3. 시공 계약서는 고객님과 논의를 거친 견적서를 바탕으로 작성되었습니다.\n4. 진행 중 변경사항이 생기면 마무리 단계에서 증감 내역을 확인하여 최종 정산에 반영합니다 :)\n\n감사합니다 :)\n\n* 계약금 안내\nhttps://#{host}/#{path}.php?cliid=#{cliid}&needs=#{needs}&inicisdeactive=true",
+        "templtName": "시공 계약금 수정 수정 수정 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-10-26 15:06:02",
+        "templtCode": "TK_4112",
+        "comments": []
+      }
     },
-    constructStart: {
-      name: "착수금 안내 수정 수정 수정 수정",
-      id: "TK_4113",
-      needs: [
+    "constructStart": {
+      "name": "착수금 안내 수정 수정 수정 수정",
+      "id": "TK_4113",
+      "needs": [
         "client",
         "amount",
         "host",
         "path",
         "cliid",
-        "needs",
+        "needs"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "amount", to: obj.amount },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "cliid", to: obj.cliid },
-          { from: "needs", to: obj.needs },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"amount\", to: obj.amount },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n          { from: \"needs\", to: obj.needs },\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{client}님! 시공 착수금 안내드립니다 :) 다음 링크를 통해 착수금 #{amount}원을 입금해주시면, 시공이 다음 단계로 진행됩니다.\n\n* 유의사항\n1. 입금자명은 반드시 신청자명으로 보내주셔야 합니다.\n2. 계좌 이체시, 현금 영수증 발행을 위해 안내 페이지 하단의 '계좌 이체' 버튼을 반드시 눌러주세요!\n3. 진행 중 변경사항이 생기면 마무리 단계에서 증감 내역을 확인하여 최종 정산에 반영합니다.\n\n이제 시공 들어가시는데 진행하시면서 저희 안내가 필요하시면 편하게 연락주세요 :)\n\n* 착수금 안내\nhttps://#{host}/#{path}.php?cliid=#{cliid}&needs=#{needs}&inicisdeactive=true",
+        "templtName": "착수금 안내 수정 수정 수정 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-10-26 15:06:48",
+        "templtCode": "TK_4113",
+        "comments": []
+      }
     },
-    constructMiddle: {
-      name: "중도금 안내 수정 수정 수정 수정",
-      id: "TK_4114",
-      needs: [
+    "constructMiddle": {
+      "name": "중도금 안내 수정 수정 수정 수정",
+      "id": "TK_4114",
+      "needs": [
         "client",
         "amount",
         "host",
         "path",
         "cliid",
-        "needs",
+        "needs"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "amount", to: obj.amount },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "cliid", to: obj.cliid },
-          { from: "needs", to: obj.needs },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"amount\", to: obj.amount },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n          { from: \"needs\", to: obj.needs },\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{client}님! 시공 중도금 안내드립니다 :) 다음 링크를 통해 중도금 #{amount}원을 입금해주시면, 시공이 다음 단계로 진행됩니다.\n\n* 유의사항\n1. 입금자명은 반드시 신청자명으로 보내주셔야 합니다.\n2. 계좌 이체시, 현금 영수증 발행을 위해 안내 페이지 하단의 '계좌 이체' 버튼을 반드시 눌러주세요!\n3. 진행 중 변경사항이 생기면 마무리 단계에서 증감 내역을 확인하여 최종 정산에 반영합니다.\n\n감사합니다 :)\n\n* 중도금 안내\nhttps://#{host}/#{path}.php?cliid=#{cliid}&needs=#{needs}&inicisdeactive=true",
+        "templtName": "중도금 안내 수정 수정 수정 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-10-26 15:07:17",
+        "templtCode": "TK_4114",
+        "comments": []
+      }
     },
-    constructRemain: {
-      name: "시공 잔금 안내 수정 수정 수정 수정",
-      id: "TK_4115",
-      needs: [
+    "constructRemain": {
+      "name": "시공 잔금 안내 수정 수정 수정 수정",
+      "id": "TK_4115",
+      "needs": [
         "client",
         "amount",
         "host",
         "path",
         "cliid",
-        "needs",
+        "needs"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "amount", to: obj.amount },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "cliid", to: obj.cliid },
-          { from: "needs", to: obj.needs },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"amount\", to: obj.amount },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n          { from: \"needs\", to: obj.needs },\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{client}님, 시공 잔금 안내드립니다 :) 기존 견적에서 가격 변동된 부분은 하늘색으로 표시해드렸습니다. 해당 내역을 반영해서 최종 잔금을 안내드리오니 확인 부탁드립니다!\n\n* 최종 납입 금액: #{amount}원 (vat포함)\n\n* 유의사항\n1. 입금자명은 반드시 신청자명으로 보내주셔야 합니다.\n2. 계좌 이체시, 현금 영수증 발행을 위해 안내 페이지 하단의 '계좌 이체' 버튼을 반드시 눌러주세요!\n\n감사합니다 :)\n\n* 잔금 안내\nhttps://#{host}/#{path}.php?cliid=#{cliid}&needs=#{needs}&inicisdeactive=true",
+        "templtName": "시공 잔금 안내 수정 수정 수정 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-10-26 15:08:05",
+        "templtCode": "TK_4115",
+        "comments": []
+      }
     },
-    generalPayments: {
-      name: "일반 결제 완료",
-      id: "TG_5450",
-      needs: [
+    "generalPayments": {
+      "name": "일반 결제 완료",
+      "id": "TG_5450",
+      "needs": [
         "client",
-        "goods",
+        "goods"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "goods", to: obj.goods },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"goods\", to: obj.goods },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님! #{goods}에 대한 입금 확인이 완료되었습니다 :) 해당 항목과 관련된 안내를 위해, 담당자가 고객님께 연락드릴 예정입니다!\n\n감사합니다.",
+        "templtName": "일반 결제 완료",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-11-22 12:49:59",
+        "templtCode": "TG_5450",
+        "comments": [
+          {
+            "cdate": "2021-11-22 14:31:45",
+            "name": "검수자",
+            "id": "1641028",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2021-11-22 14:31:45",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    constructEstimation: {
-      name: "시공 견적서",
-      id: "TG_9724",
-      needs: [
+    "constructEstimation": {
+      "name": "시공 견적서",
+      "id": "TG_9724",
+      "needs": [
         "client",
         "host",
         "path",
         "proid",
-        "buiid",
+        "buiid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "proid", to: obj.proid },
-          { from: "buiid", to: obj.buiid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"proid\", to: obj.proid },\n          { from: \"buiid\", to: obj.buiid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님~\n고객님 현장에 예상되는 시공 내역을 정리한 견적서 보내드립니다!\n\n해당 견적서는 공사 진행시 현장 상황에 따라 부득이한 변동 사항이 발생할 수 있으며, 이 때는 상호 협의 후 진행하게 됩니다.\n\n기타 문의사항은 카카오 채널 또는 유선상으로 문의 부탁드립니다! 감사합니다 :)\n\n* 견적 안내\nhttps://#{host}/middle/#{path}?proid=#{proid}&buiid=#{buiid}",
+        "templtName": "시공 견적서",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2021-12-24 12:45:29",
+        "templtCode": "TG_9724",
+        "comments": [
+          {
+            "cdate": "2021-12-24 15:14:43",
+            "name": "검수자",
+            "id": "1696533",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\n\n신청하신 메시지 확인하여 승인되었습니다.\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\n\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\n\n감사합니다.",
+            "createdAt": "2021-12-24 15:14:43",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    designerSchedule: {
-      name: "디자이너 상세 일정 기입",
-      id: "TH_1452",
-      needs: [
+    "designerSchedule": {
+      "name": "디자이너 상세 일정 기입",
+      "id": "TH_1452",
+      "needs": [
         "designer",
         "client",
         "date",
@@ -926,237 +1990,458 @@ KakaoTalk.prototype.templateTong = function (target) {
         "path",
         "desid",
         "mode",
-        "cliid",
+        "cliid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "designer", to: obj.designer },
-          { from: "client", to: obj.client },
-          { from: "date", to: obj.date },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "desid", to: obj.desid },
-          { from: "mode", to: obj.mode },
-          { from: "cliid", to: obj.cliid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"client\", to: obj.client },\n          { from: \"date\", to: obj.date },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"desid\", to: obj.desid },\n          { from: \"mode\", to: obj.mode },\n          { from: \"cliid\", to: obj.cliid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 디자이너님!\n\n#{client} 고객님 현장이 곧 시작됩니다! 계약상 시작 날짜로부터 5일 전과 당일에 맞추어 #{client} 고객님께 상세 일정 페이지가 자동으로 전송될 예정입니다.\n\n* 자동으로 전송될 날짜 : #{date}\n\n고객님이 페이지를 보기 전, 이 프로젝트에 대한 상세 일정을 간단히 기입해주세요! 기입하는 방법은 아래 링크로 가시면 매뉴얼 영상을 보실 수 있습니다 :)\n\n기타 문의 사항은 전화 또는 홈리에종 채널로 문의 부탁드리겠습니다. 감사합니다!\n\n* 상세 일정 기입\nhttps://#{host}/middle/#{path}?desid=#{desid}&mode=#{mode}&cliid=#{cliid}",
+        "templtName": "디자이너 상세 일정 기입",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-01-11 13:32:51",
+        "templtCode": "TH_1452",
+        "comments": [
+          {
+            "cdate": "2022-01-11 15:37:10",
+            "name": "검수자",
+            "id": "1721154",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2022-01-11 15:37:10",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    clientSchedule: {
-      name: "고객 상세 일정 전송",
-      id: "TH_1450",
-      needs: [
+    "clientSchedule": {
+      "name": "고객 상세 일정 전송",
+      "id": "TH_1450",
+      "needs": [
         "client",
         "date",
         "host",
         "path",
-        "proid",
+        "proid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "date", to: obj.date },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "proid", to: obj.proid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"date\", to: obj.date },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"proid\", to: obj.proid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{client}님, 안녕하세요 :)\n디자이너님과의 프로젝트 시작이 다가옵니다!\n\n* 프로젝트 시작일 : #{date}\n\n고객님께 프로젝트의 상세 일정표를 공유해드립니다. 하단 링크로 가시면, 앞으로 디자이너가 어떤 일을 하게 될 지에 대한 순서와 대략적인 날짜가 정렬되어 있습니다. 해당 일정은 프로젝트 진행 상태와 현장 상황에 따라 변경될 수 있습니다.\n\n확인 부탁드리고, 궁금한 사항이나 기타 문의가 있으시다면 언제든 연락 주세요!\n\n* 상세 일정 안내\nhttps://#{host}/middle/#{path}?proid=#{proid}",
+        "templtName": "고객 상세 일정 전송",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-01-11 13:01:31",
+        "templtCode": "TH_1450",
+        "comments": [
+          {
+            "cdate": "2022-01-11 14:34:02",
+            "name": "검수자",
+            "id": "1720876",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2022-01-11 14:34:02",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    clientScheduleNow: {
-      name: "고객 상세 일정 전송 당일",
-      id: "TH_1451",
-      needs: [
+    "clientScheduleNow": {
+      "name": "고객 상세 일정 전송 당일",
+      "id": "TH_1451",
+      "needs": [
         "client",
         "date",
         "host",
         "path",
-        "proid",
+        "proid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "date", to: obj.date },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "proid", to: obj.proid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"date\", to: obj.date },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"proid\", to: obj.proid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{client}님, 안녕하세요 :) 오늘은 디자이너님과의 프로젝트 시작일입니다!\n\n고객님께 프로젝트의 상세 일정표를 공유해드립니다. 하단 링크로 가시면, 앞으로 디자이너가 어떤 일을 하게 될 지에 대한 순서와 대략적인 날짜가 정렬되어 있습니다. 해당 일정은 프로젝트 진행 상태와 현장 상황에 따라 변경될 수 있습니다.\n\n확인 부탁드리고, 궁금한 사항이나 기타 문의가 있으시다면 언제든 연락 주세요!\n\n* 상세 일정 안내\nhttps://#{host}/middle/#{path}?proid=#{proid}",
+        "templtName": "고객 상세 일정 전송 당일",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-01-11 13:32:02",
+        "templtCode": "TH_1451",
+        "comments": [
+          {
+            "cdate": "2022-01-11 14:59:12",
+            "name": "검수자",
+            "id": "1721015",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2022-01-11 14:59:12",
+            "status": "APR"
+          }
+        ]
+      }
     },
-    pushClient: {
-      name: "상담 신청 완료 쪼기 수정",
-      id: "TJ_3621",
-      needs: [
+    "pushClient": {
+      "name": "상담 신청 완료 쪼기 수정",
+      "id": "TJ_3621",
+      "needs": [
         "client",
         "host",
         "path",
-        "cliid",
+        "cliid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "cliid", to: obj.cliid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님 홈리에종입니다!\n\n상담 신청이 끝까지 정상적으로 이루어지지 않았습니다.\n디자이너 추천 제안서를 받아 보시고, 인테리어 진행을 위해서는 끝까지 정보 입력을 완료하셔야 해요 :)\n\n다음 링크를 통해 문의를 끝까지 진행해주시고, 꼭 하단 신청 완료하기 버튼을 눌러주세요!\n\n* 상담 신청 완료하기\nhttps://#{host}/#{path}.php?cliid=#{cliid}",
+        "templtName": "상담 신청 완료 쪼기 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-07-14 11:43:44",
+        "templtCode": "TJ_3621",
+        "comments": []
+      }
     },
-    miniConsulting: {
-      name: "미니 신청 완료",
-      id: "TJ_0095",
-      needs: [
+    "miniConsulting": {
+      "name": "미니 신청 완료",
+      "id": "TJ_0095",
+      "needs": [
         "client",
         "host",
         "path",
-        "useid",
+        "useid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "useid", to: obj.useid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"useid\", to: obj.useid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요 #{client} 고객님,\n홈리에종 Mini 서비스 결제가 완료되었습니다. \n\n담당 디자이너가 #{client}님의 정보를 확인하는 동안 다음 과정을 진행해 주시면, 디자이너와의 상담이 시작됩니다! \n\n1. 우리집 직접 실측하기 \n- 스타일링이 필요한 공간의 가로 * 세로, 창문, 사용할 가구의 사이즈를 가이드에 따라 실측해 주세요.\n\n2. 내가 원하는 컨셉 준비하기\n- 디자이너와의 상담 전, 내가 원하는 무드를 정확하게 알고있다면 좀 더 효율적으로 미팅 시간을 활용할 수 있어요! \n- 레퍼런스 이미지를 미리 준비해둔다면 훨씬 소통이 매끄럽겠죠?\n\n3. 상세 정보와 현장 사진 보내기\n- 1, 2번을 마치셨다면 실측 가이드 페이지를 통해 상세 정보와 현장 사진, 레퍼런스 이미지를 보내주세요!\n\n* 상세 정보 전송 및 실측 가이드 페이지\nhttps://#{host}/middle/#{path}?useid=#{useid}",
+        "templtName": "미니 신청 완료",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-06-14 11:42:34",
+        "templtCode": "TJ_0095",
+        "comments": []
+      }
     },
-    miniRequest: {
-      name: "미니 디자인 요청 수정",
-      id: "TJ_0147",
-      needs: [
+    "miniRequest": {
+      "name": "미니 디자인 요청 수정",
+      "id": "TJ_0147",
+      "needs": [
         "designer",
         "client",
         "host",
         "path",
-        "useid",
+        "useid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "designer", to: obj.designer },
-          { from: "client", to: obj.client },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "useid", to: obj.useid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"useid\", to: obj.useid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요 #{designer} 디자이너님, #{client} 고객님의 홈리에종 Mini 서비스 신규 프로젝트 진행을 알려드립니다!\n\n* 디자인 요청 페이지\nhttps://#{host}/middle/#{path}?useid=#{useid}\n\n#{client} 고객님이 필요한 공간을 실측해주시고, 원하는 컨셉에 대해 요청을 남기셨어요. 공간 사진과 고객의 요청사항을 꼼꼼히 비교하여 원활한 작업이 진행될 수 있도록 영업일 기준 2일 내로 고객님과 상담을 진행해 주세요!\n\n[TIP] 간혹 원하는 컨셉이 없거나 디자이너의 추천을 원하는 경우도 있기 때문에 디자이너님이 제안해주실 방향도 따로 준비해주신다면 원활하게 미팅을 진행하실 수 있을 거에요!\n\n혹시 고객님께서 실측 진행을 하지 않으셨다면, 직접 하실 수 있도록 요청해 주시고,\n실측 정보를 확인 한 기준 날짜로 제안서 작업 시작일임을 안내해 주세요!\n\n* 디자인 요청 페이지\nhttps://#{host}/middle/#{path}?useid=#{useid}",
+        "templtName": "미니 디자인 요청 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-06-14 15:23:43",
+        "templtCode": "TJ_0147",
+        "comments": []
+      }
     },
-    miniFile: {
-      name: "미니 고객 파일 전송 완료",
-      id: "TJ_0100",
-      needs: [
-        "client",
+    "miniFile": {
+      "name": "미니 고객 파일 전송 완료",
+      "id": "TJ_0100",
+      "needs": [
+        "client"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님. 적어주신 상세 정보와 파일 전송이 완료되었습니다 :)\n\n홈리에종은 '홈리에종 Mini 서비스 특별 교육'을 받은 디자이너님을 매칭해드리고 있답니다! 디자이너님과 함께 새로운 우리집 변화를 느껴보세요.\n\n곧, 3일 내로 디자이너님과 상담이 시작될 예정입니다. 상담은 디자이너님과 유선 전화 또는 메신저를 통해 진행됩니다.",
+        "templtName": "미니 고객 파일 전송 완료",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-06-14 11:54:18",
+        "templtCode": "TJ_0100",
+        "comments": []
+      }
     },
-    miniConfirmUser: {
-      name: "미니 컨펌 대기 고객",
-      id: "TJ_0105",
-      needs: [
-        "client",
+    "miniConfirmUser": {
+      "name": "미니 컨펌 대기 고객",
+      "id": "TJ_0105",
+      "needs": [
+        "client"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님! 디자이너의 제안서 작업이 마무리되었고, 홈리에종에서 고객님의 요청 사항 중 놓친 부분이 없는지 더블 체크 중이에요!\n\n확인이 완료되면, 영업일 기준 2일 내 디자이너의 제안서를 열람하실 수 있도록 링크를 전달드릴게요 :)",
+        "templtName": "미니 컨펌 대기 고객",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-06-14 12:06:25",
+        "templtCode": "TJ_0105",
+        "comments": []
+      }
     },
-    miniCompleteDesigner: {
-      name: "미니 컨펌 완료 디자이너",
-      id: "TJ_0106",
-      needs: [
+    "miniCompleteDesigner": {
+      "name": "미니 컨펌 완료 디자이너",
+      "id": "TJ_0106",
+      "needs": [
         "designer",
-        "client",
+        "client"
       ],
-      convert: function (obj) {
-        return [
-          { from: "designer", to: obj.designer },
-          { from: "client", to: obj.client },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"client\", to: obj.client },\n        ];\n      }",
+      "raw": {
+        "templtContent": "#{designer} 디자이너님, 시안 작업하시느라 고생 많으셨어요!\n\n#{client} 고객님 Mini 프로젝트 제안서 중간 컨펌을 완료했습니다. 고객님께서 확인하실 수 있도록 제안서 페이지를 open하겠습니다!",
+        "templtName": "미니 컨펌 완료 디자이너",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-06-14 12:07:59",
+        "templtCode": "TJ_0106",
+        "comments": []
+      }
     },
-    miniProposal: {
-      name: "미니 제안서 전송",
-      id: "TJ_0109",
-      needs: [
+    "miniProposal": {
+      "name": "미니 제안서 전송",
+      "id": "TJ_0109",
+      "needs": [
         "client",
         "host",
         "path",
-        "useid",
+        "useid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "useid", to: obj.useid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"useid\", to: obj.useid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님! 디자인 제안서가 도착했어요. #{client}님 공간의 무드 체인지! 바로 시작해보세요!\n\n제안서 페이지를 오픈하여 내용을 확인해주시고, 시스템 내 리뷰창에 댓글을 남겨주세요. 확인 완료 댓글이 없는 경우, 페이지 오픈 기준 2일 내 자동으로 프로젝트가 종료됩니다.\n\n혹시 궁금한 점이 있다면 제안서 페이지 아래 부분에 위치한 댓글란에 확인 댓글과 함께 같이 문의를 남겨주세요.\n내용 확인 후, 1-2일 안으로 답변드리도록 하겠습니다!\n\n* 디자인 제안서\nhttps://#{host}/middle/#{path}?useid=#{useid}",
+        "templtName": "미니 제안서 전송",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-06-14 12:12:27",
+        "templtCode": "TJ_0109",
+        "comments": []
+      }
     },
-    miniComplete: {
-      name: "미니 완료 고객",
-      id: "TJ_0378",
-      needs: [
+    "miniComplete": {
+      "name": "미니 완료 고객",
+      "id": "TJ_0378",
+      "needs": [
         "client",
         "host",
         "path",
-        "useid",
+        "useid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "useid", to: obj.useid },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"useid\", to: obj.useid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요 #{client}님!\n디자이너님과 진행한 홈리에종 Mini 서비스는 만족하셨나요?\n\n가구의 변경 없이 패브릭, 액자, 소품 등의 변화로도 공간의 무드를 변화시킬 수 있는 홈리에종의 Mini 서비스, 어떠셨나요?\n\n아래 공유해 드리는 고객 만족도 설문지를 통해 홈리에종이 더 나은 서비스를 제공할 수 있도록, 고객님들의 의견에 귀 기울이겠습니다. 솔직한 설문 답변을 부탁드릴게요!\n\n* 고객 만족도 설문지\nhttps://#{host}/middle/#{path}/?useid=#{useid}&reviewcard=true",
+        "templtName": "미니 완료 고객",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-06-15 15:21:38",
+        "templtCode": "TJ_0378",
+        "comments": []
+      }
     },
-    projectDetail: {
-      name: "파일 전달",
-      id: "TK_7337",
-      needs: [
+    "projectDetail": {
+      "name": "파일 전달",
+      "id": "TK_7337",
+      "needs": [
         "client",
         "designer",
         "file",
         "host",
         "path",
         "proid",
-        "key",
+        "key"
       ],
-      convert: function (obj) {
-        return [
-          { from: "client", to: obj.client },
-          { from: "designer", to: obj.designer },
-          { from: "file", to: obj.file },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "proid", to: obj.proid },
-          { from: "key", to: obj.key },
-        ];
-      },
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"file\", to: obj.file },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"proid\", to: obj.proid },\n          { from: \"key\", to: obj.key },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요! #{client}님, #{designer} 디자이너님이 #{file} 파일을 업로드하였습니다. \n\n하단 링크를 통해 다운로드 페이지로 가실 수 있으며, 기타 궁금하신 사항은 디자이너님 또는 홈리에종으로 문의주세요!\n\n감사합니다 :)\n\n* #{file} 파일 다운로드 페이지\nhttps://#{host}/#{path}.php?proid=#{proid}&key=#{key}",
+        "templtName": "파일 전달",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-11-19 15:21:40",
+        "templtCode": "TK_7337",
+        "comments": []
+      }
     },
-    pushDesignerFile: {
-      name: "파일 전달 촉구 수정",
-      id: "TK_7749",
-      needs: [
+    "pushDesignerFile": {
+      "name": "파일 전달 촉구 수정",
+      "id": "TK_7749",
+      "needs": [
         "designer",
         "client",
         "file",
         "host",
         "path",
-        "proid",
+        "proid"
       ],
-      convert: function (obj) {
-        return [
-          { from: "designer", to: obj.designer },
-          { from: "client", to: obj.client },
-          { from: "file", to: obj.file },
-          { from: "host", to: obj.host },
-          { from: "path", to: obj.path },
-          { from: "proid", to: obj.proid },
-        ];
-      },
-    },
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"client\", to: obj.client },\n          { from: \"file\", to: obj.file },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"proid\", to: obj.proid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요! #{designer} 디자이너님, #{client} 고객님께 #{file} 파일을 디자이너 콘솔을 통해 업로드해주세요!\n\n하단 링크를 통해 업로드 페이지로 가실 수 있으며, 기타 궁금하신 사항은 홈리에종 채널로 문의주세요!\n\n감사합니다 :)\n\n* #{file} 파일 업로드 페이지\nhttps://#{host}/designer/#{path}.php?proid=#{proid}",
+        "templtName": "파일 전달 촉구 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "A",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2022-11-23 10:55:22",
+        "templtCode": "TK_7749",
+        "comments": []
+      }
+    }
   };
   if (target === "$all") {
     return tong;
@@ -1173,10 +2458,11 @@ KakaoTalk.prototype.setTalk = async function (method, name, phone, option = {}) 
   const instance = this;
   try {
     const client = { name: name, phone: phone, ...option };
-    const { id: targetId, needs, convert } = this.templateTong(method);
+    const { id: targetId, needs, convert, raw } = this.templateTong(method);
     let tong, contents;
     let convertArr;
     let tempRegexp;
+    let convertFunc;
 
     tong = {
       apikey: this.authObj.apikey,
@@ -1187,41 +2473,75 @@ KakaoTalk.prototype.setTalk = async function (method, name, phone, option = {}) 
       sender: this.senderPhone,
       receiver_1: client.phone.replace(/-/g, ''),
       recvname_1: client.name,
-      subject_1: this.templates[targetId].templtName,
+      subject_1: raw.templtName,
       message_1: "",
-      button_1: { button: this.templates[targetId].buttons },
+      button_1: { button: raw.buttons },
       failover: "Y",
-      fsubject_1: this.templates[targetId].templtName,
+      fsubject_1: raw.templtName,
       fmessage_1: ""
     };
 
-    if (convert === null) {
-      contents = this.templates[targetId].templtContent.replace(/#\{[^\{\}]+\}/g, client.name);
-    } else {
-      contents = this.templates[targetId].templtContent;
-      for (let i of needs) {
-        if (client[i] === undefined) {
-          throw new Error("invaild option");
-        }
+    contents = raw.templtContent;
+    for (let i of needs) {
+      if (client[i] === undefined) {
+        throw new Error("invaild option");
       }
-      convertArr = convert(client);
-      for (let { from, to } of convertArr) {
-        tempRegexp = new RegExp("#\\{" + from + "\\}", "g");
-        contents = contents.replace(tempRegexp, String(to));
-      }
+    }
+    convertFunc = new Function("obj", convert.replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''));
+    convertArr = convertFunc(client);
+    for (let { from, to } of convertArr) {
+      tempRegexp = new RegExp("#\\{" + from + "\\}", "g");
+      contents = contents.replace(tempRegexp, String(to));
+    }
+    if (convertArr.length === 0) {
+      contents = contents.replace(/#\{[^\{\}]+\}/g, client.name);
     }
 
     tong.message_1 = contents;
     tong.fmessage_1 = contents;
-    for (let i = 0; i < this.templates[targetId].buttons.length; i++) {
+    for (let i = 0; i < raw.buttons.length; i++) {
       tong.fmessage_1 += "\n\n";
-      tong.fmessage_1 += this.templates[targetId].buttons[0].name + " : " + this.templates[targetId].buttons[0].linkPc;
+      tong.fmessage_1 += raw.buttons[0].name + " : " + raw.buttons[0].linkPc;
     }
 
     this.message = tong;
     return tong;
   } catch (e) {
     console.log(e);
+    return null;
+  }
+}
+
+KakaoTalk.prototype.templateToBody = async function (method, name, phone, option = {}) {
+  const instance = this;
+  try {
+    const client = { name: name, phone: phone, ...option };
+    const { id: targetId, needs, convert, raw } = this.templateTong(method);
+    let contents;
+    let convertArr;
+    let convertFunc;
+    let tempRegexp;
+
+    contents = raw.templtContent;
+    for (let i of needs) {
+      if (client[i] === undefined) {
+        throw new Error("invaild option");
+      }
+    }
+    convertFunc = new Function("obj", convert.replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''));
+    convertArr = convertFunc(client);
+    for (let { from, to } of convertArr) {
+      tempRegexp = new RegExp("#\\{" + from + "\\}", "g");
+      contents = contents.replace(tempRegexp, String(to));
+    }
+    if (convertArr.length === 0) {
+      contents = contents.replace(/#\{[^\{\}]+\}/g, client.name);
+    }
+
+    return contents;
+  } catch (e) {
+    console.log(e);
+    return "";
   }
 }
 
@@ -1231,16 +2551,31 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
   const { requestSystem } = this.mother;
   try {
     let options, boo, data;
+    let result;
 
-    options = await this.setTalk(method, name, phone, convertObj);
+    boo = false;
+    data = null;
 
     try {
-      ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options));
+      result = await this.setAuth();
+      if (!result) {
+        throw new Error("auto error");
+      }
+      options = await this.setTalk(method, name, phone, convertObj);
+      if (options === null) {
+        throw new Error("set error");
+      }
+      try {
+        ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options));
+      } catch (e) {
+        data = null;
+      }
+      boo = true;
     } catch (e) {
-      data = null;
+      boo = false;
     }
 
-    if (typeof data.message === "string" && /성공/gi.test(data.message)) {
+    if (data !== null && typeof data === "object" && typeof data.message === "string" && /성공/gi.test(data.message)) {
       boo = true;
     } else {
       boo = false;
@@ -1249,13 +2584,18 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
     if (!boo) {
       await human.sendSms({
         to: phone,
-        body: options.message_1
+        body: (await this.templateToBody(method, name, phone, convertObj)),
       });
     }
 
     return data;
   } catch (e) {
     console.log(e);
+    await human.sendSms({
+      to: phone,
+      body: (await this.templateToBody(method, name, phone, convertObj)),
+    });
+    return null;
   }
 }
 
@@ -1286,15 +2626,12 @@ KakaoTalk.prototype.ObserveRemain = async function () {
 KakaoTalk.prototype.ready = async function () {
   const instance = this;
   try {
-    await this.setAuth();
-    await this.setTemplate();
+
+    // not used
+
   } catch (e) {
     console.log(e);
   }
-}
-
-KakaoTalk.prototype.getTemplate = function (target) {
-  return this.templates[this.templateTong(target).id];
 }
 
 module.exports = KakaoTalk;

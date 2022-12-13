@@ -678,8 +678,6 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     }
     arr = new RawArray(arr);
 
-    await kakaoInstance.ready();
-
     let folderPath;
     let designers, consoleInput, targetDesigner, googleFolderName;
     let adobe, tempAppList;

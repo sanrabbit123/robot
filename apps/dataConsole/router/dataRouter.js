@@ -2973,13 +2973,13 @@ DataRouter.prototype.rou_post_sendCertification = function () {
         return errorLog("인증번호 문자 전송 완료");
       }).catch((e) => { console.log(e); });
 
-      // kakao.sendTalk("certification", name, phone, {
-      //   company: "홈리에종",
-      //   name,
-      //   certification
-      // }).then(() => {
-      //   return errorLog("인증번호 카카오 전송 완료");
-      // }).catch((e) => { console.log(e); });
+      kakao.sendTalk("certification", name, phone, {
+        company: "홈리에종",
+        name,
+        certification
+      }).then(() => {
+        return errorLog("인증번호 카카오 전송 완료");
+      }).catch((e) => { console.log(e); });
 
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
