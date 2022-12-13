@@ -3749,14 +3749,14 @@ DevContext.prototype.launching = async function () {
 
 
     // kakao test
-    const kakao = new KakaoTalk();
-    await kakao.ready();
-    await kakao.sendTalk("curationComplete", "배창규", "010-2747-3403", {
-      client: "배창규",
-      host: instance.address.frontinfo.host,
-      path: "curation",
-      cliid: "c1801_aa01s",
-    });
+    // const kakao = new KakaoTalk();
+    // await kakao.ready();
+    // await kakao.sendTalk("curationComplete", "배창규", "010-2747-3403", {
+    //   client: "배창규",
+    //   host: instance.address.frontinfo.host,
+    //   path: "curation",
+    //   cliid: "c1801_aa01s",
+    // });
 
 
 
