@@ -128,23 +128,160 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // CRM
+
+    /*
+
+    const selfMongo = this.MONGOC;
+    const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
+    const requests = [ ...clients.getRequestsTong() ];
+    let longTimes;
+    let dropRequests;
+    let from, to;
+    let matrix;
+    let tempArr;
+    let sheetsId;
+
+    longTimes = requests.filter(({ analytics }) => {
+      return /장기/gi.test(analytics.response.status)
+    })
+
+    dropRequests = requests.filter(({ analytics }) => {
+      return /드[랍롭]/gi.test(analytics.response.status)
+    })
+
+    // long
+
+    from = new Date(2022, 0, 1);
+    to = new Date();
+    longTimes = longTimes.filter(({ request }) => {
+      return request.timeline.valueOf() >= from.valueOf() && request.timeline.valueOf() < to.valueOf()
+    })
+
+    matrix = [
+      [
+        "아이디",
+        "성함",
+        "문의일",
+        "연락처",
+        "상태"
+      ]
+    ];
+
+    for (let { request, analytics, cliid, name, phone } of longTimes) {
+      tempArr = [];
+
+      tempArr.push(cliid);
+      tempArr.push(name);
+      tempArr.push(dateToString(request.timeline, true));
+      tempArr.push(phone);
+      tempArr.push(analytics.response.status.value);
+
+      matrix.push(tempArr);
+    }
+
+    sheetsId = await sheets.create_newSheets_inPython("장기 고객 CRM", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix);
+    console.log(matrix);
+
+
+    // drop
+
+    from = new Date(2022, 5, 1);
+    to = new Date();
+    dropRequests = dropRequests.filter(({ request }) => {
+      return request.timeline.valueOf() >= from.valueOf() && request.timeline.valueOf() < to.valueOf()
+    })
+
+    matrix = [
+      [
+        "아이디",
+        "성함",
+        "문의일",
+        "연락처",
+        "상태",
+        "유출 이유",
+      ]
+    ];
+
+    for (let { request, analytics, cliid, name, phone } of dropRequests) {
+      tempArr = [];
+
+      tempArr.push(cliid);
+      tempArr.push(name);
+      tempArr.push(dateToString(request.timeline, true));
+      tempArr.push(phone);
+      tempArr.push(analytics.response.status.value);
+      tempArr.push(analytics.response.outreason.values.join(", "));
+
+      matrix.push(tempArr);
+    }
+
+    sheetsId = await sheets.create_newSheets_inPython("드랍 고객 CRM", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix);
+    console.log(matrix);
+
+
+    */
+
+
+
+    /*
+
+    // designer checklist
+
     const selfMongo = this.MONGOC;
     const designers = await back.getDesignersByQuery({}, { selfMongo });
+    const projects = await back.getProjectsByQuery({}, { selfMongo });
     const now = new Date();
-    const past = new Date(2020, 0, 1);
-    const monthDelta = (from, to) => {
+    const past = new Date(2019, 0, 1);
+    const calcMonthDelta = (from, to) => {
       return ((to.getFullYear() * 12) + to.getMonth() + 1) - ((from.getFullYear() * 12) + from.getMonth() + 1) + 1;
     }
     let matrix;
     let tempArr;
-    let yearDelta;
+    let yearDelta, monthDelta;
     let tempDate;
     let tempString;
     let timeDelta;
     let year, month;
+    let filteredProjectsProposal, filteredProjectsContract;
+    let filteredFilteredProjectsProposal, filteredFilteredProjectsContract;
+    let from, to;
+    let thisYear, thisMonth;
+    let thisDate;
+    let sheetsId;
 
     yearDelta = now.getFullYear() - past.getFullYear() + 1
-    timeDelta = monthDelta(past, now);
+    monthDelta = calcMonthDelta(past, now);
 
     matrix = [
       [
@@ -179,42 +316,12 @@ DevContext.prototype.launching = async function () {
       matrix[0].push(String(now.getFullYear() - i) + " " + "총 정산액");
     }
 
-    for (let i = 0; i < timeDelta; i++) {
+    for (let i = 0; i < monthDelta; i++) {
       tempDate = new Date();
       tempDate.setMonth(tempDate.getMonth() - i);
       tempString = String(tempDate.getFullYear()).slice(2) + "년 " + String(tempDate.getMonth() + 1) + "월";
       matrix[0].push(tempString + " " + "추천수");
     }
-
-    /*
-
-    [
-      [
-        '주소',             '유효 범위',        '한계 범위',
-        '홈퍼니싱 일반',    '홈스타일링 일반',  '토탈 스타일링 일반',
-        '설계 변경 일반',   '프리미엄 여부',    '부분 여부',
-        '온라인 여부',      '거주중 여부',      '총 추천수',
-        '총 진행수',        '진행율',           '총 정산액',
-        '2022 추천수',      '2022 진행수',      '2022 진행율',
-        '2022 총 정산액',   '2021 추천수',      '2021 진행수',
-        '2021 진행율',      '2021 총 정산액',   '2020 추천수',
-        '2020 진행수',      '2020 진행율',      '2020 총 정산액',
-        '22년 12월 추천수', '22년 11월 추천수', '22년 10월 추천수',
-        '22년 9월 추천수',  '22년 8월 추천수',  '22년 7월 추천수',
-        '22년 6월 추천수',  '22년 5월 추천수',  '22년 4월 추천수',
-        '22년 3월 추천수',  '22년 2월 추천수',  '22년 1월 추천수',
-        '21년 12월 추천수', '21년 11월 추천수', '21년 10월 추천수',
-        '21년 9월 추천수',  '21년 8월 추천수',  '21년 7월 추천수',
-        '21년 6월 추천수',  '21년 5월 추천수',  '21년 4월 추천수',
-        '21년 3월 추천수',  '21년 2월 추천수',  '21년 1월 추천수',
-        '20년 12월 추천수', '20년 11월 추천수', '20년 10월 추천수',
-        '20년 9월 추천수',  '20년 8월 추천수',  '20년 7월 추천수',
-        '20년 6월 추천수',  '20년 5월 추천수',  '20년 4월 추천수',
-        '20년 3월 추천수',  '20년 2월 추천수',  '20년 1월 추천수'
-      ]
-    ]
-
-    */
 
     for (let designer of designers) {
       tempArr = [];
@@ -224,26 +331,97 @@ DevContext.prototype.launching = async function () {
       tempArr.push(designer.information.contract.status.value);
       tempArr.push(dateToString(designer.information.contract.date));
 
-      timeDelta = monthDelta(designer.information.contract.date, new Date());
+      timeDelta = calcMonthDelta(designer.information.contract.date, new Date());
       tempArr.push(String(timeDelta) + "개월");
 
       [ year, month ] = designerCareer(designer.toNormal());
       tempArr.push(`${String(year)}년 ${String(month)}개월`);
 
       tempArr.push(designer.toNormal().information.address.length > 0 ? designer.toNormal().information.address[0] : "");
-      
+
+      tempArr.push(String(designer.toNormal().analytics.region.range) + "km");
+      tempArr.push(String(designer.toNormal().analytics.region.expenses) + "km");
+
+      tempArr.push(designer.toNormal().analytics.project.matrix[0][1] === 1 ? "가능" : "불가능");
+      tempArr.push(designer.toNormal().analytics.project.matrix[1][1] === 1 ? "가능" : "불가능");
+      tempArr.push(designer.toNormal().analytics.project.matrix[2][1] === 1 ? "가능" : "불가능");
+      tempArr.push(designer.toNormal().analytics.project.matrix[3][1] === 1 ? "가능" : "불가능");
+
+      tempArr.push(designer.toNormal().analytics.project.matrix.some((arr) => { return arr[2] === 1 }) ? "가능" : "불가능");
+      tempArr.push(designer.toNormal().analytics.project.matrix.some((arr) => { return arr[0] === 1 }) ? "가능" : "불가능");
+
+      tempArr.push(designer.toNormal().analytics.project.online ? "가능" : "불가능");
+      tempArr.push(designer.toNormal().analytics.project.living ? "가능" : "불가능");
+
+      filteredProjectsProposal = projects.toNormal().filter((p) => {
+        return p.proposal.detail.some((obj) => {
+          return obj.desid === designer.desid
+        });
+      });
+
+      filteredProjectsContract = projects.toNormal().filter((p) => {
+        return p.desid === designer.desid;
+      });
+
+      tempArr.push(filteredProjectsProposal.length);
+      tempArr.push(filteredProjectsContract.length);
+      tempArr.push(filteredProjectsProposal.length === 0 ? 0 : (filteredProjectsContract.length / filteredProjectsProposal.length));
+      tempArr.push(Math.floor(filteredProjectsContract.reduce((acc, curr) => {
+        return acc + curr.process.calculation.payments.totalAmount;
+      }, 0)));
 
 
+      for (let i = 0; i < yearDelta; i++) {
+
+        thisYear = (new Date()).getFullYear() - i;
+        from = new Date(thisYear, 0, 1);
+        to = new Date(thisYear + 1, 0, 1);
+
+        filteredFilteredProjectsProposal = filteredProjectsProposal.filter((p) => {
+          return (p.proposal.date.valueOf() >= from.valueOf() && p.proposal.date.valueOf() < to.valueOf());
+        });
+
+        filteredFilteredProjectsContract = filteredProjectsContract.filter((p) => {
+          return (p.process.contract.first.date.valueOf() >= from.valueOf() && p.process.contract.first.date.valueOf() < to.valueOf());
+        });
+
+
+        tempArr.push(filteredFilteredProjectsProposal.length);
+        tempArr.push(filteredFilteredProjectsContract.length);
+        tempArr.push(filteredFilteredProjectsProposal.length === 0 ? 0 : (filteredFilteredProjectsContract.length / filteredFilteredProjectsProposal.length));
+        tempArr.push(Math.floor(filteredFilteredProjectsContract.reduce((acc, curr) => {
+          return acc + curr.process.calculation.payments.totalAmount;
+        }, 0)));
+
+      }
+
+
+      for (let i = 0; i < monthDelta; i++) {
+        thisDate = new Date();
+        thisDate.setMonth(thisDate.getMonth() - i);
+
+        from = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1);
+        to = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1);
+        to.setMonth(to.getMonth() + 1);
+
+        filteredFilteredProjectsProposal = filteredProjectsProposal.filter((p) => {
+          return (p.proposal.date.valueOf() >= from.valueOf() && p.proposal.date.valueOf() < to.valueOf());
+        });
+
+        tempArr.push(filteredFilteredProjectsProposal.length);
+      }
 
       matrix.push(tempArr);
     }
 
 
+    sheetsId = await sheets.create_newSheets_inPython("디자이너 체크리스트", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix);
+
     console.log(matrix);
 
-
-
-
+    */
 
 
 
