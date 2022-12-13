@@ -4278,18 +4278,15 @@ GeneralJs.prompt = function (message, preValue = '') {
       resolve(null);
     });
 
-    input.addEventListener("keyup", function (e) {
+    input.addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
         const finalValue = this.value.trim();
-        this.parentNode.style.animation = "fadedownlite 0.2s ease forwards";
-        setTimeout(() => {
-          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-          for (let z = 0; z < targets.length; z++) {
-            try {
-              targets[z].remove();
-            } catch {}
-          }
-        }, 201);
+        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+        for (let z = 0; z < targets.length; z++) {
+          try {
+            targets[z].remove();
+          } catch {}
+        }
         resolve(finalValue);
       }
     });
@@ -4297,15 +4294,12 @@ GeneralJs.prompt = function (message, preValue = '') {
     input.addEventListener("blur", function (e) {
       if (document.querySelector('.' + promptAsideClassName) !== null) {
         const finalValue = this.value.trim();
-        this.parentNode.style.animation = "fadedownlite 0.2s ease forwards";
-        setTimeout(() => {
-          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-          for (let z = 0; z < targets.length; z++) {
-            try {
-              targets[z].remove();
-            } catch {}
-          }
-        }, 201);
+        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+        for (let z = 0; z < targets.length; z++) {
+          try {
+            targets[z].remove();
+          } catch {}
+        }
         resolve(finalValue);
       }
     });

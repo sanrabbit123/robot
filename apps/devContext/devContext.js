@@ -63,7 +63,7 @@ DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
-  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone } = this.mother;
+  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -124,6 +124,126 @@ DevContext.prototype.launching = async function () {
     //   await selfMongo.db("miro81").collection("client").updateOne(whereQuery, { $set: updateQuery });
     //   console.log(whereQuery, updateQuery);
     // }
+
+
+
+
+    const selfMongo = this.MONGOC;
+    const designers = await back.getDesignersByQuery({}, { selfMongo });
+    const now = new Date();
+    const past = new Date(2020, 0, 1);
+    const monthDelta = (from, to) => {
+      return ((to.getFullYear() * 12) + to.getMonth() + 1) - ((from.getFullYear() * 12) + from.getMonth() + 1) + 1;
+    }
+    let matrix;
+    let tempArr;
+    let yearDelta;
+    let tempDate;
+    let tempString;
+    let timeDelta;
+    let year, month;
+
+    yearDelta = now.getFullYear() - past.getFullYear() + 1
+    timeDelta = monthDelta(past, now);
+
+    matrix = [
+      [
+        "아이디",
+        "이름",
+        "계약 상태",
+        "계약일",
+        "계약 유지",
+        "적용 경력",
+        "주소",
+        "유효 범위",
+        "한계 범위",
+        "홈퍼니싱 일반",
+        "홈스타일링 일반",
+        "토탈 스타일링 일반",
+        "설계 변경 일반",
+        "프리미엄 여부",
+        "부분 여부",
+        "온라인 여부",
+        "거주중 여부",
+        "총 추천수",
+        "총 진행수",
+        "진행율",
+        "총 정산액",
+      ]
+    ];
+
+    for (let i = 0; i < yearDelta; i++) {
+      matrix[0].push(String(now.getFullYear() - i) + " " + "추천수");
+      matrix[0].push(String(now.getFullYear() - i) + " " + "진행수");
+      matrix[0].push(String(now.getFullYear() - i) + " " + "진행율");
+      matrix[0].push(String(now.getFullYear() - i) + " " + "총 정산액");
+    }
+
+    for (let i = 0; i < timeDelta; i++) {
+      tempDate = new Date();
+      tempDate.setMonth(tempDate.getMonth() - i);
+      tempString = String(tempDate.getFullYear()).slice(2) + "년 " + String(tempDate.getMonth() + 1) + "월";
+      matrix[0].push(tempString + " " + "추천수");
+    }
+
+    /*
+
+    [
+      [
+        '주소',             '유효 범위',        '한계 범위',
+        '홈퍼니싱 일반',    '홈스타일링 일반',  '토탈 스타일링 일반',
+        '설계 변경 일반',   '프리미엄 여부',    '부분 여부',
+        '온라인 여부',      '거주중 여부',      '총 추천수',
+        '총 진행수',        '진행율',           '총 정산액',
+        '2022 추천수',      '2022 진행수',      '2022 진행율',
+        '2022 총 정산액',   '2021 추천수',      '2021 진행수',
+        '2021 진행율',      '2021 총 정산액',   '2020 추천수',
+        '2020 진행수',      '2020 진행율',      '2020 총 정산액',
+        '22년 12월 추천수', '22년 11월 추천수', '22년 10월 추천수',
+        '22년 9월 추천수',  '22년 8월 추천수',  '22년 7월 추천수',
+        '22년 6월 추천수',  '22년 5월 추천수',  '22년 4월 추천수',
+        '22년 3월 추천수',  '22년 2월 추천수',  '22년 1월 추천수',
+        '21년 12월 추천수', '21년 11월 추천수', '21년 10월 추천수',
+        '21년 9월 추천수',  '21년 8월 추천수',  '21년 7월 추천수',
+        '21년 6월 추천수',  '21년 5월 추천수',  '21년 4월 추천수',
+        '21년 3월 추천수',  '21년 2월 추천수',  '21년 1월 추천수',
+        '20년 12월 추천수', '20년 11월 추천수', '20년 10월 추천수',
+        '20년 9월 추천수',  '20년 8월 추천수',  '20년 7월 추천수',
+        '20년 6월 추천수',  '20년 5월 추천수',  '20년 4월 추천수',
+        '20년 3월 추천수',  '20년 2월 추천수',  '20년 1월 추천수'
+      ]
+    ]
+
+    */
+
+    for (let designer of designers) {
+      tempArr = [];
+
+      tempArr.push(designer.desid);
+      tempArr.push(designer.designer);
+      tempArr.push(designer.information.contract.status.value);
+      tempArr.push(dateToString(designer.information.contract.date));
+
+      timeDelta = monthDelta(designer.information.contract.date, new Date());
+      tempArr.push(String(timeDelta) + "개월");
+
+      [ year, month ] = designerCareer(designer.toNormal());
+      tempArr.push(`${String(year)}년 ${String(month)}개월`);
+
+      tempArr.push(designer.toNormal().information.address.length > 0 ? designer.toNormal().information.address[0] : "");
+      
+
+
+
+      matrix.push(tempArr);
+    }
+
+
+    console.log(matrix);
+
+
+
+
 
 
 

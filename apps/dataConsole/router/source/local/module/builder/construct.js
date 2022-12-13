@@ -3,7 +3,7 @@
 BuilderJs.prototype.constructDataRender = function (project, titleMode) {
   const instance = this;
   const { ea, resetWidthEvent } = this;
-  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma, equalJson, ajaxJson } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma, equalJson, ajaxJson, sleep } = GeneralJs;
   const { process, proid, address } = project;
   const { contract, design: { construct } } = process;
   const { form: { date: { from, to } } } = contract;
@@ -1170,27 +1170,13 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
                               { question: "잔금의 비율을 숫자로만 알려주세요! 단위 %", answer: null, target: "remain", dom: 7, column: "ratio" },
                             ];
 
-                            num = 0;
-                            while (true) {
-                              answer = await GeneralJs.prompt(questions[num].question);
-                              if (answer === null) {
-                                window.alert("올바른 형식이 아닙니다!");
-                                continue;
-                              }
-                              if (answer === '') {
-                                window.alert("올바른 형식이 아닙니다!");
-                                continue;
-                              }
-                              if (Number.isNaN(Number(answer.replace(/[^0-9\.\-]/gi, '')))) {
-                                window.alert("올바른 형식이 아닙니다!");
-                                continue;
-                              }
-                              questions[num].answer = Math.floor(Number(answer.replace(/[^0-9\.\-]/gi, '')));
-                              if (questions.length - 1 === num) {
-                                break;
-                              }
-                              num++;
+                            for (let obj of questions) {
+                              do {
+                                answer = await GeneralJs.prompt(obj.question);
+                              } while (answer === null || answer === '');
+                              obj.answer = Math.floor(Number(answer.replace(/[^0-9\.\-]/gi, '')));
                             }
+
                             if (questions.some((obj) => { return typeof obj.answer !== "string" && typeof obj.answer !== "number" })) {
                               window.alert("올바른 값이 아닙니다!");
                             } else {
