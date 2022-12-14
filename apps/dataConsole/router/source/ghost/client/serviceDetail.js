@@ -292,16 +292,16 @@ ServiceDetailJs.prototype.insertStartBox = function () {
       }
     }
   } else if (mode === "styling") {
-    rightImagePosition = <%% 80, 80, 80, 80, 80 %%>;
+    rightImagePosition = <%% 80, 80, 80, 80, -290 %%>;
     contents = {
       left: {
         title: [
           big ? "<b%우리집과 예산에 맞게 시공 범위를 조절하여%b>" : "<b%예산에 맞게 시공 범위를 조절하여%b>",
-          big ? "원하던 컨셉으로 진행하는 스타일링" : "컨셉에 맞게 진행하는 스타일링",
+          big ? "원하던 컨셉으로 진행하는 스타일링" : (desktop ? "컨셉에 맞게 진행하는 스타일링" : "컨셉대로 진행하는"),
         ],
         sub: [
-          "홈스타일링 기반으로 컨셉과 니즈에 맞게, 효율적인 부분 시공으로",
-          "공간을 효과적으로 변화시키는 홈스타일링을 경험해보세요.",
+          desktop ? "홈스타일링 기반으로 컨셉과 니즈에 맞게, 효율적인 부분 시공으로" : "홈스타일링은 컨셉과 니즈에 맞게, 효율적인 부분 시공으로",
+          desktop ? "공간을 효과적으로 변화시키는 홈스타일링을 경험해보세요." : "공간을 효과적으로 변화시켜주는 서비스 입니다.",
         ]
       },
       right: {
@@ -309,16 +309,16 @@ ServiceDetailJs.prototype.insertStartBox = function () {
       }
     }
   } else if (mode === "total") {
-    rightImagePosition = <%% 57, 57, 57, 57, 57 %%>;
+    rightImagePosition = <%% 57, 57, 57, 57, -220 %%>;
     contents = {
       left: {
         title: [
-          "<b%원하는 스타일과 라이프 패턴에 맞게 기획된%b>",
-          "디자인으로 구조까지 변경하는 스타일링 서비스",
+          desktop ? "<b%원하는 스타일과 라이프 패턴에 맞게 기획된%b>" : "<b%취향과 라이프 패턴에 맞게 기획하여%b> 디자인으로",
+          desktop ? "디자인으로 구조까지 변경하는 스타일링 서비스" : "",
         ],
         sub: [
-          "시공부터 스타일링까지 완성하는 토탈 스타일링을 소개해드립니다.",
-          "기획부터 시공, 스타일링까지 풀 프로세스를 경험할 수 있어요.",
+          desktop ? "시공부터 스타일링까지 완성하는 토탈 스타일링을 소개해드립니다." : "구조까지 변경하는 토탈 스타일링을 소개해드립니다.",
+          desktop ? "기획부터 시공, 스타일링까지 풀 프로세스를 경험할 수 있어요." : "기획부터 시공, 스타일링까지 경험할 수 있어요.",
         ]
       },
       right: {
@@ -1508,29 +1508,30 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   let diagramSecondTop, diagramSecondLeft;
   let diagramThirdTop, diagramThirdLeft;
   let styling;
+  let mobileFeePaddingVisual;
 
   styling = (mode === "styling");
 
-  bottomMargin = <%% 180, 180, 150, 130, 50 %%>;
-  slideTongHeight = <%% 340, 290, 220, 180, 340 %%>;
-  blockWidth = <%% 240, 200, 150, 120, 240 %%>;
-  blockBetween = <%% 12, 10, 8, 6, 12 %%>;
+  bottomMargin = <%% 180, 180, 150, 130, 17 %%>;
+  slideTongHeight = <%% 340, 290, 220, 180, 45 %%>;
+  blockWidth = <%% 240, 200, 150, 120, 30 %%>;
+  blockBetween = <%% 12, 10, 8, 6, 1 %%>;
 
-  margin = <%% 52, 50, 40, 32, 52 %%>;
-  finalMarginBottom = <%% 72, 72, 68, 50, 72 %%>;
+  margin = <%% 52, 50, 40, 32, 7 %%>;
+  finalMarginBottom = <%% 72, 72, 68, 50, 7 %%>;
 
-  whitePaddingTop = <%% 68, 64, 56, 42, 6 %%>;
+  whitePaddingTop = <%% 68, 64, 56, 42, 7 %%>;
 
-  slideLeft = <%% -680, -515, -413, -518, -515 %%>;
+  slideLeft = <%% -680, -515, -413, -518, -48 %%>;
   slideWidth = <%% 8000, 8000, 8000, 8000, 8000 %%>;
 
-  arrowWidth = <%% 762, 450, 352, 260, 460 %%>;
+  arrowWidth = <%% 762, 450, 352, 260, 46 %%>;
   arrowHeight = <%% 10, 10, 10, 8, 10 %%>;
 
   arrowMargin = <%% 18, 18, 16, 12, 18 %%>;
   arrowTop = <%% 6, 6, 5, 4, 6 %%>;
 
-  descriptionSize = <%% 15, 14, 13, 11, 2.5 %%>;
+  descriptionSize = <%% 15, 14, 13, 11, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -1556,50 +1557,52 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   feeDescriptionPadding = <%% 20, 20, 20, 20, 20 %%>;
 
   if (styling) {
-    barWidth0 = <%% 200, 150, 130, 100, 20 %%>;
-    barWidth1 = <%% 400, 280, 240, 200, 40 %%>;
+    barWidth0 = <%% 200, 150, 130, 100, 16 %%>;
+    barWidth1 = <%% 400, 280, 240, 200, 28 %%>;
   } else {
-    barWidth0 = <%% 160, 150, 120, 110, 160 %%>;
-    barWidth1 = <%% 640, 600, 480, 400, 640 %%>;
+    barWidth0 = <%% 160, 150, 120, 110, 16 %%>;
+    barWidth1 = <%% 640, 600, 480, 400, 42 %%>;
   }
-  barBetween = <%% 5, 5, 5, 5, 5 %%>;
+  barBetween = <%% 5, 5, 5, 5, 1 %%>;
 
-  barHeight = <%% 20, 20, 16, 12, 20 %%>;
-  barMarginBottom = <%% 8, 8, 8, 8, 8 %%>;
+  barHeight = <%% 20, 20, 16, 12, 3 %%>;
+  barMarginBottom = <%% 8, 8, 8, 8, 1 %%>;
 
-  feeBarTongHeight = <%% 60, 60, 60, 52, 60 %%>;
+  feeBarTongHeight = <%% 60, 60, 60, 52, 36 %%>;
 
   if (styling) {
-    diagramImageHeight = <%% 680, 520, 426, 354, 52 %%>;
+    diagramImageHeight = <%% 680, 520, 426, 354, 72 %%>;
   } else {
-    diagramImageHeight = <%% 520, 420, 365, 280, 520 %%>;
+    diagramImageHeight = <%% 520, 420, 365, 280, 82 %%>;
   }
 
   diagramEnglishSize = <%% 27, 23, 21, 18, 4 %%>;
   diagramEnglishWeight = <%% 500, 500, 500, 500, 500 %%>;
-  diagramTitleSize = <%% 17, 15, 13, 12, 17 %%>;
+  diagramTitleSize = <%% 17, 15, 13, 12, 3.5 %%>;
   diagramTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  diagramDescriptionSize = <%% 14, 12, 11, 10, 14 %%>;
+  diagramDescriptionSize = <%% 14, 12, 11, 10, 3 %%>;
   diagramDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   diagramTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   diagramDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  diagramTitleMarginTop = <%% 8, 8, 8, 6, 8 %%>;
-  diagramTitleMarginBottom = <%% 4, 4, 4, 2, 4 %%>;
+  diagramTitleMarginTop = <%% 8, 8, 8, 6, 3 %%>;
+  diagramTitleMarginBottom = <%% 4, 4, 4, 2, 1 %%>;
 
-  diagramFirstTop = <%% 360, 271, 220, 180, 270 %%>;
-  diagramFirstLeft = <%% 98, 66, 62, 38, 66 %%>;
+  diagramFirstTop = <%% 360, 271, 220, 180, 27 %%>;
+  diagramFirstLeft = <%% 98, 66, 62, 38, 6 %%>;
   if (styling) {
-    diagramSecondTop = <%% 110, 106, 90, 76, 106 %%>;
-    diagramSecondLeft = <%% 180, 114, 94, 60, 114 %%>;
-    diagramThirdTop = <%% 532, 400, 316, 260, 400 %%>;
-    diagramThirdLeft = <%% 100, 60, 60, 28, 60 %%>;
+    diagramSecondTop = <%% 110, 106, 90, 76, 10 %%>;
+    diagramSecondLeft = <%% 180, 114, 94, 60, 11 %%>;
+    diagramThirdTop = <%% 532, 400, 316, 260, 40 %%>;
+    diagramThirdLeft = <%% 100, 60, 60, 28, 6 %%>;
   } else {
-    diagramSecondTop = <%% 229, 188, 160, 140, 229 %%>;
-    diagramSecondLeft = <%% 110, 50, 38, 32, 110 %%>;
-    diagramThirdTop = <%% 229, 188, 160, 140, 229 %%>;
-    diagramThirdLeft = <%% 100, 40, 30, 24, 100 %%>;
+    diagramSecondTop = <%% 229, 188, 160, 140, 22 %%>;
+    diagramSecondLeft = <%% 110, 50, 38, 32, 11 %%>;
+    diagramThirdTop = <%% 229, 188, 160, 140, 22 %%>;
+    diagramThirdLeft = <%% 100, 40, 30, 24, 10 %%>;
   }
+
+  mobileFeePaddingVisual = 0.5;
 
   contents = {
     description: [
@@ -1607,7 +1610,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
       "<b%내 집의 컨디션에 맞는 디자인 컨셉을 디자이너가 대신 고민해줄거예요.%b>",
     ],
     diagram: {
-      image: ServiceDetailJs.binaryPath + (styling ? ((media[0] || media[1]) ? "/styling_diagram.png" : "/styling_diagram2.png") : ((media[0] || media[1]) ? "/total_diagram.png" : "/total_diagram2.png")),
+      image: ServiceDetailJs.binaryPath + (styling ? ((media[0] || media[1]) ? "/styling_diagram.png" : (desktop ? "/styling_diagram2.png" : "/styling_diagram3.png")) : ((media[0] || media[1]) ? "/total_diagram.png" : (desktop ? "/total_diagram2.png" : "/total_diagram3.png"))),
       first: {
         english: "Design",
         title: "디자인 기획",
@@ -1632,6 +1635,13 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
           styling ? "효과와 완성도를 높임" : "완벽한 마무리",
         ]
       },
+      mobile: {
+        title: styling ? "홈스타일링의 구성" : "토탈 스타일링 구성",
+        description: [
+          styling ? "디자이너는 스타일링을 중심으로 시공의 범위를" : "디자이너는 공간의 기획 단계부터 전체 시공,",
+          styling ? "조정하여 톤 보정 시공을 함께 진행합니다." : "홈스타일링 마무리까지 전 범위를 케어합니다.",
+        ]
+      }
     }
   };
 
@@ -1643,6 +1653,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
       borderRadius: String(5) + "px",
       width: String(100) + '%',
       paddingTop: String(whitePaddingTop) + ea,
+      paddingBottom: desktop ? "" : String(8) + ea,
       background: colorChip.white,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 15px -10px " + colorChip.gray5,
@@ -1666,38 +1677,87 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
         src: contents.diagram.image,
       },
       style: {
-        display: "inline-block",
+        display: desktop ? "inline-block" : "block",
         position: "relative",
         height: String(diagramImageHeight) + ea,
       }
     }
   });
-  if (styling) {
+
+  if (desktop) {
+    if (styling) {
+      createNode({
+        mother: diagramTong,
+        style: {
+          position: "absolute",
+          top: String(diagramFirstTop) + ea,
+          left: String(diagramFirstLeft) + ea,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        },
+        children: [
+          {
+            text: contents.diagram.first.english,
+            style: {
+              fontSize: String(diagramEnglishSize) + ea,
+              fontWeight: String(diagramEnglishWeight),
+              fontFamily: "graphik",
+              fontStyle: "italic",
+              color: colorChip.green,
+            }
+          },
+          {
+            text: contents.diagram.first.title,
+            style: {
+              fontSize: String(diagramTitleSize) + ea,
+              fontWeight: String(diagramTitleWeight),
+              color: colorChip.black,
+              marginTop: String(diagramTitleMarginTop) + ea,
+              marginBottom: String(diagramTitleMarginBottom) + ea,
+              lineHeight: String(diagramTitleLineHeight),
+            }
+          },
+          {
+            text: contents.diagram.first.description.join("\n"),
+            style: {
+              fontSize: String(diagramDescriptionSize) + ea,
+              fontWeight: String(diagramDescriptionWeight),
+              color: colorChip.black,
+              lineHeight: String(diagramDescriptionLineHeight),
+            }
+          }
+        ]
+      });
+    }
     createNode({
       mother: diagramTong,
       style: {
         position: "absolute",
-        top: String(diagramFirstTop) + ea,
-        left: String(diagramFirstLeft) + ea,
+        top: String(diagramSecondTop) + ea,
+        left: styling ? "" : String(diagramSecondLeft) + ea,
+        right: styling ? String(diagramSecondLeft) + ea : "",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
+        alignItems: styling ? "start" : "end",
+        textAlign: styling ? "left" : "right",
       },
       children: [
         {
-          text: contents.diagram.first.english,
+          text: contents.diagram.second.english,
           style: {
             fontSize: String(diagramEnglishSize) + ea,
             fontWeight: String(diagramEnglishWeight),
             fontFamily: "graphik",
             fontStyle: "italic",
-            color: colorChip.green,
+            color: colorChip.gray4,
           }
         },
         {
-          text: contents.diagram.first.title,
+          text: contents.diagram.second.title,
           style: {
             fontSize: String(diagramTitleSize) + ea,
             fontWeight: String(diagramTitleWeight),
@@ -1708,7 +1768,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
           }
         },
         {
-          text: contents.diagram.first.description.join("\n"),
+          text: contents.diagram.second.description.join("\n"),
           style: {
             fontSize: String(diagramDescriptionSize) + ea,
             fontWeight: String(diagramDescriptionWeight),
@@ -1718,111 +1778,104 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
         }
       ]
     });
+    createNode({
+      mother: diagramTong,
+      style: {
+        position: "absolute",
+        top: String(diagramThirdTop) + ea,
+        right: String(diagramThirdLeft) + ea,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "start",
+        textAlign: "left",
+      },
+      children: [
+        {
+          text: contents.diagram.third.english,
+          style: {
+            fontSize: String(diagramEnglishSize) + ea,
+            fontWeight: String(diagramEnglishWeight),
+            fontFamily: "graphik",
+            fontStyle: "italic",
+            color: colorChip.gray4,
+          }
+        },
+        {
+          text: contents.diagram.third.title,
+          style: {
+            fontSize: String(diagramTitleSize) + ea,
+            fontWeight: String(diagramTitleWeight),
+            color: colorChip.black,
+            marginTop: String(diagramTitleMarginTop) + ea,
+            marginBottom: String(diagramTitleMarginBottom) + ea,
+            lineHeight: String(diagramTitleLineHeight),
+          }
+        },
+        {
+          text: contents.diagram.third.description.join("\n"),
+          style: {
+            fontSize: String(diagramDescriptionSize) + ea,
+            fontWeight: String(diagramDescriptionWeight),
+            color: colorChip.black,
+            lineHeight: String(diagramDescriptionLineHeight),
+          }
+        }
+      ]
+    });
+  } else {
+
+    createNode({
+      mother: diagramTong,
+      style: {
+        display: "block",
+        textAlign: "center",
+        position: "relative",
+      },
+      child: {
+        text: contents.diagram.mobile.title,
+        style: {
+          fontSize: String(diagramTitleSize) + ea,
+          fontWeight: String(diagramTitleWeight),
+          color: colorChip.black,
+          marginTop: String(diagramTitleMarginTop) + ea,
+          marginBottom: String(diagramTitleMarginBottom) + ea,
+          lineHeight: String(diagramTitleLineHeight),
+        }
+      }
+    });
+
+    createNode({
+      mother: diagramTong,
+      style: {
+        display: "block",
+        textAlign: "center",
+        position: "relative",
+      },
+      child: {
+        text: contents.diagram.mobile.description.join("\n"),
+        style: {
+          fontSize: String(diagramDescriptionSize) + ea,
+          fontWeight: String(diagramDescriptionWeight),
+          color: colorChip.black,
+          lineHeight: String(diagramDescriptionLineHeight),
+        }
+      }
+    });
   }
-  createNode({
-    mother: diagramTong,
-    style: {
-      position: "absolute",
-      top: String(diagramSecondTop) + ea,
-      left: styling ? "" : String(diagramSecondLeft) + ea,
-      right: styling ? String(diagramSecondLeft) + ea : "",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: styling ? "start" : "end",
-      textAlign: styling ? "left" : "right",
-    },
-    children: [
-      {
-        text: contents.diagram.second.english,
-        style: {
-          fontSize: String(diagramEnglishSize) + ea,
-          fontWeight: String(diagramEnglishWeight),
-          fontFamily: "graphik",
-          fontStyle: "italic",
-          color: colorChip.gray4,
-        }
-      },
-      {
-        text: contents.diagram.second.title,
-        style: {
-          fontSize: String(diagramTitleSize) + ea,
-          fontWeight: String(diagramTitleWeight),
-          color: colorChip.black,
-          marginTop: String(diagramTitleMarginTop) + ea,
-          marginBottom: String(diagramTitleMarginBottom) + ea,
-          lineHeight: String(diagramTitleLineHeight),
-        }
-      },
-      {
-        text: contents.diagram.second.description.join("\n"),
-        style: {
-          fontSize: String(diagramDescriptionSize) + ea,
-          fontWeight: String(diagramDescriptionWeight),
-          color: colorChip.black,
-          lineHeight: String(diagramDescriptionLineHeight),
-        }
-      }
-    ]
-  });
-  createNode({
-    mother: diagramTong,
-    style: {
-      position: "absolute",
-      top: String(diagramThirdTop) + ea,
-      right: String(diagramThirdLeft) + ea,
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "start",
-      textAlign: "left",
-    },
-    children: [
-      {
-        text: contents.diagram.third.english,
-        style: {
-          fontSize: String(diagramEnglishSize) + ea,
-          fontWeight: String(diagramEnglishWeight),
-          fontFamily: "graphik",
-          fontStyle: "italic",
-          color: colorChip.gray4,
-        }
-      },
-      {
-        text: contents.diagram.third.title,
-        style: {
-          fontSize: String(diagramTitleSize) + ea,
-          fontWeight: String(diagramTitleWeight),
-          color: colorChip.black,
-          marginTop: String(diagramTitleMarginTop) + ea,
-          marginBottom: String(diagramTitleMarginBottom) + ea,
-          lineHeight: String(diagramTitleLineHeight),
-        }
-      },
-      {
-        text: contents.diagram.third.description.join("\n"),
-        style: {
-          fontSize: String(diagramDescriptionSize) + ea,
-          fontWeight: String(diagramDescriptionWeight),
-          color: colorChip.black,
-          lineHeight: String(diagramDescriptionLineHeight),
-        }
-      }
-    ]
-  });
 
   // fee
   feeTong = createNode({
-    mother: whiteBlock,
+    mother: desktop ? whiteBlock : baseTong,
     style: {
       display: "flex",
       flexDirection: "column",
       position: "relative",
-      marginTop: String(finalMarginBottom) + ea,
-      paddingLeft: String(margin) + ea,
-      paddingRight: String(margin) + ea,
+      marginTop: desktop ? String(feeTongMarginTop) + ea : "",
+      paddingLeft: desktop ? String(margin) + ea : String(mobileFeePaddingVisual) + ea,
+      paddingRight: desktop ? String(margin) + ea : String(mobileFeePaddingVisual) + ea,
       paddingBottom: String(finalMarginBottom) + ea,
-      width: withOut(margin * 2, ea),
+      width: desktop ? withOut(margin * 2, ea) : withOut(mobileFeePaddingVisual * 2, ea),
     }
   });
   createNode({
@@ -1831,7 +1884,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
       display: "flex",
       flexDirection: "column",
       position: "relative",
-      height: String(feeTitleTongHeight) + ea,
+      height: desktop ? String(feeTitleTongHeight) + ea : "",
       width: withOut(0, ea),
       alignItems: "center",
       justifyContent: "center",
@@ -1841,7 +1894,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
       text: "비용의 구성",
       style: {
         position: "relative",
-        top: String(feeTitleTextTop) + ea,
+        top: desktop ? String(feeTitleTextTop) + ea : "",
         fontSize: String(feeTitleSize) + ea,
         fontWeight: String(feeTitleWeight),
         color: colorChip.black,
@@ -1855,13 +1908,14 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
       flexDirection: "column",
       position: "relative",
       width: withOut(0, ea),
-      height: String(feeDescriptionTongHeight) + ea,
+      height: desktop ? String(feeDescriptionTongHeight) + ea : "",
       alignItems: "center",
       justifyContent: "start",
     },
     children: [
       {
         style: {
+          display: desktop ? "block" : "none",
           position: "absolute",
           bottom: String(0),
           left: String(0),
@@ -1876,7 +1930,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
       },
       {
         text: [
-          styling ? "홈스타일링 서비스는 디자인비와 제품 구매비, 그리고 시공비로 구성됩니다." : "토탈 스타일링 서비스는 디자인비와 제품 구매비, 그리고 시공비로 구성됩니다."
+          styling ? (desktop ? "홈스타일링 서비스는 디자인비와 제품 구매비, 그리고 시공비로 구성됩니다." : "홈스타일링 서비스는 디자인비와\n제품 구매비, 그리고 시공비로 구성됩니다.") : (desktop ? "토탈 스타일링 서비스는 디자인비와 제품 구매비, 그리고 시공비로 구성됩니다." : "토탈 스타일링 서비스는 디자인비와\n제품 구매비, 그리고 시공비로 구성됩니다.")
         ].join("\n"),
         style: {
           display: "inline-block",
@@ -1884,13 +1938,35 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
           fontSize: String(feeDescriptionSize) + ea,
           fontWeight: String(feeDescriptionWeight),
           color: colorChip.black,
-          background: colorChip.white,
-          paddingLeft: String(feeDescriptionPadding) + ea,
-          paddingRight: String(feeDescriptionPadding) + ea,
+          background: desktop ? colorChip.white : "",
+          paddingLeft: desktop ? String(feeDescriptionPadding) + ea : "",
+          paddingRight: desktop ? String(feeDescriptionPadding) + ea : "",
+          lineHeight: desktop ? "" : String(1.6),
+          textAlign: "center",
+          paddingTop: mobile ? String(2) + ea : "",
         }
       }
     ]
   });
+  if (mobile) {
+    createNode({
+      mother: feeTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        borderTop: "1px solid " + colorChip.gray4,
+        borderLeft: "1px solid " + colorChip.gray4,
+        borderRight: "1px solid " + colorChip.gray4,
+        borderTopLeftRadius: String(8) + "px",
+        borderTopRightRadius: String(8) + "px",
+        height: String(6) + ea,
+        marginTop: String(6) + ea,
+        marginBottom: String(1.5) + ea,
+        boxSizing: "border-box",
+      }
+    })
+  }
   createNode({
     mother: feeTong,
     style: {
@@ -1898,9 +1974,10 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
       flexDirection: "row",
       position: "relative",
       width: withOut(0, ea),
-      height: String(feeBarTongHeight) + ea,
+      height: desktop ? String(feeBarTongHeight) + ea : "",
       alignItems: "end",
       justifyContent: "start",
+      marginBottom: desktop ? "" : String(17) + ea,
     },
     children: [
       {
@@ -2000,7 +2077,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
               width: withOut(0, ea),
               height: String(barHeight) + ea,
               borderRadius: String(5) + "px",
-              background: colorChip.gray2,
+              background: desktop ? colorChip.gray2 : colorChip.gray5,
               marginBottom: String(barMarginBottom) + ea,
             }
           },
@@ -2113,9 +2190,9 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   } else if (mode === "styling") {
     contents = {
       title: "필요한 시공만, 부분 시공 + 스타일링",
-      image: (<&& ServiceDetailJs.binaryPath + "/people_s.svg" | ServiceDetailJs.binaryPath + "/people_s.svg" | ServiceDetailJs.binaryPath + "/people_s2.svg" | ServiceDetailJs.binaryPath + "/people_s4.svg" | ServiceDetailJs.binaryPath + "/people_s.svg" &&>),
+      image: (<&& ServiceDetailJs.binaryPath + "/people_s.svg" | ServiceDetailJs.binaryPath + "/people_s.svg" | ServiceDetailJs.binaryPath + "/people_s2.svg" | ServiceDetailJs.binaryPath + "/people_s4.svg" | ServiceDetailJs.binaryPath + "/people_s5.svg" &&>),
       description: [
-        "전체 시공은 부담스럽고, 적은 시공이라 개별로 맡기기는 어렵잖아요.",
+        "전체는 부담스럽고, 적은 시공이라 개별로 맡기긴 어렵잖아요.",
         "<b%디자이너를 통해 시공 범위 조정을 먼저 진행해보세요!%b>",
       ],
       people: {
@@ -2132,7 +2209,7 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   } else if (mode === "total") {
     contents = {
       title: "디자이너의 시그니처 스타일링",
-      image: (<&& ServiceDetailJs.binaryPath + "/people_t.svg" | ServiceDetailJs.binaryPath + "/people_t.svg" | ServiceDetailJs.binaryPath + "/people_t2.svg" | ServiceDetailJs.binaryPath + "/people_t4.svg" | ServiceDetailJs.binaryPath + "/people_t.svg" &&>),
+      image: (<&& ServiceDetailJs.binaryPath + "/people_t.svg" | ServiceDetailJs.binaryPath + "/people_t.svg" | ServiceDetailJs.binaryPath + "/people_t2.svg" | ServiceDetailJs.binaryPath + "/people_t4.svg" | ServiceDetailJs.binaryPath + "/people_t5.svg" &&>),
       description: [
         "인테리어에 대한 전체적인 도움이 필요하신가요?",
         "<b%디자이너와 처음부터 끝까지 한번에 진행해보세요!%b>",
@@ -2523,7 +2600,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
         description: [
           "전반적으로 홈스타일링 과정이 엄청 만족스러웠어요.",
           "우리가 부분 부분 직접 선택한다 하더라도 이게 다 어떻게 보여질 지 ",
-          "상상을 못하잖아요. 디자이너님은 아무것도 없을 때부터 이 정도를 생각하시는",
+          "상상을 못 하잖아요. 디자이너님은 아무것도 없이 이 정도를 생각하시는",
           "분이시고, 어떻게 나올지를 보여주시니까 완전 신뢰할 수 있었죠.",
         ],
         tag: [
@@ -2557,7 +2634,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
         title: "호반 써밋 2차 41py 아파트",
         description: [
           "가장 신경 쓴 공간은 아이방이에요. 코로나 이슈로 밖에 나가서 뛰어놀기",
-          "힘들었는데 집에서라도 놀이터를 즐기라고 만들어줬어요. 그리고 확실하게 주방은",
+          "힘들었는데 집에서라도 놀이터를 즐기라고 만들어줬어요. 그리고 주방은",
           "어둡고, 거실은 밝게 무드를 잡고 싶었는데 디자이너님께선 제가 원하는대로",
           "맞춰 제안해주셨죠. 덕분에 제가 딱 원하던 집이 완성되었어요.",
         ],
@@ -2593,7 +2670,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
         title: "보문 파크뷰 자이 35py 아파트",
         description: [
           "저희가 의류 사업을 하다보니 옷도 정말 많고, 또 가족 취미가 캠핑이라 ",
-          "전체적으로 수납이 정말 중요했어요. 거실을 촬영 공간으로 사용하고 싶었고요.",
+          "전체적으로 수납이 중요했어요. 거실을 촬영 공간으로 사용하고 싶었고요.",
           "디자이너님은 저희들의 니즈와 취향에 잘 맞게 이 모든걸 제안해주셨어요. ",
           "덕분에 우리 가족에게 적합한 딱 맞는 집이 되었어요. ",
         ],
@@ -2991,7 +3068,7 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
       title: "스타일링까지 조화롭게",
       description: [
         "마지막 스타일링까지 완성해야 인테리어의 정점을 찍어요.",
-        "기획 단계부터 스타일링 마무리까지 홈스타일링의 풀 프로세스를 경험해보세요!",
+        "기획부터 스타일링까지 풀 프로세스를 경험해보세요!",
       ],
       tone: [
         {
@@ -3523,10 +3600,10 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
   let toneBoxPaddingLeft, toneBoxPaddingTop;
   let toneTitleSize, toneDescriptionSize;
 
-  topMargin = <%% 160, 160, 140, 120, 50 %%>;
-  bottomMargin = <%% 180, 180, 150, 130, 50 %%>;
-  margin = <%% 52, 50, 40, 32, 52 %%>;
-  marginTop = <%% 56, 54, 45, 36, 56 %%>;
+  topMargin = <%% 160, 160, 140, 120, 24 %%>;
+  bottomMargin = <%% 180, 180, 150, 130, 26 %%>;
+  margin = <%% 52, 50, 40, 32, 7 %%>;
+  marginTop = <%% 56, 54, 45, 36, 7 %%>;
 
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
@@ -3541,18 +3618,18 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
   middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
 
-  whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
+  whiteTongMarginTop = <%% 48, 48, 48, 48, 7 %%>;
 
   imageWidth = <%% 960, 660, 560, 430, 960 %%>;
-  imageHeight = <%% 540, 420, 360, 300, 540 %%>;
-  imageBetween = <%% 12, 12, 12, 12, 12 %%>;
+  imageHeight = <%% 540, 420, 360, 300, 51 %%>;
+  imageBetween = <%% 12, 12, 12, 12, 2 %%>;
 
-  titleSize = <%% 14, 13, 12, 11, 13 %%>;
+  titleSize = <%% 14, 13, 12, 11, 3 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  titleMarginBottom = <%% 6, 6, 6, 6, 6 %%>;
+  titleMarginBottom = <%% 6, 6, 6, 6, 1 %%>;
 
   factorTextTop = <%% -1, -1, -1, -1, -1 %%>;
   factorSize = <%% 13, 11, 10, 10, 2.8 %%>;
@@ -3569,15 +3646,15 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
   boxWidth = <%% 150, 150, 150, 150, 150 %%>;
   boxHeight = <%% 80, 80, 80, 80, 80 %%>;
 
-  singleImageWidth = <%% 390, 300, 256, 240, 390 %%>;
+  singleImageWidth = <%% 390, 300, 256, 240, 38 %%>;
 
-  markTop = <%% 16, 16, 12, 10, 16 %%>;
-  markLeft = <%% 16, 16, 12, 10, 16 %%>;
-  markWidth = <%% 70, 70, 62, 58, 70 %%>;
-  markHeight = <%% 32, 32, 30, 26, 32 %%>;
-  markSize = <%% 14, 14, 12, 11, 14 %%>;
+  markTop = <%% 16, 16, 12, 10, 1.5 %%>;
+  markLeft = <%% 16, 16, 12, 10, 1.5 %%>;
+  markWidth = <%% 70, 70, 62, 58, 12 %%>;
+  markHeight = <%% 32, 32, 30, 26, 6 %%>;
+  markSize = <%% 14, 14, 12, 11, 2.5 %%>;
   makrWeight = <%% 500, 500, 500, 500, 500 %%>;
-  markTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  markTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
 
   centerCircleWidth = <%% 60, 32, 24, 20, 6 %%>;
 
@@ -3586,18 +3663,18 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
 
   subBoxMargin = <%% 24, 24, 24, 24, 24 %%>;
 
-  subTitleSize = <%% 13, 13, 13, 13, 13 %%>;
+  subTitleSize = <%% 13, 13, 13, 13, 3 %%>;
   subTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   subTitleMarginBottom = <%% 3, 3, 3, 3, 3 %%>;
-  subDescriptionSize = <%% 13, 13, 13, 13, 13 %%>;
+  subDescriptionSize = <%% 13, 13, 13, 13, 3 %%>;
   subDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   subDescriptionBottom = <%% 16, 16, 16, 16, 16 %%>;
 
-  toneBoxPaddingLeft = <%% 20, 20, 16, 16, 20 %%>;
-  toneBoxPaddingTop = <%% 18, 18, 14, 14, 18 %%>;
+  toneBoxPaddingLeft = <%% 20, 20, 16, 16, 4.5 %%>;
+  toneBoxPaddingTop = <%% 18, 18, 14, 14, 3.5 %%>;
 
-  toneTitleSize = <%% 13, 13, 12, 10, 13 %%>;
-  toneDescriptionSize = <%% 12, 12, 11, 10, 12 %%>;
+  toneTitleSize = <%% 13, 13, 12, 10, 2.8 %%>;
+  toneDescriptionSize = <%% 12, 12, 11, 10, 2.8 %%>;
 
   pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
   newBaseTong.style.left = String(0);
@@ -3608,8 +3685,8 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
   contents = {
     title: "톤보정의 중요성",
     description: [
-      "톤보정은 기존 자재의 거슬리는 컬러, 톤, 무늬 등을 새로운 자재로",
-      "드레스업하여 배경을 새로 만들어내는 간단한 부분 시공 서비스입니다.",
+      "톤보정은 거슬리는 컬러, 톤, 무늬 등을 새로운 자재로",
+      "드레스업하여 배경을 새로 만들어내는 부분 시공 서비스입니다.",
     ],
     white: {
       basic: {
@@ -3672,7 +3749,7 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
     children: [
       {
         style: {
-          display: "block",
+          display: desktop ? "block" : "none",
           position: "absolute",
           width: String(100) + '%',
           height: String(middleTitleLineTop) + ea,
@@ -3738,291 +3815,581 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
     }
   });
 
-  createNode({
-    mother: whiteBlock,
-    style: {
-      display: "flex",
-      flexDirection: "row",
-      width: withOut(0),
-      position: "relative",
-    },
-    children: [
-      {
-        style: {
-          display: "inline-flex",
-          flexDirection: "column",
-          position: "relative",
-          marginRight: String(imageBetween) + ea,
-          width: withOut(imageWidth + imageBetween, ea),
-          height: String(imageHeight) + ea,
-          alignItems: "start",
-          justifyContent: "end",
-        },
-        children: [
-          {
-            text: contents.white.basic.title,
-            style: {
-              display: "block",
-              position: "relative",
-              fontSize: String(titleSize) + ea,
-              fontWeight: String(titleWeight),
-              color: colorChip.black,
-              lineHeight: String(descriptionLineHeight),
-              marginBottom: String(titleMarginBottom) + ea,
-            }
-          },
-          {
-            text: contents.white.basic.description.join("\n"),
-            style: {
-              display: "block",
-              position: "relative",
-              fontSize: String(titleSize) + ea,
-              fontWeight: String(descriptionWeight),
-              color: colorChip.black,
-              lineHeight: String(descriptionLineHeight),
-            }
-          },
-        ]
+  if (desktop) {
+    createNode({
+      mother: whiteBlock,
+      style: {
+        display: "flex",
+        flexDirection: "row",
+        width: withOut(0),
+        position: "relative",
       },
-      {
-        style: {
-          display: "inline-flex",
-          flexDirection: "row",
-          position: "relative",
-          width: String(imageWidth) + ea,
-          height: String(imageHeight) + ea,
-          alignItems: "center",
-          justifyContent: "center",
-          background: colorChip.gray1,
-          borderRadius: String(8) + "px",
-        },
-        children: [
-          {
-            style: {
-              display: "inline-block",
-              height: String(imageHeight) + ea,
-              width: String(singleImageWidth) + ea,
-              position: "relative",
-              borderRadius: String(8) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              backgroundSize: "auto 100%",
-              backgroundPosition: "50% 50%",
-              backgroundImage: "url('" + contents.white.images.before + "')",
-            },
-            child: {
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            flexDirection: "column",
+            position: "relative",
+            marginRight: String(imageBetween) + ea,
+            width: withOut(imageWidth + imageBetween, ea),
+            height: String(imageHeight) + ea,
+            alignItems: "start",
+            justifyContent: "end",
+          },
+          children: [
+            {
+              text: contents.white.basic.title,
               style: {
-                top: String(markTop) + ea,
-                left: String(markLeft) + ea,
-                width: String(markWidth) + ea,
-                height: String(markHeight) + ea,
-                display: "inline-flex",
-                position: "absolute",
+                display: "block",
+                position: "relative",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.black,
+                lineHeight: String(descriptionLineHeight),
+                marginBottom: String(titleMarginBottom) + ea,
+              }
+            },
+            {
+              text: contents.white.basic.description.join("\n"),
+              style: {
+                display: "block",
+                position: "relative",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(descriptionWeight),
+                color: colorChip.black,
+                lineHeight: String(descriptionLineHeight),
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            flexDirection: "row",
+            position: "relative",
+            width: String(imageWidth) + ea,
+            height: String(imageHeight) + ea,
+            alignItems: "center",
+            justifyContent: "center",
+            background: colorChip.gray1,
+            borderRadius: String(8) + "px",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                height: String(imageHeight) + ea,
+                width: String(singleImageWidth) + ea,
+                position: "relative",
                 borderRadius: String(8) + "px",
-                alignItems: "center",
-                justifyContent: "center",
-                background: colorChip.gradientGray,
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                backgroundSize: "auto 100%",
+                backgroundPosition: "50% 50%",
+                backgroundImage: "url('" + contents.white.images.before + "')",
               },
               child: {
-                text: "before",
                 style: {
-                  fontSize: String(markSize) + ea,
-                  fontWeight: String(makrWeight),
-                  color: colorChip.white,
-                  fontFamily: "graphik",
-                  fontStyle: "italic",
-                  position: "relative",
-                  top: String(markTextTop) + ea,
+                  top: String(markTop) + ea,
+                  left: String(markLeft) + ea,
+                  width: String(markWidth) + ea,
+                  height: String(markHeight) + ea,
+                  display: "inline-flex",
+                  position: "absolute",
+                  borderRadius: String(8) + "px",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: colorChip.gradientGray,
+                },
+                child: {
+                  text: "before",
+                  style: {
+                    fontSize: String(markSize) + ea,
+                    fontWeight: String(makrWeight),
+                    color: colorChip.white,
+                    fontFamily: "graphik",
+                    fontStyle: "italic",
+                    position: "relative",
+                    top: String(markTextTop) + ea,
+                  }
                 }
               }
-            }
-          },
-          {
-            style: {
-              display: big ? "inline-flex" : "none",
-              position: "relative",
-              height: String(imageHeight) + ea,
-              width: withOut(singleImageWidth * 2, ea),
-              justifyContent: "center",
-              alignItems: "center",
             },
-            child: {
+            {
               style: {
-                display: "inline-flex",
+                display: big ? "inline-flex" : "none",
                 position: "relative",
-                width: String(centerCircleWidth) + ea,
-                height: String(centerCircleWidth) + ea,
-                borderRadius: String(centerCircleWidth) + ea,
-                background: colorChip.gradientGreen,
+                height: String(imageHeight) + ea,
+                width: withOut(singleImageWidth * 2, ea),
                 justifyContent: "center",
                 alignItems: "center",
               },
               child: {
-                mode: "svg",
-                source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorChip.white),
                 style: {
-                  width: String(arrowWidth) + ea,
-                  height: String(arrowHeight) + ea,
                   display: "inline-flex",
                   position: "relative",
-                }
-              },
-              next: {
-                style: {
-                  display: media[0] ? "inline-flex" : "none",
-                  flexDirection: "column",
-                  position: "absolute",
-                  bottom: String(subBoxMargin) + ea,
-                  right: String(subBoxMargin) + ea,
-                  textAlign: "right",
+                  width: String(centerCircleWidth) + ea,
+                  height: String(centerCircleWidth) + ea,
+                  borderRadius: String(centerCircleWidth) + ea,
+                  background: colorChip.gradientGreen,
+                  justifyContent: "center",
+                  alignItems: "center",
                 },
-                children: [
-                  {
-                    text: "주방 가구",
-                    style: {
-                      fontSize: String(subTitleSize) + ea,
-                      fontWeight: String(subTitleWeight),
-                      color: colorChip.black,
-                      position: "relative",
-                      marginBottom: String(subTitleMarginBottom) + ea,
-                    }
+                child: {
+                  mode: "svg",
+                  source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorChip.white),
+                  style: {
+                    width: String(arrowWidth) + ea,
+                    height: String(arrowHeight) + ea,
+                    display: "inline-flex",
+                    position: "relative",
+                  }
+                },
+                next: {
+                  style: {
+                    display: media[0] ? "inline-flex" : "none",
+                    flexDirection: "column",
+                    position: "absolute",
+                    bottom: String(subBoxMargin) + ea,
+                    right: String(subBoxMargin) + ea,
+                    textAlign: "right",
                   },
-                  {
-                    text: "화이트 필름 시공",
-                    style: {
-                      fontSize: String(subDescriptionSize) + ea,
-                      fontWeight: String(subDescriptionWeight),
-                      color: colorChip.black,
-                      position: "relative",
-                      marginBottom: String(subDescriptionBottom) + ea,
-                    }
-                  },
-                  {
-                    text: "주방 상판",
-                    style: {
-                      fontSize: String(subTitleSize) + ea,
-                      fontWeight: String(subTitleWeight),
-                      color: colorChip.black,
-                      position: "relative",
-                      marginBottom: String(subTitleMarginBottom) + ea,
-                    }
-                  },
-                  {
-                    text: "밝은 대리석으로 교체",
-                    style: {
-                      fontSize: String(subDescriptionSize) + ea,
-                      fontWeight: String(subDescriptionWeight),
-                      color: colorChip.black,
-                      position: "relative",
-                      marginBottom: String(subDescriptionBottom) + ea,
-                    }
-                  },
-                  {
-                    text: "기타 가구 및 소품",
-                    style: {
-                      fontSize: String(subTitleSize) + ea,
-                      fontWeight: String(subTitleWeight),
-                      color: colorChip.black,
-                      position: "relative",
-                      marginBottom: String(subTitleMarginBottom) + ea,
-                    }
-                  },
-                  {
-                    text: "디자이너의 스타일링",
-                    style: {
-                      fontSize: String(subDescriptionSize) + ea,
-                      fontWeight: String(subDescriptionWeight),
-                      color: colorChip.black,
-                      position: "relative",
-                    }
-                  },
-                ]
+                  children: [
+                    {
+                      text: "주방 가구",
+                      style: {
+                        fontSize: String(subTitleSize) + ea,
+                        fontWeight: String(subTitleWeight),
+                        color: colorChip.black,
+                        position: "relative",
+                        marginBottom: String(subTitleMarginBottom) + ea,
+                      }
+                    },
+                    {
+                      text: "화이트 필름 시공",
+                      style: {
+                        fontSize: String(subDescriptionSize) + ea,
+                        fontWeight: String(subDescriptionWeight),
+                        color: colorChip.black,
+                        position: "relative",
+                        marginBottom: String(subDescriptionBottom) + ea,
+                      }
+                    },
+                    {
+                      text: "주방 상판",
+                      style: {
+                        fontSize: String(subTitleSize) + ea,
+                        fontWeight: String(subTitleWeight),
+                        color: colorChip.black,
+                        position: "relative",
+                        marginBottom: String(subTitleMarginBottom) + ea,
+                      }
+                    },
+                    {
+                      text: "밝은 대리석으로 교체",
+                      style: {
+                        fontSize: String(subDescriptionSize) + ea,
+                        fontWeight: String(subDescriptionWeight),
+                        color: colorChip.black,
+                        position: "relative",
+                        marginBottom: String(subDescriptionBottom) + ea,
+                      }
+                    },
+                    {
+                      text: "기타 가구 및 소품",
+                      style: {
+                        fontSize: String(subTitleSize) + ea,
+                        fontWeight: String(subTitleWeight),
+                        color: colorChip.black,
+                        position: "relative",
+                        marginBottom: String(subTitleMarginBottom) + ea,
+                      }
+                    },
+                    {
+                      text: "디자이너의 스타일링",
+                      style: {
+                        fontSize: String(subDescriptionSize) + ea,
+                        fontWeight: String(subDescriptionWeight),
+                        color: colorChip.black,
+                        position: "relative",
+                      }
+                    },
+                  ]
+                }
               }
-            }
-          },
-          {
-            style: {
-              display: "inline-block",
-              height: String(imageHeight) + ea,
-              width: String(singleImageWidth) + ea,
-              position: "relative",
-              borderRadius: String(8) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              backgroundSize: "100% auto",
-              backgroundPosition: "50% 50%",
-              backgroundImage: "url('" + contents.white.images.after + "')",
             },
-            child: {
+            {
               style: {
-                top: String(markTop) + ea,
-                left: String(markLeft) + ea,
-                width: String(markWidth) + ea,
-                height: String(markHeight) + ea,
-                display: "inline-flex",
-                position: "absolute",
+                display: "inline-block",
+                height: String(imageHeight) + ea,
+                width: String(singleImageWidth) + ea,
+                position: "relative",
                 borderRadius: String(8) + "px",
-                alignItems: "center",
-                justifyContent: "center",
-                background: colorChip.gradientGreen,
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                backgroundSize: "100% auto",
+                backgroundPosition: "50% 50%",
+                backgroundImage: "url('" + contents.white.images.after + "')",
               },
               child: {
-                text: "after",
                 style: {
-                  fontSize: String(markSize) + ea,
-                  fontWeight: String(makrWeight),
-                  color: colorChip.white,
-                  fontFamily: "graphik",
-                  fontStyle: "italic",
-                  position: "relative",
-                  top: String(markTextTop) + ea,
+                  top: String(markTop) + ea,
+                  left: String(markLeft) + ea,
+                  width: String(markWidth) + ea,
+                  height: String(markHeight) + ea,
+                  display: "inline-flex",
+                  position: "absolute",
+                  borderRadius: String(8) + "px",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: colorChip.gradientGreen,
+                },
+                child: {
+                  text: "after",
+                  style: {
+                    fontSize: String(markSize) + ea,
+                    fontWeight: String(makrWeight),
+                    color: colorChip.white,
+                    fontFamily: "graphik",
+                    fontStyle: "italic",
+                    position: "relative",
+                    top: String(markTextTop) + ea,
+                  }
                 }
               }
-            }
-          },
-        ]
-      },
-      {
-        style: {
-          display: "inline-flex",
-          flexDirection: "column",
-          position: "absolute",
-          top: String(0),
-          left: String(0),
-          padding: String(toneBoxPaddingLeft) + ea,
-          paddingTop: String(toneBoxPaddingTop) + ea,
-          paddingBottom: String(toneBoxPaddingTop) + ea,
-          alignItems: "start",
-          justifyContent: "end",
-          background: colorChip.gradientGray,
-          borderRadius: String(8) + "px",
+            },
+          ]
         },
-        children: [
-          {
-            text: contents.tone.title,
-            style: {
-              display: "block",
-              position: "relative",
-              fontSize: String(toneTitleSize) + ea,
-              fontWeight: String(titleWeight),
-              color: colorChip.white,
-              lineHeight: String(descriptionLineHeight),
-              marginBottom: String(titleMarginBottom) + ea,
-            }
+        {
+          style: {
+            display: "inline-flex",
+            flexDirection: "column",
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            padding: String(toneBoxPaddingLeft) + ea,
+            paddingTop: String(toneBoxPaddingTop) + ea,
+            paddingBottom: String(toneBoxPaddingTop) + ea,
+            alignItems: "start",
+            justifyContent: "end",
+            background: colorChip.gradientGray,
+            borderRadius: String(8) + "px",
           },
-          {
-            text: contents.tone.description.join("\n"),
-            style: {
-              display: "block",
-              position: "relative",
-              fontSize: String(toneDescriptionSize) + ea,
-              fontWeight: String(descriptionWeight),
-              color: colorChip.white,
-              lineHeight: String(descriptionLineHeight),
-            }
-          },
-        ]
+          children: [
+            {
+              text: contents.tone.title,
+              style: {
+                display: "block",
+                position: "relative",
+                fontSize: String(toneTitleSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.white,
+                lineHeight: String(descriptionLineHeight),
+                marginBottom: String(titleMarginBottom) + ea,
+              }
+            },
+            {
+              text: contents.tone.description.join("\n"),
+              style: {
+                display: "block",
+                position: "relative",
+                fontSize: String(toneDescriptionSize) + ea,
+                fontWeight: String(descriptionWeight),
+                color: colorChip.white,
+                lineHeight: String(descriptionLineHeight),
+              }
+            },
+          ]
+        },
+      ]
+    });
+  } else {
+    createNode({
+      mother: whiteBlock,
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        width: withOut(0),
+        position: "relative",
       },
-    ]
-  });
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            flexDirection: "row",
+            position: "relative",
+            width: withOut(0, ea),
+            height: String(imageHeight) + ea,
+            alignItems: "center",
+            justifyContent: "center",
+            background: colorChip.gray1,
+            borderRadius: String(8) + "px",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                height: String(imageHeight) + ea,
+                width: String(singleImageWidth) + ea,
+                position: "relative",
+                borderRadius: String(8) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                backgroundSize: "auto 100%",
+                backgroundPosition: "50% 50%",
+                backgroundImage: "url('" + contents.white.images.before + "')",
+              },
+              child: {
+                style: {
+                  top: String(markTop) + ea,
+                  left: String(markLeft) + ea,
+                  width: String(markWidth) + ea,
+                  height: String(markHeight) + ea,
+                  display: "inline-flex",
+                  position: "absolute",
+                  borderRadius: String(8) + "px",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: colorChip.gradientGray,
+                },
+                child: {
+                  text: "before",
+                  style: {
+                    fontSize: String(markSize) + ea,
+                    fontWeight: String(makrWeight),
+                    color: colorChip.white,
+                    fontFamily: "graphik",
+                    fontStyle: "italic",
+                    position: "relative",
+                    top: String(markTextTop) + ea,
+                  }
+                }
+              }
+            },
+            {
+              style: {
+                display: big ? "inline-flex" : "none",
+                position: "relative",
+                height: String(imageHeight) + ea,
+                width: withOut(singleImageWidth * 2, ea),
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: String(centerCircleWidth) + ea,
+                  height: String(centerCircleWidth) + ea,
+                  borderRadius: String(centerCircleWidth) + ea,
+                  background: colorChip.gradientGreen,
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  mode: "svg",
+                  source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorChip.white),
+                  style: {
+                    width: String(arrowWidth) + ea,
+                    height: String(arrowHeight) + ea,
+                    display: "inline-flex",
+                    position: "relative",
+                  }
+                },
+                next: {
+                  style: {
+                    display: media[0] ? "inline-flex" : "none",
+                    flexDirection: "column",
+                    position: "absolute",
+                    bottom: String(subBoxMargin) + ea,
+                    right: String(subBoxMargin) + ea,
+                    textAlign: "right",
+                  },
+                  children: [
+                    {
+                      text: "주방 가구",
+                      style: {
+                        fontSize: String(subTitleSize) + ea,
+                        fontWeight: String(subTitleWeight),
+                        color: colorChip.black,
+                        position: "relative",
+                        marginBottom: String(subTitleMarginBottom) + ea,
+                      }
+                    },
+                    {
+                      text: "화이트 필름 시공",
+                      style: {
+                        fontSize: String(subDescriptionSize) + ea,
+                        fontWeight: String(subDescriptionWeight),
+                        color: colorChip.black,
+                        position: "relative",
+                        marginBottom: String(subDescriptionBottom) + ea,
+                      }
+                    },
+                    {
+                      text: "주방 상판",
+                      style: {
+                        fontSize: String(subTitleSize) + ea,
+                        fontWeight: String(subTitleWeight),
+                        color: colorChip.black,
+                        position: "relative",
+                        marginBottom: String(subTitleMarginBottom) + ea,
+                      }
+                    },
+                    {
+                      text: "밝은 대리석으로 교체",
+                      style: {
+                        fontSize: String(subDescriptionSize) + ea,
+                        fontWeight: String(subDescriptionWeight),
+                        color: colorChip.black,
+                        position: "relative",
+                        marginBottom: String(subDescriptionBottom) + ea,
+                      }
+                    },
+                    {
+                      text: "기타 가구 및 소품",
+                      style: {
+                        fontSize: String(subTitleSize) + ea,
+                        fontWeight: String(subTitleWeight),
+                        color: colorChip.black,
+                        position: "relative",
+                        marginBottom: String(subTitleMarginBottom) + ea,
+                      }
+                    },
+                    {
+                      text: "디자이너의 스타일링",
+                      style: {
+                        fontSize: String(subDescriptionSize) + ea,
+                        fontWeight: String(subDescriptionWeight),
+                        color: colorChip.black,
+                        position: "relative",
+                      }
+                    },
+                  ]
+                }
+              }
+            },
+            {
+              style: {
+                display: "inline-block",
+                height: String(imageHeight) + ea,
+                width: String(singleImageWidth) + ea,
+                position: "relative",
+                borderRadius: String(8) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                backgroundSize: "100% auto",
+                backgroundPosition: "50% 50%",
+                backgroundImage: "url('" + contents.white.images.after + "')",
+              },
+              child: {
+                style: {
+                  top: String(markTop) + ea,
+                  left: String(markLeft) + ea,
+                  width: String(markWidth) + ea,
+                  height: String(markHeight) + ea,
+                  display: "inline-flex",
+                  position: "absolute",
+                  borderRadius: String(8) + "px",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: colorChip.gradientGreen,
+                },
+                child: {
+                  text: "after",
+                  style: {
+                    fontSize: String(markSize) + ea,
+                    fontWeight: String(makrWeight),
+                    color: colorChip.white,
+                    fontFamily: "graphik",
+                    fontStyle: "italic",
+                    position: "relative",
+                    top: String(markTextTop) + ea,
+                  }
+                }
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            flexDirection: "column",
+            position: "relative",
+            marginRight: String(imageBetween) + ea,
+            width: withOut(0, ea),
+            alignItems: "center",
+            justifyContent: "center",
+          },
+          children: [
+            {
+              text: contents.white.basic.title,
+              style: {
+                display: "block",
+                position: "relative",
+                fontSize: String(3.1) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.black,
+                lineHeight: String(descriptionLineHeight),
+                marginBottom: String(titleMarginBottom) + ea,
+                marginTop: String(4.5) + ea,
+                textAlign: "center",
+              }
+            },
+            {
+              text: contents.white.basic.description.join(" "),
+              style: {
+                display: "block",
+                position: "relative",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(descriptionWeight),
+                color: colorChip.black,
+                lineHeight: String(descriptionLineHeight),
+                textAlign: "center",
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            flexDirection: "column",
+            position: "relative",
+            padding: String(toneBoxPaddingLeft) + ea,
+            paddingTop: String(toneBoxPaddingTop) + ea,
+            paddingBottom: String(toneBoxPaddingTop) + ea,
+            alignItems: "start",
+            justifyContent: "end",
+            background: colorChip.gradientGray,
+            borderRadius: String(8) + "px",
+            marginTop: String(6.5) + ea,
+            marginBottom: String(1) + ea,
+          },
+          children: [
+            {
+              text: contents.tone.title,
+              style: {
+                display: "block",
+                position: "relative",
+                fontSize: String(toneTitleSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.white,
+                lineHeight: String(descriptionLineHeight),
+                marginBottom: String(titleMarginBottom) + ea,
+              }
+            },
+            {
+              text: contents.tone.description.join(" "),
+              style: {
+                display: "block",
+                position: "relative",
+                fontSize: String(toneDescriptionSize) + ea,
+                fontWeight: String(descriptionWeight),
+                color: colorChip.white,
+                lineHeight: String(descriptionLineHeight),
+              }
+            },
+          ]
+        },
+      ]
+    });
+  }
 
   return [ newBaseTong, baseTong ];
 }
@@ -6102,13 +6469,13 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   whiteTongMarginTop = <%% 48, 48, 48, 48, 7 %%>;
 
   box0Width = <%% 170, 170, 140, 110, 0 %%>;
-  box1Width = <%% 410, 410, 300, 220, 36 %%>;
+  box1Width = <%% 410, 410, 300, 220, 34 %%>;
 
   box1InnerMargin = <%% 45, 45, 30, 24, 4 %%>;
 
   boxBetween = <%% 10, 10, 10, 5, 1 %%>;
 
-  totalHeight = <%% 400, 342, 300, 240, 56 %%>;
+  totalHeight = <%% 400, 342, 300, 240, 53 %%>;
 
   innerMargin = <%% 48, 36, 30, 24, 5 %%>;
 
@@ -6185,7 +6552,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
         ],
         detail: [
           "나와 Fit 이 맞는 디자이너 추천",
-          "서비스 계약 안내,  디자이너 미팅 어레인지",
+          "서비스 계약 안내 및 디자이너 미팅 어레인지",
           "off - 디자이너 현장 미팅, 실측 / on - 비대면 미팅, 고객 직접 실측",
         ]
       },
@@ -6196,7 +6563,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
           "디자이너가 디자인을 진행하는 단계입니다. 1 ~ 3주의 시간이 소요됩니다.",
         ],
         detail: [
-          "현장 미팅 이후, 작업 기간 및 프로세스 안내",
+          "현장 미팅 후 작업 기간, 프로세스 안내",
           "컨셉 제안서, 디자인 제안서, 배치도, 구매 리스트, 시공 디자인 제안",
           "제안서 수정 및 추가 추천, 필요에 따라 대면 미팅 진행",
         ]
@@ -6948,9 +7315,9 @@ ServiceDetailJs.prototype.launching = async function (loading) {
             [ newBaseTong, baseTong ] = instance.insertToneBox(newBaseTong, baseTong);
           }
 
-          // if (instance.mode !== "furnishing") {
+          if (instance.mode !== "furnishing") {
             [ newBaseTong, baseTong ] = instance.insertConstructBox(newBaseTong, baseTong);
-          // }
+          }
           [ newBaseTong, baseTong ] = instance.insertCareBox(newBaseTong, baseTong);
           instance.insertWithBox(newBaseTong, baseTong);
 
