@@ -254,7 +254,7 @@ ServiceDetailJs.prototype.insertStartBox = function () {
   let subSize, subWeight, subLineHeight;
   let rightImagePosition;
 
-  blockHeight = <%% 294, 230, 200, 156, 75 %%>;
+  blockHeight = <%% 294, 230, 200, 156, 70 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 52, 45, 40, 32, 7 %%>;
   marginTop = <%% 52, 42, 36, 27, 7 %%>;
@@ -275,16 +275,16 @@ ServiceDetailJs.prototype.insertStartBox = function () {
   subLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
   if (mode === "furnishing") {
-    rightImagePosition = <%% 80, 80, 80, 80, -140 %%>;
+    rightImagePosition = <%% 80, 80, 80, 80, -320 %%>;
     contents = {
       left: {
         title: [
           big ? "<b%인테리어 시공 없이 가구, 패브릭, 소품만으로%b>" : "<b%시공 없이 가구, 패브릭, 소품만으로%b>",
-          big ? "우리집 무드를 변화시켜주는 스타일링" : (desktop ? "집 무드를 변화시켜주는 스타일링" : "무드를 변화시켜주는"),
+          big ? "우리집 무드를 변화시켜주는 스타일링" : (desktop ? "집 무드를 변화시켜주는 스타일링" : "무드를 바꿔주는"),
         ],
         sub: [
-          "홈퍼니싱은 시공 없이 스타일링만으로 완성하는 인테리어입니다.",
-          "내 집의 컨디션에 적합한 스타일링 서비스를 경험해보세요.",
+          desktop ? "홈퍼니싱은 시공 없이 스타일링만으로 완성하는 인테리어입니다." : "홈퍼니싱은 스타일링만으로 완성하는 인테리어입니다.",
+          desktop ? "내 집의 컨디션에 적합한 스타일링 서비스를 경험해보세요." :  "내 집에 적합한 스타일링 서비스를 경험해보세요.",
         ]
       },
       right: {
@@ -2061,7 +2061,7 @@ ServiceDetailJs.prototype.insertPeopleBox = function () {
   let topMargin;
 
   topMargin = <%% 160, 160, 140, 120, 24 %%>;
-  bottomMargin = <%% 180, 180, 150, 130, 26 %%>;
+  bottomMargin = <%% 180, 180, 150, 130, 8 %%>;
   margin = <%% 52, 50, 40, 32, 52 %%>;
 
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
@@ -2323,15 +2323,15 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
   let tagTextTop, tagSize, tagWeight, tagPaddingLeft;
   let blockId;
 
-  startBlankHeight = <%% 110, 100, 80, 50, 24 %%>;
+  startBlankHeight = <%% 110, 100, 80, 50, 17 %%>;
 
-  blockBetween = <%% 40, 40, 30, 24, 40 %%>;
+  blockBetween = <%% 40, 40, 30, 24, 17 %%>;
 
   imageHeight = <%% 420, 290, 245, 230, 42 %%>;
-  imageWidth = <%% 890, 620, 510, 350, 64 %%>;
+  imageWidth = <%% 890, 620, 510, 350, 89 %%>;
   imageBetween = <%% 40, 36, 30, 24, 3 %%>;
 
-  titleSize = <%% 17, 16, 14, 13, 3.5 %%>;
+  titleSize = <%% 17, 16, 14, 13, 3.4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   textLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
@@ -2343,17 +2343,17 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
   descriptionSize = <%% 14, 13, 12, 11, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  lineTop = <%% 20, 20, 12, 10, 2 %%>;
-  lineBottom = <%% 22, 22, 14, 12, 2 %%>;
+  lineTop = <%% 20, 20, 12, 10, 3 %%>;
+  lineBottom = <%% 22, 22, 14, 12, 3.5 %%>;
 
   tagTongHeight = <%% 26, 24, 23, 21, 5 %%>;
 
-  tagBetween = <%% 4, 3, 2, 2, 1 %%>;
+  tagBetween = <%% 4, 3, 2, 2, 0.8 %%>;
 
   tagTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
   tagSize = <%% 11, 10, 10, 10, 2.5 %%>;
   tagWeight = <%% 600, 600, 600, 600, 600 %%>;
-  tagPaddingLeft = <%% 12, 10, 9, 8, 2.5 %%>;
+  tagPaddingLeft = <%% 12, 10, 9, 8, 2 %%>;
 
   blankBlock = createNode({
     mother: baseTong,
@@ -2380,7 +2380,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
         ],
         title: "DMC SK view 33py 아파트",
         description: [
-          "임차 공간이라 시공도 어려운 상황인데 배치만으로도 확실한 변화가 있었어요.",
+          "임차 공간이라 시공이 어려운 상황인데 배치만으로도 변화가 있었어요.",
           "예산도 중요했고, 결혼 준비 해보신 분들은 아실거에요.",
           "정말 알아볼 것도 많고 준비할 것도 많은데 시간을 잘 아꼈죠.",
           "결과적으로 디자이너님 덕에 저의 시간과 기회비용을 아낄 수 있었어요.",
@@ -2433,7 +2433,6 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
           "자가",
           "30대",
           "컬러풀한",
-          "컬러풀",
         ],
       },
       {
@@ -2709,7 +2708,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
             position: "relative",
             width: desktop ? String(imageWidth) + ea : withOut(0, ea),
             height: String(imageHeight) + ea,
-            marginRight: String(imageBetween) + ea,
+            marginRight: desktop ? String(imageBetween) + ea : "",
             borderRadius: String(5) + "px",
             boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
             overflow: "hidden",
@@ -2755,6 +2754,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
             height: desktop ? String(imageHeight) + ea : "",
             justifyContent: "end",
             alignItems: "start",
+            marginTop: desktop ? "" : String(5) + ea,
           },
           children: [
             {
@@ -2767,6 +2767,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
                 fontWeight: String(titleWeight),
                 lineHeight: String(textLineHeight),
                 color: colorChip.black,
+                paddingLeft: desktop ? "" : String(4) + ea,
               }
             },
             {
@@ -2774,11 +2775,12 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
               source: svgMaker.doubleQuote(colorChip.deactive),
               style: {
                 display: "inline-block",
-                position: "relative",
+                position: desktop ? "relative" : "absolute",
                 width: String(quoteWidth) + ea,
-                marginTop: String(quoteMarginTop) + ea,
-                marginBottom: String(quoteMarginBottom) + ea,
+                marginTop: desktop ? String(quoteMarginTop) + ea : "",
+                marginBottom: desktop ? String(quoteMarginBottom) + ea : "",
                 marginLeft: String(quoteVisual) + ea,
+                top: desktop ? "" : String(1.7) + ea,
               }
             },
             {
@@ -2790,6 +2792,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
                 fontSize: String(descriptionSize) + ea,
                 fontWeight: String(descriptionWeight),
                 lineHeight: String(textLineHeight),
+                marginTop: desktop ? "" : String(1) + ea,
                 color: colorChip.black,
               }
             },
@@ -2923,13 +2926,14 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   let arrowWidth;
   let boxWidth, boxHeight;
   let total;
+  let mobileBlackCircleWidth;
 
   total = (mode === "total");
 
-  topMargin = <%% 160, 160, 140, 120, 50 %%>;
-  bottomMargin = <%% 180, 180, 150, 130, 50 %%>;
-  margin = <%% 52, 50, 40, 32, 52 %%>;
-  marginTop = <%% 56, 54, 45, 36, 56 %%>;
+  topMargin = <%% 160, 160, 140, 120, 24 %%>;
+  bottomMargin = <%% 180, 180, 150, 130, 26 %%>;
+  margin = <%% 52, 50, 40, 32, 7 %%>;
+  marginTop = <%% 56, 54, 45, 36, 7 %%>;
 
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
@@ -2944,18 +2948,18 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
   middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
 
-  whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
+  whiteTongMarginTop = <%% 48, 48, 48, 48, 7 %%>;
 
-  imageWidth = <%% 680, 480, 410, 320, 480 %%>;
-  imageHeight = <%% 400, 280, 240, 180, 2280 %%>;
+  imageWidth = <%% 680, 480, 410, 320, 48 %%>;
+  imageHeight = <%% 400, 280, 240, 180, 40 %%>;
   imageBetween = <%% 12, 12, 12, 12, 12 %%>;
 
-  titleSize = <%% 14, 13, 12, 11, 13 %%>;
+  titleSize = <%% 14, 13, 12, 11, 3 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  titleMarginBottom = <%% 6, 6, 6, 6, 6 %%>;
+  titleMarginBottom = <%% 6, 6, 6, 6, 1 %%>;
 
   factorTextTop = <%% -1, -1, -1, -1, -1 %%>;
   factorSize = <%% 13, 11, 10, 10, 2.8 %%>;
@@ -2964,15 +2968,17 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
   factorTongHeight = <%% 36, 28, 24, 22, 28 %%>;
   factorTongWidth = <%% 96, 80, 72, 70, 80 %%>;
 
-  lineStart = <%% 20, 20, 20, 8, 20 %%>;
-  lineWidth = <%% 74, 74, 70, 64, 74 %%>;
-  lineHeight = <%% 94, 64, 54, 39, 64 %%>;
+  lineStart = <%% 20, 20, 20, 8, 2 %%>;
+  lineWidth = <%% 74, 74, 70, 64, 7 %%>;
+  lineHeight = <%% 94, 64, 54, 39, 6 %%>;
   lineEnd = <%% 2, 2, 2, 2, 2 %%>;
 
-  arrowWidth = <%% 10, 10, 8, 6, 10 %%>;
+  arrowWidth = <%% 10, 10, 8, 6, 1 %%>;
 
-  boxWidth = <%% 150, 108, 120, 90, 150 %%>;
-  boxHeight = <%% 80, 66, 56, 52, 80 %%>;
+  boxWidth = <%% 150, 108, 120, 90, 15 %%>;
+  boxHeight = <%% 80, 66, 56, 52, 8 %%>;
+
+  mobileBlackCircleWidth = 10;
 
   pastBaseTong.parentNode.insertBefore(newBaseTong, pastBaseTong.nextElementSibling);
   newBaseTong.style.left = String(0);
@@ -3085,7 +3091,7 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
     children: [
       {
         style: {
-          display: "block",
+          display: desktop ? "block" : "none",
           position: "absolute",
           width: String(100) + '%',
           height: String(middleTitleLineTop) + ea,
@@ -3153,196 +3159,298 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
 
   setToneSetting = ({ title, description, factors, before, after }, index) => {
 
-    createNode({
-      mother: whiteBlock,
-      style: {
-        display: "flex",
-        flexDirection: "row",
-        width: withOut(0),
-        position: "relative",
-      },
-      children: [
-        {
-          style: {
-            display: "inline-flex",
-            flexDirection: "column",
-            position: "relative",
-            marginRight: String(imageBetween) + ea,
-            width: withOut((imageWidth / 2) + imageWidth + (imageBetween * 2)),
-            height: String(imageHeight) + ea,
-            alignItems: "start",
-            justifyContent: "end",
-          },
-          children: [
-            {
-              text: String(index + 1),
-              style: {
-                position: "absolute",
-                top: String(0),
-                left: String(0),
-                fontSize: String(titleSize) + ea,
-                fontWeight: String(500),
-                fontFamily: "graphik",
-                fontStyle: "italic",
-                color: colorChip.green
-              }
-            },
-            {
-              text: title,
-              style: {
-                display: "block",
-                position: "relative",
-                fontSize: String(titleSize) + ea,
-                fontWeight: String(titleWeight),
-                color: colorChip.black,
-                lineHeight: String(descriptionLineHeight),
-                marginBottom: String(titleMarginBottom) + ea,
-              }
-            },
-            {
-              text: description.join("\n"),
-              style: {
-                display: "block",
-                position: "relative",
-                fontSize: String(titleSize) + ea,
-                fontWeight: String(descriptionWeight),
-                color: colorChip.black,
-                lineHeight: String(descriptionLineHeight),
-              }
-            },
-          ]
+    if (desktop) {
+      createNode({
+        mother: whiteBlock,
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          width: withOut(0),
+          position: "relative",
         },
-        {
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            flexDirection: "column",
-            height: String(imageHeight) + ea,
-            width: String(imageWidth / 2) + ea,
-            marginRight: String(imageBetween) + ea,
-          },
-          children: [
-            {
-              style: {
-                display: "flex",
-                position: "relative",
-                width: String(imageWidth / 2) + ea,
-                height: String(imageHeight / 2) + ea,
-                borderRadius: String(8) + "px",
-                backgroundImage: "url('" + before + "')",
-                backgroundSize: "100% auto",
-                backgroundPosition: "50% 50%",
-                marginBottom: String(imageBetween) + ea,
-              }
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              flexDirection: "column",
+              position: "relative",
+              marginRight: String(imageBetween) + ea,
+              width: withOut((imageWidth / 2) + imageWidth + (imageBetween * 2)),
+              height: String(imageHeight) + ea,
+              alignItems: "start",
+              justifyContent: "end",
             },
-            {
+            children: [
+              {
+                text: String(index + 1),
+                style: {
+                  position: "absolute",
+                  top: String(0),
+                  left: String(0),
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(500),
+                  fontFamily: "graphik",
+                  fontStyle: "italic",
+                  color: colorChip.green
+                }
+              },
+              {
+                text: title,
+                style: {
+                  display: "block",
+                  position: "relative",
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(titleWeight),
+                  color: colorChip.black,
+                  lineHeight: String(descriptionLineHeight),
+                  marginBottom: String(titleMarginBottom) + ea,
+                }
+              },
+              {
+                text: description.join("\n"),
+                style: {
+                  display: "block",
+                  position: "relative",
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(descriptionWeight),
+                  color: colorChip.black,
+                  lineHeight: String(descriptionLineHeight),
+                }
+              },
+            ]
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              flexDirection: "column",
+              height: String(imageHeight) + ea,
+              width: String(imageWidth / 2) + ea,
+              marginRight: String(imageBetween) + ea,
+            },
+            children: [
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(imageWidth / 2) + ea,
+                  height: String(imageHeight / 2) + ea,
+                  borderRadius: String(8) + "px",
+                  backgroundImage: "url('" + before + "')",
+                  backgroundSize: "100% auto",
+                  backgroundPosition: "50% 50%",
+                  marginBottom: String(imageBetween) + ea,
+                }
+              },
+              {
+                style: {
+                  display: "flex",
+                  flexDirection: "column",
+                  position: "relative",
+                  width: String(imageWidth / 2) + ea,
+                  height: withOut((imageHeight / 2) + imageBetween, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                children: [
+                  {
+                    style: {
+                      position: "absolute",
+                      width: String(lineWidth) + ea,
+                      height: String(lineHeight) + ea,
+                      top: String(0),
+                      left: String(lineStart) + ea,
+                      borderBottomLeftRadius: String(8) + "px",
+                      borderLeft: "1px solid " + colorChip.gray5,
+                      borderBottom: "1px solid " + colorChip.gray5,
+                    }
+                  },
+                  {
+                    style: {
+                      position: "absolute",
+                      width: String(boxWidth) + ea,
+                      height: String(boxHeight) + ea,
+                      border: "1px solid " + colorChip.gray5,
+                      borderRadius: String(8) + "px",
+                      left: withOut(50, boxWidth / 2, ea),
+                      top: withOut(50, boxHeight / 2, ea),
+                    }
+                  },
+                  {
+                    style: {
+                      position: "absolute",
+                      width: String(boxWidth) + ea,
+                      height: String(0) + ea,
+                      borderBottom: "1px solid " + colorChip.gray5,
+                      left: withOut(50, boxWidth / 2, ea),
+                      top: withOut(50, 0, ea),
+                    }
+                  },
+                  {
+                    style: {
+                      position: "absolute",
+                      width: String(lineWidth + lineStart - lineEnd) + ea,
+                      height: String(0),
+                      right: String(lineEnd) + ea,
+                      top: withOut(50, 0, ea),
+                      borderBottom: "1px solid " + colorChip.gray5,
+                    }
+                  },
+                  {
+                    style: {
+                      position: "absolute",
+                      width: String(arrowWidth) + ea,
+                      height: String(arrowWidth) + ea,
+                      borderRight: "1px solid " + colorChip.gray5,
+                      borderBottom: "1px solid " + colorChip.gray5,
+                      right: String(lineEnd) + ea,
+                      top: withOut(50, arrowWidth / 2, ea),
+                      transform: "rotate(-45deg)",
+                    }
+                  }
+                ].concat(factors.map((factor, index) => {
+                  return {
+                    style: {
+                      display: "flex",
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: String(factorTongHeight) + ea,
+                      width: String(factorTongWidth) + ea,
+                      background: colorChip.black,
+                      borderRadius: String(8) + "px",
+                      marginBottom: String(index === factors.length - 1 ? 0 : 4) + ea,
+                    },
+                    child: {
+                      text: factor,
+                      style: {
+                        position: "relative",
+                        top: String(factorTextTop) + ea,
+                        fontSize: String(factorSize) + ea,
+                        fontWeight: String(factorWeight),
+                        color: colorChip.white,
+                      }
+                    }
+                  }
+                }))
+              }
+            ]
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(imageWidth) + ea,
+              height: String(imageHeight) + ea,
+              borderRadius: String(8) + "px",
+              backgroundImage: "url('" + after + "')",
+              backgroundSize: "100% auto",
+              backgroundPosition: "50% 50%",
+            }
+          }
+        ]
+      });
+    } else {
+      createNode({
+        mother: whiteBlock,
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          width: withOut(0),
+          position: "relative",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: String(imageHeight) + ea,
+              borderTopLeftRadius: String(8) + "px",
+              borderTopRightRadius: String(8) + "px",
+              backgroundImage: "url('" + before + "')",
+              backgroundSize: "100% auto",
+              backgroundPosition: "50% 50%",
+            }
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: String(imageHeight) + ea,
+              borderBottomLeftRadius: String(8) + "px",
+              borderBottomRightRadius: String(8) + "px",
+              backgroundImage: "url('" + after + "')",
+              backgroundSize: "100% auto",
+              backgroundPosition: "50% 50%",
+            },
+            child: {
               style: {
                 display: "flex",
-                flexDirection: "column",
-                position: "relative",
-                width: String(imageWidth / 2) + ea,
-                height: withOut((imageHeight / 2) + imageBetween, ea),
+                position: "absolute",
+                top: String(-1 * (mobileBlackCircleWidth / 2)) + ea,
+                left: withOut(50, mobileBlackCircleWidth / 2, ea),
+                width: String(mobileBlackCircleWidth) + ea,
+                height: String(mobileBlackCircleWidth) + ea,
+                borderRadius: String(mobileBlackCircleWidth) + ea,
+                background: colorChip.gradientGray,
                 justifyContent: "center",
                 alignItems: "center",
               },
-              children: [
-                {
-                  style: {
-                    position: "absolute",
-                    width: String(lineWidth) + ea,
-                    height: String(lineHeight) + ea,
-                    top: String(0),
-                    left: String(lineStart) + ea,
-                    borderBottomLeftRadius: String(8) + "px",
-                    borderLeft: "1px solid " + colorChip.gray5,
-                    borderBottom: "1px solid " + colorChip.gray5,
-                  }
-                },
-                {
-                  style: {
-                    position: "absolute",
-                    width: String(boxWidth) + ea,
-                    height: String(boxHeight) + ea,
-                    border: "1px solid " + colorChip.gray5,
-                    borderRadius: String(8) + "px",
-                    left: withOut(50, boxWidth / 2, ea),
-                    top: withOut(50, boxHeight / 2, ea),
-                  }
-                },
-                {
-                  style: {
-                    position: "absolute",
-                    width: String(boxWidth) + ea,
-                    height: String(0) + ea,
-                    borderBottom: "1px solid " + colorChip.gray5,
-                    left: withOut(50, boxWidth / 2, ea),
-                    top: withOut(50, 0, ea),
-                  }
-                },
-                {
-                  style: {
-                    position: "absolute",
-                    width: String(lineWidth + lineStart - lineEnd) + ea,
-                    height: String(0),
-                    right: String(lineEnd) + ea,
-                    top: withOut(50, 0, ea),
-                    borderBottom: "1px solid " + colorChip.gray5,
-                  }
-                },
-                {
-                  style: {
-                    position: "absolute",
-                    width: String(arrowWidth) + ea,
-                    height: String(arrowWidth) + ea,
-                    borderRight: "1px solid " + colorChip.gray5,
-                    borderBottom: "1px solid " + colorChip.gray5,
-                    right: String(lineEnd) + ea,
-                    top: withOut(50, arrowWidth / 2, ea),
-                    transform: "rotate(-45deg)",
-                  }
+              child: {
+                mode: "svg",
+                source: svgMaker.verticalArrow(2, 6, colorChip.white),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: String(2) + ea,
+                  height: String(6) + ea,
                 }
-              ].concat(factors.map((factor, index) => {
-                return {
-                  style: {
-                    display: "flex",
-                    position: "relative",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: String(factorTongHeight) + ea,
-                    width: String(factorTongWidth) + ea,
-                    background: colorChip.black,
-                    borderRadius: String(8) + "px",
-                    marginBottom: String(index === factors.length - 1 ? 0 : 4) + ea,
-                  },
-                  child: {
-                    text: factor,
-                    style: {
-                      position: "relative",
-                      top: String(factorTextTop) + ea,
-                      fontSize: String(factorSize) + ea,
-                      fontWeight: String(factorWeight),
-                      color: colorChip.white,
-                    }
-                  }
-                }
-              }))
+              }
             }
-          ]
-        },
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(imageWidth) + ea,
-            height: String(imageHeight) + ea,
-            borderRadius: String(8) + "px",
-            backgroundImage: "url('" + after + "')",
-            backgroundSize: "100% auto",
-            backgroundPosition: "50% 50%",
-          }
-        }
-      ]
-    });
+          },
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+              width: withOut(0),
+              alignItems: "start",
+              justifyContent: "center",
+              marginTop: String(4.5) + ea,
+            },
+            children: [
+              {
+                text: title,
+                style: {
+                  display: "block",
+                  position: "relative",
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(titleWeight),
+                  color: colorChip.black,
+                  lineHeight: String(descriptionLineHeight),
+                  marginBottom: String(titleMarginBottom) + ea,
+                  textAlign: "left",
+                }
+              },
+              {
+                text: description.join(" "),
+                style: {
+                  display: "block",
+                  position: "relative",
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(descriptionWeight),
+                  color: colorChip.black,
+                  lineHeight: String(descriptionLineHeight),
+                  textAlign: "left",
+                }
+              },
+            ]
+          },
+        ]
+      });
+    }
 
     createNode({
       mother: whiteBlock,
@@ -3968,10 +4076,10 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   let white2StandardPercentage;
   let innerDescriptionFactorWidth;
 
-  topMargin = <%% 160, 160, 140, 120, 50 %%>;
-  bottomMargin = <%% 180, 180, 150, 130, 50 %%>;
-  margin = <%% 52, 50, 40, 32, 52 %%>;
-  marginTop = <%% 56, 54, 45, 36, 56 %%>;
+  topMargin = <%% 160, 160, 140, 120, 24 %%>;
+  bottomMargin = <%% 180, 180, 150, 130, 26 %%>;
+  margin = <%% 52, 50, 40, 32, 7 %%>;
+  marginTop = <%% 56, 54, 45, 36, 8 %%>;
 
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
@@ -3986,58 +4094,58 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
   middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
 
-  whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
+  whiteTongMarginTop = <%% 48, 48, 48, 48, 7 %%>;
 
-  whiteBetween = <%% 12, 12, 12, 12, 12 %%>;
+  whiteBetween = <%% 12, 12, 12, 12, 1 %%>;
 
   leftBlockWidth = <%% 302, 256, 230, 200, 302 %%>;
   leftBlockMarginRight = <%% 12, 12, 10, 8, 12 %%>;
 
-  titleSize = <%% 14, 13, 12, 11, 14 %%>;
+  titleSize = <%% 14, 13, 12, 11, 3 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  descriptionSize = <%% 14, 13, 12, 11, 14 %%>;
+  descriptionSize = <%% 14, 13, 12, 11, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  descriptionMarginTop = <%% 6, 6, 6, 6, 6 %%>;
+  descriptionMarginTop = <%% 6, 6, 6, 6, 1 %%>;
 
-  blockBetween = <%% 12, 10, 10, 10, 12 %%>;
-  blockBetweenBottom = <%% 3, 3, 3, 3, 3 %%>;
-  imageMarginBottom = <%% 20, 20, 20, 20, 20 %%>;
-  grayBoxHeight = <%% 120, 96, 90, 76, 96 %%>;
+  blockBetween = <%% 12, 10, 10, 10, 0.5 %%>;
+  blockBetweenBottom = <%% 3, 3, 3, 3, 0.5 %%>;
+  imageMarginBottom = <%% 20, 20, 20, 20, 3 %%>;
+  grayBoxHeight = <%% 120, 96, 90, 76, 20 %%>;
 
-  innerTitleSize = <%% 15, 14, 13, 11, 15 %%>;
+  innerTitleSize = <%% 15, 14, 13, 11, 3 %%>;
   innerTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   innerTitleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  innerDescriptionSize = <%% 13, 11, 10, 10, 13 %%>;
+  innerDescriptionSize = <%% 13, 11, 10, 10, 2.5 %%>;
   innerDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   innerDescriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-  innerDescriptionMarginTop = <%% 4, 4, 4, 1, 4 %%>;
-  innerDescriptionTextVisual = <%% 2, 2, 2, 2, 2 %%>;
+  innerDescriptionMarginTop = <%% 4, 4, 4, 1, 0.5 %%>;
+  innerDescriptionTextVisual = <%% 2, 2, 2, 2, 0.5 %%>;
 
-  freeWidth = <%% 180, 180, 180, 180, 180 %%>;
-  freeHeight = <%% 42, 42, 42, 42, 42 %%>;
-  freeTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  freeWidth = <%% 180, 180, 180, 180, 32.5 %%>;
+  freeHeight = <%% 42, 42, 42, 42, 8 %%>;
+  freeTextTop = <%% -1, -1, -1, -1, -0.4 %%>;
 
-  linesTongHeight = <%% 48, 48, 48, 48, 48 %%>;
-  linesWidth = <%% 660, 464, 396, 396, 66 %%>;
+  linesTongHeight = <%% 48, 48, 48, 48, 7 %%>;
+  linesWidth = <%% 660, 464, 396, 396, 50 %%>;
 
-  blackTongHeight = <%% 52, 52, 42, 32, 52 %%>;
-  blackTongHeight2 = <%% 42, 42, 40, 32, 42 %%>;
+  blackTongHeight = <%% 52, 52, 42, 32, 7.5 %%>;
+  blackTongHeight2 = <%% 42, 42, 40, 32, 7.5 %%>;
 
-  blackGrayPaddingTop = <%% 20, 20, 14, 12, 20 %%>;
-  blackGrayPaddingLeft = <%% 25, 25, 20, 16, 25 %%>;
+  blackGrayPaddingTop = <%% 20, 20, 14, 12, 2.5 %%>;
+  blackGrayPaddingLeft = <%% 25, 25, 20, 16, 3 %%>;
 
-  blackGrayFactorBetween = <%% 4, 4, 4, 4, 4 %%>;
+  blackGrayFactorBetween = <%% 4, 4, 4, 4, 2 %%>;
 
-  blackGrayFactorWhiteHeight = <%% 12, 12, 12, 12, 12 %%>;
-  blackGrayFactorGreenHeight = <%% 12, 12, 12, 12, 12 %%>;
+  blackGrayFactorWhiteHeight = <%% 12, 12, 12, 12, 1.5 %%>;
+  blackGrayFactorGreenHeight = <%% 12, 12, 12, 12, 1.5 %%>;
 
   tagBoxHeight = <%% 140, 140, 140, 140, 140 %%>;
   tagDefaultSize = <%% 24, 24, 24, 24, 24 %%>;
   tagDefaultWeight = <%% 200, 200, 200, 200, 200 %%>;
   tagDefaultTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
-  white2StandardPercentage = <%% 11, 11, 11, 11, 11 %%>;
+  white2StandardPercentage = <%% 11, 11, 11, 11, 17 %%>;
 
   innerDescriptionFactorWidth = <%% 100, 100, 80, 64, 10 %%>;
 
@@ -4200,6 +4308,17 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
     }
   };
 
+  if (mobile) {
+    contents.white0.factors.shift();
+    contents.white0.description = [
+      "이제 시공 걱정하실 필요 없습니다.",
+      "고객과의 편리하고\n적극적인 소통,",
+      "안심 AS, 안정적인 결제 프로세스를",
+      "갖춘\n홈리에종 시공사와 안심 시공하세요. ",
+    ]
+    contents.white2.factors.shift();
+  }
+
   baseTong = createNode({
     mother: newBaseTong,
     style: {
@@ -4233,7 +4352,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
     children: [
       {
         style: {
-          display: "block",
+          display: desktop ? "block" : "none",
           position: "absolute",
           width: String(100) + '%',
           height: String(middleTitleLineTop) + ea,
@@ -4288,7 +4407,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
     mother: baseTong,
     style: {
       display: "flex",
-      flexDirection: "row",
+      flexDirection: desktop ? "row" : "column",
       marginTop: String(whiteTongMarginTop) + ea,
       width: withOut(margin * 2, ea),
       paddingLeft: String(margin) + ea,
@@ -4300,114 +4419,227 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
       borderRadius: String(8) + "px",
     }
   });
-  createNode({
-    mother: whiteBlock0,
-    style: {
-      display: "inline-flex",
-      position: "relative",
-      flexDirection: "column",
-      width: String(leftBlockWidth) + ea,
-      marginRight: String(leftBlockMarginRight) + ea,
-      alignItems: "start",
-      justifyContent: "end",
-    },
-    children: [
-      {
-        text: contents.white0.title,
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(titleSize) + ea,
-          fontWeight: String(titleWeight),
-          color: colorChip.black,
-          lineHeight: String(descriptionLineHeight),
-        }
+  if (desktop) {
+    createNode({
+      mother: whiteBlock0,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        flexDirection: "column",
+        width: String(leftBlockWidth) + ea,
+        marginRight: String(leftBlockMarginRight) + ea,
+        alignItems: "start",
+        justifyContent: "end",
       },
-      {
-        text: contents.white0.description.join("\n"),
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(titleSize) + ea,
-          fontWeight: String(descriptionWeight),
-          color: colorChip.black,
-          lineHeight: String(descriptionLineHeight),
-          marginTop: String(descriptionMarginTop) + ea,
-        }
-      },
-    ]
-  });
-  createNode({
-    mother: whiteBlock0,
-    style: {
-      display: "inline-flex",
-      position: "relative",
-      flexDirection: "row",
-      width: withOut(leftBlockWidth + leftBlockMarginRight, ea),
-    },
-    children: contents.white0.factors.map(({ image, title, description }, index) => {
-      return {
-        style: {
-          display: "flex",
-          position: "relative",
-          flexDirection: "column",
-          width: "calc(calc(100% - " + String(blockBetween * (contents.white0.factors.length - 1)) + ea + ") / " + String(contents.white0.factors.length) + ")",
-          marginRight: String(index === contents.white0.factors.length - 1 ? 0 : blockBetween) + ea,
-        },
-        children: [
-          {
-            mode: "img",
-            attribute: { src: image },
-            style: {
-              display: "block",
-              position: "relative",
-              width: withOut(0, ea),
-              marginBottom: String(imageMarginBottom) + ea,
-            }
-          },
-          {
-            style: {
-              display: "flex",
-              flexDirection: "column",
-              borderRadius: String(8) + "px",
-              background: colorChip.gray1,
-              width: withOut(0, ea),
-              height: String(grayBoxHeight) + ea,
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
-            },
-            children: [
-              {
-                text: title,
-                style: {
-                  fontSize: String(innerTitleSize) + ea,
-                  fontWeight: String(innerTitleWeight),
-                  lineHeight: String(innerTitleLineHeight),
-                  color: colorChip.black,
-                  position: "relative",
-                  display: "block",
-                }
-              },
-              {
-                text: description.join("\n"),
-                style: {
-                  position: "relative",
-                  display: "block",
-                  fontSize: String(innerDescriptionSize) + ea,
-                  fontWeight: String(innerDescriptionWeight),
-                  lineHeight: String(innerDescriptionLineHeight),
-                  color: colorChip.black,
-                  marginTop: String(innerDescriptionMarginTop) + ea,
-                  marginBottom: String(innerDescriptionTextVisual) + ea,
-                }
-              }
-            ]
+      children: [
+        {
+          text: contents.white0.title,
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
           }
-        ]
-      };
-    }),
-  });
+        },
+        {
+          text: contents.white0.description.join("\n"),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(descriptionWeight),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
+            marginTop: String(descriptionMarginTop) + ea,
+          }
+        },
+      ]
+    });
+    createNode({
+      mother: whiteBlock0,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        flexDirection: "row",
+        width: withOut(leftBlockWidth + leftBlockMarginRight, ea),
+      },
+      children: contents.white0.factors.map(({ image, title, description }, index) => {
+        return {
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "column",
+            width: "calc(calc(100% - " + String(blockBetween * (contents.white0.factors.length - 1)) + ea + ") / " + String(contents.white0.factors.length) + ")",
+            marginRight: String(index === contents.white0.factors.length - 1 ? 0 : blockBetween) + ea,
+          },
+          children: [
+            {
+              mode: "img",
+              attribute: { src: image },
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0, ea),
+                marginBottom: String(imageMarginBottom) + ea,
+              }
+            },
+            {
+              style: {
+                display: "flex",
+                flexDirection: "column",
+                borderRadius: String(8) + "px",
+                background: colorChip.gray1,
+                width: withOut(0, ea),
+                height: String(grayBoxHeight) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+              },
+              children: [
+                {
+                  text: title,
+                  style: {
+                    fontSize: String(innerTitleSize) + ea,
+                    fontWeight: String(innerTitleWeight),
+                    lineHeight: String(innerTitleLineHeight),
+                    color: colorChip.black,
+                    position: "relative",
+                    display: "block",
+                  }
+                },
+                {
+                  text: description.join("\n"),
+                  style: {
+                    position: "relative",
+                    display: "block",
+                    fontSize: String(innerDescriptionSize) + ea,
+                    fontWeight: String(innerDescriptionWeight),
+                    lineHeight: String(innerDescriptionLineHeight),
+                    color: colorChip.black,
+                    marginTop: String(innerDescriptionMarginTop) + ea,
+                    marginBottom: String(innerDescriptionTextVisual) + ea,
+                  }
+                }
+              ]
+            }
+          ]
+        };
+      }),
+    });
+  } else {
+    createNode({
+      mother: whiteBlock0,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: withOut(0, ea),
+      },
+      children: contents.white0.factors.map(({ image, title, description }, index) => {
+        return {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            flexDirection: "column",
+            width: "calc(calc(100% - " + String(blockBetween) + ea + ") / " + String(2) + ")",
+            marginRight: String(index % 2 === 1 ? 0 : blockBetween) + ea,
+            marginBottom: String(5) + ea,
+          },
+          children: [
+            {
+              mode: "img",
+              attribute: { src: image },
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0, ea),
+                marginBottom: String(imageMarginBottom) + ea,
+              }
+            },
+            {
+              style: {
+                display: "flex",
+                flexDirection: "column",
+                borderRadius: String(8) + "px",
+                background: colorChip.gray1,
+                width: withOut(0, ea),
+                height: String(grayBoxHeight) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+              },
+              children: [
+                {
+                  text: title,
+                  style: {
+                    fontSize: String(innerTitleSize) + ea,
+                    fontWeight: String(innerTitleWeight),
+                    lineHeight: String(innerTitleLineHeight),
+                    color: colorChip.black,
+                    position: "relative",
+                    display: "block",
+                  }
+                },
+                {
+                  text: description.join("\n"),
+                  style: {
+                    position: "relative",
+                    display: "block",
+                    fontSize: String(innerDescriptionSize) + ea,
+                    fontWeight: String(innerDescriptionWeight),
+                    lineHeight: String(innerDescriptionLineHeight),
+                    color: colorChip.black,
+                    marginTop: String(innerDescriptionMarginTop) + ea,
+                    marginBottom: String(innerDescriptionTextVisual) + ea,
+                  }
+                }
+              ]
+            }
+          ]
+        };
+      }),
+    });
+    createNode({
+      mother: whiteBlock0,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        flexDirection: "column",
+        width: desktop ? String(leftBlockWidth) + ea : withOut(0, ea),
+        marginRight: desktop ? String(leftBlockMarginRight) + ea : "",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: String(1) + ea,
+      },
+      children: [
+        {
+          text: contents.white0.title,
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
+          }
+        },
+        {
+          text: contents.white0.description.join(desktop ? "\n" : " "),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(descriptionWeight),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
+            marginTop: String(descriptionMarginTop) + ea,
+            textAlign: "center",
+          }
+        },
+      ]
+    });
+  }
 
 
   // 2
@@ -4416,7 +4648,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
     mother: baseTong,
     style: {
       display: "flex",
-      flexDirection: "row",
+      flexDirection: desktop ? "row" : "column",
       marginTop: String(whiteBetween) + ea,
       width: withOut(margin * 2, ea),
       paddingLeft: String(margin) + ea,
@@ -4428,233 +4660,467 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
       borderRadius: String(8) + "px",
     }
   });
-  createNode({
-    mother: whiteBlock1,
-    style: {
-      display: "inline-flex",
-      position: "relative",
-      flexDirection: "column",
-      width: String(leftBlockWidth) + ea,
-      marginRight: String(leftBlockMarginRight) + ea,
-      alignItems: "start",
-      justifyContent: "end",
-    },
-    children: [
-      {
-        text: contents.white1.title,
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(titleSize) + ea,
-          fontWeight: String(titleWeight),
-          color: colorChip.black,
-          lineHeight: String(descriptionLineHeight),
-        }
+  if (desktop) {
+    createNode({
+      mother: whiteBlock1,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        flexDirection: "column",
+        width: String(leftBlockWidth) + ea,
+        marginRight: String(leftBlockMarginRight) + ea,
+        alignItems: "start",
+        justifyContent: "end",
       },
-      {
-        text: contents.white1.description.join("\n"),
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(titleSize) + ea,
-          fontWeight: String(descriptionWeight),
-          color: colorChip.black,
-          lineHeight: String(descriptionLineHeight),
-          marginTop: String(descriptionMarginTop) + ea,
-        }
-      },
-    ]
-  })
-  createNode({
-    mother: whiteBlock1,
-    style: {
-      display: "inline-flex",
-      position: "relative",
-      flexDirection: "column",
-      width: withOut(leftBlockWidth + leftBlockMarginRight, ea),
-    },
-    children: [
-      {
-        style: {
-          display: "flex",
-          width: withOut(0, ea),
-          position: "relative",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        },
-        child: {
+      children: [
+        {
+          text: contents.white1.title,
           style: {
-            width: String(freeWidth) + ea,
-            height: String(freeHeight) + ea,
-            background: colorChip.gradientGreen,
-            borderRadius: String(freeHeight) + ea,
-            display: "inline-flex",
+            display: "block",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
+          }
+        },
+        {
+          text: contents.white1.description.join("\n"),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(descriptionWeight),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
+            marginTop: String(descriptionMarginTop) + ea,
+          }
+        },
+      ]
+    });
+    createNode({
+      mother: whiteBlock1,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        flexDirection: "column",
+        width: withOut(leftBlockWidth + leftBlockMarginRight, ea),
+      },
+      children: [
+        {
+          style: {
+            display: "flex",
+            width: withOut(0, ea),
+            position: "relative",
+            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            position: "relative",
           },
           child: {
-            text: contents.white1.diagram.title,
             style: {
-              display: "inline-block",
+              width: String(freeWidth) + ea,
+              height: String(freeHeight) + ea,
+              background: colorChip.gradientGreen,
+              borderRadius: String(freeHeight) + ea,
+              display: "inline-flex",
+              justifyContent: "center",
+              alignItems: "center",
               position: "relative",
-              top: String(freeTextTop) + ea,
-              fontSize: String(innerTitleSize) + ea,
-              fontWeight: String(innerTitleWeight),
-              color: colorChip.white,
-            }
-          }
-        }
-      },
-      {
-        style: {
-          display: "flex",
-          width: withOut(0, ea),
-          height: String(linesTongHeight) + ea,
-          position: "relative",
-          flexDirection: "column",
-          justifyContent: "end",
-          alignItems: "center",
-        },
-        children: [
-          {
-            style: {
-              display: "inline-block",
-              position: "relative",
-              width: String(linesWidth) + ea,
-              height: withOut(50, 0, ea),
-              borderTop: "1px solid " + colorChip.gray4,
-              borderRight: "1px solid " + colorChip.gray4,
-              borderLeft: "1px solid " + colorChip.gray4,
-              borderTopLeftRadius: String(8) + "px",
-              borderTopRightRadius: String(8) + "px",
-            }
-          },
-          {
-            style: {
-              position: "absolute",
-              height: withOut(0, ea),
-              width: String(0),
-              left: withOut(50, 0, ea),
-              top: String(0),
-              borderRight: "1px solid " + colorChip.gray4,
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          display: "flex",
-          flexDirection: "row",
-          width: withOut(0, ea),
-          position: "relative",
-        },
-        children: contents.white1.diagram.factors.map(({ title, values }, index) => {
-          return {
-            style: {
-              display: "flex",
-              position: "relative",
-              flexDirection: "column",
-              width: "calc(calc(100% - " + String(blockBetween * (contents.white1.diagram.factors.length - 1)) + ea + ") / " + String(contents.white1.diagram.factors.length) + ")",
-              marginRight: String(index === contents.white1.diagram.factors.length - 1 ? 0 : blockBetween) + ea,
             },
-            children: [
-              {
-                style: {
-                  display: "flex",
-                  flexDirection: "column",
-                  borderTopLeftRadius: String(8) + "px",
-                  borderTopRightRadius: String(8) + "px",
-                  background: colorChip.black,
-                  width: withOut(0, ea),
-                  height: String(blackTongHeight) + ea,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                },
-                children: [
-                  {
-                    text: title,
-                    style: {
-                      fontSize: String(innerTitleSize) + ea,
-                      fontWeight: String(innerTitleWeight),
-                      lineHeight: String(innerTitleLineHeight),
-                      color: colorChip.white,
-                      position: "relative",
-                      display: "block",
-                      top: String(freeTextTop) + ea,
-                    }
-                  },
-                ]
-              },
-              {
-                style: {
-                  display: "flex",
-                  flexDirection: "column",
-                  paddingTop: String(blackGrayPaddingTop) + ea,
-                  paddingBottom: String(blackGrayPaddingTop - blackGrayFactorBetween) + ea,
-                  width: withOut(blackGrayPaddingLeft * 2, ea),
-                  borderBottomLeftRadius: String(8) + "px",
-                  borderBottomRightRadius: String(8) + "px",
-                  paddingLeft: String(blackGrayPaddingLeft) + ea,
-                  paddingRight: String(blackGrayPaddingLeft) + ea,
-                  background: colorChip.gray1,
-                },
-                children: values.map((number, index) => {
-                  const property = contents.white1.diagram.properties[index];
-                  return {
-                    style: {
-                      display: "flex",
-                      flexDirection: "row",
-                      position: "relative",
-                      width: withOut(0, ea),
-                      justifyContent: "center",
-                      alignItems: "center",
-                      marginBottom: String(blackGrayFactorBetween) + ea,
-                    },
-                    children: [
-                      {
-                        text: property,
-                        style: {
-                          display: "inline-block",
-                          position: "relative",
-                          fontSize: String(innerDescriptionSize) + ea,
-                          fontWeight: String(700),
-                          color: colorChip.black,
-                          width: String(innerDescriptionFactorWidth) + ea,
-                        }
-                      },
-                      {
-                        style: {
-                          display: "inline-block",
-                          position: "relative",
-                          width: withOut(innerDescriptionFactorWidth, ea),
-                          height: String(blackGrayFactorWhiteHeight) + ea,
-                          background: colorChip.white,
-                          borderRadius: String(blackGrayFactorWhiteHeight) + ea,
-                          overflow: "hidden",
-                        },
-                        child: {
-                          position: "absolute",
-                          left: String(0),
-                          top: String((blackGrayFactorWhiteHeight - blackGrayFactorGreenHeight) / 2) + ea,
-                          height: String(blackGrayFactorGreenHeight) + ea,
-                          width: String(100 * number) + '%',
-                          borderRadius: String(blackGrayFactorGreenHeight) + ea,
-                          background: colorChip.gradientGreen,
-                        }
-                      }
-                    ]
-                  };
-                })
+            child: {
+              text: contents.white1.diagram.title,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(freeTextTop) + ea,
+                fontSize: String(innerTitleSize) + ea,
+                fontWeight: String(innerTitleWeight),
+                color: colorChip.white,
               }
-            ]
-          };
-        }),
-      }
-    ]
-  });
+            }
+          }
+        },
+        {
+          style: {
+            display: "flex",
+            width: withOut(0, ea),
+            height: String(linesTongHeight) + ea,
+            position: "relative",
+            flexDirection: "column",
+            justifyContent: "end",
+            alignItems: "center",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(linesWidth) + ea,
+                height: withOut(50, 0, ea),
+                borderTop: "1px solid " + colorChip.gray4,
+                borderRight: "1px solid " + colorChip.gray4,
+                borderLeft: "1px solid " + colorChip.gray4,
+                borderTopLeftRadius: String(8) + "px",
+                borderTopRightRadius: String(8) + "px",
+              }
+            },
+            {
+              style: {
+                position: "absolute",
+                height: withOut(0, ea),
+                width: String(0),
+                left: withOut(50, 0, ea),
+                top: String(0),
+                borderRight: "1px solid " + colorChip.gray4,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            display: "flex",
+            flexDirection: "row",
+            width: withOut(0, ea),
+            position: "relative",
+          },
+          children: contents.white1.diagram.factors.map(({ title, values }, index) => {
+            return {
+              style: {
+                display: "flex",
+                position: "relative",
+                flexDirection: "column",
+                width: "calc(calc(100% - " + String(blockBetween * (contents.white1.diagram.factors.length - 1)) + ea + ") / " + String(contents.white1.diagram.factors.length) + ")",
+                marginRight: String(index === contents.white1.diagram.factors.length - 1 ? 0 : blockBetween) + ea,
+              },
+              children: [
+                {
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    borderTopLeftRadius: String(8) + "px",
+                    borderTopRightRadius: String(8) + "px",
+                    background: colorChip.black,
+                    width: withOut(0, ea),
+                    height: String(blackTongHeight) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                  },
+                  children: [
+                    {
+                      text: title,
+                      style: {
+                        fontSize: String(innerTitleSize) + ea,
+                        fontWeight: String(innerTitleWeight),
+                        lineHeight: String(innerTitleLineHeight),
+                        color: colorChip.white,
+                        position: "relative",
+                        display: "block",
+                        top: String(freeTextTop) + ea,
+                      }
+                    },
+                  ]
+                },
+                {
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    paddingTop: String(blackGrayPaddingTop) + ea,
+                    paddingBottom: String(blackGrayPaddingTop - blackGrayFactorBetween) + ea,
+                    width: withOut(blackGrayPaddingLeft * 2, ea),
+                    borderBottomLeftRadius: String(8) + "px",
+                    borderBottomRightRadius: String(8) + "px",
+                    paddingLeft: String(blackGrayPaddingLeft) + ea,
+                    paddingRight: String(blackGrayPaddingLeft) + ea,
+                    background: colorChip.gray1,
+                  },
+                  children: values.map((number, index) => {
+                    const property = contents.white1.diagram.properties[index];
+                    return {
+                      style: {
+                        display: "flex",
+                        flexDirection: "row",
+                        position: "relative",
+                        width: withOut(0, ea),
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginBottom: String(blackGrayFactorBetween) + ea,
+                      },
+                      children: [
+                        {
+                          text: property,
+                          style: {
+                            display: "inline-block",
+                            position: "relative",
+                            fontSize: String(innerDescriptionSize) + ea,
+                            fontWeight: String(700),
+                            color: colorChip.black,
+                            width: String(innerDescriptionFactorWidth) + ea,
+                          }
+                        },
+                        {
+                          style: {
+                            display: "inline-block",
+                            position: "relative",
+                            width: withOut(innerDescriptionFactorWidth, ea),
+                            height: String(blackGrayFactorWhiteHeight) + ea,
+                            background: colorChip.white,
+                            borderRadius: String(blackGrayFactorWhiteHeight) + ea,
+                            overflow: "hidden",
+                          },
+                          child: {
+                            position: "absolute",
+                            left: String(0),
+                            top: String((blackGrayFactorWhiteHeight - blackGrayFactorGreenHeight) / 2) + ea,
+                            height: String(blackGrayFactorGreenHeight) + ea,
+                            width: String(100 * number) + '%',
+                            borderRadius: String(blackGrayFactorGreenHeight) + ea,
+                            background: colorChip.gradientGreen,
+                          }
+                        }
+                      ]
+                    };
+                  })
+                }
+              ]
+            };
+          }),
+        }
+      ]
+    });
+  } else {
+    createNode({
+      mother: whiteBlock1,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        flexDirection: "column",
+        width: withOut(0, ea),
+        marginTop: String(1) + ea,
+        marginBottom: String(6) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "flex",
+            width: withOut(0, ea),
+            position: "relative",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            style: {
+              width: String(freeWidth) + ea,
+              height: String(freeHeight) + ea,
+              background: colorChip.gradientGreen,
+              borderRadius: String(freeHeight) + ea,
+              display: "inline-flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+            },
+            child: {
+              text: contents.white1.diagram.title,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(freeTextTop) + ea,
+                fontSize: String(innerTitleSize) + ea,
+                fontWeight: String(innerTitleWeight),
+                color: colorChip.white,
+              }
+            }
+          }
+        },
+        {
+          style: {
+            display: "flex",
+            width: withOut(0, ea),
+            height: String(linesTongHeight) + ea,
+            position: "relative",
+            flexDirection: "column",
+            justifyContent: "end",
+            alignItems: "center",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(linesWidth) + ea,
+                height: withOut(50, 0, ea),
+                borderTop: "1px solid " + colorChip.gray4,
+                borderRight: "1px solid " + colorChip.gray4,
+                borderLeft: "1px solid " + colorChip.gray4,
+                borderTopLeftRadius: String(8) + "px",
+                borderTopRightRadius: String(8) + "px",
+              }
+            },
+            {
+              style: {
+                position: "absolute",
+                height: withOut(0, ea),
+                width: String(0),
+                left: withOut(50, 0, ea),
+                top: String(0),
+                borderRight: "1px solid " + colorChip.gray4,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            display: "flex",
+            flexDirection: "row",
+            width: withOut(0, ea),
+            position: "relative",
+          },
+          children: contents.white1.diagram.factors.map(({ title, values }, index) => {
+            return {
+              style: {
+                display: "flex",
+                position: "relative",
+                flexDirection: "column",
+                width: "calc(calc(100% - " + String(blockBetween * (contents.white1.diagram.factors.length - 1)) + ea + ") / " + String(contents.white1.diagram.factors.length) + ")",
+                marginRight: String(index === contents.white1.diagram.factors.length - 1 ? 0 : blockBetween) + ea,
+              },
+              children: [
+                {
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    borderTopLeftRadius: String(8) + "px",
+                    borderTopRightRadius: String(8) + "px",
+                    background: colorChip.black,
+                    width: withOut(0, ea),
+                    height: String(blackTongHeight) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                  },
+                  children: [
+                    {
+                      text: title,
+                      style: {
+                        fontSize: String(2.5) + ea,
+                        fontWeight: String(innerTitleWeight),
+                        lineHeight: String(innerTitleLineHeight),
+                        color: colorChip.white,
+                        position: "relative",
+                        display: "block",
+                        top: String(0) + ea,
+                      }
+                    },
+                  ]
+                },
+                {
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    paddingTop: String(blackGrayPaddingTop) + ea,
+                    paddingBottom: String(2) + ea,
+                    width: withOut(blackGrayPaddingLeft * 2, ea),
+                    borderBottomLeftRadius: String(8) + "px",
+                    borderBottomRightRadius: String(8) + "px",
+                    paddingLeft: String(blackGrayPaddingLeft) + ea,
+                    paddingRight: String(blackGrayPaddingLeft) + ea,
+                    background: colorChip.gray1,
+                  },
+                  children: values.map((number, index) => {
+                    const property = contents.white1.diagram.properties[index];
+                    return {
+                      style: {
+                        display: "flex",
+                        flexDirection: "column",
+                        position: "relative",
+                        width: withOut(0, ea),
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginBottom: String(blackGrayFactorBetween) + ea,
+                      },
+                      children: [
+                        {
+                          text: property,
+                          style: {
+                            display: "block",
+                            position: "relative",
+                            fontSize: String(innerDescriptionSize) + ea,
+                            fontWeight: String(700),
+                            color: colorChip.black,
+                            width: withOut(0, ea),
+                          }
+                        },
+                        {
+                          style: {
+                            display: "block",
+                            position: "relative",
+                            width: withOut(0, ea),
+                            height: String(blackGrayFactorWhiteHeight) + ea,
+                            background: colorChip.white,
+                            borderRadius: String(blackGrayFactorWhiteHeight) + ea,
+                            overflow: "hidden",
+                            marginTop: String(1) + ea,
+                          },
+                          child: {
+                            position: "absolute",
+                            left: String(0),
+                            top: String((blackGrayFactorWhiteHeight - blackGrayFactorGreenHeight) / 2) + ea,
+                            height: String(blackGrayFactorGreenHeight) + ea,
+                            width: String(100 * number) + '%',
+                            borderRadius: String(blackGrayFactorGreenHeight) + ea,
+                            background: colorChip.gradientGreen,
+                          }
+                        }
+                      ]
+                    };
+                  })
+                }
+              ]
+            };
+          }),
+        }
+      ]
+    });
+    createNode({
+      mother: whiteBlock1,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        flexDirection: "column",
+        width: withOut(0, ea),
+        marginRight: String(leftBlockMarginRight) + ea,
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      children: [
+        {
+          text: contents.white1.title,
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
+          }
+        },
+        {
+          text: contents.white1.description.join(desktop ? "\n" : " "),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(descriptionWeight),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
+            marginTop: String(descriptionMarginTop) + ea,
+            textAlign: "center",
+          }
+        },
+      ]
+    });
+  }
 
 
   // 3
@@ -4663,7 +5129,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
     mother: baseTong,
     style: {
       display: "flex",
-      flexDirection: "row",
+      flexDirection: desktop ? "row" : "column",
       marginTop: String(whiteBetween) + ea,
       width: withOut(margin * 2, ea),
       paddingLeft: String(margin) + ea,
@@ -4675,152 +5141,84 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
       borderRadius: String(8) + "px",
     }
   });
-  createNode({
-    mother: whiteBlock2,
-    style: {
-      display: "inline-flex",
-      position: "relative",
-      flexDirection: "column",
-      width: String(leftBlockWidth) + ea,
-      marginRight: String(leftBlockMarginRight) + ea,
-      alignItems: "start",
-      justifyContent: "end",
-    },
-    children: [
-      {
-        text: contents.white2.title,
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(titleSize) + ea,
-          fontWeight: String(titleWeight),
-          color: colorChip.black,
-          lineHeight: String(descriptionLineHeight),
-        }
+  if (desktop) {
+    createNode({
+      mother: whiteBlock2,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        flexDirection: "column",
+        width: String(leftBlockWidth) + ea,
+        marginRight: String(leftBlockMarginRight) + ea,
+        alignItems: "start",
+        justifyContent: "end",
       },
-      {
-        text: contents.white2.description.join("\n"),
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(titleSize) + ea,
-          fontWeight: String(descriptionWeight),
-          color: colorChip.black,
-          lineHeight: String(descriptionLineHeight),
-          marginTop: String(descriptionMarginTop) + ea,
-        }
-      },
-    ]
-  })
-  createNode({
-    mother: whiteBlock2,
-    style: {
-      display: "inline-flex",
-      position: "relative",
-      flexDirection: "column",
-      width: withOut(leftBlockWidth + leftBlockMarginRight, ea),
-    },
-    children: [
-      {
-        style: {
-          display: "flex",
-          position: "relative",
-          flexDirection: "row",
-          width: withOut(0, ea),
-        },
-        children: [
-          {
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              flexDirection: "column",
-              width: String(white2StandardPercentage) + '%',
-            },
-            children: [
-              {
-                style: {
-                  display: "flex",
-                  flexDirection: "column",
-                  borderRadius: String(8) + "px",
-                  background: colorChip.black,
-                  width: withOut(blockBetweenBottom, ea),
-                  height: String(blackTongHeight2) + ea,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  marginBottom: String(blockBetweenBottom) + ea,
-                },
-                child: {
-                  text: "구분",
-                  style: {
-                    position: "relative",
-                    top: String(freeTextTop) + ea,
-                    fontSize: String(innerTitleSize) + ea,
-                    fontWeight: String(innerTitleWeight),
-                    lineHeight: String(innerTitleLineHeight),
-                    color: colorChip.white,
-                    position: "relative",
-                    display: "block",
-                  }
-                }
-              }
-            ].concat(contents.white2.standard.map((str) => {
-              return {
-                style: {
-                  display: "flex",
-                  flexDirection: "column",
-                  borderRadius: String(8) + "px",
-                  background: colorChip.darkShadow,
-                  width: withOut(blockBetweenBottom, ea),
-                  height: String(blackTongHeight2) + ea,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  marginBottom: String(blockBetweenBottom) + ea,
-                },
-                child: {
-                  text: str,
-                  style: {
-                    position: "relative",
-                    top: String(freeTextTop) + ea,
-                    fontSize: String(innerTitleSize) + ea,
-                    fontWeight: String(innerTitleWeight),
-                    lineHeight: String(innerTitleLineHeight),
-                    color: colorChip.white,
-                    position: "relative",
-                    display: "block",
-                  }
-                }
-              }
-            })),
+      children: [
+        {
+          text: contents.white2.title,
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
           }
-        ].concat(contents.white2.factors.map(({ title, service }, index) => {
-          const greenBoo = [ "furnishing", "styling", "total" ].findIndex((str) => { return str === instance.mode }) === index;
-          return {
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              flexDirection: "column",
-              width: "calc(calc(" + String(100 - white2StandardPercentage) + "% - " + String(blockBetweenBottom * (contents.white0.factors.length - 1)) + ea + ") / " + String(contents.white0.factors.length) + ")",
-              marginRight: String(index === contents.white0.factors.length - 1 ? 0 : blockBetweenBottom) + ea,
-            },
-            children: [
-              {
-                style: {
-                  display: "flex",
-                  flexDirection: "column",
-                  borderRadius: String(8) + "px",
-                  background: greenBoo ? colorChip.gradientGreen : colorChip.black,
-                  width: withOut(0, ea),
-                  height: String(blackTongHeight2) + ea,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  marginBottom: String(blockBetweenBottom) + ea,
-                },
-                children: [
-                  {
-                    text: title,
+        },
+        {
+          text: contents.white2.description.join("\n"),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(descriptionWeight),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
+            marginTop: String(descriptionMarginTop) + ea,
+          }
+        },
+      ]
+    });
+    createNode({
+      mother: whiteBlock2,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        flexDirection: "column",
+        width: withOut(leftBlockWidth + leftBlockMarginRight, ea),
+      },
+      children: [
+        {
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "row",
+            width: withOut(0, ea),
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "column",
+                width: String(white2StandardPercentage) + '%',
+              },
+              children: [
+                {
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: String(8) + "px",
+                    background: colorChip.black,
+                    width: withOut(blockBetweenBottom, ea),
+                    height: String(blackTongHeight2) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    marginBottom: String(blockBetweenBottom) + ea,
+                  },
+                  child: {
+                    text: "구분",
                     style: {
                       position: "relative",
                       top: String(freeTextTop) + ea,
@@ -4831,43 +5229,311 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
                       position: "relative",
                       display: "block",
                     }
-                  },
-                ]
-              }
-            ].concat(service.map((str) => {
-              return {
-                style: {
-                  display: "flex",
-                  flexDirection: "column",
-                  borderRadius: String(8) + "px",
-                  background: greenBoo ? colorChip.gray0 : colorChip.gray1,
-                  width: withOut(0, ea),
-                  height: String(blackTongHeight2) + ea,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  marginBottom: String(blockBetweenBottom) + ea,
-                },
-                child: {
-                  text: str,
-                  style: {
-                    position: "relative",
-                    top: String(freeTextTop) + ea,
-                    fontSize: String(innerTitleSize) + ea,
-                    fontWeight: String(500),
-                    lineHeight: String(innerTitleLineHeight),
-                    color: /없음/gi.test(str) ? colorChip.deactive : (greenBoo ? colorChip.green : colorChip.black),
-                    position: "relative",
-                    display: "block",
                   }
                 }
-              }
-            }))
-          };
-        })),
+              ].concat(contents.white2.standard.map((str) => {
+                return {
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: String(8) + "px",
+                    background: colorChip.darkShadow,
+                    width: withOut(blockBetweenBottom, ea),
+                    height: String(blackTongHeight2) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    marginBottom: String(blockBetweenBottom) + ea,
+                  },
+                  child: {
+                    text: str,
+                    style: {
+                      position: "relative",
+                      top: String(freeTextTop) + ea,
+                      fontSize: String(innerTitleSize) + ea,
+                      fontWeight: String(innerTitleWeight),
+                      lineHeight: String(innerTitleLineHeight),
+                      color: colorChip.white,
+                      position: "relative",
+                      display: "block",
+                    }
+                  }
+                }
+              })),
+            }
+          ].concat(contents.white2.factors.map(({ title, service }, index) => {
+            const greenBoo = [ "furnishing", "styling", "total" ].findIndex((str) => { return str === instance.mode }) === index;
+            return {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "column",
+                width: "calc(calc(" + String(100 - white2StandardPercentage) + "% - " + String(blockBetweenBottom * (contents.white0.factors.length - 1)) + ea + ") / " + String(contents.white0.factors.length) + ")",
+                marginRight: String(index === contents.white0.factors.length - 1 ? 0 : blockBetweenBottom) + ea,
+              },
+              children: [
+                {
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: String(8) + "px",
+                    background: greenBoo ? colorChip.gradientGreen : colorChip.black,
+                    width: withOut(0, ea),
+                    height: String(blackTongHeight2) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    marginBottom: String(blockBetweenBottom) + ea,
+                  },
+                  children: [
+                    {
+                      text: title,
+                      style: {
+                        position: "relative",
+                        top: String(freeTextTop) + ea,
+                        fontSize: String(innerTitleSize) + ea,
+                        fontWeight: String(innerTitleWeight),
+                        lineHeight: String(innerTitleLineHeight),
+                        color: colorChip.white,
+                        position: "relative",
+                        display: "block",
+                      }
+                    },
+                  ]
+                }
+              ].concat(service.map((str) => {
+                return {
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: String(8) + "px",
+                    background: greenBoo ? colorChip.gray0 : colorChip.gray1,
+                    width: withOut(0, ea),
+                    height: String(blackTongHeight2) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    marginBottom: String(blockBetweenBottom) + ea,
+                  },
+                  child: {
+                    text: str,
+                    style: {
+                      position: "relative",
+                      top: String(freeTextTop) + ea,
+                      fontSize: String(innerTitleSize) + ea,
+                      fontWeight: String(500),
+                      lineHeight: String(innerTitleLineHeight),
+                      color: /없음/gi.test(str) ? colorChip.deactive : (greenBoo ? colorChip.green : colorChip.black),
+                      position: "relative",
+                      display: "block",
+                    }
+                  }
+                }
+              }))
+            };
+          })),
+        },
+      ]
+    });
+  } else {
+    createNode({
+      mother: whiteBlock2,
+      style: {
+        display: "flex",
+        position: "relative",
+        flexDirection: "column",
+        width: withOut(0, ea),
+        marginTop: String(1) + ea,
+        marginBottom: String(6) + ea,
       },
-    ]
-  })
+      children: [
+        {
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "row",
+            width: withOut(0, ea),
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "column",
+                width: String(white2StandardPercentage) + '%',
+              },
+              children: [
+                {
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: String(8) + "px",
+                    background: colorChip.black,
+                    width: withOut(blockBetweenBottom, ea),
+                    height: String(blackTongHeight2) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    marginBottom: String(blockBetweenBottom) + ea,
+                  },
+                  child: {
+                    text: "구분",
+                    style: {
+                      position: "relative",
+                      top: String(freeTextTop) + ea,
+                      fontSize: String(innerTitleSize) + ea,
+                      fontWeight: String(innerTitleWeight),
+                      lineHeight: String(innerTitleLineHeight),
+                      color: colorChip.white,
+                      position: "relative",
+                      display: "block",
+                    }
+                  }
+                }
+              ].concat(contents.white2.standard.map((str) => {
+                return {
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: String(8) + "px",
+                    background: colorChip.darkShadow,
+                    width: withOut(blockBetweenBottom, ea),
+                    height: String(blackTongHeight2) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    marginBottom: String(blockBetweenBottom) + ea,
+                  },
+                  child: {
+                    text: str,
+                    style: {
+                      position: "relative",
+                      top: String(0) + ea,
+                      fontSize: String(2.5) + ea,
+                      fontWeight: String(innerTitleWeight),
+                      lineHeight: String(innerTitleLineHeight),
+                      color: colorChip.white,
+                      position: "relative",
+                      display: "block",
+                    }
+                  }
+                }
+              })),
+            }
+          ].concat(contents.white2.factors.map(({ title, service }, index) => {
+            const greenBoo = [ "styling", "total" ].findIndex((str) => { return str === instance.mode }) === index;
+            return {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                flexDirection: "column",
+                width: "calc(calc(" + String(100 - white2StandardPercentage) + "% - " + String(blockBetweenBottom * (contents.white0.factors.length - 1)) + ea + ") / " + String(contents.white0.factors.length) + ")",
+                marginRight: String(index === contents.white0.factors.length - 1 ? 0 : blockBetweenBottom) + ea,
+              },
+              children: [
+                {
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: String(8) + "px",
+                    background: greenBoo ? colorChip.gradientGreen : colorChip.black,
+                    width: withOut(0, ea),
+                    height: String(blackTongHeight2) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    marginBottom: String(blockBetweenBottom) + ea,
+                  },
+                  children: [
+                    {
+                      text: title,
+                      style: {
+                        position: "relative",
+                        top: String(0) + ea,
+                        fontSize: String(2.5) + ea,
+                        fontWeight: String(innerTitleWeight),
+                        lineHeight: String(innerTitleLineHeight),
+                        color: colorChip.white,
+                        position: "relative",
+                        display: "block",
+                      }
+                    },
+                  ]
+                }
+              ].concat(service.map((str) => {
+                return {
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: String(8) + "px",
+                    background: greenBoo ? colorChip.gray0 : colorChip.gray1,
+                    width: withOut(0, ea),
+                    height: String(blackTongHeight2) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    marginBottom: String(blockBetweenBottom) + ea,
+                  },
+                  child: {
+                    text: str,
+                    style: {
+                      position: "relative",
+                      top: String(0) + ea,
+                      fontSize: String(2.5) + ea,
+                      fontWeight: String(500),
+                      lineHeight: String(innerTitleLineHeight),
+                      color: /없음/gi.test(str) ? colorChip.deactive : (greenBoo ? colorChip.green : colorChip.black),
+                      position: "relative",
+                      display: "block",
+                    }
+                  }
+                }
+              }))
+            };
+          })),
+        },
+      ]
+    });
+    createNode({
+      mother: whiteBlock2,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        flexDirection: "column",
+        width: desktop ? String(leftBlockWidth) + ea : withOut(0, ea),
+        marginRight: String(leftBlockMarginRight) + ea,
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      children: [
+        {
+          text: contents.white2.title,
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
+          }
+        },
+        {
+          text: contents.white2.description.join(" "),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(descriptionWeight),
+            color: colorChip.black,
+            lineHeight: String(descriptionLineHeight),
+            marginTop: String(descriptionMarginTop) + ea,
+            textAlign: "center",
+            marginBottom: String(1) + ea,
+          }
+        },
+      ]
+    });
+  }
 
   return [ newBaseTong, baseTong ];
 }
@@ -4912,10 +5578,10 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
   let box1TitleMarginTop, box1TitleMarginBottom, box1DescriptionBottomVisual;
   let box2LineWidth, box2LineMargin;
 
-  topMargin = <%% 160, 160, 140, 120, 50 %%>;
-  bottomMargin = <%% 180, 180, 150, 130, 50 %%>;
-  margin = <%% 52, 50, 40, 32, 52 %%>;
-  marginTop = <%% 56, 54, 45, 38, 6 %%>;
+  topMargin = <%% 160, 160, 140, 120, 24 %%>;
+  bottomMargin = <%% 180, 180, 150, 130, 26 %%>;
+  margin = <%% 52, 50, 40, 32, 7 %%>;
+  marginTop = <%% 56, 54, 45, 38, 8 %%>;
 
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
@@ -4930,24 +5596,24 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
   middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
 
-  whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
+  whiteTongMarginTop = <%% 48, 48, 48, 48, 7 %%>;
 
   leftWidth = <%% 390, 265, 221, 162, 265 %%>;
 
-  grayBetween = <%% 10, 6, 4, 2, 10 %%>;
+  grayBetween = <%% 10, 6, 4, 2, 1 %%>;
 
-  grayBoxNumbers = <%% 5, 5, 5, 5, 5 %%>;
+  grayBoxNumbers = <%% 5, 5, 5, 5, 1 %%>;
 
   grayHeight0 = <%% 56, 50, 45, 38, 6 %%>;
-  grayHeight1 = <%% 240, 200, 170, 144, 240 %%>;
+  grayHeight1 = <%% 240, 200, 170, 144, 36 %%>;
 
-  box0Size = <%% 15, 13, 12, 11, 4 %%>;
+  box0Size = <%% 15, 13, 12, 11, 3 %%>;
   box0Weight = <%% 700, 700, 700, 700, 700 %%>;
   box0TextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  circleWidth = <%% 108, 84, 76, 62, 8 %%>;
+  circleWidth = <%% 108, 84, 76, 62, 15 %%>;
 
-  titleSize = <%% 17, 16, 14, 12, 4 %%>;
+  titleSize = <%% 17, 16, 14, 12, 3 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -4955,15 +5621,15 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionMarginTop = <%% 12, 12, 12, 12, 12 %%>;
 
-  box1Size0 = <%% 14, 13, 11, 11, 11 %%>;
+  box1Size0 = <%% 14, 13, 11, 11, 2.5 %%>;
   box1Weight0 = <%% 800, 800, 800, 800, 800 %%>;
 
   box1Size1 = <%% 12, 11, 10, 10, 2.5 %%>;
   box1Weight1 = <%% 400, 400, 400, 400, 400 %%>;
 
-  box1TitleMarginTop = <%% 16, 16, 10, 8, 16 %%>;
-  box1TitleMarginBottom = <%% 4, 4, 4, 3, 4 %%>;
-  box1DescriptionBottomVisual = <%% 1, 1, 1, 1, 1 %%>;
+  box1TitleMarginTop = <%% 16, 16, 10, 8, 2 %%>;
+  box1TitleMarginBottom = <%% 4, 4, 4, 3, 0.7 %%>;
+  box1DescriptionBottomVisual = <%% 1, 1, 1, 1, 0.5 %%>;
 
   box2LineWidth = <%% 684, 500, 426, 348, 100 %%>;
   box2LineMargin = <%% 20, 20, 20, 12, 20 %%>;
@@ -4977,11 +5643,11 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
   contents = {
     title: "홈리에종의 프로젝트 케어",
     description: [
-      "홈리에종은 프로젝트의 처음과 마무리까지의 전 과정 케어를 진행합니다.",
-      "처음이어서, 몰라서 어려웠던 인테리어 과정을 홈리에종과 함께 해요.",
+      "홈리에종은 프로젝트 처음부터 끝까지 전 과정을 케어합니다.",
+      "몰라서 어려웠던 인테리어 과정을 홈리에종과 함께 해요.",
     ],
     work: {
-      title: "디자이너는 진행 단계별\n‘이렇게’ 제공해요.",
+      title: desktop ? "디자이너는 진행 단계별\n‘이렇게’ 제공해요." : "디자이너는 진행 단계별 ‘이렇게’ 제공해요.",
       description: [
         big ? "디자이너는 다음과 같은 단계별" : "디자이너는 단계별",
         big ? "페이퍼워크 제공을 통해 소통합니다." : "제공을 통해 소통합니다.",
@@ -5002,23 +5668,15 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
         },
         {
           image: ServiceDetailJs.binaryPath + "/workPaper1.svg",
-          title: "제품 제안",
+          title: "컨셉 제안",
           description: [
             "프로젝트에 반영될",
             "컨셉 디자인",
           ],
         },
         {
-          image: ServiceDetailJs.binaryPath + "/workPaper2.svg",
-          title: "배치도",
-          description: [
-            "시공 포함된",
-            "서비스시 해당",
-          ],
-        },
-        {
           image: ServiceDetailJs.binaryPath + "/workPaper3.svg",
-          title: "컨셉 제안서",
+          title: "배치도",
           description: [
             "공간별 구성 및",
             "가구 배치 도면",
@@ -5030,6 +5688,14 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
           description: [
             "기존 제품 활용 및",
             "제품 구매 리스트",
+          ],
+        },
+        {
+          image: ServiceDetailJs.binaryPath + "/workPaper2.svg",
+          title: "시공 의뢰서",
+          description: [
+            "시공 포함된",
+            "서비스시 해당",
           ],
         },
       ],
@@ -5070,7 +5736,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
     children: [
       {
         style: {
-          display: "block",
+          display: desktop ? "block" : "none",
           position: "absolute",
           width: String(100) + '%',
           height: String(middleTitleLineTop) + ea,
@@ -5140,7 +5806,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
     mother: whiteBlock,
     mode: "img",
     attribute: {
-      src: (<&& ServiceDetailJs.binaryPath + "/careBox.svg" | ServiceDetailJs.binaryPath + "/careBox2.svg" | ServiceDetailJs.binaryPath + "/careBox3.svg" | ServiceDetailJs.binaryPath + "/careBox4.svg" | ServiceDetailJs.binaryPath + "/careBox2.svg" &&>),
+      src: (<&& ServiceDetailJs.binaryPath + "/careBox.svg" | ServiceDetailJs.binaryPath + "/careBox2.svg" | ServiceDetailJs.binaryPath + "/careBox3.svg" | ServiceDetailJs.binaryPath + "/careBox4.svg" | ServiceDetailJs.binaryPath + "/careBox5.svg" &&>),
     },
     style: {
       display: "block",
@@ -5165,7 +5831,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
     style: {
       display: "flex",
       position: "relative",
-      flexDirection: "row",
+      flexDirection: desktop ? "row" : "column",
       width: withOut(0, ea),
     }
   });
@@ -5176,22 +5842,27 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
       display: "inline-flex",
       position: "relative",
       flexDirection: "column",
-      width: String(leftWidth) + ea,
+      width: desktop ? String(leftWidth) + ea : withOut(0, ea),
+      alignItems: desktop ? "start" : "center",
+      marginTop: desktop ? "" : String(3) + ea,
+      marginBottom: desktop ? "" : String(3.5) + ea,
     },
     children: [
       {
         text: contents.work.title,
         style: {
           position: "relative",
-          fontSize: String(titleSize) + ea,
+          fontSize: String(desktop ? titleSize : 3.3) + ea,
           fontWeight: String(titleWeight),
           color: colorChip.black,
           lineHeight: String(titleLineHeight),
+          textAlign: desktop ? "" : "center",
         }
       },
       {
         text: contents.work.description.join("\n"),
         style: {
+          display: desktop ? "block" : "none",
           position: "relative",
           fontSize: String(descriptionSize) + ea,
           fontWeight: String(descriptionWeight),
@@ -5208,37 +5879,40 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
     style: {
       display: "inline-block",
       position: "relative",
-      width: withOut(leftWidth, ea),
+      width: desktop ? withOut(leftWidth, ea) : withOut(0, ea),
+      textAlign: desktop ? "" : "center",
     }
   });
 
   // box0 - 3
-  for (let i = 0; i < contents.work.box0.length; i++) {
-    createNode({
-      mother: grayBlocksMother,
-      style: {
-        display: "inline-flex",
-        width: i === contents.work.box0.length - 1 ? "calc(calc(100% - " + String(grayBetween * (grayBoxNumbers - 1)) + ea + ") / " + String(grayBoxNumbers) + ")" : "calc(calc(calc(calc(100% - " + String(grayBetween * (grayBoxNumbers - 1)) + ea + ") / " + String(grayBoxNumbers) + ") * " + String(2) + ") + " + String(grayBetween * 1) + ea + ")",
-        height: String(grayHeight0) + ea,
-        background: colorChip.gray1,
-        borderRadius: String(8) + "px",
-        marginRight: String(i === contents.work.box0.length - 1 ? 0 : grayBetween) + ea,
-        marginBottom: String(grayBetween) + ea,
-        alignItems: "center",
-        justifyContent: "center",
-        verticalAlign: "top",
-      },
-      child: {
-        text: contents.work.box0[i],
+  if (desktop) {
+    for (let i = 0; i < contents.work.box0.length; i++) {
+      createNode({
+        mother: grayBlocksMother,
         style: {
-          fontSize: String(box0Size) + ea,
-          fontWeight: String(box0Weight),
-          color: colorChip.black,
-          position: "relative",
-          top: String(box0TextTop) + ea,
+          display: "inline-flex",
+          width: i === contents.work.box0.length - 1 ? "calc(calc(100% - " + String(grayBetween * (grayBoxNumbers - 1)) + ea + ") / " + String(grayBoxNumbers) + ")" : "calc(calc(calc(calc(100% - " + String(grayBetween * (grayBoxNumbers - 1)) + ea + ") / " + String(grayBoxNumbers) + ") * " + String(2) + ") + " + String(grayBetween * 1) + ea + ")",
+          height: String(grayHeight0) + ea,
+          background: colorChip.gray1,
+          borderRadius: String(8) + "px",
+          marginRight: String(i === contents.work.box0.length - 1 ? 0 : grayBetween) + ea,
+          marginBottom: String(grayBetween) + ea,
+          alignItems: "center",
+          justifyContent: "center",
+          verticalAlign: "top",
+        },
+        child: {
+          text: contents.work.box0[i],
+          style: {
+            fontSize: String(box0Size) + ea,
+            fontWeight: String(box0Weight),
+            color: colorChip.black,
+            position: "relative",
+            top: String(box0TextTop) + ea,
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   // box1 - 5
@@ -5247,11 +5921,11 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
       mother: grayBlocksMother,
       style: {
         display: "inline-flex",
-        width: "calc(calc(100% - " + String(grayBetween * (grayBoxNumbers - 1)) + ea + ") / " + String(grayBoxNumbers) + ")",
+        width: desktop ? "calc(calc(100% - " + String(grayBetween * (grayBoxNumbers - 1)) + ea + ") / " + String(grayBoxNumbers) + ")" : "calc(calc(100% - " + String(grayBetween * (3 - 1)) + ea + ") / " + String(3) + ")",
         height: String(grayHeight1) + ea,
         background: colorChip.gray1,
         borderRadius: String(8) + "px",
-        marginRight: String(i === contents.work.box1.length - 1 ? 0 : grayBetween) + ea,
+        marginRight: desktop ? String(i === contents.work.box1.length - 1 ? 0 : grayBetween) + ea : String(i % 3 === 2 ? 0 : grayBetween) + ea,
         marginBottom: String(grayBetween) + ea,
         alignItems: "center",
         justifyContent: "center",
@@ -5315,40 +5989,42 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
   }
 
   // box2 - 1
-  createNode({
-    mother: grayBlocksMother,
-    style: {
-      display: "inline-flex",
-      flexDirection: "row",
-      width: withOut(0, ea),
-      height: String(grayHeight0) + ea,
-      background: colorChip.gray1,
-      borderRadius: String(8) + "px",
-      position: "relative",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    child: {
-      text: contents.work.box2,
+  if (desktop) {
+    createNode({
+      mother: grayBlocksMother,
       style: {
-        fontSize: String(box0Size) + ea,
-        fontWeight: String(box0Weight),
-        color: colorChip.green,
+        display: "inline-flex",
+        flexDirection: "row",
+        width: withOut(0, ea),
+        height: String(grayHeight0) + ea,
+        background: colorChip.gray1,
+        borderRadius: String(8) + "px",
         position: "relative",
-        top: String(box0TextTop) + ea,
+        justifyContent: "center",
+        alignItems: "center",
       },
-      previous: {
+      child: {
+        text: contents.work.box2,
         style: {
-          display: "inline-block",
+          fontSize: String(box0Size) + ea,
+          fontWeight: String(box0Weight),
+          color: colorChip.green,
           position: "relative",
-          marginRight: String(box2LineMargin) + ea,
-          width: String(box2LineWidth) + ea,
-          height: String(0),
-          borderBottom: "1px dashed " + colorChip.green
+          top: String(box0TextTop) + ea,
+        },
+        previous: {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            marginRight: String(box2LineMargin) + ea,
+            width: String(box2LineWidth) + ea,
+            height: String(0),
+            borderBottom: "1px dashed " + colorChip.green
+          }
         }
       }
-    }
-  })
+    })
+  }
 
 
   return [ newBaseTong, baseTong ];
@@ -5405,13 +6081,13 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   let box0, box1, box2;
   let box2Set0, box2Set1, box2Set2, box2Set3;
 
-  topMargin = <%% 160, 160, 140, 120, 50 %%>;
-  bottomMargin = <%% 180, 180, 150, 130, 50 %%>;
-  margin = <%% 52, 50, 40, 32, 52 %%>;
-  marginTop = <%% 56, 54, 45, 36, 56 %%>;
+  topMargin = <%% 160, 160, 140, 120, 24 %%>;
+  bottomMargin = <%% 180, 180, 150, 130, 26 %%>;
+  margin = <%% 52, 50, 40, 32, 7 %%>;
+  marginTop = <%% 56, 54, 45, 36, 8 %%>;
 
-  middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
-  middleTitleMarginBottom = <%% 60, 60, 60, 60, 60 %%>;
+  middleTongPaddingBottom = <%% 150, 130, 100, 70, 1 %%>;
+  middleTitleMarginBottom = <%% 60, 60, 60, 60, 6 %%>;
 
   middleTitleLineTop = <%% 68, 65, 56, 49, 12 %%>;
 
@@ -5423,42 +6099,42 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
   middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
 
-  whiteTongMarginTop = <%% 48, 48, 48, 48, 48 %%>;
+  whiteTongMarginTop = <%% 48, 48, 48, 48, 7 %%>;
 
-  box0Width = <%% 170, 170, 140, 110, 170 %%>;
-  box1Width = <%% 410, 410, 300, 220, 410 %%>;
+  box0Width = <%% 170, 170, 140, 110, 0 %%>;
+  box1Width = <%% 410, 410, 300, 220, 36 %%>;
 
-  box1InnerMargin = <%% 45, 45, 30, 24, 45 %%>;
+  box1InnerMargin = <%% 45, 45, 30, 24, 4 %%>;
 
-  boxBetween = <%% 10, 10, 10, 5, 10 %%>;
+  boxBetween = <%% 10, 10, 10, 5, 1 %%>;
 
-  totalHeight = <%% 400, 342, 300, 240, 280 %%>;
+  totalHeight = <%% 400, 342, 300, 240, 56 %%>;
 
-  innerMargin = <%% 48, 36, 30, 24, 48 %%>;
+  innerMargin = <%% 48, 36, 30, 24, 5 %%>;
 
-  box0Size = <%% 19, 18, 16, 14, 5 %%>;
+  box0Size = <%% 19, 18, 16, 14, 4 %%>;
   box0Weight = <%% 800, 800, 800, 800, 800 %%>;
   box0TextTop = <%% -1, -1, -1, -1, -1 %%>;
   box0LineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  box1TextTop = <%% -1, -1, -1, -1, -1 %%>;
-  box1Size = <%% 18, 16, 15, 13, 14 %%>;
+  box1TextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+  box1Size = <%% 18, 16, 15, 13, 2.8 %%>;
   box1Weight = <%% 700, 700, 700, 700, 700 %%>;
   box1LightWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  buttonWidth = <%% 190, 170, 150, 140, 170 %%>;
-  buttonHeight = <%% 40, 36, 36, 30, 36 %%>;
+  buttonWidth = <%% 190, 170, 150, 140, 20 %%>;
+  buttonHeight = <%% 40, 36, 36, 30, 8 %%>;
 
-  box2Size = <%% 15, 13, 12, 11, 15 %%>;
-  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  box2Size = <%% 15, 13, 12, 11, 2.5 %%>;
+  buttonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
 
-  box2LineTop = <%% 36, 30, 24, 20, 36 %%>;
-  box2LineBottom = <%% 16, 16, 8, 8, 16 %%>;
+  box2LineTop = <%% 36, 30, 24, 20, 0 %%>;
+  box2LineBottom = <%% 16, 16, 8, 8, 3 %%>;
 
-  box2DetailPaddingTop = <%% 22, 12, 10, 10, 22 %%>;
+  box2DetailPaddingTop = <%% 22, 12, 10, 10, 2 %%>;
 
-  box2DetailBetween = <%% 24, 24, 24, 12, 24 %%>;
-  box2NumberWidth = <%% 48, 40, 40, 40, 40 %%>;
+  box2DetailBetween = <%% 24, 24, 24, 12, 2 %%>;
+  box2NumberWidth = <%% 48, 40, 40, 40, 5 %%>;
 
   box2Weight = <%% 800, 800, 800, 800, 800 %%>;
 
@@ -5468,10 +6144,10 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   box2NumberWeight = <%% 500, 500, 500, 500, 500 %%>;
   box2DetailWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  buttonBaseHeight = <%% 150, 150, 150, 150, 150 %%>;
-  finalButtonWidth = <%% 140, 124, 120, 108, 120 %%>;
-  finalButtonHeight = <%% 48, 44, 42, 36, 48 %%>;
-  buttonSize = <%% 18, 17, 17, 15, 4 %%>;
+  buttonBaseHeight = <%% 150, 150, 150, 150, 12 %%>;
+  finalButtonWidth = <%% 140, 124, 120, 108, 25 %%>;
+  finalButtonHeight = <%% 48, 44, 42, 36, 9 %%>;
+  buttonSize = <%% 18, 17, 17, 15, 3.5 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
   finalButtonTextTop = <%% -2, -1, -1, -1, -0.3 %%>;
 
@@ -5490,8 +6166,8 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   contents = {
     title: "처음부터 끝까지, 홈리에종과 함께",
     description: [
-       "상담부터 가구 배치가 완료되는 과정이 보편적으로 1달 반 정도 소요됩니다. 상담 문의는",
-       "소요되는 기간을 고려하여 미리 문의 주시면 디자이너의 선택 폭이 넓어집니다.",
+       "완료되는 과정은 보편적으로 1달 반 정도 소요됩니다.",
+       "기간을 고려하여 문의 주시면 디자이너 선택 폭이 넓어집니다.",
     ],
     box0: "홈리에종\n케어",
     box1: [
@@ -5528,7 +6204,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
       set2: {
         button: "시공, 제안 가구 구매 진행",
         description: [
-          "디자이너와 시공 범위 조정 및 디자인을 마친 후,",
+          "디자이너와 시공 조정, 디자인을 마친 후,",
           "실질적으로 시공을 진행하고 가구를 구매하는 과정입니다.",
         ],
         detail: [
@@ -5544,8 +6220,8 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
           "홈리에종이 현장을 확인하고 촬영과 인터뷰를 진행하는 단계입니다.",
         ],
         detail: [
-          "디자이너의 현장 방문 및 최종 배치, 마무리",
-          "홈리에종 현장 방문 점검 및 고객 인터뷰",
+          "디자이너의 현장 방문 및 최종 배치",
+          "홈리에종 현장 방문 및 고객 인터뷰",
           "전문 사진 작가와 함께 가장 예쁜 순간의 우리집 촬영본 남기기",
         ]
       }
@@ -5585,7 +6261,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
     children: [
       {
         style: {
-          display: "block",
+          display: desktop ? "block" : "none",
           position: "absolute",
           width: String(100) + '%',
           height: String(middleTitleLineTop) + ea,
@@ -5649,7 +6325,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   box0 = createNode({
     mother: baseBlock,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "none",
       width: String(box0Width) + ea,
       height: String(totalHeight) + ea,
       flexDirection: "column",
@@ -5768,7 +6444,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
     mother: baseBlock,
     style: {
       display: "inline-flex",
-      width: withOut(box0Width + box1Width + (boxBetween * 2), ea),
+      width: withOut(box0Width + box1Width + (boxBetween * (desktop ? 2 : 1)), ea),
       height: String(totalHeight) + ea,
       flexDirection: "column",
       background: colorChip.white,
@@ -5793,7 +6469,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
       children: [
         {
           style: {
-            display: "flex",
+            display: desktop ? "flex" : "none",
             width: String(buttonWidth) + ea,
             height: String(buttonHeight) + ea,
             borderRadius: String(8) + "px",
@@ -5862,6 +6538,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
                     fontSize: String(box2Size) + ea,
                     fontWeight: String(box2DetailWeight),
                     color: colorChip.black,
+                    width: desktop ? "" : withOut(box2NumberWidth, ea),
                   }
                 },
               ]
@@ -5886,7 +6563,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
       children: [
         {
           style: {
-            display: "flex",
+            display: desktop ? "flex" : "none",
             width: String(buttonWidth) + ea,
             height: String(buttonHeight) + ea,
             borderRadius: String(8) + "px",
@@ -5955,6 +6632,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
                     fontSize: String(box2Size) + ea,
                     fontWeight: String(box2DetailWeight),
                     color: colorChip.black,
+                    width: desktop ? "" : withOut(box2NumberWidth, ea),
                   }
                 },
               ]
@@ -5979,7 +6657,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
       children: [
         {
           style: {
-            display: "flex",
+            display: desktop ? "flex" : "none",
             width: String(buttonWidth) + ea,
             height: String(buttonHeight) + ea,
             borderRadius: String(8) + "px",
@@ -6048,6 +6726,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
                     fontSize: String(box2Size) + ea,
                     fontWeight: String(box2DetailWeight),
                     color: colorChip.black,
+                    width: desktop ? "" : withOut(box2NumberWidth, ea),
                   }
                 },
               ]
@@ -6072,7 +6751,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
       children: [
         {
           style: {
-            display: "flex",
+            display: desktop ? "flex" : "none",
             width: String(buttonWidth) + ea,
             height: String(buttonHeight) + ea,
             borderRadius: String(8) + "px",
@@ -6141,6 +6820,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
                     fontSize: String(box2Size) + ea,
                     fontWeight: String(box2DetailWeight),
                     color: colorChip.black,
+                    width: desktop ? "" : withOut(box2NumberWidth, ea),
                   }
                 },
               ]
@@ -6284,7 +6964,7 @@ ServiceDetailJs.prototype.launching = async function (loading) {
 
     this.totalContents.children[0].style.background = colorChip.gray1;
     this.totalContents.children[1].style.transition = "all 0s ease";
-    this.totalContents.children[1].style.height = String(<&& 560 | 490 | 460 | 360 | 118 &&>) + this.ea;
+    this.totalContents.children[1].style.height = String(<&& 560 | 490 | 460 | 360 | 110 &&>) + this.ea;
     if (this.media[3]) {
       this.totalContents.children[1].style.backgroundSize = "100% auto";
     }
