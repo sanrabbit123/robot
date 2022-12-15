@@ -253,6 +253,7 @@ ServiceDetailJs.prototype.insertStartBox = function () {
   let subBlockMarginTop;
   let subSize, subWeight, subLineHeight;
   let rightImagePosition;
+  let titleTextTop, subTextTop;
 
   blockHeight = <%% 294, 230, 200, 156, 70 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -273,6 +274,10 @@ ServiceDetailJs.prototype.insertStartBox = function () {
   subSize = <%% 15, 14, 13, 10, 3 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
   subLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+
+  titleTextTop = <%% (isMac() ? 0 : 3), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 0) %%>;
+  subTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 0) %%>;
+
 
   if (mode === "furnishing") {
     rightImagePosition = <%% 80, 80, 80, 80, -320 %%>;
@@ -385,6 +390,7 @@ ServiceDetailJs.prototype.insertStartBox = function () {
               color: colorChip.black,
               lineHeight: String(titleLineHeight),
               textAlign: desktop ? "left" : "center",
+              top: String(titleTextTop) + ea,
             },
             bold: {
               fontSize: String(titleSize) + ea,
@@ -405,6 +411,7 @@ ServiceDetailJs.prototype.insertStartBox = function () {
           color: colorChip.black,
           lineHeight: String(subLineHeight),
           textAlign: desktop ? "right" : "center",
+          top: String(subTextTop) + ea,
         },
       },
     ]
@@ -974,6 +981,7 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
   let barHeight, barMarginBottom;
   let feeBarTongHeight;
   let mobileFeePaddingVisual;
+  let descriptionTextTop;
 
   bottomMargin = <%% 180, 180, 150, 130, 17 %%>;
   slideTongHeight = <%% 340, 290, 220, 180, 45 %%>;
@@ -998,6 +1006,7 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.66, 1.66, 1.66, 1.66, 1.66 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  descriptionTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   circleWidth = <%% 6, 6, 6, 5, 6 %%>;
   circleBetween = <%% 4, 4, 4, 3, 4 %%>;
@@ -1194,6 +1203,7 @@ ServiceDetailJs.prototype.insertSlideBox = function () {
           color: colorChip.black,
           lineHeight: String(descriptionLineHeight),
           textAlign: desktop ? "left" : "center",
+          top: String(descriptionTextTop) + ea,
         },
         bold: {
           fontSize: String(descriptionSize) + ea,
@@ -1585,7 +1595,7 @@ ServiceDetailJs.prototype.insertDiagramBox = function () {
   diagramTitleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   diagramDescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  diagramTitleMarginTop = <%% 8, 8, 8, 6, 3 %%>;
+  diagramTitleMarginTop = <%% (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 6 : 8), 3 %%>;
   diagramTitleMarginBottom = <%% 4, 4, 4, 2, 1 %%>;
 
   diagramFirstTop = <%% 360, 271, 220, 180, 27 %%>;
@@ -2427,7 +2437,7 @@ ServiceDetailJs.prototype.insertReviewBox = function (newBaseTong, baseTong) {
 
   tagBetween = <%% 4, 3, 2, 2, 0.8 %%>;
 
-  tagTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+  tagTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
   tagSize = <%% 11, 10, 10, 10, 2.5 %%>;
   tagWeight = <%% 600, 600, 600, 600, 600 %%>;
   tagPaddingLeft = <%% 12, 10, 9, 8, 2 %%>;
@@ -3038,7 +3048,7 @@ ServiceDetailJs.prototype.insertToneBox = function (pastBaseTong, baseTong) {
 
   titleMarginBottom = <%% 6, 6, 6, 6, 1 %%>;
 
-  factorTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  factorTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1 %%>;
   factorSize = <%% 13, 11, 10, 10, 2.8 %%>;
   factorWeight = <%% 700, 700, 700, 700, 700 %%>;
 
@@ -3631,7 +3641,7 @@ ServiceDetailJs.prototype.insertAfterBox = function (pastBaseTong, baseTong) {
 
   titleMarginBottom = <%% 6, 6, 6, 6, 1 %%>;
 
-  factorTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  factorTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1 %%>;
   factorSize = <%% 13, 11, 10, 10, 2.8 %%>;
   factorWeight = <%% 700, 700, 700, 700, 700 %%>;
 
@@ -4491,7 +4501,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
 
   freeWidth = <%% 180, 180, 180, 180, 32.5 %%>;
   freeHeight = <%% 42, 42, 42, 42, 8 %%>;
-  freeTextTop = <%% -1, -1, -1, -1, -0.4 %%>;
+  freeTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.4 %%>;
 
   linesTongHeight = <%% 48, 48, 48, 48, 7 %%>;
   linesWidth = <%% 660, 464, 396, 396, 50 %%>;
@@ -4510,7 +4520,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
   tagBoxHeight = <%% 140, 140, 140, 140, 140 %%>;
   tagDefaultSize = <%% 24, 24, 24, 24, 24 %%>;
   tagDefaultWeight = <%% 200, 200, 200, 200, 200 %%>;
-  tagDefaultTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  tagDefaultTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -2 %%>;
 
   white2StandardPercentage = <%% 11, 11, 11, 11, 17 %%>;
 
@@ -5976,7 +5986,7 @@ ServiceDetailJs.prototype.insertCareBox = function (pastBaseTong, baseTong) {
 
   box0Size = <%% 15, 13, 12, 11, 3 %%>;
   box0Weight = <%% 700, 700, 700, 700, 700 %%>;
-  box0TextTop = <%% -1, -1, -1, -1, -1 %%>;
+  box0TextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1 %%>;
 
   circleWidth = <%% 108, 84, 76, 62, 15 %%>;
 
@@ -6481,10 +6491,10 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
 
   box0Size = <%% 19, 18, 16, 14, 4 %%>;
   box0Weight = <%% 800, 800, 800, 800, 800 %%>;
-  box0TextTop = <%% -1, -1, -1, -1, -1 %%>;
+  box0TextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -1 %%>;
   box0LineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  box1TextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+  box1TextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
   box1Size = <%% 18, 16, 15, 13, 2.8 %%>;
   box1Weight = <%% 700, 700, 700, 700, 700 %%>;
   box1LightWeight = <%% 300, 300, 300, 300, 300 %%>;
@@ -6493,7 +6503,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   buttonHeight = <%% 40, 36, 36, 30, 8 %%>;
 
   box2Size = <%% 15, 13, 12, 11, 2.5 %%>;
-  buttonTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
   box2LineTop = <%% 36, 30, 24, 20, 0 %%>;
   box2LineBottom = <%% 16, 16, 8, 8, 3 %%>;
@@ -6516,7 +6526,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   finalButtonHeight = <%% 48, 44, 42, 36, 9 %%>;
   buttonSize = <%% 18, 17, 17, 15, 3.5 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
-  finalButtonTextTop = <%% -2, -1, -1, -1, -0.3 %%>;
+  finalButtonTextTop = <%% (isMac() ? -2 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
   box2 = {};
   box2Set0 = () => {}

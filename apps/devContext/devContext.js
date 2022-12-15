@@ -3403,6 +3403,7 @@ DevContext.prototype.launching = async function () {
 
 
 
+
     /*
 
     const MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
@@ -3782,9 +3783,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "손예슬",
-    //     designer: "조원숙",
-    //     link: "https://drive.google.com/drive/folders/13kPZ9tntCgYSp-d5nn7OfYDlwvFcedWa",
+    //     client: "오남정",
+    //     designer: "박주령",
+    //     link: "https://drive.google.com/drive/folders/1TT06erC20my14tNoqsJKbC9D__rX7X1d",
     //     pay: true
     //   },
     // ]);
