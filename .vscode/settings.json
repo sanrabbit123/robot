@@ -3,5 +3,6 @@
     "editor.guides.highlightActiveIndentation": false,
     "editor.fontLigatures": false,
     "editor.guides.indentation": false,
-    "editor.fontVariations": false
+    "editor.fontVariations": false,
+    "editor.fontWeight": "100"
 }
