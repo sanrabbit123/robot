@@ -5872,19 +5872,19 @@ BillMaker.prototype.constructInjection = async function (bilid, buiid, amountObj
 
     if (first !== 0) {
       await this.requestInjection(bilid, "constructFirst", client, designer, project, method, { customAmount: amountObject, consumerMode: true, selfMongo: MONGOC });
-      await this.responseInjection(bilid, "firstConstructFee", client, designer, project, method, { customAmount: amountObject, consumerMode: true, customSub: { builder }, selfMongo: MONGOC });
+      // await this.responseInjection(bilid, "firstConstructFee", client, designer, project, method, { customAmount: amountObject, consumerMode: true, customSub: { builder }, selfMongo: MONGOC });
     }
     if (start !== 0) {
       await this.requestInjection(bilid, "constructStart", client, designer, project, method, { customAmount: amountObject, consumerMode: true, selfMongo: MONGOC });
-      await this.responseInjection(bilid, "startConstructFee", client, designer, project, method, { customAmount: amountObject, consumerMode: true, customSub: { builder }, selfMongo: MONGOC });
+      // await this.responseInjection(bilid, "startConstructFee", client, designer, project, method, { customAmount: amountObject, consumerMode: true, customSub: { builder }, selfMongo: MONGOC });
     }
     if (middle !== 0) {
       await this.requestInjection(bilid, "constructMiddle", client, designer, project, method, { customAmount: amountObject, consumerMode: true, selfMongo: MONGOC });
-      await this.responseInjection(bilid, "middleConstructFee", client, designer, project, method, { customAmount: amountObject, consumerMode: true, customSub: { builder }, selfMongo: MONGOC });
+      // await this.responseInjection(bilid, "middleConstructFee", client, designer, project, method, { customAmount: amountObject, consumerMode: true, customSub: { builder }, selfMongo: MONGOC });
     }
     if (remain !== 0) {
       await this.requestInjection(bilid, "constructRemain", client, designer, project, method, { customAmount: amountObject, consumerMode: true, selfMongo: MONGOC });
-      await this.responseInjection(bilid, "remainConstructFee", client, designer, project, method, { customAmount: amountObject, consumerMode: true, customSub: { builder }, selfMongo: MONGOC });
+      // await this.responseInjection(bilid, "remainConstructFee", client, designer, project, method, { customAmount: amountObject, consumerMode: true, customSub: { builder }, selfMongo: MONGOC });
     }
 
   } catch (e) {

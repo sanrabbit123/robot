@@ -129,28 +129,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-
-
-
-    // await this.MONGOPYTHONC.connect();
-    //
-    // const selfMongo = this.MONGOPYTHONC;
-    // const collection = "generalBill";
-    // const billsRaw = await back.mongoRead(collection, {}, { selfMongo });
-    // const targetBills = billsRaw.filter((bill) => {
-    //   return bill.requests.some((obj) => {
-    //     return /시공/gi.test(obj.name);
-    //   });
-    // })
-    //
-    // console.log(targetBills)
-    //
-    // await this.MONGOPYTHONC.close();
-
-
-
-
 
 
 
