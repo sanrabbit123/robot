@@ -1041,6 +1041,11 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       let refundGo;
       let oidArr;
       let refundReceipt;
+      let responsePlusButton;
+      let responsePlusButtonMenus;
+      let plusCircleWidth;
+      let plusCircleMargin;
+      let plusSize, plusWeight, plusTextTop;
 
       whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
       whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
@@ -1072,6 +1077,13 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       valueTextTop = isMac() ? -1 : 1;
 
       blockMarginBottom = 2;
+
+      plusCircleWidth = 36;
+      plusCircleMargin = 10;
+
+      plusSize = 34;
+      plusWeight = 500;
+      plusTextTop = -3;
 
       leftColumns = [
         "구분",
@@ -1105,6 +1117,9 @@ CalculationJs.prototype.whiteCardView = function (proid) {
         "환수 확인",
       ];
 
+      responsePlusButtonMenus = [
+        "시공 정산",
+      ];
 
       // base
 
@@ -1700,7 +1715,6 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           }
         }
 
-
         responseSumTotal += confirmState;
         responseSumNon += nonPayAmount;
         responseSumPaid += payAmount;
@@ -1921,6 +1935,101 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           ]
         });
       }
+
+
+      // response plus button
+
+      responsePlusButton = createNode({
+        mother: contentsAreaRight,
+        event: {
+          selectstart: (e) => {
+            e.preventDefault();
+          },
+          click: function(e) {
+            const self = this;
+            const mother = self.parentElement;
+            let baseBox;
+
+
+            baseBox = createNode({
+              mother,
+              style: {
+                display: "inline-flex",
+                flexDirection: "column",
+                position: "absolute",
+                right: String(plusCircleMargin) + ea,
+                bottom: String(plusCircleMargin + plusCircleWidth + 8) + ea,
+                width: String(120) + ea,
+                animation: "fadeuplite 0.2s ease forwards",
+              }
+            });
+
+            for (let words of responsePlusButtonMenus) {
+              createNode({
+                mother: baseBox,
+                style: {
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  width: String(108) + ea,
+                  height: String(34) + ea,
+                  background: colorChip.green,
+                  borderRadius: String(8) + "px",
+                  marginTop: String(4) + ea,
+                },
+                child: {
+                  text: words,
+                  style: {
+                    position: "relative",
+                    display: "inline-block",
+                    fontSize: String(14) + ea,
+                    fontWeight: String(700),
+                    color: colorChip.white,
+                    top: String(isMac() ? -1 : 1) + ea,
+                  }
+                }
+              });
+            }
+
+
+          },
+        },
+        style: {
+          display: "flex",
+          position: "absolute",
+          bottom: String(plusCircleMargin) + ea,
+          right: String(plusCircleMargin) + ea,
+          width: String(plusCircleWidth) + ea,
+          height: String(plusCircleWidth) + ea,
+          borderRadius: String(plusCircleWidth) + ea,
+          background: colorChip.gradientGreen,
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        child: {
+          text: "+",
+          event: {
+            selectstart: (e) => {
+              e.preventDefault();
+            },
+          },
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(plusSize) + ea,
+            fontWeight: String(plusWeight),
+            fontFamily: "graphik",
+            color: colorChip.white,
+            top: String(plusTextTop) + ea,
+            cursor: "pointer",
+          }
+        }
+      });
+
 
 
 
