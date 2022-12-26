@@ -129,8 +129,24 @@ DevContext.prototype.launching = async function () {
 
 
 
+    
 
 
+
+    // await this.MONGOPYTHONC.connect();
+    //
+    // const selfMongo = this.MONGOPYTHONC;
+    // const collection = "generalBill";
+    // const billsRaw = await back.mongoRead(collection, {}, { selfMongo });
+    // const targetBills = billsRaw.filter((bill) => {
+    //   return bill.requests.some((obj) => {
+    //     return /시공/gi.test(obj.name);
+    //   });
+    // })
+    //
+    // console.log(targetBills)
+    //
+    // await this.MONGOPYTHONC.close();
 
 
 
@@ -3783,9 +3799,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "오남정",
-    //     designer: "박주령",
-    //     link: "https://drive.google.com/drive/folders/1TT06erC20my14tNoqsJKbC9D__rX7X1d",
+    //     client: "김이정",
+    //     designer: "서해인",
+    //     link: "https://drive.google.com/drive/folders/1qCLh0fY9LQwdW9fmU3OjoMfh7p5gVIpQ",
     //     pay: true
     //   },
     // ]);
