@@ -135,7 +135,7 @@ DevContext.prototype.launching = async function () {
 
     
 
-
+    
     await this.MONGOPYTHONC.connect();
 
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
@@ -169,6 +169,12 @@ DevContext.prototype.launching = async function () {
     let doneTong, willTong;
     let matrix2;
     let matrix3, matrix4, matrix5, matrix6, matrix7, matrix8, matrix9, matrix10, matrix11, matrix12;
+    let project;
+    let client;
+    let requestNumber;
+    let num;
+    let timeline;
+
 
     projectsRaw = await back.getProjectsByQuery({}, { selfMongo });
     projects = projectsRaw.toNormal().filter((obj) => {  return obj.process.contract.first.date.valueOf() >= emptyDateValue });
@@ -492,9 +498,9 @@ DevContext.prototype.launching = async function () {
 
     }
 
-    sheetsId = await sheets.create_newSheets_inPython("매출매입_전체", motherSheetsFolderId);
-    await sheets.setting_cleanView_inPython(sheetsId);
-    await sheets.update_value_inPython(sheetsId, "", matrix);
+    // sheetsId = await sheets.create_newSheets_inPython("매출매입_전체", motherSheetsFolderId);
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix);
 
     doneTong.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() })
 
@@ -721,49 +727,49 @@ DevContext.prototype.launching = async function () {
     }
 
 
-    sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_준돈", motherSheetsFolderId);
-    await sheets.setting_cleanView_inPython(sheetsId);
-    await sheets.update_value_inPython(sheetsId, "", matrix2);
+    // sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_준돈", motherSheetsFolderId);
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix2);
 
-    sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈", motherSheetsFolderId);
-    await sheets.setting_cleanView_inPython(sheetsId);
-    await sheets.update_value_inPython(sheetsId, "", matrix3);
+    // sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈", motherSheetsFolderId);
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix3);
 
-    sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_디자인", motherSheetsFolderId);
-    await sheets.setting_cleanView_inPython(sheetsId);
-    await sheets.update_value_inPython(sheetsId, "", matrix4);
+    // sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_디자인", motherSheetsFolderId);
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix4);
 
-    sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_시공", motherSheetsFolderId);
-    await sheets.setting_cleanView_inPython(sheetsId);
-    await sheets.update_value_inPython(sheetsId, "", matrix5);
+    // sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_시공", motherSheetsFolderId);
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix5);
 
-    sheetsId = await sheets.create_newSheets_inPython("매출매입_준돈", motherSheetsFolderId);
-    await sheets.setting_cleanView_inPython(sheetsId);
-    await sheets.update_value_inPython(sheetsId, "", matrix6);
+    // sheetsId = await sheets.create_newSheets_inPython("매출매입_준돈", motherSheetsFolderId);
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix6);
 
-    sheetsId = await sheets.create_newSheets_inPython("매출매입_준돈_디자인", motherSheetsFolderId);
-    await sheets.setting_cleanView_inPython(sheetsId);
-    await sheets.update_value_inPython(sheetsId, "", matrix7);
+    // sheetsId = await sheets.create_newSheets_inPython("매출매입_준돈_디자인", motherSheetsFolderId);
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix7);
 
-    sheetsId = await sheets.create_newSheets_inPython("매출매입_준돈_시공", motherSheetsFolderId);
-    await sheets.setting_cleanView_inPython(sheetsId);
-    await sheets.update_value_inPython(sheetsId, "", matrix8);
+    // sheetsId = await sheets.create_newSheets_inPython("매출매입_준돈_시공", motherSheetsFolderId);
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix8);
 
-    sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_고객별", motherSheetsFolderId);
-    await sheets.setting_cleanView_inPython(sheetsId);
-    await sheets.update_value_inPython(sheetsId, "", matrix9);
+    // sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_고객별", motherSheetsFolderId);
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix9);
 
-    sheetsId = await sheets.create_newSheets_inPython("매출매입_받을돈_줄돈", motherSheetsFolderId);
-    await sheets.setting_cleanView_inPython(sheetsId);
-    await sheets.update_value_inPython(sheetsId, "", matrix10);
+    // sheetsId = await sheets.create_newSheets_inPython("매출매입_받을돈_줄돈", motherSheetsFolderId);
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix10);
 
-    sheetsId = await sheets.create_newSheets_inPython("매출매입_받을돈", motherSheetsFolderId);
-    await sheets.setting_cleanView_inPython(sheetsId);
-    await sheets.update_value_inPython(sheetsId, "", matrix11);
+    // sheetsId = await sheets.create_newSheets_inPython("매출매입_받을돈", motherSheetsFolderId);
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix11);
 
-    sheetsId = await sheets.create_newSheets_inPython("매출매입_줄돈", motherSheetsFolderId);
-    await sheets.setting_cleanView_inPython(sheetsId);
-    await sheets.update_value_inPython(sheetsId, "", matrix12);
+    // sheetsId = await sheets.create_newSheets_inPython("매출매입_줄돈", motherSheetsFolderId);
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix12);
 
     // 1. 매출매입_전체
     // => https://docs.google.com/spreadsheets/d/1QeYg0ISXIxaXu8FagC_FLOcl7c2aJPiqyfsVxstCzO0/edit?usp=share_link
@@ -791,9 +797,34 @@ DevContext.prototype.launching = async function () {
     // => https://docs.google.com/spreadsheets/d/1L4qY_Tigmzl-39MUvQCjCMrEJy4Q7qlJYHYKrrkIF7Y/edit?usp=share_link
 
 
+    num = 0;
+    for (let arr of matrix) {
+      if (num !== 0) {
+        [ proid ] = arr;
+
+        project = await back.getProjectById(proid, { selfMongo });
+        cliid = project.cliid;
+        desid = project.desid;
+  
+        client = await back.getClientById(cliid, { selfMongo });
+  
+        requestNumber = 0;
+        for (let i = 0; i < client.requests.length; i++) {
+          if (client.requests[i].request.timeline.valueOf() <= project.proposal.date.valueOf()) {
+            requestNumber = i;
+            break;
+          }
+        }
+
+        timeline = client.requests[requestNumber].request.timeline;
+
+        
 
 
 
+      }
+      num++;
+    }
 
 
 
