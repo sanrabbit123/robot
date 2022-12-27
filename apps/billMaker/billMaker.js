@@ -1,3 +1,5 @@
+const e = require("express");
+
 const BillMaker = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
@@ -685,12 +687,17 @@ BillMaker.billDictionary = {
           ];
         },
         target: (client, designer, project, method, subObj) => {
-          const { builder } = subObj;
+          let name;
+          if (subObj === null) {
+            name = "";
+          } else {
+            name = subObj.name;
+          }
           return {
-            id: builder.buiid,
-            name: builder.builder,
-            phone: builder.information.phone,
-            email: builder.information.email,
+            id: "",
+            name,
+            phone: "",
+            email: "",
           };
         },
         comments: [

@@ -3419,7 +3419,7 @@ ReceiptRouter.prototype.rou_post_responseInjection = function () {
       await bill.responseInjection(bilid, "generalConstructFee", client, designer, project, method, {
         customAmount: { amount: 1000000 },
         consumerMode: false,
-        customSub: null,
+        customSub: { name: "규빗" },
         selfMongo
       });
 
