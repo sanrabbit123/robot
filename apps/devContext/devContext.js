@@ -132,7 +132,21 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+    let sheetsId;
+    let rows;
+    let targets;
+
+    sheetsId = "1WeOohoFhlPpqEk4ltxVCi772ie6dLUYWtCNco-RCb1c";
+    rows = await sheets.get_value_inPython(sheetsId, "default!A2:G");
+    targets = rows.map((arr) => { return arr.slice(4) }).map(([ amount, dateString, proid ]) => {
+      const [ year, month, date ] = dateString.trim().split('.');
+      return {
+        amount: Number(amount),
+        date: new Date(Number(year), Number(month) - 1, Number(date)),
+        proid
+      }
+    });
+
 
 
 
