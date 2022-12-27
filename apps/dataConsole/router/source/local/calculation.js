@@ -1138,12 +1138,13 @@ CalculationJs.prototype.whiteCardView = function (proid) {
                 const bilid = this.getAttribute("bilid");
                 const desid = this.getAttribute("desid");
                 const cliid = this.getAttribute("cliid");
-                let loading;
+                let loading, updatedBill;
+
+                updatedBill = await ajaxJson({ bilid }, PYTHONHOST + "/responseInjection", { equal: true });
+
+                console.log(updatedBill);
 
 
-                console.log(proid, bilid, desid, cliid);
-
-                await ajaxJson({ bilid }, PYTHONHOST + "/responseInjection");
                 window.alert("업데이트 되었습니다!");
                 loading = instance.mother.grayLoading();
                 setQueue(() => {

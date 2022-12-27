@@ -3423,7 +3423,9 @@ ReceiptRouter.prototype.rou_post_responseInjection = function () {
         selfMongo
       });
 
-      res.send(JSON.stringify({ message: "success" }));
+      thisBill = await bill.getBillById(bilid, { selfMongo });
+
+      res.send(JSON.stringify(thisBill));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_responseInjection): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
