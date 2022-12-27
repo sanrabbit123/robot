@@ -1142,13 +1142,13 @@ CalculationJs.prototype.whiteCardView = function (proid) {
                 let thisBillIndex, thisProjectIndex
                 let amount, name;
 
-                amount = GeneralJs.prompt("정산 금액을 숫자로만 알려주세요!");
+                amount = await GeneralJs.prompt("정산 금액을 숫자로만 알려주세요!");
                 if (typeof amount === "string") {
                   amount = Number(amount.replace(/[^0-9]/gi, ''));
                 } else {
                   amount = 0;
                 }
-                name = GeneralJs.prompt("시공사 이름을 알려주세요!");
+                name = await GeneralJs.prompt("시공사 이름을 알려주세요!");
                 if (name === null) {
                   name = "알 수 없음";
                 }
