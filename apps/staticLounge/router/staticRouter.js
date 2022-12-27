@@ -770,7 +770,7 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
             log = await recordBackupExecute();
             safeNum++;
           } while (log === false || safeNum < 10);
-          await messageLog("record backup and delete done");
+          await errorLog("record backup and delete done");
         } catch (e) {
           await errorLog("record backup and delete error : " + e.message);
         }

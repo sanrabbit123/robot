@@ -130,20 +130,31 @@ DevContext.prototype.launching = async function () {
 
 
 
+    await this.MONGOPYTHONC.connect();
+
+    const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+    const collection = "generalBill";
+    const selfMongo = this.MONGOC;
+    const selfPythonMongo = this.MONGOPYTHONC;
+    let projects, projectsRaw;
+    let clients, designers;
+    let bills;
+
+    projectsRaw = await back.getProjectsByQuery({}, { selfMongo });
+    projects = projectsRaw.toNormal().filter((obj) => {  return obj.process.contract.first.date.valueOf() >= emptyDateValue });
+
+
+    clients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo });
+    designers = await back.getDesignersByQuery({ $or: Array.from(new Set(projects.map((p) => { return p.desid }))).map((desid) => { return { desid } }) }, { selfMongo });
+
+
+
+    
 
 
 
 
-
-
-
-
-
-
-
-
-
-
+    await this.MONGOPYTHONC.close();
 
 
 
