@@ -670,6 +670,36 @@ BillMaker.billDictionary = {
           "해당 디자이너님의 사업자 유형에 따라 정산의 방식이 다를 수 있습니다.",
         ]
       },
+      generalConstructFee: {
+        name: "홈리에종 시공 정산",
+        info: (client, designer, project, method, subObj = {}) => {
+          let info;
+          info = [];
+          info.push({ address: client.requests[0].request.space.address.value });
+          info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+          return info;
+        },
+        item: (amountObject, subObj) => {
+          return [
+            [ "generalExpenses", amountObject.amount ]
+          ];
+        },
+        target: (client, designer, project, method, subObj) => {
+          const { builder } = subObj;
+          return {
+            id: builder.buiid,
+            name: builder.builder,
+            phone: builder.information.phone,
+            email: builder.information.email,
+          };
+        },
+        comments: [
+          "홈리에종 선금 정산은 디자이너님께 드리는 총 정산 비용의 50%입니다.",
+          "프로젝트가 모두 완료되고 고객님의 컨펌이 있은 후, 잔금 정산이 될 예정입니다.",
+          "총 정산 비용은 전체 디자인비에서 해당 디자이너님의 수수료 비율을 제한 금액입니다.",
+          "해당 디자이너님의 사업자 유형에 따라 정산의 방식이 다를 수 있습니다.",
+        ]
+      },
     },
     goods: {
       designerTime: {
@@ -800,6 +830,17 @@ BillMaker.billDictionary = {
           percentage = builder.information.business.service.cost.percentage;
           [ calculate, commission ] = BillMaker.designerCalculation(amount, classification, percentage, client, { toArray: true, forcePercentage: true });
           return { amount: Math.floor((calculate / 1) / 10) * 10, commission: Math.floor((commission / 1) / 10) * 10 };
+        },
+        comments: []
+      },
+      generalExpenses: {
+        id: "_ecgs",
+        name: "시공 비용",
+        description: "시공 비용입니다.",
+        ea: null,
+        number: (subObj) => { return 1; },
+        amount: (amount, subObj) => {
+          return { amount, commission: 0 };
         },
         comments: []
       },

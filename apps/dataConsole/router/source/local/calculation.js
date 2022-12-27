@@ -983,13 +983,14 @@ CalculationJs.prototype.baseMaker = function () {
 CalculationJs.prototype.whiteCardView = function (proid) {
   const instance = this;
   const { totalContents, ea, belowHeight, projects } = this;
-  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass } = GeneralJs;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue } = GeneralJs;
   return async function (e) {
     try {
       const project = projects.find((obj) => { return obj.proid === proid });
       const zIndex = 4;
       const blank = "&nbsp;&nbsp;&nbsp;";
       const whiteCardClassName = "whiteCardClassName";
+      const responsePlusButtonPopupClassName = "responsePlusButtonPopupClassName";
       let cancelBack, whiteCard;
       let whiteOuterMargin;
       let whiteInnerMargin;
@@ -1128,7 +1129,36 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       ];
 
       responsePlusButtonMenus = [
-        "시공 정산",
+        {
+          words: "시공 정산",
+          func: function () {
+            return async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const bilid = this.getAttribute("bilid");
+                const desid = this.getAttribute("desid");
+                const cliid = this.getAttribute("cliid");
+                let loading;
+
+
+                console.log(proid, bilid, desid, cliid);
+
+                await ajaxJson({ bilid }, PYTHONHOST + "/responseInjection");
+                window.alert("업데이트 되었습니다!");
+                loading = instance.mother.grayLoading();
+                setQueue(() => {
+                  instance.contentsLoad();
+                  (instance.whiteCardView(proid))();
+                  loading.remove();
+                }, 500);
+
+                removeByClass(responsePlusButtonPopupClassName);
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          }
+        }
       ];
 
       // base
@@ -1951,6 +1981,12 @@ CalculationJs.prototype.whiteCardView = function (proid) {
 
       responsePlusButton = createNode({
         mother: contentsAreaRight,
+        attribute: {
+          proid: project.proid,
+          bilid: project.bill.bilid,
+          desid: project.desid,
+          cliid: project.cliid,
+        },
         event: {
           selectstart: (e) => {
             e.preventDefault();
@@ -1958,10 +1994,34 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           click: function(e) {
             const self = this;
             const mother = self.parentElement;
-            let baseBox;
+            const proid = this.getAttribute("proid");
+            const bilid = this.getAttribute("bilid");
+            const desid = this.getAttribute("desid");
+            const cliid = this.getAttribute("cliid");
+            let cancelBox, baseBox;
+
+            cancelBox = createNode({
+              mother,
+              class: [ responsePlusButtonPopupClassName ],
+              event: {
+                click: (e) => {
+                  removeByClass(responsePlusButtonPopupClassName);
+                }
+              },
+              style: {
+                position: "fixed",
+                top: String(0),
+                left: String(0),
+                width: withOut(0),
+                height: withOut(0),
+                zIndex: String(1),
+              }
+            });
 
             baseBox = createNode({
               mother,
+              attribute: { proid, bilid, desid, cliid },
+              class: [ responsePlusButtonPopupClassName ],
               style: {
                 display: "inline-flex",
                 flexDirection: "column",
@@ -1970,12 +2030,20 @@ CalculationJs.prototype.whiteCardView = function (proid) {
                 bottom: String(plusCircleMargin + plusCircleWidth + 8) + ea,
                 width: String(buttonWidth) + ea,
                 animation: "fadeuplite 0.2s ease forwards",
+                zIndex: String(1),
               }
             });
 
-            for (let words of responsePlusButtonMenus) {
+            for (let { words, func } of responsePlusButtonMenus) {
               createNode({
                 mother: baseBox,
+                attribute: { proid, bilid, desid, cliid },
+                event: {
+                  selectstart: (e) => {
+                    e.preventDefault();
+                  },
+                  click: func(),
+                },
                 style: {
                   display: "flex",
                   justifyContent: "center",
@@ -1986,9 +2054,15 @@ CalculationJs.prototype.whiteCardView = function (proid) {
                   background: colorChip.green,
                   borderRadius: String(8) + "px",
                   marginTop: String(buttonBetween) + ea,
+                  cursor: "pointer",
                 },
                 child: {
                   text: words,
+                  event: {
+                    selectstart: (e) => {
+                      e.preventDefault();
+                    }
+                  },
                   style: {
                     position: "relative",
                     display: "inline-block",
@@ -1996,6 +2070,7 @@ CalculationJs.prototype.whiteCardView = function (proid) {
                     fontWeight: String(buttonWeight),
                     color: colorChip.white,
                     top: String(buttonTextTop) + ea,
+                    cursor: "pointer",
                   }
                 }
               });

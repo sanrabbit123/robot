@@ -3383,6 +3383,56 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_responseInjection = function () {
+  const instance = this;
+  const bill = this.bill;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = "/responseInjection";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.bilid === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { bilid } = equalJson(req.body);
+      let thisBill;
+      let cliid, desid, proid, method;
+      let client, designer, project;
+
+      thisBill = await bill.getBillById(bilid, { selfMongo });
+      if (thisBill === null) {
+        throw new Error("invaild bilid");
+      }
+      ({ cliid, desid, proid, method } = thisBill.links);
+      client = await back.getClientById(cliid, { selfMongo: instance.mongo });
+      designer = await back.getDesignerById(desid, { selfMongo: instance.mongo });
+      project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+  
+      await bill.responseInjection(bilid, "generalConstructFee", client, designer, project, method, {
+        customAmount: { amount: 1000000 },
+        consumerMode: false,
+        customSub: null,
+        selfMongo
+      });
+
+      res.send(JSON.stringify({ message: "success" }));
+    } catch (e) {
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_responseInjection): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.getAll = function () {
   let result, result_arr;
 
