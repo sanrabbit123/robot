@@ -1138,12 +1138,16 @@ CalculationJs.prototype.whiteCardView = function (proid) {
                 const bilid = this.getAttribute("bilid");
                 const desid = this.getAttribute("desid");
                 const cliid = this.getAttribute("cliid");
-                let loading, updatedBill;
+                let loading, res;
+                let thisBillIndex, thisProjectIndex
 
-                updatedBill = await ajaxJson({ bilid }, PYTHONHOST + "/responseInjection", { equal: true });
+                res = await ajaxJson({ bilid }, PYTHONHOST + "/responseInjection", { equal: true });
 
-                console.log(updatedBill);
+                thisBillIndex = instance.bills.findIndex((obj) => { return obj.bilid === bilid });
+                thisProjectIndex = instance.projects.findIndex((obj) => { return obj.proid === proid });
 
+                instance.bills[thisBillIndex] = res.bill;
+                instance.projects[thisProjectIndex].bill = res.bill;
 
                 window.alert("업데이트 되었습니다!");
                 loading = instance.mother.grayLoading();
