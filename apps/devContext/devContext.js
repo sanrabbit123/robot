@@ -130,31 +130,675 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await this.MONGOPYTHONC.connect();
-
-    const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
-    const collection = "generalBill";
-    const selfMongo = this.MONGOC;
-    const selfPythonMongo = this.MONGOPYTHONC;
-    let projects, projectsRaw;
-    let clients, designers;
-    let bills;
-
-    projectsRaw = await back.getProjectsByQuery({}, { selfMongo });
-    projects = projectsRaw.toNormal().filter((obj) => {  return obj.process.contract.first.date.valueOf() >= emptyDateValue });
-
-
-    clients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo });
-    designers = await back.getDesignersByQuery({ $or: Array.from(new Set(projects.map((p) => { return p.desid }))).map((desid) => { return { desid } }) }, { selfMongo });
 
 
 
     
 
 
+    await this.MONGOPYTHONC.connect();
+
+    const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+    const collection = "generalBill";
+    const selfMongo = this.MONGOC;
+    const selfPythonMongo = this.MONGOPYTHONC;
+    const motherSheetsFolderId = "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF";
+    let projects, projectsRaw;
+    let clients, designers;
+    let bills;
+    let proid, cliid, desid, service;
+    let thisClient;
+    let thisDesigner;
+    let thisBill;
+    let matrix;
+    let thisRequest, thisResponse;
+    let currentState;
+    let confirmState;
+    let requestName, responseName;
+    let payDate, cancelAmount, cancelDate;
+    let requestValueArr;
+    let responseValueArr;
+    let payAmount, nonPayAmount;
+    let refundAmount;
+    let requestSumConsumer, requestSumConfirm, requestSumRefund;
+    let requestSumIncome;
+    let requestLength, responseLength;
+    let requestArr, responseArr;
+    let sheetsId;
+    let payMethod;
+    let doneTong, willTong;
+    let matrix2;
+    let matrix3, matrix4, matrix5, matrix6, matrix7, matrix8, matrix9, matrix10, matrix11, matrix12;
+
+    projectsRaw = await back.getProjectsByQuery({}, { selfMongo });
+    projects = projectsRaw.toNormal().filter((obj) => {  return obj.process.contract.first.date.valueOf() >= emptyDateValue });
+
+    clients = (await back.getClientsByQuery({ $or: Array.from(new Set(projects.map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo })).toNormal();
+    designers = (await back.getDesignersByQuery({ $or: Array.from(new Set(projects.map((p) => { return p.desid }))).map((desid) => { return { desid } }) }, { selfMongo })).toNormal();
+
+    bills = await back.mongoRead(collection, {}, { selfMongo: selfPythonMongo });
+
+    doneTong = [];
+    willTong = [];
+
+    for (let project of projects) {
+      ({ proid, cliid, desid, service } = project);
+
+      thisClient = clients.find((obj) => { return obj.cliid === cliid });
+      thisDesigner = designers.find((obj) => { return obj.desid === desid });
+      thisBill = bills.find((obj) => {
+        return ((obj.links.proid === proid) && (obj.links.method === (service.online ? "online" : "offline")))
+      });
+
+      project.client = thisClient;
+      project.designer = thisDesigner;
+      project.bill = thisBill;
+      project.name = thisClient.name;
+      project.phone = thisClient.phone;
+    }
+
+    projects = projects.filter((obj) => {
+      return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
+    });
 
 
     await this.MONGOPYTHONC.close();
+
+    matrix = [ [
+      "아이디",
+      "고객",
+      "디자이너",
+      "구분",
+      "확정가",
+      "입금일",
+      "입금액",
+      "미입금액",
+      "방법",
+    ] ];
+
+    for (let project of projects) {
+
+      requestSumConsumer = 0;
+      requestSumConfirm = 0;
+      requestSumRefund = 0;
+      requestSumIncome = 0;
+      requestArr = [];
+      for (let z = 0; z < project.bill.requests.length; z++) {
+        thisRequest = project.bill.requests[z];
+
+        requestName = thisRequest.name;
+        confirmState = Math.floor(thisRequest.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0));
+
+        if (requestName === "홈리에종 잔금") {
+          currentState = 1 - project.process.contract.remain.calculation.discount;
+          currentState = Math.floor(project.process.contract.remain.calculation.amount.consumer / currentState);
+          currentState = Math.floor(currentState - project.process.contract.first.calculation.amount);
+        } else {
+          currentState = Math.floor(thisRequest.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0));
+        }
+
+        if (/^드/gi.test(project.process.status)) {
+          if (thisRequest.pay.length === 0) {
+            confirmState = 0;
+          }
+        }
+
+        payDate = '-';
+        payMethod = '-';
+        if (thisRequest.pay.length > 0) {
+          payDate = dateToString(thisRequest.pay[0].date);
+          payMethod = thisRequest.proofs[0].method;
+          if (payMethod.trim() === "계좌" || payMethod.trim() === "계좌" || payMethod.trim() === "게좌" ||  payMethod.trim() === "계좌입금" ||  /현금영수증/gi.test(payMethod.trim()) || payMethod.trim() === "계좌이체" || payMethod.trim() === "-" || payMethod.trim() === "" || payMethod.trim() === "증빙") {
+            payMethod = "계좌 이체";
+          }
+        }
+
+        cancelAmount = 0;
+        cancelDate = '-';
+
+        if (thisRequest.cancel.length > 0) {
+          cancelAmount = thisRequest.cancel.reduce((acc, curr) => { return acc + curr.amount }, 0);
+          cancelDate = dateToString(thisRequest.cancel[0].date);
+        }
+
+        requestSumConsumer += currentState;
+        requestSumConfirm += confirmState;
+        requestSumRefund += cancelAmount;
+        if (payDate !== '-') {
+          requestSumIncome += confirmState;
+        }
+
+        requestValueArr = [
+          {
+            value: requestName,
+          },
+          {
+            value: currentState,
+          },
+          {
+            value: confirmState,
+          },
+          {
+            value: payDate,
+          },
+          {
+            value: cancelAmount,
+          },
+          {
+            value: cancelDate,
+          },
+          {
+            value: payMethod
+          },
+        ];
+
+        requestArr.push(requestValueArr.map((obj) => { return obj.value }));
+      }
+
+      requestLength = requestArr.length;
+
+      // response
+
+      responseSumTotal = 0;
+      responseSumNon = 0;
+      responseSumPaid = 0;
+      responseSumRefund = 0;
+      responseArr = [];
+      for (let z = 0; z < project.bill.responses.length; z++) {
+        thisResponse = project.bill.responses[z];
+
+        responseName = thisResponse.name;
+
+        confirmState = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
+        payAmount = Math.floor(thisResponse.pay.reduce((acc, curr) => { return acc + curr.amount }, 0));
+        refundAmount = Math.floor(thisResponse.cancel.reduce((acc, curr) => { return acc + curr.amount }, 0));
+        nonPayAmount = confirmState - payAmount;
+        payDate = '-';
+        if (thisResponse.pay.length > 0) {
+          payDate = dateToString(thisResponse.pay[0].date);
+        }
+
+        responseSumTotal += confirmState;
+        responseSumNon += nonPayAmount;
+        responseSumPaid += payAmount;
+        responseSumRefund += refundAmount;
+
+        responseValueArr = [
+          {
+            value: responseName,
+          },
+          {
+            value: confirmState,
+          },
+          {
+            value: nonPayAmount,
+          },
+          {
+            value: payAmount,
+          },
+          {
+            value: payDate,
+          },
+          {
+            value: refundAmount,
+          },
+        ];
+
+        responseArr.push(responseValueArr.map((obj) => { return obj.value }));
+      }
+
+      responseLength = responseArr.length;
+
+      for (let i = 0; i < requestLength; i++) {
+        matrix.push([
+          project.proid,
+          project.name,
+          project.designer.designer,
+          requestArr[i][0],
+          requestArr[i][2],
+          requestArr[i][3],
+          requestArr[i][3] === '-' ? 0 : requestArr[i][2],
+          requestArr[i][3] === '-' ? requestArr[i][2] : 0,
+          requestArr[i][6].replace(/ 취소/gi, ''),
+        ]);
+
+        if (requestArr[i][3].trim() === '-') {
+          willTong.push({
+            proid: project.proid,
+            cliid: project.cliid,
+            desid: project.desid,
+            bilid: project.bill.bilid,
+            name: project.name,
+            designer: project.designer.designer,
+            kind: requestArr[i][0],
+            class: /시공/gi.test(requestArr[i][0]) ? "construct" : "design",
+            standard: requestArr[i][2],
+            amount: requestArr[i][2],
+            type: "in",
+          })
+        } else {
+          doneTong.push({
+            proid: project.proid,
+            cliid: project.cliid,
+            desid: project.desid,
+            bilid: project.bill.bilid,
+            name: project.name,
+            designer: project.designer.designer,
+            kind: requestArr[i][0],
+            class: /시공/gi.test(requestArr[i][0]) ? "construct" : "design",
+            standard: requestArr[i][2],
+            date: stringToDate(requestArr[i][3]),
+            amount: requestArr[i][2],
+            method: requestArr[i][6].replace(/ 취소/gi, ''),
+            type: "in",
+          })
+        }
+
+        if (requestArr[i][4] !== 0) {
+          matrix.push([
+            project.proid,
+            project.name,
+            project.designer.designer,
+            requestArr[i][0],
+            requestArr[i][4],
+            requestArr[i][5],
+            requestArr[i][5] === '-' ? 0 : (requestArr[i][4] * -1),
+            requestArr[i][5] === '-' ? (requestArr[i][4] * -1) : 0,
+            requestArr[i][6],
+          ]);
+
+          if (requestArr[i][5].trim() === '-') {
+            willTong.push({
+              proid: project.proid,
+              cliid: project.cliid,
+              desid: project.desid,
+              bilid: project.bill.bilid,
+              name: project.name,
+              designer: project.designer.designer,
+              kind: requestArr[i][0],
+              class: /시공/gi.test(requestArr[i][0]) ? "construct" : "design",
+              standard: requestArr[i][4],
+              amount: requestArr[i][4],
+              type: "out",
+            })
+          } else {
+            doneTong.push({
+              proid: project.proid,
+              cliid: project.cliid,
+              desid: project.desid,
+              bilid: project.bill.bilid,
+              name: project.name,
+              designer: project.designer.designer,
+              kind: requestArr[i][0],
+              class: /시공/gi.test(requestArr[i][0]) ? "construct" : "design",
+              standard: requestArr[i][4],
+              date: stringToDate(requestArr[i][5]),
+              amount: requestArr[i][4],
+              method: requestArr[i][6],
+              type: "out",
+            })
+          }
+
+        }
+      }
+
+      for (let i = 0; i < responseLength; i++) {
+        matrix.push([
+          project.proid,
+          project.name,
+          project.designer.designer,
+          responseArr[i][0],
+          responseArr[i][1],
+          responseArr[i][4],
+          responseArr[i][3] * -1,
+          responseArr[i][2] * -1,
+          responseArr[i][3] !== 0 ? "계좌 이체" : "-",
+        ]);
+
+        if (responseArr[i][4].trim() === '-') {
+          willTong.push({
+            proid: project.proid,
+            cliid: project.cliid,
+            desid: project.desid,
+            bilid: project.bill.bilid,
+            name: project.name,
+            designer: project.designer.designer,
+            kind: responseArr[i][0],
+            class: /시공/gi.test(responseArr[i][0]) ? "construct" : "design",
+            standard: responseArr[i][1],
+            amount: responseArr[i][2],
+            type: "out",
+          })
+        } else {
+          doneTong.push({
+            proid: project.proid,
+            cliid: project.cliid,
+            desid: project.desid,
+            bilid: project.bill.bilid,
+            name: project.name,
+            designer: project.designer.designer,
+            kind: responseArr[i][0],
+            class: /시공/gi.test(responseArr[i][0]) ? "construct" : "design",
+            standard: responseArr[i][1],
+            date: stringToDate(responseArr[i][4]),
+            amount: responseArr[i][3],
+            method: "계좌 이체",
+            type: "out",
+          })
+        }
+
+
+      }
+
+    }
+
+    sheetsId = await sheets.create_newSheets_inPython("매출매입_전체", motherSheetsFolderId);
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix);
+
+    doneTong.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() })
+
+    matrix2 = [
+      [
+        "아이디",
+        "고객",
+        "디자이너",
+        "종류1",
+        "종류2",
+        "항목",
+        "년",
+        "월",
+        "일",
+        "금액",
+        "방법",
+      ]
+    ];
+    matrix3 = equalJson(JSON.stringify(matrix2));
+    matrix4 = equalJson(JSON.stringify(matrix2));
+    matrix5 = equalJson(JSON.stringify(matrix2));
+    matrix6 = equalJson(JSON.stringify(matrix2));
+    matrix7 = equalJson(JSON.stringify(matrix2));
+    matrix8 = equalJson(JSON.stringify(matrix2));
+    matrix9 = equalJson(JSON.stringify(matrix2));
+
+    for (let obj of doneTong) {
+
+      matrix2.push([
+        obj.proid,
+        obj.name,
+        obj.designer,
+        obj.type === "in" ? "받은돈" : "준돈",
+        obj.class === "design" ? "디자인" : "시공",
+        obj.kind,
+        obj.date.getFullYear(),
+        obj.date.getMonth() + 1,
+        obj.date.getDate(),
+        (obj.type === "in" ? 1 : -1) * obj.amount,
+        obj.method,
+      ])
+
+      if (obj.type === "in") {
+
+        matrix3.push([
+          obj.proid,
+          obj.name,
+          obj.designer,
+          obj.type === "in" ? "받은돈" : "준돈",
+          obj.class === "design" ? "디자인" : "시공",
+          obj.kind,
+          obj.date.getFullYear(),
+          obj.date.getMonth() + 1,
+          obj.date.getDate(),
+          (obj.type === "in" ? 1 : -1) * obj.amount,
+          obj.method,
+        ])
+
+        if (obj.class === "design") {
+
+          matrix4.push([
+            obj.proid,
+            obj.name,
+            obj.designer,
+            obj.type === "in" ? "받은돈" : "준돈",
+            obj.class === "design" ? "디자인" : "시공",
+            obj.kind,
+            obj.date.getFullYear(),
+            obj.date.getMonth() + 1,
+            obj.date.getDate(),
+            (obj.type === "in" ? 1 : -1) * obj.amount,
+            obj.method,
+          ])
+
+        } else {
+
+          matrix5.push([
+            obj.proid,
+            obj.name,
+            obj.designer,
+            obj.type === "in" ? "받은돈" : "준돈",
+            obj.class === "design" ? "디자인" : "시공",
+            obj.kind,
+            obj.date.getFullYear(),
+            obj.date.getMonth() + 1,
+            obj.date.getDate(),
+            (obj.type === "in" ? 1 : -1) * obj.amount,
+            obj.method,
+          ])
+
+        }
+
+
+      } else {
+
+
+        matrix6.push([
+          obj.proid,
+          obj.name,
+          obj.designer,
+          obj.type === "in" ? "받은돈" : "준돈",
+          obj.class === "design" ? "디자인" : "시공",
+          obj.kind,
+          obj.date.getFullYear(),
+          obj.date.getMonth() + 1,
+          obj.date.getDate(),
+          obj.amount,
+          obj.method,
+        ])
+
+        if (obj.class === "design") {
+
+          matrix7.push([
+            obj.proid,
+            obj.name,
+            obj.designer,
+            obj.type === "in" ? "받은돈" : "준돈",
+            obj.class === "design" ? "디자인" : "시공",
+            obj.kind,
+            obj.date.getFullYear(),
+            obj.date.getMonth() + 1,
+            obj.date.getDate(),
+            obj.amount,
+            obj.method,
+          ])
+
+        } else {
+
+          matrix8.push([
+            obj.proid,
+            obj.name,
+            obj.designer,
+            obj.type === "in" ? "받은돈" : "준돈",
+            obj.class === "design" ? "디자인" : "시공",
+            obj.kind,
+            obj.date.getFullYear(),
+            obj.date.getMonth() + 1,
+            obj.date.getDate(),
+            obj.amount,
+            obj.method,
+          ])
+
+        }
+      }
+    }
+
+    doneTong.sort((a, b) => { return Number(b.proid.replace(/[^0-9]/gi, '')) - Number(a.proid.replace(/[^0-9]/gi, '')) })
+
+    for (let obj of doneTong) {
+
+      matrix9.push([
+        obj.proid,
+        obj.name,
+        obj.designer,
+        obj.type === "in" ? "받은돈" : "준돈",
+        obj.class === "design" ? "디자인" : "시공",
+        obj.kind,
+        obj.date.getFullYear(),
+        obj.date.getMonth() + 1,
+        obj.date.getDate(),
+        (obj.type === "in" ? 1 : -1) * obj.amount,
+        obj.method,
+      ])
+
+    }
+
+
+    willTong.sort((a, b) => { return Number(b.proid.replace(/[^0-9]/gi, '')) - Number(a.proid.replace(/[^0-9]/gi, '')) })
+
+    matrix10 = [
+      [
+        "아이디",
+        "고객",
+        "디자이너",
+        "종류1",
+        "종류2",
+        "항목",
+        "금액",
+      ]
+    ];
+    matrix11 = equalJson(JSON.stringify(matrix10));
+    matrix12 = equalJson(JSON.stringify(matrix10));
+
+    for (let obj of willTong) {
+
+      matrix10.push([
+        obj.proid,
+        obj.name,
+        obj.designer,
+        obj.type === "in" ? "받을돈" : "줄돈",
+        obj.class === "design" ? "디자인" : "시공",
+        obj.kind,
+        (obj.type === "in" ? 1 : -1) * obj.amount,
+      ])
+
+      if (obj.type === "in") {
+
+        matrix11.push([
+          obj.proid,
+          obj.name,
+          obj.designer,
+          obj.type === "in" ? "받을돈" : "줄돈",
+          obj.class === "design" ? "디자인" : "시공",
+          obj.kind,
+          obj.amount,
+        ])
+
+
+      } else {
+
+        matrix12.push([
+          obj.proid,
+          obj.name,
+          obj.designer,
+          obj.type === "in" ? "받을돈" : "줄돈",
+          obj.class === "design" ? "디자인" : "시공",
+          obj.kind,
+          obj.amount,
+        ])
+
+      }
+
+
+    }
+
+
+    sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_준돈", motherSheetsFolderId);
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix2);
+
+    sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈", motherSheetsFolderId);
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix3);
+
+    sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_디자인", motherSheetsFolderId);
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix4);
+
+    sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_시공", motherSheetsFolderId);
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix5);
+
+    sheetsId = await sheets.create_newSheets_inPython("매출매입_준돈", motherSheetsFolderId);
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix6);
+
+    sheetsId = await sheets.create_newSheets_inPython("매출매입_준돈_디자인", motherSheetsFolderId);
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix7);
+
+    sheetsId = await sheets.create_newSheets_inPython("매출매입_준돈_시공", motherSheetsFolderId);
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix8);
+
+    sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_고객별", motherSheetsFolderId);
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix9);
+
+    sheetsId = await sheets.create_newSheets_inPython("매출매입_받을돈_줄돈", motherSheetsFolderId);
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix10);
+
+    sheetsId = await sheets.create_newSheets_inPython("매출매입_받을돈", motherSheetsFolderId);
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix11);
+
+    sheetsId = await sheets.create_newSheets_inPython("매출매입_줄돈", motherSheetsFolderId);
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix12);
+
+    // 1. 매출매입_전체
+    // => https://docs.google.com/spreadsheets/d/1QeYg0ISXIxaXu8FagC_FLOcl7c2aJPiqyfsVxstCzO0/edit?usp=share_link
+    // 2. 매출매입_받은돈_준돈
+    // => https://docs.google.com/spreadsheets/d/1nUeq90uUEccWcXcTluJv405HMPkNbfO7BZz3M6kLxR0/edit?usp=share_link
+    // 3. 매출매입_받은돈
+    // => https://docs.google.com/spreadsheets/d/1VhIOCGhOfz6Ja7kFU-w0u5bxYdZuQUvMdSo1zDnDjkk/edit?usp=share_link
+    // 4. 매출매입_받은돈_디자인
+    // => https://docs.google.com/spreadsheets/d/1H5wsUJaTTbOpfLqzul5yojzzFuZ2LFEEm9wEQ8cxJ5Q/edit?usp=share_link
+    // 5. 매출매입_받은돈_시공
+    // => https://docs.google.com/spreadsheets/d/1Aiy5xKxbpPDrUMEc6ORpk-TTKlvxFU7kPNdht2YkeWg/edit?usp=share_link
+    // 6. 매출매입_준돈
+    // => https://docs.google.com/spreadsheets/d/1ONG7UrjDQmgke_mh0M3gQpDDBsbs3tGOoAR1J7cmR8Q/edit?usp=share_link
+    // 7. 매출매입_준돈_디자인
+    // => https://docs.google.com/spreadsheets/d/19YjTSE3EUlGaJTRTu1f9TE7LPaBEhNhx5ljd_Y-o_Sg/edit?usp=share_link
+    // 8. 매출매입_준돈_시공
+    // => https://docs.google.com/spreadsheets/d/1zBWZp05wybO6OWLLPAV8OWFIUw88_MvIQgh6QKoZjPQ/edit?usp=share_link
+    // 9. 매출매입_받은돈_고객별
+    // => https://docs.google.com/spreadsheets/d/1Tk-t8dZbMgtbwd4ToBWeTRLH1aGVCEyRivg-XWjT9Mc/edit?usp=share_link
+    // 10. 매출매입_받을돈_줄돈
+    // => https://docs.google.com/spreadsheets/d/1W5rDDi62s0SHOVTp0eOCZRtKSnrYydh6Lxu2DvxTWYY/edit?usp=share_link
+    // 11. 매출매입_받을돈
+    // => https://docs.google.com/spreadsheets/d/1bE63mJm5_aPL8wzzOQ38X5vSRI0hxnGCM5hwTvsi6CA/edit?usp=share_link
+    // 12. 매출매입_줄돈
+    // => https://docs.google.com/spreadsheets/d/1L4qY_Tigmzl-39MUvQCjCMrEJy4Q7qlJYHYKrrkIF7Y/edit?usp=share_link
+
+
+
+
+
+
+
+
+
+
 
 
 
