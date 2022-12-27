@@ -130,106 +130,23 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await this.MONGOPYTHONC.connect();
-    const selfMongo = this.MONGOPYTHONC;
-    const selfCoreMongo = this.MONGOC;
-    const collection = "generalBill";
-    let sheetsId;
-    let rows;
-    let targets;
-    let tong;
-    let project;
-    let method;
-    let thisBill, thisBills;
-    let bilid;
-    let client, designer;
-    let updatedBill;
-    let whereQuery, updateQuery;
-    let response;
-    let thisAmount, thisDate;
-
-    sheetsId = "1WeOohoFhlPpqEk4ltxVCi772ie6dLUYWtCNco-RCb1c";
-    rows = await sheets.get_value_inPython(sheetsId, "default!A2:G");
-    targets = rows.map((arr) => { return arr.slice(2) }).map(([ construct, kind, amount, dateString, proid ]) => {
-      const [ year, month, date ] = dateString.trim().split('.');
-      return {
-        name: construct,
-        amount: Number(amount),
-        date: new Date(Number(year), Number(month) - 1, Number(date)),
-        proid
-      }
-    }).filter(({ proid }) => {
-      return proid !== '';
-    });
-
-    targets.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
-
-    tong = {};
-    for (let { name, amount, date, proid } of targets) {
-      if (!Array.isArray(tong[proid])) {
-        tong[proid] = [];
-      }
-      tong[proid].push({ name, amount, date });
-    }
-
-    for (let proid in tong) {
-      tong[proid].sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
-
-      project = await back.getProjectById(proid, { selfMongo: selfCoreMongo });
-
-      method = project.service.online ? "online" : "offline";
-
-      thisBills = await back.mongoRead(collection, {
-        $and: [
-          { "links.proid": proid },
-          { "links.method": method }
-        ],
-      }, { selfMongo });
-      [ thisBill ] = thisBills;
-
-      bilid = thisBill.bilid;
-
-      client = await back.getClientById(project.cliid, { selfMongo: selfCoreMongo });
-      designer = await back.getDesignerById(project.desid, { selfMongo: selfCoreMongo });
-  
-      for (let { amount, date, name } of tong[proid]) {
-        await bill.responseInjection(bilid, "generalConstructFee", client, designer, project, method, {
-          customAmount: { amount: Number(amount) },
-          consumerMode: false,
-          customSub: { name },
-          selfMongo
-        });
-
-        updatedBill = await bill.getBillById(bilid, { selfMongo });
-        [ response ] = updatedBill.responses;
-        thisAmount = response.items[0].amount.pure;
-        thisDate = date;
-
-        whereQuery = { bilid };
-        updateQuery = {};
-
-        updateQuery["responses.0.pay"] = [
-          {
-            amount: thisAmount,
-            date: thisDate,
-            oid: ""
-          }
-        ]
-        updateQuery["responses.0.proofs"] = [
-          {
-            date: thisDate,
-            method: "계좌 이체",
-            proof: "",
-            to: name,
-          }
-        ]
-        await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-        console.log(bilid);
-      }
-    }
 
 
-    await this.MONGOPYTHONC.close();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -332,6 +249,120 @@ DevContext.prototype.launching = async function () {
 
 
     */
+
+
+
+
+
+    /*
+
+    // construct update
+
+    await this.MONGOPYTHONC.connect();
+    const selfMongo = this.MONGOPYTHONC;
+    const selfCoreMongo = this.MONGOC;
+    const collection = "generalBill";
+    let sheetsId;
+    let rows;
+    let targets;
+    let tong;
+    let project;
+    let method;
+    let thisBill, thisBills;
+    let bilid;
+    let client, designer;
+    let updatedBill;
+    let whereQuery, updateQuery;
+    let response;
+    let thisAmount, thisDate;
+
+    sheetsId = "1WeOohoFhlPpqEk4ltxVCi772ie6dLUYWtCNco-RCb1c";
+    rows = await sheets.get_value_inPython(sheetsId, "default!A2:G");
+    targets = rows.map((arr) => { return arr.slice(2) }).map(([ construct, kind, amount, dateString, proid ]) => {
+      const [ year, month, date ] = dateString.trim().split('.');
+      return {
+        name: construct,
+        amount: Number(amount),
+        date: new Date(Number(year), Number(month) - 1, Number(date)),
+        proid
+      }
+    }).filter(({ proid }) => {
+      return proid !== '';
+    });
+
+    targets.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
+
+    tong = {};
+    for (let { name, amount, date, proid } of targets) {
+      if (!Array.isArray(tong[proid])) {
+        tong[proid] = [];
+      }
+      tong[proid].push({ name, amount, date });
+    }
+
+    for (let proid in tong) {
+      tong[proid].sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
+
+      project = await back.getProjectById(proid, { selfMongo: selfCoreMongo });
+
+      method = project.service.online ? "online" : "offline";
+
+      thisBills = await back.mongoRead(collection, {
+        $and: [
+          { "links.proid": proid },
+          { "links.method": method }
+        ],
+      }, { selfMongo });
+      [ thisBill ] = thisBills;
+
+      bilid = thisBill.bilid;
+
+      client = await back.getClientById(project.cliid, { selfMongo: selfCoreMongo });
+      designer = await back.getDesignerById(project.desid, { selfMongo: selfCoreMongo });
+  
+      for (let { amount, date, name } of tong[proid]) {
+        await bill.responseInjection(bilid, "generalConstructFee", client, designer, project, method, {
+          customAmount: { amount: Number(amount) },
+          consumerMode: false,
+          customSub: { name },
+          selfMongo
+        });
+
+        updatedBill = await bill.getBillById(bilid, { selfMongo });
+        [ response ] = updatedBill.responses;
+        thisAmount = response.items[0].amount.pure;
+        thisDate = date;
+
+        whereQuery = { bilid };
+        updateQuery = {};
+
+        updateQuery["responses.0.pay"] = [
+          {
+            amount: thisAmount,
+            date: thisDate,
+            oid: ""
+          }
+        ]
+        updateQuery["responses.0.proofs"] = [
+          {
+            date: thisDate,
+            method: "계좌 이체",
+            proof: "",
+            to: name,
+          }
+        ]
+        await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+        console.log(bilid);
+      }
+    }
+
+
+    await this.MONGOPYTHONC.close();
+
+
+    */
+
+
 
 
 

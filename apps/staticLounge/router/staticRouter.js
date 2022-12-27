@@ -594,6 +594,203 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_recordBackup = function () {
+  const instance = this;
+  const address = this.address;
+  const { errorLog, fileSystem, shellExec, shellLink, requestSystem, dateToString, uniqueValue, binaryRequest } = this.mother;
+  const { staticConst, sambaToken, homeliaisonOfficeConst, designerFolderConst } = this;
+  const storeMother = staticConst + homeliaisonOfficeConst + "/통화녹취파일";
+  const recordBackupExecute = async function () {
+    const jsdom = require("jsdom");
+    const { JSDOM } = jsdom;
+    const urls = {
+      init: "https://centrex.uplus.co.kr/premium",
+      login: "https://centrex.uplus.co.kr/premium/PHP/web_login.php",
+      list: "https://centrex.uplus.co.kr/premium/backoffice/record_list.html",
+      delete: "https://centrex.uplus.co.kr/premium/PHP/deleteRecordFile.php"
+    };
+    const splitToken = "__split__";
+    const tempFolder = process.cwd() + "/temp";
+    try {
+      const storeMotherContents = (await fileSystem(`readDir`, [ storeMother ])).filter((str) => { return !/^\./.test(str); });
+      const folderName = "records_" + dateToString(new Date()).replace(/\-/gi, '') + "_" + uniqueValue("string");
+      let url, res, dom, token, idsave, id, pass;
+      let session;
+      let inputs;
+      let postData;
+      let trArr;
+      let aNode, aArr;
+      let pageNum;
+      let totalLinks;
+      let log;
+      let tempbinary;
+      let storeTargets;
+      let downloadedFiles;
+      let errorBoo;
+      let safeNum;
+  
+      url = urls.init;
+      res = await requestSystem(url);
+  
+      dom = new JSDOM(res.data);
+  
+      token = dom.window.document.querySelectorAll("input")[2].value;
+      session = res.headers["set-cookie"][0].split(';')[0];
+      idsave = 1;
+      id = address.officeinfo.phone.total.number;
+      pass = address.officeinfo.phone.total.password;
+  
+      url = urls.login;
+      res = await requestSystem(url, { token, idsave, id, pass }, { headers: { Cookie: session } });
+  
+      url = urls.list;
+      res = await requestSystem(url, {}, { method: "get", headers: { Cookie: session } });
+  
+      dom = new JSDOM(res.data);
+      inputs = dom.window.document.querySelector('form').children;
+      postData = {};
+      for (let input of inputs) {
+        if (/INPUT/gi.test(input.nodeName)) {
+          postData[input.getAttribute("name")] = input.getAttribute("value");
+        }
+      }
+  
+      pageNum = 0;
+      totalLinks = [];
+      do {
+        pageNum++;
+        postData.page = String(pageNum);
+        res = await requestSystem(url, postData, { headers: { Cookie: session } });
+        dom = new JSDOM(res.data);
+        trArr = [ ...dom.window.document.querySelector('.contents_area').querySelector('.table_type01').querySelectorAll('tr') ];
+        aArr = [];
+        for (let tr of trArr) {
+          aNode = tr.querySelector('a');
+          if (aNode !== null) {
+            aArr.push(aNode.getAttribute("href"));
+          }
+        }
+  
+        aArr = aArr.map((str) => { return str.trim(); }).filter((str) => { return str !== '#'; }).map((str) => {
+          return str + splitToken + String(pageNum);
+        });
+        totalLinks = totalLinks.concat(aArr);
+      } while (aArr.length !== 0);
+  
+      totalLinks = [ ...new Set(totalLinks) ].map((str) => {
+        return urls.init + str.slice(2);
+      }).map((link) => {
+        let tempArr, tempArr1, obj, page;
+        page = Number(link.split(splitToken)[1]);
+        link = link.split(splitToken)[0];
+        tempArr = link.split('?');
+        tempArr1 = tempArr[1].split('&').map((s) => { return s.split('='); });
+        obj = {};
+        for (let [ key, value ] of tempArr1) {
+          obj[key] = value;
+        }
+        return { link, page, host: tempArr[0], data: obj };
+      });
+  
+      log = {
+        date: new Date(),
+        length: totalLinks.length,
+        records: totalLinks
+      };
+  
+      await shellExec(`rm -rf ${shellLink(tempFolder)}/${folderName}`);
+      await shellExec(`mkdir ${shellLink(tempFolder)}/${folderName}`);
+  
+      for (let i = 0; i < totalLinks.length; i++) {
+        safeNum = 0;
+        do {
+          errorBoo = true;
+          try {
+            tempbinary = await binaryRequest(totalLinks[i].link, null, { headers: { Cookie: session } });
+            await fileSystem(`writeBinary`, [ `${process.cwd()}/temp/${folderName}/${totalLinks[i].data.filename}`, tempbinary ]);
+            console.log(`${totalLinks[i].data.filename} download success`);
+  
+            postData.page = String(totalLinks[i].page);
+            postData["chk[]"] = totalLinks[i].data.filename.split('-')[0] + "|" + totalLinks[i].data.filename;
+            res = await requestSystem(urls.delete, postData, { headers: { Cookie: session } });
+            console.log(`${totalLinks[i].data.filename} server delete success`);
+  
+            errorBoo = false;
+          } catch (e) {
+            errorBoo = true;
+          }
+          safeNum++;
+        } while (errorBoo || safeNum > 10);
+      }
+  
+      storeTargets = {};
+      for (let str of storeMotherContents) {
+        storeTargets['p' + str.split('_')[0]] = str;
+      }
+  
+      downloadedFiles = (await fileSystem(`readDir`, [ `${tempFolder}/${folderName}` ])).filter((str) => { return !/^\./.test(str); });
+      downloadedFiles = downloadedFiles.map((str) => {
+        return { target: 'p' + str.split('-')[0].replace(/^0/gi, '').replace(/^0/gi, ''), file: `${tempFolder}/${folderName}/${str}` };
+      });
+  
+      for (let { target, file } of downloadedFiles) {
+        if (typeof storeTargets[target] === "string") {
+          await shellExec(`mv ${shellLink(file)} ${shellLink(storeMother + "/" + storeTargets[target])};`);
+        }
+      }
+  
+      await shellExec(`rm -rf ${shellLink(tempFolder)}/${folderName};`);
+  
+      return log;
+  
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  }
+  let obj;
+  obj = {};
+  obj.link = [ "/recordBackup" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      const backupFunc = async function () {
+        try {
+          let safeNum, log;
+          safeNum = 0;
+          do {
+            log = await recordBackupExecute();
+            safeNum++;
+          } while (log === false || safeNum < 10);
+          await messageLog("record backup and delete done");
+        } catch (e) {
+          await errorLog("record backup and delete error : " + e.message);
+        }
+      }
+      
+      backupFunc().catch((err) => {
+        errorLog("record backup and delete error : " + err.message).catch((e) => { console.log(e); });
+      });
+
+      res.send(JSON.stringify({ message: "will do" }));
+
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_recordBackup): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.getAll = function () {
