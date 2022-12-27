@@ -1140,8 +1140,20 @@ CalculationJs.prototype.whiteCardView = function (proid) {
                 const cliid = this.getAttribute("cliid");
                 let loading, res;
                 let thisBillIndex, thisProjectIndex
+                let amount, name;
 
-                res = await ajaxJson({ bilid }, PYTHONHOST + "/responseInjection", { equal: true });
+                amount = GeneralJs.prompt("정산 금액을 숫자로만 알려주세요!");
+                if (typeof amount === "string") {
+                  amount = Number(amount.replace(/[^0-9]/gi, ''));
+                } else {
+                  amount = 0;
+                }
+                name = GeneralJs.prompt("시공사 이름을 알려주세요!");
+                if (name === null) {
+                  name = "알 수 없음";
+                }
+
+                res = await ajaxJson({ bilid, amount, name }, PYTHONHOST + "/responseInjection", { equal: true });
 
                 thisBillIndex = instance.bills.findIndex((obj) => { return obj.bilid === bilid });
                 thisProjectIndex = instance.projects.findIndex((obj) => { return obj.proid === proid });

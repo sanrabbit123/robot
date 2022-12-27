@@ -3398,11 +3398,11 @@ ReceiptRouter.prototype.rou_post_responseInjection = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (req.body.bilid === undefined) {
+      if (req.body.bilid === undefined || req.body.amount === undefined || req.body.name === undefined) {
         throw new Error("invalid post");
       }
       const selfMongo = instance.mongolocal;
-      const { bilid } = equalJson(req.body);
+      const { bilid, amount, name } = equalJson(req.body);
       let thisBill;
       let cliid, desid, proid, method;
       let client, designer, project;
@@ -3417,9 +3417,9 @@ ReceiptRouter.prototype.rou_post_responseInjection = function () {
       project = await back.getProjectById(proid, { selfMongo: instance.mongo });
   
       await bill.responseInjection(bilid, "generalConstructFee", client, designer, project, method, {
-        customAmount: { amount: 1000000 },
+        customAmount: { amount: Number(amount) },
         consumerMode: false,
-        customSub: { name: "규빗" },
+        customSub: { name },
         selfMongo
       });
 
