@@ -1046,6 +1046,9 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       let plusCircleWidth;
       let plusCircleMargin;
       let plusSize, plusWeight, plusTextTop;
+      let buttonWidth, buttonHeight;
+      let buttonBetween;
+      let buttonSize, buttonWeight, buttonTextTop;
 
       whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
       whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
@@ -1084,6 +1087,13 @@ CalculationJs.prototype.whiteCardView = function (proid) {
       plusSize = 34;
       plusWeight = 500;
       plusTextTop = -3;
+
+      buttonWidth = 96;
+      buttonHeight = 30;
+      buttonBetween = 4;
+      buttonSize = 13;
+      buttonWeight = 700;
+      buttonTextTop = isMac() ? -1 : 1;
 
       leftColumns = [
         "구분",
@@ -1950,7 +1960,6 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             const mother = self.parentElement;
             let baseBox;
 
-
             baseBox = createNode({
               mother,
               style: {
@@ -1959,7 +1968,7 @@ CalculationJs.prototype.whiteCardView = function (proid) {
                 position: "absolute",
                 right: String(plusCircleMargin) + ea,
                 bottom: String(plusCircleMargin + plusCircleWidth + 8) + ea,
-                width: String(120) + ea,
+                width: String(buttonWidth) + ea,
                 animation: "fadeuplite 0.2s ease forwards",
               }
             });
@@ -1972,26 +1981,25 @@ CalculationJs.prototype.whiteCardView = function (proid) {
                   justifyContent: "center",
                   alignItems: "center",
                   textAlign: "center",
-                  width: String(108) + ea,
-                  height: String(34) + ea,
+                  width: String(buttonWidth) + ea,
+                  height: String(buttonHeight) + ea,
                   background: colorChip.green,
                   borderRadius: String(8) + "px",
-                  marginTop: String(4) + ea,
+                  marginTop: String(buttonBetween) + ea,
                 },
                 child: {
                   text: words,
                   style: {
                     position: "relative",
                     display: "inline-block",
-                    fontSize: String(14) + ea,
-                    fontWeight: String(700),
+                    fontSize: String(buttonSize) + ea,
+                    fontWeight: String(buttonWeight),
                     color: colorChip.white,
-                    top: String(isMac() ? -1 : 1) + ea,
+                    top: String(buttonTextTop) + ea,
                   }
                 }
               });
             }
-
 
           },
         },
@@ -2029,9 +2037,6 @@ CalculationJs.prototype.whiteCardView = function (proid) {
           }
         }
       });
-
-
-
 
     } catch (e) {
       console.log(e);

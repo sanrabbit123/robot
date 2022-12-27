@@ -9,7 +9,7 @@ const CronGhost = function () {
   this.address = ADDRESS;
   this.dir = `${process.cwd()}/apps/cronGhost`;
   this.list = [];
-  this.slack_token = "xoxb-717757271335-2032150390679-1FTxRg4wQasMpe9kKDgAdqBv";
+  this.slack_token = "xoxb-717757271335-4566120587107-i7TxxYzbPWPzdBMPoZDo2kxn";
   this.slack_bot = new WebClient(this.slack_token);
 }
 
