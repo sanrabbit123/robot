@@ -814,8 +814,8 @@ SecondRouter.prototype.rou_post_printClient = function () {
 
       text = client.toPrint();
       text += "\n";
-      text += "체크한 시공 : " + curation.construct.items.join(", ") + "\n";
-      text += "체크한 거주 환경 : " + (curation.construct.living ? "거주중" : "이사 예정") + "\n";
+      text += indent + "체크한 시공 : " + curation.construct.items.join(", ") + "\n\n";
+      text += indent + "체크한 거주 환경 : " + (curation.construct.living ? "거주중" : "이사 예정") + "\n\n";
 
       requestSystem("https://" + secondHost + "/printText", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
 
