@@ -21,6 +21,7 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.staticConst = process.env.HOME + "/static";
   this.folderConst = this.staticConst + "/photo/designer";
   this.clientConst = this.staticConst + "/photo/client";
+  this.userConst = this.staticConst + "/photo/user";
   this.hashConst = "homeliaisonHash";
 
   this.vaildHost = [
@@ -883,6 +884,248 @@ TransferRouter.prototype.rou_post_middlePhotoAlarm = function () {
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoAlarm): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_userBinary = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
+  const { userConst } = this;
+  const back = this.back;
+  let obj;
+  obj = {};
+  obj.link = [ "/userBinary" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        try {
+          if (!err) {
+            const { name, phone, useid } = fields;
+            const userFolderName = useid + "_" + phone.replace(/\-/g, '') + "_" + String((new Date()).valueOf());
+            const binaryFolder = userConst;
+            const binrayFolderTest = new RegExp(userFolderName, 'gi');
+            const binaryFolderDetail = await fileSystem(`readDir`, [ binaryFolder ]);
+            const selfMongo = instance.mongo;
+            let user;
+            let binrayFolderBoo;
+            let photoObj;
+            let updateQuery, whereQuery;
+            let userCopied;
+            let filesKeys;
+
+            // make folder and move file
+            binrayFolderBoo = false;
+            for (let i of binaryFolderDetail) {
+              if (binrayFolderTest.test(i)) {
+              binrayFolderBoo = true;
+              }
+            }
+            if (!binrayFolderBoo) {
+              await shellExec(`mkdir ${shellLink(binaryFolder + '/' + userFolderName)}`);
+            }
+
+            filesKeys = Object.keys(files);
+            for (let key of filesKeys) {
+              if (Array.isArray(files[key])) {
+                for (let j of files[key]) {
+                  await shellExec(`mv ${shellLink(j.filepath)} ${shellLink(binaryFolder + '/' + userFolderName + '/' + j.originalFilename)};`);
+                }
+              } else {
+                await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + userFolderName + '/' + files[key].originalFilename)};`);
+              }
+            }
+
+            // data
+            user = await back.getUserById(useid, { selfMongo });
+            photoObj = back.returnUserDummies("request.photo");
+            photoObj.date = new Date();
+            photoObj.key = userFolderName;
+
+            userCopied = user.toNormal();
+            userCopied.request.photo.unshift(photoObj);
+
+            whereQuery = { useid };
+            updateQuery = {};
+            updateQuery["request.photo"] = userCopied.request.photo;
+            updateQuery["request.status"] = "사진 전송";
+            updateQuery["response.status"] = "지정 필요";
+
+            await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
+
+            // slack
+            await messageSend({ text: name + " 고객님의 사진 전송이 완료되었어요.", channel: "#405_mini", voice: true });
+
+            res.send(JSON.stringify({ message: "success" }));
+
+          } else {
+            errorLog("Transfer lounge 서버 문제 생김 (rou_post_userBinary): " + e.message).catch((e) => { console.log(e); });
+            res.send(JSON.stringify({ message: "error : " + e.message }));
+          }
+        } catch (e) {
+          errorLog("Transfer lounge 서버 문제 생김 (rou_post_userBinary): " + e.message).catch((e) => { console.log(e); });
+          res.send(JSON.stringify({ message: "error : " + e.message }));
+        }
+      });
+    } catch (e) {
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_userBinary): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_userConfirm = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
+  const { userConst } = this;
+  const back = this.back;
+  let obj;
+  obj = {};
+  obj.link = [ "/userConfirm" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        try {
+          if (!err) {
+            const useid = fields.useid;
+            const length = Number(fields.indexLength);
+            const binaryFolder = userConst;
+            const selfMongo = instance.mongo;
+            const now = new Date();
+            const nowValue = now.valueOf();
+            let keyConcept, keyCollage, keyReference;
+            let dummyDesign;
+            let dummyConcept, dummyCollage, dummyReference, dummyList;
+            let user;
+            let key;
+            let targetMatrix;
+            let dummyListDetail;
+            let whereQuery, updateQuery;
+            let copiedDesign;
+            let filesKeys;
+
+            filesKeys = Object.keys(files);
+
+            user = await back.getUserById(useid, { selfMongo });
+
+            dummyDesign = back.returnUserDummies("response.design");
+
+            for (let i = 0; i < length; i++) {
+
+              dummyConcept = back.returnUserDummies("response.design.concept");
+              dummyCollage = back.returnUserDummies("response.design.proposal");
+              dummyReference = back.returnUserDummies("response.design.photo");
+              dummyList = back.returnUserDummies("response.design.list");
+
+              keyConcept = useid + "_" + "concept" + String(i) + "_" + String(nowValue);
+              keyCollage = useid + "_" + "collage" + String(i) + "_" + String(nowValue);
+              keyReference = useid + "_" + "reference" + String(i) + "_" + String(nowValue);
+
+              await shellExec(`mkdir ${shellLink(binaryFolder + '/' + keyConcept)}`);
+              await shellExec(`mkdir ${shellLink(binaryFolder + '/' + keyCollage)}`);
+              await shellExec(`mkdir ${shellLink(binaryFolder + '/' + keyReference)}`);
+
+              key = "concept_file_" + String(i);
+              await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyConcept + '/' + files[key].originalFilename)};`);
+              key = "collage_file_" + String(i);
+              await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyCollage + '/' + files[key].originalFilename)};`);
+              key = "reference_file0_" + String(i);
+              await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyReference + '/' + files[key].originalFilename)};`);
+              key = "reference_file1_" + String(i);
+              await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyReference + '/' + files[key].originalFilename)};`);
+              key = "reference_file2_" + String(i);
+              await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyReference + '/' + files[key].originalFilename)};`);
+              key = "reference_file3_" + String(i);
+              await shellExec(`mv ${shellLink(files[key].filepath)} ${shellLink(binaryFolder + '/' + keyReference + '/' + files[key].originalFilename)};`);
+
+              dummyConcept.date = new Date();
+              dummyConcept.key = keyConcept;
+              dummyConcept.target = i;
+              dummyConcept.comments.designer = fields["concept_description_" + String(i)];
+
+              dummyCollage.date = new Date();
+              dummyCollage.key = keyCollage;
+              dummyCollage.target = i;
+              dummyCollage.comments.designer = fields["collage_description_" + String(i)];
+
+              dummyReference.date = new Date();
+              dummyReference.key = keyReference;
+              dummyReference.target = i;
+              dummyReference.comments.designer = fields["reference_description_" + String(i)];
+
+              dummyList.date = new Date();
+              dummyList.target = i;
+              dummyList.detail = [];
+              targetMatrix = equalJson(fields["list_matrix_" + String(i)]);
+              for (let [ image, name, number, unit, delivery, total, spec, site, link, etc ] of targetMatrix) {
+                dummyListDetail = back.returnUserDummies("response.design.list.detail");
+                dummyListDetail.image = String(image).trim();
+                dummyListDetail.name = String(name).trim();
+                dummyListDetail.number = Number(number);
+                dummyListDetail.price.unit = Number(unit);
+                dummyListDetail.price.delivery = Number(delivery);
+                dummyListDetail.detail = (String(spec) + " " + String(etc)).trim();
+                dummyListDetail.where.name = String(site).trim();
+                dummyListDetail.where.link = String(link).trim();
+                dummyList.detail.push(dummyListDetail);
+              }
+
+              dummyDesign.concept.unshift(dummyConcept);
+              dummyDesign.proposal.unshift(dummyCollage);
+              dummyDesign.photo.unshift(dummyReference);
+              dummyDesign.list.unshift(dummyList);
+            }
+
+            whereQuery = { useid };
+            updateQuery = {};
+            updateQuery["response.timeline"] = new Date();
+            updateQuery["response.status"] = "컨펌 대기";
+            updateQuery["response.alarm"] = true;
+            copiedDesign = user.response.design.toNormal();
+            copiedDesign.unshift(dummyDesign);
+            updateQuery["response.design"] = copiedDesign;
+
+            await back.updateUser([ whereQuery, updateQuery ], { selfMongo });
+
+            // slack
+            await messageSend({ text: user.name + " 고객님의 디자인 컨펌 요청이 발생하였습니다.", channel: "#405_mini", voice: true });
+
+            res.send(JSON.stringify({ message: "success" }));
+
+          } else {
+            errorLog("Transfer lounge 서버 문제 생김 (rou_post_userConfirm): " + e.message).catch((e) => { console.log(e); });
+            res.send(JSON.stringify({ message: "error : " + e.message }));
+          }
+        } catch (e) {
+          errorLog("Transfer lounge 서버 문제 생김 (rou_post_userConfirm): " + e.message).catch((e) => { console.log(e); });
+          res.send(JSON.stringify({ message: "error : " + e.message }));
+        }
+      });
+    } catch (e) {
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_userConfirm): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

@@ -188,6 +188,10 @@ DevContext.prototype.launching = async function () {
     let responseSumRefund;
     let cStatus, pStatus, foundService;
     let payRealAmount;
+    let blockWill;
+    let copiedObject;
+    let thisRequestNumber;
+    let thisTimeline;
 
     projectsRaw = await back.getProjectsByQuery({}, { selfMongo });
     projectsRawNormal = projectsRaw.toNormal();
@@ -707,7 +711,6 @@ DevContext.prototype.launching = async function () {
         design: cliidTongRefined[client.cliid].will.filter((obj) => { return obj.type === "out" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
         construct: cliidTongRefined[client.cliid].will.filter((obj) => { return obj.type === "out" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
       };
-
       cliidTongRefined[client.cliid].willIn.sum = cliidTongRefined[client.cliid].willIn.design + cliidTongRefined[client.cliid].willIn.construct;
       cliidTongRefined[client.cliid].willOut.sum = cliidTongRefined[client.cliid].willOut.design + cliidTongRefined[client.cliid].willOut.construct;
     }
@@ -744,45 +747,139 @@ DevContext.prototype.launching = async function () {
 
     for (let obj of entireClientsTong) {
 
-      foundProject = projectsRawNormal.find((project) => { return project.cliid === obj.client.cliid })
+      blockWill = obj.blocks.concat(obj.will);
+      blockWill = blockWill.map((obj2) => {
+        return obj2.proid;
+      });
+      blockWill = [ ...new Set(blockWill) ];
 
-      cStatus = obj.client.requests[0].analytics.response.status;
-      pStatus = '-';
-      foundService = '-';
-      if (foundProject !== undefined) {
-        pStatus = foundProject.process.status;
-        foundService = serviceParsing(foundProject.service);
+      if (blockWill.length <= 1) {
+
+        if (blockWill.length === 1) {
+          foundProject = projectsRawNormal.find((project) => { return project.proid === blockWill[0].proid })
+        } else {
+          foundProject = projectsRawNormal.find((project) => { return project.cliid === obj.client.cliid })
+        }
+
+        cStatus = obj.client.requests[0].analytics.response.status;
+        pStatus = '-';
+        foundService = '-';
+        if (foundProject !== undefined) {
+          pStatus = foundProject.process.status;
+          foundService = serviceParsing(foundProject.service);
+        }
+  
+        entireClientsMatrix.push([
+          obj.client.cliid,
+          foundProject === undefined ? '-' : foundProject.proid,
+          obj.client.name,
+          cStatus,
+          pStatus,
+          foundService,
+          obj.timeline.getFullYear(),
+          obj.timeline.getMonth() + 1,
+          obj.timeline.getDate(),
+          obj.in.sum,
+          obj.in.design,
+          obj.in.construct,
+          obj.out.sum,
+          obj.out.design,
+          obj.out.construct,
+          obj.willIn.sum,
+          obj.willIn.design,
+          obj.willIn.construct,
+          obj.willOut.sum,
+          obj.willOut.design,
+          obj.willOut.construct,
+        ]);
+
+      } else if (blockWill.length > 1) {
+        for (let proid of blockWill) {
+
+          foundProject = projectsRawNormal.find((project) => { return project.proid === proid });
+
+          copiedObject = equalJson(JSON.stringify(obj));
+          copiedObject.blocks = copiedObject.blocks.filter((o) => {
+            return o.proid === proid;
+          });
+          copiedObject.will = copiedObject.will.filter((o) => {
+            return o.proid === proid;
+          });
+
+          thisRequestNumber = 0;
+          for (let i = 0; i < copiedObject.client.requests.length; i++) {
+            if (copiedObject.client.requests[i].request.timeline.valueOf() <= foundProject.proposal.date.valueOf()) {
+              thisRequestNumber = i;
+              break;
+            }
+          }
+          thisTimeline = copiedObject.client.requests[thisRequestNumber].request.timeline;
+          copiedObject.timeline = thisTimeline;
+          
+          copiedObject.in = {
+            design: copiedObject.blocks.filter((obj) => { return obj.type === "in" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+            construct: copiedObject.blocks.filter((obj) => { return obj.type === "in" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+          };
+          copiedObject.in.sum = copiedObject.in.design + copiedObject.in.construct;
+    
+          copiedObject.out = {
+            design: copiedObject.blocks.filter((obj) => { return obj.type === "out" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+            construct: copiedObject.blocks.filter((obj) => { return obj.type === "out" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+          };
+          copiedObject.out.sum = copiedObject.out.design + copiedObject.out.construct;
+
+          copiedObject.willIn = {
+            design: copiedObject.will.filter((obj) => { return obj.type === "in" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+            construct: copiedObject.will.filter((obj) => { return obj.type === "in" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+          };
+          copiedObject.willOut = {
+            design: copiedObject.will.filter((obj) => { return obj.type === "out" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+            construct: copiedObject.will.filter((obj) => { return obj.type === "out" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+          };
+          copiedObject.willIn.sum = copiedObject.willIn.design + copiedObject.willIn.construct;
+          copiedObject.willOut.sum = copiedObject.willOut.design + copiedObject.willOut.construct;
+
+
+          cStatus = copiedObject.client.requests[thisRequestNumber].analytics.response.status;
+          pStatus = '-';
+          foundService = '-';
+          if (foundProject !== undefined) {
+            pStatus = foundProject.process.status;
+            foundService = serviceParsing(foundProject.service);
+          }
+    
+          entireClientsMatrix.push([
+            copiedObject.client.cliid,
+            foundProject === undefined ? '-' : foundProject.proid,
+            copiedObject.client.name,
+            cStatus,
+            pStatus,
+            foundService,
+            copiedObject.timeline.getFullYear(),
+            copiedObject.timeline.getMonth() + 1,
+            copiedObject.timeline.getDate(),
+            copiedObject.in.sum,
+            copiedObject.in.design,
+            copiedObject.in.construct,
+            copiedObject.out.sum,
+            copiedObject.out.design,
+            copiedObject.out.construct,
+            copiedObject.willIn.sum,
+            copiedObject.willIn.design,
+            copiedObject.willIn.construct,
+            copiedObject.willOut.sum,
+            copiedObject.willOut.design,
+            copiedObject.willOut.construct,
+          ]);
+
+        }
       }
-
-      entireClientsMatrix.push([
-        obj.client.cliid,
-        foundProject === undefined ? '-' : foundProject.proid,
-        obj.client.name,
-        cStatus,
-        pStatus,
-        foundService,
-        obj.timeline.getFullYear(),
-        obj.timeline.getMonth() + 1,
-        obj.timeline.getDate(),
-        obj.in.sum,
-        obj.in.design,
-        obj.in.construct,
-        obj.out.sum,
-        obj.out.design,
-        obj.out.construct,
-        obj.willIn.sum,
-        obj.willIn.design,
-        obj.willIn.construct,
-        obj.willOut.sum,
-        obj.willOut.design,
-        obj.willOut.construct,
-      ]);
     }
 
-    // await sheets.update_value_inPython("1QeYg0ISXIxaXu8FagC_FLOcl7c2aJPiqyfsVxstCzO0", "", matrix);
-    // await sheets.update_value_inPython("1nUeq90uUEccWcXcTluJv405HMPkNbfO7BZz3M6kLxR0", "", matrix2);
-    // await sheets.update_value_inPython("1W5rDDi62s0SHOVTp0eOCZRtKSnrYydh6Lxu2DvxTWYY", "", matrix10);
-    // await sheets.update_value_inPython("1tt11onR8REeZ0-kFHuymwlMrMW5fC9Jh4w_U051ETKM", "", entireClientsMatrix);
+    await sheets.update_value_inPython("1QeYg0ISXIxaXu8FagC_FLOcl7c2aJPiqyfsVxstCzO0", "", matrix);
+    await sheets.update_value_inPython("1nUeq90uUEccWcXcTluJv405HMPkNbfO7BZz3M6kLxR0", "", matrix2);
+    await sheets.update_value_inPython("1W5rDDi62s0SHOVTp0eOCZRtKSnrYydh6Lxu2DvxTWYY", "", matrix10);
+    await sheets.update_value_inPython("1tt11onR8REeZ0-kFHuymwlMrMW5fC9Jh4w_U051ETKM", "", entireClientsMatrix);
 
     */
 

@@ -5362,6 +5362,10 @@ GeneralJs.prototype.consultingPopup = function () {
     let addressButtonEvent;
     let addressBlurEvent;
     let addressFocusEvent;
+    let commentsFocusEvent;
+    let commentsBlurEvent;
+    let greenNoticeWidth3;
+    let greenNoticeBottom3;
 
     whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
@@ -5475,11 +5479,13 @@ GeneralJs.prototype.consultingPopup = function () {
     greenNoticePaddingTop = <%% (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 7 : 9), (isMac() ? 7 : 9), 1.9 %%>;
     greenNoticePaddingBottom = <%% (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 8 : 7), (isMac() ? 8 : 7), 2.3 %%>;
     greenNoticePaddingLeft = <%% 11, 11, 10, 10, 2.4 %%>;
-    greenNoticeBottom = <%% 40, 40, 40, 40, 8 %%>;
-    greenNoticeBottom2 = <%% 36, 36, 36, 36, 7.2 %%>;
+    greenNoticeBottom = <%% 40, 40, 40, 40, 9 %%>;
+    greenNoticeBottom2 = <%% 36, 36, 36, 36, 9 %%>;
     greenNoticeLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
     greenNoticeWidth0 = <%% 96, 96, 96, 96, 28 %%>;
     greenNoticeWidth1 = <%% 120, 120, 120, 120, 28 %%>;
+    greenNoticeWidth3 = <%% 200, 200, 180, 180, 48.5 %%>;
+    greenNoticeBottom3 = <%% 102, 102, 102, 102, 33 %%>;  
 
     homeliaisonAnalytics({
       page: instance.pageName,
@@ -5649,6 +5655,75 @@ GeneralJs.prototype.consultingPopup = function () {
         ]
       });
 
+    }
+
+    commentsFocusEvent = function (e) {
+      const self = this;
+      const mother = this.previousElementSibling;
+  
+      this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+  
+      createNode({
+        mode: "aside",
+        mother,
+        style: {
+          position: "relative",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          textAlign: "center",
+        },
+        children: [
+          {
+            text: "(예) 부분 시공을 진행하고 싶어요.\n신혼 부부여서 예산을 알뜰히 쓰고 싶고,\n새아파트여서 큰 시공은 안 할 예정입니다.",
+            style: {
+              position: "absolute",
+              width: String(greenNoticeWidth3) + ea,
+              left: "calc(50% - " + String((greenNoticeWidth3 / 2) + greenNoticePaddingLeft) + ea + ")",
+              background: colorChip.gradientGreen,
+              fontSize: String(greenNoticeSize) + ea,
+              fontWeight: String(greenNoticeWeight),
+              color: colorChip.white,
+              paddingTop: String(greenNoticePaddingTop) + ea,
+              paddingBottom: String(greenNoticePaddingBottom) + ea,
+              paddingLeft: String(greenNoticePaddingLeft) + ea,
+              paddingRight: String(greenNoticePaddingLeft) + ea,
+              bottom: String(greenNoticeBottom3) + ea,
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+              animation: "fadeuplite 0.3s ease forwards",
+              lineHeight: String(greenNoticeLineHeight),
+              textAlign: "left",
+            }
+          }
+        ]
+      });
+  
+    }
+  
+    commentsBlurEvent = function (e) {
+      const self = this;
+      const mother = this.previousElementSibling;
+      const targets = [ ...mother.children ];
+      for (let dom of targets) {
+        dom.remove();
+      }
+      this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
+      if (this.value !== '') {
+        homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "inputBlur",
+          data: {
+            property: "etc",
+            value: this.value,
+            date: dateToString(new Date(), true),
+          },
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
     }
 
     pyeongNumberEvent = function (e) {
@@ -6863,30 +6938,12 @@ GeneralJs.prototype.consultingPopup = function () {
           mode: "textarea",
           class: [ inputClassName ],
           attribute: {
-            placeholder: "선호하는 스타일 + 공간의 특이 사항을 적어주세요!\n(예) 모던 프렌치 홈스타일링을 원해요.\n(예) 팬트리가 있어요.",
+            placeholder: desktop ? "(예) 부분 시공을 진행하면서 스타일링을 받고 싶어요.\n신혼 부부여서 예산을 알뜰하게 사용하고 싶고,\n새아파트이어서 큰 시공은 하지 않을 예정입니다." : "(예) 부분 시공을 진행하고 싶어요.\n신혼 부부여서 예산을 알뜰하게 사용하고 싶고, 새아파트이어서 큰 시공은 하지 않을 예정입니다.",
             property: "etc",
           },
           event: {
-            keyup: function (e) {
-              this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
-            },
-            blur: function (e) {
-              this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
-              if (this.value !== '') {
-                homeliaisonAnalytics({
-                  page: instance.pageName,
-                  standard: instance.firstPageViewTime,
-                  action: "inputBlur",
-                  data: {
-                    property: "etc",
-                    value: this.value,
-                    date: dateToString(new Date(), true),
-                  },
-                }).catch((err) => {
-                  console.log(err);
-                });
-              }
-            }
+            focus: commentsFocusEvent,
+            blur: commentsBlurEvent,
           },
           style: {
             position: "absolute",

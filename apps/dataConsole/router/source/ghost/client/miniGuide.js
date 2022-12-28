@@ -926,7 +926,7 @@ MiniGuideJs.prototype.insertRequestBox = function () {
                       let updateQuery;
                       updateQuery = {};
                       updateQuery[column] = value;
-                      await ajaxJson({ whereQuery: { useid }, updateQuery }, "/updateUser");
+                      await ajaxJson({ whereQuery: { useid }, updateQuery }, BACKHOST + "/updateUser");
                     } catch (e) {
                       console.log(e);
                     }
@@ -1966,7 +1966,7 @@ MiniGuideJs.prototype.launching = async function (loading) {
       window.location.href = this.frontPage;
     }
 
-    users = await ajaxJson({ whereQuery: { useid: getObj.useid } }, "/getUsers", { equal: true });
+    users = await ajaxJson({ whereQuery: { useid: getObj.useid } }, BACKHOST + "/getUsers", { equal: true });
     if (users.length === 0) {
       window.alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
