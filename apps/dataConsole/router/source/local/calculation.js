@@ -1784,13 +1784,13 @@ CalculationJs.prototype.whiteCardView = function (proid) {
             event: null,
           },
           {
-            value: project.process.calculation.method,
+            value: !/시공/gi.test(responseName) ? project.process.calculation.method : '-',
             color: colorChip.black,
             pointer: false,
             event: null,
           },
           {
-            value: String(project.process.calculation.percentage) + '%',
+            value: !/시공/gi.test(responseName) ? String(project.process.calculation.percentage) + '%' : '-',
             color: colorChip.black,
             pointer: false,
             event: null,

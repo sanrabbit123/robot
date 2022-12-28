@@ -6895,7 +6895,8 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
             // cliid: client.cliid,
           });
           await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈어요.", channel: "#404_curation" });
-          requestSystem("https://" + address.secondinfo.host + "/printClient", { cliid: client.cliid }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+
+          requestSystem("https://" + address.secondinfo.host + "/printClient", { cliid: client.cliid, curation: history.curation }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
         }
 
         res.send(JSON.stringify({ service: [], client: client.toNormal(), history }));
