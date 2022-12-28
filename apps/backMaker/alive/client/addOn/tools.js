@@ -238,7 +238,7 @@ const withTools = function (Client) {
     documentArr.push("계약 형태 : " + request.space.contract.value + "\n");
     documentArr.push("예산 : " + request.budget.value + "\n");
     documentArr.push("가구 구매 : " + request.furniture.value + "\n");
-    thisSerid = analytics.service.serid;
+    thisSerid = analytics.response.service.serid;
     documentArr.push("시공 정도 : " + [ "시공 없음", "부분 시공", "전체 시공", "구조 변경" ][Number(thisSerid.split("_")[1].replace(/[^0-9]/gi, '')) - 1] + "\n");
 
     comment = "요청 사항 : " + request.etc.comment;
