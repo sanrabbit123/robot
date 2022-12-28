@@ -803,14 +803,21 @@ SecondRouter.prototype.rou_post_printClient = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (req.body.cliid === undefined) {
+      if (req.body.cliid === undefined || req.body.curation === undefined) {
         throw new Error("invaild post");
       }
       const selfMongo = instance.mongo;
-      const { cliid } = req.body;
+      const { cliid, curation } = equalJson(req.body);
       const client = await back.getClientById(cliid, { selfMongo, withTools: true });
+      const indent = "    ";
+      let text;
 
-      requestSystem("https://" + secondHost + "/printText", { text: client.toPrint() }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+      text = client.toPrint();
+      text += "\n";
+      text += "체크한 시공 : " + curation.construct.items.join(", ") + "\n";
+      text += "체크한 거주 환경 : " + (curation.construct.living ? "거주중" : "이사 예정") + "\n";
+
+      requestSystem("https://" + secondHost + "/printText", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
 
       res.send(JSON.stringify({ message: "will do" }));
 

@@ -178,6 +178,16 @@ DevContext.prototype.launching = async function () {
     let entireClients;
     let entireClientsTong, entireClientsMatrix;
     let foundProject;
+    let requestSumConsumer;
+    let requestSumConfirm;
+    let requestSumRefund;
+    let requestSumIncome;
+    let responseSumTotal;
+    let responseSumNon;
+    let responseSumPaid;
+    let responseSumRefund;
+    let cStatus, pStatus, foundService;
+    let payRealAmount;
 
     projectsRaw = await back.getProjectsByQuery({}, { selfMongo });
     projectsRawNormal = projectsRaw.toNormal();
@@ -219,13 +229,16 @@ DevContext.prototype.launching = async function () {
       "아이디",
       "고객",
       "디자이너",
+      "종류",
       "구분",
       "확정가",
       "입금일",
       "입금액",
       "미입금액",
       "방법",
-      "문의일"
+      "문의일",
+      "서비스 유형",
+      "상태",
     ] ];
 
     for (let project of projects) {
@@ -266,12 +279,14 @@ DevContext.prototype.launching = async function () {
 
         payDate = '-';
         payMethod = '-';
+        payRealAmount = 0;
         if (thisRequest.pay.length > 0) {
           payDate = dateToString(thisRequest.pay[0].date);
           payMethod = thisRequest.proofs[0].method;
           if (payMethod.trim() === "계좌" || payMethod.trim() === "계좌" || payMethod.trim() === "게좌" ||  payMethod.trim() === "계좌입금" ||  /현금영수증/gi.test(payMethod.trim()) || payMethod.trim() === "계좌이체" || payMethod.trim() === "-" || payMethod.trim() === "" || payMethod.trim() === "증빙") {
             payMethod = "계좌 이체";
           }
+          payRealAmount = thisRequest.pay.reduce((acc, curr) => { return acc + curr.amount }, 0);
         }
 
         cancelAmount = 0;
@@ -294,7 +309,7 @@ DevContext.prototype.launching = async function () {
             value: requestName,
           },
           {
-            value: currentState,
+            value: payRealAmount,
           },
           {
             value: confirmState,
@@ -375,13 +390,16 @@ DevContext.prototype.launching = async function () {
           project.proid,
           project.name,
           project.designer.designer,
+          /시공/gi.test(requestArr[i][0]) ? "시공" : "디자인",
           requestArr[i][0],
           requestArr[i][2],
           requestArr[i][3],
-          requestArr[i][3] === '-' ? 0 : requestArr[i][2],
-          requestArr[i][3] === '-' ? requestArr[i][2] : 0,
+          requestArr[i][3] === '-' ? 0 : requestArr[i][1],
+          requestArr[i][3] === '-' ? requestArr[i][1] : 0,
           requestArr[i][6].replace(/ 취소/gi, ''),
           dateToString(timeline),
+          serviceParsing(project.service),
+          project.process.status,
         ]);
 
         if (requestArr[i][3].trim() === '-') {
@@ -395,9 +413,11 @@ DevContext.prototype.launching = async function () {
             kind: requestArr[i][0],
             class: /시공/gi.test(requestArr[i][0]) ? "construct" : "design",
             standard: requestArr[i][2],
-            amount: requestArr[i][2],
+            amount: requestArr[i][1],
             type: "in",
             timeline,
+            service: project.service,
+            status: project.process.status,
           })
         } else {
           doneTong.push({
@@ -411,10 +431,12 @@ DevContext.prototype.launching = async function () {
             class: /시공/gi.test(requestArr[i][0]) ? "construct" : "design",
             standard: requestArr[i][2],
             date: stringToDate(requestArr[i][3]),
-            amount: requestArr[i][2],
+            amount: requestArr[i][1],
             method: requestArr[i][6].replace(/ 취소/gi, ''),
             type: "in",
             timeline,
+            service: project.service,
+            status: project.process.status,
           })
         }
 
@@ -423,6 +445,7 @@ DevContext.prototype.launching = async function () {
             project.proid,
             project.name,
             project.designer.designer,
+            /시공/gi.test(requestArr[i][0]) ? "시공" : "디자인",
             requestArr[i][0],
             requestArr[i][4],
             requestArr[i][5],
@@ -430,6 +453,8 @@ DevContext.prototype.launching = async function () {
             requestArr[i][5] === '-' ? (requestArr[i][4] * -1) : 0,
             requestArr[i][6],
             dateToString(timeline),
+            serviceParsing(project.service),
+            project.process.status,
           ]);
 
           if (requestArr[i][5].trim() === '-') {
@@ -446,6 +471,8 @@ DevContext.prototype.launching = async function () {
               amount: requestArr[i][4],
               type: "out",
               timeline,
+              service: project.service,
+              status: project.process.status,
             })
           } else {
             doneTong.push({
@@ -463,6 +490,8 @@ DevContext.prototype.launching = async function () {
               method: requestArr[i][6],
               type: "out",
               timeline,
+              service: project.service,
+              status: project.process.status,
             })
           }
 
@@ -474,6 +503,7 @@ DevContext.prototype.launching = async function () {
           project.proid,
           project.name,
           project.designer.designer,
+          /시공/gi.test(responseArr[i][0]) ? "시공" : "디자인",
           responseArr[i][0],
           responseArr[i][1],
           responseArr[i][4],
@@ -481,6 +511,8 @@ DevContext.prototype.launching = async function () {
           responseArr[i][2] * -1,
           responseArr[i][3] !== 0 ? "계좌 이체" : "-",
           dateToString(timeline),
+          serviceParsing(project.service),
+          project.process.status,
         ]);
 
         if (responseArr[i][4].trim() === '-') {
@@ -497,6 +529,8 @@ DevContext.prototype.launching = async function () {
             amount: responseArr[i][2],
             type: "out",
             timeline,
+            service: project.service,
+            status: project.process.status,
           })
         } else {
           doneTong.push({
@@ -514,6 +548,8 @@ DevContext.prototype.launching = async function () {
             method: "계좌 이체",
             type: "out",
             timeline,
+            service: project.service,
+            status: project.process.status,
           })
         }
 
@@ -540,15 +576,10 @@ DevContext.prototype.launching = async function () {
         "문의 년",
         "문의 월",
         "문의 일",
+        "서비스 유형",
+        "상태",
       ]
     ];
-    matrix3 = equalJson(JSON.stringify(matrix2));
-    matrix4 = equalJson(JSON.stringify(matrix2));
-    matrix5 = equalJson(JSON.stringify(matrix2));
-    matrix6 = equalJson(JSON.stringify(matrix2));
-    matrix7 = equalJson(JSON.stringify(matrix2));
-    matrix8 = equalJson(JSON.stringify(matrix2));
-    matrix9 = equalJson(JSON.stringify(matrix2));
 
     for (let obj of doneTong) {
 
@@ -567,152 +598,12 @@ DevContext.prototype.launching = async function () {
         obj.timeline.getFullYear(),
         obj.timeline.getMonth() + 1,
         obj.timeline.getDate(),
-      ])
-
-      if (obj.type === "in") {
-
-        matrix3.push([
-          obj.proid,
-          obj.name,
-          obj.designer,
-          obj.type === "in" ? "받은돈" : "준돈",
-          obj.class === "design" ? "디자인" : "시공",
-          obj.kind,
-          obj.date.getFullYear(),
-          obj.date.getMonth() + 1,
-          obj.date.getDate(),
-          (obj.type === "in" ? 1 : -1) * obj.amount,
-          obj.method,
-          obj.timeline.getFullYear(),
-          obj.timeline.getMonth() + 1,
-          obj.timeline.getDate(),
-        ])
-
-        if (obj.class === "design") {
-
-          matrix4.push([
-            obj.proid,
-            obj.name,
-            obj.designer,
-            obj.type === "in" ? "받은돈" : "준돈",
-            obj.class === "design" ? "디자인" : "시공",
-            obj.kind,
-            obj.date.getFullYear(),
-            obj.date.getMonth() + 1,
-            obj.date.getDate(),
-            (obj.type === "in" ? 1 : -1) * obj.amount,
-            obj.method,
-            obj.timeline.getFullYear(),
-            obj.timeline.getMonth() + 1,
-            obj.timeline.getDate(),
-          ])
-
-        } else {
-
-          matrix5.push([
-            obj.proid,
-            obj.name,
-            obj.designer,
-            obj.type === "in" ? "받은돈" : "준돈",
-            obj.class === "design" ? "디자인" : "시공",
-            obj.kind,
-            obj.date.getFullYear(),
-            obj.date.getMonth() + 1,
-            obj.date.getDate(),
-            (obj.type === "in" ? 1 : -1) * obj.amount,
-            obj.method,
-            obj.timeline.getFullYear(),
-            obj.timeline.getMonth() + 1,
-            obj.timeline.getDate(),
-          ])
-
-        }
-
-
-      } else {
-
-
-        matrix6.push([
-          obj.proid,
-          obj.name,
-          obj.designer,
-          obj.type === "in" ? "받은돈" : "준돈",
-          obj.class === "design" ? "디자인" : "시공",
-          obj.kind,
-          obj.date.getFullYear(),
-          obj.date.getMonth() + 1,
-          obj.date.getDate(),
-          obj.amount,
-          obj.method,
-          obj.timeline.getFullYear(),
-          obj.timeline.getMonth() + 1,
-          obj.timeline.getDate(),
-        ])
-
-        if (obj.class === "design") {
-
-          matrix7.push([
-            obj.proid,
-            obj.name,
-            obj.designer,
-            obj.type === "in" ? "받은돈" : "준돈",
-            obj.class === "design" ? "디자인" : "시공",
-            obj.kind,
-            obj.date.getFullYear(),
-            obj.date.getMonth() + 1,
-            obj.date.getDate(),
-            obj.amount,
-            obj.method,
-            obj.timeline.getFullYear(),
-            obj.timeline.getMonth() + 1,
-            obj.timeline.getDate(),
-          ])
-
-        } else {
-
-          matrix8.push([
-            obj.proid,
-            obj.name,
-            obj.designer,
-            obj.type === "in" ? "받은돈" : "준돈",
-            obj.class === "design" ? "디자인" : "시공",
-            obj.kind,
-            obj.date.getFullYear(),
-            obj.date.getMonth() + 1,
-            obj.date.getDate(),
-            obj.amount,
-            obj.method,
-            obj.timeline.getFullYear(),
-            obj.timeline.getMonth() + 1,
-            obj.timeline.getDate(),
-          ])
-
-        }
-      }
-    }
-
-    doneTong.sort((a, b) => { return Number(b.proid.replace(/[^0-9]/gi, '')) - Number(a.proid.replace(/[^0-9]/gi, '')) })
-
-    for (let obj of doneTong) {
-
-      matrix9.push([
-        obj.proid,
-        obj.name,
-        obj.designer,
-        obj.type === "in" ? "받은돈" : "준돈",
-        obj.class === "design" ? "디자인" : "시공",
-        obj.kind,
-        obj.date.getFullYear(),
-        obj.date.getMonth() + 1,
-        obj.date.getDate(),
-        (obj.type === "in" ? 1 : -1) * obj.amount,
-        obj.method,
-        obj.timeline.getFullYear(),
-        obj.timeline.getMonth() + 1,
-        obj.timeline.getDate(),
+        serviceParsing(obj.service),
+        obj.status,
       ])
 
     }
+
 
     willTong.sort((a, b) => { return Number(b.proid.replace(/[^0-9]/gi, '')) - Number(a.proid.replace(/[^0-9]/gi, '')) })
 
@@ -728,10 +619,10 @@ DevContext.prototype.launching = async function () {
         "문의 년",
         "문의 월",
         "문의 일",
+        "서비스 유형",
+        "상태",
       ]
     ];
-    matrix11 = equalJson(JSON.stringify(matrix10));
-    matrix12 = equalJson(JSON.stringify(matrix10));
 
     for (let obj of willTong) {
 
@@ -746,39 +637,9 @@ DevContext.prototype.launching = async function () {
         obj.timeline.getFullYear(),
         obj.timeline.getMonth() + 1,
         obj.timeline.getDate(),
+        serviceParsing(obj.service),
+        obj.status,
       ])
-
-      if (obj.type === "in") {
-
-        matrix11.push([
-          obj.proid,
-          obj.name,
-          obj.designer,
-          obj.type === "in" ? "받을돈" : "줄돈",
-          obj.class === "design" ? "디자인" : "시공",
-          obj.kind,
-          obj.amount,
-          obj.timeline.getFullYear(),
-          obj.timeline.getMonth() + 1,
-          obj.timeline.getDate(),
-        ])
-
-      } else {
-
-        matrix12.push([
-          obj.proid,
-          obj.name,
-          obj.designer,
-          obj.type === "in" ? "받을돈" : "줄돈",
-          obj.class === "design" ? "디자인" : "시공",
-          obj.kind,
-          obj.amount,
-          obj.timeline.getFullYear(),
-          obj.timeline.getMonth() + 1,
-          obj.timeline.getDate(),
-        ])
-
-      }
 
     }
 
@@ -811,6 +672,7 @@ DevContext.prototype.launching = async function () {
         construct: cliidTongRefined[cliid].blocks.filter((obj) => { return obj.type === "out" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
       };
       cliidTongRefined[cliid].out.sum = cliidTongRefined[cliid].out.design + cliidTongRefined[cliid].out.construct;
+
     }
 
 
@@ -858,6 +720,9 @@ DevContext.prototype.launching = async function () {
         "c아이디",
         "p아이디",
         "고객",
+        "c상태",
+        "p상태",
+        "서비스 유형",
         "문의 년",
         "문의 월",
         "문의 일",
@@ -881,10 +746,21 @@ DevContext.prototype.launching = async function () {
 
       foundProject = projectsRawNormal.find((project) => { return project.cliid === obj.client.cliid })
 
+      cStatus = obj.client.requests[0].analytics.response.status;
+      pStatus = '-';
+      foundService = '-';
+      if (foundProject !== undefined) {
+        pStatus = foundProject.process.status;
+        foundService = serviceParsing(foundProject.service);
+      }
+
       entireClientsMatrix.push([
         obj.client.cliid,
         foundProject === undefined ? '-' : foundProject.proid,
         obj.client.name,
+        cStatus,
+        pStatus,
+        foundService,
         obj.timeline.getFullYear(),
         obj.timeline.getMonth() + 1,
         obj.timeline.getDate(),
@@ -905,16 +781,7 @@ DevContext.prototype.launching = async function () {
 
     // await sheets.update_value_inPython("1QeYg0ISXIxaXu8FagC_FLOcl7c2aJPiqyfsVxstCzO0", "", matrix);
     // await sheets.update_value_inPython("1nUeq90uUEccWcXcTluJv405HMPkNbfO7BZz3M6kLxR0", "", matrix2);
-    // await sheets.update_value_inPython("1VhIOCGhOfz6Ja7kFU-w0u5bxYdZuQUvMdSo1zDnDjkk", "", matrix3);
-    // await sheets.update_value_inPython("1H5wsUJaTTbOpfLqzul5yojzzFuZ2LFEEm9wEQ8cxJ5Q", "", matrix4);
-    // await sheets.update_value_inPython("1Aiy5xKxbpPDrUMEc6ORpk-TTKlvxFU7kPNdht2YkeWg", "", matrix5);
-    // await sheets.update_value_inPython("1ONG7UrjDQmgke_mh0M3gQpDDBsbs3tGOoAR1J7cmR8Q", "", matrix6);
-    // await sheets.update_value_inPython("19YjTSE3EUlGaJTRTu1f9TE7LPaBEhNhx5ljd_Y-o_Sg", "", matrix7);
-    // await sheets.update_value_inPython("1zBWZp05wybO6OWLLPAV8OWFIUw88_MvIQgh6QKoZjPQ", "", matrix8);
-    // await sheets.update_value_inPython("1Tk-t8dZbMgtbwd4ToBWeTRLH1aGVCEyRivg-XWjT9Mc", "", matrix9);
     // await sheets.update_value_inPython("1W5rDDi62s0SHOVTp0eOCZRtKSnrYydh6Lxu2DvxTWYY", "", matrix10);
-    // await sheets.update_value_inPython("1bE63mJm5_aPL8wzzOQ38X5vSRI0hxnGCM5hwTvsi6CA", "", matrix11);
-    // await sheets.update_value_inPython("1L4qY_Tigmzl-39MUvQCjCMrEJy4Q7qlJYHYKrrkIF7Y", "", matrix12);
     // await sheets.update_value_inPython("1tt11onR8REeZ0-kFHuymwlMrMW5fC9Jh4w_U051ETKM", "", entireClientsMatrix);
 
     */
