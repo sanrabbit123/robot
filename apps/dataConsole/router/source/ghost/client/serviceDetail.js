@@ -137,7 +137,7 @@ ServiceDetailJs.prototype.insertInitBox = function () {
     subTitleContents = "부분 시공과 스타일링의 조합";
   } else if (mode === "total") {
     titleWording = "토탈 스타일링 소개";
-    subTitleContents = "전체 시공부터 시그니처 스타일링까지";
+    subTitleContents = "전체 시공에서 시그니처가 느껴지는";
   }
 
   mobileBlockTop = 4.5;
@@ -563,11 +563,11 @@ ServiceDetailJs.prototype.insertThreeBox = function () {
       title: "라이프 스타일에 맞게 기획된 인테리어",
       description: [
         "라이프 스타일이 녹아 있는 집을 기획하고 제안합니다.",
-        "내게 맞춘 집을 기획해보세요. 홈리에종 시공팀이 함께 합니다.",
+        "내게 맞추어진 집을 기획해보세요. 홈리에종 시공팀이 함께 합니다.",
       ],
       three: {
         first: {
-          up: "내게 맞춘 디자인이 필요한 공간",
+          up: "내게 맞추어진 디자인이 필요한 공간",
           upSub: "(새입주)",
           down: "( 전체적인 변경이 필요한 공간 )",
           downSub: "(거주중)",
@@ -4592,7 +4592,7 @@ ServiceDetailJs.prototype.insertConstructBox = function (pastBaseTong, baseTong)
         ],
         factors: [
           { title: "홈리에종 시공사", values: [ 0.95, 0.95, 0.95, 0.95 ] },
-          { title: "디자이너 시공사", values: [ 0.95, 0.95, 0.35, 0.8 ] },
+          { title: "디자이너 시공사", values: [ 0.95, 0.95, 0.35, 0.95 ] },
           { title: "기타 외부 시공사", values: [ 0.5, 0.2, 0.1, 0.2 ] },
         ]
       }
