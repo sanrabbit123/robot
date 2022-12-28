@@ -1161,13 +1161,12 @@ CalculationJs.prototype.whiteCardView = function (proid) {
                 instance.bills[thisBillIndex] = res.bill;
                 instance.projects[thisProjectIndex].bill = res.bill;
 
-                window.alert("업데이트 되었습니다!");
                 loading = instance.mother.grayLoading();
                 setQueue(() => {
                   instance.contentsLoad();
                   (instance.whiteCardView(proid))();
                   loading.remove();
-                }, 500);
+                });
 
                 removeByClass(responsePlusButtonPopupClassName);
               } catch (e) {
@@ -3695,7 +3694,6 @@ CalculationJs.prototype.makeExcuteEvent = function (bilid, responseIndex, proid,
   return async function (e) {
     try {
       await instance.excuteResponse(bilid, responseIndex, new Date());
-      window.alert("업데이트 되었습니다!");
       const loading = instance.mother.grayLoading();
       setQueue(() => {
         instance.contentsLoad();
@@ -3705,7 +3703,7 @@ CalculationJs.prototype.makeExcuteEvent = function (bilid, responseIndex, proid,
           (instance.queueView())();
         }
         loading.remove();
-      }, 500);
+      });
     } catch (e) {
       console.log(e);
     }
@@ -3728,7 +3726,7 @@ CalculationJs.prototype.makeRefundEvent = function (bilid, requestIndex, proid) 
         instance.contentsLoad();
         (instance.whiteCardView(proid))();
         loading.remove();
-      }, 500);
+      });
     } catch (e) {
       console.log(e);
     }
@@ -3752,7 +3750,7 @@ CalculationJs.prototype.makeCashRefundEvent = function (refundRequest) {
         instance.contentsLoad();
         (instance.refundView())({ preventDefault() { return null } });
         loading.remove();
-      }, 500);
+      });
     } catch (e) {
       console.log(e);
     }
@@ -3776,13 +3774,12 @@ CalculationJs.prototype.makeRepayEvent = function (bilid, responseIndex, proid) 
       } while (amount === 0 || Number.isNaN(amount))
 
       await instance.excuteRepay(bilid, responseIndex, new Date(), amount);
-      window.alert("업데이트 되었습니다!");
       const loading = instance.mother.grayLoading();
       setQueue(() => {
         instance.contentsLoad();
         (instance.whiteCardView(proid))();
         loading.remove();
-      }, 500);
+      });
     } catch (e) {
       console.log(e);
     }
@@ -3833,7 +3830,6 @@ CalculationJs.prototype.dateFixEvent = function (bilid, responseIndex, proid, qu
         try {
           const targetDate = stringToDate(this.getAttribute("buttonValue"));
           await instance.excuteResponse(thisBilid, thisIndex, targetDate);
-          window.alert("업데이트 되었습니다!");
           removeByClass(dateFixTargetClassName);
           const loading = instance.mother.grayLoading();
           setQueue(() => {
@@ -3844,7 +3840,7 @@ CalculationJs.prototype.dateFixEvent = function (bilid, responseIndex, proid, qu
               (instance.queueView())();
             }
             loading.remove();
-          }, 500);
+          });
         } catch (e) {
           console.log(e);
         }
@@ -3964,7 +3960,6 @@ CalculationJs.prototype.amountFixEvent = function (bilid, responseIndex, proid, 
                   const thisProjectIndex = projects.findIndex((obj) => { return obj.proid === res.proid });
                   instance.bills[thisBillIndex] = res.bill;
                   instance.projects[thisProjectIndex].bill = res.bill;
-                  window.alert("업데이트 되었습니다!");
                   removeByClass(amountFixTargetClassName);
                   const loading = instance.mother.grayLoading();
                   setQueue(() => {
@@ -3975,7 +3970,7 @@ CalculationJs.prototype.amountFixEvent = function (bilid, responseIndex, proid, 
                       (instance.queueView())();
                     }
                     loading.remove();
-                  }, 500);
+                  });
                 }
               }
             } catch (e) {

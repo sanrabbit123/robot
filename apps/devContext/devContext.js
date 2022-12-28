@@ -135,6 +135,9 @@ DevContext.prototype.launching = async function () {
 
     
 
+
+
+    /*
     
     await this.MONGOPYTHONC.connect();
 
@@ -160,8 +163,6 @@ DevContext.prototype.launching = async function () {
     let responseValueArr;
     let payAmount, nonPayAmount;
     let refundAmount;
-    let requestSumConsumer, requestSumConfirm, requestSumRefund;
-    let requestSumIncome;
     let requestLength, responseLength;
     let requestArr, responseArr;
     let sheetsId;
@@ -169,14 +170,18 @@ DevContext.prototype.launching = async function () {
     let doneTong, willTong;
     let matrix2;
     let matrix3, matrix4, matrix5, matrix6, matrix7, matrix8, matrix9, matrix10, matrix11, matrix12;
-    let project;
-    let client;
     let requestNumber;
-    let num;
     let timeline;
-
+    let cliidTong;
+    let tempObj;
+    let cliidTongRefined;
+    let entireClients;
+    let entireClientsTong, entireClientsMatrix;
+    let foundProject;
 
     projectsRaw = await back.getProjectsByQuery({}, { selfMongo });
+    projectsRawNormal = projectsRaw.toNormal();
+    entireClients = (await back.getClientsByQuery({}, { selfMongo })).toNormal();
     projects = projectsRaw.toNormal().filter((obj) => {  return obj.process.contract.first.date.valueOf() >= emptyDateValue });
 
     clients = (await back.getClientsByQuery({ $or: Array.from(new Set(projects.map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo })).toNormal();
@@ -220,9 +225,19 @@ DevContext.prototype.launching = async function () {
       "입금액",
       "미입금액",
       "방법",
+      "문의일"
     ] ];
 
     for (let project of projects) {
+
+      requestNumber = 0;
+      for (let i = 0; i < project.client.requests.length; i++) {
+        if (project.client.requests[i].request.timeline.valueOf() <= project.proposal.date.valueOf()) {
+          requestNumber = i;
+          break;
+        }
+      }
+      timeline = project.client.requests[requestNumber].request.timeline;
 
       requestSumConsumer = 0;
       requestSumConfirm = 0;
@@ -366,6 +381,7 @@ DevContext.prototype.launching = async function () {
           requestArr[i][3] === '-' ? 0 : requestArr[i][2],
           requestArr[i][3] === '-' ? requestArr[i][2] : 0,
           requestArr[i][6].replace(/ 취소/gi, ''),
+          dateToString(timeline),
         ]);
 
         if (requestArr[i][3].trim() === '-') {
@@ -381,6 +397,7 @@ DevContext.prototype.launching = async function () {
             standard: requestArr[i][2],
             amount: requestArr[i][2],
             type: "in",
+            timeline,
           })
         } else {
           doneTong.push({
@@ -397,6 +414,7 @@ DevContext.prototype.launching = async function () {
             amount: requestArr[i][2],
             method: requestArr[i][6].replace(/ 취소/gi, ''),
             type: "in",
+            timeline,
           })
         }
 
@@ -411,6 +429,7 @@ DevContext.prototype.launching = async function () {
             requestArr[i][5] === '-' ? 0 : (requestArr[i][4] * -1),
             requestArr[i][5] === '-' ? (requestArr[i][4] * -1) : 0,
             requestArr[i][6],
+            dateToString(timeline),
           ]);
 
           if (requestArr[i][5].trim() === '-') {
@@ -426,6 +445,7 @@ DevContext.prototype.launching = async function () {
               standard: requestArr[i][4],
               amount: requestArr[i][4],
               type: "out",
+              timeline,
             })
           } else {
             doneTong.push({
@@ -442,6 +462,7 @@ DevContext.prototype.launching = async function () {
               amount: requestArr[i][4],
               method: requestArr[i][6],
               type: "out",
+              timeline,
             })
           }
 
@@ -459,6 +480,7 @@ DevContext.prototype.launching = async function () {
           responseArr[i][3] * -1,
           responseArr[i][2] * -1,
           responseArr[i][3] !== 0 ? "계좌 이체" : "-",
+          dateToString(timeline),
         ]);
 
         if (responseArr[i][4].trim() === '-') {
@@ -474,6 +496,7 @@ DevContext.prototype.launching = async function () {
             standard: responseArr[i][1],
             amount: responseArr[i][2],
             type: "out",
+            timeline,
           })
         } else {
           doneTong.push({
@@ -490,6 +513,7 @@ DevContext.prototype.launching = async function () {
             amount: responseArr[i][3],
             method: "계좌 이체",
             type: "out",
+            timeline,
           })
         }
 
@@ -497,10 +521,6 @@ DevContext.prototype.launching = async function () {
       }
 
     }
-
-    // sheetsId = await sheets.create_newSheets_inPython("매출매입_전체", motherSheetsFolderId);
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    // await sheets.update_value_inPython(sheetsId, "", matrix);
 
     doneTong.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() })
 
@@ -512,11 +532,14 @@ DevContext.prototype.launching = async function () {
         "종류1",
         "종류2",
         "항목",
-        "년",
-        "월",
-        "일",
+        "입금 년",
+        "입금 월",
+        "입금 일",
         "금액",
         "방법",
+        "문의 년",
+        "문의 월",
+        "문의 일",
       ]
     ];
     matrix3 = equalJson(JSON.stringify(matrix2));
@@ -541,6 +564,9 @@ DevContext.prototype.launching = async function () {
         obj.date.getDate(),
         (obj.type === "in" ? 1 : -1) * obj.amount,
         obj.method,
+        obj.timeline.getFullYear(),
+        obj.timeline.getMonth() + 1,
+        obj.timeline.getDate(),
       ])
 
       if (obj.type === "in") {
@@ -557,6 +583,9 @@ DevContext.prototype.launching = async function () {
           obj.date.getDate(),
           (obj.type === "in" ? 1 : -1) * obj.amount,
           obj.method,
+          obj.timeline.getFullYear(),
+          obj.timeline.getMonth() + 1,
+          obj.timeline.getDate(),
         ])
 
         if (obj.class === "design") {
@@ -573,6 +602,9 @@ DevContext.prototype.launching = async function () {
             obj.date.getDate(),
             (obj.type === "in" ? 1 : -1) * obj.amount,
             obj.method,
+            obj.timeline.getFullYear(),
+            obj.timeline.getMonth() + 1,
+            obj.timeline.getDate(),
           ])
 
         } else {
@@ -589,6 +621,9 @@ DevContext.prototype.launching = async function () {
             obj.date.getDate(),
             (obj.type === "in" ? 1 : -1) * obj.amount,
             obj.method,
+            obj.timeline.getFullYear(),
+            obj.timeline.getMonth() + 1,
+            obj.timeline.getDate(),
           ])
 
         }
@@ -609,6 +644,9 @@ DevContext.prototype.launching = async function () {
           obj.date.getDate(),
           obj.amount,
           obj.method,
+          obj.timeline.getFullYear(),
+          obj.timeline.getMonth() + 1,
+          obj.timeline.getDate(),
         ])
 
         if (obj.class === "design") {
@@ -625,6 +663,9 @@ DevContext.prototype.launching = async function () {
             obj.date.getDate(),
             obj.amount,
             obj.method,
+            obj.timeline.getFullYear(),
+            obj.timeline.getMonth() + 1,
+            obj.timeline.getDate(),
           ])
 
         } else {
@@ -641,6 +682,9 @@ DevContext.prototype.launching = async function () {
             obj.date.getDate(),
             obj.amount,
             obj.method,
+            obj.timeline.getFullYear(),
+            obj.timeline.getMonth() + 1,
+            obj.timeline.getDate(),
           ])
 
         }
@@ -663,10 +707,12 @@ DevContext.prototype.launching = async function () {
         obj.date.getDate(),
         (obj.type === "in" ? 1 : -1) * obj.amount,
         obj.method,
+        obj.timeline.getFullYear(),
+        obj.timeline.getMonth() + 1,
+        obj.timeline.getDate(),
       ])
 
     }
-
 
     willTong.sort((a, b) => { return Number(b.proid.replace(/[^0-9]/gi, '')) - Number(a.proid.replace(/[^0-9]/gi, '')) })
 
@@ -679,6 +725,9 @@ DevContext.prototype.launching = async function () {
         "종류2",
         "항목",
         "금액",
+        "문의 년",
+        "문의 월",
+        "문의 일",
       ]
     ];
     matrix11 = equalJson(JSON.stringify(matrix10));
@@ -694,6 +743,9 @@ DevContext.prototype.launching = async function () {
         obj.class === "design" ? "디자인" : "시공",
         obj.kind,
         (obj.type === "in" ? 1 : -1) * obj.amount,
+        obj.timeline.getFullYear(),
+        obj.timeline.getMonth() + 1,
+        obj.timeline.getDate(),
       ])
 
       if (obj.type === "in") {
@@ -706,8 +758,10 @@ DevContext.prototype.launching = async function () {
           obj.class === "design" ? "디자인" : "시공",
           obj.kind,
           obj.amount,
+          obj.timeline.getFullYear(),
+          obj.timeline.getMonth() + 1,
+          obj.timeline.getDate(),
         ])
-
 
       } else {
 
@@ -719,112 +773,163 @@ DevContext.prototype.launching = async function () {
           obj.class === "design" ? "디자인" : "시공",
           obj.kind,
           obj.amount,
+          obj.timeline.getFullYear(),
+          obj.timeline.getMonth() + 1,
+          obj.timeline.getDate(),
         ])
 
       }
 
-
     }
 
 
-    // sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_준돈", motherSheetsFolderId);
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    // await sheets.update_value_inPython(sheetsId, "", matrix2);
-
-    // sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈", motherSheetsFolderId);
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    // await sheets.update_value_inPython(sheetsId, "", matrix3);
-
-    // sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_디자인", motherSheetsFolderId);
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    // await sheets.update_value_inPython(sheetsId, "", matrix4);
-
-    // sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_시공", motherSheetsFolderId);
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    // await sheets.update_value_inPython(sheetsId, "", matrix5);
-
-    // sheetsId = await sheets.create_newSheets_inPython("매출매입_준돈", motherSheetsFolderId);
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    // await sheets.update_value_inPython(sheetsId, "", matrix6);
-
-    // sheetsId = await sheets.create_newSheets_inPython("매출매입_준돈_디자인", motherSheetsFolderId);
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    // await sheets.update_value_inPython(sheetsId, "", matrix7);
-
-    // sheetsId = await sheets.create_newSheets_inPython("매출매입_준돈_시공", motherSheetsFolderId);
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    // await sheets.update_value_inPython(sheetsId, "", matrix8);
-
-    // sheetsId = await sheets.create_newSheets_inPython("매출매입_받은돈_고객별", motherSheetsFolderId);
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    // await sheets.update_value_inPython(sheetsId, "", matrix9);
-
-    // sheetsId = await sheets.create_newSheets_inPython("매출매입_받을돈_줄돈", motherSheetsFolderId);
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    // await sheets.update_value_inPython(sheetsId, "", matrix10);
-
-    // sheetsId = await sheets.create_newSheets_inPython("매출매입_받을돈", motherSheetsFolderId);
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    // await sheets.update_value_inPython(sheetsId, "", matrix11);
-
-    // sheetsId = await sheets.create_newSheets_inPython("매출매입_줄돈", motherSheetsFolderId);
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    // await sheets.update_value_inPython(sheetsId, "", matrix12);
-
-    // 1. 매출매입_전체
-    // => https://docs.google.com/spreadsheets/d/1QeYg0ISXIxaXu8FagC_FLOcl7c2aJPiqyfsVxstCzO0/edit?usp=share_link
-    // 2. 매출매입_받은돈_준돈
-    // => https://docs.google.com/spreadsheets/d/1nUeq90uUEccWcXcTluJv405HMPkNbfO7BZz3M6kLxR0/edit?usp=share_link
-    // 3. 매출매입_받은돈
-    // => https://docs.google.com/spreadsheets/d/1VhIOCGhOfz6Ja7kFU-w0u5bxYdZuQUvMdSo1zDnDjkk/edit?usp=share_link
-    // 4. 매출매입_받은돈_디자인
-    // => https://docs.google.com/spreadsheets/d/1H5wsUJaTTbOpfLqzul5yojzzFuZ2LFEEm9wEQ8cxJ5Q/edit?usp=share_link
-    // 5. 매출매입_받은돈_시공
-    // => https://docs.google.com/spreadsheets/d/1Aiy5xKxbpPDrUMEc6ORpk-TTKlvxFU7kPNdht2YkeWg/edit?usp=share_link
-    // 6. 매출매입_준돈
-    // => https://docs.google.com/spreadsheets/d/1ONG7UrjDQmgke_mh0M3gQpDDBsbs3tGOoAR1J7cmR8Q/edit?usp=share_link
-    // 7. 매출매입_준돈_디자인
-    // => https://docs.google.com/spreadsheets/d/19YjTSE3EUlGaJTRTu1f9TE7LPaBEhNhx5ljd_Y-o_Sg/edit?usp=share_link
-    // 8. 매출매입_준돈_시공
-    // => https://docs.google.com/spreadsheets/d/1zBWZp05wybO6OWLLPAV8OWFIUw88_MvIQgh6QKoZjPQ/edit?usp=share_link
-    // 9. 매출매입_받은돈_고객별
-    // => https://docs.google.com/spreadsheets/d/1Tk-t8dZbMgtbwd4ToBWeTRLH1aGVCEyRivg-XWjT9Mc/edit?usp=share_link
-    // 10. 매출매입_받을돈_줄돈
-    // => https://docs.google.com/spreadsheets/d/1W5rDDi62s0SHOVTp0eOCZRtKSnrYydh6Lxu2DvxTWYY/edit?usp=share_link
-    // 11. 매출매입_받을돈
-    // => https://docs.google.com/spreadsheets/d/1bE63mJm5_aPL8wzzOQ38X5vSRI0hxnGCM5hwTvsi6CA/edit?usp=share_link
-    // 12. 매출매입_줄돈
-    // => https://docs.google.com/spreadsheets/d/1L4qY_Tigmzl-39MUvQCjCMrEJy4Q7qlJYHYKrrkIF7Y/edit?usp=share_link
-
-
-    num = 0;
-    for (let arr of matrix) {
-      if (num !== 0) {
-        [ proid ] = arr;
-
-        project = await back.getProjectById(proid, { selfMongo });
-        cliid = project.cliid;
-        desid = project.desid;
-  
-        client = await back.getClientById(cliid, { selfMongo });
-  
-        requestNumber = 0;
-        for (let i = 0; i < client.requests.length; i++) {
-          if (client.requests[i].request.timeline.valueOf() <= project.proposal.date.valueOf()) {
-            requestNumber = i;
-            break;
-          }
-        }
-
-        timeline = client.requests[requestNumber].request.timeline;
-
-        
-
-
-
+    cliidTong = {};
+    for (let obj of doneTong) {
+      if (!Array.isArray(cliidTong[obj.cliid])) {
+        cliidTong[obj.cliid] = [];
       }
-      num++;
+      cliidTong[obj.cliid].push(equalJson(JSON.stringify(obj)));
     }
+
+    cliidTongRefined = {};
+    for (let cliid in cliidTong) {
+      thisClient = clients.find((obj) => { return obj.cliid === cliid });
+      cliidTongRefined[cliid] = {
+        client: thisClient,
+        blocks: equalJson(JSON.stringify(cliidTong[cliid])),
+      }
+      cliidTongRefined[cliid].timeline = thisClient.requests[0].request.timeline;
+
+      cliidTongRefined[cliid].in = {
+        design: cliidTongRefined[cliid].blocks.filter((obj) => { return obj.type === "in" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+        construct: cliidTongRefined[cliid].blocks.filter((obj) => { return obj.type === "in" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+      };
+      cliidTongRefined[cliid].in.sum = cliidTongRefined[cliid].in.design + cliidTongRefined[cliid].in.construct;
+
+      cliidTongRefined[cliid].out = {
+        design: cliidTongRefined[cliid].blocks.filter((obj) => { return obj.type === "out" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+        construct: cliidTongRefined[cliid].blocks.filter((obj) => { return obj.type === "out" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+      };
+      cliidTongRefined[cliid].out.sum = cliidTongRefined[cliid].out.design + cliidTongRefined[cliid].out.construct;
+    }
+
+
+    for (let client of entireClients) {
+      if (cliidTongRefined[client.cliid] === undefined) {
+        cliidTongRefined[client.cliid] = {};
+        cliidTongRefined[client.cliid].client = client;
+        cliidTongRefined[client.cliid].blocks = [];
+        cliidTongRefined[client.cliid].will = [];
+        cliidTongRefined[client.cliid].timeline = client.requests[0].request.timeline;
+        cliidTongRefined[client.cliid].in = { design: 0, construct: 0, sum: 0 };
+        cliidTongRefined[client.cliid].out = { design: 0, construct: 0, sum: 0 };
+      } else {
+        cliidTongRefined[client.cliid].will = [];
+      }
+    }
+
+    for (let obj of willTong) {
+      if (!Array.isArray(cliidTongRefined[obj.cliid].will)) {
+        cliidTongRefined[obj.cliid].will = [];
+      }
+      cliidTongRefined[obj.cliid].will.push(equalJson(JSON.stringify(obj)));
+    }
+    
+
+    for (let client of entireClients) {
+      cliidTongRefined[client.cliid].willIn = {
+        design: cliidTongRefined[client.cliid].will.filter((obj) => { return obj.type === "in" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+        construct: cliidTongRefined[client.cliid].will.filter((obj) => { return obj.type === "in" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+      };
+      cliidTongRefined[client.cliid].willOut = {
+        design: cliidTongRefined[client.cliid].will.filter((obj) => { return obj.type === "out" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+        construct: cliidTongRefined[client.cliid].will.filter((obj) => { return obj.type === "out" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
+      };
+
+      cliidTongRefined[client.cliid].willIn.sum = cliidTongRefined[client.cliid].willIn.design + cliidTongRefined[client.cliid].willIn.construct;
+      cliidTongRefined[client.cliid].willOut.sum = cliidTongRefined[client.cliid].willOut.design + cliidTongRefined[client.cliid].willOut.construct;
+    }
+
+    entireClientsTong = Object.values(cliidTongRefined);
+    entireClientsTong.sort((a, b) => { return b.timeline.valueOf() - a.timeline.valueOf() });
+
+    entireClientsMatrix = [
+      [
+        "c아이디",
+        "p아이디",
+        "고객",
+        "문의 년",
+        "문의 월",
+        "문의 일",
+        "총 받은 돈",
+        "디자인 받은 돈",
+        "시공 받은 돈",
+        "총 준 돈",
+        "디자인 준 돈",
+        "시공 준 돈",
+        "총 받을 돈",
+        "디자인 받을 돈",
+        "시공 받을 돈",
+        "총 줄 돈",
+        "디자인 줄 돈",
+        "시공 줄 돈",
+      ]
+    ]
+    
+
+    for (let obj of entireClientsTong) {
+
+      foundProject = projectsRawNormal.find((project) => { return project.cliid === obj.client.cliid })
+
+      entireClientsMatrix.push([
+        obj.client.cliid,
+        foundProject === undefined ? '-' : foundProject.proid,
+        obj.client.name,
+        obj.timeline.getFullYear(),
+        obj.timeline.getMonth() + 1,
+        obj.timeline.getDate(),
+        obj.in.sum,
+        obj.in.design,
+        obj.in.construct,
+        obj.out.sum,
+        obj.out.design,
+        obj.out.construct,
+        obj.willIn.sum,
+        obj.willIn.design,
+        obj.willIn.construct,
+        obj.willOut.sum,
+        obj.willOut.design,
+        obj.willOut.construct,
+      ]);
+    }
+
+    // await sheets.update_value_inPython("1QeYg0ISXIxaXu8FagC_FLOcl7c2aJPiqyfsVxstCzO0", "", matrix);
+    // await sheets.update_value_inPython("1nUeq90uUEccWcXcTluJv405HMPkNbfO7BZz3M6kLxR0", "", matrix2);
+    // await sheets.update_value_inPython("1VhIOCGhOfz6Ja7kFU-w0u5bxYdZuQUvMdSo1zDnDjkk", "", matrix3);
+    // await sheets.update_value_inPython("1H5wsUJaTTbOpfLqzul5yojzzFuZ2LFEEm9wEQ8cxJ5Q", "", matrix4);
+    // await sheets.update_value_inPython("1Aiy5xKxbpPDrUMEc6ORpk-TTKlvxFU7kPNdht2YkeWg", "", matrix5);
+    // await sheets.update_value_inPython("1ONG7UrjDQmgke_mh0M3gQpDDBsbs3tGOoAR1J7cmR8Q", "", matrix6);
+    // await sheets.update_value_inPython("19YjTSE3EUlGaJTRTu1f9TE7LPaBEhNhx5ljd_Y-o_Sg", "", matrix7);
+    // await sheets.update_value_inPython("1zBWZp05wybO6OWLLPAV8OWFIUw88_MvIQgh6QKoZjPQ", "", matrix8);
+    // await sheets.update_value_inPython("1Tk-t8dZbMgtbwd4ToBWeTRLH1aGVCEyRivg-XWjT9Mc", "", matrix9);
+    // await sheets.update_value_inPython("1W5rDDi62s0SHOVTp0eOCZRtKSnrYydh6Lxu2DvxTWYY", "", matrix10);
+    // await sheets.update_value_inPython("1bE63mJm5_aPL8wzzOQ38X5vSRI0hxnGCM5hwTvsi6CA", "", matrix11);
+    // await sheets.update_value_inPython("1L4qY_Tigmzl-39MUvQCjCMrEJy4Q7qlJYHYKrrkIF7Y", "", matrix12);
+    // await sheets.update_value_inPython("1tt11onR8REeZ0-kFHuymwlMrMW5fC9Jh4w_U051ETKM", "", entireClientsMatrix);
+
+    */
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
