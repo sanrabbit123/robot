@@ -129,8 +129,13 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const res = await requestSystem("https://" + address.testinfo.host + "/basicReport", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
-    console.log(res);
+
+
+    
+
+
+
+
 
     
 
