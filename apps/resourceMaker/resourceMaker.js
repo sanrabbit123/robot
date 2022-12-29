@@ -484,9 +484,9 @@ ResourceMaker.prototype.portfolio_verification = function () {
   resultObj.raw.apartTitle = { text: apart, length: apart.length };
 
   resultObj.boo = {};
-  resultObj.boo.apart = (apartText.length < 10);
+  resultObj.boo.apart = (apartText.length < 12);
   resultObj.boo.subject = (subject.length < 19);
-  resultObj.boo.apartTitle = (apart.length < 21);
+  resultObj.boo.apartTitle = (apart.length < 23);
   resultObj.boo.subjectTitle = (subject.length + apartText.length < 27);
 
   for (let i in resultObj.boo) {
@@ -973,8 +973,8 @@ ResourceMaker.prototype.launching = async function () {
     await fileSystem("write", [ `${process.cwd()}/temp/${this.p_id}.js`, JSON.stringify(this.final, null, 2) ]);
 
     //on view
-    await shellExec(`atom ${shellLink(process.cwd())}/temp/${this.p_id}_raw.js`);
-    await shellExec(`atom ${shellLink(process.cwd())}/temp/${this.p_id}.js`);
+    await shellExec(`code ${shellLink(process.cwd())}/temp/${this.p_id}_raw.js`);
+    await shellExec(`code ${shellLink(process.cwd())}/temp/${this.p_id}.js`);
     console.log(this.final);
 
     //confirm
