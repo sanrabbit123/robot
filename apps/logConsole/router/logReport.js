@@ -971,7 +971,7 @@ LogReport.prototype.dailyReports = async function () {
         const clients = await back.getClientsByQuery({ requests: { $elemMatch: { "request.timeline": { $gte: queryStandardDate } } } }, { selfMongo: selfCoreMongo, withTools: true });
         const projects = await back.getProjectsByQuery({ "proposal.date": { $gte: queryStandardDate } }, { selfMongo: selfCoreMongo, withTools: true });
         const clientHistories = (await requestSystem("https://" + address.backinfo.host + "/getHistoryProperty", {
-          idArr: clients.toNormal().map((obj) => { return obj.cliid }),
+          idArr: clients.toNormal().map((obj) => { return obj.cliid }).concat([ "c1801_aa01s" ]),
           property: "curation",
           method: "client",
         }, { headers: { "Content-Type": "application/json" } })).data;
