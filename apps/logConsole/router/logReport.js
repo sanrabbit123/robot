@@ -968,10 +968,10 @@ LogReport.prototype.dailyReports = async function () {
         const queryStandardDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
         queryStandardDate.setMonth(queryStandardDate.getMonth() - 3);
 
-        const clients = await back.getClientsByQuery({ requests: { $elemMatch: { "request.timeline": { $gte: queryStandardDate } } } }, { selfMongo: selfCoreMongo, withTools: true });
+        const clients = await back.getClientsByQuery({ $or: [ { cliid: "c1801_aa01s" }, { requests: { $elemMatch: { "request.timeline": { $gte: queryStandardDate } } } } ] }, { selfMongo: selfCoreMongo, withTools: true });
         const projects = await back.getProjectsByQuery({ "proposal.date": { $gte: queryStandardDate } }, { selfMongo: selfCoreMongo, withTools: true });
         const clientHistories = (await requestSystem("https://" + address.backinfo.host + "/getHistoryProperty", {
-          idArr: clients.toNormal().map((obj) => { return obj.cliid }).concat([ "c1801_aa01s" ]),
+          idArr: clients.toNormal().map((obj) => { return obj.cliid }),
           property: "curation",
           method: "client",
         }, { headers: { "Content-Type": "application/json" } })).data;
