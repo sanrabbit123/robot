@@ -1350,6 +1350,9 @@ LogReport.prototype.dailyReports = async function () {
           fourthMatrix = fourthMatrix.map(({ cliid, users, ids }) => {
             const targetRequest = requests.find((obj) => { return obj.cliid === cliid });
             const targetHistory = clientHistories[cliid];
+            if (targetHistory === undefined) {
+              errorLog("there is no history => " + cliid).catch((err) => { console.log(err); });
+            }
             let returnType;
             let source, sourceArr;
             let campaign, campaignArr;
