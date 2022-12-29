@@ -128,11 +128,38 @@ DevContext.prototype.launching = async function () {
     // }
 
 
+    // const sambaPath = "/home/homeliaison/samba";
+    // const target = "/home/homeliaison/samba/corePortfolio/rawImage";
+    // let res, targetList;
+    // let motherPath;
+    // let thisPath;
+    // let url;
+    // let pid;
+    // let commandList;
+
+    // url = "https://home-liaison.serveftp.com:3000/readDir";
+    // motherPath = "/drive/HomeLiaisonServer/사진_등록_포트폴리오";
+
+    // res = await ajaxJson({ path: motherPath }, url);
+
+    // targetList = res.filter((str) => { return /^p/.test(str) });
+
+    // targetList.sort((a, b) => {
+    //   return Number(a.split('_')[0].replace(/[^0-9]/gi, '')) - Number(b.split('_')[0].replace(/[^0-9]/gi, ''))
+    // })
 
 
+    // commandList = [];
+    // for (let name of targetList) {
+    //   thisPath = motherPath + "/" + name;
+    //   res = await ajaxJson({ path: thisPath }, url);
+    //   [ pid ] = name.split("_");
 
-    
+    //   commandList.push("cp -r " + sambaPath + thisPath + "/" + pid + " " + target + ";")
+      
+    // }
 
+    // console.log(commandList.join(""));
 
 
 
