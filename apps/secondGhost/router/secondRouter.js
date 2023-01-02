@@ -843,10 +843,9 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-
-      console.log(req.body);
-
-      res.send(JSON.stringify({ challenge: req.body.challenge }));
+      const { user, text, channel } = equalJson(req.body);
+      console.log(user, text, channel);
+      res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
