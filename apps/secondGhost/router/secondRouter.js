@@ -846,8 +846,6 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
     try {
       const { user, text, channel } = equalJson(req.body).event;
 
-      
-
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + e.message).catch((e) => { console.log(e); });
