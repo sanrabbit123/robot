@@ -175,9 +175,19 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const slack_userToken = "xoxp-717757271335-704486967090-4566130160163-fd2a2cc412e2a509a43635fb8f6c65e2";
+
+    // const res = await requestSystem("https://slack.com/api/users.list", {}, {
+    //   method: "get",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "Authorization": "Bearer " + slack_userToken,
+    //   }
+    // })
+    // console.log(res.data);
 
 
-
+    
     /*
 
     

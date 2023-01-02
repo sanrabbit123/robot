@@ -1,4 +1,4 @@
-const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC) {
+const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
 
@@ -10,6 +10,7 @@ const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC) {
   this.mongolocal = MONGOLOCALC;
   this.timeouts = {};
 
+  this.slack_userToken = slack_userToken;
   this.slack_bot = slack_bot;
   this.webHook = {
     url: "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844",
@@ -831,7 +832,7 @@ SecondRouter.prototype.rou_post_printClient = function () {
 
 SecondRouter.prototype.rou_post_slackEvents = function () {
   const instance = this;
-  const { secondHost } = this;
+  const { secondHost, slack_userToken } = this;
   const { errorLog, messageLog, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/slackEvents" ];
@@ -844,7 +845,9 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
     });
     try {
       const { user, text, channel } = equalJson(req.body).event;
-      console.log(user, text, channel);
+
+      
+
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + e.message).catch((e) => { console.log(e); });
