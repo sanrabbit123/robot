@@ -843,7 +843,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const { user, text, channel } = equalJson(req.body);
+      const { user, text, channel } = equalJson(req.body).event;
       console.log(user, text, channel);
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
