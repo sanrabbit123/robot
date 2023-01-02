@@ -872,7 +872,7 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   mainPaddingBottom = <%% 120, 100, 60, 45, 8 %%>;
 
   searchWordingSize = <%% 22, 21, 20, 18, 22 %%>;
-  searchWordingWeight = <%% 600, 600, 600, 600, 600 %%>;
+  searchWordingWeight = <%% 700, 700, 700, 700, 700 %%>;
   searchWordingMarginBottom = <%% (isMac() ? 20 : 17), (isMac() ? 17 : 15), (isMac() ? 16 : 14), (isMac() ? 15 : 13), 17 %%>;
 
   searchWordingCircleWidth = <%% 4, 4, 4, 3, 4 %%>;
@@ -2330,7 +2330,6 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   let threeWidth0, threeWidth1;
   let threeSize, threeWeight, threeSmallSize;
   let blackCircleWidth;
-  let arrowWidth, arrowHeight;
   let numberTop, numberLeft, numberSize, numberWeight;
   let mainBetween, subBetween, subTop;
   let mainTong, blockTong;
@@ -2339,20 +2338,24 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   let threePhotoHeight;
   let threeTitlePaddingLeft;
   let threeTitleAreaHeight;
+  let threeDescriptionBoxPaddingTop, threeDescriptionBoxBetween;
+  let checkBoxWidth, checkBoxMarginRight, checkBoxTop;
+  let arrowBottom, arrowWidth, arrowHeight;
+  let boxNumber;
 
   middleTongPaddinngTop = <%% 140, 120, 90, 65, 8 %%>;
-  middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
+  middleTongPaddingBottom = <%% 164, 144, 110, 75, 17 %%>;
   middleTitleMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
 
   middleTitleLineTop = <%% 68, 65, 56, 49, 12 %%>;
 
   middleTitleSize = <%% 22, 21, 20, 18, 4 %%>;
-  middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  middleTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
   middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
+  middleInfoSize = <%% 13, 13, 12, 11, 3 %%>;
 
   threeBetween = <%% 10, 10, 6, 4, 1 %%>;
   threeHeight = <%% 170, 120, 110, 84, 21 %%>;
@@ -2362,17 +2365,14 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   threeWidth0 = <%% 525, 525, 525, 525, 525 %%>;
   threeWidth1 = <%% 330, 330, 330, 330, 330 %%>;
 
-  threeTitleSize = <%% 17, 17, 17, 17, 4 %%>;
+  threeTitleSize = <%% 18, 18, 16, 14, 4 %%>;
   threeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-  threeSize = <%% 14, 14, 13, 12, 3.5 %%>;
+  threeSize = <%% 13, 13, 12, 11, 3.5 %%>;
   threeWeight = <%% 400, 400, 400, 400, 400 %%>;
   threeSmallSize = <%% 13, 12, 10, 10, 2.5 %%>;
 
   blackCircleWidth = <%% 40, 36, 32, 28, 3 %%>;
-
-  arrowWidth = <%% 22, 20, 18, 16, 4 %%>;
-  arrowHeight = <%% 8, 8, 8, 8, 8 %%>;
 
   numberTop = <%% 14, 14, 12, 10, 2.5 %%>;
   numberLeft = <%% 22, 22, 20, 16, 3.5 %%>;
@@ -2386,17 +2386,59 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   threeBlockWidth = <%% 400, 400, 400, 400, 400 %%>;
   threeBlockHeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  threePhotoHeight = <%% 240, 240, 240, 240, 240 %%>;
-  threeTitlePaddingLeft = <%% 25, 25, 25, 25, 25 %%>;
-  threeTitleAreaHeight = <%% 58, 58, 58, 58, 58 %%>;
+  threePhotoHeight = <%% 253, 253, 253, 253, 253 %%>;
+  threeTitlePaddingLeft = <%% 26, 26, 26, 26, 26 %%>;
+  threeTitleAreaHeight = <%% 60, 60, 60, 60, 60 %%>;
+
+  threeDescriptionBoxPaddingTop = <%% 23, 23, 23, 23, 23 %%>;
+  threeDescriptionBoxBetween = <%% 5, 5, 5, 5, 5 %%>;
+
+  checkBoxWidth = <%% 10, 10, 10, 10, 10 %%>;
+  checkBoxMarginRight = <%% 6, 6, 6, 6, 6 %%>;
+  checkBoxTop = <%% 5, 5, 5, 5, 5 %%>;
+
+  arrowBottom = <%% 26, 26, 26, 26, 26 %%>;
+  arrowWidth = <%% 36, 36, 36, 36, 36 %%>;
+  arrowHeight = <%% 10, 10, 10, 10, 10 %%>;
 
   contents = {
-    title: "디자이너가 이끄는 무드 체인지 효과",
+    title: "나에게 맞는 서비스, 나에게 맞는 디자이너",
     description: [
-      "디자이너의 기획이 담긴 디자인 컨셉에 맞게,",
-      "제안된 스타일링으로 조화로운 완성을 이끌어 냅니다.",
+      "홈리에종은 내게 맞는 서비스와 디자이너를 선택하는 과정부터 시작합니다.",
+      "내 상황에 딱 맞는 서비스를 고르고 디자이너를 추천받아 보세요!",
     ],
+    three: [
+      {
+        title: "홈퍼니싱",
+        description: [
+          "인테리어 시공 없이 가구나 패브릭, 소품만",
+          "우리 집 무드를 변화시켜주는 스타일링",
+        ],
+        color: "#bfb8b0",
+        background: FrontIndexJs.binaryPath + "/" + "startf0.jpg",
+      },
+      {
+        title: "홈스타일링",
+        description: [
+          "집 컨디션에 맞는 범위의 시공을 진행",
+          "컨셉에 맞게 변화시켜주는 스타일링",
+        ],
+        color: "#b1ae9d",
+        background: FrontIndexJs.binaryPath + "/" + "starts0.jpg",
+      },
+      {
+        title: "토탈 스타일링",
+        description: [
+          "원하는 스타일과 라이프 패턴에 맞게 기획",
+          "디자인의 구조로 변경하는 스타일링 서비스",
+        ],
+        color: "#546d81",
+        background: FrontIndexJs.binaryPath + "/" + "startt0.jpg",
+      },
+    ]
   }
+
+  boxNumber = contents.three.length;
 
   // base box
   mainTong = createNode({
@@ -2485,147 +2527,166 @@ FrontIndexJs.prototype.insertThreeBox = function () {
       position: "relative",
       width: String(100) + '%',
       marginTop: String(threeBlockMarginTop) + ea,
-      paddingBottom: String(middleTongPaddinngTop) + ea,
+      paddingBottom: String(middleTongPaddingBottom) + ea,
     },
   });
 
 
   // three detail
 
-  createNode({
-    mother: threeBlock,
-    style: {
-      display: "inline-block",
-      width: String(threeBlockWidth) + ea,
-      height: String(threeBlockHeight) + ea,
-      background: colorChip.white,
-      borderRadius: String(8) + "px",
-      boxShadow: "0px 5px 20px -12px " + colorChip.shadow,
-    },
-    children: [
-      {
+  for (let i = 0; i < boxNumber; i++) {
+    createNode({
+      mother: threeBlock,
+      style: {
+        display: "inline-block",
+        width: String(threeBlockWidth) + ea,
+        height: String(threeBlockHeight) + ea,
+        background: colorChip.white,
+        borderRadius: String(8) + "px",
+        boxShadow: "0px 5px 20px -12px " + colorChip.shadow,
+      },
+      children: [
+        {
+          style: {
+            display: "flex",
+            height: String(threeTitleAreaHeight) + ea,
+            width: withOut(threeTitlePaddingLeft, ea),
+            position: "relative",
+            alignItems: "center",
+            justifyContent: "start",
+            paddingLeft: String(threeTitlePaddingLeft) + ea,
+          },
+          child: {
+            text: contents.three[i].title,
+            style: {
+              position: "relative",
+              fontSize: String(threeTitleSize) + ea,
+              fontWeight: String(threeTitleWeight),
+              color: colorChip.black,
+            }
+          }
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            height: String(threePhotoHeight) + ea,
+            backgroundImage: "url('" + contents.three[i].background + "')",
+            backgroundSize: "100% auto",
+            backgroundPosition: "50% 50%",
+          }
+        },
+        {
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "column",
+            width: withOut(threeTitlePaddingLeft * 2, ea),
+            paddingLeft: String(threeTitlePaddingLeft) + ea,
+            paddingRight: String(threeTitlePaddingLeft) + ea,
+            paddingTop: String(threeDescriptionBoxPaddingTop) + ea,
+            paddingBottom: String(threeDescriptionBoxPaddingTop) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "flex",
+                flexDirection: "row",
+                position: "relative",
+                marginBottom: String(threeDescriptionBoxBetween) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(contents.three[i].color),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(checkBoxWidth) + ea,
+                    marginRight: String(checkBoxMarginRight) + ea,
+                    top: String(checkBoxTop) + ea,
+                  }
+                },
+                {
+                  text: contents.three[i].description[0],
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(threeSize) + ea,
+                    fontWeight: String(threeWeight),
+                    color: colorChip.black,
+                  }
+                }
+              ]
+            },
+            {
+              style: {
+                display: "flex",
+                flexDirection: "row",
+                position: "relative",
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(contents.three[i].color),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(checkBoxWidth) + ea,
+                    marginRight: String(checkBoxMarginRight) + ea,
+                    top: String(checkBoxTop) + ea,
+                  }
+                },
+                {
+                  text: contents.three[i].description[1],
+                  style: {
+                    fontSize: String(threeSize) + ea,
+                    fontWeight: String(threeWeight),
+                    color: colorChip.black,
+                  }
+                }
+              ]
+            },
+            {
+              mode: "svg",
+              source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, contents.three[i].color),
+              style: {
+                position: "absolute",
+                bottom: String(arrowBottom) + ea,
+                right: String(threeTitlePaddingLeft) + ea,
+                width: String(arrowWidth) + ea,
+              }
+            }
+          ]
+        }
+      ]
+    });
+  
+    if (i !== boxNumber - 1) {
+      createNode({
+        mother: threeBlock,
         style: {
-          display: "flex",
-          height: String(threeTitleAreaHeight) + ea,
-          width: withOut(threeTitlePaddingLeft, ea),
+          display: "inline-block",
           position: "relative",
-          alignItems: "center",
-          justifyContent: "start",
-          paddingLeft: String(threeTitlePaddingLeft) + ea,
+          width: "calc(calc(100% - " + String(threeBlockWidth * boxNumber) + ea + ") / " + String(boxNumber - 1) + ")",
+          height: String(threeBlockHeight) + ea,
         },
         child: {
-          text: "홈퍼니싱",
           style: {
-            position: "relative",
-            fontSize: String(threeTitleSize) + ea,
-            fontWeight: String(threeTitleWeight),
-            color: colorChip.black,
-          }
-        }
-      },
-      {
-        style: {
-          display: "block",
-          position: "relative",
-          width: withOut(0, ea),
-          height: String(threePhotoHeight) + ea,
-          background: colorChip.green,
-        }
-      },
-      {
-        style: {
-          display: "flex",
-          position: "relative",
-          flexDirection: "column",
-          width: withOut(threeTitlePaddingLeft * 2, ea),
-          paddingLeft: String(threeTitlePaddingLeft) + ea,
-          paddingRight: String(threeTitlePaddingLeft) + ea,
-          paddingTop: String(24) + ea,
-          paddingBottom: String(24) + ea,
-        },
-        children: [
-          {
-            style: {
-              display: "flex",
-              flexDirection: "row",
-              position: "relative",
-            },
-            children: [
-              {
-                text: "인테리어 시공 없이 가구나 패브릭, 소품만",
-                style: {
-                  fontSize: String(threeSize) + ea,
-                  fontWeight: String(threeWeight),
-                  color: colorChip.black,
-                }
-              }
-            ]
+            display: "inline-block",
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: String(50) + '%',
+            height: withOut(0, ea),
+            borderRight: "1px dashed " + colorChip.gray3,
+            boxSizing: "border-box",
           },
-          {
-            style: {
-              display: "flex",
-              flexDirection: "row",
-              position: "relative",
-            },
-            children: [
-              {
-                text: "우리 집 무드를 변화시켜주는 스타일링",
-                style: {
-                  fontSize: String(threeSize) + ea,
-                  fontWeight: String(threeWeight),
-                  color: colorChip.black,
-                }
-              }
-            ]
-          },
-        ]
-      }
-    ]
-  });
-
-  createNode({
-    mother: threeBlock,
-    style: {
-      display: "inline-block",
-      width: "calc(calc(100% - " + String(threeBlockWidth * 3) + ea + ") / 2)",
-      height: String(threeBlockHeight) + ea,
+        }
+      });
     }
-  });
-
-  createNode({
-    mother: threeBlock,
-    style: {
-      display: "inline-block",
-      width: String(threeBlockWidth) + ea,
-      height: String(threeBlockHeight) + ea,
-      background: colorChip.white,
-      borderRadius: String(8) + "px",
-      boxShadow: "0px 5px 20px -12px " + colorChip.shadow,
-    }
-  });
-
-  createNode({
-    mother: threeBlock,
-    style: {
-      display: "inline-block",
-      width: "calc(calc(100% - " + String(threeBlockWidth * 3) + ea + ") / 2)",
-      height: String(threeBlockHeight) + ea,
-    }
-  });
-
-  createNode({
-    mother: threeBlock,
-    style: {
-      display: "inline-block",
-      width: String(threeBlockWidth) + ea,
-      height: String(threeBlockHeight) + ea,
-      background: colorChip.white,
-      borderRadius: String(8) + "px",
-      boxShadow: "0px 5px 20px -12px " + colorChip.shadow,
-    }
-  });
-
-
+  }
 
 }
 
@@ -2684,8 +2745,8 @@ FrontIndexJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertSlideBox();
-          instance.insertAboutBox();
-          // instance.insertThreeBox();
+          // instance.insertAboutBox();
+          instance.insertThreeBox();
           instance.insertBlackBox();
           instance.insertSearchBox();
           instance.insertStrongBox();

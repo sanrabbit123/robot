@@ -829,6 +829,30 @@ SecondRouter.prototype.rou_post_printClient = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_slackEvents = function () {
+  const instance = this;
+  const { secondHost } = this;
+  const { errorLog, messageLog, equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/slackEvents" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      
+      res.send(JSON.stringify({ challenge: req.body.challenge }));
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 SecondRouter.prototype.getAll = function () {

@@ -6521,7 +6521,7 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   box2NumberWeight = <%% 500, 500, 500, 500, 500 %%>;
   box2DetailWeight = <%% 600, 600, 600, 600, 600 %%>;
 
-  buttonBaseHeight = <%% 150, 150, 150, 150, 12 %%>;
+  buttonBaseHeight = <%% 80, 80, 80, 80, 12 %%>;
   finalButtonWidth = <%% 140, 124, 120, 108, 25 %%>;
   finalButtonHeight = <%% 48, 44, 42, 36, 9 %%>;
   buttonSize = <%% 18, 17, 17, 15, 3.5 %%>;
@@ -7258,6 +7258,411 @@ ServiceDetailJs.prototype.insertWithBox = function (pastBaseTong, baseTong) {
   return [ newBaseTong, baseTong ];
 }
 
+ServiceDetailJs.prototype.insertContextBox = function () {
+  const instance = this;
+  const { ea, media, standardWidth, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  let contents;
+  let middleTongPaddinngTop;
+  let middleTongPaddingBottom;
+  let middleTong;
+  let middleTitleSize;
+  let middleTitleWeight;
+  let middleTitlePadding;
+  let middleTitleLineTop;
+  let middleTitleTextTop;
+  let middleAreaPaddingTop;
+  let middleInfoSize;
+  let middleTitleMarginBottom;
+  let threeBetween;
+  let threeHeight;
+  let threeBlock;
+  let threeBlockMarginTop;
+  let threeVisualPaddingBottom;
+  let threeWidth0, threeWidth1;
+  let threeSize, threeWeight, threeSmallSize;
+  let blackCircleWidth;
+  let numberTop, numberLeft, numberSize, numberWeight;
+  let mainBetween, subBetween, subTop;
+  let mainTong, blockTong;
+  let threeBlockWidth, threeBlockHeight;
+  let threeTitleSize, threeTitleWeight;
+  let threePhotoHeight;
+  let threeTitlePaddingLeft;
+  let threeTitleAreaHeight;
+  let threeDescriptionBoxPaddingTop, threeDescriptionBoxBetween;
+  let checkBoxWidth, checkBoxMarginRight, checkBoxTop;
+  let arrowBottom, arrowWidth, arrowHeight;
+  let boxNumber;
+
+  middleTongPaddinngTop = <%% 160, 160, 140, 120, 24 %%>;
+  middleTongPaddingBottom = <%% 180, 180, 150, 130, 26 %%>;
+  middleTitleMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
+
+  middleTitleLineTop = <%% 68, 65, 56, 49, 12 %%>;
+
+  middleTitleSize = <%% 23, 21, 19, 17, 4 %%>;
+  middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
+  middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+  middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
+  middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
+
+  threeBetween = <%% 10, 10, 6, 4, 1 %%>;
+  threeHeight = <%% 170, 120, 110, 84, 21 %%>;
+  threeVisualPaddingBottom = <%% 2, 2, 2, 2, 0.5 %%>;
+  threeBlockMarginTop = <%% 48, 48, 48, 40, 7 %%>;
+
+  threeWidth0 = <%% 525, 525, 525, 525, 525 %%>;
+  threeWidth1 = <%% 330, 330, 330, 330, 330 %%>;
+
+  threeTitleSize = <%% 18, 18, 16, 14, 4 %%>;
+  threeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+  threeSize = <%% 13, 13, 12, 11, 3.5 %%>;
+  threeWeight = <%% 400, 400, 400, 400, 400 %%>;
+  threeSmallSize = <%% 13, 12, 10, 10, 2.5 %%>;
+
+  blackCircleWidth = <%% 40, 36, 32, 28, 3 %%>;
+
+  numberTop = <%% 14, 14, 12, 10, 2.5 %%>;
+  numberLeft = <%% 22, 22, 20, 16, 3.5 %%>;
+  numberSize = <%% 13, 13, 12, 10, 2.5 %%>;
+  numberWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  mainBetween = <%% 4, 4, 2, 2, 0.5 %%>;
+  subBetween = <%% 6, 6, 6, 6, 0.5 %%>;
+  subTop = <%% 3, 3, 3, 3, 0.5 %%>;
+
+  threeBlockWidth = <%% 400, 400, 400, 400, 400 %%>;
+  threeBlockHeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  threePhotoHeight = <%% 253, 253, 253, 253, 253 %%>;
+  threeTitlePaddingLeft = <%% 26, 26, 26, 26, 26 %%>;
+  threeTitleAreaHeight = <%% 60, 60, 60, 60, 60 %%>;
+
+  threeDescriptionBoxPaddingTop = <%% 23, 23, 23, 23, 23 %%>;
+  threeDescriptionBoxBetween = <%% 5, 5, 5, 5, 5 %%>;
+
+  checkBoxWidth = <%% 10, 10, 10, 10, 10 %%>;
+  checkBoxMarginRight = <%% 6, 6, 6, 6, 6 %%>;
+  checkBoxTop = <%% 5, 5, 5, 5, 5 %%>;
+
+  arrowBottom = <%% 26, 26, 26, 26, 26 %%>;
+  arrowWidth = <%% 36, 36, 36, 36, 36 %%>;
+  arrowHeight = <%% 10, 10, 10, 10, 10 %%>;
+
+  contents = {
+    title: "나에게 맞는 서비스, 나에게 맞는 디자이너",
+    description: [
+      "홈리에종은 내게 맞는 서비스와 디자이너를 선택하는 과정부터 시작합니다.",
+      "내 상황에 딱 맞는 서비스를 고르고 디자이너를 추천받아 보세요!",
+    ],
+    three: [
+      {
+        title: "홈퍼니싱",
+        description: [
+          "인테리어 시공 없이 가구나 패브릭, 소품만",
+          "우리 집 무드를 변화시켜주는 스타일링",
+        ],
+        color: "#bfb8b0",
+        background: ServiceDetailJs.binaryPath + "/" + "startf0.jpg",
+      },
+      {
+        title: "홈스타일링",
+        description: [
+          "집 컨디션에 맞는 범위의 시공을 진행",
+          "컨셉에 맞게 변화시켜주는 스타일링",
+        ],
+        color: "#b1ae9d",
+        background: ServiceDetailJs.binaryPath + "/" + "starts0.jpg",
+      },
+      {
+        title: "토탈 스타일링",
+        description: [
+          "원하는 스타일과 라이프 패턴에 맞게 기획",
+          "디자인의 구조로 변경하는 스타일링 서비스",
+        ],
+        color: "#546d81",
+        background: ServiceDetailJs.binaryPath + "/" + "startt0.jpg",
+      },
+    ]
+  }
+
+  boxNumber = contents.three.length;
+
+  // base box
+  mainTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      background: colorChip.white,
+    },
+  });
+  blockTong = createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      height: String(100) + '%',
+      paddingTop: desktop ? "" : String(mobileBlockPadding) + ea,
+      paddingBottom: desktop ? "" : String(mobileBlockPadding) + ea,
+      textAlign: desktop ? "" : "center",
+    }
+  });
+  middleTong = createNode({
+    mother: blockTong,
+    style: {
+      position: "relative",
+      width: withOut(0 * 2, ea),
+      paddingTop: String(middleTongPaddinngTop) + ea,
+      paddingBottom: String(middleTitleMarginBottom) + ea,
+    }
+  });
+
+  // title
+  createNode({
+    mother: middleTong,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "block" : "none",
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(middleTitleLineTop) + ea,
+          top: String(0),
+          left: String(0),
+          borderBottom: "1px solid " + colorChip.gray3,
+        }
+      },
+      {
+        text: contents.title,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleTitleSize) + ea,
+          fontWeight: String(middleTitleWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingLeft: String(middleTitlePadding) + ea,
+          paddingRight: String(middleTitlePadding) + ea,
+          top: String(middleTitleTextTop) + ea,
+          background: colorChip.white,
+        }
+      },
+      {
+        text: contents.description.join("\n"),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleInfoSize) + ea,
+          fontWeight: String(400),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingTop: String(middleTitlePadding) + ea,
+          paddingLeft: String(middleTitlePadding * 1.5) + ea,
+          paddingRight: String(middleTitlePadding * 1.5) + ea,
+          background: colorChip.white,
+        },
+        bold: {
+          fontSize: String(middleInfoSize) + ea,
+          fontWeight: String(700),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+        }
+      }
+    ]
+  });
+
+  // three base
+  threeBlock = createNode({
+    mother: middleTong,
+    style: {
+      display: "flex",
+      flexDirection: desktop ? "row" : "column",
+      position: "relative",
+      width: String(100) + '%',
+      marginTop: String(threeBlockMarginTop) + ea,
+      paddingBottom: String(middleTongPaddingBottom) + ea,
+    },
+  });
+
+
+  // three detail
+
+  for (let i = 0; i < boxNumber; i++) {
+    createNode({
+      mother: threeBlock,
+      style: {
+        display: "inline-block",
+        width: String(threeBlockWidth) + ea,
+        height: String(threeBlockHeight) + ea,
+        background: colorChip.white,
+        borderRadius: String(8) + "px",
+        boxShadow: "0px 5px 20px -12px " + colorChip.shadow,
+      },
+      children: [
+        {
+          style: {
+            display: "flex",
+            height: String(threeTitleAreaHeight) + ea,
+            width: withOut(threeTitlePaddingLeft, ea),
+            position: "relative",
+            alignItems: "center",
+            justifyContent: "start",
+            paddingLeft: String(threeTitlePaddingLeft) + ea,
+          },
+          child: {
+            text: contents.three[i].title,
+            style: {
+              position: "relative",
+              fontSize: String(threeTitleSize) + ea,
+              fontWeight: String(threeTitleWeight),
+              color: colorChip.black,
+            }
+          }
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            height: String(threePhotoHeight) + ea,
+            backgroundImage: "url('" + contents.three[i].background + "')",
+            backgroundSize: "100% auto",
+            backgroundPosition: "50% 50%",
+          }
+        },
+        {
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "column",
+            width: withOut(threeTitlePaddingLeft * 2, ea),
+            paddingLeft: String(threeTitlePaddingLeft) + ea,
+            paddingRight: String(threeTitlePaddingLeft) + ea,
+            paddingTop: String(threeDescriptionBoxPaddingTop) + ea,
+            paddingBottom: String(threeDescriptionBoxPaddingTop) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "flex",
+                flexDirection: "row",
+                position: "relative",
+                marginBottom: String(threeDescriptionBoxBetween) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(contents.three[i].color),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(checkBoxWidth) + ea,
+                    marginRight: String(checkBoxMarginRight) + ea,
+                    top: String(checkBoxTop) + ea,
+                  }
+                },
+                {
+                  text: contents.three[i].description[0],
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(threeSize) + ea,
+                    fontWeight: String(threeWeight),
+                    color: colorChip.black,
+                  }
+                }
+              ]
+            },
+            {
+              style: {
+                display: "flex",
+                flexDirection: "row",
+                position: "relative",
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(contents.three[i].color),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(checkBoxWidth) + ea,
+                    marginRight: String(checkBoxMarginRight) + ea,
+                    top: String(checkBoxTop) + ea,
+                  }
+                },
+                {
+                  text: contents.three[i].description[1],
+                  style: {
+                    fontSize: String(threeSize) + ea,
+                    fontWeight: String(threeWeight),
+                    color: colorChip.black,
+                  }
+                }
+              ]
+            },
+            {
+              mode: "svg",
+              source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, contents.three[i].color),
+              style: {
+                position: "absolute",
+                bottom: String(arrowBottom) + ea,
+                right: String(threeTitlePaddingLeft) + ea,
+                width: String(arrowWidth) + ea,
+              }
+            }
+          ]
+        }
+      ]
+    });
+  
+    if (i !== boxNumber - 1) {
+      createNode({
+        mother: threeBlock,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: "calc(calc(100% - " + String(threeBlockWidth * boxNumber) + ea + ") / " + String(boxNumber - 1) + ")",
+          height: String(threeBlockHeight) + ea,
+        },
+        child: {
+          style: {
+            display: "inline-block",
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: String(50) + '%',
+            height: withOut(0, ea),
+            borderRight: "1px dashed " + colorChip.gray3,
+            boxSizing: "border-box",
+          },
+        }
+      });
+    }
+  }
+
+}
+
 ServiceDetailJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -7326,6 +7731,8 @@ ServiceDetailJs.prototype.launching = async function (loading) {
           }
           [ newBaseTong, baseTong ] = instance.insertCareBox(newBaseTong, baseTong);
           instance.insertWithBox(newBaseTong, baseTong);
+
+          instance.insertContextBox();
 
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ServiceDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
