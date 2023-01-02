@@ -7283,13 +7283,9 @@ ServiceDetailJs.prototype.launching = async function (loading) {
       base: {
         instance: this,
         binaryPath: ServiceDetailJs.binaryPath,
-        subTitle: "홈리에종 서비스 설명",
+        subTitle: "",
         secondBackground: false,
         backgroundType: 0,
-        talk: {
-          text: "기타 문의 사항은 홈리에종 채널에 주세요!",
-          event: "channel",
-        }
       },
       local: async () => {
         try {

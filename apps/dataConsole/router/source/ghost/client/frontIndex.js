@@ -2302,6 +2302,333 @@ FrontIndexJs.prototype.popupLaunching = function () {
 
 }
 
+FrontIndexJs.prototype.insertThreeBox = function () {
+  const instance = this;
+  const { ea, media, standardWidth, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  let contents;
+  let middleTongPaddinngTop;
+  let middleTongPaddingBottom;
+  let middleTong;
+  let middleTitleSize;
+  let middleTitleWeight;
+  let middleTitlePadding;
+  let middleTitleLineTop;
+  let middleTitleTextTop;
+  let middleAreaPaddingTop;
+  let middleInfoSize;
+  let middleTitleMarginBottom;
+  let threeBetween;
+  let threeHeight;
+  let threeBlock;
+  let threeBlockMarginTop;
+  let threeVisualPaddingBottom;
+  let threeWidth0, threeWidth1;
+  let threeSize, threeWeight, threeSmallSize;
+  let blackCircleWidth;
+  let arrowWidth, arrowHeight;
+  let numberTop, numberLeft, numberSize, numberWeight;
+  let mainBetween, subBetween, subTop;
+  let mainTong, blockTong;
+  let threeBlockWidth, threeBlockHeight;
+  let threeTitleSize, threeTitleWeight;
+  let threePhotoHeight;
+  let threeTitlePaddingLeft;
+  let threeTitleAreaHeight;
+
+  middleTongPaddinngTop = <%% 140, 120, 90, 65, 8 %%>;
+  middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
+  middleTitleMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
+
+  middleTitleLineTop = <%% 68, 65, 56, 49, 12 %%>;
+
+  middleTitleSize = <%% 22, 21, 20, 18, 4 %%>;
+  middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
+  middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+  middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
+  middleInfoSize = <%% 14, 13, 12, 11, 3 %%>;
+
+  threeBetween = <%% 10, 10, 6, 4, 1 %%>;
+  threeHeight = <%% 170, 120, 110, 84, 21 %%>;
+  threeVisualPaddingBottom = <%% 2, 2, 2, 2, 0.5 %%>;
+  threeBlockMarginTop = <%% 48, 48, 48, 40, 7 %%>;
+
+  threeWidth0 = <%% 525, 525, 525, 525, 525 %%>;
+  threeWidth1 = <%% 330, 330, 330, 330, 330 %%>;
+
+  threeTitleSize = <%% 17, 17, 17, 17, 4 %%>;
+  threeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+  threeSize = <%% 14, 14, 13, 12, 3.5 %%>;
+  threeWeight = <%% 400, 400, 400, 400, 400 %%>;
+  threeSmallSize = <%% 13, 12, 10, 10, 2.5 %%>;
+
+  blackCircleWidth = <%% 40, 36, 32, 28, 3 %%>;
+
+  arrowWidth = <%% 22, 20, 18, 16, 4 %%>;
+  arrowHeight = <%% 8, 8, 8, 8, 8 %%>;
+
+  numberTop = <%% 14, 14, 12, 10, 2.5 %%>;
+  numberLeft = <%% 22, 22, 20, 16, 3.5 %%>;
+  numberSize = <%% 13, 13, 12, 10, 2.5 %%>;
+  numberWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  mainBetween = <%% 4, 4, 2, 2, 0.5 %%>;
+  subBetween = <%% 6, 6, 6, 6, 0.5 %%>;
+  subTop = <%% 3, 3, 3, 3, 0.5 %%>;
+
+  threeBlockWidth = <%% 400, 400, 400, 400, 400 %%>;
+  threeBlockHeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  threePhotoHeight = <%% 240, 240, 240, 240, 240 %%>;
+  threeTitlePaddingLeft = <%% 25, 25, 25, 25, 25 %%>;
+  threeTitleAreaHeight = <%% 58, 58, 58, 58, 58 %%>;
+
+  contents = {
+    title: "디자이너가 이끄는 무드 체인지 효과",
+    description: [
+      "디자이너의 기획이 담긴 디자인 컨셉에 맞게,",
+      "제안된 스타일링으로 조화로운 완성을 이끌어 냅니다.",
+    ],
+  }
+
+  // base box
+  mainTong = createNode({
+    mother: totalContents,
+    style: {
+      display: "block",
+      position: "relative",
+      background: colorChip.white,
+    },
+  });
+  blockTong = createNode({
+    mother: mainTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      height: String(100) + '%',
+      paddingTop: desktop ? "" : String(mobileBlockPadding) + ea,
+      paddingBottom: desktop ? "" : String(mobileBlockPadding) + ea,
+      textAlign: desktop ? "" : "center",
+    }
+  });
+  middleTong = createNode({
+    mother: blockTong,
+    style: {
+      position: "relative",
+      width: withOut(0 * 2, ea),
+      paddingTop: String(middleTongPaddinngTop) + ea,
+      paddingBottom: String(middleTitleMarginBottom) + ea,
+    }
+  });
+
+  // title
+  createNode({
+    mother: middleTong,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      position: "relative",
+      width: String(100) + '%',
+      textAlign: "center",
+    },
+    children: [
+      {
+        text: contents.title,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleTitleSize) + ea,
+          fontWeight: String(middleTitleWeight),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingLeft: String(middleTitlePadding) + ea,
+          paddingRight: String(middleTitlePadding) + ea,
+          top: String(middleTitleTextTop) + ea,
+          background: colorChip.white,
+        }
+      },
+      {
+        text: contents.description.join("\n"),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(middleInfoSize) + ea,
+          fontWeight: String(400),
+          lineHeight: String(1.6),
+          color: colorChip.black,
+          textAlign: "center",
+          paddingTop: String(middleTitlePadding) + ea,
+          paddingLeft: String(middleTitlePadding * 1.5) + ea,
+          paddingRight: String(middleTitlePadding * 1.5) + ea,
+          background: colorChip.white,
+        }
+      }
+    ]
+  });
+
+  // three base
+  threeBlock = createNode({
+    mother: middleTong,
+    style: {
+      display: "flex",
+      flexDirection: desktop ? "row" : "column",
+      position: "relative",
+      width: String(100) + '%',
+      marginTop: String(threeBlockMarginTop) + ea,
+      paddingBottom: String(middleTongPaddinngTop) + ea,
+    },
+  });
+
+
+  // three detail
+
+  createNode({
+    mother: threeBlock,
+    style: {
+      display: "inline-block",
+      width: String(threeBlockWidth) + ea,
+      height: String(threeBlockHeight) + ea,
+      background: colorChip.white,
+      borderRadius: String(8) + "px",
+      boxShadow: "0px 5px 20px -12px " + colorChip.shadow,
+    },
+    children: [
+      {
+        style: {
+          display: "flex",
+          height: String(threeTitleAreaHeight) + ea,
+          width: withOut(threeTitlePaddingLeft, ea),
+          position: "relative",
+          alignItems: "center",
+          justifyContent: "start",
+          paddingLeft: String(threeTitlePaddingLeft) + ea,
+        },
+        child: {
+          text: "홈퍼니싱",
+          style: {
+            position: "relative",
+            fontSize: String(threeTitleSize) + ea,
+            fontWeight: String(threeTitleWeight),
+            color: colorChip.black,
+          }
+        }
+      },
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(threePhotoHeight) + ea,
+          background: colorChip.green,
+        }
+      },
+      {
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "column",
+          width: withOut(threeTitlePaddingLeft * 2, ea),
+          paddingLeft: String(threeTitlePaddingLeft) + ea,
+          paddingRight: String(threeTitlePaddingLeft) + ea,
+          paddingTop: String(24) + ea,
+          paddingBottom: String(24) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "flex",
+              flexDirection: "row",
+              position: "relative",
+            },
+            children: [
+              {
+                text: "인테리어 시공 없이 가구나 패브릭, 소품만",
+                style: {
+                  fontSize: String(threeSize) + ea,
+                  fontWeight: String(threeWeight),
+                  color: colorChip.black,
+                }
+              }
+            ]
+          },
+          {
+            style: {
+              display: "flex",
+              flexDirection: "row",
+              position: "relative",
+            },
+            children: [
+              {
+                text: "우리 집 무드를 변화시켜주는 스타일링",
+                style: {
+                  fontSize: String(threeSize) + ea,
+                  fontWeight: String(threeWeight),
+                  color: colorChip.black,
+                }
+              }
+            ]
+          },
+        ]
+      }
+    ]
+  });
+
+  createNode({
+    mother: threeBlock,
+    style: {
+      display: "inline-block",
+      width: "calc(calc(100% - " + String(threeBlockWidth * 3) + ea + ") / 2)",
+      height: String(threeBlockHeight) + ea,
+    }
+  });
+
+  createNode({
+    mother: threeBlock,
+    style: {
+      display: "inline-block",
+      width: String(threeBlockWidth) + ea,
+      height: String(threeBlockHeight) + ea,
+      background: colorChip.white,
+      borderRadius: String(8) + "px",
+      boxShadow: "0px 5px 20px -12px " + colorChip.shadow,
+    }
+  });
+
+  createNode({
+    mother: threeBlock,
+    style: {
+      display: "inline-block",
+      width: "calc(calc(100% - " + String(threeBlockWidth * 3) + ea + ") / 2)",
+      height: String(threeBlockHeight) + ea,
+    }
+  });
+
+  createNode({
+    mother: threeBlock,
+    style: {
+      display: "inline-block",
+      width: String(threeBlockWidth) + ea,
+      height: String(threeBlockHeight) + ea,
+      background: colorChip.white,
+      borderRadius: String(8) + "px",
+      boxShadow: "0px 5px 20px -12px " + colorChip.shadow,
+    }
+  });
+
+
+
+}
+
 FrontIndexJs.prototype.launching = async function (loading) {
   const instance = this;
   const { returnGet, ajaxJson, setQueue, setDebounce, serviceParsing, facebookSdkPatch } = GeneralJs;
@@ -2358,6 +2685,7 @@ FrontIndexJs.prototype.launching = async function (loading) {
         try {
           instance.insertSlideBox();
           instance.insertAboutBox();
+          // instance.insertThreeBox();
           instance.insertBlackBox();
           instance.insertSearchBox();
           instance.insertStrongBox();

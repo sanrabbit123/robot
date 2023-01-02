@@ -80,6 +80,17 @@ DevContext.prototype.launching = async function () {
     const findCode = this.findCode.bind(this);
     const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
     const human = new HumanPacket();
+    const print = async (cliid) => {
+      try {
+        await instance.MONGOCONSOLEC.connect();
+        const selfMongo = instance.MONGOCONSOLEC;
+        const history = await back.getHistoryById("client", cliid, { selfMongo });
+        await requestSystem("https://" + address.secondinfo.host + "/printClient", { cliid: cliid, curation: history.curation }, { headers: { "Content-Type": "application/json" } });
+        await instance.MONGOCONSOLEC.close();
+      } catch (e) {
+        console.log(e);
+      }
+    }
 
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
@@ -164,14 +175,15 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
 
 
 
     /*
+
     
     await this.MONGOPYTHONC.connect();
 
+    const emptyDate = new Date(1800, 0, 1);
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
     const collection = "generalBill";
     const selfMongo = this.MONGOC;
@@ -199,8 +211,6 @@ DevContext.prototype.launching = async function () {
     let sheetsId;
     let payMethod;
     let doneTong, willTong;
-    let matrix2;
-    let matrix3, matrix4, matrix5, matrix6, matrix7, matrix8, matrix9, matrix10, matrix11, matrix12;
     let requestNumber;
     let timeline;
     let cliidTong;
@@ -208,7 +218,7 @@ DevContext.prototype.launching = async function () {
     let cliidTongRefined;
     let entireClients;
     let entireClientsTong, entireClientsMatrix;
-    let foundProject;
+    let foundProject, foundClient;
     let requestSumConsumer;
     let requestSumConfirm;
     let requestSumRefund;
@@ -223,10 +233,21 @@ DevContext.prototype.launching = async function () {
     let copiedObject;
     let thisRequestNumber;
     let thisTimeline;
+    let totalTong;
+    let proidTong;
+    let thisArray;
+    let thisObject;
+    let thisRequestObject;
+    let thisContractDate;
+    let reduceFunction;
+    let allClients;
+    let requestsTong;
 
     projectsRaw = await back.getProjectsByQuery({}, { selfMongo });
     projectsRawNormal = projectsRaw.toNormal();
-    entireClients = (await back.getClientsByQuery({}, { selfMongo })).toNormal();
+    allClients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
+    requestsTong = allClients.getRequestsTong();
+    entireClients = allClients.toNormal();
     projects = projectsRaw.toNormal().filter((obj) => {  return obj.process.contract.first.date.valueOf() >= emptyDateValue });
 
     clients = (await back.getClientsByQuery({ $or: Array.from(new Set(projects.map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo })).toNormal();
@@ -236,6 +257,7 @@ DevContext.prototype.launching = async function () {
 
     doneTong = [];
     willTong = [];
+    totalTong = [];
 
     for (let project of projects) {
       ({ proid, cliid, desid, service } = project);
@@ -256,7 +278,6 @@ DevContext.prototype.launching = async function () {
     projects = projects.filter((obj) => {
       return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
     });
-
 
     await this.MONGOPYTHONC.close();
 
@@ -365,7 +386,6 @@ DevContext.prototype.launching = async function () {
 
         requestArr.push(requestValueArr.map((obj) => { return obj.value }));
       }
-
       requestLength = requestArr.length;
 
       // response
@@ -417,7 +437,6 @@ DevContext.prototype.launching = async function () {
 
         responseArr.push(responseValueArr.map((obj) => { return obj.value }));
       }
-
       responseLength = responseArr.length;
 
       for (let i = 0; i < requestLength; i++) {
@@ -430,50 +449,32 @@ DevContext.prototype.launching = async function () {
           requestArr[i][2],
           requestArr[i][3],
           requestArr[i][3] === '-' ? 0 : requestArr[i][1],
-          requestArr[i][3] === '-' ? requestArr[i][1] : 0,
+          requestArr[i][3] === '-' ? requestArr[i][2] : 0,
           requestArr[i][6].replace(/ 취소/gi, ''),
           dateToString(timeline),
           serviceParsing(project.service),
           project.process.status,
         ]);
-
-        if (requestArr[i][3].trim() === '-') {
-          willTong.push({
-            proid: project.proid,
-            cliid: project.cliid,
-            desid: project.desid,
-            bilid: project.bill.bilid,
-            name: project.name,
-            designer: project.designer.designer,
-            kind: requestArr[i][0],
-            class: /시공/gi.test(requestArr[i][0]) ? "construct" : "design",
-            standard: requestArr[i][2],
-            amount: requestArr[i][1],
-            type: "in",
-            timeline,
-            service: project.service,
-            status: project.process.status,
-          })
-        } else {
-          doneTong.push({
-            proid: project.proid,
-            cliid: project.cliid,
-            desid: project.desid,
-            bilid: project.bill.bilid,
-            name: project.name,
-            designer: project.designer.designer,
-            kind: requestArr[i][0],
-            class: /시공/gi.test(requestArr[i][0]) ? "construct" : "design",
-            standard: requestArr[i][2],
-            date: stringToDate(requestArr[i][3]),
-            amount: requestArr[i][1],
-            method: requestArr[i][6].replace(/ 취소/gi, ''),
-            type: "in",
-            timeline,
-            service: project.service,
-            status: project.process.status,
-          })
-        }
+        totalTong.push({
+          proid: project.proid,
+          cliid: project.cliid,
+          desid: project.desid,
+          bilid: project.bill.bilid,
+          name: project.name,
+          designer: project.designer.designer,
+          kind: requestArr[i][0],
+          class: /시공/gi.test(requestArr[i][0]) ? "construct" : "design",
+          standard: requestArr[i][2],
+          date: requestArr[i][3].trim() === '-' ? emptyDate : stringToDate(requestArr[i][3]),
+          amount: requestArr[i][3].trim() === '-' ? requestArr[i][2] : requestArr[i][1],
+          method: requestArr[i][6].replace(/ 취소/gi, ''),
+          type: "in",
+          category: requestArr[i][3].trim() === '-' ? "will" : "done",
+          timeline,
+          service: project.service,
+          status: project.process.status,
+          requestNumber,
+        });
 
         if (requestArr[i][4] !== 0) {
           matrix.push([
@@ -491,44 +492,26 @@ DevContext.prototype.launching = async function () {
             serviceParsing(project.service),
             project.process.status,
           ]);
-
-          if (requestArr[i][5].trim() === '-') {
-            willTong.push({
-              proid: project.proid,
-              cliid: project.cliid,
-              desid: project.desid,
-              bilid: project.bill.bilid,
-              name: project.name,
-              designer: project.designer.designer,
-              kind: requestArr[i][0],
-              class: /시공/gi.test(requestArr[i][0]) ? "construct" : "design",
-              standard: requestArr[i][4],
-              amount: requestArr[i][4],
-              type: "out",
-              timeline,
-              service: project.service,
-              status: project.process.status,
-            })
-          } else {
-            doneTong.push({
-              proid: project.proid,
-              cliid: project.cliid,
-              desid: project.desid,
-              bilid: project.bill.bilid,
-              name: project.name,
-              designer: project.designer.designer,
-              kind: requestArr[i][0],
-              class: /시공/gi.test(requestArr[i][0]) ? "construct" : "design",
-              standard: requestArr[i][4],
-              date: stringToDate(requestArr[i][5]),
-              amount: requestArr[i][4],
-              method: requestArr[i][6],
-              type: "out",
-              timeline,
-              service: project.service,
-              status: project.process.status,
-            })
-          }
+          totalTong.push({
+            proid: project.proid,
+            cliid: project.cliid,
+            desid: project.desid,
+            bilid: project.bill.bilid,
+            name: project.name,
+            designer: project.designer.designer,
+            kind: requestArr[i][0],
+            class: /시공/gi.test(requestArr[i][0]) ? "construct" : "design",
+            standard: requestArr[i][4],
+            date: requestArr[i][5].trim() === '-' ? emptyDate : stringToDate(requestArr[i][5]),
+            amount: requestArr[i][4] * -1,
+            method: requestArr[i][6],
+            type: "out",
+            category: requestArr[i][5].trim() === '-' ? "will" : "done",
+            timeline,
+            service: project.service,
+            status: project.process.status,
+            requestNumber,
+          });
 
         }
       }
@@ -549,372 +532,215 @@ DevContext.prototype.launching = async function () {
           serviceParsing(project.service),
           project.process.status,
         ]);
-
-        if (responseArr[i][4].trim() === '-') {
-          willTong.push({
-            proid: project.proid,
-            cliid: project.cliid,
-            desid: project.desid,
-            bilid: project.bill.bilid,
-            name: project.name,
-            designer: project.designer.designer,
-            kind: responseArr[i][0],
-            class: /시공/gi.test(responseArr[i][0]) ? "construct" : "design",
-            standard: responseArr[i][1],
-            amount: responseArr[i][2],
-            type: "out",
-            timeline,
-            service: project.service,
-            status: project.process.status,
-          })
-        } else {
-          doneTong.push({
-            proid: project.proid,
-            cliid: project.cliid,
-            desid: project.desid,
-            bilid: project.bill.bilid,
-            name: project.name,
-            designer: project.designer.designer,
-            kind: responseArr[i][0],
-            class: /시공/gi.test(responseArr[i][0]) ? "construct" : "design",
-            standard: responseArr[i][1],
-            date: stringToDate(responseArr[i][4]),
-            amount: responseArr[i][3],
-            method: "계좌 이체",
-            type: "out",
-            timeline,
-            service: project.service,
-            status: project.process.status,
-          })
-        }
-
+        totalTong.push({
+          proid: project.proid,
+          cliid: project.cliid,
+          desid: project.desid,
+          bilid: project.bill.bilid,
+          name: project.name,
+          designer: project.designer.designer,
+          kind: responseArr[i][0],
+          class: /시공/gi.test(responseArr[i][0]) ? "construct" : "design",
+          standard: responseArr[i][1],
+          date: responseArr[i][4].trim() === '-' ? emptyDate : stringToDate(responseArr[i][4]),
+          amount: responseArr[i][4].trim() === '-' ? responseArr[i][2] * -1 : responseArr[i][3] * -1,
+          method: responseArr[i][4].trim() === '-' ? "-" : "계좌 이체",
+          type: "out",
+          category: responseArr[i][4].trim() === '-' ? "will" : "done",
+          timeline,
+          service: project.service,
+          status: project.process.status,
+          requestNumber,
+        });
 
       }
-
     }
 
-    doneTong.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() })
-
-    matrix2 = [
-      [
-        "아이디",
-        "고객",
-        "디자이너",
-        "종류1",
-        "종류2",
-        "항목",
-        "입금 년",
-        "입금 월",
-        "입금 일",
-        "금액",
-        "방법",
-        "문의 년",
-        "문의 월",
-        "문의 일",
-        "서비스 유형",
-        "상태",
-      ]
-    ];
-
-    for (let obj of doneTong) {
-
-      matrix2.push([
-        obj.proid,
-        obj.name,
-        obj.designer,
-        obj.type === "in" ? "받은돈" : "준돈",
-        obj.class === "design" ? "디자인" : "시공",
-        obj.kind,
-        obj.date.getFullYear(),
-        obj.date.getMonth() + 1,
-        obj.date.getDate(),
-        (obj.type === "in" ? 1 : -1) * obj.amount,
-        obj.method,
-        obj.timeline.getFullYear(),
-        obj.timeline.getMonth() + 1,
-        obj.timeline.getDate(),
-        serviceParsing(obj.service),
-        obj.status,
-      ])
-
-    }
-
-
-    willTong.sort((a, b) => { return Number(b.proid.replace(/[^0-9]/gi, '')) - Number(a.proid.replace(/[^0-9]/gi, '')) })
-
-    matrix10 = [
-      [
-        "아이디",
-        "고객",
-        "디자이너",
-        "종류1",
-        "종류2",
-        "항목",
-        "금액",
-        "문의 년",
-        "문의 월",
-        "문의 일",
-        "서비스 유형",
-        "상태",
-      ]
-    ];
-
-    for (let obj of willTong) {
-
-      matrix10.push([
-        obj.proid,
-        obj.name,
-        obj.designer,
-        obj.type === "in" ? "받을돈" : "줄돈",
-        obj.class === "design" ? "디자인" : "시공",
-        obj.kind,
-        (obj.type === "in" ? 1 : -1) * obj.amount,
-        obj.timeline.getFullYear(),
-        obj.timeline.getMonth() + 1,
-        obj.timeline.getDate(),
-        serviceParsing(obj.service),
-        obj.status,
-      ])
-
-    }
-
-
-    cliidTong = {};
-    for (let obj of doneTong) {
-      if (!Array.isArray(cliidTong[obj.cliid])) {
-        cliidTong[obj.cliid] = [];
-      }
-      cliidTong[obj.cliid].push(equalJson(JSON.stringify(obj)));
-    }
-
-    cliidTongRefined = {};
-    for (let cliid in cliidTong) {
-      thisClient = clients.find((obj) => { return obj.cliid === cliid });
-      cliidTongRefined[cliid] = {
-        client: thisClient,
-        blocks: equalJson(JSON.stringify(cliidTong[cliid])),
-      }
-      cliidTongRefined[cliid].timeline = thisClient.requests[0].request.timeline;
-
-      cliidTongRefined[cliid].in = {
-        design: cliidTongRefined[cliid].blocks.filter((obj) => { return obj.type === "in" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-        construct: cliidTongRefined[cliid].blocks.filter((obj) => { return obj.type === "in" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-      };
-      cliidTongRefined[cliid].in.sum = cliidTongRefined[cliid].in.design + cliidTongRefined[cliid].in.construct;
-
-      cliidTongRefined[cliid].out = {
-        design: cliidTongRefined[cliid].blocks.filter((obj) => { return obj.type === "out" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-        construct: cliidTongRefined[cliid].blocks.filter((obj) => { return obj.type === "out" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-      };
-      cliidTongRefined[cliid].out.sum = cliidTongRefined[cliid].out.design + cliidTongRefined[cliid].out.construct;
-
-    }
-
-
-    for (let client of entireClients) {
-      if (cliidTongRefined[client.cliid] === undefined) {
-        cliidTongRefined[client.cliid] = {};
-        cliidTongRefined[client.cliid].client = client;
-        cliidTongRefined[client.cliid].blocks = [];
-        cliidTongRefined[client.cliid].will = [];
-        cliidTongRefined[client.cliid].timeline = client.requests[0].request.timeline;
-        cliidTongRefined[client.cliid].in = { design: 0, construct: 0, sum: 0 };
-        cliidTongRefined[client.cliid].out = { design: 0, construct: 0, sum: 0 };
-      } else {
-        cliidTongRefined[client.cliid].will = [];
-      }
-    }
-
-    for (let obj of willTong) {
-      if (!Array.isArray(cliidTongRefined[obj.cliid].will)) {
-        cliidTongRefined[obj.cliid].will = [];
-      }
-      cliidTongRefined[obj.cliid].will.push(equalJson(JSON.stringify(obj)));
-    }
     
+    proidTong = {};
+    for (let obj of totalTong) {
+      if (!Array.isArray(proidTong[obj.proid])) {
+        proidTong[obj.proid] = [];
+      }
+      proidTong[obj.proid].push(equalJson(JSON.stringify(obj)));
 
-    for (let client of entireClients) {
-      cliidTongRefined[client.cliid].willIn = {
-        design: cliidTongRefined[client.cliid].will.filter((obj) => { return obj.type === "in" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-        construct: cliidTongRefined[client.cliid].will.filter((obj) => { return obj.type === "in" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-      };
-      cliidTongRefined[client.cliid].willOut = {
-        design: cliidTongRefined[client.cliid].will.filter((obj) => { return obj.type === "out" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-        construct: cliidTongRefined[client.cliid].will.filter((obj) => { return obj.type === "out" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-      };
-      cliidTongRefined[client.cliid].willIn.sum = cliidTongRefined[client.cliid].willIn.design + cliidTongRefined[client.cliid].willIn.construct;
-      cliidTongRefined[client.cliid].willOut.sum = cliidTongRefined[client.cliid].willOut.design + cliidTongRefined[client.cliid].willOut.construct;
     }
 
-    entireClientsTong = Object.values(cliidTongRefined);
-    entireClientsTong.sort((a, b) => { return b.timeline.valueOf() - a.timeline.valueOf() });
+    proidMatrix = [];
+    for (let proid in proidTong) {
+      thisArray = proidTong[proid];
+      [ thisObject ] = thisArray;
+      thisRequestNumber = thisObject.requestNumber;
+      thisTimeline = thisObject.timeline;
 
-    entireClientsMatrix = [
-      [
-        "c아이디",
-        "p아이디",
-        "고객",
-        "c상태",
-        "p상태",
-        "서비스 유형",
-        "문의 년",
-        "문의 월",
-        "문의 일",
-        "총 받은 돈",
-        "디자인 받은 돈",
-        "시공 받은 돈",
-        "총 준 돈",
-        "디자인 준 돈",
-        "시공 준 돈",
-        "총 받을 돈",
-        "디자인 받을 돈",
-        "시공 받을 돈",
-        "총 줄 돈",
-        "디자인 줄 돈",
-        "시공 줄 돈",
-      ]
-    ]
-    
+      foundClient = entireClients.find((client) => { return client.cliid === thisObject.cliid });
+      foundProject = projectsRawNormal.find((project) => { return project.proid === proid });
 
-    for (let obj of entireClientsTong) {
+      thisRequestObject = foundClient.requests[thisRequestNumber];
+      thisContractDate = foundProject.process.contract.first.date;
 
-      blockWill = obj.blocks.concat(obj.will);
-      blockWill = blockWill.map((obj2) => {
-        return obj2.proid;
-      });
-      blockWill = [ ...new Set(blockWill) ];
+      reduceFunction = (acc, curr) => {
+        return acc + curr.amount;
+      }
 
-      if (blockWill.length <= 1) {
+      proidMatrix.push([
+        thisObject.name,
+        thisObject.cliid,
+        proid,
+        thisRequestObject.analytics.response.status,
+        foundProject.process.status,
+        serviceParsing(foundProject.service),
+        dateToString(thisTimeline, true),
+        thisTimeline.getFullYear(),
+        thisTimeline.getMonth() + 1,
+        thisTimeline.getDate(),
+        dateToString(thisContractDate, true),
+        thisContractDate.getFullYear(),
+        thisContractDate.getMonth() + 1,
+        thisContractDate.getDate(),
+        thisArray.filter((obj) => { return obj.type === "in" && obj.category === "done" }).reduce(reduceFunction, 0),
+        thisArray.filter((obj) => { return obj.type === "in" && obj.category === "done" && obj.class === "design" }).reduce(reduceFunction, 0),
+        thisArray.filter((obj) => { return obj.type === "in" && obj.category === "done" && obj.class === "construct" }).reduce(reduceFunction, 0),
+        thisArray.filter((obj) => { return obj.type === "out" && obj.category === "done" }).reduce(reduceFunction, 0),
+        thisArray.filter((obj) => { return obj.type === "out" && obj.category === "done" && obj.class === "design" }).reduce(reduceFunction, 0),
+        thisArray.filter((obj) => { return obj.type === "out" && obj.category === "done" && obj.class === "construct" }).reduce(reduceFunction, 0),
+        thisArray.filter((obj) => { return obj.type === "in" && obj.category === "will" }).reduce(reduceFunction, 0),
+        thisArray.filter((obj) => { return obj.type === "in" && obj.category === "will" && obj.class === "design" }).reduce(reduceFunction, 0),
+        thisArray.filter((obj) => { return obj.type === "in" && obj.category === "will" && obj.class === "construct" }).reduce(reduceFunction, 0),
+        thisArray.filter((obj) => { return obj.type === "out" && obj.category === "will" }).reduce(reduceFunction, 0),
+        thisArray.filter((obj) => { return obj.type === "out" && obj.category === "will" && obj.class === "design" }).reduce(reduceFunction, 0),
+        thisArray.filter((obj) => { return obj.type === "out" && obj.category === "will" && obj.class === "construct" }).reduce(reduceFunction, 0),
+      ]);
 
-        if (blockWill.length === 1) {
-          foundProject = projectsRawNormal.find((project) => { return project.proid === blockWill[0].proid })
-        } else {
-          foundProject = projectsRawNormal.find((project) => { return project.cliid === obj.client.cliid })
+    }
+
+
+    for (let rawProject of projectsRawNormal) {
+
+      if (proidMatrix.find((arr) => { return arr[2] === rawProject.proid; }) === undefined) {
+
+        foundClient = entireClients.find((client) => { return client.cliid === rawProject.cliid });
+
+        thisRequestNumber = 0;
+        for (let i = 0; i < foundClient.requests.length; i++) {
+          if (foundClient.requests[i].request.timeline.valueOf() <= rawProject.proposal.date.valueOf()) {
+            thisRequestNumber = i;
+            break;
+          }
         }
 
-        cStatus = obj.client.requests[0].analytics.response.status;
-        pStatus = '-';
-        foundService = '-';
-        if (foundProject !== undefined) {
-          pStatus = foundProject.process.status;
-          foundService = serviceParsing(foundProject.service);
-        }
-  
-        entireClientsMatrix.push([
-          obj.client.cliid,
-          foundProject === undefined ? '-' : foundProject.proid,
-          obj.client.name,
-          cStatus,
-          pStatus,
-          foundService,
-          obj.timeline.getFullYear(),
-          obj.timeline.getMonth() + 1,
-          obj.timeline.getDate(),
-          obj.in.sum,
-          obj.in.design,
-          obj.in.construct,
-          obj.out.sum,
-          obj.out.design,
-          obj.out.construct,
-          obj.willIn.sum,
-          obj.willIn.design,
-          obj.willIn.construct,
-          obj.willOut.sum,
-          obj.willOut.design,
-          obj.willOut.construct,
+        thisRequestObject = foundClient.requests[thisRequestNumber];
+        thisTimeline = thisRequestObject.request.timeline;
+
+        proidMatrix.push([
+          foundClient.name,
+          foundClient.cliid,
+          rawProject.proid,
+          thisRequestObject.analytics.response.status,
+          rawProject.process.status,
+          serviceParsing(rawProject.service),
+          dateToString(thisTimeline, true),
+          thisTimeline.getFullYear(),
+          thisTimeline.getMonth() + 1,
+          thisTimeline.getDate(),
+          "1800-01-01 00:00:00",
+          1800,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
         ]);
 
-      } else if (blockWill.length > 1) {
-        for (let proid of blockWill) {
+      }
 
-          foundProject = projectsRawNormal.find((project) => { return project.proid === proid });
+    }
 
-          copiedObject = equalJson(JSON.stringify(obj));
-          copiedObject.blocks = copiedObject.blocks.filter((o) => {
-            return o.proid === proid;
-          });
-          copiedObject.will = copiedObject.will.filter((o) => {
-            return o.proid === proid;
-          });
+    for (let obj of requestsTong) {
+      if (proidMatrix.find((arr) => { return arr[1] === obj.cliid; }) === undefined) {
 
-          thisRequestNumber = 0;
-          for (let i = 0; i < copiedObject.client.requests.length; i++) {
-            if (copiedObject.client.requests[i].request.timeline.valueOf() <= foundProject.proposal.date.valueOf()) {
-              thisRequestNumber = i;
-              break;
-            }
-          }
-          thisTimeline = copiedObject.client.requests[thisRequestNumber].request.timeline;
-          copiedObject.timeline = thisTimeline;
-          
-          copiedObject.in = {
-            design: copiedObject.blocks.filter((obj) => { return obj.type === "in" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-            construct: copiedObject.blocks.filter((obj) => { return obj.type === "in" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-          };
-          copiedObject.in.sum = copiedObject.in.design + copiedObject.in.construct;
-    
-          copiedObject.out = {
-            design: copiedObject.blocks.filter((obj) => { return obj.type === "out" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-            construct: copiedObject.blocks.filter((obj) => { return obj.type === "out" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-          };
-          copiedObject.out.sum = copiedObject.out.design + copiedObject.out.construct;
+        thisTimeline = obj.request.timeline;
 
-          copiedObject.willIn = {
-            design: copiedObject.will.filter((obj) => { return obj.type === "in" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-            construct: copiedObject.will.filter((obj) => { return obj.type === "in" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-          };
-          copiedObject.willOut = {
-            design: copiedObject.will.filter((obj) => { return obj.type === "out" && obj.class === "design" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-            construct: copiedObject.will.filter((obj) => { return obj.type === "out" && obj.class === "construct" }).reduce((acc, curr) => { return acc + curr.amount }, 0),
-          };
-          copiedObject.willIn.sum = copiedObject.willIn.design + copiedObject.willIn.construct;
-          copiedObject.willOut.sum = copiedObject.willOut.design + copiedObject.willOut.construct;
+        proidMatrix.push([
+          obj.name,
+          obj.cliid,
+          '-',
+          obj.analytics.response.status,
+          '-',
+          '-',
+          dateToString(thisTimeline, true),
+          thisTimeline.getFullYear(),
+          thisTimeline.getMonth() + 1,
+          thisTimeline.getDate(),
+          "1800-01-01 00:00:00",
+          1800,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+        ]);
+        
 
-
-          cStatus = copiedObject.client.requests[thisRequestNumber].analytics.response.status;
-          pStatus = '-';
-          foundService = '-';
-          if (foundProject !== undefined) {
-            pStatus = foundProject.process.status;
-            foundService = serviceParsing(foundProject.service);
-          }
-    
-          entireClientsMatrix.push([
-            copiedObject.client.cliid,
-            foundProject === undefined ? '-' : foundProject.proid,
-            copiedObject.client.name,
-            cStatus,
-            pStatus,
-            foundService,
-            copiedObject.timeline.getFullYear(),
-            copiedObject.timeline.getMonth() + 1,
-            copiedObject.timeline.getDate(),
-            copiedObject.in.sum,
-            copiedObject.in.design,
-            copiedObject.in.construct,
-            copiedObject.out.sum,
-            copiedObject.out.design,
-            copiedObject.out.construct,
-            copiedObject.willIn.sum,
-            copiedObject.willIn.design,
-            copiedObject.willIn.construct,
-            copiedObject.willOut.sum,
-            copiedObject.willOut.design,
-            copiedObject.willOut.construct,
-          ]);
-
-        }
       }
     }
 
+    proidMatrix.sort((a, b) => {
+      return stringToDate(b[6]).valueOf() - stringToDate(a[6]).valueOf()
+    })
+
+    proidMatrix.unshift([
+      "고객",
+      "c아이디",
+      "p아이디",
+      "c상태",
+      "p상태",
+      "서비스",
+      "문의 날짜",
+      "문의 년",
+      "문의 월",
+      "문의 일",
+      "계약 날짜",
+      "계약 년",
+      "계약 월",
+      "계약 일",
+      "총 받은 돈",
+      "디자인 받은 돈",
+      "시공 받은 돈",
+      "총 준 돈",
+      "디자인 준 돈",
+      "시공 준 돈",
+      "총 받을 돈",
+      "디자인 받을 돈",
+      "시공 받을 돈",
+      "총 줄 돈",
+      "디자인 줄 돈",
+      "시공 줄 돈",
+    ])
+
     await sheets.update_value_inPython("1QeYg0ISXIxaXu8FagC_FLOcl7c2aJPiqyfsVxstCzO0", "", matrix);
-    await sheets.update_value_inPython("1nUeq90uUEccWcXcTluJv405HMPkNbfO7BZz3M6kLxR0", "", matrix2);
-    await sheets.update_value_inPython("1W5rDDi62s0SHOVTp0eOCZRtKSnrYydh6Lxu2DvxTWYY", "", matrix10);
-    await sheets.update_value_inPython("1tt11onR8REeZ0-kFHuymwlMrMW5fC9Jh4w_U051ETKM", "", entireClientsMatrix);
+    await sheets.update_value_inPython("1tt11onR8REeZ0-kFHuymwlMrMW5fC9Jh4w_U051ETKM", "", proidMatrix);
+
 
     */
-
-
 
 
 
