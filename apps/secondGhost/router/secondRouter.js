@@ -857,7 +857,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       thisChannelName = "unknown"
     } else {
 
-      thisChannelCopied = equalJson(JSON.stringify(thisMember));
+      thisChannelCopied = equalJson(JSON.stringify(thisChannel));
 
       if (typeof thisChannel.name === "string") {
         if (/error/gi.test(thisChannel.name)) {
