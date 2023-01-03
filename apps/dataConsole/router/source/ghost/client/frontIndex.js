@@ -119,7 +119,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   interval = <%% 2700, 2700, 2700, 2700, 2700 %%>;
 
   naviHeight = <%% 72, 72, 66, 60, 60 %%>;
-  mainHeight = <%% 746, 639, 560, 480, 70 %%>;
+  mainHeight = <%% 746, 639, 560, 480, 72 %%>;
 
   randomNumber = <%% 5, 5, 5, 5, 5 %%>;
   titlePadding = <%% 100, 75, 75, 90, 8 %%>;
@@ -2342,33 +2342,37 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   let checkBoxWidth, checkBoxMarginRight, checkBoxTop;
   let arrowBottom, arrowWidth, arrowHeight;
   let boxNumber;
+  let mobileBlockPadding;
+  let mobilePhotoMarginBottom;
+  let mobileTitleMarginBottom;
+  let mobileContentsMarginBottom;
 
-  middleTongPaddinngTop = <%% 160, 140, 110, 95, 24 %%>;
-  middleTongPaddingBottom = <%% 180, 150, 120, 105, 26 %%>;
+  middleTongPaddinngTop = <%% 160, 140, 110, 95, 0 %%>;
+  middleTongPaddingBottom = <%% 180, 150, 120, 105, 0 %%>;
   middleTitleMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
 
   middleTitleLineTop = <%% 68, 65, 56, 49, 12 %%>;
 
-  middleTitleSize = <%% 22, 21, 20, 18, 4 %%>;
+  middleTitleSize = <%% 22, 21, 20, 18, 3.9 %%>;
   middleTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-  middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
+  middleTitlePadding = <%% 16, 16, 12, 10, 1.8 %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 13, 13, 12, 12, 3 %%>;
+  middleInfoSize = <%% 13, 13, 12, 12, 2.7 %%>;
 
   threeBetween = <%% 10, 10, 6, 4, 1 %%>;
   threeHeight = <%% 170, 120, 110, 84, 21 %%>;
   threeVisualPaddingBottom = <%% 2, 2, 2, 2, 0.5 %%>;
-  threeBlockMarginTop = <%% 48, 48, 45, 34, 7 %%>;
+  threeBlockMarginTop = <%% 48, 48, 45, 34, 0 %%>;
 
   threeWidth0 = <%% 525, 525, 525, 525, 525 %%>;
   threeWidth1 = <%% 330, 330, 330, 330, 330 %%>;
 
-  threeTitleSize = <%% 18, 17, 16, 14, 4 %%>;
-  threeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  threeTitleSize = <%% 18, 17, 16, 14, 3.8 %%>;
+  threeTitleWeight = <%% 800, 800, 800, 800, 700 %%>;
 
-  threeSize = <%% 13, 13, 12, 11, 3.5 %%>;
+  threeSize = <%% 13, 13, 12, 11, 2.6 %%>;
   threeWeight = <%% 400, 400, 400, 400, 400 %%>;
   threeSmallSize = <%% 13, 12, 10, 10, 2.5 %%>;
 
@@ -2383,23 +2387,28 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   subBetween = <%% 6, 6, 6, 6, 0.5 %%>;
   subTop = <%% 3, 3, 3, 3, 0.5 %%>;
 
-  threeBlockWidth = <%% 400, 340, 290, 234, 30 %%>;
-  threeBlockHeight = <%% 400, 360, 325, 268, 30 %%>;
+  threeBlockWidth = <%% 400, 340, 290, 234, 27 %%>;
+  threeBlockHeight = <%% 400, 360, 325, 268, 25 %%>;
 
   threePhotoHeight = <%% 253, 222, 200, 160, 230 %%>;
-  threeTitlePaddingLeft = <%% 26, 26, 24, 21, 26 %%>;
+  threeTitlePaddingLeft = <%% 26, 26, 24, 21, 4.6 %%>;
   threeTitleAreaHeight = <%% 60, 50, 48, 40, 5 %%>;
 
-  threeDescriptionBoxPaddingTop = <%% 23, 23, 19, 16, 23 %%>;
-  threeDescriptionBoxBetween = <%% 5, 5, 5, 4, 1 %%>;
+  threeDescriptionBoxPaddingTop = <%% 23, 23, 19, 16, 4.6 %%>;
+  threeDescriptionBoxBetween = <%% 5, 5, 5, 4, (isIphone() ? 0.8 : 1) %%>;
 
-  checkBoxWidth = <%% 10, 10, 9, 8, 10 %%>;
+  checkBoxWidth = <%% 10, 10, 9, 8, 2 %%>;
   checkBoxMarginRight = <%% 6, 6, 6, 5, 1 %%>;
-  checkBoxTop = <%% 5, 5, 4, 4, 5 %%>;
+  checkBoxTop = <%% 5, 5, 4, 4, 0.9 %%>;
 
-  arrowBottom = <%% 27, 27, 24, 22, 2 %%>;
-  arrowWidth = <%% 36, 36, 20, 12, 3 %%>;
-  arrowHeight = <%% 10, 10, 8, 4, 1 %%>;
+  arrowBottom = <%% 27, 27, 24, 22, (isIphone() ? 5.6 : 5.3) %%>;
+  arrowWidth = <%% 36, 36, 20, 12, 3.5 %%>;
+  arrowHeight = <%% 10, 10, 8, 4, 1.8 %%>;
+
+  mobileBlockPadding = 14;
+  mobilePhotoMarginBottom = 6;
+  mobileTitleMarginBottom = 2.5;
+  mobileContentsMarginBottom = 4;
 
   contents = {
     title: "나에게 맞는 서비스, 나에게 맞는 디자이너",
@@ -2410,6 +2419,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
     three: [
       {
         title: "홈퍼니싱",
+        sub: "home-furnishing",
         description: [
           "인테리어 시공 없이 가구나 패브릭, 소품만",
           "우리 집 무드를 변화시켜주는 스타일링",
@@ -2419,6 +2429,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
       },
       {
         title: "홈스타일링",
+        sub: "home-styling",
         description: [
           "집 컨디션에 맞는 범위의 시공을 진행",
           "컨셉에 맞게 변화시켜주는 스타일링",
@@ -2428,9 +2439,10 @@ FrontIndexJs.prototype.insertThreeBox = function () {
       },
       {
         title: "토탈 스타일링",
+        sub: "total-styling",
         description: [
           "원하는 스타일과 라이프 패턴에 맞게 기획",
-          "디자인 구조로 변경하는 스타일링 서비스",
+          "전체적인 구조를 변경하는 스타일링",
         ],
         color: "#546d81",
         background: FrontIndexJs.binaryPath + "/" + "startt0.jpg",
@@ -2473,50 +2485,52 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   });
 
   // title
-  createNode({
-    mother: middleTong,
-    style: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      position: "relative",
-      width: String(100) + '%',
-      textAlign: "center",
-    },
-    children: [
-      {
-        text: contents.title,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(middleTitleSize) + ea,
-          fontWeight: String(middleTitleWeight),
-          color: colorChip.black,
-          textAlign: "center",
-          paddingLeft: String(middleTitlePadding) + ea,
-          paddingRight: String(middleTitlePadding) + ea,
-          top: String(middleTitleTextTop) + ea,
-          background: colorChip.white,
-        }
+  if (desktop) {
+    createNode({
+      mother: middleTong,
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        position: "relative",
+        width: String(100) + '%',
+        textAlign: "center",
       },
-      {
-        text: contents.description.join("\n"),
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(middleInfoSize) + ea,
-          fontWeight: String(400),
-          lineHeight: String(1.6),
-          color: colorChip.black,
-          textAlign: "center",
-          paddingTop: String(middleTitlePadding) + ea,
-          paddingLeft: String(middleTitlePadding * 1.5) + ea,
-          paddingRight: String(middleTitlePadding * 1.5) + ea,
-          background: colorChip.white,
+      children: [
+        {
+          text: contents.title,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(middleTitleSize) + ea,
+            fontWeight: String(middleTitleWeight),
+            color: colorChip.black,
+            textAlign: "center",
+            paddingLeft: String(middleTitlePadding) + ea,
+            paddingRight: String(middleTitlePadding) + ea,
+            top: String(middleTitleTextTop) + ea,
+            background: colorChip.white,
+          }
+        },
+        {
+          text: contents.description.join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(middleInfoSize) + ea,
+            fontWeight: String(400),
+            lineHeight: String(1.6),
+            color: colorChip.black,
+            textAlign: "center",
+            paddingTop: String(middleTitlePadding) + ea,
+            paddingLeft: String(middleTitlePadding * 1.5) + ea,
+            paddingRight: String(middleTitlePadding * 1.5) + ea,
+            background: colorChip.white,
+          }
         }
-      }
-    ]
-  });
+      ]
+    });
+  }
 
   // three base
   threeBlock = createNode({
@@ -2538,17 +2552,19 @@ FrontIndexJs.prototype.insertThreeBox = function () {
     createNode({
       mother: threeBlock,
       style: {
-        display: "inline-block",
-        width: String(threeBlockWidth) + ea,
+        display: desktop ? "inline-block" : "block",
+        width: desktop ? String(threeBlockWidth) + ea : withOut(0),
         height: String(threeBlockHeight) + ea,
         background: colorChip.white,
         borderRadius: String(8) + "px",
         boxShadow: "0px 5px 20px -12px " + colorChip.shadow,
+        overflow: desktop ? "" : "hidden",
+        marginBottom: desktop ? "" : String(2) + ea,
       },
       children: [
         {
           style: {
-            display: "flex",
+            display: desktop ? "flex" : "none",
             height: String(threeTitleAreaHeight) + ea,
             width: withOut(threeTitlePaddingLeft, ea),
             position: "relative",
@@ -2568,27 +2584,65 @@ FrontIndexJs.prototype.insertThreeBox = function () {
         },
         {
           style: {
-            display: "block",
+            display: desktop ? "block" : "inline-block",
             position: "relative",
-            width: withOut(0, ea),
-            height: String(threePhotoHeight) + ea,
+            width: desktop ? withOut(0, ea) : String(threeBlockWidth) + ea,
+            height: desktop ? String(threePhotoHeight) + ea : String(102) + '%',
             backgroundImage: "url('" + contents.three[i].background + "')",
-            backgroundSize: "100% auto",
+            backgroundSize: desktop ? "100% auto" : "auto 100%",
             backgroundPosition: "50% 50%",
+            verticalAlign: desktop ? "" : "top",
           }
         },
         {
           style: {
-            display: "flex",
+            display: desktop ? "flex" : "inline-flex",
             position: "relative",
             flexDirection: "column",
-            width: withOut(threeTitlePaddingLeft * 2, ea),
+            width: desktop ? withOut(threeTitlePaddingLeft * 2, ea) : withOut((threeTitlePaddingLeft * 2) + threeBlockWidth, ea),
             paddingLeft: String(threeTitlePaddingLeft) + ea,
             paddingRight: String(threeTitlePaddingLeft) + ea,
             paddingTop: String(threeDescriptionBoxPaddingTop) + ea,
             paddingBottom: String(threeDescriptionBoxPaddingTop) + ea,
+            verticalAlign: desktop ? "" : "top",
+            height: desktop ? "" : withOut(threeDescriptionBoxPaddingTop * 2, ea),
+            justifyContent: desktop ? "" : "end",
+            top: desktop ? "" : String(0),
           },
           children: [
+            {
+              style: {
+                display: desktop ? "none" : "inline-block",
+                position: "absolute",
+                top: String(isIphone() ? 3.9 : 4.2) + ea,
+                left: String(threeTitlePaddingLeft) + ea,
+              },
+              children: [
+                {
+                  text: contents.three[i].title,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(threeTitleSize) + ea,
+                    fontWeight: String(threeTitleWeight),
+                    color: colorChip.black,
+                  }
+                },
+                {
+                  text: contents.three[i].sub,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(2.5) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.gray3,
+                    fontFamily: "graphik",
+                    fontStyle: "italic",
+                    marginLeft: String(1.2) + ea,
+                  }
+                }
+              ]
+            },
             {
               style: {
                 display: "flex",
@@ -2652,7 +2706,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
               mode: "svg",
               source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, contents.three[i].color),
               style: {
-                display: big ? "inline-block" : "none",
+                display: !media[3] ? "inline-block" : "none",
                 position: "absolute",
                 bottom: String(arrowBottom) + ea,
                 right: String(threeTitlePaddingLeft) + ea,
@@ -2668,7 +2722,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
       createNode({
         mother: threeBlock,
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           position: "relative",
           width: "calc(calc(100% - " + String(threeBlockWidth * boxNumber) + ea + ") / " + String(boxNumber - 1) + ")",
           height: String(threeBlockHeight) + ea,
