@@ -835,7 +835,9 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
   const instance = this;
   const { secondHost, slack_userToken, telegram } = this;
   const { errorLog, messageLog, equalJson, ajaxJson } = this.mother;
-  const telegramChat = (user, text, channel) => {
+  const telegramChat = (user, textRaw, channel) => {
+    let text;
+    text = user + " : " + textRaw + " / in " + channel;
     ajaxJson({ chat_id: telegram.chat.log, text }, telegram.url(telegram.token)).catch((err) => { console.log(err); });
   }
   let obj = {};
