@@ -841,12 +841,14 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
   const telegramChat = (user, textRaw, channel) => {
     let text;
     let thisMember, thisChannel, thisChannelName, receiver;
+    let thisMemberCopied, thisChannelCopied;
 
     thisMember = slackMembers.find((obj) => { return obj.id === user });
     if (thisMember === undefined) {
       thisMember = "unknown";
     } else {
-      thisMember = thisMember.real_name
+      thisMemberCopied = equalJson(JSON.stringify(thisMember));
+      thisMember = thisMember.real_name;
     }
 
     thisChannel = slackChannels.find((obj) => { return obj.id === channel });
@@ -854,6 +856,9 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       thisChannel = "private";
       thisChannelName = "unknown"
     } else {
+
+      thisChannelCopied = equalJson(JSON.stringify(thisMember));
+
       if (typeof thisChannel.name === "string") {
         if (/error/gi.test(thisChannel.name)) {
           thisChannel = "log";
@@ -862,10 +867,10 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
         } else {
           thisChannel = "general";
         }
-        thisChannelName = thisChannel.name;
+        thisChannelName = thisChannelCopied.name;
       } else {
         thisChannel = "private";
-        receiver = slackMembers.find((obj) => { return obj.id === thisChannel.user });
+        receiver = slackMembers.find((obj) => { return obj.id === thisChannelCopied.user });
         if (receiver === undefined) {
           thisChannelName = "unknown"
         } else {
