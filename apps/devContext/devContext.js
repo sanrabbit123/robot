@@ -139,38 +139,10 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-    // const sambaPath = "/home/homeliaison/samba";
-    // const target = "/home/homeliaison/samba/corePortfolio/rawImage";
-    // let res, targetList;
-    // let motherPath;
-    // let thisPath;
-    // let url;
-    // let pid;
-    // let commandList;
 
-    // url = "https://home-liaison.serveftp.com:3000/readDir";
-    // motherPath = "/drive/HomeLiaisonServer/사진_등록_포트폴리오";
-
-    // res = await ajaxJson({ path: motherPath }, url);
-
-    // targetList = res.filter((str) => { return /^p/.test(str) });
-
-    // targetList.sort((a, b) => {
-    //   return Number(a.split('_')[0].replace(/[^0-9]/gi, '')) - Number(b.split('_')[0].replace(/[^0-9]/gi, ''))
-    // })
+    
 
 
-    // commandList = [];
-    // for (let name of targetList) {
-    //   thisPath = motherPath + "/" + name;
-    //   res = await ajaxJson({ path: thisPath }, url);
-    //   [ pid ] = name.split("_");
-
-    //   commandList.push("cp -r " + sambaPath + thisPath + "/" + pid + " " + target + ";")
-      
-    // }
-
-    // console.log(commandList.join(""));
 
 
 
@@ -187,9 +159,23 @@ DevContext.prototype.launching = async function () {
     // console.log(res.data);
 
 
+    const telegram = {
+      chat: {
+        general: "-1001897212963",
+        notice: "-873784218",
+        operation: "-658958104",
+        log: "-760085658",
+      },
+      token: "5127747215:AAHDSmjmeYNJ4C4B5hWdAO-T1bJleSfOpGU",
+      url: (token) => { return `https://api.telegram.org/bot${token}/sendMessage` }
+    }
 
-
+    ajaxJson({ chat_id: telegram.chat.log, text: "내가 돌아왔다" }, telegram.url(telegram.token)).catch((err) => { console.log(err); });
     
+
+
+
+
 
     
     /*

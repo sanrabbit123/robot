@@ -494,6 +494,7 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
       const c1500 = "1500";
       const c3508 = pid;
       const targetDir = staticConst + homeliaisonOfficeConst + "/" + designerPhotoConst;
+
       const list = await fileSystem(`readDir`, [ targetDir ]);
       const homeFolder = await fileSystem(`readDir`, [ process.env.HOME ]);
       const tempFolderName = "temp";
@@ -527,6 +528,8 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
       shareDesignerName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
 
       commands = "";
+      commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c3508)};`;
+      commands += `zip ${shellLink(staticConst)}/corePortfolio/rawImage/${shellLink(c3508)}.zip ./*;`;
       commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c3508)};`;
       commands += `zip ${shellLink(process.env.HOME)}/${shellLink(tempFolderName)}/${shellLink(shareDesignerName)} ./*;`;
       commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c780)};`;

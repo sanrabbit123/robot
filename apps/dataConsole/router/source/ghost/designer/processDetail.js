@@ -4135,7 +4135,6 @@ ProcessDetailJs.prototype.returnButtonList = function () {
 
                     loading.remove();
 
-                    window.alert("업로드가 완료되었습니다!");
                     cancelBack.click();
                   }
                 } catch (e) {
@@ -4553,15 +4552,16 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
 
                   res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
                   await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
-                  window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
-                  await instance.setPanBlocks();
-
-                  loading.remove();
-
-                  removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-                  for (let dom of removeTargets) {
-                    dom.remove();
+                  if (desktop) {
+                    await instance.setPanBlocks();
+                    loading.remove();
+                    removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                    for (let dom of removeTargets) {
+                      dom.remove();
+                    }
+                  } else {
+                    window.location.reload();
                   }
 
                 }
@@ -4655,15 +4655,16 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
 
                   res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
                   await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
-                  window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
-                  await instance.setPanBlocks();
-
-                  loading.remove();
-
-                  removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-                  for (let dom of removeTargets) {
-                    dom.remove();
+                  if (desktop) {
+                    await instance.setPanBlocks();
+                    loading.remove();
+                    removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                    for (let dom of removeTargets) {
+                      dom.remove();
+                    }
+                  } else {
+                    window.location.reload();
                   }
 
                 }
@@ -4770,15 +4771,16 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
 
               res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
               await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
-              window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
-              await instance.setPanBlocks();
-
-              loading.remove();
-
-              removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-              for (let dom of removeTargets) {
-                dom.remove();
+              if (desktop) {
+                await instance.setPanBlocks();
+                loading.remove();
+                removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                for (let dom of removeTargets) {
+                  dom.remove();
+                }
+              } else {
+                window.location.reload();
               }
 
             }
@@ -4876,15 +4878,16 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
 
               res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
               await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
-              window.alert(thisTitle + " 관련 파일 업로드가 완료되었습니다!");
 
-              await instance.setPanBlocks();
-
-              loading.remove();
-
-              removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-              for (let dom of removeTargets) {
-                dom.remove();
+              if (desktop) {
+                await instance.setPanBlocks();
+                loading.remove();
+                removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+                for (let dom of removeTargets) {
+                  dom.remove();
+                }
+              } else {
+                window.location.reload();
               }
 
             }
