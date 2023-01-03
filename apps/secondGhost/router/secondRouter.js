@@ -1,4 +1,4 @@
-const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken) {
+const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken, telegram) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
 
@@ -44,6 +44,7 @@ const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken) 
     "192.168.0.14:3000",
   ];
 
+  this.telegram = telegram;
 }
 
 SecondRouter.prototype.baseMaker = function (target, req = null) {
@@ -832,8 +833,11 @@ SecondRouter.prototype.rou_post_printClient = function () {
 
 SecondRouter.prototype.rou_post_slackEvents = function () {
   const instance = this;
-  const { secondHost, slack_userToken } = this;
-  const { errorLog, messageLog, equalJson } = this.mother;
+  const { secondHost, slack_userToken, telegram } = this;
+  const { errorLog, messageLog, equalJson, ajaxJson } = this.mother;
+  const telegramChat = (user, text, channel) => {
+    ajaxJson({ chat_id: telegram.chat.log, text }, telegram.url(telegram.token)).catch((err) => { console.log(err); });
+  }
   let obj = {};
   obj.link = [ "/slackEvents" ];
   obj.func = async function (req, res) {
@@ -845,7 +849,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
     });
     try {
       const { user, text, channel } = equalJson(req.body).event;
-
+      telegramChat(user, text, channel);
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + e.message).catch((e) => { console.log(e); });

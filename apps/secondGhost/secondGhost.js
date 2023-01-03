@@ -16,6 +16,16 @@ const SecondGhost = function (mother = null, back = null, address = null) {
   this.slack_token = "xoxb-717757271335-4566120587107-i7TxxYzbPWPzdBMPoZDo2kxn";
   this.slack_userToken = "xoxp-717757271335-704486967090-4566130160163-fd2a2cc412e2a509a43635fb8f6c65e2";
   this.slack_bot = new WebClient(this.slack_token);
+  this.telegram = {
+    chat: {
+      general: "-1001897212963",
+      notice: "-873784218",
+      operation: "-658958104",
+      log: "-760085658",
+    },
+    token: "5127747215:AAHDSmjmeYNJ4C4B5hWdAO-T1bJleSfOpGU",
+    url: (token) => { return `https://api.telegram.org/bot${token}/sendMessage` }
+  }
 }
 
 SecondGhost.prototype.ghostConnect = async function () {
@@ -81,7 +91,7 @@ SecondGhost.prototype.ghostConnect = async function () {
 
     //set router
     const SecondRouter = require(`${this.dir}/router/secondRouter.js`);
-    const router = new SecondRouter(this.slack_bot, MONGOC, MONGOLOCALC, this.slack_userToken);
+    const router = new SecondRouter(this.slack_bot, MONGOC, MONGOLOCALC, this.slack_userToken, this.telegram);
 
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
