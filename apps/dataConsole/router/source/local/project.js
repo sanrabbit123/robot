@@ -5617,6 +5617,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
                                                 kind = "vaccount" + ((entire || percentage === 100) ? "Entire" : "Partial");
                                                 bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
+
                                                 do {
                                                   raw = await GeneralJs.prompt("은행 이름을 알려주세요!");
                                                   if (raw !== null) {
@@ -5633,6 +5634,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                     bankName = null;
                                                   }
                                                 } while (bankName === null)
+
+                                                console.log("this");
+
                                                 do {
                                                   raw = await GeneralJs.prompt("계좌 번호를 알려주세요!");
                                                   if (raw !== null) {
@@ -5642,6 +5646,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                     accountNumber = null;
                                                   }
                                                 } while (accountNumber === null)
+                                                
                                                 do {
                                                   raw = await GeneralJs.prompt("예금주를 알려주세요!");
                                                   if (raw !== null) {
@@ -5693,6 +5698,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                     bankName = null;
                                                   }
                                                 } while (bankName === null)
+
                                                 do {
                                                   raw = await GeneralJs.prompt("계좌 번호를 알려주세요!");
                                                   if (raw !== null) {
@@ -5702,6 +5708,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                     accountNumber = null;
                                                   }
                                                 } while (accountNumber === null)
+
                                                 do {
                                                   raw = await GeneralJs.prompt("예금주를 알려주세요!");
                                                   if (raw !== null) {

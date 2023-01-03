@@ -4300,7 +4300,7 @@ GeneralJs.prompt = function (message, preValue = '') {
             targets[z].remove();
           } catch {}
         }
-        resolve(finalValue);
+        resolve(finalValue === '' ? null : finalValue);
       }
     });
 
