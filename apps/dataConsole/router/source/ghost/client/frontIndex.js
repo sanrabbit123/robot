@@ -868,8 +868,8 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   let subInfoTextTop;
   let subTitleMarginTopReview;
 
-  mainPaddingTop = <%% 140, 120, 90, 65, 8 %%>;
-  mainPaddingBottom = <%% 120, 100, 60, 45, 8 %%>;
+  mainPaddingTop = <%% 160, 140, 110, 95, 8 %%>;
+  mainPaddingBottom = <%% 130, 110, 70, 65, 8 %%>;
 
   searchWordingSize = <%% 22, 21, 20, 18, 22 %%>;
   searchWordingWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -943,8 +943,8 @@ FrontIndexJs.prototype.insertSearchBox = function () {
   portfolioBlockPaddingTop = <%% 50, 45, 35, 35, 7 %%>;
   reviewBlockPaddingTop = <%% 20, 0, 0, 0, 4 %%>;
 
-  blockTitleMarginBottom = <%% (isMac() ? 24 : 21), (isMac() ? 24 : 20), (isMac() ? 23 : 19), (isMac() ? 17 : 14), 3.2 %%>;
-  blockTitleSize = <%% 20, 20, 20, 18, 4 %%>;
+  blockTitleMarginBottom = <%% (isMac() ? 24 : 21), (isMac() ? 24 : 20), (isMac() ? 21 : 17), (isMac() ? 15 : 12), 3.2 %%>;
+  blockTitleSize = <%% 20, 20, 19, 17, 4 %%>;
   blockTitleWeight = <%% 600, 600, 600, 600, 600 %%>;
   blockWhitePaddingRight = <%% 15, 15, 15, 15, 3 %%>;
 
@@ -1724,8 +1724,8 @@ FrontIndexJs.prototype.insertNewsBox = function () {
   margin = <%% 18, 16, 16, 12, 2 %%>;
 
   tongPaddingLeft = <%% 60, 0, 0, 0, 0 %%>;
-  tongPaddingTop = <%% 160, 130, 100, 70, 13 %%>;
-  tongPaddingBottom = <%% 160, 130, 100, 70, 15 %%>;
+  tongPaddingTop = <%% 160, 140, 110, 95, 13 %%>;
+  tongPaddingBottom = <%% 180, 150, 120, 105, 15 %%>;
 
   whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
   whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
@@ -1758,13 +1758,13 @@ FrontIndexJs.prototype.insertNewsBox = function () {
 
   titleBoxHeight = <%% 40, 36, 26, 25, 4 %%>;
   titleTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
-  titleSize = <%% 25, 25, 24, 22, 4.2 %%>;
+  titleSize = <%% 25, 25, 22, 19, 4.2 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
   titleBarBottom = <%% (isMac() ? 0 : 3), (isMac() ? 0 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
   titleBarLeft = <%% -4, -4, -4, -3, -0.6 %%>;
-  titleBarWidth = <%% 144, 144, 139, 125, 24 %%>;
-  titleBarHeight = <%% 9, 9, 9, 8, 1.5 %%>;
+  titleBarWidth = <%% 144, 144, 128, 110, 24 %%>;
+  titleBarHeight = <%% 9, 9, 8, 8, 1.5 %%>;
 
   indent = 100;
   circleOpacity = 0.4;
@@ -2343,8 +2343,8 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   let arrowBottom, arrowWidth, arrowHeight;
   let boxNumber;
 
-  middleTongPaddinngTop = <%% 140, 120, 90, 65, 8 %%>;
-  middleTongPaddingBottom = <%% 164, 144, 110, 75, 17 %%>;
+  middleTongPaddinngTop = <%% 160, 140, 110, 95, 24 %%>;
+  middleTongPaddingBottom = <%% 180, 150, 120, 105, 26 %%>;
   middleTitleMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
 
   middleTitleLineTop = <%% 68, 65, 56, 49, 12 %%>;
@@ -2355,17 +2355,17 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
-  middleInfoSize = <%% 13, 13, 12, 11, 3 %%>;
+  middleInfoSize = <%% 13, 13, 12, 12, 3 %%>;
 
   threeBetween = <%% 10, 10, 6, 4, 1 %%>;
   threeHeight = <%% 170, 120, 110, 84, 21 %%>;
   threeVisualPaddingBottom = <%% 2, 2, 2, 2, 0.5 %%>;
-  threeBlockMarginTop = <%% 48, 48, 48, 40, 7 %%>;
+  threeBlockMarginTop = <%% 48, 48, 45, 34, 7 %%>;
 
   threeWidth0 = <%% 525, 525, 525, 525, 525 %%>;
   threeWidth1 = <%% 330, 330, 330, 330, 330 %%>;
 
-  threeTitleSize = <%% 18, 18, 16, 14, 4 %%>;
+  threeTitleSize = <%% 18, 17, 16, 14, 4 %%>;
   threeTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
   threeSize = <%% 13, 13, 12, 11, 3.5 %%>;
@@ -2383,23 +2383,23 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   subBetween = <%% 6, 6, 6, 6, 0.5 %%>;
   subTop = <%% 3, 3, 3, 3, 0.5 %%>;
 
-  threeBlockWidth = <%% 400, 400, 400, 400, 400 %%>;
-  threeBlockHeight = <%% 400, 400, 400, 400, 400 %%>;
+  threeBlockWidth = <%% 400, 340, 290, 234, 30 %%>;
+  threeBlockHeight = <%% 400, 360, 325, 268, 30 %%>;
 
-  threePhotoHeight = <%% 253, 253, 253, 253, 253 %%>;
-  threeTitlePaddingLeft = <%% 26, 26, 26, 26, 26 %%>;
-  threeTitleAreaHeight = <%% 60, 60, 60, 60, 60 %%>;
+  threePhotoHeight = <%% 253, 222, 200, 160, 230 %%>;
+  threeTitlePaddingLeft = <%% 26, 26, 24, 21, 26 %%>;
+  threeTitleAreaHeight = <%% 60, 50, 48, 40, 5 %%>;
 
-  threeDescriptionBoxPaddingTop = <%% 23, 23, 23, 23, 23 %%>;
-  threeDescriptionBoxBetween = <%% 5, 5, 5, 5, 5 %%>;
+  threeDescriptionBoxPaddingTop = <%% 23, 23, 19, 16, 23 %%>;
+  threeDescriptionBoxBetween = <%% 5, 5, 5, 4, 1 %%>;
 
-  checkBoxWidth = <%% 10, 10, 10, 10, 10 %%>;
-  checkBoxMarginRight = <%% 6, 6, 6, 6, 6 %%>;
-  checkBoxTop = <%% 5, 5, 5, 5, 5 %%>;
+  checkBoxWidth = <%% 10, 10, 9, 8, 10 %%>;
+  checkBoxMarginRight = <%% 6, 6, 6, 5, 1 %%>;
+  checkBoxTop = <%% 5, 5, 4, 4, 5 %%>;
 
-  arrowBottom = <%% 26, 26, 26, 26, 26 %%>;
-  arrowWidth = <%% 36, 36, 36, 36, 36 %%>;
-  arrowHeight = <%% 10, 10, 10, 10, 10 %%>;
+  arrowBottom = <%% 27, 27, 24, 22, 2 %%>;
+  arrowWidth = <%% 36, 36, 20, 12, 3 %%>;
+  arrowHeight = <%% 10, 10, 8, 4, 1 %%>;
 
   contents = {
     title: "나에게 맞는 서비스, 나에게 맞는 디자이너",
@@ -2430,7 +2430,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
         title: "토탈 스타일링",
         description: [
           "원하는 스타일과 라이프 패턴에 맞게 기획",
-          "디자인의 구조로 변경하는 스타일링 서비스",
+          "디자인 구조로 변경하는 스타일링 서비스",
         ],
         color: "#546d81",
         background: FrontIndexJs.binaryPath + "/" + "startt0.jpg",
@@ -2652,6 +2652,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
               mode: "svg",
               source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, contents.three[i].color),
               style: {
+                display: big ? "inline-block" : "none",
                 position: "absolute",
                 bottom: String(arrowBottom) + ea,
                 right: String(threeTitlePaddingLeft) + ea,
@@ -2674,7 +2675,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
         },
         child: {
           style: {
-            display: "inline-block",
+            display: media[0] ? "inline-block" : "none",
             position: "absolute",
             top: String(0),
             left: String(0),
