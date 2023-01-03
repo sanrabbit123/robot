@@ -2309,7 +2309,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker, selfHref } = GeneralJs;
   let contents;
   let middleTongPaddinngTop;
   let middleTongPaddingBottom;
@@ -2346,6 +2346,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   let mobilePhotoMarginBottom;
   let mobileTitleMarginBottom;
   let mobileContentsMarginBottom;
+  let titleTextTop, descriptionTextTop;
 
   middleTongPaddinngTop = <%% 160, 140, 110, 95, 0 %%>;
   middleTongPaddingBottom = <%% 180, 150, 120, 105, 0 %%>;
@@ -2399,7 +2400,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
 
   checkBoxWidth = <%% 10, 10, 9, 8, 2 %%>;
   checkBoxMarginRight = <%% 6, 6, 6, 5, 1 %%>;
-  checkBoxTop = <%% 5, 5, 4, 4, 0.9 %%>;
+  checkBoxTop = <%% 5, 5, 4, 4, 1 %%>;
 
   arrowBottom = <%% 27, 27, 24, 22, (isIphone() ? 5.6 : 5.3) %%>;
   arrowWidth = <%% 36, 36, 20, 12, 3.5 %%>;
@@ -2409,6 +2410,9 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   mobilePhotoMarginBottom = 6;
   mobileTitleMarginBottom = 2.5;
   mobileContentsMarginBottom = 4;
+
+  titleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 1), 0 %%>;
+  descriptionTextTop = <%% (isMac() ? 0 : 2.5), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 1.5), 0 %%>;
 
   contents = {
     title: "나에게 맞는 서비스, 나에게 맞는 디자이너",
@@ -2426,6 +2430,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
         ],
         color: "#bfb8b0",
         background: FrontIndexJs.binaryPath + "/" + "startf0.jpg",
+        href: FRONTHOST + "/service.php?mode=furnishing",
       },
       {
         title: "홈스타일링",
@@ -2436,6 +2441,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
         ],
         color: "#b1ae9d",
         background: FrontIndexJs.binaryPath + "/" + "starts0.jpg",
+        href: FRONTHOST + "/service.php?mode=styling",
       },
       {
         title: "토탈 스타일링",
@@ -2446,6 +2452,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
         ],
         color: "#546d81",
         background: FrontIndexJs.binaryPath + "/" + "startt0.jpg",
+        href: FRONTHOST + "/service.php?mode=total",
       },
     ]
   }
@@ -2551,6 +2558,15 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   for (let i = 0; i < boxNumber; i++) {
     createNode({
       mother: threeBlock,
+      attribute: {
+        index: String(i),
+      },
+      event: {
+        click: function (e) {
+          const index = Number(this.getAttribute("index"));
+          selfHref(contents.three[index].href);
+        }
+      },
       style: {
         display: desktop ? "inline-block" : "block",
         width: desktop ? String(threeBlockWidth) + ea : withOut(0),
@@ -2560,6 +2576,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
         boxShadow: "0px 5px 20px -12px " + colorChip.shadow,
         overflow: desktop ? "" : "hidden",
         marginBottom: desktop ? "" : String(2) + ea,
+        cursor: "pointer",
       },
       children: [
         {
@@ -2579,6 +2596,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
               fontSize: String(threeTitleSize) + ea,
               fontWeight: String(threeTitleWeight),
               color: colorChip.black,
+              top: desktop ? String(titleTextTop) + ea : "",
             }
           }
         },
@@ -2670,6 +2688,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
                     fontSize: String(threeSize) + ea,
                     fontWeight: String(threeWeight),
                     color: colorChip.black,
+                    top: desktop ? String(descriptionTextTop) + ea : "",
                   }
                 }
               ]
@@ -2695,9 +2714,12 @@ FrontIndexJs.prototype.insertThreeBox = function () {
                 {
                   text: contents.three[i].description[1],
                   style: {
+                    display: "inline-block",
+                    position: "relative",
                     fontSize: String(threeSize) + ea,
                     fontWeight: String(threeWeight),
                     color: colorChip.black,
+                    top: desktop ? String(descriptionTextTop) + ea : "",
                   }
                 }
               ]
