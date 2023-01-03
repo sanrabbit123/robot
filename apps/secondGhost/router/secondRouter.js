@@ -1,4 +1,4 @@
-const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken, telegram) {
+const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken, slackMembers, slackChannels, telegram) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
 
@@ -12,6 +12,9 @@ const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken, 
 
   this.slack_userToken = slack_userToken;
   this.slack_bot = slack_bot;
+  this.slackMembers = slackMembers;
+  this.slackChannels = slackChannels;
+
   this.webHook = {
     url: "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844",
     headers: {
@@ -833,12 +836,38 @@ SecondRouter.prototype.rou_post_printClient = function () {
 
 SecondRouter.prototype.rou_post_slackEvents = function () {
   const instance = this;
-  const { secondHost, slack_userToken, telegram } = this;
+  const { secondHost, slack_userToken, telegram, slackMembers, slackChannels } = this;
   const { errorLog, messageLog, equalJson, ajaxJson } = this.mother;
   const telegramChat = (user, textRaw, channel) => {
     let text;
-    text = user + " : " + textRaw + " / in " + channel;
-    ajaxJson({ chat_id: telegram.chat.log, text }, telegram.url(telegram.token)).catch((err) => { console.log(err); });
+    let thisMember, thisChannel;
+
+    thisMember = slackMembers.find((obj) => { return obj.id === user });
+    if (thisMember === undefined) {
+      thisMember = "unknown";
+    } else {
+      thisMember = thisMember.real_name
+    }
+
+    thisChannel = slackChannels.find((obj) => { return obj.id === channel });
+    if (thisChannel === undefined) {
+      thisChannel = "private";
+    } else {
+      if (typeof thisChannel.name === "string") {
+        if (/error/gi.test(thisChannel.name)) {
+          thisChannel = "log";
+        } else if (/operation/gi.test(thisChannel.name)) {
+          thisChannel = "operation";
+        } else {
+          thisChannel = "general";
+        }
+      } else {
+        thisChannel = "private";
+      }
+    }
+
+    text = thisMember + " : " + textRaw;
+    ajaxJson({ chat_id: telegram.chat[thisChannel], text }, telegram.url(telegram.token)).catch((err) => { console.log(err); });
   }
   let obj = {};
   obj.link = [ "/slackEvents" ];

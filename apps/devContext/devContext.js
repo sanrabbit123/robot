@@ -147,35 +147,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const slack_userToken = "xoxp-717757271335-704486967090-4566130160163-fd2a2cc412e2a509a43635fb8f6c65e2";
 
-    // const res = await requestSystem("https://slack.com/api/users.list", {}, {
-    //   method: "get",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "Authorization": "Bearer " + slack_userToken,
-    //   }
-    // })
-    // console.log(res.data);
-
-
-    const telegram = {
-      chat: {
-        general: "-1001897212963",
-        notice: "-873784218",
-        operation: "-658958104",
-        log: "-760085658",
-      },
-      token: "5127747215:AAHDSmjmeYNJ4C4B5hWdAO-T1bJleSfOpGU",
-      url: (token) => { return `https://api.telegram.org/bot${token}/sendMessage` }
-    }
-
-    ajaxJson({ chat_id: telegram.chat.log, text: "내가 돌아왔다" }, telegram.url(telegram.token)).catch((err) => { console.log(err); });
     
-
-
-
-
+    
 
     
     /*

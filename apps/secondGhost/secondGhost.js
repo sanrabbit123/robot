@@ -19,7 +19,7 @@ const SecondGhost = function (mother = null, back = null, address = null) {
   this.telegram = {
     chat: {
       general: "-1001897212963",
-      notice: "-873784218",
+      private: "-873784218",
       operation: "-658958104",
       log: "-760085658",
     },
@@ -31,6 +31,7 @@ const SecondGhost = function (mother = null, back = null, address = null) {
 SecondGhost.prototype.ghostConnect = async function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep } = this.mother;
+  const { slack_userToken } = this;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
@@ -89,9 +90,26 @@ SecondGhost.prototype.ghostConnect = async function () {
     }
     pems.allowHTTP1 = true;
 
+    //set slack members, channels;
+
+    const { data: { members: slackMembers } } = await requestSystem("https://slack.com/api/users.list", {}, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + slack_userToken,
+      }
+    });
+    const { data: { channels: slackChannels } } = await requestSystem("https://slack.com/api/conversations.list?limit=999&types=public_channel,private_channel,mpim,im", {}, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + slack_userToken,
+      }
+    });
+
     //set router
     const SecondRouter = require(`${this.dir}/router/secondRouter.js`);
-    const router = new SecondRouter(this.slack_bot, MONGOC, MONGOLOCALC, this.slack_userToken, this.telegram);
+    const router = new SecondRouter(this.slack_bot, MONGOC, MONGOLOCALC, slack_userToken, slackMembers, slackChannels, this.telegram);
 
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
