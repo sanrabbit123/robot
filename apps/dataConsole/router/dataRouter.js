@@ -6134,7 +6134,7 @@ DataRouter.prototype.rou_post_calendarSync = function () {
     });
     try {
       calendarSyncFunc(instance.mongo).catch((err) => {
-        errorLog("Console 서버 문제 생김 (rou_post_calendarSync): " + e.message).catch((err) => { console.log(err) });
+        errorLog("Console 서버 문제 생김 (rou_post_calendarSync): " + err.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
@@ -6312,6 +6312,143 @@ DataRouter.prototype.rou_post_pushClient = function () {
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_pushClient): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_photoStatusSync = function () {
+  const instance = this;
+  const back = this.back;
+  const { errorLog, sleep, equalJson } = this.mother;
+  const photoStatusSyncFunc = async (MONGOC) => {
+    try {
+      const selfMongo = MONGOC;
+      const dummny = {
+        status: "결제 대기",
+        date: new Date(1800, 0, 1),
+        cancel: new Date(1800, 0, 1),
+        calculation: {
+          amount: 165000,
+          info: {
+            method: "",
+            proof: "",
+            to: "",
+          },
+          refund: 0,
+        },
+      };
+      const collection = "project";
+      let allDesigners;
+      let whereQuery, updateQuery;
+      let rawProjects;
+      let proid;
+      let thisDummy;
+      let thisDesigner;
+      let thisProof;
+  
+      allDesigners = (await back.getDesignersByQuery({}, { selfMongo })).toNormal();
+  
+      rawProjects = await selfMongo.db("miro81").collection(collection).find({}).toArray();
+      for (let rawProject of rawProjects) {
+        proid = rawProject.proid;
+        thisDesigner = null;
+        if (rawProject.desid !== '') {
+          thisDesigner = allDesigners.find((designer) => { return designer.desid === rawProject.desid });
+          if (thisDesigner === undefined) {
+            thisDesigner = null;
+          }
+        }
+  
+        whereQuery = { proid };
+        updateQuery = {};
+        thisDummy = equalJson(JSON.stringify(dummny));
+  
+        if (rawProject.contents.photo.boo) {
+  
+          if ((new Date(2000, 0, 1)).valueOf() <= rawProject.contents.photo.date.valueOf() && (new Date(3000, 0, 1)).valueOf() > rawProject.contents.photo.date.valueOf()) {
+            if ((new Date()).valueOf() >= rawProject.contents.photo.date.valueOf()) {
+  
+              if (rawProject.contents.photo.info.photographer !== "디자이너" && rawProject.contents.photo.info.photographer !== "고객") {
+  
+                if (rawProject.contents.photo.info.photographer !== "미정") {
+                  updateQuery["contents.photo.status"] = "촬영 완료";
+                }
+  
+                thisProof = '';
+                if (thisDesigner !== null) {
+                  if (/프리/gi.test(thisDesigner.information.business.businessInfo.classification) || /간이/gi.test(thisDesigner.information.business.businessInfo.classification)) {
+                    thisProof = "현금영수증";
+                  } else {
+                    thisProof = "세금계산서"
+                  }
+                }
+                thisDummy.status = "결제 완료";
+                thisDummy.date = rawProject.contents.photo.date;
+                thisDummy.calculation.info.method = "계좌 이체";
+                thisDummy.calculation.info.proof = thisProof;
+                thisDummy.calculation.info.to = thisDesigner !== null ? thisDesigner.designer : "";
+  
+              } else {
+  
+                updateQuery["contents.photo.status"] = "해당 없음";
+                thisDummy.status = "해당 없음";
+                thisDummy.calculation.amount = 0;
+  
+              }
+  
+            }
+          } else {
+  
+            if (/완료/gi.test(rawProject.contents.photo.status)) {
+              if (rawProject.contents.photo.info.photographer === "디자이너" || rawProject.contents.photo.info.photographer === "고객") {
+                if (rawProject.process.calculation.payments.remain.date > (new Date(2000, 0, 1)).valueOf()) {
+                  updateQuery["contents.photo.status"] = "해당 없음";
+                  updateQuery["contents.photo.date"] = rawProject.process.calculation.payments.remain.date;
+                  thisDummy.status = "해당 없음";
+                  thisDummy.calculation.amount = 0;
+                }
+              }
+            }
+  
+          }
+  
+        } else {
+          updateQuery["contents.photo.status"] = "해당 없음";
+          thisDummy.status = "해당 없음";
+          thisDummy.calculation.amount = 0;
+        }
+  
+        updateQuery["contents.payment"] = thisDummy;
+  
+        await selfMongo.db("miro81").collection(collection).updateOne(whereQuery, { $set: updateQuery });
+        
+      }
+  
+      await errorLog("photoStatus sync done : " + JSON.stringify(new Date()));
+
+
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_photoStatusSync): " + e.message);
+    }
+  }
+  let obj = {};
+  obj.link = [ "/photoStatusSync" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      photoStatusSyncFunc(instance.mongo).catch((err) => {
+        errorLog("Console 서버 문제 생김 (rou_post_photoStatusSync): " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_photoStatusSync): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }

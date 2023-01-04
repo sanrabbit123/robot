@@ -5699,9 +5699,12 @@ DataRouter.prototype.rou_post_photoStatusSync = function () {
         updateQuery["contents.payment"] = thisDummy;
   
         await selfMongo.db("miro81").collection(collection).updateOne(whereQuery, { $set: updateQuery });
-        console.log(whereQuery);
+        
       }
   
+      await errorLog("photoStatus sync done : " + JSON.stringify(new Date()));
+
+
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_photoStatusSync): " + e.message);
     }
