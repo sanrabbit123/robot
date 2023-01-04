@@ -189,6 +189,10 @@ DevContext.prototype.launching = async function () {
 
     //         if (rawProject.contents.photo.info.photographer !== "디자이너" && rawProject.contents.photo.info.photographer !== "고객") {
 
+    //           if (rawProject.contents.photo.info.photographer !== "미정") {
+    //             updateQuery["contents.photo.status"] = "촬영 완료";
+    //           }
+
     //           thisProof = '';
     //           if (thisDesigner !== null) {
     //             if (/프리/gi.test(thisDesigner.information.business.businessInfo.classification) || /간이/gi.test(thisDesigner.information.business.businessInfo.classification)) {
@@ -197,7 +201,6 @@ DevContext.prototype.launching = async function () {
     //               thisProof = "세금계산서"
     //             }
     //           }
-  
     //           thisDummy.status = "결제 완료";
     //           thisDummy.date = rawProject.contents.photo.date;
     //           thisDummy.calculation.info.method = "계좌 이체";
@@ -206,15 +209,30 @@ DevContext.prototype.launching = async function () {
 
     //         } else {
 
+    //           updateQuery["contents.photo.status"] = "해당 없음";
     //           thisDummy.status = "해당 없음";
     //           thisDummy.calculation.amount = 0;
 
     //         }
 
     //       }
+    //     } else {
+
+    //       if (/완료/gi.test(rawProject.contents.photo.status)) {
+    //         if (rawProject.contents.photo.info.photographer === "디자이너" || rawProject.contents.photo.info.photographer === "고객") {
+    //           if (rawProject.process.calculation.payments.remain.date > (new Date(2000, 0, 1)).valueOf()) {
+    //             updateQuery["contents.photo.status"] = "해당 없음";
+    //             updateQuery["contents.photo.date"] = rawProject.process.calculation.payments.remain.date;
+    //             thisDummy.status = "해당 없음";
+    //             thisDummy.calculation.amount = 0;
+    //           }
+    //         }
+    //       }
+
     //     }
 
     //   } else {
+    //     updateQuery["contents.photo.status"] = "해당 없음";
     //     thisDummy.status = "해당 없음";
     //     thisDummy.calculation.amount = 0;
     //   }
