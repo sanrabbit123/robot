@@ -140,35 +140,90 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const selfMongo = this.MONGOC;
-    // const dummny = {
-    //   status: "결제 대기",
-    //   date: new Date(1800, 0, 1),
-    //   cancel: new Date(1800, 0, 1),
-    //   calculation: {
-    //     amount: 165000,
-    //     info: {
-    //       method: "",
-    //       proof: "",
-    //       to: "",
-    //     },
-    //     refund: 0,
-    //   },
-    // };
-    // const collection = "project";
-    // let whereQuery, updateQuery;
-    // let rawProjects;
-    // let proid;
+    const selfMongo = this.MONGOC;
+    const dummny = {
+      status: "결제 대기",
+      date: new Date(1800, 0, 1),
+      cancel: new Date(1800, 0, 1),
+      calculation: {
+        amount: 165000,
+        info: {
+          method: "",
+          proof: "",
+          to: "",
+        },
+        refund: 0,
+      },
+    };
+    const collection = "project";
+    let allDesigners;
+    let whereQuery, updateQuery;
+    let rawProjects;
+    let proid;
+    let thisDummy;
+    let thisDesigner;
+    let thisProof;
 
-    // rawProjects = await selfMongo.db("miro81").collection(collection).find({}).toArray();
-    // for (let rawProject of rawProjects) {
-    //   proid = rawProject.proid;
-    //   whereQuery = { proid };
-    //   updateQuery = {};
-    //   updateQuery["contents.payment"] = equalJson(JSON.stringify(dummny));
-    //   await selfMongo.db("miro81").collection(collection).updateOne(whereQuery, { $set: updateQuery });
-    //   console.log(whereQuery);
-    // }
+    allDesigners = (await back.getDesignersByQuery({}, { selfMongo })).toNormal();
+
+    rawProjects = await selfMongo.db("miro81").collection(collection).find({}).toArray();
+    for (let rawProject of rawProjects) {
+      proid = rawProject.proid;
+      thisDesigner = null;
+      if (rawProject.desid !== '') {
+        thisDesigner = allDesigners.find((designer) => { return designer.desid === rawProject.desid });
+        if (thisDesigner === undefined) {
+          thisDesigner = null;
+        }
+      }
+
+      whereQuery = { proid };
+      updateQuery = {};
+
+      thisDummy = equalJson(JSON.stringify(dummny));
+
+      if (rawProject.contents.photo.boo) {
+
+        if ((new Date(2000, 0, 1)).valueOf() <= rawProject.contents.photo.date.valueOf() && (new Date(3000, 0, 1)).valueOf() > rawProject.contents.photo.date.valueOf()) {
+          if ((new Date()).valueOf() >= rawProject.contents.photo.date.valueOf()) {
+
+            if (rawProject.contents.photo.info.photographer !== "디자이너" && rawProject.contents.photo.info.photographer !== "고객") {
+
+              thisProof = '';
+              if (thisDesigner !== null) {
+                if (/프리/gi.test(thisDesigner.information.business.businessInfo.classification) || /간이/gi.test(thisDesigner.information.business.businessInfo.classification)) {
+                  thisProof = "현금영수증";
+                } else {
+                  thisProof = "세금계산서"
+                }
+              }
+  
+              thisDummy.status = "결제 완료";
+              thisDummy.date = rawProject.contents.photo.date;
+              thisDummy.calculation.info.method = "계좌 이체";
+              thisDummy.calculation.info.proof = thisProof;
+              thisDummy.calculation.info.to = thisDesigner !== null ? thisDesigner.designer : "";
+
+            } else {
+
+              thisDummy.status = "해당 없음";
+              thisDummy.calculation.amount = 0;
+
+            }
+
+          }
+        }
+
+      } else {
+        thisDummy.status = "해당 없음";
+        thisDummy.calculation.amount = 0;
+      }
+
+      updateQuery["contents.payment"] = thisDummy;
+
+      await selfMongo.db("miro81").collection(collection).updateOne(whereQuery, { $set: updateQuery });
+      console.log(whereQuery);
+    }
 
 
   
