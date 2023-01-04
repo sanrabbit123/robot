@@ -138,8 +138,8 @@ DevContext.prototype.launching = async function () {
     //   console.log(whereQuery, updateQuery);
     // }
 
-    await requestSystem("https://" + address.backinfo.host + ":3000/photoStatusSync", { data: null }, { headers: { "Content-Type": "application/json" } });
 
+    
 
     // const selfMongo = this.MONGOC;
     // const dummny = {
