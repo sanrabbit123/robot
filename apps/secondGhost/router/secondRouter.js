@@ -837,50 +837,86 @@ SecondRouter.prototype.rou_post_printClient = function () {
 SecondRouter.prototype.rou_post_slackEvents = function () {
   const instance = this;
   const { secondHost, slack_userToken, telegram, slackMembers, slackChannels } = this;
-  const { errorLog, messageLog, equalJson, ajaxJson } = this.mother;
-  const telegramChat = (user, textRaw, channel) => {
-    let text;
-    let thisMember, thisChannel, thisChannelName, receiver;
-    let thisMemberCopied, thisChannelCopied;
-
-    thisMember = slackMembers.find((obj) => { return obj.id === user });
-    if (thisMember === undefined) {
-      thisMember = "unknown";
-    } else {
-      thisMemberCopied = equalJson(JSON.stringify(thisMember));
-      thisMember = thisMember.real_name;
-    }
-
-    thisChannel = slackChannels.find((obj) => { return obj.id === channel });
-    if (thisChannel === undefined) {
-      thisChannel = "private";
-      thisChannelName = "unknown"
-    } else {
-
-      thisChannelCopied = equalJson(JSON.stringify(thisChannel));
-
-      if (typeof thisChannel.name === "string") {
-        if (/error/gi.test(thisChannel.name)) {
-          thisChannel = "log";
-        } else if (/operation/gi.test(thisChannel.name)) {
-          thisChannel = "operation";
-        } else {
-          thisChannel = "general";
-        }
-        thisChannelName = thisChannelCopied.name;
+  const { errorLog, messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
+  const telegramChat = async (user, textRaw, channel) => {
+    try {
+      let text;
+      let thisMember, thisChannel, thisChannelName;
+      let thisMemberCopied, thisChannelCopied;
+      let members;
+  
+      thisMember = slackMembers.find((obj) => { return obj.id === user });
+      if (thisMember === undefined) {
+        thisMember = "unknown";
       } else {
+        thisMemberCopied = equalJson(JSON.stringify(thisMember));
+        thisMember = thisMember.real_name;
+      }
+  
+      thisChannel = slackChannels.find((obj) => { return obj.id === channel });
+      if (thisChannel === undefined) {
         thisChannel = "private";
-        receiver = slackMembers.find((obj) => { return obj.id === thisChannelCopied.user });
-        if (receiver === undefined) {
-          thisChannelName = "unknown"
+        thisChannelName = "unknown";
+      } else {
+  
+        thisChannelCopied = equalJson(JSON.stringify(thisChannel));
+  
+        if (typeof thisChannel.name === "string") {
+          if (/error/gi.test(thisChannel.name)) {
+            thisChannel = "log";
+          } else if (/operation/gi.test(thisChannel.name)) {
+            thisChannel = "operation";
+          } else {
+            thisChannel = "general";
+          }
+          thisChannelName = thisChannelCopied.name;
         } else {
-          thisChannelName = receiver.real_name;
+          thisChannel = "private";
+  
+          if (Array.isArray(thisChannelCopied.members)) {
+  
+            thisChannelName = thisChannelCopied.members.map((id) => {
+              return slackMembers.find((obj) => { return obj.id === id });
+            }).map((obj2) => {
+              if (obj2 === undefined) {
+                return "unknown";
+              } else {
+                return obj2.real_name
+              }
+            }).join(", ");
+  
+          } else {
+  
+            if (thisChannelCopied.is_im === true) {
+  
+              ({ data: { members } } = await requestSystem("https://slack.com/api/conversations.members?channel=" + thisChannelCopied.id, {}, { method: "get", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken, } }));
+              thisChannelName = members.map((id) => {
+                return slackMembers.find((obj) => { return obj.id === id });
+              }).map((obj2) => {
+                if (obj2 === undefined) {
+                  return "unknown";
+                } else {
+                  return obj2.real_name
+                }
+              }).join(", ");
+
+            } else {
+  
+              thisChannelName = "unknown";
+  
+            }
+  
+          }
+          
         }
       }
-    }
+  
+      text = thisMember + " (" + thisChannelName + ") : " + textRaw;
+      await ajaxJson({ chat_id: telegram.chat[thisChannel], text }, telegram.url(telegram.token));
 
-    text = thisMember + " (" + thisChannelName + ") : " + textRaw;
-    ajaxJson({ chat_id: telegram.chat[thisChannel], text }, telegram.url(telegram.token)).catch((err) => { console.log(err); });
+    } catch (e) {
+      console.log(e);
+    }
   }
   let obj = {};
   obj.link = [ "/slackEvents" ];
@@ -893,7 +929,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
     });
     try {
       const { user, text, channel } = equalJson(req.body).event;
-      telegramChat(user, text, channel);
+      telegramChat(user, text, channel).catch((err) => { console.log(err); });
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + e.message).catch((e) => { console.log(e); });

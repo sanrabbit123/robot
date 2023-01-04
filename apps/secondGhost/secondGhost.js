@@ -30,7 +30,7 @@ const SecondGhost = function (mother = null, back = null, address = null) {
 
 SecondGhost.prototype.ghostConnect = async function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep } = this.mother;
+  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, equalJson } = this.mother;
   const { slack_userToken } = this;
   const PORT = 3000;
   const https = require("https");
@@ -106,6 +106,14 @@ SecondGhost.prototype.ghostConnect = async function () {
         "Authorization": "Bearer " + slack_userToken,
       }
     });
+    let members;
+    for (let obj of slackChannels) {
+      if (obj.is_im === true) {
+        await sleep(100);
+        ({ data: { members } } = await requestSystem("https://slack.com/api/conversations.members?channel=" + obj.id, {}, { method: "get", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken, } }));
+        obj.members = equalJson(JSON.stringify(members));
+      }
+    }
 
     //set router
     const SecondRouter = require(`${this.dir}/router/secondRouter.js`);
