@@ -181,7 +181,7 @@ ContentsPaymentCalculation.prototype.toNormal = function () {
 }
 
 const ContentsPayment = function (json) {
-  this.status = new Menu(json.status, [ '결제 대기', '결제 완료', '환불 완료', '해당 없음' ], false);
+  this.status = new Menu(json.status, [ '결제 대기', '결제 완료', '무료 촬영', '환불 완료', '해당 없음' ], false);
   this.date = new DateParse(json.date);
   this.cancel = new DateParse(json.cancel);
   this.calculation = new ContentsPaymentCalculation(json.calculation);

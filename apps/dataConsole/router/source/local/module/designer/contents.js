@@ -2,10 +2,11 @@
 
 DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   const instance = this;
-  const { ea, photoActionList, resetWidthEvent } = this;
+  const { ea, photoActionList, paymentActionList, resetWidthEvent } = this;
   const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma, equalJson } = GeneralJs;
-  const { desid, name, address, contents: { photo, raw, share, sns }, history } = project;
+  const { desid, name, address, contents: { photo, payment, raw, share, sns }, history } = project;
   const { boo, date, info: { interviewer, photographer }, status } = photo;
+  const { status: paymentStatus } = payment;
   const { portfolio: { status: portfolioStatus, link: portfolioLink }, interview: { status: interviewStatus, link: interviewLink }, photo: { status: photoStatus, link: photoLink } } = raw;
   const { client: { photo: photoClient, contents: contentsClient }, designer: { photo: photoDesigner, contents: contentsDesigner } } = share;
   const { portfolio: { long: longPortfolio, short: shortPortfoilo }, interview: { long: longInterview, short: shortInterview } } = sns;
@@ -100,6 +101,12 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
         title: "상태",
         position: "contents.photo.status",
         values: [ '세팅 대기', '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ],
+        chain: null
+      },
+      payment: {
+        title: "결제",
+        position: "contents.payment.status",
+        values: [ '결제 대기', '결제 완료', '무료 촬영', '환불 완료', '해당 없음' ],
         chain: null
       },
       photographer: {
@@ -494,6 +501,79 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "status";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 114;
+      margin = 4;
+
+      background = colorChip.gradientGreen4;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          updateQuery[position] = value;
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          calendarEvent(thisCase);
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      nodeArr = [];
+      for (let i = 0; i < values.length; i++) {
+        nodeArr.push({
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[i] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top + ((margin + height) * i)) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background, zIndex, boxShadow, borderRadius, animation,
+          }
+        });
+        nodeArr.push({
+          mother: -1,
+          text: values[i],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.whiteBlack,
+          }
+        });
+      }
+      createNodes(nodeArr);
+    });
+    stringArr.push(textMaker(map["payment"].title, paymentStatus, "black", "payment"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "payment";
       let startLeft, width, margin, background;
       let values, updateEvent;
       let nodeArr;
@@ -2776,6 +2856,9 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
     displayBoo = true;
   }
 
+
+
+
   return { map, stringArr, updateArr, grayBoo: boo, displayBoo };
 }
 
@@ -4241,6 +4324,13 @@ DesignerJs.prototype.contentsView = async function () {
       "촬영 대기",
       "원본 요청 요망",
       "원본 요청 완료",
+      "해당 없음"
+    ];
+    this.paymentActionList = [
+      "결제 대기",
+      "결제 완료",
+      "무료 촬영",
+      "환불 완료",
       "해당 없음"
     ];
 
