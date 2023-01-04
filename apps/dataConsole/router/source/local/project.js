@@ -9013,8 +9013,13 @@ ProjectJs.prototype.communicationRender = function () {
         const client = (await GeneralJs.ajaxJson({ noFlat: true, where: { cliid: project.cliid } }, "/getClients", { equal: true }))[0];
         if (window.confirm(client.name + "고객님에게 스타일링 계약서를 전송합니다! 확실하십니까?")) {
           let contractName, contractAddress;
+          let rawValue;
 
-          contractName = (await GeneralJs.prompt("계약시 별도의 이름이 있습니까? 없을 시, '없음' 또는 공백")).trim();
+          do {
+            rawValue = await GeneralJs.prompt("계약시 별도의 이름이 있습니까? 없을 시, '없음' 또는 공백");
+          } while (rawValue === null)
+
+          contractName = rawValue.trim();
           if (/없/gi.test(contractName)) {
             contractName = '';
           }
@@ -9023,7 +9028,11 @@ ProjectJs.prototype.communicationRender = function () {
           }
           contractName = contractName.replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '');
 
-          contractAddress = (await GeneralJs.prompt("계약시 별도의 주소가 있습니까? 없을 시, '없음' 또는 공백")).trim();
+          do {
+            rawValue = await GeneralJs.prompt("계약시 별도의 주소가 있습니까? 없을 시, '없음' 또는 공백");
+          } while (rawValue === null)
+
+          contractAddress = rawValue.trim();
           if (/없/gi.test(contractAddress)) {
             contractAddress = '';
           }
