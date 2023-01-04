@@ -5687,7 +5687,6 @@ DataRouter.prototype.rou_post_photoStatusSync = function () {
   
         if (Object.keys(updateQuery).length > 0) {
           await selfMongo.db("miro81").collection(collection).updateOne(whereQuery, { $set: updateQuery });
-          console.log(updateQuery)
         }
         
       }
