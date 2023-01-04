@@ -5652,25 +5652,12 @@ DataRouter.prototype.rou_post_photoStatusSync = function () {
                   updateQuery["contents.photo.status"] = "촬영 완료";
                 }
   
-                thisProof = '';
-                if (thisDesigner !== null) {
-                  if (/프리/gi.test(thisDesigner.information.business.businessInfo.classification) || /간이/gi.test(thisDesigner.information.business.businessInfo.classification)) {
-                    thisProof = "현금영수증";
-                  } else {
-                    thisProof = "세금계산서"
-                  }
-                }
-                thisDummy.status = "결제 완료";
-                thisDummy.date = rawProject.contents.photo.date;
-                thisDummy.calculation.info.method = "계좌 이체";
-                thisDummy.calculation.info.proof = thisProof;
-                thisDummy.calculation.info.to = thisDesigner !== null ? thisDesigner.designer : "";
-  
               } else {
   
                 updateQuery["contents.photo.status"] = "해당 없음";
                 thisDummy.status = "해당 없음";
                 thisDummy.calculation.amount = 0;
+                updateQuery["contents.payment"] = thisDummy;
   
               }
   
@@ -5684,6 +5671,7 @@ DataRouter.prototype.rou_post_photoStatusSync = function () {
                   updateQuery["contents.photo.date"] = rawProject.process.calculation.payments.remain.date;
                   thisDummy.status = "해당 없음";
                   thisDummy.calculation.amount = 0;
+                  updateQuery["contents.payment"] = thisDummy;
                 }
               }
             }
@@ -5694,11 +5682,13 @@ DataRouter.prototype.rou_post_photoStatusSync = function () {
           updateQuery["contents.photo.status"] = "해당 없음";
           thisDummy.status = "해당 없음";
           thisDummy.calculation.amount = 0;
+          updateQuery["contents.payment"] = thisDummy;
         }
   
-        updateQuery["contents.payment"] = thisDummy;
-  
-        await selfMongo.db("miro81").collection(collection).updateOne(whereQuery, { $set: updateQuery });
+        if (Object.keys(updateQuery).length > 0) {
+          await selfMongo.db("miro81").collection(collection).updateOne(whereQuery, { $set: updateQuery });
+          console.log(updateQuery)
+        }
         
       }
   
