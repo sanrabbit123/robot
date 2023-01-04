@@ -886,9 +886,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
             }).join(", ");
   
           } else {
-  
             if (thisChannelCopied.is_im === true) {
-  
               ({ data: { members } } = await requestSystem("https://slack.com/api/conversations.members?channel=" + thisChannelCopied.id, {}, { method: "get", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken, } }));
               thisChannelName = members.map((id) => {
                 return slackMembers.find((obj) => { return obj.id === id });
@@ -899,13 +897,9 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                   return obj2.real_name
                 }
               }).join(", ");
-
             } else {
-  
               thisChannelName = "unknown";
-  
             }
-  
           }
           
         }
