@@ -19,6 +19,10 @@ const SecondGhost = function (mother = null, back = null, address = null) {
   this.slack_users = {
     admin: "xoxp-717757271335-704486967090-4566130160163-fd2a2cc412e2a509a43635fb8f6c65e2",
     uragen: "xoxp-717757271335-715434169876-4588473337589-1ff8fc65c00ba8872f90e3f9aae69ead",
+    jieun: "xoxp-717757271335-2960561312114-4576992369527-1745a6175c197f2db2321da053358e47",
+    olivia: "xoxp-717757271335-1334942686963-4615245189440-a82b4e9a6a06ac94bd66102081c2d5c6",
+    pepper: "xoxp-717757271335-1632232192805-4588632652437-c713b6e752aa02c8e43e026bbfd22a4d",
+    bigstar: "xoxp-717757271335-1593962461382-4591588399522-9a688c5683c1d3aa453459e178d77fe0",
   };
   this.telegram = {
     chat: {
@@ -112,7 +116,7 @@ SecondGhost.prototype.ghostConnect = async function () {
       for (let obj of slackChannels) {
         if (obj.is_im === true) {
           console.log("find private channel : " + obj.id + " of " + user);
-          await sleep(200);
+          await sleep(500);
           ({ data: { members } } = await requestSystem("https://slack.com/api/conversations.members?channel=" + obj.id, {}, { method: "get", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + thisToken, } }));
           obj.members = equalJson(JSON.stringify(members));
         }

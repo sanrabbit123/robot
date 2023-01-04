@@ -140,35 +140,35 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const selfMongo = this.MONGOC;
-    const dummny = {
-      status: "결제 대기",
-      date: new Date(1800, 0, 1),
-      cancel: new Date(1800, 0, 1),
-      calculation: {
-        amount: 165000,
-        info: {
-          method: "",
-          proof: "",
-          to: "",
-        },
-        refund: 0,
-      },
-    };
-    const collection = "project";
-    let whereQuery, updateQuery;
-    let rawProjects;
-    let proid;
+    // const selfMongo = this.MONGOC;
+    // const dummny = {
+    //   status: "결제 대기",
+    //   date: new Date(1800, 0, 1),
+    //   cancel: new Date(1800, 0, 1),
+    //   calculation: {
+    //     amount: 165000,
+    //     info: {
+    //       method: "",
+    //       proof: "",
+    //       to: "",
+    //     },
+    //     refund: 0,
+    //   },
+    // };
+    // const collection = "project";
+    // let whereQuery, updateQuery;
+    // let rawProjects;
+    // let proid;
 
-    rawProjects = await selfMongo.db("miro81").collection(collection).find({}).toArray();
-    for (let rawProject of rawProjects) {
-      proid = rawProject.proid;
-      whereQuery = { proid };
-      updateQuery = {};
-      updateQuery["contents.payment"] = equalJson(JSON.stringify(dummny));
-      await selfMongo.db("miro81").collection(collection).updateOne(whereQuery, { $set: updateQuery });
-      console.log(whereQuery);
-    }
+    // rawProjects = await selfMongo.db("miro81").collection(collection).find({}).toArray();
+    // for (let rawProject of rawProjects) {
+    //   proid = rawProject.proid;
+    //   whereQuery = { proid };
+    //   updateQuery = {};
+    //   updateQuery["contents.payment"] = equalJson(JSON.stringify(dummny));
+    //   await selfMongo.db("miro81").collection(collection).updateOne(whereQuery, { $set: updateQuery });
+    //   console.log(whereQuery);
+    // }
 
 
     
