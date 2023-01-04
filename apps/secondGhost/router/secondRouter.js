@@ -922,9 +922,14 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const { user, text, channel } = equalJson(req.body).event;
-      telegramChat(user, text, channel).catch((err) => { console.log(err); });
-      res.send(JSON.stringify({ message: "OK" }));
+      const thisBody = equalJson(req.body);
+      if (typeof thisBody.event === "object") {
+        const { user, text, channel } = thisBody.event;
+        telegramChat(user, text, channel).catch((err) => { console.log(err); });
+        res.send(JSON.stringify({ message: "OK" }));
+      } else {
+        res.send(JSON.stringify({ challenge: thisBody.challenge }));
+      }
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
