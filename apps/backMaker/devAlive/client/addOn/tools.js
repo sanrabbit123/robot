@@ -215,12 +215,13 @@ const withTools = function (Client) {
   }
 
   Client.prototype.toPrint = function () {
-    const { request } = this.requests[0];
+    const { request, analytics } = this.requests[0];
     const indent = "    ";
     const bar = "=============================================================";
     const wordEaLength = 70;
     let documentArr, comment, commentArr;
     let tempStr;
+    let thisSerid;
 
     documentArr = [];
 
@@ -237,7 +238,8 @@ const withTools = function (Client) {
     documentArr.push("계약 형태 : " + request.space.contract.value + "\n");
     documentArr.push("예산 : " + request.budget.value + "\n");
     documentArr.push("가구 구매 : " + request.furniture.value + "\n");
-    documentArr.push("유입 경로 : " + request.etc.channel + "\n");
+    thisSerid = analytics.response.service.serid;
+    documentArr.push("시공 정도 : " + [ "시공 없음", "부분 시공", "전체 시공", "구조 변경" ][Number(thisSerid.split("_")[1].replace(/[^0-9]/gi, '')) - 1] + "\n");
 
     comment = "요청 사항 : " + request.etc.comment;
     commentArr = [];

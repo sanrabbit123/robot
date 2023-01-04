@@ -121,6 +121,20 @@ module.exports = {
               interviewer: "미정",
             }
           },
+          payment: {
+            status: "결제 대기",
+            date: new Date(1800, 0, 1),
+            cancel: new Date(1800, 0, 1),
+            calculation: {
+              amount: 165000,
+              info: {
+                method: "",
+                proof: "",
+                to: "",
+              },
+              refund: 0,
+            },
+          },
           raw: {
             portfolio: {
               status: "해당 없음",
