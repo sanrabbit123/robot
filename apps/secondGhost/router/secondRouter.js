@@ -836,7 +836,7 @@ SecondRouter.prototype.rou_post_printClient = function () {
 
 SecondRouter.prototype.rou_post_slackEvents = function () {
   const instance = this;
-  const { secondHost, slack_userToken, telegram, slackMembers, slackChannels } = this;
+  const { secondHost, telegram, slackMembers, slackChannels } = this;
   const { errorLog, messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
   const telegramChat = async (user, textRaw, channel) => {
     try {
@@ -886,20 +886,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
             }).join(", ");
   
           } else {
-            if (thisChannelCopied.is_im === true) {
-              ({ data: { members } } = await requestSystem("https://slack.com/api/conversations.members?channel=" + thisChannelCopied.id, {}, { method: "get", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken, } }));
-              thisChannelName = members.map((id) => {
-                return slackMembers.find((obj) => { return obj.id === id });
-              }).map((obj2) => {
-                if (obj2 === undefined) {
-                  return "unknown";
-                } else {
-                  return obj2.real_name
-                }
-              }).join(", ");
-            } else {
-              thisChannelName = "unknown";
-            }
+            thisChannelName = "unknown";
           }
           
         }

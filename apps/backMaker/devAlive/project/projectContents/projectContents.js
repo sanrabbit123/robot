@@ -152,9 +152,54 @@ ContentsPhoto.prototype.toNormal = function () {
   return obj;
 }
 
+const ContentsPaymentCalculationInfo = function (json) {
+  this.method = json.method;
+  this.proof = json.proof;
+  this.to = json.to;
+}
+
+ContentsPaymentCalculationInfo.prototype.toNormal = function () {
+  let obj = {};
+  obj.method = this.method;
+  obj.proof = this.proof;
+  obj.to = this.to;
+  return obj;
+}
+
+const ContentsPaymentCalculation = function (json) {
+  this.amount = json.amount;
+  this.info = new ContentsPaymentCalculationInfo(json.info);
+  this.refund = json.refund;
+}
+
+ContentsPaymentCalculation.prototype.toNormal = function () {
+  let obj = {};
+  obj.amount = this.amount;
+  obj.info = this.info.toNormal();
+  obj.refund = this.refund;
+  return obj;
+}
+
+const ContentsPayment = function (json) {
+  this.status = new Menu(json.status, [ '결제 대기', '결제 완료', '환불 완료', '해당 없음' ], false);
+  this.date = new DateParse(json.date);
+  this.cancel = new DateParse(json.cancel);
+  this.calculation = new ContentsPaymentCalculation(json.calculation);
+}
+
+ContentsPayment.prototype.toNormal = function () {
+  let obj = {};
+  obj.status = this.status.toNormal();
+  obj.date = this.date.toNormal();
+  obj.cancel = this.cancel.toNormal();
+  obj.calculation = this.calculation.toNormal();
+  return obj;
+}
+
 const ProjectContents = function (json) {
   this.conid = json.conid;
   this.photo = new ContentsPhoto(json.photo);
+  this.payment = new ContentsPayment(json.payment);
   this.raw = new ContentsRaw(json.raw);
   this.share = new ContentsShare(json.share);
   this.sns = new ContentsSns(json.sns);
@@ -164,6 +209,7 @@ ProjectContents.prototype.toNormal = function () {
   let obj = {};
   obj.conid = this.conid;
   obj.photo = this.photo.toNormal();
+  obj.payment = this.payment.toNormal();
   obj.raw = this.raw.toNormal();
   obj.share = this.share.toNormal();
   obj.sns = this.sns.toNormal();

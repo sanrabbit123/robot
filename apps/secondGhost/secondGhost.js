@@ -106,11 +106,13 @@ SecondGhost.prototype.ghostConnect = async function () {
 
     slackChannelsTotal = [];
     for (let user in slack_users) {
+      console.log("find channel in " + user + "...");
       thisToken = slack_users[user];
       ({ data: { channels: slackChannels } } = await requestSystem("https://slack.com/api/conversations.list?limit=999&types=public_channel,private_channel,mpim,im", {}, { method: "get", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + thisToken, } }));
       for (let obj of slackChannels) {
         if (obj.is_im === true) {
-          await sleep(100);
+          console.log("find private channel : " + obj.id + " of " + user);
+          await sleep(200);
           ({ data: { members } } = await requestSystem("https://slack.com/api/conversations.members?channel=" + obj.id, {}, { method: "get", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + thisToken, } }));
           obj.members = equalJson(JSON.stringify(members));
         }
