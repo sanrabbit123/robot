@@ -555,7 +555,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
   secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
 
-  contentsWordingSize = <%% 15, 15, 14, 13, 3 %%>;
+  contentsWordingSize = <%% 15, 15, 14, 13, 2.9 %%>;
   contentsTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), -0.2 %%>;
 
   contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
@@ -597,8 +597,8 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
 
   panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
   panBetween = <%% 8, 8, 8, 8, 1 %%>;
-  panTitleBoxWidth = <%% 124, 120, 114, 108, 22 %%>;
-  panTitleBoxHeight = <%% 52, 48, 45, 40, 9 %%>;
+  panTitleBoxWidth = <%% 124, 120, 114, 108, 21 %%>;
+  panTitleBoxHeight = <%% 52, 48, 45, 40, 8.2 %%>;
 
   uploadCircleWidth = <%% 28, 28, 28, 24, 6 %%>;
   uploadCirclePadding = <%% 16, 16, 16, 12, 4 %%>;
@@ -1023,7 +1023,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
   secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
   secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
 
-  contentsWordingSize = <%% 15, 15, 14, 13, 3 %%>;
+  contentsWordingSize = <%% 15, 15, 14, 13, 2.9 %%>;
   contentsTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), -0.2 %%>;
 
   contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
@@ -1065,8 +1065,8 @@ ProcessDetailJs.prototype.insertControlBox = function () {
 
   panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
   panBetween = <%% 8, 8, 8, 8, 1 %%>;
-  panTitleBoxWidth = <%% 124, 120, 114, 108, 22 %%>;
-  panTitleBoxHeight = <%% 52, 48, 45, 40, 9 %%>;
+  panTitleBoxWidth = <%% 124, 120, 114, 108, 21 %%>;
+  panTitleBoxHeight = <%% 52, 48, 45, 40, 8.2 %%>;
 
   uploadCircleWidth = <%% 28, 28, 28, 24, 6 %%>;
   uploadCirclePadding = <%% 16, 16, 16, 12, 4 %%>;
@@ -1101,9 +1101,9 @@ ProcessDetailJs.prototype.insertControlBox = function () {
 
   panMotherBetween = <%% 10, 8, 8, 8, 1 %%>;
 
-  buttonHeight = <%% 42, 42, 38, 34, 42 %%>;
-  buttonBetween = <%% 4, 4, 3, 2, 1 %%>;
-  buttonSize = <%% 14, 14, 13, 12, 14 %%>;
+  buttonHeight = <%% 42, 42, 38, 34, 7.5 %%>;
+  buttonBetween = <%% 4, 4, 3, 2, 0.8 %%>;
+  buttonSize = <%% 14, 14, 13, 12, 2.5 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
   buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
@@ -1195,7 +1195,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
         title: "컨텐츠 관련",
         children: [
           {
-            title: "원본 사진 다운로드",
+            title: "사진 다운로드",
           },
           {
             title: "포트폴리오 보기",
@@ -1286,8 +1286,6 @@ ProcessDetailJs.prototype.insertControlBox = function () {
           display: "block",
           position: "relative",
           width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
-          background: desktop ? "" : colorChip.white,
-          boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
           borderRadius: mobile ? String(1) + ea : "",
           overflow: "hidden",
           marginBottom: String(0) + ea,
@@ -1373,7 +1371,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
                 alignItems: "center",
                 width: withOut(0),
                 height: String(buttonHeight) + ea,
-                background: live ? (target ? colorChip.white : colorChip.gray3) : colorChip.gray2,
+                background: live ? (target ? colorChip.white : (desktop ? colorChip.gray3 : colorChip.gray2)) : (desktop ? colorChip.gray2 : colorChip.gray4),
                 borderRadius: String(5) + "px",
                 marginBottom: index !== 3 - 1 ? String(buttonBetween) + ea : "",
                 cursor: "pointer",
@@ -1464,7 +1462,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
                 alignItems: "center",
                 width: withOut(0),
                 height: String(buttonHeight) + ea,
-                background: live ? colorChip.gradientGreen : colorChip.gray2,
+                background: live ? colorChip.gradientGreen : (desktop ? colorChip.gray2 : colorChip.gray4),
                 borderRadius: String(5) + "px",
                 marginBottom: index !== 3 - 1 ? String(buttonBetween) + ea : "",
                 cursor: "pointer",
@@ -2906,11 +2904,14 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
   let initContentsBottom;
   let initContentsPaddingLeft;
   let printSize;
+  let outMode;
 
   if (returnGet().mode === "request") {
     wordsTitle = desktop ? "홈스타일링 의뢰서" + "&nbsp;&nbsp;<b%pdf로 저장%b>" : "홈스타일링 의뢰서";
+    outMode = false;
   } else {
     wordsTitle = desktop ? wordings.title.join(" ") + "&nbsp;&nbsp;<b%pdf로 저장%b>" : wordings.title.join(" ");
+    outMode = true;
   }
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -2956,7 +2957,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
   mobileCalendarMargin = 6;
   mobileCalendarMarginTop = 4;
   mobilePaddingTop = 5;
-  mobilePaddingBottom = 10.5;
+  mobilePaddingBottom = 10;
 
   initWordingSize = <%% 14.5, 14, 14, 13, 3.2 %%>;
 
@@ -3089,7 +3090,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
       {
         text: emptyReload(projectHistory.request.about.where, [ client.requests[requestNumber].request.space.address ]),
         style: {
-          display: "block",
+          display: (outMode && mobile) ? "none" : "block",
           fontSize: String(initWordingSize) + ea,
           fontWeight: String(400),
           color: desktop ? colorChip.black : colorChip.green,
@@ -3105,7 +3106,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
       {
         text: wordings.subTitle[0],
         style: {
-          display: "block",
+          display: (outMode && mobile) ? "none" : "block",
           fontSize: String(initWordingSize) + ea,
           fontWeight: String(600),
           color: colorChip.black,
@@ -3136,7 +3137,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
       {
         text: emptyReload(projectHistory.request.about.when, [ dateToString(project.process.contract.meeting.date, true, true) ]),
         style: {
-          display: "block",
+          display: (outMode && mobile) ? "none" : "block",
           fontSize: String(initWordingSize) + ea,
           fontWeight: String(400),
           color: desktop ? colorChip.black : colorChip.green,
@@ -3152,9 +3153,472 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
       {
         text: wordings.subTitle[1],
         style: {
+          display: (outMode && mobile) ? "none" : "block",
+          position: "relative",
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black,
+          paddingLeft: String(initContentsPaddingLeft) + ea,
+          marginTop: String(bigNumberBetweenMargin) + ea,
+          lineHeight: String(1.6),
+        },
+        bold: {
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black
+        },
+        children: [
+          {
+            mode: "svg",
+            source: mother.returnArrow("right", colorChip.green),
+            style: {
+              display: desktop ? "block" : "none",
+              position: "absolute",
+              width: String(arrowWidth) + ea,
+              left: String(arrorLeft) + ea,
+              top: String(arrowTop) + ea,
+            }
+          },
+        ]
+      },
+      {
+        style: {
+          display: big ? "block" : "none",
+          marginTop: String(bigNumberBetween) + ea,
+          position: "relative",
+          textAlign: "right",
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              width: String(100) + '%',
+              height: String(periodLineTop) + ea,
+              top: String(0),
+              left: String(0),
+              borderBottom: "1px solid " + colorChip.whiteGreen,
+            }
+          },
+          {
+            text: dateToString(project.process.contract.form.date.to).replace(/-/g, ". "),
+            style: {
+              display: "inline-block",
+              fontSize: String(bigNumberSize) + ea,
+              fontWeight: String(200),
+              fontFamily: "graphik",
+              color: colorChip.green,
+              lineHeight: String(1.6),
+              background: colorChip.white,
+              paddingLeft: String(16) + ea,
+              position: "relative",
+            }
+          }
+        ]
+      },
+      {
+        style: {
           display: "block",
           position: "relative",
+          textAlign: desktop ? "left" : "center",
+          marginTop: String(bigNumberMargin) + ea,
+        },
+        children: [
+          {
+            text: dateToString(project.process.contract.form.date.from).replace(/-/g, ". "),
+            style: {
+              display: "inline-block",
+              fontSize: String(bigNumberSize) + ea,
+              fontWeight: String(200),
+              fontFamily: "graphik",
+              color: colorChip.green,
+              lineHeight: String(1.4),
+              position: "relative",
+            }
+          },
+          {
+            text: dateToString(project.process.contract.form.date.to).replace(/-/g, ". "),
+            style: {
+              display: small ? "inline-block" : "none",
+              fontSize: String(bigNumberSize) + ea,
+              fontWeight: String(200),
+              fontFamily: "graphik",
+              color: colorChip.green,
+              lineHeight: String(1.4),
+              background: colorChip.white,
+              paddingLeft: String(periodPaddingLeft) + ea,
+              position: "relative",
+            }
+          },
+          {
+            style: {
+              display: small ? "block" : "none",
+              position: "absolute",
+              width: big ? String(100) + '%' : String(periodLineWidth) + ea,
+              height: String(periodLineTop) + ea,
+              top: String(0),
+              left: desktop ? String(165) + ea : withOut(50, periodLineWidth / 2, ea),
+              borderBottom: "1px solid " + colorChip.whiteGreen,
+            }
+          },
+        ]
+      },
+      {
+        text: wordings.subTitle[2],
+        style: {
+          display: "block",
           fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black,
+          marginTop: String(desktop ? bigNumberBetweenMargin : 2) + ea,
+          paddingLeft: String(contentsPaddingLeft) + ea,
+          lineHeight: String(1.6),
+          position: "relative",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: mother.returnArrow("right", colorChip.green),
+            style: {
+              display: desktop ? "block" : "none",
+              position: "absolute",
+              width: String(arrowWidth) + ea,
+              left: String(arrorLeft) + ea,
+              top: String(arrowTop) + ea,
+            }
+          },
+        ]
+      },
+    ]
+  });
+
+
+}
+
+ProcessDetailJs.prototype.insertBelowBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, project, projectHistory, requestNumber, ea, baseTong, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, blankHref, downloadFile, returnGet } = GeneralJs;
+  const wordings = {
+    title: [ "고객 정보" ],
+    subTitle: [
+      "현장 미팅 주소",
+      "현장 미팅 시간",
+      "프로젝트 기간"
+    ],
+    contents: [
+      "현장 미팅 전, <b%디자이너에게 공유%b>할 고객님의 기본 정보입니다.",
+      "<b%잘못된 정보가 있을 시%b> 홈리에종에 말씀해주시길 바랍니다.",
+    ],
+    table: instance.tableStatic(instance.designer, instance.project, instance.client, instance.clientHistory, instance.projectHistory, instance.requestNumber)
+  };
+  const {
+    title,
+    initialContents,
+    emptyReload,
+    mainContents,
+    pictureContents,
+    pictureContentsSite,
+    pictureContentsPrefer,
+    pictures,
+    matrix,
+    mergeMap,
+    callbackMap,
+    boldMap,
+    titleMap,
+    widthRatio,
+  } = wordings.table;
+  let paddingTop;
+  let block;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let titleFontSize;
+  let num;
+  let numberRight;
+  let titleTop, titleTopNumber;
+  let titleBottom;
+  let index;
+  let mobileTitleLeft, mobileTitleTop;
+  let secondBlockWidth, secondBlockMargin;
+  let tong;
+  let contentsWordingSize;
+  let contentsBottom;
+  let whiteBottomMargin;
+  let contentsTitleMarginTop, contentsMarginTop;
+  let contentsPaddingLeft;
+  let arrowWidth;
+  let arrowTop;
+  let arrorLeft;
+  let bigNumberSize;
+  let bigNumberBetween;
+  let bigNumberMargin;
+  let bigNumberBetweenMargin;
+  let periodLineTop;
+  let calendar;
+  let mobileCalendarMargin, mobileCalendarMarginTop;
+  let mobilePaddingTop, mobilePaddingBottom;
+  let periodPaddingLeft;
+  let periodLineWidth;
+  let initWordingSize;
+  let zeroWordingSize;
+  let zeroWordingTop;
+  let initTitleMarginTop;
+  let initContentsMarginTop;
+  let initContentsBottom;
+  let initContentsPaddingLeft;
+  let printSize;
+  let outMode;
+  let contentsAreaPaddingTop;
+  let mobilePaddingLeft;
+
+  if (returnGet().mode === "request") {
+    wordsTitle = desktop ? "홈스타일링 의뢰서" + "&nbsp;&nbsp;<b%pdf로 저장%b>" : "홈스타일링 의뢰서";
+    outMode = false;
+  } else {
+    wordsTitle = desktop ? wordings.title.join(" ") + "&nbsp;&nbsp;<b%pdf로 저장%b>" : wordings.title.join(" ");
+    outMode = true;
+  }
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
+
+  whiteBottomMargin = <%% 58, 58, 58, 58, 0 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  printSize = <%% 14, 14, 13, 12, 4 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 0 %%>;
+
+
+  secondBlockWidth = <%% 300, 230, 180, 200, 33 %%>;
+  secondBlockMargin = <%% 45, 40, 30, 40, 33 %%>;
+
+  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+
+  contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
+  contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
+  contentsPaddingLeft = <%% 14, 14, 14, 13, 0 %%>;
+  arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
+  arrowTop = <%% (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 7 : 5), 0.3 %%>;
+  arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
+
+  bigNumberSize = <%% 37, 37, 28, 30, 5 %%>;
+  bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
+  bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
+  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 5 %%>;
+
+  periodLineTop = <%% 27, 27, 23, 23, 3.8 %%>;
+  periodPaddingLeft = <%% 16, 16, 16, 32, 7 %%>;
+  periodLineWidth = <%% 4, 4, 4, 18, 4 %%>;
+
+  mobileCalendarMargin = 6;
+  mobileCalendarMarginTop = 7;
+  mobilePaddingTop = 5;
+  mobilePaddingBottom = 2;
+
+  initWordingSize = <%% 14.5, 14, 14, 13, 3.2 %%>;
+
+  zeroWordingSize = <%% 21, 21, 21, 21, 21 %%>;
+  zeroWordingTop = <%% -3, -3, -3, -3, -3 %%>;
+
+  initTitleMarginTop = <%% 14, 14, 14, 14, 2.5 %%>;
+  initContentsMarginTop = <%% 4, 4, 4, 4, 0.5 %%>;
+  initContentsBottom = <%% -3, -3, -3, -3, 0 %%>;
+  initContentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
+
+  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
+
+  this.whiteMargin = (desktop ? margin : 0);
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: desktop ? colorChip.white : "",
+      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+      paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+        height: String(100) + '%',
+        marginLeft: String(desktop ? margin : 0) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  block = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: mobile ? "absolute" : "relative",
+          left: desktop ? "" : String(mobileTitleLeft) + ea,
+          top: desktop ? "" : String(mobileTitleTop) + ea,
+          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+          marginBottom: String(titleBottom) + ea,
+          zIndex: mobile ? String(1) : "",
+        },
+        children: [
+          {
+            text: "고객 정보",
+            style: {
+              position: "relative",
+              display: "inline-block",
+              top: String(titleTopNumber) + ea,
+              fontSize: String(titleFontSize) + ea,
+              fontWeight: String(600),
+              background: desktop ? colorChip.white : colorChip.gray1,
+              paddingRight: String(numberRight) + ea,
+              color: colorChip.black,
+            }
+          },
+        ]
+      },
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
+          background: desktop ? "" : colorChip.white,
+          boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+          borderRadius: mobile ? String(1) + ea : "",
+          overflow: "hidden",
+          marginBottom: String(0) + ea,
+          marginTop: desktop ? "" : String(14) + ea,
+          paddingTop: String(contentsAreaPaddingTop) + ea,
+          borderTop: desktop ? "1px solid " + colorChip.shadow : "",
+          paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingBottom: desktop ? "" : String(6) + ea,
+        }
+      },
+    ]
+  });
+  tong = block.lastChild;
+  tong.appendChild(mother.makeTable(matrix, { whiteMode: true, style: { width: 100 }, mergeMap, callbackMap, boldMap, titleMap, widthRatio }));
+  calendar = tong.firstChild;
+
+  if (desktop) {
+    calendar.style.width = big ? withOut(secondBlockWidth + secondBlockMargin, ea) : String(100) + '%';
+    calendar.style.display = big ? "inline-block" : "block";
+  } else {
+    calendar.style.width = withOut(mobileCalendarMargin * 2, ea);
+    calendar.style.marginLeft = String(mobileCalendarMargin) + ea;
+    tong.style.paddingTop = String(mobileCalendarMarginTop) + ea;
+    calendar.style.display = "block";
+  }
+
+  createNode({
+    mother: tong,
+    style: {
+      display: desktop ? "inline-flex" : "flex",
+      position: "relative",
+      width: big ? String(secondBlockWidth) + ea : withOut(mobileCalendarMargin * 2, ea),
+      height: big ? String(tong.getBoundingClientRect().height) + ea : "",
+      verticalAlign: "top",
+      textAlign: desktop ? "" : "center",
+      marginLeft: big ? String(secondBlockMargin) + ea : String(mobileCalendarMargin) + ea,
+      flexDirection: "column-reverse",
+      paddingTop: desktop ? "" : String(mobilePaddingTop) + ea,
+      paddingBottom: desktop ? String(1) + ea : String(mobilePaddingBottom) + ea,
+    },
+    children: [
+      {
+        text: emptyReload(projectHistory.request.about.where, [ client.requests[requestNumber].request.space.address ]),
+        style: {
+          display: (outMode && mobile) ? "none" : "block",
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(400),
+          color: desktop ? colorChip.black : colorChip.green,
+          marginTop: String(initContentsMarginTop) + ea,
+          lineHeight: String(1.6),
+        },
+        bold: {
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black
+        }
+      },
+      {
+        text: wordings.subTitle[0],
+        style: {
+          display: (outMode && mobile) ? "none" : "block",
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black,
+          marginTop: String(bigNumberBetweenMargin) + ea,
+          paddingLeft: String(initContentsPaddingLeft) + ea,
+          lineHeight: String(1.6),
+          position: "relative",
+        },
+        bold: {
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black
+        },
+        children: [
+          {
+            mode: "svg",
+            source: mother.returnArrow("right", colorChip.green),
+            style: {
+              display: desktop ? "block" : "none",
+              position: "absolute",
+              width: String(arrowWidth) + ea,
+              left: String(arrorLeft) + ea,
+              top: String(arrowTop) + ea,
+            }
+          },
+        ]
+      },
+      {
+        text: emptyReload(projectHistory.request.about.when, [ dateToString(project.process.contract.meeting.date, true, true) ]),
+        style: {
+          display: (outMode && mobile) ? "none" : "block",
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(400),
+          color: desktop ? colorChip.black : colorChip.green,
+          marginTop: String(initContentsMarginTop) + ea,
+          lineHeight: String(1.6),
+        },
+        bold: {
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black
+        }
+      },
+      {
+        text: wordings.subTitle[1],
+        style: {
+          display: (outMode && mobile) ? "none" : "block",
+          position: "relative",
+          fontSize: String(initWordingSize) + ea,
           fontWeight: String(600),
           color: colorChip.black,
           paddingLeft: String(initContentsPaddingLeft) + ea,
@@ -5858,7 +6322,6 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             instance.insertInformationBox();
             instance.insertDetailBox();
             instance.insertStyleBox();
-            instance.insertProcessBox();
             instance.insertUploadBox();
             instance.insertControlBox();
             instance.insertNoticeBox();
@@ -5870,7 +6333,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             instance.insertProcessBox();
             instance.insertUploadBox();
             instance.insertControlBox();
-            instance.insertInformationBox();
+            instance.insertBelowBox();
             instance.insertDetailBox();
             instance.insertStyleBox();
             instance.insertNoticeBox();
