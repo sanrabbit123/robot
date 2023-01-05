@@ -601,6 +601,13 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
 
           updateQuery[position] = value;
           await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+
+          if (/대기/gi.test(paymentStatus)) {
+            valueDom.style.color = colorChip.red;
+          } else {
+            valueDom.style.color = colorChip.black;
+          }
+
           if (/결제 완료/gi.test(value)) {
 
             additionalUpdateQuery = {};
