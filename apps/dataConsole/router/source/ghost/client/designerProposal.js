@@ -2311,9 +2311,9 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
     if (mobile) {
       sourceArr[sourceArr.length - 1].title = "출장비 (" + km + " / " + time + " / 회당)";
     }
-    if (distance * number === 0) {
-      sourceArr.pop();
-    }
+    // if (distance * number === 0) {
+    //   sourceArr.pop();
+    // }
   }
 
   if (both) {
@@ -2325,9 +2325,9 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
     if (mobile) {
       sourceArr[sourceArr.length - 1].title = "출장비 (" + km + " / " + time + " / 회당)";
     }
-    if (distance * number === 0) {
-      sourceArr.pop();
-    }
+    // if (distance * number === 0) {
+    //   sourceArr.pop();
+    // }
   }
 
   onlineDiscount = 0;
