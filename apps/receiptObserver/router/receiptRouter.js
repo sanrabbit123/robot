@@ -1085,7 +1085,7 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, messageLog, messageSend, errorLog, autoComma, requestSystem, sleep } = this.mother;
+  const { equalJson, messageLog, messageSend, errorLog, autoComma, requestSystem, sleep, emergencyAlarm } = this.mother;
   const collection = "accountTransfer";
   const standardDay = 7;
   let obj = {};
@@ -1166,7 +1166,7 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
           });
 
         } else {
-          errorLog(errorMessage).catch((e) => { console.log(e); });
+          emergencyAlarm(errorMessage).catch((e) => { console.log(e); });
         }
 
       } else {
