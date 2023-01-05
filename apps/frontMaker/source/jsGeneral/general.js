@@ -4113,9 +4113,11 @@ GeneralJs.confirm = function (message) {
 }
 
 GeneralJs.prompt = function (message, preValue = '') {
-  const { createNode, colorChip, withOut } = GeneralJs;
+  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
   const ea = "px";
   const promptAsideClassName = "promptAsideClassName";
+  const mobile = window.innerWidth <= 900;
+  const desktop = !mobile;
   let whiteTongBase;
   let whiteTong;
   let whiteWidth, whiteHeight;
@@ -4195,7 +4197,7 @@ GeneralJs.prompt = function (message, preValue = '') {
       borderRadius: String(5) + "px",
       boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
       background: colorChip.white,
-      animation: "fadeuplite 0.4s ease forwards",
+      animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
     }
   });
 
@@ -4291,7 +4293,7 @@ GeneralJs.prompt = function (message, preValue = '') {
       }
     });
 
-    if (window.innerWidth <= 760) {
+    if (mobile) {
       input.addEventListener("blur", function (e) {
         if (document.querySelector('.' + promptAsideClassName) !== null) {
           const finalValue = this.value.trim();
