@@ -4291,18 +4291,20 @@ GeneralJs.prompt = function (message, preValue = '') {
       }
     });
 
-    input.addEventListener("blur", function (e) {
-      if (document.querySelector('.' + promptAsideClassName) !== null) {
-        const finalValue = this.value.trim();
-        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
-        for (let z = 0; z < targets.length; z++) {
-          try {
-            targets[z].remove();
-          } catch {}
+    if (window.innerWidth <= 760) {
+      input.addEventListener("blur", function (e) {
+        if (document.querySelector('.' + promptAsideClassName) !== null) {
+          const finalValue = this.value.trim();
+          const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+          for (let z = 0; z < targets.length; z++) {
+            try {
+              targets[z].remove();
+            } catch {}
+          }
+          resolve(finalValue === '' ? null : finalValue);
         }
-        resolve(finalValue === '' ? null : finalValue);
-      }
-    });
+      });
+    }
 
   });
 }
