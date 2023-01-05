@@ -569,7 +569,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       }
       createNodes(nodeArr);
     });
-    stringArr.push(textMaker(map["payment"].title, paymentStatus, "black", "payment"));
+    stringArr.push(textMaker(map["payment"].title, paymentStatus, (/대기/gi.test(paymentStatus) ? "red" : "black"), "payment"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
