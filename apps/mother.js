@@ -3100,6 +3100,34 @@ Mother.prototype.errorLog = function (text) {
   });
 }
 
+Mother.prototype.emergencyAlarm = function (text) {
+  if (typeof text === "object" && text !== null) {
+    if (typeof text.text === "string") {
+      text = text.text;
+    } else {
+      throw new Error("invaild input");
+    }
+  } else {
+    if (typeof text !== "string") {
+      throw new Error("invaild input");
+    }
+  }
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3000/emergencyAlarm";
+  const axios = require("axios");
+  return new Promise((resolve, reject) => {
+    axios.post(recordUrl, { text }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+      if (res.status !== 200) {
+        reject(res);
+      } else {
+        resolve(res);
+      }
+    }).catch((err) => {
+      reject(err);
+    });
+  });
+}
+
 Mother.prototype.messageSend = function (text, channel = "silent", voice = false) {
   if (typeof text === "object" && text !== null) {
     if (typeof text.text === "string" && typeof text.channel === "string") {

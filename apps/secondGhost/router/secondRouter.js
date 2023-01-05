@@ -179,6 +179,37 @@ SecondRouter.prototype.rou_post_messageLog = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_emergencyAlarm = function () {
+  const instance = this;
+  const { requestSystem } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/emergencyAlarm" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.text === undefined) {
+        throw new Error("invaild post, must be text");
+      }
+      const { text } = req.body;
+      const channel = "#emergency_alarm";
+
+      await instance.slack_bot.chat.postMessage({ text, channel });
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_emergencyAlarm): " + JSON.stringify(req.body) + " " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_parsingCall = function () {
   const instance = this;
   const back = this.back;
@@ -866,6 +897,8 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
             thisChannel = "log";
           } else if (/operation/gi.test(thisChannel.name)) {
             thisChannel = "operation";
+          } else if (/emergency/gi.test(thisChannel.name)) {
+            thisChannel = "emergency";
           } else {
             thisChannel = "general";
           }
