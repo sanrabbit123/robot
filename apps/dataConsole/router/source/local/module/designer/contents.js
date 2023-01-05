@@ -3,8 +3,8 @@
 DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   const instance = this;
   const { ea, photoActionList, paymentActionList, resetWidthEvent } = this;
-  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma, equalJson } = GeneralJs;
-  const { desid, name, address, contents: { photo, payment, raw, share, sns }, history } = project;
+  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma, equalJson, ajaxJson } = GeneralJs;
+  const { desid, name, address, process: { calculation: { method: calculationMethod, info: calculationInfo } }, contents: { photo, payment, raw, share, sns }, history } = project;
   const { boo, date, info: { interviewer, photographer }, status } = photo;
   const { status: paymentStatus } = payment;
   const { portfolio: { status: portfolioStatus, link: portfolioLink }, interview: { status: interviewStatus, link: interviewLink }, photo: { status: photoStatus, link: photoLink } } = raw;
@@ -596,8 +596,29 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
         try {
           const value = this.getAttribute("value");
           const removeTargets = mother.querySelectorAll("aside");
+          let additionalUpdateQuery;
+          let rawValue;
+
           updateQuery[position] = value;
           await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          if (/결제 완료/gi.test(value)) {
+
+            additionalUpdateQuery = {};
+            do {
+              rawValue = await GeneralJs.prompt("결제한 금액을 알려주세요!", "165000");
+            } while (rawValue === null)
+            additionalUpdateQuery["contents.payment.date"] = new Date();
+            additionalUpdateQuery["contents.payment.calculation.amount"] = Number(rawValue.replace(/[^0-9]/gi, ''));
+            additionalUpdateQuery["contents.payment.calculation.info.method"] = "계좌 이체";
+            if (/프리/gi.test(calculationMethod) || /간이/gi.test(calculationMethod)) {
+              additionalUpdateQuery["contents.payment.calculation.info.proof"] = "현금영수증";
+            } else {
+              additionalUpdateQuery["contents.payment.calculation.info.proof"] = "세금계산서";
+            }
+            additionalUpdateQuery["contents.payment.calculation.info.to"] = calculationInfo.to;
+
+            await ajaxJson({ whereQuery, updateQuery: additionalUpdateQuery }, BACKHOST + "/rawUpdateProject");
+          }
           valueDom.textContent = value;
           calendarEvent(thisCase);
           for (let dom of removeTargets) {
