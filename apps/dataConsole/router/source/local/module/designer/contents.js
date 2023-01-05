@@ -118,7 +118,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       interviewer: {
         title: "담당",
         position: "contents.photo.info.interviewer",
-        values: [ '미정', '정재은', '강해진', '임혜령', '임지민', '이큰별', '배창규', '박혜연', '김지은' ],
+        values: [ '미정', '정재은', '강해진', '임혜령', '임지민', '이큰별', '배창규', '박혜연', '김지은', '해당 없음' ],
         chain: null
       },
       address: {
