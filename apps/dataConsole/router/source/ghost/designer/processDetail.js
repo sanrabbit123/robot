@@ -1197,10 +1197,8 @@ ProcessDetailJs.prototype.insertControlBox = function () {
                   const desid = project.desid;
                   const impKey = "imp71921105";
                   const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "designerPhoto" }, BACKHOST + "/generalImpPayment");
-                  const [ designer ] = await ajaxJson({ noFlat: true, whereQuery: { desid } }, BACKHOST + "/getDesigners", { equal: true });
+                  const [ designer ] = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
                   let oid, plugin;
-
-                  console.log(designer);
 
                   oid = oidConst + proid + "_" + String((new Date()).valueOf());
                   plugin = new Function(pluginScript);
