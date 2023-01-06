@@ -1188,6 +1188,72 @@ ProcessDetailJs.prototype.insertControlBox = function () {
         children: [
           {
             title: "촬영비 결제",
+            click: (project) => {
+              return async function (e) {
+                try {
+                  const amount = 165000;
+                  const proid = project.proid;
+                  const cliid = project.cliid;
+                  const desid = project.desid;
+                  const impKey = "imp71921105";
+                  const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "designerPhoto" }, BACKHOST + "/generalImpPayment");
+                  const [ designer ] = await ajaxJson({ noFlat: true, whereQuery: { desid } }, BACKHOST + "/getDesigners", { equal: true });
+                  let oid, plugin;
+
+                  console.log(designer);
+
+                  oid = oidConst + proid + "_" + String((new Date()).valueOf());
+                  plugin = new Function(pluginScript);
+                  plugin();
+                  window.IMP.init(impKey);
+                  if (desktop) {
+                    window.IMP.request_pay({
+                        pg: "inicis",
+                        pay_method: "card",
+                        merchant_uid: oid,
+                        name: "사진 촬영비",
+                        amount: Math.floor(amount),
+                        buyer_email: designer.information.email,
+                        buyer_name: designer.designer,
+                        buyer_tel: designer.information.phone,
+                    }, async (rsp) => {
+
+                      console.log(rsp);
+
+                      // try {
+                      //   if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+                      //     map.rsp = JSON.parse(JSON.stringify(rsp));
+                      //     const { useid } = await ajaxJson({ map }, "/userSubmit");
+                      //   } else {
+                      //     window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+                      //   }
+                      // } catch (e) {
+                      //   window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+                      // }
+                    });
+                  } else {
+
+                    // ({ key } = await ajaxJson({ mode: "store", oid: oid, data: map }, BACKHOST + "/generalImpPayment"));
+
+                    // window.IMP.request_pay({
+                    //     pg: "inicis",
+                    //     pay_method: "card",
+                    //     merchant_uid: map.oid,
+                    //     name: "HomeLiaison Mini",
+                    //     amount: Math.floor(map.targets * initialPrice),
+                    //     buyer_email: map.email,
+                    //     buyer_name: map.name,
+                    //     buyer_tel: map.phone,
+                    //     m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + "?mobilecard=" + key,
+                    // }, (rsp) => {});
+
+                  }
+
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
           },
         ]
       },
@@ -1196,12 +1262,42 @@ ProcessDetailJs.prototype.insertControlBox = function () {
         children: [
           {
             title: "사진 다운로드",
+            click: (project) => {
+              return async function (e) {
+                try {
+
+                  console.log("this!2");
+
+
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
           },
           {
             title: "포트폴리오 보기",
+            click: (project) => {
+              return async function (e) {
+                try {
+
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
           },
           {
             title: "고객 후기 보기",
+            click: (project) => {
+              return async function (e) {
+                try {
+
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
           },
         ]
       },
@@ -1210,12 +1306,39 @@ ProcessDetailJs.prototype.insertControlBox = function () {
         children: [
           {
             title: "샘플 다운로드",
+            click: (project) => {
+              return async function (e) {
+                try {
+
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
           },
           {
             title: "디자이너 글 업로드",
+            click: (project) => {
+              return async function (e) {
+                try {
+
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
           },
           {
             title: "디자이너 글 수정",
+            click: (project) => {
+              return async function (e) {
+                try {
+
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
           },
         ]
       },
@@ -1454,7 +1577,11 @@ ProcessDetailJs.prototype.insertControlBox = function () {
           },
           children: (new Array(3)).fill(0, 0).map((zero, index) => {
             const live = contents.right[i].children[index] !== undefined;
+            const eventFunction = live ? contents.right[i].children[index].click(project) : ((e) => { console.log("nothing") });
             return {
+              event: {
+                click: eventFunction
+              },
               style: {
                 display: "flex",
                 position: "relative",
