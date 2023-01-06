@@ -999,6 +999,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
   let contents;
   let buttonSize, buttonWeight, buttonTextTop;
   let buttonHeight;
+  let paymentByCard;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1099,249 +1100,402 @@ ProcessDetailJs.prototype.insertControlBox = function () {
 
   subButtonsBetween = <%% 18, 18, 16, 14, 3 %%>;
 
-  panMotherBetween = <%% 10, 8, 8, 8, 1 %%>;
+  panMotherBetween = <%% 8, 7, 6, 5, 1 %%>;
 
   buttonHeight = <%% 42, 42, 38, 34, 7.5 %%>;
   buttonBetween = <%% 4, 4, 3, 2, 0.8 %%>;
-  buttonSize = <%% 14, 14, 13, 12, 2.5 %%>;
+  buttonSize = <%% 14, 14, 13, 12, 2.7 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
   buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
-  contents = {
-    left: [
-      {
-        title: "촬영 상태",
-        children: [
-          {
-            title: "촬영 컨택",
-            target: (project) => {
-              let boo;
-              boo = true;
-              if (/확정/gi.test(project.contents.photo.status)) {
-                boo = false;
-              } else if (/완료/gi.test(project.contents.photo.status) || /없음/gi.test(project.contents.photo.status)) {
-                boo = false;
+  paymentByCard = (project) => {
+    return async function (e) {
+      try {
+        const amount = 165000;
+        const proid = project.proid;
+        const cliid = project.cliid;
+        const desid = project.desid;
+        const impKey = "imp71921105";
+        const loading = instance.mother.grayLoading();
+        const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "designerPhoto" }, BACKHOST + "/generalImpPayment");
+        const [ designer ] = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
+        const [ client ] = await ajaxJson({ whereQuery: { cliid } }, SECONDHOST + "/getClients", { equal: true });
+        let oid, plugin;
+        let whereQuery, updateQuery;
+
+        oid = oidConst + proid + "_" + String((new Date()).valueOf());
+        plugin = new Function(pluginScript);
+        plugin();
+        window.IMP.init(impKey);
+        if (desktop) {
+
+          window.IMP.request_pay({
+              pg: "inicis",
+              pay_method: "card",
+              merchant_uid: oid,
+              name: "사진 촬영비",
+              amount: Math.floor(amount),
+              buyer_email: designer.information.email,
+              buyer_name: designer.designer,
+              buyer_tel: designer.information.phone,
+          }, async (rsp) => {
+            try {
+              if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+                
+                whereQuery = { proid };
+                updateQuery = {};
+
+                updateQuery["contents.payment.status"] = "결제 완료";
+                updateQuery["contents.payment.date"] = new Date();
+                updateQuery["contents.payment.calculation.amount"] = amount;
+                updateQuery["contents.payment.calculation.info.method"] = `카드(${rsp.card_name.replace(/카드/gi, '')})`;
+                updateQuery["contents.payment.calculation.info.proof"] = "이니시스";
+                updateQuery["contents.payment.calculation.info.to"] = designer.designer;
+                
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
+                await ajaxJson({ message: designer.designer + " 실장님이 콘솔을 통해 " + client.name + " 고객님 촬영비를 결제하셨습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
+
+                window.alert("결제가 완료 되었습니다!");
+                window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + proid;
+
+              } else {
+                window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+                loading.remove();
               }
-              return boo;
-            },
-          },
-          {
-            title: "촬영 일정 확정",
-            target: (project) => {
-              return /확정/gi.test(project.contents.photo.status);
-            },
-          },
-          {
-            title: "촬영 완료",
-            target: (project) => {
-              return (/완료/gi.test(project.contents.photo.status) || /없음/gi.test(project.contents.photo.status));
-            },
-          },
-        ]
-      },
-      {
-        title: "촬영비 상태",
-        children: [
-          {
-            title: "촬영비 결제 대기",
-            target: (project) => {
-              return /대기/gi.test(project.contents.payment.status);
-            },
-          },
-          {
-            title: "촬영비 결제 완료",
-            target: (project) => {
-              return /결제 완료/gi.test(project.contents.payment.status);
-            },
-          },
-          {
-            title: "촬영비 해당 없음",
-            target: (project) => {
-              return (/무료/gi.test(project.contents.payment.status) || /없음/gi.test(project.contents.payment.status) || /환불/gi.test(project.contents.payment.status));
-            },
-          },
-        ]
-      },
-      {
-        title: "디자이너 글",
-        children: [
-          {
-            title: "디자이너 글 대기",
-            target: (project) => {
-              return !(/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
-            },
-          },
-          {
-            title: "디자이너 글 완료",
-            target: (project) => {
-              return (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
-            },
-          },
-        ]
-      },
-    ],
-    right: [
-      {
-        title: "촬영비 관련",
-        children: [
-          {
-            title: "촬영비 결제",
-            click: (project) => {
-              return async function (e) {
-                try {
-                  const amount = 165000;
-                  const proid = project.proid;
-                  const cliid = project.cliid;
-                  const desid = project.desid;
-                  const impKey = "imp71921105";
-                  const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "designerPhoto" }, BACKHOST + "/generalImpPayment");
-                  const [ designer ] = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
-                  let oid, plugin;
+            } catch (e) {
+              window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+              loading.remove();
+            }
+          });
+        } else {
 
-                  oid = oidConst + proid + "_" + String((new Date()).valueOf());
-                  plugin = new Function(pluginScript);
-                  plugin();
-                  window.IMP.init(impKey);
-                  if (desktop) {
-                    window.IMP.request_pay({
-                        pg: "inicis",
-                        pay_method: "card",
-                        merchant_uid: oid,
-                        name: "사진 촬영비",
-                        amount: Math.floor(amount),
-                        buyer_email: designer.information.email,
-                        buyer_name: designer.designer,
-                        buyer_tel: designer.information.phone,
-                    }, async (rsp) => {
+          ({ key } = await ajaxJson({ mode: "store", oid: oid, data: { oid } }, BACKHOST + "/generalImpPayment"));
 
-                      console.log(rsp);
+          window.IMP.request_pay({
+              pg: "inicis",
+              pay_method: "card",
+              merchant_uid: oid,
+              name: "사진 촬영비",
+              amount: Math.floor(amount),
+              buyer_email: designer.information.email,
+              buyer_name: designer.designer,
+              buyer_tel: designer.information.phone,
+              m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=" + key,
+          }, (rsp) => {});
 
-                      // try {
-                      //   if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
-                      //     map.rsp = JSON.parse(JSON.stringify(rsp));
-                      //     const { useid } = await ajaxJson({ map }, "/userSubmit");
-                      //   } else {
-                      //     window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-                      //   }
-                      // } catch (e) {
-                      //   window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-                      // }
-                    });
-                  } else {
+        }
 
-                    // ({ key } = await ajaxJson({ mode: "store", oid: oid, data: map }, BACKHOST + "/generalImpPayment"));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
 
-                    // window.IMP.request_pay({
-                    //     pg: "inicis",
-                    //     pay_method: "card",
-                    //     merchant_uid: map.oid,
-                    //     name: "HomeLiaison Mini",
-                    //     amount: Math.floor(map.targets * initialPrice),
-                    //     buyer_email: map.email,
-                    //     buyer_name: map.name,
-                    //     buyer_tel: map.phone,
-                    //     m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + "?mobilecard=" + key,
-                    // }, (rsp) => {});
+  if (manyBig) {
 
+    contents = {
+      left: [
+        {
+          title: "촬영 상태",
+          children: [
+            {
+              title: "촬영 컨택",
+              target: (project) => {
+                let boo;
+                boo = true;
+                if (/확정/gi.test(project.contents.photo.status)) {
+                  boo = false;
+                } else if (/완료/gi.test(project.contents.photo.status) || /없음/gi.test(project.contents.photo.status)) {
+                  boo = false;
+                }
+                return boo;
+              },
+            },
+            {
+              title: "촬영 일정 확정",
+              target: (project) => {
+                return /확정/gi.test(project.contents.photo.status);
+              },
+            },
+            {
+              title: "촬영 완료",
+              target: (project) => {
+                return (/완료/gi.test(project.contents.photo.status) || /없음/gi.test(project.contents.photo.status));
+              },
+            },
+          ]
+        },
+        {
+          title: "촬영비 상태",
+          children: [
+            {
+              title: "촬영비 결제 대기",
+              target: (project) => {
+                return /대기/gi.test(project.contents.payment.status);
+              },
+            },
+            {
+              title: "촬영비 결제 완료",
+              target: (project) => {
+                return /결제 완료/gi.test(project.contents.payment.status);
+              },
+            },
+            {
+              title: "촬영비 해당 없음",
+              target: (project) => {
+                return (/무료/gi.test(project.contents.payment.status) || /없음/gi.test(project.contents.payment.status) || /환불/gi.test(project.contents.payment.status));
+              },
+            },
+          ]
+        },
+        {
+          title: "디자이너 글",
+          children: [
+            {
+              title: "디자이너 글 대기",
+              target: (project) => {
+                return !(/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
+              },
+            },
+            {
+              title: "디자이너 글 완료",
+              target: (project) => {
+                return (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
+              },
+            },
+          ]
+        },
+      ],
+      right: [
+        {
+          title: "촬영비 관련",
+          children: [
+            {
+              title: "촬영비 카드 결제",
+              click: paymentByCard,
+            },
+            {
+              title: "원본 사진 다운로드",
+              click: (project) => {
+                return async function (e) {
+                  try {
+  
+                    console.log("this!2");
+  
+                  } catch (e) {
+                    console.log(e);
                   }
-
-                } catch (e) {
-                  console.log(e);
                 }
-              }
+              },
             },
-          },
-        ]
-      },
-      {
-        title: "컨텐츠 관련",
-        children: [
-          {
-            title: "사진 다운로드",
-            click: (project) => {
-              return async function (e) {
-                try {
-
-                  console.log("this!2");
-
-
-                } catch (e) {
-                  console.log(e);
+          ]
+        },
+        {
+          title: "디자이너 글",
+          children: [
+            {
+              title: "샘플 다운로드",
+              click: (project) => {
+                return async function (e) {
+                  try {
+  
+                  } catch (e) {
+                    console.log(e);
+                  }
                 }
-              }
+              },
             },
-          },
-          {
-            title: "포트폴리오 보기",
-            click: (project) => {
-              return async function (e) {
-                try {
-
-                } catch (e) {
-                  console.log(e);
+            {
+              title: "디자이너 글 업로드",
+              click: (project) => {
+                return async function (e) {
+                  try {
+  
+                  } catch (e) {
+                    console.log(e);
+                  }
                 }
-              }
+              },
             },
-          },
-          {
-            title: "고객 후기 보기",
-            click: (project) => {
-              return async function (e) {
-                try {
-
-                } catch (e) {
-                  console.log(e);
+            {
+              title: "디자이너 글 수정",
+              click: (project) => {
+                return async function (e) {
+                  try {
+  
+                  } catch (e) {
+                    console.log(e);
+                  }
                 }
-              }
+              },
             },
-          },
-        ]
-      },
-      {
-        title: "디자이너 글",
-        children: [
-          {
-            title: "샘플 다운로드",
-            click: (project) => {
-              return async function (e) {
-                try {
-
-                } catch (e) {
-                  console.log(e);
+          ]
+        },
+        {
+          title: "디자이너 글",
+          children: [
+            {
+              title: "샘플 다운로드",
+              click: (project) => {
+                return async function (e) {
+                  try {
+  
+                  } catch (e) {
+                    console.log(e);
+                  }
                 }
-              }
+              },
             },
-          },
-          {
-            title: "디자이너 글 업로드",
-            click: (project) => {
-              return async function (e) {
-                try {
-
-                } catch (e) {
-                  console.log(e);
+            {
+              title: "디자이너 글 업로드",
+              click: (project) => {
+                return async function (e) {
+                  try {
+  
+                  } catch (e) {
+                    console.log(e);
+                  }
                 }
-              }
+              },
             },
-          },
-          {
-            title: "디자이너 글 수정",
-            click: (project) => {
-              return async function (e) {
-                try {
-
-                } catch (e) {
-                  console.log(e);
+            {
+              title: "디자이너 글 수정",
+              click: (project) => {
+                return async function (e) {
+                  try {
+  
+                  } catch (e) {
+                    console.log(e);
+                  }
                 }
-              }
+              },
             },
-          },
-        ]
-      },
-    ]
-  };
+          ]
+        },
+      ]
+    };
+
+  } else {
+
+    contents = {
+      left: [
+        {
+          title: "촬영비 상태",
+          children: [
+            {
+              title: "촬영비 결제 대기",
+              target: (project) => {
+                return /대기/gi.test(project.contents.payment.status);
+              },
+            },
+            {
+              title: "촬영비 결제 완료",
+              target: (project) => {
+                return /결제 완료/gi.test(project.contents.payment.status);
+              },
+            },
+            {
+              title: "촬영비 해당 없음",
+              target: (project) => {
+                return (/무료/gi.test(project.contents.payment.status) || /없음/gi.test(project.contents.payment.status) || /환불/gi.test(project.contents.payment.status));
+              },
+            },
+          ]
+        },
+        {
+          title: "디자이너 글",
+          children: [
+            {
+              title: "디자이너 글 대기",
+              target: (project) => {
+                return !(/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
+              },
+            },
+            {
+              title: "디자이너 글 완료",
+              target: (project) => {
+                return (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
+              },
+            },
+          ]
+        },
+      ],
+      right: [
+        {
+          title: "촬영비 관련",
+          children: [
+            {
+              title: "촬영비 카드 결제",
+              click: paymentByCard,
+            },
+            {
+              title: "원본 사진 다운로드",
+              click: (project) => {
+                return async function (e) {
+                  try {
+                    const proid = project.proid;
+
+                    
+                    
+                    
+
+
+                    console.log("this!2");
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              },
+            },
+          ]
+        },
+        {
+          title: "디자이너 글",
+          children: [
+            {
+              title: "샘플 다운로드",
+              click: (project) => {
+                return async function (e) {
+                  try {
+  
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              },
+            },
+            {
+              title: "디자이너 글 업로드",
+              click: (project) => {
+                return async function (e) {
+                  try {
+  
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              },
+            },
+            {
+              title: "디자이너 글 수정",
+              click: (project) => {
+                return async function (e) {
+                  try {
+  
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              },
+            },
+          ]
+        },
+      ]
+    };
+
+  }
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -1423,15 +1577,15 @@ ProcessDetailJs.prototype.insertControlBox = function () {
   panMother = createNode({
     mother: tong,
     style: {
-      display: manyBig ? "inline-flex" : "flex",
+      display: desktop ? "inline-flex" : "flex",
       flexDirection: "row",
       position: "relative",
       borderRadius: String(5) + "px",
       background: desktop ? colorChip.gray3 : colorChip.gray1,
-      width: manyBig ? "calc(calc(calc(100% - " + String(panMotherBetween) + ea + ") / 2) - " + String(panMotherInnerPadding * 2) + ea + ")" : withOut(panMotherInnerPadding * 2, ea),
+      width: desktop ? "calc(calc(calc(100% - " + String(panMotherBetween) + ea + ") / 2) - " + String(panMotherInnerPadding * 2) + ea + ")" : withOut(panMotherInnerPadding * 2, ea),
       padding: String(panMotherInnerPadding) + ea,
-      marginRight: manyBig ? String(panMotherBetween) + ea : "",
-      marginBottom: manyBig ? "" : String(panMotherBetween) + ea,
+      marginRight: desktop ? String(panMotherBetween) + ea : "",
+      marginBottom: desktop ? "" : String(panMotherBetween) + ea,
       verticalAlign: "top",
     }
   });
@@ -1517,12 +1671,12 @@ ProcessDetailJs.prototype.insertControlBox = function () {
   panMother = createNode({
     mother: tong,
     style: {
-      display: manyBig ? "inline-flex" : "flex",
+      display: desktop ? "inline-flex" : "flex",
       flexDirection: "row",
       position: "relative",
       borderRadius: String(5) + "px",
       background: desktop ? colorChip.gray3 : colorChip.gray1,
-      width: manyBig ? "calc(calc(calc(100% - " + String(panMotherBetween) + ea + ") / 2) - " + String(panMotherInnerPadding * 2) + ea + ")" : withOut(panMotherInnerPadding * 2, ea),
+      width: desktop ? "calc(calc(calc(100% - " + String(panMotherBetween) + ea + ") / 2) - " + String(panMotherInnerPadding * 2) + ea + ")" : withOut(panMotherInnerPadding * 2, ea),
       padding: String(panMotherInnerPadding) + ea,
       verticalAlign: "top",
     }
@@ -6366,6 +6520,9 @@ ProcessDetailJs.prototype.launching = async function (loading) {
 
     const { returnGet, ajaxJson, setQueue } = GeneralJs;
     const getObj = returnGet();
+    const { media } = this;
+    const mobile = media[4];
+    const desktop = !mobile;
     let cliid, clients, client;
     let proid, projects, project;
     let whereQuery;
@@ -6458,7 +6615,11 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             instance.insertProcessBox();
             instance.insertUploadBox();
             instance.insertControlBox();
-            instance.insertBelowBox();
+            if (mobile) {
+              instance.insertBelowBox();
+            } else {
+              instance.insertInformationBox();
+            }
             instance.insertDetailBox();
             instance.insertStyleBox();
             instance.insertNoticeBox();
@@ -6471,6 +6632,50 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
+
+    if (typeof getObj.mobilecard === "string") {
+      const grayLoadingIcon = instance.mother.grayLoading();
+      const response = await ajaxJson({ mode: "open", key: getObj.mobilecard }, BACKHOST + "/generalImpPayment", { equal: true });
+      if (response.data !== undefined && response.rsp !== undefined) {
+        const { data, rsp } = response;
+        let whereQuery, updateQuery;
+        let amount;
+
+        if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+
+          whereQuery = { proid: instance.project.proid };
+          updateQuery = {};
+
+          if (typeof rsp.amount === "string") {
+            amount = Number(rsp.amount.replace(/[^0-9]/gi, ''));
+          } else if (typeof rsp.amount === "number") {
+            amount = rsp.amount
+          } else {
+            amount = 165000;
+          }
+
+          updateQuery["contents.payment.status"] = "결제 완료";
+          updateQuery["contents.payment.date"] = new Date();
+          updateQuery["contents.payment.calculation.amount"] = amount;
+          updateQuery["contents.payment.calculation.info.method"] = `카드(${rsp.card_name.replace(/카드/gi, '')})`;
+          updateQuery["contents.payment.calculation.info.proof"] = "이니시스";
+          updateQuery["contents.payment.calculation.info.to"] = instance.designer.designer;
+
+          await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
+          await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + instance.client.name + " 고객님 촬영비를 결제하셨습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
+
+          window.alert("결제가 완료 되었습니다!");
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
+
+        } else {
+          window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+        }
+      } else {
+        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+      }
+      grayLoadingIcon.remove();
+    }
+
 
   } catch (err) {
     console.log(err);
