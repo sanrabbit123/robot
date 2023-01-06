@@ -891,7 +891,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         zipLinks = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: nextPid }, { headers: { "Content-Type": "application/json" } })).data;
         shareLinkDeginer = zipLinks.designer;
-        shareGoogleIdDesigner = drive.general.parsingId(shareLinkDeginer);
+        shareGoogleIdDesigner = drive.parsingId(shareLinkDeginer);
         await shellExec(`rm -rf ${shellLink(folderPath)};`);
 
         consoleQInput = await consoleQ(`Is it OK? (press "OK")\ndesigner : https://drive.google.com/file/d/${shareGoogleIdDesigner}/view?usp=sharing\n`);

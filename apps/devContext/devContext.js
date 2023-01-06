@@ -4583,9 +4583,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김가범",
-    //     designer: "권미정",
-    //     link: "https://drive.google.com/drive/folders/1r6wMDSK3MvSyqzBlDNq4l67sBzgA7Tlj",
+    //     client: null,
+    //     designer: "이주영",
+    //     link: "https://drive.google.com/drive/folders/1TonTq7jl-6d0Sm96VrnzUp0Rrr__E7CA",
     //     pay: true
     //   },
     // ]);
@@ -4642,7 +4642,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "오정언", "2022-07-15" ],
+    //   [ "이주영", "2022-12-29" ],
     // ]);
 
 

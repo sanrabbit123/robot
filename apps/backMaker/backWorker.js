@@ -137,7 +137,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
   }
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, messageSend } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, messageSend, requestSystem } = this.mother;
   const toUpdateQuery = async function (aspirant, contractDay) {
     const today = new Date();
     const thisDesigner = aspirant.designer + " (" + aspirant.aspid + ")";

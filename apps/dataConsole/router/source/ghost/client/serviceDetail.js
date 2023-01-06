@@ -271,7 +271,7 @@ ServiceDetailJs.prototype.insertStartBox = function () {
   titleLineMarginRight = <%% 20, 20, 20, 20, 20 %%>;
 
   subBlockMarginTop = <%% 70, 40, 30, 21, 7 %%>;
-  subSize = <%% 15, 14, 13, 10, 3 %%>;
+  subSize = <%% 15, 14, 13, 10, 3.2 %%>;
   subWeight = <%% 400, 400, 400, 400, 400 %%>;
   subLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
@@ -305,7 +305,7 @@ ServiceDetailJs.prototype.insertStartBox = function () {
           big ? "원하던 컨셉으로 진행하는 스타일링" : (desktop ? "컨셉에 맞게 진행하는 스타일링" : "컨셉대로 진행하는"),
         ],
         sub: [
-          desktop ? "홈스타일링 기반으로 컨셉과 니즈에 맞게, 효율적인 부분 시공으로" : "홈스타일링은 컨셉과 니즈에 맞게, 효율적인 부분 시공으로",
+          desktop ? "홈스타일링 기반으로 컨셉과 니즈에 맞게, 효율적인 부분 시공으로" : "홈스타일링은 니즈에 맞게, 효율적인 부분 시공으로",
           desktop ? "공간을 효과적으로 변화시키는 홈스타일링을 경험해보세요." : "공간을 효과적으로 변화시켜주는 서비스 입니다.",
         ]
       },
@@ -7599,7 +7599,7 @@ ServiceDetailJs.prototype.insertContextBox = function () {
               style: {
                 display: desktop ? "none" : "inline-block",
                 position: "absolute",
-                top: String(isIphone() ? 3.9 : 4.2) + ea,
+                top: String(isIphone() ? 4.1 : 4.4) + ea,
                 left: String(threeTitlePaddingLeft) + ea,
               },
               children: [
