@@ -141,7 +141,6 @@ DevContext.prototype.launching = async function () {
 
     await this.MONGOCONSOLEC.connect();
 
-
     const selfMongo = this.selfMongo;
     const selfLocalMongo = this.MONGOCONSOLEC;
     const token = "__fore__";
@@ -207,23 +206,29 @@ DevContext.prototype.launching = async function () {
       } else if (tempClients.length > 1) {
         
 
+        
+
+
+
+
 
       }
 
     }
-    
-
-
 
     console.log(secondResult);
 
-    
-
-
-    
-    
 
     await this.MONGOCONSOLEC.close();
+
+
+
+
+    
+
+
+
+
 
 
 

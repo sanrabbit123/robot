@@ -697,6 +697,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     let photoshopScript;
     let contentsRows;
     let fromArr, toArr;
+    let allContentsArr;
+    let allProjects, allClients;
 
     tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
     adobe = null;
@@ -818,7 +820,27 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         await shellExec(`rm -rf ${shellLink(folderPath)};`);
 
-        projects = await back.getProjectsByNames([ client.trim(), designer.trim() ]);
+        allContentsArr = (await back.getContentsArrByQuery({})).toNormal();
+        allProjects = (await back.getProjectsByQuery({ desid: targetDesigner.desid })).toNormal();
+        allClients = (await back.getClientsByQuery({ name: client.trim() })).toNormal();
+
+        projects = allProjects.filter((obj) => {
+          return allClients.map((client) => { return client.cliid }).includes(obj.cliid);
+        }).filter((obj) => {
+          return !allContentsArr.filter((c) => { return c.proid !== '' }).map(({ proid }) => { return proid }).includes(obj.proid);
+        });
+        if (projects.length > 1) {
+          projects = projects.filter((obj) => {
+            return !foreRows.filter((o) => { return typeof o.proid === "string" }).map(({ proid }) => { return proid }).includes(obj.proid);
+          });
+          if (projects.length > 1) {
+            projects = projects.filter((obj) => {
+              return obj.contents.photo.date.valueOf() <= (new Date()).valueOf()
+            });
+            projects.sort((a, b) => { return a.contents.photo.date.valueOf() - b.contents.photo.date.valueOf() });
+          }
+        }
+
         if (projects.length > 0) {
           project = projects[0];
           await back.updateProject([
@@ -829,6 +851,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
               "contents.share.designer.photo": new Date(),
             }
           ]);
+          await back.mongoUpdate("foreContents", [ { pid: nextPid }, { proid: project.proid } ], { console: true });
           clientObj = await back.getClientById(project.cliid);
           designerObj = await back.getDesignerById(project.desid);
 
