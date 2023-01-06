@@ -5754,7 +5754,6 @@ DataRouter.prototype.rou_post_rawImageParsing = function () {
       let finalResult;
       
       allProjects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo });
-  
       contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
       foreContents = await back.mongoRead("foreContents", {}, { selfMongo: selfLocalMongo });
   
