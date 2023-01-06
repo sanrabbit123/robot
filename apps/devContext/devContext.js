@@ -139,6 +139,93 @@ DevContext.prototype.launching = async function () {
     // }
 
 
+    await this.MONGOCONSOLEC.connect();
+
+
+    const selfMongo = this.selfMongo;
+    const selfLocalMongo = this.MONGOCONSOLEC;
+    const token = "__fore__";
+    let firstResult;
+    let contentsArr;
+    let foreContents;
+    let foreTargets;
+    let nameTargets;
+    let allClients;
+    let tempClients;
+    let allProjects;
+    let thisProjects;
+    let thisCliids;
+    let secondResult;
+    
+    allProjects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo });
+
+    contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
+    foreContents = await back.mongoRead("foreContents", {}, { selfMongo: selfLocalMongo });
+
+    firstResult = await ajaxJson({ path: "/corePortfolio/rawImage" }, "https://home-liaison.serveftp.com:3000/readDir")
+    firstResult = firstResult.filter((str) => { return /^[ap]/.test(str) }).map((str) => { return str.split('.')[0] });
+
+    firstResult = firstResult.map((pid) => {
+      const contents = contentsArr.find((obj) => { return obj.contents.portfolio.pid === pid })
+      if (contents === undefined) {
+        return token + pid;
+      } else {
+        return contents;
+      }
+    })
+
+    foreTargets = firstResult.filter((o) => { return typeof o === "string" }).filter((str) => { return (new RegExp("^" + token)).test(str) }).map((str) => {
+      return str.slice(token.length);
+    }).map((pid) => {
+      const result = foreContents.find((obj) => { return obj.pid === pid });
+      if (result !== undefined) {
+        return result;
+      } else {
+        return null;
+      }
+    }).filter((obj) => {
+      return obj !== null;
+    })
+
+    nameTargets = foreTargets.map(({ client }) => { return client; });
+    
+    allClients = await back.getClientsByQuery({ $or: nameTargets.map((name) => { return { name } }) }, { selfMongo });
+
+    secondResult = [];
+    for (let { pid, desid, client: name } of foreTargets) {
+
+      tempClients = allClients.toNormal().filter((obj) => { return obj.name === name });
+      thisProjects = allProjects.toNormal().filter((obj) => { return obj.desid === desid });
+      thisCliids = thisProjects.map((obj) => { return obj.cliid });
+
+      tempClients = tempClients.filter((client) => {
+        return thisCliids.includes(client.cliid);
+      })
+
+      if (tempClients.length === 1) {
+        secondResult.push({ proid: thisProjects.find((obj) => { return obj.cliid === tempClients[0].cliid }).proid, pid });
+      } else if (tempClients.length > 1) {
+        
+
+
+      }
+
+    }
+    
+
+
+
+    console.log(secondResult);
+
+    
+
+
+    
+    
+
+    await this.MONGOCONSOLEC.close();
+
+
 
     
     // const selfMongo = this.MONGOC;
