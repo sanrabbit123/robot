@@ -252,7 +252,7 @@ StaticRouter.prototype.rou_post_readDir = function () {
   return obj;
 }
 
-StaticRouter.prototype.rou_pos_renameTargets = function () {
+StaticRouter.prototype.rou_post_renameTargets = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
   const { staticConst } = this;
@@ -321,7 +321,7 @@ StaticRouter.prototype.rou_pos_renameTargets = function () {
 
       res.send(JSON.stringify({ message: "succcess" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_pos_renameTargets): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Static lounge 서버 문제 생김 (rou_post_renameTargets): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

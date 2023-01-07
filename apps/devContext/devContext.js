@@ -138,21 +138,35 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await this.MONGOCONSOLEC.connect();
-
-    let res;
 
     
+    let res;
+    let pathConst;
+    let from, to;
+    
+    pathConst = "corePortfolio/rawImage";
+
     res = await requestSystem("https://home-liaison.org:3000/rawImageParsing", { data: null }, { headers: { "Content-Type": "application/json" } });
 
 
-    
-    
+
+    from = [];
+    to = [];
+    for (let { proid, pid } of res.data) {
+      from.push(pathConst + "/" + pid + ".zip");
+      to.push(pathConst + "/" + proid + "__split__" + pid + ".zip");
+    }
+
+    res = await requestSystem("https://home-liaison.serveftp.com:3000/renameTargets", { from, to }, { headers: { "Content-Type": "application/json" } });
+
+
+    console.log(res)
+
 
     
 
 
-    
+
     // const selfMongo = this.MONGOC;
     // const dummny = {
     //   status: "결제 대기",
