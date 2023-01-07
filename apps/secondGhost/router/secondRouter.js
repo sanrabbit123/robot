@@ -958,6 +958,38 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_rawImageParsing = function () {
+  const instance = this;
+  const { errorLog, ajaxJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/rawImageParsing" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const token = "__split__";
+      let firstResult;
+
+      firstResult = await ajaxJson({ path: "/corePortfolio/rawImage" }, "https://" + instance.address.officeinfo.ghost.host + ":3000/readDir");
+      firstResult = firstResult.filter((str) => { return /^[p]/.test(str) }).filter((str) => { return str.split(token).length >= 2 }).map((str) => {
+        const [ proid, pidZip ] = str.split(token);
+        const [ pid ] = pidZip.split(".");
+        return { proid, pid }
+      });
+  
+      res.send(JSON.stringify(firstResult));
+    } catch (e) {
+      await errorLog("Second Ghost 서버 문제 생김 (rou_post_rawImageParsing): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 SecondRouter.prototype.getAll = function () {
