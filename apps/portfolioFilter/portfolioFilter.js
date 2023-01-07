@@ -810,16 +810,6 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         await sleep(1000);
 
-        zipLinks = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: nextPid }, { headers: { "Content-Type": "application/json" } })).data;
-        shareLinkClient = zipLinks.client;
-        shareLinkDeginer = zipLinks.designer;
-        if (shareLinkClient !== null) {
-          shareGoogleIdClient = drive.parsingId(shareLinkClient);
-        }
-        shareGoogleIdDesigner = drive.parsingId(shareLinkDeginer);
-
-        await shellExec(`rm -rf ${shellLink(folderPath)};`);
-
         allContentsArr = (await back.getContentsArrByQuery({})).toNormal();
         allProjects = (await back.getProjectsByQuery({ desid: targetDesigner.desid })).toNormal();
         allClients = (await back.getClientsByQuery({ name: client.trim() })).toNormal();
@@ -843,6 +833,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         if (projects.length > 0) {
           project = projects[0];
+          console.log("find proid => " + project.proid);
+
           await back.updateProject([
             { proid: project.proid },
             {
@@ -854,6 +846,16 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
           await back.mongoUpdate("foreContents", [ { pid: nextPid }, { proid: project.proid } ], { console: true });
           clientObj = await back.getClientById(project.cliid);
           designerObj = await back.getDesignerById(project.desid);
+
+          zipLinks = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: nextPid, proid: project.proid }, { headers: { "Content-Type": "application/json" } })).data;
+          shareLinkClient = zipLinks.client;
+          shareLinkDeginer = zipLinks.designer;
+          if (shareLinkClient !== null) {
+            shareGoogleIdClient = drive.parsingId(shareLinkClient);
+          }
+          shareGoogleIdDesigner = drive.parsingId(shareLinkDeginer);
+  
+          await shellExec(`rm -rf ${shellLink(folderPath)};`);
 
           if (clientObj !== null && designerObj !== null) {
             consoleQInput = await consoleQ(`Is it OK? (press "OK")\nclient : https://drive.google.com/file/d/${shareGoogleIdClient}/view?usp=sharing\ndesigner : https://drive.google.com/file/d/${shareGoogleIdDesigner}/view?usp=sharing\n`);
@@ -912,7 +914,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
         await sleep(1000);
 
-        zipLinks = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: nextPid }, { headers: { "Content-Type": "application/json" } })).data;
+        zipLinks = (await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/zipPhoto", { pid: nextPid, proid: "" }, { headers: { "Content-Type": "application/json" } })).data;
         shareLinkDeginer = zipLinks.designer;
         shareGoogleIdDesigner = drive.parsingId(shareLinkDeginer);
         await shellExec(`rm -rf ${shellLink(folderPath)};`);

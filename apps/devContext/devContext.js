@@ -136,13 +136,18 @@ DevContext.prototype.launching = async function () {
     //   console.log(whereQuery, updateQuery);
     // }
 
+
+
+    await this.MONGOCONSOLEC.connect();
+
+    let res;
+
     
-
+    res = await requestSystem("https://home-liaison.org:3000/rawImageParsing", { data: null }, { headers: { "Content-Type": "application/json" } });
 
 
     
     
-
 
     
 

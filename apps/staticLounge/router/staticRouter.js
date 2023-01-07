@@ -252,6 +252,82 @@ StaticRouter.prototype.rou_post_readDir = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_pos_renameTargets = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { staticConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/renameTargets" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.from === undefined || req.body.to === undefined) {
+        throw new Error("invalid post");
+      }
+      const { from, to } = equalJson(req.body);
+      if (!Array.isArray(from) || !Array.isArray(to)) {
+        throw new Error("invalid post");
+      }
+      let finalFrom, finalTo;
+
+      finalFrom = [];
+      for (let target of from) {
+        if (typeof target !== "string") {
+          throw new Error("invalid post");
+        }
+        target = target.replace(/^\//i, '').replace(/\/$/i, '');
+        if (target.trim() === '') {
+          target = "__samba__";
+        }
+        if (!/^__/.test(target)) {
+          target = "__samba__" + "/" + target;
+        }
+        target = target.replace(/__samba__/gi, staticConst);
+        finalFrom.push(target);
+      }
+
+      finalTo = [];
+      for (let target of to) {
+        if (typeof target !== "string") {
+          throw new Error("invalid post");
+        }
+        target = target.replace(/^\//i, '').replace(/\/$/i, '');
+        if (target.trim() === '') {
+          target = "__samba__";
+        }
+        if (!/^__/.test(target)) {
+          target = "__samba__" + "/" + target;
+        }
+        target = target.replace(/__samba__/gi, staticConst);
+        finalTo.push(target);
+      }
+
+      if (finalFrom.length !== finalTo.length) {
+        throw new Error("invalid post");
+      }
+
+      for (let i = 0; i < finalFrom.length; i++) {
+        await shellExec("mv", [ finalFrom[i], finalTo[i] ]);
+      }
+
+      res.send(JSON.stringify({ message: "succcess" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_pos_renameTargets): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_generalFileUpload = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
@@ -485,14 +561,15 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      if (req.body.pid === undefined) {
+      if (req.body.pid === undefined || req.body.proid === undefined) {
         throw new Error("invaild post");
       }
       const targetFolderId = "1rSIKIL-jjmXU-D2Zdmf9ElXFmH2Htycl";
-      const { pid } = req.body;
+      const { pid, proid } = req.body;
       const c780 = "780";
       const c1500 = "1500";
       const c3508 = pid;
+      const splitToken = "__split__";
       const targetDir = staticConst + homeliaisonOfficeConst + "/" + designerPhotoConst;
 
       const list = await fileSystem(`readDir`, [ targetDir ]);
@@ -528,8 +605,10 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
       shareDesignerName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
 
       commands = "";
-      commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c3508)};`;
-      commands += `zip ${shellLink(staticConst)}/corePortfolio/rawImage/${shellLink(c3508)}.zip ./*;`;
+      if (proid.trim() !== "") {
+        commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c3508)};`;
+        commands += `zip ${shellLink(staticConst)}/corePortfolio/rawImage/${proid}${splitToken}${shellLink(c3508)}.zip ./*;`;  
+      }
       commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c3508)};`;
       commands += `zip ${shellLink(process.env.HOME)}/${shellLink(tempFolderName)}/${shellLink(shareDesignerName)} ./*;`;
       commands += `cd ${shellLink(targetDir)}/${shellLink(folderName)}/${shellLink(c780)};`;
