@@ -5723,8 +5723,7 @@ DataRouter.prototype.rou_post_photoStatusSync = function () {
 
 DataRouter.prototype.rou_post_rawImageParsing = function () {
   const instance = this;
-  const back = this.back;
-  const { errorLog, sleep, equalJson, ajaxJson } = this.mother;
+  const { errorLog, ajaxJson } = this.mother;
   let obj = {};
   obj.link = [ "/rawImageParsing" ];
   obj.func = async function (req, res) {
@@ -5735,115 +5734,17 @@ DataRouter.prototype.rou_post_rawImageParsing = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const selfMongo = instance.mongo;
-      const selfLocalMongo = instance.mongolocal;
-      const token = "__fore__";
+      const token = "__split__";
       let firstResult;
-      let contentsArr;
-      let foreContents;
-      let foreTargets;
-      let nameTargets;
-      let allClients;
-      let tempClients;
-      let allProjects;
-      let thisProjects;
-      let thisCliids;
-      let secondResult;
-      let cliidTargets;
-      let projectTargets;
-      let finalResult;
-      
-      allProjects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo });
-      contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
-      foreContents = await back.mongoRead("foreContents", {}, { selfMongo: selfLocalMongo });
-  
-      firstResult = await ajaxJson({ path: "/corePortfolio/rawImage" }, "https://" + instance.address.officeinfo.ghost.host + ":3000/readDir");
-      firstResult = firstResult.filter((str) => { return /^[ap]/.test(str) }).map((str) => { return str.split('.')[0] });
-  
-      firstResult = firstResult.map((pid) => {
-        const contents = contentsArr.find((obj) => { return obj.contents.portfolio.pid === pid })
-        if (contents === undefined) {
-          return token + pid;
-        } else {
-          return contents;
-        }
-      })
-  
-      foreTargets = firstResult.filter((o) => { return typeof o === "string" }).filter((str) => { return (new RegExp("^" + token)).test(str) }).map((str) => {
-        return str.slice(token.length);
-      }).map((pid) => {
-        const result = foreContents.find((obj) => { return obj.pid === pid });
-        if (result !== undefined) {
-          return result;
-        } else {
-          return null;
-        }
-      }).filter((obj) => {
-        return obj !== null;
-      })
-  
-      nameTargets = foreTargets.map(({ client }) => { return client; });
-      
-      allClients = await back.getClientsByQuery({ $or: nameTargets.map((name) => { return { name } }) }, { selfMongo });
-  
-      secondResult = [];
-      for (let { pid, desid, client: name } of foreTargets) {
-  
-        tempClients = allClients.toNormal().filter((obj) => { return obj.name === name });
-        thisProjects = allProjects.toNormal().filter((obj) => { return obj.desid === desid });
-        thisCliids = thisProjects.map((obj) => { return obj.cliid });
-  
-        tempClients = tempClients.filter((client) => {
-          return thisCliids.includes(client.cliid);
-        });
-  
-        if (tempClients.length === 1) {
-  
-          secondResult.push({ proid: thisProjects.find((obj) => { return obj.cliid === tempClients[0].cliid }).proid, pid });
-  
-        } else if (tempClients.length > 1) {
-          
-          cliidTargets = tempClients.map(({ cliid }) => { return cliid; });
-          projectTargets = thisProjects.filter((obj) => { return cliidTargets.includes(obj.cliid) });
-          
-          projectTargets = projectTargets.filter((obj) => {
-            return !contentsArr.filter((c) => { return c.proid !== '' }).map(({ proid }) => { return proid }).includes(obj.proid);
-          }).filter((obj) => {
-            return obj.contents.share.client.photo.valueOf() > (new Date(2000, 0, 1)).valueOf() && obj.contents.share.client.photo.valueOf() <= (new Date()).valueOf()
-          });
-  
-          if (projectTargets.length === 1) {
-            secondResult.push({ proid: projectTargets[0].proid, pid });
-          } else if (projectTargets.length > 1) {
-            projectTargets = projectTargets.filter((obj) => {
-              return obj.contents.photo.date.valueOf() <= (new Date()).valueOf()
-            });
-            projectTargets.sort((a, b) => { return a.contents.photo.date.valueOf() - b.contents.photo.date.valueOf() });
-            secondResult.push({ proid: projectTargets[0].proid, pid });
-          }
-  
-        }
-  
-      }
-  
-      finalResult = firstResult.map((o) => {
-        let target;
-        if (typeof o === "string") {
-          target = secondResult.find(({ pid }) => { return pid === o.slice(token.length) });
-          if (target === undefined) {
-            return null;
-          } else {
-            return target;
-          }
-        } else {
-          return {
-            proid: o.proid,
-            pid: o.contents.portfolio.pid,
-          }
-        }
-      }).filter((o) => { return o !== null });
 
-      res.send(JSON.stringify(finalResult));
+      firstResult = await ajaxJson({ path: "/corePortfolio/rawImage" }, "https://" + instance.address.officeinfo.ghost.host + ":3000/readDir");
+      firstResult = firstResult.filter((str) => { return /^[p]/.test(str) }).filter((str) => { return str.split(token).length >= 2 }).map((str) => {
+        const [ proid, pidZip ] = str.split(token);
+        const [ pid ] = pidZip.split(".");
+        return { proid, pid }
+      });
+  
+      res.send(JSON.stringify(firstResult));
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_rawImageParsing): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
