@@ -143,7 +143,7 @@ DevContext.prototype.launching = async function () {
     let res;
 
     
-    res = await requestSystem("https://home-liaison.org:3000/rawImageParsing", { data: null }, { headers: { "Content-Type": "application/json" } });
+    res = await requestSystem("https://home-liaison.net:3000/rawImageParsing", { data: null }, { headers: { "Content-Type": "application/json" } });
 
 
 
