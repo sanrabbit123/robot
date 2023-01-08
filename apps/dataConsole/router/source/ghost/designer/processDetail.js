@@ -918,12 +918,12 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
 ProcessDetailJs.prototype.insertControlBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { client, ea, baseTong, media, project } = this;
+  const { client, ea, baseTong, media, project, contentsRawInfo } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const manyBig = media[0];
   const generalSmall = !manyBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainTitle = "프로젝트 상태";
   let paddingTop;
@@ -1000,6 +1000,9 @@ ProcessDetailJs.prototype.insertControlBox = function () {
   let buttonSize, buttonWeight, buttonTextTop;
   let buttonHeight;
   let paymentByCard;
+  let downloadOriginal;
+  let viewPortfolio;
+  let viewReview;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1193,6 +1196,54 @@ ProcessDetailJs.prototype.insertControlBox = function () {
     }
   }
 
+  downloadOriginal = (project) => {
+    return async function (e) {
+      try {
+        const { link } = instance.contentsRawInfo.raw;
+        let loading;
+        if (link.trim() === '') {
+          window.alert("원본 파일이 없습니다!");
+        } else {
+          loading = instance.mother.grayLoading();
+          await downloadFile(link);
+          loading.remove();
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  viewPortfolio = (project) => {
+    return async function (e) {
+      try {
+        const { link } = instance.contentsRawInfo.portfolio;
+        if (link.trim() === '') {
+          window.alert("포트폴리오가 발행되지 않았습니다!");
+        } else {
+          await blankHref(link);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  viewReview = (project) => {
+    return async function (e) {
+      try {
+        const { link } = instance.contentsRawInfo.review;
+        if (link.trim() === '') {
+          window.alert("고객 후기가 발행되지 않았습니다!");
+        } else {
+          await blankHref(link);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
   if (manyBig) {
 
     contents = {
@@ -1274,21 +1325,36 @@ ProcessDetailJs.prototype.insertControlBox = function () {
           children: [
             {
               title: "촬영비 카드 결제",
+              active: (project) => {
+                return /대기/gi.test(project.contents.payment.status);
+              },
               click: paymentByCard,
             },
+          ]
+        },
+        {
+          title: "컨텐츠 관련",
+          children: [
             {
               title: "원본 사진 다운로드",
-              click: (project) => {
-                return async function (e) {
-                  try {
-  
-                    console.log("this!2");
-  
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
+              active: (project) => {
+                return contentsRawInfo.raw.exist;
               },
+              click: downloadOriginal,
+            },
+            {
+              title: "포트폴리오 보기",
+              active: (project) => {
+                return contentsRawInfo.portfolio.exist;
+              },
+              click: viewPortfolio,
+            },
+            {
+              title: "고객 후기 보기",
+              active: (project) => {
+                return contentsRawInfo.review.exist;
+              },
+              click: viewReview,
             },
           ]
         },
@@ -1297,6 +1363,9 @@ ProcessDetailJs.prototype.insertControlBox = function () {
           children: [
             {
               title: "샘플 다운로드",
+              active: (project) => {
+                return !(/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
+              },
               click: (project) => {
                 return async function (e) {
                   try {
@@ -1309,6 +1378,9 @@ ProcessDetailJs.prototype.insertControlBox = function () {
             },
             {
               title: "디자이너 글 업로드",
+              active: (project) => {
+                return !(/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
+              },
               click: (project) => {
                 return async function (e) {
                   try {
@@ -1320,48 +1392,10 @@ ProcessDetailJs.prototype.insertControlBox = function () {
               },
             },
             {
-              title: "디자이너 글 수정",
-              click: (project) => {
-                return async function (e) {
-                  try {
-  
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
+              title: "디자이너 글 다운로드",
+              active: (project) => {
+                return (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
               },
-            },
-          ]
-        },
-        {
-          title: "디자이너 글",
-          children: [
-            {
-              title: "샘플 다운로드",
-              click: (project) => {
-                return async function (e) {
-                  try {
-  
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
-              },
-            },
-            {
-              title: "디자이너 글 업로드",
-              click: (project) => {
-                return async function (e) {
-                  try {
-  
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
-              },
-            },
-            {
-              title: "디자이너 글 수정",
               click: (project) => {
                 return async function (e) {
                   try {
@@ -1428,26 +1462,24 @@ ProcessDetailJs.prototype.insertControlBox = function () {
           children: [
             {
               title: "촬영비 카드 결제",
+              active: (project) => {
+                return /대기/gi.test(project.contents.payment.status);
+              },
               click: paymentByCard,
             },
             {
               title: "원본 사진 다운로드",
-              click: (project) => {
-                return async function (e) {
-                  try {
-                    const proid = project.proid;
-
-                    
-                    
-                    
-
-
-                    console.log("this!2");
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
+              active: (project) => {
+                return contentsRawInfo.raw.exist;
               },
+              click: downloadOriginal,
+            },
+            {
+              title: "포트폴리오 보기",
+              active: (project) => {
+                return contentsRawInfo.portfolio.exist;
+              },
+              click: viewPortfolio,
             },
           ]
         },
@@ -1456,6 +1488,9 @@ ProcessDetailJs.prototype.insertControlBox = function () {
           children: [
             {
               title: "샘플 다운로드",
+              active: (project) => {
+                return !(/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
+              },
               click: (project) => {
                 return async function (e) {
                   try {
@@ -1468,6 +1503,9 @@ ProcessDetailJs.prototype.insertControlBox = function () {
             },
             {
               title: "디자이너 글 업로드",
+              active: (project) => {
+                return !(/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
+              },
               click: (project) => {
                 return async function (e) {
                   try {
@@ -1479,7 +1517,10 @@ ProcessDetailJs.prototype.insertControlBox = function () {
               },
             },
             {
-              title: "디자이너 글 수정",
+              title: "디자이너 글 다운로드",
+              active: (project) => {
+                return (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
+              },
               click: (project) => {
                 return async function (e) {
                   try {
@@ -1729,6 +1770,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
           },
           children: (new Array(3)).fill(0, 0).map((zero, index) => {
             const live = contents.right[i].children[index] !== undefined;
+            const active = live ? contents.right[i].children[index].active(project) : false;
             const eventFunction = live ? contents.right[i].children[index].click(project) : ((e) => { console.log("nothing") });
             return {
               event: {
@@ -1741,7 +1783,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
                 alignItems: "center",
                 width: withOut(0),
                 height: String(buttonHeight) + ea,
-                background: live ? colorChip.gradientGreen : (desktop ? colorChip.gray2 : colorChip.gray4),
+                background: live ? (active ? colorChip.gradientGreen : (desktop ? colorChip.gray3 : colorChip.gray2)) : (desktop ? colorChip.gray2 : colorChip.gray4),
                 borderRadius: String(5) + "px",
                 marginBottom: index !== 3 - 1 ? String(buttonBetween) + ea : "",
                 cursor: "pointer",
@@ -1751,7 +1793,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
                 style: {
                   fontSize: String(buttonSize) + ea,
                   fontWeight: String(buttonWeight),
-                  color: colorChip.white,
+                  color: active ? colorChip.white : colorChip.deactive,
                   position: "relative",
                   top: String(buttonTextTop) + ea,
                 }
@@ -6582,6 +6624,9 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
     this.panContents = this.contents.map((obj) => { return obj.children }).flat();
 
+    this.contentsRawInfo = await ajaxJson({ mode: "search", proid }, SECONDHOST + "/rawImageParsing", { equal: true });
+    console.log(this.contentsRawInfo);
+
     this.hashConst = "homeliaisonHash";
     this.targetKeywords = "/photo/designer";
     this.targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + this.targetKeywords + "/" + this.designer.desid + "/" + this.project.proid;
@@ -6633,6 +6678,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
 
     loading.parentNode.removeChild(loading);
 
+    // mobile payment
     if (typeof getObj.mobilecard === "string") {
       const grayLoadingIcon = instance.mother.grayLoading();
       const response = await ajaxJson({ mode: "open", key: getObj.mobilecard }, BACKHOST + "/generalImpPayment", { equal: true });
@@ -6675,7 +6721,6 @@ ProcessDetailJs.prototype.launching = async function (loading) {
       }
       grayLoadingIcon.remove();
     }
-
 
   } catch (err) {
     console.log(err);
