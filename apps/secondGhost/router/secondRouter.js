@@ -960,6 +960,8 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
 
 SecondRouter.prototype.rou_post_rawImageParsing = function () {
   const instance = this;
+  const back = this.back;
+  const address = this.address;
   const { errorLog, ajaxJson } = this.mother;
   let obj = {};
   obj.link = [ "/rawImageParsing" ];
@@ -971,8 +973,19 @@ SecondRouter.prototype.rou_post_rawImageParsing = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const { mode } = req.body;
       const token = "__split__";
+      const folderConst = "/corePortfolio/rawImage";
+      const selfMongo = instance.mongo;
       let firstResult;
+      let contentsArr;
+      let proid;
+      let finalResult;
+      let temp;
+      let thisPid;
 
       firstResult = await ajaxJson({ path: "/corePortfolio/rawImage" }, "https://" + instance.address.officeinfo.ghost.host + ":3000/readDir");
       firstResult = firstResult.filter((str) => { return /^[p]/.test(str) }).filter((str) => { return str.split(token).length >= 2 }).map((str) => {
@@ -981,7 +994,49 @@ SecondRouter.prototype.rou_post_rawImageParsing = function () {
         return { proid, pid }
       });
   
-      res.send(JSON.stringify(firstResult));
+      if (mode === "list") {
+
+        res.send(JSON.stringify(firstResult));
+
+      } else if (mode === "get" || mode === "search" || mode === "proid") {
+
+        if (req.body.proid === undefined) {
+          throw new Error("invalid post");
+        }
+
+        finalResult = {};
+
+        ({ proid } = req.body);
+        contentsArr = await back.getContentsArrByQuery({ proid }, { selfMongo });
+
+        finalResult.proid = proid;
+        finalResult.raw = { exist: false, link: "" };
+        finalResult.portfolio = { exist: false, link: "" };
+        finalResult.review = { exist: false, link: "" };
+
+        temp = firstResult.find((obj) => { return obj.proid === proid });
+        if (temp !== undefined) {
+          thisPid = temp.pid;
+          finalResult.raw.exist = true;
+          finalResult.raw.link = "https://" + address.officeinfo.ghost.host + folderConst + "/" + proid + token + thisPid + ".zip";
+        }
+
+        if (contentsArr.length > 0) {
+          [ { contents: { portfolio: { pid: thisPid } } } ] = contentsArr;
+          finalResult.raw.portfolio = true;
+          finalResult.raw.link = "https://" + address.frontinfo.host + "/portdetail.php?pid=" + thisPid;
+          if (contentsArr[0].contents.review.rid !== "" && !/re999/gi.test(contentsArr[0].contents.review.rid)) {
+            finalResult.raw.review = true;
+            finalResult.raw.link = "https://" + address.frontinfo.host + "/revdetail.php?pid=" + thisPid;  
+          }
+        }
+
+        res.send(JSON.stringify(finalResult));
+        
+      } else {
+        throw new Error("invalid mode");
+      }
+
     } catch (e) {
       await errorLog("Second Ghost 서버 문제 생김 (rou_post_rawImageParsing): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
