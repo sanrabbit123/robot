@@ -918,12 +918,12 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
 ProcessDetailJs.prototype.insertControlBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { client, ea, baseTong, media, project, contentsRawInfo } = this;
+  const { client, ea, baseTong, media, project, contentsRawInfo, totalContents, requestNumber } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const manyBig = media[0];
   const generalSmall = !manyBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainTitle = "프로젝트 상태";
   let paddingTop;
@@ -1003,6 +1003,8 @@ ProcessDetailJs.prototype.insertControlBox = function () {
   let downloadOriginal;
   let viewPortfolio;
   let viewReview;
+  let designerRawContentsDownload;
+  let designerSampleDownload;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1244,6 +1246,272 @@ ProcessDetailJs.prototype.insertControlBox = function () {
     }
   }
 
+  designerSampleDownload = (project) => {
+    return async function (e) {
+      try {
+        await downloadFile(S3HOST + "/photo/sample/commentsSample.docx");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  designerRawContentsDownload = (project) => {
+    return async function (e) {
+      try {
+        const commentPopupClassName = "commentPopupClassName";
+        const proid = instance.project.proid;
+        const designer = instance.designer.designer;
+        const client = instance.client.name;
+        const self = this;
+        const zIndex = String(2);
+        let cancelBack, whitePrompt, hiddenInput;
+        let whitePromptWidth;
+        let whitePromptPaddingTop;
+        let whitePromptPaddingBottom;
+        let whitePromptTitleHeight;
+        let whitePromptButtonHeight;
+        let whitePromptTitleSize;
+        let whitePromptTitleWeight;
+        let whitePromptTitleBoldWeight;
+        let whitePromptTitleLineHeight;
+        let whitePromptTitleTextTop;
+        let whitePromptButtonBetween;
+        let whitePromptButtonTextTop;
+        let whitePromptButtonWidth;
+        let whitePromptButtonSize;
+        let whitePromptButtonWeight;
+
+        whitePromptWidth = <%% 600, 600, 520, 450, 82 %%>;
+        whitePromptPaddingTop = <%% 12, 12, 10, 8, 2 %%>;
+        whitePromptPaddingBottom = <%% 40, 40, 36, 32, 5.6 %%>;
+        whitePromptTitleHeight = <%% 110, 110, 100, 80, 16 %%>;
+        whitePromptButtonHeight = <%% 35, 35, 32, 30, 6 %%>;
+
+        whitePromptTitleSize = <%% 20, 20, 18, 16, 3.2 %%>;
+        whitePromptTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
+        whitePromptTitleBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+        whitePromptTitleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+        whitePromptTitleTextTop = <%% 0, 0, 0, 0, 0 %%>;
+
+        whitePromptButtonBetween = <%% 6, 6, 5, 4, 1 %%>;
+        whitePromptButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+        whitePromptButtonWidth = <%% 125, 125, 125, 115, 25 %%>;
+
+        whitePromptButtonSize = <%% 13, 13, 12, 11, 2.5 %%>;
+        whitePromptButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+        cancelBack = createNode({
+          mother: totalContents,
+          class: [ commentPopupClassName ],
+          event: {
+            click: (e) => {
+              e.stopPropagation();
+              removeByClass(commentPopupClassName);
+            }
+          },
+          style: {
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            background: colorChip.black,
+            opacity: String(0.2),
+            position: "fixed",
+            zIndex: String(zIndex),
+          }
+        });
+
+        hiddenInput = createNode({
+          mother: totalContents,
+          class: [ commentPopupClassName ],
+          mode: "input",
+          attribute: {
+            type: "file",
+            name: "comments",
+            proid,
+            designer,
+            client
+          },
+          event: {
+            change: async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const designer = this.getAttribute("designer");
+                const client = this.getAttribute("client");
+                let thisFile, formData, res, loading;
+                if ([ ...this.files ].length === 1) {
+                  thisFile = [ ...this.files ][0];
+
+                  formData = new FormData();
+                  formData.enctype = "multipart/form-data";
+                  formData.append("proid", proid);
+                  formData.append("designer", designer);
+                  formData.append("client", client);
+                  formData.append("comments", thisFile);
+                  formData.append("desid", instance.designer.desid);
+
+                  loading = instance.mother.grayLoading();
+
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middleCommentsBinary");
+                  await ajaxJson({ whereQuery: { proid }, updateQuery: { "contents.raw.portfolio.status": "원본 수집 완료" } }, SECONDHOST + "/updateProject");
+                  await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
+
+                  loading.remove();
+
+                  window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
+
+                  cancelBack.click();
+                }
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          },
+          style: {
+            display: "none",
+            opacity: String(0),
+            position: "absolute",
+          }
+        });
+
+        whitePrompt = createNode({
+          mother: totalContents,
+          class: [ commentPopupClassName ],
+          event: {
+            click: (e) => { e.stopPropagation() }
+          },
+          style: {
+            display: "inline-block",
+            position: "fixed",
+            borderRadius: String(5) + "px",
+            background: colorChip.white,
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            width: String(whitePromptWidth) + ea,
+            left: withOut(50, whitePromptWidth / 2, ea),
+            top: withOut(50, ((whitePromptPaddingTop + whitePromptPaddingBottom + whitePromptTitleHeight + whitePromptButtonHeight) / 2), ea),
+            paddingTop: String(whitePromptPaddingTop) + ea,
+            paddingBottom: String(whitePromptPaddingBottom) + ea,
+            zIndex: String(zIndex),
+            animation: "fadeuplite 0.3s ease",
+          },
+          children: [
+            {
+              style: {
+                display: "flex",
+                position: "relative",
+                height: String(whitePromptTitleHeight) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                flexDirection: "column",
+              },
+              children: [
+                {
+                  text: "디자이너 글 탬플릿을 활용하여\n디자이너 글을 <b%워드 / pdf / 한글 등의 파일로 업로드%b> 해주세요!",
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(whitePromptTitleTextTop) + ea,
+                    fontSize: String(whitePromptTitleSize) + ea,
+                    fontWeight: String(whitePromptTitleWeight),
+                    color: colorChip.black,
+                    lineHeight: String(whitePromptTitleLineHeight),
+                  },
+                  bold: {
+                    fontSize: String(whitePromptTitleSize) + ea,
+                    fontWeight: String(whitePromptTitleBoldWeight),
+                    color: colorChip.black,
+                  }
+                }
+              ]
+            },
+            {
+              style: {
+                display: "flex",
+                position: "relative",
+                height: String(whitePromptButtonHeight) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                flexDirection: "row",
+              },
+              children: [
+                {
+                  event: {
+                    click: function (e) {
+                      downloadFile(S3HOST + "/photo/sample/commentsSample.docx").catch((err) => {
+                        console.log(err);
+                      });
+                    }
+                  },
+                  style: {
+                    display: "inline-flex",
+                    width: String(whitePromptButtonWidth) + ea,
+                    height: String(whitePromptButtonHeight) + ea,
+                    borderRadius: String(5) + "px",
+                    background: colorChip.gradientGray,
+                    marginRight: String(whitePromptButtonBetween) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    cursor: "pointer",
+                  },
+                  children: [
+                    {
+                      text: "디자이너 글 탬플릿",
+                      style: {
+                        position: "relative",
+                        top: String(whitePromptButtonTextTop) + ea,
+                        fontSize: String(whitePromptButtonSize) + ea,
+                        fontWeight: String(whitePromptButtonWeight),
+                        color: colorChip.white,
+                      }
+                    }
+                  ]
+                },
+                {
+                  event: {
+                    click: function (e) {
+                      const targetInput = document.querySelector("input." + commentPopupClassName);
+                      targetInput.click();
+                    }
+                  },
+                  style: {
+                    display: "inline-flex",
+                    width: String(whitePromptButtonWidth) + ea,
+                    height: String(whitePromptButtonHeight) + ea,
+                    borderRadius: String(5) + "px",
+                    background: colorChip.gradientGreen,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    cursor: "pointer",
+                  },
+                  children: [
+                    {
+                      text: "디자이너 글 업로드",
+                      style: {
+                        position: "relative",
+                        top: String(whitePromptButtonTextTop) + ea,
+                        fontSize: String(whitePromptButtonSize) + ea,
+                        fontWeight: String(whitePromptButtonWeight),
+                        color: colorChip.white,
+                      }
+                    }
+                  ]
+                },
+              ]
+            }
+          ]
+        });
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
   if (manyBig) {
 
     contents = {
@@ -1366,30 +1634,14 @@ ProcessDetailJs.prototype.insertControlBox = function () {
               active: (project) => {
                 return !(/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
               },
-              click: (project) => {
-                return async function (e) {
-                  try {
-  
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
-              },
+              click: designerSampleDownload,
             },
             {
               title: "디자이너 글 업로드",
               active: (project) => {
                 return !(/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
               },
-              click: (project) => {
-                return async function (e) {
-                  try {
-  
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
-              },
+              click: designerRawContentsDownload,
             },
             {
               title: "디자이너 글 다운로드",
@@ -1400,6 +1652,9 @@ ProcessDetailJs.prototype.insertControlBox = function () {
                 return async function (e) {
                   try {
   
+
+
+
                   } catch (e) {
                     console.log(e);
                   }
@@ -1491,30 +1746,14 @@ ProcessDetailJs.prototype.insertControlBox = function () {
               active: (project) => {
                 return !(/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
               },
-              click: (project) => {
-                return async function (e) {
-                  try {
-  
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
-              },
+              click: designerSampleDownload,
             },
             {
               title: "디자이너 글 업로드",
               active: (project) => {
                 return !(/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
               },
-              click: (project) => {
-                return async function (e) {
-                  try {
-  
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
-              },
+              click: designerRawContentsDownload,
             },
             {
               title: "디자이너 글 다운로드",
@@ -1525,6 +1764,9 @@ ProcessDetailJs.prototype.insertControlBox = function () {
                 return async function (e) {
                   try {
   
+
+
+
                   } catch (e) {
                     console.log(e);
                   }
@@ -5494,6 +5736,8 @@ ProcessDetailJs.prototype.returnButtonList = function () {
                     await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
 
                     loading.remove();
+
+                    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
 
                     cancelBack.click();
                   }
