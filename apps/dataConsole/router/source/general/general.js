@@ -3136,7 +3136,7 @@ GeneralJs.prototype.greenAlert = async function (message, blackMode = false) {
       opacity: String(0),
       width: String(2000) + ea,
       transition: "all 0s ease",
-      zIndex: String(200),
+      zIndex: String(400),
     };
     for (let i in style) {
       div_clone.style[i] = style[i];

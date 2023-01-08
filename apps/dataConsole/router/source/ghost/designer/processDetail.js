@@ -1003,8 +1003,9 @@ ProcessDetailJs.prototype.insertControlBox = function () {
   let downloadOriginal;
   let viewPortfolio;
   let viewReview;
-  let designerRawContentsDownload;
+  let designerRawContentsUpload;
   let designerSampleDownload;
+  let designerRawContentsView;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1256,7 +1257,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
     }
   }
 
-  designerRawContentsDownload = (project) => {
+  designerRawContentsUpload = (project) => {
     return async function (e) {
       try {
         const commentPopupClassName = "commentPopupClassName";
@@ -1512,6 +1513,16 @@ ProcessDetailJs.prototype.insertControlBox = function () {
     }
   }
 
+  designerRawContentsView = (project) => {
+    return async function (e) {
+      try {
+        // dev
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
   if (manyBig) {
 
     contents = {
@@ -1641,26 +1652,15 @@ ProcessDetailJs.prototype.insertControlBox = function () {
               active: (project) => {
                 return !(/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
               },
-              click: designerRawContentsDownload,
+              click: designerRawContentsUpload,
             },
-            {
-              title: "디자이너 글 다운로드",
-              active: (project) => {
-                return (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
-              },
-              click: (project) => {
-                return async function (e) {
-                  try {
-  
-
-
-
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
-              },
-            },
+            // {
+            //   title: "디자이너 글 보기",
+            //   active: (project) => {
+            //     return (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
+            //   },
+            //   click: designerRawContentsView,
+            // },
           ]
         },
       ]
@@ -1753,26 +1753,15 @@ ProcessDetailJs.prototype.insertControlBox = function () {
               active: (project) => {
                 return !(/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
               },
-              click: designerRawContentsDownload,
+              click: designerRawContentsUpload,
             },
-            {
-              title: "디자이너 글 다운로드",
-              active: (project) => {
-                return (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
-              },
-              click: (project) => {
-                return async function (e) {
-                  try {
-  
-
-
-
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
-              },
-            },
+            // {
+            //   title: "디자이너 글 보기",
+            //   active: (project) => {
+            //     return (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
+            //   },
+            //   click: designerRawContentsView,
+            // },
           ]
         },
       ]
@@ -5078,8 +5067,11 @@ ProcessDetailJs.prototype.insertStyleBox = function () {
     num++;
   }
 
-
-
+  positionArr.sort((a, b) => { return a.getBoundingClientRect().height - b.getBoundingClientRect().height; });
+  tempArr.sort((a, b) => { return b.getBoundingClientRect().height - a.getBoundingClientRect().height; });
+  for (let i = 0; i < tempArr.length; i++) {
+    positionArr[i].appendChild(tempArr[i]);
+  }
 
 }
 
@@ -6867,10 +6859,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
 
     this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
     this.panContents = this.contents.map((obj) => { return obj.children }).flat();
-
     this.contentsRawInfo = await ajaxJson({ mode: "search", proid }, SECONDHOST + "/rawImageParsing", { equal: true });
-    console.log(this.contentsRawInfo);
-
     this.hashConst = "homeliaisonHash";
     this.targetKeywords = "/photo/designer";
     this.targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + this.targetKeywords + "/" + this.designer.desid + "/" + this.project.proid;
@@ -6964,6 +6953,18 @@ ProcessDetailJs.prototype.launching = async function (loading) {
         window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
       }
       grayLoadingIcon.remove();
+    }
+
+    // auto download
+    if (typeof getObj.download === "string") {
+      if (getObj.download === "auto") {
+        if (this.contentsRawInfo.raw.exist) {
+          const loading = instance.mother.grayLoading();
+          instance.mother.greenAlert("다운로드를 진행합니다!").catch((err) => { console.log(err); });
+          await GeneralJs.downloadFile(this.contentsRawInfo.raw.link);
+          loading.remove();
+        }
+      }
     }
 
   } catch (err) {
