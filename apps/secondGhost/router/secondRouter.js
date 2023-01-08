@@ -1023,16 +1023,16 @@ SecondRouter.prototype.rou_post_rawImageParsing = function () {
 
         if (contentsArr.length > 0) {
           [ { contents: { portfolio: { pid: thisPid } } } ] = contentsArr;
-          finalResult.raw.portfolio = true;
-          finalResult.raw.link = "https://" + address.frontinfo.host + "/portdetail.php?pid=" + thisPid;
+          finalResult.portfolio.exist = true;
+          finalResult.portfolio.link = "https://" + address.frontinfo.host + "/portdetail.php?pid=" + thisPid;
           if (contentsArr[0].contents.review.rid !== "" && !/re999/gi.test(contentsArr[0].contents.review.rid)) {
-            finalResult.raw.review = true;
-            finalResult.raw.link = "https://" + address.frontinfo.host + "/revdetail.php?pid=" + thisPid;  
+            finalResult.review.exist = true;
+            finalResult.review.link = "https://" + address.frontinfo.host + "/revdetail.php?pid=" + thisPid;  
           }
         }
 
         res.send(JSON.stringify(finalResult));
-        
+
       } else {
         throw new Error("invalid mode");
       }
