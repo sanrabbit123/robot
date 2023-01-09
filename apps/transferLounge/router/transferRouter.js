@@ -75,6 +75,7 @@ TransferRouter.prototype.rou_get_First = function () {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
+    console.log(req);
     try {
 
       if (req.params.id === "ssl") {
@@ -113,7 +114,6 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      console.log(req);
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
