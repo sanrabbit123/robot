@@ -1116,88 +1116,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
 
   this.whiteMargin = (desktop ? margin : 0);
 
-  paymentByCard = (project) => {
-    return async function (e) {
-      try {
-        const amount = 165000;
-        const proid = project.proid;
-        const cliid = project.cliid;
-        const desid = project.desid;
-        const impKey = "imp71921105";
-        const loading = instance.mother.grayLoading();
-        const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "designerPhoto" }, BACKHOST + "/generalImpPayment");
-        const [ designer ] = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
-        const [ client ] = await ajaxJson({ whereQuery: { cliid } }, SECONDHOST + "/getClients", { equal: true });
-        let oid, plugin;
-        let whereQuery, updateQuery;
-
-        oid = oidConst + proid + "_" + String((new Date()).valueOf());
-        plugin = new Function(pluginScript);
-        plugin();
-        window.IMP.init(impKey);
-        if (desktop) {
-
-          window.IMP.request_pay({
-              pg: "inicis",
-              pay_method: "card",
-              merchant_uid: oid,
-              name: "사진 촬영비",
-              amount: Math.floor(amount),
-              buyer_email: designer.information.email,
-              buyer_name: designer.designer,
-              buyer_tel: designer.information.phone,
-          }, async (rsp) => {
-            try {
-              if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
-                
-                whereQuery = { proid };
-                updateQuery = {};
-
-                updateQuery["contents.payment.status"] = "결제 완료";
-                updateQuery["contents.payment.date"] = new Date();
-                updateQuery["contents.payment.calculation.amount"] = amount;
-                updateQuery["contents.payment.calculation.info.method"] = `카드(${rsp.card_name.replace(/카드/gi, '')})`;
-                updateQuery["contents.payment.calculation.info.proof"] = "이니시스";
-                updateQuery["contents.payment.calculation.info.to"] = designer.designer;
-                
-                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
-                await ajaxJson({ message: designer.designer + " 실장님이 콘솔을 통해 " + client.name + " 고객님 촬영비를 결제하셨습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
-
-                window.alert("결제가 완료 되었습니다!");
-                window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + proid;
-
-              } else {
-                window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-                loading.remove();
-              }
-            } catch (e) {
-              window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-              loading.remove();
-            }
-          });
-        } else {
-
-          ({ key } = await ajaxJson({ mode: "store", oid: oid, data: { oid } }, BACKHOST + "/generalImpPayment"));
-
-          window.IMP.request_pay({
-              pg: "inicis",
-              pay_method: "card",
-              merchant_uid: oid,
-              name: "사진 촬영비",
-              amount: Math.floor(amount),
-              buyer_email: designer.information.email,
-              buyer_name: designer.designer,
-              buyer_tel: designer.information.phone,
-              m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=" + key,
-          }, (rsp) => {});
-
-        }
-
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
+  paymentByCard = instance.paymentByCard();
 
   downloadOriginal = (project) => {
     return async function (e) {
@@ -1207,10 +1126,10 @@ ProcessDetailJs.prototype.insertControlBox = function () {
         if (link.trim() === '') {
           window.alert("원본 파일이 없습니다!");
         } else {
-          loading = instance.mother.grayLoading();
-          await downloadFile(link);
+          loading = instance.mother.whiteProgressLoading();
+          await downloadFile(link, null, loading.progress.firstChild);
           loading.remove();
-        }
+      }
       } catch (e) {
         console.log(e);
       }
@@ -1250,7 +1169,9 @@ ProcessDetailJs.prototype.insertControlBox = function () {
   designerSampleDownload = (project) => {
     return async function (e) {
       try {
-        await downloadFile(S3HOST + "/photo/sample/commentsSample.docx");
+        const loading = instance.mother.whiteProgressLoading();
+        await downloadFile(S3HOST + "/photo/sample/commentsSample.docx", null, loading.progress.firstChild);
+        loading.remove();
       } catch (e) {
         console.log(e);
       }
@@ -1440,10 +1361,14 @@ ProcessDetailJs.prototype.insertControlBox = function () {
               children: [
                 {
                   event: {
-                    click: function (e) {
-                      downloadFile(S3HOST + "/photo/sample/commentsSample.docx").catch((err) => {
-                        console.log(err);
-                      });
+                    click: async function (e) {
+                      try {
+                        const loading = instance.mother.whiteProgressLoading();
+                        await downloadFile(S3HOST + "/photo/sample/commentsSample.docx", null, loading.progress.firstChild);
+                        loading.remove();
+                      } catch (e) {
+                        console.log(e);
+                      }
                     }
                   },
                   style: {
@@ -2445,20 +2370,23 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
             mother: whitePrompt,
             event: {
               click: async function (e) {
-                let parsedString;
+                let parsedString, loading;
                 try {
                   if (instance.itemList.length === 0) {
                     window.alert("파일을 먼저 선택해주세요!");
                   } else {
                     for (let { original, type, hex, exe } of instance.itemList) {
+                      loading = instance.mother.whiteProgressLoading();
                       if (type === "photo") {
-                        await downloadFile(original);
+                        await downloadFile(original, null, loading.progress.firstChild);
                       } else {
                         parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true });
-                        await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe);
+                        await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe, loading.progress.firstChild);
                       }
+                      loading.remove();
                     }
                     cancelEvent.call(self, e);
+                    await instance.setPanBlocks();
                   }
                 } catch (e) {
                   console.log(e);
@@ -5388,7 +5316,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, blankHref, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, downloadFile, removeByClass } = GeneralJs;
-  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const { project, requestNumber, ea, baseTong, media, totalContents, contentsRawInfo } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -5438,17 +5366,18 @@ ProcessDetailJs.prototype.returnButtonList = function () {
       return async function (e) {
         let parsedString;
         let protocol, host, static0, static1, desid, proid, file;
-        let parsedObject;
+        let parsedObject, loading;
         try {
           if (instance.itemList.length === 0) {
             window.alert("파일을 먼저 선택해주세요!");
           } else {
             for (let { original, type, hex, exe } of instance.itemList) {
+              loading = instance.mother.whiteProgressLoading();
               if (type === "photo") {
-                await downloadFile(original);
+                await downloadFile(original, null, loading.progress.firstChild);
               } else if (type === "file") {
                 parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true });
-                await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe);
+                await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe, loading.progress.firstChild);
               } else {
                 [ protocol, host, static0, static1, desid, proid, file ] = original.split("/").filter((str) => { return str !== "" });
                 parsedObject = await ajaxJson({ links: [ { desid, proid, file } ] }, BRIDGEHOST + "/middleLinkParsing", { equal: true });
@@ -5456,6 +5385,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
                   blankHref(parsedObject[0].link);
                 }
               }
+              loading.remove();
             }
           }
           await instance.setPanBlocks();
@@ -5580,7 +5510,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
 
   buttonList.push({
     name: "고객 알림 보내기",
-    item: false,
+    item: true,
     deactive: false,
     reverse: false,
     event: function () {
@@ -5624,7 +5554,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
   buttonList.push({
     name: "디자이너 글 업로드",
     item: false,
-    deactive: false,
+    deactive: (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status)),
     reverse: true,
     event: function () {
       return async function (e) {
@@ -5883,6 +5813,40 @@ ProcessDetailJs.prototype.returnButtonList = function () {
     }
   });
 
+  buttonList.push({
+    name: "촬영비 카드 결제",
+    item: false,
+    deactive: !(/대기/gi.test(project.contents.payment.status)),
+    reverse: true,
+    event: function () {
+      return (instance.paymentByCard())(instance.project);
+    }
+  });
+
+  buttonList.push({
+    name: "원본 사진 다운로드",
+    item: false,
+    deactive: !contentsRawInfo.raw.exist,
+    reverse: true,
+    event: function () {
+      return async function (e) {
+        try {
+          const { link } = instance.contentsRawInfo.raw;
+          let loading;
+          if (link.trim() === '') {
+            window.alert("원본 파일이 없습니다!");
+          } else {
+            loading = instance.mother.whiteProgressLoading();
+            await downloadFile(link, null, loading.progress.firstChild);
+            loading.remove();
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+  });
+
   return buttonList;
 }
 
@@ -5972,6 +5936,8 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
     ]
   }).firstChild;
 
+  this.buttonBase = buttonBase.parentNode;
+
   setButtons = () => {
     buttonList = instance.returnButtonList();
     cleanChildren(buttonBase);
@@ -5989,12 +5955,13 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
           designer: instance.designer.designer,
           height: String(buttonHeight) + ea,
           margin: String(buttonMarginTop) + ea,
+          deactive: buttonList[i].deactive ? "true" : "false",
         },
         style: {
           display: "flex",
           width: withOut(0),
           height: String(buttonHeight) + ea,
-          background: buttonList[i].item ? colorChip.gray3 : colorChip.softGreen,
+          background: buttonList[i].item ? colorChip.gray3 : (!buttonList[i].deactive ? colorChip.softGreen : colorChip.gray3),
           borderRadius: String(5) + "px",
           marginBottom: String(buttonMarginTop) + ea,
           justifyContent: "center",
@@ -6013,7 +5980,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
               top: String(buttonTextTop) + ea,
               fontSize: String(buttonSize) + ea,
               fontWeight: String(buttonWeight),
-              color: buttonList[i].item ? colorChip.deactive : colorChip.white,
+              color: buttonList[i].item ? colorChip.deactive : (!buttonList[i].deactive ? colorChip.white : colorChip.deactive),
             }
           }
         ]
@@ -6026,6 +5993,134 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
 
 }
 
+ProcessDetailJs.prototype.asyncLoadingBlock = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let baseWidth;
+  let bottom;
+  let chatBaseWidth;
+  let chatBaseHeight;
+  let chatBaseBetween;
+  let right;
+  let zIndex;
+  let setButtons;
+  let buttonList;
+  let buttonBase;
+  let buttonPadding;
+  let buttonHeight;
+  let buttonMarginTop;
+  let buttonBetween;
+  let buttonTextTop;
+  let buttonSize;
+  let buttonWeight;
+  let basePadding;
+  let loadingWidth;
+  let loadingTop;
+  let progressSize;
+  let progressWeight;
+  let progressMarginBottom;
+  let pastButtonBase;
+
+  const WhiteLoading = function (base, progress, pastBase) {
+    this.base = base;
+    this.progress = progress;
+    this.pastBase = pastBase;
+  }
+
+  WhiteLoading.prototype.remove = function () {
+    this.base.parentElement.removeChild(this.base);
+    this.pastBase.style.animation = "talkfade 0.3s ease forwards";
+  }
+
+  baseWidth = desktop ? 68 : 12;
+  right = desktop ? 40 : 5.4;
+  bottom = desktop ? 39 : 6;
+
+  zIndex = 4;
+
+  chatBaseWidth = <%% 160, 160, 160, 160, 21 %%>;
+  chatBaseHeight = <%% 90, 90, 90, 90, 21 %%>;
+  chatBaseBetween = <%% 16, 16, 16, 16, 2 %%>;
+
+  buttonPadding = <%% 12, 12, 12, 10, 3.2 %%>;
+  buttonHeight = <%% 36, 36, 36, 33, 6.8 %%>;
+  buttonMarginTop = <%% 6, 6, 6, 6, 1 %%>;
+  buttonBetween = <%% 6, 6, 6, 6, 1 %%>;
+
+  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isIphone() ? -0.1 : -0.3) %%>;
+  buttonSize = <%% 14, 14, 14, 13, 2.6 %%>;
+  buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  basePadding = <%% 12, 12, 12, 10, 1.6 %%>;
+
+  loadingWidth = <%% 40, 40, 40, 36, 8 %%>;
+  loadingTop = <%% -3, -3, -3, -2, -0.5 %%>;
+
+  progressSize = <%% 15, 15, 15, 14, 3.2 %%>;
+  progressWeight = <%% 400, 400, 400, 400, 400 %%>;
+  progressMarginBottom = <%% 1, 1, 1, 1, 0.5 %%>;
+
+  pastButtonBase = instance.buttonBase;
+  pastButtonBase.style.animation = "fadeoutlite 0.2s ease forwards";
+
+  buttonBase = createNode({
+    mother: totalContents,
+    style: {
+      display: "inline-flex",
+      position: "fixed",
+      width: String(chatBaseWidth) + ea,
+      height: String(chatBaseHeight) + ea,
+      borderRadius: String(8) + "px",
+      right: String(right) + ea,
+      bottom: String(bottom + baseWidth + chatBaseBetween) + ea,
+      boxShadow: "0px 6px 20px -10px " + colorChip.shadow,
+      animation: "talkfade 0.3s ease forwards",
+      overflow: "hidden",
+      background: colorChip.white,
+      padding: String(basePadding) + ea,
+      paddingBottom: String(basePadding - buttonMarginTop) + ea,
+      zIndex: String(zIndex),
+      transition: "all 0.5s ease",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "column",
+    },
+    children: [
+      {
+        mode: "svg",
+        source: instance.mother.returnLoading(),
+        class: [ "loading" ],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(loadingWidth) + ea,
+          height: String(loadingWidth) + ea,
+          left: "auto",
+          top: String(loadingTop) + ea,
+        }
+      },
+      {
+        text: "0%",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(progressSize) + ea,
+          fontWeight: String(progressWeight),
+          fontFamily: "graphik",
+          color: colorChip.green,
+          marginBottom: String(progressMarginBottom) + ea,
+        }
+      }
+    ]
+  });
+
+  return (new WhiteLoading(buttonBase, buttonBase.lastChild, pastButtonBase));
+}
+
 ProcessDetailJs.prototype.reloadGreenButtons = function () {
   const instance = this;
   const greenButtonClassName = "greenButtonClassName";
@@ -6034,6 +6129,7 @@ ProcessDetailJs.prototype.reloadGreenButtons = function () {
   const { colorChip } = GeneralJs;
   let targets;
   let reverseTargets;
+  let thisDeactive;
 
   targets = document.querySelectorAll('.' + greenButtonClassName);
   reverseTargets = document.querySelectorAll('.' + reverseButtonClassName);
@@ -6041,8 +6137,9 @@ ProcessDetailJs.prototype.reloadGreenButtons = function () {
   if (this.itemList.length > 0) {
 
     for (let dom of targets) {
-      dom.style.background = colorChip.softGreen;
-      dom.firstChild.style.color = colorChip.white;
+      thisDeactive = dom.getAttribute("deactive") === "true";
+      dom.style.background = thisDeactive ? colorChip.gray3 : colorChip.softGreen;
+      dom.firstChild.style.color = thisDeactive ? colorChip.deactive : colorChip.white;
       dom.style.height = dom.getAttribute("height");
       dom.style.marginBottom = dom.getAttribute("margin");
       dom.style.animation = "fadeuplite 0.3s ease forwards";
@@ -6067,8 +6164,9 @@ ProcessDetailJs.prototype.reloadGreenButtons = function () {
     }
 
     for (let dom of reverseTargets) {
-      dom.style.background = colorChip.softGreen;
-      dom.firstChild.style.color = colorChip.white;
+      thisDeactive = dom.getAttribute("deactive") === "true";
+      dom.style.background = thisDeactive ? colorChip.gray3 : colorChip.softGreen;
+      dom.firstChild.style.color = thisDeactive ? colorChip.deactive : colorChip.white;
       dom.style.height = dom.getAttribute("height");
       dom.style.marginBottom = dom.getAttribute("margin");
       dom.style.animation = "fadeuplite 0.3s ease forwards";
@@ -6244,13 +6342,13 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                   }
                   rawResponse = rawResponse.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
 
-                  loading = instance.mother.grayLoading();
+                  loading = instance.asyncLoadingBlock();
 
                   ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
                   formData.append("name", hash);
 
-                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                  await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
+                  // await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
 
                   if (desktop) {
                     await instance.setPanBlocks();
@@ -6791,6 +6889,99 @@ ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
   }
 }
 
+ProcessDetailJs.prototype.paymentByCard = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project, contentsRawInfo, totalContents, requestNumber } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const manyBig = media[0];
+  const generalSmall = !manyBig;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker } = GeneralJs;
+  return (project) => {
+    return async function (e) {
+      try {
+        const amount = 165000;
+        const proid = project.proid;
+        const cliid = project.cliid;
+        const desid = project.desid;
+        const impKey = "imp71921105";
+        const loading = instance.mother.grayLoading();
+        const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "designerPhoto" }, BACKHOST + "/generalImpPayment");
+        const [ designer ] = await ajaxJson({ whereQuery: { desid } }, SECONDHOST + "/getDesigners", { equal: true });
+        const [ client ] = await ajaxJson({ whereQuery: { cliid } }, SECONDHOST + "/getClients", { equal: true });
+        let oid, plugin;
+        let whereQuery, updateQuery;
+
+        oid = oidConst + proid + "_" + String((new Date()).valueOf());
+        plugin = new Function(pluginScript);
+        plugin();
+        window.IMP.init(impKey);
+        if (desktop) {
+
+          window.IMP.request_pay({
+              pg: "inicis",
+              pay_method: "card",
+              merchant_uid: oid,
+              name: "사진 촬영비",
+              amount: Math.floor(amount),
+              buyer_email: designer.information.email,
+              buyer_name: designer.designer,
+              buyer_tel: designer.information.phone,
+          }, async (rsp) => {
+            try {
+              if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+                
+                whereQuery = { proid };
+                updateQuery = {};
+
+                updateQuery["contents.payment.status"] = "결제 완료";
+                updateQuery["contents.payment.date"] = new Date();
+                updateQuery["contents.payment.calculation.amount"] = amount;
+                updateQuery["contents.payment.calculation.info.method"] = `카드(${rsp.card_name.replace(/카드/gi, '')})`;
+                updateQuery["contents.payment.calculation.info.proof"] = "이니시스";
+                updateQuery["contents.payment.calculation.info.to"] = designer.designer;
+                
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
+                await ajaxJson({ message: designer.designer + " 실장님이 콘솔을 통해 " + client.name + " 고객님 촬영비를 결제하셨습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
+
+                window.alert("결제가 완료 되었습니다!");
+                window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + proid;
+
+              } else {
+                window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+                loading.remove();
+              }
+            } catch (e) {
+              window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+              loading.remove();
+            }
+          });
+        } else {
+
+          ({ key } = await ajaxJson({ mode: "store", oid: oid, data: { oid } }, BACKHOST + "/generalImpPayment"));
+
+          window.IMP.request_pay({
+              pg: "inicis",
+              pay_method: "card",
+              merchant_uid: oid,
+              name: "사진 촬영비",
+              amount: Math.floor(amount),
+              buyer_email: designer.information.email,
+              buyer_name: designer.designer,
+              buyer_tel: designer.information.phone,
+              m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=" + key,
+          }, (rsp) => {});
+
+        }
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+}
+
 ProcessDetailJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -6959,9 +7150,9 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     if (typeof getObj.download === "string") {
       if (getObj.download === "auto") {
         if (this.contentsRawInfo.raw.exist) {
-          const loading = instance.mother.grayLoading();
+          const loading = instance.mother.whiteProgressLoading();
           instance.mother.greenAlert("다운로드를 진행합니다!").catch((err) => { console.log(err); });
-          await GeneralJs.downloadFile(this.contentsRawInfo.raw.link);
+          await GeneralJs.downloadFile(this.contentsRawInfo.raw.link, null, loading.progress.firstChild);
           loading.remove();
         }
       }

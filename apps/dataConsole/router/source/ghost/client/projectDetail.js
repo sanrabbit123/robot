@@ -1411,20 +1411,23 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
             mother: whitePrompt,
             event: {
               click: async function (e) {
-                let parsedString;
+                let parsedString, loading;
                 try {
                   if (instance.itemList.length === 0) {
                     window.alert("파일을 먼저 선택해주세요!");
                   } else {
                     for (let { original, type, hex, exe } of instance.itemList) {
+                      loading = instance.mother.whiteProgressLoading();
                       if (type === "photo") {
-                        await downloadFile(original);
+                        await downloadFile(original, null, loading.progress.firstChild);
                       } else {
                         parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true });
-                        await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe);
+                        await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe, loading.progress.firstChild);
                       }
+                      loading.remove();
                     }
                     cancelEvent.call(self, e);
+                    await instance.setPanBlocks();
                   }
                 } catch (e) {
                   console.log(e);
@@ -2480,19 +2483,22 @@ ProjectDetailJs.prototype.returnButtonList = function () {
     name: "선택 파일 다운로드",
     event: function () {
       return async function (e) {
-        let parsedString;
+        let parsedString, loading;
         try {
           if (instance.itemList.length === 0) {
             window.alert("파일을 먼저 선택해주세요!");
           } else {
             for (let { original, type, hex, exe } of instance.itemList) {
+              loading = instance.mother.whiteProgressLoading();
               if (type === "photo") {
-                await downloadFile(original);
+                await downloadFile(original, null, loading.progress.firstChild);
               } else {
                 parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true });
-                await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe);
+                await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe, loading.progress.firstChild);
               }
+              loading.remove();
             }
+            await instance.setPanBlocks();
           }
         } catch (e) {
           console.log(e);

@@ -5248,6 +5248,105 @@ GeneralJs.prototype.grayLoading = function (mother = null) {
   return (new GrayLoading(cancel, loading));
 }
 
+GeneralJs.prototype.whiteProgressLoading = function (mother = null) {
+  if (typeof mother !== "object" || mother !== null) {
+    throw new Error("input must be dom");
+  }
+  const instance = this;
+  const { createNode, colorChip, withOut } = GeneralJs;
+  let width, ea;
+  let cancel, loading;
+  let progressBox;
+  let progressWidth;
+  let zIndex;
+  let progressSize, progressWeight;
+  let progressHeight;
+  let progressPadding;
+
+  zIndex = 300;
+
+  ea = <%% "px", "px", "px", "px", "vw" %%>;
+  width = <%% 50, 50, 48, 40, 10 %%>;
+  progressWidth = <%% 200, 200, 200, 200, 20 %%>;
+  progressHeight = <%% 40, 40, 36, 32, 4 %%>;
+  progressSize = <%% 17, 17, 17, 15, 3.5 %%>;
+  progressWeight = <%% 400, 400, 400, 400, 400 %%>;
+  progressPadding = <%% 20, 20, 20, 17, 3.9 %%>;
+
+  const WhiteLoading = function (cancel, loading, progress) {
+    this.cancel = cancel;
+    this.loading = loading;
+    this.progress = progress;
+  }
+
+  WhiteLoading.prototype.remove = function () {
+    this.loading.parentElement.removeChild(this.loading);
+    this.cancel.parentElement.removeChild(this.cancel);
+    this.progress.parentElement.removeChild(this.progress);
+  }
+
+  if (mother === null || mother === undefined) {
+    mother = document.body;
+  }
+
+  cancel = createNode({
+    mother,
+    style: {
+      position: "fixed",
+      top: String(0),
+      left: String(0),
+      width: String(100) + '%',
+      height: String(100) + '%',
+      background: colorChip.white,
+      zIndex: String(zIndex),
+      opacity: String(0.7),
+    }
+  });
+
+  loading = createNode({
+    mother,
+    mode: "svg",
+    source: this.returnLoading(),
+    class: [ "loading" ],
+    style: {
+      position: "fixed",
+      top: withOut(50, (width / 2) + progressPadding, ea),
+      left: withOut(50, width / 2, ea),
+      width: String(width) + ea,
+      height: String(width) + ea,
+      zIndex: String(zIndex),
+    }
+  });
+
+  progressBox = createNode({
+    mother,
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "fixed",
+      height: String(progressHeight) + ea,
+      width: String(progressWidth) + ea,
+      top: withOut(50, (progressHeight / 2) - progressPadding, ea),
+      left: withOut(50, progressWidth / 2, ea),
+      zIndex: String(zIndex),
+    },
+    child: {
+      text: "0%",
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(progressSize) + ea,
+        fontWeight: String(progressWeight),
+        fontFamily: "graphik",
+        color: colorChip.green,
+      }
+    }
+  })
+
+  return (new WhiteLoading(cancel, loading, progressBox));
+}
+
 GeneralJs.prototype.consultingPopup = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, ajaxJson, homeliaisonAnalytics } = GeneralJs;

@@ -452,7 +452,7 @@ GeneralJs.ajaxPromise = function (data, url) {
   });
 }
 
-GeneralJs.ajaxForm = function (data, url) {
+GeneralJs.ajaxForm = function (data, url, loadingDom = null) {
   if (data === undefined && url === undefined) {
     throw new Error("must be arguments (data, url)");
   } else if (data !== undefined && url === undefined) {
@@ -479,6 +479,14 @@ GeneralJs.ajaxForm = function (data, url) {
        statusText: xhr.statusText
      });
     };
+    xhr.upload.onprogress = function (e) {
+      console.log(e);
+      // if (loadingDom !== null) {
+      //   if (loadingDom.textContent !== undefined && e.total !== 0 && e.lengthComputable) {
+      //     loadingDom.textContent = String(Math.round((e.loaded / e.total) * 100)) + '%';
+      //   }
+      // }
+    }
     xhr.send(data);
   });
 }
@@ -575,55 +583,64 @@ GeneralJs.requestPromise = function (url) {
   });
 }
 
-GeneralJs.downloadFile = function (url, forceName = null) {
+GeneralJs.downloadFile = function (url, forceName = null, loadingDom = null) {
   return new Promise(function (resolve, reject) {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", url);
     xhr.responseType = "arraybuffer";
+    xhr.onprogress = function (e) {
+      if (loadingDom !== null) {
+        if (loadingDom.textContent !== undefined && e.total !== 0 && e.lengthComputable) {
+          loadingDom.textContent = String(Math.round((e.loaded / e.total) * 100)) + '%';
+        }
+      }
+    }
     xhr.onload = function () {
-     if (xhr.readyState !== 4) { return; }
-     if (xhr.status >= 200 && xhr.status < 300) {
-       let fileName, fileType, blob, a, timeoutId;
-       let execSearch;
-       fileName = url.split("/")[url.split("/").length - 1];
-       execSearch = /\.[^\.]+$/.exec(fileName);
-       if (execSearch === null) {
-         reject("invaild url");
-         return;
-       }
-       fileType = GeneralJs.mimeTypes[execSearch[0].replace(/\./g, '').toLowerCase()];
-       if (fileType === undefined) {
-         fileType = "application/octet-stream";
-       }
-       if (forceName !== null && typeof forceName === "string") {
-         fileName = forceName.replace(/\.[^\.]+$/, '') + '.' + execSearch[0].replace(/\./g, '').toLowerCase();
-       }
-       blob = new Blob([ xhr.response ], { type: fileType });
-       a = document.createElement('A');
-       a.download = fileName;
-       a.href = URL.createObjectURL(blob);
-       a.dataset.downloadurl = [ fileType, a.download, a.href ].join(':');
-       a.style.display = "none";
-       document.body.appendChild(a);
-       a.click();
-       document.body.removeChild(a);
-       resolve(fileName);
-       timeoutId = setTimeout(function() {
-         URL.revokeObjectURL(a.href);
-         clearTimeout(timeoutId);
-       }, 1500);
-     } else {
-       reject({
-         status: this.status,
-         statusText: xhr.statusText
-       });
-     }
+      if (xhr.readyState !== 4) {
+        return;
+      }
+      if (xhr.status >= 200 && xhr.status < 300) {
+        let fileName, fileType, blob, a, timeoutId;
+        let execSearch;
+        fileName = url.split("/")[url.split("/").length - 1];
+        execSearch = /\.[^\.]+$/.exec(fileName);
+        if (execSearch === null) {
+          reject("invaild url");
+          return;
+        }
+        fileType = GeneralJs.mimeTypes[execSearch[0].replace(/\./g, '').toLowerCase()];
+        if (fileType === undefined) {
+          fileType = "application/octet-stream";
+        }
+        if (forceName !== null && typeof forceName === "string") {
+          fileName = forceName.replace(/\.[^\.]+$/, '') + '.' + execSearch[0].replace(/\./g, '').toLowerCase();
+        }
+        blob = new Blob([ xhr.response ], { type: fileType });
+        a = document.createElement('A');
+        a.download = fileName;
+        a.href = URL.createObjectURL(blob);
+        a.dataset.downloadurl = [ fileType, a.download, a.href ].join(':');
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        resolve(fileName);
+        timeoutId = setTimeout(function() {
+          URL.revokeObjectURL(a.href);
+          clearTimeout(timeoutId);
+        }, 1500);
+      } else {
+        reject({
+          status: this.status,
+          statusText: xhr.statusText
+        });
+      }
     };
     xhr.onerror = function () {
-     reject({
-       status: this.status,
-       statusText: xhr.statusText
-     });
+      reject({
+        status: this.status,
+        statusText: xhr.statusText
+      });
     };
     xhr.send();
   });
