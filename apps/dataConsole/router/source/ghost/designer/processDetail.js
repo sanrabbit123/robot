@@ -6025,6 +6025,8 @@ ProcessDetailJs.prototype.asyncLoadingBlock = function () {
   let progressMarginBottom;
   let pastButtonBase;
 
+  this.nowUploading = true;
+
   const WhiteLoading = function (base, progress, pastBase) {
     this.base = base;
     this.progress = progress;
@@ -6034,6 +6036,7 @@ ProcessDetailJs.prototype.asyncLoadingBlock = function () {
   WhiteLoading.prototype.remove = function () {
     this.base.parentElement.removeChild(this.base);
     this.pastBase.style.animation = "talkfade 0.3s ease forwards";
+    instance.nowUploading = false;
   }
 
   baseWidth = desktop ? 68 : 12;
@@ -6203,87 +6206,91 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
         const designer = this.getAttribute("designer");
         let input, removeTargets;
 
-        removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-        for (let dom of removeTargets) {
-          dom.remove();
-        }
+        if (!instance.nowUploading) {
 
-        input = createNode({
-          mother: document.body,
-          class: [ fileInputClassName ],
-          mode: "input",
-          event: {
-            change: async function (e) {
-              try {
-                const proid = this.getAttribute("proid");
-                const desid = this.getAttribute("desid");
-                const client = this.getAttribute("client");
-                const designer = this.getAttribute("designer");
-                const thisKey = this.getAttribute("name");
-                const thisTitle = this.getAttribute("title");
-                let thisFiles, formData, res;
-                let removeTargets;
-                let loading;
-                let hash;
-
-                thisFiles = [ ...this.files ];
-
-                if (thisFiles.length >= 1) {
-                  formData = new FormData();
-                  formData.enctype = "multipart/form-data";
-                  formData.append("proid", proid);
-                  formData.append("desid", desid);
-                  formData.append("client", client);
-                  formData.append("type", "photo");
-                  for (let i = 0; i < thisFiles.length; i++) {
-                    formData.append("file_" + thisKey + "_" + String(i), thisFiles[i]);
-                  }
-
-                  loading = instance.mother.grayLoading();
-
-                  ({ hash } = await ajaxJson({ mode: "crypto", string: String((new Date()).valueOf()) }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
-                  formData.append("name", hash);
-
-                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-                  await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
-
-                  if (desktop) {
-                    await instance.setPanBlocks();
-                    loading.remove();
-                    removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-                    for (let dom of removeTargets) {
-                      dom.remove();
-                    }
-                  } else {
-                    window.location.reload();
-                  }
-
-                }
-
-              } catch (e) {
-                console.log(e);
-                window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-                window.location.reload();
-              }
-            }
-          },
-          attribute: {
-            type: "file",
-            name: thisKey,
-            title: thisTitle,
-            multiple: "true",
-            proid,
-            desid,
-            client: name,
-            designer,
-            accept: "image/*, application/pdf",
-          },
-          style: {
-            display: "none",
+          removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+          for (let dom of removeTargets) {
+            dom.remove();
           }
-        });
+  
+          input = createNode({
+            mother: document.body,
+            class: [ fileInputClassName ],
+            mode: "input",
+            event: {
+              change: async function (e) {
+                try {
+                  const proid = this.getAttribute("proid");
+                  const desid = this.getAttribute("desid");
+                  const client = this.getAttribute("client");
+                  const designer = this.getAttribute("designer");
+                  const thisKey = this.getAttribute("name");
+                  const thisTitle = this.getAttribute("title");
+                  let thisFiles, formData, res;
+                  let removeTargets;
+                  let loading;
+                  let hash;
+  
+                  thisFiles = [ ...this.files ];
+  
+                  if (thisFiles.length >= 1) {
+                    formData = new FormData();
+                    formData.enctype = "multipart/form-data";
+                    formData.append("proid", proid);
+                    formData.append("desid", desid);
+                    formData.append("client", client);
+                    formData.append("type", "photo");
+                    for (let i = 0; i < thisFiles.length; i++) {
+                      formData.append("file_" + thisKey + "_" + String(i), thisFiles[i]);
+                    }
+  
+                    if (!instance.nowUploading) {
+                      loading = instance.asyncLoadingBlock();
+  
+                      ({ hash } = await ajaxJson({ mode: "crypto", string: String((new Date()).valueOf()) }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                      formData.append("name", hash);
+    
+                      res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                      await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
+    
+                      window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
+  
+                    } else {
+                      instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+                    }
+  
+                  }
+  
+                } catch (e) {
+                  console.log(e);
+                  window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                  window.location.reload();
+                }
+              }
+            },
+            attribute: {
+              type: "file",
+              name: thisKey,
+              title: thisTitle,
+              multiple: "true",
+              proid,
+              desid,
+              client: name,
+              designer,
+              accept: "image/*, application/pdf",
+            },
+            style: {
+              display: "none",
+            }
+          });
+  
+          input.click();
 
-        input.click();
+        } else {
+
+          instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+
+        }
 
       } catch (e) {
         console.log(e);
@@ -6300,91 +6307,96 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
         const designer = this.getAttribute("designer");
         let input, removeTargets;
 
-        removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-        for (let dom of removeTargets) {
-          dom.remove();
-        }
+        if (!instance.nowUploading) {
 
-        input = createNode({
-          mother: document.body,
-          class: [ fileInputClassName ],
-          mode: "input",
-          event: {
-            change: async function (e) {
-              try {
-                const proid = this.getAttribute("proid");
-                const desid = this.getAttribute("desid");
-                const client = this.getAttribute("client");
-                const designer = this.getAttribute("designer");
-                const thisKey = this.getAttribute("name");
-                const thisTitle = this.getAttribute("title");
-                let thisFiles, formData, res;
-                let removeTargets;
-                let loading;
-                let hash;
-                let rawResponse;
-
-                thisFiles = [ ...this.files ];
-
-                if (thisFiles.length >= 1) {
-                  formData = new FormData();
-                  formData.enctype = "multipart/form-data";
-                  formData.append("proid", proid);
-                  formData.append("desid", desid);
-                  formData.append("client", client);
-                  formData.append("type", "file");
-                  formData.append("file_" + thisKey + "_" + String(0), thisFiles[0]);
-
-                  rawResponse = null;
-                  rawResponse = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1");
-                  if (typeof rawResponse !== "string" || rawResponse.trim() === '') {
-                    rawResponse = "메모 없음";
-                  }
-                  rawResponse = rawResponse.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
-
-                  loading = instance.asyncLoadingBlock();
-
-                  ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
-                  formData.append("name", hash);
-
-                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
-                  // await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
-
-                  if (desktop) {
-                    await instance.setPanBlocks();
-                    loading.remove();
-                    removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-                    for (let dom of removeTargets) {
-                      dom.remove();
-                    }
-                  } else {
-                    window.location.reload();
-                  }
-
-                }
-
-              } catch (e) {
-                console.log(e);
-                window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-                window.location.reload();
-              }
-            }
-          },
-          attribute: {
-            type: "file",
-            name: thisKey,
-            title: thisTitle,
-            proid,
-            desid,
-            client: name,
-            designer,
-          },
-          style: {
-            display: "none",
+          removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+          for (let dom of removeTargets) {
+            dom.remove();
           }
-        });
+  
+          input = createNode({
+            mother: document.body,
+            class: [ fileInputClassName ],
+            mode: "input",
+            event: {
+              change: async function (e) {
+                try {
+                  const proid = this.getAttribute("proid");
+                  const desid = this.getAttribute("desid");
+                  const client = this.getAttribute("client");
+                  const designer = this.getAttribute("designer");
+                  const thisKey = this.getAttribute("name");
+                  const thisTitle = this.getAttribute("title");
+                  let thisFiles, formData, res;
+                  let removeTargets;
+                  let loading;
+                  let hash;
+                  let rawResponse;
+  
+                  thisFiles = [ ...this.files ];
+  
+                  if (thisFiles.length >= 1) {
+                    formData = new FormData();
+                    formData.enctype = "multipart/form-data";
+                    formData.append("proid", proid);
+                    formData.append("desid", desid);
+                    formData.append("client", client);
+                    formData.append("type", "file");
+                    formData.append("file_" + thisKey + "_" + String(0), thisFiles[0]);
+  
+                    if (!instance.nowUploading) {
+  
+                      rawResponse = null;
+                      rawResponse = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1");
+                      if (typeof rawResponse !== "string" || rawResponse.trim() === '') {
+                        rawResponse = "메모 없음";
+                      }
+                      rawResponse = rawResponse.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
+  
+                      loading = instance.asyncLoadingBlock();
+  
+                      ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                      formData.append("name", hash);
+    
+                      res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
+                      await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
+    
+                      window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
+  
+                    } else {
+                      instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+                    }
+  
+                  }
+  
+                } catch (e) {
+                  console.log(e);
+                  window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                  window.location.reload();
+                }
+              }
+            },
+            attribute: {
+              type: "file",
+              name: thisKey,
+              title: thisTitle,
+              proid,
+              desid,
+              client: name,
+              designer,
+            },
+            style: {
+              display: "none",
+            }
+          });
+  
+          input.click();
 
-        input.click();
+        } else {
+
+          instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+
+        }
 
       } catch (e) {
         console.log(e);
@@ -6428,88 +6440,94 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
         const designer = this.getAttribute("designer");
         let input, changeEvent;
 
-        removeByClass(fileInputClassName);
+        if (!instance.nowUploading) {
 
-        changeEvent = async function (e) {
-          try {
-            const proid = this.getAttribute("proid");
-            const desid = this.getAttribute("desid");
-            const client = this.getAttribute("client");
-            const designer = this.getAttribute("designer");
-            const thisKey = this.getAttribute("name");
-            const thisTitle = this.getAttribute("title");
-            let thisFiles, formData, res;
-            let removeTargets;
-            let loading;
-            let hash;
+          removeByClass(fileInputClassName);
 
-            thisFiles = [ ...this.files ].filter((file) => {
-              return /^image/gi.test(file.type) || file.type.trim() === "application/pdf";
-            });
-
-            if (thisFiles.length >= 1) {
-              formData = new FormData();
-              formData.enctype = "multipart/form-data";
-              formData.append("proid", proid);
-              formData.append("desid", desid);
-              formData.append("client", client);
-              formData.append("type", "photo");
-              for (let i = 0; i < thisFiles.length; i++) {
-                formData.append("file_" + thisKey + "_" + String(i), thisFiles[i]);
-              }
-
-              loading = instance.mother.grayLoading();
-
-              ({ hash } = await ajaxJson({ mode: "crypto", string: String((new Date()).valueOf()) }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
-              formData.append("name", hash);
-
-              res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-              await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
-
-              if (desktop) {
-                await instance.setPanBlocks();
-                loading.remove();
-                removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-                for (let dom of removeTargets) {
-                  dom.remove();
+          changeEvent = async function (e) {
+            try {
+              const proid = this.getAttribute("proid");
+              const desid = this.getAttribute("desid");
+              const client = this.getAttribute("client");
+              const designer = this.getAttribute("designer");
+              const thisKey = this.getAttribute("name");
+              const thisTitle = this.getAttribute("title");
+              let thisFiles, formData, res;
+              let removeTargets;
+              let loading;
+              let hash;
+  
+              thisFiles = [ ...this.files ].filter((file) => {
+                return /^image/gi.test(file.type) || file.type.trim() === "application/pdf";
+              });
+  
+              if (thisFiles.length >= 1) {
+                formData = new FormData();
+                formData.enctype = "multipart/form-data";
+                formData.append("proid", proid);
+                formData.append("desid", desid);
+                formData.append("client", client);
+                formData.append("type", "photo");
+                for (let i = 0; i < thisFiles.length; i++) {
+                  formData.append("file_" + thisKey + "_" + String(i), thisFiles[i]);
                 }
-              } else {
-                window.location.reload();
+  
+                if (!instance.nowUploading) {
+  
+                  loading = instance.asyncLoadingBlock();
+  
+                  ({ hash } = await ajaxJson({ mode: "crypto", string: String((new Date()).valueOf()) }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                  formData.append("name", hash);
+    
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                  await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
+    
+                  window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
+  
+                } else {
+                  instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+                }
+  
               }
-
+  
+            } catch (e) {
+              console.log(e);
+              window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+              window.location.reload();
             }
-
-          } catch (e) {
-            console.log(e);
-            window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-            window.location.reload();
           }
+  
+          input = createNode({
+            mother: document.body,
+            class: [ fileInputClassName ],
+            mode: "input",
+            event: {
+              change: changeEvent
+            },
+            attribute: {
+              type: "file",
+              name: thisKey,
+              title: thisTitle,
+              multiple: "true",
+              proid,
+              desid,
+              client: name,
+              designer,
+              accept: "image/*, application/pdf",
+            },
+            style: {
+              display: "none",
+            }
+          });
+          input.files = e.dataTransfer.files;
+          changeEvent.call(input, e);
+
+        } else {
+
+          instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+
         }
 
-        input = createNode({
-          mother: document.body,
-          class: [ fileInputClassName ],
-          mode: "input",
-          event: {
-            change: changeEvent
-          },
-          attribute: {
-            type: "file",
-            name: thisKey,
-            title: thisTitle,
-            multiple: "true",
-            proid,
-            desid,
-            client: name,
-            designer,
-            accept: "image/*, application/pdf",
-          },
-          style: {
-            display: "none",
-          }
-        });
-        input.files = e.dataTransfer.files;
-        changeEvent.call(input, e);
         this.style.background = colorChip.gray1;
 
       } catch (e) {
@@ -6531,91 +6549,97 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
         const designer = this.getAttribute("designer");
         let input, changeEvent;
 
-        removeByClass(fileInputClassName);
+        if (!instance.nowUploading) {
 
-        changeEvent = async function (e) {
-          try {
-            const proid = this.getAttribute("proid");
-            const desid = this.getAttribute("desid");
-            const client = this.getAttribute("client");
-            const designer = this.getAttribute("designer");
-            const thisKey = this.getAttribute("name");
-            const thisTitle = this.getAttribute("title");
-            let thisFiles, formData, res;
-            let removeTargets;
-            let loading;
-            let hash;
-            let rawResponse;
+          removeByClass(fileInputClassName);
 
-            thisFiles = [ ...this.files ];
-
-            if (thisFiles.length >= 1) {
-              formData = new FormData();
-              formData.enctype = "multipart/form-data";
-              formData.append("proid", proid);
-              formData.append("desid", desid);
-              formData.append("client", client);
-              formData.append("type", "file");
-              formData.append("file_" + thisKey + "_" + String(0), thisFiles[0]);
-
-              rawResponse = null;
-              rawResponse = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1");
-              if (typeof rawResponse !== "string" || rawResponse.trim() === '') {
-                rawResponse = "메모 없음";
-              }
-              rawResponse = rawResponse.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
-
-              loading = instance.mother.grayLoading();
-
-              ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
-              formData.append("name", hash);
-
-              res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
-              await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
-
-              if (desktop) {
-                await instance.setPanBlocks();
-                loading.remove();
-                removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
-                for (let dom of removeTargets) {
-                  dom.remove();
+          changeEvent = async function (e) {
+            try {
+              const proid = this.getAttribute("proid");
+              const desid = this.getAttribute("desid");
+              const client = this.getAttribute("client");
+              const designer = this.getAttribute("designer");
+              const thisKey = this.getAttribute("name");
+              const thisTitle = this.getAttribute("title");
+              let thisFiles, formData, res;
+              let removeTargets;
+              let loading;
+              let hash;
+              let rawResponse;
+  
+              thisFiles = [ ...this.files ];
+  
+              if (thisFiles.length >= 1) {
+                formData = new FormData();
+                formData.enctype = "multipart/form-data";
+                formData.append("proid", proid);
+                formData.append("desid", desid);
+                formData.append("client", client);
+                formData.append("type", "file");
+                formData.append("file_" + thisKey + "_" + String(0), thisFiles[0]);
+  
+                if (!instance.nowUploading) {
+  
+                  rawResponse = null;
+                  rawResponse = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1");
+                  if (typeof rawResponse !== "string" || rawResponse.trim() === '') {
+                    rawResponse = "메모 없음";
+                  }
+                  rawResponse = rawResponse.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
+    
+                  loading = instance.asyncLoadingBlock();
+    
+                  ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                  formData.append("name", hash);
+    
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                  await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
+    
+                  window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
+  
+                } else {
+                  instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
                 }
-              } else {
-                window.location.reload();
+  
               }
-
+  
+            } catch (e) {
+              console.log(e);
+              window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+              window.location.reload();
             }
-
-          } catch (e) {
-            console.log(e);
-            window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-            window.location.reload();
           }
+  
+          input = createNode({
+            mother: document.body,
+            class: [ fileInputClassName ],
+            mode: "input",
+            event: {
+              change: changeEvent
+            },
+            attribute: {
+              type: "file",
+              name: thisKey,
+              title: thisTitle,
+              multiple: "true",
+              proid,
+              desid,
+              client: name,
+              designer,
+            },
+            style: {
+              display: "none",
+            }
+          });
+          input.files = e.dataTransfer.files;
+          changeEvent.call(input, e);
+
+        } else {
+
+          instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+
         }
 
-        input = createNode({
-          mother: document.body,
-          class: [ fileInputClassName ],
-          mode: "input",
-          event: {
-            change: changeEvent
-          },
-          attribute: {
-            type: "file",
-            name: thisKey,
-            title: thisTitle,
-            multiple: "true",
-            proid,
-            desid,
-            client: name,
-            designer,
-          },
-          style: {
-            display: "none",
-          }
-        });
-        input.files = e.dataTransfer.files;
-        changeEvent.call(input, e);
         this.style.background = colorChip.gray1;
 
       } catch (e) {
@@ -7057,6 +7081,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     this.targetDrive = "/" + this.designer.desid + "/" + this.project.proid;
     this.panList = [];
     this.itemList = [];
+    this.nowUploading = false;
 
     await this.mother.ghostDesignerLaunching({
       name: "processDetail",

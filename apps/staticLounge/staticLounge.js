@@ -28,7 +28,17 @@ StaticLounge.prototype.staticConnect = async function () {
   app.use(express.json({ limit : "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   app.use(express.static(staticFolder));
-
+  app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, PUT, HEAD, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me");
+    if (req.method === "OPTIONS") {
+      res.sendStatus(200);
+    } else {
+      next();
+    }
+  });
+  
   try {
     console.log(``);
     console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching static lounge ==============`);

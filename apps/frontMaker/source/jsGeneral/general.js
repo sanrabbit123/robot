@@ -479,14 +479,15 @@ GeneralJs.ajaxForm = function (data, url, loadingDom = null) {
        statusText: xhr.statusText
      });
     };
-    xhr.upload.onprogress = function (e) {
-      console.log(e);
-      // if (loadingDom !== null) {
-      //   if (loadingDom.textContent !== undefined && e.total !== 0 && e.lengthComputable) {
-      //     loadingDom.textContent = String(Math.round((e.loaded / e.total) * 100)) + '%';
-      //   }
-      // }
+
+    if (loadingDom !== null) {
+      xhr.upload.onprogress = function (e) {
+        if (loadingDom.textContent !== undefined && e.total !== 0 && e.lengthComputable) {
+          loadingDom.textContent = String(Math.round((e.loaded / e.total) * 100)) + '%';
+        }
+      }
     }
+
     xhr.send(data);
   });
 }
