@@ -33,7 +33,7 @@ TransferLounge.prototype.transConnect = async function () {
     res.header("Access-Control-Allow-Methods", "GET, PUT, HEAD, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me");
     if (req.method === "OPTIONS") {
-      res.send(200);
+      res.sendStatus(200);
     } else {
       next();
     }
