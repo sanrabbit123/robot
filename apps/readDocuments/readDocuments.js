@@ -13,15 +13,90 @@ const ReadDocuments = function (mother = null, back = null, address = null) {
   }
   this.dir = process.cwd() + "/apps/readDocuments";
   this.moduleDir = this.dir + "/module";
+  
+  const { stat } = require("fs/promises");
+  this.stat = stat;
 }
 
 ReadDocuments.prototype.readDocx = async function (fileName) {
   const instance = this;
-  const { moduleDir } = this;
+  const { moduleDir, stat } = this;
   const readDocx = require(moduleDir + "/readDocx.js");
   try {
+    const raw = await stat(fileName);
     const text = await readDocx(fileName);
-    return text;
+    let result;
+
+    result = {
+      name: fileName.split("/")[fileName.split("/").length - 1],
+      type: "docx",
+      exe: fileName.split("/")[fileName.split("/").length - 1].split(".")[1],
+      size: {
+        bytes: raw.size,
+        kb: raw.size / 1024,
+        mb: (raw.size / 1024) / 1024,
+      },
+      date: {
+        birth: raw.birthtime,
+        last: {
+          access: raw.atime,
+          modification: raw.mtime,
+        }
+      },
+      body: text
+    };
+
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ReadDocuments.prototype.readPdf = async function (fileName) {
+  const instance = this;
+  const { moduleDir } = this;
+  try {
+
+
+
+
+
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ReadDocuments.prototype.readXlsx = async function (fileName) {
+  const instance = this;
+  const { moduleDir } = this;
+  try {
+
+
+
+
+
+
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ReadDocuments.prototype.readPages = async function (fileName) {
+  const instance = this;
+  const { moduleDir } = this;
+  try {
+
+
+
+
+
+
+
+
   } catch (e) {
     console.log(e);
   }
