@@ -75,7 +75,6 @@ TransferRouter.prototype.rou_get_First = function () {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
-    console.log(req);
     try {
 
       if (req.params.id === "ssl") {
