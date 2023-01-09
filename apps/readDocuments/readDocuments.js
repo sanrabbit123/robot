@@ -54,14 +54,46 @@ ReadDocuments.prototype.readDocx = async function (fileName) {
 
 ReadDocuments.prototype.readPdf = async function (fileName) {
   const instance = this;
-  const { moduleDir } = this;
+  const { moduleDir, stat } = this;
+  const readPdf = require(moduleDir + "/readPdf.js");
   try {
+    const raw = await stat(fileName);
+    const meta = await readPdf(fileName);
+    const { text, info, numpages } = meta;
+    let result;
 
+    result = {
+      name: fileName.split("/")[fileName.split("/").length - 1],
+      type: "pdf",
+      exe: fileName.split("/")[fileName.split("/").length - 1].split(".")[1],
+      size: {
+        bytes: raw.size,
+        kb: raw.size / 1024,
+        mb: (raw.size / 1024) / 1024,
+      },
+      date: {
+        birth: raw.birthtime,
+        last: {
+          access: raw.atime,
+          modification: raw.mtime,
+        }
+      },
+      body: text,
+      info: {
+        version: info.PDFFormatVersion,
+        isAcroFormPresent: info.IsAcroFormPresent,
+        isXFAPresent: info.IsXFAPresent,
+        creator: info.Creator,
+        producer: info.Producer,
+        numberOfPages: numpages,
+        date: {
+          create: info.CreationDate,
+          modification: info.ModDate,
+        }
+      }
+    };
 
-
-
-
-
+    return result;
 
   } catch (e) {
     console.log(e);
