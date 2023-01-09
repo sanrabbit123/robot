@@ -117,7 +117,7 @@ ReadDocuments.prototype.readXlsx = async function (fileName) {
   }
 }
 
-ReadDocuments.prototype.readPages = async function (fileName) {
+ReadDocuments.prototype.readHwp = async function (fileName) {
   const instance = this;
   const { moduleDir } = this;
   try {
