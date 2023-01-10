@@ -140,32 +140,30 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const sheetsId = "1fmNokJeylkpIu_St2ZWghnhyrYBO4QfPo-HGwI29V6o";
-    const sheetsName = "default";
-    let rows;
-    let maxLength;
+    // const sheetsId = "1fmNokJeylkpIu_St2ZWghnhyrYBO4QfPo-HGwI29V6o";
+    // const sheetsName = "default";
+    // let rows;
+    // let maxLength;
 
-    rows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:U");
+    // rows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:U");
+    // maxLength = rows.map((arr) => { return arr.length }).reduce((acc, curr) => { return acc > curr ? acc : curr }, 0);
+    // for (let arr of rows) {
+    //   for (let i = 0; i < maxLength - arr.length; i++) {
+    //     arr.push('');
+    //   }
+    //   arr[2] = (arr[2] === "TRUE");
+    // }
 
-    maxLength = rows.map((arr) => { return arr.length }).reduce((acc, curr) => { return acc > curr ? acc : curr }, 0);
+    // rows.unshift((new Array(maxLength)).fill(''))
+    // rows.unshift((new Array(maxLength)).fill(''))
+    // rows.unshift((new Array(maxLength)).fill(''))
+    // rows.unshift((new Array(maxLength)).fill(''))
+    // rows.unshift((new Array(maxLength)).fill(''))
+    // rows.unshift((new Array(maxLength)).fill(''))
+    // rows.unshift((new Array(maxLength)).fill(''))
+    // rows.unshift((new Array(maxLength)).fill(''))
 
-    for (let arr of rows) {
-      for (let i = 0; i < maxLength - arr.length; i++) {
-        arr.push('');
-      }
-      arr[2] = (arr[2] === "TRUE");
-    }
-
-    rows.unshift((new Array(maxLength)).fill(''))
-    rows.unshift((new Array(maxLength)).fill(''))
-    rows.unshift((new Array(maxLength)).fill(''))
-    rows.unshift((new Array(maxLength)).fill(''))
-    rows.unshift((new Array(maxLength)).fill(''))
-    rows.unshift((new Array(maxLength)).fill(''))
-    rows.unshift((new Array(maxLength)).fill(''))
-    rows.unshift((new Array(maxLength)).fill(''))
-
-    await sheets.update_value_inPython(sheetsId, sheetsName, rows, [ 0, 1 ]);
+    // await sheets.update_value_inPython(sheetsId, sheetsName, rows, [ 0, 1 ]);
 
 
 
@@ -185,7 +183,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    /*
+    // /*
 
     await this.MONGOCONSOLEC.connect();
 
@@ -197,8 +195,12 @@ DevContext.prototype.launching = async function () {
     const clientHistories = await back.mongoRead(historyCollection, {}, { selfMongo: selfConsoleMongo });
     const projects = await back.getProjectsByQuery({}, { selfMongo });
     const designers = await back.getDesignersByQuery({}, { selfMongo });
-    const sheetsId = "1EsYgzt-itSq_hWjYBkSwOgorpOWCjoe9_gmfCtBtlZ4";
+    // const sheetsId = "1EsYgzt-itSq_hWjYBkSwOgorpOWCjoe9_gmfCtBtlZ4";
+    const sheetsId = "1rUTutNz_rNQLln6abM9ZmAcJXVU38MkFQHoJTl3i0z0";
     const sheetsName = "default";
+    const dateToDate = (dateObject) => {
+      return `${String(dateObject.getFullYear())}. ${String(dateObject.getMonth() + 1)}. ${String(dateObject.getDate())}`;
+    }
     let rows;
     let status;
     let call;
@@ -209,8 +211,119 @@ DevContext.prototype.launching = async function () {
     let contract;
     let selectedDesigners;
     let href;
+    let totalRows;
+    let maxLength;
+    let filteredRequests;
+    let aWeekAgo;
+    let cliidArr;
+    let tempArr;
+    let now;
+    let splitArr;
+    let totalNum;
+    let aNum, bNum, cNum;
+    let currentNum, dropNum, possibleNum, targetNum, contractNum;
+
+
+
+    /*
 
     rows = await sheets.get_value_inPython(sheetsId, sheetsName + "!E2:E");
+
+    totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:U");
+    maxLength = totalRows.map((arr) => { return arr.length }).reduce((acc, curr) => { return acc > curr ? acc : curr }, 0);
+    for (let arr of totalRows) {
+      for (let i = 0; i < maxLength - arr.length; i++) {
+        arr.push('');
+      }
+      arr[2] = (arr[2] === "TRUE");
+    }
+
+    now = new Date();
+
+    aWeekAgo = new Date();
+    aWeekAgo.setDate(aWeekAgo.getDate() - 7);
+    cliidArr = rows.map((arr) => {
+      return arr.length > 0 ? arr[0] : "";
+    }).filter((str) => {
+      return /^c/.test(str);
+    })
+
+    filteredRequests = requests.filter((arr) => {
+      return arr.request.timeline.valueOf() > aWeekAgo.valueOf();
+    }).filter((arr) => {
+      return !cliidArr.includes(arr.cliid);
+    })
+
+    splitArr = totalRows[0][0].split(". ");
+    if (dateToString(new Date(Number(splitArr[0].replace(/[^0-9]/gi, '')), Number(splitArr[1].replace(/[^0-9]/gi, '')) - 1, Number(splitArr[2].replace(/[^0-9]/gi, '')))) !== dateToString(now)) {
+      tempArr = new Array(maxLength);
+      totalRows.unshift(tempArr)
+      tempArr[0] = "";
+      tempArr[1] = "계";
+      tempArr[2] = false;
+      tempArr[3] = "";
+      tempArr[4] = "";
+      tempArr[5] = "";
+      tempArr[6] = "";
+      tempArr[7] = "-";
+      tempArr[8] = '-';
+      tempArr[9] = '-';
+      tempArr[10] = '';
+      tempArr[11] = '';
+      tempArr[12] = '-';
+      tempArr[13] = '-';
+      tempArr[14] = '-';
+      tempArr[15] = '';
+      tempArr[16] = '-';
+      tempArr[17] = '-';
+      tempArr[18] = '';
+      tempArr[19] = '';
+      tempArr[20] = '-';
+    }
+
+    for (let i = 0; i < filteredRequests.length; i++) {
+      tempArr = new Array(maxLength);
+      totalRows.unshift(tempArr);
+      tempArr[0] = dateToDate(now);
+      tempArr[1] = "대기";
+      tempArr[2] = true;
+      tempArr[3] = filteredRequests[i].name;
+      tempArr[4] = filteredRequests[i].cliid;
+      tempArr[5] = "https://" + instance.address.backinfo.host + "/client?cliid=" + filteredRequests[i].cliid;
+      tempArr[6] = dateToDate(filteredRequests[i].request.timeline);
+      tempArr[7] = "응대중";
+      tempArr[8] = 'X';
+      tempArr[9] = 'X';
+      tempArr[10] = '';
+      tempArr[11] = '';
+      tempArr[12] = '대기';
+      tempArr[13] = '대기';
+      tempArr[14] = '해당 없음';
+      tempArr[15] = '';
+      tempArr[16] = 'X';
+      tempArr[17] = 'X';
+      tempArr[18] = '';
+      tempArr[19] = '';
+      tempArr[20] = 'X';
+    }
+
+    await sheets.update_value_inPython(sheetsId, sheetsName, totalRows, [ 0, 1 ]);
+ 
+    rows = await sheets.get_value_inPython(sheetsId, sheetsName + "!E2:E");
+
+    */
+
+    totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:U");
+    maxLength = totalRows.map((arr) => { return arr.length }).reduce((acc, curr) => { return acc > curr ? acc : curr }, 0);
+    for (let arr of totalRows) {
+      for (let i = 0; i < maxLength - arr.length; i++) {
+        arr.push('');
+      }
+      arr[2] = (arr[2] === "TRUE");
+    }
+    
+    /*
+
 
     href = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -226,7 +339,7 @@ DevContext.prototype.launching = async function () {
         return "https://" + instance.address.backinfo.host + "/client?cliid=" + obj.cliid;
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, href.map((str) => { return [ str ] }), [ 5, 1 ]);
+    // await sheets.update_value_inPython(sheetsId, sheetsName, href.map((str) => { return [ str ] }), [ 5, 1 ]);
 
     status = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -242,7 +355,7 @@ DevContext.prototype.launching = async function () {
         return obj.analytics.response.status.value
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, status.map((str) => { return [ str ] }), [ 7, 1 ]);
+    // await sheets.update_value_inPython(sheetsId, sheetsName, status.map((str) => { return [ str ] }), [ 7, 1 ]);
 
     call = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -258,7 +371,7 @@ DevContext.prototype.launching = async function () {
         return (obj.curation.analytics.call.out.length > 0 ? "시도" : "대기")
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, call.map((str) => { return [ str ] }), [ 12, 1 ]);
+    // await sheets.update_value_inPython(sheetsId, sheetsName, call.map((str) => { return [ str ] }), [ 12, 1 ]);
 
     about = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -274,7 +387,7 @@ DevContext.prototype.launching = async function () {
         return (obj.curation.analytics.send.filter((obj) => { return obj.page === "finalPush" }).length > 0 ? "완료" : "대기")
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, about.map((str) => { return [ str ] }), [ 13, 1 ]);
+    // await sheets.update_value_inPython(sheetsId, sheetsName, about.map((str) => { return [ str ] }), [ 13, 1 ]);
 
     proposal = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -290,7 +403,7 @@ DevContext.prototype.launching = async function () {
         return (obj.curation.analytics.send.filter((obj) => { return obj.page === "designerProposal" }).length > 0 ? "O" : "X")
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, proposal.map((str) => { return [ str ] }), [ 16, 1 ]);
+    // await sheets.update_value_inPython(sheetsId, sheetsName, proposal.map((str) => { return [ str ] }), [ 16, 1 ]);
 
     selectedDesigners = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -312,7 +425,7 @@ DevContext.prototype.launching = async function () {
         }
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, selectedDesigners.map((str) => { return [ str ] }), [ 18, 1 ]);
+    // await sheets.update_value_inPython(sheetsId, sheetsName, selectedDesigners.map((str) => { return [ str ] }), [ 18, 1 ]);
 
     feedBack = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -347,7 +460,7 @@ DevContext.prototype.launching = async function () {
         return boo ? "O" : "X";
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, feedBack.map((str) => { return [ str ] }), [ 17, 1 ]);
+    // await sheets.update_value_inPython(sheetsId, sheetsName, feedBack.map((str) => { return [ str ] }), [ 17, 1 ]);
 
     outreason = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -371,7 +484,7 @@ DevContext.prototype.launching = async function () {
         }
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, outreason.map((str) => { return [ str ] }), [ 14, 1 ]);
+    // await sheets.update_value_inPython(sheetsId, sheetsName, outreason.map((str) => { return [ str ] }), [ 14, 1 ]);
     
     contract = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -396,11 +509,83 @@ DevContext.prototype.launching = async function () {
         }
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, contract.map((str) => { return [ str ] }), [ 20, 1 ]);
+    // await sheets.update_value_inPython(sheetsId, sheetsName, contract.map((str) => { return [ str ] }), [ 20, 1 ]);
+
+    */
+
+
+    totalNum = 0;
+    aNum = 0;
+    bNum = 0;
+    cNum = 0;
+    currentNum = 0;
+    dropNum = 0;
+    possibleNum = 0;
+    targetNum = 0;
+    contractNum = 0;
+    for (let i = 0; i < totalRows.length; i++) {
+      if (totalRows[i][1] === "계") {
+
+        // push
+        totalRows[i][0] = "";
+        totalRows[i][1] = "계";
+        totalRows[i][2] = false;
+        totalRows[i][3] = `총 ${String(totalNum)}`;
+        totalRows[i][4] = `응대 ${String(currentNum)}`;
+        totalRows[i][5] = `J / K / P`;
+        totalRows[i][6] = `${String(aNum)} / ${String(bNum)} / ${String(cNum)}`;
+        totalRows[i][7] = "-";
+        totalRows[i][8] = "-";
+        totalRows[i][9] = "-";
+        totalRows[i][10] = `드랍 ${String(dropNum)} / 가능성 ${String(possibleNum)} / 타겟 ${String(targetNum)} / 계약 ${String(contractNum)}`;
+
+        totalNum = 0;
+        aNum = 0;
+        bNum = 0;
+        cNum = 0;
+        currentNum = 0;
+        dropNum = 0;
+        possibleNum = 0;
+        targetNum = 0;
+        contractNum = 0;
+
+      } else {
+
+        totalNum = totalNum + 1;
+        if (/^J/gi.test(totalRows[i][1])) {
+          aNum = aNum + 1;
+        } else if (/^K/gi.test(totalRows[i][1])) {
+          bNum = bNum + 1;
+        } else if (/^P/gi.test(totalRows[i][1])) {
+          cNum = cNum + 1;
+        }
+        if (/^응/gi.test(totalRows[i][7])) {
+          currentNum = currentNum + 1;
+        } else if (/^드/gi.test(totalRows[i][7])) {
+          dropNum = dropNum + 1;
+        }
+        if (/^O/gi.test(totalRows[i][8])) {
+          possibleNum = possibleNum + 1;
+        }
+        if (/^O/gi.test(totalRows[i][9])) {
+          targetNum = targetNum + 1;
+        }
+        if (/^O/gi.test(totalRows[i][20])) {
+          contractNum = contractNum + 1;
+        }
+
+      }
+    }
+
+    await sheets.update_value_inPython(sheetsId, sheetsName, totalRows, [ 0, 1 ]);
+    console.log(totalRows);
+
+
+
 
     await this.MONGOCONSOLEC.close();
 
-    */
+    // */
 
 
 
