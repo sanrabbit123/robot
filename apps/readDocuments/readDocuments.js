@@ -100,33 +100,47 @@ ReadDocuments.prototype.readPdf = async function (fileName) {
   }
 }
 
+ReadDocuments.prototype.readHwp = async function (fileName) {
+  const instance = this;
+  const { moduleDir, stat } = this;
+  const readHwp = require(moduleDir + "/readHwp.js");
+  try {
+    const raw = await stat(fileName);
+    const text = await readHwp(fileName);
+    let result;
+
+    result = {
+      name: fileName.split("/")[fileName.split("/").length - 1],
+      type: "hwp",
+      exe: fileName.split("/")[fileName.split("/").length - 1].split(".")[1],
+      size: {
+        bytes: raw.size,
+        kb: raw.size / 1024,
+        mb: (raw.size / 1024) / 1024,
+      },
+      date: {
+        birth: raw.birthtime,
+        last: {
+          access: raw.atime,
+          modification: raw.mtime,
+        }
+      },
+      body: text
+    };
+
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 ReadDocuments.prototype.readXlsx = async function (fileName) {
   const instance = this;
   const { moduleDir } = this;
   try {
 
 
-
-
-
-
-
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-ReadDocuments.prototype.readHwp = async function (fileName) {
-  const instance = this;
-  const { moduleDir } = this;
-  try {
-
-
-
-
-
-
+    
 
 
   } catch (e) {

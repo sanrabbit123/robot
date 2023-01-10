@@ -139,21 +139,225 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+    
+
     
 
 
 
-    // const sheetsId = "1EsYgzt-itSq_hWjYBkSwOgorpOWCjoe9_gmfCtBtlZ4";
-    // const sheetsName = "default";
 
-    // await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:");
+    /*
 
+    await this.MONGOCONSOLEC.connect();
 
+    const selfMongo = this.MONGOC;
+    const historyCollection = "clientHistory";
+    const selfConsoleMongo = this.MONGOCONSOLEC;
+    const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
+    const requests = clients.getRequestsTong();
+    const clientHistories = await back.mongoRead(historyCollection, {}, { selfMongo: selfConsoleMongo });
+    const projects = await back.getProjectsByQuery({}, { selfMongo });
+    const designers = await back.getDesignersByQuery({}, { selfMongo });
+    const sheetsId = "1EsYgzt-itSq_hWjYBkSwOgorpOWCjoe9_gmfCtBtlZ4";
+    const sheetsName = "default";
+    let rows;
+    let status;
+    let call;
+    let about;
+    let proposal;
+    let outreason;
+    let feedBack;
+    let contract;
+    let selectedDesigners;
 
+    rows = await sheets.get_value_inPython(sheetsId, sheetsName + "!D2:D");
 
+    status = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
+      if (!/^c/.test(cliid)) {
+        return null;
+      } else {
+        const result = requests.find((arr) => { return arr.cliid === cliid });
+        return result;
+      }
+    }).map((obj) => {
+      if (obj === null) {
+        return "-";
+      } else {
+        return obj.analytics.response.status.value
+      }
+    });
+
+    await sheets.update_value_inPython(sheetsId, sheetsName, status.map((str) => { return [ str ] }), [ 7, 1 ]);
+
+    call = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
+      if (!/^c/.test(cliid)) {
+        return null;
+      } else {
+        const result = clientHistories.find((arr) => { return arr.cliid === cliid });
+        return result;
+      }
+    }).map((obj) => {
+      if (obj === null) {
+        return "-";
+      } else {
+        return (obj.curation.analytics.call.out.length > 0 ? "시도" : "대기")
+      }
+    });
     
+    await sheets.update_value_inPython(sheetsId, sheetsName, call.map((str) => { return [ str ] }), [ 12, 1 ]);
 
+    about = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
+      if (!/^c/.test(cliid)) {
+        return null;
+      } else {
+        const result = clientHistories.find((arr) => { return arr.cliid === cliid });
+        return result;
+      }
+    }).map((obj) => {
+      if (obj === null) {
+        return "-";
+      } else {
+        return (obj.curation.analytics.send.filter((obj) => { return obj.page === "finalPush" }).length > 0 ? "완료" : "대기")
+      }
+    });
 
+    await sheets.update_value_inPython(sheetsId, sheetsName, about.map((str) => { return [ str ] }), [ 13, 1 ]);
+
+    proposal = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
+      if (!/^c/.test(cliid)) {
+        return null;
+      } else {
+        const result = clientHistories.find((arr) => { return arr.cliid === cliid });
+        return result;
+      }
+    }).map((obj) => {
+      if (obj === null) {
+        return "-";
+      } else {
+        return (obj.curation.analytics.send.filter((obj) => { return obj.page === "designerProposal" }).length > 0 ? "O" : "X")
+      }
+    });
+
+    await sheets.update_value_inPython(sheetsId, sheetsName, proposal.map((str) => { return [ str ] }), [ 16, 1 ]);
+
+    selectedDesigners = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
+      if (!/^c/.test(cliid)) {
+        return null;
+      } else {
+        const result = clientHistories.find((arr) => { return arr.cliid === cliid });
+        return result;
+      }
+    }).map((obj) => {
+      if (obj === null) {
+        return "-";
+      } else {
+        let thisProject;
+        if (obj.curation.analytics.send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
+          thisProject = projects.find((o) => { return o.cliid === obj.cliid });
+          if (thisProject !== undefined) {
+            return (thisProject.proposal.detail.map((o) => { return o.desid }).map((desid) => { return designers.find((d) => { return d.desid === desid }).designer }).join(" / "))
+          } else {
+            return '-';
+          }
+        } else {
+          return '-';
+        }
+      }
+    });
+
+    await sheets.update_value_inPython(sheetsId, sheetsName, selectedDesigners.map((str) => { return [ str ] }), [ 18, 1 ]);
+
+    feedBack = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
+      if (!/^c/.test(cliid)) {
+        return null;
+      } else {
+        const result = clientHistories.find((arr) => { return arr.cliid === cliid });
+        return result;
+      }
+    }).map((obj) => {
+      if (obj === null) {
+        return "-";
+      } else {
+        let arr0, arr1;
+        let boo;
+
+        arr0 = obj.curation.analytics.send.filter((obj) => { return obj.page === "designerProposal" })
+        arr1 = obj.curation.analytics.call.out
+
+        boo = false;
+        for (let { date } of arr0) {
+          for (let { date: callDate } of arr1) {
+            boo = date.valueOf() <= callDate.valueOf();
+            if (boo) {
+              break;
+            }
+          }
+          if (boo) {
+            break;
+          }
+        }
+
+        return boo ? "O" : "X";
+      }
+    });
+
+    await sheets.update_value_inPython(sheetsId, sheetsName, feedBack.map((str) => { return [ str ] }), [ 17, 1 ]);
+
+    outreason = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
+      if (!/^c/.test(cliid)) {
+        return null;
+      } else {
+        const result = requests.find((arr) => { return arr.cliid === cliid });
+        return result;
+      }
+    }).map((obj) => {
+      if (obj === null) {
+        return "-";
+      } else {
+        if (/^드/gi.test(obj.analytics.response.status.value)) {
+          if (obj.analytics.response.outreason.values.length > 0) {
+            return obj.analytics.response.outreason.values[0];
+          } else {
+            return "해당 없음";
+          }
+        } else {
+          return "해당 없음";
+        }
+      }
+    });
+
+    await sheets.update_value_inPython(sheetsId, sheetsName, outreason.map((str) => { return [ str ] }), [ 14, 1 ]);
+    
+    contract = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
+      if (!/^c/.test(cliid)) {
+        return null;
+      } else {
+        const result = requests.find((arr) => { return arr.cliid === cliid });
+        return result;
+      }
+    }).map((obj) => {
+      if (obj === null) {
+        return "-";
+      } else {
+        const thisProject = projects.find((o) => { return o.cliid === obj.cliid });
+        if (thisProject === undefined) {
+          return 'X';
+        } else {
+          if (thisProject.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf()) {
+            return 'O';
+          } else {
+            return 'X';
+          }
+        }
+      }
+    });
+
+    await sheets.update_value_inPython(sheetsId, sheetsName, contract.map((str) => { return [ str ] }), [ 20, 1 ]);
+
+    await this.MONGOCONSOLEC.close();
+
+    */
 
 
 
