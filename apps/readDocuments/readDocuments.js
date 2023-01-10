@@ -134,15 +134,35 @@ ReadDocuments.prototype.readHwp = async function (fileName) {
   }
 }
 
-ReadDocuments.prototype.readXlsx = async function (fileName) {
+ReadDocuments.prototype.readXlsx = async function (fileName, sheetsName = null) {
   const instance = this;
-  const { moduleDir } = this;
+  const { moduleDir, stat } = this;
+  const readXlsx = require(moduleDir + "/readXlsx.js");
   try {
+    const raw = await stat(fileName);
+    const matrix = await readXlsx(fileName, sheetsName);
+    let result;
 
+    result = {
+      name: fileName.split("/")[fileName.split("/").length - 1],
+      type: "xlsx",
+      exe: fileName.split("/")[fileName.split("/").length - 1].split(".")[1],
+      size: {
+        bytes: raw.size,
+        kb: raw.size / 1024,
+        mb: (raw.size / 1024) / 1024,
+      },
+      date: {
+        birth: raw.birthtime,
+        last: {
+          access: raw.atime,
+          modification: raw.mtime,
+        }
+      },
+      body: matrix
+    };
 
-    
-
-
+    return result;
   } catch (e) {
     console.log(e);
   }
