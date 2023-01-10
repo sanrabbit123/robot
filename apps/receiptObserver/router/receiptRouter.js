@@ -1783,13 +1783,47 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       const inisis = "현금 영수증";
       const bankFrom = req.body.nm_inputbank;
       const nameFrom = req.body.nm_input;
-      const bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: oid } } }, { selfMongo: instance.mongolocal });
+      let bills;
+      let accountTransferCollection;
+      let transferRows, transferRows2;
+
+      bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: oid } } }, { selfMongo: instance.mongolocal });
+
       if (bills.length === 0) {
-        throw new Error("invaild oid");
+        accountTransferCollection = "accountTransfer";
+        transferRows = await back.mongoRead(accountTransferCollection, { "accountInfo.no_oid": oid }, { selfMongo: instance.mongolocal });
+        if (transferRows.length > 0) {
+          transferRows2 = await back.mongoRead(accountTransferCollection, {
+            $and: [
+              { name: transferRows[0].name },
+              { phone: transferRows[0].phone },
+              { amount: transferRows[0].amount },
+              { goodname: transferRows[0].goodname },
+            ]
+          }, { selfMongo: instance.mongolocal });
+          if (transferRows2.length > 1) {
+            transferRows2.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+            for (let obj of transferRows2) {
+              bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: obj.accountInfo.no_oid } } }, { selfMongo: instance.mongolocal });
+              if (bills.length !== 0) {
+                break;
+              }
+            }
+            if (bills.length === 0) {
+              throw new Error("invaild oid 3");
+            }
+          } else {
+            throw new Error("invaild oid 2");
+          }
+        } else {
+          throw new Error("invaild oid 1");
+        }
       }
+
       if (bills[0].links.proid === undefined || bills[0].links.desid === undefined || bills[0].links.cliid === undefined) {
         throw new Error("invaild bill");
       }
+
       const { proid, cliid, desid, method } = bills[0].links;
       let infoArr, index;
       let bilid;

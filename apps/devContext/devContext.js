@@ -138,14 +138,20 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-    
-
 
     
 
 
 
+    // const sheetsId = "1EsYgzt-itSq_hWjYBkSwOgorpOWCjoe9_gmfCtBtlZ4";
+    // const sheetsName = "default";
 
+    // await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:");
+
+
+
+
+    
 
 
 
@@ -4498,9 +4504,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "허지혜",
-    //     designer: "박주령",
-    //     link: "https://drive.google.com/drive/folders/1mmWz1CUEU4IHYBrVDblkF3qhK4fLr_8i",
+    //     client: "최정안",
+    //     designer: "박정훈",
+    //     link: "https://drive.google.com/drive/folders/1GmELYCWYGdOnxGt0K9Eu5Fob87mfM8Db",
     //     pay: true
     //   },
     // ]);
@@ -4607,15 +4613,11 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
-    // const human = new HumanPacket();
-    // const name = "윤민아";
-    // const amount = 3770000;
+    // const name = "김동혁";
+    // const amount = 2128500;
     // await human.sendSms({
-    //   name: "",
-    //   phone: "01055432039",
-    //   subject: "",
-    //   contents: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
+    //   to: "01055432039",
+    //   body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
     // });
 
 
