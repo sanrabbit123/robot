@@ -140,9 +140,47 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const sheetsId = "1fmNokJeylkpIu_St2ZWghnhyrYBO4QfPo-HGwI29V6o";
+    const sheetsName = "default";
+    let rows;
+    let maxLength;
 
-    
-    
+    rows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:U");
+
+    maxLength = rows.map((arr) => { return arr.length }).reduce((acc, curr) => { return acc > curr ? acc : curr }, 0);
+
+    for (let arr of rows) {
+      for (let i = 0; i < maxLength - arr.length; i++) {
+        arr.push('');
+      }
+      arr[2] = (arr[2] === "TRUE");
+    }
+
+    rows.unshift((new Array(maxLength)).fill(''))
+    rows.unshift((new Array(maxLength)).fill(''))
+    rows.unshift((new Array(maxLength)).fill(''))
+    rows.unshift((new Array(maxLength)).fill(''))
+    rows.unshift((new Array(maxLength)).fill(''))
+    rows.unshift((new Array(maxLength)).fill(''))
+    rows.unshift((new Array(maxLength)).fill(''))
+    rows.unshift((new Array(maxLength)).fill(''))
+
+    await sheets.update_value_inPython(sheetsId, sheetsName, rows, [ 0, 1 ]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -170,8 +208,25 @@ DevContext.prototype.launching = async function () {
     let feedBack;
     let contract;
     let selectedDesigners;
+    let href;
 
-    rows = await sheets.get_value_inPython(sheetsId, sheetsName + "!D2:D");
+    rows = await sheets.get_value_inPython(sheetsId, sheetsName + "!E2:E");
+
+    href = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
+      if (!/^c/.test(cliid)) {
+        return null;
+      } else {
+        const result = requests.find((arr) => { return arr.cliid === cliid });
+        return result;
+      }
+    }).map((obj) => {
+      if (obj === null) {
+        return '';
+      } else {
+        return "https://" + instance.address.backinfo.host + "/client?cliid=" + obj.cliid;
+      }
+    });
+    await sheets.update_value_inPython(sheetsId, sheetsName, href.map((str) => { return [ str ] }), [ 5, 1 ]);
 
     status = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -187,7 +242,6 @@ DevContext.prototype.launching = async function () {
         return obj.analytics.response.status.value
       }
     });
-
     await sheets.update_value_inPython(sheetsId, sheetsName, status.map((str) => { return [ str ] }), [ 7, 1 ]);
 
     call = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
@@ -204,7 +258,6 @@ DevContext.prototype.launching = async function () {
         return (obj.curation.analytics.call.out.length > 0 ? "시도" : "대기")
       }
     });
-    
     await sheets.update_value_inPython(sheetsId, sheetsName, call.map((str) => { return [ str ] }), [ 12, 1 ]);
 
     about = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
@@ -221,7 +274,6 @@ DevContext.prototype.launching = async function () {
         return (obj.curation.analytics.send.filter((obj) => { return obj.page === "finalPush" }).length > 0 ? "완료" : "대기")
       }
     });
-
     await sheets.update_value_inPython(sheetsId, sheetsName, about.map((str) => { return [ str ] }), [ 13, 1 ]);
 
     proposal = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
@@ -238,7 +290,6 @@ DevContext.prototype.launching = async function () {
         return (obj.curation.analytics.send.filter((obj) => { return obj.page === "designerProposal" }).length > 0 ? "O" : "X")
       }
     });
-
     await sheets.update_value_inPython(sheetsId, sheetsName, proposal.map((str) => { return [ str ] }), [ 16, 1 ]);
 
     selectedDesigners = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
@@ -253,19 +304,14 @@ DevContext.prototype.launching = async function () {
         return "-";
       } else {
         let thisProject;
-        if (obj.curation.analytics.send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
-          thisProject = projects.find((o) => { return o.cliid === obj.cliid });
-          if (thisProject !== undefined) {
-            return (thisProject.proposal.detail.map((o) => { return o.desid }).map((desid) => { return designers.find((d) => { return d.desid === desid }).designer }).join(" / "))
-          } else {
-            return '-';
-          }
+        thisProject = projects.find((o) => { return o.cliid === obj.cliid });
+        if (thisProject !== undefined) {
+          return (thisProject.proposal.detail.map((o) => { return o.desid }).map((desid) => { return designers.find((d) => { return d.desid === desid }).designer }).join(" / "))
         } else {
           return '-';
         }
       }
     });
-
     await sheets.update_value_inPython(sheetsId, sheetsName, selectedDesigners.map((str) => { return [ str ] }), [ 18, 1 ]);
 
     feedBack = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
@@ -301,7 +347,6 @@ DevContext.prototype.launching = async function () {
         return boo ? "O" : "X";
       }
     });
-
     await sheets.update_value_inPython(sheetsId, sheetsName, feedBack.map((str) => { return [ str ] }), [ 17, 1 ]);
 
     outreason = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
@@ -326,7 +371,6 @@ DevContext.prototype.launching = async function () {
         }
       }
     });
-
     await sheets.update_value_inPython(sheetsId, sheetsName, outreason.map((str) => { return [ str ] }), [ 14, 1 ]);
     
     contract = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
@@ -352,7 +396,6 @@ DevContext.prototype.launching = async function () {
         }
       }
     });
-
     await sheets.update_value_inPython(sheetsId, sheetsName, contract.map((str) => { return [ str ] }), [ 20, 1 ]);
 
     await this.MONGOCONSOLEC.close();
