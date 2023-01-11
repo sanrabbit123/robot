@@ -5741,6 +5741,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       "Jini": "강해진",
       "KB": "이큰별",
       "Pepper": "임지민",
+      "대기": "-",
     };
     try {
       const selfMongo = MONGOC;
