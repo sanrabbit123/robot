@@ -6316,6 +6316,8 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
 
       await sheets.update_value_inPython(sheetsId, sheetsName2, totalMatrix, [ 0, 0 ]);
 
+      await errorLog("cx dashboard update done");
+
     } catch (e) {
       errorLog("Console 서버 문제 생김 (rou_post_cxDashboardSync): " + err.message).catch((err) => { console.log(err) });
     }
@@ -6330,7 +6332,15 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      cxDashboardSyncFunc(instance.mongo, instance.mongolocal).catch((err) => {
+      const { noNewClient } = req.body;
+      let clientUpdate;
+
+      clientUpdate = true;
+      if (noNewClient === "true" || noNewClient === true || noNewClient === 1) {
+        clientUpdate = false;
+      }
+
+      cxDashboardSyncFunc(instance.mongo, instance.mongolocal, clientUpdate).catch((err) => {
         errorLog("Console 서버 문제 생김 (rou_post_cxDashboardSync): " + err.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
