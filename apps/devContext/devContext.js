@@ -237,17 +237,18 @@ DevContext.prototype.launching = async function () {
       tempArr[9] = '-';
       tempArr[10] = '';
       tempArr[11] = '';
-      tempArr[12] = '-';
+      tempArr[12] = '';
       tempArr[13] = '-';
       tempArr[14] = '-';
       tempArr[15] = '-';
-      tempArr[16] = '';
-      tempArr[17] = '-';
+      tempArr[16] = '-';
+      tempArr[17] = '';
       tempArr[18] = '-';
       tempArr[19] = '-';
-      tempArr[20] = '';
+      tempArr[20] = '-';
       tempArr[21] = '';
-      tempArr[22] = '-';
+      tempArr[22] = '';
+      tempArr[23] = '-';
     }
 
     for (let i = 0; i < filteredRequests.length; i++) {
@@ -265,17 +266,18 @@ DevContext.prototype.launching = async function () {
       tempArr[9] = 'X';
       tempArr[10] = '';
       tempArr[11] = '';
-      tempArr[12] = '대기';
+      tempArr[12] = '';
       tempArr[13] = '대기';
       tempArr[14] = '대기';
-      tempArr[15] = '해당 없음';
-      tempArr[16] = '';
-      tempArr[17] = 'X';
+      tempArr[15] = '대기';
+      tempArr[16] = '해당 없음';
+      tempArr[17] = '';
       tempArr[18] = 'X';
       tempArr[19] = 'X';
-      tempArr[20] = '';
+      tempArr[20] = 'X';
       tempArr[21] = '';
-      tempArr[22] = 'X';
+      tempArr[22] = '';
+      tempArr[23] = 'X';
     }
 
     await sheets.update_value_inPython(sheetsId, sheetsName, totalRows, [ 0, 1 ]);
@@ -591,7 +593,7 @@ DevContext.prototype.launching = async function () {
         if (/^O/gi.test(totalRows[i][9])) {
           targetNum = targetNum + 1;
         }
-        if (/^O/gi.test(totalRows[i][22])) {
+        if (/^O/gi.test(totalRows[i][23])) {
           contractNum = contractNum + 1;
         }
 
