@@ -414,7 +414,7 @@ GoogleAnalytics.prototype.reportParsing = function (reports) {
 
 GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
   const instance = this;
-  const { dateToString, stringToDate, pythonExecute } = this.mother;
+  const { dateToString, stringToDate, pythonExecute, sleep } = this.mother;
   const zeroAddition = function (num) {
     if (num < 10) {
       return `0${String(num)}`;
@@ -477,6 +477,8 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
     let userResult;
     let userTotalNumbers;
     let userDetailObj;
+    let userResultObj;
+    let tempTempObj;
 
     // users
 
@@ -484,8 +486,21 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
     for (let i of userDimensions) {
       temp = [];
       temp.push({ name: i.name });
-      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "getUserMetric" ], { startDate, endDate, dimensions: temp });
-      userResult.push(this.reportParsing(tempObj));
+      try {
+        tempObj = await pythonExecute(this.pythonApp, [ "analytics", "getUserMetric" ], { startDate, endDate, dimensions: temp });
+        userResultObj = this.reportParsing(tempObj);  
+      } catch {
+        await sleep(1000);
+        try {
+          tempObj = await pythonExecute(this.pythonApp, [ "analytics", "getUserMetric" ], { startDate, endDate, dimensions: temp });
+          userResultObj = this.reportParsing(tempObj);  
+        } catch {
+          await sleep(3000);
+          tempObj = await pythonExecute(this.pythonApp, [ "analytics", "getUserMetric" ], { startDate, endDate, dimensions: temp });
+          userResultObj = this.reportParsing(tempObj);  
+        }
+      }
+      userResult.push(userResultObj);
     }
 
     userTotalNumbers = userResult.map((obj) => { return obj.total });
@@ -504,8 +519,21 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
     for (let i of dimensions) {
       temp = [];
       temp.push({ name: i.name });
-      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "generalMetric" ], { startDate, endDate, dimensions: temp });
-      result.push(this.reportParsing(tempObj));
+      try {
+        tempObj = await pythonExecute(this.pythonApp, [ "analytics", "generalMetric" ], { startDate, endDate, dimensions: temp });
+        tempTempObj = this.reportParsing(tempObj);
+      } catch {
+        await sleep(1000);
+        try {
+          tempObj = await pythonExecute(this.pythonApp, [ "analytics", "generalMetric" ], { startDate, endDate, dimensions: temp });
+          tempTempObj = this.reportParsing(tempObj);
+        } catch {
+          await sleep(3000);
+          tempObj = await pythonExecute(this.pythonApp, [ "analytics", "generalMetric" ], { startDate, endDate, dimensions: temp });
+          tempTempObj = this.reportParsing(tempObj);
+        }
+      }
+      result.push(tempTempObj);
     }
 
     totalNumbers = result.map((obj) => { return obj.total });
@@ -513,8 +541,21 @@ GoogleAnalytics.prototype.generalMetric = async function (startDate, endDate) {
     for (let i of eventDimensions) {
       temp = [];
       temp.push({ name: i.name });
-      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "eventMetric" ], { startDate, endDate, dimensions: temp });
-      result.push(this.reportParsing(tempObj));
+      try {
+        tempObj = await pythonExecute(this.pythonApp, [ "analytics", "eventMetric" ], { startDate, endDate, dimensions: temp });
+        tempTempObj = this.reportParsing(tempObj);
+      } catch {
+        await sleep(1000);
+        try {
+          tempObj = await pythonExecute(this.pythonApp, [ "analytics", "eventMetric" ], { startDate, endDate, dimensions: temp });
+          tempTempObj = this.reportParsing(tempObj);
+        } catch {
+          await sleep(3000);
+          tempObj = await pythonExecute(this.pythonApp, [ "analytics", "eventMetric" ], { startDate, endDate, dimensions: temp });
+          tempTempObj = this.reportParsing(tempObj);
+        }
+      }
+      result.push(tempTempObj);
     }
 
     detailObj = {};
