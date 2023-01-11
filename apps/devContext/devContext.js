@@ -140,47 +140,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const sheetsId = "1fmNokJeylkpIu_St2ZWghnhyrYBO4QfPo-HGwI29V6o";
-    // const sheetsName = "default";
-    // let rows;
-    // let maxLength;
-
-    // rows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:U");
-    // maxLength = rows.map((arr) => { return arr.length }).reduce((acc, curr) => { return acc > curr ? acc : curr }, 0);
-    // for (let arr of rows) {
-    //   for (let i = 0; i < maxLength - arr.length; i++) {
-    //     arr.push('');
-    //   }
-    //   arr[2] = (arr[2] === "TRUE");
-    // }
-
-    // rows.unshift((new Array(maxLength)).fill(''))
-    // rows.unshift((new Array(maxLength)).fill(''))
-    // rows.unshift((new Array(maxLength)).fill(''))
-    // rows.unshift((new Array(maxLength)).fill(''))
-    // rows.unshift((new Array(maxLength)).fill(''))
-    // rows.unshift((new Array(maxLength)).fill(''))
-    // rows.unshift((new Array(maxLength)).fill(''))
-    // rows.unshift((new Array(maxLength)).fill(''))
-
-    // await sheets.update_value_inPython(sheetsId, sheetsName, rows, [ 0, 1 ]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     // /*
@@ -195,8 +154,7 @@ DevContext.prototype.launching = async function () {
     const clientHistories = await back.mongoRead(historyCollection, {}, { selfMongo: selfConsoleMongo });
     const projects = await back.getProjectsByQuery({}, { selfMongo });
     const designers = await back.getDesignersByQuery({}, { selfMongo });
-    // const sheetsId = "1EsYgzt-itSq_hWjYBkSwOgorpOWCjoe9_gmfCtBtlZ4";
-    const sheetsId = "1pVyHBFq5-TULQhUk4nNgPGvNwaTscxZzX9Uyo_Q-gyI";
+    const sheetsId = "1EsYgzt-itSq_hWjYBkSwOgorpOWCjoe9_gmfCtBtlZ4";
     const sheetsName = "default";
     const dateToDate = (dateObject) => {
       return `${String(dateObject.getFullYear())}. ${String(dateObject.getMonth() + 1)}. ${String(dateObject.getDate())}`;
@@ -233,10 +191,12 @@ DevContext.prototype.launching = async function () {
     let finalTong;
     let totalMatrix;
     let num;
+    let columns;
+    let view, success;
 
     rows = await sheets.get_value_inPython(sheetsId, sheetsName + "!E2:E");
 
-    totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:U");
+    totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:Z");
     maxLength = totalRows.map((arr) => { return arr.length }).reduce((acc, curr) => { return acc > curr ? acc : curr }, 0);
     for (let arr of totalRows) {
       for (let i = 0; i < maxLength - arr.length; i++) {
@@ -280,12 +240,14 @@ DevContext.prototype.launching = async function () {
       tempArr[12] = '-';
       tempArr[13] = '-';
       tempArr[14] = '-';
-      tempArr[15] = '';
-      tempArr[16] = '-';
+      tempArr[15] = '-';
+      tempArr[16] = '';
       tempArr[17] = '-';
-      tempArr[18] = '';
-      tempArr[19] = '';
-      tempArr[20] = '-';
+      tempArr[18] = '-';
+      tempArr[19] = '-';
+      tempArr[20] = '';
+      tempArr[21] = '';
+      tempArr[22] = '-';
     }
 
     for (let i = 0; i < filteredRequests.length; i++) {
@@ -305,20 +267,22 @@ DevContext.prototype.launching = async function () {
       tempArr[11] = '';
       tempArr[12] = '대기';
       tempArr[13] = '대기';
-      tempArr[14] = '해당 없음';
-      tempArr[15] = '';
-      tempArr[16] = 'X';
+      tempArr[14] = '대기';
+      tempArr[15] = '해당 없음';
+      tempArr[16] = '';
       tempArr[17] = 'X';
-      tempArr[18] = '';
-      tempArr[19] = '';
-      tempArr[20] = 'X';
+      tempArr[18] = 'X';
+      tempArr[19] = 'X';
+      tempArr[20] = '';
+      tempArr[21] = '';
+      tempArr[22] = 'X';
     }
 
     await sheets.update_value_inPython(sheetsId, sheetsName, totalRows, [ 0, 1 ]);
  
     rows = await sheets.get_value_inPython(sheetsId, sheetsName + "!E2:E");
-
-    totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:U");
+    columns = (await sheets.get_value_inPython(sheetsId, sheetsName + "!A1:Z1")).flat();
+    totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:Z");
     maxLength = totalRows.map((arr) => { return arr.length }).reduce((acc, curr) => { return acc > curr ? acc : curr }, 0);
     for (let arr of totalRows) {
       for (let i = 0; i < maxLength - arr.length; i++) {
@@ -326,7 +290,6 @@ DevContext.prototype.launching = async function () {
       }
       arr[2] = (arr[2] === "TRUE");
     }
-    
 
     href = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -342,7 +305,7 @@ DevContext.prototype.launching = async function () {
         return "https://" + instance.address.backinfo.host + "/client?cliid=" + obj.cliid;
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, href.map((str) => { return [ str ] }), [ 5, 1 ]);
+    await sheets.update_value_inPython(sheetsId, sheetsName, href.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /콘솔/gi.test(str) }), 1 ]);
 
     status = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -358,7 +321,7 @@ DevContext.prototype.launching = async function () {
         return obj.analytics.response.status.value
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, status.map((str) => { return [ str ] }), [ 7, 1 ]);
+    await sheets.update_value_inPython(sheetsId, sheetsName, status.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /상태/gi.test(str) }), 1 ]);
 
     call = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -374,7 +337,24 @@ DevContext.prototype.launching = async function () {
         return (obj.curation.analytics.call.out.length > 0 ? "시도" : "대기")
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, call.map((str) => { return [ str ] }), [ 12, 1 ]);
+    await sheets.update_value_inPython(sheetsId, sheetsName, call.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /1차 응대 시도/gi.test(str) }), 1 ]);
+
+    success = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
+      if (!/^c/.test(cliid)) {
+        return null;
+      } else {
+        const result = clientHistories.find((arr) => { return arr.cliid === cliid });
+        return result;
+      }
+    }).map((obj) => {
+      if (obj === null) {
+        return "-";
+      } else {
+        return (obj.curation.analytics.call.out.filter((o) => { return o.success }).length > 0 ? "성공" : "대기")
+      }
+    });
+    await sheets.update_value_inPython(sheetsId, sheetsName, success.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /1차 응대 성공/gi.test(str) }), 1 ]);
+
 
     about = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -390,7 +370,7 @@ DevContext.prototype.launching = async function () {
         return (obj.curation.analytics.send.filter((obj) => { return obj.page === "finalPush" }).length > 0 ? "완료" : "대기")
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, about.map((str) => { return [ str ] }), [ 13, 1 ]);
+    await sheets.update_value_inPython(sheetsId, sheetsName, about.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /서비스 설명/gi.test(str) }), 1 ]);
 
     proposal = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -406,7 +386,23 @@ DevContext.prototype.launching = async function () {
         return (obj.curation.analytics.send.filter((obj) => { return obj.page === "designerProposal" }).length > 0 ? "O" : "X")
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, proposal.map((str) => { return [ str ] }), [ 16, 1 ]);
+    await sheets.update_value_inPython(sheetsId, sheetsName, proposal.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /추천서 발송/gi.test(str) }), 1 ]);
+
+    view = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
+      if (!/^c/.test(cliid)) {
+        return null;
+      } else {
+        const result = clientHistories.find((arr) => { return arr.cliid === cliid });
+        return result;
+      }
+    }).map((obj) => {
+      if (obj === null) {
+        return "-";
+      } else {
+        return (obj.curation.analytics.page.filter((obj) => { return obj.page === "designerProposal" }).length > 0 ? "O" : "X")
+      }
+    });
+    await sheets.update_value_inPython(sheetsId, sheetsName, view.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /추천서 조회/gi.test(str) }), 1 ]);
 
     selectedDesigners = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -428,7 +424,7 @@ DevContext.prototype.launching = async function () {
         }
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, selectedDesigners.map((str) => { return [ str ] }), [ 18, 1 ]);
+    await sheets.update_value_inPython(sheetsId, sheetsName, selectedDesigners.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /추천 디자이너/gi.test(str) }), 1 ]);
 
     feedBack = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -463,7 +459,7 @@ DevContext.prototype.launching = async function () {
         return boo ? "O" : "X";
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, feedBack.map((str) => { return [ str ] }), [ 17, 1 ]);
+    await sheets.update_value_inPython(sheetsId, sheetsName, feedBack.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /피드백 통화/gi.test(str) }), 1 ]);
 
     outreason = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -487,7 +483,7 @@ DevContext.prototype.launching = async function () {
         }
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, outreason.map((str) => { return [ str ] }), [ 14, 1 ]);
+    await sheets.update_value_inPython(sheetsId, sheetsName, outreason.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /드랍 판단/gi.test(str) }), 1 ]);
     
     contract = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
       if (!/^c/.test(cliid)) {
@@ -512,8 +508,16 @@ DevContext.prototype.launching = async function () {
         }
       }
     });
-    await sheets.update_value_inPython(sheetsId, sheetsName, contract.map((str) => { return [ str ] }), [ 20, 1 ]);
+    await sheets.update_value_inPython(sheetsId, sheetsName, contract.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /계약/gi.test(str) }), 1 ]);
 
+    totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:Z");
+    maxLength = totalRows.map((arr) => { return arr.length }).reduce((acc, curr) => { return acc > curr ? acc : curr }, 0);
+    for (let arr of totalRows) {
+      for (let i = 0; i < maxLength - arr.length; i++) {
+        arr.push('');
+      }
+      arr[2] = (arr[2] === "TRUE");
+    }
 
     totalTong = [];
 
@@ -533,13 +537,13 @@ DevContext.prototype.launching = async function () {
         totalRows[i][1] = "계";
         totalRows[i][2] = false;
         totalRows[i][3] = `총 ${String(totalNum)}`;
-        totalRows[i][4] = `응대 ${String(currentNum)}`;
+        totalRows[i][4] = "";
         totalRows[i][5] = `J / K / P`;
         totalRows[i][6] = `${String(aNum)} / ${String(bNum)} / ${String(cNum)}`;
         totalRows[i][7] = "-";
         totalRows[i][8] = "-";
         totalRows[i][9] = "-";
-        totalRows[i][10] = `드랍 ${String(dropNum)} / 가능성 ${String(possibleNum)} / 타겟 ${String(targetNum)} / 계약 ${String(contractNum)}`;
+        totalRows[i][10] = `응대 ${String(currentNum)} / 드랍 ${String(dropNum)} / 가능성 ${String(possibleNum)} / 타겟 ${String(targetNum)} / 계약 ${String(contractNum)}`;
 
         totalTong.push({
           date: dateParsing(thisDate),
@@ -587,7 +591,7 @@ DevContext.prototype.launching = async function () {
         if (/^O/gi.test(totalRows[i][9])) {
           targetNum = targetNum + 1;
         }
-        if (/^O/gi.test(totalRows[i][20])) {
+        if (/^O/gi.test(totalRows[i][22])) {
           contractNum = contractNum + 1;
         }
 
@@ -706,7 +710,6 @@ DevContext.prototype.launching = async function () {
     }
 
     await sheets.update_value_inPython(sheetsId, "total", totalMatrix, [ 0, 0 ]);
-    console.log(totalMatrix);
 
     await this.MONGOCONSOLEC.close();
 
