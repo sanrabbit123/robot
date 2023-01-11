@@ -36,7 +36,7 @@ const ContentsMaker = function () {
 
 ContentsMaker.prototype.startAdobe = async function (obj) {
   const instance = this;
-  const { fileSystem, babelSystem, appleScript } = this.mother;
+  const { fileSystem, appleScript } = this.mother;
   let boo, boo2;
   if (obj.end === undefined && obj.noclean === undefined) {
     boo = false;
@@ -96,7 +96,7 @@ ContentsMaker.prototype.startAdobe = async function (obj) {
     temp_scriptString += `var text = ${JSON.stringify(obj.data, null, 2)};\n`;
     temp_scriptString += await fileSystem(`readString`, [ `${this.factory}/script/polyfill.js` ]);
     temp_scriptString += `\n`;
-    temp_scriptString += await babelSystem(obj.script);
+    temp_scriptString += obj.script;
     temp_scriptString += `} catch (e) { e; }`;
 
     await fileSystem(`write`, [ targetJs, temp_scriptString ]);

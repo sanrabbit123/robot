@@ -3,7 +3,6 @@ const FrontMaker = function () {
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   this.mother = new Mother();
-  this.csso = require("csso");
   this.strings = {};
   this.dir = `${process.cwd()}/apps/frontMaker`;
   this.back = new BackMaker();
@@ -251,7 +250,7 @@ FrontMaker.prototype.jsToPoo = async function (dayString, test = false) {
       exec_string = (await this.mother.fileSystem(`readString`, [ `${this.links.source}/jsGeneral/exec.js` ])).replace(/\/<%name%>\//g, (i.replace(/\.js$/g, '').charAt(0).toUpperCase() + i.replace(/\.js$/g, '').slice(1)));
       code = code + "\n\n" + exec_string;
 
-      //babel compile
+
       result = (await minify(code, {
         keep_classnames: true,
         keep_fnames: true
@@ -259,12 +258,12 @@ FrontMaker.prototype.jsToPoo = async function (dayString, test = false) {
 
       //css general
       css_code = require(`${this.links.source}/cssGeneral/general.js`);
-      css_string_general = this.csso.minify(css_code()).css;
+      css_string_general = css_code();
       css_string_general = css_string_general.replace(/"/g, '\\"');
 
       //css local
       css_code = require(`${this.links.source}/css/${i}`);
-      css_string = this.csso.minify(css_code() + cssOutString).css;
+      css_string = css_code() + cssOutString;
       css_string = css_string.replace(/"/g, '\\"');
       css_string_final = this.strings.cssRenderString.replace(/\/<%css%>\//g, ('"' + css_string_general + css_string + '";'));
 

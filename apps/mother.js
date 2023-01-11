@@ -422,34 +422,6 @@ Mother.prototype.fileSystem = function (sw, arr) {
   }
 }
 
-Mother.prototype.babelSystem = function (code, minify = false) {
-  const babel = require("@babel/core");
-  let babelOptions = {
-    presets: [
-      [ "@babel/preset-env", { targets: { browsers : [ "last 2 versions", "ie >= 11" ] } }, ],
-    ],
-  }
-  if (minify) {
-    babelOptions.presets.push([ "minify", {
-      mangle: false,
-      simplify: false,
-    }]);
-  }
-  return new Promise(function(resolve, reject) {
-    babel.transform(code, babelOptions, function(err, result) {
-      if (err) { reject(err); }
-      let code;
-      if (minify) {
-        code = result.code.replace(/\\u([\d\w]{4})/gi, (m, g) => String.fromCharCode(parseInt(g, 16)));
-      } else {
-        code = result.code;
-      }
-      code = result.code;
-      resolve(code);
-    });
-  });
-}
-
 Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   const axios = require('axios');
   const FormData = require('form-data');

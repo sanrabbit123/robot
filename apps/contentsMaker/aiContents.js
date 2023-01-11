@@ -165,7 +165,7 @@ AiContents.prototype.photo_list = async function () {
 
 AiContents.prototype.makeAnd_execute = async function () {
   const instance = this;
-  const { fileSystem, babelSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink } = this.mother;
   const { home_dir } = this.options;
   try {
     const orders = [ "portfolio_contents", "portfolio_titles", "portfolio_photo" ];
@@ -177,7 +177,7 @@ AiContents.prototype.makeAnd_execute = async function () {
       temp_scriptString = `var text = ${JSON.stringify(this.text, null, 2)};\n`;
       temp_scriptString += await fileSystem(`readString`, [ `${home_dir}/factory/script/polyfill.js` ]);
       temp_scriptString += `\n`;
-      temp_scriptString += await babelSystem(this.general.generator.contents_maker[i](this.options));
+      temp_scriptString += this.general.generator.contents_maker[i](this.options);
       await fileSystem(`write`, [ `${home_dir}/script/${i}.js`, temp_scriptString ]);
     }
     if (this.text.r_id !== "re999") {
@@ -185,7 +185,7 @@ AiContents.prototype.makeAnd_execute = async function () {
         temp_scriptString = `var text = ${JSON.stringify(this.text, null, 2)};\n`;
         temp_scriptString += await fileSystem(`readString`, [ `${home_dir}/factory/script/polyfill.js` ]);
         temp_scriptString += `\n`;
-        temp_scriptString += await babelSystem(this.general.generator.contents_maker[i](this.options));
+        temp_scriptString += this.general.generator.contents_maker[i](this.options);
         await fileSystem(`write`, [ `${home_dir}/script/${i}.js`, temp_scriptString ]);
       }
     }

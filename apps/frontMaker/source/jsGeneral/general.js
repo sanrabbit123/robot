@@ -3186,22 +3186,13 @@ GeneralJs.blankHref = function (link, newWindow = false) {
     throw new Error("must be link");
   }
   let a;
-  if (/Electron/gi.test(window.navigator.userAgent)) {
-    if (newWindow) {
-      const { shell } = require("electron");
-      shell.openExternal(link);
-    } else {
-      window.location.href = link;
-    }
-  } else {
-    a = document.createElement("A");
-    a.style.display = "none";
-    a.href = link;
-    a.setAttribute("target", "_blank");
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }
+  a = document.createElement("A");
+  a.style.display = "none";
+  a.href = link;
+  a.setAttribute("target", "_blank");
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
 GeneralJs.selfHref = function (link) {
