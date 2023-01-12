@@ -221,12 +221,14 @@ ProcessDetailJs.prototype.insertInitBox = function () {
 
 }
 
-ProcessDetailJs.prototype.insertProcessBox = function () {
+ProcessDetailJs.prototype.insertNumbersBox = function () {
   const instance = this;
   const mother = this.mother;
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, selfHref, scrollTo } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
@@ -245,25 +247,48 @@ ProcessDetailJs.prototype.insertProcessBox = function () {
   let textMarginLeft;
   let mobileVisualPaddingValue;
   let button, buttons;
+  let blockBetween;
+  let blockBetweenBottom;
+  let blockHeight;
+  let lineTop;
+  let columnsNumber;
+  let textFileWeight;
+  let whitePadding;
+  let smallSize, smallWeight, smallBetween;
+  let textTextTop;
+  let smallTextTop;
+  let panDom;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop = <%% 52, 52, 44, 36, 6 %%>;
+  paddingTop = <%% 44, 44, 36, 28, 5.4 %%>;
 
-  whiteBottomMargin = <%% 55, 55, 47, 39, 6 %%>;
+  whiteBottomMargin = <%% 46, 46, 38, 30, 5.6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
   innerMargin = <%% 0, 0, 0, 0, 1 %%>;
 
-  arrowBetween = <%% 5, 5, 5, 3, 1 %%>;
-  arrowWidth = <%% 214, 160, 138, 109, 27 %%>;
-  arrowHeight = <%% 100, 90, 80, 60, 11 %%>;
+  textTextTop = <%% (isMac() ? 1 : 3), (isMac() ? 1 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 1), 0 %%>;
+  smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
 
-  textTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
-  textSize = <%% 16, 14, 13, 11, 2.8 %%>;
-  textWeight = <%% 800, 800, 800, 800, 700 %%>;
-  textMarginLeft = <%% 50, 48, 45, 30, 4.5 %%>;
+  textSize = <%% 16, 15, 14, 13, 2.9 %%>;
+  textWeight = <%% 700, 700, 700, 700, 700 %%>;
+  textFileWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  whitePadding = <%% 12, 12, 8, 8, 2.2 %%>;
+
+  blockBetween = <%% 36, 28, 26, 24, 5 %%>;
+  blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
+  blockHeight = <%% 36, 36, 32, 26, 4 %%>;
+
+  lineTop = <%% 18, 18, 16, 13, 1.9 %%>;
+
+  columnsNumber = <%% 4, 3, 3, 3, 2 %%>;
+
+  smallSize = <%% 11, 11, 10, 10, 2.5 %%>;
+  smallWeight = <%% 400, 400, 400, 400, 400 %%>;
+  smallBetween = <%% 5, 5, 4, 4, 0 %%>;
 
   mobileVisualPaddingValue = 0.2;
 
@@ -279,7 +304,7 @@ ProcessDetailJs.prototype.insertProcessBox = function () {
       width: String(100) + '%',
       background: colorChip.white,
       paddingTop: String(paddingTop) + ea,
-      paddingBottom: String(whiteBottomMargin) + ea,
+      paddingBottom: String(whiteBottomMargin - blockBetweenBottom) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },
@@ -310,145 +335,157 @@ ProcessDetailJs.prototype.insertProcessBox = function () {
     }
   });
 
-  buttons = [];
-  for (let i = 0; i < contents.process.length; i++) {
-    button = createNode({
+  this.panNumbers = [];
+  for (let i = 0; i < this.panContents.length; i++) {
+    panDom = createNode({
       mother: grayTong,
-      class: [ buttonsClassName ],
       attribute: {
         index: String(i),
-        key: contents.process[i].key,
-        toggle: "off",
-        children: JSON.stringify(contents.process[i].children.map((obj) => { return obj.key })),
-      },
-      event: {
-        mouseenter: function (e) {
-          e.stopPropagation();
-          e.preventDefault();
-
-          const toggle = this.getAttribute("toggle");
-          if (toggle === "off") {
-            this.children[1].style.color = colorChip.green;
-          } else {
-            this.children[1].style.color = colorChip.green;
-          }
-
-        },
-        mouseleave: function (e) {
-          e.stopPropagation();
-          e.preventDefault();
-
-          const toggle = this.getAttribute("toggle");
-          if (toggle === "off") {
-            this.children[1].style.color = colorChip.black;
-          } else {
-            this.children[1].style.color = colorChip.black;
-          }
-
-        },
-        click: function (e) {
-          e.stopPropagation();
-          const index = Number(this.getAttribute("index"));
-          const children = JSON.parse(this.getAttribute("children"));
-          scrollTo(window, instance.panList.find((dom) => {
-            return children.includes(dom.getAttribute("key"));
-          }), instance.mother.naviHeight * 2, true);
-          this.children[1].style.color = colorChip.black;
-        }
+        key: this.panContents[i].key,
       },
       style: {
         display: "inline-flex",
         position: "relative",
-        width: desktop ? "calc(calc(100% - " + String(arrowBetween * (contents.process.length - 1)) + ea + ") / " + String(contents.process.length) + ")" : "calc(calc(100% - " + String(arrowBetween * (3 - 1)) + ea + ") / " + String(3) + ")",
-        marginBottom: desktop ? "" : String(arrowBetween) + ea,
-        height: String(arrowHeight) + ea,
-        justifyContent: "center",
+        width: "calc(calc(100% - " + String(blockBetween * (columnsNumber - 1)) + ea + ") / " + String(columnsNumber) + ")",
+        height: String(blockHeight) + ea,
+        marginRight: String((i % columnsNumber !== columnsNumber - 1) ? blockBetween : 0) + ea,
+        marginBottom: String(blockBetweenBottom) + ea,
+        justifyContent: "start",
         alignItems: "center",
-        textAlign: "center",
-        cursor: "pointer",
-        transition: "all 0.1s ease",
+        flexDirection: "row",
       },
       children: [
         {
-          mode: "svg",
-          source: desktop ? svgMaker.processArrow(arrowWidth, arrowHeight, (i % 2 === 0 ? colorChip.gray2 : colorChip.gray0)) : svgMaker.processArrow(arrowWidth, arrowHeight, (i % 2 === 0 ? colorChip.gray2 : colorChip.gray0)),
           style: {
             position: "absolute",
-            top: String(0),
+            top: String(0) + ea,
             left: String(0),
-            width: String(arrowWidth) + ea,
-            height: String(arrowHeight) + ea,
+            height: String(lineTop) + ea,
+            borderBottom: "1px solid " + colorChip.gray3,
+            width: withOut(0, ea),
           }
         },
         {
-          event: {
-            selectstart: function (e) {
-              e.preventDefault();
-            }
-          },
-          text: contents.process[i].title,
+          text: this.panContents[i].title,
           style: {
-            display: "inline-block",
             position: "relative",
-            top: String(textTop) + ea,
+            top: String(textTextTop) + ea,
             fontSize: String(textSize) + ea,
             fontWeight: String(textWeight),
             color: colorChip.black,
-            marginLeft: String(textMarginLeft) + ea,
+            background: colorChip.white,
+            paddingRight: String(whitePadding) + ea,
           }
-        }
+        },
+        {
+          style: {
+            right: String(0),
+            position: "absolute",
+            display: "inline-flex",
+            alignItems: "end",
+            justifyContent: "start",
+            flexDirection: "row",
+            background: colorChip.white,
+            paddingLeft: String(whitePadding) + ea,
+          },
+          children: [
+            {
+              attribute: {
+                value: String(0),
+              },
+              text: "0 file",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(textSize) + ea,
+                fontWeight: String(textFileWeight),
+                fontFamily: "graphik",
+                color: colorChip.green,
+                fontStyle: "italic",
+                marginRight: String(smallBetween) + ea,
+                background: colorChip.white,
+              }
+            },
+            {
+              attribute: {
+                date: "0000-00-00",
+              },
+              text: big ? "최신 업로드 0000-00-00" : "00-00-00",
+              style: {
+                display: desktop ? "inline-block" : "none",
+                position: "relative",
+                top: String(smallTextTop) + ea,
+                fontSize: String(smallSize) + ea,
+                fontWeight: String(smallWeight),
+                color: colorChip.green,
+                background: colorChip.white,
+              }
+            },
+          ]
+        },
       ]
     });
-    buttons.push(button);
+    this.panNumbers.push(panDom);
   }
-  this.buttons = buttons;
+}
 
-  if (mobile) {
-    createNode({
-      mother: grayTong,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: desktop ? "calc(calc(100% - " + String(arrowBetween * (contents.process.length - 1)) + ea + ") / " + String(contents.process.length) + ")" : "calc(calc(calc(100% - " + String(arrowBetween * (3 - 1)) + ea + ") / " + String(3) + ") * 2)",
-        marginBottom: desktop ? "" : String(arrowBetween) + ea,
-        height: String(arrowHeight) + ea,
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        cursor: "pointer",
-      },
-      children: [
-        {
-          mode: "svg",
-          source: svgMaker.processArrow(51, arrowHeight, colorChip.gray0),
-          style: {
-            position: "absolute",
-            top: String(0),
-            left: String(0),
-            width: String(51) + ea,
-            height: String(arrowHeight) + ea,
-            opacity: String(0.9),
-          }
-        },
-        {
-          event: {
-            selectstart: function (e) {
-              e.preventDefault();
-            }
-          },
-          text: "현장 완료",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(textTop) + ea,
-            fontSize: String(textSize) + ea,
-            fontWeight: String(textWeight),
-            color: colorChip.black,
-            marginLeft: String(1) + ea,
-          }
+ProcessDetailJs.prototype.reloadNumbers = function (itemList) {
+  const instance = this;
+  const mother = this.mother;
+  const { ea, baseTong, media } = this;
+  const { dateToString } = GeneralJs;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  let keyArr;
+  let keyTong;
+  let keyOptionArr;
+  let targets, target;
+  let filteredItems;
+
+  targets = this.panNumbers;
+
+  keyArr = itemList.map((obj) => { return obj.key });
+  keyTong = {};
+  for (let key of keyArr) {
+    if (keyTong[key] === undefined) {
+      keyTong[key] = [];
+    }
+    keyTong[key].push(key);
+  }
+
+  keyOptionArr = [];
+  for (let key in keyTong) {
+    keyOptionArr.push({
+      key,
+      number: keyTong[key].length,
+    })
+  }
+
+  for (let { key, number } of keyOptionArr) {
+    target = targets.find((dom) => { return dom.getAttribute("key") === key });
+    if (target !== undefined) {
+
+      if (number === 1 || number === 0) {
+        target.children[2].firstChild.textContent = String(number) + " file";
+      } else {
+        target.children[2].firstChild.textContent = String(number) + " files";
+      }
+      target.children[2].firstChild.setAttribute("value", String(number));
+
+      filteredItems = itemList.filter((obj) => { return obj.key === key });
+      if (filteredItems.length > 0) {
+        filteredItems.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        target.children[2].lastChild.setAttribute("date", dateToString(filteredItems[0].date));
+        if (big) {
+          target.children[2].lastChild.textContent = "최신 업로드 " + dateToString(filteredItems[0].date);
+        } else {
+          target.children[2].lastChild.textContent = dateToString(filteredItems[0].date).slice(2);
         }
-      ]
-    });
+      }
+
+    }
   }
 
 }
@@ -3097,6 +3134,8 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
     motherMaxNumber = motherMatrix.reduce((acc, curr) => { return (acc >= curr ? acc : curr) }, 0);
     transparentItemsMatrix = motherMatrix.map((num) => { return Math.abs(motherMaxNumber - num) });
+
+    this.reloadNumbers(itemList);
 
     this.itemList = [];
     this.reloadGreenButtons();
@@ -7081,6 +7120,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     this.targetDrive = "/" + this.designer.desid + "/" + this.project.proid;
     this.panList = [];
     this.itemList = [];
+    this.panNumbers = [];
     this.nowUploading = false;
 
     await this.mother.ghostDesignerLaunching({
@@ -7106,7 +7146,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             }
           } else {
             instance.insertInitBox();
-            instance.insertProcessBox();
+            instance.insertNumbersBox();
             instance.insertUploadBox();
             instance.insertControlBox();
             if (mobile) {
