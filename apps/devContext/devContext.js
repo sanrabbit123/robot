@@ -135,10 +135,18 @@ DevContext.prototype.launching = async function () {
     //   console.log(whereQuery, updateQuery);
     // }
 
+    const hungul = new ParsingHangul();
+    const documents = new ReadDocuments();
+    const rawTargetFolder = process.cwd() + "/temp/docxTarget";
+    const entire = (await fileSystem("readDir", [ rawTargetFolder ])).filter((str) => { return !/^\./.test(str) });
+    let proid, exe;
 
+
+    await documents.readFiles(entire.map((str) => { return `${rawTargetFolder}/${str}` }));
 
     
     
+
 
 
     /*

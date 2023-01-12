@@ -52,6 +52,40 @@ ReadDocuments.prototype.readDocx = async function (fileName) {
   }
 }
 
+ReadDocuments.prototype.readDoc = async function (fileName) {
+  const instance = this;
+  const { moduleDir, stat } = this;
+  const readDoc = require(moduleDir + "/readDoc.js");
+  try {
+    const raw = await stat(fileName);
+    const text = await readDoc(fileName);
+    let result;
+
+    result = {
+      name: fileName.split("/")[fileName.split("/").length - 1],
+      type: "doc",
+      exe: fileName.split("/")[fileName.split("/").length - 1].split(".")[1],
+      size: {
+        bytes: raw.size,
+        kb: raw.size / 1024,
+        mb: (raw.size / 1024) / 1024,
+      },
+      date: {
+        birth: raw.birthtime,
+        last: {
+          access: raw.atime,
+          modification: raw.mtime,
+        }
+      },
+      body: text
+    };
+
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 ReadDocuments.prototype.readPptx = async function (fileName) {
   const instance = this;
   const { moduleDir, stat } = this;
@@ -89,12 +123,19 @@ ReadDocuments.prototype.readPptx = async function (fileName) {
 ReadDocuments.prototype.readPdf = async function (fileName) {
   const instance = this;
   const { moduleDir, stat } = this;
+  const { shellExec, uniqueValue, fileSystem } = this.mother;
   const readPdf = require(moduleDir + "/readPdf.js");
   try {
     const raw = await stat(fileName);
-    const meta = await readPdf(fileName);
-    const { text, info, numpages } = meta;
-    let result;
+    const tempFileName = `${process.cwd()}/temp/__pdftotext__${uniqueValue("hex")}`;
+    let result, text;
+    try {
+      await shellExec("pdftotext", [ "-q", fileName, tempFileName ]);
+      text = await fileSystem(`readString`, [ tempFileName ]);
+      await shellExec("rm", [ `-rf`, tempFileName ]);
+    } catch {
+      text = "";
+    }
 
     result = {
       name: fileName.split("/")[fileName.split("/").length - 1],
@@ -113,18 +154,6 @@ ReadDocuments.prototype.readPdf = async function (fileName) {
         }
       },
       body: text,
-      info: {
-        version: info.PDFFormatVersion,
-        isAcroFormPresent: info.IsAcroFormPresent,
-        isXFAPresent: info.IsXFAPresent,
-        creator: info.Creator,
-        producer: info.Producer,
-        numberOfPages: numpages,
-        date: {
-          create: info.CreationDate,
-          modification: info.ModDate,
-        }
-      }
     };
 
     return result;
@@ -197,6 +226,66 @@ ReadDocuments.prototype.readXlsx = async function (fileName, sheetsName = null) 
     };
 
     return result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ReadDocuments.prototype.readFile = async function (filePath) {
+  if (typeof filePath !== "string") {
+    throw new Error("invalid input");
+  }
+
+  const instance = this;
+  try {
+    let fileName, exe;
+
+    fileName = filePath.split("/")[filePath.split("/").length - 1];
+    exe = fileName.split(".")[fileName.split(".").length - 1].trim().toLowerCase();
+
+    if (exe === "docx") {
+      return this.readDocx(filePath);
+    } else if (exe === "doc") {
+      return this.readDoc(filePath);
+    } else if (exe === "pptx") {
+      return this.readPptx(filePath);
+    } else if (exe === "pdf") {
+      return this.readPdf(filePath);
+    } else if (exe === "hwp") {
+      return this.readHwp(filePath);
+    } else if (exe === "xlsx") {
+      return this.readXlsx(filePath);
+    } else {
+      return null;
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ReadDocuments.prototype.readFiles = async function (fileArr) {
+  if (!Array.isArray(fileArr)) {
+    throw new Error("invalid input");
+  }
+  if (!fileArr.every((str) => { return (typeof str === "string") })) {
+    throw new Error("invalid input 2");
+  }
+
+  const instance = this;
+  try {
+    let resultArr;
+    let obj;
+
+    resultArr = [];
+
+    for (let str of fileArr) {
+      obj = await this.readFile(str);
+      resultArr.push(obj);
+    }
+
+    return resultArr;
+
   } catch (e) {
     console.log(e);
   }
