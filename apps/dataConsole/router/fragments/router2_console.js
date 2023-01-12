@@ -3182,13 +3182,13 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         cliidArr = result.matrix.filter((i) => { return i !== emptyCliid; });
         cliidArr = cliidArr.map((id) => { return { cliid: id }; });
         if (cliidArr.length !== 0) {
-          clients = await back.getClientsByQuery({ $or: cliidArr }, { selfMongo: instance.mongo });
+          clients = await back.getClientsByQuery({ $or: cliidArr }, { selfMongo: instance.mongo, withTools: true });
         } else {
           clients = new SearchArray();
         }
         result.matrix = result.matrix.map((id) => {
           let client;
-          client = clients.find(id);
+          client = clients.search(id);
           if (client !== undefined && client !== null) {
             return { name: client.name, cliid: client.cliid };
           } else {

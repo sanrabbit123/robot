@@ -3906,13 +3906,13 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         cliidArr = result.matrix.filter((i) => { return i !== emptyCliid; });
         cliidArr = cliidArr.map((id) => { return { cliid: id }; });
         if (cliidArr.length !== 0) {
-          clients = await back.getClientsByQuery({ $or: cliidArr }, { selfMongo: instance.mongo });
+          clients = await back.getClientsByQuery({ $or: cliidArr }, { selfMongo: instance.mongo, withTools: true });
         } else {
           clients = new SearchArray();
         }
         result.matrix = result.matrix.map((id) => {
           let client;
-          client = clients.find(id);
+          client = clients.search(id);
           if (client !== undefined && client !== null) {
             return { name: client.name, cliid: client.cliid };
           } else {
@@ -6465,6 +6465,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       "Jini": "강해진",
       "KB": "이큰별",
       "Pepper": "임지민",
+      "대기": "-",
     };
     try {
       const selfMongo = MONGOC;
@@ -6735,7 +6736,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
         } else {
           let thisProject;
           thisProject = projects.find((o) => { return o.cliid === obj.cliid });
-          if (thisProject !== undefined) {
+          if (thisProject !== undefined && thisProject !== null) {
             return (thisProject.proposal.detail.map((o) => { return o.desid }).map((desid) => { return designers.find((d) => { return d.desid === desid }).designer }).join(" / "))
           } else {
             return '-';
@@ -6815,7 +6816,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
           return "-";
         } else {
           const thisProject = projects.find((o) => { return o.cliid === obj.cliid });
-          if (thisProject === undefined) {
+          if (thisProject === undefined || thisProject === null) {
             return 'X';
           } else {
             if (thisProject.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf()) {
@@ -7043,7 +7044,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       await errorLog("cx dashboard update done");
 
     } catch (e) {
-      errorLog("Console 서버 문제 생김 (rou_post_cxDashboardSync): " + err.message).catch((err) => { console.log(err) });
+      errorLog("Console 서버 문제 생김 (rou_post_cxDashboardSync): " + e.message).catch((err) => { console.log(err) });
     }
   }
   let obj = {};
