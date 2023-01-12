@@ -49,12 +49,13 @@ const ReadDocuments = require(APP_PATH + "/readDocuments/readDocuments.js");
 const DevContext = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
-  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo } = this.mother;
   this.MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   this.MONGOPYTHONC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
   this.MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
   this.MONGOLOGC = new mongo(mongotestinfo, { useUnifiedTopology: true });
+  this.MONGOSECONDC = new mongo(mongosecondinfo, { useUnifiedTopology: true });
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = `${process.cwd()}/apps/devContext`;
 }
@@ -135,18 +136,77 @@ DevContext.prototype.launching = async function () {
     //   console.log(whereQuery, updateQuery);
     // }
 
-    const hungul = new ParsingHangul();
-    const documents = new ReadDocuments();
-    const rawTargetFolder = process.cwd() + "/temp/docxTarget";
-    const entire = (await fileSystem("readDir", [ rawTargetFolder ])).filter((str) => { return !/^\./.test(str) });
-    let proid, exe;
+
+    await this.MONGOSECONDC.connect();
+
+    const selfMongo = this.MONGOSECONDC;
+    const selfCoreMongo = this.MONGOC;
+    // const documents = new ReadDocuments();
+    // const rawTargetFolder = process.cwd() + "/temp/docxTarget";
+    const collection = "designerRawContents";
+    // const entire = (await fileSystem("readDir", [ rawTargetFolder ])).filter((str) => { return !/^\./.test(str) });
+    // let rawTargets;
+    // let proid, exe;
+    // let thisProject;
+    // let desid, cliid;
+    // let whereQuery, updateQuery;
+    // let createJson;
+    // let tempRows;
+
+    // rawTargets = await documents.readFiles(entire.map((str) => { return `${rawTargetFolder}/${str}` }));
+
+    // for (let { name, date: { birth: thisDate }, type, body } of rawTargets) {
+    //   [ proid, exe ] = name.split(".");
+    //   proid = proid.trim();
+    //   exe = exe.trim();
+
+    //   thisProject = await back.getProjectById(proid, { selfMongo: selfCoreMongo });
+
+    //   desid = thisProject.desid;
+    //   cliid = thisProject.cliid;
+
+    //   whereQuery = { proid };
+    //   updateQuery = {};
+
+    //   createJson = {
+    //     proid,
+    //     desid,
+    //     cliid,
+    //     date: thisDate,
+    //     contents: { type, body }
+    //   };
+
+    //   updateQuery["desid"] = desid;
+    //   updateQuery["cliid"] = cliid;
+    //   updateQuery["date"] = thisDate;
+    //   updateQuery["contents.type"] = type;
+    //   updateQuery["contents.body"] = body;
+
+    //   tempRows = await back.mongoRead(collection, whereQuery, { selfMongo });
+    //   if (tempRows.length === 0) {
+    //     await back.mongoCreate(collection, createJson, { selfMongo });
+    //   } else {
+    //     await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+    //   }
+    //   console.log(whereQuery);
+
+    // }
 
 
-    await documents.readFiles(entire.map((str) => { return `${rawTargetFolder}/${str}` }));
+    const bodyRows = await back.mongoRead(collection, {}, { selfMongo });
+    const allProjects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo: selfCoreMongo });
+
+
+    console.log(allProjects.length);
+    console.log(bodyRows.length);
+
+
 
     
-    
 
+
+
+    await this.MONGOSECONDC.close();
 
 
     /*
