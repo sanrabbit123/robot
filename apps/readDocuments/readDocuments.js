@@ -52,6 +52,40 @@ ReadDocuments.prototype.readDocx = async function (fileName) {
   }
 }
 
+ReadDocuments.prototype.readPptx = async function (fileName) {
+  const instance = this;
+  const { moduleDir, stat } = this;
+  const readPptx = require(moduleDir + "/readPptx.js");
+  try {
+    const raw = await stat(fileName);
+    const text = await readPptx(fileName);
+    let result;
+
+    result = {
+      name: fileName.split("/")[fileName.split("/").length - 1],
+      type: "pptx",
+      exe: fileName.split("/")[fileName.split("/").length - 1].split(".")[1],
+      size: {
+        bytes: raw.size,
+        kb: raw.size / 1024,
+        mb: (raw.size / 1024) / 1024,
+      },
+      date: {
+        birth: raw.birthtime,
+        last: {
+          access: raw.atime,
+          modification: raw.mtime,
+        }
+      },
+      body: text
+    };
+
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 ReadDocuments.prototype.readPdf = async function (fileName) {
   const instance = this;
   const { moduleDir, stat } = this;
