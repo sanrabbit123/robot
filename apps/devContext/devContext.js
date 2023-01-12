@@ -193,21 +193,44 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-    const bodyRows = await back.mongoRead(collection, {}, { selfMongo });
-    const allProjects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo: selfCoreMongo });
+    // const bodyRows = await back.mongoRead(collection, {}, { selfMongo });
+    // const allProjects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo: selfCoreMongo });
+    // const targetProjects = allProjects.filter((project) => {
+    //   return project.process.contract.remain.date.valueOf() > (new Date(2000, 0, 1)).valueOf()
+    // })
+    // const allClients = await back.getClientsByQuery({}, { selfMongo: selfCoreMongo });
+    // const allDesigners = await back.getDesignersByQuery({}, { selfMongo: selfCoreMongo });
+    // let proidArr0, proidArr1;
+    // let targetProids;
+    // let filteredProjects;
+    // let nameArr;
+
+    // proidArr0 = bodyRows.map((obj) => { return obj.proid });
+    // proidArr1 = targetProjects.map((obj) => { return obj.proid });
+
+    // targetProids = proidArr1.filter((proid) => { return !proidArr0.includes(proid) })
+
+    // filteredProjects = targetProjects.filter((project) => { return targetProids.includes(project.proid) })
+
+    // nameArr = [];
+    // for (let { proid, cliid, desid } of filteredProjects) {
+    //   nameArr.push([
+    //     allClients.find((client) => { return client.cliid === cliid }).name,
+    //     allDesigners.find((designer) => { return designer.desid === desid }).designer,
+    //     proid,
+    //   ]);
+    // }
+
+    // console.log(nameArr);
+
+    // await this.MONGOSECONDC.close();
 
 
-    console.log(allProjects.length);
-    console.log(bodyRows.length);
+
 
 
 
     
-
-
-
-    await this.MONGOSECONDC.close();
-
 
     /*
 
