@@ -6320,7 +6320,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       await errorLog("cx dashboard update done");
 
     } catch (e) {
-      errorLog("Console 서버 문제 생김 (rou_post_cxDashboardSync): " + err.message).catch((err) => { console.log(err) });
+      errorLog("Console 서버 문제 생김 (rou_post_cxDashboardSync): " + e.message).catch((err) => { console.log(err) });
     }
   }
   let obj = {};
