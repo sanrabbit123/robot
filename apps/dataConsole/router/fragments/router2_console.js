@@ -6012,7 +6012,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
         } else {
           let thisProject;
           thisProject = projects.find((o) => { return o.cliid === obj.cliid });
-          if (thisProject !== undefined) {
+          if (thisProject !== undefined && thisProject !== null) {
             return (thisProject.proposal.detail.map((o) => { return o.desid }).map((desid) => { return designers.find((d) => { return d.desid === desid }).designer }).join(" / "))
           } else {
             return '-';
@@ -6092,7 +6092,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
           return "-";
         } else {
           const thisProject = projects.find((o) => { return o.cliid === obj.cliid });
-          if (thisProject === undefined) {
+          if (thisProject === undefined || thisProject === null) {
             return 'X';
           } else {
             if (thisProject.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf()) {

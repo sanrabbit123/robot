@@ -695,11 +695,7 @@ const withToolsArr = function (Projects) {
     }
     return result;
   }
-
-  Projects.prototype.find = function (proid) {
-    return this.search(proid);
-  }
-
+  
   Projects.prototype.searchByCliid = function (cliid, isContract = false) {
     if (cliid === undefined) {
       throw new Error("must be cliid");
