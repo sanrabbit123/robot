@@ -5144,6 +5144,7 @@ DataPatch.prototype.projectMap = function () {
     let endEvent;
     let originalValue;
     let dropCase;
+    let completeCase;
 
     originalValue = input.value;
 
@@ -5152,8 +5153,9 @@ DataPatch.prototype.projectMap = function () {
       let finalValue;
       let items;
 
-      items = [ '대기', '진행중', '완료', '홀딩' ];
+      items = [ '대기', '진행중', '홀딩' ];
       dropCase = [ '드랍' ];
+      completeCase = [ '완료' ];
 
       if (items.includes(rawValue)) {
         finalValue = rawValue;
