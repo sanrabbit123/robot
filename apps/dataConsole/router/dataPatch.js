@@ -5160,7 +5160,38 @@ DataPatch.prototype.projectMap = function () {
       if (items.includes(rawValue)) {
         finalValue = rawValue;
       } else {
-        finalValue = originalValue;
+        if (dropCase.includes(rawValue)) {
+
+          
+          
+
+
+
+
+
+
+
+          finalValue = originalValue;
+
+
+        } else if (dropCase.includes(rawValue)) {
+
+
+
+
+
+
+
+
+
+
+
+          finalValue = originalValue;
+
+
+        } else {
+          finalValue = originalValue;
+        }
       }
 
       if (finalValue === "홀딩" || finalValue === "드랍") {
