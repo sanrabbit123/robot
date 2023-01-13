@@ -5143,6 +5143,7 @@ DataPatch.prototype.projectMap = function () {
     let inputArr, length;
     let endEvent;
     let originalValue;
+    let dropCase;
 
     originalValue = input.value;
 
@@ -5151,7 +5152,9 @@ DataPatch.prototype.projectMap = function () {
       let finalValue;
       let items;
 
-      items = [ '대기', '진행중', '완료', '홀딩', '드랍' ];
+      items = [ '대기', '진행중', '완료', '홀딩' ];
+      dropCase = [ '드랍' ];
+
       if (items.includes(rawValue)) {
         finalValue = rawValue;
       } else {

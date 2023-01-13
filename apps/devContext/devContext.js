@@ -137,21 +137,25 @@ DevContext.prototype.launching = async function () {
     // }
 
 
+
+
+
+
     await this.MONGOSECONDC.connect();
 
     const selfMongo = this.MONGOSECONDC;
     const selfCoreMongo = this.MONGOC;
-    // const documents = new ReadDocuments();
-    // const rawTargetFolder = process.cwd() + "/temp/docxTarget";
+    const documents = new ReadDocuments();
+    const rawTargetFolder = process.cwd() + "/temp/docxTarget";
     const collection = "designerRawContents";
-    // const entire = (await fileSystem("readDir", [ rawTargetFolder ])).filter((str) => { return !/^\./.test(str) });
-    // let rawTargets;
-    // let proid, exe;
-    // let thisProject;
-    // let desid, cliid;
-    // let whereQuery, updateQuery;
-    // let createJson;
-    // let tempRows;
+    const entire = (await fileSystem("readDir", [ rawTargetFolder ])).filter((str) => { return !/^\./.test(str) });
+    let rawTargets;
+    let proid, exe;
+    let thisProject;
+    let desid, cliid;
+    let whereQuery, updateQuery;
+    let createJson;
+    let tempRows;
 
     // rawTargets = await documents.readFiles(entire.map((str) => { return `${rawTargetFolder}/${str}` }));
 
@@ -193,17 +197,42 @@ DevContext.prototype.launching = async function () {
     // }
 
 
+
+
+    /*
+
+    0. 정산 관련 케이스 연구 관련 계획표 짜기
+    1. 프로젝트 드랍 처리시 정산 묻는 로직 추가
+    2. da 콘솔 로딩 속도 너무 느림 개선
+    3. 고객 관리 새로운 콘솔 설계 (현재 시트를 대신할)
+    3. 디자이너글 업로드시 db 저장 로직 추가
+    4. 디자이너글 홈리에종에서 업로드시 db 저장 로직 추가
+    5. 디자이너글 재검색, 동기화
+    6. 디자이너글 긁어 모으기 작업
+
+
+    정산(Da) => Sa => Ca => 디자이너 콘솔 => Co
+
+
+    */
+
+
+
     // const bodyRows = await back.mongoRead(collection, {}, { selfMongo });
     // const allProjects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo: selfCoreMongo });
     // const targetProjects = allProjects.filter((project) => {
     //   return project.process.contract.remain.date.valueOf() > (new Date(2000, 0, 1)).valueOf()
-    // })
+    // }).filter((project) => {
+    //   return project.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf()
+    // });
     // const allClients = await back.getClientsByQuery({}, { selfMongo: selfCoreMongo });
     // const allDesigners = await back.getDesignersByQuery({}, { selfMongo: selfCoreMongo });
+    // const allContentsArr = await back.getContentsArrByQuery({}, { selfMongo: selfCoreMongo });
     // let proidArr0, proidArr1;
     // let targetProids;
     // let filteredProjects;
     // let nameArr;
+    // let targets;
 
     // proidArr0 = bodyRows.map((obj) => { return obj.proid });
     // proidArr1 = targetProjects.map((obj) => { return obj.proid });
@@ -221,7 +250,14 @@ DevContext.prototype.launching = async function () {
     //   ]);
     // }
 
-    // console.log(nameArr);
+    // targets = nameArr.filter(([ client, designer, proid ]) => { return  allContentsArr.map((obj) => { return obj.proid }).filter((str) => { return str !== '' }).includes(proid) });
+
+    // console.log(targets.length);
+    // console.log(nameArr.length);
+    
+
+
+    
 
     // await this.MONGOSECONDC.close();
 
@@ -236,11 +272,13 @@ DevContext.prototype.launching = async function () {
 
     
     await this.MONGOPYTHONC.connect();
+    await this.MONGOCONSOLEC.connect();
 
     const emptyDate = new Date(1800, 0, 1);
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
     const collection = "generalBill";
     const selfMongo = this.MONGOC;
+    const selfConsoleMongo = this.MONGOCONSOLEC;
     const selfPythonMongo = this.MONGOPYTHONC;
     const motherSheetsFolderId = "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF";
     let projects, projectsRaw;
@@ -296,6 +334,7 @@ DevContext.prototype.launching = async function () {
     let reduceFunction;
     let allClients;
     let requestsTong;
+    let projectHistory, projectHistories;
 
     projectsRaw = await back.getProjectsByQuery({}, { selfMongo });
     projectsRawNormal = projectsRaw.toNormal();
@@ -309,6 +348,8 @@ DevContext.prototype.launching = async function () {
 
     bills = await back.mongoRead(collection, {}, { selfMongo: selfPythonMongo });
 
+    projectHistories = await back.mongoRead("projectHistory", {}, { selfMongo: selfConsoleMongo });
+
     doneTong = [];
     willTong = [];
     totalTong = [];
@@ -321,12 +362,14 @@ DevContext.prototype.launching = async function () {
       thisBill = bills.find((obj) => {
         return ((obj.links.proid === proid) && (obj.links.method === (service.online ? "online" : "offline")))
       });
+      projectHistory = projectHistories.find((obj) => { return obj.proid === proid });
 
       project.client = thisClient;
       project.designer = thisDesigner;
       project.bill = thisBill;
       project.name = thisClient.name;
       project.phone = thisClient.phone;
+      project.manager = projectHistory.manager;
     }
 
     projects = projects.filter((obj) => {
@@ -334,6 +377,7 @@ DevContext.prototype.launching = async function () {
     });
 
     await this.MONGOPYTHONC.close();
+    await this.MONGOCONSOLEC.close();
 
     matrix = [ [
       "아이디",
@@ -349,6 +393,7 @@ DevContext.prototype.launching = async function () {
       "문의일",
       "서비스 유형",
       "상태",
+      "담당자",
     ] ];
 
     for (let project of projects) {
@@ -508,6 +553,7 @@ DevContext.prototype.launching = async function () {
           dateToString(timeline),
           serviceParsing(project.service),
           project.process.status,
+          project.manager,
         ]);
         totalTong.push({
           proid: project.proid,
@@ -545,6 +591,7 @@ DevContext.prototype.launching = async function () {
             dateToString(timeline),
             serviceParsing(project.service),
             project.process.status,
+            project.manager,
           ]);
           totalTong.push({
             proid: project.proid,
@@ -585,6 +632,7 @@ DevContext.prototype.launching = async function () {
           dateToString(timeline),
           serviceParsing(project.service),
           project.process.status,
+          project.manager,
         ]);
         totalTong.push({
           proid: project.proid,
