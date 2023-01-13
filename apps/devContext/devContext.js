@@ -141,125 +141,59 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await this.MONGOSECONDC.connect();
-
-    const selfMongo = this.MONGOSECONDC;
-    const selfCoreMongo = this.MONGOC;
-    const documents = new ReadDocuments();
-    const rawTargetFolder = process.cwd() + "/temp/docxTarget";
-    const collection = "designerRawContents";
-    const entire = (await fileSystem("readDir", [ rawTargetFolder ])).filter((str) => { return !/^\./.test(str) });
-    let rawTargets;
-    let proid, exe;
-    let thisProject;
-    let desid, cliid;
-    let whereQuery, updateQuery;
-    let createJson;
-    let tempRows;
-
-    // rawTargets = await documents.readFiles(entire.map((str) => { return `${rawTargetFolder}/${str}` }));
-
-    // for (let { name, date: { birth: thisDate }, type, body } of rawTargets) {
-    //   [ proid, exe ] = name.split(".");
-    //   proid = proid.trim();
-    //   exe = exe.trim();
-
-    //   thisProject = await back.getProjectById(proid, { selfMongo: selfCoreMongo });
-
-    //   desid = thisProject.desid;
-    //   cliid = thisProject.cliid;
-
-    //   whereQuery = { proid };
-    //   updateQuery = {};
-
-    //   createJson = {
-    //     proid,
-    //     desid,
-    //     cliid,
-    //     date: thisDate,
-    //     contents: { type, body }
-    //   };
-
-    //   updateQuery["desid"] = desid;
-    //   updateQuery["cliid"] = cliid;
-    //   updateQuery["date"] = thisDate;
-    //   updateQuery["contents.type"] = type;
-    //   updateQuery["contents.body"] = body;
-
-    //   tempRows = await back.mongoRead(collection, whereQuery, { selfMongo });
-    //   if (tempRows.length === 0) {
-    //     await back.mongoCreate(collection, createJson, { selfMongo });
-    //   } else {
-    //     await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-    //   }
-    //   console.log(whereQuery);
-
-    // }
-
-
 
 
     /*
 
-    0. 정산 관련 케이스 연구 관련 계획표 짜기
-    1. 프로젝트 드랍 처리시 정산 묻는 로직 추가
-    2. da 콘솔 로딩 속도 너무 느림 개선
-    3. 고객 관리 새로운 콘솔 설계 (현재 시트를 대신할)
-    3. 디자이너글 업로드시 db 저장 로직 추가
-    4. 디자이너글 홈리에종에서 업로드시 db 저장 로직 추가
-    5. 디자이너글 재검색, 동기화
-    6. 디자이너글 긁어 모으기 작업
+    // missing raw contents view
 
+    await this.MONGOSECONDC.connect();
 
-    정산(Da) => Sa => Ca => 디자이너 콘솔 => Co
+    const selfMongo = this.MONGOSECONDC;
+    const selfCoreMongo = this.MONGOC;
+    const collection = "designerRawContents";
+    const bodyRows = await back.mongoRead(collection, {}, { selfMongo });
+    const allProjects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo: selfCoreMongo });
+    const targetProjects = allProjects.filter((project) => {
+      return project.process.contract.remain.date.valueOf() > (new Date(2000, 0, 1)).valueOf()
+    }).filter((project) => {
+      return project.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf()
+    });
+    const allClients = await back.getClientsByQuery({}, { selfMongo: selfCoreMongo });
+    const allDesigners = await back.getDesignersByQuery({}, { selfMongo: selfCoreMongo });
+    let proidArr0, proidArr1;
+    let targetProids;
+    let filteredProjects;
+    let nameArr;
 
+    proidArr0 = bodyRows.map((obj) => { return obj.proid });
+    proidArr1 = targetProjects.map((obj) => { return obj.proid });
+
+    targetProids = proidArr1.filter((proid) => { return !proidArr0.includes(proid) })
+
+    filteredProjects = targetProjects.filter((project) => { return targetProids.includes(project.proid) }).filter((project) => {
+      return project.process.status.value !== "드랍";
+    })
+
+    nameArr = [];
+    for (let { proid, cliid, desid } of filteredProjects) {
+      nameArr.push([
+        allClients.find((client) => { return client.cliid === cliid }).name,
+        allDesigners.find((designer) => { return designer.desid === desid }).designer,
+        proid,
+        cliid,
+        desid,
+      ]);
+    }
+
+    console.log(nameArr.length);
+
+    await this.MONGOSECONDC.close();
 
     */
 
 
 
-    // const bodyRows = await back.mongoRead(collection, {}, { selfMongo });
-    // const allProjects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo: selfCoreMongo });
-    // const targetProjects = allProjects.filter((project) => {
-    //   return project.process.contract.remain.date.valueOf() > (new Date(2000, 0, 1)).valueOf()
-    // }).filter((project) => {
-    //   return project.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf()
-    // });
-    // const allClients = await back.getClientsByQuery({}, { selfMongo: selfCoreMongo });
-    // const allDesigners = await back.getDesignersByQuery({}, { selfMongo: selfCoreMongo });
-    // const allContentsArr = await back.getContentsArrByQuery({}, { selfMongo: selfCoreMongo });
-    // let proidArr0, proidArr1;
-    // let targetProids;
-    // let filteredProjects;
-    // let nameArr;
-    // let targets;
-
-    // proidArr0 = bodyRows.map((obj) => { return obj.proid });
-    // proidArr1 = targetProjects.map((obj) => { return obj.proid });
-
-    // targetProids = proidArr1.filter((proid) => { return !proidArr0.includes(proid) })
-
-    // filteredProjects = targetProjects.filter((project) => { return targetProids.includes(project.proid) })
-
-    // nameArr = [];
-    // for (let { proid, cliid, desid } of filteredProjects) {
-    //   nameArr.push([
-    //     allClients.find((client) => { return client.cliid === cliid }).name,
-    //     allDesigners.find((designer) => { return designer.desid === desid }).designer,
-    //     proid,
-    //   ]);
-    // }
-
-    // targets = nameArr.filter(([ client, designer, proid ]) => { return  allContentsArr.map((obj) => { return obj.proid }).filter((str) => { return str !== '' }).includes(proid) });
-
-    // console.log(targets.length);
-    // console.log(nameArr.length);
-    
-
-
-    
-
-    // await this.MONGOSECONDC.close();
 
 
 
