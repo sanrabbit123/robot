@@ -4,6 +4,7 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   const ImageReader = require(process.cwd() + "/apps/imageReader/imageReader.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
+  const ReadDocuments = require(`${process.cwd()}/apps/readDocuments/readDocuments.js`);
 
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -17,6 +18,7 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.imageReader = new ImageReader(this.mother, this.back, this.address);
   this.hangul = new ParsingHangul();
   this.drive = new GoogleDrive();
+  this.documents = new ReadDocuments();
 
   this.staticConst = process.env.HOME + "/static";
   this.folderConst = this.staticConst + "/photo/designer";
@@ -792,9 +794,11 @@ TransferRouter.prototype.rou_post_generalFileUpload = function () {
 
 TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson, requestSystem } = this.mother;
   const { folderConst } = this;
+  const address = this.address;
   const drive = this.drive;
+  const documents = this.documents;
   let obj;
   obj = {};
   obj.link = [ "/middleCommentsBinary" ];
@@ -817,17 +821,31 @@ TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
             const parentsId = "1YuWV37wnTqe68nYqnn_oyu5j_p6SPuAe";
             let execName, file;
             let newFileName;
+            let contents;
+            let tongContents;
+            let body;
 
+            tongContents = [];
             for (let key in files) {
               file = files[key];
               execName = file.originalFilename.split(".")[file.originalFilename.split(".").length - 1];
               newFileName = `${folderConst}/${desid}/${proid}/${designer}_${client}_디자이너글_${proid}.${execName}`;
               await shellExec(`mv ${shellLink(file.filepath)} ${newFileName};`);
-              await drive.upload_inPython(parentsId, newFileName);
-              await shellExec(`rm -rf ${newFileName};`);
+              contents = await documents.readFile(newFileName);
+              if (contents === null) {
+                tongContents.push('');
+              } else {
+                body = contents.body;
+                tongContents.push(body);
+                drive.upload_inPython(parentsId, newFileName).then(() => {
+                  return shellExec(`rm -rf ${newFileName};`);
+                }).catch((err) => {
+                  errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary): " + err.message).catch((e) => { console.log(e); });
+                })
+              }
             }
 
-            res.send(JSON.stringify({ message: "done" }));
+            res.send(JSON.stringify(tongContents));
 
           } else {
             errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary): " + e.message).catch((e) => { console.log(e); });

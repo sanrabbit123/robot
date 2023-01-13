@@ -1313,6 +1313,9 @@ ProcessDetailJs.prototype.insertControlBox = function () {
                   loading = instance.mother.grayLoading();
 
                   res = await ajaxForm(formData, BRIDGEHOST + "/middleCommentsBinary");
+
+                  console.log(res);
+
                   await ajaxJson({ whereQuery: { proid }, updateQuery: { "contents.raw.portfolio.status": "원본 수집 완료" } }, SECONDHOST + "/updateProject");
                   await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
 
@@ -5693,6 +5696,9 @@ ProcessDetailJs.prototype.returnButtonList = function () {
                     loading = instance.mother.grayLoading();
 
                     res = await ajaxForm(formData, BRIDGEHOST + "/middleCommentsBinary");
+
+                    console.log(res);
+
                     await ajaxJson({ whereQuery: { proid }, updateQuery: { "contents.raw.portfolio.status": "원본 수집 완료" } }, SECONDHOST + "/updateProject");
                     await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
 

@@ -49,6 +49,7 @@ ReadDocuments.prototype.readDocx = async function (fileName) {
     return result;
   } catch (e) {
     console.log(e);
+    return null;
   }
 }
 
@@ -83,6 +84,7 @@ ReadDocuments.prototype.readDoc = async function (fileName) {
     return result;
   } catch (e) {
     console.log(e);
+    return null;
   }
 }
 
@@ -117,6 +119,7 @@ ReadDocuments.prototype.readPptx = async function (fileName) {
     return result;
   } catch (e) {
     console.log(e);
+    return null;
   }
 }
 
@@ -160,6 +163,7 @@ ReadDocuments.prototype.readPdf = async function (fileName) {
 
   } catch (e) {
     console.log(e);
+    return null;
   }
 }
 
@@ -194,6 +198,7 @@ ReadDocuments.prototype.readHwp = async function (fileName) {
     return result;
   } catch (e) {
     console.log(e);
+    return null;
   }
 }
 
@@ -228,6 +233,7 @@ ReadDocuments.prototype.readXlsx = async function (fileName, sheetsName = null) 
     return result;
   } catch (e) {
     console.log(e);
+    return null;
   }
 }
 
@@ -261,6 +267,7 @@ ReadDocuments.prototype.readFile = async function (filePath) {
 
   } catch (e) {
     console.log(e);
+    return null;
   }
 }
 
