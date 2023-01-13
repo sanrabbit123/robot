@@ -734,6 +734,89 @@ SecondRouter.prototype.rou_post_projectDesignerMemo = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_projectDesignerRaw = function () {
+  const instance = this;
+  const back = this.back;
+  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/projectDesignerRaw" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.mode === undefined || req.body.desid === undefined || req.body.cliid === undefined || req.body.proid === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const collection = "designerRawContents";
+      const { mode, desid, proid, cliid } = req.body;
+      let resultObj;
+      let rows;
+      let json;
+      let body, type;
+
+      if (typeof req.body.body === "string") {
+        body = req.body.body;
+      } else {
+        body = "";
+      }
+
+      if (typeof req.body.type === "string") {
+        type = req.body.type;
+      } else {
+        type = "docx";
+      }
+
+      json = {
+        proid,
+        desid,
+        cliid,
+        date: new Date(),
+        contents: {
+          body,
+          type,
+        }
+      };
+
+      if (mode === "get") {
+
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        if (rows.length === 0) {
+          await back.mongoCreate(collection, json, { selfMongo });
+          resultObj = json;
+        } else {
+          resultObj = rows[0];
+        }
+
+      } else if (mode === "update") {
+
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        if (rows.length === 0) {
+          await back.mongoCreate(collection, json, { selfMongo });
+        } else {
+          await back.mongoUpdate(collection, [ { proid }, { "contents.body": body, "contents.type": type, "date": new Date() } ], { selfMongo });
+        }
+
+        resultObj = { message: "success" };
+      }
+
+      res.send(JSON.stringify(resultObj));
+
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_projectDesignerRaw): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_voice = function () {
   const instance = this;
   const back = this.back;

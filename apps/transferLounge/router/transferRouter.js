@@ -817,13 +817,14 @@ TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
       form.parse(req, async function (err, fields, files) {
         try {
           if (!err) {
-            const { proid, designer, client, desid } = fields;
+            const { proid, designer, client, desid, cliid } = fields;
             const parentsId = "1YuWV37wnTqe68nYqnn_oyu5j_p6SPuAe";
             let execName, file;
             let newFileName;
             let contents;
             let tongContents;
             let body;
+            let type;
 
             tongContents = [];
             for (let key in files) {
@@ -836,12 +837,20 @@ TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
                 tongContents.push('');
               } else {
                 body = contents.body;
+                type = contents.type;
                 tongContents.push(body);
-                drive.upload_inPython(parentsId, newFileName).then(() => {
+                
+                requestSystem("https://" + address.secondinfo.host + ":3000/projectDesignerRaw", { mode: "update", proid, cliid, desid, body, type }, { headers: {
+                  "Content-Type": "application/json",
+                  "origin": address.transinfo.host,
+                } }).then(() => {
+                  return drive.upload_inPython(parentsId, newFileName);
+                }).then(() => {
                   return shellExec(`rm -rf ${newFileName};`);
                 }).catch((err) => {
                   errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary): " + err.message).catch((e) => { console.log(e); });
-                })
+                });
+
               }
             }
 
