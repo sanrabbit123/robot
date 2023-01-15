@@ -1216,303 +1216,11 @@ ProcessDetailJs.prototype.insertControlBox = function () {
   }
 
   designerRawContentsUpload = (project) => {
-    return async function (e) {
-      try {
-        const commentPopupClassName = "commentPopupClassName";
-        const proid = instance.project.proid;
-        const designer = instance.designer.designer;
-        const client = instance.client.name;
-        const self = this;
-        const zIndex = String(2);
-        let cancelBack, whitePrompt, hiddenInput;
-        let whitePromptWidth;
-        let whitePromptPaddingTop;
-        let whitePromptPaddingBottom;
-        let whitePromptTitleHeight;
-        let whitePromptButtonHeight;
-        let whitePromptTitleSize;
-        let whitePromptTitleWeight;
-        let whitePromptTitleBoldWeight;
-        let whitePromptTitleLineHeight;
-        let whitePromptTitleTextTop;
-        let whitePromptButtonBetween;
-        let whitePromptButtonTextTop;
-        let whitePromptButtonWidth;
-        let whitePromptButtonSize;
-        let whitePromptButtonWeight;
-
-        whitePromptWidth = <%% 600, 600, 520, 450, 86 %%>;
-        whitePromptPaddingTop = <%% 12, 12, 10, 8, 2 %%>;
-        whitePromptPaddingBottom = <%% 40, 40, 36, 32, 5.6 %%>;
-        whitePromptTitleHeight = <%% 110, 110, 100, 80, 16 %%>;
-        whitePromptButtonHeight = <%% 35, 35, 32, 30, 6 %%>;
-
-        whitePromptTitleSize = <%% 20, 20, 18, 16, 3.2 %%>;
-        whitePromptTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
-        whitePromptTitleBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
-        whitePromptTitleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-        whitePromptTitleTextTop = <%% 0, 0, 0, 0, 0 %%>;
-
-        whitePromptButtonBetween = <%% 6, 6, 5, 4, 1 %%>;
-        whitePromptButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
-        whitePromptButtonWidth = <%% 125, 125, 125, 115, 24 %%>;
-
-        whitePromptButtonSize = <%% 13, 13, 12, 11, 2.5 %%>;
-        whitePromptButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
-
-        cancelBack = createNode({
-          mother: totalContents,
-          class: [ commentPopupClassName ],
-          event: {
-            click: (e) => {
-              e.stopPropagation();
-              removeByClass(commentPopupClassName);
-            }
-          },
-          style: {
-            top: String(0),
-            left: String(0),
-            width: withOut(0, ea),
-            height: withOut(0, ea),
-            background: colorChip.black,
-            opacity: String(0.2),
-            position: "fixed",
-            zIndex: String(zIndex),
-          }
-        });
-
-        hiddenInput = createNode({
-          mother: totalContents,
-          class: [ commentPopupClassName ],
-          mode: "input",
-          attribute: {
-            type: "file",
-            name: "comments",
-            proid,
-            designer,
-            client
-          },
-          event: {
-            change: async function (e) {
-              try {
-                const proid = this.getAttribute("proid");
-                const designer = this.getAttribute("designer");
-                const client = this.getAttribute("client");
-                let thisFile, formData, res, loading;
-                if ([ ...this.files ].length === 1) {
-                  thisFile = [ ...this.files ][0];
-
-                  formData = new FormData();
-                  formData.enctype = "multipart/form-data";
-                  formData.append("proid", proid);
-                  formData.append("designer", designer);
-                  formData.append("client", client);
-                  formData.append("comments", thisFile);
-                  formData.append("desid", instance.designer.desid);
-                  formData.append("cliid", instance.client.cliid);
-
-                  loading = instance.mother.grayLoading();
-
-                  [ res ] = equalJson(await ajaxForm(formData, BRIDGEHOST + "/middleCommentsBinary"));
-                  await ajaxJson({ whereQuery: { proid }, updateQuery: { "contents.raw.portfolio.status": "원본 수집 완료" } }, SECONDHOST + "/updateProject");
-                  await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
-
-                  loading.remove();
-
-                  window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
-
-                  cancelBack.click();
-                }
-              } catch (e) {
-                console.log(e);
-              }
-            }
-          },
-          style: {
-            display: "none",
-            opacity: String(0),
-            position: "absolute",
-          }
-        });
-
-        whitePrompt = createNode({
-          mother: totalContents,
-          class: [ commentPopupClassName ],
-          event: {
-            click: (e) => { e.stopPropagation() }
-          },
-          style: {
-            display: "inline-block",
-            position: "fixed",
-            borderRadius: String(5) + "px",
-            background: colorChip.white,
-            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            width: String(whitePromptWidth) + ea,
-            left: withOut(50, whitePromptWidth / 2, ea),
-            top: withOut(50, ((whitePromptPaddingTop + whitePromptPaddingBottom + whitePromptTitleHeight + whitePromptButtonHeight) / 2), ea),
-            paddingTop: String(whitePromptPaddingTop) + ea,
-            paddingBottom: String(whitePromptPaddingBottom) + ea,
-            zIndex: String(zIndex),
-            animation: "fadeuplite 0.3s ease",
-          },
-          children: [
-            {
-              style: {
-                display: "flex",
-                position: "relative",
-                height: String(whitePromptTitleHeight) + ea,
-                justifyContent: "center",
-                alignItems: "center",
-                textAlign: "center",
-                flexDirection: "column",
-              },
-              children: [
-                {
-                  text: "디자이너 글 탬플릿을 활용하여\n디자이너 글을 <b%워드 / pdf / 한글 등의 파일로 업로드%b> 해주세요!",
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    top: String(whitePromptTitleTextTop) + ea,
-                    fontSize: String(whitePromptTitleSize) + ea,
-                    fontWeight: String(whitePromptTitleWeight),
-                    color: colorChip.black,
-                    lineHeight: String(whitePromptTitleLineHeight),
-                  },
-                  bold: {
-                    fontSize: String(whitePromptTitleSize) + ea,
-                    fontWeight: String(whitePromptTitleBoldWeight),
-                    color: colorChip.black,
-                  }
-                }
-              ]
-            },
-            {
-              style: {
-                display: "flex",
-                position: "relative",
-                height: String(whitePromptButtonHeight) + ea,
-                justifyContent: "center",
-                alignItems: "center",
-                textAlign: "center",
-                flexDirection: "row",
-              },
-              children: [
-                {
-                  event: {
-                    click: async function (e) {
-                      try {
-                        const loading = instance.mother.whiteProgressLoading();
-                        await downloadFile(S3HOST + "/photo/sample/commentsSample.docx", null, loading.progress.firstChild);
-                        loading.remove();
-                      } catch (e) {
-                        console.log(e);
-                      }
-                    }
-                  },
-                  style: {
-                    display: "inline-flex",
-                    width: String(whitePromptButtonWidth) + ea,
-                    height: String(whitePromptButtonHeight) + ea,
-                    borderRadius: String(5) + "px",
-                    background: colorChip.gradientGray,
-                    marginRight: String(whitePromptButtonBetween) + ea,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    textAlign: "center",
-                    cursor: "pointer",
-                  },
-                  children: [
-                    {
-                      text: "디자이너 글 탬플릿",
-                      style: {
-                        position: "relative",
-                        top: String(whitePromptButtonTextTop) + ea,
-                        fontSize: String(whitePromptButtonSize) + ea,
-                        fontWeight: String(whitePromptButtonWeight),
-                        color: colorChip.white,
-                      }
-                    }
-                  ]
-                },
-                {
-                  event: {
-                    click: function (e) {
-                      const targetInput = document.querySelector("input." + commentPopupClassName);
-                      targetInput.click();
-                    }
-                  },
-                  style: {
-                    display: "inline-flex",
-                    width: String(whitePromptButtonWidth) + ea,
-                    height: String(whitePromptButtonHeight) + ea,
-                    borderRadius: String(5) + "px",
-                    background: colorChip.gradientGreen,
-                    marginRight: String(whitePromptButtonBetween) + ea,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    textAlign: "center",
-                    cursor: "pointer",
-                  },
-                  children: [
-                    {
-                      text: "디자이너 글 업로드",
-                      style: {
-                        position: "relative",
-                        top: String(whitePromptButtonTextTop) + ea,
-                        fontSize: String(whitePromptButtonSize) + ea,
-                        fontWeight: String(whitePromptButtonWeight),
-                        color: colorChip.white,
-                      }
-                    }
-                  ]
-                },
-                {
-                  event: {
-                    click: instance.insertRawContentsBox(),
-                  },
-                  style: {
-                    display: "inline-flex",
-                    width: String(whitePromptButtonWidth) + ea,
-                    height: String(whitePromptButtonHeight) + ea,
-                    borderRadius: String(5) + "px",
-                    background: colorChip.gradientGreen,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    textAlign: "center",
-                    cursor: "pointer",
-                  },
-                  children: [
-                    {
-                      text: "디자이너 글 확인",
-                      style: {
-                        position: "relative",
-                        top: String(whitePromptButtonTextTop) + ea,
-                        fontSize: String(whitePromptButtonSize) + ea,
-                        fontWeight: String(whitePromptButtonWeight),
-                        color: colorChip.white,
-                      }
-                    }
-                  ]
-                },
-              ]
-            }
-          ]
-        });
-
-      } catch (e) {
-        console.log(e);
-      }
-    }
+    return instance.insertRawUploadBox();
   }
 
   designerRawContentsView = (project) => {
-    return async function (e) {
-      try {
-        // dev
-      } catch (e) {
-        console.log(e);
-      }
-    }
+    return instance.insertRawContentsBox();
   }
 
   if (manyBig) {
@@ -1646,13 +1354,13 @@ ProcessDetailJs.prototype.insertControlBox = function () {
               },
               click: designerRawContentsUpload,
             },
-            // {
-            //   title: "디자이너 글 보기",
-            //   active: (project) => {
-            //     return (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
-            //   },
-            //   click: designerRawContentsView,
-            // },
+            {
+              title: "디자이너 글 확인",
+              active: (project) => {
+                return (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
+              },
+              click: designerRawContentsView,
+            },
           ]
         },
       ]
@@ -1747,13 +1455,13 @@ ProcessDetailJs.prototype.insertControlBox = function () {
               },
               click: designerRawContentsUpload,
             },
-            // {
-            //   title: "디자이너 글 보기",
-            //   active: (project) => {
-            //     return (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
-            //   },
-            //   click: designerRawContentsView,
-            // },
+            {
+              title: "디자이너 글 확인",
+              active: (project) => {
+                return (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status));
+              },
+              click: designerRawContentsView,
+            },
           ]
         },
       ]
@@ -5620,297 +5328,27 @@ ProcessDetailJs.prototype.returnButtonList = function () {
     }
   });
 
-  buttonList.push({
-    name: "디자이너 글 업로드",
-    item: false,
-    deactive: (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status)),
-    reverse: true,
-    event: function () {
-      return async function (e) {
-        try {
-          const commentPopupClassName = "commentPopupClassName";
-          const proid = instance.project.proid;
-          const designer = instance.designer.designer;
-          const client = instance.client.name;
-          const self = this;
-          const zIndex = String(2);
-          let cancelBack, whitePrompt, hiddenInput;
-          let whitePromptWidth;
-          let whitePromptPaddingTop;
-          let whitePromptPaddingBottom;
-          let whitePromptTitleHeight;
-          let whitePromptButtonHeight;
-          let whitePromptTitleSize;
-          let whitePromptTitleWeight;
-          let whitePromptTitleBoldWeight;
-          let whitePromptTitleLineHeight;
-          let whitePromptTitleTextTop;
-          let whitePromptButtonBetween;
-          let whitePromptButtonTextTop;
-          let whitePromptButtonWidth;
-          let whitePromptButtonSize;
-          let whitePromptButtonWeight;
-
-          whitePromptWidth = <%% 600, 600, 520, 450, 86 %%>;
-          whitePromptPaddingTop = <%% 12, 12, 10, 8, 2 %%>;
-          whitePromptPaddingBottom = <%% 40, 40, 36, 32, 5.6 %%>;
-          whitePromptTitleHeight = <%% 110, 110, 100, 80, 16 %%>;
-          whitePromptButtonHeight = <%% 35, 35, 32, 30, 6 %%>;
-
-          whitePromptTitleSize = <%% 20, 20, 18, 16, 3.2 %%>;
-          whitePromptTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
-          whitePromptTitleBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
-          whitePromptTitleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
-          whitePromptTitleTextTop = <%% 0, 0, 0, 0, 0 %%>;
-
-          whitePromptButtonBetween = <%% 6, 6, 5, 4, 1 %%>;
-          whitePromptButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
-          whitePromptButtonWidth = <%% 125, 125, 125, 115, 24 %%>;
-
-          whitePromptButtonSize = <%% 13, 13, 12, 11, 2.5 %%>;
-          whitePromptButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
-
-          cancelBack = createNode({
-            mother: totalContents,
-            class: [ commentPopupClassName ],
-            event: {
-              click: (e) => {
-                e.stopPropagation();
-                removeByClass(commentPopupClassName);
-              }
-            },
-            style: {
-              top: String(0),
-              left: String(0),
-              width: withOut(0, ea),
-              height: withOut(0, ea),
-              background: colorChip.black,
-              opacity: String(0.2),
-              position: "fixed",
-              zIndex: String(zIndex),
-            }
-          });
-
-          hiddenInput = createNode({
-            mother: totalContents,
-            class: [ commentPopupClassName ],
-            mode: "input",
-            attribute: {
-              type: "file",
-              name: "comments",
-              proid,
-              designer,
-              client
-            },
-            event: {
-              change: async function (e) {
-                try {
-                  const proid = this.getAttribute("proid");
-                  const designer = this.getAttribute("designer");
-                  const client = this.getAttribute("client");
-                  let thisFile, formData, res, loading;
-                  if ([ ...this.files ].length === 1) {
-                    thisFile = [ ...this.files ][0];
-
-                    formData = new FormData();
-                    formData.enctype = "multipart/form-data";
-                    formData.append("proid", proid);
-                    formData.append("designer", designer);
-                    formData.append("client", client);
-                    formData.append("comments", thisFile);
-                    formData.append("desid", instance.designer.desid);
-                    formData.append("cliid", instance.client.cliid);
-
-                    loading = instance.mother.grayLoading();
-
-                    [ res ] = equalJson(await ajaxForm(formData, BRIDGEHOST + "/middleCommentsBinary"));
-                    await ajaxJson({ whereQuery: { proid }, updateQuery: { "contents.raw.portfolio.status": "원본 수집 완료" } }, SECONDHOST + "/updateProject");
-                    await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
-
-                    loading.remove();
-
-                    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
-
-                    cancelBack.click();
-                  }
-                } catch (e) {
-                  console.log(e);
-                }
-              }
-            },
-            style: {
-              display: "none",
-              opacity: String(0),
-              position: "absolute",
-            }
-          });
-
-          whitePrompt = createNode({
-            mother: totalContents,
-            class: [ commentPopupClassName ],
-            event: {
-              click: (e) => { e.stopPropagation() }
-            },
-            style: {
-              display: "inline-block",
-              position: "fixed",
-              borderRadius: String(5) + "px",
-              background: colorChip.white,
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              width: String(whitePromptWidth) + ea,
-              left: withOut(50, whitePromptWidth / 2, ea),
-              top: withOut(50, ((whitePromptPaddingTop + whitePromptPaddingBottom + whitePromptTitleHeight + whitePromptButtonHeight) / 2), ea),
-              paddingTop: String(whitePromptPaddingTop) + ea,
-              paddingBottom: String(whitePromptPaddingBottom) + ea,
-              zIndex: String(zIndex),
-              animation: "fadeuplite 0.3s ease",
-            },
-            children: [
-              {
-                style: {
-                  display: "flex",
-                  position: "relative",
-                  height: String(whitePromptTitleHeight) + ea,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  flexDirection: "column",
-                },
-                children: [
-                  {
-                    text: "디자이너 글 탬플릿을 활용하여\n디자이너 글을 <b%워드 / pdf / 한글 등의 파일로 업로드%b> 해주세요!",
-                    style: {
-                      display: "inline-block",
-                      position: "relative",
-                      top: String(whitePromptTitleTextTop) + ea,
-                      fontSize: String(whitePromptTitleSize) + ea,
-                      fontWeight: String(whitePromptTitleWeight),
-                      color: colorChip.black,
-                      lineHeight: String(whitePromptTitleLineHeight),
-                    },
-                    bold: {
-                      fontSize: String(whitePromptTitleSize) + ea,
-                      fontWeight: String(whitePromptTitleBoldWeight),
-                      color: colorChip.black,
-                    }
-                  }
-                ]
-              },
-              {
-                style: {
-                  display: "flex",
-                  position: "relative",
-                  height: String(whitePromptButtonHeight) + ea,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  flexDirection: "row",
-                },
-                children: [
-                  {
-                    event: {
-                      click: function (e) {
-                        downloadFile(S3HOST + "/photo/sample/commentsSample.docx").catch((err) => {
-                          console.log(err);
-                        });
-                      }
-                    },
-                    style: {
-                      display: "inline-flex",
-                      width: String(whitePromptButtonWidth) + ea,
-                      height: String(whitePromptButtonHeight) + ea,
-                      borderRadius: String(5) + "px",
-                      background: colorChip.gradientGray,
-                      marginRight: String(whitePromptButtonBetween) + ea,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      textAlign: "center",
-                      cursor: "pointer",
-                    },
-                    children: [
-                      {
-                        text: "디자이너 글 탬플릿",
-                        style: {
-                          position: "relative",
-                          top: String(whitePromptButtonTextTop) + ea,
-                          fontSize: String(whitePromptButtonSize) + ea,
-                          fontWeight: String(whitePromptButtonWeight),
-                          color: colorChip.white,
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    event: {
-                      click: function (e) {
-                        const targetInput = document.querySelector("input." + commentPopupClassName);
-                        targetInput.click();
-                      }
-                    },
-                    style: {
-                      display: "inline-flex",
-                      width: String(whitePromptButtonWidth) + ea,
-                      height: String(whitePromptButtonHeight) + ea,
-                      borderRadius: String(5) + "px",
-                      background: colorChip.gradientGreen,
-                      marginRight: String(whitePromptButtonBetween) + ea,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      textAlign: "center",
-                      cursor: "pointer",
-                    },
-                    children: [
-                      {
-                        text: "디자이너 글 업로드",
-                        style: {
-                          position: "relative",
-                          top: String(whitePromptButtonTextTop) + ea,
-                          fontSize: String(whitePromptButtonSize) + ea,
-                          fontWeight: String(whitePromptButtonWeight),
-                          color: colorChip.white,
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    event: {
-                      click: instance.insertRawContentsBox(),
-                    },
-                    style: {
-                      display: "inline-flex",
-                      width: String(whitePromptButtonWidth) + ea,
-                      height: String(whitePromptButtonHeight) + ea,
-                      borderRadius: String(5) + "px",
-                      background: colorChip.gradientGreen,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      textAlign: "center",
-                      cursor: "pointer",
-                    },
-                    children: [
-                      {
-                        text: "디자이너 글 확인",
-                        style: {
-                          position: "relative",
-                          top: String(whitePromptButtonTextTop) + ea,
-                          fontSize: String(whitePromptButtonSize) + ea,
-                          fontWeight: String(whitePromptButtonWeight),
-                          color: colorChip.white,
-                        }
-                      }
-                    ]
-                  },
-                ]
-              }
-            ]
-          });
-
-        } catch (e) {
-          console.log(e);
-        }
+  if (!(/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status))) {
+    buttonList.push({
+      name: "디자이너 글 업로드",
+      item: false,
+      deactive: (/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status)),
+      reverse: true,
+      event: function () {
+        return instance.insertRawUploadBox();
       }
-    }
-  });
+    });
+  } else {
+    buttonList.push({
+      name: "디자이너 글 확인",
+      item: false,
+      deactive: !(/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status)),
+      reverse: true,
+      event: function () {
+        return instance.insertRawContentsBox();
+      }
+    });
+  }
 
   buttonList.push({
     name: "촬영비 카드 결제",
@@ -6276,6 +5714,307 @@ ProcessDetailJs.prototype.reloadGreenButtons = function () {
 
   }
 
+}
+
+ProcessDetailJs.prototype.insertRawUploadBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project, contentsRawInfo, totalContents, requestNumber } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const manyBig = media[0];
+  const generalSmall = !manyBig;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker } = GeneralJs;
+  const blank = "&nbsp;&nbsp;&nbsp;";
+  return async function (e) {
+    try {
+      const commentPopupClassName = "commentPopupClassName";
+      const proid = instance.project.proid;
+      const designer = instance.designer.designer;
+      const client = instance.client.name;
+      const self = this;
+      const zIndex = String(2);
+      const activeUpload = !(/수집 완료/gi.test(instance.project.contents.raw.portfolio.status) || /편집중/gi.test(instance.project.contents.raw.portfolio.status) || /편집 완료/gi.test(instance.project.contents.raw.portfolio.status));
+      const activeConfirm = !activeUpload;
+      let cancelBack, whitePrompt, hiddenInput;
+      let whitePromptWidth;
+      let whitePromptPaddingTop;
+      let whitePromptPaddingBottom;
+      let whitePromptTitleHeight;
+      let whitePromptButtonHeight;
+      let whitePromptTitleSize;
+      let whitePromptTitleWeight;
+      let whitePromptTitleBoldWeight;
+      let whitePromptTitleLineHeight;
+      let whitePromptTitleTextTop;
+      let whitePromptButtonBetween;
+      let whitePromptButtonTextTop;
+      let whitePromptButtonWidth;
+      let whitePromptButtonSize;
+      let whitePromptButtonWeight;
+
+      whitePromptWidth = <%% 600, 600, 520, 450, 86 %%>;
+      whitePromptPaddingTop = <%% 12, 12, 10, 8, 2 %%>;
+      whitePromptPaddingBottom = <%% 40, 40, 36, 32, 5.6 %%>;
+      whitePromptTitleHeight = <%% 110, 110, 100, 80, 16 %%>;
+      whitePromptButtonHeight = <%% 35, 35, 32, 30, 6 %%>;
+
+      whitePromptTitleSize = <%% 20, 20, 18, 16, 3.2 %%>;
+      whitePromptTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
+      whitePromptTitleBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+      whitePromptTitleLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+      whitePromptTitleTextTop = <%% 0, 0, 0, 0, 0 %%>;
+
+      whitePromptButtonBetween = <%% 6, 6, 5, 4, 1 %%>;
+      whitePromptButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+      whitePromptButtonWidth = <%% 125, 125, 125, 115, 24 %%>;
+
+      whitePromptButtonSize = <%% 13, 13, 12, 11, 2.5 %%>;
+      whitePromptButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ commentPopupClassName ],
+        event: {
+          click: (e) => {
+            e.stopPropagation();
+            removeByClass(commentPopupClassName);
+          }
+        },
+        style: {
+          top: String(0),
+          left: String(0),
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          background: colorChip.black,
+          opacity: String(0.2),
+          position: "fixed",
+          zIndex: String(zIndex),
+        }
+      });
+
+      hiddenInput = createNode({
+        mother: totalContents,
+        class: [ commentPopupClassName ],
+        mode: "input",
+        attribute: {
+          type: "file",
+          name: "comments",
+          proid,
+          designer,
+          client
+        },
+        event: {
+          change: async function (e) {
+            try {
+              const proid = this.getAttribute("proid");
+              const designer = this.getAttribute("designer");
+              const client = this.getAttribute("client");
+              let thisFile, formData, res, loading;
+              if ([ ...this.files ].length === 1) {
+                thisFile = [ ...this.files ][0];
+
+                formData = new FormData();
+                formData.enctype = "multipart/form-data";
+                formData.append("proid", proid);
+                formData.append("designer", designer);
+                formData.append("client", client);
+                formData.append("comments", thisFile);
+                formData.append("desid", instance.designer.desid);
+                formData.append("cliid", instance.client.cliid);
+
+                loading = instance.mother.grayLoading();
+
+                [ res ] = equalJson(await ajaxForm(formData, BRIDGEHOST + "/middleCommentsBinary"));
+                await ajaxJson({ whereQuery: { proid }, updateQuery: { "contents.raw.portfolio.status": "원본 수집 완료" } }, SECONDHOST + "/updateProject");
+                await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
+
+                loading.remove();
+
+                window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
+
+                cancelBack.click();
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
+        style: {
+          display: "none",
+          opacity: String(0),
+          position: "absolute",
+        }
+      });
+
+      whitePrompt = createNode({
+        mother: totalContents,
+        class: [ commentPopupClassName ],
+        event: {
+          click: (e) => { e.stopPropagation() }
+        },
+        style: {
+          display: "inline-block",
+          position: "fixed",
+          borderRadius: String(5) + "px",
+          background: colorChip.white,
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          width: String(whitePromptWidth) + ea,
+          left: withOut(50, whitePromptWidth / 2, ea),
+          top: withOut(50, ((whitePromptPaddingTop + whitePromptPaddingBottom + whitePromptTitleHeight + whitePromptButtonHeight) / 2), ea),
+          paddingTop: String(whitePromptPaddingTop) + ea,
+          paddingBottom: String(whitePromptPaddingBottom) + ea,
+          zIndex: String(zIndex),
+          animation: "fadeuplite 0.3s ease",
+        },
+        children: [
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              height: String(whitePromptTitleHeight) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              flexDirection: "column",
+            },
+            children: [
+              {
+                text: "디자이너 글 탬플릿을 활용하여\n디자이너 글을 <b%워드 / pdf / 한글 등의 파일로 업로드%b> 해주세요!",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(whitePromptTitleTextTop) + ea,
+                  fontSize: String(whitePromptTitleSize) + ea,
+                  fontWeight: String(whitePromptTitleWeight),
+                  color: colorChip.black,
+                  lineHeight: String(whitePromptTitleLineHeight),
+                },
+                bold: {
+                  fontSize: String(whitePromptTitleSize) + ea,
+                  fontWeight: String(whitePromptTitleBoldWeight),
+                  color: colorChip.black,
+                }
+              }
+            ]
+          },
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              height: String(whitePromptButtonHeight) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              flexDirection: "row",
+            },
+            children: [
+              {
+                event: {
+                  click: async function (e) {
+                    try {
+                      const loading = instance.mother.whiteProgressLoading();
+                      await downloadFile(S3HOST + "/photo/sample/commentsSample.docx", null, loading.progress.firstChild);
+                      loading.remove();
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                },
+                style: {
+                  display: "inline-flex",
+                  width: String(whitePromptButtonWidth) + ea,
+                  height: String(whitePromptButtonHeight) + ea,
+                  borderRadius: String(5) + "px",
+                  background: colorChip.gradientGray,
+                  marginRight: String(whitePromptButtonBetween) + ea,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  cursor: "pointer",
+                },
+                children: [
+                  {
+                    text: "디자이너 글 탬플릿",
+                    style: {
+                      position: "relative",
+                      top: String(whitePromptButtonTextTop) + ea,
+                      fontSize: String(whitePromptButtonSize) + ea,
+                      fontWeight: String(whitePromptButtonWeight),
+                      color: colorChip.white,
+                    }
+                  }
+                ]
+              },
+              {
+                event: {
+                  click: function (e) {
+                    const targetInput = document.querySelector("input." + commentPopupClassName);
+                    targetInput.click();
+                  }
+                },
+                style: {
+                  display: "inline-flex",
+                  width: String(whitePromptButtonWidth) + ea,
+                  height: String(whitePromptButtonHeight) + ea,
+                  borderRadius: String(5) + "px",
+                  background: activeUpload ? colorChip.gradientGreen : colorChip.gray2,
+                  marginRight: String(whitePromptButtonBetween) + ea,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  cursor: "pointer",
+                },
+                children: [
+                  {
+                    text: "디자이너 글 업로드",
+                    style: {
+                      position: "relative",
+                      top: String(whitePromptButtonTextTop) + ea,
+                      fontSize: String(whitePromptButtonSize) + ea,
+                      fontWeight: String(whitePromptButtonWeight),
+                      color: activeUpload ? colorChip.white : colorChip.deactive,
+                    }
+                  }
+                ]
+              },
+              {
+                event: {
+                  click: instance.insertRawContentsBox(),
+                },
+                style: {
+                  display: "inline-flex",
+                  width: String(whitePromptButtonWidth) + ea,
+                  height: String(whitePromptButtonHeight) + ea,
+                  borderRadius: String(5) + "px",
+                    background: activeUpload ? colorChip.gray2 : colorChip.gradientGreen,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  cursor: "pointer",
+                },
+                children: [
+                  {
+                    text: "디자이너 글 확인",
+                    style: {
+                      position: "relative",
+                      top: String(whitePromptButtonTextTop) + ea,
+                      fontSize: String(whitePromptButtonSize) + ea,
+                      fontWeight: String(whitePromptButtonWeight),
+                        color: activeUpload ? colorChip.deactive : colorChip.white,
+                    }
+                  }
+                ]
+              },
+            ]
+          }
+        ]
+      });
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 ProcessDetailJs.prototype.insertRawContentsBox = function () {
@@ -7533,6 +7272,13 @@ ProcessDetailJs.prototype.launching = async function (loading) {
           await GeneralJs.downloadFile(this.contentsRawInfo.raw.link, null, loading.progress.firstChild);
           loading.remove();
         }
+      }
+    }
+
+    // raw comments upload
+    if (typeof getObj.raw === "string") {
+      if (getObj.raw === "upload") {
+        instance.insertRawUploadBox().call(document.getElementById("totalcontents"), {});
       }
     }
 
