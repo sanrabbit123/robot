@@ -6286,6 +6286,7 @@ ProcessDetailJs.prototype.insertRawContentsBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const rawCommentPopupClassName = "rawCommentPopupClassName";
+  const rawCommentUpdateTargetClassName = "rawCommentUpdateTargetClassName";
   const zIndex = 4;
   return async function (e) {
     try {
@@ -6310,34 +6311,65 @@ ProcessDetailJs.prototype.insertRawContentsBox = function () {
       let textLineHeight;
       let updatedTextTop;
       let xIconWidth;
+      let rawCommentUpdateEvent;
+      let popupCloseEvent;
 
       whitePromptWidth = instance.standardWidth;
-      whitePromptMarginTop = <%% 50, 50, 48, 40, 10 %%>;
+      whitePromptMarginTop = <%% 50, 50, 45, 40, 10 %%>;
 
       realMargin = <%% 20, 20, 16, 12, 2 %%>;
       grayBlockBetween = <%% 8, 6, 6, 4, 1 %%>;
-      closeButtonHeight = <%% 50, 50, 50, 48, 6 %%>;
+      closeButtonHeight = <%% 50, 50, 45, 40, 9 %%>;
 
       textMargin = <%% 30, 30, 24, 20, 4 %%>;
-      textSize = <%% 14, 14, 14, 14, 14 %%>;
+      textSize = <%% 14, 14, 13, 12, 3.2 %%>;
       textWeight = <%% 400, 400, 400, 400, 400 %%>;
       textLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-      updatedTextTop = <%% -1, -1, -1, 0, 0 %%>;
+      updatedTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
 
-      xIconWidth = <%% 16, 16, 15, 14, 2 %%>;
+      xIconWidth = <%% 16, 16, 14, 13, 3 %%>;
 
       thisRawContents = await ajaxJson({ mode: "get", proid, desid, cliid }, SECONDHOST + "/projectDesignerRaw", { equal: true });
       ({ date, contents: { body } } = thisRawContents);
+
+      rawCommentUpdateEvent = function () {
+        return async function (e) {
+          try {
+            const target = document.querySelector('.' + rawCommentUpdateTargetClassName);
+            let body;
+            let type;
+            let mode;
+            let response;
+            if (target !== null) {
+              mode = "update";
+              type = "web";
+              body = target.value.replace(/[\=\&]/gi, '').trim();
+              response = await ajaxJson({ mode, proid, desid, cliid, body, type }, SECONDHOST + "/projectDesignerRaw");
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      }
+
+      popupCloseEvent = function () {
+        return async function (e) {
+          try {
+            e.stopPropagation();
+            rawCommentUpdateEvent().call(this, e);
+            removeByClass(rawCommentPopupClassName);
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      }
 
       cancelBack = createNode({
         mother: totalContents,
         class: [ rawCommentPopupClassName ],
         event: {
-          click: (e) => {
-            e.stopPropagation();
-            removeByClass(rawCommentPopupClassName);
-          }
+          click: popupCloseEvent(),
         },
         style: {
           top: String(0),
@@ -6414,7 +6446,7 @@ ProcessDetailJs.prototype.insertRawContentsBox = function () {
                 left: String(textMargin) + ea,
                 top: String(updatedTextTop) + ea,
                 position: "relative",
-                fontSize: String(textSize) + ea,
+                fontSize: String(desktop ? textSize : 2.9) + ea,
                 fontWeight: String(500),
                 fontFamily: "graphik",
                 fontStyle: "italic",
@@ -6422,6 +6454,9 @@ ProcessDetailJs.prototype.insertRawContentsBox = function () {
             }
           },
           {
+            event: {
+              click: popupCloseEvent(),
+            },
             style: {
               display: "inline-flex",
               width: String(closeButtonHeight) + ea,
@@ -6467,7 +6502,11 @@ ProcessDetailJs.prototype.insertRawContentsBox = function () {
           },
           child: {
             mode: "textarea",
+            class: [ rawCommentUpdateTargetClassName ],
             text: body,
+            event: {
+              blur: rawCommentUpdateEvent(),
+            },
             style: {
               width: withOut(0),
               height: withOut(0),
