@@ -1468,10 +1468,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
                 },
                 {
                   event: {
-                    click: function (e) {
-                      const targetInput = document.querySelector("input." + commentPopupClassName);
-                      targetInput.click();
-                    }
+                    click: instance.insertRawContentsBox(),
                   },
                   style: {
                     display: "inline-flex",
@@ -1486,7 +1483,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
                   },
                   children: [
                     {
-                      text: "디자이너 글 보기",
+                      text: "디자이너 글 확인",
                       style: {
                         position: "relative",
                         top: String(whitePromptButtonTextTop) + ea,
@@ -5877,10 +5874,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
                   },
                   {
                     event: {
-                      click: function (e) {
-                        const targetInput = document.querySelector("input." + commentPopupClassName);
-                        targetInput.click();
-                      }
+                      click: instance.insertRawContentsBox(),
                     },
                     style: {
                       display: "inline-flex",
@@ -5895,7 +5889,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
                     },
                     children: [
                       {
-                        text: "디자이너 글 보기",
+                        text: "디자이너 글 확인",
                         style: {
                           position: "relative",
                           top: String(whitePromptButtonTextTop) + ea,
@@ -6282,6 +6276,152 @@ ProcessDetailJs.prototype.reloadGreenButtons = function () {
 
   }
 
+}
+
+ProcessDetailJs.prototype.insertRawContentsBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, removeByClass } = GeneralJs;
+  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const rawCommentPopupClassName = "rawCommentPopupClassName";
+  const zIndex = 4;
+  return async function (e) {
+    try {
+      const designer = instance.designer;
+      const client = instance.client;
+      const proid = project.proid;
+      const desid = project.desid;
+      const cliid = project.cliid;
+      let thisRawContents;
+      let date, body;
+      let cancelBack, whitePrompt;
+      let whitePromptWidth;
+      let whitePromptMarginTop;
+      let realBaseTong;
+      let realMargin;
+      let dateCloseTong, contentsTong;
+      let grayBlockBetween;
+      let closeButtonHeight;
+
+      whitePromptWidth = instance.standardWidth;
+      whitePromptMarginTop = <%% 50, 50, 48, 40, 10 %%>;
+
+      realMargin = <%% 20, 20, 16, 12, 2 %%>;
+      grayBlockBetween = <%% 8, 6, 6, 4, 1 %%>;
+      closeButtonHeight = <%% 54, 54, 50, 48, 6 %%>;
+
+      thisRawContents = await ajaxJson({ mode: "get", proid, desid, cliid }, SECONDHOST + "/projectDesignerRaw", { equal: true });
+      ({ date, contents: { body } } = thisRawContents);
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ rawCommentPopupClassName ],
+        event: {
+          click: (e) => {
+            e.stopPropagation();
+            removeByClass(rawCommentPopupClassName);
+          }
+        },
+        style: {
+          top: String(0),
+          left: String(0),
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          background: colorChip.black,
+          opacity: String(0.3),
+          position: "fixed",
+          zIndex: String(zIndex),
+        }
+      });
+
+      whitePrompt = createNode({
+        mother: totalContents,
+        class: [ rawCommentPopupClassName ],
+        event: {
+          click: (e) => { e.stopPropagation() }
+        },
+        style: {
+          display: "inline-flex",
+          position: "fixed",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          borderRadius: String(5) + "px",
+          background: colorChip.white,
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          width: String(whitePromptWidth) + ea,
+          height: "calc(calc(100vh - " + String(instance.naviHeight) + "px" + ") - " + String(whitePromptMarginTop * 2) + ea + ")",
+          left: withOut(50, whitePromptWidth / 2, ea),
+          top: "calc(" + String(instance.naviHeight) + "px" + " + " + String(whitePromptMarginTop) + ea + ")",
+          zIndex: String(zIndex),
+          animation: "fadeuplite 0.3s ease",
+        }
+      });
+
+      realBaseTong = createNode({
+        mother: whitePrompt,
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          width: withOut(realMargin * 2, ea),
+          height: withOut(realMargin * 2, ea),
+        }
+      });
+
+      dateCloseTong = createNode({
+        mother: realBaseTong,
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          width: withOut(0, ea),
+          height: String(closeButtonHeight) + ea,
+          marginBottom: String(grayBlockBetween) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              width: withOut(closeButtonHeight + grayBlockBetween, ea),
+              height: String(closeButtonHeight) + ea,
+              marginRight: String(grayBlockBetween) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray0,
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              width: String(closeButtonHeight) + ea,
+              height: String(closeButtonHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray0,
+            }
+          }
+        ]
+      });
+
+      contentsTong = createNode({
+        mother: realBaseTong,
+        style: {
+          display: "flex",
+          width: withOut(0, ea),
+          height: withOut(closeButtonHeight + grayBlockBetween, ea),
+          borderRadius: String(5) + "px",
+          background: colorChip.gray0,
+        }
+      })
+
+
+
+      
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
