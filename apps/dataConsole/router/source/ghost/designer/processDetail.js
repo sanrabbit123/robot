@@ -6304,13 +6304,28 @@ ProcessDetailJs.prototype.insertRawContentsBox = function () {
       let dateCloseTong, contentsTong;
       let grayBlockBetween;
       let closeButtonHeight;
+      let textMargin;
+      let textSize;
+      let textWeight;
+      let textLineHeight;
+      let updatedTextTop;
+      let xIconWidth;
 
       whitePromptWidth = instance.standardWidth;
       whitePromptMarginTop = <%% 50, 50, 48, 40, 10 %%>;
 
       realMargin = <%% 20, 20, 16, 12, 2 %%>;
       grayBlockBetween = <%% 8, 6, 6, 4, 1 %%>;
-      closeButtonHeight = <%% 54, 54, 50, 48, 6 %%>;
+      closeButtonHeight = <%% 50, 50, 50, 48, 6 %%>;
+
+      textMargin = <%% 30, 30, 24, 20, 4 %%>;
+      textSize = <%% 14, 14, 14, 14, 14 %%>;
+      textWeight = <%% 400, 400, 400, 400, 400 %%>;
+      textLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+
+      updatedTextTop = <%% -1, -1, -1, 0, 0 %%>;
+
+      xIconWidth = <%% 16, 16, 15, 14, 2 %%>;
 
       thisRawContents = await ajaxJson({ mode: "get", proid, desid, cliid }, SECONDHOST + "/projectDesignerRaw", { equal: true });
       ({ date, contents: { body } } = thisRawContents);
@@ -6389,6 +6404,21 @@ ProcessDetailJs.prototype.insertRawContentsBox = function () {
               marginRight: String(grayBlockBetween) + ea,
               borderRadius: String(5) + "px",
               background: colorChip.gray0,
+              alignItems: "center",
+              justifyContent: "start",
+            },
+            child: {
+              text: "Updated : " + dateToString(date, true),
+              style: {
+                display: "inline-block",
+                left: String(textMargin) + ea,
+                top: String(updatedTextTop) + ea,
+                position: "relative",
+                fontSize: String(textSize) + ea,
+                fontWeight: String(500),
+                fontFamily: "graphik",
+                fontStyle: "italic",
+              }
             }
           },
           {
@@ -6398,6 +6428,18 @@ ProcessDetailJs.prototype.insertRawContentsBox = function () {
               height: String(closeButtonHeight) + ea,
               borderRadius: String(5) + "px",
               background: colorChip.gray0,
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+            },
+            child: {
+              mode: "svg",
+              source: svgMaker.closeIcon(colorChip.shadow),
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(xIconWidth) + ea,
+              }
             }
           }
         ]
@@ -6407,16 +6449,42 @@ ProcessDetailJs.prototype.insertRawContentsBox = function () {
         mother: realBaseTong,
         style: {
           display: "flex",
+          position: "relative",
           width: withOut(0, ea),
           height: withOut(closeButtonHeight + grayBlockBetween, ea),
           borderRadius: String(5) + "px",
           background: colorChip.gray0,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        child: {
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(textMargin * 2, ea),
+            height: withOut(textMargin * 2, ea),
+            overflow: "scroll",
+          },
+          child: {
+            mode: "textarea",
+            text: body,
+            style: {
+              width: withOut(0),
+              height: withOut(0),
+              fontSize: String(textSize) + ea,
+              fontWeight: String(textWeight),
+              color: colorChip.black,
+              background: "transparent",
+              border: String(0),
+              outline: String(0),
+              lineHeight: String(textLineHeight),
+            }
+          }
         }
       })
 
-
-
-      
+      contentsTong.firstChild.firstChild.value = body;
+      contentsTong.firstChild.firstChild.focus();
 
     } catch (e) {
       console.log(e);
