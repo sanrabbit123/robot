@@ -1241,7 +1241,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
         let whitePromptButtonSize;
         let whitePromptButtonWeight;
 
-        whitePromptWidth = <%% 600, 600, 520, 450, 82 %%>;
+        whitePromptWidth = <%% 600, 600, 520, 450, 86 %%>;
         whitePromptPaddingTop = <%% 12, 12, 10, 8, 2 %%>;
         whitePromptPaddingBottom = <%% 40, 40, 36, 32, 5.6 %%>;
         whitePromptTitleHeight = <%% 110, 110, 100, 80, 16 %%>;
@@ -1255,7 +1255,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
 
         whitePromptButtonBetween = <%% 6, 6, 5, 4, 1 %%>;
         whitePromptButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
-        whitePromptButtonWidth = <%% 125, 125, 125, 115, 25 %%>;
+        whitePromptButtonWidth = <%% 125, 125, 125, 115, 24 %%>;
 
         whitePromptButtonSize = <%% 13, 13, 12, 11, 2.5 %%>;
         whitePromptButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -1447,6 +1447,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
                     height: String(whitePromptButtonHeight) + ea,
                     borderRadius: String(5) + "px",
                     background: colorChip.gradientGreen,
+                    marginRight: String(whitePromptButtonBetween) + ea,
                     justifyContent: "center",
                     alignItems: "center",
                     textAlign: "center",
@@ -1455,6 +1456,37 @@ ProcessDetailJs.prototype.insertControlBox = function () {
                   children: [
                     {
                       text: "디자이너 글 업로드",
+                      style: {
+                        position: "relative",
+                        top: String(whitePromptButtonTextTop) + ea,
+                        fontSize: String(whitePromptButtonSize) + ea,
+                        fontWeight: String(whitePromptButtonWeight),
+                        color: colorChip.white,
+                      }
+                    }
+                  ]
+                },
+                {
+                  event: {
+                    click: function (e) {
+                      const targetInput = document.querySelector("input." + commentPopupClassName);
+                      targetInput.click();
+                    }
+                  },
+                  style: {
+                    display: "inline-flex",
+                    width: String(whitePromptButtonWidth) + ea,
+                    height: String(whitePromptButtonHeight) + ea,
+                    borderRadius: String(5) + "px",
+                    background: colorChip.gradientGreen,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    cursor: "pointer",
+                  },
+                  children: [
+                    {
+                      text: "디자이너 글 보기",
                       style: {
                         position: "relative",
                         top: String(whitePromptButtonTextTop) + ea,
@@ -5622,7 +5654,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
           let whitePromptButtonSize;
           let whitePromptButtonWeight;
 
-          whitePromptWidth = <%% 600, 600, 520, 450, 82 %%>;
+          whitePromptWidth = <%% 600, 600, 520, 450, 86 %%>;
           whitePromptPaddingTop = <%% 12, 12, 10, 8, 2 %%>;
           whitePromptPaddingBottom = <%% 40, 40, 36, 32, 5.6 %%>;
           whitePromptTitleHeight = <%% 110, 110, 100, 80, 16 %%>;
@@ -5636,7 +5668,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
 
           whitePromptButtonBetween = <%% 6, 6, 5, 4, 1 %%>;
           whitePromptButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
-          whitePromptButtonWidth = <%% 125, 125, 125, 115, 25 %%>;
+          whitePromptButtonWidth = <%% 125, 125, 125, 115, 24 %%>;
 
           whitePromptButtonSize = <%% 13, 13, 12, 11, 2.5 %%>;
           whitePromptButtonWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -5824,6 +5856,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
                       height: String(whitePromptButtonHeight) + ea,
                       borderRadius: String(5) + "px",
                       background: colorChip.gradientGreen,
+                      marginRight: String(whitePromptButtonBetween) + ea,
                       justifyContent: "center",
                       alignItems: "center",
                       textAlign: "center",
@@ -5832,6 +5865,37 @@ ProcessDetailJs.prototype.returnButtonList = function () {
                     children: [
                       {
                         text: "디자이너 글 업로드",
+                        style: {
+                          position: "relative",
+                          top: String(whitePromptButtonTextTop) + ea,
+                          fontSize: String(whitePromptButtonSize) + ea,
+                          fontWeight: String(whitePromptButtonWeight),
+                          color: colorChip.white,
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    event: {
+                      click: function (e) {
+                        const targetInput = document.querySelector("input." + commentPopupClassName);
+                        targetInput.click();
+                      }
+                    },
+                    style: {
+                      display: "inline-flex",
+                      width: String(whitePromptButtonWidth) + ea,
+                      height: String(whitePromptButtonHeight) + ea,
+                      borderRadius: String(5) + "px",
+                      background: colorChip.gradientGreen,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      textAlign: "center",
+                      cursor: "pointer",
+                    },
+                    children: [
+                      {
+                        text: "디자이너 글 보기",
                         style: {
                           position: "relative",
                           top: String(whitePromptButtonTextTop) + ea,
