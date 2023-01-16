@@ -140,56 +140,15 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const html = new HtmlMaker();
-    // await human.sendMail({
-    //   to: "uragenbooks@gmail.com",
-    //   subject: "안녕",
-    //   body: await html.returnHtml(async () => {
-    //     try {
-    //       let base;
-    //       let greenBackground;
-    //       let basicMargin;
-    //       let totalHeight;
 
-    //       basicMargin = 20;
-    //       totalHeight = 800;
-            
-    //       greenBackground = createNode({
-    //         mother: totalContents,
-    //         style: {
-    //           background: colorChip.green,
-    //           display: "block",
-    //           position: "relative",
-    //           width: withOut(basicMargin, ea),
-    //           height: String(totalHeight - basicMargin) + ea,
-    //           paddingTop: String(basicMargin) + ea,
-    //           paddingLeft: String(basicMargin) + ea,
-    //         }
-    //       });
+    
 
-    //       base = createNode({
-    //         mother: greenBackground,
-    //         style: {
-    //           display: "block",
-    //           position: "relative",
-    //           width: withOut(basicMargin * 1, ea),
-    //           height: withOut(basicMargin * 1, ea),
-    //           background: colorChip.white,
-    //           borderRadius: String(8) + ea,
-    //           boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-    //         }
-    //       });
 
-    //     } catch (e) {
-    //       console.log(e);
-    //     }
-    //   })
-    // })
+
 
 
 
     
-
 
 
 
@@ -4715,8 +4674,8 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "김동혁";
-    // const amount = 2128500;
+    // const name = "김혜경";
+    // const amount = 3748800;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,

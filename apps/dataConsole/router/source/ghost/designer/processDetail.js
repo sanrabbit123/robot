@@ -7114,6 +7114,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     let requestNumber;
     let service;
     let key;
+    let contentsArr;
 
     if (getObj.proid === undefined) {
       window.alert("잘못된 접근입니다!");
@@ -7162,6 +7163,8 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     }
     [ designer ] = designers;
     this.designer = designer;
+
+    contentsArr = await ajaxJson({ whereQuery: { proid: project.proid } }, SECONDHOST + "/getContents", { equal: true });
 
     this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
     this.panContents = this.contents.map((obj) => { return obj.children }).flat();

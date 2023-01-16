@@ -7527,7 +7527,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         }).then((rows) => {
 
           if (detailUpdate.length > 0) {
-            if (rows.length > 0) {
+            if (rows.length > 0 && rows[0].desid === "") {
               newProid = rows[0].proid;
               return back.updateProject([ { proid: newProid }, updateQuery ], { selfMongo: instance.mongo });
             } else {
