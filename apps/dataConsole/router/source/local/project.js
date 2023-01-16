@@ -9251,7 +9251,7 @@ ProjectJs.prototype.rawCommentUpload = function (proid) {
 
                 [ res ] = equalJson(await ajaxForm(formData, BRIDGEHOST + "/middleCommentsBinary"));
                 await ajaxJson({ whereQuery: { proid }, updateQuery: { "contents.raw.portfolio.status": "원본 수집 완료" } }, SECONDHOST + "/updateProject");
-                await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!\n" + BACKHOST.replace(/\:3000/gi, '') + "/project__query__proid__equal__" + proid + "__amper__raw__equal__contents", channel: "#301_console" }, BACKHOST + "/sendSlack");
+                await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!(홈리에종 콘솔)\n" + BACKHOST.replace(/\:3000/gi, '') + "/project__query__proid__equal__" + proid + "__amper__raw__equal__contents", channel: "#301_console" }, BACKHOST + "/sendSlack");
 
                 loading.remove();
 
