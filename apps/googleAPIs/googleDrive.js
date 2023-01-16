@@ -206,4 +206,18 @@ GoogleDrive.prototype.parsingId = function (link) {
   return target;
 }
 
+GoogleDrive.prototype.listFiles_inPython = async function (folder_id) {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, sleep, pythonExecute } = this.mother;
+  if (/^http/.test(folder_id) || /google/gi.test(folder_id)) {
+    folder_id = this.parsingId(folder_id);
+  }
+  try {
+    const files = await pythonExecute(this.pythonApp, [ "drive", "readFolderFiles" ], { targetId: folder_id });
+    return files;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = GoogleDrive;

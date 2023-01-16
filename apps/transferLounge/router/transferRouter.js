@@ -831,6 +831,15 @@ TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
               file = files[key];
               execName = file.originalFilename.split(".")[file.originalFilename.split(".").length - 1];
               newFileName = `${folderConst}/${desid}/${proid}/${designer}_${client}_디자이너글_${proid}.${execName}`;
+
+              if (!(await fileSystem(`exist`, [ `${folderConst}/${desid}` ]))) {
+                await shellExec(`mkdir`, [ `${folderConst}/${desid}` ]);
+              }
+
+              if (!(await fileSystem(`exist`, [ `${folderConst}/${desid}/${proid}` ]))) {
+                await shellExec(`mkdir`, [ `${folderConst}/${desid}/${proid}` ]);
+              }
+
               await shellExec(`mv ${shellLink(file.filepath)} ${newFileName};`);
               contents = await documents.readFile(newFileName);
               if (contents === null) {

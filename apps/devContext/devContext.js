@@ -140,17 +140,27 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+    
+
+
+
+
     
 
 
     
 
-    /*
+    // /*
 
     // missing raw contents view
 
     await this.MONGOSECONDC.connect();
 
+    const targetDriveId0 = "1iqH3Ajbz5CB2jXIiMuDKTnc33e36laUr";
+    const targetDriveId1 = "1k-vo9L_WB90ACup7WarklVIUFq1mf1ay";
+    const targetDriveId2 = "1YuWV37wnTqe68nYqnn_oyu5j_p6SPuAe";
+    const drive = new GoogleDrive();
     const selfMongo = this.MONGOSECONDC;
     const selfCoreMongo = this.MONGOC;
     const collection = "designerRawContents";
@@ -167,6 +177,9 @@ DevContext.prototype.launching = async function () {
     let targetProids;
     let filteredProjects;
     let nameArr;
+    let driveFiles0, driveFiles1, driveFiles2;
+    let nameTargets;
+    let tempArr;
 
     proidArr0 = bodyRows.map((obj) => { return obj.proid });
     proidArr1 = targetProjects.map((obj) => { return obj.proid });
@@ -188,11 +201,25 @@ DevContext.prototype.launching = async function () {
       ]);
     }
 
-    console.log(nameArr.length);
+    driveFiles0 = await drive.listFiles_inPython(targetDriveId0);
+    driveFiles1 = await drive.listFiles_inPython(targetDriveId1);
+    driveFiles2 = await drive.listFiles_inPython(targetDriveId2);
+
+    nameTargets = [];
+    nameTargets = nameTargets.concat(driveFiles0);
+    nameTargets = nameTargets.concat(driveFiles1);
+    nameTargets = nameTargets.concat(driveFiles2);
+
+    for (let [ client, designer ] of nameArr) {
+      tempArr = nameTargets.filter(({ name }) => { return (new RegExp(client, "gi")).test(name) }).filter(({ name }) => { return (new RegExp(designer, "gi")).test(name) })
+      if (tempArr.length > 0) {
+        console.log(client, designer, tempArr);
+      }
+    }
 
     await this.MONGOSECONDC.close();
 
-    */
+    // */
 
 
 
@@ -2754,13 +2781,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const kakao = new KakaoTalk();
-    await kakao.sendTalk("requestRawContents", "배창규", "010-2747-3403", {
-      client: "배창규",
-      designer: "박혜연",
-      host: address.frontinfo.host,
-      proid: "p1801_aa01s",
-    });
+
+    
 
 
 
