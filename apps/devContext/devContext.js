@@ -63,7 +63,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
-  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm } = this.mother;
+  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -139,9 +139,58 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
+    // const html = new HtmlMaker();
+    // await human.sendMail({
+    //   to: "uragenbooks@gmail.com",
+    //   subject: "안녕",
+    //   body: await html.returnHtml(async () => {
+    //     try {
+    //       let base;
+    //       let greenBackground;
+    //       let basicMargin;
+    //       let totalHeight;
+
+    //       basicMargin = 20;
+    //       totalHeight = 800;
+            
+    //       greenBackground = createNode({
+    //         mother: totalContents,
+    //         style: {
+    //           background: colorChip.green,
+    //           display: "block",
+    //           position: "relative",
+    //           width: withOut(basicMargin, ea),
+    //           height: String(totalHeight - basicMargin) + ea,
+    //           paddingTop: String(basicMargin) + ea,
+    //           paddingLeft: String(basicMargin) + ea,
+    //         }
+    //       });
+
+    //       base = createNode({
+    //         mother: greenBackground,
+    //         style: {
+    //           display: "block",
+    //           position: "relative",
+    //           width: withOut(basicMargin * 1, ea),
+    //           height: withOut(basicMargin * 1, ea),
+    //           background: colorChip.white,
+    //           borderRadius: String(8) + ea,
+    //           boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+    //         }
+    //       });
+
+    //     } catch (e) {
+    //       console.log(e);
+    //     }
+    //   })
+    // })
+
+
 
     
+
+
 
 
 
@@ -196,6 +245,13 @@ DevContext.prototype.launching = async function () {
     await this.MONGOSECONDC.close();
 
     */
+
+
+
+
+
+
+    
 
 
 

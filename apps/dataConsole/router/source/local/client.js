@@ -6715,7 +6715,7 @@ ClientJs.prototype.communicationRender = function () {
   const { communication } = this.mother;
   const { ajaxJson, sleep } = GeneralJs;
   communication.setItem([
-    () => { return "제안서 자동 생성"; },
+    () => { return "추천서 자동 생성"; },
     function () {
       return true;
     },
@@ -6739,14 +6739,13 @@ ClientJs.prototype.communicationRender = function () {
           }
         }
         if (thisCase !== null) {
-          if (window.confirm(thisCase.name + " 고객님의 제안서를 새롭게 자동 생성합니다. 확실합니까?")) {
+          if (window.confirm(thisCase.name + " 고객님의 추천서를 새롭게 자동 생성합니다. 확실합니까?")) {
 
             response = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getProjects", { equal: true });
             if (response.length !== 0) {
               [ project ] = response;
               if (project.desid !== "") {
-                window.alert("이미 계약된 제안서는 리셋할 수 없습니다! 리셋을 원할시 별도로 문의해주세요!");
-                throw new Error("invaild reset");
+                window.alert("추천서가 새로 만들어질 예정입니다.");
               }
             }
 

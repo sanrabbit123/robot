@@ -465,7 +465,6 @@ HumanPacket.prototype.sendMail = async function (obj) {
   const instance = this;
   const { fileSystem, shellExec, pythonExecute } = this.mother;
   const { dir, moduleDir } = this;
-  const { to, subject, body } = obj;
   const tempDir = process.cwd() + "/temp";
   const pythonTempScriptName = "pythonTempScriptName_" + String((new Date()).valueOf()) + ".py";
   try {
