@@ -901,16 +901,16 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
         try {
           const value = this.getAttribute("value");
           const removeTargets = mother.querySelectorAll("aside");
-          updateQuery[position] = value;
-          if (/요망/gi.test(value)) {
-            valueDom.style.color = colorChip.red;
-          } else if (/편집 완료/gi.test(value)) {
-            valueDom.style.color = colorChip.green;
-          } else {
-            valueDom.style.color = colorChip.black;
-          }
-          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
-          valueDom.textContent = value;
+          // updateQuery[position] = value;
+          // if (/요망/gi.test(value)) {
+          //   valueDom.style.color = colorChip.red;
+          // } else if (/편집 완료/gi.test(value)) {
+          //   valueDom.style.color = colorChip.green;
+          // } else {
+          //   valueDom.style.color = colorChip.black;
+          // }
+          // await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          // valueDom.textContent = value;
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
@@ -981,15 +981,15 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
         try {
           const value = this.getAttribute("value");
           const removeTargets = mother.querySelectorAll("aside");
-          updateQuery[position] = value;
-          if (value === '') {
-            valueDom.textContent = "링크 없음";
-          } else {
-            valueDom.textContent = "링크 있음";
-            thisCase["portfolioStatus"].textContent = "원본 수집 완료";
-            thisCase["portfolioStatus"].style.color = colorChip.black;
-          }
-          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          // updateQuery[position] = value;
+          // if (value === '') {
+          //   valueDom.textContent = "링크 없음";
+          // } else {
+          //   valueDom.textContent = "링크 있음";
+          //   thisCase["portfolioStatus"].textContent = "원본 수집 완료";
+          //   thisCase["portfolioStatus"].style.color = colorChip.black;
+          // }
+          // await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
