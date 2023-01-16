@@ -135,7 +135,7 @@ SecondRouter.prototype.rou_get_First = function () {
 
 SecondRouter.prototype.rou_post_messageLog = function () {
   const instance = this;
-  const webHook = this.webHook;
+  const { slackMembers } = this;
   const { requestSystem } = this.mother;
   let obj;
   obj = {};
@@ -152,12 +152,31 @@ SecondRouter.prototype.rou_post_messageLog = function () {
         throw new Error("invaild post, must be text, channel");
       }
       const { text, channel, collection } = req.body;
-      let voice;
+      let voice, target;
 
-      if (channel === "silent") {
-        await instance.slack_bot.chat.postMessage({ text, channel: "#error_log" });
+      target = null;
+      if (typeof req.body.target === "string" && req.body.target !== "null" && req.body.target !== "undefined") {
+        target = slackMembers.find((obj) => { return obj.profile.display_name.trim() === req.body.target });
+        if (target === undefined) {
+          target = slackMembers.find((obj) => { return obj.profile.real_name.trim() === req.body.target });
+        }
+      }
+      if (target === undefined) {
+        target = null;
+      }
+
+      if (target === null) {
+        if (channel === "silent") {
+          await instance.slack_bot.chat.postMessage({ text, channel: "#error_log" });
+        } else {
+          await instance.slack_bot.chat.postMessage({ text, channel });
+        }
       } else {
-        await instance.slack_bot.chat.postMessage({ text, channel });
+        if (channel === "silent") {
+          await instance.slack_bot.chat.postMessage({ text: '<' + '@' + target.id + '>' + ' ' + text, channel: "#error_log" });
+        } else {
+          await instance.slack_bot.chat.postMessage({ text: '<' + '@' + target.id + '>' + ' ' + text, channel });
+        }
       }
 
       if (req.body.voice === true || req.body.voice === "true") {

@@ -3100,7 +3100,7 @@ Mother.prototype.emergencyAlarm = function (text) {
   });
 }
 
-Mother.prototype.messageSend = function (text, channel = "silent", voice = false) {
+Mother.prototype.messageSend = function (text, channel = "silent", voice = false, target = null) {
   if (typeof text === "object" && text !== null) {
     if (typeof text.text === "string" && typeof text.channel === "string") {
       channel = text.channel;
@@ -3108,6 +3108,9 @@ Mother.prototype.messageSend = function (text, channel = "silent", voice = false
         voice = true;
       } else {
         voice = false;
+      }
+      if (typeof text.target === "string") {
+        target = text.target;
       }
       text = text.text;
     } else {
@@ -3131,7 +3134,7 @@ Mother.prototype.messageSend = function (text, channel = "silent", voice = false
     });
   }
   return new Promise((resolve, reject) => {
-    axios.post(recordUrl, { text, channel, collection, voice }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+    axios.post(recordUrl, { text, channel, collection, voice, target }, { headers: { "Content-Type": "application/json" } }).then((res) => {
       if (res.status !== 200) {
         reject(res);
       } else {
