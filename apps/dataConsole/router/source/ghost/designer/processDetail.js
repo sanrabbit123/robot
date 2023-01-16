@@ -7097,6 +7097,21 @@ ProcessDetailJs.prototype.paymentByCard = function () {
   }
 }
 
+ProcessDetailJs.prototype.insertContentsBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project, contentsRawInfo, totalContents, requestNumber } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const manyBig = media[0];
+  const generalSmall = !manyBig;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker } = GeneralJs;
+
+  
+
+
+}
+
 ProcessDetailJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -7165,6 +7180,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     this.designer = designer;
 
     contentsArr = await ajaxJson({ whereQuery: { proid: project.proid } }, SECONDHOST + "/getContents", { equal: true });
+    this.contentsArr = contentsArr;
 
     this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
     this.panContents = this.contents.map((obj) => { return obj.children }).flat();
@@ -7202,6 +7218,9 @@ ProcessDetailJs.prototype.launching = async function (loading) {
           } else {
             instance.insertInitBox();
             instance.insertNumbersBox();
+            if (instance.contentsArr.length > 0) {
+              instance.insertContentsBox();
+            }
             instance.insertUploadBox();
             instance.insertControlBox();
             if (mobile) {

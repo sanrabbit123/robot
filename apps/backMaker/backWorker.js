@@ -898,6 +898,31 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                   }
                 }
 
+                if (requestTravel !== undefined && condition) {
+                  businessNumber = designer.information.business.businessInfo.businessNumber.replace(/-/g, '');
+                  if (/프리/gi.test(designer.information.business.businessInfo.classification)) {
+                    condition = true;
+                  } else if (/간이/gi.test(designer.information.business.businessInfo.classification)) {
+                    condition = (cashReceipts.filter((obj) => {
+                      return obj.method === 1;
+                    }).filter((obj) => {
+                      return obj.who.business.replace(/\-/gi, '') === businessNumber
+                    }).filter((obj) => {
+                      return obj.amount.total === itemAmount
+                    }).filter((obj) => {
+                      return obj.date.valueOf() > requestTravel.pay[0].date.valueOf()
+                    }).length > 0);
+                  } else {
+                    condition = (taxBills.filter((obj) => {
+                      return obj.who.from.business.replace(/\-/gi, '') === businessNumber
+                    }).filter((obj) => {
+                      return obj.sum.total === itemAmount
+                    }).filter((obj) => {
+                      return obj.date.valueOf() > requestTravel.pay[0].date.valueOf()
+                    }).length > 0);
+                  }
+                }
+
               } else if (/시공 계약금/gi.test(response.name)) {
                 condition = false;
               } else if (/시공 착수금/gi.test(response.name)) {
