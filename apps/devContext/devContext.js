@@ -138,14 +138,10 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
 
     
 
-
-
     
-
 
 
 
@@ -4554,9 +4550,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "최정안",
-    //     designer: "박정훈",
-    //     link: "https://drive.google.com/drive/folders/1GmELYCWYGdOnxGt0K9Eu5Fob87mfM8Db",
+    //     client: "김지혜",
+    //     designer: "박미연",
+    //     link: "https://drive.google.com/drive/folders/1Yb-uhUzyfET5NLt3jspu6bFIwjXxsudo",
     //     pay: true
     //   },
     // ]);
