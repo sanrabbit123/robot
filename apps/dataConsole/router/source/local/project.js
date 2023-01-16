@@ -9721,7 +9721,7 @@ ProjectJs.prototype.communicationRender = function () {
           const [ client ] = await GeneralJs.ajaxJson({ noFlat: true, where: { cliid: project.cliid } }, "/getClients", { equal: true });
           const [ designer ] = await GeneralJs.ajaxJson({ noFlat: true, where: { desid: project.desid } }, "/getDesigners", { equal: true });
 
-          await ajaxJson({
+          await GeneralJs.ajaxJson({
             method: "requestRawContents",
             name: "배창규",
             phone: "010-2747-3403",
