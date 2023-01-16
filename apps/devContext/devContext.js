@@ -155,70 +155,8 @@ DevContext.prototype.launching = async function () {
     
     // missing raw contents view
 
-    await this.MONGOSECONDC.connect();
-
-    const targetDriveId0 = "1iqH3Ajbz5CB2jXIiMuDKTnc33e36laUr";
-    const targetDriveId1 = "1k-vo9L_WB90ACup7WarklVIUFq1mf1ay";
-    const targetDriveId2 = "1YuWV37wnTqe68nYqnn_oyu5j_p6SPuAe";
-    const drive = new GoogleDrive();
-    const selfMongo = this.MONGOSECONDC;
-    const selfCoreMongo = this.MONGOC;
-    const collection = "designerRawContents";
-
-    const bodyRows = await back.mongoRead(collection, {}, { selfMongo });
-    const allProjects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo: selfCoreMongo });
-    const targetProjects = allProjects.filter((project) => {
-      return project.process.contract.remain.date.valueOf() > (new Date(2000, 0, 1)).valueOf()
-    }).filter((project) => {
-      return project.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf()
-    });
-    const allClients = await back.getClientsByQuery({ $or: targetProjects.map((p) => { return { cliid: p.cliid } }) }, { selfMongo: selfCoreMongo });
-    const allDesigners = await back.getDesignersByQuery({ $or: targetProjects.map((p) => { return { desid: p.desid } }) }, { selfMongo: selfCoreMongo });
-    let proidArr0, proidArr1;
-    let targetProids;
-    let filteredProjects;
-    let nameArr;
-    let driveFiles0, driveFiles1, driveFiles2;
-    let nameTargets;
-    let tempArr;
-
-    proidArr0 = bodyRows.map((obj) => { return obj.proid });
-    proidArr1 = targetProjects.map((obj) => { return obj.proid });
-
-    targetProids = proidArr1.filter((proid) => { return !proidArr0.includes(proid) })
-
-    filteredProjects = targetProjects.filter((project) => { return targetProids.includes(project.proid) }).filter((project) => {
-      return project.process.status.value !== "드랍";
-    })
-
-    nameArr = [];
-    for (let { proid, cliid, desid } of filteredProjects) {
-      nameArr.push([
-        allClients.find((client) => { return client.cliid === cliid }).name,
-        allDesigners.find((designer) => { return designer.desid === desid }).designer,
-        proid,
-        cliid,
-        desid,
-      ]);
-    }
-
-    driveFiles0 = await drive.listFiles_inPython(targetDriveId0);
-    driveFiles1 = await drive.listFiles_inPython(targetDriveId1);
-    driveFiles2 = await drive.listFiles_inPython(targetDriveId2);
-
-    nameTargets = [];
-    nameTargets = nameTargets.concat(driveFiles0);
-    nameTargets = nameTargets.concat(driveFiles1);
-    nameTargets = nameTargets.concat(driveFiles2);
-
-    for (let [ client, designer ] of nameArr) {
-      tempArr = nameTargets.filter(({ name }) => { return (new RegExp(client, "gi")).test(name) }).filter(({ name }) => { return (new RegExp(designer, "gi")).test(name) })
-      if (tempArr.length > 0) {
-        console.log(client, designer, tempArr);
-      }
-    }
-
-    await this.MONGOSECONDC.close();
+    const res = await requestSystem("https://" + address.secondinfo.host + ":3000/rawContentsSync", { data: null }, { headers: { "Content-Type": "application/json" } });
+    console.log(res);
 
 
     

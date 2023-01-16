@@ -1218,6 +1218,8 @@ SecondRouter.prototype.rou_post_rawContentsSync = function () {
         }
       }
 
+      await errorLog("raw contents sync done");
+
     } catch (e) {
       console.log(e);
     }
