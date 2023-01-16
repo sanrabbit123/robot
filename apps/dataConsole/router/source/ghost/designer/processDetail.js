@@ -7100,15 +7100,116 @@ ProcessDetailJs.prototype.paymentByCard = function () {
 ProcessDetailJs.prototype.insertContentsBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { client, ea, baseTong, media, project, contentsRawInfo, totalContents, requestNumber } = this;
+  const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const manyBig = media[0];
-  const generalSmall = !manyBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker } = GeneralJs;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, selfHref, scrollTo } = GeneralJs;
+  const buttonsClassName = "buttonsClassName";
+  let margin;
+  let paddingTop;
+  let whiteBottomMargin;
+  let titleFontSize;
+  let bottomMargin;
+  let whiteBlock;
+  let grayTong;
+  let arrowBetween;
+  let contents;
+  let innerMargin;
+  let arrowWidth, arrowHeight;
+  let textTop;
+  let textSize, textWeight;
+  let textMarginLeft;
+  let mobileVisualPaddingValue;
+  let button, buttons;
+  let blockBetween;
+  let blockBetweenBottom;
+  let blockHeight;
+  let lineTop;
+  let columnsNumber;
+  let textFileWeight;
+  let whitePadding;
+  let smallSize, smallWeight, smallBetween;
+  let textTextTop;
+  let smallTextTop;
+  let panDom;
 
-  
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 6 %%>;
+  paddingTop = <%% 44, 44, 36, 28, 5.4 %%>;
 
+  whiteBottomMargin = <%% 46, 46, 38, 30, 5.6 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+
+  innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+
+  textTextTop = <%% (isMac() ? 1 : 3), (isMac() ? 1 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 1), 0 %%>;
+  smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
+
+  textSize = <%% 16, 15, 14, 13, 2.9 %%>;
+  textWeight = <%% 700, 700, 700, 700, 700 %%>;
+  textFileWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  whitePadding = <%% 12, 12, 8, 8, 2.2 %%>;
+
+  blockBetween = <%% 36, 28, 26, 24, 5 %%>;
+  blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
+  blockHeight = <%% 36, 36, 32, 26, 4 %%>;
+
+  lineTop = <%% 18, 18, 16, 13, 1.9 %%>;
+
+  columnsNumber = <%% 4, 3, 3, 3, 2 %%>;
+
+  smallSize = <%% 11, 11, 10, 10, 2.5 %%>;
+  smallWeight = <%% 400, 400, 400, 400, 400 %%>;
+  smallBetween = <%% 5, 5, 4, 4, 0 %%>;
+
+  mobileVisualPaddingValue = 0.2;
+
+  contents = {
+    process: this.contents,
+  };
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: colorChip.white,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(whiteBottomMargin - blockBetweenBottom) + ea,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(margin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(margin) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  grayTong = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingTop: String(innerMargin) + ea,
+      paddingBottom: String(desktop ? innerMargin : innerMargin - arrowBetween) + ea,
+      paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+      paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
+      width: withOut(innerMargin * 2, ea),
+      background: colorChip.white,
+      borderRadius: String(8) + "px",
+    }
+  });
 
 }
 
@@ -7217,10 +7318,10 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             }
           } else {
             instance.insertInitBox();
+            // if (instance.contentsArr.length > 0) {
+            //   instance.insertContentsBox();
+            // }
             instance.insertNumbersBox();
-            if (instance.contentsArr.length > 0) {
-              instance.insertContentsBox();
-            }
             instance.insertUploadBox();
             instance.insertControlBox();
             if (mobile) {
