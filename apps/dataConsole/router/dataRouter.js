@@ -2331,49 +2331,18 @@ DataRouter.prototype.rou_post_sendSlack = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      let link;
-      let link_index;
-      let row_message, new_message;
-      let query;
-      let requrl;
+      if (req.body.message === undefined || req.body.channel === undefined) {
+        throw new Error("invalid post");
+      }
+      const { message, channel } = req.body;
+      let text;
 
-      link = '';
-      link_index = 0;
-      row_message = '';
-      new_message = '';
+      text = message.replace(/__equal__/g, '=').replace(/__amper__/g, '&').replace(/__query__/g, '?').replace(/__plus__/g, '+');
 
-      if (req.body.linkmake !== undefined) {
-        query = equalJson(req.body.query);
-        requrl = url.format({
-            protocol: req.protocol,
-            host: req.get('host'),
-            pathname: req.body.link,
-        });
-
-        link += requrl + '?';
-        for (let i of query) {
-          link += i.standard + '=' + i.value + '&'
-        }
-        link = link.slice(0, -1);
-
-        row_message = req.body.message;
-        link_index = row_message.search(/link:/g);
-        new_message = row_message.slice(0, link_index) + "link: " + link + row_message.slice(link_index + 6);
-
-        if (req.body.channel === "#error_log") {
-          await errorLog(new_message);
-        } else {
-          await messageSend({ text: new_message, channel: req.body.channel });
-        }
-
+      if (channel === "#error_log") {
+        await errorLog(text);
       } else {
-
-        if (req.body.channel === "#error_log") {
-          await errorLog(req.body.message);
-        } else {
-          await messageSend({ text: req.body.message, channel: req.body.channel, voice: (req.body.voice !== undefined ? true : false) });
-        }
-
+        await messageSend({ text, channel, voice: (req.body.voice !== undefined ? true : false) });
       }
 
       res.send(JSON.stringify({ message: "success" }));
