@@ -151,8 +151,8 @@ DevContext.prototype.launching = async function () {
 
     
 
-    /*
 
+    
     // missing raw contents view
 
     await this.MONGOSECONDC.connect();
@@ -164,6 +164,7 @@ DevContext.prototype.launching = async function () {
     const selfMongo = this.MONGOSECONDC;
     const selfCoreMongo = this.MONGOC;
     const collection = "designerRawContents";
+
     const bodyRows = await back.mongoRead(collection, {}, { selfMongo });
     const allProjects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo: selfCoreMongo });
     const targetProjects = allProjects.filter((project) => {
@@ -171,8 +172,8 @@ DevContext.prototype.launching = async function () {
     }).filter((project) => {
       return project.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf()
     });
-    const allClients = await back.getClientsByQuery({}, { selfMongo: selfCoreMongo });
-    const allDesigners = await back.getDesignersByQuery({}, { selfMongo: selfCoreMongo });
+    const allClients = await back.getClientsByQuery({ $or: targetProjects.map((p) => { return { cliid: p.cliid } }) }, { selfMongo: selfCoreMongo });
+    const allDesigners = await back.getDesignersByQuery({ $or: targetProjects.map((p) => { return { desid: p.desid } }) }, { selfMongo: selfCoreMongo });
     let proidArr0, proidArr1;
     let targetProids;
     let filteredProjects;
@@ -219,8 +220,8 @@ DevContext.prototype.launching = async function () {
 
     await this.MONGOSECONDC.close();
 
-    */
 
+    
 
 
 

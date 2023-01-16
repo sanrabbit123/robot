@@ -1,6 +1,8 @@
 const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken, slackMembers, slackChannels, telegram) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+  const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
+  const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
 
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -9,6 +11,8 @@ const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken, 
   this.mongo = MONGOC;
   this.mongolocal = MONGOLOCALC;
   this.timeouts = {};
+  this.sheets = new GoogleSheet();
+  this.drive = new GoogleDrive();
 
   this.slack_userToken = slack_userToken;
   this.slack_bot = slack_bot;
@@ -1146,6 +1150,98 @@ SecondRouter.prototype.rou_post_rawImageParsing = function () {
   }
   return obj;
 }
+
+SecondRouter.prototype.rou_post_rawContentsSync = function () {
+  const instance = this;
+  const back = this.back;
+  const drive = this.drive;
+  const { errorLog, emergencyAlarm } = this.mother;
+  const rawcontentsSyncFunc = async function (MONGOLOCALC, MONGOC) {
+    try {
+      const targetDriveId0 = "1iqH3Ajbz5CB2jXIiMuDKTnc33e36laUr";
+      const targetDriveId1 = "1k-vo9L_WB90ACup7WarklVIUFq1mf1ay";
+      const targetDriveId2 = "1YuWV37wnTqe68nYqnn_oyu5j_p6SPuAe";
+      const selfMongo = MONGOLOCALC;
+      const selfCoreMongo = MONGOC;
+      const collection = "designerRawContents";
+      const bodyRows = await back.mongoRead(collection, {}, { selfMongo });
+      const allProjects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo: selfCoreMongo });
+      const targetProjects = allProjects.filter((project) => {
+        return project.process.contract.remain.date.valueOf() > (new Date(2000, 0, 1)).valueOf()
+      }).filter((project) => {
+        return project.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf()
+      });
+
+      const allClients = await back.getClientsByQuery({ $or: targetProjects.map((p) => { return { cliid: p.cliid } }) }, { selfMongo: selfCoreMongo });
+      const allDesigners = await back.getDesignersByQuery({ $or: targetProjects.map((p) => { return { desid: p.desid } }) }, { selfMongo: selfCoreMongo });
+      let proidArr0, proidArr1;
+      let targetProids;
+      let filteredProjects;
+      let nameArr;
+      let driveFiles0, driveFiles1, driveFiles2;
+      let nameTargets;
+      let tempArr;
+  
+      proidArr0 = bodyRows.map((obj) => { return obj.proid });
+      proidArr1 = targetProjects.map((obj) => { return obj.proid });
+  
+      targetProids = proidArr1.filter((proid) => { return !proidArr0.includes(proid) })
+  
+      filteredProjects = targetProjects.filter((project) => { return targetProids.includes(project.proid) }).filter((project) => {
+        return project.process.status.value !== "드랍";
+      })
+  
+      nameArr = [];
+      for (let { proid, cliid, desid } of filteredProjects) {
+        nameArr.push([
+          allClients.find((client) => { return client.cliid === cliid }).name,
+          allDesigners.find((designer) => { return designer.desid === desid }).designer,
+          proid,
+          cliid,
+          desid,
+        ]);
+      }
+  
+      driveFiles0 = await drive.listFiles_inPython(targetDriveId0);
+      driveFiles1 = await drive.listFiles_inPython(targetDriveId1);
+      driveFiles2 = await drive.listFiles_inPython(targetDriveId2);
+  
+      nameTargets = [];
+      nameTargets = nameTargets.concat(driveFiles0);
+      nameTargets = nameTargets.concat(driveFiles1);
+      nameTargets = nameTargets.concat(driveFiles2);
+  
+      for (let [ client, designer ] of nameArr) {
+        tempArr = nameTargets.filter(({ name }) => { return (new RegExp(client, "gi")).test(name) }).filter(({ name }) => { return (new RegExp(designer, "gi")).test(name) })
+        if (tempArr.length > 0) {
+          await emergencyAlarm(JSON.stringify(tempArr, null, 2));
+        }
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  let obj = {};
+  obj.link = [ "/rawContentsSync" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      rawcontentsSyncFunc(instance.mongolocal, instance.mongo).catch((err) => { console.log(err); });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Second Ghost 서버 문제 생김 (rou_post_rawContentsSync): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 
 //ROUTING ----------------------------------------------------------------------
 
