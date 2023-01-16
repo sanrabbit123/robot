@@ -138,14 +138,13 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const token = "ATTA4e194cc66c57d591c43d02a5f328a0308ca57da46ad3e18326a690041fe1668fB8A61188";
+    // const key = "a8f3f39ea9739b982faa14b0324f3777";
+    // const boardId = "63c51e4d2d0e9b021baf1260";
+    // const url = "https://api.trello.com/1/boards/" + boardId + "/cards";
+    // const res = await requestSystem(url, { token, key }, { method: "get" });
 
-
-
-    
-
-
-
-
+    // console.log(res.data[0]);
     
 
 
