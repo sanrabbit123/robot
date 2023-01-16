@@ -8923,6 +8923,225 @@ ProjectJs.prototype.globalChaining = async function (thisCase, column, value, pa
   }
 }
 
+ProjectJs.prototype.rawCommentView = function (proid) {
+  const instance = this;
+  const { createNode, withOut, colorChip, ajaxJson, removeByClass, dateToString, svgMaker } = GeneralJs;
+  return async function () {
+    try {
+      const [ project ] = await ajaxJson({ noFlat: true, where: { proid } }, "/getProjects", { equal: true });
+      const totalContents = document.getElementById("totalcontents");
+      const rawCommentPopupClassName = "rawCommentPopupClassName";
+      const { belowHeight } = instance;
+      const ea = "px";
+      const zIndex = 4;
+      let thisRawContents;
+      let cancelBack, whitePrompt;
+      let whitePromptWidth;
+      let whitePromptMarginTop;
+      let realBaseTong;
+      let realMargin;
+      let dateCloseTong;
+      let contentsTong;
+      let closeButtonHeight;
+      let grayBlockBetween;
+      let textMargin;
+      let updatedTextTop;
+      let textSize;
+      let xIconWidth;
+      let textWeight;
+      let textLineHeight;
+
+      whitePromptMarginTop = 30;
+      whitePromptWidth = window.innerWidth - (whitePromptMarginTop * 2);
+      
+      realMargin = 20;
+      closeButtonHeight = 50;
+      grayBlockBetween = 8;
+
+      textMargin = 30;
+      updatedTextTop = -1;
+      textSize = 14;
+      xIconWidth = 16;
+
+      textWeight = 400;
+      textLineHeight = 1.6;
+
+      if ((/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status))) {
+
+        thisRawContents = await ajaxJson({
+          mode: "get",
+          proid: project.proid,
+          desid: project.desid,
+          cliid: project.cliid,
+        }, SECONDHOST + "/projectDesignerRaw", { equal: true });
+
+        cancelBack = createNode({
+          mother: totalContents,
+          class: [ rawCommentPopupClassName ],
+          event: {
+            click: (e) => {
+              removeByClass(rawCommentPopupClassName);
+            }
+          },
+          style: {
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(belowHeight, ea),
+            background: colorChip.black,
+            opacity: String(0.3),
+            position: "fixed",
+            zIndex: String(zIndex),
+          }
+        });
+
+        whitePrompt = createNode({
+          mother: totalContents,
+          class: [ rawCommentPopupClassName ],
+          event: {
+            click: (e) => { e.stopPropagation() }
+          },
+          style: {
+            display: "inline-flex",
+            position: "fixed",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: String(5) + "px",
+            background: colorChip.white,
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            width: String(whitePromptWidth) + ea,
+            height: "calc(calc(100vh - " + String(belowHeight) + ea + ") - " + String(whitePromptMarginTop * 2) + ea + ")",
+            left: withOut(50, whitePromptWidth / 2, ea),
+            top: String(whitePromptMarginTop) + ea,
+            zIndex: String(zIndex),
+            animation: "fadeuplite 0.3s ease",
+          }
+        });
+
+        realBaseTong = createNode({
+          mother: whitePrompt,
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            position: "relative",
+            width: withOut(realMargin * 2, ea),
+            height: withOut(realMargin * 2, ea),
+          }
+        });
+
+        dateCloseTong = createNode({
+          mother: realBaseTong,
+          style: {
+            display: "flex",
+            flexDirection: "row",
+            width: withOut(0, ea),
+            height: String(closeButtonHeight) + ea,
+            marginBottom: String(grayBlockBetween) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                width: withOut(closeButtonHeight + grayBlockBetween, ea),
+                height: String(closeButtonHeight) + ea,
+                marginRight: String(grayBlockBetween) + ea,
+                borderRadius: String(5) + "px",
+                background: colorChip.gray0,
+                alignItems: "center",
+                justifyContent: "start",
+              },
+              child: {
+                text: "Updated : " + dateToString(thisRawContents.date, true),
+                style: {
+                  display: "inline-block",
+                  left: String(textMargin) + ea,
+                  top: String(updatedTextTop) + ea,
+                  position: "relative",
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(500),
+                  fontFamily: "graphik",
+                  fontStyle: "italic",
+                }
+              }
+            },
+            {
+              event: {
+                click: (e) => {
+                  removeByClass(rawCommentPopupClassName);
+                }
+              },
+              style: {
+                display: "inline-flex",
+                width: String(closeButtonHeight) + ea,
+                height: String(closeButtonHeight) + ea,
+                borderRadius: String(5) + "px",
+                background: colorChip.gray0,
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+              },
+              child: {
+                mode: "svg",
+                source: svgMaker.closeIcon(colorChip.shadow),
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: String(xIconWidth) + ea,
+                }
+              }
+            }
+          ]
+        });
+  
+        contentsTong = createNode({
+          mother: realBaseTong,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+            height: withOut(closeButtonHeight + grayBlockBetween, ea),
+            borderRadius: String(5) + "px",
+            background: colorChip.gray0,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(textMargin * 2, ea),
+              height: withOut(textMargin * 2, ea),
+              overflow: "scroll",
+            },
+            child: {
+              mode: "textarea",
+              text: thisRawContents.contents.body,
+              style: {
+                width: withOut(0),
+                height: withOut(0),
+                fontSize: String(textSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.black,
+                background: "transparent",
+                border: String(0),
+                outline: String(0),
+                lineHeight: String(textLineHeight),
+              }
+            }
+          }
+        })
+
+      } else {
+        window.alert("디자이너 글이 아직 수집되지 않았습니다!");
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 ProjectJs.prototype.communicationRender = function () {
   const instance = this;
   const { communication } = this.mother;
@@ -9222,7 +9441,7 @@ ProjectJs.prototype.communicationRender = function () {
       try {
         if (instance.whiteBox !== null) {
           const proid = instance.whiteBox.id;
-          let thisCase;
+          let thisCase, popupFunction;
           for (let c of instance.cases) {
             if (c !== null) {
               if (c.proid === proid) {
@@ -9230,210 +9449,8 @@ ProjectJs.prototype.communicationRender = function () {
               }
             }
           }
-          const { createNode, withOut, colorChip, ajaxJson, removeByClass, dateToString, svgMaker } = GeneralJs;
-          const [ project ] = await ajaxJson({ noFlat: true, where: { proid } }, "/getProjects", { equal: true });
-          const totalContents = document.getElementById("totalcontents");
-          const rawCommentPopupClassName = "rawCommentPopupClassName";
-          const { belowHeight } = instance;
-          const ea = "px";
-          const zIndex = 4;
-          let thisRawContents;
-          let cancelBack, whitePrompt;
-          let whitePromptWidth;
-          let whitePromptMarginTop;
-          let realBaseTong;
-          let realMargin;
-          let dateCloseTong;
-          let contentsTong;
-          let closeButtonHeight;
-          let grayBlockBetween;
-          let textMargin;
-          let updatedTextTop;
-          let textSize;
-          let xIconWidth;
-          let textWeight;
-          let textLineHeight;
-  
-          whitePromptMarginTop = 30;
-          whitePromptWidth = window.innerWidth - (whitePromptMarginTop * 2);
-          
-          realMargin = 20;
-          closeButtonHeight = 50;
-          grayBlockBetween = 8;
-
-          textMargin = 30;
-          updatedTextTop = -1;
-          textSize = 14;
-          xIconWidth = 16;
-
-          textWeight = 400;
-          textLineHeight = 1.6;
-
-          if ((/수집 완료/gi.test(project.contents.raw.portfolio.status) || /편집중/gi.test(project.contents.raw.portfolio.status) || /편집 완료/gi.test(project.contents.raw.portfolio.status))) {
-  
-            thisRawContents = await ajaxJson({
-              mode: "get",
-              proid: project.proid,
-              desid: project.desid,
-              cliid: project.cliid,
-            }, SECONDHOST + "/projectDesignerRaw", { equal: true });
-  
-            cancelBack = createNode({
-              mother: totalContents,
-              class: [ rawCommentPopupClassName ],
-              event: {
-                click: (e) => {
-                  removeByClass(rawCommentPopupClassName);
-                }
-              },
-              style: {
-                top: String(0),
-                left: String(0),
-                width: withOut(0, ea),
-                height: withOut(belowHeight, ea),
-                background: colorChip.black,
-                opacity: String(0.3),
-                position: "fixed",
-                zIndex: String(zIndex),
-              }
-            });
-  
-            whitePrompt = createNode({
-              mother: totalContents,
-              class: [ rawCommentPopupClassName ],
-              event: {
-                click: (e) => { e.stopPropagation() }
-              },
-              style: {
-                display: "inline-flex",
-                position: "fixed",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: String(5) + "px",
-                background: colorChip.white,
-                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                width: String(whitePromptWidth) + ea,
-                height: "calc(calc(100vh - " + String(belowHeight) + ea + ") - " + String(whitePromptMarginTop * 2) + ea + ")",
-                left: withOut(50, whitePromptWidth / 2, ea),
-                top: String(whitePromptMarginTop) + ea,
-                zIndex: String(zIndex),
-                animation: "fadeuplite 0.3s ease",
-              }
-            });
-  
-            realBaseTong = createNode({
-              mother: whitePrompt,
-              style: {
-                display: "flex",
-                flexDirection: "column",
-                position: "relative",
-                width: withOut(realMargin * 2, ea),
-                height: withOut(realMargin * 2, ea),
-              }
-            });
-
-            dateCloseTong = createNode({
-              mother: realBaseTong,
-              style: {
-                display: "flex",
-                flexDirection: "row",
-                width: withOut(0, ea),
-                height: String(closeButtonHeight) + ea,
-                marginBottom: String(grayBlockBetween) + ea,
-              },
-              children: [
-                {
-                  style: {
-                    display: "inline-flex",
-                    width: withOut(closeButtonHeight + grayBlockBetween, ea),
-                    height: String(closeButtonHeight) + ea,
-                    marginRight: String(grayBlockBetween) + ea,
-                    borderRadius: String(5) + "px",
-                    background: colorChip.gray0,
-                    alignItems: "center",
-                    justifyContent: "start",
-                  },
-                  child: {
-                    text: "Updated : " + dateToString(thisRawContents.date, true),
-                    style: {
-                      display: "inline-block",
-                      left: String(textMargin) + ea,
-                      top: String(updatedTextTop) + ea,
-                      position: "relative",
-                      fontSize: String(textSize) + ea,
-                      fontWeight: String(500),
-                      fontFamily: "graphik",
-                      fontStyle: "italic",
-                    }
-                  }
-                },
-                {
-                  style: {
-                    display: "inline-flex",
-                    width: String(closeButtonHeight) + ea,
-                    height: String(closeButtonHeight) + ea,
-                    borderRadius: String(5) + "px",
-                    background: colorChip.gray0,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                  },
-                  child: {
-                    mode: "svg",
-                    source: svgMaker.closeIcon(colorChip.shadow),
-                    style: {
-                      display: "inline-flex",
-                      position: "relative",
-                      width: String(xIconWidth) + ea,
-                    }
-                  }
-                }
-              ]
-            });
-      
-            contentsTong = createNode({
-              mother: realBaseTong,
-              style: {
-                display: "flex",
-                position: "relative",
-                width: withOut(0, ea),
-                height: withOut(closeButtonHeight + grayBlockBetween, ea),
-                borderRadius: String(5) + "px",
-                background: colorChip.gray0,
-                justifyContent: "center",
-                alignItems: "center",
-              },
-              child: {
-                style: {
-                  display: "flex",
-                  position: "relative",
-                  width: withOut(textMargin * 2, ea),
-                  height: withOut(textMargin * 2, ea),
-                  overflow: "scroll",
-                },
-                child: {
-                  mode: "textarea",
-                  text: thisRawContents.contents.body,
-                  style: {
-                    width: withOut(0),
-                    height: withOut(0),
-                    fontSize: String(textSize) + ea,
-                    fontWeight: String(textWeight),
-                    color: colorChip.black,
-                    background: "transparent",
-                    border: String(0),
-                    outline: String(0),
-                    lineHeight: String(textLineHeight),
-                  }
-                }
-              }
-            })
-    
-          } else {
-            window.alert("디자이너 글이 아직 수집되지 않았습니다!");
-          }
-  
+          popupFunction = instance.rawCommentView(proid);
+          await popupFunction();
         }
       } catch (e) {
         console.log(e);
@@ -9633,6 +9650,12 @@ ProjectJs.prototype.launching = async function () {
               instance.whiteBox.contentsBox.firstChild.firstChild.children[9].click();
             } catch {}
           }
+        }
+        if (getObj.proid !== undefined && getObj.raw === "contents") {
+          const popupFunction = instance.rawCommentView(getObj.proid);
+          popupFunction().catch((err) => {
+            console.log(err);
+          });
         }
       }
     }
