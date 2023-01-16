@@ -5827,7 +5827,11 @@ ProcessDetailJs.prototype.insertRawUploadBox = function () {
 
                 [ res ] = equalJson(await ajaxForm(formData, BRIDGEHOST + "/middleCommentsBinary"));
                 await ajaxJson({ whereQuery: { proid }, updateQuery: { "contents.raw.portfolio.status": "원본 수집 완료" } }, SECONDHOST + "/updateProject");
-                await ajaxJson({ message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!\n" + BACKHOST.replace(/\:3000/gi, '') + "/project__query__proid__equal__" + instance.project.proid + "__amper__raw__equal__contents", channel: "#301_console" }, BACKHOST + "/sendSlack");
+                await ajaxJson({
+                  message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!\n" + BACKHOST.replace(/\:3000/gi, '') + "/project__query__proid__equal__" + instance.project.proid + "__amper__raw__equal__contents",
+                  channel: "#301_console",
+                  target: this.manager,
+                }, BACKHOST + "/sendSlack");
 
                 loading.remove();
 
@@ -7260,6 +7264,18 @@ ProcessDetailJs.prototype.launching = async function (loading) {
 
     this.projectHistory = await ajaxJson({ id: project.proid, rawMode: true }, BACKHOST + "/getProjectHistory");
     this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, BACKHOST + "/getClientHistory");
+    this.manager = this.projectHistory.manager;
+    if (this.manager === '-') {
+      this.manager = null;
+    } else if (this.manager === "강해진") {
+      this.manager = "Jini";
+    } else if (this.manager === "이큰별") {
+      this.manager = "이큰별";
+    } else if (this.manager === "임지민") {
+      this.manager = "Pepper";
+    } else {
+      this.manager = null;
+    }
 
     this.project.name = this.client.name;
 
