@@ -9723,8 +9723,8 @@ ProjectJs.prototype.communicationRender = function () {
 
           await GeneralJs.ajaxJson({
             method: "requestRawContents",
-            name: "배창규",
-            phone: "010-2747-3403",
+            name: client.name,
+            phone: client.phone,
             option: {
               client: client.name,
               designer: designer.designer,
@@ -9733,6 +9733,8 @@ ProjectJs.prototype.communicationRender = function () {
             }
           }, "/alimTalk");
   
+          window.alert("디자이너 글을 요청하였습니다!");
+
         }
       } catch (e) {
         console.log(e);
