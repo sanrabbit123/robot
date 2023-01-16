@@ -138,7 +138,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await messageSend({ text: "안녕하세요 테스트입니다.", channel: "#general", target: "Pepper" })
 
 
     
@@ -2755,7 +2754,13 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    const kakao = new KakaoTalk();
+    await kakao.sendTalk("requestRawContents", "배창규", "010-2747-3403", {
+      client: "배창규",
+      designer: "박혜연",
+      host: address.frontinfo.host,
+      proid: "p1801_aa01s",
+    });
 
 
 

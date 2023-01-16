@@ -724,17 +724,18 @@ KakaoTalk.prototype.templateTong = function (target) {
       }
     },
     "photoShareDesigner": {
-      "name": "사진 공유 디자이너",
-      "id": "TF_1158",
+      "name": "사진 공유 디자이너 수정",
+      "id": "TL_3781",
       "needs": [
         "client",
         "designer",
-        "file"
+        "host",
+        "proid"
       ],
-      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"file\", to: obj.file }\n        ];\n      }",
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"proid\", to: obj.proid }\n        ];\n      }",
       "raw": {
-        "templtContent": "#{designer} 실장님, 안녕하세요 :) #{client} 고객님 원본 사진이 나와서 연락드려요!\n\n이번 프로젝트도 너무 수고 많으셨습니다! #{client}님만의 매력과 취향이 묻어나는 아름다운 집을 완성해주셔서 감사드려요~\n\n포트폴리오 콘텐츠는 순차 발행중이라 나오면 추후에 링크 공유드리겠습니다! \n\n※ 그리고 마지막에 첨부해드린 포트폴리오 활용 가이드 라인도 체크 부탁드려요 :) \n\n사진 공유 : https://drive.google.com/file/d/#{file}/view?usp=sharing",
-        "templtName": "사진 공유 디자이너",
+        "templtContent": "#{designer} 실장님, 안녕하세요 :) #{client} 고객님 원본 사진이 나와서 연락드려요!\n\n이번 프로젝트도 너무 수고 많으셨습니다! #{client}님만의 매력과 취향이 묻어나는 아름다운 집을 완성해주셔서 감사드려요~\n\n포트폴리오 콘텐츠는 순차 발행중이라 나오면 추후에 링크 공유드리겠습니다! \n\n* 사진 공유\nhttps://#{host}/designer/process.php?proid=#{proid}&download=auto",
+        "templtName": "사진 공유 디자이너 수정",
         "templateType": "BA",
         "templateEmType": "NONE",
         "templateExtra": "",
@@ -746,41 +747,20 @@ KakaoTalk.prototype.templateTong = function (target) {
         "block": "N",
         "dormant": "N",
         "securityFlag": "N",
-        "status": "A",
+        "status": "R",
         "inspStatus": "APR",
         "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
-        "buttons": [
-          {
-            "ordering": "1",
-            "name": "포트폴리오 활용 가이드",
-            "linkType": "WL",
-            "linkTypeName": "웹링크",
-            "linkMo": "https://docs.google.com/document/d/1Zovq4JhIxSUrcYTm-3kS0wasPsAEJOX9UIm6cGjDcwc/edit?usp=sharing",
-            "linkPc": "https://docs.google.com/document/d/1Zovq4JhIxSUrcYTm-3kS0wasPsAEJOX9UIm6cGjDcwc/edit?usp=sharing",
-            "linkIos": "",
-            "linkAnd": ""
-          },
-          {
-            "ordering": "2",
-            "name": "디자이너글 작성 가이드",
-            "linkType": "WL",
-            "linkTypeName": "웹링크",
-            "linkMo": "https://docs.google.com/document/d/1swz4pvjEosv6Pfq8pDcsa5IrttbythDt0aFlE-IRtqA/edit?usp=sharing",
-            "linkPc": "https://docs.google.com/document/d/1swz4pvjEosv6Pfq8pDcsa5IrttbythDt0aFlE-IRtqA/edit?usp=sharing",
-            "linkIos": "",
-            "linkAnd": ""
-          }
-        ],
-        "cdate": "2021-07-13 10:03:35",
-        "templtCode": "TF_1158",
+        "buttons": [],
+        "cdate": "2023-01-09 09:17:28",
+        "templtCode": "TL_3781",
         "comments": [
           {
-            "cdate": "2021-07-13 14:23:51",
+            "cdate": "2023-01-09 12:29:51",
             "name": "검수자",
-            "id": "1439358",
+            "id": "2330013",
             "userName": "검수자",
             "commentContent": "",
-            "createdAt": "2021-07-13 14:23:51",
+            "createdAt": "2023-01-09 12:29:51",
             "status": "APR"
           }
         ]
@@ -2440,6 +2420,49 @@ KakaoTalk.prototype.templateTong = function (target) {
         "cdate": "2022-11-23 10:55:22",
         "templtCode": "TK_7749",
         "comments": []
+      }
+    },
+    "requestRawContents": {
+      "name": "디자이너 글 요청",
+      "id": "TL_4785",
+      "needs": [
+        "client",
+        "designer",
+        "host",
+        "proid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"proid\", to: obj.proid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 실장님! 홈리에종입니다 :) #{client} 고객님 현장의 디자이너 글 요청드립니다!\n\n완성된 현장의 사진은 텍스트와 함께 홈리에종의 웹사이트 / SNS 채널에 발행되며, 고객 제안 및 디자이너 브랜딩 용도로 사용합니다 :)\n\n* 반드시 아래 링크를 통해 디자이너 글을 업로드 해주세요!\n\n* 업로드 링크\nhttps://#{host}/designer/process.php?proid=#{proid}&raw=upload",
+        "templtName": "디자이너 글 요청",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-01-16 09:48:42",
+        "templtCode": "TL_4785",
+        "comments": [
+          {
+            "cdate": "2023-01-16 13:42:19",
+            "name": "검수자",
+            "id": "2350588",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2023-01-16 13:42:19",
+            "status": "APR"
+          }
+        ]
       }
     }
   };

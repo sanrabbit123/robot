@@ -9718,10 +9718,20 @@ ProjectJs.prototype.communicationRender = function () {
             }
           }
           const [ project ] = await GeneralJs.ajaxJson({ noFlat: true, where: { proid } }, "/getProjects", { equal: true });
-  
+          const [ client ] = await GeneralJs.ajaxJson({ noFlat: true, where: { cliid: project.cliid } }, "/getClients", { equal: true });
+          const [ designer ] = await GeneralJs.ajaxJson({ noFlat: true, where: { desid: project.desid } }, "/getDesigners", { equal: true });
 
-
-          // Dev
+          await ajaxJson({
+            method: "requestRawContents",
+            name: "배창규",
+            phone: "010-2747-3403",
+            option: {
+              client: client.name,
+              designer: designer.designer,
+              host: FRONTHOST.slice(8),
+              proid: project.proid,
+            }
+          }, "/alimTalk");
   
         }
       } catch (e) {

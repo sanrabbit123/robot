@@ -861,7 +861,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
             consoleQInput = await consoleQ(`Is it OK? (press "OK")\nclient : https://drive.google.com/file/d/${shareGoogleIdClient}/view?usp=sharing\ndesigner : https://drive.google.com/file/d/${shareGoogleIdDesigner}/view?usp=sharing\n`);
             if (/OK/gi.test(consoleQInput.trim())) {
               await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, file: shareGoogleIdClient });
-              await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, file: shareGoogleIdDesigner });
+              await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, host: instance.address.frontinfo.host, proid: project.proid });
               await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
             }
           }

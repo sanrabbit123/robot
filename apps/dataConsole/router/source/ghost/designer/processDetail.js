@@ -7138,6 +7138,15 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   let textTextTop;
   let smallTextTop;
   let panDom;
+  let thisContents;
+  let imageTargets;
+  let titleBottom;
+  let mobileTitleLeft;
+  let mobileTitleTop;
+  let numberRight;
+  let titleTopNumber;
+  let titleTop;
+  let mobileInnerPaddingBottom;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -7172,9 +7181,19 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
 
   mobileVisualPaddingValue = 0.2;
 
-  contents = {
-    process: this.contents,
-  };
+  titleBottom = <%% (isMac() ? 16 : 15), (isMac() ? 16 : 15), (isMac() ? 16 : 15), (isMac() ? 16 : 15), 0 %%>;
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
+
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  mobileInnerPaddingBottom = 0;
+
+
+  [ thisContents ] = this.contentsArr
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -7184,7 +7203,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
       width: String(100) + '%',
       background: colorChip.white,
       paddingTop: String(paddingTop) + ea,
-      paddingBottom: String(whiteBottomMargin - blockBetweenBottom) + ea,
+      paddingBottom: String(whiteBottomMargin) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },
@@ -7200,6 +7219,44 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   });
   whiteTong = whiteBlock.firstChild;
 
+  block = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: mobile ? "absolute" : "relative",
+          left: desktop ? "" : String(mobileTitleLeft) + ea,
+          top: desktop ? "" : String(mobileTitleTop) + ea,
+          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+          marginBottom: String(titleBottom) + ea,
+          zIndex: mobile ? String(1) : "",
+        },
+        children: [
+          {
+            text: "컨텐츠 설정",
+            style: {
+              position: "relative",
+              display: "inline-block",
+              top: String(titleTopNumber) + ea,
+              fontSize: String(titleFontSize) + ea,
+              fontWeight: String(600),
+              background: desktop ? colorChip.white : colorChip.gray1,
+              paddingRight: String(numberRight) + ea,
+              color: colorChip.black,
+            }
+          },
+        ]
+      },
+    ]
+  });
+
+
   grayTong = createNode({
     mother: whiteTong,
     style: {
@@ -7208,12 +7265,35 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
       paddingTop: String(innerMargin) + ea,
       paddingBottom: String(desktop ? innerMargin : innerMargin - arrowBetween) + ea,
       paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
-      paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
-      width: withOut(innerMargin * 2, ea),
+      paddingRight: String(desktop ? (innerMargin - 8) : (innerMargin + mobileVisualPaddingValue)) + ea,
+      width: withOut((innerMargin * 2) - 8, ea),
       background: colorChip.white,
       borderRadius: String(8) + "px",
     }
   });
+
+  imageTargets = thisContents.photos.detail.map((obj) => {
+    obj.src = FRONTHOST + "/list_image/portp" + thisContents.contents.portfolio.pid + "/t" + String(obj.index) + thisContents.contents.portfolio.pid + ".jpg";
+    return obj;
+  });
+
+  for (let { src, gs } of imageTargets) {
+    createNode({
+      mother: grayTong,
+      mode: "img",
+      attribute: { src },
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(gs === 's' ? 154 : 308 + 8) + ea,
+        height: String(224) + ea,
+        borderRadius: String(5) + "px",
+        marginRight: String(8) + ea,
+        marginBottom: String(8) + ea,
+      }
+    })
+  }
+
 
 }
 
