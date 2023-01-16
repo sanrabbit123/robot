@@ -153,11 +153,6 @@ DevContext.prototype.launching = async function () {
 
 
     
-    // missing raw contents view
-
-    const res = await requestSystem("https://" + address.secondinfo.host + ":3000/rawContentsSync", { data: null }, { headers: { "Content-Type": "application/json" } });
-    console.log(res);
-
 
     
 
