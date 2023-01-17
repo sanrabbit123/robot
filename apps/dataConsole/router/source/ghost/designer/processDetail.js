@@ -7111,6 +7111,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   const small = !big;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, selfHref, scrollTo } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
+  const blank = "<u%&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;%u>";
   let margin;
   let paddingTop;
   let whiteBottomMargin;
@@ -7150,6 +7151,15 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   let imageTong;
   let imageBetween;
   let imageWidth, imageHeight;
+  let portfolioText, reviewText;
+  let textBoldWeight, textUnderWeight;
+  let textBetween;
+  let whiteBlockHeight;
+  let smallButtonWidth, smallButtonHeight, smallButtonSize, smallButtonWeight, smallButtonTextTop;
+  let thisTendency;
+  let tendencyBox;
+  let whitePaddingTop;
+  let tendencyTitleBoxWidth;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -7159,18 +7169,22 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
-  innerMargin = <%% 20, 16, 16, 12, 1 %%>;
+  innerMargin = <%% 12, 12, 10, 10, 1 %%>;
 
-  textTextTop = <%% (isMac() ? 1 : 3), (isMac() ? 1 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 1), 0 %%>;
-  smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
+  textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), 0 %%>;
+  smallTextTop = <%% (isMac() ? 0 : 0), (isMac() ? 0 : 0), (isMac() ? 0 : 0), (isMac() ? 0 : 0), 0 %%>;
 
   textSize = <%% 16, 15, 14, 13, 2.9 %%>;
-  textWeight = <%% 700, 700, 700, 700, 700 %%>;
+  textWeight = <%% 400, 400, 400, 400, 400 %%>;
+  textBoldWeight = <%% 600, 600, 600, 600, 600 %%>;
+  textUnderWeight = <%% 300, 300, 300, 300, 300 %%>;
   textFileWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  whitePadding = <%% 12, 12, 8, 8, 2.2 %%>;
+  textBetween = <%% 8, 8, 8, 8, 8 %%>;
 
-  blockBetween = <%% 36, 28, 26, 24, 5 %%>;
+  whitePadding = <%% 24, 24, 22, 20, 2.2 %%>;
+
+  blockBetween = <%% 8, 8, 8, 8, 5 %%>;
   blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
   blockHeight = <%% 36, 36, 32, 26, 4 %%>;
 
@@ -7200,8 +7214,27 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   imageWidth = <%% 154, 154, 154, 154, 154 %%>;
   imageHeight = <%% 224, 224, 224, 224, 224 %%>;
 
+  whiteBlockHeight = <%% 60, 60, 60, 48, 6 %%>;
 
-  [ thisContents ] = this.contentsArr
+  smallButtonWidth = <%% 100, 100, 100, 100, 100 %%>;
+  smallButtonHeight = <%% 30, 30, 30, 30, 30 %%>;
+  smallButtonSize = <%% 12, 12, 12, 12, 12 %%>;
+  smallButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
+  smallButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+  whitePaddingTop = <%% 18, 18, 18, 18, 1 %%>;
+
+  tendencyTitleBoxWidth = <%% 160, 160, 160, 160, 16 %%>;
+
+  [ thisContents ] = this.contentsArr;
+  ({ contents: { portfolio: { detailInfo: { tendency: thisTendency } } } } = thisContents);
+
+  portfolioText = "<b%" + thisContents.contents.portfolio.title.main + "%b>" + blank + thisContents.contents.portfolio.spaceInfo.region + blank + thisContents.contents.portfolio.spaceInfo.method + blank + "<u%" + dateToString(thisContents.contents.portfolio.date, true) + "%u>";
+  if (/999/gi.test(thisContents.contents.review.rid)) {
+    reviewText = "";
+  } else {
+    reviewText = "<b%" + thisContents.contents.review.title.main + "%b>" + blank + thisContents.contents.review.title.sub + blank + "<u%" + dateToString(thisContents.contents.review.date, true) + "%u>";
+  }
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -7265,7 +7298,6 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   });
 
 
-
   // images
 
   imageTong = createNode({
@@ -7314,14 +7346,231 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
       width: withOut(innerMargin * 2, ea),
       background: colorChip.gray2,
       borderRadius: String(8) + "px",
-      marginTop: String(24) + ea,
+      marginTop: String(20) + ea,
     }
   });
 
+  // portfolio
+  createNode({
+    mother: grayTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      background: colorChip.white,
+      borderRadius: String(8) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      height: String(whiteBlockHeight) + ea,
+      flexDirection: "row",
+      justifyContent: "start",
+      alignItems: "center",
+    },
+    children: [
+      {
+        text: thisContents.contents.portfolio.pid,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textFileWeight),
+          color: colorChip.gray4,
+          fontFamily: "graphik",
+          fontStyle: "italic",
+          marginLeft: String(whitePadding) + ea,
+          marginRight: String(textBetween) + ea,
+          top: String(smallTextTop) + ea,
+        }
+      },
+      {
+        text: portfolioText,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.black,
+          top: String(textTextTop) + ea,
+        },
+        bold: {
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textBoldWeight),
+          color: colorChip.black,
+        },
+        under: {
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textUnderWeight),
+          color: colorChip.gray4,
+        }
+      },
+      {
+        style: {
+          display: "inline-flex",
+          position: "absolute",
+          width: String(smallButtonWidth) + ea,
+          height: String(smallButtonHeight) + ea,
+          top: String((whiteBlockHeight - smallButtonHeight) / 2) + ea,
+          right: String((whiteBlockHeight - smallButtonHeight) / 2) + ea,
+          borderRadius: String(8) + ea,
+          background: colorChip.gradientGreen,
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+        },
+        child: {
+          text: "포트폴리오 보기",
+          style: {
+            fontSize: String(smallButtonSize) + ea,
+            fontWeight: String(smallButtonWeight),
+            color: colorChip.white,
+            position: "relative",
+            top: String(smallButtonTextTop) + ea,
+          }
+        }
+      }
+    ]
+  });
 
-  
+  // review
+  if (reviewText !== "") {
+    createNode({
+      mother: grayTong,
+      style: {
+        display: "flex",
+        marginTop: String(blockBetween) + ea,
+        position: "relative",
+        width: withOut(0, ea),
+        background: colorChip.white,
+        borderRadius: String(8) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        height: String(whiteBlockHeight) + ea,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "center",
+      },
+      children: [
+        {
+          text: thisContents.contents.portfolio.pid,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(textSize) + ea,
+            fontWeight: String(textFileWeight),
+            color: colorChip.gray4,
+            fontFamily: "graphik",
+            fontStyle: "italic",
+            marginLeft: String(whitePadding) + ea,
+            marginRight: String(textBetween) + ea,
+            top: String(smallTextTop) + ea,
+          }
+        },
+        {
+          text: reviewText,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(textSize) + ea,
+            fontWeight: String(textWeight),
+            color: colorChip.black,
+            top: String(textTextTop) + ea,
+          },
+          bold: {
+            fontSize: String(textSize) + ea,
+            fontWeight: String(textBoldWeight),
+            color: colorChip.black,
+          },
+          under: {
+            fontSize: String(textSize) + ea,
+            fontWeight: String(textUnderWeight),
+            color: colorChip.gray4,
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            width: String(smallButtonWidth) + ea,
+            height: String(smallButtonHeight) + ea,
+            top: String((whiteBlockHeight - smallButtonHeight) / 2) + ea,
+            right: String((whiteBlockHeight - smallButtonHeight) / 2) + ea,
+            borderRadius: String(8) + ea,
+            background: colorChip.gradientGreen,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          },
+          child: {
+            text: "고객 후기 보기",
+            style: {
+              fontSize: String(smallButtonSize) + ea,
+              fontWeight: String(smallButtonWeight),
+              color: colorChip.white,
+              position: "relative",
+              top: String(smallButtonTextTop) + ea,
+            }
+          }
+        }
+      ]
+    });
+  }
 
+  // tendency
+  console.log(thisTendency)
+  tendencyBox = createNode({
+    mother: grayTong,
+    style: {
+      display: "flex",
+      marginTop: String(blockBetween) + ea,
+      position: "relative",
+      width: withOut(whitePadding * 2, ea),
+      background: colorChip.white,
+      borderRadius: String(8) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      flexDirection: "row",
+      justifyContent: "start",
+      alignItems: "center",
+      paddingLeft: String(whitePadding) + ea,
+      paddingRight: String(whitePadding) + ea,
+      paddingTop: String(whitePaddingTop) + ea,
+    },
+  });
 
+  createNode({
+    mother: tendencyBox,
+    style: {
+      display: "inline-flex",
+      width: String(tendencyTitleBoxWidth) + ea,
+      height: String(400) + ea,
+      justifyContent: "start",
+      alignItems: "start",
+      flexDirection: "column",
+      verticalAlign: "top",
+    },
+    child: {
+      text: "스타일 경향성",
+      style: {
+        display: "block",
+        position: "relative",
+        fontSize: String(textSize) + ea,
+        fontWeight: String(textBoldWeight),
+        color: colorChip.black,
+      }
+    }
+  });
+
+  createNode({
+    mother: tendencyBox,
+    style: {
+      display: "inline-flex",
+      verticalAlign: "top",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "column",
+      width: withOut(tendencyTitleBoxWidth, ea),
+      height: String(400) + ea,
+    }
+  })
 
 
 
