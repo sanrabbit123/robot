@@ -23,7 +23,8 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.staticConst = process.env.HOME + "/static";
   this.folderConst = this.staticConst + "/photo/designer";
   this.clientConst = this.staticConst + "/photo/client";
-  this.userConst = this.staticConst + "/photo/user";
+  this.userLinkConst = "/photo/user";
+  this.userConst = this.staticConst + this.userLinkConst;
   this.hashConst = "homeliaisonHash";
 
   this.vaildHost = [
@@ -1162,6 +1163,54 @@ TransferRouter.prototype.rou_post_userConfirm = function () {
       });
     } catch (e) {
       errorLog("Transfer lounge 서버 문제 생김 (rou_post_userConfirm): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_userPhoto = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
+  const { userConst, userLinkConst } = this;
+  const back = this.back;
+  const address = this.address;
+  let obj;
+  obj = {};
+  obj.link = [ "/userPhoto" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.useid === undefined) {
+        throw new Error("invaild post");
+      }
+      const staticPath = userConst;
+      const selfMongo = instance.mongo;
+      const { useid } = req.body;
+      const user = await back.getUserById(useid, { selfMongo });
+      let keyArr;
+      let dir;
+      let tong;
+
+      keyArr = user.request.photo.toNormal().map((obj) => { return obj.key });
+      keyArr = keyArr.map((str) => { return { path: staticPath + "/" + str, link: userLinkConst + "/" + str } });
+
+      tong = [];
+      for (let { path, link } of keyArr) {
+        dir = await fileSystem("readDir", [ path ]);
+        dir = dir.filter((str) => { return str !== ".DS_Store" }).map((str) => { return link + "/" + str });
+        tong = tong.concat(dir);
+      }
+
+      res.send(JSON.stringify({ list: tong }));
+
+    } catch (e) {
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_userPhoto): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
