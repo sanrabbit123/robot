@@ -7147,6 +7147,9 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   let titleTopNumber;
   let titleTop;
   let mobileInnerPaddingBottom;
+  let imageTong;
+  let imageBetween;
+  let imageWidth, imageHeight;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -7156,7 +7159,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
-  innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+  innerMargin = <%% 20, 16, 16, 12, 1 %%>;
 
   textTextTop = <%% (isMac() ? 1 : 3), (isMac() ? 1 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 1), 0 %%>;
   smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
@@ -7191,6 +7194,11 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
   mobileInnerPaddingBottom = 0;
+
+  imageBetween = <%% 8, 8, 6, 4, 1 %%>;
+
+  imageWidth = <%% 154, 154, 154, 154, 154 %%>;
+  imageHeight = <%% 224, 224, 224, 224, 224 %%>;
 
 
   [ thisContents ] = this.contentsArr
@@ -7257,18 +7265,16 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   });
 
 
-  grayTong = createNode({
+
+  // images
+
+  imageTong = createNode({
     mother: whiteTong,
     style: {
       display: "block",
       position: "relative",
-      paddingTop: String(innerMargin) + ea,
-      paddingBottom: String(desktop ? innerMargin : innerMargin - arrowBetween) + ea,
-      paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
-      paddingRight: String(desktop ? (innerMargin - 8) : (innerMargin + mobileVisualPaddingValue)) + ea,
-      width: withOut((innerMargin * 2) - 8, ea),
+      width: withOut(imageBetween * -1, ea),
       background: colorChip.white,
-      borderRadius: String(8) + "px",
     }
   });
 
@@ -7279,20 +7285,45 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
 
   for (let { src, gs } of imageTargets) {
     createNode({
-      mother: grayTong,
+      mother: imageTong,
       mode: "img",
       attribute: { src },
       style: {
         display: "inline-block",
         position: "relative",
-        width: String(gs === 's' ? 154 : 308 + 8) + ea,
-        height: String(224) + ea,
+        width: String(gs === 's' ? imageWidth : (imageWidth * 2) + imageBetween) + ea,
+        height: String(imageHeight) + ea,
         borderRadius: String(5) + "px",
-        marginRight: String(8) + ea,
-        marginBottom: String(8) + ea,
+        marginRight: String(imageBetween) + ea,
+        marginBottom: String(imageBetween) + ea,
       }
     })
   }
+
+  // links
+
+  grayTong = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingTop: String(innerMargin) + ea,
+      paddingBottom: String(desktop ? innerMargin : innerMargin - arrowBetween) + ea,
+      paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+      paddingRight: String(desktop ? (innerMargin) : (innerMargin + mobileVisualPaddingValue)) + ea,
+      width: withOut(innerMargin * 2, ea),
+      background: colorChip.gray2,
+      borderRadius: String(8) + "px",
+      marginTop: String(24) + ea,
+    }
+  });
+
+
+  
+
+
+
+
 
 
 }
@@ -7414,9 +7445,9 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             }
           } else {
             instance.insertInitBox();
-            // if (instance.contentsArr.length > 0) {
-            //   instance.insertContentsBox();
-            // }
+            if (instance.contentsArr.length > 0) {
+              instance.insertContentsBox();
+            }
             instance.insertNumbersBox();
             instance.insertUploadBox();
             instance.insertControlBox();
