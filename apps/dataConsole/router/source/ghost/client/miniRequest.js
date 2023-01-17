@@ -646,6 +646,7 @@ MiniRequestJs.prototype.insertMemoBox = function () {
               width: String(100) + '%',
               height: String(100) + '%',
               verticalAlign: "top",
+              overflow: "scroll",
             },
             children: [
               {
@@ -684,7 +685,7 @@ MiniRequestJs.prototype.insertMemoBox = function () {
                   whereQuery = { useid: instance.user.useid };
                   updateQuery = {};
                   updateQuery["request.comments.etc"] = this.value.trim();
-                  await ajaxJson({ whereQuery, updateQuery }, "/updateUser");
+                  await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/updateUser");
                 } catch (e) {
                   window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
                 }
@@ -739,9 +740,9 @@ MiniRequestJs.prototype.insertMemoBox = function () {
 
   (async () => {
     try {
-      const data = await ajaxJson({ useid: instance.user.useid }, "/ghostPass_userPhoto", { equal: true });
+      const data = await ajaxJson({ useid: instance.user.useid }, BRIDGEHOST + "/userPhoto", { equal: true });
       const { list } = data;
-      const targets = list.map((raw) => { return "https://" + FILEHOST + window.encodeURI(raw) });
+      const targets = list.map((raw) => { return BRIDGEHOST.replace(/\:3000/gi, '') + window.encodeURI(raw) });
       let images;
       let index;
 
@@ -2719,7 +2720,7 @@ MiniRequestJs.prototype.insertListBox = function (mother, index) {
                     if (num === 0) {
                       arr.unshift("사진");
                     } else {
-                      ({ image } = await ajaxJson({ url: window.encodeURIComponent(arr[7]) }, "/getOpenGraph"));
+                      ({ image } = await ajaxJson({ url: window.encodeURIComponent(arr[7]) }, BACKHOST + "/getOpenGraph"));
                       arr.unshift(image);
                     }
 
@@ -3504,7 +3505,7 @@ MiniRequestJs.prototype.launching = async function (loading) {
       window.location.href = this.frontPage;
     }
 
-    users = await ajaxJson({ whereQuery: { useid: getObj.useid } }, "/getUsers", { equal: true });
+    users = await ajaxJson({ whereQuery: { useid: getObj.useid } }, BACKHOST + "/getUsers", { equal: true });
     if (users.length === 0) {
       window.alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
