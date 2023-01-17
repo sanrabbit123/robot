@@ -7160,6 +7160,12 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   let tendencyBox;
   let whitePaddingTop;
   let tendencyTitleBoxWidth;
+  let tendencyContents;
+  let tendencyTong;
+  let whitePaddingBottom;
+  let barTong;
+  let barTongHeight, barHeight;
+  let barTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -7175,7 +7181,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   smallTextTop = <%% (isMac() ? 0 : 0), (isMac() ? 0 : 0), (isMac() ? 0 : 0), (isMac() ? 0 : 0), 0 %%>;
 
   textSize = <%% 16, 15, 14, 13, 2.9 %%>;
-  textWeight = <%% 400, 400, 400, 400, 400 %%>;
+  textWeight = <%% 300, 300, 300, 300, 300 %%>;
   textBoldWeight = <%% 600, 600, 600, 600, 600 %%>;
   textUnderWeight = <%% 300, 300, 300, 300, 300 %%>;
   textFileWeight = <%% 500, 500, 500, 500, 500 %%>;
@@ -7222,9 +7228,14 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   smallButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
   smallButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  whitePaddingTop = <%% 18, 18, 18, 18, 1 %%>;
-
+  whitePaddingTop = <%% 20, 20, 20, 20, 1 %%>;
+  whitePaddingBottom = <%% 13, 13, 12, 11, 1 %%>;
+  
   tendencyTitleBoxWidth = <%% 160, 160, 160, 160, 16 %%>;
+
+  barTongHeight = <%% 28, 28, 28, 28, 28 %%>;
+  barHeight = <%% 16, 16, 16, 16, 16 %%>;
+  barTop = <%% 2, 2, 2, 2, 2 %%>;
 
   [ thisContents ] = this.contentsArr;
   ({ contents: { portfolio: { detailInfo: { tendency: thisTendency } } } } = thisContents);
@@ -7235,6 +7246,118 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   } else {
     reviewText = "<b%" + thisContents.contents.review.title.main + "%b>" + blank + thisContents.contents.review.title.sub + blank + "<u%" + dateToString(thisContents.contents.review.date, true) + "%u>";
   }
+
+  tendencyContents = [
+    {
+      title: "스타일 경향성",
+      children: [
+        {
+          title: "모던",
+          value: thisTendency.style.modern
+        },
+        {
+          title: "클래식",
+          value: thisTendency.style.classic
+        },
+        {
+          title: "내추럴",
+          value: thisTendency.style.natural
+        },
+        {
+          title: "믹스매치",
+          value: thisTendency.style.mixmatch
+        },
+        {
+          title: "북유럽",
+          value: thisTendency.style.scandinavian
+        },
+        {
+          title: "빈티지",
+          value: thisTendency.style.vintage
+        },
+        {
+          title: "오리엔탈",
+          value: thisTendency.style.oriental
+        },
+        {
+          title: "이그저틱",
+          value: thisTendency.style.exotic
+        },
+      ]
+    },
+    {
+      title: "텍스처 경향성",
+      children: [
+        {
+          title: "진한 우드",
+          value: thisTendency.texture.darkWood
+        },
+        {
+          title: "연한 우드",
+          value: thisTendency.texture.whiteWood
+        },
+        {
+          title: "도장",
+          value: thisTendency.texture.coating
+        },
+        {
+          title: "금속",
+          value: thisTendency.texture.metal
+        },
+      ]
+    },
+    {
+      title: "컬러톤 경향성",
+      children: [
+        {
+          title: "다크 우드",
+          value: thisTendency.color.darkWood
+        },
+        {
+          title: "밝은 우드",
+          value: thisTendency.color.whiteWood
+        },
+        {
+          title: "고대비",
+          value: thisTendency.color.highContrast
+        },
+        {
+          title: "비비드",
+          value: thisTendency.color.vivid
+        },
+        {
+          title: "화이트",
+          value: thisTendency.color.white
+        },
+        {
+          title: "모노톤",
+          value: thisTendency.color.mono
+        },
+        {
+          title: "밝은톤",
+          value: thisTendency.color.bright
+        },
+        {
+          title: "어두운톤",
+          value: thisTendency.color.dark
+        },
+      ]
+    },
+    {
+      title: "밀도 경향성",
+      children: [
+        {
+          title: "맥시멈",
+          value: thisTendency.density.maximun
+        },
+        {
+          title: "미니멈",
+          value: thisTendency.density.minimum
+        },
+      ]
+    },
+  ];
+
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -7516,64 +7639,116 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   }
 
   // tendency
-  console.log(thisTendency)
-  tendencyBox = createNode({
-    mother: grayTong,
-    style: {
-      display: "flex",
-      marginTop: String(blockBetween) + ea,
-      position: "relative",
-      width: withOut(whitePadding * 2, ea),
-      background: colorChip.white,
-      borderRadius: String(8) + "px",
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-      flexDirection: "row",
-      justifyContent: "start",
-      alignItems: "center",
-      paddingLeft: String(whitePadding) + ea,
-      paddingRight: String(whitePadding) + ea,
-      paddingTop: String(whitePaddingTop) + ea,
-    },
-  });
-
-  createNode({
-    mother: tendencyBox,
-    style: {
-      display: "inline-flex",
-      width: String(tendencyTitleBoxWidth) + ea,
-      height: String(400) + ea,
-      justifyContent: "start",
-      alignItems: "start",
-      flexDirection: "column",
-      verticalAlign: "top",
-    },
-    child: {
-      text: "스타일 경향성",
+  for (let i = 0; i < tendencyContents.length; i++) {
+    tendencyBox = createNode({
+      mother: grayTong,
       style: {
-        display: "block",
+        display: "flex",
+        marginTop: String(blockBetween) + ea,
         position: "relative",
-        fontSize: String(textSize) + ea,
-        fontWeight: String(textBoldWeight),
-        color: colorChip.black,
+        width: withOut(whitePadding * 2, ea),
+        background: colorChip.white,
+        borderRadius: String(8) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+        paddingLeft: String(whitePadding) + ea,
+        paddingRight: String(whitePadding) + ea,
+        paddingTop: String(whitePaddingTop) + ea,
+        paddingBottom: String(whitePaddingBottom) + ea,
+      },
+    });
+  
+    createNode({
+      mother: tendencyBox,
+      style: {
+        display: "inline-flex",
+        width: String(tendencyTitleBoxWidth) + ea,
+        justifyContent: "start",
+        alignItems: "start",
+        flexDirection: "column",
+        verticalAlign: "top",
+      },
+      child: {
+        text: tendencyContents[i].title,
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        }
       }
+    });
+  
+    tendencyTong = createNode({
+      mother: tendencyBox,
+      style: {
+        display: "inline-flex",
+        verticalAlign: "top",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        width: withOut(tendencyTitleBoxWidth, ea),
+      }
+    })
+  
+    for (z = 0; z < tendencyContents[i].children.length; z++) {
+      barTong = createNode({
+        mother: tendencyTong,
+        style: {
+          display: "flex",
+          width: withOut(0, ea),
+          height: String(barTongHeight) + ea,
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "start",
+        },
+        children: [
+          {
+            text: tendencyContents[i].children[z].title,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(textSize) + ea,
+              fontWeight: String(textWeight),
+              color: colorChip.black,
+              width: String(100) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              flexDirection: "row",
+              position: "relative",
+              width: withOut(100, ea),
+              height: String(barHeight) + ea,
+              overflow: "hidden",
+              borderRadius: String(5) + "px",
+              top: String(barTop) + ea,
+              background: colorChip.gray2,
+            }
+          }
+        ]
+      }).children[1];
+  
+      for (let y = 0; y < 10; y++) {
+        createNode({
+          mother: barTong,
+          style: {
+            display: "inline-block",
+            width: "calc(100% / " + String(10) + ")",
+            height: withOut(0, ea),
+            background: y <= tendencyContents[i].children[z].value ? colorChip.green : colorChip.gray2,
+            borderTopRightRadius: y === tendencyContents[i].children[z].value ? String(5) + "px" : "",
+            borderBottomRightRadius: y === tendencyContents[i].children[z].value ? String(5) + "px" : "",
+          }
+        })
+      }
+  
     }
-  });
-
-  createNode({
-    mother: tendencyBox,
-    style: {
-      display: "inline-flex",
-      verticalAlign: "top",
-      justifyContent: "center",
-      alignItems: "center",
-      flexDirection: "column",
-      width: withOut(tendencyTitleBoxWidth, ea),
-      height: String(400) + ea,
-    }
-  })
-
-
-
+  }
 
 }
 
