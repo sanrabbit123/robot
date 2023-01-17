@@ -7166,6 +7166,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   let barTong;
   let barTongHeight, barHeight;
   let barTop;
+  let whiteCircleWidth, whiteCircleMargin;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -7236,6 +7237,9 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   barTongHeight = <%% 28, 28, 28, 28, 28 %%>;
   barHeight = <%% 16, 16, 16, 16, 16 %%>;
   barTop = <%% 2, 2, 2, 2, 2 %%>;
+
+  whiteCircleMargin = <%% 12, 12, 12, 12, 12 %%>;
+  whiteCircleWidth = <%% 16, 16, 16, 16, 16 %%>;
 
   [ thisContents ] = this.contentsArr;
   ({ contents: { portfolio: { detailInfo: { tendency: thisTendency } } } } = thisContents);
@@ -7441,8 +7445,18 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   for (let { src, gs } of imageTargets) {
     createNode({
       mother: imageTong,
-      mode: "img",
-      attribute: { src },
+      event: {
+        mouseenter: function (e) {
+          if (desktop) {
+            this.style.opacity = String(0.7);
+          }
+        },
+        mouseleave: function (e) {
+          if (desktop) {
+            this.style.opacity = String(1);
+          }
+        },
+      },
       style: {
         display: "inline-block",
         position: "relative",
@@ -7451,6 +7465,24 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
         borderRadius: String(5) + "px",
         marginRight: String(imageBetween) + ea,
         marginBottom: String(imageBetween) + ea,
+        backgroundImage: "url('" + src + "')",
+        backgroundPosition: "50% 50%",
+        backgroundSize: "100% 100%",
+        opacity: String(1),
+        transition: "all 0.3s ease",
+        cursor: "pointer",
+      },
+      child: {
+        style: {
+          position: "absolute",
+          top: String(whiteCircleMargin) + ea,
+          left: String(whiteCircleMargin) + ea,
+          width: String(whiteCircleWidth) + ea,
+          height: String(whiteCircleWidth) + ea,
+          borderRadius: String(whiteCircleWidth) + ea,
+          background: colorChip.white,
+          opacity: String(0.8),
+        }
       }
     })
   }
