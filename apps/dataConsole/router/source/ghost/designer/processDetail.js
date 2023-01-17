@@ -7167,6 +7167,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   let barTongHeight, barHeight;
   let barTop;
   let whiteCircleWidth, whiteCircleMargin;
+  let representative;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -7239,10 +7240,10 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   barTop = <%% 2, 2, 2, 2, 2 %%>;
 
   whiteCircleMargin = <%% 12, 12, 12, 12, 12 %%>;
-  whiteCircleWidth = <%% 16, 16, 16, 16, 16 %%>;
+  whiteCircleWidth = <%% 18, 18, 18, 18, 16 %%>;
 
   [ thisContents ] = this.contentsArr;
-  ({ contents: { portfolio: { detailInfo: { tendency: thisTendency } } } } = thisContents);
+  ({ contents: { portfolio: { detailInfo: { photodae: representative, tendency: thisTendency } } } } = thisContents);
 
   portfolioText = "<b%" + thisContents.contents.portfolio.title.main + "%b>" + blank + thisContents.contents.portfolio.spaceInfo.region + blank + thisContents.contents.portfolio.spaceInfo.method + blank + "<u%" + dateToString(thisContents.contents.portfolio.date, true) + "%u>";
   if (/999/gi.test(thisContents.contents.review.rid)) {
@@ -7442,9 +7443,13 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
     return obj;
   });
 
-  for (let { src, gs } of imageTargets) {
+  for (let { src, gs, index } of imageTargets) {
     createNode({
       mother: imageTong,
+      attribute: {
+        index: String(index),
+        toggle: representative.includes(index) ? "on" : "off",
+      },
       event: {
         mouseenter: function (e) {
           if (desktop) {
@@ -7474,6 +7479,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
       },
       child: {
         style: {
+          display: "inline-flex",
           position: "absolute",
           top: String(whiteCircleMargin) + ea,
           left: String(whiteCircleMargin) + ea,
@@ -7481,7 +7487,31 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
           height: String(whiteCircleWidth) + ea,
           borderRadius: String(whiteCircleWidth) + ea,
           background: colorChip.white,
-          opacity: String(0.8),
+          opacity: String(0.9),
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        child: {
+          mode: "svg",
+          source: svgMaker.checkCircle(colorChip.green),
+          style: {
+            display: representative.includes(index) ? "block" : "none",
+            position: "relative",
+            width: String(whiteCircleWidth) + ea,
+          }
+        },
+        next: {
+          style: {
+            display: "block",
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            background: colorChip.green,
+            opacity: representative.includes(index) ? String(0.2) : String(0),
+          }          
         }
       }
     })
