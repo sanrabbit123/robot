@@ -2370,7 +2370,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   threeWidth0 = <%% 525, 525, 525, 525, 525 %%>;
   threeWidth1 = <%% 330, 330, 330, 330, 330 %%>;
 
-  threeTitleSize = <%% 18, 17, 16, 14, 3.8 %%>;
+  threeTitleSize = <%% 18, 17, 16, 14, 4 %%>;
   threeTitleWeight = <%% 800, 800, 800, 800, 700 %%>;
 
   threeSize = <%% 13, 13, 12, 11, 2.6 %%>;
@@ -2388,23 +2388,23 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   subBetween = <%% 6, 6, 6, 6, 0.5 %%>;
   subTop = <%% 3, 3, 3, 3, 0.5 %%>;
 
-  threeBlockWidth = <%% 400, 340, 290, 234, 27 %%>;
-  threeBlockHeight = <%% 400, 360, 325, 268, 25 %%>;
+  threeBlockWidth = <%% 400, 340, 290, 234, 31 %%>;
+  threeBlockHeight = <%% 477, 438, 405, 338, 28 %%>;
 
-  threePhotoHeight = <%% 253, 222, 200, 160, 230 %%>;
-  threeTitlePaddingLeft = <%% 26, 26, 24, 21, 4.6 %%>;
+  threePhotoHeight = <%% 330, 300, 280, 230, 230 %%>;
+  threeTitlePaddingLeft = <%% 26, 26, 24, 21, 4.8 %%>;
   threeTitleAreaHeight = <%% 60, 50, 48, 40, 5 %%>;
 
-  threeDescriptionBoxPaddingTop = <%% 23, 23, 19, 16, 4.6 %%>;
+  threeDescriptionBoxPaddingTop = <%% 23, 23, 19, 16, 5.2 %%>;
   threeDescriptionBoxBetween = <%% 5, 5, 5, 4, (isIphone() ? 0.8 : 1) %%>;
 
   checkBoxWidth = <%% 10, 10, 9, 8, 2 %%>;
   checkBoxMarginRight = <%% 6, 6, 6, 5, 1 %%>;
   checkBoxTop = <%% 5, 5, 4, 4, 1 %%>;
 
-  arrowBottom = <%% 27, 27, 24, 22, (isIphone() ? 5.6 : 5.3) %%>;
-  arrowWidth = <%% 36, 36, 20, 12, 3.5 %%>;
-  arrowHeight = <%% 10, 10, 8, 4, 1.8 %%>;
+  arrowBottom = <%% 27, 27, 24, 22, (isIphone() ? 6.3 : 6) %%>;
+  arrowWidth = <%% 36, 36, 20, 12, 3 %%>;
+  arrowHeight = <%% 10, 10, 8, 4, 1.5 %%>;
 
   mobileBlockPadding = 14;
   mobilePhotoMarginBottom = 6;
@@ -2425,11 +2425,11 @@ FrontIndexJs.prototype.insertThreeBox = function () {
         title: "홈퍼니싱",
         sub: "home-furnishing",
         description: [
-          "인테리어 시공 없이 가구나 패브릭, 소품만",
-          "우리 집 무드를 변화시켜주는 스타일링",
+          "인테리어 시공 없이 가구, 패브릭, 소품만",
+          "집 무드를 변화시켜주는 스타일링",
         ],
         color: "#bfb8b0",
-        background: FrontIndexJs.binaryPath + "/" + "startf0.jpg",
+        background: FrontIndexJs.binaryPath + "/" + "startillf0.png",
         href: FRONTHOST + "/service.php?mode=furnishing",
       },
       {
@@ -2440,7 +2440,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
           "컨셉에 맞게 변화시켜주는 스타일링",
         ],
         color: "#b1ae9d",
-        background: FrontIndexJs.binaryPath + "/" + "starts0.jpg",
+        background: FrontIndexJs.binaryPath + "/" + "startills0.png",
         href: FRONTHOST + "/service.php?mode=styling",
       },
       {
@@ -2451,7 +2451,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
           "전체적인 구조를 변경하는 스타일링",
         ],
         color: "#546d81",
-        background: FrontIndexJs.binaryPath + "/" + "startt0.jpg",
+        background: FrontIndexJs.binaryPath + "/" + "startillt0.png",
         href: FRONTHOST + "/service.php?mode=total",
       },
     ]
@@ -2607,7 +2607,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
             width: desktop ? withOut(0, ea) : String(threeBlockWidth) + ea,
             height: desktop ? String(threePhotoHeight) + ea : String(102) + '%',
             backgroundImage: "url('" + contents.three[i].background + "')",
-            backgroundSize: desktop ? "100% auto" : "auto 100%",
+            backgroundSize: desktop ? "100% auto" : "100% auto",
             backgroundPosition: "50% 50%",
             verticalAlign: desktop ? "" : "top",
           }
@@ -2632,7 +2632,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
               style: {
                 display: desktop ? "none" : "inline-block",
                 position: "absolute",
-                top: String(isIphone() ? 4.1 : 4.4) + ea,
+                top: String(isIphone() ? 5.2 : 5.4) + ea,
                 left: String(threeTitlePaddingLeft) + ea,
               },
               children: [
