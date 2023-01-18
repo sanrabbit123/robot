@@ -7109,7 +7109,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, selfHref, scrollTo } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, selfHref, scrollTo, blankHref } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   const blank = "<u%&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;%u>";
   let margin;
@@ -7170,6 +7170,8 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   let representative;
   let tendencySubTitleBoxWidth;
   let grayTongMarginTop;
+  let tendencyLength;
+  let detailInfo;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -7247,9 +7249,12 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
 
   grayTongMarginTop = <%% 20, 20, 20, 20, 4 %%>;
 
-  [ thisContents ] = this.contentsArr;
-  ({ contents: { portfolio: { detailInfo: { photodae: representative, tendency: thisTendency } } } } = thisContents);
+  tendencyLength = 10;
 
+  [ thisContents ] = this.contentsArr;
+  ({ contents: { portfolio: { detailInfo: { photodae: representative, tendency: thisTendency } }, review: { detailInfo } } } = thisContents);
+  representative = representative.concat(detailInfo.photodae);
+  
   if (media[0]) {
     portfolioText = "<b%" + thisContents.contents.portfolio.title.main + "%b>" + blank + thisContents.contents.portfolio.spaceInfo.region + blank + thisContents.contents.portfolio.spaceInfo.method + blank + "<u%" + dateToString(thisContents.contents.portfolio.date, true) + "%u>";
   } else if (media[1] || media[2]) {
@@ -7260,7 +7265,6 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
     portfolioText = "<b%" + thisContents.contents.portfolio.title.sub + "%b>";
   }
 
-  
   if (/999/gi.test(thisContents.contents.review.rid)) {
     reviewText = "";
   } else {
@@ -7281,34 +7285,42 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
       children: [
         {
           title: "모던",
+          position: "contents.portfolio.detailInfo.tendency.style.modern",
           value: thisTendency.style.modern
         },
         {
           title: "클래식",
+          position: "contents.portfolio.detailInfo.tendency.style.classic",
           value: thisTendency.style.classic
         },
         {
           title: "내추럴",
+          position: "contents.portfolio.detailInfo.tendency.style.natural",
           value: thisTendency.style.natural
         },
         {
           title: "믹스매치",
+          position: "contents.portfolio.detailInfo.tendency.style.mixmatch",
           value: thisTendency.style.mixmatch
         },
         {
           title: "북유럽",
+          position: "contents.portfolio.detailInfo.tendency.style.scandinavian",
           value: thisTendency.style.scandinavian
         },
         {
           title: "빈티지",
+          position: "contents.portfolio.detailInfo.tendency.style.vintage",
           value: thisTendency.style.vintage
         },
         {
           title: "오리엔탈",
+          position: "contents.portfolio.detailInfo.tendency.style.oriental",
           value: thisTendency.style.oriental
         },
         {
           title: "이그저틱",
+          position: "contents.portfolio.detailInfo.tendency.style.exotic",
           value: thisTendency.style.exotic
         },
       ]
@@ -7318,18 +7330,22 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
       children: [
         {
           title: "진한 우드",
+          position: "contents.portfolio.detailInfo.tendency.texture.darkWood",
           value: thisTendency.texture.darkWood
         },
         {
           title: "연한 우드",
+          position: "contents.portfolio.detailInfo.tendency.texture.whiteWood",
           value: thisTendency.texture.whiteWood
         },
         {
           title: "도장",
+          position: "contents.portfolio.detailInfo.tendency.texture.coating",
           value: thisTendency.texture.coating
         },
         {
           title: "금속",
+          position: "contents.portfolio.detailInfo.tendency.texture.metal",
           value: thisTendency.texture.metal
         },
       ]
@@ -7339,34 +7355,42 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
       children: [
         {
           title: "다크 우드",
+          position: "contents.portfolio.detailInfo.tendency.color.darkWood",
           value: thisTendency.color.darkWood
         },
         {
           title: "밝은 우드",
+          position: "contents.portfolio.detailInfo.tendency.color.whiteWood",
           value: thisTendency.color.whiteWood
         },
         {
           title: "고대비",
+          position: "contents.portfolio.detailInfo.tendency.color.highContrast",
           value: thisTendency.color.highContrast
         },
         {
           title: "비비드",
+          position: "contents.portfolio.detailInfo.tendency.color.vivid",
           value: thisTendency.color.vivid
         },
         {
           title: "화이트",
+          position: "contents.portfolio.detailInfo.tendency.color.white",
           value: thisTendency.color.white
         },
         {
           title: "모노톤",
+          position: "contents.portfolio.detailInfo.tendency.color.mono",
           value: thisTendency.color.mono
         },
         {
           title: "밝은톤",
+          position: "contents.portfolio.detailInfo.tendency.color.bright",
           value: thisTendency.color.bright
         },
         {
           title: "어두운톤",
+          position: "contents.portfolio.detailInfo.tendency.color.dark",
           value: thisTendency.color.dark
         },
       ]
@@ -7376,16 +7400,17 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
       children: [
         {
           title: "맥시멈",
+          position: "contents.portfolio.detailInfo.tendency.density.maximun",
           value: thisTendency.density.maximun
         },
         {
           title: "미니멈",
+          position: "contents.portfolio.detailInfo.tendency.density.minimum",
           value: thisTendency.density.minimum
         },
       ]
     },
   ];
-
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -7533,7 +7558,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
             height: withOut(0, ea),
             background: colorChip.green,
             opacity: representative.includes(index) ? String(0.2) : String(0),
-          }          
+          }
         }
       }
     })
@@ -7610,6 +7635,15 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
         }
       },
       {
+        attribute: {
+          pid: thisContents.contents.portfolio.pid
+        },
+        event: {
+          click: function (e) {
+            const pid = this.getAttribute("pid");
+            blankHref(FRONTHOST + "/portdetail.php?pid=" + pid);
+          }
+        },
         style: {
           display: "inline-flex",
           position: "absolute",
@@ -7693,6 +7727,15 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
           }
         },
         {
+          attribute: {
+            pid: thisContents.contents.portfolio.pid
+          },
+          event: {
+            click: function (e) {
+              const pid = this.getAttribute("pid");
+              blankHref(FRONTHOST + "/revdetail.php?pid=" + pid);
+            }
+          },
           style: {
             display: "inline-flex",
             position: "absolute",
@@ -7817,16 +7860,74 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
         ]
       }).children[1];
   
-      for (let y = 0; y < 10; y++) {
+      for (let y = 0; y < tendencyLength; y++) {
         createNode({
           mother: barTong,
+          class: [ tendencyContents[i].children[z].position.replace(/\./gi, '') ],
+          attribute: {
+            position: tendencyContents[i].children[z].position,
+            index: String(y + 1),
+            conid: thisContents.conid,
+            toggle: (y + 1) <= tendencyContents[i].children[z].value ? "on" : "off",
+          },
+          event: {
+            click: async function (e) {
+              try {
+                const position = this.getAttribute("position");
+                const index = Number(this.getAttribute("index"));
+                const className = position.replace(/\./gi, '');
+                const targets = [ ...document.querySelectorAll('.' + className) ];
+                const conid = this.getAttribute("conid");
+                let newValue;
+                let whereQuery, updateQuery;
+
+                targets.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) });
+
+                newValue = index;
+
+                for (let i = 0; i < tendencyLength; i++) {
+                  targets[i].style.background = (i + 1) <= newValue ? colorChip.green : colorChip.gray2;
+                  targets[i].style.borderTopRightRadius = (i + 1) === newValue ? String(5) + "px" : "";
+                  targets[i].style.borderBottomRightRadius = (i + 1) === newValue ? String(5) + "px" : "";
+                  targets[i].setAttribute("toggle", (i + 1) <= newValue ? "on" : "off")
+                }
+
+                whereQuery = { conid };
+                updateQuery = {};
+                updateQuery[position] = newValue;
+                
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateContents");
+
+              } catch (e) {
+                console.log(e);
+              }
+            },
+            mouseenter: function (e) {
+              const toggle = this.getAttribute("toggle");
+              if (toggle === "on") {
+                this.style.background = colorChip.softGreen;
+              } else {
+                this.style.background = colorChip.gray3;
+              }
+            },
+            mouseleave: function (e) {
+              const toggle = this.getAttribute("toggle");
+              if (toggle === "on") {
+                this.style.background = colorChip.green;
+              } else {
+                this.style.background = colorChip.gray2;
+              }
+            }
+          },
           style: {
             display: "inline-block",
-            width: "calc(100% / " + String(10) + ")",
+            width: "calc(100% / " + String(tendencyLength) + ")",
             height: withOut(0, ea),
-            background: y <= tendencyContents[i].children[z].value ? colorChip.green : colorChip.gray2,
-            borderTopRightRadius: y === tendencyContents[i].children[z].value ? String(5) + "px" : "",
-            borderBottomRightRadius: y === tendencyContents[i].children[z].value ? String(5) + "px" : "",
+            background: (y + 1) <= tendencyContents[i].children[z].value ? colorChip.green : colorChip.gray2,
+            borderTopRightRadius: (y + 1) === tendencyContents[i].children[z].value ? String(5) + "px" : "",
+            borderBottomRightRadius: (y + 1) === tendencyContents[i].children[z].value ? String(5) + "px" : "",
+            cursor: "pointer",
+            transition: "all 0s ease",
           }
         })
       }

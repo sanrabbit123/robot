@@ -79,7 +79,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   const { indexArr } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const photoChar = 'b';
+  const photoChar = 't';
   const photoCharMobile = "mot";
   let speed;
   let naviHeight;

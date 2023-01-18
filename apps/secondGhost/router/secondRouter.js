@@ -549,8 +549,6 @@ SecondRouter.prototype.rou_post_updateDocument = function () {
         throw new Error("invaild query object");
       }
 
-      await messageSend({ text: "업데이트 감지 (" + req.url + ") : \n\nwhereQuery : " + JSON.stringify(whereQuery, null, 2) + "\n\nupdateQuery : " + JSON.stringify(updateQuery, null, 2), channel: "#error_log" });
-
       if (req.url === "/updateClient") {
         data = await back.updateClient([ whereQuery, updateQuery ], { selfMongo });
       } else if (req.url === "/updateDesigner") {

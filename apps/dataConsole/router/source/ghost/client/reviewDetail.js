@@ -52,7 +52,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const contents = contentsArr.toNormal().filter((obj) => { return obj.contents.portfolio.pid === pid })[0];
-  const photoChar = 'b';
+  const photoChar = 't';
   const photoCharMobile = "mot";
   let mainHeight;
   let mainTong;
@@ -101,7 +101,7 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
   topReviewWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   mainTitleSize = <%% 36, 35, 33, 29, 4.5 %%>;
-  mainTitleWeight = <%% 400, 400, 400, 400, 400 %%>;
+  mainTitleWeight = <%% 500, 500, 500, 500, 500 %%>;
   mainTitleLineHeight = <%% 1.16, 1.16, 1.16, 1.16, 1.2 %%>;
   mainTitleMarginTop = <%% 5, 5, 5, 3, 7.5 %%>;
 
@@ -164,6 +164,11 @@ ReviewDetailJs.prototype.reviewMainBox = function () {
 
   picture = createNode({
     mother: contentsBox,
+    event: {
+      contextmenu: (e) => {
+        e.preventDefault();
+      }
+    },
     style: {
       display: desktop ? "inline-block" : "block",
       position: desktop ? "relative" : "absolute",

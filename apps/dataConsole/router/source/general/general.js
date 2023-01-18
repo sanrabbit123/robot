@@ -4538,10 +4538,6 @@ GeneralJs.prototype.certificationBox = function (name, phone, callback) {
   }
 
   GeneralJs.ajaxJson({
-    text: "인증번호 감지 (브라우저)",
-  }, LOGHOST + "/errorMessage").catch((err) => {});
-
-  GeneralJs.ajaxJson({
     name,
     phone,
     certification: randomValue

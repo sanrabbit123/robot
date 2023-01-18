@@ -803,6 +803,50 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
   return obj;
 }
 
+LogRouter.prototype.rou_post_updateContents = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, errorLog, messageLog, messageSend } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateContents" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.whereQuery === undefined || req.body.updateQuery === undefined) {
+        throw new Error("invaild post");
+      }
+
+      const selfMongo = instance.mongo;
+      const { whereQuery, updateQuery } = equalJson(req.body);
+      let data;
+
+      if (typeof whereQuery !== "object" || whereQuery === null) {
+        throw new Error("invaild query object");
+      }
+      if (Object.keys(whereQuery).length === 0) {
+        throw new Error("query ban");
+      }
+      if (typeof updateQuery !== "object" || updateQuery === null) {
+        throw new Error("invaild query object");
+      }
+
+      data = await back.updateContents([ whereQuery, updateQuery ], { selfMongo });
+      res.send(JSON.stringify({ message: data }));
+
+    } catch (e) {
+      errorLog("Log console 문제 생김 (rou_post_updateContents): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 LogRouter.policy = function () {
