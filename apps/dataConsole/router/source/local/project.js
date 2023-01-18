@@ -5618,6 +5618,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                 kind = "vaccount" + ((entire || percentage === 100) ? "Entire" : "Partial");
                                                 bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
 
+                                                await GeneralJs.sleep(500);
+
                                                 raw = await GeneralJs.prompt("은행 이름을 알려주세요!");
                                                 if (raw !== null) {
                                                   raw = raw.trim();
@@ -5674,6 +5676,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                 kind = "cash" + (percentage === 100 ? "Entire" : "Partial");
                                                 bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
 
+                                                await GeneralJs.sleep(500);
+
                                                 raw = await GeneralJs.prompt("은행 이름을 알려주세요!");
                                                 if (raw !== null) {
                                                   raw = raw.trim();
@@ -5690,12 +5694,12 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                 }
 
                                                 raw = await GeneralJs.prompt("계좌 번호를 알려주세요!");
-                                                  if (raw !== null) {
-                                                    accountNumber = null;
-                                                    accountNumber = raw.replace(/[^0-9]/gi, '').trim();
-                                                  } else {
-                                                    accountNumber = null;
-                                                  }
+                                                if (raw !== null) {
+                                                  accountNumber = null;
+                                                  accountNumber = raw.replace(/[^0-9]/gi, '').trim();
+                                                } else {
+                                                  accountNumber = null;
+                                                }
 
                                                 raw = await GeneralJs.prompt("예금주를 알려주세요!");
                                                 if (raw !== null) {
