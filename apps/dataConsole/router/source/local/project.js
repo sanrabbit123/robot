@@ -5618,44 +5618,36 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                 kind = "vaccount" + ((entire || percentage === 100) ? "Entire" : "Partial");
                                                 bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
 
-                                                do {
-                                                  raw = await GeneralJs.prompt("은행 이름을 알려주세요!");
-                                                  if (raw !== null) {
-                                                    raw = raw.trim();
-                                                    bankName = null;
-                                                    for (let arr of bankCode) {
-                                                      if ((new RegExp(arr[0], "gi")).test(raw)) {
-                                                        if (window.confirm("은행 이름이 '" + arr[0] + "'가 맞나요?")) {
-                                                          bankName = arr[0];
-                                                        }
+                                                raw = await GeneralJs.prompt("은행 이름을 알려주세요!");
+                                                if (raw !== null) {
+                                                  raw = raw.trim();
+                                                  bankName = null;
+                                                  for (let arr of bankCode) {
+                                                    if ((new RegExp(arr[0], "gi")).test(raw)) {
+                                                      if (window.confirm("은행 이름이 '" + arr[0] + "'가 맞나요?")) {
+                                                        bankName = arr[0];
                                                       }
                                                     }
-                                                  } else {
-                                                    bankName = null;
                                                   }
-                                                } while (bankName === null)
+                                                } else {
+                                                  bankName = null;
+                                                }
 
-                                                console.log("this");
-
-                                                do {
-                                                  raw = await GeneralJs.prompt("계좌 번호를 알려주세요!");
-                                                  if (raw !== null) {
-                                                    accountNumber = null;
-                                                    accountNumber = raw.replace(/[^0-9]/gi, '').trim();
-                                                  } else {
-                                                    accountNumber = null;
-                                                  }
-                                                } while (accountNumber === null)
+                                                raw = await GeneralJs.prompt("계좌 번호를 알려주세요!");
+                                                if (raw !== null) {
+                                                  accountNumber = null;
+                                                  accountNumber = raw.replace(/[^0-9]/gi, '').trim();
+                                                } else {
+                                                  accountNumber = null;
+                                                }
                                                 
-                                                do {
-                                                  raw = await GeneralJs.prompt("예금주를 알려주세요!");
-                                                  if (raw !== null) {
-                                                    accountName = null;
-                                                    accountName = raw.trim();
-                                                  } else {
-                                                    accountName = null;
-                                                  }
-                                                } while (accountName === null)
+                                                raw = await GeneralJs.prompt("예금주를 알려주세요!");
+                                                if (raw !== null) {
+                                                  accountName = null;
+                                                  accountName = raw.trim();
+                                                } else {
+                                                  accountName = null;
+                                                }
 
                                                 if (ratio) {
                                                   if (window.confirm("무통장 " + String(percentage) + "% 환불을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
