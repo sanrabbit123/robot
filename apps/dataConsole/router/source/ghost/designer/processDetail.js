@@ -5431,13 +5431,13 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
   buttonPadding = <%% 12, 12, 12, 10, 3.2 %%>;
   buttonHeight = <%% 36, 36, 36, 33, 6.8 %%>;
   buttonMarginTop = <%% 6, 6, 6, 6, 1 %%>;
-  buttonBetween = <%% 6, 6, 6, 6, 1 %%>;
+  buttonBetween = <%% 5, 5, 5, 5, 0.8 %%>;
 
   buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isIphone() ? -0.1 : -0.3) %%>;
   buttonSize = <%% 14, 14, 14, 13, 2.6 %%>;
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
 
-  basePadding = <%% 12, 12, 12, 10, 1.6 %%>;
+  basePadding = <%% 8, 8, 8, 6, 1.2 %%>;
 
   buttonBase = createNode({
     mother: totalContents,
@@ -7104,14 +7104,15 @@ ProcessDetailJs.prototype.paymentByCard = function () {
 ProcessDetailJs.prototype.insertContentsBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { client, ea, baseTong, media, project } = this;
+  const { client, ea, baseTong, media, project, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, selfHref, scrollTo, blankHref } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, selfHref, scrollTo, blankHref, removeByClass } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   const blank = "<u%&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;%u>";
+  const imageTargetClassName = "imageTargetClassName";
   let margin;
   let paddingTop;
   let whiteBottomMargin;
@@ -7172,6 +7173,10 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   let grayTongMarginTop;
   let tendencyLength;
   let detailInfo;
+  let imagePromptEvent;
+  let promptPadding;
+  let promptButtonWidth, promptButtonHeight, promptButtonBetween;
+  let promptSize, promptWeight, promptTextTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -7250,6 +7255,15 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   grayTongMarginTop = <%% 20, 20, 20, 20, 4 %%>;
 
   tendencyLength = 10;
+
+  promptPadding = <%% 6, 6, 6, 4, 1.2 %%>;
+  promptButtonWidth = <%% 140, 140, 140, 130, 32 %%>;
+  promptButtonHeight = <%% 30, 30, 30, 28, 7 %%>;
+  promptButtonBetween = <%% 4, 4, 4, 2, 0.8 %%>;
+
+  promptSize = <%% 12, 12, 12, 11, 2.7 %%>
+  promptWeight = <%% 700, 700, 700, 700, 700 %%>
+  promptTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>
 
   [ thisContents ] = this.contentsArr;
   ({ contents: { portfolio: { detailInfo: { photodae: representative, tendency: thisTendency } }, review: { detailInfo } } } = thisContents);
@@ -7412,6 +7426,295 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
     },
   ];
 
+  imagePromptEvent = function (e) {
+
+    e.stopPropagation();
+    e.preventDefault();
+
+    const zIndex = 5;
+    const imagePromptClassName = "imagePromptClassName";
+    const { x, y } = e;
+    const gs = this.getAttribute("gs");
+    const index = Number(this.getAttribute("index"));
+    const conid = this.getAttribute("conid");
+    let cancelBack, whitePrompt;
+    let buttonList;
+    let num;
+
+    buttonList = [
+      {
+        title: "포트폴리오 대표 사진으로",
+        click: async function (e) {
+          try {
+            const gs = this.getAttribute("gs");
+            const index = Number(this.getAttribute("index"));
+            const targets = [ ...document.querySelectorAll('.' + imageTargetClassName + gs) ];
+            const conid = this.getAttribute("conid");
+            const [ thisContents ] = await ajaxJson({ whereQuery: { conid } }, SECONDHOST + "/getContents", { equal: true });
+            let newRepresentative;
+            let newOnArr;
+            let whereQuery, updateQuery;
+            let thisIndex;
+            let check, pan;
+
+            whereQuery = { conid };
+            updateQuery = {};
+
+            newRepresentative = null;
+            newOnArr = null;
+
+            if (gs === 's') {
+              if (index !== thisContents.contents.portfolio.detailInfo.photodae[0] && index !== thisContents.contents.review.detailInfo.photodae[0]) {
+                newRepresentative = [ index, thisContents.contents.portfolio.detailInfo.photodae[1] ];
+                newOnArr = [ index, thisContents.contents.review.detailInfo.photodae[0] ];
+  
+                for (let dom of targets) {
+                  thisIndex = Number(dom.getAttribute("index"));
+                  dom.setAttribute("toggle", newOnArr.includes(thisIndex) ? "on" : "off");
+                  [ check, pan ] = [ ...dom.children ];
+                  check.firstChild.style.display = newOnArr.includes(thisIndex) ? "block" : "none";
+                  pan.style.opacity = newOnArr.includes(thisIndex) ? String(0.2) : String(0);
+                }
+
+                updateQuery["contents.portfolio.detailInfo.photodae"] = newRepresentative;
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateContents");
+                await ajaxJson({ whereQuery, updateQuery }, LOGHOST + "/updateContents");
+
+              } else if (index === thisContents.contents.review.detailInfo.photodae[0]) {
+
+                newRepresentative = [ index, thisContents.contents.portfolio.detailInfo.photodae[1] ];
+                newOnArr = [ index, thisContents.contents.portfolio.detailInfo.photodae[0] ];
+
+                for (let dom of targets) {
+                  thisIndex = Number(dom.getAttribute("index"));
+                  dom.setAttribute("toggle", newOnArr.includes(thisIndex) ? "on" : "off");
+                  [ check, pan ] = [ ...dom.children ];
+                  check.firstChild.style.display = newOnArr.includes(thisIndex) ? "block" : "none";
+                  pan.style.opacity = newOnArr.includes(thisIndex) ? String(0.2) : String(0);
+                }
+
+                updateQuery["contents.portfolio.detailInfo.photodae"] = newRepresentative;
+                updateQuery["contents.review.detailInfo.photodae"] = [ thisContents.contents.portfolio.detailInfo.photodae[0], thisContents.contents.review.detailInfo.photodae[1] ];
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateContents");
+                await ajaxJson({ whereQuery, updateQuery }, LOGHOST + "/updateContents");
+
+              }
+            } else {
+              if (index !== thisContents.contents.portfolio.detailInfo.photodae[1] && index !== thisContents.contents.review.detailInfo.photodae[1]) {
+                newRepresentative = [ thisContents.contents.portfolio.detailInfo.photodae[0], index ];
+                newOnArr = [ thisContents.contents.review.detailInfo.photodae[1], index ];
+  
+                for (let dom of targets) {
+                  thisIndex = Number(dom.getAttribute("index"));
+                  dom.setAttribute("toggle", newOnArr.includes(thisIndex) ? "on" : "off");
+                  [ check, pan ] = [ ...dom.children ];
+                  check.firstChild.style.display = newOnArr.includes(thisIndex) ? "block" : "none";
+                  pan.style.opacity = newOnArr.includes(thisIndex) ? String(0.2) : String(0);
+                }
+
+                updateQuery["contents.portfolio.detailInfo.photodae"] = newRepresentative;
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateContents");
+                await ajaxJson({ whereQuery, updateQuery }, LOGHOST + "/updateContents");
+
+              } else if (index === thisContents.contents.review.detailInfo.photodae[1]) {
+
+                newRepresentative = [ thisContents.contents.portfolio.detailInfo.photodae[0], index ];
+                newOnArr = [ thisContents.contents.portfolio.detailInfo.photodae[1], index ];
+
+                for (let dom of targets) {
+                  thisIndex = Number(dom.getAttribute("index"));
+                  dom.setAttribute("toggle", newOnArr.includes(thisIndex) ? "on" : "off");
+                  [ check, pan ] = [ ...dom.children ];
+                  check.firstChild.style.display = newOnArr.includes(thisIndex) ? "block" : "none";
+                  pan.style.opacity = newOnArr.includes(thisIndex) ? String(0.2) : String(0);
+                }
+
+                updateQuery["contents.portfolio.detailInfo.photodae"] = newRepresentative;
+                updateQuery["contents.review.detailInfo.photodae"] = [ thisContents.contents.review.detailInfo.photodae[0], thisContents.contents.portfolio.detailInfo.photodae[1] ];
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateContents");
+                await ajaxJson({ whereQuery, updateQuery }, LOGHOST + "/updateContents");
+
+              }
+
+            }
+            removeByClass(imagePromptClassName);
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      {
+        title: "고객 후기 대표 사진으로",
+        click: async function (e) {
+          try {
+            const gs = this.getAttribute("gs");
+            const index = Number(this.getAttribute("index"));
+            const targets = [ ...document.querySelectorAll('.' + imageTargetClassName + gs) ];
+            const conid = this.getAttribute("conid");
+            const [ thisContents ] = await ajaxJson({ whereQuery: { conid } }, SECONDHOST + "/getContents", { equal: true });
+            let newRepresentative;
+            let newOnArr;
+            let whereQuery, updateQuery;
+            let thisIndex;
+            let check, pan;
+
+            whereQuery = { conid };
+            updateQuery = {};
+
+            newRepresentative = null;
+            newOnArr = null;
+
+            if (gs === 's') {
+              if (index !== thisContents.contents.portfolio.detailInfo.photodae[0] && index !== thisContents.contents.review.detailInfo.photodae[0]) {
+                newRepresentative = [ index, thisContents.contents.review.detailInfo.photodae[1] ];
+                newOnArr = [ index, thisContents.contents.portfolio.detailInfo.photodae[0] ];
+  
+                for (let dom of targets) {
+                  thisIndex = Number(dom.getAttribute("index"));
+                  dom.setAttribute("toggle", newOnArr.includes(thisIndex) ? "on" : "off");
+                  [ check, pan ] = [ ...dom.children ];
+                  check.firstChild.style.display = newOnArr.includes(thisIndex) ? "block" : "none";
+                  pan.style.opacity = newOnArr.includes(thisIndex) ? String(0.2) : String(0);
+                }
+
+                updateQuery["contents.review.detailInfo.photodae"] = newRepresentative;
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateContents");
+                await ajaxJson({ whereQuery, updateQuery }, LOGHOST + "/updateContents");
+
+              } else if (index === thisContents.contents.portfolio.detailInfo.photodae[0]) {
+
+                newRepresentative = [ index, thisContents.contents.review.detailInfo.photodae[1] ];
+                newOnArr = [ index, thisContents.contents.review.detailInfo.photodae[0] ];
+
+                for (let dom of targets) {
+                  thisIndex = Number(dom.getAttribute("index"));
+                  dom.setAttribute("toggle", newOnArr.includes(thisIndex) ? "on" : "off");
+                  [ check, pan ] = [ ...dom.children ];
+                  check.firstChild.style.display = newOnArr.includes(thisIndex) ? "block" : "none";
+                  pan.style.opacity = newOnArr.includes(thisIndex) ? String(0.2) : String(0);
+                }
+
+                updateQuery["contents.review.detailInfo.photodae"] = newRepresentative;
+                updateQuery["contents.portfolio.detailInfo.photodae"] = [ thisContents.contents.review.detailInfo.photodae[0], thisContents.contents.portfolio.detailInfo.photodae[1] ];
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateContents");
+                await ajaxJson({ whereQuery, updateQuery }, LOGHOST + "/updateContents");
+
+              }
+            } else {
+              if (index !== thisContents.contents.portfolio.detailInfo.photodae[1] && index !== thisContents.contents.review.detailInfo.photodae[1]) {
+                newRepresentative = [ thisContents.contents.review.detailInfo.photodae[0], index ];
+                newOnArr = [ thisContents.contents.portfolio.detailInfo.photodae[1], index ];
+  
+                for (let dom of targets) {
+                  thisIndex = Number(dom.getAttribute("index"));
+                  dom.setAttribute("toggle", newOnArr.includes(thisIndex) ? "on" : "off");
+                  [ check, pan ] = [ ...dom.children ];
+                  check.firstChild.style.display = newOnArr.includes(thisIndex) ? "block" : "none";
+                  pan.style.opacity = newOnArr.includes(thisIndex) ? String(0.2) : String(0);
+                }
+
+                updateQuery["contents.review.detailInfo.photodae"] = newRepresentative;
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateContents");
+                await ajaxJson({ whereQuery, updateQuery }, LOGHOST + "/updateContents");
+
+              } else if (index === thisContents.contents.portfolio.detailInfo.photodae[1]) {
+
+                newRepresentative = [ thisContents.contents.review.detailInfo.photodae[0], index ];
+                newOnArr = [ thisContents.contents.review.detailInfo.photodae[1], index ];
+
+                for (let dom of targets) {
+                  thisIndex = Number(dom.getAttribute("index"));
+                  dom.setAttribute("toggle", newOnArr.includes(thisIndex) ? "on" : "off");
+                  [ check, pan ] = [ ...dom.children ];
+                  check.firstChild.style.display = newOnArr.includes(thisIndex) ? "block" : "none";
+                  pan.style.opacity = newOnArr.includes(thisIndex) ? String(0.2) : String(0);
+                }
+
+                updateQuery["contents.review.detailInfo.photodae"] = newRepresentative;
+                updateQuery["contents.portfolio.detailInfo.photodae"] = [ thisContents.contents.portfolio.detailInfo.photodae[0], thisContents.contents.review.detailInfo.photodae[1] ];
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateContents");
+                await ajaxJson({ whereQuery, updateQuery }, LOGHOST + "/updateContents");
+
+              }
+
+            }
+            removeByClass(imagePromptClassName);
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+    ];
+
+    cancelBack = createNode({
+      mother: totalContents,
+      class: [ imagePromptClassName ],
+      event: {
+        click: (e) => {
+          removeByClass(imagePromptClassName);
+        }
+      },
+      style: {
+        position: "fixed",
+        top: String(0) + ea,
+        left: String(0) + ea,
+        width: String(100) + '%',
+        height: String(100) + '%',
+        background: "transparent",
+      }
+    })
+
+    whitePrompt = createNode({
+      mother: totalContents,
+      class: [ imagePromptClassName ],
+      style: {
+        position: "fixed",
+        top: String(y) + "px",
+        left: desktop ? (String(x) + "px") : ("calc(" + String(x) + "px" + " - " + String(promptButtonWidth / 2) + ea + ")"),
+        padding: String(promptPadding) + ea,
+        background: colorChip.white,
+        borderRadius: String(8) + "px",
+        animation: "fadeuplite 0.3s ease forwards",
+        boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
+      }
+    })
+
+    num = 0;
+    for (let { title, click } of buttonList) {
+      createNode({
+        mother: whitePrompt,
+        event: { click },
+        attribute: { gs, index: String(index), conid, },
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(promptButtonWidth) + ea,
+          height: String(promptButtonHeight) + ea,
+          marginBottom: num === buttonList.length - 1 ? "" : String(promptButtonBetween) + ea,
+          background: colorChip.gradientGreen,
+          borderRadius: String(5) + "px",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+        },
+        child: {
+          text: title,
+          style: {
+            position: "relative",
+            fontSize: String(promptSize) + ea,
+            fontWeight: String(promptWeight),
+            color: colorChip.white,
+            top: String(promptTextTop) + ea,
+          }
+        }
+      })
+
+      num++;
+    }
+
+  }
+
   whiteBlock = createNode({
     mother: baseTong,
     style: {
@@ -7493,11 +7796,16 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   for (let { src, gs, index } of imageTargets) {
     createNode({
       mother: imageTong,
+      class: [ imageTargetClassName + gs ],
       attribute: {
         index: String(index),
         toggle: representative.includes(index) ? "on" : "off",
+        gs,
+        conid: thisContents.conid,
       },
       event: {
+        click: imagePromptEvent,
+        contextmenu: imagePromptEvent,
         mouseenter: function (e) {
           if (desktop) {
             this.style.opacity = String(0.7);
@@ -7897,6 +8205,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
                 updateQuery[position] = newValue;
                 
                 await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateContents");
+                await ajaxJson({ whereQuery, updateQuery }, LOGHOST + "/updateContents");
 
               } catch (e) {
                 console.log(e);
