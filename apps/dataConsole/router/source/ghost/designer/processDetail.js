@@ -7168,16 +7168,18 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   let barTop;
   let whiteCircleWidth, whiteCircleMargin;
   let representative;
+  let tendencySubTitleBoxWidth;
+  let grayTongMarginTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
   paddingTop = <%% 44, 44, 36, 28, 5.4 %%>;
 
-  whiteBottomMargin = <%% 46, 46, 38, 30, 5.6 %%>;
+  whiteBottomMargin = <%% 46, 46, 46, 38, 5.6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
-  innerMargin = <%% 12, 12, 10, 10, 1 %%>;
+  innerMargin = <%% 12, 12, 10, 10, 0 %%>;
 
   textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), 0 %%>;
   smallTextTop = <%% (isMac() ? 0 : 0), (isMac() ? 0 : 0), (isMac() ? 0 : 0), (isMac() ? 0 : 0), 0 %%>;
@@ -7188,12 +7190,12 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   textUnderWeight = <%% 300, 300, 300, 300, 300 %%>;
   textFileWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  textBetween = <%% 8, 8, 8, 8, 8 %%>;
+  textBetween = <%% 8, 8, 8, 8, 1 %%>;
 
-  whitePadding = <%% 24, 24, 22, 20, 2.2 %%>;
+  whitePadding = <%% 24, 24, 22, 20, 0 %%>;
 
-  blockBetween = <%% 8, 8, 8, 8, 5 %%>;
-  blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
+  blockBetween = <%% 8, 8, 8, 8, 1 %%>;
+  blockBetweenBottom = <%% 10, 4, 4, 4, 3 %%>;
   blockHeight = <%% 36, 36, 32, 26, 4 %%>;
 
   lineTop = <%% 18, 18, 16, 13, 1.9 %%>;
@@ -7219,37 +7221,59 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
 
   imageBetween = <%% 8, 8, 6, 4, 1 %%>;
 
-  imageWidth = <%% 154, 154, 154, 154, 154 %%>;
-  imageHeight = <%% 224, 224, 224, 224, 224 %%>;
+  imageWidth = <%% 154, 150, 196, 157, 37.5 %%>;
+  imageHeight = <%% 224, 220, 277, 224, 53 %%>;
 
-  whiteBlockHeight = <%% 60, 60, 60, 48, 6 %%>;
+  whiteBlockHeight = <%% 60, 60, 56, 48, 7 %%>;
 
-  smallButtonWidth = <%% 100, 100, 100, 100, 100 %%>;
-  smallButtonHeight = <%% 30, 30, 30, 30, 30 %%>;
-  smallButtonSize = <%% 12, 12, 12, 12, 12 %%>;
+  smallButtonWidth = <%% 100, 100, 100, 90, 15 %%>;
+  smallButtonHeight = <%% 30, 30, 30, 28, 4.8 %%>;
+  smallButtonSize = <%% 12, 12, 12, 11, 2.5 %%>;
   smallButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
-  smallButtonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  smallButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
-  whitePaddingTop = <%% 20, 20, 20, 20, 1 %%>;
+  whitePaddingTop = <%% 20, 20, 18, 16, 2 %%>;
   whitePaddingBottom = <%% 13, 13, 12, 11, 1 %%>;
   
-  tendencyTitleBoxWidth = <%% 160, 160, 160, 160, 16 %%>;
+  tendencyTitleBoxWidth = <%% 160, 140, 120, 120, 21 %%>;
+  tendencySubTitleBoxWidth = <%% 100, 90, 80, 70, 14 %%>;
 
-  barTongHeight = <%% 28, 28, 28, 28, 28 %%>;
-  barHeight = <%% 16, 16, 16, 16, 16 %%>;
-  barTop = <%% 2, 2, 2, 2, 2 %%>;
+  barTongHeight = <%% 28, 28, 24, 22, 4.1 %%>;
+  barHeight = <%% 16, 16, 15, 12, 2 %%>;
+  barTop = <%% 2, 2, 2, 3, 1 %%>;
 
-  whiteCircleMargin = <%% 12, 12, 12, 12, 12 %%>;
-  whiteCircleWidth = <%% 18, 18, 18, 18, 16 %%>;
+  whiteCircleMargin = <%% 12, 12, 12, 12, 2.5 %%>;
+  whiteCircleWidth = <%% 16, 16, 16, 16, 3.2 %%>;
+
+  grayTongMarginTop = <%% 20, 20, 20, 20, 3 %%>;
 
   [ thisContents ] = this.contentsArr;
   ({ contents: { portfolio: { detailInfo: { photodae: representative, tendency: thisTendency } } } } = thisContents);
 
-  portfolioText = "<b%" + thisContents.contents.portfolio.title.main + "%b>" + blank + thisContents.contents.portfolio.spaceInfo.region + blank + thisContents.contents.portfolio.spaceInfo.method + blank + "<u%" + dateToString(thisContents.contents.portfolio.date, true) + "%u>";
+  if (media[0]) {
+    portfolioText = "<b%" + thisContents.contents.portfolio.title.main + "%b>" + blank + thisContents.contents.portfolio.spaceInfo.region + blank + thisContents.contents.portfolio.spaceInfo.method + blank + "<u%" + dateToString(thisContents.contents.portfolio.date, true) + "%u>";
+  } else if (media[1] || media[2]) {
+    portfolioText = "<b%" + thisContents.contents.portfolio.title.main + "%b>" + blank + thisContents.contents.portfolio.spaceInfo.region + blank + thisContents.contents.portfolio.spaceInfo.method;
+  } else if (media[3]) {
+    portfolioText = "<b%" + thisContents.contents.portfolio.title.main + "%b>" + blank + thisContents.contents.portfolio.spaceInfo.region;
+  } else {
+    portfolioText = "<b%" + thisContents.contents.portfolio.title.sub + "%b>";
+  }
+
+
+
   if (/999/gi.test(thisContents.contents.review.rid)) {
     reviewText = "";
   } else {
-    reviewText = "<b%" + thisContents.contents.review.title.main + "%b>" + blank + thisContents.contents.review.title.sub + blank + "<u%" + dateToString(thisContents.contents.review.date, true) + "%u>";
+    if (media[0]) {
+      reviewText = "<b%" + thisContents.contents.review.title.main + "%b>" + blank + thisContents.contents.review.title.sub + blank + "<u%" + dateToString(thisContents.contents.review.date, true) + "%u>";
+    } else if (media[1] || media[2]) {
+      reviewText = "<b%" + thisContents.contents.review.title.main + "%b>" + blank + thisContents.contents.review.title.sub;
+    } else if (media[3]) {
+      reviewText = "<b%" + thisContents.contents.review.title.main + "%b>";
+    } else {
+      reviewText = "<b%" + thisContents.contents.review.title.sub + "%b>";
+    }
   }
 
   tendencyContents = [
@@ -7394,14 +7418,13 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
       display: "block",
       position: "relative",
       width: String(100) + '%',
+      height: desktop ? "" : String(9) + ea,
     },
     children: [
       {
         style: {
           display: "block",
           position: mobile ? "absolute" : "relative",
-          left: desktop ? "" : String(mobileTitleLeft) + ea,
-          top: desktop ? "" : String(mobileTitleTop) + ea,
           width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
           marginBottom: String(titleBottom) + ea,
           zIndex: mobile ? String(1) : "",
@@ -7415,7 +7438,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
               top: String(titleTopNumber) + ea,
               fontSize: String(titleFontSize) + ea,
               fontWeight: String(600),
-              background: desktop ? colorChip.white : colorChip.gray1,
+              background: colorChip.white,
               paddingRight: String(numberRight) + ea,
               color: colorChip.black,
             }
@@ -7525,13 +7548,13 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
       display: "block",
       position: "relative",
       paddingTop: String(innerMargin) + ea,
-      paddingBottom: String(desktop ? innerMargin : innerMargin - arrowBetween) + ea,
-      paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
-      paddingRight: String(desktop ? (innerMargin) : (innerMargin + mobileVisualPaddingValue)) + ea,
+      paddingBottom: String(innerMargin) + ea,
+      paddingLeft: String(innerMargin) + ea,
+      paddingRight: String(innerMargin) + ea,
       width: withOut(innerMargin * 2, ea),
-      background: colorChip.gray2,
+      background: desktop ? colorChip.gray2 : colorChip.white,
       borderRadius: String(8) + "px",
-      marginTop: String(20) + ea,
+      marginTop: String(grayTongMarginTop) + ea,
     }
   });
 
@@ -7544,7 +7567,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
       width: withOut(0, ea),
       background: colorChip.white,
       borderRadius: String(8) + "px",
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      boxShadow: desktop ? "0px 3px 15px -9px " + colorChip.shadow : "",
       height: String(whiteBlockHeight) + ea,
       flexDirection: "row",
       justifyContent: "start",
@@ -7554,7 +7577,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
       {
         text: thisContents.contents.portfolio.pid,
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           position: "relative",
           fontSize: String(textSize) + ea,
           fontWeight: String(textFileWeight),
@@ -7593,8 +7616,8 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
           position: "absolute",
           width: String(smallButtonWidth) + ea,
           height: String(smallButtonHeight) + ea,
-          top: String((whiteBlockHeight - smallButtonHeight) / 2) + ea,
-          right: String((whiteBlockHeight - smallButtonHeight) / 2) + ea,
+          top: desktop ? String((whiteBlockHeight - smallButtonHeight) / 2) + ea : String(1.2) + ea,
+          right: desktop ? String((whiteBlockHeight - smallButtonHeight) / 2) + ea : String(0),
           borderRadius: String(8) + ea,
           background: colorChip.gradientGreen,
           flexDirection: "row",
@@ -7603,7 +7626,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
           cursor: "pointer",
         },
         child: {
-          text: "포트폴리오 보기",
+          text: desktop ? "포트폴리오 보기" : "포트폴리오",
           style: {
             fontSize: String(smallButtonSize) + ea,
             fontWeight: String(smallButtonWeight),
@@ -7627,7 +7650,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
         width: withOut(0, ea),
         background: colorChip.white,
         borderRadius: String(8) + "px",
-        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        boxShadow: desktop ? "0px 3px 15px -9px " + colorChip.shadow : "",
         height: String(whiteBlockHeight) + ea,
         flexDirection: "row",
         justifyContent: "start",
@@ -7637,7 +7660,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
         {
           text: thisContents.contents.portfolio.pid,
           style: {
-            display: "inline-block",
+            display: desktop ? "inline-block" : "none",
             position: "relative",
             fontSize: String(textSize) + ea,
             fontWeight: String(textFileWeight),
@@ -7676,8 +7699,8 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
             position: "absolute",
             width: String(smallButtonWidth) + ea,
             height: String(smallButtonHeight) + ea,
-            top: String((whiteBlockHeight - smallButtonHeight) / 2) + ea,
-            right: String((whiteBlockHeight - smallButtonHeight) / 2) + ea,
+            top: desktop ? String((whiteBlockHeight - smallButtonHeight) / 2) + ea : String(1.2) + ea,
+            right: desktop ? String((whiteBlockHeight - smallButtonHeight) / 2) + ea : String(0),
             borderRadius: String(8) + ea,
             background: colorChip.gradientGreen,
             flexDirection: "row",
@@ -7686,7 +7709,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
             cursor: "pointer",
           },
           child: {
-            text: "고객 후기 보기",
+            text: desktop ? "고객 후기 보기" : "고객 후기",
             style: {
               fontSize: String(smallButtonSize) + ea,
               fontWeight: String(smallButtonWeight),
@@ -7711,7 +7734,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
         width: withOut(whitePadding * 2, ea),
         background: colorChip.white,
         borderRadius: String(8) + "px",
-        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        boxShadow: desktop ? "0px 3px 15px -9px " + colorChip.shadow : "",
         flexDirection: "row",
         justifyContent: "start",
         alignItems: "start",
@@ -7776,7 +7799,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
               fontSize: String(textSize) + ea,
               fontWeight: String(textWeight),
               color: colorChip.black,
-              width: String(100) + ea,
+              width: String(tendencySubTitleBoxWidth) + ea,
             }
           },
           {
@@ -7784,7 +7807,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
               display: "inline-flex",
               flexDirection: "row",
               position: "relative",
-              width: withOut(100, ea),
+              width: withOut(tendencySubTitleBoxWidth, ea),
               height: String(barHeight) + ea,
               overflow: "hidden",
               borderRadius: String(5) + "px",
