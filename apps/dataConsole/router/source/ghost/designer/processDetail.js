@@ -7226,7 +7226,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
 
   whiteBlockHeight = <%% 60, 60, 56, 48, 7 %%>;
 
-  smallButtonWidth = <%% 100, 100, 100, 90, 15 %%>;
+  smallButtonWidth = <%% 100, 100, 100, 90, 16 %%>;
   smallButtonHeight = <%% 30, 30, 30, 28, 4.8 %%>;
   smallButtonSize = <%% 12, 12, 12, 11, 2.5 %%>;
   smallButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
