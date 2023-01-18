@@ -5619,19 +5619,13 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                 bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
 
                                                 raw = await GeneralJs.prompt("은행 이름을 알려주세요!");
-                                                console.log(raw);
-                                                if (raw !== null) {
-                                                  raw = raw.trim();
-                                                  bankName = null;
-                                                  for (let arr of bankCode) {
-                                                    if ((new RegExp(arr[0], "gi")).test(raw)) {
-                                                      if (window.confirm("은행 이름이 '" + arr[0] + "'가 맞나요?")) {
-                                                        bankName = arr[0];
-                                                      }
+                                                bankName = null;
+                                                for (let arr of bankCode) {
+                                                  if ((new RegExp(arr[0], "gi")).test(raw.trim())) {
+                                                    if (window.confirm("은행 이름이 '" + arr[0] + "'가 맞나요?")) {
+                                                      bankName = arr[0];
                                                     }
                                                   }
-                                                } else {
-                                                  bankName = null;
                                                 }
 
                                                 raw = await GeneralJs.prompt("계좌 번호를 알려주세요!");
@@ -5676,19 +5670,13 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                 bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
 
                                                 raw = await GeneralJs.prompt("은행 이름을 알려주세요!");
-                                                console.log(raw);
-                                                if (raw !== null) {
-                                                  raw = raw.trim();
-                                                  bankName = null;
-                                                  for (let arr of bankCode) {
-                                                    if ((new RegExp(arr[0], "gi")).test(raw)) {
-                                                      if (window.confirm("은행 이름이 '" + arr[0] + "'가 맞나요?")) {
-                                                        bankName = arr[0];
-                                                      }
+                                                bankName = null;
+                                                for (let arr of bankCode) {
+                                                  if ((new RegExp(arr[0], "gi")).test(raw.trim())) {
+                                                    if (window.confirm("은행 이름이 '" + arr[0] + "'가 맞나요?")) {
+                                                      bankName = arr[0];
                                                     }
                                                   }
-                                                } else {
-                                                  bankName = null;
                                                 }
 
                                                 raw = await GeneralJs.prompt("계좌 번호를 알려주세요!");
