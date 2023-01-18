@@ -7181,12 +7181,12 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
 
   innerMargin = <%% 12, 12, 10, 10, 0 %%>;
 
-  textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), 0 %%>;
-  smallTextTop = <%% (isMac() ? 0 : 0), (isMac() ? 0 : 0), (isMac() ? 0 : 0), (isMac() ? 0 : 0), 0 %%>;
+  textTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), 0 %%>;
+  smallTextTop = <%% -1, -1, -1, -1, 0 %%>;
 
   textSize = <%% 16, 15, 14, 13, 2.9 %%>;
   textWeight = <%% 300, 300, 300, 300, 300 %%>;
-  textBoldWeight = <%% 600, 600, 600, 600, 600 %%>;
+  textBoldWeight = <%% 600, 600, 600, 600, 700 %%>;
   textUnderWeight = <%% 300, 300, 300, 300, 300 %%>;
   textFileWeight = <%% 500, 500, 500, 500, 500 %%>;
 
@@ -7226,26 +7226,26 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
 
   whiteBlockHeight = <%% 60, 60, 56, 48, 7 %%>;
 
-  smallButtonWidth = <%% 100, 100, 100, 90, 15 %%>;
+  smallButtonWidth = <%% 100, 100, 100, 90, 16 %%>;
   smallButtonHeight = <%% 30, 30, 30, 28, 4.8 %%>;
   smallButtonSize = <%% 12, 12, 12, 11, 2.5 %%>;
   smallButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
-  smallButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+  smallButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.1 %%>;
 
-  whitePaddingTop = <%% 20, 20, 18, 16, 2 %%>;
-  whitePaddingBottom = <%% 13, 13, 12, 11, 1 %%>;
+  whitePaddingTop = <%% (isMac() ? 20 : 22), (isMac() ? 20 : 22), (isMac() ? 18 : 20), (isMac() ? 16 : 17), 2 %%>;
+  whitePaddingBottom = <%% (isMac() ? 13 : 12), (isMac() ? 13 : 12), (isMac() ? 12 : 11), (isMac() ? 11 : 10), 1 %%>;
   
   tendencyTitleBoxWidth = <%% 160, 140, 120, 120, 21 %%>;
   tendencySubTitleBoxWidth = <%% 100, 90, 80, 70, 14 %%>;
 
   barTongHeight = <%% 28, 28, 24, 22, 4.1 %%>;
   barHeight = <%% 16, 16, 15, 12, 2 %%>;
-  barTop = <%% 2, 2, 2, 3, 1 %%>;
+  barTop = <%% (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 3 : 1), 1 %%>;
 
   whiteCircleMargin = <%% 12, 12, 12, 12, 2.5 %%>;
   whiteCircleWidth = <%% 16, 16, 16, 16, 3.2 %%>;
 
-  grayTongMarginTop = <%% 20, 20, 20, 20, 3 %%>;
+  grayTongMarginTop = <%% 20, 20, 20, 20, 4 %%>;
 
   [ thisContents ] = this.contentsArr;
   ({ contents: { portfolio: { detailInfo: { photodae: representative, tendency: thisTendency } } } } = thisContents);
