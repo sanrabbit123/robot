@@ -1490,7 +1490,7 @@ DesignerJs.prototype.requestStaticHtml = function (designer, project, client, cl
 DesignerJs.prototype.requestContents = async function (board, designer, project, client, clientHistory, projectHistory, requestNumber) {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma, blankHref } = GeneralJs;
   const { totalMother, ea, grayBarWidth, middleMode } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -1646,10 +1646,14 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
           }
         },
         {
-          text: "PDF 추출",
+          text: "의뢰서 미리보기",
           class: [ "hoverDefault_lite" ],
+          attribute: { proid },
           event: {
-            click: this.requestStaticHtml(designer, project, client, clientHistory, projectHistory, requestNumber, clientPhoto)
+            click: function (e) {
+              const proid = this.getAttribute("proid");
+              blankHref(FRONTHOST + "/designer/process.php?proid=" + proid + "&mode=request");
+            }
           },
           style: {
             position: "absolute",
