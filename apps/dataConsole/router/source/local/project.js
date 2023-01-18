@@ -5622,9 +5622,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                 bankName = null;
                                                 for (let arr of bankCode) {
                                                   if ((new RegExp(arr[0], "gi")).test(raw.trim())) {
-                                                    if (window.confirm("은행 이름이 '" + arr[0] + "'가 맞나요?")) {
-                                                      bankName = arr[0];
-                                                    }
+                                                    bankName = arr[0];
                                                   }
                                                 }
 
@@ -5669,15 +5667,11 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                 kind = "cash" + (percentage === 100 ? "Entire" : "Partial");
                                                 bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
 
-                                                console.log(bankCode);
-
                                                 raw = await GeneralJs.prompt("은행 이름을 알려주세요!");
                                                 bankName = null;
                                                 for (let arr of bankCode) {
                                                   if ((new RegExp(arr[0], "gi")).test(raw.trim())) {
-                                                    if (window.confirm("은행 이름이 '" + arr[0] + "'가 맞나요?")) {
-                                                      bankName = arr[0];
-                                                    }
+                                                    bankName = arr[0];
                                                   }
                                                 }
 
