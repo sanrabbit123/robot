@@ -4295,7 +4295,7 @@ GeneralJs.prompt = function (message, preValue = '') {
       resolve(null);
     });
 
-    input.addEventListener("keypress", function (e) {
+    input.addEventListener("keyup", function (e) {
       if (e.key === "Enter") {
         const finalValue = this.value.trim();
         const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
