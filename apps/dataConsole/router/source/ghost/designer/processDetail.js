@@ -7260,8 +7260,6 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
     portfolioText = "<b%" + thisContents.contents.portfolio.title.sub + "%b>";
   }
 
-
-
   if (/999/gi.test(thisContents.contents.review.rid)) {
     reviewText = "";
   } else {
