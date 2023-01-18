@@ -119,7 +119,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   interval = <%% 2700, 2700, 2700, 2700, 2700 %%>;
 
   naviHeight = <%% 72, 72, 66, 60, 60 %%>;
-  mainHeight = <%% 746, 639, 560, 480, 72 %%>;
+  mainHeight = <%% 746, 639, 560, 480, 73 %%>;
 
   randomNumber = <%% 5, 5, 5, 5, 5 %%>;
   titlePadding = <%% 100, 75, 75, 90, 8 %%>;
@@ -2388,10 +2388,10 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   subBetween = <%% 6, 6, 6, 6, 0.5 %%>;
   subTop = <%% 3, 3, 3, 3, 0.5 %%>;
 
-  threeBlockWidth = <%% 400, 340, 290, 234, 31 %%>;
-  threeBlockHeight = <%% 477, 438, 405, 338, 28 %%>;
+  threeBlockWidth = <%% 388, 340, 290, 234, 31 %%>;
+  threeBlockHeight = <%% 457, 408, 385, 338, 25.8 %%>;
 
-  threePhotoHeight = <%% 330, 300, 280, 230, 230 %%>;
+  threePhotoHeight = <%% 310, 270, 260, 230, 230 %%>;
   threeTitlePaddingLeft = <%% 26, 26, 24, 21, 4.8 %%>;
   threeTitleAreaHeight = <%% 60, 50, 48, 40, 5 %%>;
 
@@ -2632,7 +2632,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
               style: {
                 display: desktop ? "none" : "inline-block",
                 position: "absolute",
-                top: String(isIphone() ? 5.2 : 5.4) + ea,
+                top: String(isIphone() ? 4.6 : 4.8) + ea,
                 left: String(threeTitlePaddingLeft) + ea,
               },
               children: [
@@ -2651,7 +2651,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
                   style: {
                     display: "inline-block",
                     position: "relative",
-                    fontSize: String(2.5) + ea,
+                    fontSize: String(2.7) + ea,
                     fontWeight: String(500),
                     color: colorChip.gray3,
                     fontFamily: "graphik",
