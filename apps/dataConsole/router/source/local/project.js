@@ -5618,9 +5618,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                 kind = "vaccount" + ((entire || percentage === 100) ? "Entire" : "Partial");
                                                 bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
 
-                                                await GeneralJs.sleep(500);
-
                                                 raw = await GeneralJs.prompt("은행 이름을 알려주세요!");
+                                                await GeneralJs.sleep(300);
                                                 if (raw !== null) {
                                                   raw = raw.trim();
                                                   bankName = null;
@@ -5676,9 +5675,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                 kind = "cash" + (percentage === 100 ? "Entire" : "Partial");
                                                 bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
 
-                                                await GeneralJs.sleep(500);
-
                                                 raw = await GeneralJs.prompt("은행 이름을 알려주세요!");
+                                                await GeneralJs.sleep(300)
                                                 if (raw !== null) {
                                                   raw = raw.trim();
                                                   bankName = null;
