@@ -601,15 +601,16 @@ KakaoTalk.prototype.templateTong = function (target) {
     },
     "contentsShareClient": {
       "name": "컨텐츠 공유 고객",
-      "id": "TF_0642",
+      "id": "TL_5290",
       "needs": [
         "client",
-        "rid"
+        "host",
+        "pid"
       ],
-      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"rid\", to: obj.rid }\n        ];\n      }",
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"pid\", to: obj.pid }\n        ];\n      }",
       "raw": {
-        "templtContent": "#{client} 고객님 안녕하세요 :) 고객 후기 콘텐츠가 오픈되어 연락드려요~\n\n고객 후기 : https://home-liaison.com/revdetail.php?qqq=#{rid}\n\n#{client}님이 처음 문의주신 때부터 실제로 만나뵙고 인터뷰를 진행하던 순간까지 저희 홈리에종에게도 너무나 소중한 시간이었습니다! 저희는 고객 후기 공유를 끝으로 마지막 인사를 드리며, 앞으로도 항상 행복하고 건강하시기를 바랍니다! \n\n홈리에종의 서비스가 만족스러우셨다면, 주변 분들에게 살포시 추천도 부탁드릴게요 :) 감사합니다!\n\n- 홈리에종 드림.",
-        "templtName": "컨텐츠 공유 고객",
+        "templtContent": "#{client} 고객님 안녕하세요 :) 고객 후기 콘텐츠가 오픈되어 연락드려요~\n\n* 고객 후기\nhttps://#{host}/revdetail.php?pid=#{pid}\n\n#{client}님이 처음 문의주신 때부터 실제로 만나뵙고 인터뷰를 진행하던 순간까지 저희 홈리에종에게도 너무나 소중한 시간이었습니다! 저희는 고객 후기 공유를 끝으로 마지막 인사를 드리며, 앞으로도 항상 행복하고 건강하시기를 바랍니다! \n\n홈리에종의 서비스가 만족스러우셨다면, 주변 분들에게 살포시 추천도 부탁드릴게요 :)\n\n감사합니다!\n\n- 홈리에종 드림.",
+        "templtName": "컨텐츠 공유 고객 수정",
         "templateType": "BA",
         "templateEmType": "NONE",
         "templateExtra": "",
@@ -621,20 +622,20 @@ KakaoTalk.prototype.templateTong = function (target) {
         "block": "N",
         "dormant": "N",
         "securityFlag": "N",
-        "status": "A",
+        "status": "R",
         "inspStatus": "APR",
         "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
         "buttons": [],
-        "cdate": "2021-07-07 14:30:27",
-        "templtCode": "TF_0642",
+        "cdate": "2023-01-18 16:17:29",
+        "templtCode": "TL_5290",
         "comments": [
           {
-            "cdate": "2021-07-07 16:14:07",
+            "cdate": "2023-01-18 16:57:05",
             "name": "검수자",
-            "id": "1430887",
+            "id": "2356565",
             "userName": "검수자",
-            "commentContent": "",
-            "createdAt": "2021-07-07 16:14:07",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n\r\n참고로 승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 알림톡 운영 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2023-01-18 16:57:05",
             "status": "APR"
           }
         ]
@@ -642,16 +643,18 @@ KakaoTalk.prototype.templateTong = function (target) {
     },
     "contentsShareDesigner": {
       "name": "컨텐츠 공유 디자이너",
-      "id": "TF_0643",
+      "id": "TL_5291",
       "needs": [
         "client",
         "designer",
-        "pid"
+        "host",
+        "pid",
+        "proid"
       ],
-      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"pid\", to: obj.pid }\n        ];\n      }",
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"pid\", to: obj.pid },\n          { from: \"proid\", to: obj.proid }\n        ];\n      }",
       "raw": {
-        "templtContent": "#{designer} 실장님, 안녕하세요 :) #{client} 고객님 디자이너 포트폴리오 콘텐츠가 오픈되었어요!\n\n포트폴리오 : https://home-liaison.com/portdetail.php?qqq=#{pid}\n\n현장미팅 시작부터 촬영까지 #{client} 고객님께 좋은 집꾸미기 경험을 선물해드릴 수 있도록, 홈리에종과 함께 해주셔서 감사합니다 :) 실장님께도 즐거운 추억이 되셨기를 바라며, 콘텐츠 공유를 끝으로 #{client} 고객님 건 최종 마무리하겠습니다!",
-        "templtName": "컨텐츠 공유 디자이너",
+        "templtContent": "#{designer} 실장님, 안녕하세요 :) #{client} 고객님 디자이너 포트폴리오 콘텐츠가 오픈되었어요!\n\n* 포트폴리오\nhttps://#{host}/portdetail.php?pid=#{pid}\n\n디자이너 콘솔에서 포트폴리오의 대표 사진을 변경하실 수 있고, 기타 설정값을 원하시는대로 조정할 수 있습니다!\n\n* 콘솔 (대표 사진 조정)\nhttps://#{host}/designer/process.php?proid=#{proid}\n\n현장 미팅 시작부터 촬영까지 #{client} 고객님께 좋은 경험을 선물해드릴 수 있도록, 홈리에종과 함께 해주셔서 감사합니다 :)",
+        "templtName": "컨텐츠 공유 디자이너 수정",
         "templateType": "BA",
         "templateEmType": "NONE",
         "templateExtra": "",
@@ -663,20 +666,20 @@ KakaoTalk.prototype.templateTong = function (target) {
         "block": "N",
         "dormant": "N",
         "securityFlag": "N",
-        "status": "A",
+        "status": "R",
         "inspStatus": "APR",
         "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
         "buttons": [],
-        "cdate": "2021-07-07 14:31:03",
-        "templtCode": "TF_0643",
+        "cdate": "2023-01-18 16:22:55",
+        "templtCode": "TL_5291",
         "comments": [
           {
-            "cdate": "2021-07-07 16:14:38",
+            "cdate": "2023-01-18 17:03:36",
             "name": "검수자",
-            "id": "1430892",
+            "id": "2356584",
             "userName": "검수자",
             "commentContent": "",
-            "createdAt": "2021-07-07 16:14:38",
+            "createdAt": "2023-01-18 17:03:36",
             "status": "APR"
           }
         ]

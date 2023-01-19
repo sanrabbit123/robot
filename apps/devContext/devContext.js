@@ -138,182 +138,151 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+    /*
+
+    const trelloToJson = async () => {
+      try {
+        const token = "ATTA4e194cc66c57d591c43d02a5f328a0308ca57da46ad3e18326a690041fe1668fB8A61188";
+        const key = "a8f3f39ea9739b982faa14b0324f3777";
+        const boardId = "63c5f6e79ceb1d015ab198a0";
+        const baseUrl = "https://api.trello.com";
+        const urlMaker = (path) => { return `${baseUrl}/${path}` }
+        let res;
+        let listRaw;
+        let targetList;
+        let cardsRaw;
+        let listDic;
+        let listDicKeys, listRefined;
     
-
-
-    // 6 month trello to sheets
-
-    // const token = "ATTA4e194cc66c57d591c43d02a5f328a0308ca57da46ad3e18326a690041fe1668fB8A61188";
-    // const key = "a8f3f39ea9739b982faa14b0324f3777";
-    // const boardId = "63c5f6e79ceb1d015ab198a0";
-    // const baseUrl = "https://api.trello.com";
-    // const sheetsId = "1Q_epCyVE0JukFomRKgMGUvuTN44-v3rGAp2wXuc09cY";
-    // const urlMaker = (path) => { return `${baseUrl}/${path}` }
-    // let res;
-    // let cardsRaw;
-    // let listRaw;
-    // let listDic;
-    // let goalDic;
-    // let matrix;
+        res = await requestSystem(urlMaker(`1/boards/${boardId}/lists`), { token, key }, { method: "get" });
+        listRaw = res.data;
+        targetList = listRaw.filter((obj) => { return /^PD/.test(obj.name) });
     
-    // res = await requestSystem(urlMaker(`1/boards/${boardId}/lists`), { token, key }, { method: "get" });
-    // listRaw = res.data;
-
-    // res = await requestSystem(urlMaker(`1/boards/${boardId}/cards`), { token, key }, { method: "get" });
-    // cardsRaw = res.data;
-
-    // listDic = {};
-    // for (let { id, name, close } of listRaw) {
-    //   if (!close) {
-    //     listDic[id] = name;
-    //   }
-    // }
-
-    // goalDic = {};
-    // for (let obj of cardsRaw) {
-    //   if (!obj.close) {
-    //     if (obj.labels.length === 0) {
-    //       goalDic[obj.idList] = obj.name;
-    //     }
-    //   }
-    // }
-
-    // matrix = [
-    //   [
-    //     "날짜",
-    //     "목표",
-    //     "계획명",
-    //     "중분류",
-    //     "상태",
-    //     "아이디",
-    //   ]
-    // ]
-    // for (let obj of cardsRaw) {
-    //   if (!obj.close) {
-    //     if (obj.labels.length !== 0) {
-    //       matrix.push([
-    //         listDic[obj.idList],
-    //         goalDic[obj.idList],
-    //         obj.name,
-    //         obj.labels[0].name,
-    //         obj.labels[1].name,
-    //         obj.id,
-    //       ])
-    //     }
-    //   }
-    // }
-
-    // await sheets.update_value_inPython(sheetsId, "dev2023", matrix, [ 0, 0 ]);
-    // console.log(matrix);
+        res = await requestSystem(urlMaker(`1/boards/${boardId}/cards`), { token, key }, { method: "get" });
+        cardsRaw = res.data.filter((obj) => { return targetList.map((o) => { return o.id }).includes(obj.idList) });
     
+    
+        listDic = {};
+        for (let { id, name, close } of targetList) {
+          if (!close) {
+            listDic[id] = { name, cards: [] };
+          }
+        }
+        for (let obj of cardsRaw) {
+          listDic[obj.idList].cards.push(equalJson(JSON.stringify(obj)));
+        }
+    
+        listDicKeys = Object.keys(listDic);
+        listRefined = [];
+        for (let key of listDicKeys) {
+          listDic[key].id = key;
+          listRefined.push(listDic[key]);
+        }
+    
+        for (let obj of listRefined) {
+    
+          obj.key = obj.name;
+          obj.name = "";
+          obj.goal = "";
+          obj.childrenRaw = [];
+    
+          for (let card of obj.cards) {
+            if (card.labels.length === 0) {
+              obj.goal = card.name;
+            } else if (card.labels.length === 1 && card.labels[0].name === "제목") {
+              obj.name = card.name;
+            } else {
+              obj.childrenRaw.push(equalJson(JSON.stringify(card)));
+            }
+          }
+          delete obj.cards;
+    
+          obj.children = [];
+          for (let rawObj of obj.childrenRaw) {
+            res = await requestSystem(urlMaker(`1/checklists/${rawObj.idChecklists[0]}`), { token, key }, { method: "get" });
+            res.data.checkItems.sort((a, b) => { return a.pos - b.pos });
+    
+            obj.children.push({
+              id: rawObj.id,
+              name: rawObj.name,
+              status: rawObj.labels.filter((o) => { return [ "대기", "진행중", "완료" ].includes(o.name) })[0].name,
+              class: rawObj.labels.filter((o) => { return ![ "대기", "진행중", "완료" ].includes(o.name) })[0].name,
+              description: rawObj.desc.replace(/\n/g, ' ').trim(),
+              until: rawObj.due,
+              children: res.data.checkItems.map((o) => {
+                return {
+                  name: o.name,
+                  status: o.state === "complete" ? "완료" : "대기"
+                }
+              }),
+            });
+          }
+          delete obj.childrenRaw;
+        }
+
+        return listRefined;
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    const sheetsId = "1Q_epCyVE0JukFomRKgMGUvuTN44-v3rGAp2wXuc09cY";
+    const trelloJson = await trelloToJson();
+    let matrix;
+
+    trelloJson.sort((a, b) => {
+      return Number(a.key.replace(/[^0-9]/gi, '')) - Number(b.key.replace(/[^0-9]/gi, ''));
+    });
 
 
+    matrix = [
+      [
+        "대분류",
+        "목표",
+        "계획명",
+        "중분류",
+        "상태",
+        "설명",
+        "목표일",
+        "세부 사항",
+        "세부 상태",
+      ]
+    ]
 
-    // designer console trello to sheets
+    for (let obj of trelloJson) {
+      for (let obj2 of obj.children) {
+        for (let obj3 of obj2.children) {
+          matrix.push([
+            obj.name.replace(/개발/gi, '').trim(),
+            obj.goal,
+            obj2.name,
+            obj2.class,
+            obj2.status,
+            obj2.description,
+            dateToString(obj2.until),
+            obj3.name,
+            obj3.status,
+          ]);
+        }
+      }
+    }
 
-    // const token = "ATTA4e194cc66c57d591c43d02a5f328a0308ca57da46ad3e18326a690041fe1668fB8A61188";
-    // const key = "a8f3f39ea9739b982faa14b0324f3777";
-    // const boardId = "63c618e3a163ab010efc502e";
-    // const baseUrl = "https://api.trello.com";
-    // const sheetsId = "1Q_epCyVE0JukFomRKgMGUvuTN44-v3rGAp2wXuc09cY";
-    // const urlMaker = (path) => { return `${baseUrl}/${path}` }
-    // let res;
-    // let cardsRaw;
-    // let listRaw;
-    // let listDic;
-    // let timingDic;
-    // let statusDic;
-    // let matrix;
-    // let talkDic;
+    await sheets.update_value_inPython(sheetsId, "dev2023", matrix, [ 0, 0 ])
+    
+    */
 
-    // res = await requestSystem(urlMaker(`1/boards/${boardId}/lists`), { token, key }, { method: "get" });
-    // listRaw = res.data;
 
-    // res = await requestSystem(urlMaker(`1/boards/${boardId}/cards`), { token, key }, { method: "get" });
-    // cardsRaw = res.data;
-
-    // listDic = {};
-    // for (let { id, name, close } of listRaw) {
-    //   if (!close) {
-    //     listDic[id] = name;
-    //   }
-    // }
-
-    // timingDic = {};
-    // for (let obj of cardsRaw) {
-    //   if (!obj.close) {
-    //     if (obj.labels.length === 0) {
-    //       timingDic[obj.idList] = obj.name;
-    //     }
-    //   }
-    // }
-
-    // statusDic = {};
-    // for (let obj of cardsRaw) {
-    //   if (!obj.close) {
-    //     if (obj.labels.length === 1) {
-    //       if (obj.labels[0].name === "상태") {
-    //         statusDic[obj.idList] = obj.name;
-    //       }
-    //     }
-    //   }
-    // }
-
-    // talkDic = {};
-    // for (let obj of cardsRaw) {
-    //   if (!obj.close) {
-    //     if (obj.labels.length === 1) {
-    //       if (obj.labels[0].name !== "상태") {
-    //         talkDic[obj.idList] = obj.desc.trim();
-    //       }
-    //     }
-    //   }
-    // }
-
-    // console.log(talkDic);
-
-    // matrix = [
-    //   [
-    //     "분류",
-    //     "시점",
-    //     "상태",
-    //     "내용",
-    //     "설명",
-    //     "알림톡",
-    //     "적용 페이지",
-    //     "구현 상태",
-    //     "알림톡 상태",
-    //     "아이디",
-    //   ]
-    // ]
-
-    // for (let obj of cardsRaw) {
-    //   if (!obj.close) {
-    //     if (obj.labels.length !== 0) {
-    //       if (obj.labels.length !== 1) {
-    //         matrix.push([
-    //           listDic[obj.idList],
-    //           timingDic[obj.idList],
-    //           statusDic[obj.idList],
-    //           obj.name,
-    //           obj.desc.replace(/\n/gi, " ").trim(),
-    //           talkDic[obj.idList],
-    //           obj.labels[0].name,
-    //           obj.labels[1].name,
-    //           talkDic[obj.idList] === '-' ? "미완료" : "완료",
-    //           obj.id,
-    //         ])
-    //       }
-    //     }
-    //   }
-    // }
-
-    // await sheets.update_value_inPython(sheetsId, "designer", matrix, [ 0, 0 ]);
-    // console.log(matrix);
+    
     
 
 
 
+
+
+    
 
 
 
@@ -2867,8 +2836,6 @@ DevContext.prototype.launching = async function () {
 
 
     
-
-
 
     // force client complete
     // const cliid = "c2203_aa35s";

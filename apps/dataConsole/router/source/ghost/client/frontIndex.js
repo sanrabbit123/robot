@@ -2389,7 +2389,7 @@ FrontIndexJs.prototype.insertThreeBox = function () {
   subTop = <%% 3, 3, 3, 3, 0.5 %%>;
 
   threeBlockWidth = <%% 390, 340, 290, 234, 31 %%>;
-  threeBlockHeight = <%% 457, 408, 385, 338, 25.8 %%>;
+  threeBlockHeight = <%% 457, 408, 385, 338, 26.4 %%>;
 
   threePhotoHeight = <%% 310, 270, 260, 230, 230 %%>;
   threeTitlePaddingLeft = <%% 26, 26, 24, 21, 4.8 %%>;
