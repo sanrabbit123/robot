@@ -209,6 +209,7 @@ GoogleCalendar.prototype.getSchedule = async function (from, id) {
   } catch (e) {
     await errorLog("google calendar api error(getSchedule) : " + e.message);
     console.log(e);
+    return null;
   }
 }
 
@@ -232,6 +233,7 @@ GoogleCalendar.prototype.listEvents = async function (from, search = null) {
   } catch (e) {
     await errorLog("google calendar api error(listEvents) : " + e.message);
     console.log(e);
+    return [];
   }
 }
 
@@ -239,7 +241,6 @@ GoogleCalendar.prototype.updateSchedule = async function (from, id, updateQuery)
   const instance = this;
   const { pythonExecute, errorLog } = this.mother;
   try {
-    const past = await this.getSchedule(from, id);
     let queryObj;
     let startDate, endDate;
     let res;
@@ -258,11 +259,7 @@ GoogleCalendar.prototype.updateSchedule = async function (from, id, updateQuery)
     queryObj.end = {};
     queryObj.end.dateTime = endDate;
 
-    if (updateQuery.title !== undefined) {
-      queryObj.summary = updateQuery.title;
-    } else {
-      queryObj.summary = past.title;
-    }
+    queryObj.summary = updateQuery.title;
 
     res = await pythonExecute(this.pythonApp, [ "calendar", "updateSchedule" ], { targetId: this.findCalendarId(from), eventId: id, body: queryObj });
     return res;

@@ -5294,6 +5294,7 @@ DataRouter.prototype.rou_post_calendarSync = function () {
       let clients, designers;
       let client, designer;
       let title, list;
+      let allEvents;
 
       from = "photographing";
       projects = await back.getProjectsByQuery({
@@ -5311,13 +5312,14 @@ DataRouter.prototype.rou_post_calendarSync = function () {
         designers = await back.getDesignersByQuery({
           $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.desid; })) ].map((c) => { return { desid: c } }),
         }, { selfMongo });
+        allEvents = await calendar.listEvents(from);
 
         for (let project of projects) {
           if (!/디자이너/gi.test(project.contents.photo.info.photographer) && !/고객/gi.test(project.contents.photo.info.photographer)) {
             client = clients.toNormal().find((obj) => { return obj.cliid === project.cliid });
             designer = designers.toNormal().find((obj) => { return obj.desid === project.desid });
             title = `촬영 W ${client.name}C ${designer.designer}D ${project.contents.photo.info.photographer}P ${project.contents.photo.info.interviewer}I ${project.proid}`;
-            list = await calendar.listEvents(from, project.proid);
+            list = allEvents.filter((obj) => { return (new RegExp(project.proid, "gi")).test(obj.title) });
             if (list.length > 0) {
               await calendar.updateSchedule(from, list[0].eventId, { start: project.contents.photo.date.toNormal(), title });
               console.log(`${project.proid} photo schedule update : ${title}`);
@@ -5345,13 +5347,14 @@ DataRouter.prototype.rou_post_calendarSync = function () {
         }, { selfMongo });
         designers = await back.getDesignersByQuery({
           $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.desid; })) ].map((c) => { return { desid: c } }),
-        }, { selfMongo });
+        }, { selfMongo });  
+        allEvents = await calendar.listEvents(from);
 
         for (let project of projects) {
           client = clients.toNormal().find((obj) => { return obj.cliid === project.cliid });
           designer = designers.toNormal().find((obj) => { return obj.desid === project.desid });
           title = `현장 미팅 W ${client.name}C ${designer.designer}D ${project.proid}`;
-          list = await calendar.listEvents(from, project.proid);
+          list = allEvents.filter((obj) => { return (new RegExp(project.proid, "gi")).test(obj.title) });
           if (list.length > 0) {
             await calendar.updateSchedule(from, list[0].eventId, { start: project.process.contract.meeting.date.toNormal(), title });
             console.log(`${project.proid} meeting schedule update : ${title}`);
