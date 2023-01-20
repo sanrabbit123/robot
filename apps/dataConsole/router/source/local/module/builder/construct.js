@@ -3470,6 +3470,7 @@ BuilderJs.prototype.constructBlockInjection = function () {
   this.scrollTong = scrollTong;
   this.contentsBlocks = [];
   this.ignoreNumbers = [ 3, 1 ];
+  this.widthArrMotherConverted = null;
   this.resetWidthEvent = async function () {
     try {
       const { xyConverting, sleep, setQueue } = GeneralJs;
@@ -3481,23 +3482,30 @@ BuilderJs.prototype.constructBlockInjection = function () {
 
       setQueue(async () => {
 
-        widthArrMother = [];
-        for (let block of instance.contentsBlocks) {
-          children = block.children;
-          widthArr = [];
-          for (let i = 0; i < children.length; i++) {
-            if (i >= ignoreNumbers[0] && i < children.length - ignoreNumbers[1]) {
-              children[i].style.width = "auto";
+        if (instance.widthArrMotherConverted === null) {
+
+          widthArrMother = [];
+          for (let block of instance.contentsBlocks) {
+            children = block.children;
+            widthArr = [];
+            for (let i = 0; i < children.length; i++) {
+              if (i >= ignoreNumbers[0] && i < children.length - ignoreNumbers[1]) {
+                children[i].style.width = "auto";
+              }
+              widthArr.push(children[i].getBoundingClientRect().width);
             }
-            widthArr.push(children[i].getBoundingClientRect().width);
+            widthArrMother.push(widthArr);
           }
-          widthArrMother.push(widthArr);
+    
+          widthArrMotherConverted = xyConverting(widthArrMother).map((arr) => {
+            arr.sort((a, b) => { return b - a; });
+            return arr[0];
+          });  
+
+          instance.widthArrMotherConverted = widthArrMotherConverted;
         }
-  
-        widthArrMotherConverted = xyConverting(widthArrMother).map((arr) => {
-          arr.sort((a, b) => { return b - a; });
-          return arr[0];
-        });
+        widthArrMotherConverted = instance.widthArrMotherConverted;
+
   
         for (let block of instance.contentsBlocks) {
           children = block.children;
