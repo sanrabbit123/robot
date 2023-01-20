@@ -106,7 +106,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       payment: {
         title: "결제",
         position: "contents.payment.status",
-        values: [ '결제 대기', '결제 완료', '무료 촬영', '환불 완료', '해당 없음' ],
+        values: [ '결제 요청', '결제 대기', '결제 완료', '무료 촬영', '환불 완료', '해당 없음' ],
         chain: null
       },
       photographer: {
@@ -599,40 +599,54 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
           let additionalUpdateQuery;
           let rawValue;
 
-          updateQuery[position] = value;
-          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          if (!/결제 요청/gi.test(value)) {
 
-          if (/대기/gi.test(value)) {
-            valueDom.style.color = colorChip.red;
-          } else {
-            valueDom.style.color = colorChip.black;
-          }
-
-          if (/결제 완료/gi.test(value)) {
-
-            additionalUpdateQuery = {};
-            do {
-              rawValue = await GeneralJs.prompt("결제한 금액을 알려주세요!", "165000");
-            } while (rawValue === null)
-            additionalUpdateQuery["contents.payment.date"] = new Date();
-            additionalUpdateQuery["contents.payment.calculation.amount"] = Number(rawValue.replace(/[^0-9]/gi, ''));
-            additionalUpdateQuery["contents.payment.calculation.info.method"] = "계좌 이체";
-            if (/프리/gi.test(calculationMethod) || /간이/gi.test(calculationMethod)) {
-              additionalUpdateQuery["contents.payment.calculation.info.proof"] = "현금영수증";
+            updateQuery[position] = value;
+            await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+  
+            if (/대기/gi.test(value)) {
+              valueDom.style.color = colorChip.red;
             } else {
-              additionalUpdateQuery["contents.payment.calculation.info.proof"] = "세금계산서";
+              valueDom.style.color = colorChip.black;
             }
-            additionalUpdateQuery["contents.payment.calculation.info.to"] = calculationInfo.to;
+  
+            if (/결제 완료/gi.test(value)) {
+  
+              additionalUpdateQuery = {};
+              do {
+                rawValue = await GeneralJs.prompt("결제한 금액을 알려주세요!", "165000");
+              } while (rawValue === null)
+              additionalUpdateQuery["contents.payment.date"] = new Date();
+              additionalUpdateQuery["contents.payment.calculation.amount"] = Number(rawValue.replace(/[^0-9]/gi, ''));
+              additionalUpdateQuery["contents.payment.calculation.info.method"] = "계좌 이체";
+              if (/프리/gi.test(calculationMethod) || /간이/gi.test(calculationMethod)) {
+                additionalUpdateQuery["contents.payment.calculation.info.proof"] = "현금영수증";
+              } else {
+                additionalUpdateQuery["contents.payment.calculation.info.proof"] = "세금계산서";
+              }
+              additionalUpdateQuery["contents.payment.calculation.info.to"] = calculationInfo.to;
+  
+              await ajaxJson({ whereQuery, updateQuery: additionalUpdateQuery }, BACKHOST + "/rawUpdateProject");
+            }
+            
+            valueDom.textContent = value;
+            calendarEvent(thisCase);
+  
+            for (let dom of removeTargets) {
+              mother.removeChild(dom);
+            }
 
-            await ajaxJson({ whereQuery, updateQuery: additionalUpdateQuery }, BACKHOST + "/rawUpdateProject");
-          }
-          valueDom.textContent = value;
-          calendarEvent(thisCase);
-          for (let dom of removeTargets) {
-            mother.removeChild(dom);
-          }
+            resetWidthEvent();
 
-          resetWidthEvent();
+          } else {
+
+            for (let dom of removeTargets) {
+              mother.removeChild(dom);
+            }
+
+            console.log("this");
+
+          }
         } catch (e) {
           console.log(e);
         }
@@ -3179,37 +3193,41 @@ DesignerJs.prototype.contentsBlockInjection = function () {
   this.ignoreNumbers = [ 3, 1 ];
   this.resetWidthEvent = async function () {
     try {
-      const { xyConverting } = GeneralJs;
+      const { xyConverting, sleep, setQueue } = GeneralJs;
       const { ignoreNumbers } = instance;
       let children;
       let widthArrMother, widthArrMotherConverted;
       let widthArr;
       let tempArr;
 
-      widthArrMother = [];
-      for (let block of instance.contentsBlocks) {
-        children = block.children;
-        widthArr = [];
-        for (let i = 0; i < children.length; i++) {
-          if (i >= ignoreNumbers[0] && i < children.length - ignoreNumbers[1]) {
-            children[i].style.width = "auto";
+      setQueue(async () => {
+
+        widthArrMother = [];
+        for (let block of instance.contentsBlocks) {
+          children = block.children;
+          widthArr = [];
+          for (let i = 0; i < children.length; i++) {
+            if (i >= ignoreNumbers[0] && i < children.length - ignoreNumbers[1]) {
+              children[i].style.width = "auto";
+            }
+            widthArr.push(children[i].getBoundingClientRect().width);
           }
-          widthArr.push(children[i].getBoundingClientRect().width);
+          widthArrMother.push(widthArr);
         }
-        widthArrMother.push(widthArr);
-      }
+  
+        widthArrMotherConverted = xyConverting(widthArrMother).map((arr) => {
+          arr.sort((a, b) => { return b - a; });
+          return arr[0];
+        });
 
-      widthArrMotherConverted = xyConverting(widthArrMother).map((arr) => {
-        arr.sort((a, b) => { return b - a; });
-        return arr[0];
-      });
-
-      for (let block of instance.contentsBlocks) {
-        children = block.children;
-        for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
-          children[i].style.width = String(widthArrMotherConverted[i]) + ea;
+        for (let block of instance.contentsBlocks) {
+          children = block.children;
+          for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
+            await sleep(2);
+            children[i].style.width = String(widthArrMotherConverted[i]) + ea;
+          }
         }
-      }
+      }, 100);
 
     } catch (e) {
       console.log(e);

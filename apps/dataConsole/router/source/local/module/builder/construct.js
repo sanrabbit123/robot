@@ -3472,37 +3472,42 @@ BuilderJs.prototype.constructBlockInjection = function () {
   this.ignoreNumbers = [ 3, 1 ];
   this.resetWidthEvent = async function () {
     try {
-      const { xyConverting } = GeneralJs;
+      const { xyConverting, sleep, setQueue } = GeneralJs;
       const { ignoreNumbers } = instance;
       let children;
       let widthArrMother, widthArrMotherConverted;
       let widthArr;
       let tempArr;
 
-      widthArrMother = [];
-      for (let block of instance.contentsBlocks) {
-        children = block.children;
-        widthArr = [];
-        for (let i = 0; i < children.length; i++) {
-          if (i >= ignoreNumbers[0] && i < children.length - ignoreNumbers[1]) {
-            children[i].style.width = "auto";
+      setQueue(async () => {
+
+        widthArrMother = [];
+        for (let block of instance.contentsBlocks) {
+          children = block.children;
+          widthArr = [];
+          for (let i = 0; i < children.length; i++) {
+            if (i >= ignoreNumbers[0] && i < children.length - ignoreNumbers[1]) {
+              children[i].style.width = "auto";
+            }
+            widthArr.push(children[i].getBoundingClientRect().width);
           }
-          widthArr.push(children[i].getBoundingClientRect().width);
+          widthArrMother.push(widthArr);
         }
-        widthArrMother.push(widthArr);
-      }
-
-      widthArrMotherConverted = xyConverting(widthArrMother).map((arr) => {
-        arr.sort((a, b) => { return b - a; });
-        return arr[0];
-      });
-
-      for (let block of instance.contentsBlocks) {
-        children = block.children;
-        for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
-          children[i].style.width = String(widthArrMotherConverted[i]) + ea;
+  
+        widthArrMotherConverted = xyConverting(widthArrMother).map((arr) => {
+          arr.sort((a, b) => { return b - a; });
+          return arr[0];
+        });
+  
+        for (let block of instance.contentsBlocks) {
+          children = block.children;
+          for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
+            await sleep(2);
+            children[i].style.width = String(widthArrMotherConverted[i]) + ea;
+          }
         }
-      }
+
+      }, 100)
 
     } catch (e) {
       console.log(e);
