@@ -1217,6 +1217,37 @@ TransferRouter.prototype.rou_post_userPhoto = function () {
   return obj;
 }
 
+TransferRouter.prototype.rou_post_userKey = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
+  const { userConst, userLinkConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/userKey" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.key === undefined) {
+        throw new Error("invaild post");
+      }
+      const staticPath = userConst;
+      const selfMongo = instance.mongo;
+      const { key } = req.body;
+      const keyDetailList = (await fileSystem("readDir", [ staticPath + "/" + key ])).filter((str) => { return str !== ".DS_Store" });
+      res.send(JSON.stringify({ list: keyDetailList.map((str) => { return userLinkConst + "/" + key + "/" + str }) }));
+    } catch (e) {
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_userKey): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 TransferRouter.prototype.rou_post_excelToMatrix = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;

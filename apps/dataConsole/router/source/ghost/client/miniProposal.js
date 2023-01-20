@@ -918,14 +918,14 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
       photo = user.response.design[0].photo[index];
       list = user.response.design[0].list[index];
 
-      conceptImages = await ajaxJson({ key: concept.key }, "/ghostPass_userKey", { equal: true });
-      conceptImages = conceptImages.list.map((path) => { return "https://" + FILEHOST + path });
+      conceptImages = await ajaxJson({ key: concept.key }, BRIDGEHOST + "/userKey", { equal: true });
+      conceptImages = conceptImages.list.map((path) => { return BRIDGEHOST.replace(/\:3000/g, '') + path });
 
-      proposalImages = await ajaxJson({ key: proposal.key }, "/ghostPass_userKey", { equal: true });
-      proposalImages = proposalImages.list.map((path) => { return "https://" + FILEHOST + path });
+      proposalImages = await ajaxJson({ key: proposal.key }, BRIDGEHOST + "/userKey", { equal: true });
+      proposalImages = proposalImages.list.map((path) => { return BRIDGEHOST.replace(/\:3000/g, '') + path });
 
-      photoImages = await ajaxJson({ key: photo.key }, "/ghostPass_userKey", { equal: true });
-      photoImages = photoImages.list.map((path) => { return "https://" + FILEHOST + path });
+      photoImages = await ajaxJson({ key: photo.key }, BRIDGEHOST + "/userKey", { equal: true });
+      photoImages = photoImages.list.map((path) => { return BRIDGEHOST.replace(/\:3000/g, '') + path });
 
       slide = conceptImages.concat(proposalImages);
 
@@ -1447,7 +1447,7 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
                     updateQuery = {};
                     updateQuery["response.design.0.concept.0.comments.client"] = this.value.replace(/[\&\=\+]/gi, '');
 
-                    await ajaxJson({ whereQuery, updateQuery }, "/updateUser");
+                    await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/updateUser");
 
                   } catch (e) {
                     window.alert("오류가 발생하였습니다! 다시 시도해주세요.");
@@ -1473,8 +1473,9 @@ MiniProposalJs.prototype.insertSecondBox = async function () {
     });
 
   } catch (e) {
-    window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
-    window.location.reload();
+    console.log(e);
+    // window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+    // window.location.reload();
   }
 }
 
@@ -2632,7 +2633,7 @@ MiniProposalJs.prototype.launching = async function (loading) {
       window.location.href = this.frontPage;
     }
 
-    users = await ajaxJson({ whereQuery: { useid: getObj.useid } }, "/getUsers", { equal: true });
+    users = await ajaxJson({ whereQuery: { useid: getObj.useid } }, BACKHOST + "/getUsers", { equal: true });
     if (users.length === 0) {
       window.alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
