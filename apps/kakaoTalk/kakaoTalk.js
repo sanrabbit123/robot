@@ -1146,7 +1146,7 @@ KakaoTalk.prototype.templateTong = function (target) {
       }
     },
     "realAccount": {
-      "name": "홈리에종 계좌 안내 수정",
+      "name": "홈리에종 계좌 안내 수정 수정",
       "id": "TJ_9111",
       "needs": [
         "client",

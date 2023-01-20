@@ -9647,6 +9647,49 @@ ProjectJs.prototype.communicationRender = function () {
   ]);
 
   communication.setItem([
+    () => { return "촬영비 결제 요청"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        if (instance.whiteBox !== null) {
+          const proid = instance.whiteBox.id;
+          let thisCase;
+          for (let c of instance.cases) {
+            if (c !== null) {
+              if (c.proid === proid) {
+                thisCase = c;
+              }
+            }
+          }
+          const [ project ] = await GeneralJs.ajaxJson({ noFlat: true, where: { proid } }, "/getProjects", { equal: true });
+          const [ client ] = await GeneralJs.ajaxJson({ noFlat: true, where: { cliid: project.cliid } }, "/getClients", { equal: true });
+          const [ designer ] = await GeneralJs.ajaxJson({ noFlat: true, where: { desid: project.desid } }, "/getDesigners", { equal: true });
+
+          // await GeneralJs.ajaxJson({
+          //   method: "requestRawContents",
+          //   name: designer.designer,
+          //   phone: designer.information.phone,
+          //   option: {
+          //     client: client.name,
+          //     designer: designer.designer,
+          //     host: FRONTHOST.slice(8),
+          //     proid: project.proid,
+          //   }
+          // }, "/alimTalk");
+  
+          window.alert("촬영비 결제를 요청하였습니다!");
+
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+
+  communication.setItem([
     () => { return "디자이너 글 업로드"; },
     function () {
       return true;
@@ -9695,8 +9738,8 @@ ProjectJs.prototype.communicationRender = function () {
 
           await GeneralJs.ajaxJson({
             method: "requestRawContents",
-            name: client.name,
-            phone: client.phone,
+            name: designer.designer,
+            phone: designer.information.phone,
             option: {
               client: client.name,
               designer: designer.designer,

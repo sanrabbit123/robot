@@ -1198,6 +1198,12 @@ ReceiptRouter.prototype.rou_post_accountTimeSet = function () {
   let obj = {};
   obj.link = "/accountTimeSet";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.amount === undefined || req.body.name === undefined) {
         throw new Error("invaild post");
@@ -1209,15 +1215,9 @@ ReceiptRouter.prototype.rou_post_accountTimeSet = function () {
       messageSend(`${name} 고객님이 계좌에 입금을 위한 안내를 받으셨어요. 아직 입금한 건 아니에요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
       await back.mongoCreate(collection, equalJson(req.body), { selfMongo });
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_smsParsing): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Python 서버 문제 생김 (rou_post_accountTimeSet): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error" }));
     }
@@ -1234,6 +1234,12 @@ ReceiptRouter.prototype.rou_post_accountTimeUpdate = function () {
   let obj = {};
   obj.link = "/accountTimeUpdate";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       const selfMongo = instance.mongolocal;
       const { whereQuery, updateQuery, name, phone } = equalJson(req.body);
@@ -1245,15 +1251,9 @@ ReceiptRouter.prototype.rou_post_accountTimeUpdate = function () {
       }
       await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_smsParsing): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Python 서버 문제 생김 (rou_post_accountTimeUpdate): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error" }));
     }

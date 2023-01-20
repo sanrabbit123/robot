@@ -7100,6 +7100,42 @@ ProcessDetailJs.prototype.paymentByCard = function () {
   }
 }
 
+ProcessDetailJs.prototype.paymentByAccount = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project, contentsRawInfo, totalContents, requestNumber } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const manyBig = media[0];
+  const generalSmall = !manyBig;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker } = GeneralJs;
+  return (project) => {
+    return async function (e) {
+      try {
+        const amount = 165000;
+        const goodname = "홈리에종 촬영비";
+        const proid = project.proid;
+        const cliid = project.cliid;
+        const desid = project.desid;
+        const requestNumber = instance.requestNumber;
+        const designer = instance.designer;
+        const name = designer.designer;
+        const phone = designer.information.phone;
+        const complete = 0;
+        const date = new Date();
+        let body;
+
+        body = { requestNumber, proid, cliid, desid, goodname, name, phone, amount, complete, date };
+
+        console.log("this Logic")
+        
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+}
+
 ProcessDetailJs.prototype.insertContentsBox = function () {
   const instance = this;
   const mother = this.mother;
@@ -8333,7 +8369,7 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
   buttonHeight = <%% 36, 40, 33, 31, 8 %%>;
 
   buttonOuterPadding = <%% 8, 8, 6, 5, 1 %%>;
-  buttonInnerMargin = <%% 6, 6, 4, 4, 1 %%>;
+  buttonInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
 
   descriptionBetween = <%% 16, 16, 16, 14, 1 %%>;
 
@@ -8376,42 +8412,51 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
         {
           title: "촬영 컨택",
           active: false,
+          click: null,
         },
         {
           title: "촬영 일정 확정",
           active: true,
+          click: null,
         },
         {
           title: "촬영 완료",
           active: false,
+          click: null,
         }
       ],
       [
         {
           title: "촬영비 결제 대기",
           active: false,
+          click: null,
         },
         {
           title: "촬영비 결제 완료",
           active: true,
+          click: null,
         },
         {
           title: "촬영비 해당 없음",
           active: false,
+          click: null,
         }
       ],
       [
         {
           title: "촬영비 카드 결제",
           active: true,
+          click: instance.paymentByCard(),
         },
         {
           title: "촬영비 계좌 이체",
           active: true,
+          click: instance.paymentByAccount(),
         },
         {
           title: "",
           active: false,
+          click: null,
         }
       ],
     ];
@@ -8421,28 +8466,34 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
         {
           title: "촬영비 결제 대기",
           active: false,
+          click: null,
         },
         {
           title: "촬영비 결제 완료",
           active: true,
+          click: null,
         },
         {
           title: "촬영비 해당 없음",
           active: false,
+          click: null,
         }
       ],
       [
         {
           title: "촬영비 카드 결제",
           active: true,
+          click: instance.paymentByCard(),
         },
         {
           title: "촬영비 계좌 이체",
           active: true,
+          click: instance.paymentByAccount(),
         },
         {
           title: "",
           active: false,
+          click: null,
         }
       ],
     ];
@@ -8587,6 +8638,9 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
           },
           children: variableArray(contents.buttonSet[i].length).map((index) => {
             return {
+              event: {
+                click: (typeof contents.buttonSet[i][index].click === "function") ? contents.buttonSet[i][index].click(instance.project) : (e) => {},
+              },
               style: {
                 width: String(buttonWidth) + ea,
                 height: String(buttonHeight) + ea,
