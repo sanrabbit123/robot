@@ -8254,7 +8254,7 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, selfHref, scrollTo, variableArray } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -8300,7 +8300,7 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
-  veryBigSize = <%% 23, 21, 20, 17, 4 %%>;
+  veryBigSize = <%% 23, 21, 20, 17, 4.4 %%>;
   veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
   veryBigTextTop = <%% -1, -1, -2, -1, -1 %%>;
 
@@ -8309,7 +8309,7 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
   textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
   smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
 
-  textSize = <%% 14, 14, 13, 12, 2.9 %%>;
+  textSize = <%% 14, 14, 13, 12, 3.2 %%>;
   textWeight = <%% 700, 700, 700, 700, 700 %%>;
   textFileWeight = <%% 400, 400, 400, 400, 400 %%>;
 
@@ -8327,22 +8327,22 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
   smallWeight = <%% 400, 400, 400, 400, 400 %%>;
   smallBetween = <%% 5, 5, 4, 4, 0 %%>;
 
-  firstWidth = <%% 298, 220, 203, 124, 300 %%>;
+  firstWidth = <%% 298, 220, 203, 122, 300 %%>;
 
-  buttonWidth = <%% 140, 136, 124, 108, 140 %%>;
-  buttonHeight = <%% 38, 38, 32, 31, 38 %%>;
+  buttonWidth = <%% 140, 136, 124, 106, 34.5 %%>;
+  buttonHeight = <%% 36, 40, 33, 31, 8 %%>;
 
-  buttonOuterPadding = <%% 8, 8, 6, 5, 8 %%>;
-  buttonInnerMargin = <%% 6, 6, 4, 4, 6 %%>;
+  buttonOuterPadding = <%% 8, 8, 6, 5, 1 %%>;
+  buttonInnerMargin = <%% 6, 6, 4, 4, 1 %%>;
 
-  descriptionBetween = <%% 16, 16, 15, 14, 1 %%>;
+  descriptionBetween = <%% 16, 16, 16, 14, 1 %%>;
 
-  panWidth = <%% 20, 20, 20, 20, 20 %%>;
+  panWidth = <%% 20, 20, 20, 20, 2 %%>;
   panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
 
-  circleWidth = <%% 5, 5, 5, 4, 5 %%>;
-  circleTop = <%% 5, 5, 4, 4, 5 %%>;
-  circleLeft = <%% -7, -7, -7, -7, -7 %%>;
+  circleWidth = <%% 5, 5, 5, 4, 1 %%>;
+  circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1 %%>;
+  circleLeft = <%% -7, -7, -7, -7, (isIphone() ? 12.6 : 13) %%>;
 
   mobileVisualPaddingValue = 0.2;
 
@@ -8457,7 +8457,7 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
       width: String(100) + '%',
       background: colorChip.white,
       paddingTop: String(paddingTop) + ea,
-      paddingBottom: String(whiteBottomMargin - blockBetweenBottom) + ea,
+      paddingBottom: String(desktop ? whiteBottomMargin - blockBetweenBottom : 6.6) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },
@@ -8491,27 +8491,33 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
   createNode({
     mother: grayTong,
     style: {
-      display: "flex",
+      display: desktop ? "flex" : "block",
       width: withOut(0),
-      flexDirection: "row",
-      justifyContent: "start",
-      alignItems: "start",
+      flexDirection: desktop ? "row" : "",
+      justifyContent: desktop ? "start" : "",
+      alignItems: desktop ? "start" : "",
     },
     children: [
       {
-        text: contents.title.join("\n"),
+        text: contents.title.join(desktop ? "\n" : " "),
         style: {
-          display: "inline-flex",
+          display: desktop ? "inline-flex" : "flex",
           position: "relative",
           fontSize: String(veryBigSize) + ea,
           fontWeight: String(veryBigWeight),
           color: colorChip.black,
           lineHeight: String(1.5),
-          width: String(firstWidth) + ea,
-          top: String(veryBigTextTop) + ea,
+          width: desktop ? String(firstWidth) + ea : withOut(0, ea),
+          top: desktop ? String(veryBigTextTop) + ea : "",
+          justifyContent: desktop ? "" : "center",
+          alignItems: desktop ? "" : "center",
+          textAlign: desktop ? "" : "center",
+          marginTop: desktop ? "" : String(2.8) + ea,
+          marginBottom: desktop ? "" : String(3) + ea,
         },
         child: {
           style: {
+            display: "inline-block",
             position: "absolute",
             top: String(circleTop) + ea,
             left: String(circleLeft) + ea,
@@ -8524,10 +8530,11 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
       },
       {
         style: {
-          display: "inline-flex",
+          display: desktop ? "inline-flex" : "flex",
           position: "relative",
-          width: withOut(firstWidth + ((buttonWidth + buttonOuterPadding + buttonOuterPadding) * contents.buttonSet.length) + (buttonOuterPadding * (contents.buttonSet.length - 1)), ea),
+          width: desktop ? withOut(firstWidth + ((buttonWidth + buttonOuterPadding + buttonOuterPadding) * contents.buttonSet.length) + (buttonOuterPadding * (contents.buttonSet.length - 1)), ea) : withOut(0, ea),
           flexDirection: "column",
+          marginBottom: desktop ? "" : String(7.2) + ea,
         },
         children: [
           {
@@ -8551,6 +8558,7 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
               color: colorChip.black,
               lineHeight: String(1.6),
               marginBottom: String(descriptionBetween) + ea,
+              textAlign: desktop ? "" : "center",
             }
           },
           {
@@ -8561,6 +8569,7 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
               fontWeight: String(textFileWeight),
               color: colorChip.black,
               lineHeight: String(1.6),
+              textAlign: desktop ? "" : "center",
             }
           },
         ]
@@ -8596,7 +8605,7 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
                 style: {
                   position: "relative",
                   top: String(textTextTop) + ea,
-                  fontSize: String(textSize) + ea,
+                  fontSize: String(desktop ? textSize : 2.9) + ea,
                   fontWeight: String(textWeight),
                   color: contents.buttonSet[i][index].active ? (i !== contents.buttonSet.length - 1 ? colorChip.green : colorChip.white) : colorChip.deactive,
                 }
