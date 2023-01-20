@@ -6902,7 +6902,11 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
 
       await sheets.update_value_inPython(sheetsId, sheetsName, totalRows, [ 0, 1 ]);
       for (let { whereQuery, updateQuery } of updateTong) {
-        await back.mongoUpdate(historyCollection, [ whereQuery, updateQuery ], { selfMongo: selfConsoleMongo });
+        if (updateQuery.manager !== undefined && typeof updateQuery.manager === "string") {
+          if (updateQuery.manager.trim() !== '-' && updateQuery.manager.trim() !== '') {
+            await back.mongoUpdate(historyCollection, [ whereQuery, updateQuery ], { selfMongo: selfConsoleMongo });
+          }
+        }
       }
 
       weekTong = [];
