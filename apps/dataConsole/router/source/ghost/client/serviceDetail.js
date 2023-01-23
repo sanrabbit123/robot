@@ -7587,11 +7587,9 @@ ServiceDetailJs.prototype.insertContextBox = function () {
             width: desktop ? withOut(threeTitlePaddingLeft * 2, ea) : withOut((threeTitlePaddingLeft * 2) + threeBlockWidth, ea),
             paddingLeft: String(threeTitlePaddingLeft) + ea,
             paddingRight: String(threeTitlePaddingLeft) + ea,
-            paddingTop: String(threeDescriptionBoxPaddingTop) + ea,
+            paddingTop: String(desktop ? threeDescriptionBoxPaddingTop : 13.4) + ea,
             paddingBottom: String(threeDescriptionBoxPaddingTop) + ea,
             verticalAlign: desktop ? "" : "top",
-            height: desktop ? "" : withOut(threeDescriptionBoxPaddingTop * 2, ea),
-            justifyContent: desktop ? "" : "end",
             top: desktop ? "" : String(0),
           },
           children: [
