@@ -977,9 +977,10 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
     try {
       const thisBody = equalJson(req.body);
       if (typeof thisBody.event === "object") {
+        if (thisBody.event.type === "message") {
+          console.log(thisBody.event);
 
-        console.log(thisBody);
-
+        }
         res.send(JSON.stringify({ message: "OK" }));
       } else {
         res.send(JSON.stringify({ challenge: thisBody.challenge }));
