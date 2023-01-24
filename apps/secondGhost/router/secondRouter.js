@@ -132,7 +132,6 @@ SecondRouter.prototype.rou_get_First = function () {
   return obj;
 }
 
-
 //POST ---------------------------------------------------------------------------------------------
 
 SecondRouter.prototype.rou_post_messageLog = function () {
@@ -154,39 +153,20 @@ SecondRouter.prototype.rou_post_messageLog = function () {
         throw new Error("invaild post, must be text, channel");
       }
       const { text, channel, collection } = req.body;
-      let voice, target;
       let thisChannel;
 
-      // dev
-      target = null;
-      if (target === null) {
-        if (channel === "silent") {
-          await instance.slack_bot.chat.postMessage({ text, channel: "#error_log" });
-        } else {
-          await instance.slack_bot.chat.postMessage({ text, channel });
-        }
-      } else {
-        if (channel === "silent") {
-          await instance.slack_bot.chat.postMessage({ text: '<' + '@' + target.id + '>' + ' ' + text, channel: "#error_log" });
-        } else {
-          await instance.slack_bot.chat.postMessage({ text: '<' + '@' + target.id + '>' + ' ' + text, channel });
-        }
-      }
-
-      if (req.body.voice === true || req.body.voice === "true") {
-        voice = true;
-      } else {
-        voice = false;
-      }
+      instance.slack_bot.chat.postMessage({ text, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
 
       if (/silent/gi.test(channel) || /error_log/gi.test(channel)) {
         thisChannel = "log";
       } else {
         thisChannel = "general";
       }
-      await ajaxJson({ chat_id: telegram.bot[thisChannel], text: `(${channel}) ${text}` }, telegram.url(telegram.token));
+      ajaxJson({ chat_id: telegram.bot[thisChannel], text: `(${channel}) ${text}` }, telegram.url(telegram.token)).catch((err) => {
+        console.log(err);
+      });
 
-      if (voice) {
+      if (req.body.voice === true || req.body.voice === "true") {
         requestSystem("https://" + instance.address.officeinfo.voice.host + ":" + String(instance.address.officeinfo.voice.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
       }
 
