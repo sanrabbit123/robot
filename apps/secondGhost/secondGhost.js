@@ -32,6 +32,11 @@ const SecondGhost = function (mother = null, back = null, address = null) {
       log: "-760085658",
       emergency: "-724464036",
     },
+    bot: {
+      log: "-741702420",
+      general: "-771644766",
+      emergency: "-754872890",
+    },
     token: "5127747215:AAHDSmjmeYNJ4C4B5hWdAO-T1bJleSfOpGU",
     url: (token) => { return `https://api.telegram.org/bot${token}/sendMessage` }
   }

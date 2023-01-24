@@ -139,8 +139,8 @@ SecondRouter.prototype.rou_get_First = function () {
 
 SecondRouter.prototype.rou_post_messageLog = function () {
   const instance = this;
-  const { slackMembers } = this;
-  const { requestSystem } = this.mother;
+  const { slackMembers, telegram } = this;
+  const { requestSystem, ajaxJson } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/messageLog" ];
@@ -157,6 +157,7 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       }
       const { text, channel, collection } = req.body;
       let voice, target;
+      let thisChannel;
 
       target = null;
       if (typeof req.body.target === "string" && req.body.target !== "null" && req.body.target !== "undefined") {
@@ -189,6 +190,13 @@ SecondRouter.prototype.rou_post_messageLog = function () {
         voice = false;
       }
 
+      if (/silent/gi.test(channel) || /error_log/gi.test(channel)) {
+        thisChannel = "log";
+      } else {
+        thisChannel = "general";
+      }
+      await ajaxJson({ chat_id: telegram.bot[thisChannel], text: `(${channel}) ${text}` }, telegram.url(telegram.token));
+
       if (voice) {
         requestSystem("https://" + instance.address.officeinfo.voice.host + ":" + String(instance.address.officeinfo.voice.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
       }
@@ -204,7 +212,8 @@ SecondRouter.prototype.rou_post_messageLog = function () {
 
 SecondRouter.prototype.rou_post_emergencyAlarm = function () {
   const instance = this;
-  const { requestSystem } = this.mother;
+  const { telegram } = this;
+  const { requestSystem, ajaxJson } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/emergencyAlarm" ];
@@ -223,6 +232,8 @@ SecondRouter.prototype.rou_post_emergencyAlarm = function () {
       const channel = "#emergency_alarm";
 
       await instance.slack_bot.chat.postMessage({ text, channel });
+
+      await ajaxJson({ chat_id: telegram.bot["emergency"], text: `(${channel}) ${text}` }, telegram.url(telegram.token));
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
