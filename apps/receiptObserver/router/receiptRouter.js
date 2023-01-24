@@ -237,14 +237,12 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
       rows = [];
       if (json.cashOut !== undefined) {
         const { cashOut: cashOut_raw } = json;
-        await messageLog("cashout receive");
         for (let arr of cashOut_raw) {
           for (let obj of arr) {
             rows.push(obj);
           }
         }
       } else if (json.cashIn !== undefined) {
-        await messageLog("cashin receive");
         const { cashIn: cashIn_raw } = json;
         for (let arr of cashIn_raw) {
           for (let obj of arr) {
@@ -1218,6 +1216,44 @@ ReceiptRouter.prototype.rou_post_accountTimeSet = function () {
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       errorLog("Python 서버 문제 생김 (rou_post_accountTimeSet): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ message: "error" }));
+    }
+  }
+  return obj;
+}
+
+ReceiptRouter.prototype.rou_post_designerTransfer = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const { equalJson, messageLog, messageSend, errorLog, autoComma } = this.mother;
+  const collection = "designerTransfer";
+  let obj = {};
+  obj.link = "/designerTransfer";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.designer === undefined || req.body.body === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { designer, body } = equalJson(req.body);
+  
+      messageSend(`${designer} 실장님이 ${body.goodname} 결제를 위해 계좌에 입금을 위한 안내를 받으셨어요. 아직 입금한 건 아니에요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
+
+      // alimtalk
+
+      await back.mongoCreate(collection, body, { selfMongo });
+
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      errorLog("Python 서버 문제 생김 (rou_post_designerTransfer): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error" }));
     }

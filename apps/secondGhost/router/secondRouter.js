@@ -155,18 +155,24 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       const { text, channel, collection } = req.body;
       let thisChannel;
 
-      await instance.slack_bot.chat.postMessage({ text, channel: (channel === "silent" ? "#error_log" : channel) });
-
-      if (/silent/gi.test(channel) || /error_log/gi.test(channel)) {
-        thisChannel = "log";
-      } else {
-        thisChannel = "general";
-      }
-      await ajaxJson({ chat_id: telegram.bot[thisChannel], text: `(${channel}) ${text}` }, telegram.url(telegram.token));
+      instance.slack_bot.chat.postMessage({ text, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
 
       if (req.body.voice === true || req.body.voice === "true") {
         requestSystem("https://" + instance.address.officeinfo.voice.host + ":" + String(instance.address.officeinfo.voice.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
       }
+
+      if (/silent/gi.test(channel) || /error_log/gi.test(channel)) {
+        thisChannel = "log";
+      } else if (/consulting/gi.test(channel)) {
+        thisChannel = "consulting";
+      } else if (/operation/gi.test(channel)) {
+        thisChannel = "operation";
+      } else {
+        thisChannel = "general";
+      }
+      ajaxJson({ chat_id: telegram.bot[thisChannel], text: `(${channel}) ${text}` }, telegram.url(telegram.token)).catch((err) => {
+        instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_messageLog): " + err.message).catch((e) => { console.log(e); });
+      })
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
