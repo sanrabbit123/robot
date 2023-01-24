@@ -18,11 +18,10 @@ const SecondGhost = function (mother = null, back = null, address = null) {
   this.slack_bot = new WebClient(this.slack_token);
   this.telegram = {
     chat: {
-      general: "-1001897212963",
-      private: "-873784218",
-      operation: "-658958104",
-      log: "-760085658",
-      emergency: "-724464036",
+      general: "-806575867",
+      notice: "-896011842",
+      operation: "-895560263",
+      request: "-625365105",
     },
     bot: {
       log: "-741702420",
@@ -30,6 +29,10 @@ const SecondGhost = function (mother = null, back = null, address = null) {
       emergency: "-754872890",
       consulting: "-856907489",
       operation: "-728861584",
+      proposal: "-885912068",
+      mail: "-617429987",
+      taxbill: "-802082485",
+      console: "-818998366"
     },
     token: "5127747215:AAHDSmjmeYNJ4C4B5hWdAO-T1bJleSfOpGU",
     url: (token) => { return `https://api.telegram.org/bot${token}/sendMessage` }

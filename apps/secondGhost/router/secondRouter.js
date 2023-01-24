@@ -167,6 +167,14 @@ SecondRouter.prototype.rou_post_messageLog = function () {
         thisChannel = "consulting";
       } else if (/operation/gi.test(channel)) {
         thisChannel = "operation";
+      } else if (/proposal/gi.test(channel)) {
+        thisChannel = "proposal";
+      } else if (/mail/gi.test(channel)) {
+        thisChannel = "mail";
+      } else if (/taxbill/gi.test(channel)) {
+        thisChannel = "taxbill";
+      } else if (/console/gi.test(channel)) {
+        thisChannel = "console";
       } else {
         thisChannel = "general";
       }
@@ -969,6 +977,9 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
     try {
       const thisBody = equalJson(req.body);
       if (typeof thisBody.event === "object") {
+
+        console.log(thisBody);
+
         res.send(JSON.stringify({ message: "OK" }));
       } else {
         res.send(JSON.stringify({ challenge: thisBody.challenge }));
