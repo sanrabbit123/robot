@@ -2,15 +2,12 @@ const CronGhost = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
-  const { WebClient } = require("@slack/web-api");
 
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = ADDRESS;
   this.dir = `${process.cwd()}/apps/cronGhost`;
   this.list = [];
-  this.slack_token = "xoxb-717757271335-4566120587107-i7TxxYzbPWPzdBMPoZDo2kxn";
-  this.slack_bot = new WebClient(this.slack_token);
 }
 
 CronGhost.prototype.aliveTest = async function () {
@@ -57,12 +54,12 @@ CronGhost.prototype.aliveTest = async function () {
             if (successNum === targetNumber) {
               console.log("\x1b[33m%s\x1b[0m", "all alive");
               message = "server all alive";
-              await instance.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+              await errorLog(message);
             } else if (successNum + failNum === targetNumber) {
               console.log("\x1b[33m%s\x1b[0m", "something death");
               message += "\n======================================";
               message += "\nsomething death";
-              await instance.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+              await errorLog(message);
             }
           }
         }
@@ -76,7 +73,7 @@ CronGhost.prototype.aliveTest = async function () {
           console.log("\x1b[33m%s\x1b[0m", "something death");
           message += "\n======================================";
           message += "\nsomething death";
-          await instance.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+          await errorLog(message);
         }
       }
 
@@ -91,13 +88,13 @@ CronGhost.prototype.aliveTest = async function () {
     });
 
   } catch (e) {
-    await instance.slack_bot.chat.postMessage({ text: "alive test error : " + e.message, channel: "#error_log" });
+    await errorLog("alive test error : " + e.message);
   }
 }
 
 CronGhost.prototype.diskTest = async function () {
   const instance = this;
-  const { requestSystem } = this.mother;
+  const { requestSystem, errorLog } = this.mother;
   try {
     const targets = [
       { name: "post", host: instance.address.backinfo.host },
@@ -114,10 +111,10 @@ CronGhost.prototype.diskTest = async function () {
       response = await requestSystem(protocol + "//" + host + ":" + String(robotPort) + pathConst);
       console.log(response.data.disk);
       if (response.data.disk[2] < 100000) {
-        await instance.slack_bot.chat.postMessage({ text: name + " " + "disk warning", channel: "#error_log" });
+        await errorLog(name + " " + "disk warning");
       }
     }
-    await instance.slack_bot.chat.postMessage({ text: "disk check done", channel: "#error_log" });
+    await errorLog("disk check done");
   } catch (e) {
     console.log(e);
   }
