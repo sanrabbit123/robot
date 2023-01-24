@@ -113,36 +113,10 @@ SecondGhost.prototype.ghostConnect = async function () {
       }
     }
     pems.allowHTTP1 = true;
-
-    //set slack members, channels;
-    const { data: { members: slackMembers } } = await requestSystem("https://slack.com/api/users.list", {}, {
-      method: "get",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + slack_userToken,
-      }
-    });
-    let slackChannelsTotal, slackChannels, members, thisToken;
-
-    slackChannelsTotal = [];
-    for (let user in slack_users) {
-      console.log("find channel in " + user + "...");
-      thisToken = slack_users[user];
-      ({ data: { channels: slackChannels } } = await requestSystem("https://slack.com/api/conversations.list?limit=999&types=public_channel,private_channel,mpim,im", {}, { method: "get", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + thisToken, } }));
-      // for (let obj of slackChannels) {
-      //   if (obj.is_im === true) {
-      //     console.log("find private channel : " + obj.id + " of " + user);
-      //     await sleep(500);
-      //     ({ data: { members } } = await requestSystem("https://slack.com/api/conversations.members?channel=" + obj.id, {}, { method: "get", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + thisToken, } }));
-      //     obj.members = equalJson(JSON.stringify(members));
-      //   }
-      // }
-      slackChannelsTotal = slackChannelsTotal.concat(slackChannels);
-    }
-
+    
     //set router
     const SecondRouter = require(`${this.dir}/router/secondRouter.js`);
-    const router = new SecondRouter(this.slack_bot, MONGOC, MONGOLOCALC, slack_userToken, slackMembers, slackChannelsTotal, this.telegram);
+    const router = new SecondRouter(this.slack_bot, MONGOC, MONGOLOCALC, slack_userToken, this.telegram);
 
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {

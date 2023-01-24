@@ -1,4 +1,4 @@
-const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken, slackMembers, slackChannels, telegram) {
+const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken, telegram) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
@@ -16,8 +16,6 @@ const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken, 
 
   this.slack_userToken = slack_userToken;
   this.slack_bot = slack_bot;
-  this.slackMembers = slackMembers;
-  this.slackChannels = slackChannels;
 
   this.webHook = {
     url: "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844",
@@ -139,7 +137,7 @@ SecondRouter.prototype.rou_get_First = function () {
 
 SecondRouter.prototype.rou_post_messageLog = function () {
   const instance = this;
-  const { slackMembers, telegram } = this;
+  const { telegram } = this;
   const { requestSystem, ajaxJson } = this.mother;
   let obj;
   obj = {};
@@ -159,17 +157,8 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       let voice, target;
       let thisChannel;
 
+      // dev
       target = null;
-      if (typeof req.body.target === "string" && req.body.target !== "null" && req.body.target !== "undefined") {
-        target = slackMembers.find((obj) => { return obj.profile.display_name.trim() === req.body.target });
-        if (target === undefined) {
-          target = slackMembers.find((obj) => { return obj.profile.real_name.trim() === req.body.target });
-        }
-      }
-      if (target === undefined) {
-        target = null;
-      }
-
       if (target === null) {
         if (channel === "silent") {
           await instance.slack_bot.chat.postMessage({ text, channel: "#error_log" });
@@ -982,71 +971,8 @@ SecondRouter.prototype.rou_post_printClient = function () {
 
 SecondRouter.prototype.rou_post_slackEvents = function () {
   const instance = this;
-  const { secondHost, telegram, slackMembers, slackChannels } = this;
+  const { secondHost } = this;
   const { errorLog, messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
-  const telegramChat = async (user, textRaw, channel) => {
-    try {
-      let text;
-      let thisMember, thisChannel, thisChannelName;
-      let thisMemberCopied, thisChannelCopied;
-      let members;
-  
-      thisMember = slackMembers.find((obj) => { return obj.id === user });
-      if (thisMember === undefined) {
-        thisMember = "unknown";
-      } else {
-        thisMemberCopied = equalJson(JSON.stringify(thisMember));
-        thisMember = thisMember.real_name;
-      }
-  
-      thisChannel = slackChannels.find((obj) => { return obj.id === channel });
-      if (thisChannel === undefined) {
-        thisChannel = "private";
-        thisChannelName = "unknown";
-      } else {
-  
-        thisChannelCopied = equalJson(JSON.stringify(thisChannel));
-  
-        if (typeof thisChannel.name === "string") {
-          if (/error/gi.test(thisChannel.name)) {
-            thisChannel = "log";
-          } else if (/operation/gi.test(thisChannel.name)) {
-            thisChannel = "operation";
-          } else if (/emergency/gi.test(thisChannel.name)) {
-            thisChannel = "emergency";
-          } else {
-            thisChannel = "general";
-          }
-          thisChannelName = thisChannelCopied.name;
-        } else {
-          thisChannel = "private";
-  
-          if (Array.isArray(thisChannelCopied.members)) {
-  
-            thisChannelName = thisChannelCopied.members.map((id) => {
-              return slackMembers.find((obj) => { return obj.id === id });
-            }).map((obj2) => {
-              if (obj2 === undefined) {
-                return "unknown";
-              } else {
-                return obj2.real_name
-              }
-            }).join(", ");
-  
-          } else {
-            thisChannelName = "unknown";
-          }
-          
-        }
-      }
-  
-      text = thisMember + " (" + thisChannelName + ") : " + textRaw;
-      await ajaxJson({ chat_id: telegram.chat[thisChannel], text }, telegram.url(telegram.token));
-
-    } catch (e) {
-      console.log(e);
-    }
-  }
   let obj = {};
   obj.link = [ "/slackEvents" ];
   obj.func = async function (req, res) {
@@ -1059,8 +985,6 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
     try {
       const thisBody = equalJson(req.body);
       if (typeof thisBody.event === "object") {
-        const { user, text, channel } = thisBody.event;
-        telegramChat(user, text, channel).catch((err) => { console.log(err); });
         res.send(JSON.stringify({ message: "OK" }));
       } else {
         res.send(JSON.stringify({ challenge: thisBody.challenge }));
