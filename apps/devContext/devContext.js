@@ -138,9 +138,14 @@ DevContext.prototype.launching = async function () {
     // }
 
 
+    const slack_userToken = "xoxp-717757271335-704486967090-4566130160163-fd2a2cc412e2a509a43635fb8f6c65e2";
+    let slackChannels;
+    ({ data: { channels: slackChannels } } = await requestSystem("https://slack.com/api/conversations.list?limit=999&types=public_channel,private_channel,mpim,im", {}, { method: "get", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken, } }))
 
-    await messageSend({ text: "안녕하세요, 테스트입니다.", channel: "#general" });
+    await fileSystem(`writeJson`, [ `${process.cwd()}/temp/channels.json`, slackChannels ])
+    console.log(slackChannels);
 
+    
 
     /*
 

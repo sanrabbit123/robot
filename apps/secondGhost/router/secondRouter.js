@@ -16,6 +16,55 @@ const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken, 
 
   this.slack_userToken = slack_userToken;
   this.slack_bot = slack_bot;
+  this.slack_info = {
+    userDictionary: {
+      "ULQEAUF2N": "homeliaison",
+      "UM1S7H3GQ": "Clarehye",
+      "UM1SUNFFX": "Jini",
+      "U019UTQL6UB": "Olivia",
+      "U01HFUADKB8": "이큰별",
+      "U01JL6U5NPP": "Pepper",
+      "U02U8GH963C": "김지은",
+      "U048W15FA1M": "박혜정"
+    },
+    channelDictionary: {
+      "CLQERRWR1": "general",
+      "CLQERS2CB": "homestyling-platform",
+      "CLVGBR8HX": "random",
+      "CPLC56QUW": "plan_image",
+      "CRWHWBN2V": "cooperation",
+      "C01DG384RFF": "to-do-list",
+      "CLY8SV681": "401_consulting",
+      "CM1T6HXLM": "502_sns_contents",
+      "CM20UBN3S": "403_proposal",
+      "CM3PM73LP": "000_master_notice",
+      "C02SQGGTG00": "001_staff_notice",
+      "CUZGKGUBS": "100_service",
+      "CM4G6QBRT": "300_designer",
+      "CM5H48SJG": "105_ir",
+      "CM9PHLM0D": "200_web",
+      "C02RP66AK6C": "201_test",
+      "C02K21JU5K5": "202_request",
+      "C03RCHW40UT": "203_schedule",
+      "C03UMHVQQT1": "204_magazine",
+      "C04CK5X9Q83": "301_console",
+      "CMZMWGK1A": "400_customer",
+      "C02AE3H16US": "404_curation",
+      "C03KHAUAL9Y": "405_mini",
+      "CNY9UEBEG": "500_marketing",
+      "C01HHA4DC0K": "503_contents",
+      "CS05EFPD1": "900_design",
+      "C0135LFQH7X": "700_operation",
+      "C0236JSQGGP": "701_taxbill",
+      "C04DN6KMHBR": "702_mail",
+      "C01E32KPH0Q": "수다방",
+      "C01EBS9E5BK": "시공",
+      "C023VF8HB8S": "cx",
+      "C02FBSYM40G": "file",
+      "C02KKLHUVBJ": "call",
+      "C04H4LBJZ3R": "emergency_alarm",
+    }
+  };
 
   this.webHook = {
     url: "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844",
@@ -963,7 +1012,7 @@ SecondRouter.prototype.rou_post_printClient = function () {
 
 SecondRouter.prototype.rou_post_slackEvents = function () {
   const instance = this;
-  const { secondHost } = this;
+  const { secondHost, slack_info: { userDictionary, channelDictionary }, telegram } = this;
   const { errorLog, messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/slackEvents" ];
@@ -976,11 +1025,27 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
     });
     try {
       const thisBody = equalJson(req.body);
+      let text;
+      let thisChannel;
+
       if (typeof thisBody.event === "object") {
         if (thisBody.event.type === "message") {
-          console.log(thisBody.event);
-
+          if (channelDictionary[thisBody.event.channel] !== undefined && userDictionary[thisBody.event.user] !== undefined) {
+            text = `(${channelDictionary[thisBody.event.channel]}) ${userDictionary[thisBody.event.user]} : ${thisBody.event.text}`;
+            thisChannel = "general";
+            if (/notice/gi.test(channelDictionary[thisBody.event.channel])) {
+              thisChannel = "notice";
+            } else if (/operation/gi.test(channelDictionary[thisBody.event.channel])) {
+              thisChannel = "operation";
+            } else if (/request/gi.test(channelDictionary[thisBody.event.channel])) {
+              thisChannel = "request";
+            }
+            ajaxJson({ chat_id: telegram.chat[thisChannel], text }, telegram.url(telegram.token)).catch((err) => {
+              instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + err.message).catch((e) => { console.log(e); });
+            })
+          }
         }
+        
         res.send(JSON.stringify({ message: "OK" }));
       } else {
         res.send(JSON.stringify({ challenge: thisBody.challenge }));
