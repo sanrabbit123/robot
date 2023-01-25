@@ -4293,7 +4293,7 @@ CalculationJs.prototype.launching = async function () {
 
     loading = this.mother.grayLoading();
 
-    serverResponse = await ajaxJson({ mode: "entire" }, PYTHONHOST + "/calculationConsole", { equal: true });
+    serverResponse = await ajaxJson({ mode: "init" }, PYTHONHOST + "/calculationConsole", { equal: true });
 
     projects = serverResponse.projects;
     clients = serverResponse.clients;
@@ -4328,7 +4328,6 @@ CalculationJs.prototype.launching = async function () {
     this.extractMatrix();
     this.searchMatrix();
     this.reportMatrix();
-
     if (getObj.mode === "report") {
       (this.queueView())();
     }
