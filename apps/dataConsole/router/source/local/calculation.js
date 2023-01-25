@@ -2232,7 +2232,7 @@ CalculationJs.prototype.reportMatrix = function () {
 
 CalculationJs.prototype.queueView = function () {
   const instance = this;
-  const { totalContents, ea, belowHeight, projects, bills } = this;
+  const { totalContents, ea, belowHeight } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, copyJson, removeByClass } = GeneralJs;
   return async function (e) {
     try {
@@ -2287,6 +2287,7 @@ CalculationJs.prototype.queueView = function () {
       let responseSumPaid;
       let grayTong;
       let loading;
+      let bills, projects;
 
       whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
       whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
@@ -2339,11 +2340,10 @@ CalculationJs.prototype.queueView = function () {
 
       loading = instance.mother.grayLoading();
 
-
-
-
-
-
+      instance.reloadProjects(await ajaxJson({ mode: "entire" }, PYTHONHOST + "/calculationConsole", { equal: true }));
+      instance.contentsLoad();
+      bills = instance.bills;
+      projects = instance.projects;
 
       responses = await ajaxJson({ mode: "get" }, PYTHONHOST + "/nonPaidResponses");
 
@@ -3277,7 +3277,7 @@ CalculationJs.prototype.queueView = function () {
 
 CalculationJs.prototype.refundView = function () {
   const instance = this;
-  const { totalContents, ea, belowHeight, projects, bills } = this;
+  const { totalContents, ea, belowHeight } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, copyJson, removeByClass } = GeneralJs;
   return async function (e) {
     try {
@@ -3338,6 +3338,7 @@ CalculationJs.prototype.refundView = function () {
       let targetRequestsTong;
       let refundReceipt;
       let thisProject;
+      let bills, projects;
 
       whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
       whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
@@ -3369,6 +3370,13 @@ CalculationJs.prototype.refundView = function () {
       valueTextTop = isMac() ? -1 : 1;
 
       blockMarginBottom = 2;
+
+      loading = instance.mother.grayLoading();
+
+      instance.reloadProjects(await ajaxJson({ mode: "entire" }, PYTHONHOST + "/calculationConsole", { equal: true }));
+      instance.contentsLoad();
+      bills = instance.bills;
+      projects = instance.projects;
 
       targetRequestsTong = [];
       for (let bill of bills) {
@@ -3408,8 +3416,6 @@ CalculationJs.prototype.refundView = function () {
 
       contentsAreaLeft = {};
       contentsAreaRight = {};
-
-      loading = instance.mother.grayLoading();
 
       // base
 
