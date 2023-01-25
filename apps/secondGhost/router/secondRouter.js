@@ -238,7 +238,7 @@ SecondRouter.prototype.rou_post_messageLog = function () {
           finalTargets = foundNames.join(" ");
         }
 
-        slackText = finalTargets + " " + finalTargets;
+        slackText = finalTargets + " " + text;
 
       }
 
