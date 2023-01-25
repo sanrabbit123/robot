@@ -102,10 +102,10 @@ DevContext.prototype.launching = async function () {
     // await facebook.getAccessToken();
 
 
-    
-    
-    await findCode("cashReceipt done ")
 
+    
+
+    
 
     
     // monthly GA report
@@ -4755,8 +4755,8 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "김혜경";
-    // const amount = 3748800;
+    // const name = "박혜연";
+    // const amount = 165000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,

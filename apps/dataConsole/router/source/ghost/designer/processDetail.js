@@ -1308,6 +1308,13 @@ ProcessDetailJs.prototype.insertControlBox = function () {
               },
               click: paymentByCard,
             },
+            {
+              title: "촬영비 계좌 이체",
+              active: (project) => {
+                return /대기/gi.test(project.contents.payment.status);
+              },
+              click: instance.paymentByAccount(),
+            },
           ]
         },
         {
@@ -7125,9 +7132,11 @@ ProcessDetailJs.prototype.paymentByAccount = function () {
         const date = new Date();
         let body;
 
-        body = { requestNumber, proid, cliid, desid, goodname, date, name, phone, amount, complete };
-        await ajaxJson({ designer: name, desid, body }, PYTHONHOST + "/designerTransfer");
-        window.alert("카카오 채널을 통해 입금하실 통장과 금액을 안내해드렸습니다!");
+        if (window.confirm("계좌 이체를 통해 결제를 하시겠습니까?")) {
+          body = { requestNumber, proid, cliid, desid, goodname, date, name, phone, amount, complete };
+          await ajaxJson({ designer: name, desid, body }, PYTHONHOST + "/designerTransfer");
+          window.alert("카카오 채널을 통해 입금하실 통장과 금액을 안내해드렸습니다!");
+        }
 
       } catch (e) {
         console.log(e);
