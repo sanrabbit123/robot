@@ -187,7 +187,7 @@ SecondRouter.prototype.rou_get_First = function () {
 SecondRouter.prototype.rou_post_messageLog = function () {
   const instance = this;
   const { telegram, slack_info } = this;
-  const { requestSystem, ajaxJson } = this.mother;
+  const { requestSystem, ajaxJson, equalJson } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/messageLog" ];
@@ -212,9 +212,9 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       let finalTargets;
 
       slackText = text;
-      // if (Array.isArray(equalJson(req.body).target)) {
+      if (Array.isArray(equalJson(req.body).target)) {
 
-      //   targetArr = equalJson(req.body).target;
+        targetArr = equalJson(req.body).target;
 
       //   keyArr = Object.keys(slack_info.userDictionary);
       //   valueArr = [];
@@ -240,7 +240,7 @@ SecondRouter.prototype.rou_post_messageLog = function () {
 
       //   slackText = finalTargets + " " + finalTargets;
 
-      // }
+      }
 
       instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
 
