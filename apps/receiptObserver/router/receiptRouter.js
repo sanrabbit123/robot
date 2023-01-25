@@ -1249,8 +1249,7 @@ ReceiptRouter.prototype.rou_post_designerTransfer = function () {
 
       messageSend(`${designer} 실장님이 ${body.goodname} 결제를 위해 계좌에 입금을 위한 안내를 받으셨어요. 아직 입금한 건 아니에요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
 
-      // kakao.sendTalk("designerAccount", designer, thisDesigner.information.phone, {
-      kakao.sendTalk("designerAccount", "배창규", "010-2747-3403", {
+      kakao.sendTalk("designerAccount", designer, thisDesigner.information.phone, {
         designer,
         goodName: body.goodname,
         bankName: "기업",
