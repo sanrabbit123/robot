@@ -7126,7 +7126,7 @@ ProcessDetailJs.prototype.paymentByAccount = function () {
         let body;
 
         body = { requestNumber, proid, cliid, desid, goodname, date, name, phone, amount, complete };
-        await ajaxJson({ designer: name, body }, PYTHONHOST + "/designerTransfer");
+        await ajaxJson({ designer: name, desid, body }, PYTHONHOST + "/designerTransfer");
         window.alert("카카오 채널을 통해 입금하실 통장과 금액을 안내해드렸습니다!");
 
       } catch (e) {

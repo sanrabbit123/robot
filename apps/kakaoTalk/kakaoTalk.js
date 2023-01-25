@@ -1146,8 +1146,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       }
     },
     "realAccount": {
-      "name": "홈리에종 계좌 안내 수정 수정",
-      "id": "TJ_9111",
+      "name": "홈리에종 계좌 안내 수정 수정 수정",
+      "id": "TL_5574",
       "needs": [
         "client",
         "goodName",
@@ -1158,8 +1158,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       ],
       "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"goodName\", to: obj.goodName },\n          { from: \"bankName\", to: obj.bankName },\n          { from: \"account\", to: obj.account },\n          { from: \"to\", to: obj.to },\n          { from: \"amount\", to: obj.amount },\n        ];\n      }",
       "raw": {
-        "templtContent": "안녕하세요, #{client}님! #{goodName}을 입금해주실 계좌 안내드립니다.\n\n은행명 : #{bankName}\n계좌번호 : #{account}\n수취인 : #{to}\n금액 : #{amount}원\n\n위 계좌를 통해 #{amount}원을 입금해주시면 결제가 완료됩니다!\n\n감사합니다 :)",
-        "templtName": "홈리에종 계좌 안내 수정 수정",
+        "templtContent": "안녕하세요, #{client}님! #{goodName}을 입금해주실 계좌 안내드립니다.\n\n은행명 : #{bankName}\n계좌번호 : #{account}\n수취인 : #{to}\n금액 : #{amount}원\n\n위 계좌를 통해 #{amount}원을 입금해주시면 결제가 완료됩니다! 받는 통장 표시에 반드시 #{client}님의 성함을 적어주세요!\n\n감사합니다 :)",
+        "templtName": "홈리에종 계좌 안내 수정 수정 수정",
         "templateType": "BA",
         "templateEmType": "NONE",
         "templateExtra": "",
@@ -1171,14 +1171,69 @@ KakaoTalk.prototype.templateTong = function (target) {
         "block": "N",
         "dormant": "N",
         "securityFlag": "N",
-        "status": "A",
+        "status": "R",
         "inspStatus": "APR",
         "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
         "buttons": [],
-        "cdate": "2022-09-05 18:42:44",
-        "templtCode": "TJ_9111",
-        "comments": []
+        "cdate": "2023-01-20 13:51:51",
+        "templtCode": "TL_5574",
+        "comments": [
+          {
+            "cdate": "2023-01-20 15:48:10",
+            "name": "검수자",
+            "id": "2361483",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-01-20 15:48:10",
+            "status": "APR"
+          }
+        ]
       }
+    },
+    "designerAccount": {
+      "name": "홈리에종 계좌 안내 디자이너",
+      "id": "TL_5575",
+      "needs": [
+        "designer",
+        "goodName",
+        "bankName",
+        "account",
+        "to",
+        "amount"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"goodName\", to: obj.goodName },\n          { from: \"bankName\", to: obj.bankName },\n          { from: \"account\", to: obj.account },\n          { from: \"to\", to: obj.to },\n          { from: \"amount\", to: obj.amount },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 실장님! #{goodName}을 입금해주실 계좌 안내드립니다.\n\n은행명 : #{bankName}\n계좌번호 : #{account}\n수취인 : #{to}\n금액 : #{amount}원\n\n위 계좌를 통해 #{amount}원을 입금해주시면 결제가 완료됩니다. 받는 통장 표시에 반드시 #{designer} 실장님의 성함을 적어주세요!\n\n감사합니다 :)",
+        "templtName": "홈리에종 계좌 안내 디자이너",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-01-20 13:52:07",
+        "templtCode": "TL_5575",
+        "comments": [
+          {
+            "cdate": "2023-01-20 15:48:25",
+            "name": "검수자",
+            "id": "2361484",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-01-20 15:48:25",
+            "status": "APR"
+          }
+        ]
+      },
     },
     "firstPayment": {
       "name": "계약금 안내 수정 수정",

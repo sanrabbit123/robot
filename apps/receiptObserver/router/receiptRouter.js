@@ -1227,6 +1227,7 @@ ReceiptRouter.prototype.rou_post_designerTransfer = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
+  const kakao = this.kakao;
   const { equalJson, messageLog, messageSend, errorLog, autoComma } = this.mother;
   const collection = "designerTransfer";
   let obj = {};
@@ -1239,15 +1240,26 @@ ReceiptRouter.prototype.rou_post_designerTransfer = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (req.body.designer === undefined || req.body.body === undefined) {
+      if (req.body.designer === undefined || req.body.desid === undefined || req.body.body === undefined) {
         throw new Error("invaild post");
       }
       const selfMongo = instance.mongolocal;
-      const { designer, body } = equalJson(req.body);
-  
+      const { designer, desid, body } = equalJson(req.body);
+      const thisDesigner = await back.getDesignerById(desid, { selfMongo: instance.mongo });
+
       messageSend(`${designer} 실장님이 ${body.goodname} 결제를 위해 계좌에 입금을 위한 안내를 받으셨어요. 아직 입금한 건 아니에요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
 
-      // alimtalk
+      // kakao.sendTalk("designerAccount", designer, thisDesigner.information.phone, {
+      kakao.sendTalk("designerAccount", "배창규", "010-2747-3403", {
+        designer,
+        goodName: body.goodname,
+        bankName: "기업",
+        account: "049-085567-04-022",
+        to: designer,
+        amount: autoComma(body.amount),
+      }).catch((err) => {
+        console.log(err);
+      });
 
       await back.mongoCreate(collection, body, { selfMongo });
 

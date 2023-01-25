@@ -5283,7 +5283,7 @@ DataRouter.prototype.rou_post_calendarSync = function () {
   const calendar = this.calendar;
   const address = this.address;
   const { errorLog, sleep } = this.mother;
-  const calendarSyncFunc = async (MONGOC) => {
+  const calendarSyncFunc = async (MONGOC, index) => {
     try {
       const selfMongo = MONGOC;
       const today = new Date();
@@ -5320,12 +5320,18 @@ DataRouter.prototype.rou_post_calendarSync = function () {
             designer = designers.toNormal().find((obj) => { return obj.desid === project.desid });
             title = `촬영 W ${client.name}C ${designer.designer}D ${project.contents.photo.info.photographer}P ${project.contents.photo.info.interviewer}I ${project.proid}`;
             list = allEvents.filter((obj) => { return (new RegExp(project.proid, "gi")).test(obj.title) });
-            if (list.length > 0) {
+            if (list.length === 1) {
               await calendar.updateSchedule(from, list[0].eventId, { start: project.contents.photo.date.toNormal(), title });
-              console.log(`${project.proid} photo schedule update : ${title}`);
-            } else {
+            } else if (list.length === 0) {
               await calendar.makeSchedule(from, title, '', project.contents.photo.date.toNormal());
-              console.log(`${project.proid} photo schedule create : ${title}`);
+            } else {
+              for (let i = 0; i < list.length; i++) {
+                if (i === 0) {
+                  await calendar.updateSchedule(from, list[i].eventId, { start: project.contents.photo.date.toNormal(), title });
+                } else {
+                  await calendar.deleteSchedule(from, list[i].eventId);
+                }
+              }
             }
           }
         }
@@ -5355,18 +5361,24 @@ DataRouter.prototype.rou_post_calendarSync = function () {
           designer = designers.toNormal().find((obj) => { return obj.desid === project.desid });
           title = `현장 미팅 W ${client.name}C ${designer.designer}D ${project.proid}`;
           list = allEvents.filter((obj) => { return (new RegExp(project.proid, "gi")).test(obj.title) });
-          if (list.length > 0) {
+          if (list.length === 1) {
             await calendar.updateSchedule(from, list[0].eventId, { start: project.process.contract.meeting.date.toNormal(), title });
-            console.log(`${project.proid} meeting schedule update : ${title}`);
-          } else {
+          } else if (list.length === 0) {
             await calendar.makeSchedule(from, title, '', project.process.contract.meeting.date.toNormal());
-            console.log(`${project.proid} meeting schedule create : ${title}`);
+          } else {
+            for (let i = 0; i < list.length; i++) {
+              if (i === 0) {
+                await calendar.updateSchedule(from, list[i].eventId, { start: project.process.contract.meeting.date.toNormal(), title });
+              } else {
+                await calendar.deleteSchedule(from, list[i].eventId);
+              }
+            }
           }
         }
 
       }
 
-      errorLog("calendar sync success : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+      errorLog("calendar sync success " + String(index) + " : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
 
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_calendarSync): " + e.message);
@@ -5382,7 +5394,9 @@ DataRouter.prototype.rou_post_calendarSync = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      calendarSyncFunc(instance.mongo).catch((err) => {
+      calendarSyncFunc(instance.mongo, 0).then(() => {
+        return calendarSyncFunc(instance.mongo, 1);
+      }).catch((err) => {
         errorLog("Console 서버 문제 생김 (rou_post_calendarSync): " + err.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
