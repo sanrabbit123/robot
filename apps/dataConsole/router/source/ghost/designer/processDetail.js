@@ -8773,7 +8773,7 @@ ProcessDetailJs.prototype.insertMeetingBackBox = function () {
   buttonOuterPadding = <%% 4, 4, 4, 3, 1 %%>;
   buttonInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
 
-  descriptionBetween = <%% 14, 14, 14, 12, 1 %%>;
+  descriptionBetween = <%% 13, 14, 14, 12, 1 %%>;
 
   panWidth = <%% 20, 20, 20, 20, 2 %%>;
   panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
