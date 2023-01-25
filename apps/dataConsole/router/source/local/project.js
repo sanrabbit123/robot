@@ -9667,17 +9667,19 @@ ProjectJs.prototype.communicationRender = function () {
           const [ client ] = await GeneralJs.ajaxJson({ noFlat: true, where: { cliid: project.cliid } }, "/getClients", { equal: true });
           const [ designer ] = await GeneralJs.ajaxJson({ noFlat: true, where: { desid: project.desid } }, "/getDesigners", { equal: true });
 
-          // await GeneralJs.ajaxJson({
-          //   method: "requestRawContents",
-          //   name: designer.designer,
-          //   phone: designer.information.phone,
-          //   option: {
-          //     client: client.name,
-          //     designer: designer.designer,
-          //     host: FRONTHOST.slice(8),
-          //     proid: project.proid,
-          //   }
-          // }, "/alimTalk");
+          await GeneralJs.ajaxJson({
+            method: "requestPhotoPay",
+            name: designer.designer,
+            phone: designer.information.phone,
+            option: {
+              client: client.name,
+              designer: designer.designer,
+              amount0: GeneralJs.autoComma(300000),
+              amount1: GeneralJs.autoComma(165000),
+              host: FRONTHOST.slice(8),
+              proid: project.proid,
+            }
+          }, "/alimTalk");
   
           window.alert("촬영비 결제를 요청하였습니다!");
 

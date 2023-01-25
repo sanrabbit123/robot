@@ -2522,7 +2522,52 @@ KakaoTalk.prototype.templateTong = function (target) {
           }
         ]
       }
-    }
+    },
+    "requestPhotoPay": {
+      "name": "촬영비 안내",
+      "id": "TL_5621",
+      "needs": [
+        "client",
+        "designer",
+        "amount0",
+        "amount1",
+        "host",
+        "proid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"amount0\", to: obj.amount0 },\n          { from: \"amount1\", to: obj.amount1 },\n          { from: \"host\", to: obj.host },\n          { from: \"proid\", to: obj.proid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 실장님! #{client} 고객님 현장의 촬영비 안내 드립니다.\n\n홈리에종은 디자이너 현장의 정확한 기록과 퀄리티 있는 포트폴리오를 위해 전문 작가를 이용합니다.\n\n전문 작가의 비용은 건당 #{amount0}원 (VAT 별도) 이며, 홈리에종의 50% 부담을 제외한 #{amount1}원 (VAT 포함) 입니다.\n\n기타 자세한 사항은 디자이너 콘솔을 통해 확인하실 수 있습니다. 감사합니다 :)\n\n* 디자이너 콘솔\nhttps://#{host}/designer/process.php?proid=#{proid}&mode=photopay",
+        "templtName": "촬영비 안내",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-01-20 18:20:08",
+        "templtCode": "TL_5621",
+        "comments": [
+          {
+            "cdate": "2023-01-25 10:26:52",
+            "name": "검수자",
+            "id": "2361995",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-01-25 10:26:52",
+            "status": "APR"
+          }
+        ]
+      }
+    },
   };
   if (target === "$all") {
     return tong;

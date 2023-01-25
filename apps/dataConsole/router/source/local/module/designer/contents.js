@@ -4,7 +4,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   const instance = this;
   const { ea, photoActionList, paymentActionList, resetWidthEvent } = this;
   const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma, equalJson, ajaxJson } = GeneralJs;
-  const { desid, name, address, process: { calculation: { method: calculationMethod, info: calculationInfo } }, contents: { photo, payment, raw, share, sns }, history } = project;
+  const { proid, desid, name, address, process: { calculation: { method: calculationMethod, info: calculationInfo } }, contents: { photo, payment, raw, share, sns }, history } = project;
   const { boo, date, info: { interviewer, photographer }, status } = photo;
   const { status: paymentStatus } = payment;
   const { portfolio: { status: portfolioStatus, link: portfolioLink }, interview: { status: interviewStatus, link: interviewLink }, photo: { status: photoStatus, link: photoLink } } = raw;
@@ -640,11 +640,32 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
 
           } else {
 
+            if (window.confirm("이 현장의 실장님께 촬영비 결제를 요청할까요?")) {
+
+              const [ project ] = await GeneralJs.ajaxJson({ noFlat: true, where: { proid } }, "/getProjects", { equal: true });
+              const [ client ] = await GeneralJs.ajaxJson({ noFlat: true, where: { cliid: project.cliid } }, "/getClients", { equal: true });
+              const [ designer ] = await GeneralJs.ajaxJson({ noFlat: true, where: { desid: project.desid } }, "/getDesigners", { equal: true });
+    
+              await GeneralJs.ajaxJson({
+                method: "requestPhotoPay",
+                name: designer.designer,
+                phone: designer.information.phone,
+                option: {
+                  client: client.name,
+                  designer: designer.designer,
+                  amount0: GeneralJs.autoComma(300000),
+                  amount1: GeneralJs.autoComma(165000),
+                  host: FRONTHOST.slice(8),
+                  proid: project.proid,
+                }
+              }, "/alimTalk");
+
+              window.alert("촬영비 결제 요청을 완료하였습니다!");
+            }
+
             for (let dom of removeTargets) {
               mother.removeChild(dom);
             }
-
-            console.log("this");
 
           }
         } catch (e) {

@@ -102,12 +102,14 @@ DevContext.prototype.launching = async function () {
     // await facebook.getAccessToken();
 
 
+    // kakao template json
 
-    
+    // const kakao = new KakaoTalk();
+    // const json = await kakao.getTemplate();
+    // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/kakaoJson.json`, json ]);
+    // await shellExec(`code`, [ `${process.cwd()}/temp/kakaoJson.json` ]);
 
-    
 
-    
     // monthly GA report
 
     // const app = new GoogleAnalytics();
@@ -143,8 +145,8 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-
     
+
 
     
 
