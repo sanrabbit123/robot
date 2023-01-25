@@ -3604,11 +3604,25 @@ ReceiptRouter.prototype.rou_post_calculationConsole = function () {
     try {
       const selfMongo = instance.mongolocal;
       const selfCoreMongo = instance.mongo;
+      const { mode } = req.body;
       let projects, clients, designers, bills;
+      let ago;
 
-      projects = await back.getProjectsByQuery({
-        "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
-      }, { selfMongo: selfCoreMongo });
+      if (mode === "entire") {
+        ago = new Date();
+        ago.setDate(ago.getDate() - 14);
+        projects = await back.getProjectsByQuery({
+          "process.contract.first.date": { $gte: ago }
+        }, { selfMongo: selfCoreMongo });
+      } else {
+
+        
+
+
+      }
+
+
+
       clients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
       designers = await back.getDesignersByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.desid }))).map((desid) => { return { desid } }) }, { selfMongo: selfCoreMongo });
 

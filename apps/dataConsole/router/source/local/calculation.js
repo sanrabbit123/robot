@@ -4293,7 +4293,7 @@ CalculationJs.prototype.launching = async function () {
 
     loading = this.mother.grayLoading();
 
-    serverResponse = await ajaxJson({}, PYTHONHOST + "/calculationConsole", { equal: true });
+    serverResponse = await ajaxJson({ mode: "entire" }, PYTHONHOST + "/calculationConsole", { equal: true });
 
     projects = serverResponse.projects;
     clients = serverResponse.clients;
