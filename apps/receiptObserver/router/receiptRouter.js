@@ -1085,6 +1085,7 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
   const bill = this.bill;
   const { equalJson, messageLog, messageSend, errorLog, autoComma, requestSystem, sleep, emergencyAlarm } = this.mother;
   const collection = "accountTransfer";
+  const designerCollection = "designerTransfer";
   const standardDay = 7;
   let obj = {};
   obj.link = "/smsParsing";
@@ -1110,6 +1111,11 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
         "KG이니시스",
       ];
       let rows, ago, target, rows2;
+      let target2;
+      let whereQuery;
+      let updateQuery;
+      let thisProject;
+      let thisClient;
 
       if (!ignoreList.includes(name.trim())) {
         ago = new Date();
@@ -1140,13 +1146,14 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
           }
         }
 
-        messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
-
         if (target !== null) {
+
+          messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
 
           await sleep(500);
 
           const { phone, amount } = target;
+
           requestSystem("https://" + instance.address.pythoninfo.host + ":3000/webHookVAccount", target.accountInfo, {
             headers: { "Content-Type": "application/json" }
           }).then(() => {
@@ -1170,7 +1177,72 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
           });
 
         } else {
-          emergencyAlarm(errorMessage).catch((e) => { console.log(e); });
+
+          target2 = null;
+          rows = await back.mongoRead(designerCollection, { amount }, { selfMongo });
+          if (rows.length > 0) {
+            rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+            rows = rows.filter((obj) => {
+              return obj.date.valueOf() >= ago.valueOf();
+            }).filter((obj) => {
+              return (new RegExp(obj.name, "gi")).test(name);
+            }).filter((obj) => {
+              return obj.complete === 0;
+            });
+            if (rows.length > 0) {
+              if (rows.length === 1) {
+                [ target2 ] = rows;
+              } else {
+                rows2 = rows.filter((obj) => {
+                  return obj.name.trim() === name.trim();
+                });
+                if (rows2.length > 0) {
+                  [ target2 ] = rows2;
+                } else {
+                  [ target2 ] = rows;
+                }
+              }
+            }
+          }
+
+          if (target2 !== null) {
+
+            if (/촬영/gi.test(target2.goodname)) {
+
+              thisProject = await back.getProjectById(target2.proid, { selfMongo: instance.mongo });
+              thisClient = await back.getClientById(target2.cliid, { selfMongo: instance.mongo });
+
+              messageSend(`${target2.name} 실장님이 계좌 이체로 ${thisClient.name} 고객님 현장의 ${target2.goodname}를 결제하셨습니다.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
+
+              whereQuery = { proid: target2.proid };
+              updateQuery = {};
+              updateQuery["contents.payment.status"] = "결제 완료";
+              updateQuery["contents.payment.date"] = new Date();
+              updateQuery["contents.payment.calculation.amount"] = amount;
+              updateQuery["contents.payment.calculation.info.method"] = "계좌 이체";
+              if (/프리/gi.test(thisProject.process.calculation.method) || /간이/gi.test(thisProject.process.calculation.method)) {
+                updateQuery["contents.payment.calculation.info.proof"] = "현금영수증";
+              } else {
+                updateQuery["contents.payment.calculation.info.proof"] = "세금계산서";
+              }
+              updateQuery["contents.payment.calculation.info.to"] = target2.name;
+              await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+
+              whereQuery = { proid: target2.proid, goodname: target2.goodname };
+              updateQuery = {};
+              updateQuery["complete"] = 1;
+              await selfMongo.db("miro81").collection(designerCollection).updateMany(whereQuery, { $set: updateQuery });
+
+            } else {
+              messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
+              emergencyAlarm(errorMessage).catch((e) => { console.log(e); });
+            }
+
+          } else {
+            messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
+            emergencyAlarm(errorMessage).catch((e) => { console.log(e); });
+          }
+
         }
 
       } else {
