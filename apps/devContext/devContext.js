@@ -119,6 +119,7 @@ DevContext.prototype.launching = async function () {
     // await app.complexMonthly(pastMonthDate.getFullYear(), pastMonthDate.getMonth() + 1);
 
 
+    
     // monthly real estate parsing
 
     // const selfMongo = this.MONGOLOGC;
