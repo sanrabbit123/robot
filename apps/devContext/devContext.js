@@ -146,7 +146,7 @@ DevContext.prototype.launching = async function () {
 
 
     
-
+    await messageSend({ text: "안녕", channel: "#error_log", target: [ "배창규" ] });
 
     
 
