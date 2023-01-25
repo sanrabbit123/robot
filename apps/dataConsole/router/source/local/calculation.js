@@ -344,7 +344,7 @@ CalculationJs.prototype.baseMaker = function () {
     });
 
     instance.names = [];
-    for (let project of projects) {
+    for (let project of instance.projects) {
 
       instance.matrix.push(startRow);
 
@@ -2166,40 +2166,49 @@ CalculationJs.prototype.extractMatrix = function () {
 
 CalculationJs.prototype.searchMatrix = function () {
   const instance = this;
-  const { totalContents, ea, belowHeight, projects } = this;
+  const { totalContents, ea, belowHeight } = this;
   const { ajaxJson, uniqueValue, blankHref, setDebounce } = GeneralJs;
   const whiteCardClassName = "whiteCardClassName";
   let searchEvent;
+  let loading;
 
   searchEvent = (value, e) => {
     return () => {
-      const removeTargets = document.querySelectorAll('.' + whiteCardClassName);
-      for (let dom of removeTargets) {
-        dom.remove();
-      }
-      let target;
-      if (value.trim() === '') {
-        for (let dom of instance.names) {
-          dom.parentElement.parentElement.parentElement.style.display = "block";
-        }
-      } else {
-        target = instance.names.find((dom) => { return (new RegExp(value.trim().replace(/ /gi, ''), "gi")).test(dom.getAttribute("name")) });
-        if (target !== undefined) {
-          for (let dom of instance.names) {
-            if (dom === target) {
+      if (value.trim() !== '') {
+
+        loading = instance.mother.grayLoading();
+        ajaxJson({ mode: "search", value: value.trim() }, PYTHONHOST + "/calculationConsole", { equal: true }).then((serverResponse) => {
+          instance.reloadProjects(serverResponse);
+          instance.contentsLoad();
+    
+          loading.remove();
+
+          const removeTargets = document.querySelectorAll('.' + whiteCardClassName);
+          for (let dom of removeTargets) {
+            dom.remove();
+          }
+          let targetArr;
+          if (value.trim() === '') {
+            for (let dom of instance.names) {
               dom.parentElement.parentElement.parentElement.style.display = "block";
-            } else {
-              dom.parentElement.parentElement.parentElement.style.display = "none";
+            }
+          } else {
+            targetArr = instance.names.filter((dom) => { return (new RegExp(value.trim().replace(/ /gi, ''), "gi")).test(dom.getAttribute("name")) });
+            for (let dom of instance.names) {
+              if (targetArr.includes(dom)) {
+                dom.parentElement.parentElement.parentElement.style.display = "block";
+              } else {
+                dom.parentElement.parentElement.parentElement.style.display = "none";
+              }
+            }
+            if (targetArr.length === 1) {
+              targetArr[0].click();
             }
           }
-          if (e.key === "Enter") {
-            target.click();
-          }
-        } else {
-          for (let dom of instance.names) {
-            dom.parentElement.parentElement.parentElement.style.display = "none";
-          }
-        }
+  
+        }).catch((err) => {
+          console.log(err);
+        })
       }
     }
   }
@@ -2329,6 +2338,12 @@ CalculationJs.prototype.queueView = function () {
       contentsAreaRight = {};
 
       loading = instance.mother.grayLoading();
+
+
+
+
+
+
 
       responses = await ajaxJson({ mode: "get" }, PYTHONHOST + "/nonPaidResponses");
 
@@ -4271,6 +4286,41 @@ CalculationJs.prototype.excuteRepay = async function (bilid, responseIndex, date
   }
 }
 
+CalculationJs.prototype.reloadProjects = function (serverResponse) {
+  const instance = this;
+  let projects, clients, designers, bills;
+  let proid, cliid, desid, service;
+  let thisClient, thisDesigner, thisBill;
+
+  projects = serverResponse.projects;
+  clients = serverResponse.clients;
+  designers = serverResponse.designers;
+  bills = serverResponse.bills;
+
+  for (let project of projects) {
+    ({ proid, cliid, desid, service } = project);
+
+    thisClient = clients.find((obj) => { return obj.cliid === cliid });
+    thisDesigner = designers.find((obj) => { return obj.desid === desid });
+    thisBill = bills.find((obj) => {
+      return ((obj.links.proid === proid) && (obj.links.method === (service.online ? "online" : "offline")))
+    });
+
+    project.client = thisClient;
+    project.designer = thisDesigner;
+    project.bill = thisBill;
+    project.name = thisClient.name;
+    project.phone = thisClient.phone;
+  }
+
+  projects = projects.filter((obj) => {
+    return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
+  });
+
+  this.bills = bills;
+  this.projects = projects;
+}
+
 CalculationJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson, equalJson, returnGet } = GeneralJs;
@@ -4278,13 +4328,7 @@ CalculationJs.prototype.launching = async function () {
     const getObj = returnGet();
     const emptyDate = () => { return new Date(1800, 0, 1) };
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
-    let projects, projectsRaw;
-    let clients, designers;
     let loading;
-    let bills;
-    let proid, cliid, desid, service;
-    let thisClient, thisDesigner;
-    let thisBill;
     let serverResponse;
 
     this.belowHeight = this.mother.belowHeight;
@@ -4295,33 +4339,8 @@ CalculationJs.prototype.launching = async function () {
 
     serverResponse = await ajaxJson({ mode: "init" }, PYTHONHOST + "/calculationConsole", { equal: true });
 
-    projects = serverResponse.projects;
-    clients = serverResponse.clients;
-    designers = serverResponse.designers;
-    bills = serverResponse.bills;
+    this.reloadProjects(serverResponse);
 
-    for (let project of projects) {
-      ({ proid, cliid, desid, service } = project);
-
-      thisClient = clients.find((obj) => { return obj.cliid === cliid });
-      thisDesigner = designers.find((obj) => { return obj.desid === desid });
-      thisBill = bills.find((obj) => {
-        return ((obj.links.proid === proid) && (obj.links.method === (service.online ? "online" : "offline")))
-      });
-
-      project.client = thisClient;
-      project.designer = thisDesigner;
-      project.bill = thisBill;
-      project.name = thisClient.name;
-      project.phone = thisClient.phone;
-    }
-
-    projects = projects.filter((obj) => {
-      return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
-    });
-
-    this.bills = bills;
-    this.projects = projects;
     this.matrix = [];
     this.names = [];
     this.baseMaker();

@@ -3615,14 +3615,20 @@ ReceiptRouter.prototype.rou_post_calculationConsole = function () {
         projects = await back.getProjectsByQuery({
           "process.contract.first.date": { $gte: ago }
         }, { selfMongo: selfCoreMongo });
-      } else {
+      } else if (mode === "search") {
         const { value } = req.body;
         preClients = await back.getClientsByQuery({ name: { $regex: value } }, { selfMongo: selfCoreMongo });
         projects = await back.getProjectsByQuery({ $or: preClients.toNormal().map((c) => { return { cliid: c.cliid } }) }, { selfMongo: selfCoreMongo });
         projects = projects.filter((project) => {
           return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
         });
+      } else {
+        projects = await back.getProjectsByQuery({
+          "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
+        }, { selfMongo: selfCoreMongo });
       }
+
+      projects.sort((a, b) => { return b.process.contract.first.date.valueOf() - a.process.contract.first.date.valueOf() });
 
       clients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
       designers = await back.getDesignersByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.desid }))).map((desid) => { return { desid } }) }, { selfMongo: selfCoreMongo });
