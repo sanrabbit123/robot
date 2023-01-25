@@ -102,8 +102,8 @@ DevContext.prototype.launching = async function () {
     // await facebook.getAccessToken();
 
 
-    await requestSystem("https://" + address.backinfo.host + ":3000/calendarSync", { data: null }, { headers: { "Content-Type": "application/json" } });
 
+    
     
 
 
