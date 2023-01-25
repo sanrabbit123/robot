@@ -216,29 +216,29 @@ SecondRouter.prototype.rou_post_messageLog = function () {
 
         targetArr = equalJson(req.body).target;
 
-      //   keyArr = Object.keys(slack_info.userDictionary);
-      //   valueArr = [];
-      //   for (let i = 0; i < keyArr.length; i++) {
-      //     valueArr.push(slack_info.userDictionary[keyArr[i]]);
-      //   }
+        keyArr = Object.keys(slack_info.userDictionary);
+        valueArr = [];
+        for (let i = 0; i < keyArr.length; i++) {
+          valueArr.push(slack_info.userDictionary[keyArr[i]]);
+        }
 
-      //   foundNames = [];
-      //   for (let name of targetArr) {
-      //     tempName = valueArr.findIndex((n) => { return n === name });
-      //     if (tempName !== -1) {
-      //       foundNames.push(tempName);
-      //     }
-      //   }
-      //   foundNames = foundNames.map((index) => { return keyArr[index] }).map((id) => {
-      //     return `<@${id}>`;
-      //   });
+        foundNames = [];
+        for (let name of targetArr) {
+          tempName = valueArr.findIndex((n) => { return n === name });
+          if (tempName !== -1) {
+            foundNames.push(tempName);
+          }
+        }
+        foundNames = foundNames.map((index) => { return keyArr[index] }).map((id) => {
+          return `<@${id}>`;
+        });
 
-      //   finalTargets = '';
-      //   if (foundNames.length > 0) {
-      //     finalTargets = foundNames.join(" ");
-      //   }
+        finalTargets = '';
+        if (foundNames.length > 0) {
+          finalTargets = foundNames.join(" ");
+        }
 
-      //   slackText = finalTargets + " " + finalTargets;
+        slackText = finalTargets + " " + finalTargets;
 
       }
 
