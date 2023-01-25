@@ -8372,20 +8372,20 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
   smallWeight = <%% 400, 400, 400, 400, 400 %%>;
   smallBetween = <%% 5, 5, 4, 4, 0 %%>;
 
-  firstWidth = <%% 298, 220, 203, 122, 300 %%>;
+  firstWidth = <%% 298, 220, 203, 130, 300 %%>;
 
   buttonWidth = <%% 140, 136, 124, 106, 34.5 %%>;
   buttonHeight = <%% 36, 40, 33, 31, 8 %%>;
 
-  buttonOuterPadding = <%% 8, 8, 6, 5, 1 %%>;
+  buttonOuterPadding = <%% 6, 6, 6, 5, 1 %%>;
   buttonInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
 
-  descriptionBetween = <%% 16, 16, 16, 14, 1 %%>;
+  descriptionBetween = <%% 15, 15, 15, 14, 1 %%>;
 
   panWidth = <%% 20, 20, 20, 20, 2 %%>;
   panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
 
-  circleWidth = <%% 5, 5, 5, 4, 1 %%>;
+  circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
   circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1 %%>;
   circleLeft = <%% -7, -7, -7, -7, (isIphone() ? 12.6 : 13) %%>;
 
@@ -8420,34 +8420,34 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
       [
         {
           title: "촬영 컨택",
-          active: false,
+          active: !(/확정/gi.test(project.contents.photo.status) || /완료/gi.test(project.contents.photo.status) || /없음/gi.test(project.contents.photo.status)),
           click: null,
         },
         {
           title: "촬영 일정 확정",
-          active: true,
+          active: /확정/gi.test(project.contents.photo.status),
           click: null,
         },
         {
           title: "촬영 완료",
-          active: false,
+          active: (/완료/gi.test(project.contents.photo.status) || /없음/gi.test(project.contents.photo.status)),
           click: null,
         }
       ],
       [
         {
           title: "촬영비 결제 대기",
-          active: false,
+          active: /대기/gi.test(project.contents.payment.status),
           click: null,
         },
         {
           title: "촬영비 결제 완료",
-          active: true,
+          active: /결제 완료/gi.test(project.contents.payment.status),
           click: null,
         },
         {
           title: "촬영비 해당 없음",
-          active: false,
+          active: (/무료/gi.test(project.contents.payment.status) || /없음/gi.test(project.contents.payment.status) || /환불/gi.test(project.contents.payment.status)),
           click: null,
         }
       ],
@@ -8682,6 +8682,387 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
 
 }
 
+ProcessDetailJs.prototype.insertMeetingBackBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const veryBig = (media[0] || media[1]);
+  const generalSmall = !veryBig;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray } = GeneralJs;
+  const buttonsClassName = "buttonsClassName";
+  let margin;
+  let paddingTop;
+  let whiteBottomMargin;
+  let titleFontSize;
+  let bottomMargin;
+  let whiteBlock;
+  let grayTong;
+  let contents;
+  let innerMargin;
+  let arrowWidth, arrowHeight;
+  let textTop;
+  let textSize, textWeight;
+  let textMarginLeft;
+  let mobileVisualPaddingValue;
+  let button, buttons;
+  let blockBetween;
+  let blockBetweenBottom;
+  let blockHeight;
+  let lineTop;
+  let columnsNumber;
+  let textFileWeight;
+  let whitePadding;
+  let smallSize, smallWeight, smallBetween;
+  let textTextTop;
+  let smallTextTop;
+  let panDom;
+  let veryBigSize;
+  let veryBigWeight;
+  let firstWidth;
+  let buttonWidth, buttonHeight;
+  let buttonOuterPadding, buttonInnerMargin;
+  let descriptionBetween;
+  let panWidth, panVisualLeft;
+  let veryBigTextTop;
+  let circleWidth, circleTop, circleLeft;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 6 %%>;
+  paddingTop = <%% 44, 44, 36, 28, 5.4 %%>;
+
+  whiteBottomMargin = <%% 46, 46, 38, 30, 5.6 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+
+  veryBigSize = <%% 23, 21, 20, 17, 4.4 %%>;
+  veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
+  veryBigTextTop = <%% -1, -1, -2, -1, -1 %%>;
+
+  innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+
+  textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+  smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
+
+  textSize = <%% 14, 14, 13, 12, 3.2 %%>;
+  textWeight = <%% 700, 700, 700, 700, 700 %%>;
+  textFileWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  whitePadding = <%% 12, 12, 8, 8, 2.2 %%>;
+
+  blockBetween = <%% 36, 28, 26, 24, 5 %%>;
+  blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
+  blockHeight = <%% 36, 36, 32, 26, 4 %%>;
+
+  lineTop = <%% 18, 18, 16, 13, 1.9 %%>;
+
+  columnsNumber = <%% 4, 3, 3, 3, 2 %%>;
+
+  smallSize = <%% 11, 11, 10, 10, 2.5 %%>;
+  smallWeight = <%% 400, 400, 400, 400, 400 %%>;
+  smallBetween = <%% 5, 5, 4, 4, 0 %%>;
+
+  firstWidth = <%% 298, 220, 203, 130, 300 %%>;
+
+  buttonWidth = <%% 490, 320, 285, 230, 72 %%>;
+  buttonHeight = <%% 36, 40, 33, 31, 8 %%>;
+
+  buttonOuterPadding = <%% 4, 4, 4, 3, 1 %%>;
+  buttonInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
+
+  descriptionBetween = <%% 14, 14, 14, 12, 1 %%>;
+
+  panWidth = <%% 20, 20, 20, 20, 2 %%>;
+  panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
+
+  circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
+  circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1 %%>;
+  circleLeft = <%% -7, -7, -7, -7, (isIphone() ? 12.6 : 13) %%>;
+
+  arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
+  arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
+
+  mobileVisualPaddingValue = 0.2;
+
+  contents = {
+    title: [
+      big ? "고객과의 현장 미팅," : "현장 미팅은",
+      big ? "잘 끝나셨나요?" : "잘 끝나셨나요?",
+    ],
+    description: [
+      (veryBig ? [
+        "고객님과의 현장 미팅은 어떠셨나요? 무사히 잘 끝났다면",
+        "아래 콘솔을 통해 현장 사진을 올려주세요!",
+      ] : [
+        "고객님과 현장 미팅, 어떠셨나요? 잘 끝났다면",
+        "아래 콘솔을 통해 현장 사진을 올려주세요!",
+      ]),
+      (veryBig ? [
+        "피드백 후, 잔금 요청과 계약서 발송이 진행됩니다.",
+        (media[0] ? "고객님의 " : "") + "잔금 지불이 완료되기 전까지 프로젝트 시작을 홀딩해주세요!"
+      ] : [
+        "피드백 후, 잔금 요청, 계약서 발송이 진행됩니다.",
+        "고객님의 잔금 지불이 완료되고 계약서 서명이",
+        "이루어지기 전까지, 프로젝트 시작을 홀딩해주세요!",
+      ])
+    ],
+  };
+
+  contents.buttonSet = [
+    [
+      {
+        title: <&& "현장 사진 콘솔에 업로드하기" | "현장 사진 콘솔에 업로드하기" | "현장 사진 콘솔에 업로드하기" | "현장 사진 업로드하기" | "현장 사진 콘솔에 업로드하기" &&>,
+        active: true,
+        click: null,
+      },
+      {
+        title: <&& "현장에 대한 간략한 메모 작성하기" | "현장에 대한 메모 작성하기" | "현장에 대한 메모 작성하기" | "현장에 대한 메모 작성하기" | "현장에 대한 간략한 메모 작성하기" &&>,
+        active: true,
+        click: null,
+      },
+      {
+        title: <&& "홈스타일링 의뢰서 다시 보기" | "홈스타일링 의뢰서 다시 보기" | "홈스타일링 의뢰서 다시 보기" | "의뢰서 다시 보기" | "홈스타일링 의뢰서 다시 보기" &&>,
+        active: true,
+        click: null,
+      }
+    ],
+  ];
+
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: colorChip.white,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(desktop ? whiteBottomMargin - blockBetweenBottom : 6.6) + ea,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(margin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(margin) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  grayTong = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingTop: String(innerMargin) + ea,
+      paddingBottom: String(desktop ? innerMargin : 0) + ea,
+      paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+      paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
+      width: withOut(innerMargin * 2, ea),
+      background: colorChip.white,
+      borderRadius: String(8) + "px",
+    }
+  });
+
+  createNode({
+    mother: grayTong,
+    style: {
+      display: desktop ? "flex" : "block",
+      width: withOut(0),
+      flexDirection: desktop ? "row" : "",
+      justifyContent: desktop ? "start" : "",
+      alignItems: desktop ? "start" : "",
+    },
+    children: [
+      {
+        text: contents.title.join(desktop ? "\n" : " "),
+        style: {
+          display: desktop ? "inline-flex" : "flex",
+          position: "relative",
+          fontSize: String(veryBigSize) + ea,
+          fontWeight: String(veryBigWeight),
+          color: colorChip.black,
+          lineHeight: String(1.5),
+          width: desktop ? String(firstWidth) + ea : withOut(0, ea),
+          top: desktop ? String(veryBigTextTop) + ea : "",
+          justifyContent: desktop ? "" : "center",
+          alignItems: desktop ? "" : "center",
+          textAlign: desktop ? "" : "center",
+          marginTop: desktop ? "" : String(2.8) + ea,
+          marginBottom: desktop ? "" : String(3) + ea,
+        },
+        child: {
+          style: {
+            display: "inline-block",
+            position: "absolute",
+            top: String(circleTop) + ea,
+            left: String(circleLeft) + ea,
+            width: String(circleWidth) + ea,
+            height: String(circleWidth) + ea,
+            borderRadius: String(circleWidth) + ea,
+            background: colorChip.red,
+          }
+        }
+      },
+      {
+        style: {
+          display: desktop ? "inline-flex" : "flex",
+          position: "relative",
+          width: desktop ? withOut(firstWidth + ((buttonWidth + buttonOuterPadding + buttonOuterPadding) * contents.buttonSet.length) + (buttonOuterPadding * (contents.buttonSet.length - 1)), ea) : withOut(0, ea),
+          flexDirection: "column",
+          marginBottom: desktop ? "" : String(7.2) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: veryBig ? "display" : "none",
+              position: "absolute",
+              top: String(0),
+              left: String(panVisualLeft) + ea,
+              width: String(panWidth) + ea,
+              height: String((buttonHeight * contents.buttonSet[0].length) + (buttonInnerMargin * (contents.buttonSet[0].length - 1)) + (buttonOuterPadding * 2)) + ea,
+              borderBottom: String(3) + "px solid " + colorChip.black,
+              boxSizing: "border-box",
+            }
+          },
+          {
+            text: contents.description[0].join("\n"),
+            style: {
+              position: "relative",
+              fontSize: String(textSize) + ea,
+              fontWeight: String(textFileWeight),
+              color: colorChip.black,
+              lineHeight: String(1.6),
+              marginBottom: String(descriptionBetween) + ea,
+              textAlign: desktop ? "" : "center",
+            }
+          },
+          {
+            text: contents.description[1].join("\n"),
+            style: {
+              position: "relative",
+              fontSize: String(textSize) + ea,
+              fontWeight: String(textFileWeight),
+              color: colorChip.black,
+              lineHeight: String(1.6),
+              textAlign: desktop ? "" : "center",
+            }
+          },
+        ]
+      },
+      ...variableArray(contents.buttonSet.length).map((i) => {
+        return {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            borderRadius: String(8) + "px",
+            background: i !== contents.buttonSet.length - 1 ? colorChip.gray3 : colorChip.gray3,
+            padding: String(buttonOuterPadding) + ea,
+            flexDirection: "column",
+            marginRight: i !== contents.buttonSet.length - 1 ? String(buttonOuterPadding) + ea : "",
+          },
+          children: variableArray(contents.buttonSet[i].length).map((index, z) => {
+            return {
+              style: {
+                display: "flex",
+                flexDirection: "row",
+              },
+              children: [
+                {
+                  style: {
+                    width: String(buttonHeight) + ea,
+                    height: String(buttonHeight) + ea,
+                    marginRight: String(buttonInnerMargin) + ea,
+                    display: "inline-flex",
+                    position: "relative",
+                    borderRadius: String(5) + "px",
+                    background: contents.buttonSet[i][index].active ? (i !== contents.buttonSet.length - 1 ? colorChip.gray1 : colorChip.gray1) : (i !== contents.buttonSet.length - 1 ? colorChip.gray1 : colorChip.gray1),
+                    marginBottom: index !== contents.buttonSet[i].length - 1 ? String(buttonInnerMargin) + ea : "",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                  child: {
+                    mode: "svg",
+                    source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorChip.deactive),
+                    style: {
+                      position: "relative",
+                      width: String(arrowWidth) + ea,
+                    }
+                  }
+                },
+                {
+                  style: {
+                    width: String(buttonHeight) + ea,
+                    height: String(buttonHeight) + ea,
+                    marginRight: String(buttonInnerMargin) + ea,
+                    display: "inline-flex",
+                    position: "relative",
+                    borderRadius: String(5) + "px",
+                    background: contents.buttonSet[i][index].active ? (i !== contents.buttonSet.length - 1 ? colorChip.gray0 : colorChip.gray0) : (i !== contents.buttonSet.length - 1 ? colorChip.gray0 : colorChip.gray0),
+                    marginBottom: index !== contents.buttonSet[i].length - 1 ? String(buttonInnerMargin) + ea : "",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                  child: {
+                    text: String(z + 1),
+                    style: {
+                      position: "relative",
+                      top: String(desktop ? -1 : -0.3) + ea,
+                      fontSize: String(desktop ? textSize : 2.9) + ea,
+                      fontFamily: "graphik",
+                      fontStyle: "italic",
+                      fontWeight: String(500),
+                      color: contents.buttonSet[i][index].active ? (i !== contents.buttonSet.length - 1 ? colorChip.green : colorChip.green) : colorChip.deactive,
+                    }
+                  }
+                },
+                {
+                  event: {
+                    click: (typeof contents.buttonSet[i][index].click === "function") ? contents.buttonSet[i][index].click(instance.project) : (e) => {},
+                  },
+                  style: {
+                    width: String(buttonWidth - ((buttonInnerMargin + buttonHeight) * 2)) + ea,
+                    height: String(buttonHeight) + ea,
+                    display: "inline-flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    position: "relative",
+                    borderRadius: String(5) + "px",
+                    background: contents.buttonSet[i][index].active ? (i !== contents.buttonSet.length - 1 ? colorChip.white : colorChip.white) : (i !== contents.buttonSet.length - 1 ? colorChip.gray2 : colorChip.gray2),
+                    marginBottom: index !== contents.buttonSet[i].length - 1 ? String(buttonInnerMargin) + ea : "",
+                    cursor: "pointer",
+                  },
+                  child: {
+                    text: contents.buttonSet[i][index].title,
+                    style: {
+                      position: "relative",
+                      top: String(textTextTop) + ea,
+                      fontSize: String(desktop ? textSize : 2.9) + ea,
+                      fontWeight: String(textWeight),
+                      color: contents.buttonSet[i][index].active ? (i !== contents.buttonSet.length - 1 ? colorChip.black : colorChip.black) : colorChip.deactive,
+                    }
+                  }
+                }
+              ]
+            }
+          })
+        };
+      })
+    ]
+  })
+
+}
+
 ProcessDetailJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -8801,7 +9182,10 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             instance.insertInitBox();
             if (getObj.mode === "photopay") {
               instance.insertPhotoPayBox();
+            } else if (getObj.mode === "feedback") {
+              instance.insertMeetingBackBox();
             }
+
             if (instance.contentsArr.length > 0) {
               instance.insertContentsBox();
             }
