@@ -25,7 +25,8 @@ const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken, 
       "U01HFUADKB8": "이큰별",
       "U01JL6U5NPP": "Pepper",
       "U02U8GH963C": "김지은",
-      "U048W15FA1M": "박혜정"
+      "U048W15FA1M": "박혜정",
+      "U04LDNEUFDZ": "배창규",
     },
     channelDictionary: {
       "CLQERRWR1": "general",
@@ -185,7 +186,7 @@ SecondRouter.prototype.rou_get_First = function () {
 
 SecondRouter.prototype.rou_post_messageLog = function () {
   const instance = this;
-  const { telegram } = this;
+  const { telegram, slack_info } = this;
   const { requestSystem, ajaxJson } = this.mother;
   let obj;
   obj = {};
@@ -203,8 +204,44 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       }
       const { text, channel, collection } = req.body;
       let thisChannel;
+      let slackText;
+      let keyArr, valueArr;
+      let targetArr;
+      let tempName;
+      let foundNames;
+      let finalTargets;
 
-      instance.slack_bot.chat.postMessage({ text, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
+      slackText = text;
+      if (Array.isArray(equalJson(req.body).target)) {
+
+        targetArr = equalJson(req.body).target;
+
+        keyArr = Object.keys(slack_info.userDictionary);
+        valueArr = [];
+        for (let i = 0; i < keyArr.length; i++) {
+          valueArr.push(slack_info.userDictionary[keyArr[i]]);
+        }
+
+        foundNames = [];
+        for (let name of targetArr) {
+          tempName = valueArr.findIndex((n) => { return n === name });
+          if (tempName !== -1) {
+            foundNames.push(tempName);
+          }
+        }
+        foundNames = foundNames.map((index) => { return keyArr[index] }).map((id) => {
+          return `<@${id}>`;
+        });
+
+        finalTargets = '';
+        if (foundNames.length > 0) {
+          finalTargets = foundNames.join(" ");
+        }
+
+        slackText = finalTargets + " " + finalTargets;
+      }
+
+      instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
 
       if (req.body.voice === true || req.body.voice === "true") {
         requestSystem("https://" + instance.address.officeinfo.voice.host + ":" + String(instance.address.officeinfo.voice.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
@@ -227,7 +264,7 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       } else {
         thisChannel = "general";
       }
-      ajaxJson({ chat_id: telegram.bot[thisChannel], text: `(${channel}) ${text}` }, telegram.url(telegram.token)).catch((err) => {
+      ajaxJson({ chat_id: telegram.bot[thisChannel], text: `(${channel}) ${slackText}` }, telegram.url(telegram.token)).catch((err) => {
         instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_messageLog): " + err.message).catch((e) => { console.log(e); });
       })
 

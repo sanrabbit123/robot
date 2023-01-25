@@ -3109,7 +3109,7 @@ Mother.prototype.messageSend = function (text, channel = "silent", voice = false
       } else {
         voice = false;
       }
-      if (typeof text.target === "string") {
+      if (Array.isArray(text.target)) {
         target = text.target;
       }
       text = text.text;

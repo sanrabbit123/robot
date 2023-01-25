@@ -5836,7 +5836,7 @@ ProcessDetailJs.prototype.insertRawUploadBox = function () {
                 await ajaxJson({
                   message: designer + " 실장님이 콘솔을 통해 " + client + " 고객님 디자이너 글을 업로드 했습니다!\n" + BACKHOST.replace(/\:3000/gi, '') + "/project__query__proid__equal__" + instance.project.proid + "__amper__raw__equal__contents",
                   channel: "#301_console",
-                  target: this.manager,
+                  target: instance.manager !== null ? [ instance.manager ] : null,
                 }, BACKHOST + "/sendSlack");
 
                 loading.remove();
