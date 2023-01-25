@@ -4285,6 +4285,7 @@ CalculationJs.prototype.launching = async function () {
     let proid, cliid, desid, service;
     let thisClient, thisDesigner;
     let thisBill;
+    let serverResponse;
 
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
@@ -4292,13 +4293,12 @@ CalculationJs.prototype.launching = async function () {
 
     loading = this.mother.grayLoading();
 
-    projectsRaw = await ajaxJson({ noFlat: true, whereQuery: {} }, "/getProjects", { equal: true });
-    projects = projectsRaw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= emptyDateValue });
+    serverResponse = await ajaxJson({}, PYTHONHOST + "/calculationConsole", { equal: true });
 
-    clients = await ajaxJson({ noFlat: true, whereQuery: { $or: Array.from(new Set(projects.map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) } }, "/getClients", { equal: true });
-    designers = await ajaxJson({ noFlat: true, whereQuery: { $or: Array.from(new Set(projects.map((p) => { return p.desid }))).map((desid) => { return { desid } }) } }, "/getDesigners", { equal: true });
-
-    bills = await ajaxJson({ mode: "read", db: "python", collection: "generalBill", whereQuery: {} }, PYTHONHOST + "/generalMongo", { equal: true });
+    projects = serverResponse.projects;
+    clients = serverResponse.clients;
+    designers = serverResponse.designers;
+    bills = serverResponse.bills;
 
     for (let project of projects) {
       ({ proid, cliid, desid, service } = project);

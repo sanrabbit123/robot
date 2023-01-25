@@ -3588,6 +3588,44 @@ ReceiptRouter.prototype.rou_post_responseInjection = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_calculationConsole = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = "/calculationConsole";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      let projects, clients, designers, bills;
+
+      projects = await back.getProjectsByQuery({
+        "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
+      }, { selfMongo: selfCoreMongo });
+      clients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
+      designers = await back.getDesignersByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.desid }))).map((desid) => { return { desid } }) }, { selfMongo: selfCoreMongo });
+
+      bills = await back.mongoRead("generalBill", {
+        $or: projects.toNormal().map((project) => { return { "links.proid": project.proid } })
+      }, { selfMongo });
+
+      res.send(JSON.stringify({ projects: projects.toNormal(), clients: clients.toNormal(), designers: designers.toNormal(), bills }));
+    } catch (e) {
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_calculationConsole): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.getAll = function () {
   let result, result_arr;
 
