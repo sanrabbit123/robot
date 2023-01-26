@@ -1308,8 +1308,7 @@ SecondRouter.prototype.rou_post_slackTest = function () {
             "name": "text_2"
           },
         ]
-      }
-      [출처] [python] slack app 만들기|작성자 군잉));
+      }));
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackTest): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
