@@ -1320,7 +1320,7 @@ SecondRouter.prototype.rou_post_slackTest = function () {
       const response = await requestSystem("https://slack.com/api/views.open", modalJson, {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + "xoxp-717757271335-704486967090-4566130160163-fd2a2cc412e2a509a43635fb8f6c65e2"
+          "Authorization": "Bearer " + instance.slack_userToken,
         }
       });
 
