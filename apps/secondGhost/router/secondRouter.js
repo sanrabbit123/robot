@@ -1287,26 +1287,147 @@ SecondRouter.prototype.rou_post_slackTest = function () {
     try {
       console.log(req.body);
       res.send(JSON.stringify({
-        "callback_id": "ryde-46e2b0",
-        "title": "your_app_dialog_templete",
-        "submit_label": "Submit",
-        "state": "Limo",
-        "elements": [
+        "type": "modal",
+        "title": {
+          "type": "plain_text",
+          "text": "원본 사진 링크 공유",
+          "emoji": true
+        },
+        "submit": {
+          "type": "plain_text",
+          "text": "공유하기",
+          "emoji": true
+        },
+        "close": {
+          "type": "plain_text",
+          "text": "취소",
+          "emoji": true
+        },
+        "blocks": [
           {
-            "type": "text",
-            "label": "제목",
-            "name": "text_0"
+            "dispatch_action": true,
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "dispatch_action_config": {
+                "trigger_actions_on": [
+                  "on_character_entered"
+                ]
+              },
+              "action_id": "plain_text_input-action"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "고객명",
+              "emoji": true
+            }
           },
           {
-            "type": "textarea",
-            "label": "라벨1",
-            "name": "text_1"
+            "type": "context",
+            "elements": [
+              {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              }
+            ]
           },
           {
-            "type": "text",
-            "label": "라벨2",
-            "name": "text_2"
+            "dispatch_action": true,
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "dispatch_action_config": {
+                "trigger_actions_on": [
+                  "on_character_entered"
+                ]
+              },
+              "action_id": "plain_text_input-action"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "디자이너명",
+              "emoji": true
+            }
           },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              }
+            ]
+          },
+          {
+            "dispatch_action": true,
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "dispatch_action_config": {
+                "trigger_actions_on": [
+                  "on_character_entered"
+                ]
+              },
+              "action_id": "plain_text_input-action"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "원본 사진 링크",
+              "emoji": true
+            }
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              }
+            ]
+          },
+          {
+            "type": "input",
+            "element": {
+              "type": "radio_buttons",
+              "options": [
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "유료",
+                    "emoji": true
+                  },
+                  "value": "value-0"
+                },
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "무료",
+                    "emoji": true
+                  },
+                  "value": "value-1"
+                }
+              ],
+              "action_id": "radio_buttons-action"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "촬영비",
+              "emoji": true
+            }
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              }
+            ]
+          }
         ]
       }));
     } catch (e) {
