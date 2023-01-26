@@ -1288,7 +1288,6 @@ SecondRouter.prototype.rou_post_slackTest = function () {
       const thisBody = equalJson(req.body);
       console.log(thisBody);
       const modalJson = {
-        "token": thisBody.payload.token,
         "trigger_id": thisBody.payload.trigger_id,
         "view": {
           "id": "V1234567890",
@@ -1493,7 +1492,7 @@ SecondRouter.prototype.rou_post_slackTest = function () {
       const response = await requestSystem("https://slack.com/api/views.open", modalJson, {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + thisBody.payload.token
+          "Authorization": "Bearer " + "xoxp-717757271335-704486967090-4566130160163-fd2a2cc412e2a509a43635fb8f6c65e2"
         }
       });
 
