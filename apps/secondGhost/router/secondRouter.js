@@ -1065,15 +1065,12 @@ SecondRouter.prototype.rou_post_telegramEvents = function () {
             valueArr.push(channelDictionary[key]);
           }
 
-          console.log(id);
-          console.log(thisBody.message);
-
           targetChannel = null;
-          if (id === telegram.chat.plan) {
+          if (String(id) === telegram.chat.plan) {
             targetChannel = keyArr[valueArr.findIndex((str) => { return str === "plan" })];
-          } else if (id === telegram.chat.clare) {
+          } else if (String(id) === telegram.chat.clare) {
             targetChannel = keyArr[valueArr.findIndex((str) => { return str === "clare" })];
-          } else if (id === telegram.chat.jyeun) {
+          } else if (String(id) === telegram.chat.jyeun) {
             targetChannel = keyArr[valueArr.findIndex((str) => { return str === "jyeun" })];
           } else {
             targetChannel = null;
