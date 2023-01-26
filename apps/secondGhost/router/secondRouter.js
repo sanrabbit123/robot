@@ -1485,12 +1485,13 @@ SecondRouter.prototype.rou_post_slackTest = function () {
           "bot_id": "B00"
         }
       };
-      requestSystem("https://slack.com/api/views.open", modalJson, {
+      const response = await requestSystem("https://slack.com/api/views.open", modalJson, {
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + instance.slack_userToken,
         }
-      }).catch((err) => { console.log(err); })
+      });
+      console.log(response);
       res.send({ message: "will do" });
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackTest): " + e.message).catch((e) => { console.log(e); });
