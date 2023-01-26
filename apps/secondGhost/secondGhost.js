@@ -16,6 +16,59 @@ const SecondGhost = function (mother = null, back = null, address = null) {
   this.slack_token = "xoxb-717757271335-4566120587107-i7TxxYzbPWPzdBMPoZDo2kxn";
   this.slack_userToken = "xoxp-717757271335-704486967090-4566130160163-fd2a2cc412e2a509a43635fb8f6c65e2";
   this.slack_bot = new WebClient(this.slack_token);
+  this.slack_info = {
+    userDictionary: {
+      "ULQEAUF2N": "homeliaison",
+      "UM1S7H3GQ": "Clarehye",
+      "UM1SUNFFX": "Jini",
+      "U019UTQL6UB": "Olivia",
+      "U01HFUADKB8": "이큰별",
+      "U01JL6U5NPP": "Pepper",
+      "U02U8GH963C": "김지은",
+      "U048W15FA1M": "박혜정",
+      "U04LDNEUFDZ": "배창규",
+    },
+    channelDictionary: {
+      "CLQERRWR1": "general",
+      "CLQERS2CB": "homestyling-platform",
+      "CLVGBR8HX": "random",
+      "CPLC56QUW": "plan_image",
+      "CRWHWBN2V": "cooperation",
+      "C01DG384RFF": "to-do-list",
+      "CLY8SV681": "401_consulting",
+      "CM1T6HXLM": "502_sns_contents",
+      "CM20UBN3S": "403_proposal",
+      "CM3PM73LP": "000_master_notice",
+      "C02SQGGTG00": "001_staff_notice",
+      "CUZGKGUBS": "100_service",
+      "CM4G6QBRT": "300_designer",
+      "CM5H48SJG": "105_ir",
+      "CM9PHLM0D": "200_web",
+      "C02RP66AK6C": "201_test",
+      "C02K21JU5K5": "202_request",
+      "C03RCHW40UT": "203_schedule",
+      "C03UMHVQQT1": "204_magazine",
+      "C04CK5X9Q83": "301_console",
+      "CMZMWGK1A": "400_customer",
+      "C02AE3H16US": "404_curation",
+      "C03KHAUAL9Y": "405_mini",
+      "CNY9UEBEG": "500_marketing",
+      "C01HHA4DC0K": "503_contents",
+      "CS05EFPD1": "900_design",
+      "C0135LFQH7X": "700_operation",
+      "C0236JSQGGP": "701_taxbill",
+      "C04DN6KMHBR": "702_mail",
+      "C01E32KPH0Q": "수다방",
+      "C01EBS9E5BK": "시공",
+      "C023VF8HB8S": "cx",
+      "C02FBSYM40G": "file",
+      "C02KKLHUVBJ": "call",
+      "C04H4LBJZ3R": "emergency_alarm",
+      "D04M3GWK3TJ": "jieun",
+      "C04LB1RBWQ5": "plan",
+      "D04LDNF1RQT": "clare",
+    }
+  };
   this.telegram = {
     chat: {
       general: "-806575867",
@@ -45,7 +98,7 @@ const SecondGhost = function (mother = null, back = null, address = null) {
 SecondGhost.prototype.ghostConnect = async function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, equalJson } = this.mother;
-  const { slack_userToken } = this;
+  const { slack_userToken, slack_info, telegram } = this;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
@@ -116,7 +169,7 @@ SecondGhost.prototype.ghostConnect = async function () {
     
     //set router
     const SecondRouter = require(`${this.dir}/router/secondRouter.js`);
-    const router = new SecondRouter(this.slack_bot, MONGOC, MONGOLOCALC, slack_userToken, this.telegram);
+    const router = new SecondRouter(this.slack_bot, MONGOC, MONGOLOCALC, slack_userToken, slack_info, telegram);
 
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
