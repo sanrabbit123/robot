@@ -1470,11 +1470,11 @@ SecondRouter.prototype.rou_post_slackForm = function () {
             console.log(thisBody.payload.view.state.values);
             console.log(thisBody.payload.view.state.values.pay);
 
-            console.log(thisBody.view.state.values.client.clientInput.value)
-            console.log(thisBody.view.state.values.designer.designerInput.value)
-            console.log(thisBody.view.state.values.link.linkInput.value)
-            console.log(thisBody.view.state.values.pay.payInput.selected_option.value)
-            
+            console.log(thisBody.payload.view.state.values.client.clientInput.value)
+            console.log(thisBody.payload.view.state.values.designer.designerInput.value)
+            console.log(thisBody.payload.view.state.values.link.linkInput.value)
+            console.log(thisBody.payload.view.state.values.pay.payInput.selected_option.value)
+
 
 
             resultJson = {
