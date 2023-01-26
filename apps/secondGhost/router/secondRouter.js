@@ -1,4 +1,4 @@
-const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken, slack_info, telegram) {
+const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, telegram) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
@@ -16,6 +16,7 @@ const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken, 
 
   this.slack_userToken = slack_userToken;
   this.slack_bot = slack_bot;
+  this.slack_user = slack_user;
   this.slack_info = slack_info;
 
   this.secondPort = this.address.officeinfo.ghost.second.port;
@@ -1039,7 +1040,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
 
 SecondRouter.prototype.rou_post_telegramEvents = function () {
   const instance = this;
-  const { secondHost, slack_info: { userDictionary, channelDictionary }, telegram } = this;
+  const { secondHost, slack_info: { userDictionary, channelDictionary }, telegram, slack_user } = this;
   const { errorLog, messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/telegramEvents" ];
@@ -1052,9 +1053,26 @@ SecondRouter.prototype.rou_post_telegramEvents = function () {
     });
     try {
       const thisBody = equalJson(req.body);
-
-      console.log(thisBody);
-
+      if (typeof thisBody.message === "object" && thisBody.message !== null) {
+        if (typeof thisBody.message.chat === "object") {
+          const { text, chat: id } = thisBody.message;
+          const keyArr = Object.keys(channelDictionary);
+          let valueArr;
+          let targetChannel;
+          valueArr = [];
+          for (let key of keyArr) {
+            valueArr.push(channelDictionary[key]);
+          }
+          if (id === telegram.chat.plan) {
+            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "plan" })]
+          } else if (id === telegram.chat.clare) {
+            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "plan" })]
+          } else if (id === telegram.chat.jyeun) {
+            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "plan" })]
+          }
+          await slack_user.chat.postMessage({ text, channel: targetChannel });
+        }
+      }
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_telegramEvents): " + e.message).catch((e) => { console.log(e); });

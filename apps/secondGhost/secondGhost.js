@@ -16,6 +16,7 @@ const SecondGhost = function (mother = null, back = null, address = null) {
   this.slack_token = "xoxb-717757271335-4566120587107-i7TxxYzbPWPzdBMPoZDo2kxn";
   this.slack_userToken = "xoxp-717757271335-704486967090-4566130160163-fd2a2cc412e2a509a43635fb8f6c65e2";
   this.slack_bot = new WebClient(this.slack_token);
+  this.slack_user = new WebClient("xoxp-717757271335-4693762967475-4723976908816-94869470cce7af216e5fb9b1b09c00c2");
   this.slack_info = {
     userDictionary: {
       "ULQEAUF2N": "homeliaison",
@@ -169,7 +170,7 @@ SecondGhost.prototype.ghostConnect = async function () {
     
     //set router
     const SecondRouter = require(`${this.dir}/router/secondRouter.js`);
-    const router = new SecondRouter(this.slack_bot, MONGOC, MONGOLOCALC, slack_userToken, slack_info, telegram);
+    const router = new SecondRouter(this.slack_bot, this.slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, telegram);
 
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
