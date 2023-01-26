@@ -1287,19 +1287,7 @@ SecondRouter.prototype.rou_post_slackTest = function () {
     try {
       const thisBody = equalJson(req.body);
       console.log(thisBody);
-      res.send(JSON.stringify({
-        "type": "view_submission",
-        "team": {
-          "id": "TM3N97Z9V",
-          "domain": "homeliaisonworkspace"
-        },
-        "user": {
-          "id": "U04LDNEUFDZ",
-          "username": "yullaho",
-          "name": "yullaho",
-          "team_id": "TM3N97Z9V"
-        },
-        "api_app_id": "A02",
+      const modalJson = {
         "token": thisBody.payload.token,
         "trigger_id": thisBody.payload.trigger_id,
         "view": {
@@ -1500,10 +1488,19 @@ SecondRouter.prototype.rou_post_slackTest = function () {
           "app_installed_team_id": "TM3N97Z9V",
           "bot_id": "B00"
         },
-        "response_urls": [],
-        "is_enterprise_install": false,
-        "enterprise": null
-      }));
+      };
+
+      const response = await requestSystem("https://slack.com/api/views.open", modalJson, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + thisBody.payload.token
+        }
+      });
+
+      console.log(response);
+
+      res.send({ message: "done" });
+
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackTest): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
