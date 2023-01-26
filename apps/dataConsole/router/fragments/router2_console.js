@@ -5812,20 +5812,21 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
           tempArr[7] = "-";
           tempArr[8] = '-';
           tempArr[9] = '-';
-          tempArr[10] = '';
+          tempArr[10] = '-';
           tempArr[11] = '';
           tempArr[12] = '';
-          tempArr[13] = '-';
+          tempArr[13] = '';
           tempArr[14] = '-';
           tempArr[15] = '-';
           tempArr[16] = '-';
-          tempArr[17] = '';
-          tempArr[18] = '-';
+          tempArr[17] = '-';
+          tempArr[18] = '';
           tempArr[19] = '-';
           tempArr[20] = '-';
-          tempArr[21] = '';
+          tempArr[21] = '-';
           tempArr[22] = '';
-          tempArr[23] = '-';
+          tempArr[23] = '';
+          tempArr[24] = '-';
           totalRows.unshift(tempArr)
         }
     
@@ -5840,21 +5841,22 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
           tempArr[6] = dateToDate(filteredRequests[i].request.timeline);
           tempArr[7] = "응대중";
           tempArr[8] = 'X';
-          tempArr[9] = 'X';
-          tempArr[10] = '';
+          tempArr[9] = '하';
+          tempArr[10] = 'X';
           tempArr[11] = '';
           tempArr[12] = '';
-          tempArr[13] = '대기';
+          tempArr[13] = '';
           tempArr[14] = '대기';
           tempArr[15] = '대기';
-          tempArr[16] = '해당 없음';
-          tempArr[17] = '';
-          tempArr[18] = 'X';
+          tempArr[16] = '대기';
+          tempArr[17] = '해당 없음';
+          tempArr[18] = '';
           tempArr[19] = 'X';
           tempArr[20] = 'X';
-          tempArr[21] = '';
+          tempArr[21] = 'X';
           tempArr[22] = '';
-          tempArr[23] = 'X';
+          tempArr[23] = '';
+          tempArr[24] = 'X';
           totalRows.unshift(tempArr);
         }
     
@@ -6124,7 +6126,8 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
           totalRows[i][7] = "-";
           totalRows[i][8] = "-";
           totalRows[i][9] = "-";
-          totalRows[i][10] = `응대 ${String(currentNum)} / 드랍 ${String(dropNum)} / 가능성 ${String(possibleNum)} / 타겟 ${String(targetNum)} / 계약 ${String(contractNum)}`;
+          totalRows[i][10] = "-";
+          totalRows[i][11] = `응대 ${String(currentNum)} / 드랍 ${String(dropNum)} / 가능성 ${String(possibleNum)} / 타겟 ${String(targetNum)} / 계약 ${String(contractNum)}`;
 
           totalTong.push({
             date: dateParsing(thisDate),
