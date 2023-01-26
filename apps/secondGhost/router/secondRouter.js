@@ -1293,26 +1293,10 @@ SecondRouter.prototype.rou_post_slackTest = function () {
 
         console.log(thisBody.payload.view.state.values);
         resultJson = {
-          "response_action": "update",
-          "view": {
-            "type": "modal",
-            "title": {
-              "type": "plain_text",
-              "text": "Updated view"
-            },
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "plain_text",
-                  "text": "I've changed and I'll never be the same. You must believe me."
-                }
-              }
-            ]
-          }
+          "response_action": "clear"
         }
 
-      } else {
+      } else if (typeof thisBody.payload !== "object") {
 
         modalJson = {
           "trigger_id": (typeof thisBody.payload === "object" ? thisBody.payload.trigger_id : thisBody.trigger_id),
@@ -1480,6 +1464,10 @@ SecondRouter.prototype.rou_post_slackTest = function () {
             "Authorization": "Bearer " + instance.slack_userToken,
           }
         });
+
+        resultJson = { "message": "done" }
+
+      } else {
 
         resultJson = { "message": "done" }
 
