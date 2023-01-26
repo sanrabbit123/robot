@@ -1286,6 +1286,7 @@ SecondRouter.prototype.rou_post_slackTest = function () {
     });
     try {
       const thisBody = equalJson(req.body);
+      console.log(thisBody);
       const modalJson = {
         "trigger_id": (thisBody.payload === undefined ? thisBody.trigger_id : thisBody.payload.trigger_id),
         "view": {
@@ -1444,7 +1445,6 @@ SecondRouter.prototype.rou_post_slackTest = function () {
             "text": "공유하기",
             "emoji": true
           },
-          "response_url": "https://home-liaison.net/slackTest",
         }
       };
       await requestSystem("https://slack.com/api/views.open", modalJson, {
