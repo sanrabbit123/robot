@@ -1291,7 +1291,7 @@ SecondRouter.prototype.rou_post_slackTest = function () {
 
       if (typeof thisBody.payload === "object" && thisBody.payload.type === "view_submission") {
 
-        console.log(thisBody.payload.view.state);
+        console.log(thisBody.payload.view.state.values);
 
       } else {
 
