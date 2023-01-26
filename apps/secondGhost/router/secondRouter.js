@@ -1274,7 +1274,7 @@ SecondRouter.prototype.rou_post_rawContentsSync = function () {
 SecondRouter.prototype.rou_post_slackForm = function () {
   const instance = this;
   const { secondHost, slack_info: { userDictionary, channelDictionary }, telegram } = this;
-  const { errorLog, messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
+  const { errorLog, messageSend, equalJson, ajaxJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/slackForm", "/slackForm_rawPhoto" ];
   obj.func = async function (req, res) {
@@ -1287,8 +1287,10 @@ SecondRouter.prototype.rou_post_slackForm = function () {
     try {
       const thisBody = equalJson(req.body);
       let modalJson, resultJson;
+      let finalValues;
 
       resultJson = { "message": "done" };
+      finalValues = {};
 
       if (req.url === "/slackForm_rawPhoto") {
 
@@ -1466,16 +1468,17 @@ SecondRouter.prototype.rou_post_slackForm = function () {
 
           if (thisBody.payload.view.callback_id === "rawPhoto") {
 
-            console.log(thisBody.payload);
-            console.log(thisBody.payload.view.state.values);
-            console.log(thisBody.payload.view.state.values.pay);
+            finalValues = {
+              client: thisBody.payload.view.state.values.client.clientInput.value,
+              designer: thisBody.payload.view.state.values.designer.designerInput.value,
+              link: thisBody.payload.view.state.values.link.linkInput.value,
+              pay: thisBody.payload.view.state.values.pay.payInput.selected_option.value,
+            };
 
-            console.log(thisBody.payload.view.state.values.client.clientInput.value)
-            console.log(thisBody.payload.view.state.values.designer.designerInput.value)
-            console.log(thisBody.payload.view.state.values.link.linkInput.value)
-            console.log(thisBody.payload.view.state.values.pay.payInput.selected_option.value)
-
-
+            await messageSend({
+              text: `${finalValues.client} 고객님 ${finalValues.designer} 실장님 현장의 원본 사진 링크를 공유합니다! (${pay === "paid" ? "유료" : "무료"} 촬영)\n${link}`,
+              channel: "#error_log",
+            });
 
             resultJson = {
               "response_action": "clear"
