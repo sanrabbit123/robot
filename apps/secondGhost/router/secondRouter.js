@@ -1314,7 +1314,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
                 "dispatch_action": true,
                 "element": {
                   "type": "plain_text_input",
-                  "action_id": "plain_text_input-action",
+                  "action_id": "clientInput",
                   "dispatch_action_config": {
                     "trigger_actions_on": [
                       "on_character_entered"
@@ -1345,7 +1345,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
                 "dispatch_action": true,
                 "element": {
                   "type": "plain_text_input",
-                  "action_id": "plain_text_input-action",
+                  "action_id": "designerInput",
                   "dispatch_action_config": {
                     "trigger_actions_on": [
                       "on_character_entered"
@@ -1376,7 +1376,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
                 "dispatch_action": true,
                 "element": {
                   "type": "plain_text_input",
-                  "action_id": "plain_text_input-action",
+                  "action_id": "linkInput",
                   "dispatch_action_config": {
                     "trigger_actions_on": [
                       "on_character_entered"
@@ -1415,7 +1415,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
                         "text": "유료",
                         "emoji": true
                       },
-                      "value": "value-0"
+                      "value": "paid"
                     },
                     {
                       "text": {
@@ -1423,7 +1423,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
                         "text": "무료",
                         "emoji": true
                       },
-                      "value": "value-1"
+                      "value": "free"
                     }
                   ]
                 }
@@ -1468,6 +1468,13 @@ SecondRouter.prototype.rou_post_slackForm = function () {
 
             console.log(thisBody.payload);
             console.log(thisBody.payload.view.state.values);
+            console.log(thisBody.payload.view.state.values.pay);
+
+
+            
+
+
+
             resultJson = {
               "response_action": "clear"
             }
