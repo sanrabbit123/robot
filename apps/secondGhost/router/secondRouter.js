@@ -1279,19 +1279,38 @@ SecondRouter.prototype.rou_post_slackTest = function () {
   obj.link = [ "/slackTest" ];
   obj.func = async function (req, res) {
     res.set({
-      "Content-Type": "text/plain",
+      "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
       const thisBody = equalJson(req.body);
-      let modalJson;
+      let modalJson, resultJson;
       console.log(thisBody);
 
       if (typeof thisBody.payload === "object" && thisBody.payload.type === "view_submission") {
 
-        console.log(thisBody.payload.view.state);
+        console.log(thisBody.payload.view.state.values);
+        resultJson = {
+          "response_action": "update",
+          "view": {
+            "type": "modal",
+            "title": {
+              "type": "plain_text",
+              "text": "Updated view"
+            },
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "plain_text",
+                  "text": "I've changed and I'll never be the same. You must believe me."
+                }
+              }
+            ]
+          }
+        }
 
       } else {
 
@@ -1462,11 +1481,13 @@ SecondRouter.prototype.rou_post_slackTest = function () {
           }
         });
 
+        resultJson = { "message": "done" }
+
       }
-      res.send("200 OK");
+      res.send(JSON.stringify(resultJson));
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackTest): " + e.message).catch((e) => { console.log(e); });
-      res.send("ERROR");
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
