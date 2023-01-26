@@ -1297,20 +1297,141 @@ SecondRouter.prototype.rou_post_slackTest = function () {
           },
           "blocks": [
             {
-              "type": "section",
-              "block_id": "section-identifier",
-              "text": {
-                "type": "mrkdwn",
-                "text": "*Welcome* to ~my~ Block Kit _modal_!"
+              "type": "input",
+              "block_id": "BgH",
+              "label": {
+                "type": "plain_text",
+                "text": "고객명",
+                "emoji": true
               },
-              "accessory": {
-                "type": "button",
-                "text": {
-                  "type": "plain_text",
-                  "text": "Just a button"
-                },
-                "action_id": "button-identifier"
+              "optional": false,
+              "dispatch_action": true,
+              "element": {
+                "type": "plain_text_input",
+                "action_id": "plain_text_input-action",
+                "dispatch_action_config": {
+                  "trigger_actions_on": [
+                    "on_character_entered"
+                  ]
+                }
               }
+            },
+            {
+              "type": "context",
+              "block_id": "zlUbD",
+              "elements": [
+                {
+                  "type": "plain_text",
+                  "text": " ",
+                  "emoji": true
+                }
+              ]
+            },
+            {
+              "type": "input",
+              "block_id": "xm2",
+              "label": {
+                "type": "plain_text",
+                "text": "디자이너명",
+                "emoji": true
+              },
+              "optional": false,
+              "dispatch_action": true,
+              "element": {
+                "type": "plain_text_input",
+                "action_id": "plain_text_input-action",
+                "dispatch_action_config": {
+                  "trigger_actions_on": [
+                    "on_character_entered"
+                  ]
+                }
+              }
+            },
+            {
+              "type": "context",
+              "block_id": "dXBH9",
+              "elements": [
+                {
+                  "type": "plain_text",
+                  "text": " ",
+                  "emoji": true
+                }
+              ]
+            },
+            {
+              "type": "input",
+              "block_id": "gDd",
+              "label": {
+                "type": "plain_text",
+                "text": "원본 사진 링크",
+                "emoji": true
+              },
+              "optional": false,
+              "dispatch_action": true,
+              "element": {
+                "type": "plain_text_input",
+                "action_id": "plain_text_input-action",
+                "dispatch_action_config": {
+                  "trigger_actions_on": [
+                    "on_character_entered"
+                  ]
+                }
+              }
+            },
+            {
+              "type": "context",
+              "block_id": "fIR",
+              "elements": [
+                {
+                  "type": "plain_text",
+                  "text": " ",
+                  "emoji": true
+                }
+              ]
+            },
+            {
+              "type": "input",
+              "block_id": "fx7",
+              "label": {
+                "type": "plain_text",
+                "text": "촬영비",
+                "emoji": true
+              },
+              "optional": false,
+              "dispatch_action": false,
+              "element": {
+                "type": "radio_buttons",
+                "action_id": "radio_buttons-action",
+                "options": [
+                  {
+                    "text": {
+                      "type": "plain_text",
+                      "text": "유료",
+                      "emoji": true
+                    },
+                    "value": "value-0"
+                  },
+                  {
+                    "text": {
+                      "type": "plain_text",
+                      "text": "무료",
+                      "emoji": true
+                    },
+                    "value": "value-1"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "context",
+              "block_id": "VY=",
+              "elements": [
+                {
+                  "type": "plain_text",
+                  "text": " ",
+                  "emoji": true
+                }
+              ]
             }
           ],
           "close": {
