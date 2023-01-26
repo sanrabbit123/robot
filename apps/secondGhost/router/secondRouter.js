@@ -1279,7 +1279,7 @@ SecondRouter.prototype.rou_post_slackTest = function () {
   obj.link = [ "/slackTest" ];
   obj.func = async function (req, res) {
     res.set({
-      "Content-Type": "application/json",
+      "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
@@ -1291,7 +1291,7 @@ SecondRouter.prototype.rou_post_slackTest = function () {
 
       if (typeof thisBody.payload === "object" && thisBody.payload.type === "view_submission") {
 
-        console.log(thisBody.payload.view);
+        console.log(thisBody.payload.view.state);
 
       } else {
 
@@ -1463,10 +1463,10 @@ SecondRouter.prototype.rou_post_slackTest = function () {
         });
 
       }
-      res.send({ message: "done" });
+      res.send("OK");
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackTest): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
+      res.send("ERROR");
     }
   }
   return obj;
