@@ -1291,7 +1291,9 @@ SecondRouter.prototype.rou_post_slackTest = function () {
 
       if (typeof thisBody.payload === "object" && thisBody.payload.type === "view_submission") {
 
-        console.log(thisBody.payload.view.state.values);
+        thisBody.payload.view.state.values.forEach((obj) => {
+          console.log(obj);
+        })
 
       } else {
 
@@ -1463,7 +1465,7 @@ SecondRouter.prototype.rou_post_slackTest = function () {
         });
 
       }
-      res.send("OK");
+      res.send("200 OK");
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackTest): " + e.message).catch((e) => { console.log(e); });
       res.send("ERROR");
