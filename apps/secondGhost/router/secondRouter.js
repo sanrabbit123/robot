@@ -1288,17 +1288,25 @@ SecondRouter.prototype.rou_post_slackTest = function () {
       res.send(JSON.stringify({
         "blocks": [
           {
-            "dispatch_action": true,
-            "type": "input",
-            "element": {
-              "type": "plain_text_input",
-              "action_id": "plain_text_input-action"
-            },
-            "label": {
+            "type": "header",
+            "text": {
               "type": "plain_text",
-              "text": "Label",
+              "text": "원본 사진 링크 공유",
               "emoji": true
             }
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              }
+            ]
           },
           {
             "dispatch_action": true,
@@ -1314,64 +1322,75 @@ SecondRouter.prototype.rou_post_slackTest = function () {
             },
             "label": {
               "type": "plain_text",
-              "text": "Label",
+              "text": "고객명",
               "emoji": true
             }
           },
           {
-            "type": "input",
-            "element": {
-              "type": "multi_users_select",
-              "placeholder": {
+            "type": "context",
+            "elements": [
+              {
                 "type": "plain_text",
-                "text": "Select users",
+                "text": " ",
                 "emoji": true
+              }
+            ]
+          },
+          {
+            "dispatch_action": true,
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "dispatch_action_config": {
+                "trigger_actions_on": [
+                  "on_character_entered"
+                ]
               },
-              "action_id": "multi_users_select-action"
+              "action_id": "plain_text_input-action"
             },
             "label": {
               "type": "plain_text",
-              "text": "Label",
+              "text": "디자이너명",
               "emoji": true
             }
           },
           {
+            "type": "context",
+            "elements": [
+              {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              }
+            ]
+          },
+          {
+            "dispatch_action": true,
             "type": "input",
             "element": {
-              "type": "checkboxes",
-              "options": [
-                {
-                  "text": {
-                    "type": "plain_text",
-                    "text": "*this is plain_text text*",
-                    "emoji": true
-                  },
-                  "value": "value-0"
-                },
-                {
-                  "text": {
-                    "type": "plain_text",
-                    "text": "*this is plain_text text*",
-                    "emoji": true
-                  },
-                  "value": "value-1"
-                },
-                {
-                  "text": {
-                    "type": "plain_text",
-                    "text": "*this is plain_text text*",
-                    "emoji": true
-                  },
-                  "value": "value-2"
-                }
-              ],
-              "action_id": "checkboxes-action"
+              "type": "plain_text_input",
+              "dispatch_action_config": {
+                "trigger_actions_on": [
+                  "on_character_entered"
+                ]
+              },
+              "action_id": "plain_text_input-action"
             },
             "label": {
               "type": "plain_text",
-              "text": "Label",
+              "text": "원본 사진 링크",
               "emoji": true
             }
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              }
+            ]
           },
           {
             "type": "input",
@@ -1381,7 +1400,7 @@ SecondRouter.prototype.rou_post_slackTest = function () {
                 {
                   "text": {
                     "type": "plain_text",
-                    "text": "*this is plain_text text*",
+                    "text": "유료",
                     "emoji": true
                   },
                   "value": "value-0"
@@ -1389,18 +1408,10 @@ SecondRouter.prototype.rou_post_slackTest = function () {
                 {
                   "text": {
                     "type": "plain_text",
-                    "text": "*this is plain_text text*",
+                    "text": "무료",
                     "emoji": true
                   },
                   "value": "value-1"
-                },
-                {
-                  "text": {
-                    "type": "plain_text",
-                    "text": "*this is plain_text text*",
-                    "emoji": true
-                  },
-                  "value": "value-2"
                 }
               ],
               "action_id": "radio_buttons-action"
@@ -1409,6 +1420,23 @@ SecondRouter.prototype.rou_post_slackTest = function () {
               "type": "plain_text",
               "text": "Label",
               "emoji": true
+            }
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": " "
+            },
+            "accessory": {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "공유하기",
+                "emoji": true
+              },
+              "value": "click_me_123",
+              "action_id": "button-action"
             }
           }
         ]
