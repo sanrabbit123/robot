@@ -1271,6 +1271,155 @@ SecondRouter.prototype.rou_post_rawContentsSync = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_slackTest = function () {
+  const instance = this;
+  const { secondHost, slack_info: { userDictionary, channelDictionary }, telegram } = this;
+  const { errorLog, messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/slackTest" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      res.send(JSON.stringify({
+        "blocks": [
+          {
+            "dispatch_action": true,
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "action_id": "plain_text_input-action"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "Label",
+              "emoji": true
+            }
+          },
+          {
+            "dispatch_action": true,
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "dispatch_action_config": {
+                "trigger_actions_on": [
+                  "on_character_entered"
+                ]
+              },
+              "action_id": "plain_text_input-action"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "Label",
+              "emoji": true
+            }
+          },
+          {
+            "type": "input",
+            "element": {
+              "type": "multi_users_select",
+              "placeholder": {
+                "type": "plain_text",
+                "text": "Select users",
+                "emoji": true
+              },
+              "action_id": "multi_users_select-action"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "Label",
+              "emoji": true
+            }
+          },
+          {
+            "type": "input",
+            "element": {
+              "type": "checkboxes",
+              "options": [
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "*this is plain_text text*",
+                    "emoji": true
+                  },
+                  "value": "value-0"
+                },
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "*this is plain_text text*",
+                    "emoji": true
+                  },
+                  "value": "value-1"
+                },
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "*this is plain_text text*",
+                    "emoji": true
+                  },
+                  "value": "value-2"
+                }
+              ],
+              "action_id": "checkboxes-action"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "Label",
+              "emoji": true
+            }
+          },
+          {
+            "type": "input",
+            "element": {
+              "type": "radio_buttons",
+              "options": [
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "*this is plain_text text*",
+                    "emoji": true
+                  },
+                  "value": "value-0"
+                },
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "*this is plain_text text*",
+                    "emoji": true
+                  },
+                  "value": "value-1"
+                },
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "*this is plain_text text*",
+                    "emoji": true
+                  },
+                  "value": "value-2"
+                }
+              ],
+              "action_id": "radio_buttons-action"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "Label",
+              "emoji": true
+            }
+          }
+        ]
+      }));
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackTest): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
 
 //ROUTING ----------------------------------------------------------------------
 
