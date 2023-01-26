@@ -498,6 +498,8 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainTitle = "프로젝트 파일";
+  const uploadIconClassName = "uploadIconClassName";
+  const memoIconClassName = "memoIconClassName";
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -866,6 +868,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
 
     createNode({
       mother: basePan,
+      class: [ uploadIconClassName ],
       attribute: {
         index: String(i),
         key: this.panContents[i].key,
@@ -906,8 +909,10 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
 
     createNode({
       mother: basePan,
+      class: [ memoIconClassName ],
       attribute: {
         index: String(i),
+        key: this.panContents[i].key,
         proid: project.proid,
         desid: instance.designer.desid,
         name: project.name,
@@ -3112,6 +3117,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
     ],
     table: instance.tableStatic(instance.designer, instance.project, instance.client, instance.clientHistory, instance.projectHistory, instance.requestNumber)
   };
+  const pdfSaveIconClassName = "pdfSaveIconClassName";
   const {
     title,
     initialContents,
@@ -3278,6 +3284,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
         children: [
           {
             text: wordsTitle,
+            class: [ pdfSaveIconClassName ],
             event: {
               click: function (e) {
                 const loading = instance.mother.grayLoading();
@@ -3579,6 +3586,7 @@ ProcessDetailJs.prototype.insertBelowBox = function () {
     ],
     table: instance.tableStatic(instance.designer, instance.project, instance.client, instance.clientHistory, instance.projectHistory, instance.requestNumber)
   };
+  const pdfSaveIconClassName = "pdfSaveIconClassName";
   const {
     title,
     initialContents,
@@ -3751,6 +3759,7 @@ ProcessDetailJs.prototype.insertBelowBox = function () {
         children: [
           {
             text: "고객 정보",
+            class: [ pdfSaveIconClassName ],
             style: {
               position: "relative",
               display: "inline-block",
@@ -8692,7 +8701,7 @@ ProcessDetailJs.prototype.insertMeetingBackBox = function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -8816,17 +8825,49 @@ ProcessDetailJs.prototype.insertMeetingBackBox = function () {
       {
         title: <&& "현장 사진 콘솔에 업로드하기" | "현장 사진 콘솔에 업로드하기" | "현장 사진 콘솔에 업로드하기" | "현장 사진 업로드하기" | "현장 사진 콘솔에 업로드하기" &&>,
         active: true,
-        click: null,
+        click: (project) => {
+          return async function (e) {
+            try {
+              const target = findByAttribute(document.querySelectorAll(".uploadIconClassName"), "key", "firstPhoto");
+              if (target !== null) {
+                target.click();
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
       },
       {
         title: <&& "현장에 대한 간략한 메모 작성하기" | "현장에 대한 메모 작성하기" | "현장에 대한 메모 작성하기" | "현장에 대한 메모 작성하기" | "현장에 대한 간략한 메모 작성하기" &&>,
         active: true,
-        click: null,
+        click: (project) => {
+          return async function (e) {
+            try {
+              const target = findByAttribute(document.querySelectorAll(".memoIconClassName"), "key", "firstPhoto");
+              if (target !== null) {
+                target.click();
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
       },
       {
         title: <&& "홈스타일링 의뢰서 다시 보기" | "홈스타일링 의뢰서 다시 보기" | "홈스타일링 의뢰서 다시 보기" | "의뢰서 다시 보기" | "홈스타일링 의뢰서 다시 보기" &&>,
         active: true,
-        click: null,
+        click: (project) => {
+          return async function (e) {
+            try {
+              setQueue(() => {
+                scrollTo(window, document.querySelector(".pdfSaveIconClassName"), (desktop ? 72 : 60));
+              });
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
       }
     ],
   ];
