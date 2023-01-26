@@ -1287,221 +1287,148 @@ SecondRouter.prototype.rou_post_slackTest = function () {
     try {
       console.log(req.body);
       res.send(JSON.stringify({
-        "type": "view_submission",
-        "team": {
-          "id": "TM3N97Z9V",
-          "domain": "homeliaisonworkspace"
+        "type": "modal",
+        "title": {
+          "type": "plain_text",
+          "text": "원본 사진 공유",
+          "emoji": true
         },
-        "user": {
-          "id": "U04LDNEUFDZ",
-          "username": "yullaho",
-          "name": "yullaho",
-          "team_id": "TM3N97Z9V"
+        "submit": {
+          "type": "plain_text",
+          "text": "Submit",
+          "emoji": true
         },
-        "api_app_id": "A02",
-        "token": "Shh_its_a_seekrit",
-        "trigger_id": "123456789.123456789",
-        "view": {
-          "id": "V1234567890",
-          "team_id": "TM3N97Z9V",
-          "type": "modal",
-          "blocks": [
-            {
-              "type": "input",
-              "block_id": "BgH",
-              "label": {
-                "type": "plain_text",
-                "text": "고객명",
-                "emoji": true
-              },
-              "optional": false,
-              "dispatch_action": true,
-              "element": {
-                "type": "plain_text_input",
-                "action_id": "plain_text_input-action",
-                "dispatch_action_config": {
-                  "trigger_actions_on": [
-                    "on_character_entered"
-                  ]
-                }
-              }
-            },
-            {
-              "type": "context",
-              "block_id": "zlUbD",
-              "elements": [
-                {
-                  "type": "plain_text",
-                  "text": " ",
-                  "emoji": true
-                }
-              ]
-            },
-            {
-              "type": "input",
-              "block_id": "xm2",
-              "label": {
-                "type": "plain_text",
-                "text": "디자이너명",
-                "emoji": true
-              },
-              "optional": false,
-              "dispatch_action": true,
-              "element": {
-                "type": "plain_text_input",
-                "action_id": "plain_text_input-action",
-                "dispatch_action_config": {
-                  "trigger_actions_on": [
-                    "on_character_entered"
-                  ]
-                }
-              }
-            },
-            {
-              "type": "context",
-              "block_id": "dXBH9",
-              "elements": [
-                {
-                  "type": "plain_text",
-                  "text": " ",
-                  "emoji": true
-                }
-              ]
-            },
-            {
-              "type": "input",
-              "block_id": "gDd",
-              "label": {
-                "type": "plain_text",
-                "text": "원본 사진 링크",
-                "emoji": true
-              },
-              "optional": false,
-              "dispatch_action": true,
-              "element": {
-                "type": "plain_text_input",
-                "action_id": "plain_text_input-action",
-                "dispatch_action_config": {
-                  "trigger_actions_on": [
-                    "on_character_entered"
-                  ]
-                }
-              }
-            },
-            {
-              "type": "context",
-              "block_id": "fIR",
-              "elements": [
-                {
-                  "type": "plain_text",
-                  "text": " ",
-                  "emoji": true
-                }
-              ]
-            },
-            {
-              "type": "input",
-              "block_id": "fx7",
-              "label": {
-                "type": "plain_text",
-                "text": "촬영비",
-                "emoji": true
-              },
-              "optional": false,
-              "dispatch_action": false,
-              "element": {
-                "type": "radio_buttons",
-                "action_id": "radio_buttons-action",
-                "options": [
-                  {
-                    "text": {
-                      "type": "plain_text",
-                      "text": "유료",
-                      "emoji": true
-                    },
-                    "value": "value-0"
-                  },
-                  {
-                    "text": {
-                      "type": "plain_text",
-                      "text": "무료",
-                      "emoji": true
-                    },
-                    "value": "value-1"
-                  }
+        "close": {
+          "type": "plain_text",
+          "text": "Cancel",
+          "emoji": true
+        },
+        "blocks": [
+          {
+            "dispatch_action": true,
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "dispatch_action_config": {
+                "trigger_actions_on": [
+                  "on_character_entered"
                 ]
-              }
+              },
+              "action_id": "plain_text_input-action"
             },
-            {
-              "type": "context",
-              "block_id": "VY=",
-              "elements": [
-                {
-                  "type": "plain_text",
-                  "text": " ",
-                  "emoji": true
-                }
-              ]
+            "label": {
+              "type": "plain_text",
+              "text": "고객명",
+              "emoji": true
             }
-          ],
-          "private_metadata": "",
-          "callback_id": "",
-          "state": {
-            "values": {
-              "BgH": {
-                "plain_text_input-action": {
-                  "type": "plain_text_input",
-                  "value": null
-                }
-              },
-              "xm2": {
-                "plain_text_input-action": {
-                  "type": "plain_text_input",
-                  "value": null
-                }
-              },
-              "gDd": {
-                "plain_text_input-action": {
-                  "type": "plain_text_input",
-                  "value": null
-                }
-              },
-              "fx7": {
-                "radio_buttons-action": {
-                  "type": "radio_buttons",
-                  "selected_option": null
-                }
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
               }
+            ]
+          },
+          {
+            "dispatch_action": true,
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "dispatch_action_config": {
+                "trigger_actions_on": [
+                  "on_character_entered"
+                ]
+              },
+              "action_id": "plain_text_input-action"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "디자이너명",
+              "emoji": true
             }
           },
-          "hash": "1674714304.w6jPTQ8J",
-          "title": {
-            "type": "plain_text",
-            "text": "원본 사진 링크 공유",
-            "emoji": true
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              }
+            ]
           },
-          "clear_on_close": false,
-          "notify_on_close": false,
-          "close": {
-            "type": "plain_text",
-            "text": "취소",
-            "emoji": true
+          {
+            "dispatch_action": true,
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "dispatch_action_config": {
+                "trigger_actions_on": [
+                  "on_character_entered"
+                ]
+              },
+              "action_id": "plain_text_input-action"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "원본 사진 링크",
+              "emoji": true
+            }
           },
-          "submit": {
-            "type": "plain_text",
-            "text": "공유하기",
-            "emoji": true
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              }
+            ]
           },
-          "previous_view_id": null,
-          "root_view_id": "V1234567890",
-          "app_id": "A02",
-          "external_id": "",
-          "app_installed_team_id": "TM3N97Z9V",
-          "bot_id": "B00"
-        },
-        "response_urls": [],
-        "is_enterprise_install": false,
-        "enterprise": null
+          {
+            "type": "input",
+            "element": {
+              "type": "radio_buttons",
+              "options": [
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "유료",
+                    "emoji": true
+                  },
+                  "value": "value-0"
+                },
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "무료",
+                    "emoji": true
+                  },
+                  "value": "value-1"
+                }
+              ],
+              "action_id": "radio_buttons-action"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "촬영비",
+              "emoji": true
+            }
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              }
+            ]
+          }
+        ]
       }));
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackTest): " + e.message).catch((e) => { console.log(e); });
