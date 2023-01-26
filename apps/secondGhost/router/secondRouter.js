@@ -1286,6 +1286,69 @@ SecondRouter.prototype.rou_post_slackTest = function () {
     });
     try {
       res.send(JSON.stringify({
+        "type": "block_actions",
+        "user": {
+          "id": "U04LDNEUFDZ",
+          "username": "yullaho",
+          "name": "yullaho",
+          "team_id": "TM3N97Z9V"
+        },
+        "api_app_id": "A02",
+        "token": "Shh_its_a_seekrit",
+        "container": {
+          "type": "message",
+          "text": "The contents of the original message where the action originated"
+        },
+        "trigger_id": "12466734323.1395872398",
+        "team": {
+          "id": "TM3N97Z9V",
+          "domain": "homeliaisonworkspace"
+        },
+        "enterprise": null,
+        "is_enterprise_install": false,
+        "state": {
+          "values": {
+            "Fu7mC": {
+              "plain_text_input-action": {
+                "type": "plain_text_input",
+                "value": null
+              }
+            },
+            "8i6m": {
+              "plain_text_input-action": {
+                "type": "plain_text_input",
+                "value": null
+              }
+            },
+            "U3zR": {
+              "plain_text_input-action": {
+                "type": "plain_text_input",
+                "value": null
+              }
+            },
+            "qZEoq": {
+              "radio_buttons-action": {
+                "type": "radio_buttons",
+                "selected_option": null
+              }
+            }
+          }
+        },
+        "response_url": "https://www.postresponsestome.com/T123567/1509734234",
+        "actions": [
+          {
+            "type": "button",
+            "block_id": "JYQu",
+            "action_id": "button-action",
+            "text": {
+              "type": "plain_text",
+              "text": "공유하기",
+              "emoji": true
+            },
+            "value": "click_me_123",
+            "action_ts": "1674712618.276765"
+          }
+        ],
         "blocks": [
           {
             "type": "header",
