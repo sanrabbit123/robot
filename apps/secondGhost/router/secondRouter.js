@@ -1476,7 +1476,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
             };
 
             await messageSend({
-              text: `${finalValues.client} 고객님 ${finalValues.designer} 실장님 현장의 원본 사진 링크를 공유합니다! (${pay === "paid" ? "유료" : "무료"} 촬영)\n${link}`,
+              text: `${finalValues.client} 고객님 ${finalValues.designer} 실장님 현장의 원본 사진 링크를 공유합니다! (${finalValues.pay === "paid" ? "유료" : "무료"} 촬영)\n${finalValues.link}`,
               channel: "#error_log",
             });
 
