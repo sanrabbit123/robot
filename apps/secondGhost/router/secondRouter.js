@@ -1296,7 +1296,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
           "trigger_id": (typeof thisBody.payload === "object" ? thisBody.payload.trigger_id : thisBody.trigger_id),
           "view": {
             "type": "modal",
-            "callback_id": "modal-identifier",
+            "callback_id": "rawPhoto",
             "title": {
               "type": "plain_text",
               "text": "원본 사진 링크 공유"
@@ -1304,7 +1304,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
             "blocks": [
               {
                 "type": "input",
-                "block_id": "BgH",
+                "block_id": "client",
                 "label": {
                   "type": "plain_text",
                   "text": "고객명",
@@ -1335,7 +1335,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
               },
               {
                 "type": "input",
-                "block_id": "xm2",
+                "block_id": "designer",
                 "label": {
                   "type": "plain_text",
                   "text": "디자이너명",
@@ -1366,7 +1366,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
               },
               {
                 "type": "input",
-                "block_id": "gDd",
+                "block_id": "link",
                 "label": {
                   "type": "plain_text",
                   "text": "원본 사진 링크",
@@ -1397,7 +1397,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
               },
               {
                 "type": "input",
-                "block_id": "fx7",
+                "block_id": "pay",
                 "label": {
                   "type": "plain_text",
                   "text": "촬영비",
@@ -1464,10 +1464,14 @@ SecondRouter.prototype.rou_post_slackForm = function () {
 
         if (typeof thisBody.payload === "object" && thisBody.payload.type === "view_submission") {
 
-          console.log(thisBody.payload);
-          console.log(thisBody.payload.view.state.values);
-          resultJson = {
-            "response_action": "clear"
+          if (thisBody.payload.view.callback_id === "rawPhoto") {
+
+            console.log(thisBody.payload);
+            console.log(thisBody.payload.view.state.values);
+            resultJson = {
+              "response_action": "clear"
+            }
+
           }
   
         }
