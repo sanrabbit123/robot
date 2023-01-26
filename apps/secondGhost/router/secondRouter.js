@@ -1055,7 +1055,7 @@ SecondRouter.prototype.rou_post_telegramEvents = function () {
       const thisBody = equalJson(req.body);
       if (typeof thisBody.message === "object" && thisBody.message !== null) {
         if (typeof thisBody.message.chat === "object") {
-          const { text, chat: id } = thisBody.message;
+          const { text, chat: { id } } = thisBody.message;
           const keyArr = Object.keys(channelDictionary);
           let valueArr;
           let targetChannel;
@@ -1065,20 +1065,21 @@ SecondRouter.prototype.rou_post_telegramEvents = function () {
             valueArr.push(channelDictionary[key]);
           }
 
-          console.log(valueArr);
-          console.log(keyArr)
-
+          targetChannel = null;
           if (id === telegram.chat.plan) {
-            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "plan" })]
+            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "plan" })];
           } else if (id === telegram.chat.clare) {
-            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "clare" })]
+            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "clare" })];
           } else if (id === telegram.chat.jyeun) {
-            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "jyeun" })]
+            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "jyeun" })];
+          } else {
+            targetChannel = null;
           }
 
-          console.log(targetChannel);
+          if (targetChannel !== null) {
+            await slack_user.chat.postMessage({ text, channel: targetChannel });
+          }
 
-          await slack_user.chat.postMessage({ text, channel: targetChannel });
         }
       }
       res.send(JSON.stringify({ message: "OK" }));
