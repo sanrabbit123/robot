@@ -1271,12 +1271,12 @@ SecondRouter.prototype.rou_post_rawContentsSync = function () {
   return obj;
 }
 
-SecondRouter.prototype.rou_post_slackTest = function () {
+SecondRouter.prototype.rou_post_slackForm = function () {
   const instance = this;
   const { secondHost, slack_info: { userDictionary, channelDictionary }, telegram } = this;
   const { errorLog, messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
   let obj = {};
-  obj.link = [ "/slackTest" ];
+  obj.link = [ "/slackForm_rawPhoto" ];
   obj.func = async function (req, res) {
     res.set({
       "Content-Type": "application/json",
@@ -1287,194 +1287,198 @@ SecondRouter.prototype.rou_post_slackTest = function () {
     try {
       const thisBody = equalJson(req.body);
       let modalJson, resultJson;
-      console.log(thisBody);
 
-      if (typeof thisBody.payload === "object" && thisBody.payload.type === "view_submission") {
+      resultJson = { "message": "done" };
 
-        console.log(thisBody.payload.view.state.values);
-        resultJson = {
-          "response_action": "clear"
-        }
+      if (req.url === "/slackForm_rawPhoto") {
 
-      } else if (typeof thisBody.payload !== "object") {
+        if (typeof thisBody.payload === "object" && thisBody.payload.type === "view_submission") {
 
-        modalJson = {
-          "trigger_id": (typeof thisBody.payload === "object" ? thisBody.payload.trigger_id : thisBody.trigger_id),
-          "view": {
-            "type": "modal",
-            "callback_id": "modal-identifier",
-            "title": {
-              "type": "plain_text",
-              "text": "원본 사진 링크 공유"
-            },
-            "blocks": [
-              {
-                "type": "input",
-                "block_id": "BgH",
-                "label": {
-                  "type": "plain_text",
-                  "text": "고객명",
-                  "emoji": true
-                },
-                "optional": false,
-                "dispatch_action": true,
-                "element": {
-                  "type": "plain_text_input",
-                  "action_id": "plain_text_input-action",
-                  "dispatch_action_config": {
-                    "trigger_actions_on": [
-                      "on_character_entered"
-                    ]
-                  }
-                }
+          console.log(thisBody.payload.view.state.values);
+          resultJson = {
+            "response_action": "clear"
+          }
+  
+        } else if (typeof thisBody.payload !== "object") {
+  
+          modalJson = {
+            "trigger_id": (typeof thisBody.payload === "object" ? thisBody.payload.trigger_id : thisBody.trigger_id),
+            "view": {
+              "type": "modal",
+              "callback_id": "modal-identifier",
+              "title": {
+                "type": "plain_text",
+                "text": "원본 사진 링크 공유"
               },
-              {
-                "type": "context",
-                "block_id": "zlUbD",
-                "elements": [
-                  {
+              "blocks": [
+                {
+                  "type": "input",
+                  "block_id": "BgH",
+                  "label": {
                     "type": "plain_text",
-                    "text": " ",
+                    "text": "고객명",
                     "emoji": true
+                  },
+                  "optional": false,
+                  "dispatch_action": true,
+                  "element": {
+                    "type": "plain_text_input",
+                    "action_id": "plain_text_input-action",
+                    "dispatch_action_config": {
+                      "trigger_actions_on": [
+                        "on_character_entered"
+                      ]
+                    }
                   }
-                ]
-              },
-              {
-                "type": "input",
-                "block_id": "xm2",
-                "label": {
-                  "type": "plain_text",
-                  "text": "디자이너명",
-                  "emoji": true
                 },
-                "optional": false,
-                "dispatch_action": true,
-                "element": {
-                  "type": "plain_text_input",
-                  "action_id": "plain_text_input-action",
-                  "dispatch_action_config": {
-                    "trigger_actions_on": [
-                      "on_character_entered"
-                    ]
-                  }
-                }
-              },
-              {
-                "type": "context",
-                "block_id": "dXBH9",
-                "elements": [
-                  {
-                    "type": "plain_text",
-                    "text": " ",
-                    "emoji": true
-                  }
-                ]
-              },
-              {
-                "type": "input",
-                "block_id": "gDd",
-                "label": {
-                  "type": "plain_text",
-                  "text": "원본 사진 링크",
-                  "emoji": true
-                },
-                "optional": false,
-                "dispatch_action": true,
-                "element": {
-                  "type": "plain_text_input",
-                  "action_id": "plain_text_input-action",
-                  "dispatch_action_config": {
-                    "trigger_actions_on": [
-                      "on_character_entered"
-                    ]
-                  }
-                }
-              },
-              {
-                "type": "context",
-                "block_id": "fIR",
-                "elements": [
-                  {
-                    "type": "plain_text",
-                    "text": " ",
-                    "emoji": true
-                  }
-                ]
-              },
-              {
-                "type": "input",
-                "block_id": "fx7",
-                "label": {
-                  "type": "plain_text",
-                  "text": "촬영비",
-                  "emoji": true
-                },
-                "optional": false,
-                "dispatch_action": false,
-                "element": {
-                  "type": "radio_buttons",
-                  "action_id": "radio_buttons-action",
-                  "options": [
+                {
+                  "type": "context",
+                  "block_id": "zlUbD",
+                  "elements": [
                     {
-                      "text": {
-                        "type": "plain_text",
-                        "text": "유료",
-                        "emoji": true
-                      },
-                      "value": "value-0"
-                    },
+                      "type": "plain_text",
+                      "text": " ",
+                      "emoji": true
+                    }
+                  ]
+                },
+                {
+                  "type": "input",
+                  "block_id": "xm2",
+                  "label": {
+                    "type": "plain_text",
+                    "text": "디자이너명",
+                    "emoji": true
+                  },
+                  "optional": false,
+                  "dispatch_action": true,
+                  "element": {
+                    "type": "plain_text_input",
+                    "action_id": "plain_text_input-action",
+                    "dispatch_action_config": {
+                      "trigger_actions_on": [
+                        "on_character_entered"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "context",
+                  "block_id": "dXBH9",
+                  "elements": [
                     {
-                      "text": {
-                        "type": "plain_text",
-                        "text": "무료",
-                        "emoji": true
+                      "type": "plain_text",
+                      "text": " ",
+                      "emoji": true
+                    }
+                  ]
+                },
+                {
+                  "type": "input",
+                  "block_id": "gDd",
+                  "label": {
+                    "type": "plain_text",
+                    "text": "원본 사진 링크",
+                    "emoji": true
+                  },
+                  "optional": false,
+                  "dispatch_action": true,
+                  "element": {
+                    "type": "plain_text_input",
+                    "action_id": "plain_text_input-action",
+                    "dispatch_action_config": {
+                      "trigger_actions_on": [
+                        "on_character_entered"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "context",
+                  "block_id": "fIR",
+                  "elements": [
+                    {
+                      "type": "plain_text",
+                      "text": " ",
+                      "emoji": true
+                    }
+                  ]
+                },
+                {
+                  "type": "input",
+                  "block_id": "fx7",
+                  "label": {
+                    "type": "plain_text",
+                    "text": "촬영비",
+                    "emoji": true
+                  },
+                  "optional": false,
+                  "dispatch_action": false,
+                  "element": {
+                    "type": "radio_buttons",
+                    "action_id": "radio_buttons-action",
+                    "options": [
+                      {
+                        "text": {
+                          "type": "plain_text",
+                          "text": "유료",
+                          "emoji": true
+                        },
+                        "value": "value-0"
                       },
-                      "value": "value-1"
+                      {
+                        "text": {
+                          "type": "plain_text",
+                          "text": "무료",
+                          "emoji": true
+                        },
+                        "value": "value-1"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "context",
+                  "block_id": "VY=",
+                  "elements": [
+                    {
+                      "type": "plain_text",
+                      "text": " ",
+                      "emoji": true
                     }
                   ]
                 }
+              ],
+              "close": {
+                "type": "plain_text",
+                "text": "취소",
+                "emoji": true
               },
-              {
-                "type": "context",
-                "block_id": "VY=",
-                "elements": [
-                  {
-                    "type": "plain_text",
-                    "text": " ",
-                    "emoji": true
-                  }
-                ]
-              }
-            ],
-            "close": {
-              "type": "plain_text",
-              "text": "취소",
-              "emoji": true
-            },
-            "submit": {
-              "type": "plain_text",
-              "text": "공유하기",
-              "emoji": true
-            },
-          }
-        };
-        await requestSystem("https://slack.com/api/views.open", modalJson, {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + instance.slack_userToken,
-          }
-        });
-
-        resultJson = { "message": "done" }
-
-      } else {
-
-        resultJson = { "message": "done" }
+              "submit": {
+                "type": "plain_text",
+                "text": "공유하기",
+                "emoji": true
+              },
+            }
+          };
+          await requestSystem("https://slack.com/api/views.open", modalJson, {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + instance.slack_userToken,
+            }
+          });
+  
+          resultJson = { "message": "done" }
+  
+        } else {
+          resultJson = { "message": "done" }
+        }
 
       }
+
       res.send(JSON.stringify(resultJson));
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackTest): " + e.message).catch((e) => { console.log(e); });
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackForm): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
