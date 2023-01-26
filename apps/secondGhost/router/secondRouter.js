@@ -1301,7 +1301,7 @@ SecondRouter.prototype.rou_post_slackTest = function () {
         },
         "api_app_id": "A02",
         "token": thisBody.payload.token,
-        "trigger_id": "123456789.123456789",
+        "trigger_id": thisBody.payload.trigger_id,
         "view": {
           "id": "V1234567890",
           "team_id": "TM3N97Z9V",
