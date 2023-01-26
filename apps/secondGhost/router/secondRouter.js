@@ -1407,7 +1407,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
                 "dispatch_action": false,
                 "element": {
                   "type": "radio_buttons",
-                  "action_id": "radio_buttons-action",
+                  "action_id": "payInput",
                   "options": [
                     {
                       "text": {
@@ -1470,9 +1470,11 @@ SecondRouter.prototype.rou_post_slackForm = function () {
             console.log(thisBody.payload.view.state.values);
             console.log(thisBody.payload.view.state.values.pay);
 
-
+            console.log(thisBody.view.state.values.client.clientInput.value)
+            console.log(thisBody.view.state.values.designer.designerInput.value)
+            console.log(thisBody.view.state.values.link.linkInput.value)
+            console.log(thisBody.view.state.values.pay.payInput.selected_option.value)
             
-
 
 
             resultJson = {
