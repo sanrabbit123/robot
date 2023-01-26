@@ -64,6 +64,9 @@ const SecondRouter = function (slack_bot, MONGOC, MONGOLOCALC, slack_userToken, 
       "C02FBSYM40G": "file",
       "C02KKLHUVBJ": "call",
       "C04H4LBJZ3R": "emergency_alarm",
+      "D04M3GWK3TJ": "jieun",
+      "C04LB1RBWQ5": "plan",
+      "D04LDNF1RQT": "clare",
     }
   };
 
@@ -1068,9 +1071,6 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
 
       if (typeof thisBody.event === "object") {
         if (thisBody.event.type === "message") {
-
-          console.log(thisBody.event);
-
           if (channelDictionary[thisBody.event.channel] !== undefined && userDictionary[thisBody.event.user] !== undefined) {
             text = `(${channelDictionary[thisBody.event.channel]}) ${userDictionary[thisBody.event.user]} : ${thisBody.event.text}`;
             thisChannel = "general";
@@ -1080,10 +1080,16 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
               thisChannel = "operation";
             } else if (/request/gi.test(channelDictionary[thisBody.event.channel])) {
               thisChannel = "request";
+            } else if (/plan/gi.test(channelDictionary[thisBody.event.channel])) {
+              thisChannel = "plan";
+            } else if (/clare/gi.test(channelDictionary[thisBody.event.channel])) {
+              thisChannel = "clare";
+            } else if (/jyeun/gi.test(channelDictionary[thisBody.event.channel])) {
+              thisChannel = "jyeun";
             }
             ajaxJson({ chat_id: telegram.chat[thisChannel], text }, telegram.url(telegram.token)).catch((err) => {
               instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + err.message).catch((e) => { console.log(e); });
-            })
+            });
           }
         }
         

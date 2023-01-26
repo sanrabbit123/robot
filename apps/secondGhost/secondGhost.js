@@ -22,6 +22,9 @@ const SecondGhost = function (mother = null, back = null, address = null) {
       notice: "-896011842",
       operation: "-895560263",
       request: "-625365105",
+      plan: "-799916015",
+      clare: "-882308233",
+      jyeun: "-835972543",
     },
     bot: {
       log: "-741702420",
