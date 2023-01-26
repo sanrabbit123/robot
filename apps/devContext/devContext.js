@@ -146,11 +146,8 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-    
 
-    // const { WebClient } = require("@slack/web-api");
-    // const slack_bot = new WebClient("xoxp-717757271335-4693762967475-4723976908816-94869470cce7af216e5fb9b1b09c00c2");
-    // await slack_bot.chat.postMessage({ text: "안녕하세요", channel: "C04LB1RBWQ5" });
+
 
     
     /*

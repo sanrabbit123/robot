@@ -1066,10 +1066,13 @@ SecondRouter.prototype.rou_post_telegramEvents = function () {
           if (id === telegram.chat.plan) {
             targetChannel = keyArr[valueArr.findIndex((str) => { return str === "plan" })]
           } else if (id === telegram.chat.clare) {
-            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "plan" })]
+            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "clare" })]
           } else if (id === telegram.chat.jyeun) {
-            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "plan" })]
+            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "jyeun" })]
           }
+
+          console.log(targetChannel);
+
           await slack_user.chat.postMessage({ text, channel: targetChannel });
         }
       }
