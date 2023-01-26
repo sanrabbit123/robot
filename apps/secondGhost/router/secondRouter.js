@@ -1059,10 +1059,15 @@ SecondRouter.prototype.rou_post_telegramEvents = function () {
           const keyArr = Object.keys(channelDictionary);
           let valueArr;
           let targetChannel;
+
           valueArr = [];
           for (let key of keyArr) {
             valueArr.push(channelDictionary[key]);
           }
+
+          console.log(valueArr);
+          console.log(keyArr)
+
           if (id === telegram.chat.plan) {
             targetChannel = keyArr[valueArr.findIndex((str) => { return str === "plan" })]
           } else if (id === telegram.chat.clare) {
