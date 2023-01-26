@@ -1444,9 +1444,7 @@ SecondRouter.prototype.rou_post_slackTest = function () {
             "text": "공유하기",
             "emoji": true
           },
-          "response_urls": [
-            "https://home-liaison.net/slackTest",
-          ],
+          "response_url": "https://home-liaison.net/slackTest",
         }
       };
       await requestSystem("https://slack.com/api/views.open", modalJson, {
