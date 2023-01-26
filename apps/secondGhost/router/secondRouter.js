@@ -1037,6 +1037,33 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_telegramEvents = function () {
+  const instance = this;
+  const { secondHost, slack_info: { userDictionary, channelDictionary }, telegram } = this;
+  const { errorLog, messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/telegramEvents" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const thisBody = equalJson(req.body);
+
+      console.log(thisBody);
+
+      res.send(JSON.stringify({ message: "OK" }));
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_telegramEvents): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_rawImageParsing = function () {
   const instance = this;
   const back = this.back;
