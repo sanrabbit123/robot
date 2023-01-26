@@ -1460,7 +1460,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
             "Authorization": "Bearer " + instance.slack_userToken,
           }
         });
-        resultJson = { "message": "done" }
+        resultJson = { "message": "done" };
 
       } else if (req.url === "/slackForm") {
 
