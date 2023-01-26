@@ -1068,6 +1068,9 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
 
       if (typeof thisBody.event === "object") {
         if (thisBody.event.type === "message") {
+
+          console.log(thisBody.event);
+
           if (channelDictionary[thisBody.event.channel] !== undefined && userDictionary[thisBody.event.user] !== undefined) {
             text = `(${channelDictionary[thisBody.event.channel]}) ${userDictionary[thisBody.event.user]} : ${thisBody.event.text}`;
             thisChannel = "general";
