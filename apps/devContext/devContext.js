@@ -312,7 +312,7 @@ DevContext.prototype.launching = async function () {
       blocks.push(normalButtonSection(designerWording, "프로젝트 (" + String(thisProjects.filter((p) => { return /진행/gi.test(p.process.status) }).length + thisProjects.filter((p) => { return /대기/gi.test(p.process.status) }).length) + "건) 상세"));
     }
 
-    res = await requestSystem("https://slack.com/api/views.publish", { user_id: "U04LDNEUFDZ", view: { type, blocks } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
+    res = await requestSystem("https://slack.com/api/views.publish", { user_id: "U04LDNEUFDZ", view: { type, blocks, callback_id: "home_projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
   
     await this.MONGOCONSOLEC.close();
 
