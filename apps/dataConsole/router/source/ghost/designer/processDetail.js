@@ -9202,13 +9202,13 @@ ProcessDetailJs.prototype.insertPayFirstBox = function () {
   panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
 
   circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
-  circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1 %%>;
-  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? 11.1 : 11.5) %%>;
+  circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
+  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? 10.9 : 11.5) %%>;
 
   arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
   arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
 
-  subButtonWidth = <%% 90, 90, 80, 70, 10 %%>;
+  subButtonWidth = <%% 90, 70, 70, 56, 15 %%>;
 
   mobileVisualPaddingValue = 0.2;
 
@@ -9252,7 +9252,7 @@ ProcessDetailJs.prototype.insertPayFirstBox = function () {
       ],
       [
         {
-          title: "선금액",
+          title: "선금",
           active: true,
           click: null,
         },
@@ -9264,7 +9264,7 @@ ProcessDetailJs.prototype.insertPayFirstBox = function () {
       ],
       [
         {
-          title: "잔금액",
+          title: "잔금",
           active: false,
           click: null,
         },
@@ -9449,7 +9449,7 @@ ProcessDetailJs.prototype.insertPayFirstBox = function () {
                     width: String(buttonHeight) + ea,
                     height: String(buttonHeight) + ea,
                     marginRight: String(buttonInnerMargin) + ea,
-                    display: "inline-flex",
+                    display: media[0] ? "inline-flex" : "none",
                     position: "relative",
                     borderRadius: String(5) + "px",
                     background: colorChip.gray0,
@@ -9499,7 +9499,7 @@ ProcessDetailJs.prototype.insertPayFirstBox = function () {
                 },
                 {
                   style: {
-                    width: String(buttonWidth - ((buttonInnerMargin + buttonHeight) * 2) - (subButtonWidth + buttonInnerMargin)) + ea,
+                    width: String(buttonWidth - ((buttonInnerMargin + buttonHeight) * (media[0] ? 2 : 1)) - (subButtonWidth + buttonInnerMargin)) + ea,
                     height: String(buttonHeight) + ea,
                     display: "inline-flex",
                     flexDirection: "column",
@@ -9509,7 +9509,6 @@ ProcessDetailJs.prototype.insertPayFirstBox = function () {
                     borderRadius: String(5) + "px",
                     background: colorChip.white,
                     marginBottom: index !== contents.buttonSet[i].length - 1 ? String(buttonInnerMargin) + ea : "",
-                    cursor: "pointer",
                   },
                   child: {
                     text: contents.buttonSet[i][index][1].title,
