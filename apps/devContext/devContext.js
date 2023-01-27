@@ -146,14 +146,175 @@ DevContext.prototype.launching = async function () {
     // }
 
 
+    await this.MONGOCONSOLEC.connect();
 
 
+    const selfMongo = this.MONGOC;
+    const selfConsoleMongo = this.MONGOCONSOLEC;
+    const slack_userToken = "xoxb-717757271335-4566120587107-i7TxxYzbPWPzdBMPoZDo2kxn";
+    const firstResponseLink = "https://docs.google.com/spreadsheets/d/1EsYgzt-itSq_hWjYBkSwOgorpOWCjoe9_gmfCtBtlZ4/edit?usp=sharing";
+    const divider = () => {
+      return {
+        "type": "divider"
+      };
+    }
+    const header = (text) => {
+      return {
+        "type": "header",
+        "text": {
+          "type": "plain_text",
+          "text": text,
+          "emoji": true
+        }
+      }
+    }
+    const blank = () => {
+      return {
+        "type": "section",
+        "text": {
+          "type": "plain_text",
+          "text": " ",
+          "emoji": true
+        }
+      };
+    }
+    const blankDivider = () => {
+      return [
+        blank(),
+        divider()
+      ]
+    }
+    const linkButtonSection = (text, buttonText, buttonLink) => {
+      return {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": text
+        },
+        "accessory": {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "text": buttonText,
+            "emoji": true
+          },
+          "value": "click_me_123",
+          "url": buttonLink,
+          "action_id": "button-action"
+        }
+      }
+    }
+    const normalButtonSection = (text, buttonText) => {
+      return {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": text
+        },
+        "accessory": {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "text": buttonText,
+            "emoji": true
+          },
+          "value": "click_me_123",
+          "action_id": "button-action"
+        }
+      };
+    }
+    let type;
+    let blocks;
+    let res;
+    let designers;
+    let designerHistories;
+    let todayString;
+    let filtered;
+    let thisDesigner;
+    let allProjects;
+    let thisProjects;
+    let designerWording;
+    let processLength, stayLength;
 
+    todayString = dateToString(new Date()).split("-").map((str, index) => { return String(Number(str)) + ([ "년 ", "월 ", "일" ][index]) }).join("");
 
-    
+    designers = (await back.getDesignersByQuery({}, { selfMongo })).toNormal();
+    designerHistories = await back.mongoRead("designerHistory", {}, { selfMongo: selfConsoleMongo });
+    allProjects = (await back.getProjectsByQuery({ "process.contract.first.date": { $gte: new Date(2000, 0, 1) } })).toNormal();
 
+    type = "home";
 
+    blocks = [
+      header(todayString),
+      ...blankDivider(),
+      header("1차 응대 현황"),
+      linkButtonSection("Jini 5명 / 이큰별 3명 / Pepper 3명", "구글 시트", firstResponseLink),
+      ...blankDivider(),
+      header("프로젝트 관리"),
+      blank(),
+    ];
 
+    filtered = designerHistories.filter((obj) => { return /이큰별/gi.test(obj.manager) });
+    processLength = 0;
+    stayLength = 0;
+    for (let { desid } of filtered) {
+      thisDesigner = designers.find((d) => { return d.desid === desid });
+      thisProjects = allProjects.filter((p) => { return p.desid === desid });
+      processLength += thisProjects.filter((p) => { return /진행/gi.test(p.process.status) }).length;
+      stayLength += thisProjects.filter((p) => { return /대기/gi.test(p.process.status) }).length;
+    }
+    blocks.push(header("이큰별 : 디자이너 " + String(filtered.length) + "명 => " + "진행중 " + String(processLength) + "건 / " + "대기 " + String(stayLength) + "건"));
+    blocks.push(blank());
+    for (let { desid } of filtered) {
+      thisDesigner = designers.find((d) => { return d.desid === desid });
+      thisProjects = allProjects.filter((p) => { return p.desid === desid });
+
+      designerWording = "";
+      designerWording += thisDesigner.designer + " 디자이너";
+      designerWording += " => ";
+
+      designerWording += "진행중 " + String(thisProjects.filter((p) => { return /진행/gi.test(p.process.status) }).length) + "건";
+      designerWording += " / ";
+      designerWording += "대기 " + String(thisProjects.filter((p) => { return /대기/gi.test(p.process.status) }).length) + "건";
+
+      blocks.push(normalButtonSection(designerWording, "프로젝트 (" + String(thisProjects.filter((p) => { return /진행/gi.test(p.process.status) }).length + thisProjects.filter((p) => { return /대기/gi.test(p.process.status) }).length) + "건) 상세"));
+    }
+
+    blocks.push(blank());
+    blocks.push(blank());
+    blocks.push(divider());
+    blocks.push(blank());
+
+    filtered = designerHistories.filter((obj) => { return /임지민/gi.test(obj.manager) });
+    processLength = 0;
+    stayLength = 0;
+    for (let { desid } of filtered) {
+      thisDesigner = designers.find((d) => { return d.desid === desid });
+      thisProjects = allProjects.filter((p) => { return p.desid === desid });
+      processLength += thisProjects.filter((p) => { return /진행/gi.test(p.process.status) }).length;
+      stayLength += thisProjects.filter((p) => { return /대기/gi.test(p.process.status) }).length;
+    }
+    blocks.push(header("임지민 : 디자이너 " + String(filtered.length) + "명 => " + "진행중 " + String(processLength) + "건 / " + "대기 " + String(stayLength) + "건"));
+    blocks.push(blank());
+    for (let { desid } of filtered) {
+      thisDesigner = designers.find((d) => { return d.desid === desid });
+
+      thisProjects = allProjects.filter((p) => { return p.desid === desid });
+
+      designerWording = "";
+      designerWording += thisDesigner.designer + " 디자이너";
+      designerWording += " => ";
+
+      designerWording += "진행중 " + String(thisProjects.filter((p) => { return /진행/gi.test(p.process.status) }).length) + "건";
+      designerWording += " / ";
+      designerWording += "대기 " + String(thisProjects.filter((p) => { return /대기/gi.test(p.process.status) }).length) + "건";
+
+      blocks.push(normalButtonSection(designerWording, "프로젝트 (" + String(thisProjects.filter((p) => { return /진행/gi.test(p.process.status) }).length + thisProjects.filter((p) => { return /대기/gi.test(p.process.status) }).length) + "건) 상세"));
+    }
+
+    res = await requestSystem("https://slack.com/api/views.publish", { user_id: "U04LDNEUFDZ", view: { type, blocks } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
+  
+    await this.MONGOCONSOLEC.close();
 
 
 

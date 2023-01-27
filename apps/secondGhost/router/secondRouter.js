@@ -1464,6 +1464,8 @@ SecondRouter.prototype.rou_post_slackForm = function () {
 
       } else if (req.url === "/slackForm") {
 
+        console.log(thisBody);
+
         if (typeof thisBody.payload === "object" && thisBody.payload.type === "view_submission") {
 
           if (thisBody.payload.view.callback_id === "rawPhoto") {
