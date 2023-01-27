@@ -730,11 +730,11 @@ Mother.prototype.binaryRequest = function (to, port = null, headers = null) {
             let binary = Buffer.concat(chunks);
             resolve(binary);
         });
-        res.on('error', function (e) {
+        res.on('error', (e) => {
             reject(e);
         });
     });
-    req.on('error', function (e) { reject(e); });
+    req.on('error', (e) => { reject(e); });
     req.end();
   });
 }

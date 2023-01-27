@@ -3391,7 +3391,7 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
   const formSync = async (MONGOC, MONGOPYTHONC) => {
     try {
       const selfMongo = MONGOPYTHONC;
-      let eformResponse, token;
+      let widsignResponse, token;
       let num;
       let forms, resultForms, finalForms;
       let pageSize;
@@ -3410,18 +3410,18 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
         monthAgoValue = monthAgoValue.valueOf();
 
         pageSize = 30;
-        eformResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+        widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
 
-        if (eformResponse.data.result_code !== 200) {
+        if (widsignResponse.data.result_code !== 200) {
           throw new Error("access token error");
         } else {
-          token = eformResponse.data.access_token;
+          token = widsignResponse.data.access_token;
           resultForms = [];
           forms = [ null ];
           num = 1;
           while (forms.length > 0) {
-            eformResponse = await requestSystem(endPoint + "/v2/doc", { page: num, page_size: pageSize }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-            forms = equalJson(JSON.stringify(eformResponse.data.result)).map((obj) => {
+            widsignResponse = await requestSystem(endPoint + "/v2/doc", { page: num, page_size: pageSize }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+            forms = equalJson(JSON.stringify(widsignResponse.data.result)).map((obj) => {
               let newObj;
               newObj = {};
               newObj.form = obj.form_id;
@@ -3451,8 +3451,13 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
             }
           }
 
-          whereQuery = { $or: finalForms.map((obj) => { return { name: obj.name } }) };
+          widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+          if (widsignResponse.data.result_code !== 200) {
+            throw new Error("access token error");
+          }
+          token = widsignResponse.data.access_token;
 
+          whereQuery = { $or: finalForms.map((obj) => { return { name: obj.name } }) };
           dbForms = await back.mongoRead(collection, whereQuery, { selfMongo });
           for (let f of dbForms) {
             whereQuery = { proid: f.proid };
@@ -3466,19 +3471,19 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
             }
 
             if (target !== null) {
-              eformResponse = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-              if (typeof eformResponse.data === "object") {
-                if (eformResponse.data.result !== undefined) {
-                  if (eformResponse.data.result.receiver_list.length > 0) {
+              widsignResponse = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+              if (typeof widsignResponse.data === "object") {
+                if (widsignResponse.data.result !== undefined) {
+                  if (widsignResponse.data.result.receiver_list.length > 0) {
                     updateQuery["id"] = target.id;
                     updateQuery["date"] = target.date;
                     updateQuery["confirm"] = target.confirm;
                     updateQuery["form"] = target.form;
-                    updateQuery["detail"] = eformResponse.data.result.receiver_list[0];
-                    eformResponse = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-                    if (typeof eformResponse.data === "object") {
-                      if (Array.isArray(eformResponse.data.result)) {
-                        updateQuery["history"] = eformResponse.data.result.map((obj) => {
+                    updateQuery["detail"] = widsignResponse.data.result.receiver_list[0];
+                    widsignResponse = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                    if (typeof widsignResponse.data === "object") {
+                      if (Array.isArray(widsignResponse.data.result)) {
+                        updateQuery["history"] = widsignResponse.data.result.map((obj) => {
                           obj.date = stringToDate(obj.created_date);
                           delete obj.created_date;
                           return obj;

@@ -23,6 +23,8 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.staticConst = process.env.HOME + "/static";
   this.folderConst = this.staticConst + "/photo/designer";
   this.clientConst = this.staticConst + "/photo/client";
+  this.contractLinkConst = "/photo/contract";
+  this.contractConst = this.staticConst + this.contractLinkConst;
   this.userLinkConst = "/photo/user";
   this.userConst = this.staticConst + this.userLinkConst;
   this.hashConst = "homeliaisonHash";
@@ -1291,6 +1293,49 @@ TransferRouter.prototype.rou_post_excelToMatrix = function () {
       });
     } catch (e) {
       errorLog("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_contractList = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
+  const { contractLinkConst, contractConst } = this;
+  const address = this.address;
+  let obj;
+  obj = {};
+  obj.link = [ "/contractList" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const splitToken = "__split__";
+      const rawList = await fileSystem("readDir", [ contractConst ]);
+      let result;
+
+      result = rawList.filter((str) => { return !/^\./.test(str) }).map((rawString) => {
+        const [ proid, cliid, requestNumberString, idFileExe ] = rawString.split(splitToken);
+        const [ id, zip ] = idFileExe.split(".");
+        return {
+          proid,
+          cliid,
+          requestNumber: Number(requestNumberString),
+          id,
+          fileName: rawString,
+          downloadLink: "https://" + address.transinfo.host + contractLinkConst + "/" + rawString,
+        }
+      });
+
+      res.send(JSON.stringify(result));
+
+    } catch (e) {
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_contractList): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
