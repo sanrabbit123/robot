@@ -1276,7 +1276,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
   const back = this.back;
   const address = this.address;
   const { secondHost, slack_info: { userDictionary, channelDictionary }, telegram } = this;
-  const { errorLog, messageSend, equalJson, ajaxJson, requestSystem } = this.mother;
+  const { errorLog, messageSend, equalJson, ajaxJson, requestSystem, dateToString } = this.mother;
 
   const divider = () => {
     return {
@@ -1576,7 +1576,11 @@ SecondRouter.prototype.rou_post_slackForm = function () {
               buttonText += thisClient.name + " 고객님";
               buttonText += " / ";
               buttonText += project.process.status;
-              
+              buttonText += " => ";
+              buttonText += dateToString(project.process.contract.form.date.from).slice(2);
+              buttonText += " ~ ";
+              buttonText += dateToString(project.process.contract.form.date.to).slice(2);
+
               modalJson.view.blocks.push(linkButtonSection(buttonText, "콘솔", "https://" + address.backinfo.host + "/project?proid=" + project.proid));
             }
 
