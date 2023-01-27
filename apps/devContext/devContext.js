@@ -149,12 +149,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-    const res = await requestSystem("https://" + address.pythoninfo.host + ":3000/stylingFormFile", { data: null }, { headers: { "Content-Type": "application/json" } });;
-
-    console.log(res);
-
-
+    
+    
 
 
 

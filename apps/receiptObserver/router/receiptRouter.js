@@ -3513,6 +3513,7 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
         }
 
       }
+      
       errorLog("styling form sync success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
 
     } catch (e) {

@@ -1332,6 +1332,15 @@ TransferRouter.prototype.rou_post_contractList = function () {
         }
       });
 
+      if (req.body.mode === "search" && typeof req.body.proid === "string") {
+        result = result.filter((obj) => { return obj.proid === req.body.proid });
+        if (result.length > 0) {
+          result = { contract: result[0] };
+        } else {
+          result = { contract: null };
+        }
+      }
+
       res.send(JSON.stringify(result));
 
     } catch (e) {
