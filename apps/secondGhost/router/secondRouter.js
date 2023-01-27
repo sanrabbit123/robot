@@ -1274,6 +1274,7 @@ SecondRouter.prototype.rou_post_rawContentsSync = function () {
 SecondRouter.prototype.rou_post_slackForm = function () {
   const instance = this;
   const back = this.back;
+  const address = this.address;
   const { secondHost, slack_info: { userDictionary, channelDictionary }, telegram } = this;
   const { errorLog, messageSend, equalJson, ajaxJson, requestSystem } = this.mother;
 
@@ -1365,6 +1366,10 @@ SecondRouter.prototype.rou_post_slackForm = function () {
       let thisDesigner;
       let allProjects;
       let processArr, stayArr;
+      let targetArr;
+      let buttonText;
+      let allClients;
+      let thisClient;
 
       resultJson = { "message": "done" };
       finalValues = {};
@@ -1531,9 +1536,14 @@ SecondRouter.prototype.rou_post_slackForm = function () {
             desid = thisBody.payload.actions[0].value;
             thisDesigner = await back.getDesignerById(desid, { selfMongo: instance.mongo });
             allProjects = (await back.getProjectsByQuery({ $and: [ { "desid": thisDesigner.desid }, { "process.contract.first.date": { $gte: new Date(2000, 0, 1) } } ] }, { selfMongo: instance.mongo })).toNormal();
+            if (allProjects.length === 0) {
+              allClients = [];
+            } else {
+              allClients = (await back.getClientsByQuery({ $or: allProjects.map(({ cliid }) => { return { cliid }; }) }, { selfMongo: instance.mongo })).toNormal();
+            }
             processArr = allProjects.filter((p) => { return /진행/gi.test(p.process.status) });
             stayArr = allProjects.filter((p) => { return /대기/gi.test(p.process.status) });
-      
+            targetArr = stayArr.concat(processArr);
 
             modalJson = {
               "trigger_id": triggerId,
@@ -1558,8 +1568,17 @@ SecondRouter.prototype.rou_post_slackForm = function () {
               }
             };
 
-            for (let project of allProjects) {
-              modalJson.view.blocks.push(linkButtonSection(project.proid, "console", "https://google.com"));
+            for (let project of targetArr) {
+
+              thisClient = allClients.find(({ cliid }) => { return cliid === project.cliid });
+
+              buttonText = project.proid;
+              buttonText += " => ";
+              buttonText += thisClient.name + " 고객님";
+              buttonText += " / ";
+              buttonText += project.process.status;
+              
+              modalJson.view.blocks.push(linkButtonSection(buttonText, "콘솔", "https://" + address.backinfo.host + "/project?proid=" + project.proid));
             }
 
             await requestSystem("https://slack.com/api/views.open", modalJson, {
