@@ -1273,8 +1273,81 @@ SecondRouter.prototype.rou_post_rawContentsSync = function () {
 
 SecondRouter.prototype.rou_post_slackForm = function () {
   const instance = this;
+  const back = this.back;
   const { secondHost, slack_info: { userDictionary, channelDictionary }, telegram } = this;
   const { errorLog, messageSend, equalJson, ajaxJson, requestSystem } = this.mother;
+
+  const divider = () => {
+    return {
+      "type": "divider"
+    };
+  }
+  const header = (text) => {
+    return {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": text,
+        "emoji": true
+      }
+    }
+  }
+  const blank = () => {
+    return {
+      "type": "section",
+      "text": {
+        "type": "plain_text",
+        "text": " ",
+        "emoji": true
+      }
+    };
+  }
+  const blankDivider = () => {
+    return [
+      blank(),
+      divider()
+    ]
+  }
+  const linkButtonSection = (text, buttonText, buttonLink) => {
+    return {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": text
+      },
+      "accessory": {
+        "type": "button",
+        "text": {
+          "type": "plain_text",
+          "text": buttonText,
+          "emoji": true
+        },
+        "value": "click_me_123",
+        "url": buttonLink,
+        "action_id": "button-action"
+      }
+    }
+  }
+  const normalButtonSection = (text, buttonText, actionId, buttonValue) => {
+    return {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": text
+      },
+      "accessory": {
+        "type": "button",
+        "text": {
+          "type": "plain_text",
+          "text": buttonText,
+          "emoji": true
+        },
+        "value": buttonValue,
+        "action_id": actionId
+      }
+    };
+  }
+
   let obj = {};
   obj.link = [ "/slackForm", "/slackForm_rawPhoto" ];
   obj.func = async function (req, res) {
@@ -1289,6 +1362,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
       let modalJson, resultJson;
       let finalValues;
       let desid, triggerId;
+      let thisDesigner;
 
       resultJson = { "message": "done" };
       finalValues = {};
@@ -1325,17 +1399,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
                   }
                 }
               },
-              {
-                "type": "context",
-                "block_id": "zlUbD",
-                "elements": [
-                  {
-                    "type": "plain_text",
-                    "text": " ",
-                    "emoji": true
-                  }
-                ]
-              },
+              blank(),
               {
                 "type": "input",
                 "block_id": "designer",
@@ -1356,17 +1420,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
                   }
                 }
               },
-              {
-                "type": "context",
-                "block_id": "dXBH9",
-                "elements": [
-                  {
-                    "type": "plain_text",
-                    "text": " ",
-                    "emoji": true
-                  }
-                ]
-              },
+              blank(),
               {
                 "type": "input",
                 "block_id": "link",
@@ -1387,17 +1441,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
                   }
                 }
               },
-              {
-                "type": "context",
-                "block_id": "fIR",
-                "elements": [
-                  {
-                    "type": "plain_text",
-                    "text": " ",
-                    "emoji": true
-                  }
-                ]
-              },
+              blank(),
               {
                 "type": "input",
                 "block_id": "pay",
@@ -1431,17 +1475,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
                   ]
                 }
               },
-              {
-                "type": "context",
-                "block_id": "VY=",
-                "elements": [
-                  {
-                    "type": "plain_text",
-                    "text": " ",
-                    "emoji": true
-                  }
-                ]
-              }
+              blank(),
             ],
             "close": {
               "type": "plain_text",
@@ -1493,7 +1527,8 @@ SecondRouter.prototype.rou_post_slackForm = function () {
 
             triggerId = thisBody.payload.trigger_id;
             desid = thisBody.payload.actions[0].value;
-
+            thisDesigner = await back.getDesignerById(desid, { selfMongo: instance.mongo });
+            
             modalJson = {
               "trigger_id": triggerId,
               "view": {
@@ -1501,147 +1536,9 @@ SecondRouter.prototype.rou_post_slackForm = function () {
                 "callback_id": "projectCareDetail",
                 "title": {
                   "type": "plain_text",
-                  "text": "프로젝트 상세"
+                  "text": thisDesigner.designer + " 프로젝트 상세"
                 },
-                "blocks": [
-                  {
-                    "type": "input",
-                    "block_id": "client",
-                    "label": {
-                      "type": "plain_text",
-                      "text": "고객명",
-                      "emoji": true
-                    },
-                    "optional": false,
-                    "dispatch_action": true,
-                    "element": {
-                      "type": "plain_text_input",
-                      "action_id": "clientInput",
-                      "dispatch_action_config": {
-                        "trigger_actions_on": [
-                          "on_character_entered"
-                        ]
-                      }
-                    }
-                  },
-                  {
-                    "type": "context",
-                    "block_id": "zlUbD",
-                    "elements": [
-                      {
-                        "type": "plain_text",
-                        "text": " ",
-                        "emoji": true
-                      }
-                    ]
-                  },
-                  {
-                    "type": "input",
-                    "block_id": "designer",
-                    "label": {
-                      "type": "plain_text",
-                      "text": "디자이너명",
-                      "emoji": true
-                    },
-                    "optional": false,
-                    "dispatch_action": true,
-                    "element": {
-                      "type": "plain_text_input",
-                      "action_id": "designerInput",
-                      "dispatch_action_config": {
-                        "trigger_actions_on": [
-                          "on_character_entered"
-                        ]
-                      }
-                    }
-                  },
-                  {
-                    "type": "context",
-                    "block_id": "dXBH9",
-                    "elements": [
-                      {
-                        "type": "plain_text",
-                        "text": " ",
-                        "emoji": true
-                      }
-                    ]
-                  },
-                  {
-                    "type": "input",
-                    "block_id": "link",
-                    "label": {
-                      "type": "plain_text",
-                      "text": "원본 사진 링크",
-                      "emoji": true
-                    },
-                    "optional": false,
-                    "dispatch_action": true,
-                    "element": {
-                      "type": "plain_text_input",
-                      "action_id": "linkInput",
-                      "dispatch_action_config": {
-                        "trigger_actions_on": [
-                          "on_character_entered"
-                        ]
-                      }
-                    }
-                  },
-                  {
-                    "type": "context",
-                    "block_id": "fIR",
-                    "elements": [
-                      {
-                        "type": "plain_text",
-                        "text": " ",
-                        "emoji": true
-                      }
-                    ]
-                  },
-                  {
-                    "type": "input",
-                    "block_id": "pay",
-                    "label": {
-                      "type": "plain_text",
-                      "text": "촬영비",
-                      "emoji": true
-                    },
-                    "optional": false,
-                    "dispatch_action": false,
-                    "element": {
-                      "type": "radio_buttons",
-                      "action_id": "payInput",
-                      "options": [
-                        {
-                          "text": {
-                            "type": "plain_text",
-                            "text": "유료",
-                            "emoji": true
-                          },
-                          "value": "paid"
-                        },
-                        {
-                          "text": {
-                            "type": "plain_text",
-                            "text": "무료",
-                            "emoji": true
-                          },
-                          "value": "free"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "type": "context",
-                    "block_id": "VY=",
-                    "elements": [
-                      {
-                        "type": "plain_text",
-                        "text": " ",
-                        "emoji": true
-                      }
-                    ]
-                  }
-                ],
+                "blocks": [],
                 "close": {
                   "type": "plain_text",
                   "text": "취소",
@@ -1649,7 +1546,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
                 },
                 "submit": {
                   "type": "plain_text",
-                  "text": "공유하기",
+                  "text": "확인",
                   "emoji": true
                 },
               }
