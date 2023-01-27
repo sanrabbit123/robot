@@ -283,7 +283,7 @@ DevContext.prototype.launching = async function () {
 
       blocks.push(normalButtonSection(
         designerWording,
-        "프로젝트 (" + String(processArr.length + stayArr.length) + "건) 상세",
+        thisDesigner.designer + " 프로젝트 (" + String(processArr.length + stayArr.length) + "건) 상세",
         thisDesigner.desid + "_projects_button",
         thisDesigner.desid,
       ));
@@ -322,7 +322,7 @@ DevContext.prototype.launching = async function () {
 
       blocks.push(normalButtonSection(
         designerWording,
-        "프로젝트 (" + String(processArr.length + stayArr.length) + "건) 상세",
+        thisDesigner.designer + " 프로젝트 (" + String(processArr.length + stayArr.length) + "건) 상세",
         thisDesigner.desid + "_projects_button",
         thisDesigner.desid,
       ));

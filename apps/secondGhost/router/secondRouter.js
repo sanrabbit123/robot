@@ -1363,6 +1363,8 @@ SecondRouter.prototype.rou_post_slackForm = function () {
       let finalValues;
       let desid, triggerId;
       let thisDesigner;
+      let allProjects;
+      let processArr, stayArr;
 
       resultJson = { "message": "done" };
       finalValues = {};
@@ -1528,7 +1530,11 @@ SecondRouter.prototype.rou_post_slackForm = function () {
             triggerId = thisBody.payload.trigger_id;
             desid = thisBody.payload.actions[0].value;
             thisDesigner = await back.getDesignerById(desid, { selfMongo: instance.mongo });
-            
+            allProjects = (await back.getProjectsByQuery({ $and: [ { "desid": thisDesigner.desid }, { "process.contract.first.date": { $gte: new Date(2000, 0, 1) } } ] }, { selfMongo: instance.mongo })).toNormal();
+            processArr = allProjects.filter((p) => { return /진행/gi.test(p.process.status) });
+            stayArr = allProjects.filter((p) => { return /대기/gi.test(p.process.status) });
+      
+
             modalJson = {
               "trigger_id": triggerId,
               "view": {
@@ -1538,7 +1544,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
                   "type": "plain_text",
                   "text": thisDesigner.designer + " 프로젝트 상세"
                 },
-                "blocks": [],
+                "blocks": [ blank() ],
                 "close": {
                   "type": "plain_text",
                   "text": "취소",
@@ -1551,6 +1557,11 @@ SecondRouter.prototype.rou_post_slackForm = function () {
                 },
               }
             };
+
+            for (let project of allProjects) {
+              modalJson.view.blocks.push(linkButtonSection(project.proid, "console", "https://google.com"));
+            }
+
             await requestSystem("https://slack.com/api/views.open", modalJson, {
               headers: {
                 "Content-Type": "application/json",
