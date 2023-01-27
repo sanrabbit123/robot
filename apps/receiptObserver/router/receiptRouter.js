@@ -3385,7 +3385,8 @@ ReceiptRouter.prototype.rou_post_passiveResponse = function () {
 ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
   const instance = this;
   const { requestSystem, equalJson, stringToDate, messageLog, errorLog, messageSend } = this.mother;
-  const { officeinfo: { widsign: { id, key, endPoint } } } = this.address;
+  const address = this.address;
+  const { officeinfo: { widsign: { id, key, endPoint } } } = address;
   const collections = [ "stylingForm", "constructForm" ];
   const back = this.back;
   const formSync = async (MONGOC, MONGOPYTHONC) => {
@@ -3528,7 +3529,9 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      formSync(instance.mongo, instance.mongolocal).catch((err) => {
+      formSync(instance.mongo, instance.mongolocal).then(() => {
+        return requestSystem("https://" + address.pythoninfo.host + ":3000/stylingFormFile", { data: null }, { headers: { "Content-Type": "application/json" } });;
+      }).catch((err) => {
         errorLog("Python 서버 문제 생김 (rou_post_stylingFormSync): " + err.message).catch((e) => { console.log(e); });
       });
       res.send(JSON.stringify({ message: "will do" }));
@@ -3536,6 +3539,79 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
       errorLog("Python 서버 문제 생김 (rou_post_stylingFormSync): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error" }));
+    }
+  }
+  return obj;
+}
+
+ReceiptRouter.prototype.rou_post_stylingFormFile = function () {
+  const instance = this;
+  const { requestSystem, binaryRequest, fileSystem, shellExec, sleep, generalFileUpload, equalJson, stringToDate, messageLog, errorLog, messageSend } = this.mother;
+  const address = this.address;
+  const { officeinfo: { widsign: { id, key, endPoint } } } = address;
+  const back = this.back;
+  let obj = {};
+  obj.link = "/stylingFormFile";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongolocal;
+      const splitToken = "__split__";
+      const collection = "stylingForm";
+      let widsignResponse;
+      let token;
+      let rows;
+      let fileName;
+      let transRes;
+      let subtract;
+      let fileList;
+      let downloadTargets;
+      let fromArr, toArr;
+
+      rows = await back.mongoRead(collection, {}, { selfMongo });
+      rows = rows.filter((obj) => { return obj.confirm });
+  
+      transRes = await requestSystem("https://" + address.transinfo.host + ":3000/contractList", { data: null }, { headers: { "Content-Type": "application/json" } });
+
+      fileList = transRes.data.map((obj) => { return obj.proid });
+      subtract = rows.map((obj) => { return obj.proid }).filter((proid) => {
+        return !fileList.includes(proid);
+      });
+      downloadTargets = rows.filter((obj) => {
+        return subtract.includes(obj.proid);
+      });
+  
+      for (let { id: formId, proid, client: { cliid, requestNumber } } of downloadTargets) {
+        widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+        if (widsignResponse.data.result_code !== 200) {
+          throw new Error("access token error");
+        }
+        token = widsignResponse.data.access_token;
+        fileName = `${proid}${splitToken}${cliid}${splitToken}${requestNumber}${splitToken}${formId}.zip`;
+        widsignResponse = await binaryRequest(endPoint + "/v2/doc/download?receiver_meta_id=" + formId, null, { "x-api-key": key, "x-access-token": token });
+        await fileSystem(`writeBinary`, [ `${process.cwd()}/temp/${fileName}`, widsignResponse ]);
+  
+        fromArr = [ `${process.cwd()}/temp/${fileName}` ];
+        toArr = [ "/photo/contract/" + fileName ];
+        await generalFileUpload("https://" + address.transinfo.host + ":3000/generalFileUpload", fromArr, toArr);
+  
+        await sleep(300);
+        await shellExec("rm", [ "-rf", `${process.cwd()}/temp/${fileName}` ]);
+  
+      }
+
+      errorLog("styling form file success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      errorLog("Python 서버 문제 생김 (rou_post_stylingFormFile): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ message: "error " + e.message }));
     }
   }
   return obj;

@@ -150,36 +150,11 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // await this.MONGOPYTHONC.connect();
+    const res = await requestSystem("https://" + address.pythoninfo.host + ":3000/stylingFormFile", { data: null }, { headers: { "Content-Type": "application/json" } });;
 
-    // const selfMongo = this.MONGOPYTHONC;
-    // const { officeinfo: { widsign: { id, key, endPoint } } } = this.address;
-    // const splitToken = "__split__";
-    // let widsignResponse;
-    // let token;
-    // let formId;
-    // let rows;
-    // let fileName;
-
-    // rows = await back.mongoRead("stylingForm", {}, { selfMongo });
-    // rows = rows.filter((obj) => { return obj.confirm });
-    
-    // for (let { id: formId, proid, client: { cliid, requestNumber } } of rows) {
-    //   widsignResponse = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
-    //   token = widsignResponse.data.access_token;
-    //   fileName = `${proid}${splitToken}${cliid}${splitToken}${requestNumber}${splitToken}${formId}.zip`;
-    //   console.log(fileName);
-    //   widsignResponse = await binaryRequest(endPoint + "/v2/doc/download?receiver_meta_id=" + formId, null, { "x-api-key": key, "x-access-token": token });
-    //   await fileSystem(`writeBinary`, [ `${process.cwd()}/temp/${fileName}`, widsignResponse ])
-    //   await sleep(1000);
-    //   console.log("download done");
-    // }
-
-    // await this.MONGOPYTHONC.close();
+    console.log(res);
 
 
-
-    
 
 
 
