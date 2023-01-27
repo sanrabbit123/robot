@@ -8354,7 +8354,7 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
-  veryBigSize = <%% 23, 21, 20, 17, 4.4 %%>;
+  veryBigSize = <%% 23, 21, 20, 16, 4.4 %%>;
   veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
   veryBigTextTop = <%% -1, -1, -2, -1, -1 %%>;
 
@@ -8396,7 +8396,7 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
 
   circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
   circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1 %%>;
-  circleLeft = <%% -7, -7, -7, -7, (isIphone() ? 12.6 : 13) %%>;
+  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? 12.6 : 13) %%>;
 
   mobileVisualPaddingValue = 0.2;
 
@@ -8747,7 +8747,7 @@ ProcessDetailJs.prototype.insertMeetingBackBox = function () {
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
-  veryBigSize = <%% 23, 21, 20, 17, 4.4 %%>;
+  veryBigSize = <%% 23, 21, 20, 16, 4.4 %%>;
   veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
   veryBigTextTop = <%% -1, -1, -2, -1, -1 %%>;
 
@@ -8789,7 +8789,7 @@ ProcessDetailJs.prototype.insertMeetingBackBox = function () {
 
   circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
   circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1 %%>;
-  circleLeft = <%% -7, -7, -7, -7, (isIphone() ? 12.6 : 13) %%>;
+  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? 12.6 : 13) %%>;
 
   arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
   arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
@@ -9104,7 +9104,7 @@ ProcessDetailJs.prototype.insertMeetingBackBox = function () {
 
 }
 
-ProcessDetailJs.prototype.insertPhotoConfirmBox = function () {
+ProcessDetailJs.prototype.insertPayFirstBox = function () {
   const instance = this;
   const mother = this.mother;
   const { client, ea, baseTong, media, project } = this;
@@ -9151,6 +9151,7 @@ ProcessDetailJs.prototype.insertPhotoConfirmBox = function () {
   let panWidth, panVisualLeft;
   let veryBigTextTop;
   let circleWidth, circleTop, circleLeft;
+  let subButtonWidth;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -9160,7 +9161,7 @@ ProcessDetailJs.prototype.insertPhotoConfirmBox = function () {
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
-  veryBigSize = <%% 23, 21, 20, 17, 4.4 %%>;
+  veryBigSize = <%% 23, 21, 20, 16, 4.4 %%>;
   veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
   veryBigTextTop = <%% -1, -1, -2, -1, -1 %%>;
 
@@ -9202,86 +9203,77 @@ ProcessDetailJs.prototype.insertPhotoConfirmBox = function () {
 
   circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
   circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1 %%>;
-  circleLeft = <%% -7, -7, -7, -7, (isIphone() ? 12.6 : 13) %%>;
+  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? 11.1 : 11.5) %%>;
 
   arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
   arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
+
+  subButtonWidth = <%% 90, 90, 80, 70, 10 %%>;
 
   mobileVisualPaddingValue = 0.2;
 
   contents = {
     title: [
-      big ? "촬영 정보에 대해서" : "촬영에 대해",
-      big ? "안내드립니다!" : "안내드립니다!",
+      big ? "디자인비 선금 정산이" : "선금 정산이",
+      big ? "완료 되었습니다!" : "완료 되었습니다!",
     ],
     description: [
       (veryBig ? [
-        "고객님과의 현장 미팅은 어떠셨나요? 무사히 잘 끝났다면",
-        "아래 콘솔을 통해 현장 사진을 올려주세요!",
+        "수수료를 제외한 디자인비의 50%인 선금이 지급되었습니다.",
+        "실장님께서는 정산 확인 부탁드리겠습니다.",
       ] : [
-        "고객님과 현장 미팅, 어떠셨나요? 잘 끝났다면",
-        "아래 콘솔을 통해 현장 사진을 올려주세요!",
+        "디자인비의 50%인 선금이 지급 완료되었습니다.",
+        "실장님께는 정산 확인 부탁드리겠습니다.",
       ]),
       (veryBig ? [
-        "피드백 후, 잔금 요청과 계약서 발송이 진행됩니다.",
-        (media[0] ? "고객님의 " : "") + "잔금 지불이 완료되기 전까지 프로젝트 시작을 홀딩해주세요!"
+        "나머지 50%의 잔금 지급은 고객님의 현장이 모두",
+        "마무리되고, 고객님의 확인 과정을 거쳐 지급될 예정입니다!"
       ] : [
-        "피드백 후, 잔금 요청, 계약서 발송이 진행됩니다.",
-        "고객님의 잔금 지불이 완료되고 계약서 서명이",
-        "이루어지기 전까지, 프로젝트 시작을 홀딩해주세요!",
+        "나머지 디자인비의 50%는 잔금의 형태로 실장님께",
+        "지급될 예정입니다. 잔금 지급은 현장이 모두",
+        "마무리되고 고객님 확인을 거쳐 정산이 완료됩니다!"
       ])
     ],
   };
 
   contents.buttonSet = [
     [
-      {
-        title: <&& "현장 사진 콘솔에 업로드하기" | "현장 사진 콘솔에 업로드하기" | "현장 사진 콘솔에 업로드하기" | "현장 사진 업로드하기" | "현장 사진 콘솔에 업로드하기" &&>,
-        active: true,
-        click: (project) => {
-          return async function (e) {
-            try {
-              const target = findByAttribute(document.querySelectorAll(".uploadIconClassName"), "key", "firstPhoto");
-              if (target !== null) {
-                target.click();
-              }
-            } catch (e) {
-              console.log(e);
-            }
-          }
+      [
+        {
+          title: "종류",
+          active: true,
+          click: null,
         },
-      },
-      {
-        title: <&& "현장에 대한 간략한 메모 작성하기" | "현장에 대한 메모 작성하기" | "현장에 대한 메모 작성하기" | "현장에 대한 메모 작성하기" | "현장에 대한 간략한 메모 작성하기" &&>,
-        active: true,
-        click: (project) => {
-          return async function (e) {
-            try {
-              const target = findByAttribute(document.querySelectorAll(".memoIconClassName"), "key", "firstPhoto");
-              if (target !== null) {
-                target.click();
-              }
-            } catch (e) {
-              console.log(e);
-            }
-          }
+        {
+          title: project.process.calculation.method,
+          active: true,
+          click: null,
         },
-      },
-      {
-        title: <&& "홈스타일링 의뢰서 다시 보기" | "홈스타일링 의뢰서 다시 보기" | "홈스타일링 의뢰서 다시 보기" | "의뢰서 다시 보기" | "홈스타일링 의뢰서 다시 보기" &&>,
-        active: true,
-        click: (project) => {
-          return async function (e) {
-            try {
-              setQueue(() => {
-                scrollTo(window, document.querySelector(".pdfSaveIconClassName"), (desktop ? 72 : 60));
-              });
-            } catch (e) {
-              console.log(e);
-            }
-          }
+      ],
+      [
+        {
+          title: "선금액",
+          active: true,
+          click: null,
         },
-      }
+        {
+          title: autoComma(project.process.calculation.payments.first.amount) + '원',
+          active: true,
+          click: null,
+        },
+      ],
+      [
+        {
+          title: "잔금액",
+          active: false,
+          click: null,
+        },
+        {
+          title: autoComma(project.process.calculation.payments.first.amount) + '원',
+          active: false,
+          click: null,
+        },
+      ],
     ],
   ];
 
@@ -9437,7 +9429,7 @@ ProcessDetailJs.prototype.insertPhotoConfirmBox = function () {
                     display: "inline-flex",
                     position: "relative",
                     borderRadius: String(5) + "px",
-                    background: contents.buttonSet[i][index].active ? (i !== contents.buttonSet.length - 1 ? colorChip.gray1 : colorChip.gray1) : (i !== contents.buttonSet.length - 1 ? colorChip.gray1 : colorChip.gray1),
+                    background: colorChip.gray1,
                     marginBottom: index !== contents.buttonSet[i].length - 1 ? String(buttonInnerMargin) + ea : "",
                     flexDirection: "column",
                     justifyContent: "center",
@@ -9460,7 +9452,7 @@ ProcessDetailJs.prototype.insertPhotoConfirmBox = function () {
                     display: "inline-flex",
                     position: "relative",
                     borderRadius: String(5) + "px",
-                    background: contents.buttonSet[i][index].active ? (i !== contents.buttonSet.length - 1 ? colorChip.gray0 : colorChip.gray0) : (i !== contents.buttonSet.length - 1 ? colorChip.gray0 : colorChip.gray0),
+                    background: colorChip.gray0,
                     marginBottom: index !== contents.buttonSet[i].length - 1 ? String(buttonInnerMargin) + ea : "",
                     flexDirection: "column",
                     justifyContent: "center",
@@ -9475,16 +9467,13 @@ ProcessDetailJs.prototype.insertPhotoConfirmBox = function () {
                       fontFamily: "graphik",
                       fontStyle: "italic",
                       fontWeight: String(500),
-                      color: contents.buttonSet[i][index].active ? (i !== contents.buttonSet.length - 1 ? colorChip.green : colorChip.green) : colorChip.deactive,
+                      color: contents.buttonSet[i][index][0].active ? colorChip.green : colorChip.deactive,
                     }
                   }
                 },
                 {
-                  event: {
-                    click: (typeof contents.buttonSet[i][index].click === "function") ? contents.buttonSet[i][index].click(instance.project) : (e) => {},
-                  },
                   style: {
-                    width: String(buttonWidth - ((buttonInnerMargin + buttonHeight) * 2)) + ea,
+                    width: String(subButtonWidth) + ea,
                     height: String(buttonHeight) + ea,
                     display: "inline-flex",
                     flexDirection: "column",
@@ -9492,21 +9481,47 @@ ProcessDetailJs.prototype.insertPhotoConfirmBox = function () {
                     alignItems: "center",
                     position: "relative",
                     borderRadius: String(5) + "px",
-                    background: contents.buttonSet[i][index].active ? (i !== contents.buttonSet.length - 1 ? colorChip.white : colorChip.white) : (i !== contents.buttonSet.length - 1 ? colorChip.gray2 : colorChip.gray2),
+                    background: colorChip.gray0,
+                    marginRight: String(buttonInnerMargin) + ea,
                     marginBottom: index !== contents.buttonSet[i].length - 1 ? String(buttonInnerMargin) + ea : "",
                     cursor: "pointer",
                   },
                   child: {
-                    text: contents.buttonSet[i][index].title,
+                    text: contents.buttonSet[i][index][0].title,
+                    style: {
+                      position: "relative",
+                      top: String(textTextTop) + ea,
+                      fontSize: String(desktop ? textSize : 2.9) + ea,
+                      fontWeight: String(500),
+                      color: contents.buttonSet[i][index][0].active ? colorChip.black : colorChip.deactive,
+                    }
+                  }
+                },
+                {
+                  style: {
+                    width: String(buttonWidth - ((buttonInnerMargin + buttonHeight) * 2) - (subButtonWidth + buttonInnerMargin)) + ea,
+                    height: String(buttonHeight) + ea,
+                    display: "inline-flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    position: "relative",
+                    borderRadius: String(5) + "px",
+                    background: colorChip.white,
+                    marginBottom: index !== contents.buttonSet[i].length - 1 ? String(buttonInnerMargin) + ea : "",
+                    cursor: "pointer",
+                  },
+                  child: {
+                    text: contents.buttonSet[i][index][1].title,
                     style: {
                       position: "relative",
                       top: String(textTextTop) + ea,
                       fontSize: String(desktop ? textSize : 2.9) + ea,
                       fontWeight: String(textWeight),
-                      color: contents.buttonSet[i][index].active ? (i !== contents.buttonSet.length - 1 ? colorChip.black : colorChip.black) : colorChip.deactive,
+                      color: contents.buttonSet[i][index][1].active ? colorChip.green : colorChip.deactive,
                     }
                   }
-                }
+                },
               ]
             }
           })
@@ -9638,8 +9653,8 @@ ProcessDetailJs.prototype.launching = async function (loading) {
               instance.insertPhotoPayBox();
             } else if (getObj.mode === "feedback") {
               instance.insertMeetingBackBox();
-            } else if (getObj.mode === "photoconfirm") {
-              instance.insertPhotoConfirmBox();
+            } else if (getObj.mode === "payfirst") {
+              instance.insertPayFirstBox();
             }
 
             if (instance.contentsArr.length > 0) {
