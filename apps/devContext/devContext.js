@@ -148,10 +148,8 @@ DevContext.prototype.launching = async function () {
 
     await this.MONGOCONSOLEC.connect();
 
-
     const selfMongo = this.MONGOC;
     const selfConsoleMongo = this.MONGOCONSOLEC;
-    const slack_userToken = "xoxb-717757271335-4566120587107-i7TxxYzbPWPzdBMPoZDo2kxn";
     const firstResponseLink = "https://docs.google.com/spreadsheets/d/1EsYgzt-itSq_hWjYBkSwOgorpOWCjoe9_gmfCtBtlZ4/edit?usp=sharing";
     const divider = () => {
       return {
@@ -342,6 +340,7 @@ DevContext.prototype.launching = async function () {
       ));
     }
 
+    const slack_userToken = "xoxb-717757271335-4566120587107-i7TxxYzbPWPzdBMPoZDo2kxn";
     res = await requestSystem("https://slack.com/api/views.publish", { user_id: "U04LDNEUFDZ", view: { type, blocks, callback_id: "projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
     console.log(res);
     res = await requestSystem("https://slack.com/api/views.publish", { user_id: "UM1S7H3GQ", view: { type, blocks, callback_id: "projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });

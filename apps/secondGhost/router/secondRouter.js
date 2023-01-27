@@ -1001,9 +1001,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       const thisBody = equalJson(req.body);
       let text;
       let thisChannel;
-
-      console.log(thisBody);
-
+      
       if (typeof thisBody.event === "object") {
         if (thisBody.event.type === "message") {
           if (channelDictionary[thisBody.event.channel] !== undefined && userDictionary[thisBody.event.user] !== undefined) {
@@ -1026,6 +1024,8 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
               instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + err.message).catch((e) => { console.log(e); });
             });
           }
+        } else if (thisBody.event.type === "app_home_opened") {
+          console.log(thisBody.event.user)
         }
         
         res.send(JSON.stringify({ message: "OK" }));
