@@ -1488,10 +1488,12 @@ SecondRouter.prototype.rou_post_slackForm = function () {
   
         } else if (typeof thisBody.payload === "object" && thisBody.payload.type === "block_actions") {
 
-          console.log(thisBody);
-          console.log(thisBody.payload);
-          console.log(thisBody.payload.view);
+          if (thisBody.payload.view.callback_id === "projectCare") {
 
+            console.log(thisBody.payload)
+
+
+          }
 
         }
 
