@@ -329,8 +329,11 @@ DevContext.prototype.launching = async function () {
     }
 
     res = await requestSystem("https://slack.com/api/views.publish", { user_id: "U04LDNEUFDZ", view: { type, blocks, callback_id: "projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
+    console.log(res);
     res = await requestSystem("https://slack.com/api/views.publish", { user_id: "UM1S7H3GQ", view: { type, blocks, callback_id: "projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
+    console.log(res);
     res = await requestSystem("https://slack.com/api/views.publish", { user_id: "U02U8GH963C", view: { type, blocks, callback_id: "projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
+    console.log(res);
 
     
     await this.MONGOCONSOLEC.close();

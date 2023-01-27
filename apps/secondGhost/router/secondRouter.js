@@ -1508,6 +1508,10 @@ SecondRouter.prototype.rou_post_slackForm = function () {
 
         if (typeof thisBody.payload === "object" && thisBody.payload.type === "view_submission") {
 
+          resultJson = {
+            "response_action": "clear"
+          };
+
           if (thisBody.payload.view.callback_id === "rawPhoto") {
 
             finalValues = {
