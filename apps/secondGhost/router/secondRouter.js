@@ -1572,8 +1572,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
 
               thisClient = allClients.find(({ cliid }) => { return cliid === project.cliid });
 
-              buttonText = project.proid;
-              buttonText += " => ";
+              buttonText = ""
               buttonText += thisClient.name + " 고객님";
               buttonText += " / ";
               buttonText += project.process.status;
