@@ -3618,10 +3618,14 @@ ReceiptRouter.prototype.rou_post_calculationConsole = function () {
       } else if (mode === "search") {
         const { value } = req.body;
         preClients = await back.getClientsByQuery({ name: { $regex: value } }, { selfMongo: selfCoreMongo });
-        projects = await back.getProjectsByQuery({ $or: preClients.toNormal().map((c) => { return { cliid: c.cliid } }) }, { selfMongo: selfCoreMongo });
-        projects = projects.filter((project) => {
-          return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
-        });
+        if (preClients.length === 0) {
+          projects = [];
+        } else {
+          projects = await back.getProjectsByQuery({ $or: preClients.toNormal().map((c) => { return { cliid: c.cliid } }) }, { selfMongo: selfCoreMongo });
+          projects = projects.filter((project) => {
+            return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+          });
+        }
       } else {
         projects = await back.getProjectsByQuery({
           "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
@@ -3630,14 +3634,23 @@ ReceiptRouter.prototype.rou_post_calculationConsole = function () {
 
       projects.sort((a, b) => { return b.process.contract.first.date.valueOf() - a.process.contract.first.date.valueOf() });
 
-      clients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
-      designers = await back.getDesignersByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.desid }))).map((desid) => { return { desid } }) }, { selfMongo: selfCoreMongo });
+      if (projects.length > 0) {
 
-      bills = await back.mongoRead("generalBill", {
-        $or: projects.toNormal().map((project) => { return { "links.proid": project.proid } })
-      }, { selfMongo });
+        clients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
+        designers = await back.getDesignersByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.desid }))).map((desid) => { return { desid } }) }, { selfMongo: selfCoreMongo });
+  
+        bills = await back.mongoRead("generalBill", {
+          $or: projects.toNormal().map((project) => { return { "links.proid": project.proid } })
+        }, { selfMongo });
+  
+        res.send(JSON.stringify({ projects: projects.toNormal(), clients: clients.toNormal(), designers: designers.toNormal(), bills }));
 
-      res.send(JSON.stringify({ projects: projects.toNormal(), clients: clients.toNormal(), designers: designers.toNormal(), bills }));
+      } else {
+
+        res.send(JSON.stringify({ projects: [], clients: [], designers: [], bills: [] }));
+
+      }
+
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_calculationConsole): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
