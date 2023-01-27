@@ -236,12 +236,26 @@ DevContext.prototype.launching = async function () {
     let designerWording;
     let processLength, stayLength;
     let processArr, stayArr;
+    let allClients;
+    let requestsTong;
+    let allClientHistories;
+    let currentCliids;
 
     todayString = dateToString(new Date()).split("-").map((str, index) => { return String(Number(str)) + ([ "년 ", "월 ", "일" ][index]) }).join("");
 
+    allClients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
+
+    requestsTong = allClients.getRequestsTong();
+    requestsTong = requestsTong.filter((obj) => { return /응대/gi.test(obj.analytics.response.status) });
+
+    allClientHistories = await back.mongoRead("clientHistory", {}, { selfMongo: selfConsoleMongo });
+
+    currentCliids = requestsTong.map((obj) => { return obj.cliid }).map((cliid) => {
+      return [ cliid, allClientHistories.find((o) => { return o.cliid === cliid }).manager ];
+    });
     designers = (await back.getDesignersByQuery({}, { selfMongo })).toNormal();
     designerHistories = await back.mongoRead("designerHistory", {}, { selfMongo: selfConsoleMongo });
-    allProjects = (await back.getProjectsByQuery({ "process.contract.first.date": { $gte: new Date(2000, 0, 1) } })).toNormal();
+    allProjects = (await back.getProjectsByQuery({ "process.contract.first.date": { $gte: new Date(2000, 0, 1) } }, { selfMongo })).toNormal();
 
     type = "home";
 
@@ -249,7 +263,7 @@ DevContext.prototype.launching = async function () {
       header(todayString),
       ...blankDivider(),
       header("1차 응대 현황"),
-      linkButtonSection("Jini 5명 / 이큰별 3명 / Pepper 3명", "구글 시트", firstResponseLink),
+      linkButtonSection("Jini " + String(currentCliids.filter((arr) => { return /강해진/gi.test(arr[1]) }).length) + "명 / 이큰별 " + String(currentCliids.filter((arr) => { return /이큰별/gi.test(arr[1]) }).length) + "명 / Pepper " + String(currentCliids.filter((arr) => { return /임지민/gi.test(arr[1]) }).length) + "명", "구글 시트", firstResponseLink),
       ...blankDivider(),
       header("프로젝트 관리"),
       blank(),
