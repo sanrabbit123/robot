@@ -1288,6 +1288,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
       const thisBody = equalJson(req.body);
       let modalJson, resultJson;
       let finalValues;
+      let desid, triggerId;
 
       resultJson = { "message": "done" };
       finalValues = {};
@@ -1490,7 +1491,176 @@ SecondRouter.prototype.rou_post_slackForm = function () {
 
           if (thisBody.payload.view.callback_id === "projectCare") {
 
-            console.log(thisBody.payload)
+            triggerId = thisBody.payload.trigger_id;
+            desid = thisBody.payload.actions[0].value;
+
+            modalJson = {
+              "trigger_id": triggerId,
+              "view": {
+                "type": "modal",
+                "callback_id": "projectCareDetail",
+                "title": {
+                  "type": "plain_text",
+                  "text": "프로젝트 상세"
+                },
+                "blocks": [
+                  {
+                    "type": "input",
+                    "block_id": "client",
+                    "label": {
+                      "type": "plain_text",
+                      "text": "고객명",
+                      "emoji": true
+                    },
+                    "optional": false,
+                    "dispatch_action": true,
+                    "element": {
+                      "type": "plain_text_input",
+                      "action_id": "clientInput",
+                      "dispatch_action_config": {
+                        "trigger_actions_on": [
+                          "on_character_entered"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "context",
+                    "block_id": "zlUbD",
+                    "elements": [
+                      {
+                        "type": "plain_text",
+                        "text": " ",
+                        "emoji": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "input",
+                    "block_id": "designer",
+                    "label": {
+                      "type": "plain_text",
+                      "text": "디자이너명",
+                      "emoji": true
+                    },
+                    "optional": false,
+                    "dispatch_action": true,
+                    "element": {
+                      "type": "plain_text_input",
+                      "action_id": "designerInput",
+                      "dispatch_action_config": {
+                        "trigger_actions_on": [
+                          "on_character_entered"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "context",
+                    "block_id": "dXBH9",
+                    "elements": [
+                      {
+                        "type": "plain_text",
+                        "text": " ",
+                        "emoji": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "input",
+                    "block_id": "link",
+                    "label": {
+                      "type": "plain_text",
+                      "text": "원본 사진 링크",
+                      "emoji": true
+                    },
+                    "optional": false,
+                    "dispatch_action": true,
+                    "element": {
+                      "type": "plain_text_input",
+                      "action_id": "linkInput",
+                      "dispatch_action_config": {
+                        "trigger_actions_on": [
+                          "on_character_entered"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "context",
+                    "block_id": "fIR",
+                    "elements": [
+                      {
+                        "type": "plain_text",
+                        "text": " ",
+                        "emoji": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "input",
+                    "block_id": "pay",
+                    "label": {
+                      "type": "plain_text",
+                      "text": "촬영비",
+                      "emoji": true
+                    },
+                    "optional": false,
+                    "dispatch_action": false,
+                    "element": {
+                      "type": "radio_buttons",
+                      "action_id": "payInput",
+                      "options": [
+                        {
+                          "text": {
+                            "type": "plain_text",
+                            "text": "유료",
+                            "emoji": true
+                          },
+                          "value": "paid"
+                        },
+                        {
+                          "text": {
+                            "type": "plain_text",
+                            "text": "무료",
+                            "emoji": true
+                          },
+                          "value": "free"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "type": "context",
+                    "block_id": "VY=",
+                    "elements": [
+                      {
+                        "type": "plain_text",
+                        "text": " ",
+                        "emoji": true
+                      }
+                    ]
+                  }
+                ],
+                "close": {
+                  "type": "plain_text",
+                  "text": "취소",
+                  "emoji": true
+                },
+                "submit": {
+                  "type": "plain_text",
+                  "text": "공유하기",
+                  "emoji": true
+                },
+              }
+            };
+            await requestSystem("https://slack.com/api/views.open", modalJson, {
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + instance.slack_userToken,
+              }
+            });
+            resultJson = { "message": "done" };
 
 
           }

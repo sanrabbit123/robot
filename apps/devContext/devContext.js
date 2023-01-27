@@ -204,7 +204,7 @@ DevContext.prototype.launching = async function () {
         }
       }
     }
-    const normalButtonSection = (text, buttonText) => {
+    const normalButtonSection = (text, buttonText, actionId, buttonValue) => {
       return {
         "type": "section",
         "text": {
@@ -218,8 +218,8 @@ DevContext.prototype.launching = async function () {
             "text": buttonText,
             "emoji": true
           },
-          "value": "click_me_123",
-          "action_id": "button-action"
+          "value": buttonValue,
+          "action_id": actionId
         }
       };
     }
@@ -235,6 +235,7 @@ DevContext.prototype.launching = async function () {
     let thisProjects;
     let designerWording;
     let processLength, stayLength;
+    let processArr, stayArr;
 
     todayString = dateToString(new Date()).split("-").map((str, index) => { return String(Number(str)) + ([ "년 ", "월 ", "일" ][index]) }).join("");
 
@@ -269,15 +270,23 @@ DevContext.prototype.launching = async function () {
       thisDesigner = designers.find((d) => { return d.desid === desid });
       thisProjects = allProjects.filter((p) => { return p.desid === desid });
 
+      processArr = thisProjects.filter((p) => { return /진행/gi.test(p.process.status) });
+      stayArr = thisProjects.filter((p) => { return /대기/gi.test(p.process.status) });
+
       designerWording = "";
       designerWording += thisDesigner.designer + " 디자이너";
       designerWording += " => ";
 
-      designerWording += "진행중 " + String(thisProjects.filter((p) => { return /진행/gi.test(p.process.status) }).length) + "건";
+      designerWording += "진행중 " + String(processArr.length) + "건";
       designerWording += " / ";
-      designerWording += "대기 " + String(thisProjects.filter((p) => { return /대기/gi.test(p.process.status) }).length) + "건";
+      designerWording += "대기 " + String(stayArr.length) + "건";
 
-      blocks.push(normalButtonSection(designerWording, "프로젝트 (" + String(thisProjects.filter((p) => { return /진행/gi.test(p.process.status) }).length + thisProjects.filter((p) => { return /대기/gi.test(p.process.status) }).length) + "건) 상세"));
+      blocks.push(normalButtonSection(
+        designerWording,
+        "프로젝트 (" + String(processArr.length + stayArr.length) + "건) 상세",
+        thisDesigner.desid + "_projects_button",
+        thisDesigner.desid,
+      ));
     }
 
     blocks.push(blank());
@@ -298,22 +307,31 @@ DevContext.prototype.launching = async function () {
     blocks.push(blank());
     for (let { desid } of filtered) {
       thisDesigner = designers.find((d) => { return d.desid === desid });
-
       thisProjects = allProjects.filter((p) => { return p.desid === desid });
+
+      processArr = thisProjects.filter((p) => { return /진행/gi.test(p.process.status) });
+      stayArr = thisProjects.filter((p) => { return /대기/gi.test(p.process.status) });
 
       designerWording = "";
       designerWording += thisDesigner.designer + " 디자이너";
       designerWording += " => ";
 
-      designerWording += "진행중 " + String(thisProjects.filter((p) => { return /진행/gi.test(p.process.status) }).length) + "건";
+      designerWording += "진행중 " + String(processArr.length) + "건";
       designerWording += " / ";
-      designerWording += "대기 " + String(thisProjects.filter((p) => { return /대기/gi.test(p.process.status) }).length) + "건";
+      designerWording += "대기 " + String(stayArr.length) + "건";
 
-      blocks.push(normalButtonSection(designerWording, "프로젝트 (" + String(thisProjects.filter((p) => { return /진행/gi.test(p.process.status) }).length + thisProjects.filter((p) => { return /대기/gi.test(p.process.status) }).length) + "건) 상세"));
+      blocks.push(normalButtonSection(
+        designerWording,
+        "프로젝트 (" + String(processArr.length + stayArr.length) + "건) 상세",
+        thisDesigner.desid + "_projects_button",
+        thisDesigner.desid,
+      ));
     }
 
     res = await requestSystem("https://slack.com/api/views.publish", { user_id: "U04LDNEUFDZ", view: { type, blocks, callback_id: "projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
   
+    console.log(res);
+
     await this.MONGOCONSOLEC.close();
 
 
