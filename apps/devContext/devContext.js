@@ -146,6 +146,14 @@ DevContext.prototype.launching = async function () {
     // }
 
 
+
+
+
+
+
+
+    /*
+
     await this.MONGOCONSOLEC.connect();
 
     const selfMongo = this.MONGOC;
@@ -301,10 +309,14 @@ DevContext.prototype.launching = async function () {
       ));
     }
 
+
+
     blocks.push(blank());
     blocks.push(blank());
     blocks.push(divider());
     blocks.push(blank());
+
+
 
     filtered = designerHistories.filter((obj) => { return /임지민/gi.test(obj.manager) });
     processLength = 0;
@@ -350,6 +362,20 @@ DevContext.prototype.launching = async function () {
 
     
     await this.MONGOCONSOLEC.close();
+
+    */
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
