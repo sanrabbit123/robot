@@ -246,6 +246,10 @@ DevContext.prototype.launching = async function () {
     let requestsTong;
     let allClientHistories;
     let currentCliids;
+    let matrix;
+    let thisClient;
+    let targetArr;
+    let sheetsId;
 
     todayString = dateToString(new Date()).split("-").map((str, index) => { return String(Number(str)) + ([ "년 ", "월 ", "일" ][index]) }).join("");
 
@@ -275,6 +279,21 @@ DevContext.prototype.launching = async function () {
       blank(),
     ];
 
+
+    matrix = [
+      [
+        "담당자",
+        "디자이너",
+        "고객명",
+        "상태",
+        "응대",
+        "프로젝트 시작일",
+        "프로젝트 종료일",
+      ]
+    ]
+
+
+
     filtered = designerHistories.filter((obj) => { return /이큰별/gi.test(obj.manager) });
     processLength = 0;
     stayLength = 0;
@@ -292,6 +311,20 @@ DevContext.prototype.launching = async function () {
 
       processArr = thisProjects.filter((p) => { return /진행/gi.test(p.process.status) });
       stayArr = thisProjects.filter((p) => { return /대기/gi.test(p.process.status) });
+      targetArr = stayArr.concat(processArr);
+
+      for (let project of targetArr) {
+        thisClient = allClients.toNormal().find((c) => { return c.cliid === project.cliid });
+        matrix.push([
+          "이큰별",
+          thisDesigner.designer,
+          thisClient.name,
+          project.process.status,
+          project.process.action,
+          dateToString(project.process.contract.form.date.from),
+          dateToString(project.process.contract.form.date.to),
+        ]);
+      }
 
       designerWording = "";
       designerWording += thisDesigner.designer + " 디자이너";
@@ -308,8 +341,6 @@ DevContext.prototype.launching = async function () {
         thisDesigner.desid,
       ));
     }
-
-
 
     blocks.push(blank());
     blocks.push(blank());
@@ -335,6 +366,20 @@ DevContext.prototype.launching = async function () {
 
       processArr = thisProjects.filter((p) => { return /진행/gi.test(p.process.status) });
       stayArr = thisProjects.filter((p) => { return /대기/gi.test(p.process.status) });
+      targetArr = stayArr.concat(processArr);
+
+      for (let project of targetArr) {
+        thisClient = allClients.toNormal().find((c) => { return c.cliid === project.cliid });
+        matrix.push([
+          "임지민",
+          thisDesigner.designer,
+          thisClient.name,
+          project.process.status,
+          project.process.action,
+          dateToString(project.process.contract.form.date.from),
+          dateToString(project.process.contract.form.date.to),
+        ]);
+      }
 
       designerWording = "";
       designerWording += thisDesigner.designer + " 디자이너";
@@ -352,13 +397,26 @@ DevContext.prototype.launching = async function () {
       ));
     }
 
-    const slack_userToken = "xoxb-717757271335-4566120587107-i7TxxYzbPWPzdBMPoZDo2kxn";
-    res = await requestSystem("https://slack.com/api/views.publish", { user_id: "U04LDNEUFDZ", view: { type, blocks, callback_id: "projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
-    console.log(res);
-    res = await requestSystem("https://slack.com/api/views.publish", { user_id: "UM1S7H3GQ", view: { type, blocks, callback_id: "projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
-    console.log(res);
-    res = await requestSystem("https://slack.com/api/views.publish", { user_id: "U02U8GH963C", view: { type, blocks, callback_id: "projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
-    console.log(res);
+
+    sheetsId = await sheets.create_newSheets_inPython("현재 프로젝트 상황", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix);
+
+    console.log(matrix);
+
+
+
+
+
+
+
+    // const slack_userToken = "xoxb-717757271335-4566120587107-i7TxxYzbPWPzdBMPoZDo2kxn";
+    // res = await requestSystem("https://slack.com/api/views.publish", { user_id: "U04LDNEUFDZ", view: { type, blocks, callback_id: "projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
+    // console.log(res);
+    // res = await requestSystem("https://slack.com/api/views.publish", { user_id: "UM1S7H3GQ", view: { type, blocks, callback_id: "projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
+    // console.log(res);
+    // res = await requestSystem("https://slack.com/api/views.publish", { user_id: "U02U8GH963C", view: { type, blocks, callback_id: "projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
+    // console.log(res);
 
     
     await this.MONGOCONSOLEC.close();
