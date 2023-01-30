@@ -2501,7 +2501,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
             cursor: "pointer",
           },
           child: {
-            text: "알림 보내기",
+            text: "고객 알림 보내기",
             style: {
               display: "inline-block",
               position: "relative",
@@ -10118,7 +10118,7 @@ ProcessDetailJs.prototype.insertContractConfirmBox = function () {
       ],
       [
         {
-          title: "게약서",
+          title: "계약서",
           active: true,
           click: null,
         },
@@ -10546,7 +10546,7 @@ ProcessDetailJs.prototype.insertContractStartBox = function () {
       ],
       [
         {
-          title: "게약서",
+          title: "계약서",
           active: true,
           click: null,
         },
@@ -10862,6 +10862,11 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
   let veryBigTextTop;
   let circleWidth, circleTop, circleLeft;
   let subButtonWidth;
+  let thirdWidth;
+  let imageBoxVisualPaddingBottom;
+  let imageBetween;
+  let panBoxBetween;
+  let wordingPaddingTop0, wordingPaddingTop1;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -10922,71 +10927,37 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
 
   mobileVisualPaddingValue = 0.2;
 
+  thirdWidth = <%% 180, 0, 0, 0, 0 %%>;
+
+  imageBoxVisualPaddingBottom = <%% 9, 9, 9, 9, 9 %%>;
+  imageBetween = <%% 32, 32, 32, 32, 32 %%>;
+  panBoxBetween = <%% 12, 12, 12, 12, 12 %%>;
+
+  wordingPaddingTop0 = <%% 213, 213, 213, 213, 213 %%>;
+  wordingPaddingTop1 = <%% 243, 243, 243, 243, 243 %%>;
+
   contents = {
     title: [
-      big ? "고객님의 계약서 서명이" : "계약서 서명이",
-      big ? "완료 되었습니다!" : "완료 되었습니다!",
+      "페이퍼 워크",
+      "업로드 안내"
     ],
     description: [
-      (veryBig ? [
-        "고객님이 홈스타일링 계약서에 서명을 완료하셨습니다.",
-        "계약서 날짜에 따라 프로젝트를 진행해 주세요!"
-      ] : [
-        "고객님이 계약서에 서명을 완료하셨습니다.",
-        "계약서 날짜에 따라 프로젝트를 진행해 주세요!"
-      ]),
-      (veryBig ? [
-        "시작일에 고객님께 디자인 진행 안내가 발송됩니다.",
-        "실장님께서는 계약서상의 시작일 확인을 부탁드립니다.",
-      ] : [
-        "계약상 시작일이 되면, 고객님께 프로젝트의",
-        "디자인 작업이 시작된다는 안내가 발송됩니다.",
-        "실장님께서는 시작일 확인을 부탁드립니다."
-      ])
+      [
+        "해당 영역의 박스로 가신 후,",
+        "위 화살표 모양의 아이콘을 누르시면",
+        "파일을 업로드할 수 있습니다."
+      ],
+      [
+        "올리신 파일을 우클릭 하거나",
+        "터치를 하시면 그 파일에 관련된",
+        "다양한 제어를 하실 수 있습니다."
+      ]
     ],
+    about: [
+      ProcessDetailJs.binaryPath + "/consoleAboutDesktop0.png",
+      ProcessDetailJs.binaryPath + "/consoleAboutDesktop1.png",
+    ]
   };
-
-  contents.buttonSet = [
-    [
-      [
-        {
-          title: "시작일",
-          active: true,
-          click: null,
-        },
-        {
-          title: dateToString(project.process.contract.form.date.from),
-          active: true,
-          click: null,
-        },
-      ],
-      [
-        {
-          title: "종료일",
-          active: true,
-          click: null,
-        },
-        {
-          title: dateToString(project.process.contract.form.date.to),
-          active: false,
-          click: null,
-        },
-      ],
-      [
-        {
-          title: "게약서",
-          active: true,
-          click: null,
-        },
-        {
-          title: "계약서 보기",
-          active: true,
-          click: null,
-        },
-      ],
-    ],
-  ];
-
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -11063,7 +11034,7 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
             width: String(circleWidth) + ea,
             height: String(circleWidth) + ea,
             borderRadius: String(circleWidth) + ea,
-            background: colorChip.red,
+            background: colorChip.gray4,
           }
         }
       },
@@ -11071,174 +11042,119 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
         style: {
           display: desktop ? "inline-flex" : "flex",
           position: "relative",
-          width: desktop ? withOut(firstWidth + ((buttonWidth + buttonOuterPadding + buttonOuterPadding) * contents.buttonSet.length) + (buttonOuterPadding * (contents.buttonSet.length - 1)), ea) : withOut(0, ea),
+          width: desktop ? withOut(firstWidth + thirdWidth, ea) : withOut(0, ea),
           flexDirection: "column",
           marginBottom: desktop ? "" : String(7.2) + ea,
+          paddingBottom: String(imageBoxVisualPaddingBottom) + ea,
         },
         children: [
           {
+            mode: "img",
+            attribute: {
+              src: contents.about[0],
+            },
             style: {
-              display: veryBig ? "display" : "none",
-              position: "absolute",
-              top: String(0),
-              left: String(panVisualLeft) + ea,
-              width: String(panWidth) + ea,
-              height: String((buttonHeight * contents.buttonSet[0].length) + (buttonInnerMargin * (contents.buttonSet[0].length - 1)) + (buttonOuterPadding * 2)) + ea,
-              borderBottom: String(3) + "px solid " + colorChip.black,
-              boxSizing: "border-box",
+              display: "block",
+              position: "relative",
+              width: withOut(0),
+              borderRadius: String(8) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+              marginBottom: String(imageBetween) + ea,
             }
           },
           {
-            text: contents.description[0].join("\n"),
+            mode: "img",
+            attribute: {
+              src: contents.about[1],
+            },
             style: {
+              display: "block",
               position: "relative",
-              fontSize: String(textSize) + ea,
-              fontWeight: String(textFileWeight),
-              color: colorChip.black,
-              lineHeight: String(1.6),
-              marginBottom: String(descriptionBetween) + ea,
-              textAlign: desktop ? "" : "center",
-            }
-          },
-          {
-            text: contents.description[1].join("\n"),
-            style: {
-              position: "relative",
-              fontSize: String(textSize) + ea,
-              fontWeight: String(textFileWeight),
-              color: colorChip.black,
-              lineHeight: String(1.6),
-              textAlign: desktop ? "" : "center",
+              width: withOut(0),
+              borderRadius: String(8) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
             }
           },
         ]
       },
-      ...variableArray(contents.buttonSet.length).map((i) => {
-        return {
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            borderRadius: String(8) + "px",
-            background: i !== contents.buttonSet.length - 1 ? colorChip.gray3 : colorChip.gray3,
-            padding: String(buttonOuterPadding) + ea,
-            flexDirection: "column",
-            marginRight: i !== contents.buttonSet.length - 1 ? String(buttonOuterPadding) + ea : "",
-          },
-          children: variableArray(contents.buttonSet[i].length).map((index, z) => {
-            return {
-              style: {
-                display: "flex",
-                flexDirection: "row",
+      {
+        style: {
+          display: desktop ? "inline-flex" : "flex",
+          position: "relative",
+          width: String(thirdWidth) + ea,
+          flexDirection: "column",
+        },
+        children: [
+          {
+            style: {
+              paddingLeft: String(imageBetween) + ea,
+              width: withOut(imageBetween, ea),
+              display: "block",
+              paddingTop: String(wordingPaddingTop0) + ea,
+            },
+            children: [
+              {
+                text: contents.description[0].join(" "),
+                style: {
+                  position: "relative",
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textFileWeight),
+                  color: colorChip.black,
+                  lineHeight: String(1.6),
+                  textAlign: "left",
+                  marginBottom: String(panBoxBetween) + ea,
+                }
               },
-              children: [
-                {
-                  style: {
-                    width: String(buttonHeight) + ea,
-                    height: String(buttonHeight) + ea,
-                    marginRight: String(buttonInnerMargin) + ea,
-                    display: "inline-flex",
-                    position: "relative",
-                    borderRadius: String(5) + "px",
-                    background: colorChip.gray1,
-                    marginBottom: index !== contents.buttonSet[i].length - 1 ? String(buttonInnerMargin) + ea : "",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  },
-                  child: {
-                    mode: "svg",
-                    source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, colorChip.deactive),
-                    style: {
-                      position: "relative",
-                      width: String(arrowWidth) + ea,
-                    }
-                  }
-                },
-                {
-                  style: {
-                    width: String(buttonHeight) + ea,
-                    height: String(buttonHeight) + ea,
-                    marginRight: String(buttonInnerMargin) + ea,
-                    display: media[0] ? "inline-flex" : "none",
-                    position: "relative",
-                    borderRadius: String(5) + "px",
-                    background: colorChip.gray0,
-                    marginBottom: index !== contents.buttonSet[i].length - 1 ? String(buttonInnerMargin) + ea : "",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  },
-                  child: {
-                    text: String(z + 1),
-                    style: {
-                      position: "relative",
-                      top: String(desktop ? -1 : -0.3) + ea,
-                      fontSize: String(desktop ? textSize : 2.9) + ea,
-                      fontFamily: "graphik",
-                      fontStyle: "italic",
-                      fontWeight: String(500),
-                      color: contents.buttonSet[i][index][0].active ? colorChip.green : colorChip.deactive,
-                    }
-                  }
-                },
-                {
-                  style: {
-                    width: String(subButtonWidth) + ea,
-                    height: String(buttonHeight) + ea,
-                    display: "inline-flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    position: "relative",
-                    borderRadius: String(5) + "px",
-                    background: colorChip.gray0,
-                    marginRight: String(buttonInnerMargin) + ea,
-                    marginBottom: index !== contents.buttonSet[i].length - 1 ? String(buttonInnerMargin) + ea : "",
-                    cursor: "pointer",
-                  },
-                  child: {
-                    text: contents.buttonSet[i][index][0].title,
-                    style: {
-                      position: "relative",
-                      top: String(textTextTop) + ea,
-                      fontSize: String(desktop ? textSize : 2.9) + ea,
-                      fontWeight: String(500),
-                      color: contents.buttonSet[i][index][0].active ? colorChip.black : colorChip.deactive,
-                    }
-                  }
-                },
-                {
-                  style: {
-                    width: String(buttonWidth - ((buttonInnerMargin + buttonHeight) * (media[0] ? 2 : 1)) - (subButtonWidth + buttonInnerMargin)) + ea,
-                    height: String(buttonHeight) + ea,
-                    display: "inline-flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    position: "relative",
-                    borderRadius: String(5) + "px",
-                    background: colorChip.white,
-                    marginBottom: index !== contents.buttonSet[i].length - 1 ? String(buttonInnerMargin) + ea : "",
-                    cursor: "pointer",
-                  },
-                  child: {
-                    text: contents.buttonSet[i][index][1].title,
-                    style: {
-                      position: "relative",
-                      top: String(textTextTop) + ea,
-                      fontSize: String(desktop ? textSize : 2.9) + ea,
-                      fontWeight: String(textWeight),
-                      color: contents.buttonSet[i][index][1].active ? colorChip.green : colorChip.deactive,
-                    }
-                  }
-                },
-              ]
-            }
-          })
-        };
-      })
+              {
+                style: {
+                  display: "display",
+                  position: "relative",
+                  top: String(0),
+                  width: String(panWidth) + ea,
+                  height: String(0) + ea,
+                  borderBottom: String(3) + "px solid " + colorChip.black,
+                  boxSizing: "border-box",
+                }
+              },
+            ]
+          },
+          {
+            style: {
+              paddingLeft: String(imageBetween) + ea,
+              width: withOut(imageBetween, ea),
+              display: "block",
+              paddingTop: String(wordingPaddingTop1) + ea,
+            },
+            children: [
+              {
+                text: contents.description[1].join(" "),
+                style: {
+                  position: "relative",
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textFileWeight),
+                  color: colorChip.black,
+                  lineHeight: String(1.6),
+                  textAlign: "left",
+                  marginBottom: String(panBoxBetween) + ea,
+                }
+              },
+              {
+                style: {
+                  display: "display",
+                  position: "relative",
+                  top: String(0),
+                  width: String(panWidth) + ea,
+                  height: String(0) + ea,
+                  borderBottom: String(3) + "px solid " + colorChip.black,
+                  boxSizing: "border-box",
+                }
+              },
+            ]
+          },
+        ]
+      }
     ]
-  })
+  });
 
 }
 
@@ -11363,13 +11279,13 @@ ProcessDetailJs.prototype.launching = async function (loading) {
               instance.insertPhotoPayBox();
             } else if (getObj.mode === "feedback") {
               instance.insertMeetingBackBox();
+              instance.insertAboutConsoleBox();
             } else if (getObj.mode === "payfirst") {
               instance.insertPayFirstBox();
             } else if (getObj.mode === "payremain") {
               instance.insertPayRemainBox();
             } else if (getObj.mode === "contractconfirm") {
               instance.insertContractConfirmBox();
-              instance.insertAboutConsoleBox();
             } else if (getObj.mode === "contractstart") {
               instance.insertContractStartBox();
               instance.insertAboutConsoleBox();
