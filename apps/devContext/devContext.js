@@ -150,12 +150,308 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
+
+
+
+
+
+
+    /*
+
+    await this.MONGOLOGC.connect();
+
+    const selfMongo = this.MONGOLOGC;
+    const collection = "complexReport";
+    let allRows;
+    let matrix;
+    let tempArr;
+    let num;
+    let sheetsId;
     
 
+    allRows = await back.mongoRead(collection, {}, { selfMongo });
 
-    
 
 
+    // age
+    matrix = [ [ "날짜" ] ];
+    for (let i = 0; i < allRows[0].data.age.length; i++) {
+      matrix[0].push(allRows[0].data.age[i].case);
+    }
+    for (let i = 0; i < allRows[0].data.age.length; i++) {
+      matrix[0].push(allRows[0].data.age[i].case);
+    }
+    for (let { date, data } of allRows) {
+      tempArr = [ dateToString(date.from) ];
+      for (let i = 0; i < data.age.length; i++) {
+        tempArr.push(data.age[i].value);
+      }
+      for (let i = 0; i < data.age.length; i++) {
+        tempArr.push(data.age[i].ratio);
+      }
+      matrix.push(tempArr);
+    }
+    sheetsId = await sheets.create_newSheets_inPython("추출_나이", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
+
+
+
+    // gender
+    matrix = [ [ "날짜" ] ];
+    for (let i = 0; i < allRows[0].data.gender.length; i++) {
+      matrix[0].push(allRows[0].data.gender[i].case);
+    }
+    for (let i = 0; i < allRows[0].data.gender.length; i++) {
+      matrix[0].push(allRows[0].data.gender[i].case);
+    }
+    for (let { date, data } of allRows) {
+      tempArr = [ dateToString(date.from) ];
+      for (let i = 0; i < data.gender.length; i++) {
+        tempArr.push(data.gender[i].value);
+      }
+      for (let i = 0; i < data.gender.length; i++) {
+        tempArr.push(data.gender[i].ratio);
+      }
+      matrix.push(tempArr);
+    }
+    sheetsId = await sheets.create_newSheets_inPython("추출_성별", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
+
+
+
+
+    // device
+    matrix = [ [ "날짜" ] ];
+    for (let i = 0; i < allRows[0].data.device.length; i++) {
+      matrix[0].push(allRows[0].data.device[i].case);
+    }
+    for (let i = 0; i < allRows[0].data.device.length; i++) {
+      matrix[0].push(allRows[0].data.device[i].case);
+    }
+    for (let { date, data } of allRows) {
+      tempArr = [ dateToString(date.from) ];
+      for (let i = 0; i < data.device.length; i++) {
+        tempArr.push(data.device[i].value);
+      }
+      for (let i = 0; i < data.device.length; i++) {
+        tempArr.push(data.device[i].ratio);
+      }
+      matrix.push(tempArr);
+    }
+    sheetsId = await sheets.create_newSheets_inPython("추출_디바이스", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
+
+
+
+
+    // pyeong
+    matrix = [ [ "날짜" ] ];
+    for (let i = 0; i < allRows[0].data.pyeong.detail.length; i++) {
+      matrix[0].push(allRows[0].data.pyeong.detail[i].case);
+    }
+    for (let i = 0; i < allRows[0].data.pyeong.detail.length; i++) {
+      matrix[0].push(allRows[0].data.pyeong.detail[i].case);
+    }
+    for (let { date, data } of allRows) {
+      tempArr = [ dateToString(date.from) ];
+      for (let i = 0; i < data.pyeong.detail.length; i++) {
+        tempArr.push(data.pyeong.detail[i].value);
+      }
+      for (let i = 0; i < data.pyeong.detail.length; i++) {
+        tempArr.push(data.pyeong.detail[i].ratio);
+      }
+      matrix.push(tempArr);
+    }
+    sheetsId = await sheets.create_newSheets_inPython("추출_평형대", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
+
+
+
+
+    // service
+    matrix = [ [ "날짜" ] ];
+    for (let i = 0; i < allRows[0].data.service.detail.length; i++) {
+      matrix[0].push(allRows[0].data.service.detail[i].case);
+    }
+    for (let i = 0; i < allRows[0].data.service.detail.length; i++) {
+      matrix[0].push(allRows[0].data.service.detail[i].case);
+    }
+    for (let { date, data } of allRows) {
+      tempArr = [ dateToString(date.from) ];
+      for (let i = 0; i < data.service.detail.length; i++) {
+        tempArr.push(data.service.detail[i].value);
+      }
+      for (let i = 0; i < data.service.detail.length; i++) {
+        tempArr.push(data.service.detail[i].ratio);
+      }
+      matrix.push(tempArr);
+    }
+    sheetsId = await sheets.create_newSheets_inPython("추출_서비스", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
+
+
+
+
+
+    // region
+    matrix = [ [ "날짜" ] ];
+    for (let i = 0; i < allRows[0].data.region.detail.length; i++) {
+      matrix[0].push(allRows[0].data.region.detail[i].case);
+    }
+    for (let i = 0; i < allRows[0].data.region.detail.length; i++) {
+      matrix[0].push(allRows[0].data.region.detail[i].case);
+    }
+    for (let { date, data } of allRows) {
+      tempArr = [ dateToString(date.from) ];
+      for (let i = 0; i < data.region.detail.length; i++) {
+        tempArr.push(data.region.detail[i].value);
+      }
+      for (let i = 0; i < data.region.detail.length; i++) {
+        tempArr.push(data.region.detail[i].ratio);
+      }
+      matrix.push(tempArr);
+    }
+    sheetsId = await sheets.create_newSheets_inPython("추출_지역", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
+
+
+
+
+
+    // fee
+    matrix = [ [ "날짜" ] ];
+    for (let i = 0; i < allRows[0].data.fee.detail.length; i++) {
+      matrix[0].push(allRows[0].data.fee.detail[i].case);
+    }
+    for (let i = 0; i < allRows[0].data.fee.detail.length; i++) {
+      matrix[0].push(allRows[0].data.fee.detail[i].case);
+    }
+    for (let { date, data } of allRows) {
+      tempArr = [ dateToString(date.from) ];
+      for (let i = 0; i < data.fee.detail.length; i++) {
+        tempArr.push(data.fee.detail[i].value);
+      }
+      for (let i = 0; i < data.fee.detail.length; i++) {
+        tempArr.push(data.fee.detail[i].ratio);
+      }
+      matrix.push(tempArr);
+    }
+    sheetsId = await sheets.create_newSheets_inPython("추출_예산", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
+
+
+
+
+
+
+    // family
+    matrix = [ [ "날짜" ] ];
+    for (let i = 0; i < allRows[0].data.family.detail.length; i++) {
+      matrix[0].push(allRows[0].data.family.detail[i].case);
+    }
+    for (let i = 0; i < allRows[0].data.family.detail.length; i++) {
+      matrix[0].push(allRows[0].data.family.detail[i].case);
+    }
+    for (let { date, data } of allRows) {
+      tempArr = [ dateToString(date.from) ];
+      for (let i = 0; i < data.family.detail.length; i++) {
+        tempArr.push(data.family.detail[i].value);
+      }
+      for (let i = 0; i < data.family.detail.length; i++) {
+        tempArr.push(data.family.detail[i].ratio);
+      }
+      matrix.push(tempArr);
+    }
+    sheetsId = await sheets.create_newSheets_inPython("추출_가족구성", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
+
+
+
+
+
+
+
+
+    // living
+    matrix = [ [ "날짜" ] ];
+    for (let i = 0; i < allRows[0].data.living.detail.length; i++) {
+      matrix[0].push(allRows[0].data.living.detail[i].case);
+    }
+    for (let i = 0; i < allRows[0].data.living.detail.length; i++) {
+      matrix[0].push(allRows[0].data.living.detail[i].case);
+    }
+    for (let { date, data } of allRows) {
+      tempArr = [ dateToString(date.from) ];
+      for (let i = 0; i < data.living.detail.length; i++) {
+        tempArr.push(data.living.detail[i].value);
+      }
+      for (let i = 0; i < data.living.detail.length; i++) {
+        tempArr.push(data.living.detail[i].ratio);
+      }
+      matrix.push(tempArr);
+    }
+    sheetsId = await sheets.create_newSheets_inPython("추출_거주중", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
+
+    // contract
+    matrix = [ [ "날짜" ] ];
+    for (let i = 0; i < allRows[0].data.contract.detail.length; i++) {
+      matrix[0].push(allRows[0].data.contract.detail[i].case);
+    }
+    for (let i = 0; i < allRows[0].data.contract.detail.length; i++) {
+      matrix[0].push(allRows[0].data.contract.detail[i].case);
+    }
+    for (let { date, data } of allRows) {
+      tempArr = [ dateToString(date.from) ];
+      for (let i = 0; i < data.contract.detail.length; i++) {
+        tempArr.push(data.contract.detail[i].value);
+      }
+      for (let i = 0; i < data.contract.detail.length; i++) {
+        tempArr.push(data.contract.detail[i].ratio);
+      }
+      matrix.push(tempArr);
+    }
+    sheetsId = await sheets.create_newSheets_inPython("추출_계약형태", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
+
+
+    // age: [Array],
+    // gender: [Array],
+    // type: [Array],
+    // source: [Array],
+    // device: [Array],
+    // sessionSource: [Array],
+    // timeSource: [Array],
+    // boundSource: [Array],
+    // query: [Array],
+
+    // conversion: [Object],
+    // pyeong: [Object],
+    // service: [Object],
+    // region: [Object],
+    // fee: [Object],
+    // family: [Object],
+    // living: [Object],
+    // contract: [Object]
+
+    await this.MONGOLOGC.close();
+
+
+    */
 
 
 
