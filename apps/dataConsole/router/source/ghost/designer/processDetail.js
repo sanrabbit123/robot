@@ -10920,7 +10920,7 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
 
   circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
   circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
-  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? 8.5 : 9.1) %%>;
+  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? 14.7 : 15.3) %%>;
 
   arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
   arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
@@ -10931,8 +10931,8 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
 
   thirdWidth = <%% 180, 0, 0, 0, 0 %%>;
 
-  imageBoxVisualPaddingBottom = <%% 4, 2, 2, 2, 1 %%>;
-  imageBetween = <%% 32, 16, 12, 12, 4 %%>;
+  imageBoxVisualPaddingBottom = <%% 4, 2, 2, 2, 0 %%>;
+  imageBetween = <%% 32, 16, 12, 12, 6 %%>;
   panBoxBetween = <%% 12, 32, 26, 24, 12 %%>;
 
   wordingPaddingTop0 = <%% 213, 213, 213, 213, 213 %%>;
@@ -10947,14 +10947,12 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
     ],
     description: [
       [
-        "해당 영역의 박스로 가신 후,",
-        "아래 화살표 모양의 아이콘을 누르시면",
-        "파일을 업로드할 수 있습니다."
+        "해당 영역의 박스로 가신 후, 아래 화살표 모양의",
+        "아이콘을 누르시면 파일을 업로드할 수 있습니다.",
       ],
       [
-        "올리신 파일을 우클릭 하거나",
-        "터치를 하시면 그 파일에 관련된",
-        "다양한 제어를 하실 수 있습니다."
+        "올리신 파일을 우클릭 하거나 터치를 하시면",
+        "그 파일에 관련된 다양한 제어를 하실 수 있습니다.",
       ]
     ],
     about: [
@@ -11002,168 +11000,289 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
     }
   });
 
-  mainTong = createNode({
-    mother: grayTong,
-    style: {
-      display: desktop ? "flex" : "block",
-      width: withOut(0),
-      flexDirection: desktop ? "row" : "",
-      justifyContent: desktop ? "start" : "",
-      alignItems: desktop ? "start" : "",
-    },
-    children: [
-      {
-        text: contents.title.join(desktop ? "\n" : " "),
-        style: {
-          display: desktop ? "inline-flex" : "flex",
-          position: "relative",
-          fontSize: String(veryBigSize) + ea,
-          fontWeight: String(veryBigWeight),
-          color: colorChip.black,
-          lineHeight: String(1.5),
-          width: desktop ? String(firstWidth) + ea : withOut(0, ea),
-          top: desktop ? String(veryBigTextTop) + ea : "",
-          justifyContent: desktop ? "" : "center",
-          alignItems: desktop ? "" : "center",
-          textAlign: desktop ? "" : "center",
-          marginTop: desktop ? "" : String(2.8) + ea,
-          marginBottom: desktop ? "" : String(3) + ea,
-        },
-        child: {
-          style: {
-            display: "inline-block",
-            position: "absolute",
-            top: String(circleTop) + ea,
-            left: String(circleLeft) + ea,
-            width: String(circleWidth) + ea,
-            height: String(circleWidth) + ea,
-            borderRadius: String(circleWidth) + ea,
-            background: colorChip.gray4,
-          }
-        }
-      },
-      {
-        style: {
-          display: desktop ? "inline-flex" : "flex",
-          position: "relative",
-          width: desktop ? withOut(firstWidth + thirdWidth, ea) : withOut(0, ea),
-          flexDirection: "column",
-          marginBottom: desktop ? "" : String(7.2) + ea,
-          paddingBottom: String(imageBoxVisualPaddingBottom) + ea,
-        },
-        children: [
-          {
-            mode: "img",
-            attribute: {
-              src: contents.about[0],
-            },
-            style: {
-              display: "block",
-              position: "relative",
-              width: withOut(0),
-              borderRadius: String(8) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
-              marginBottom: String(imageBetween) + ea,
-            }
-          },
-          {
-            mode: "img",
-            attribute: {
-              src: contents.about[1],
-            },
-            style: {
-              display: "block",
-              position: "relative",
-              width: withOut(0),
-              borderRadius: String(8) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
-            }
-          },
-        ]
-      }
-    ]
-  });
+  if (desktop) {
 
-  createNode({
-    mother: mainTong,
-    style: {
-      display: desktop ? "inline-flex" : "flex",
-      position: media[0] ? "relative" : "absolute",
-      width: media[0] ? String(thirdWidth) + ea : "",
-      flexDirection: "column",
-      left: media[0] ? "" : String(0),
-      bottom: media[0] ? "" : String(imageBoxVisualPaddingBottom) + ea,
-    },
-    children: [
-      {
-        style: {
-          paddingLeft: String(imageBetween) + ea,
-          width: withOut(imageBetween, ea),
-          display: media[0] ? "block" : "none",
-          paddingTop: String(wordingPaddingTop0) + ea,
-        },
-        children: [
-          {
-            text: contents.description[0].join(" "),
-            style: {
-              position: "relative",
-              fontSize: String(textSize) + ea,
-              fontWeight: String(textFileWeight),
-              color: colorChip.black,
-              lineHeight: String(1.6),
-              textAlign: "left",
-              marginBottom: String(panBoxBetween) + ea,
-            }
-          },
-          {
-            style: {
-              display: "display",
-              position: "relative",
-              top: String(0),
-              width: String(panWidth) + ea,
-              height: String(0) + ea,
-              borderBottom: String(3) + "px solid " + colorChip.black,
-              boxSizing: "border-box",
-            }
-          },
-        ]
+    mainTong = createNode({
+      mother: grayTong,
+      style: {
+        display: desktop ? "flex" : "block",
+        width: withOut(0),
+        flexDirection: desktop ? "row" : "",
+        justifyContent: desktop ? "start" : "",
+        alignItems: desktop ? "start" : "",
       },
-      {
-        style: {
-          paddingLeft: media[0] ? String(imageBetween) + ea : "",
-          width: media[0] ? withOut(imageBetween, ea) : "",
-          display: "block",
-          paddingTop: media[0] ? String(wordingPaddingTop1) + ea : "",
+      children: [
+        {
+          text: contents.title.join(desktop ? "\n" : " "),
+          style: {
+            display: desktop ? "inline-flex" : "flex",
+            position: "relative",
+            fontSize: String(veryBigSize) + ea,
+            fontWeight: String(veryBigWeight),
+            color: colorChip.black,
+            lineHeight: String(1.5),
+            width: desktop ? String(firstWidth) + ea : withOut(0, ea),
+            top: desktop ? String(veryBigTextTop) + ea : "",
+            justifyContent: desktop ? "" : "center",
+            alignItems: desktop ? "" : "center",
+            textAlign: desktop ? "" : "center",
+            marginTop: desktop ? "" : String(2.8) + ea,
+            marginBottom: desktop ? "" : String(3) + ea,
+          },
+          child: {
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              top: String(circleTop) + ea,
+              left: String(circleLeft) + ea,
+              width: String(circleWidth) + ea,
+              height: String(circleWidth) + ea,
+              borderRadius: String(circleWidth) + ea,
+              background: colorChip.gray4,
+            }
+          }
         },
-        children: [
-          {
-            text: media[0] ? contents.description[1].join(" ") : contents.description[0].join(" ") + "\n\n" + contents.description[1].join(" "),
-            style: {
-              position: "relative",
-              fontSize: String(textSize) + ea,
-              fontWeight: String(textFileWeight),
-              color: colorChip.black,
-              lineHeight: String(1.6),
-              textAlign: "left",
-              marginBottom: String(panBoxBetween) + ea,
-              width: media[0] ? "" : String(wordingBoxWidth) + ea,
-            }
+        {
+          style: {
+            display: desktop ? "inline-flex" : "flex",
+            position: "relative",
+            width: desktop ? withOut(firstWidth + thirdWidth, ea) : withOut(0, ea),
+            flexDirection: "column",
+            marginBottom: desktop ? "" : String(7.2) + ea,
+            paddingBottom: String(imageBoxVisualPaddingBottom) + ea,
           },
-          {
-            style: {
-              display: "display",
-              position: "relative",
-              top: String(0),
-              width: String(panWidth) + ea,
-              height: String(0) + ea,
-              borderBottom: String(3) + "px solid " + colorChip.black,
-              boxSizing: "border-box",
-            }
-          },
-        ]
+          children: [
+            {
+              mode: "img",
+              attribute: {
+                src: contents.about[0],
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0),
+                borderRadius: String(8) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+                marginBottom: String(imageBetween) + ea,
+              }
+            },
+            {
+              mode: "img",
+              attribute: {
+                src: contents.about[1],
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0),
+                borderRadius: String(8) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+              }
+            },
+          ]
+        }
+      ]
+    });
+  
+    createNode({
+      mother: mainTong,
+      style: {
+        display: desktop ? "inline-flex" : "flex",
+        position: media[0] ? "relative" : "absolute",
+        width: media[0] ? String(thirdWidth) + ea : "",
+        flexDirection: "column",
+        left: media[0] ? "" : String(0),
+        bottom: media[0] ? "" : String(imageBoxVisualPaddingBottom) + ea,
       },
-    ]
-  })
+      children: [
+        {
+          style: {
+            paddingLeft: String(imageBetween) + ea,
+            width: withOut(imageBetween, ea),
+            display: media[0] ? "block" : "none",
+            paddingTop: String(wordingPaddingTop0) + ea,
+          },
+          children: [
+            {
+              text: contents.description[0].join(" "),
+              style: {
+                position: "relative",
+                fontSize: String(textSize) + ea,
+                fontWeight: String(textFileWeight),
+                color: colorChip.black,
+                lineHeight: String(1.6),
+                textAlign: "left",
+                marginBottom: String(panBoxBetween) + ea,
+              }
+            },
+            {
+              style: {
+                display: "display",
+                position: "relative",
+                top: String(0),
+                width: String(panWidth) + ea,
+                height: String(0) + ea,
+                borderBottom: String(3) + "px solid " + colorChip.black,
+                boxSizing: "border-box",
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            paddingLeft: media[0] ? String(imageBetween) + ea : "",
+            width: media[0] ? withOut(imageBetween, ea) : "",
+            display: "block",
+            paddingTop: media[0] ? String(wordingPaddingTop1) + ea : "",
+          },
+          children: [
+            {
+              text: media[0] ? contents.description[1].join(" ") : contents.description[0].join(" ") + "\n\n" + contents.description[1].join(" "),
+              style: {
+                position: "relative",
+                fontSize: String(textSize) + ea,
+                fontWeight: String(textFileWeight),
+                color: colorChip.black,
+                lineHeight: String(1.6),
+                textAlign: "left",
+                marginBottom: String(panBoxBetween) + ea,
+                width: media[0] ? "" : String(wordingBoxWidth) + ea,
+              }
+            },
+            {
+              style: {
+                display: "display",
+                position: "relative",
+                top: String(0),
+                width: String(panWidth) + ea,
+                height: String(0) + ea,
+                borderBottom: String(3) + "px solid " + colorChip.black,
+                boxSizing: "border-box",
+              }
+            },
+          ]
+        },
+      ]
+    });
+
+  } else {
+
+    mainTong = createNode({
+      mother: grayTong,
+      style: {
+        display: desktop ? "flex" : "block",
+        width: withOut(0),
+        flexDirection: desktop ? "row" : "",
+        justifyContent: desktop ? "start" : "",
+        alignItems: desktop ? "start" : "",
+      },
+      children: [
+        {
+          text: contents.title.join(desktop ? "\n" : " "),
+          style: {
+            display: desktop ? "inline-flex" : "flex",
+            position: "relative",
+            fontSize: String(veryBigSize) + ea,
+            fontWeight: String(veryBigWeight),
+            color: colorChip.black,
+            lineHeight: String(1.5),
+            width: desktop ? String(firstWidth) + ea : withOut(0, ea),
+            top: desktop ? String(veryBigTextTop) + ea : "",
+            justifyContent: desktop ? "" : "center",
+            alignItems: desktop ? "" : "center",
+            textAlign: desktop ? "" : "center",
+            marginTop: desktop ? "" : String(2.8) + ea,
+            marginBottom: desktop ? "" : String(3) + ea,
+          },
+          child: {
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              top: String(circleTop) + ea,
+              left: String(circleLeft) + ea,
+              width: String(circleWidth) + ea,
+              height: String(circleWidth) + ea,
+              borderRadius: String(circleWidth) + ea,
+              background: colorChip.gray4,
+            }
+          }
+        },
+        {
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+            flexDirection: "column",
+            marginBottom: String(7.2) + ea,
+          },
+          children: [
+            {
+              text: contents.description[0].join("\n"),
+              style: {
+                position: "relative",
+                fontSize: String(textSize) + ea,
+                fontWeight: String(textFileWeight),
+                color: colorChip.black,
+                lineHeight: String(1.6),
+                marginBottom: String(descriptionBetween) + ea,
+                textAlign: desktop ? "" : "center",
+              }
+            },
+            {
+              text: contents.description[1].join("\n"),
+              style: {
+                position: "relative",
+                fontSize: String(textSize) + ea,
+                fontWeight: String(textFileWeight),
+                color: colorChip.black,
+                lineHeight: String(1.6),
+                textAlign: desktop ? "" : "center",
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: desktop ? "inline-flex" : "flex",
+            position: "relative",
+            width: desktop ? withOut(firstWidth + thirdWidth, ea) : withOut(0, ea),
+            flexDirection: "column",
+            paddingBottom: String(imageBoxVisualPaddingBottom) + ea,
+          },
+          children: [
+            {
+              mode: "img",
+              attribute: {
+                src: contents.about[0],
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0),
+                borderRadius: String(8) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+                marginBottom: String(imageBetween) + ea,
+              }
+            },
+            {
+              mode: "img",
+              attribute: {
+                src: contents.about[1],
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0),
+                borderRadius: String(8) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+              }
+            },
+          ]
+        }
+      ]
+    });
+  
+  }
 
 }
 
