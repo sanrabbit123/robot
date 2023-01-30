@@ -8348,9 +8348,9 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop = <%% 44, 44, 36, 28, 5.4 %%>;
+  paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
-  whiteBottomMargin = <%% 46, 46, 38, 30, 5.6 %%>;
+  whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
@@ -8741,9 +8741,9 @@ ProcessDetailJs.prototype.insertMeetingBackBox = function () {
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop = <%% 44, 44, 36, 28, 5.4 %%>;
+  paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
-  whiteBottomMargin = <%% 46, 46, 38, 30, 5.6 %%>;
+  whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
@@ -9155,9 +9155,9 @@ ProcessDetailJs.prototype.insertPayFirstBox = function () {
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop = <%% 44, 44, 36, 28, 5.4 %%>;
+  paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
-  whiteBottomMargin = <%% 46, 46, 38, 30, 5.6 %%>;
+  whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
@@ -9582,9 +9582,9 @@ ProcessDetailJs.prototype.insertPayRemainBox = function () {
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop = <%% 44, 44, 36, 28, 5.4 %%>;
+  paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
-  whiteBottomMargin = <%% 46, 46, 38, 30, 5.6 %%>;
+  whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
@@ -10009,9 +10009,9 @@ ProcessDetailJs.prototype.insertContractConfirmBox = function () {
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop = <%% 44, 44, 36, 28, 5.4 %%>;
+  paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
-  whiteBottomMargin = <%% 46, 46, 38, 30, 5.6 %%>;
+  whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
@@ -10437,9 +10437,9 @@ ProcessDetailJs.prototype.insertContractStartBox = function () {
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop = <%% 44, 44, 36, 28, 5.4 %%>;
+  paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
-  whiteBottomMargin = <%% 46, 46, 38, 30, 5.6 %%>;
+  whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
@@ -10867,12 +10867,14 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
   let imageBetween;
   let panBoxBetween;
   let wordingPaddingTop0, wordingPaddingTop1;
+  let mainTong;
+  let wordingBoxWidth;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop = <%% 44, 44, 36, 28, 5.4 %%>;
+  paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
 
-  whiteBottomMargin = <%% 46, 46, 38, 30, 5.6 %%>;
+  whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
@@ -10929,12 +10931,14 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
 
   thirdWidth = <%% 180, 0, 0, 0, 0 %%>;
 
-  imageBoxVisualPaddingBottom = <%% 9, 9, 9, 9, 9 %%>;
-  imageBetween = <%% 32, 32, 32, 32, 32 %%>;
-  panBoxBetween = <%% 12, 12, 12, 12, 12 %%>;
+  imageBoxVisualPaddingBottom = <%% 4, 2, 2, 2, 1 %%>;
+  imageBetween = <%% 32, 16, 12, 12, 4 %%>;
+  panBoxBetween = <%% 12, 32, 26, 24, 12 %%>;
 
   wordingPaddingTop0 = <%% 213, 213, 213, 213, 213 %%>;
   wordingPaddingTop1 = <%% 243, 243, 243, 243, 243 %%>;
+
+  wordingBoxWidth = <%% 175, 175, 165, 98, 175 %%>;
 
   contents = {
     title: [
@@ -10944,7 +10948,7 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
     description: [
       [
         "해당 영역의 박스로 가신 후,",
-        "위 화살표 모양의 아이콘을 누르시면",
+        "아래 화살표 모양의 아이콘을 누르시면",
         "파일을 업로드할 수 있습니다."
       ],
       [
@@ -10954,8 +10958,8 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
       ]
     ],
     about: [
-      ProcessDetailJs.binaryPath + "/consoleAboutDesktop0.png",
-      ProcessDetailJs.binaryPath + "/consoleAboutDesktop1.png",
+      <&& ProcessDetailJs.binaryPath + "/consoleAboutDesktop0.png" | ProcessDetailJs.binaryPath + "/consoleAboutDesktop0.png" | ProcessDetailJs.binaryPath + "/consoleAboutTablet0.png" | ProcessDetailJs.binaryPath + "/consoleAboutTablet0.png" | ProcessDetailJs.binaryPath + "/consoleAboutMobile0.png" &&>,
+      <&& ProcessDetailJs.binaryPath + "/consoleAboutDesktop1.png" | ProcessDetailJs.binaryPath + "/consoleAboutDesktop1.png" | ProcessDetailJs.binaryPath + "/consoleAboutTablet1.png" | ProcessDetailJs.binaryPath + "/consoleAboutTablet1.png" | ProcessDetailJs.binaryPath + "/consoleAboutMobile1.png" &&>,
     ]
   };
 
@@ -10998,7 +11002,7 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
     }
   });
 
-  createNode({
+  mainTong = createNode({
     mother: grayTong,
     style: {
       display: desktop ? "flex" : "block",
@@ -11076,85 +11080,90 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
             }
           },
         ]
-      },
-      {
-        style: {
-          display: desktop ? "inline-flex" : "flex",
-          position: "relative",
-          width: String(thirdWidth) + ea,
-          flexDirection: "column",
-        },
-        children: [
-          {
-            style: {
-              paddingLeft: String(imageBetween) + ea,
-              width: withOut(imageBetween, ea),
-              display: "block",
-              paddingTop: String(wordingPaddingTop0) + ea,
-            },
-            children: [
-              {
-                text: contents.description[0].join(" "),
-                style: {
-                  position: "relative",
-                  fontSize: String(textSize) + ea,
-                  fontWeight: String(textFileWeight),
-                  color: colorChip.black,
-                  lineHeight: String(1.6),
-                  textAlign: "left",
-                  marginBottom: String(panBoxBetween) + ea,
-                }
-              },
-              {
-                style: {
-                  display: "display",
-                  position: "relative",
-                  top: String(0),
-                  width: String(panWidth) + ea,
-                  height: String(0) + ea,
-                  borderBottom: String(3) + "px solid " + colorChip.black,
-                  boxSizing: "border-box",
-                }
-              },
-            ]
-          },
-          {
-            style: {
-              paddingLeft: String(imageBetween) + ea,
-              width: withOut(imageBetween, ea),
-              display: "block",
-              paddingTop: String(wordingPaddingTop1) + ea,
-            },
-            children: [
-              {
-                text: contents.description[1].join(" "),
-                style: {
-                  position: "relative",
-                  fontSize: String(textSize) + ea,
-                  fontWeight: String(textFileWeight),
-                  color: colorChip.black,
-                  lineHeight: String(1.6),
-                  textAlign: "left",
-                  marginBottom: String(panBoxBetween) + ea,
-                }
-              },
-              {
-                style: {
-                  display: "display",
-                  position: "relative",
-                  top: String(0),
-                  width: String(panWidth) + ea,
-                  height: String(0) + ea,
-                  borderBottom: String(3) + "px solid " + colorChip.black,
-                  boxSizing: "border-box",
-                }
-              },
-            ]
-          },
-        ]
       }
     ]
   });
+
+  createNode({
+    mother: mainTong,
+    style: {
+      display: desktop ? "inline-flex" : "flex",
+      position: media[0] ? "relative" : "absolute",
+      width: media[0] ? String(thirdWidth) + ea : "",
+      flexDirection: "column",
+      left: media[0] ? "" : String(0),
+      bottom: media[0] ? "" : String(imageBoxVisualPaddingBottom) + ea,
+    },
+    children: [
+      {
+        style: {
+          paddingLeft: String(imageBetween) + ea,
+          width: withOut(imageBetween, ea),
+          display: media[0] ? "block" : "none",
+          paddingTop: String(wordingPaddingTop0) + ea,
+        },
+        children: [
+          {
+            text: contents.description[0].join(" "),
+            style: {
+              position: "relative",
+              fontSize: String(textSize) + ea,
+              fontWeight: String(textFileWeight),
+              color: colorChip.black,
+              lineHeight: String(1.6),
+              textAlign: "left",
+              marginBottom: String(panBoxBetween) + ea,
+            }
+          },
+          {
+            style: {
+              display: "display",
+              position: "relative",
+              top: String(0),
+              width: String(panWidth) + ea,
+              height: String(0) + ea,
+              borderBottom: String(3) + "px solid " + colorChip.black,
+              boxSizing: "border-box",
+            }
+          },
+        ]
+      },
+      {
+        style: {
+          paddingLeft: media[0] ? String(imageBetween) + ea : "",
+          width: media[0] ? withOut(imageBetween, ea) : "",
+          display: "block",
+          paddingTop: media[0] ? String(wordingPaddingTop1) + ea : "",
+        },
+        children: [
+          {
+            text: media[0] ? contents.description[1].join(" ") : contents.description[0].join(" ") + "\n\n" + contents.description[1].join(" "),
+            style: {
+              position: "relative",
+              fontSize: String(textSize) + ea,
+              fontWeight: String(textFileWeight),
+              color: colorChip.black,
+              lineHeight: String(1.6),
+              textAlign: "left",
+              marginBottom: String(panBoxBetween) + ea,
+              width: media[0] ? "" : String(wordingBoxWidth) + ea,
+            }
+          },
+          {
+            style: {
+              display: "display",
+              position: "relative",
+              top: String(0),
+              width: String(panWidth) + ea,
+              height: String(0) + ea,
+              borderBottom: String(3) + "px solid " + colorChip.black,
+              boxSizing: "border-box",
+            }
+          },
+        ]
+      },
+    ]
+  })
 
 }
 
