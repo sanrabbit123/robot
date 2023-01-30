@@ -9968,7 +9968,7 @@ ProcessDetailJs.prototype.insertContractConfirmBox = function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, downloadFile } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -10125,7 +10125,18 @@ ProcessDetailJs.prototype.insertContractConfirmBox = function () {
         {
           title: "계약서 보기",
           active: true,
-          click: null,
+          click: async function (e) {
+            try {
+              const thisContract = await ajaxJson({ mode: "search", proid: instance.project.proid }, BRIDGEHOST + "/contractList", { equal: true });
+              if (thisContract.contract !== null) {
+                await downloadFile(thisContract.contract.downloadLink);
+              } else {
+                window.alert("계약서를 확인할 수 없습니다!");
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
       ],
     ],
@@ -10352,6 +10363,10 @@ ProcessDetailJs.prototype.insertContractConfirmBox = function () {
                   }
                 },
                 {
+                  event: {
+                    click: typeof contents.buttonSet[i][index][1].click === "function" ? contents.buttonSet[i][index][1].click : (e) => {},
+                    selectstart: (e) => { e.preventDefault() },
+                  },
                   style: {
                     width: String(buttonWidth - ((buttonInnerMargin + buttonHeight) * (media[0] ? 2 : 1)) - (subButtonWidth + buttonInnerMargin)) + ea,
                     height: String(buttonHeight) + ea,
@@ -10396,7 +10411,7 @@ ProcessDetailJs.prototype.insertContractStartBox = function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, downloadFile } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -10553,7 +10568,18 @@ ProcessDetailJs.prototype.insertContractStartBox = function () {
         {
           title: "계약서 보기",
           active: true,
-          click: null,
+          click: async function (e) {
+            try {
+              const thisContract = await ajaxJson({ mode: "search", proid: instance.project.proid }, BRIDGEHOST + "/contractList", { equal: true });
+              if (thisContract.contract !== null) {
+                await downloadFile(thisContract.contract.downloadLink);
+              } else {
+                window.alert("계약서를 확인할 수 없습니다!");
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          },
         },
       ],
     ],
@@ -10780,6 +10806,10 @@ ProcessDetailJs.prototype.insertContractStartBox = function () {
                   }
                 },
                 {
+                  event: {
+                    click: typeof contents.buttonSet[i][index][1].click === "function" ? contents.buttonSet[i][index][1].click : (e) => {},
+                    selectstart: (e) => { e.preventDefault() },
+                  },
                   style: {
                     width: String(buttonWidth - ((buttonInnerMargin + buttonHeight) * (media[0] ? 2 : 1)) - (subButtonWidth + buttonInnerMargin)) + ea,
                     height: String(buttonHeight) + ea,
@@ -10814,7 +10844,7 @@ ProcessDetailJs.prototype.insertContractStartBox = function () {
 
 }
 
-ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
+ProcessDetailJs.prototype.insertAboutConsoleBox = function (feedback = false) {
   const instance = this;
   const mother = this.mother;
   const { client, ea, baseTong, media, project } = this;
@@ -10920,7 +10950,7 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
 
   circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
   circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
-  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? 14.7 : 15.3) %%>;
+  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? (feedback ? 14.7 : 17.0) : (feedback ? 15.3 : 17.6)) %%>;
 
   arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
   arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
@@ -10942,16 +10972,16 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function () {
 
   contents = {
     title: [
-      "페이퍼 워크",
+      feedback ? "현장 사진" : "페이퍼 워크",
       "업로드 안내"
     ],
     description: [
       [
         "해당 영역의 박스로 가신 후, 아래 화살표 모양의",
-        "아이콘을 누르시면 파일을 업로드할 수 있습니다.",
+        "아이콘을 누르시면 " + (feedback ? "사진" : "파일") + "을 업로드할 수 있습니다.",
       ],
       [
-        "올리신 파일을 우클릭 하거나 터치를 하시면",
+        "올리신 " + (feedback ? "사진" : "파일") + "을 우클릭 하거나 터치를 하시면",
         "그 파일에 관련된 다양한 제어를 하실 수 있습니다.",
       ]
     ],
@@ -11407,16 +11437,17 @@ ProcessDetailJs.prototype.launching = async function (loading) {
               instance.insertPhotoPayBox();
             } else if (getObj.mode === "feedback") {
               instance.insertMeetingBackBox();
-              instance.insertAboutConsoleBox();
+              instance.insertAboutConsoleBox(true);
             } else if (getObj.mode === "payfirst") {
               instance.insertPayFirstBox();
             } else if (getObj.mode === "payremain") {
               instance.insertPayRemainBox();
             } else if (getObj.mode === "contractconfirm") {
               instance.insertContractConfirmBox();
+              instance.insertAboutConsoleBox(false);
             } else if (getObj.mode === "contractstart") {
               instance.insertContractStartBox();
-              instance.insertAboutConsoleBox();
+              instance.insertAboutConsoleBox(false);
             }
 
             if (instance.contentsArr.length > 0) {
