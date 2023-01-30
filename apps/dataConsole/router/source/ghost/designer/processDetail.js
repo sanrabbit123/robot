@@ -8395,8 +8395,8 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
   panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
 
   circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
-  circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1 %%>;
-  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? 12.6 : 13) %%>;
+  circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
+  circleLeft = <%% -7, -7, -7, -5, -0.8 %%>;
 
   mobileVisualPaddingValue = 0.2;
 
@@ -8568,34 +8568,42 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
     },
     children: [
       {
-        text: contents.title.join(desktop ? "\n" : " "),
         style: {
           display: desktop ? "inline-flex" : "flex",
           position: "relative",
-          fontSize: String(veryBigSize) + ea,
-          fontWeight: String(veryBigWeight),
-          color: colorChip.black,
-          lineHeight: String(1.5),
           width: desktop ? String(firstWidth) + ea : withOut(0, ea),
-          top: desktop ? String(veryBigTextTop) + ea : "",
           justifyContent: desktop ? "" : "center",
           alignItems: desktop ? "" : "center",
           textAlign: desktop ? "" : "center",
           marginTop: desktop ? "" : String(2.8) + ea,
           marginBottom: desktop ? "" : String(3) + ea,
         },
-        child: {
-          style: {
-            display: "inline-block",
-            position: "absolute",
-            top: String(circleTop) + ea,
-            left: String(circleLeft) + ea,
-            width: String(circleWidth) + ea,
-            height: String(circleWidth) + ea,
-            borderRadius: String(circleWidth) + ea,
-            background: colorChip.red,
+        children: [
+          {
+            text: contents.title.join(desktop ? "\n" : " "),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(veryBigSize) + ea,
+              fontWeight: String(veryBigWeight),
+              color: colorChip.black,
+              lineHeight: String(1.5),
+              top: desktop ? String(veryBigTextTop) + ea : "",
+            },
+            child: {
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: String(circleTop) + ea,
+                left: String(circleLeft) + ea,
+                width: String(circleWidth) + ea,
+                height: String(circleWidth) + ea,
+                borderRadius: String(circleWidth) + ea,
+                background: colorChip.red,
+              }
+            }
           }
-        }
+        ]
       },
       {
         style: {
@@ -8788,8 +8796,8 @@ ProcessDetailJs.prototype.insertMeetingBackBox = function () {
   panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
 
   circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
-  circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1 %%>;
-  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? 12.6 : 13) %%>;
+  circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
+  circleLeft = <%% -7, -7, -7, -5, -0.8 %%>;
 
   arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
   arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
@@ -8923,34 +8931,42 @@ ProcessDetailJs.prototype.insertMeetingBackBox = function () {
     },
     children: [
       {
-        text: contents.title.join(desktop ? "\n" : " "),
         style: {
           display: desktop ? "inline-flex" : "flex",
           position: "relative",
-          fontSize: String(veryBigSize) + ea,
-          fontWeight: String(veryBigWeight),
-          color: colorChip.black,
-          lineHeight: String(1.5),
           width: desktop ? String(firstWidth) + ea : withOut(0, ea),
-          top: desktop ? String(veryBigTextTop) + ea : "",
           justifyContent: desktop ? "" : "center",
           alignItems: desktop ? "" : "center",
           textAlign: desktop ? "" : "center",
           marginTop: desktop ? "" : String(2.8) + ea,
           marginBottom: desktop ? "" : String(3) + ea,
         },
-        child: {
-          style: {
-            display: "inline-block",
-            position: "absolute",
-            top: String(circleTop) + ea,
-            left: String(circleLeft) + ea,
-            width: String(circleWidth) + ea,
-            height: String(circleWidth) + ea,
-            borderRadius: String(circleWidth) + ea,
-            background: colorChip.red,
+        children: [
+          {
+            text: contents.title.join(desktop ? "\n" : " "),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(veryBigSize) + ea,
+              fontWeight: String(veryBigWeight),
+              color: colorChip.black,
+              lineHeight: String(1.5),
+              top: desktop ? String(veryBigTextTop) + ea : "",
+            },
+            child: {
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: String(circleTop) + ea,
+                left: String(circleLeft) + ea,
+                width: String(circleWidth) + ea,
+                height: String(circleWidth) + ea,
+                borderRadius: String(circleWidth) + ea,
+                background: colorChip.red,
+              }
+            }
           }
-        }
+        ]
       },
       {
         style: {
@@ -9203,7 +9219,7 @@ ProcessDetailJs.prototype.insertPayFirstBox = function () {
 
   circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
   circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
-  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? 10.9 : 11.5) %%>;
+  circleLeft = <%% -7, -7, -7, -5, -0.7 %%>;
 
   arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
   arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
@@ -9328,34 +9344,42 @@ ProcessDetailJs.prototype.insertPayFirstBox = function () {
     },
     children: [
       {
-        text: contents.title.join(desktop ? "\n" : " "),
         style: {
           display: desktop ? "inline-flex" : "flex",
           position: "relative",
-          fontSize: String(veryBigSize) + ea,
-          fontWeight: String(veryBigWeight),
-          color: colorChip.black,
-          lineHeight: String(1.5),
           width: desktop ? String(firstWidth) + ea : withOut(0, ea),
-          top: desktop ? String(veryBigTextTop) + ea : "",
           justifyContent: desktop ? "" : "center",
           alignItems: desktop ? "" : "center",
           textAlign: desktop ? "" : "center",
           marginTop: desktop ? "" : String(2.8) + ea,
           marginBottom: desktop ? "" : String(3) + ea,
         },
-        child: {
-          style: {
-            display: "inline-block",
-            position: "absolute",
-            top: String(circleTop) + ea,
-            left: String(circleLeft) + ea,
-            width: String(circleWidth) + ea,
-            height: String(circleWidth) + ea,
-            borderRadius: String(circleWidth) + ea,
-            background: colorChip.red,
+        children: [
+          {
+            text: contents.title.join(desktop ? "\n" : " "),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(veryBigSize) + ea,
+              fontWeight: String(veryBigWeight),
+              color: colorChip.black,
+              lineHeight: String(1.5),
+              top: desktop ? String(veryBigTextTop) + ea : "",
+            },
+            child: {
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: String(circleTop) + ea,
+                left: String(circleLeft) + ea,
+                width: String(circleWidth) + ea,
+                height: String(circleWidth) + ea,
+                borderRadius: String(circleWidth) + ea,
+                background: colorChip.red,
+              }
+            }
           }
-        }
+        ]
       },
       {
         style: {
@@ -9630,7 +9654,7 @@ ProcessDetailJs.prototype.insertPayRemainBox = function () {
 
   circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
   circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
-  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? 10.4 : 11) %%>;
+  circleLeft = <%% -7, -7, -7, -5, -0.9 %%>;
 
   arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
   arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
@@ -9755,34 +9779,42 @@ ProcessDetailJs.prototype.insertPayRemainBox = function () {
     },
     children: [
       {
-        text: contents.title.join(desktop ? "\n" : " "),
         style: {
           display: desktop ? "inline-flex" : "flex",
           position: "relative",
-          fontSize: String(veryBigSize) + ea,
-          fontWeight: String(veryBigWeight),
-          color: colorChip.black,
-          lineHeight: String(1.5),
           width: desktop ? String(firstWidth) + ea : withOut(0, ea),
-          top: desktop ? String(veryBigTextTop) + ea : "",
           justifyContent: desktop ? "" : "center",
           alignItems: desktop ? "" : "center",
           textAlign: desktop ? "" : "center",
           marginTop: desktop ? "" : String(2.8) + ea,
           marginBottom: desktop ? "" : String(3) + ea,
         },
-        child: {
-          style: {
-            display: "inline-block",
-            position: "absolute",
-            top: String(circleTop) + ea,
-            left: String(circleLeft) + ea,
-            width: String(circleWidth) + ea,
-            height: String(circleWidth) + ea,
-            borderRadius: String(circleWidth) + ea,
-            background: colorChip.red,
+        children: [
+          {
+            text: contents.title.join(desktop ? "\n" : " "),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(veryBigSize) + ea,
+              fontWeight: String(veryBigWeight),
+              color: colorChip.black,
+              lineHeight: String(1.5),
+              top: desktop ? String(veryBigTextTop) + ea : "",
+            },
+            child: {
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: String(circleTop) + ea,
+                left: String(circleLeft) + ea,
+                width: String(circleWidth) + ea,
+                height: String(circleWidth) + ea,
+                borderRadius: String(circleWidth) + ea,
+                background: colorChip.red,
+              }
+            }
           }
-        }
+        ]
       },
       {
         style: {
@@ -10057,7 +10089,7 @@ ProcessDetailJs.prototype.insertContractConfirmBox = function () {
 
   circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
   circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
-  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? 8.5 : 9.1) %%>;
+  circleLeft = <%% -7, -7, -7, -5, -0.9 %%>;
 
   arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
   arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
@@ -10193,34 +10225,42 @@ ProcessDetailJs.prototype.insertContractConfirmBox = function () {
     },
     children: [
       {
-        text: contents.title.join(desktop ? "\n" : " "),
         style: {
           display: desktop ? "inline-flex" : "flex",
           position: "relative",
-          fontSize: String(veryBigSize) + ea,
-          fontWeight: String(veryBigWeight),
-          color: colorChip.black,
-          lineHeight: String(1.5),
           width: desktop ? String(firstWidth) + ea : withOut(0, ea),
-          top: desktop ? String(veryBigTextTop) + ea : "",
           justifyContent: desktop ? "" : "center",
           alignItems: desktop ? "" : "center",
           textAlign: desktop ? "" : "center",
           marginTop: desktop ? "" : String(2.8) + ea,
           marginBottom: desktop ? "" : String(3) + ea,
         },
-        child: {
-          style: {
-            display: "inline-block",
-            position: "absolute",
-            top: String(circleTop) + ea,
-            left: String(circleLeft) + ea,
-            width: String(circleWidth) + ea,
-            height: String(circleWidth) + ea,
-            borderRadius: String(circleWidth) + ea,
-            background: colorChip.red,
+        children: [
+          {
+            text: contents.title.join(desktop ? "\n" : " "),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(veryBigSize) + ea,
+              fontWeight: String(veryBigWeight),
+              color: colorChip.black,
+              lineHeight: String(1.5),
+              top: desktop ? String(veryBigTextTop) + ea : "",
+            },
+            child: {
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: String(circleTop) + ea,
+                left: String(circleLeft) + ea,
+                width: String(circleWidth) + ea,
+                height: String(circleWidth) + ea,
+                borderRadius: String(circleWidth) + ea,
+                background: colorChip.red,
+              }
+            }
           }
-        }
+        ]
       },
       {
         style: {
@@ -10500,7 +10540,7 @@ ProcessDetailJs.prototype.insertContractStartBox = function () {
 
   circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
   circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
-  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? 11.6 : 12) %%>;
+  circleLeft = <%% -7, -7, -7, -5, -0.9 %%>;
 
   arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
   arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
@@ -10636,34 +10676,42 @@ ProcessDetailJs.prototype.insertContractStartBox = function () {
     },
     children: [
       {
-        text: contents.title.join(desktop ? "\n" : " "),
         style: {
           display: desktop ? "inline-flex" : "flex",
           position: "relative",
-          fontSize: String(veryBigSize) + ea,
-          fontWeight: String(veryBigWeight),
-          color: colorChip.black,
-          lineHeight: String(1.5),
           width: desktop ? String(firstWidth) + ea : withOut(0, ea),
-          top: desktop ? String(veryBigTextTop) + ea : "",
           justifyContent: desktop ? "" : "center",
           alignItems: desktop ? "" : "center",
           textAlign: desktop ? "" : "center",
           marginTop: desktop ? "" : String(2.8) + ea,
           marginBottom: desktop ? "" : String(3) + ea,
         },
-        child: {
-          style: {
-            display: "inline-block",
-            position: "absolute",
-            top: String(circleTop) + ea,
-            left: String(circleLeft) + ea,
-            width: String(circleWidth) + ea,
-            height: String(circleWidth) + ea,
-            borderRadius: String(circleWidth) + ea,
-            background: colorChip.red,
+        children: [
+          {
+            text: contents.title.join(desktop ? "\n" : " "),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(veryBigSize) + ea,
+              fontWeight: String(veryBigWeight),
+              color: colorChip.black,
+              lineHeight: String(1.5),
+              top: desktop ? String(veryBigTextTop) + ea : "",
+            },
+            child: {
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: String(circleTop) + ea,
+                left: String(circleLeft) + ea,
+                width: String(circleWidth) + ea,
+                height: String(circleWidth) + ea,
+                borderRadius: String(circleWidth) + ea,
+                background: colorChip.red,
+              }
+            }
           }
-        }
+        ]
       },
       {
         style: {
@@ -10950,7 +10998,7 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function (feedback = false) {
 
   circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
   circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
-  circleLeft = <%% -7, -7, -7, -5, (isIphone() ? (feedback ? 14.7 : 17.0) : (feedback ? 15.3 : 17.6)) %%>;
+  circleLeft = <%% -7, -7, -7, -5, -0.8 %%>;
 
   arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
   arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
@@ -11043,34 +11091,42 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function (feedback = false) {
       },
       children: [
         {
-          text: contents.title.join(desktop ? "\n" : " "),
           style: {
             display: desktop ? "inline-flex" : "flex",
             position: "relative",
-            fontSize: String(veryBigSize) + ea,
-            fontWeight: String(veryBigWeight),
-            color: colorChip.black,
-            lineHeight: String(1.5),
             width: desktop ? String(firstWidth) + ea : withOut(0, ea),
-            top: desktop ? String(veryBigTextTop) + ea : "",
             justifyContent: desktop ? "" : "center",
             alignItems: desktop ? "" : "center",
             textAlign: desktop ? "" : "center",
             marginTop: desktop ? "" : String(2.8) + ea,
             marginBottom: desktop ? "" : String(3) + ea,
           },
-          child: {
-            style: {
-              display: "inline-block",
-              position: "absolute",
-              top: String(circleTop) + ea,
-              left: String(circleLeft) + ea,
-              width: String(circleWidth) + ea,
-              height: String(circleWidth) + ea,
-              borderRadius: String(circleWidth) + ea,
-              background: colorChip.gray4,
+          children: [
+            {
+              text: contents.title.join(desktop ? "\n" : " "),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(veryBigSize) + ea,
+                fontWeight: String(veryBigWeight),
+                color: colorChip.black,
+                lineHeight: String(1.5),
+                top: desktop ? String(veryBigTextTop) + ea : "",
+              },
+              child: {
+                style: {
+                  display: "inline-block",
+                  position: "absolute",
+                  top: String(circleTop) + ea,
+                  left: String(circleLeft) + ea,
+                  width: String(circleWidth) + ea,
+                  height: String(circleWidth) + ea,
+                  borderRadius: String(circleWidth) + ea,
+                  background: colorChip.gray4,
+                }
+              }
             }
-          }
+          ]
         },
         {
           style: {
@@ -11208,34 +11264,42 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function (feedback = false) {
       },
       children: [
         {
-          text: contents.title.join(desktop ? "\n" : " "),
           style: {
             display: desktop ? "inline-flex" : "flex",
             position: "relative",
-            fontSize: String(veryBigSize) + ea,
-            fontWeight: String(veryBigWeight),
-            color: colorChip.black,
-            lineHeight: String(1.5),
             width: desktop ? String(firstWidth) + ea : withOut(0, ea),
-            top: desktop ? String(veryBigTextTop) + ea : "",
             justifyContent: desktop ? "" : "center",
             alignItems: desktop ? "" : "center",
             textAlign: desktop ? "" : "center",
             marginTop: desktop ? "" : String(2.8) + ea,
             marginBottom: desktop ? "" : String(3) + ea,
           },
-          child: {
-            style: {
-              display: "inline-block",
-              position: "absolute",
-              top: String(circleTop) + ea,
-              left: String(circleLeft) + ea,
-              width: String(circleWidth) + ea,
-              height: String(circleWidth) + ea,
-              borderRadius: String(circleWidth) + ea,
-              background: colorChip.gray4,
+          children: [
+            {
+              text: contents.title.join(desktop ? "\n" : " "),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(veryBigSize) + ea,
+                fontWeight: String(veryBigWeight),
+                color: colorChip.black,
+                lineHeight: String(1.5),
+                top: desktop ? String(veryBigTextTop) + ea : "",
+              },
+              child: {
+                style: {
+                  display: "inline-block",
+                  position: "absolute",
+                  top: String(circleTop) + ea,
+                  left: String(circleLeft) + ea,
+                  width: String(circleWidth) + ea,
+                  height: String(circleWidth) + ea,
+                  borderRadius: String(circleWidth) + ea,
+                  background: colorChip.gray4,
+                }
+              }
             }
-          }
+          ]
         },
         {
           style: {
