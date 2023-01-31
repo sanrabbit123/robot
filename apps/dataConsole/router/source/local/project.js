@@ -637,6 +637,13 @@ ProjectJs.prototype.infoArea = function (info) {
 
       if (this.querySelector("input") === null) {
 
+        const map = DataPatch.projectMap();
+        const thisMap = map[this.getAttribute("column")];
+
+        if (thisMap.constant === true) {
+          return;
+        }
+
         cancel_inputBack = GeneralJs.nodes.div.cloneNode(true);
         cancel_inputBack.classList.add("removeTarget");
         style = {
@@ -682,10 +689,6 @@ ProjectJs.prototype.infoArea = function (info) {
         input_clone.addEventListener("keypress", updateValueEvent);
 
         this.appendChild(input_clone);
-
-        //items
-        const map = DataPatch.projectMap();
-        const thisMap = map[this.getAttribute("column")];
 
         if (thisMap.type === "date" && e.type === "click") {
 
@@ -3864,6 +3867,12 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
       if (this.querySelector("input") === null) {
 
+        const thisMap = map[this.parentNode.getAttribute("index")];
+
+        if (thisMap.constant === true) {
+          return;
+        }
+
         cancel_inputBack = GeneralJs.nodes.div.cloneNode(true);
         cancel_inputBack.classList.add("removeTarget");
         style = {
@@ -3908,9 +3917,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         input_clone.addEventListener("keypress", updateValueEvent);
 
         this.appendChild(input_clone);
-
-        //items
-        const thisMap = map[this.parentNode.getAttribute("index")];
 
         if (thisMap.type === "date" && e.type === "click") {
 
@@ -6720,36 +6726,45 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                       e.preventDefault();
                                       e.stopPropagation();
                                       try {
-                                        let [ amount, date, method, proof, to ] = domArr.map((dom) => { return dom.getAttribute("value"); });
-                                        let whereQuery, updateQuery;
-                                        if (Number.isNaN(Number(amount.replace(/[^0-9]/gi, ''))) || Number(amount.replace(/[^0-9]/gi, '')) === 0 || !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(date)) {
-                                          window.alert("정보를 먼저 올바르게 기입해주세요!");
+                                        if (/디자인비 선금/gi.test(responseName) || /디자인비 잔금/gi.test(responseName)) {
+
+                                          window.alert("해당 기능은 차단되었습니다. DA 콘솔을 이용해주세요!");
+
                                         } else {
-                                          amount = Number(amount.replace(/[^0-9]/gi, ''));
-                                          date = stringToDate(date);
 
-                                          whereQuery = { bilid };
-                                          updateQuery = {};
-
-                                          updateQuery["responses." + String(responsesIndex) + ".pay"] = [ { amount, date, oid: "" } ];
-                                          updateQuery["responses." + String(responsesIndex) + ".proofs"] = [ { date, method, proof, to } ];
-                                          await ajaxJson({ mode: "update", whereQuery, updateQuery }, "/pythonPass_generalBill");
-
-                                          if (responseName === "디자인비 잔금" || responseName === "디자인비 잔금") {
-                                            whereQuery = { proid };
+                                          let [ amount, date, method, proof, to ] = domArr.map((dom) => { return dom.getAttribute("value"); });
+                                          let whereQuery, updateQuery;
+                                          if (Number.isNaN(Number(amount.replace(/[^0-9]/gi, ''))) || Number(amount.replace(/[^0-9]/gi, '')) === 0 || !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(date)) {
+                                            window.alert("정보를 먼저 올바르게 기입해주세요!");
+                                          } else {
+                                            amount = Number(amount.replace(/[^0-9]/gi, ''));
+                                            date = stringToDate(date);
+  
+                                            whereQuery = { bilid };
                                             updateQuery = {};
-                                            if (responseName === "디자인비 선금") {
-                                              updateQuery["process.calculation.payments.first.date"] = date;
-                                            } else {
-                                              updateQuery["process.calculation.payments.remain.date"] = date;
+  
+                                            updateQuery["responses." + String(responsesIndex) + ".pay"] = [ { amount, date, oid: "" } ];
+                                            updateQuery["responses." + String(responsesIndex) + ".proofs"] = [ { date, method, proof, to } ];
+                                            await ajaxJson({ mode: "update", whereQuery, updateQuery }, "/pythonPass_generalBill");
+  
+                                            if (responseName === "디자인비 선금" || responseName === "디자인비 잔금") {
+                                              whereQuery = { proid };
+                                              updateQuery = {};
+                                              if (responseName === "디자인비 선금") {
+                                                updateQuery["process.calculation.payments.first.date"] = date;
+                                              } else {
+                                                updateQuery["process.calculation.payments.remain.date"] = date;
+                                              }
+                                              await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateProject");
                                             }
-                                            await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateProject");
+  
+                                            window.alert("저장되었습니다!");
+                                            window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&rmode=true";
+  
                                           }
 
-                                          window.alert("저장되었습니다!");
-                                          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&rmode=true";
-
                                         }
+
                                       } catch (e) {
                                         console.log(e);
                                       }
