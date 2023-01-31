@@ -79,7 +79,7 @@ CronGhost.prototype.aliveTest = async function () {
 
     }
 
-    bill.parsingCashReceipt().then(() => {
+    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/parsingCashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
       return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.backinfo.host + ":" + String(generalPort) + "/callHistory", { data: null }, { headers: { "Content-Type": "application/json" } });
@@ -295,6 +295,11 @@ CronGhost.prototype.cronServer = async function () {
         console.log(e);
       }
     }, 1000 * 10);
+
+
+    
+
+
 
     pems = {};
     pemsLink = process.cwd() + "/pems/" + address.officeinfo.ghost.host;

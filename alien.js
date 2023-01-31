@@ -299,7 +299,6 @@ Alien.prototype.smsLaunching = async function () {
     app.use(express.urlencoded({ extended: true }));
 
     wsLaunching = () => {}
-
     wsOpenEvent = async () => {
       try {
         await errorLog("sms wss wake up");
@@ -390,7 +389,6 @@ Alien.prototype.smsLaunching = async function () {
         process.exit();
       }
     }
-
     wsLaunching = () => {
       let ws;
       ws = new WebSocket(url);
@@ -399,7 +397,6 @@ Alien.prototype.smsLaunching = async function () {
       ws.on("close", wsCloseEvent);
       return ws;
     }
-
     ws = wsLaunching();
 
     app.get("/", (req, res) => {
