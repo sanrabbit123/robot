@@ -995,15 +995,15 @@ KakaoTalk.prototype.templateTong = function (target) {
       }
     },
     "curationComplete": {
-      "name": "큐레이션 완료 수정 수정 수정 링크 없는 버전",
-      "id": "TJ_0535",
+      "name": "큐레이션 완료 최종 수정",
+      "id": "TL_5994",
       "needs": [
         "client"
       ],
       "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n        ];\n      }",
       "raw": {
-        "templtContent": "안녕하세요, #{client}님!\n작성하신 내용은 모두 전달되었습니다.\n고객님의 요청 사항을 토대로 더 상세한 상담을 위해, 영업일 기준 2일 안에 전화드리겠습니다 :)\n\n감사합니다!",
-        "templtName": "큐레이션 완료 수정 수정 수정 링크 없는 버전",
+        "templtContent": "안녕하세요, #{client}님!\n작성하신 내용은 모두 전달되었습니다.\n\n고객님의 요청 사항을 토대로 더 상세한 상담을 위해, 영업일 기준 3-4일 안에 전화드리겠습니다 :)\n\n감사합니다!",
+        "templtName": "큐레이션 완료 최종 수정",
         "templateType": "BA",
         "templateEmType": "NONE",
         "templateExtra": "",
@@ -1015,13 +1015,23 @@ KakaoTalk.prototype.templateTong = function (target) {
         "block": "N",
         "dormant": "N",
         "securityFlag": "N",
-        "status": "A",
+        "status": "R",
         "inspStatus": "APR",
         "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
         "buttons": [],
-        "cdate": "2022-06-16 16:12:31",
-        "templtCode": "TJ_0535",
-        "comments": []
+        "cdate": "2023-01-27 12:31:25",
+        "templtCode": "TL_5994",
+        "comments": [
+          {
+            "cdate": "2023-01-27 14:41:05",
+            "name": "검수자",
+            "id": "2367698",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-01-27 14:41:05",
+            "status": "APR"
+          }
+        ]
       }
     },
     "paymentAndChannel": {
@@ -2563,6 +2573,264 @@ KakaoTalk.prototype.templateTong = function (target) {
             "userName": "검수자",
             "commentContent": "",
             "createdAt": "2023-01-25 10:26:52",
+            "status": "APR"
+          }
+        ]
+      }
+    },
+    "feedBackDesigner": {
+      "name": "현장 미팅 피드백",
+      "id": "TL_5837",
+      "needs": [
+        "client",
+        "designer",
+        "host",
+        "proid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"proid\", to: obj.proid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 실장님!\n#{client} 고객님과의 현장 미팅은 어떠셨나요? 무사히 잘 끝났다면, 디자이너 콘솔을 통해 현장 사진을 업로드해주세요!\n\n홈리에종과 고객님 간 피드백 통화 이후, 잔금 요청과 계약서 발송 단계가 진행됩니다. 고객님의 잔금 지불이 완료되기 전까지 프로젝트 시작을 홀딩해주세요.\n\n* 콘솔 (현장 사진 업로드)\nhttps://#{host}/designer/process.php?proid=#{proid}&mode=feedback",
+        "templtName": "현장 미팅 피드백",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-01-26 11:31:19",
+        "templtCode": "TL_5837",
+        "comments": [
+          {
+            "cdate": "2023-01-26 14:18:00",
+            "name": "검수자",
+            "id": "2365267",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-01-26 14:18:00",
+            "status": "APR"
+          }
+        ]
+      }
+    },
+    "paymentFirstDesigner": {
+      "name": "선금 지급 완료",
+      "id": "TL_5974",
+      "needs": [
+        "client",
+        "designer",
+        "host",
+        "proid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"proid\", to: obj.proid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 실장님!\n#{client} 고객님 현장의 디자인비 선금 정산이 완료되었습니다. 실장님께서는 정산 확인 부탁드리겠습니다.\n\n금액 등 상세 내역과 기타 안내는 아래 디자이너 콘솔 링크에서 확인하실 수 있습니다.\n\n감사합니다!\n\n* 콘솔\nhttps://#{host}/designer/process.php?proid=#{proid}&mode=payfirst",
+        "templtName": "선금 지급 완료",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-01-27 10:54:35",
+        "templtCode": "TL_5974",
+        "comments": [
+          {
+            "cdate": "2023-01-27 13:59:14",
+            "name": "검수자",
+            "id": "2367525",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-01-27 13:59:14",
+            "status": "APR"
+          }
+        ]
+      }
+    },
+    "paymentRemainDesigner": {
+      "name": "잔금 지급 완료",
+      "id": "TL_5976",
+      "needs": [
+        "client",
+        "designer",
+        "host",
+        "proid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"proid\", to: obj.proid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 실장님!\n#{client} 고객님 현장의 디자인비 잔금 정산이 완료되었습니다. 실장님께서는 정산 확인 부탁드리겠습니다.\n\n금액 등 상세 내역과 기타 안내는 아래 디자이너 콘솔 링크에서 확인하실 수 있습니다.\n\n감사합니다!\n\n* 콘솔\nhttps://#{host}/designer/process.php?proid=#{proid}&mode=payremain",
+        "templtName": "잔금 지급 완료",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-01-27 10:55:04",
+        "templtCode": "TL_5976",
+        "comments": [
+          {
+            "cdate": "2023-01-27 14:03:34",
+            "name": "검수자",
+            "id": "2367542",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-01-27 14:03:34",
+            "status": "APR"
+          }
+        ]
+      }
+    },
+    "photoDateDesigner": {
+      "name": "촬영일 알림 디자이너 수정",
+      "id": "TL_5980",
+      "needs": [
+        "client",
+        "designer",
+        "date",
+        "address"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"date\", to: obj.date },\n          { from: \"address\", to: obj.address }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 실장님! #{client} 고객님 현장의 촬영일이 다가와 알림 드립니다 :)\n\n* 일시 : #{date}\n* 주소 : #{address}\n\n촬영 전 공간 세팅 부탁드립니다. 세팅 시간은 고객님께 별도로 연락하셔서 협의해주시면 됩니다! \n\n감사합니다 :)",
+        "templtName": "촬영일 알림 디자이너 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-01-27 10:58:32",
+        "templtCode": "TL_5980",
+        "comments": [
+          {
+            "cdate": "2023-01-27 14:03:52",
+            "name": "검수자",
+            "id": "2367544",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-01-27 14:03:52",
+            "status": "APR"
+          }
+        ]
+      }
+    },
+    "contractConfirmDesigner": {
+      "name": "계약서 서명시 디자이너",
+      "id": "TL_6162",
+      "needs": [
+        "client",
+        "designer",
+        "host",
+        "proid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"proid\", to: obj.proid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 실장님!\n#{client} 고객님께서 홈스타일링 계약서에 서명을 완료하셨습니다!\n\n계약상 시작일이 되면, 고객님께 프로젝트의 디자인 작업이 시작된다는 안내가 발송됩니다. 실장님께서는 시작일 확인을 부탁드립니다.\n\n시작 날짜 등 자세한 사항은 디자이너 콘솔을 통해 확인 부탁드립니다.\n \n감사합니다!\n\n* 콘솔 (계약서 확인)\nhttps://#{host}/designer/process.php?proid=#{proid}&mode=contractconfirm",
+        "templtName": "계약서 서명시 디자이너",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-01-30 09:15:32",
+        "templtCode": "TL_6162",
+        "comments": [
+          {
+            "cdate": "2023-01-30 11:46:20",
+            "name": "검수자",
+            "id": "2369491",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-01-30 11:46:20",
+            "status": "APR"
+          }
+        ]
+      }
+    },
+    "contractStartDesigner": {
+      "name": "계약서 시작일 디자이너",
+      "id": "TL_6163",
+      "needs": [
+        "client",
+        "designer",
+        "host",
+        "proid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"proid\", to: obj.proid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 실장님!\n#{client} 고객님 프로젝트의 계약서상 시작일이 되었습니다. 실장님께서는 디자인 작업을 시작해 주세요!\n\n고객님과의 상담을 통해 작업을 진행하신 후, 일정표, 디자인 제안서, 제품 리스트 등의 페이퍼 작업을 콘솔에 업로드해 주세요!\n\n* 콘솔\nhttps://#{host}/designer/process.php?proid=#{proid}&mode=contractstart",
+        "templtName": "계약서 시작일 디자이너",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-01-30 09:18:48",
+        "templtCode": "TL_6163",
+        "comments": [
+          {
+            "cdate": "2023-01-30 11:46:42",
+            "name": "검수자",
+            "id": "2369493",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-01-30 11:46:42",
             "status": "APR"
           }
         ]

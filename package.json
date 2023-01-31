@@ -9,7 +9,11 @@
   "author": "uragen",
   "license": "ISC",
   "dependencies": {
-    "@google-analytics/data": "^3.1.2",
+    "@aws-sdk/client-cost-and-usage-report-service": "^3.261.0",
+    "@aws-sdk/client-cost-explorer": "^3.261.0",
+    "@aws-sdk/client-ec2": "^3.261.0",
+    "@aws-sdk/client-ec2-instance-connect": "^3.261.0",
+    "@google-analytics/data": "^3.2.0",
     "@slack/web-api": "^5.15.0",
     "axios": "^1.2.2",
     "express": "^4.18.2",
