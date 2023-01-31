@@ -44,6 +44,8 @@ StaticRouter.prototype.fireWall = function (req) {
   const instance = this;
   let __originTarget, __wallLogicBoo, __vailHosts;
 
+  console.log(req.headers);
+
   __vailHosts = this.vaildHost;
   __originTarget = req.headers["origin"];
   if (typeof __originTarget !== "string") {
@@ -1011,7 +1013,7 @@ StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      
+
       bill.parsingCashReceipt().catch((err) => {
         errorLog("cash receipt error : " + err.message).catch((e) => { console.log(e); });
       });
