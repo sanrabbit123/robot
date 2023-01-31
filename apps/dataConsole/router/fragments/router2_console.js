@@ -5494,6 +5494,69 @@ DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
       await errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
     }
   }
+  const afterMeetingAlarmFunc = async (MONGOC) => {
+    try {
+      const selfMongo = MONGOC;
+      const today = new Date();
+      let projects;
+      let clients, client;
+      let clientIndex;
+      let meetingDate;
+      let todayValue;
+      let designer;
+      let ago;
+
+      today.setHours(9);
+      todayValue = today.valueOf();
+
+      ago = new Date();
+      ago.setHours(7);
+      ago.setDate(ago.getDate() - 1);
+
+      projects = await back.getProjectsByQuery({
+        $and: [
+          { "desid": { $regex: "^d" } },
+          { "process.status": { $regex: "^[대진완홀]" } },
+          { "process.contract.meeting.date": { $gte: ago } },
+        ]
+      }, { selfMongo });
+
+      if (projects.length > 0) {
+
+        clients = await back.getClientsByQuery({
+          $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.cliid; })) ].map((cliid) => { return { cliid } }),
+        }, { selfMongo });
+
+        for (let project of projects) {
+          clientIndex = clients.toNormal().findIndex((obj) => { return obj.cliid === project.cliid });
+          if (clientIndex !== -1) {
+            meetingDate = project.process.contract.meeting.date;
+            client = clients.toNormal()[clientIndex];
+
+            if (meetingDate.valueOf() <= todayValue) {
+              
+              designer = await back.getDesignerById(project.desid, { selfMongo });
+
+              await kakao.sendTalk("feedBackDesigner", designer.designer, designer.information.phone, {
+                client: client.name,
+                designer: designer.designer,
+                host: address.frontinfo.host,
+                proid: project.proid,
+              });
+
+              await messageSend(designer.designer + " 실장님께 현장 미팅 피드백 알림을 전송하였어요.", "#300_designer", true);
+
+            }
+          }
+        }
+      }
+
+      await errorLog("first meeting feedback alarm done");
+
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
+    }
+  }
   let obj = {};
   obj.link = [ "/firstMeetingAlarm" ];
   obj.func = async function (req, res) {
@@ -5504,7 +5567,9 @@ DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      firstMeetingAlarmFunc(instance.mongo).catch((err) => {
+      firstMeetingAlarmFunc(instance.mongo).then(() => {
+        return afterMeetingAlarmFunc(instance.mongo);
+      }).catch((err) => {
         errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
