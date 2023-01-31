@@ -151,7 +151,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    const res = await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/mongoToJson", { data: null }, { headers: { "Content-Type": "application/json" } });
+    console.log(res);
 
 
     // const  { EC2Client, DescribeInstancesCommand } = require("@aws-sdk/client-ec2");
