@@ -145,6 +145,7 @@ DevContext.prototype.launching = async function () {
     //   console.log(whereQuery, updateQuery);
     // }
 
+    await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/mongoToJson", { data: null }, { headers: { "Content-Type": "application/json" } });
 
 
 

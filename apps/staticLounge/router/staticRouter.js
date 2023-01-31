@@ -44,8 +44,6 @@ StaticRouter.prototype.fireWall = function (req) {
   const instance = this;
   let __originTarget, __wallLogicBoo, __vailHosts;
 
-  console.log(req.headers);
-
   __vailHosts = this.vaildHost;
   __originTarget = req.headers["origin"];
   if (typeof __originTarget !== "string") {
