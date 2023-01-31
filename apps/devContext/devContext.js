@@ -157,21 +157,32 @@ DevContext.prototype.launching = async function () {
     // const  { EC2Client, DescribeInstancesCommand } = require("@aws-sdk/client-ec2");
     // const ec2Client = new EC2Client({ region: "ap-northeast-2" });
     // const params = {};
+    // let instances, data;
 
-    // const data = await ec2Client.send(new DescribeInstancesCommand(params));
-
+    // data = await ec2Client.send(new DescribeInstancesCommand(params));
+    // instances = [];
     // for (let obj of data.Reservations) {
-    //   console.log(obj);
+    //   for (let obj2 of obj.Instances) {
+    //     instances.push({
+    //       name: obj2.Tags.find((o) => { return o.Key === "Name" }).Value,
+    //       id: obj2.InstanceId,
+    //       type: obj2.InstanceType,
+    //       state: obj2.State.Name,
+    //       ip: {
+    //         outer: obj2.PublicIpAddress,
+    //         inner: obj2.PrivateIpAddress
+    //       }
+    //     });
+    //   }
     // }
 
-
-
+    // console.log(instances);
 
 
 
     
 
-
+    
     
 
 

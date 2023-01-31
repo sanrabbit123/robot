@@ -917,6 +917,80 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_mongoToJson = function () {
+  const instance = this;
+  const { shellExec, shellLink, fileSystem, errorLog } = this.mother;
+  const mongoToJsonFunction = async function () {
+    try {
+      const today = new Date();
+      const zeroAddition = function (number) {
+        if (number < 10) {
+          return `0${String(number)}`;
+        } else {
+          return String(number);
+        }
+      }
+      const backFolderName = "backup";
+      const mongoTargets = [
+        [ "mongoinfo", "mongo" ],
+        [ "backinfo", "console" ],
+        [ "pythoninfo", "python" ],
+        [ "testinfo", "log" ],
+        [ "secondinfo", "second" ],
+      ];
+      const robotDirArr = process.cwd().split("/");
+      robotDirArr.pop();
+      const robotDirMother = robotDirArr.join("/");
+      const robotDirMotherDetail = await fileSystem(`readDir`, [ robotDirMother ]);
+      if (!robotDirMotherDetail.includes(backFolderName)) {
+        await shellExec(`mkdir ${shellLink(robotDirMother)}/${backFolderName}`);
+      }
+      const backDir = robotDirMother + "/" + backFolderName;
+      let tempInfo, timeString;
+      
+      timeString = `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`;
+
+      for (let [ infoName, dbName ] of mongoTargets) {
+        tempInfo = address[infoName];
+        await shellExec(`mongodump --uri="mongodb://${tempInfo["host"]}/${tempInfo["database"]}" --username=${tempInfo["user"]} --password=${tempInfo["password"]} --port=${String(tempInfo["port"])} --out="${shellLink(backDir)}/${timeString}/${dbName}${timeString}" --authenticationDatabase admin`);
+      }
+
+      await shellExec(`cd ${shellLink(backDir)};zip -r ./${timeString}.zip ./${timeString};rm -rf ${shellLink(backDir)}/${timeString}`);
+
+      await errorLog("mongo to json done");
+
+    } catch (e) {
+      await errorLog("mongo to json error : " + e.message);
+    }
+  }
+  let obj;
+  obj = {};
+  obj.link = [ "/mongoToJson" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+    
+      mongoToJsonFunction().catch((err) => {
+        errorLog("mongo to json error : " + err.message).catch((e) => { console.log(e); });
+      });
+
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_mongoToJson): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.getAll = function () {
