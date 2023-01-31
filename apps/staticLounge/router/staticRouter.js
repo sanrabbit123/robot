@@ -992,6 +992,39 @@ StaticRouter.prototype.rou_post_mongoToJson = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
+  const instance = this;
+  const { errorLog } = this.mother;
+  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+  const bill = new BillMaker();
+  let obj;
+  obj = {};
+  obj.link = [ "/parsingCashReceipt" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      
+      bill.parsingCashReceipt().catch((err) => {
+        errorLog("cash receipt error : " + err.message).catch((e) => { console.log(e); });
+      });
+
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_parsingCashReceipt): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.getAll = function () {

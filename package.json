@@ -9,10 +9,12 @@
   "author": "uragen",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-cloudwatch": "^3.261.0",
     "@aws-sdk/client-cost-and-usage-report-service": "^3.261.0",
     "@aws-sdk/client-cost-explorer": "^3.261.0",
     "@aws-sdk/client-ec2": "^3.261.0",
     "@aws-sdk/client-ec2-instance-connect": "^3.261.0",
+    "@aws-sdk/client-polly": "^3.261.0",
     "@aws-sdk/client-s3": "^3.261.0",
     "@aws-sdk/client-s3-control": "^3.261.0",
     "@google-analytics/data": "^3.2.0",
