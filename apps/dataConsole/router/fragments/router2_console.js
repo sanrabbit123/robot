@@ -5557,6 +5557,154 @@ DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
       await errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
     }
   }
+  const photoDesignerAlarmFunc = async (MONGOC) => {
+    try {
+      const selfMongo = MONGOC;
+      const today = new Date();
+      let projects;
+      let clients, client;
+      let clientIndex;
+      let photoDate;
+      let delta;
+      let todayValue;
+      let rawDelta;
+      let designer;
+      let requestNumber;
+
+      today.setHours(9);
+      todayValue = today.valueOf();
+
+      projects = await back.getProjectsByQuery({
+        $and: [
+          { "desid": { $regex: "^d" } },
+          { "process.status": { $regex: "^[대진완홀]" } },
+          { "contents.photo.date": { $gt: new Date() } },
+        ]
+      }, { selfMongo });
+
+      if (projects.length > 0) {
+
+        clients = await back.getClientsByQuery({
+          $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.cliid; })) ].map((cliid) => { return { cliid } }),
+        }, { selfMongo });
+
+        for (let project of projects) {
+          clientIndex = clients.toNormal().findIndex((obj) => { return obj.cliid === project.cliid });
+          if (clientIndex !== -1) {
+            photoDate = project.contents.photo.date;
+            client = clients.toNormal()[clientIndex];
+            requestNumber = 0;
+            for (let z = 0; z < client.requests.length; z++) {
+              if (client.requests[z].request.timeline.valueOf() <= project.proposal.date.valueOf()) {
+                requestNumber = z;
+                break;
+              }
+            }
+
+            rawDelta = (((Math.abs(photoDate.valueOf() - todayValue) / 1000) / 60) / 60) / 24;
+            delta = Math.floor(rawDelta);
+
+            if (delta === 3) {
+
+              designer = await back.getDesignerById(project.desid, { selfMongo });
+
+              await kakao.sendTalk("photoDateDesigner", designer.designer, designer.information.phone, {
+                designer: designer.designer,
+                client: client.name,
+                date: `${String(photoDate.getFullYear())}년 ${String(photoDate.getMonth() + 1)}월 ${String(photoDate.getDate())}일 ${String(photoDate.getHours())}시`,
+                address: client.requests[requestNumber].request.space.address,
+              });
+
+              // dev
+              await kakao.sendTalk("photoDateDesigner", "배창규", "010-2747-3403", {
+                designer: designer.designer,
+                client: client.name,
+                date: `${String(photoDate.getFullYear())}년 ${String(photoDate.getMonth() + 1)}월 ${String(photoDate.getDate())}일 ${String(photoDate.getHours())}시`,
+                address: client.requests[requestNumber].request.space.address,
+              });
+
+              await messageSend(designer.designer + " 실장님께 촬영일 알림을 전송하였어요.", "#300_designer", true);
+            }
+
+          }
+        }
+      }
+
+      await errorLog("photo designer alarm done");
+
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
+    }
+  }
+  const contractStartAlarmFunc = async (MONGOC) => {
+    try {
+      const selfMongo = MONGOC;
+      const today = new Date();
+      let projects;
+      let clients, client;
+      let clientIndex;
+      let contractDate;
+      let todayValue;
+      let designer;
+      let requestNumber;
+      let ago;
+
+      today.setHours(9);
+      todayValue = today.valueOf();
+
+      ago = new Date();
+      ago.setHours(7);
+      ago.setDate(ago.getDate() - 2);
+
+      projects = await back.getProjectsByQuery({
+        $and: [
+          { "desid": { $regex: "^d" } },
+          { "process.status": { $regex: "^[대진완홀]" } },
+          { "process.contract.form.date.from": { $gte: ago } },
+        ]
+      }, { selfMongo });
+
+      if (projects.length > 0) {
+
+        clients = await back.getClientsByQuery({
+          $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.cliid; })) ].map((cliid) => { return { cliid } }),
+        }, { selfMongo });
+
+        for (let project of projects) {
+          clientIndex = clients.toNormal().findIndex((obj) => { return obj.cliid === project.cliid });
+          if (clientIndex !== -1) {
+            contractDate = project.process.contract.form.date.from;
+            client = clients.toNormal()[clientIndex];
+            requestNumber = 0;
+            for (let z = 0; z < client.requests.length; z++) {
+              if (client.requests[z].request.timeline.valueOf() <= project.proposal.date.valueOf()) {
+                requestNumber = z;
+                break;
+              }
+            }
+            if (dateToString(contractDate) === dateToString(new Date())) {
+
+              designer = await back.getDesignerById(project.desid, { selfMongo });
+
+              await kakao.sendTalk("contractStartDesigner", designer.designer, designer.information.phone, {
+                designer: designer.designer,
+                client: client.name,
+                host: address.frontinfo.host,
+                proid: project.proid,
+              });
+
+              await messageSend(designer.designer + " 실장님께 " + client.name + " 고객님 프로젝트 계약 시작일 알림을 전송하였어요.", "#300_designer", true);
+            }
+          }
+        }
+      }
+
+      await errorLog("contract start designer alarm done");
+
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
+    }
+  }
   let obj = {};
   obj.link = [ "/firstMeetingAlarm" ];
   obj.func = async function (req, res) {
@@ -5569,6 +5717,10 @@ DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
     try {
       firstMeetingAlarmFunc(instance.mongo).then(() => {
         return afterMeetingAlarmFunc(instance.mongo);
+      }).then(() => {
+        return photoDesignerAlarmFunc(instance.mongo);
+      }).then(() => {
+        return contractStartAlarmFunc(instance.mongo);
       }).catch((err) => {
         errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message).catch((err) => { console.log(err) });
       });

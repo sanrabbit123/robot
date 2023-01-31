@@ -90,13 +90,11 @@ class GeneralPhp {
 
     // naver
     $html .= '<script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>'."\n";
-    if ($name === $curationName) {
-      $html .= '<script type="text/javascript">'."\n";
-      $html .= 'var _nasa={};'."\n";
-      $html .= 'if (window.wcs) { _nasa["cnv"] = wcs.cnv("1", "10"); }'."\n";
-      $html .= '</script>'."\n";
-    }
     $html .= '<script type="text/javascript">'."\n";
+    if ($name === $curationName) {
+      $html .= 'var _nasa={};'."\n";
+      $html .= 'if (window.wcs) { _nasa["cnv"] = wcs.cnv("4", "10"); }'."\n";
+    }
     $html .= 'if (!wcs_add) { var wcs_add = {}; }'."\n";
     $html .= 'wcs_add["wa"] = "'.$naverLogId.'";'."\n";
     $html .= 'if (!_nasa) { var _nasa={}; }'."\n";

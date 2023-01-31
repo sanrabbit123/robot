@@ -148,12 +148,25 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const  { EC2Client, DescribeInstancesCommand } = require("@aws-sdk/client-ec2");
+    // const ec2Client = new EC2Client({ region: "ap-northeast-2" });
+    // const params = {};
+
+    // const data = await ec2Client.send(new DescribeInstancesCommand(params));
+
+    // for (let obj of data.Reservations) {
+    //   console.log(obj);
+    // }
+
+
+
 
 
 
     
 
 
+    
 
 
     /*

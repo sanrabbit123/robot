@@ -3087,7 +3087,9 @@ ReceiptRouter.prototype.rou_post_excuteResponse = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, errorLog } = this.mother;
+  const address = this.address;
+  const kakao = this.kakao;
+  const { equalJson, errorLog, messageSend } = this.mother;
   let obj = {};
   obj.link = "/excuteResponse";
   obj.func = async function (req, res) {
@@ -3112,6 +3114,8 @@ ReceiptRouter.prototype.rou_post_excuteResponse = function () {
       let whereQuery, updateQuery;
       let projectWhereQuery, projectUpdateQuery;
       let amount;
+      let type;
+      let thisClient, thisDesigner;
 
       responseIndex = Number(responseIndex);
       if (Number.isNaN(responseIndex)) {
@@ -3163,13 +3167,35 @@ ReceiptRouter.prototype.rou_post_excuteResponse = function () {
           projectUpdateQuery["process.calculation.payments.first.amount"] = Math.floor(amount);
           projectUpdateQuery["process.calculation.payments.first.date"] = date;
           projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor(thisProject.process.calculation.payments.totalAmount - amount);
+          type = "first";
         } else if (/홈리에종 잔금/gi.test(name)) {
           projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor(amount);
           projectUpdateQuery["process.calculation.payments.remain.date"] = date;
+          type = "remain";
         }
 
         await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: instance.mongo });
         thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
+        thisClient = await back.getClientById(thisProject.cliid, { selfMongo: instance.mongo });
+        thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: instance.mongo });
+
+        if (type === "first") {
+          await kakao.sendTalk("paymentFirstDesigner", thisDesigner.designer, thisDesigner.information.phone, {
+            designer: thisDesigner.designer,
+            client: thisClient.name,
+            host: address.frontinfo.host,
+            proid: thisProject.proid,
+          });
+          await messageSend({ text: thisDesigner.designer + " 실장님께 선금 정산 완료 알림을 보냈습니다!", channel: "#700_operation", voice: true });
+        } else {
+          await kakao.sendTalk("paymentRemainDesigner", thisDesigner.designer, thisDesigner.information.phone, {
+            designer: thisDesigner.designer,
+            client: thisClient.name,
+            host: address.frontinfo.host,
+            proid: thisProject.proid,
+          });
+          await messageSend({ text: thisDesigner.designer + " 실장님께 잔금 정산 완료 알림을 보냈습니다!", channel: "#700_operation", voice: true });
+        }
 
       }
 
@@ -3386,6 +3412,7 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
   const instance = this;
   const { requestSystem, equalJson, stringToDate, messageLog, errorLog, messageSend } = this.mother;
   const address = this.address;
+  const kakao = this.kakao;
   const { officeinfo: { widsign: { id, key, endPoint } } } = address;
   const collections = [ "stylingForm", "constructForm" ];
   const back = this.back;
@@ -3403,6 +3430,7 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
       let target;
       let formDetail;
       let thisClient;
+      let thisProject, thisDesigner;
       let text;
 
       for (let collection of collections) {
@@ -3490,9 +3518,24 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
                           return obj;
                         });
                         if (f.confirm !== true && target.confirm === true) {
+
+                          thisProject = await back.getProjectById(f.proid, { selfMongo: MONGOC });
                           thisClient = await back.getClientById(f.client.cliid, { selfMongo: MONGOC });
+                          thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: MONGOC });
+
                           text = thisClient.name + " 고객님이 계약서에 서명을 완료하셨습니다!";
                           await messageSend({ text, channel: "#cx", voice: true });
+
+                          if (thisDesigner !== null) {
+                            await kakao.sendTalk("contractConfirmDesigner", thisDesigner.designer, thisDesigner.information.phone, {
+                              client: thisClient.name,
+                              designer: thisDesigner.designer,
+                              host: address.frontinfo.host,
+                              proid: thisProject.proid,
+                            });
+                            await messageSend(thisDesigner.designer + " 실장님께 계약서 서명 완료 알림을 전송하였어요.", "#300_designer", false);
+                          }
+
                         }
                         await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
 
