@@ -12,7 +12,7 @@ const hourId = [];
 
 const worker = async function (package) {
   const { mother, address, back, mongo, mongolocal } = package;
-  const { messageLog, errorLog } = mother;
+  const { requestSystem, messageLog, errorLog } = mother;
   try {
     await requestSystem("https://" + address.backinfo.host + ":3000/workProjectActionSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     return true;
