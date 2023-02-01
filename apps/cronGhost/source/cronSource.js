@@ -1,10 +1,8 @@
-const CronSource = function (mother, back, address, work, MONGOC, MONGOCONSOLEC, MONGOLOCALC) {
+const CronSource = function (mother, back, address, MONGOC, MONGOLOCALC) {
   this.mother = mother;
   this.back = back;
   this.address = address;
-  this.work = work;
   this.mongo = MONGOC;
-  this.mongoconsole = MONGOCONSOLEC;
   this.mongolocal = MONGOLOCALC;
   this.dir = process.cwd() + "/apps/cronGhost/source";
   this.sourceMap = null;
@@ -78,9 +76,7 @@ CronSource.prototype.targetLauching = async function (cronId) {
     mother: this.mother,
     back: this.back,
     address: this.address,
-    work: this.work,
     mongo: this.mongo,
-    mongoconsole: this.mongoconsole,
     mongolocal: this.mongolocal,
   };
   try {

@@ -2,12 +2,10 @@ const CronGhost = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
-
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = ADDRESS;
   this.dir = `${process.cwd()}/apps/cronGhost`;
-  this.list = [];
 }
 
 CronGhost.prototype.aliveTest = async function () {
@@ -27,6 +25,7 @@ CronGhost.prototype.aliveTest = async function () {
       { name: "log", protocol: "https:", host: address.testinfo.host, port: generalPort, },
       { name: "second", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
       { name: "trans", protocol: "https:", host: address.transinfo.host, port: generalPort, },
+      { name: "cron", protocol: "https:", host: address.croninfo.host, port: generalPort, },
       { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: generalPort, },
     ];
 
@@ -102,6 +101,7 @@ CronGhost.prototype.diskTest = async function () {
       { name: "log", host: instance.address.testinfo.host },
       { name: "second", host: instance.address.secondinfo.host },
       { name: "trans", host: instance.address.transinfo.host },
+      { name: "cron", host: instance.address.croninfo.host },
     ]
     const robotPort = 3000;
     const pathConst = "/disk";
@@ -124,19 +124,16 @@ CronGhost.prototype.cronServer = async function () {
   const instance = this;
   const address = this.address;
   const { shellExec, fileSystem, messageSend, requestSystem, pureServer, dateToString, mongo, mongolocalinfo, mongoinfo, mongoconsoleinfo, errorLog } = this.mother;
-  const port = 53001;
+  const port = 3000;
   const interval = (10 * 60 * 1000);
   const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
   const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num) }
   const CronSource = require(`${this.dir}/source/cronSource.js`);
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-  const MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-  const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
   const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
   try {
     const human = new HumanPacket();
-    const work = new BackWorker();
     const https = require("https");
     const express = require("express");
     const app = express();
@@ -157,7 +154,6 @@ CronGhost.prototype.cronServer = async function () {
 
     await MONGOC.connect();
     await MONGOLOCALC.connect();
-    await MONGOCONSOLEC.connect();
 
     this.time = new Date();
     this.cronId = {
@@ -170,26 +166,24 @@ CronGhost.prototype.cronServer = async function () {
       this.mother,
       this.back,
       this.address,
-      work,
       MONGOC,
-      MONGOCONSOLEC,
       MONGOLOCALC
     );
     await this.source.sourceLoad();
 
-    app.post("/voice", async (req, res) => {
-      res.set("Content-Type", "application/json");
-      try {
-        if (req.body.text === undefined) {
-          res.send(JSON.stringify({ message: "invaild post" }));
-        } else {
-          shellExec("say", [ req.body.text.replace(/[a-zA-Z\:\=\&\/\-\?]/gi, '').replace(/[0-9]/gi, '') ]).catch((err) => { console.log(err); });
-          res.send(JSON.stringify({ message: "will do" }));
-        }
-      } catch (e) {
-        res.send(JSON.stringify({ error: e.message }));
-      }
-    });
+
+    //set router
+    const CronRouter = require(`${this.dir}/router/cronRouter.js`);
+    const router = new CronRouter(MONGOC, MONGOLOCALC);
+    const rouObj = router.getAll();
+    for (let obj of rouObj.get) {
+      app.get(obj.link, obj.func);
+    }
+    for (let obj of rouObj.post) {
+      app.post(obj.link, obj.func);
+    }
+    console.log(`set router`);
+
 
     intervalFunc = async () => {
       try {
@@ -297,12 +291,8 @@ CronGhost.prototype.cronServer = async function () {
     }, 1000 * 10);
 
 
-    
-
-
-
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + address.officeinfo.ghost.host;
+    pemsLink = process.cwd() + "/pems/" + address.croninfo.host;
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
     caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
@@ -324,7 +314,7 @@ CronGhost.prototype.cronServer = async function () {
     }
     pems.allowHTTP1 = true;
 
-    https.createServer(pems, app).listen(address.officeinfo.voice.port, () => {
+    https.createServer(pems, app).listen(port, () => {
       console.log(``);
       console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
       console.log(``);

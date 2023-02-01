@@ -6562,3 +6562,87 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_workProposalToClient = function () {
+  const instance = this;
+  const work = this.work;
+  const { errorLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/workProposalToClient" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      work.setProposalToClient("cron", { selfMongo: instance.mongo }).then(() => {
+        return errorLog("proposal to client sync done : " + JSON.stringify(new Date()));
+      }).catch((err) => {
+        errorLog("Console 서버 문제 생김 (rou_post_workProposalToClient): " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_workProposalToClient): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_workProjectActionSync = function () {
+  const instance = this;
+  const work = this.work;
+  const { errorLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/workProjectActionSync" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      work.projectActionSync({ selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal, updateMongo: instance.mongo }).then(() => {
+        return errorLog("project action sync done : " + JSON.stringify(new Date()));
+      }).catch((err) => {
+        errorLog("Console 서버 문제 생김 (rou_post_workProjectActionSync): " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_workProjectActionSync): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_workClientActionSync = function () {
+  const instance = this;
+  const work = this.work;
+  const { errorLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/workClientActionSync" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      work.clientActionSync({ selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal, updateMongo: instance.mongo }).then(() => {
+        return errorLog("client action sync done : " + JSON.stringify(new Date()));
+      }).catch((err) => {
+        errorLog("Console 서버 문제 생김 (rou_post_workClientActionSync): " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_workClientActionSync): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
