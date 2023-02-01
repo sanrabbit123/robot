@@ -423,8 +423,8 @@ Mother.prototype.fileSystem = function (sw, arr) {
 }
 
 Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
-  const axios = require('axios');
-  const FormData = require('form-data');
+  const axios = require("axios");
+  const FormData = require("form-data");
 
   let method, dataKeys, configKeys;
   let dataBoo, configBoo, jsonBoo, nvpBoo;
@@ -433,6 +433,7 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   let finalConfig;
   let getData;
   let querystring;
+  let formHeaders;
 
   method = "get";
   dataKeys = Object.keys(data);
@@ -514,37 +515,43 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
             form.append(key, data[key]);
           }
         }
-        let formHeaders = form.getHeaders();
-        if (!configBoo) {
-          axios.post(url, form, { headers: { ...formHeaders } }).then(function (response) {
-            resolve(response);
-          }).catch(function (error) {
-            reject(error);
-          });
-        } else {
-          finalConfig = { headers: { ...formHeaders } };
-          if (config.headers !== undefined) {
-            for (let z in config.headers) {
-              finalConfig.headers[z] = config.headers[z];
-            }
-            for (let z in config) {
-              if (z !== "headers") {
-                finalConfig[z] = config[z];
-              }
-            }
+        form.getLength((err, length) => {
+          if (err) {
+            reject(err);
           } else {
-            for (let z in config) {
-              finalConfig[z] = config[z];
+            formHeaders = form.getHeaders();
+            formHeaders["Content-Length"] = length;
+            if (!configBoo) {
+              axios.post(url, form, { headers: { ...formHeaders } }).then(function (response) {
+                resolve(response);
+              }).catch(function (error) {
+                reject(error);
+              });
+            } else {
+              finalConfig = { headers: { ...formHeaders } };
+              if (config.headers !== undefined) {
+                for (let z in config.headers) {
+                  finalConfig.headers[z] = config.headers[z];
+                }
+                for (let z in config) {
+                  if (z !== "headers") {
+                    finalConfig[z] = config[z];
+                  }
+                }
+              } else {
+                for (let z in config) {
+                  finalConfig[z] = config[z];
+                }
+              }
+              axios.post(url, form, finalConfig).then(function (response) {
+                resolve(response);
+              }).catch(function (error) {
+                reject(error);
+              });
             }
           }
-          axios.post(url, form, finalConfig).then(function (response) {
-            resolve(response);
-          }).catch(function (error) {
-            reject(error);
-          });
-        }
+        });
       }
-
     }
   });
 }
@@ -1097,34 +1104,39 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
     toList = toArr;
     form.append("toArr", JSON.stringify(toList));
     for (let fileName of fromArr) {
-      form.append("file" + String(num), fs.createReadStream(fileName));
+      form.append("file" + String(num), fs.readFileSync(fileName));
       num++;
     }
-    formHeaders = form.getHeaders();
-    axios.post(`https://${ADDRESS.officeinfo.ghost.host}:${String(3000)}/generalFileUpload`, form, {
-      headers: { ...formHeaders },
-      maxContentLength: Infinity,
-      maxBodyLength: Infinity,
-    }).then((response) => {
-      resolve({ message: "done" });
-    }).catch((error) => {
-      reject(error);
+
+    form.getLength((err, length) => {
+      if (err) {
+        reject(err);
+      } else {
+        formHeaders = form.getHeaders();
+        formHeaders["Content-Length"] = length;
+        axios.post(`https://${ADDRESS.officeinfo.ghost.host}:${String(3000)}/generalFileUpload`, form, {
+          headers: { ...formHeaders },
+        }).then((response) => {
+          resolve({ message: "done" });
+        }).catch((error) => {
+          reject(error);
+        });
+      }
     });
 
   });
 }
 
-Mother.prototype.generalFileUpload = async function (url, fromArr, toArr) {
+Mother.prototype.generalFileUpload = function (url, fromArr, toArr) {
   if (typeof url !== "string" || !Array.isArray(fromArr) || !Array.isArray(toArr)) {
     throw new Error("input must be url, from array, to array");
   }
-  const fs = require(`fs`);
-  const FormData = require('form-data');
-  const axios = require(`axios`);
+  const fs = require("fs");
+  const FormData = require("form-data");
+  const axios = require("axios");
   const form = new FormData();
-  try {
-    let num, formHeaders, toList;
-
+  let num, formHeaders, toList;
+  return new Promise((resolve, reject) => {
     for (let i = 0; i < toArr.length; i++) {
       if (/^\//.test(toArr[i])) {
         toArr[i] = toArr[i].slice(1);
@@ -1132,21 +1144,29 @@ Mother.prototype.generalFileUpload = async function (url, fromArr, toArr) {
     }
     toList = toArr;
     form.append("toArr", JSON.stringify(toList));
-
+  
     num = 0;
     for (let fileName of fromArr) {
-      form.append("file" + String(num), fs.createReadStream(fileName));
+      form.append("file" + String(num), fs.readFileSync(fileName));
       num++;
     }
-    formHeaders = form.getHeaders();
-    await axios.post(url, form, {
-      headers: { ...formHeaders },
-      maxContentLength: Infinity,
-      maxBodyLength: Infinity,
+  
+    form.getLength((err, length) => {
+      if (err) {
+        reject(err);
+      } else {
+        formHeaders = form.getHeaders();
+        formHeaders["Content-Length"] = length;
+        axios.post(url, form, {
+          headers: { ...formHeaders },
+        }).then((response) => {
+          resolve({ message: "done" });
+        }).catch((error) => {
+          reject(error);
+        });
+      }
     });
-  } catch (e) {
-    console.log(e);
-  }
+  });
 }
 
 Mother.prototype.sleep = function (time) {
