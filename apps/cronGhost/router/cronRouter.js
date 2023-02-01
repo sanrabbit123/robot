@@ -16,6 +16,7 @@ const CronRouter = function (MONGOC, MONGOLOCALC) {
     this.address.backinfo.host,
     this.address.pythoninfo.host,
     this.address.testinfo.host,
+    this.address.croninfo.host,
     this.address.officeinfo.ghost.host,
     "home-liaison.servehttp.com",
     "localhost:3000",

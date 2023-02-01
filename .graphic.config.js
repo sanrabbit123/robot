@@ -1,11 +1,11 @@
 module.exports = {
   apps: [
     {
-      name: "clown",
-      script: "./clown.js",
+      name: "robot",
+      script: "./robot.js",
       instances: 1,
       exec_mode: "cluster",
-      args: [ "cronServer" ]
+      args: [ "graphicServer" ]
     }
   ]
 };
