@@ -6132,7 +6132,7 @@ DataRouter.prototype.rou_post_calendarSync = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
+DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
   const instance = this;
   const back = this.back;
   const kakao = this.kakao;
@@ -6339,15 +6339,7 @@ DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
                 address: client.requests[requestNumber].request.space.address,
               });
 
-              // dev
-              await kakao.sendTalk("photoDateDesigner", "배창규", "010-2747-3403", {
-                designer: designer.designer,
-                client: client.name,
-                date: `${String(photoDate.getFullYear())}년 ${String(photoDate.getMonth() + 1)}월 ${String(photoDate.getDate())}일 ${String(photoDate.getHours())}시`,
-                address: client.requests[requestNumber].request.space.address,
-              });
-
-              await messageSend(designer.designer + " 실장님께 촬영일 알림을 전송하였어요.", "#300_designer", true);
+              await messageSend(designer.designer + " 실장님께 촬영일 알림을 전송하였어요.", "#300_designer", false);
             }
 
           }
@@ -6417,7 +6409,7 @@ DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
                 proid: project.proid,
               });
 
-              await messageSend(designer.designer + " 실장님께 " + client.name + " 고객님 프로젝트 계약 시작일 알림을 전송하였어요.", "#300_designer", true);
+              await messageSend(designer.designer + " 실장님께 " + client.name + " 고객님 프로젝트 계약 시작일 알림을 전송하였어요.", "#300_designer", false);
             }
           }
         }
@@ -6430,7 +6422,7 @@ DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
     }
   }
   let obj = {};
-  obj.link = [ "/firstMeetingAlarm" ];
+  obj.link = [ "/timeDeltaAlarm" ];
   obj.func = async function (req, res) {
     res.set({
       "Content-Type": "application/json",
@@ -6445,12 +6437,14 @@ DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
         return photoDesignerAlarmFunc(instance.mongo);
       }).then(() => {
         return contractStartAlarmFunc(instance.mongo);
+      }).then(() => {
+        return errorLog("time delta alarm done : " + JSON.stringify(new Date()));
       }).catch((err) => {
-        errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message).catch((err) => { console.log(err) });
+        errorLog("Console 서버 문제 생김 (rou_post_timeDeltaAlarm): " + e.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
+      await errorLog("Console 서버 문제 생김 (rou_post_timeDeltaAlarm): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -7281,6 +7275,90 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_cxDashboardSync): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_workProposalToClient = function () {
+  const instance = this;
+  const work = this.work;
+  const { errorLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/workProposalToClient" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      work.setProposalToClient("cron", { selfMongo: instance.mongo }).then(() => {
+        return errorLog("proposal to client sync done : " + JSON.stringify(new Date()));
+      }).catch((err) => {
+        errorLog("Console 서버 문제 생김 (rou_post_workProposalToClient): " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_workProposalToClient): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_workProjectActionSync = function () {
+  const instance = this;
+  const work = this.work;
+  const { errorLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/workProjectActionSync" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      work.projectActionSync({ selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal, updateMongo: instance.mongo }).then(() => {
+        return errorLog("project action sync done : " + JSON.stringify(new Date()));
+      }).catch((err) => {
+        errorLog("Console 서버 문제 생김 (rou_post_workProjectActionSync): " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_workProjectActionSync): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_workClientActionSync = function () {
+  const instance = this;
+  const work = this.work;
+  const { errorLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/workClientActionSync" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      work.clientActionSync({ selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal, updateMongo: instance.mongo }).then(() => {
+        return errorLog("client action sync done : " + JSON.stringify(new Date()));
+      }).catch((err) => {
+        errorLog("Console 서버 문제 생김 (rou_post_workClientActionSync): " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_workClientActionSync): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }

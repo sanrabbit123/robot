@@ -5408,7 +5408,7 @@ DataRouter.prototype.rou_post_calendarSync = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
+DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
   const instance = this;
   const back = this.back;
   const kakao = this.kakao;
@@ -5615,15 +5615,7 @@ DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
                 address: client.requests[requestNumber].request.space.address,
               });
 
-              // dev
-              await kakao.sendTalk("photoDateDesigner", "배창규", "010-2747-3403", {
-                designer: designer.designer,
-                client: client.name,
-                date: `${String(photoDate.getFullYear())}년 ${String(photoDate.getMonth() + 1)}월 ${String(photoDate.getDate())}일 ${String(photoDate.getHours())}시`,
-                address: client.requests[requestNumber].request.space.address,
-              });
-
-              await messageSend(designer.designer + " 실장님께 촬영일 알림을 전송하였어요.", "#300_designer", true);
+              await messageSend(designer.designer + " 실장님께 촬영일 알림을 전송하였어요.", "#300_designer", false);
             }
 
           }
@@ -5693,7 +5685,7 @@ DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
                 proid: project.proid,
               });
 
-              await messageSend(designer.designer + " 실장님께 " + client.name + " 고객님 프로젝트 계약 시작일 알림을 전송하였어요.", "#300_designer", true);
+              await messageSend(designer.designer + " 실장님께 " + client.name + " 고객님 프로젝트 계약 시작일 알림을 전송하였어요.", "#300_designer", false);
             }
           }
         }
@@ -5706,7 +5698,7 @@ DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
     }
   }
   let obj = {};
-  obj.link = [ "/firstMeetingAlarm" ];
+  obj.link = [ "/timeDeltaAlarm" ];
   obj.func = async function (req, res) {
     res.set({
       "Content-Type": "application/json",
@@ -5721,12 +5713,14 @@ DataRouter.prototype.rou_post_firstMeetingAlarm = function () {
         return photoDesignerAlarmFunc(instance.mongo);
       }).then(() => {
         return contractStartAlarmFunc(instance.mongo);
+      }).then(() => {
+        return errorLog("time delta alarm done : " + JSON.stringify(new Date()));
       }).catch((err) => {
-        errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message).catch((err) => { console.log(err) });
+        errorLog("Console 서버 문제 생김 (rou_post_timeDeltaAlarm): " + e.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
+      await errorLog("Console 서버 문제 생김 (rou_post_timeDeltaAlarm): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
