@@ -301,7 +301,7 @@ GraphicBot.prototype.chromeOpen = async function (url) {
         exec(`google-chrome ${url} --start-maximized`);
         setTimeout(function () {
           resolve(stdout);
-        }, 3000);
+        }, 10000);
       });
     });
 
