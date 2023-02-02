@@ -63,6 +63,18 @@ GoogleSheet.prototype.setting_cleanView_inPython = async function (id) {
   }
 }
 
+GoogleSheet.prototype.setting_styleInjection_inPython = async function (id, sheetsIndex, requests) {
+  const instance = this;
+  const mother = this.mother;
+  try {
+    id = this.parsingId(id);
+    const result = await mother.pythonExecute(this.pythonApp, [ "sheets", "styleInjection" ], { id, sheetsIndex, requestArr: requests });
+    return result.message;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 GoogleSheet.prototype.update_defaultSheetName_inPython = async function (id, title) {
   const instance = this;
   const mother = this.mother;

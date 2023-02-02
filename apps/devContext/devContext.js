@@ -46,6 +46,7 @@ const HumanPacket = require(APP_PATH + "/humanPacket/humanPacket.js");
 const HtmlMaker = require(APP_PATH + "/htmlMaker/htmlMaker.js");
 const ReadDocuments = require(APP_PATH + "/readDocuments/readDocuments.js");
 const AwsAPIs = require(APP_PATH + "/awsAPIs/awsAPIs.js");
+const CronGhost = require(APP_PATH + "/cronGhost/cronGhost.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -64,7 +65,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
-  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery } = this.mother;
+  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -77,7 +78,6 @@ DevContext.prototype.launching = async function () {
     const agent = new Agent({ rejectUnauthorized: false });
     const chrome = new GoogleChrome();
     const findCode = this.findCode.bind(this);
-    const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
     const human = new HumanPacket();
     const print = async (cliid) => {
       try {
@@ -149,45 +149,59 @@ DevContext.prototype.launching = async function () {
 
     
 
-    
 
-    const res = await requestSystem("https://" + address.secondinfo.host + ":3000/receiptSend", { amount: 1000, phone: "010-2747-3403" }, { headers: { "Content-Type": "application/json" } });
-
-    console.log(res);
 
     
 
 
-    // const { EC2Client, DescribeInstancesCommand } = require("@aws-sdk/client-ec2");
-    // const ec2Client = new EC2Client({ region: "ap-northeast-2" });
-    // const params = {};
-    // let instances, data;
 
-    // data = await ec2Client.send(new DescribeInstancesCommand(params));
-    // instances = [];
-    // for (let obj of data.Reservations) {
-    //   for (let obj2 of obj.Instances) {
-    //     instances.push({
-    //       name: obj2.Tags.find((o) => { return o.Key === "Name" }).Value,
-    //       id: obj2.InstanceId,
-    //       type: obj2.InstanceType,
-    //       state: obj2.State.Name,
-    //       ip: {
-    //         outer: obj2.PublicIpAddress,
-    //         inner: obj2.PrivateIpAddress
-    //       }
-    //     });
+
+
+
+
+
+
+    // const sheetsIndex = 0;
+    // await sheets.setting_styleInjection_inPython("15WGLx0-FDlhNy_5kZJmPXSN4kBKcvaJpqJKJ7Gy9Evk", sheetsIndex, [
+    //   {
+    //     repeatCell: {
+    //       range: {
+    //         sheetId: sheetsIndex,
+    //         startRowIndex: 5,
+    //         endRowIndex: 8,
+    //         startColumnIndex: 6,
+    //         endColumnIndex: 7
+    //       },
+    //       cell: {
+    //         userEnteredFormat: {
+    //           backgroundColor: {
+    //             red: 50,
+    //             green: 120,
+    //             blue: 3,
+    //           },
+    //           horizontalAlignment: "CENTER",
+    //           verticalAlignment: "MIDDLE",
+    //           textFormat: {
+    //             foregroundColor: {
+    //               red: 0,
+    //               green: 0,
+    //               blue: 0,
+    //             },
+    //             fontSize: 10,
+    //             bold: true
+    //           }
+    //         }
+    //       },
+    //       fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
+    //     }
     //   }
-    // }
-    
-    // console.log(instances);
-
-
-
+    // ])
     
 
+
+    const cron = new CronGhost();
     
-    
+    await cron.aliveTest(this.MONGOLOCALC);
 
 
     /*
@@ -5381,8 +5395,8 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "배창규";
-    // const amount = 1400;
+    // const name = "박정아";
+    // const amount = 330000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,

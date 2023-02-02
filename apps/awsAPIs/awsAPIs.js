@@ -140,4 +140,191 @@ AwsAPIs.prototype.pollyStream = function (text = "안녕하세요?") {
   });
 }
 
+AwsAPIs.prototype.getInstancesStatus = async function () {
+  const instance = this;
+  const { orderSystem, zeroAddition } = this.mother;
+  const { EC2Client, DescribeInstancesCommand } = require("@aws-sdk/client-ec2");
+  const { CloudWatchClient, GetMetricDataCommand } = require("@aws-sdk/client-cloudwatch");
+  try {
+    const nameDictionary = {
+      coreDB: { info: "mongoinfo", key: "co0000" },
+      backConsole: { info: "backinfo", key: "ba0000" },
+      logConsole: { info: "testinfo", key: "lo0000" },
+      secondGhost: { info: "secondinfo", key: "se0000" },
+      pythonCloud: { info: "pythoninfo", key: "py0000" },
+      transferLounge: { info: "transinfo", key: "tr0000" },
+      cronLauncher: { info: "croninfo", key: "cr0000" },
+    };
+    const idKeyword = "alive_";
+    const region = "ap-northeast-2";
+    const client = new EC2Client({ region });
+    const watch = new CloudWatchClient({ region });
+    let instances, data;
+    let ago;
+    let now;
+    let str;
+
+    ago = new Date();
+    now = new Date(JSON.stringify(ago).slice(1, -1));
+    ago.setMinutes(ago.getMinutes() - 30);
+
+    str = orderSystem("encode", Number(String(now.getFullYear()).slice(0, 2)));
+    str += orderSystem("encode", Number(String(now.getFullYear()).slice(2) + zeroAddition(now.getMonth() + 1) + zeroAddition(now.getDate())));
+    str += orderSystem("encode", Number(zeroAddition(now.getHours()) + zeroAddition(now.getMinutes())));
+    str += orderSystem("encode", now.getSeconds());
+
+    data = await client.send(new DescribeInstancesCommand({}));
+    instances = [];
+    for (let obj of data.Reservations) {
+      for (let obj2 of obj.Instances) {
+        instances.push({
+          id: idKeyword + nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value].key + "_" + str,
+          name: obj2.Tags.find((o) => { return o.Key === "Name" }).Value,
+          alive: /running/gi.test(obj2.State.Name),
+          date: {
+            from: ago,
+            to: now,
+          },
+          info: nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value].info,
+          instance: {
+            id: obj2.InstanceId,
+            type: obj2.InstanceType,
+          },
+          network: {
+            host: instance.address[nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value].info].host,
+            ip: {
+              outer: {
+                value: obj2.PublicIpAddress,
+                match: instance.address[nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value].info].ip.outer === obj2.PublicIpAddress,
+              },
+              inner: {
+                value: obj2.PrivateIpAddress,
+                match: instance.address[nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value].info].ip.inner === obj2.PrivateIpAddress,
+              }
+            },
+          },
+          utilization: {
+            cpu: {
+              average: 0,
+              maximum: 0
+            },
+            network: {
+              in: 0,
+              out: 0
+            }
+          }
+        });
+      }
+    }
+    for (let obj of instances) {
+      data = await watch.send(new GetMetricDataCommand({
+        StartTime: ago,
+        EndTime: now,
+        MetricDataQueries: [
+          {
+            Id: "cPUUtilization_Average",
+            MetricStat: {
+              Metric: {
+                Namespace: "AWS/EC2",
+                MetricName: "CPUUtilization",
+                Dimensions: [
+                  {
+                    Name: "InstanceId",
+                    Value: obj.instance.id,
+                  },
+                ]
+              },
+              Period: 30 * 60,
+              Stat: "Average",
+            },
+          }
+        ],
+      }));
+      obj.utilization.cpu.average = data.MetricDataResults[0]["Values"][0] / 100;
+
+      data = await watch.send(new GetMetricDataCommand({
+        StartTime: ago,
+        EndTime: now,
+        MetricDataQueries: [
+          {
+            Id: "cPUUtilization_Maximum",
+            MetricStat: {
+              Metric: {
+                Namespace: "AWS/EC2",
+                MetricName: "CPUUtilization",
+                Dimensions: [
+                  {
+                    Name: "InstanceId",
+                    Value: obj.instance.id,
+                  },
+                ]
+              },
+              Period: 30 * 60,
+              Stat: "Maximum",
+            },
+          }
+        ],
+      }));
+      obj.utilization.cpu.maximum = data.MetricDataResults[0]["Values"][0] / 100;
+
+  
+      data = await watch.send(new GetMetricDataCommand({
+        StartTime: ago,
+        EndTime: now,
+        MetricDataQueries: [
+          {
+            Id: "networkIn_Average",
+            MetricStat: {
+              Metric: {
+                Namespace: "AWS/EC2",
+                MetricName: "NetworkIn",
+                Dimensions: [
+                  {
+                    Name: "InstanceId",
+                    Value: obj.instance.id,
+                  },
+                ]
+              },
+              Period: 30 * 60,
+              Stat: "Average",
+            },
+          }
+        ],
+      }));
+      obj.utilization.network.in = Math.round(data.MetricDataResults[0]["Values"][0]);
+  
+      data = await watch.send(new GetMetricDataCommand({
+        StartTime: ago,
+        EndTime: now,
+        MetricDataQueries: [
+          {
+            Id: "networkOut_Average",
+            MetricStat: {
+              Metric: {
+                Namespace: "AWS/EC2",
+                MetricName: "NetworkOut",
+                Dimensions: [
+                  {
+                    Name: "InstanceId",
+                    Value: obj.instance.id,
+                  },
+                ]
+              },
+              Period: 30 * 60,
+              Stat: "Average",
+            },
+          }
+        ],
+      }));
+      obj.utilization.network.out = Math.round(data.MetricDataResults[0]["Values"][0]);
+    }
+
+    return instances;
+
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+}
+
 module.exports = AwsAPIs;

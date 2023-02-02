@@ -1083,6 +1083,13 @@ Mother.prototype.orderSystem = function (type, number) {
   }
 }
 
+Mother.prototype.zeroAddition = function (number) {
+  if (typeof number !== "number") {
+    throw new Error("input must be number");
+  }
+  return (number < 10 ? `0${String(number)}` : String(number));
+}
+
 Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
   if (!Array.isArray(fromArr) || !Array.isArray(toArr)) {
     throw new Error("input must be from array, to array")

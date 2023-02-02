@@ -101,6 +101,68 @@ class GoogleSheet:
            sheet_ids.append(item.get("properties").get('sheetId'))
         return sheet_ids
 
+    def styleInjection(self, id, sheetsIndex, requests):
+        batch_update_spreadsheet_request_body = {
+            "requests": [
+                {
+                    "updateDimensionProperties": {
+                        "range": {
+                            "sheetId": sheetsIndex,
+                            "dimension": "COLUMNS",
+                            "startIndex": 0,
+                        },
+                        "properties": {
+                            "pixelSize": 120
+                        },
+                        "fields": "pixelSize"
+                    }
+                },
+                {
+                    "updateDimensionProperties": {
+                        "range": {
+                            "sheetId": sheetsIndex,
+                            "dimension": "ROWS",
+                            "startIndex": 0,
+                        },
+                        "properties": {
+                            "pixelSize": 30
+                        },
+                        "fields": "pixelSize"
+                    }
+                },
+                {
+                    "repeatCell": {
+                        "range": {
+                            "sheetId": sheetsIndex,
+                            "startRowIndex": 0,
+                        },
+                        "cell": {
+                            "userEnteredFormat": {
+                                "backgroundColor": {
+                                    "red": 1.0,
+                                    "green": 1.0,
+                                    "blue": 1.0
+                                },
+                                "horizontalAlignment" : "CENTER",
+                                "verticalAlignment": "MIDDLE",
+                                "textFormat": {
+                                    "fontSize": 10,
+                                }
+                            }
+                        },
+                        "fields": "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
+                    }
+                }
+            ]
+        }
+
+        for obj in requests:
+            batch_update_spreadsheet_request_body["requests"].append(obj)
+
+        request = self.app.batchUpdate(spreadsheetId=id, body=batch_update_spreadsheet_request_body)
+        response = request.execute()
+        return dumps({ "message": "success" })
+
 
     def cleanView(self, id):
         sheet_ids = self.getAllSheetIds(id)

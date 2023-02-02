@@ -2,31 +2,37 @@ const CronGhost = function () {
   const Mother = require(process.cwd() + "/apps/mother.js");
   const BackMaker = require(process.cwd() + "/apps/backMaker/backMaker.js");
   const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
+  const AwsAPIs = require(process.cwd() + "/apps/awsAPIs/awsAPIs.js")
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = ADDRESS;
   this.dir = `${process.cwd()}/apps/cronGhost`;
+  this.aws = new AwsAPIs();
 }
 
-CronGhost.prototype.aliveTest = async function () {
+CronGhost.prototype.aliveTest = async function (MONGOC) {
   const instance = this;
   const address = this.address;
   const { requestSystem, messageLog, errorLog } = this.mother;
   const generalPort = 3000;
   const controlPath = "/ssl";
-  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
-  const bill = new BillMaker();
+  const aws = this.aws;
+  const back = this.back;
+  const collection = "aliveLog";
+  const selfMongo = MONGOC;
   let res, targets, targetNumber, successNum, failNum, message;
+  let instnaces;
+  let thisObj;
   try {
 
     targets = [
-      { name: "python", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
-      { name: "post", protocol: "https:", host: address.backinfo.host, port: generalPort, },
-      { name: "log", protocol: "https:", host: address.testinfo.host, port: generalPort, },
-      { name: "second", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
-      { name: "trans", protocol: "https:", host: address.transinfo.host, port: generalPort, },
-      { name: "cron", protocol: "https:", host: address.croninfo.host, port: generalPort, },
-      { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: generalPort, },
+      { name: "pythonCloud", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
+      { name: "backConsole", protocol: "https:", host: address.backinfo.host, port: generalPort, },
+      { name: "logConsole", protocol: "https:", host: address.testinfo.host, port: generalPort, },
+      { name: "secondGhost", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
+      { name: "transferLounge", protocol: "https:", host: address.transinfo.host, port: generalPort, },
+      { name: "cronLauncher", protocol: "https:", host: address.croninfo.host, port: generalPort, },
+      { name: "officeLounge", protocol: "https:", host: address.officeinfo.ghost.host, port: generalPort, },
     ];
 
     targetNumber = targets.length;
@@ -34,9 +40,16 @@ CronGhost.prototype.aliveTest = async function () {
     failNum = 0;
     message = '';
 
+    instnaces = await aws.getInstancesStatus();
+
     for (let { name, protocol, host, port } of targets) {
 
+      thisObj = instnaces.find((obj) => { return obj.name === name; });
+
       boo = false;
+      if (thisObj !== undefined) {
+        thisObj.alive = false;
+      }
       try {
         res = await requestSystem(protocol + "//" + host + ':' + String(port) + controlPath);
       } catch {
@@ -46,16 +59,16 @@ CronGhost.prototype.aliveTest = async function () {
       if (typeof res === "object" && res !== null) {
         if (res.status !== undefined && typeof res.status === "number") {
           if (res.status === 200) {
-            console.log("\x1b[32m%s\x1b[0m", name + " server alive");
             successNum = successNum + 1;
             message += "\n" +  name + " server alive";
             boo = true;
+            if (thisObj !== undefined) {
+              thisObj.alive = true;
+            }
             if (successNum === targetNumber) {
-              console.log("\x1b[33m%s\x1b[0m", "all alive");
               message = "server all alive";
               await errorLog(message);
             } else if (successNum + failNum === targetNumber) {
-              console.log("\x1b[33m%s\x1b[0m", "something death");
               message += "\n======================================";
               message += "\nsomething death";
               await errorLog(message);
@@ -66,10 +79,8 @@ CronGhost.prototype.aliveTest = async function () {
 
       if (!boo) {
         failNum = failNum + 1;
-        console.log("\x1b[32m%s\x1b[0m", name + " server death");
         message += "\n" +  name + " server death";
         if (successNum + failNum === targetNumber) {
-          console.log("\x1b[33m%s\x1b[0m", "something death");
           message += "\n======================================";
           message += "\nsomething death";
           await errorLog(message);
@@ -85,6 +96,10 @@ CronGhost.prototype.aliveTest = async function () {
     }).catch((e) => {
       throw new Error(e);
     });
+
+    for (let json of instnaces) {
+      await back.mongoCreate(collection, json, { selfMongo });
+    }
 
   } catch (e) {
     await errorLog("alive test error : " + e.message);
@@ -232,7 +247,7 @@ CronGhost.prototype.cronServer = async function () {
 
     intervalFunc1 = async () => {
       try {
-        await instance.aliveTest();
+        await instance.aliveTest(MONGOLOCALC);
       } catch (e) {
         console.log(e);
       }

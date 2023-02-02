@@ -167,6 +167,11 @@ try:
         result = sheetsApp.addSheet(data["id"], data["nameArr"])
         print(result)
 
+    elif argv[1] == 'sheets' and argv[2] == 'styleInjection':
+        sheetsApp = GoogleSheet()
+        result = sheetsApp.styleInjection(data["id"], data["sheetsIndex"], data["requestArr"])
+        print(result)
+
     elif argv[1] == 'sheets' and argv[2] == 'updateDefaultSheetName':
         sheetsApp = GoogleSheet()
         result = sheetsApp.updateDefaultSheetName(data["id"], data["title"])
@@ -249,7 +254,7 @@ try:
 
     elif argv[1] == 'test' and argv[2] == 'test':
         sheetsApp = GoogleSheet()
-        result = sheetsApp.test("1AAhENYhHmPhpau9cUmO7SjR0w5ssgLHJvVufZN5MkJc")
+        result = sheetsApp.test("15WGLx0-FDlhNy_5kZJmPXSN4kBKcvaJpqJKJ7Gy9Evk")
         print(result)
 
     elif argv[1] == 'youtube' and argv[2] == 'channelNumbers':

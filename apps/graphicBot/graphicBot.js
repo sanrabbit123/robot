@@ -441,7 +441,7 @@ GraphicBot.prototype.pasteText = async function () {
     } else {
       command = "control";
     }
-    await sleep(500);
+    await sleep(300);
     bot.keyTap("v", command);
     await sleep(100);
   } catch (e) {
