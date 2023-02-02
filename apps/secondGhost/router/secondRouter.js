@@ -986,7 +986,7 @@ SecondRouter.prototype.rou_post_printClient = function () {
 
 SecondRouter.prototype.rou_post_slackEvents = function () {
   const instance = this;
-  const { secondHost, slack_info: { userDictionary, channelDictionary }, telegram } = this;
+  const { slack_info: { userDictionary, channelDictionary }, telegram } = this;
   const { errorLog, messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/slackEvents" ];
@@ -1042,7 +1042,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
 
 SecondRouter.prototype.rou_post_telegramEvents = function () {
   const instance = this;
-  const { secondHost, slack_info: { userDictionary, channelDictionary }, telegram, slack_user } = this;
+  const { slack_info: { userDictionary, channelDictionary }, telegram, slack_user } = this;
   const { errorLog, messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/telegramEvents" ];
@@ -1277,7 +1277,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { secondHost, slack_info: { userDictionary, channelDictionary }, telegram } = this;
+  const { slack_info: { userDictionary, channelDictionary }, telegram } = this;
   const { errorLog, messageSend, equalJson, ajaxJson, requestSystem, dateToString } = this.mother;
 
   const divider = () => {

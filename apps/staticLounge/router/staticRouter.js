@@ -5,6 +5,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GoogleDocs = require(process.cwd() + "/apps/googleAPIs/googleDocs.js");
+  const GoogleChrome = require(process.cwd() + "/apps/googleAPIs/googleChrome.js");
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
 
   this.mother = new Mother();
@@ -19,6 +20,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   this.hangul = new ParsingHangul();
   this.drive = new GoogleDrive();
   this.docs = new GoogleDocs();
+  this.chrome = new GoogleChrome();
   this.audio = new PlayAudio();
 
   this.staticConst = process.env.HOME + "/samba";
@@ -1107,6 +1109,56 @@ StaticRouter.prototype.rou_post_printText = function () {
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       errorLog("Static lounge 서버 문제 생김 (rou_post_printText): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_pageToPdf = function () {
+  const instance = this;
+  const chrome = this.chrome;
+  const address = this.address;
+  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { staticConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/pageToPdf" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (typeof req.body.url !== "string") {
+        throw new Error("invaild post : url must be string");
+      }
+      const imageName = `pagePrint_${uniqueValue("string")}.png`;
+      const htmlName = imageName.replace(/\.png$/i, ".html");
+      const pdfName = imageName.replace(/\.png$/i, ".pdf");
+      let htmlString;
+
+      await chrome.pageToPng(global.decodeURIComponent(req.body.url), staticConst + "/" + imageName, true);
+
+      htmlString = `<html><head><style>*{margin:0;padding:0}</style></head><body><img src="https://${address.officeinfo.ghost.host}/${imageName}" style="width:100%"></body></html>`;
+      await fileSystem(`write`, [ `${staticConst}/${htmlName}`, htmlString ]);
+
+      await chrome.pdfPrint(`https://${address.officeinfo.ghost.host}/${htmlName}`, `${staticConst}/${pdfName}`, false);
+
+      await shellExec(`rm`, [ `-rf`, `${staticConst}/${imageName}` ]);
+      await shellExec(`rm`, [ `-rf`, `${staticConst}/${htmlName}` ]);
+
+      res.send(JSON.stringify({
+        url: global.encodeURIComponent("https://" + address.officeinfo.ghost.host + "/" + pdfName),
+      }));
+
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_pageToPdf): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
