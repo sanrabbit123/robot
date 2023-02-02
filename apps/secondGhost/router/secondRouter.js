@@ -182,7 +182,7 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
 
       if (req.body.voice === true || req.body.voice === "true") {
-        requestSystem("https://" + instance.address.officeinfo.voice.host + ":" + String(instance.address.officeinfo.voice.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+        requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/textToVoice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
       }
 
       if (/silent/gi.test(channel) || /error_log/gi.test(channel)) {
@@ -856,8 +856,7 @@ SecondRouter.prototype.rou_post_projectDesignerRaw = function () {
 
 SecondRouter.prototype.rou_post_voice = function () {
   const instance = this;
-  const back = this.back;
-  const { secondHost } = this;
+  const address = this.address;
   const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/voice" ];
@@ -872,7 +871,7 @@ SecondRouter.prototype.rou_post_voice = function () {
       if (req.body.text === undefined) {
         throw new Error("invaild post");
       }
-      requestSystem("https://" + secondHost + "/voice", {
+      requestSystem("https://" + address.officeinfo.ghost.host + ":3000/textToVoice", {
         text: req.body.text,
       }, {
         headers: { "Content-Type": "application/json" }

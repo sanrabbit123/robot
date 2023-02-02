@@ -5,6 +5,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GoogleDocs = require(process.cwd() + "/apps/googleAPIs/googleDocs.js");
+  const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
 
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -18,6 +19,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   this.hangul = new ParsingHangul();
   this.drive = new GoogleDrive();
   this.docs = new GoogleDocs();
+  this.audio = new PlayAudio();
 
   this.staticConst = process.env.HOME + "/samba";
   this.sambaToken = "__samba__";
@@ -1020,6 +1022,39 @@ StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       errorLog("Static lounge 서버 문제 생김 (rou_post_parsingCashReceipt): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_textToVoice = function () {
+  const instance = this;
+  const audio = this.audio;
+  const { errorLog } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/textToVoice" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (typeof req.body.text !== "string") {
+        throw new Error("invalid post");
+      }
+      audio.textToVoice(req.body.text).catch((err) => {
+        console.log(err);
+      })
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_textToVoice): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

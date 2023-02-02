@@ -45,6 +45,7 @@ const FacebookAPIs = require(APP_PATH + "/facebookAPIs/facebookAPIs.js");
 const HumanPacket = require(APP_PATH + "/humanPacket/humanPacket.js");
 const HtmlMaker = require(APP_PATH + "/htmlMaker/htmlMaker.js");
 const ReadDocuments = require(APP_PATH + "/readDocuments/readDocuments.js");
+const AwsAPIs = require(APP_PATH + "/awsAPIs/awsAPIs.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -147,10 +148,8 @@ DevContext.prototype.launching = async function () {
 
 
     
-
     
-
-
+    
 
 
     // const { EC2Client, DescribeInstancesCommand } = require("@aws-sdk/client-ec2");

@@ -1325,29 +1325,6 @@ GraphicBot.prototype.botRouter = function () {
     }
   };
 
-  funcObj.post_voice = {
-    link: [ "/voice" ],
-    func: async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      try {
-        if (req.body.text === undefined) {
-          throw new Error("invaild post");
-        }
-        const { text } = req.body;
-        shellExec("say", [ text ]).catch((err) => { console.log(err); });
-        res.send({ message: "will do" });
-      } catch (e) {
-        console.log(e);
-        res.send({ error: e.message });
-      }
-    }
-  };
-
   funcObj.post_apartment = {
     link: [ "/apartment" ],
     func: async function (req, res) {

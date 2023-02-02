@@ -1,8 +1,10 @@
 const PlayAudio = function (option = {}) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const AwsAPIs = require(`${process.cwd()}/apps/awsAPIs/awsAPIs.js`);
   this.mother = new Mother();
   this.address = ADDRESS;
+  this.aws = new AwsAPIs();
   if (option.players === undefined) {
     this.players = [
       'mplayer',
@@ -95,37 +97,9 @@ PlayAudio.prototype.textToVoice = async function (text = "안녕하세요?") {
   const { shellExec, shellLink } = this.mother;
   try {
     let file;
-    file = await this.textToMp3(text);
+    file = await this.aws.pollyStream(text);
     await this.play(file);
     await shellExec(`rm -rf ${shellLink(file)}`);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-PlayAudio.prototype.textToMp3 = async function (text = "안녕하세요?") {
-  const instance = this;
-  const { shellExec, shellLink, returnRandoms } = this.mother;
-  try {
-    let command, tempDir, fileName, randoms;
-
-    randoms = await returnRandoms();
-    text = text.replace(/[\[\]\{\}\"\'\<\>\/\\\~\`\+\=\-\_\@\#\$\%\^\&\*\(\)\:\;]/g, '');
-    text = text.replace(/[^가-힣\?\!\.]/gi, '');
-    tempDir = process.cwd() + "/temp";
-    fileName = `tempVoiceRecord_${String((new Date()).valueOf())}_${String(randoms[0])}.mp3`;
-
-    command = ``;
-    command += `aws polly synthesize-speech `;
-    command += `--output-format mp3 `;
-    command += `--voice-id Seoyeon `;
-    command += `--text '${text.replace(/\'/g, '"').replace(/\n/g, ' ').replace(/\t/g, '')}' `;
-    command += `${shellLink(tempDir)}/${fileName}`;
-
-    await shellExec(command);
-
-    return (tempDir + "/" + fileName);
-
   } catch (e) {
     console.log(e);
   }
