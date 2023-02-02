@@ -1092,7 +1092,7 @@ StaticRouter.prototype.rou_post_printText = function () {
       lpstat.stdout.on("data", (data) => {
         const arr = String(data).split("\n").map((i) => { return i.trim(); });
         const printerRaw = arr.find((i) => { return /epson/gi.test(i); });
-        printer = printerRaw.trim().split(' ')[0];
+        printer = printerRaw.trim().split(' ')[1];
         lpstat.kill();
         fileSystem(`write`, [ targetFile, req.body.text ]).then(() => {
           return shellExec(`lpr -P ${printer} -o orientation-requested=4 ${shellLink(targetFile)}`);
