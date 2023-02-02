@@ -1084,6 +1084,7 @@ StaticRouter.prototype.rou_post_printText = function () {
       }
       const { spawn } = require("child_process");
       const lpstat = spawn("lpstat", [ "-p" ]);
+      const fontName = `/home/homeliaison/font/NanumGothicEco.ttf`;
       let printer;
       let targetFile;
 
@@ -1095,7 +1096,7 @@ StaticRouter.prototype.rou_post_printText = function () {
         printer = printerRaw.trim().split(' ')[1];
         lpstat.kill();
         fileSystem(`write`, [ targetFile, req.body.text ]).then(() => {
-          return shellExec(`lpr -P ${printer} -o orientation-requested=4 ${shellLink(targetFile)}`);
+          return shellExec(`uniprint -printer ${printer} -size 9 -hsize 0 -L -media A4 -wrap -font ${fontName} ${shellLink(targetFile)}`);
         }).then(() => {
           return shellExec("rm", [ "-rf", targetFile ]);
         }).catch((err) => {
