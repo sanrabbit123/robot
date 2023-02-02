@@ -921,7 +921,7 @@ SecondRouter.prototype.rou_post_receiptSend = function () {
 
 SecondRouter.prototype.rou_post_pageToPdf = function () {
   const instance = this;
-  const { secondHost } = this;
+  const address = this.address;
   const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/pageToPdf" ];
@@ -933,7 +933,7 @@ SecondRouter.prototype.rou_post_pageToPdf = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const ghostResponse = await requestSystem("https://" + secondHost + "/pageToPdf", req.body, { headers: { "Content-Type": "application/json" } });
+      const ghostResponse = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/pageToPdf", req.body, { headers: { "Content-Type": "application/json" } });
       res.send(JSON.stringify(ghostResponse.data));
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_pageToPdf): " + e.message).catch((e) => { console.log(e); });

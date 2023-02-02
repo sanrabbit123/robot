@@ -148,8 +148,8 @@ DevContext.prototype.launching = async function () {
 
 
     
-    const res = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/pageToPdf", { url: "https://naver.com" }, { headers: { "Content-Type": "application/json" } });
-    console.log(res);
+
+    
 
 
 

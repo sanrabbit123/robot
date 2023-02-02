@@ -1350,48 +1350,6 @@ GraphicBot.prototype.botRouter = function () {
     }
   };
 
-  funcObj.post_pageToPdf = {
-    link: [ "/pageToPdf" ],
-    func: async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      try {
-        if (typeof req.body.url !== "string") {
-          throw new Error("invaild post : url must be string");
-        }
-
-        const imageName = `pagePrint_${uniqueValue("string")}.png`;
-        const htmlName = imageName.replace(/\.png$/i, ".html");
-        const pdfName = imageName.replace(/\.png$/i, ".pdf");
-        let htmlString;
-
-        await chromeGhost.pageToPng(global.decodeURIComponent(req.body.url), staticHomeFolder + "/" + imageName, true);
-
-        htmlString = `<html><head><style>*{margin:0;padding:0}</style></head><body><img src="http://127.0.0.1/${imageName}" style="width:100%"></body></html>`;
-        await fileSystem(`write`, [ `${staticHomeFolder}/${htmlName}`, htmlString ]);
-
-        await chromeGhost.pdfPrint(`http://127.0.0.1/${htmlName}`, `${staticHomeFolder}/${pdfName}`, false);
-
-        await shellExec(`scp ${shellLink(staticHomeFolder + "/" + pdfName)} ${address.officeinfo.ghost.user}@${address.officeinfo.ghost.host}:${shellLink(address.officeinfo.ghost.file.static)}`);
-        await shellExec(`rm`, [ `-rf`, `${staticHomeFolder}/${imageName}` ]);
-        await shellExec(`rm`, [ `-rf`, `${staticHomeFolder}/${htmlName}` ]);
-        await shellExec(`rm`, [ `-rf`, `${staticHomeFolder}/${pdfName}` ]);
-
-        res.send(JSON.stringify({
-          url: global.encodeURIComponent("https://" + address.officeinfo.ghost.host + "/" + pdfName),
-        }));
-
-      } catch (e) {
-        console.log(e);
-        res.send(JSON.stringify({ error: e.message }));
-      }
-    }
-  };
-
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
