@@ -199,10 +199,8 @@ DevContext.prototype.launching = async function () {
     
 
 
-    const cron = new CronGhost();
-    
-    await cron.aliveTest(this.MONGOLOCALC);
 
+    
 
     /*
 
