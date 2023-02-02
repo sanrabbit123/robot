@@ -1061,6 +1061,57 @@ StaticRouter.prototype.rou_post_textToVoice = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_printText = function () {
+  const instance = this;
+  const audio = this.audio;
+  const { errorLog } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/printText" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (typeof req.body.text !== "string") {
+        throw new Error("invalid post");
+      }
+      const { spawn } = require("child_process");
+      const lpstat = spawn("lpstat", [ "-p" ]);
+      let printer;
+      let targetFile;
+
+      targetFile = process.cwd() + "/temp/printerTemp_" + uniqueValue("hex") + ".txt";
+
+      lpstat.stdout.on("data", (data) => {
+        const arr = String(data).split("\n").map((i) => { return i.trim(); });
+        const printerRaw = arr.find((i) => { return /epson/gi.test(i); });
+        printer = printerRaw.trim().split(' ')[0];
+        lpstat.kill();
+        fileSystem(`write`, [ targetFile, req.body.text ]).then(() => {
+          return shellExec(`lpr -P ${printer} -o orientation-requested=4 ${shellLink(targetFile)}`);
+        }).then(() => {
+          return shellExec("rm", [ "-rf", targetFile ]);
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_printText): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.getAll = function () {
