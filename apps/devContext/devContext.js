@@ -147,10 +147,8 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-    
-    const res = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/printText", { text: "안녕하세요" }, { headers: { "Content-Type": "application/json" } });
-    console.log(res);
 
+    
 
 
 

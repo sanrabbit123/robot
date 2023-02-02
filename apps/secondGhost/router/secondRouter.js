@@ -946,7 +946,7 @@ SecondRouter.prototype.rou_post_pageToPdf = function () {
 SecondRouter.prototype.rou_post_printClient = function () {
   const instance = this;
   const back = this.back;
-  const { secondHost } = this;
+  const address = this.address;
   const { requestSystem, messageSend, errorLog, messageLog, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/printClient" ];
@@ -972,7 +972,7 @@ SecondRouter.prototype.rou_post_printClient = function () {
       text += indent + "체크한 시공 : " + curation.construct.items.join(", ") + "\n\n";
       text += indent + "체크한 거주 환경 : " + (curation.construct.living ? "거주중" : "이사 예정") + "\n\n";
 
-      requestSystem("https://" + secondHost + "/printText", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+      requestSystem("https://" + address.officeinfo.ghost.host + ":3000/printText", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
 
       res.send(JSON.stringify({ message: "will do" }));
 
