@@ -905,8 +905,8 @@ SecondRouter.prototype.rou_post_receiptSend = function () {
       }
       const { amount, phone } = req.body;
       requestSystem("https://" + secondHost + "/receiptSend", {
-        amount: req.body.amount,
-        phone: req.body.phone,
+        amount,
+        phone,
       }, {
         headers: { "Content-Type": "application/json" }
       }).catch((err) => { console.log(err); });
