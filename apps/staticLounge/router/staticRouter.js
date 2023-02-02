@@ -1119,7 +1119,7 @@ StaticRouter.prototype.rou_post_pageToPdf = function () {
   const instance = this;
   const chrome = this.chrome;
   const address = this.address;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { errorLog, fileSystem, shellExec, shellLink, uniqueValue } = this.mother;
   const { staticConst } = this;
   let obj;
   obj = {};
