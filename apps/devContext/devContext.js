@@ -149,6 +149,11 @@ DevContext.prototype.launching = async function () {
 
     
 
+    
+
+    const res = await requestSystem("https://" + address.secondinfo.host + ":3000/receiptSend", { amount: 1000, phone: "010-2747-3403" }, { headers: { "Content-Type": "application/json" } });
+
+    console.log(res);
 
     
 
