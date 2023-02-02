@@ -1064,7 +1064,7 @@ StaticRouter.prototype.rou_post_textToVoice = function () {
 StaticRouter.prototype.rou_post_printText = function () {
   const instance = this;
   const audio = this.audio;
-  const { errorLog } = this.mother;
+  const { errorLog, uniqueValue, fileSystem, shellExec, shellLink } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/printText" ];
