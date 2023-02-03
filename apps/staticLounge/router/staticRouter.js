@@ -1166,6 +1166,125 @@ StaticRouter.prototype.rou_post_pageToPdf = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_getUtilization = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, dateToString, errorLog } = this.mother;
+  const fileTargetFolder = process.env.HOME + "/nmontong";
+  const delta = 30;
+  const fileKeyWords = "homeliaison_";
+  const utilizationByDate = async function (standardDate, delta = 30) {
+    try {
+      const fileToMatrix = async function (fileName) {
+        try {
+          let target;
+          let matrix, tempArr;
+          let targetArr;
+          let filteredMatrix;
+      
+          target = await fileSystem("readString", [ `${fileTargetFolder}/${fileName}` ])
+      
+          targetArr = target.split("\n");
+      
+          matrix = [];
+          tempArr = null;
+          for (let raw of targetArr) {
+            if (/^ZZZZ/.test(raw)) {
+              if (Array.isArray(tempArr)) {
+                matrix.push(tempArr);
+              }
+              tempArr = [];
+              tempArr.push(raw);
+            } else {
+              if (Array.isArray(tempArr)) {
+                if (/^NET,/.test(raw)) {
+                  tempArr.push(raw);
+                } else if (/^CPU_ALL,/.test(raw)) {
+                  tempArr.push(raw);
+                }
+              }
+            }
+          }
+      
+          filteredMatrix = matrix.map(([ , cpu, net ]) => {
+            const cpuUsage = (100 - Number(cpu.split(",")[5])) / 100;
+            const networkIn = Number(net.split(",")[3]) * 1024;
+            const networkOut = Number(net.split(",")[5]) * 1024;
+            return [ cpuUsage, networkIn, networkOut ];
+          });
+  
+          return filteredMatrix;
+        } catch (e) {
+          console.log(e);
+          return [];
+        }
+      }
+      const dateToName = function (dateObject) {
+        return fileKeyWords + dateToString(dateObject, true).slice(2, -3).replace(/\-/gi, '').replace(/\:/gi, '').replace(/ /gi, "_") + ".nmon";
+      }
+      let ago, copiedDate;
+      let totalMatrix;
+      let cpuMax, cpuAve, networkIn, networkOut;
+
+      ago = new Date(JSON.stringify(standardDate).slice(1, -1));
+      ago.setMinutes(ago.getMinutes() - delta);
+  
+      totalMatrix = [];
+      for (let i = 0; i < delta; i++) {
+        copiedDate = new Date(JSON.stringify(ago).slice(1, -1));
+        copiedDate.setMinutes(copiedDate.getMinutes() + i);
+        totalMatrix = totalMatrix.concat(await fileToMatrix(dateToName(copiedDate)));
+      }
+  
+      cpuMax = totalMatrix.reduce((acc, curr) => { return acc >= curr[0] ? acc : curr[0] }, 0);
+      if (totalMatrix.length === 0) {
+        cpuAve = 0;
+      } else {
+        cpuAve = totalMatrix.reduce((acc, curr) => { return acc + curr[0] }, 0) / totalMatrix.length;
+      }
+      networkIn = Math.round(totalMatrix.reduce((acc, curr) => { return acc + curr[1] }, 0));
+      networkOut = Math.round(totalMatrix.reduce((acc, curr) => { return acc + curr[2] }, 0));
+      return {
+        cpu: {
+          average: cpuAve,
+          maximum: cpuMax
+        },
+        network: {
+          in: networkIn,
+          out: networkOut
+        },
+      };
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+  let obj = {};
+  obj.link = [ "/getUtilization" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      let standardDate;
+      let result;
+
+      standardDate = new Date();
+      standardDate.setMinutes(standardDate.getMinutes() - 1);
+
+      result = await utilizationByDate(standardDate, delta);
+
+      res.send(JSON.stringify(result));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_getUtilization): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.getAll = function () {
