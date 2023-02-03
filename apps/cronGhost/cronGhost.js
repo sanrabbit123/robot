@@ -26,6 +26,7 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
   try {
 
     targets = [
+      { name: "coreDB", protocol: "http:", host: address.mongoinfo.host, port: generalPort, },
       { name: "pythonCloud", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
       { name: "backConsole", protocol: "https:", host: address.backinfo.host, port: generalPort, },
       { name: "logConsole", protocol: "https:", host: address.testinfo.host, port: generalPort, },
