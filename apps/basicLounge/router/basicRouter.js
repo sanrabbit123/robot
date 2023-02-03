@@ -131,7 +131,8 @@ BasicRouter.prototype.rou_post_generalJson = function () {
     });
     try {
       if (req.body.mode === undefined || req.body.collection === undefined) {
-        throw new Error("invalid post");
+        console.log(req.body);
+        throw new Error("invalid post must be mode and collection");
       }
       const { mode, collection } = equalJson(req.body);
       const staticDir = await fileSystem("readDir", [ staticConst ]);
@@ -171,7 +172,7 @@ BasicRouter.prototype.rou_post_generalJson = function () {
       if (mode === "create") {
 
         if (req.body.createQuery === undefined) {
-          throw new Error("invalid post");
+          throw new Error("invalid post must be createQuery");
         }
 
         const { createQuery } = equalJson(req.body);
@@ -222,12 +223,12 @@ BasicRouter.prototype.rou_post_generalJson = function () {
         }
         
         thisJson = await fileSystem("readJson", [ collectionFolder + "/" + thisFileName ]);
-
+        
         for (let order in updateQuery) {
           orderArr = order.split(".");
           if (orderArr.length > 0) {
             targetObj = thisJson;
-            for (let i = 0; i < orderArr.length - 2; i++) {
+            for (let i = 0; i < orderArr.length - 1; i++) {
               targetObj = targetObj[orderArr[i]];
             }
             targetObj[orderArr[orderArr.length - 1]] = updateQuery[order];
@@ -292,7 +293,7 @@ BasicRouter.prototype.rou_post_generalJson = function () {
 
       res.send(JSON.stringify(resultObj));
     } catch (e) {
-      errorLog("Basic lounge 서버 문제 생김 (rou_post_generalJson): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

@@ -6,6 +6,7 @@ const BasicLounge = function () {
 
 BasicLounge.prototype.basicConnect = async function () {
   const instance = this;
+  const { fileSystem, shellExec } = this.mother;
   const PORT = 3000;
   const http = require("http");
   const express = require("express");
@@ -32,6 +33,11 @@ BasicLounge.prototype.basicConnect = async function () {
     console.log(``);
     console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching basic lounge ==============`);
     console.log(``);
+
+    //set static
+    if (!(await fileSystem("exist", [ staticFolder ]))) {
+      await shellExec("mkdir", [ staticFolder ]);
+    }
 
     //set router
     const BasicRouter = require(`${this.dir}/router/basicRouter.js`);

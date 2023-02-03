@@ -331,6 +331,16 @@ Robot.prototype.staticConnect = async function () {
   }
 }
 
+Robot.prototype.basicConnect = async function () {
+  try {
+    const BasicLounge = require(process.cwd() + "/apps/basicLounge/basicLounge.js");
+    const app = new BasicLounge();
+    await app.basicConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.consoleSource = function () {
   const AiConsole = require(process.cwd() + "/apps/contentsMaker/aiConsole.js");
   let cobot = new AiConsole();
@@ -1238,6 +1248,13 @@ const MENU = {
   static: async function () {
     try {
       await robot.staticConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  basic: async function () {
+    try {
+      await robot.basicConnect();
     } catch (e) {
       console.log(e);
     }
