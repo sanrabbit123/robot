@@ -146,6 +146,9 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
   const { EC2Client, DescribeInstancesCommand } = require("@aws-sdk/client-ec2");
   const { CloudWatchClient, GetMetricDataCommand } = require("@aws-sdk/client-cloudwatch");
   try {
+
+    await this.setCredentials();
+
     const nameDictionary = {
       coreDB: { info: "mongoinfo", key: "co0000" },
       backConsole: { info: "backinfo", key: "ba0000" },
@@ -211,7 +214,12 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
             network: {
               in: 0,
               out: 0
-            }
+            },
+            disk: {
+              total: 0,
+              used: 0,
+              available: 0,
+            },
           }
         });
       }

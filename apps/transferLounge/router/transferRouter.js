@@ -84,7 +84,8 @@ TransferRouter.prototype.rou_get_First = function () {
     try {
 
       if (req.params.id === "ssl") {
-        res.send(JSON.stringify({ message: "hi" }));
+        const disk = await diskReading();
+        res.send(JSON.stringify({ disk: disk.toArray() }));
       } else if (req.params.id === "disk") {
         const disk = await diskReading();
         res.send(JSON.stringify({ disk: disk.toArray() }));

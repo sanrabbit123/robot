@@ -99,11 +99,13 @@ SecondRouter.prototype.rou_get_First = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      let disk;
 
       if (req.params.id === "ssl") {
-        res.send(JSON.stringify({ message: "hi" }));
+        disk = await diskReading();
+        res.send(JSON.stringify({ disk: disk.toArray() }));
       } else if (req.params.id === "disk") {
-        const disk = await diskReading();
+        disk = await diskReading();
         res.send(JSON.stringify({ disk: disk.toArray() }));
       } else {
         res.send(JSON.stringify({ message: "hi" }));

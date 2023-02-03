@@ -205,8 +205,12 @@ DataRouter.prototype.rou_get_First = function () {
 
       if (req.params.id === "ssl") {
 
-        res.set({ "Content-Type": "text/plain" });
-        res.send("hi");
+        diskReading().then((disk) => {
+          res.set({ "Content-Type": "application/json" });
+          res.send(JSON.stringify({ disk: disk.toArray() }));
+        }).catch((err) => {
+          throw new Error(err);
+        });
 
       } else if (req.params.id === "disk") {
 
