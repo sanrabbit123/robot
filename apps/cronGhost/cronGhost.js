@@ -33,7 +33,7 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
       { name: "secondGhost", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
       { name: "transferLounge", protocol: "https:", host: address.transinfo.host, port: generalPort, },
       { name: "cronLauncher", protocol: "https:", host: address.croninfo.host, port: generalPort, },
-      { name: "officeLounge", protocol: "https:", host: address.officeinfo.ghost.host, port: generalPort, },
+      { name: "staticLounge", protocol: "https:", host: address.officeinfo.ghost.host, port: generalPort, },
     ];
 
     targetNumber = targets.length;

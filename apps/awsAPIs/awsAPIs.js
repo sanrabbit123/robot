@@ -142,7 +142,8 @@ AwsAPIs.prototype.pollyStream = function (text = "안녕하세요?") {
 
 AwsAPIs.prototype.getInstancesStatus = async function () {
   const instance = this;
-  const { orderSystem, zeroAddition } = this.mother;
+  const address = this.address;
+  const { orderSystem, zeroAddition, requestSystem } = this.mother;
   const { EC2Client, DescribeInstancesCommand } = require("@aws-sdk/client-ec2");
   const { CloudWatchClient, GetMetricDataCommand } = require("@aws-sdk/client-cloudwatch");
   try {
@@ -166,6 +167,7 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
     let ago;
     let now;
     let str;
+    let officeUsage;
 
     ago = new Date();
     now = new Date(JSON.stringify(ago).slice(1, -1));
@@ -326,6 +328,46 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
       }));
       obj.utilization.network.out = Math.round(data.MetricDataResults[0]["Values"][0]);
     }
+
+    // office server
+
+    officeUsage = (await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/getUtilization", { data: null }, { headers: { "Content-Type": "application/json" } })).data;
+    instances.push({
+      id: idKeyword + "of0000" + "_" + str,
+      name: "staticLounge",
+      alive: true,
+      date: {
+        from: ago,
+        to: now,
+      },
+      info: "officeinfo",
+      instance: {
+        id: "i-0000000000000000a",
+        type: "minisuit.i7",
+      },
+      network: {
+        host: address.officeinfo.ghost.host,
+        ip: {
+          outer: {
+            value: address.officeinfo.ghost.outer,
+            match: true,
+          },
+          inner: {
+            value: address.officeinfo.ghost.inner,
+            match: true,
+          }
+        },
+      },
+      utilization: {
+        cpu: officeUsage.cpu,
+        network: officeUsage.network,
+        disk: {
+          total: 0,
+          used: 0,
+          available: 0,
+        },
+      }
+    });
 
     return instances;
 
