@@ -65,6 +65,9 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
             boo = true;
             if (thisObj !== undefined) {
               thisObj.alive = true;
+              thisObj.utilization.disk.total = res.data.disk[0];
+              thisObj.utilization.disk.used = res.data.disk[1];
+              thisObj.utilization.disk.available = res.data.disk[2];
             }
             if (successNum === targetNumber) {
               message = "server all alive";
