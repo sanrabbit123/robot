@@ -399,12 +399,12 @@ Mother.prototype.fileSystem = function (sw, arr) {
       return new Promise(function (resolve, reject) {
         if (arr.length !== 1) { reject("second argument must be length 1 array"); }
         const { spawn } = require("child_process");
-        const mkdir = spawn("rm", [ "-rf", arr[0] ]);
+        const remove = spawn("rm", [ "-rf", arr[0] ]);
         let out;
         out = "";
-        mkdir.stdout.on("data", (data) => { out += String(data); });
-        mkdir.stderr.on("data", (data) => { reject(String(data)); });
-        mkdir.on("close", (code) => { resolve(arr[0]); });
+        remove.stdout.on("data", (data) => { out += String(data); });
+        remove.stderr.on("data", (data) => { reject(String(data)); });
+        remove.on("close", (code) => { resolve(arr[0]); });
       });
       break;
     case "open":

@@ -1285,6 +1285,59 @@ StaticRouter.prototype.rou_post_getUtilization = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_removeCronNmon = function () {
+  const instance = this;
+  const { fileSystem, dateToString, errorLog } = this.mother;
+  const targetDir = process.env.HOME + "/nmontong";
+  let obj = {};
+  obj.link = [ "/removeCronNmon" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const targetDirList = await fileSystem("readDir", [ targetDir ]);
+      const nmonTargetKeywords = "homeliaison_";
+      const yearKeywords = String((new Date()).getFullYear()).slice(0, 2);
+      const now = new Date();
+      const ago = new Date(JSON.stringify(now).slice(1, -1));
+      const agoConst = 12;
+      let removeTargets;
+  
+      ago.setHours(ago.getHours() - agoConst);
+  
+      removeTargets = targetDirList.filter((str) => { return (new RegExp("^" + nmonTargetKeywords)).test(str) }).map((str) => {
+        const [ key, dateRaw, hoursRaw ] = str.split("_");
+        const [ hours, exe ] = hoursRaw.split(".");
+        const thisDate = new Date(
+          Number(yearKeywords + dateRaw.slice(0, 2)),
+          Number(dateRaw.slice(2, 4)) - 1,
+          Number(dateRaw.slice(4)),
+          Number(hours.slice(0, 2)),
+          Number(hours.slice(2)),
+          0
+        );
+        return { date: thisDate, fileName: str };
+      }).filter(({ date, fileName }) => {
+        return date.valueOf() <= ago.valueOf();
+      }).map(({ fileName }) => { return targetDir + "/" + fileName });
+  
+      for (let str of removeTargets) {
+        await fileSystem("remove", [ str ]);
+      }
+      
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_removeCronNmon): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.getAll = function () {
