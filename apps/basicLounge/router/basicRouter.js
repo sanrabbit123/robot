@@ -300,6 +300,57 @@ BasicRouter.prototype.rou_post_generalJson = function () {
   return obj;
 }
 
+BasicRouter.prototype.rou_post_textToVoice = function () {
+  const instance = this;
+  const { errorLog } = this.mother;
+  const os = require("os");
+  const thisOs = os.type();
+  const { spawn } = require("child_process");
+  const sayVoice = function (text) {
+    let say, out;
+    return new Promise((resolve, reject) => {
+      say = spawn("say", [ text ]);
+      out = "";
+      say.stdout.on("data", (data) => { out += String(data); });
+      say.stderr.on("data", (data) => { reject(String(data)); });
+      say.on("close", (code) => { resolve(out) });
+    });
+  }
+  let obj;
+  obj = {};
+  obj.link = [ "/textToVoice" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (typeof req.body.text !== "string") {
+        throw new Error("invalid post");
+      }
+      let text;
+      if (/Darwin/gi.test(thisOs)) {
+        text = req.body.text;
+        text = text.replace(/[\[\]\{\}\"\'\<\>\/\\\~\`\+\=\-\_\@\#\$\%\^\&\*\(\)\:\;]/g, '');
+        text = text.replace(/[^가-힣\?\!\.]/gi, '');
+        text = text.replace(/\'/g, '"').replace(/\n/g, ' ').replace(/\t/g, '');
+        sayVoice(text).catch((err) => {
+          console.log(err);
+        });
+        res.send(JSON.stringify({ message: "will do" }));
+      } else {
+        res.send(JSON.stringify({ message: "only possible in mac" }));
+      }
+    } catch (e) {
+      console.log(e);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 BasicRouter.prototype.getAll = function () {

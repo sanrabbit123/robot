@@ -102,12 +102,37 @@ GoogleSheet.prototype.add_newSheet_inPython = async function (id, nameArr) {
 GoogleSheet.prototype.get_value_inPython = async function (id, range) {
   const instance = this;
   const mother = this.mother;
+  const { sleep } = this.mother;
   try {
+    let result;
     id = this.parsingId(id);
-    let result = await mother.pythonExecute(this.pythonApp, [ "sheets", "get" ], { id, range });
-    return result;
+    result = await mother.pythonExecute(this.pythonApp, [ "sheets", "get" ], { id, range });
+    if (!Array.isArray(result)) {
+      await sleep(3000);
+      result = await mother.pythonExecute(this.pythonApp, [ "sheets", "get" ], { id, range });
+      if (!Array.isArray(result)) {
+        await sleep(3000);
+        result = await mother.pythonExecute(this.pythonApp, [ "sheets", "get" ], { id, range });
+        if (!Array.isArray(result)) {
+          await sleep(3000);
+          result = await mother.pythonExecute(this.pythonApp, [ "sheets", "get" ], { id, range });
+          if (!Array.isArray(result)) {
+            throw new Error("fail read");
+          } else {
+            return result;
+          }
+        } else {
+          return result;
+        }
+      } else {
+        return result;
+      }
+    } else {
+      return result;
+    }
   } catch (e) {
     console.log(e);
+    return [];
   }
 }
 
