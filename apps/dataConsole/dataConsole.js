@@ -716,7 +716,7 @@ DataConsole.prototype.renderDesignerPhp = async function () {
 
 DataConsole.prototype.mergeRouter = async function (middle = true) {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shellLink } = this.mother;
   try {
     const routerFragments = this.dir + "/router/fragments";
     const routerFragmentsDir_raw = await fileSystem(`readDir`, [ routerFragments ]);
