@@ -302,7 +302,7 @@ BasicRouter.prototype.rou_post_generalJson = function () {
 
 BasicRouter.prototype.rou_post_textToVoice = function () {
   const instance = this;
-  const { errorLog } = this.mother;
+  const { errorLog, shellExec } = this.mother;
   const os = require("os");
   const thisOs = os.type();
   const { spawn } = require("child_process");
@@ -337,6 +337,15 @@ BasicRouter.prototype.rou_post_textToVoice = function () {
         text = text.replace(/[^가-힣\?\!\.]/gi, '');
         text = text.replace(/\'/g, '"').replace(/\n/g, ' ').replace(/\t/g, '');
         sayVoice(text).catch((err) => {
+          console.log(err);
+        });
+        res.send(JSON.stringify({ message: "will do" }));
+      } else if (/Windows/gi.test(thisOs)) {
+        text = req.body.text;
+        text = text.replace(/[\[\]\{\}\"\'\<\>\/\\\~\`\+\=\-\_\@\#\$\%\^\&\*\(\)\:\;]/g, '');
+        text = text.replace(/[^가-힣\?\!\.]/gi, '');
+        text = text.replace(/\'/g, '"').replace(/\n/g, ' ').replace(/\t/g, '');
+        shellExec(`PowerShell -Command "Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('${text}');"`).catch((err) => {
           console.log(err);
         });
         res.send(JSON.stringify({ message: "will do" }));
