@@ -5980,6 +5980,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       let columns;
       let view, success;
       let updateTong;
+      let caseTong;
 
       if (clientUpdate) {
 
@@ -6324,6 +6325,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       possibleNum = 0;
       targetNum = 0;
       contractNum = 0;
+      caseTong = [];
       for (let i = 0; i < totalRows.length; i++) {
         if (totalRows[i][1] === "계") {
 
@@ -6392,14 +6394,36 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
 
           thisDate = totalRows[i][0];
 
-          updateTong.push({
-            whereQuery: {
+          if (totalRows[i][columns.findIndex((str) => { return /아이디/gi.test(str) })] !== '') {
+            updateTong.push({
+              whereQuery: {
+                cliid: totalRows[i][columns.findIndex((str) => { return /아이디/gi.test(str) })],
+              },
+              updateQuery: {
+                manager: managerDictionary[totalRows[i][columns.findIndex((str) => { return /담당자/gi.test(str) })]],
+              },
+            });
+    
+            caseTong.push({
+              date: dateParsing(totalRows[i][0]),
               cliid: totalRows[i][columns.findIndex((str) => { return /아이디/gi.test(str) })],
-            },
-            updateQuery: {
               manager: managerDictionary[totalRows[i][columns.findIndex((str) => { return /담당자/gi.test(str) })]],
-            },
-          })
+              status: totalRows[i][columns.findIndex((str) => { return /상태/gi.test(str) })],
+              possible: totalRows[i][columns.findIndex((str) => { return /계약 가능성/gi.test(str) })],
+              target: totalRows[i][columns.findIndex((str) => { return /타겟 고객/gi.test(str) })],
+              contract: totalRows[i][columns.findIndex((str) => { return /계약금 입금/gi.test(str) })],
+              order: totalRows[i][columns.findIndex((str) => { return /우선 순위/gi.test(str) })],
+              first: {
+                try: totalRows[i][columns.findIndex((str) => { return /1차 응대 시도/gi.test(str) })],
+                success: totalRows[i][columns.findIndex((str) => { return /1차 응대 성공/gi.test(str) })],
+              },
+              proposal: {
+                send: totalRows[i][columns.findIndex((str) => { return /추천서 발송/gi.test(str) })],
+                open: totalRows[i][columns.findIndex((str) => { return /추천서 조회/gi.test(str) })],
+                feedback: totalRows[i][columns.findIndex((str) => { return /피드백 통화 시도/gi.test(str) })],
+              }
+            });
+          }
 
         }
       }
@@ -6412,6 +6436,8 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
           }
         }
       }
+
+
 
       weekTong = [];
       weekFactorTong = [];
