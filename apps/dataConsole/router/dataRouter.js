@@ -2354,6 +2354,7 @@ DataRouter.prototype.rou_post_sendSlack = function () {
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_sendSlack): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
@@ -6662,12 +6663,14 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
     const sheetsId = "1EsYgzt-itSq_hWjYBkSwOgorpOWCjoe9_gmfCtBtlZ4";
     const sheetsName = "default";
     const sheetsName2 = "total";
+    const sheetsIndex = 673494059;
     const managerDictionary = {
       "Jini": "강해진",
       "KB": "이큰별",
       "Pepper": "임지민",
       "대기": "-",
     };
+    const managerConst = [ "강해진", "이큰별", "임지민" ];
     try {
       const selfMongo = MONGOC;
       const selfConsoleMongo = MONGOLOCALC;
@@ -6708,6 +6711,17 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       let columns;
       let view, success;
       let updateTong;
+      let caseTong;
+      let dateTargets;
+      let caseFilteringTong;
+      let fromDate, toDate;
+      let thisTargetCases;
+      let caseObj;
+      let thisTargetAccCases;
+      let thisMonthFromDate;
+      let thisTargetMonthCases;
+      let caseMatrix, caseTempArr;
+      let colorRequestArr;
 
       if (clientUpdate) {
 
@@ -7052,6 +7066,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       possibleNum = 0;
       targetNum = 0;
       contractNum = 0;
+      caseTong = [];
       for (let i = 0; i < totalRows.length; i++) {
         if (totalRows[i][1] === "계") {
 
@@ -7120,14 +7135,36 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
 
           thisDate = totalRows[i][0];
 
-          updateTong.push({
-            whereQuery: {
+          if (totalRows[i][columns.findIndex((str) => { return /아이디/gi.test(str) })] !== '') {
+            updateTong.push({
+              whereQuery: {
+                cliid: totalRows[i][columns.findIndex((str) => { return /아이디/gi.test(str) })],
+              },
+              updateQuery: {
+                manager: managerDictionary[totalRows[i][columns.findIndex((str) => { return /담당자/gi.test(str) })]],
+              },
+            });
+    
+            caseTong.push({
+              date: dateParsing(totalRows[i][0]),
               cliid: totalRows[i][columns.findIndex((str) => { return /아이디/gi.test(str) })],
-            },
-            updateQuery: {
               manager: managerDictionary[totalRows[i][columns.findIndex((str) => { return /담당자/gi.test(str) })]],
-            },
-          })
+              status: totalRows[i][columns.findIndex((str) => { return /상태/gi.test(str) })],
+              possible: totalRows[i][columns.findIndex((str) => { return /계약 가능성/gi.test(str) })],
+              target: totalRows[i][columns.findIndex((str) => { return /타겟 고객/gi.test(str) })],
+              contract: totalRows[i][columns.findIndex((str) => { return /계약금 입금/gi.test(str) })],
+              order: totalRows[i][columns.findIndex((str) => { return /우선 순위/gi.test(str) })],
+              first: {
+                try: totalRows[i][columns.findIndex((str) => { return /1차 응대 시도/gi.test(str) })],
+                success: totalRows[i][columns.findIndex((str) => { return /1차 응대 성공/gi.test(str) })],
+              },
+              proposal: {
+                send: totalRows[i][columns.findIndex((str) => { return /추천서 발송/gi.test(str) })],
+                open: totalRows[i][columns.findIndex((str) => { return /추천서 조회/gi.test(str) })],
+                feedback: totalRows[i][columns.findIndex((str) => { return /피드백 통화 시도/gi.test(str) })],
+              }
+            });
+          }
 
         }
       }
@@ -7141,114 +7178,305 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
         }
       }
 
-      weekTong = [];
-      weekFactorTong = [];
-      pastNumber = 9;
-      for (let obj of totalTong) {
-        thisNumber = obj.date.getDay();
-        if (thisNumber > pastNumber) {
-          weekTong.push(equalJson(JSON.stringify(weekFactorTong)));
-          weekFactorTong = [];
+      dateTargets = Array.from(new Set(caseTong.map((obj) => {
+        return dateToString(obj.date);
+      }))).map((str) => { return stringToDate(str) });
+      
+      dateTargets.sort((a, b) => { return b.valueOf() - a.valueOf() });
+  
+      caseFilteringTong = [];
+      for (let standardDate of dateTargets) {
+  
+        caseObj = {};
+  
+        fromDate = new Date(JSON.stringify(standardDate).slice(1, -1));
+        toDate = new Date(JSON.stringify(standardDate).slice(1, -1));
+        thisMonthFromDate = new Date(JSON.stringify(standardDate).slice(1, -1));
+  
+        toDate.setHours(15);
+        fromDate.setHours(15);
+        fromDate.setDate(fromDate.getDate() - 1);
+        thisMonthFromDate.setHours(15);
+        thisMonthFromDate.setDate(1);
+        thisMonthFromDate.setDate(thisMonthFromDate.getDate() - 1);
+  
+        thisTargetCases = caseTong.filter((obj) => { return obj.date.valueOf() > fromDate.valueOf() && obj.date.valueOf() < toDate.valueOf() })
+        thisTargetAccCases = caseTong.filter((obj) => { return obj.date.valueOf() < toDate.valueOf() });
+        thisTargetMonthCases = caseTong.filter((obj) => { return obj.date.valueOf() > thisMonthFromDate.valueOf() && obj.date.valueOf() < toDate.valueOf() })
+        
+        caseObj.date = standardDate;
+        caseObj.todayManagers = [];
+        caseObj.accManagers = [];
+        caseObj.monthManagers = [];
+        caseObj.currentTargetManagers = [];
+        caseObj.currentNonTargetManagers = [];
+        caseObj.currentPossibleManagers = [];
+        caseObj.contractTodayManagers = [];
+        caseObj.contractMonthManagers = [];
+        caseObj.contractAccManagers = [];
+        for (let name of managerConst) {
+  
+          caseObj.todayManagers.push({
+            name,
+            value: thisTargetCases.filter((obj) => { return obj.manager === name }).length
+          });
+          caseObj.accManagers.push({
+            name,
+            value: thisTargetAccCases.filter((obj) => { return obj.manager === name }).length
+          });
+          caseObj.monthManagers.push({
+            name,
+            value: thisTargetMonthCases.filter((obj) => { return obj.manager === name }).length
+          });
+  
+          caseObj.currentTargetManagers.push({
+            name,
+            value: thisTargetAccCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
+              return /^[응장]/gi.test(obj.status);
+            }).filter((obj) => {
+              return /^O/gi.test(obj.target);
+            }).length
+          });
+  
+          caseObj.currentNonTargetManagers.push({
+            name,
+            value: thisTargetAccCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
+              return /^[응장]/gi.test(obj.status);
+            }).filter((obj) => {
+              return !/^O/gi.test(obj.target);
+            }).length
+          });
+  
+          caseObj.currentPossibleManagers.push({
+            name,
+            value: thisTargetAccCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
+              return /^[응장]/gi.test(obj.status);
+            }).filter((obj) => {
+              return /^O/gi.test(obj.possible);
+            }).length
+          });
+  
+          caseObj.contractTodayManagers.push({
+            name,
+            value: thisTargetCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
+              return /^O/gi.test(obj.contract);
+            }).length
+          });
+  
+          caseObj.contractMonthManagers.push({
+            name,
+            value: thisTargetMonthCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
+              return /^O/gi.test(obj.contract);
+            }).length
+          });
+  
+          caseObj.contractAccManagers.push({
+            name,
+            value: thisTargetAccCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
+              return /^O/gi.test(obj.contract);
+            }).length
+          });
+  
         }
-        weekFactorTong.push(obj);
-        pastNumber = thisNumber;
+        
+        caseFilteringTong.push(caseObj);
+  
       }
-      weekTong.push(equalJson(JSON.stringify(weekFactorTong)));
-
-      finalTong = weekTong.map((arr) => {
-        return {
-          raw: equalJson(JSON.stringify(arr)),
-          data: {
-            total: arr.reduce((acc, curr) => { return acc + curr.total }, 0),
-            current: arr.reduce((acc, curr) => { return acc + curr.current }, 0),
-            manager: {
-              a: arr.reduce((acc, curr) => { return acc + curr.manager.a }, 0),
-              b: arr.reduce((acc, curr) => { return acc + curr.manager.b }, 0),
-              c: arr.reduce((acc, curr) => { return acc + curr.manager.c }, 0),
-            },
-            drop: arr.reduce((acc, curr) => { return acc + curr.drop }, 0),
-            possible: arr.reduce((acc, curr) => { return acc + curr.possible }, 0),
-            target: arr.reduce((acc, curr) => { return acc + curr.target }, 0),
-            contract: arr.reduce((acc, curr) => { return acc + curr.contract }, 0),
-          }
+  
+      caseMatrix = [];
+      for (let obj of caseFilteringTong) {
+        caseTempArr = [];
+        caseTempArr.push(dateToString(obj.date));
+        caseTempArr.push("당일 응대 배정");
+        caseTempArr.push("총 누적 고객 수");
+        caseTempArr.push("당월 누적 고객 수");
+        caseTempArr.push("현 응대중 고객 수");
+        caseTempArr.push("응대하지 않을 고객 수");
+        caseTempArr.push("계약 가능성 고객 수");
+        caseTempArr.push("당일 계약 수");
+        caseTempArr.push("당월 누적 계약 수");
+        caseTempArr.push("총 누적 계약 수");
+        caseMatrix.push(equalJson(JSON.stringify(caseTempArr)));
+  
+        for (let name of managerConst) {
+          caseTempArr = [];
+          caseTempArr.push(name);
+          caseTempArr.push(obj.todayManagers.find((o) => { return o.name === name }).value);
+          caseTempArr.push(obj.accManagers.find((o) => { return o.name === name }).value);
+          caseTempArr.push(obj.monthManagers.find((o) => { return o.name === name }).value);
+          caseTempArr.push(obj.currentTargetManagers.find((o) => { return o.name === name }).value);
+          caseTempArr.push(obj.currentNonTargetManagers.find((o) => { return o.name === name }).value);
+          caseTempArr.push(obj.currentPossibleManagers.find((o) => { return o.name === name }).value);
+          caseTempArr.push(obj.contractTodayManagers.find((o) => { return o.name === name }).value);
+          caseTempArr.push(obj.contractMonthManagers.find((o) => { return o.name === name }).value);
+          caseTempArr.push(obj.contractAccManagers.find((o) => { return o.name === name }).value);
+          caseMatrix.push(equalJson(JSON.stringify(caseTempArr)));
         }
-      });
-      totalMatrix = [
-        [
-          "날짜",
-          "총 문의",
-          "Jini",
-          "KB",
-          "Pepper",
-          "응대중",
-          "드랍",
-          "계약 가능",
-          "타겟 고객",
-          "계약"
-        ]
-      ]
-
-      num = 0;
-      for (let { raw, data } of finalTong) {
-        for (let obj of raw) {
-          totalMatrix.push([
-            dateToDate(obj.date),
-            obj.total,
-            obj.manager.a,
-            obj.manager.b,
-            obj.manager.c,
-            obj.current,
-            obj.drop,
-            obj.possible,
-            obj.target,
-            obj.contract,
-          ])
-        }
-        totalMatrix.push([
-          "주차",
-          data.total,
-          data.manager.a,
-          data.manager.b,
-          data.manager.c,
-          data.current,
-          data.drop,
-          data.possible,
-          data.target,
-          data.contract,
-        ])
-        totalMatrix.push([
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-        ])
-
-        if (num !== finalTong.length - 1) {
-          totalMatrix.push([
-            "날짜",
-            "총 문의",
-            "Jini",
-            "KB",
-            "Pepper",
-            "응대중",
-            "드랍",
-            "계약 가능",
-            "타겟 고객",
-            "계약"
-          ])
-        }
-
-        num++;
+  
+        caseTempArr = [];
+        caseTempArr.push("계");
+        caseTempArr.push(obj.todayManagers.reduce((acc, curr) => { return acc + curr.value; }, 0));
+        caseTempArr.push(obj.accManagers.reduce((acc, curr) => { return acc + curr.value; }, 0));
+        caseTempArr.push(obj.monthManagers.reduce((acc, curr) => { return acc + curr.value; }, 0));
+        caseTempArr.push(obj.currentTargetManagers.reduce((acc, curr) => { return acc + curr.value; }, 0));
+        caseTempArr.push(obj.currentNonTargetManagers.reduce((acc, curr) => { return acc + curr.value; }, 0));
+        caseTempArr.push(obj.currentPossibleManagers.reduce((acc, curr) => { return acc + curr.value; }, 0));
+        caseTempArr.push(obj.contractTodayManagers.reduce((acc, curr) => { return acc + curr.value; }, 0));
+        caseTempArr.push(obj.contractMonthManagers.reduce((acc, curr) => { return acc + curr.value; }, 0));
+        caseTempArr.push(obj.contractAccManagers.reduce((acc, curr) => { return acc + curr.value; }, 0));
+        caseMatrix.push(equalJson(JSON.stringify(caseTempArr)));
+  
+        caseTempArr = [];
+        caseTempArr.push("");
+        caseTempArr.push("");
+        caseTempArr.push("");
+        caseTempArr.push("");
+        caseTempArr.push("");
+        caseTempArr.push("");
+        caseTempArr.push("");
+        caseTempArr.push("");
+        caseTempArr.push("");
+        caseTempArr.push("");
+        caseMatrix.push(equalJson(JSON.stringify(caseTempArr)));
       }
-
-      await sheets.update_value_inPython(sheetsId, sheetsName2, totalMatrix, [ 0, 0 ]);
-
+  
+      await sheets.update_value_inPython(sheetsId, sheetsName2, caseMatrix, [ 0, 0 ]);
+  
+      colorRequestArr = [];
+      colorRequestArr.push({
+        repeatCell: {
+          range: {
+            sheetId: sheetsIndex,
+            startColumnIndex: 0,
+            endColumnIndex: 1
+          },
+          cell: {
+            userEnteredFormat: {
+              backgroundColor: {
+                red: 1,
+                green: 13,
+                blue: 41,
+              },
+              horizontalAlignment: "CENTER",
+              verticalAlignment: "MIDDLE",
+              textFormat: {
+                foregroundColor: {
+                  red: 0,
+                  green: 0,
+                  blue: 0,
+                },
+                fontSize: 10,
+                bold: false
+              }
+            }
+          },
+          fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
+        }
+      })
+  
+      for (let i = 0; i < caseMatrix.length; i++) {
+        if (/^[0-9][0-9][0-9][0-9]/gi.test(caseMatrix[i][0])) {
+          colorRequestArr.push({
+            repeatCell: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i,
+                endRowIndex: i + 1,
+              },
+              cell: {
+                userEnteredFormat: {
+                  backgroundColor: {
+                    red: 166,
+                    green: 120,
+                    blue: 47,
+                  },
+                  horizontalAlignment: "CENTER",
+                  verticalAlignment: "MIDDLE",
+                  textFormat: {
+                    foregroundColor: {
+                      red: 1,
+                      green: 1,
+                      blue: 1,
+                    },
+                    fontSize: 10,
+                    bold: true
+                  }
+                }
+              },
+              fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
+            }
+          })
+        } else if (/^계/gi.test(caseMatrix[i][0])) {
+  
+          colorRequestArr.push({
+            repeatCell: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i,
+                endRowIndex: i + 1,
+              },
+              cell: {
+                userEnteredFormat: {
+                  backgroundColor: {
+                    red: 16,
+                    green: 16,
+                    blue: 16,
+                  },
+                  horizontalAlignment: "CENTER",
+                  verticalAlignment: "MIDDLE",
+                  textFormat: {
+                    foregroundColor: {
+                      red: 0,
+                      green: 0,
+                      blue: 0,
+                    },
+                    fontSize: 10,
+                    bold: true
+                  }
+                }
+              },
+              fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
+            }
+          })
+  
+        } else if (caseMatrix[i][0].trim() === '') {
+  
+          colorRequestArr.push({
+            repeatCell: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i,
+                endRowIndex: i + 1,
+              },
+              cell: {
+                userEnteredFormat: {
+                  backgroundColor: {
+                    red: 1,
+                    green: 1,
+                    blue: 1,
+                  },
+                  horizontalAlignment: "CENTER",
+                  verticalAlignment: "MIDDLE",
+                  textFormat: {
+                    foregroundColor: {
+                      red: 1,
+                      green: 1,
+                      blue: 1,
+                    },
+                    fontSize: 10,
+                    bold: true
+                  }
+                }
+              },
+              fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
+            }
+          })
+  
+        }
+      }
+  
+      await sheets.setting_styleInjection_inPython(sheetsId, sheetsIndex, colorRequestArr);  
+      
       await errorLog("cx dashboard update done");
 
     } catch (e) {

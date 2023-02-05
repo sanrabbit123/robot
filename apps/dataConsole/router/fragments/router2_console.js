@@ -1626,6 +1626,7 @@ DataRouter.prototype.rou_post_sendSlack = function () {
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_sendSlack): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;
