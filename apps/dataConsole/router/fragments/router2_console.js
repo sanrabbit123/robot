@@ -6001,12 +6001,14 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       let thisTargetMonthCases;
       let caseMatrix, caseTempArr;
       let colorRequestArr;
+      let contractDate;
+      let haha;
 
       if (clientUpdate) {
 
         rows = await sheets.get_value_inPython(sheetsId, sheetsName + "!E2:E");
 
-        totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:Z");
+        totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:AA");
         maxLength = totalRows.map((arr) => { return arr.length }).reduce((acc, curr) => { return acc > curr ? acc : curr }, 0);
         for (let arr of totalRows) {
           for (let i = 0; i < maxLength - arr.length; i++) {
@@ -6045,20 +6047,22 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
           tempArr[8] = '-';
           tempArr[9] = '-';
           tempArr[10] = '-';
-          tempArr[11] = '';
+          tempArr[11] = '-';
           tempArr[12] = '';
           tempArr[13] = '';
-          tempArr[14] = '-';
+          tempArr[14] = '';
           tempArr[15] = '-';
           tempArr[16] = '-';
           tempArr[17] = '-';
-          tempArr[18] = '';
-          tempArr[19] = '-';
+          tempArr[18] = '-';
+          tempArr[19] = '';
           tempArr[20] = '-';
           tempArr[21] = '-';
-          tempArr[22] = '';
+          tempArr[22] = '-';
           tempArr[23] = '';
-          tempArr[24] = '-';
+          tempArr[24] = '';
+          tempArr[25] = '-';
+          tempArr[26] = '';
           totalRows.unshift(tempArr)
         }
     
@@ -6075,20 +6079,22 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
           tempArr[8] = 'X';
           tempArr[9] = '하';
           tempArr[10] = 'X';
-          tempArr[11] = '';
+          tempArr[11] = 'X';
           tempArr[12] = '';
           tempArr[13] = '';
-          tempArr[14] = '대기';
+          tempArr[14] = '';
           tempArr[15] = '대기';
           tempArr[16] = '대기';
-          tempArr[17] = '해당 없음';
-          tempArr[18] = '';
-          tempArr[19] = 'X';
+          tempArr[17] = '대기';
+          tempArr[18] = '해당 없음';
+          tempArr[19] = '';
           tempArr[20] = 'X';
           tempArr[21] = 'X';
-          tempArr[22] = '';
+          tempArr[22] = 'X';
           tempArr[23] = '';
-          tempArr[24] = 'X';
+          tempArr[24] = '';
+          tempArr[25] = 'X';
+          tempArr[26] = '1800. 1. 1';
           totalRows.unshift(tempArr);
         }
     
@@ -6097,8 +6103,8 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       }
 
       rows = await sheets.get_value_inPython(sheetsId, sheetsName + "!E2:E");
-      columns = (await sheets.get_value_inPython(sheetsId, sheetsName + "!A1:Z1")).flat();
-      totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:Z");
+      columns = (await sheets.get_value_inPython(sheetsId, sheetsName + "!A1:AA1")).flat();
+      totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:AA");
       maxLength = totalRows.map((arr) => { return arr.length }).reduce((acc, curr) => { return acc > curr ? acc : curr }, 0);
       for (let arr of totalRows) {
         for (let i = 0; i < maxLength - arr.length; i++) {
@@ -6325,7 +6331,48 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       });
       await sheets.update_value_inPython(sheetsId, sheetsName, contract.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /계약금 입금/gi.test(str) }), 1 ]);
 
-      totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:Z");
+      contractDate = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
+        if (!/^c/.test(cliid)) {
+          return null;
+        } else {
+          const result = requests.find((arr) => { return arr.cliid === cliid });
+          return result;
+        }
+      }).map((obj) => {
+        if (obj === null) {
+          return "-";
+        } else {
+          const thisProject = projects.find((o) => { return o.cliid === obj.cliid });
+          if (thisProject === undefined || thisProject === null) {
+            return '1800. 1. 1';
+          } else {
+            if (thisProject.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf()) {
+              return dateToDate(thisProject.process.contract.first.date);
+            } else {
+              return '1800. 1. 1';
+            }
+          }
+        }
+      });
+      await sheets.update_value_inPython(sheetsId, sheetsName, contractDate.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /계약금 날짜/gi.test(str) }), 1 ]);
+
+      haha = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
+        if (!/^c/.test(cliid)) {
+          return null;
+        } else {
+          const result = requests.find((arr) => { return arr.cliid === cliid });
+          return result;
+        }
+      }).map((obj) => {
+        if (obj === null) {
+          return "-";
+        } else {
+          return 'X';
+        }
+      });
+      await sheets.update_value_inPython(sheetsId, sheetsName, haha.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /하하 전송/gi.test(str) }), 1 ]);
+
+      totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:AA");
       maxLength = totalRows.map((arr) => { return arr.length }).reduce((acc, curr) => { return acc > curr ? acc : curr }, 0);
       for (let arr of totalRows) {
         for (let i = 0; i < maxLength - arr.length; i++) {
@@ -6814,8 +6861,8 @@ DataRouter.prototype.rou_post_hahaClientAlarm = function () {
       let targetCliids;
       let targetClients;
 
-      columns = (await sheets.get_value_inPython(sheetsId, sheetsName + "!A1:Z1")).flat();
-      totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:Z");
+      columns = (await sheets.get_value_inPython(sheetsId, sheetsName + "!A1:AA1")).flat();
+      totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:AA");
   
       caseTong = [];
       for (let i = 0; i < totalRows.length; i++) {
