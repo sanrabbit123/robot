@@ -6003,6 +6003,9 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       let colorRequestArr;
       let contractDate;
       let haha;
+      let thisContractTargetCases;
+      let thisContractTargetAccCases;
+      let thisContractTargetMonthCases;
 
       if (clientUpdate) {
 
@@ -6516,6 +6519,10 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
         thisTargetAccCases = caseTong.filter((obj) => { return obj.date.valueOf() < toDate.valueOf() });
         thisTargetMonthCases = caseTong.filter((obj) => { return obj.date.valueOf() > thisMonthFromDate.valueOf() && obj.date.valueOf() < toDate.valueOf() })
         
+        thisContractTargetCases = caseTong.filter((obj) => { return obj.contractDate.valueOf() > fromDate.valueOf() && obj.contractDate.valueOf() < toDate.valueOf() })
+        thisContractTargetAccCases = caseTong.filter((obj) => { return obj.contractDate.valueOf() < toDate.valueOf() });
+        thisContractTargetMonthCases = caseTong.filter((obj) => { return obj.contractDate.valueOf() > thisMonthFromDate.valueOf() && obj.contractDate.valueOf() < toDate.valueOf() })
+
         caseObj.date = standardDate;
         caseObj.todayManagers = [];
         caseObj.accManagers = [];
@@ -6570,21 +6577,21 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
   
           caseObj.contractTodayManagers.push({
             name,
-            value: thisTargetCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
+            value: thisContractTargetCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
               return /^O/gi.test(obj.contract);
             }).length
           });
   
           caseObj.contractMonthManagers.push({
             name,
-            value: thisTargetMonthCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
+            value: thisContractTargetMonthCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
               return /^O/gi.test(obj.contract);
             }).length
           });
   
           caseObj.contractAccManagers.push({
             name,
-            value: thisTargetAccCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
+            value: thisContractTargetAccCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
               return /^O/gi.test(obj.contract);
             }).length
           });
@@ -6898,8 +6905,8 @@ DataRouter.prototype.rou_post_hahaClientAlarm = function () {
       if (targetCliids.length > 0) {
         targetClients = await back.getClientsByQuery({ $or: targetCliids.map((cliid) => { return { cliid } }) }, { selfMongo });
         for (let client of targetClients) {
-          // await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name });
-          // await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#cx", voice: false });
+          await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name });
+          await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#cx", voice: false });
         }
 
         haha = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
