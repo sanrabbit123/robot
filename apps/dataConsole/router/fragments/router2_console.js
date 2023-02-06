@@ -6647,7 +6647,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
         }
   
         caseTempArr = [];
-        caseTempArr.push("-");
+        caseTempArr.push("--");
         caseTempArr.push("");
         caseTempArr.push("");
         caseTempArr.push("");
@@ -6777,7 +6777,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
               fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
             }
           })
-        } else if (/^계/gi.test(caseMatrix[i][0])) {
+        } else if (/--/gi.test(caseMatrix[i][0])) {
   
           colorRequestArr.push({
             repeatCell: {
