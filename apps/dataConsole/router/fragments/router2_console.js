@@ -6356,22 +6356,6 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       });
       await sheets.update_value_inPython(sheetsId, sheetsName, contractDate.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /계약금 날짜/gi.test(str) }), 1 ]);
 
-      haha = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
-        if (!/^c/.test(cliid)) {
-          return null;
-        } else {
-          const result = requests.find((arr) => { return arr.cliid === cliid });
-          return result;
-        }
-      }).map((obj) => {
-        if (obj === null) {
-          return "-";
-        } else {
-          return 'X';
-        }
-      });
-      await sheets.update_value_inPython(sheetsId, sheetsName, haha.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /하하 전송/gi.test(str) }), 1 ]);
-
       totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:AA");
       maxLength = totalRows.map((arr) => { return arr.length }).reduce((acc, curr) => { return acc > curr ? acc : curr }, 0);
       for (let arr of totalRows) {
@@ -6862,6 +6846,10 @@ DataRouter.prototype.rou_post_hahaClientAlarm = function () {
       let targetCases;
       let targetCliids;
       let targetClients;
+      let haha;
+      let rows;
+
+      rows = await sheets.get_value_inPython(sheetsId, sheetsName + "!E2:E");
 
       columns = (await sheets.get_value_inPython(sheetsId, sheetsName + "!A1:AA1")).flat();
       totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:AA");
@@ -6910,9 +6898,34 @@ DataRouter.prototype.rou_post_hahaClientAlarm = function () {
       if (targetCliids.length > 0) {
         targetClients = await back.getClientsByQuery({ $or: targetCliids.map((cliid) => { return { cliid } }) }, { selfMongo });
         for (let client of targetClients) {
-          await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name });
-          await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#cx", voice: false });
+          // await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name });
+          // await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#cx", voice: false });
         }
+
+        haha = rows.map((arr) => { return (arr.length === 0 ? "" : arr[0].trim()) }).map((cliid) => {
+          if (!/^c/.test(cliid)) {
+            return null;
+          } else {
+            const result = targetClients.toNormal().find((arr) => { return arr.cliid === cliid });
+            if (result === undefined) {
+              return 0;
+            } else {
+              return result;
+            }
+          }
+        }).map((obj) => {
+          if (obj === null) {
+            return "-";
+          } else {
+            if (obj === 0) {
+              return 'X';
+            } else {
+              return 'O';
+            }
+          }
+        });
+        await sheets.update_value_inPython(sheetsId, sheetsName, haha.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /하하 전송/gi.test(str) }), 1 ]);
+  
       }
 
     } catch (e) {
