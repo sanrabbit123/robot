@@ -2836,6 +2836,57 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       }
     },
+    "hahaClientSend": {
+      "name": "하하 고객용 수정 수정",
+      "id": "TL_7096",
+      "needs": [
+        "client",
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client} 고객님!\n원활한 상담을 위해 아래 3가지 문항 체크해 보시고, 해당 사항이 없으시면 상담 진행을 도와드리겠습니다.\n\n1. 시공 서비스'만' 필요하신가요? 홈리에종은 시공 업체가 아니기 때문에 시공 서비스'만'을 제공하지 않습니다.\n\n2. 거주 중에 시공을 진행하시나요? 거주 중에 시공이 필요한 경우, 시공 부분이 필요한 공간의 짐들을 모두 비워주셔야 시공 진행 가능합니다.\n\n3. 일단 견적서만 받아보기를 원하시나요? 홈리에종은 디자이너 매칭 후, 디자이너와의 상담을 거쳐 시공 범위를 정하는 서비스로 견적서만 먼저 제공해드리기는 어렵습니다.\n\n홈리에종은 디자이너와의 매칭 후 시공을 포함하여 스타일링 서비스까지, 전체 인테리어 과정을 함께 진행합니다.\n위 3가지 유의 사항 체크해 보시고, 유선 상담을 원하시면 홈리에종 카카오 채널을 통해 성함을 남겨주세요!",
+        "templtName": "하하 고객용 수정 수정",
+        "templateType": "AD",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "채널 추가하고 이 채널의 광고와 마케팅 메시지를 카카오톡으로 받기",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [
+          {
+            "ordering": "1",
+            "name": "채널 추가",
+            "linkType": "AC",
+            "linkTypeName": "채널 추가",
+            "linkMo": "",
+            "linkPc": "",
+            "linkIos": "",
+            "linkAnd": ""
+          }
+        ],
+        "cdate": "2023-02-03 17:57:34",
+        "templtCode": "TL_7096",
+        "comments": [
+          {
+            "cdate": "2023-02-06 10:51:55",
+            "name": "검수자",
+            "id": "2380736",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2023-02-06 10:51:55",
+            "status": "APR"
+          }
+        ]
+      }
+    },
   };
   if (target === "$all") {
     return tong;

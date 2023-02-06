@@ -5334,6 +5334,13 @@ DataRouter.prototype.rou_post_calendarSync = function () {
                 }
               }
             }
+          } else {
+            list = allEvents.filter((obj) => { return (new RegExp(project.proid, "gi")).test(obj.title) });
+            if (list.length !== 0) {
+              for (let i = 0; i < list.length; i++) {
+                await calendar.deleteSchedule(from, list[i].eventId);
+              }
+            }
           }
         }
       }
@@ -6407,7 +6414,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
 
           thisDate = totalRows[i][0];
 
-          if (totalRows[i][columns.findIndex((str) => { return /아이디/gi.test(str) })] !== '') {
+          if (totalRows[i][columns.findIndex((str) => { return /담당자/gi.test(str) })].trim() !== '') {
             updateTong.push({
               whereQuery: {
                 cliid: totalRows[i][columns.findIndex((str) => { return /아이디/gi.test(str) })],
@@ -6779,6 +6786,108 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_cxDashboardSync): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_hahaClientAlarm = function () {
+  const instance = this;
+  const back = this.back;
+  const sheets = this.sheets;
+  const kakao = this.kakao;
+  const { errorLog, sleep, equalJson, dateToString, stringToDate } = this.mother;
+  const hahaClientAlarmFunc = async (MONGOC) => {
+    try {
+      const selfMongo = MONGOC;
+      const sheetsId = "1EsYgzt-itSq_hWjYBkSwOgorpOWCjoe9_gmfCtBtlZ4";
+      const sheetsName = "default";
+      const dateParsing = (str) => {
+        const [ yearString, monthString, dateString ] = str.split(". ");
+        return (new Date(Number(yearString.replace(/[^0-9]/gi, '')), Number(monthString.replace(/[^0-9]/gi, '')) - 1, Number(dateString.replace(/[^0-9]/gi, ''))));
+      }
+      const today = new Date();
+      let totalRows;
+      let caseTong;
+      let targetCases;
+      let targetCliids;
+      let targetClients;
+
+      columns = (await sheets.get_value_inPython(sheetsId, sheetsName + "!A1:Z1")).flat();
+      totalRows = await sheets.get_value_inPython(sheetsId, sheetsName + "!A2:Z");
+  
+      caseTong = [];
+      for (let i = 0; i < totalRows.length; i++) {
+        if (totalRows[i][1] !== "계") {
+          if (totalRows[i][columns.findIndex((str) => { return /담당자/gi.test(str) })].trim() !== '') {
+            caseTong.push({
+              date: dateParsing(totalRows[i][0]),
+              cliid: totalRows[i][columns.findIndex((str) => { return /아이디/gi.test(str) })],
+              status: totalRows[i][columns.findIndex((str) => { return /상태/gi.test(str) })],
+              possible: totalRows[i][columns.findIndex((str) => { return /계약 가능성/gi.test(str) })],
+              target: totalRows[i][columns.findIndex((str) => { return /타겟 고객/gi.test(str) })],
+              contract: totalRows[i][columns.findIndex((str) => { return /계약금 입금/gi.test(str) })],
+              order: totalRows[i][columns.findIndex((str) => { return /우선 순위/gi.test(str) })],
+              first: {
+                try: totalRows[i][columns.findIndex((str) => { return /1차 응대 시도/gi.test(str) })],
+                success: totalRows[i][columns.findIndex((str) => { return /1차 응대 성공/gi.test(str) })],
+              },
+              proposal: {
+                send: totalRows[i][columns.findIndex((str) => { return /추천서 발송/gi.test(str) })],
+                open: totalRows[i][columns.findIndex((str) => { return /추천서 조회/gi.test(str) })],
+                feedback: totalRows[i][columns.findIndex((str) => { return /피드백 통화 시도/gi.test(str) })],
+              }
+            });
+          }
+        }
+      }
+  
+      targetCases = caseTong.filter(({ date }) => {
+        return dateToString(date) === dateToString(today);
+      }).filter((obj) => {
+        if (/O/gi.test(obj.target)) {
+          return false;
+        } else {
+          if (/하/gi.test(obj.order)) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      });
+  
+      targetCliids = targetCases.map(({ cliid }) => { return cliid });
+      if (targetCliids.length > 0) {
+        targetClients = await back.getClientsByQuery({ $or: targetCliids.map((cliid) => { return { cliid } }) }, { selfMongo });
+        for (let client of targetClients) {
+          await kakao.sendTalk("hahaClientSend", "배창규", "010-2747-3403", { client: client.name });
+          await messageSend({ text: client.name + " 고객님께 하하 고객용 알림톡을 전송하였습니다!", channel: "#cx", voice: false });
+        }
+      }
+
+    } catch (e) {
+      errorLog("Console 서버 문제 생김 (rou_post_hahaClientAlarm): " + e.message).catch((err) => { console.log(err) });
+      console.log(e);
+    }
+  }
+  
+  let obj = {};
+  obj.link = [ "/hahaClientAlarm" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      hahaClientAlarmFunc(instance.mongo).catch((err) => {
+        errorLog("Console 서버 문제 생김 (rou_post_hahaClientAlarm): " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_hahaClientAlarm): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
