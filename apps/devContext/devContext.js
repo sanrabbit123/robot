@@ -148,9 +148,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const res = await requestSystem("https://home-liaison.org:3000/hahaClientAlarm", { data: null }, { headers: { "Content-Type": "application/json" } });
 
-    console.log(res);
+    
 
 
 

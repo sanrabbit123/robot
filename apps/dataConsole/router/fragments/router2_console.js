@@ -6861,8 +6861,8 @@ DataRouter.prototype.rou_post_hahaClientAlarm = function () {
       if (targetCliids.length > 0) {
         targetClients = await back.getClientsByQuery({ $or: targetCliids.map((cliid) => { return { cliid } }) }, { selfMongo });
         for (let client of targetClients) {
-          await kakao.sendTalk("hahaClientSend", "배창규", "010-2747-3403", { client: client.name });
-          await messageSend({ text: client.name + " 고객님께 하하 고객용 알림톡을 전송하였습니다!", channel: "#cx", voice: false });
+          await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name });
+          await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#cx", voice: false });
         }
       }
 
