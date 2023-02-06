@@ -6879,8 +6879,8 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
                 userEnteredFormat: {
                   backgroundColor: {
                     red: 1,
-                    green: 13,
-                    blue: 41,
+                    green: 33,
+                    blue: 61,
                   },
                   horizontalAlignment: "CENTER",
                   verticalAlignment: "MIDDLE",
