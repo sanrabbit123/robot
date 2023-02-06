@@ -6842,7 +6842,30 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
               mergeType: "MERGE_ALL"
             },
           })
-
+          colorRequestArr.push({
+            mergeCells: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i + 1,
+                endRowIndex: i + 4,
+                startColumnIndex: 2,
+                endColumnIndex: 3,
+              },
+              mergeType: "MERGE_ALL"
+            },
+          })
+          colorRequestArr.push({
+            mergeCells: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i + 1,
+                endRowIndex: i + 4,
+                startColumnIndex: 3,
+                endColumnIndex: 4,
+              },
+              mergeType: "MERGE_ALL"
+            },
+          })
 
         } else if (/--/gi.test(caseMatrix[i][0])) {
   
