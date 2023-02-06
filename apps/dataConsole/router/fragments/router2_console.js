@@ -6528,6 +6528,14 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
         thisContractTargetMonthCases = caseTong.filter((obj) => { return obj.contractDate.valueOf() > thisMonthFromDate.valueOf() && obj.contractDate.valueOf() < toDate.valueOf() })
 
         caseObj.date = standardDate;
+
+        caseObj.thisTargetCases = equalJson(JSON.stringify(thisTargetCases));
+        caseObj.thisTargetAccCases = equalJson(JSON.stringify(thisTargetAccCases));
+        caseObj.thisTargetMonthCases = equalJson(JSON.stringify(thisTargetMonthCases));
+        caseObj.thisContractTargetCases = equalJson(JSON.stringify(thisContractTargetCases));
+        caseObj.thisContractTargetAccCases = equalJson(JSON.stringify(thisContractTargetAccCases));
+        caseObj.thisContractTargetMonthCases = equalJson(JSON.stringify(thisContractTargetMonthCases));
+
         caseObj.todayManagers = [];
         caseObj.accManagers = [];
         caseObj.monthManagers = [];
@@ -6629,9 +6637,9 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
         for (let name of managerConst) {
           caseTempArr = [];
           caseTempArr.push("-");
-          caseTempArr.push(thisTargetCases.length);
-          caseTempArr.push(thisTargetCases.filter(({ target }) => { return /O/gi.test(target) }).length);
-          caseTempArr.push(thisTargetCases.length - thisTargetCases.filter(({ target }) => { return /O/gi.test(target) }).length);
+          caseTempArr.push(obj.thisTargetCases.length);
+          caseTempArr.push(obj.thisTargetCases.filter(({ target }) => { return /O/gi.test(target) }).length);
+          caseTempArr.push(obj.thisTargetCases.length - thisTargetCases.filter(({ target }) => { return /O/gi.test(target) }).length);
           caseTempArr.push(name);
           caseTempArr.push(obj.todayManagers.find((o) => { return o.name === name }).value);
           caseTempArr.push(obj.accManagers.find((o) => { return o.name === name }).value);
