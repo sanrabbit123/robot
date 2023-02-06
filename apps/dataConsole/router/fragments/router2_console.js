@@ -6407,7 +6407,8 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
           totalRows[i][8] = "-";
           totalRows[i][9] = "-";
           totalRows[i][10] = "-";
-          totalRows[i][11] = `응대 ${String(currentNum)} / 드랍 ${String(dropNum)} / 가능성 ${String(possibleNum)} / 타겟 ${String(targetNum)} / 계약 ${String(contractNum)}`;
+          totalRows[i][11] = "-";
+          totalRows[i][12] = `응대 ${String(currentNum)} / 드랍 ${String(dropNum)} / 가능성 ${String(possibleNum)} / 타겟 ${String(targetNum)} / 계약 ${String(contractNum)}`;
 
           totalTong.push({
             date: dateParsing(thisDate),
@@ -6479,6 +6480,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
               possible: totalRows[i][columns.findIndex((str) => { return /계약 가능성/gi.test(str) })],
               target: totalRows[i][columns.findIndex((str) => { return /타겟 고객/gi.test(str) })],
               contract: totalRows[i][columns.findIndex((str) => { return /계약금 입금/gi.test(str) })],
+              contractDate: dateParsing(totalRows[i][columns.findIndex((str) => { return /계약금 날짜/gi.test(str) })]),
               order: totalRows[i][columns.findIndex((str) => { return /우선 순위/gi.test(str) })],
               first: {
                 try: totalRows[i][columns.findIndex((str) => { return /1차 응대 시도/gi.test(str) })],
