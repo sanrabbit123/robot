@@ -6629,9 +6629,9 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
         for (let name of managerConst) {
           caseTempArr = [];
           caseTempArr.push("-");
-          caseTempArr.push("");
-          caseTempArr.push("");
-          caseTempArr.push("");
+          caseTempArr.push(thisTargetCases.length);
+          caseTempArr.push(thisTargetCases.filter(({ target }) => { return /O/gi.test(target) }).length);
+          caseTempArr.push(thisTargetCases.length - thisTargetCases.filter(({ target }) => { return /O/gi.test(target) }).length);
           caseTempArr.push(name);
           caseTempArr.push(obj.todayManagers.find((o) => { return o.name === name }).value);
           caseTempArr.push(obj.accManagers.find((o) => { return o.name === name }).value);
@@ -6707,7 +6707,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
                   blue: 0,
                 },
                 fontSize: 10,
-                bold: false
+                bold: true
               }
             }
           },
