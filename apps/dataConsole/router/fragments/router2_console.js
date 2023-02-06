@@ -6767,9 +6767,9 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
               cell: {
                 userEnteredFormat: {
                   backgroundColor: {
-                    red: 196,
-                    green: 150,
-                    blue: 77,
+                    red: 216,
+                    green: 170,
+                    blue: 97,
                   },
                   horizontalAlignment: "CENTER",
                   verticalAlignment: "MIDDLE",
@@ -6865,6 +6865,70 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
               },
               mergeType: "MERGE_ALL"
             },
+          })
+          colorRequestArr.push({
+            repeatCell: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i + 1,
+                endRowIndex: i + 4,
+                startColumnIndex: 4,
+                endColumnIndex: 5,
+              },
+              cell: {
+                userEnteredFormat: {
+                  backgroundColor: {
+                    red: 1,
+                    green: 13,
+                    blue: 41,
+                  },
+                  horizontalAlignment: "CENTER",
+                  verticalAlignment: "MIDDLE",
+                  textFormat: {
+                    foregroundColor: {
+                      red: 0,
+                      green: 0,
+                      blue: 0,
+                    },
+                    fontSize: 10,
+                    bold: true
+                  }
+                }
+              },
+              fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
+            }
+          })
+          colorRequestArr.push({
+            repeatCell: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i + 1,
+                endRowIndex: i + 4,
+                startColumnIndex: 10,
+                endColumnIndex: 11,
+              },
+              cell: {
+                userEnteredFormat: {
+                  backgroundColor: {
+                    red: 1,
+                    green: 1,
+                    blue: 1,
+                  },
+                  horizontalAlignment: "CENTER",
+                  verticalAlignment: "MIDDLE",
+                  textFormat: {
+                    foregroundColor: {
+                      red: 0,
+                      green: 1,
+                      blue: 1,
+                    },
+                    fontSize: 10,
+                    bold: false
+                  }
+                }
+              },
+              fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
+            }
           })
 
         } else if (/--/gi.test(caseMatrix[i][0])) {
