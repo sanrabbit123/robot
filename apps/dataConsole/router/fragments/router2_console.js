@@ -6797,7 +6797,7 @@ DataRouter.prototype.rou_post_hahaClientAlarm = function () {
   const back = this.back;
   const sheets = this.sheets;
   const kakao = this.kakao;
-  const { errorLog, sleep, equalJson, dateToString, stringToDate } = this.mother;
+  const { errorLog, sleep, equalJson, dateToString, stringToDate, messageSend } = this.mother;
   const hahaClientAlarmFunc = async (MONGOC) => {
     try {
       const selfMongo = MONGOC;
