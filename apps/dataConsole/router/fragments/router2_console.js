@@ -6628,7 +6628,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
         z = 0;
         for (let name of managerConst) {
           caseTempArr = [];
-          caseTempArr.push("");
+          caseTempArr.push("-");
           caseTempArr.push("");
           caseTempArr.push("");
           caseTempArr.push("");
@@ -6647,7 +6647,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
         }
   
         caseTempArr = [];
-        caseTempArr.push("");
+        caseTempArr.push("-");
         caseTempArr.push("");
         caseTempArr.push("");
         caseTempArr.push("");
