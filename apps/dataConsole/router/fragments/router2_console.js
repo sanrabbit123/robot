@@ -6823,13 +6823,27 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
               range: {
                 sheetId: sheetsIndex,
                 startRowIndex: i,
-                endRowIndex: i + 4,
+                endRowIndex: i + 5,
                 startColumnIndex: 0,
                 endColumnIndex: 1,
               },
               mergeType: "MERGE_ALL"
             },
           })
+          colorRequestArr.push({
+            mergeCells: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i + 1,
+                endRowIndex: i + 4,
+                startColumnIndex: 1,
+                endColumnIndex: 2,
+              },
+              mergeType: "MERGE_ALL"
+            },
+          })
+
+
         } else if (/--/gi.test(caseMatrix[i][0])) {
   
           colorRequestArr.push({
