@@ -6767,9 +6767,9 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
               cell: {
                 userEnteredFormat: {
                   backgroundColor: {
-                    red: 176,
-                    green: 130,
-                    blue: 57,
+                    red: 196,
+                    green: 150,
+                    blue: 77,
                   },
                   horizontalAlignment: "CENTER",
                   verticalAlignment: "MIDDLE",
@@ -6817,6 +6817,18 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
               },
               fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
             }
+          })
+          colorRequestArr.push({
+            mergeCells: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i,
+                endRowIndex: i + 4,
+                startColumnIndex: 0,
+                endColumnIndex: 1,
+              },
+              mergeType: "MERGE_ALL"
+            },
           })
         } else if (/--/gi.test(caseMatrix[i][0])) {
   
