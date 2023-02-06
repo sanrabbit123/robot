@@ -6639,7 +6639,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
           caseTempArr.push("-");
           caseTempArr.push(obj.thisTargetCases.length);
           caseTempArr.push(obj.thisTargetCases.filter(({ target }) => { return /O/gi.test(target) }).length);
-          caseTempArr.push(obj.thisTargetCases.length - thisTargetCases.filter(({ target }) => { return /O/gi.test(target) }).length);
+          caseTempArr.push(obj.thisTargetCases.length - obj.thisTargetCases.filter(({ target }) => { return /O/gi.test(target) }).length);
           caseTempArr.push(name);
           caseTempArr.push(obj.todayManagers.find((o) => { return o.name === name }).value);
           caseTempArr.push(obj.accManagers.find((o) => { return o.name === name }).value);
@@ -6761,6 +6761,39 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
                 sheetId: sheetsIndex,
                 startRowIndex: i,
                 endRowIndex: i + 1,
+                startColumnIndex: 0,
+                endColumnIndex: 1,
+              },
+              cell: {
+                userEnteredFormat: {
+                  backgroundColor: {
+                    red: 176,
+                    green: 130,
+                    blue: 57,
+                  },
+                  horizontalAlignment: "CENTER",
+                  verticalAlignment: "MIDDLE",
+                  textFormat: {
+                    foregroundColor: {
+                      red: 1,
+                      green: 1,
+                      blue: 1,
+                    },
+                    fontSize: 10,
+                    bold: true
+                  }
+                }
+              },
+              fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
+            }
+          })
+          colorRequestArr.push({
+            repeatCell: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i,
+                endRowIndex: i + 1,
+                startColumnIndex: 1,
               },
               cell: {
                 userEnteredFormat: {
