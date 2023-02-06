@@ -266,6 +266,13 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
   let naviMenu;
   let textVisual;
   let whiteSubSize;
+  let currentTong;
+  let currentRatio;
+  let pipeMargin;
+  let valueMargin;
+  let subTextTop, subTextMargin;
+  let blockVisualPaddingBottom;
+  let currentTargets, totalTargets, contentsTargets;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -283,18 +290,18 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
 
   mobileTitleLeft = 6;
 
-  grayMargin = <%% 12, 12, 10, 10, 0 %%>;
+  grayMargin = <%% 0, 0, 0, 0, 0 %%>;
   grayPadding = <%% 14, 14, 10, 10, 0 %%>;
 
   tongMargin = <%% 6, 6, 6, 6, 1 %%>;
 
-  tongHeight = <%% 120, 120, 110, 100, 16 %%>;
+  tongHeight = <%% 72, 68, 60, 52, 12 %%>;
 
-  whiteSize = <%% 20, 19, 18, 17, 3.4 %%>;
-  whiteWeight = <%% 800, 800, 800, 800, 800 %%>;
+  whiteSize = <%% 17, 16, 14, 14, 3.2 %%>;
+  whiteWeight = <%% 700, 700, 700, 700, 700 %%>;
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
-  whiteSubSize = <%% 14, 14, 13, 12, 2.6 %%>;
+  whiteSubSize = <%% 13, 13, 13, 12, 2.5 %%>;
 
   circleWidth = <%% 8, 8, 8, 8, 1.2 %%>;
   circleTop = <%% 21, 21, 17, 17, 2.7 %%>;
@@ -310,11 +317,32 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
 
   textVisual = <%% (isMac() ? 3 : 1), (isMac() ? 3 : 1), (isMac() ? 3 : 1), (isMac() ? 3 : 1), 0.2 %%>;
 
+  currentRatio = <%% 60, 60, 58, 56, 60 %%>;
+  pipeMargin = <%% 36, 18, 12, 24, 3.8 %%>;
+  valueMargin = <%% 10, 10, 8, 8, 1.5 %%>;
+
+  subTextTop = <%% 1, 1, 0, 0, 0.2 %%>;
+  subTextMargin = <%% 5, 5, 5, 5, 1.2 %%>;
+
+  blockVisualPaddingBottom = <%% (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), (isMac() ? 1 : 2), 0.5 %%>;
+
   this.whiteMargin = (desktop ? margin : 0);
+
+  currentTargets = equalJson(JSON.stringify(projects));
+  totalTargets = equalJson(JSON.stringify(projects));
+  contentsTargets = equalJson(JSON.stringify(projects));
+
+  currentTargets = currentTargets.filter((obj) => {
+    return (!/드[랍롭]/gi.test(obj.process.status) && !/홀[드딩]/gi.test(obj.process.status) && !/완료/gi.test(obj.process.status));
+  })
+  contentsTargets = contentsTargets.filter((obj) => {
+    return instance.contentsArr.toNormal().map((o) => { return o.proid }).includes(obj.proid);
+    return true
+  });
 
   naviMenu = [
     {
-      title: "기본 정보",
+      title: media[0] ? "기본 정보 관리" : (big ? "기본 정보" : (mobile ? "기본 정보" : "기본 정보 관리")),
       sub: "checklist",
       href: FRONTHOST + "/designer/about.php" + "?desid=" + desid,
     },
@@ -322,11 +350,6 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
       title: "정산 리포트",
       sub: "report",
       href: FRONTHOST + "/designer/report.php" + "?desid=" + desid,
-    },
-    {
-      title: desktop ? "프로젝트 의뢰서" : "의뢰서",
-      sub: "requests",
-      href: FRONTHOST + "/designer/requests.php" + "?desid=" + desid,
     },
   ];
 
@@ -375,14 +398,138 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
   });
   tong = block.lastChild;
 
+  currentTong = createNode({
+    mother: tong,
+    style: {
+      display: big ? "inline-flex" : "flex",
+      background: "transparent",
+      borderRadius: String(5) + "px",
+      paddingTop: String(grayMargin) + ea,
+      paddingBottom: String(grayMargin) + ea,
+      position: "relative",
+      width: big ? withOut(currentRatio, 0, ea) : String(100) + '%',
+      marginRight: big ? String(tongMargin) + ea : "",
+      verticalAlign: "top",
+      alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "center",
+      textAlign: "center",
+      boxSizing: "border-box",
+      border: "1px solid " + colorChip.gray3,
+      height: String(tongHeight) + ea,
+      paddingBottom: String(blockVisualPaddingBottom) + ea,
+      marginBottom: big ? "" : String(tongMargin) + ea,
+    },
+    children: [
+      {
+        text: "진행중 " + (desktop ? "프로젝트 " : "") + ": ",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(whiteTextTop) + ea,
+          fontSize: String(whiteSize) + ea,
+          fontWeight: String(whiteWeight),
+          color: colorChip.black,
+        }
+      },
+      {
+        text: String(currentTargets.length) + "건",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(whiteTextTop) + ea,
+          fontSize: String(whiteSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.green,
+          marginLeft: String(valueMargin) + ea,
+        }
+      },
+      {
+        text: " | ",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(whiteTextTop) + ea,
+          fontSize: String(whiteSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.deactive,
+          marginLeft: String(pipeMargin) + ea,
+          marginRight: String(pipeMargin) + ea,
+        }
+      },
+      {
+        text: "누적 " + (desktop ? "프로젝트 " : "") + ": ",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(whiteTextTop) + ea,
+          fontSize: String(whiteSize) + ea,
+          fontWeight: String(whiteWeight),
+          color: colorChip.black,
+        }
+      },
+      {
+        text: String(totalTargets.length) + "건",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(whiteTextTop) + ea,
+          fontSize: String(whiteSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.green,
+          marginLeft: String(valueMargin) + ea,
+        }
+      },
+      {
+        text: " | ",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(whiteTextTop) + ea,
+          fontSize: String(whiteSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.deactive,
+          marginLeft: String(pipeMargin) + ea,
+          marginRight: String(pipeMargin) + ea,
+        }
+      },
+      {
+        text: "발행 " + (desktop ? "프로젝트 " : "") + ": ",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(whiteTextTop) + ea,
+          fontSize: String(whiteSize) + ea,
+          fontWeight: String(whiteWeight),
+          color: colorChip.black,
+        }
+      },
+      {
+        text: String(contentsTargets.length) + "건",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(whiteTextTop) + ea,
+          fontSize: String(whiteSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.green,
+          marginLeft: String(valueMargin) + ea,
+        }
+      },
+    ]
+  });
+
   grayTong = createNode({
     mother: tong,
     style: {
-      display: "block",
-      background: desktop ? colorChip.gray3 : "transparent",
+      display: big ? "inline-block" : "block",
+      background: "transparent",
       borderRadius: String(5) + "px",
       paddingTop: String(grayMargin) + ea,
-      paddingBottom: String(grayMargin - tongMargin) + ea,
+      paddingBottom: String(grayMargin) + ea,
+      position: "relative",
+      width: big ? withOut((100 - currentRatio), tongMargin, ea) : String(100) + '%',
+      verticalAlign: "top",
     }
   });
 
@@ -406,14 +553,13 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
         width: "calc(calc(calc(100% - " + String(grayMargin * 2) + ea + ") - " + String(tongMargin * (naviMenu.length - 1)) + ea + ") / " + String(naviMenu.length) + ")",
         height: String(tongHeight) + ea,
         borderRadius: String(5) + "px",
-        background: desktop ? colorChip.white : colorChip.gray1,
-        marginBottom: String(desktop ? tongMargin : 0) + ea,
+        background: desktop ? colorChip.gray1 : colorChip.gray1,
         alignItems: "center",
-        flexDirection: "column",
+        flexDirection: "row",
         cursor: "pointer",
-        boxShadow: desktop ? "0px 3px 12px -9px " + colorChip.shadow : "",
         justifyContent: "center",
         textAlign: "center",
+        paddingBottom: String(blockVisualPaddingBottom) + ea,
       },
       children: [
         {
@@ -432,18 +578,19 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
           style: {
             display: "block",
             position: "relative",
-            top: desktop ? "" : String(isIphone() ? -0.6 : 0) + ea,
+            top: String(subTextTop) + ea,
             fontSize: String(whiteSubSize) + ea,
-            fontWeight: String(400),
+            fontWeight: String(500),
             fontFamily: "graphik",
+            fontStyle: "italic",
             color: colorChip.green,
-            marginBottom: String(textVisual) + ea,
+            marginLeft: String(subTextMargin) + ea,
           }
         }
       ]
     });
   }
-
+  
 }
 
 DesignerBoardJs.prototype.insertProcessBox = function () {
@@ -480,7 +627,6 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   let whiteTextTop;
   let contentsMap;
   let widthMap;
-  let circleWidth, circleTop;
   let state;
   let boxTarget;
   let targets;
@@ -495,6 +641,9 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   let whiteBaseTongDictionary;
   let setContents;
   let printSize;
+  let circleWidth, circleBetween, circleColor;
+  let circleBoxTop;
+  let mobileCircleBoxPaddingBottom;
 
   grayBetween = <%% 40, 40, 36, 36, 5 %%>;
 
@@ -539,6 +688,11 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   colorBoxSize = <%% 11, 11, 10, 10, 2.5 %%>;
   colorBoxWeight = <%% 700, 700, 700, 700, 700 %%>;
   colorBoxTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isIphone() ? 0 : -0.2) %%>;
+
+  circleWidth = <%% 8, 8, 7, 6, 1.5 %%>;
+  circleBetween = <%% 5, 5, 4, 4, 1 %%>;
+  circleBoxTop = <%% 30, 30, 28, 24, 4 %%>;
+  mobileCircleBoxPaddingBottom = 1.4;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -650,6 +804,45 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   setContents = (total = false) => {
     cleanChildren(whiteTong);
 
+    targets = equalJson(JSON.stringify(projects));
+    targets.sort((a, b) => {
+      const emptyValue = Math.abs((new Date(1200, 0, 1)).valueOf());
+      let aConst, bConst;
+
+      if (/드[랍롭]/gi.test(a.process.status) || /홀[드딩]/gi.test(a.process.status)) {
+        aConst = 1;
+      } else if (/완료/gi.test(a.process.status)) {
+        aConst = 10000;
+      } else {
+        aConst = 100000000;
+      }
+
+      if (/드[랍롭]/gi.test(b.process.status) || /홀[드딩]/gi.test(b.process.status)) {
+        bConst = 1;
+      } else if (/완료/gi.test(b.process.status)) {
+        bConst = 10000;
+      } else {
+        bConst = 100000000;
+      }
+
+      return ((b.process.contract.form.date.from.valueOf() + emptyValue) * bConst) - ((a.process.contract.form.date.from.valueOf() + emptyValue) * aConst);
+    });
+
+    targetLength = targets.length;
+    if (targetLength < minimalLength) {
+      for (let i = 0; i < minimalLength - targetLength; i++) {
+        targets.push(null);
+      }
+    }
+
+    circleColor = colorChip.deactive;
+    if (!total) {
+      if (targets.length > 16) {
+        targets = targets.slice(0, 16);
+        circleColor = colorChip.green;
+      }
+    }
+
     block = createNode({
       mother: whiteTong,
       style: {
@@ -689,7 +882,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
               },
               bold: {
                 background: colorChip.white,
-                color: colorChip.green,
+                color: circleColor,
                 fontSize: String(printSize) + ea,
                 fontWeight: String(300),
                 cursor: "pointer",
@@ -720,43 +913,6 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
         paddingBottom: String(grayMargin - tongMargin) + ea,
       }
     });
-
-    targets = equalJson(JSON.stringify(projects));
-    targets.sort((a, b) => {
-      const emptyValue = Math.abs((new Date(1200, 0, 1)).valueOf());
-      let aConst, bConst;
-
-      if (/드[랍롭]/gi.test(a.process.status) || /홀[드딩]/gi.test(a.process.status)) {
-        aConst = 1;
-      } else if (/완료/gi.test(a.process.status)) {
-        aConst = 10000;
-      } else {
-        aConst = 100000000;
-      }
-
-      if (/드[랍롭]/gi.test(b.process.status) || /홀[드딩]/gi.test(b.process.status)) {
-        bConst = 1;
-      } else if (/완료/gi.test(b.process.status)) {
-        bConst = 10000;
-      } else {
-        bConst = 100000000;
-      }
-
-      return ((b.process.contract.form.date.from.valueOf() + emptyValue) * bConst) - ((a.process.contract.form.date.from.valueOf() + emptyValue) * aConst);
-    });
-
-    targetLength = targets.length;
-    if (targetLength < minimalLength) {
-      for (let i = 0; i < minimalLength - targetLength; i++) {
-        targets.push(null);
-      }
-    }
-
-    if (!total) {
-      if (targets.length > 10) {
-        targets = targets.slice(0, 10);
-      }
-    }
 
     whiteBaseTongDictionary = {};
     for (let i = 0; i < targets.length; i++) {
@@ -927,6 +1083,612 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
         whiteBaseTongDictionary[getObj.proid].click();
       }
     }
+
+    createNode({
+      mother: tong,
+      event: {
+        click: function (e) {
+          setContents(/모두/gi.test(block.firstChild.firstChild.textContent));
+        },
+      },
+      style: {
+        display: "flex",
+        marginTop: String(circleBoxTop) + ea,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        cursor: "pointer",
+        paddingBottom: desktop ? "" : String(mobileCircleBoxPaddingBottom) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleWidth) + ea,
+            height: String(circleWidth) + ea,
+            background: circleColor,
+            borderRadius: String(circleWidth) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleWidth) + ea,
+            height: String(circleWidth) + ea,
+            background: circleColor,
+            borderRadius: String(circleWidth) + ea,
+            marginLeft: String(circleBetween) + ea,
+            marginRight: String(circleBetween) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleWidth) + ea,
+            height: String(circleWidth) + ea,
+            background: circleColor,
+            borderRadius: String(circleWidth) + ea,
+          }
+        },
+      ]
+    });
+
+  }
+
+  setContents();
+
+  return whiteBlock;
+}
+
+DesignerBoardJs.prototype.insertReleaseBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { clients, projects, requestNumber, ea, baseTong, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, selfHref, returnGet } = GeneralJs;
+  const getObj = returnGet();
+  let paddingTop;
+  let block;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let titleFontSize;
+  let num;
+  let numberRight;
+  let titleTop, titleTopNumber;
+  let titleBottom;
+  let index;
+  let mobileTitleLeft;
+  let tong;
+  let whiteBottomMargin;
+  let grayTong;
+  let grayMargin;
+  let tongMargin;
+  let grayPadding;
+  let tongHeight;
+  let whiteSize;
+  let whiteWeight, whiteColumnWeight;
+  let whiteBaseTong;
+  let whiteTextTop;
+  let contentsMap;
+  let widthMap;
+  let state;
+  let boxTarget;
+  let targets;
+  let minimalLength;
+  let forceWidth;
+  let colorBoxHeight;
+  let colorBoxPadding;
+  let colorBoxSize, colorBoxWeight, colorBoxTextTop;
+  let targetLength;
+  let arrowHeight;
+  let grayBetween;
+  let whiteBaseTongDictionary;
+  let setContents;
+  let printSize;
+  let circleWidth, circleBetween, circleColor;
+  let circleBoxTop;
+  let mobileCircleBoxPaddingBottom;
+
+  grayBetween = <%% 40, 40, 36, 36, 5 %%>;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 6 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
+
+  whiteBottomMargin = <%% 58, 56, 50, 44, 6 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  printSize = <%% 14, 14, 13, 12, 2.5 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 2.5 %%>;
+
+  mobileTitleLeft = 6;
+
+  grayMargin = <%% 12, 12, 10, 10, 2 %%>;
+  grayPadding = <%% 14, 14, 10, 10, 2.5 %%>;
+
+  tongMargin = <%% 2, 2, 2, 2, 1 %%>;
+
+  tongHeight = <%% 50, 50, 42, 42, 15.64 %%>;
+
+  whiteSize = <%% 15, 15, 13, 13, 3 %%>;
+  whiteWeight = <%% 400, 400, 400, 400, 400 %%>;
+  whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
+  whiteTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+
+  circleWidth = <%% 21, 21, 20, 16, 4 %%>;
+  circleTop = <%% 20, 20, 17, 17, 3 %%>;
+  circleRight = <%% 20, 20, 20, 12, 2.7 %%>;
+  arrowHeight = <%% 8, 8, 8, 6, 1.5 %%>;
+
+  minimalLength = <%% 3, 3, 3, 3, 3 %%>;
+
+  colorBoxHeight = <%% 26, 26, 24, 24, 5.5 %%>;
+  colorBoxPadding = <%% 10, 10, 8, 8, 2.2 %%>;
+  colorBoxSize = <%% 11, 11, 10, 10, 2.5 %%>;
+  colorBoxWeight = <%% 700, 700, 700, 700, 700 %%>;
+  colorBoxTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isIphone() ? 0 : -0.2) %%>;
+
+  circleWidth = <%% 8, 8, 7, 6, 1.5 %%>;
+  circleBetween = <%% 5, 5, 4, 4, 1 %%>;
+  circleBoxTop = <%% 30, 30, 28, 24, 4 %%>;
+  mobileCircleBoxPaddingBottom = 1.4;
+
+  this.whiteMargin = (desktop ? margin : 0);
+
+  contentsMap = (project, index) => {
+    let map;
+
+    if (big) {
+      map = [
+        project.process.action,
+        serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
+        project.name,
+        "<b%시작일 : %b>" + dateToString(project.process.contract.form.date.from, false).slice(2),
+        "<b%종료일 : %b>" + dateToString(project.process.contract.form.date.to, false).slice(2),
+        "<b%선금 정산 : %b>" + (/없음/gi.test(dateToString(project.process.calculation.payments.first.date, false).slice(2)) ? "예정" : dateToString(project.process.calculation.payments.first.date, false).slice(2)),
+        "<b%잔금 정산 : %b>" + (/없음/gi.test(dateToString(project.process.calculation.payments.remain.date, false).slice(2)) ? "예정" : dateToString(project.process.calculation.payments.remain.date, false).slice(2)),
+      ];
+    } else {
+      if (desktop) {
+        map = [
+          project.process.action,
+          serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
+          project.name,
+          "<b%시작일 : %b>" + dateToString(project.process.contract.form.date.from, false).slice(2),
+          "<b%종료일 : %b>" + dateToString(project.process.contract.form.date.to, false).slice(2),
+          "<b%선금 : %b>" + (/없음/gi.test(dateToString(project.process.calculation.payments.first.date, false).slice(2)) ? "예정" : dateToString(project.process.calculation.payments.first.date, false).slice(2)),
+        ];
+      } else {
+        map = [
+          project.name + " <b%고객님%b>",
+          project.process.action,
+          serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
+          "선금 : " + (/없음/gi.test(dateToString(project.process.calculation.payments.first.date, false).slice(2)) ? "예정" : dateToString(project.process.calculation.payments.first.date, false).slice(2)),
+        ];
+      }
+    }
+    return map[index];
+  }
+
+  if (desktop) {
+    widthMap = <&&
+      [ 94, 110, 73, 150, 150, 170, 150 ] |
+      [ 94, 106, 62, 140, 140, 160, 140 ] |
+      [ 88, 99, 54, 116, 116, 132, 116 ] |
+      [ 86, 96, 54, 116, 116, 116 ] |
+      [ 6, 11, 12, 7, 14, 15, 15 ]
+    &&>;
+
+    boxTarget = [
+      (state) => { return (state <= 1 ? colorChip.red : colorChip.deactive) },
+      (state) => { return (state <= 1 ? colorChip.yellow : colorChip.deactive) },
+      null,
+      null,
+      null,
+      null,
+      null,
+    ];
+
+    forceWidth = [
+      (<&& 70 | 70 | 68 | 66 | 6 &&>),
+      (<&& 70 | 70 | 68 | 66 | 6 &&>),
+      null,
+      null,
+      null,
+      null,
+      null,
+    ];
+  } else {
+    widthMap = [ 6, 11, 12, 7 ];
+
+    boxTarget = [
+      null,
+      (state) => { return colorChip.red },
+      (state) => { return colorChip.yellow },
+      (state) => { return colorChip.shadow },
+    ];
+
+    forceWidth = [
+      null,
+      null,
+      null,
+      null,
+    ];
+  }
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: colorChip.white,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(whiteBottomMargin) + ea,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(margin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(margin) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  setContents = (total = false) => {
+    cleanChildren(whiteTong);
+
+    targets = equalJson(JSON.stringify(projects));
+    targets = targets.filter((obj) => {
+      return instance.contentsArr.toNormal().map((o) => { return o.proid }).includes(obj.proid);
+      return true
+    });
+    targets.sort((a, b) => {
+      const emptyValue = Math.abs((new Date(1200, 0, 1)).valueOf());
+      let aConst, bConst;
+
+      if (/드[랍롭]/gi.test(a.process.status) || /홀[드딩]/gi.test(a.process.status)) {
+        aConst = 1;
+      } else if (/완료/gi.test(a.process.status)) {
+        aConst = 10000;
+      } else {
+        aConst = 100000000;
+      }
+
+      if (/드[랍롭]/gi.test(b.process.status) || /홀[드딩]/gi.test(b.process.status)) {
+        bConst = 1;
+      } else if (/완료/gi.test(b.process.status)) {
+        bConst = 10000;
+      } else {
+        bConst = 100000000;
+      }
+
+      return ((b.process.contract.form.date.from.valueOf() + emptyValue) * bConst) - ((a.process.contract.form.date.from.valueOf() + emptyValue) * aConst);
+    });
+
+    targetLength = targets.length;
+    if (targetLength < minimalLength) {
+      for (let i = 0; i < minimalLength - targetLength; i++) {
+        targets.push(null);
+      }
+    }
+
+    circleColor = colorChip.deactive;
+    if (!total) {
+      if (targets.length > 16) {
+        targets = targets.slice(0, 16);
+        circleColor = colorChip.green;
+      }
+    }
+
+    block = createNode({
+      mother: whiteTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0),
+            marginBottom: String(titleBottom) + ea,
+            zIndex: mobile ? String(1) : "",
+          },
+          children: [
+            {
+              text: "발행된 프로젝트" + (!total ? "&nbsp;&nbsp;<b%모두 보기%b>" : "&nbsp;&nbsp;<b%일부만 보기%b>"),
+              event: {
+                click: function (e) {
+                  setContents(/모두/gi.test(this.textContent));
+                },
+                selectstart: (e) => {
+                  e.preventDefault();
+                }
+              },
+              style: {
+                position: "relative",
+                display: "inline-block",
+                top: String(titleTopNumber) + ea,
+                fontSize: String(titleFontSize) + ea,
+                fontWeight: String(600),
+                background: colorChip.white,
+                paddingRight: String(numberRight) + ea,
+                color: colorChip.black,
+              },
+              bold: {
+                background: colorChip.white,
+                color: circleColor,
+                fontSize: String(printSize) + ea,
+                fontWeight: String(300),
+                cursor: "pointer",
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: String(100) + '%',
+            overflow: "hidden",
+            marginBottom: String(0) + ea,
+          }
+        },
+      ]
+    });
+    tong = block.lastChild;
+
+    grayTong = createNode({
+      mother: tong,
+      style: {
+        display: "block",
+        background: colorChip.gray3,
+        borderRadius: String(5) + "px",
+        paddingTop: String(grayMargin) + ea,
+        paddingBottom: String(grayMargin - tongMargin) + ea,
+      }
+    });
+
+    whiteBaseTongDictionary = {};
+    for (let i = 0; i < targets.length; i++) {
+
+      if (targets[i] !== null) {
+        state = 0;
+        if (/드[랍롭]/gi.test(targets[i].process.status) || /홀[드딩]/gi.test(targets[i].process.status)) {
+          state = 3;
+        }
+
+        whiteBaseTong = createNode({
+          mother: grayTong,
+          attribute: {
+            proid: targets[i].proid
+          },
+          event: {
+            click: function (e) {
+              const proid = this.getAttribute("proid");
+              selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+            },
+            contextmenu: function (e) {
+              e.preventDefault();
+              const proid = this.getAttribute("proid");
+              selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+            }
+          },
+          style: {
+            display: desktop ? "inline-flex" : "block",
+            position: "relative",
+            marginLeft: String(grayMargin) + ea,
+            width: withOut((grayMargin * 2) + (grayPadding * 2), ea),
+            paddingLeft: String(grayPadding) + ea,
+            paddingRight: String(grayPadding) + ea,
+            height: desktop ? String(tongHeight) + ea : "",
+            borderRadius: String(5) + "px",
+            background: state >= 2 ? (state === 3 ? colorChip.gray4 : colorChip.gray1) : colorChip.white,
+            marginBottom: String(tongMargin) + ea,
+            alignItems: "center",
+            flexDirection: "row",
+            cursor: "pointer",
+            paddingTop: desktop ? "" : String(grayPadding) + ea,
+            paddingBottom: desktop ? "" : String(grayPadding - 0.8) + ea,
+          },
+        });
+        for (let j = 0; j < widthMap.length; j++) {
+
+          if (boxTarget[j] === null) {
+
+            createNode({
+              mother: whiteBaseTong,
+              text: contentsMap(targets[i], j),
+              style: {
+                display: desktop ? "inline-block" : "block",
+                position: "relative",
+                fontSize: String(whiteSize) + ea,
+                fontWeight: String(mobile || j === 2 ? 700 : whiteWeight),
+                top: String(whiteTextTop) + ea,
+                color: state >= 2 ? colorChip.deactive : colorChip.black,
+                width: desktop ? String(widthMap[j]) + ea : "",
+                marginRight: desktop ? "" : String(1) + ea,
+                marginBottom: desktop ? "" : String(1) + ea,
+                paddingLeft: desktop ? "" : String(0.4) + ea,
+                paddingTop: desktop ? "" : String(0.2) + ea,
+              },
+              bold: {
+                fontWeight: String(whiteColumnWeight),
+                color: j === 2 ? (state >= 2 ? colorChip.deactive : colorChip.black) : colorChip.deactive,
+              }
+            });
+
+          } else {
+
+            createNode({
+              mother: whiteBaseTong,
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                alignItems: "center",
+                top: String(0),
+                height: withOut(0),
+                width: desktop ? String(widthMap[j]) + ea : "",
+                marginRight: desktop ? "" : String(1) + ea,
+                marginBottom: desktop ? "" : String(1) + ea,
+              },
+              children: [
+                {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    alignItems: "center",
+                    height: String(colorBoxHeight) + ea,
+                    background: boxTarget[j](state),
+                    borderRadius: String(5) + "px",
+                    paddingLeft: String(colorBoxPadding) + ea,
+                    paddingRight: String(colorBoxPadding) + ea,
+                    width: desktop ? (forceWidth[j] === null ? "" : String(forceWidth[j]) + ea) : "",
+                    justifyContent: "center",
+                  },
+                  children: [
+                    {
+                      text: contentsMap(targets[i], j),
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        fontSize: String(colorBoxSize) + ea,
+                        fontWeight: String(colorBoxWeight),
+                        color: colorChip.white,
+                        top: String(colorBoxTextTop) + ea,
+                      }
+                    }
+                  ]
+                }
+              ]
+            });
+
+          }
+
+        }
+
+        createNode({
+          mother: whiteBaseTong,
+          mode: "svg",
+          attribute: {
+            proid: targets[i].proid
+          },
+          source: svgMaker.horizontalArrow(circleWidth, arrowHeight, (state === 0 ? colorChip.green : colorChip.deactive)),
+          style: {
+            position: "absolute",
+            right: String(circleRight) + ea,
+            top: String(circleTop) + ea,
+            width: String(circleWidth) + ea,
+            borderRadius: String(circleWidth) + ea,
+            cursor: "pointer",
+          }
+        });
+
+        whiteBaseTongDictionary[targets[i].proid] = whiteBaseTong;
+
+      } else {
+
+        whiteBaseTong = createNode({
+          mother: grayTong,
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            marginLeft: String(grayMargin) + ea,
+            width: withOut((grayMargin * 2) + (grayPadding * 2), ea),
+            paddingLeft: String(grayPadding) + ea,
+            paddingRight: String(grayPadding) + ea,
+            height: String(tongHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gray1,
+            marginBottom: String(tongMargin) + ea,
+            alignItems: "center",
+            flexDirection: "row",
+            cursor: "pointer",
+          },
+        });
+
+      }
+
+    }
+
+    if (typeof getObj.proid === "string") {
+      if (targets.filter((project) => { return project !== null }).map((project) => { return project.proid }).includes(getObj.proid)) {
+        whiteBaseTongDictionary[getObj.proid].click();
+      }
+    }
+
+    createNode({
+      mother: tong,
+      event: {
+        click: function (e) {
+          setContents(/모두/gi.test(block.firstChild.firstChild.textContent));
+        },
+      },
+      style: {
+        display: "flex",
+        marginTop: String(circleBoxTop) + ea,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        cursor: "pointer",
+        paddingBottom: desktop ? "" : String(mobileCircleBoxPaddingBottom) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleWidth) + ea,
+            height: String(circleWidth) + ea,
+            background: circleColor,
+            borderRadius: String(circleWidth) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleWidth) + ea,
+            height: String(circleWidth) + ea,
+            background: circleColor,
+            borderRadius: String(circleWidth) + ea,
+            marginLeft: String(circleBetween) + ea,
+            marginRight: String(circleBetween) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleWidth) + ea,
+            height: String(circleWidth) + ea,
+            background: circleColor,
+            borderRadius: String(circleWidth) + ea,
+          }
+        },
+      ]
+    });
 
   }
 
@@ -1346,7 +2108,7 @@ DesignerBoardJs.prototype.portfolioBlock = function () {
   arrowBottom = <%% 3, 3, 3, 2, 1 %%>;
   arrowReviewBottom = <%% 5, 4, 4, 4, 1 %%>;
 
-  baseBlock = baseTong.children[4];
+  baseBlock = baseTong.children[5];
   cleanChildren(baseBlock);
 
   if (limitLength !== 0) {
@@ -1700,8 +2462,9 @@ DesignerBoardJs.prototype.launching = async function (loading) {
         try {
           let whiteBlock;
           instance.insertInitBox();
+          instance.insertRouterBox();
           instance.insertProcessBox();
-          instance.insertCalendarBox();
+          instance.insertReleaseBox();
           instance.insertPortfolioBase();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "DesignerBoardJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
