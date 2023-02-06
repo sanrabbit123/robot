@@ -6918,9 +6918,9 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
                   verticalAlignment: "MIDDLE",
                   textFormat: {
                     foregroundColor: {
-                      red: 0,
-                      green: 1,
-                      blue: 1,
+                      red: 1,
+                      green: 0,
+                      blue: 0,
                     },
                     fontSize: 10,
                     bold: false
