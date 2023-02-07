@@ -981,6 +981,16 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
   let mobilePaddingLeft;
   let mobileInnerPaddingBottom;
   let contentsAreaPaddingTop;
+  let panMother;
+  let panMotherInnerPadding;
+  let panBetween;
+  let panTitleBoxWidth;
+  let panTitleBoxHeight;
+  let panMotherBetween;
+  let contents;
+  let itemBetween;
+  let smallBetween;
+  let contentsPanPaddingTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -997,12 +1007,102 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
   titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
   contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
 
+  panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
+  panBetween = <%% 8, 8, 8, 8, 1 %%>;
+  panTitleBoxWidth = <%% 124, 120, 114, 108, 21 %%>;
+  panTitleBoxHeight = <%% 52, 48, 45, 40, 8.2 %%>;
+
+  panMotherBetween = <%% 8, 7, 6, 5, 1 %%>;
+  smallBetween = <%% 3, 3, 2, 2, 1 %%>;
+
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
+
+  itemBetween = <%% 8, 8, 7, 6, 1 %%>;
+
+  contentsPanPaddingTop = <%% 18, 18, 16, 12, 3 %%>;
+
 
   mobileInnerPaddingBottom = 0;
 
   this.whiteMargin = (desktop ? margin : 0);
+
+  contents = {
+    schedule: [
+      {
+        title: "현장 미팅",
+        description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+        date: {
+          start: new Date(),
+          end: new Date(),
+        },
+        color: colorChip.red,
+      },
+      {
+        title: "계약 시작일",
+        description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+        date: {
+          start: new Date(),
+          end: new Date(),
+        },
+        color: colorChip.red,
+      },
+      {
+        title: "현장 미팅",
+        description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+        date: {
+          start: new Date(),
+          end: new Date(),
+        },
+        color: colorChip.red,
+      },
+      {
+        title: "계약 시작일",
+        description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+        date: {
+          start: new Date(),
+          end: new Date(),
+        },
+        color: colorChip.red,
+      },
+      {
+        title: "현장 미팅",
+        description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+        date: {
+          start: new Date(),
+          end: new Date(),
+        },
+        color: colorChip.red,
+      },
+      {
+        title: "계약 시작일",
+        description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+        date: {
+          start: new Date(),
+          end: new Date(),
+        },
+        color: colorChip.red,
+      },
+      {
+        title: "현장 미팅",
+        description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+        date: {
+          start: new Date(),
+          end: new Date(),
+        },
+        color: colorChip.red,
+      },
+      {
+        title: "계약 시작일",
+        description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+        date: {
+          start: new Date(),
+          end: new Date(),
+        },
+        color: colorChip.red,
+      },
+    ]
+  };
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -1081,7 +1181,105 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
   });
   tong = block.lastChild;
 
+  panMother = createNode({
+    mother: tong,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
+      borderRadius: String(5) + "px",
+      background: desktop ? colorChip.gray3 : colorChip.gray1,
+      width: withOut(panMotherInnerPadding * 2, ea),
+      padding: String(panMotherInnerPadding) + ea,
+      verticalAlign: "top",
+    },
+    child: {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        borderRadius: String(5) + "px",
+        background: colorChip.gray1,
+        width: withOut(contentsPanPaddingTop * 2, ea),
+        padding: String(contentsPanPaddingTop) + ea,
+        verticalAlign: "top",
+      }
+    }
+  }).firstChild;
 
+  for (let i = 0; i < contents.schedule.length; i++) {
+    createNode({
+      mother: panMother,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(panTitleBoxHeight) + ea,
+        marginBottom: String(itemBetween) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(panTitleBoxHeight) + ea,
+            height: String(panTitleBoxHeight) + ea,
+            background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            marginRight: String(smallBetween) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(panTitleBoxHeight * 4) + ea,
+            height: String(panTitleBoxHeight) + ea,
+            background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            marginRight: String(smallBetween) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(panTitleBoxHeight * 11) + ea,
+            height: String(panTitleBoxHeight) + ea,
+            background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            marginRight: String(smallBetween) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: "calc(" + withOut((panTitleBoxHeight * (1 + 4 + 11)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
+            height: String(panTitleBoxHeight) + ea,
+            background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            marginRight: String(smallBetween) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: "calc(" + withOut((panTitleBoxHeight * (1 + 4 + 11)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
+            height: String(panTitleBoxHeight) + ea,
+            background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          }
+        },
+      ]
+    });
+  }
 
 }
 

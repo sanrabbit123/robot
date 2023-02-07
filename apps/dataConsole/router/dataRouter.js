@@ -7789,6 +7789,7 @@ DataRouter.prototype.rou_post_hahaClientAlarm = function () {
       let targetClients;
       let haha;
       let rows;
+      let todayCase;
 
       rows = await sheets.get_value_inPython(sheetsId, sheetsName + "!E2:E");
 
@@ -7821,9 +7822,11 @@ DataRouter.prototype.rou_post_hahaClientAlarm = function () {
         }
       }
   
-      targetCases = caseTong.filter(({ date }) => {
+      todayCase = caseTong.filter(({ date }) => {
         return dateToString(date) === dateToString(today);
-      }).filter((obj) => {
+      });
+
+      targetCases = todayCase.filter((obj) => {
         if (/O/gi.test(obj.target)) {
           return false;
         } else {
@@ -7865,7 +7868,7 @@ DataRouter.prototype.rou_post_hahaClientAlarm = function () {
             }
           }
         });
-        await sheets.update_value_inPython(sheetsId, sheetsName, haha.map((str) => { return [ str ] }), [ columns.findIndex((str) => { return /하하 전송/gi.test(str) }), 1 ]);
+        await sheets.update_value_inPython(sheetsId, sheetsName, haha.map((str) => { return [ str ] }).slice(0, todayCase.length + 1), [ columns.findIndex((str) => { return /하하 전송/gi.test(str) }), 1 ]);
   
       }
 
