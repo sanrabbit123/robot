@@ -956,6 +956,135 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   return whiteBlock;
 }
 
+ProcessDetailJs.prototype.insertScheduleBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project, contentsRawInfo, totalContents, requestNumber } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const manyBig = media[0];
+  const generalSmall = !manyBig;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker } = GeneralJs;
+  const blank = "&nbsp;&nbsp;&nbsp;";
+  const mainTitle = "프로젝트 일정";
+  let paddingTop;
+  let margin;
+  let block;
+  let whiteBottomMargin;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let titleFontSize;
+  let numberRight;
+  let titleTop, titleTopNumber;
+  let titleBottom;
+  let mobileTitleLeft, mobileTitleTop;
+  let mobilePaddingLeft;
+  let mobileInnerPaddingBottom;
+  let contentsAreaPaddingTop;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+
+  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
+  contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
+
+  mobileInnerPaddingBottom = 0;
+
+  this.whiteMargin = (desktop ? margin : 0);
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    attribute: { toggle: "on" },
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: desktop ? colorChip.white : "",
+      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+      paddingBottom: desktop ? String(margin) + ea : "",
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+        height: String(100) + '%',
+        marginLeft: String(desktop ? margin : 0) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  block = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: mobile ? "absolute" : "relative",
+          left: desktop ? "" : String(mobileTitleLeft) + ea,
+          top: desktop ? "" : String(mobileTitleTop) + ea,
+          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+          marginBottom: String(titleBottom) + ea,
+          zIndex: mobile ? String(1) : "",
+        },
+        children: [
+          {
+            text: mainTitle,
+            style: {
+              position: "relative",
+              display: "inline-block",
+              top: String(titleTopNumber) + ea,
+              fontSize: String(titleFontSize) + ea,
+              fontWeight: String(600),
+              background: desktop ? colorChip.white : colorChip.gray1,
+              paddingRight: String(numberRight) + ea,
+              color: colorChip.black,
+            }
+          },
+        ]
+      },
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
+          borderRadius: mobile ? String(1) + ea : "",
+          overflow: "hidden",
+          marginBottom: String(0) + ea,
+          marginTop: desktop ? "" : String(14) + ea,
+          paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingBottom: desktop ? "" : String(mobileInnerPaddingBottom) + ea,
+        }
+      },
+    ]
+  });
+  tong = block.lastChild;
+
+
+
+}
+
 ProcessDetailJs.prototype.insertControlBox = function () {
   const instance = this;
   const mother = this.mother;
@@ -11490,6 +11619,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             instance.insertDetailBox();
             instance.insertStyleBox();
             instance.insertUploadBox();
+            instance.insertScheduleBox();
             instance.insertControlBox();
             instance.insertNoticeBox();
             if (getObj.green !== "deactive") {
@@ -11513,12 +11643,12 @@ ProcessDetailJs.prototype.launching = async function (loading) {
               instance.insertContractStartBox();
               instance.insertAboutConsoleBox(false);
             }
-
             if (instance.contentsArr.length > 0) {
               instance.insertContentsBox();
             }
             instance.insertNumbersBox();
             instance.insertUploadBox();
+            instance.insertScheduleBox();
             instance.insertControlBox();
             if (mobile) {
               instance.insertBelowBox();

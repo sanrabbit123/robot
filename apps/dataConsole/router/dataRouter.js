@@ -6731,6 +6731,10 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       let colorRequestArr;
       let contractDate;
       let haha;
+      let thisContractTargetCases;
+      let thisContractTargetAccCases;
+      let thisContractTargetMonthCases;
+      let z;
 
       if (clientUpdate) {
 
@@ -7218,6 +7222,9 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
         }
       }
 
+
+      // total
+
       dateTargets = Array.from(new Set(caseTong.map((obj) => {
         return dateToString(obj.date);
       }))).map((str) => { return stringToDate(str) });
@@ -7244,7 +7251,19 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
         thisTargetAccCases = caseTong.filter((obj) => { return obj.date.valueOf() < toDate.valueOf() });
         thisTargetMonthCases = caseTong.filter((obj) => { return obj.date.valueOf() > thisMonthFromDate.valueOf() && obj.date.valueOf() < toDate.valueOf() })
         
+        thisContractTargetCases = caseTong.filter((obj) => { return obj.contractDate.valueOf() > fromDate.valueOf() && obj.contractDate.valueOf() < toDate.valueOf() })
+        thisContractTargetAccCases = caseTong.filter((obj) => { return obj.contractDate.valueOf() < toDate.valueOf() });
+        thisContractTargetMonthCases = caseTong.filter((obj) => { return obj.contractDate.valueOf() > thisMonthFromDate.valueOf() && obj.contractDate.valueOf() < toDate.valueOf() })
+
         caseObj.date = standardDate;
+
+        caseObj.thisTargetCases = equalJson(JSON.stringify(thisTargetCases));
+        caseObj.thisTargetAccCases = equalJson(JSON.stringify(thisTargetAccCases));
+        caseObj.thisTargetMonthCases = equalJson(JSON.stringify(thisTargetMonthCases));
+        caseObj.thisContractTargetCases = equalJson(JSON.stringify(thisContractTargetCases));
+        caseObj.thisContractTargetAccCases = equalJson(JSON.stringify(thisContractTargetAccCases));
+        caseObj.thisContractTargetMonthCases = equalJson(JSON.stringify(thisContractTargetMonthCases));
+
         caseObj.todayManagers = [];
         caseObj.accManagers = [];
         caseObj.monthManagers = [];
@@ -7298,21 +7317,21 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
   
           caseObj.contractTodayManagers.push({
             name,
-            value: thisTargetCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
+            value: thisContractTargetCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
               return /^O/gi.test(obj.contract);
             }).length
           });
   
           caseObj.contractMonthManagers.push({
             name,
-            value: thisTargetMonthCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
+            value: thisContractTargetMonthCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
               return /^O/gi.test(obj.contract);
             }).length
           });
   
           caseObj.contractAccManagers.push({
             name,
-            value: thisTargetAccCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
+            value: thisContractTargetAccCases.filter((obj) => { return obj.manager === name }).filter((obj) => {
               return /^O/gi.test(obj.contract);
             }).length
           });
@@ -7327,6 +7346,10 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
       for (let obj of caseFilteringTong) {
         caseTempArr = [];
         caseTempArr.push(dateToString(obj.date));
+        caseTempArr.push("금일 문의량");
+        caseTempArr.push("신규 타겟 고객 수");
+        caseTempArr.push("타겟 아님 대상");
+        caseTempArr.push("");
         caseTempArr.push("당일 응대 배정");
         caseTempArr.push("총 누적 고객 수");
         caseTempArr.push("당월 누적 고객 수");
@@ -7338,8 +7361,13 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
         caseTempArr.push("총 누적 계약 수");
         caseMatrix.push(equalJson(JSON.stringify(caseTempArr)));
   
+        z = 0;
         for (let name of managerConst) {
           caseTempArr = [];
+          caseTempArr.push("-");
+          caseTempArr.push(obj.thisTargetCases.length);
+          caseTempArr.push(obj.thisTargetCases.filter(({ target }) => { return /O/gi.test(target) }).length);
+          caseTempArr.push(obj.thisTargetCases.length - obj.thisTargetCases.filter(({ target }) => { return /O/gi.test(target) }).length);
           caseTempArr.push(name);
           caseTempArr.push(obj.todayManagers.find((o) => { return o.name === name }).value);
           caseTempArr.push(obj.accManagers.find((o) => { return o.name === name }).value);
@@ -7351,9 +7379,14 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
           caseTempArr.push(obj.contractMonthManagers.find((o) => { return o.name === name }).value);
           caseTempArr.push(obj.contractAccManagers.find((o) => { return o.name === name }).value);
           caseMatrix.push(equalJson(JSON.stringify(caseTempArr)));
+          z++;
         }
   
         caseTempArr = [];
+        caseTempArr.push("--");
+        caseTempArr.push("");
+        caseTempArr.push("");
+        caseTempArr.push("");
         caseTempArr.push("계");
         caseTempArr.push(obj.todayManagers.reduce((acc, curr) => { return acc + curr.value; }, 0));
         caseTempArr.push(obj.accManagers.reduce((acc, curr) => { return acc + curr.value; }, 0));
@@ -7377,6 +7410,10 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
         caseTempArr.push("");
         caseTempArr.push("");
         caseTempArr.push("");
+        caseTempArr.push("");
+        caseTempArr.push("");
+        caseTempArr.push("");
+        caseTempArr.push("");
         caseMatrix.push(equalJson(JSON.stringify(caseTempArr)));
       }
   
@@ -7388,7 +7425,7 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
           range: {
             sheetId: sheetsIndex,
             startColumnIndex: 0,
-            endColumnIndex: 1
+            endColumnIndex: 4
           },
           cell: {
             userEnteredFormat: {
@@ -7396,6 +7433,36 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
                 red: 1,
                 green: 13,
                 blue: 41,
+              },
+              horizontalAlignment: "CENTER",
+              verticalAlignment: "MIDDLE",
+              textFormat: {
+                foregroundColor: {
+                  red: 0,
+                  green: 0,
+                  blue: 0,
+                },
+                fontSize: 10,
+                bold: true
+              }
+            }
+          },
+          fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
+        }
+      })
+      colorRequestArr.push({
+        repeatCell: {
+          range: {
+            sheetId: sheetsIndex,
+            startColumnIndex: 4,
+            endColumnIndex: 5
+          },
+          cell: {
+            userEnteredFormat: {
+              backgroundColor: {
+                red: 1,
+                green: 20,
+                blue: 48,
               },
               horizontalAlignment: "CENTER",
               verticalAlignment: "MIDDLE",
@@ -7422,6 +7489,39 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
                 sheetId: sheetsIndex,
                 startRowIndex: i,
                 endRowIndex: i + 1,
+                startColumnIndex: 0,
+                endColumnIndex: 1,
+              },
+              cell: {
+                userEnteredFormat: {
+                  backgroundColor: {
+                    red: 216,
+                    green: 170,
+                    blue: 97,
+                  },
+                  horizontalAlignment: "CENTER",
+                  verticalAlignment: "MIDDLE",
+                  textFormat: {
+                    foregroundColor: {
+                      red: 1,
+                      green: 1,
+                      blue: 1,
+                    },
+                    fontSize: 10,
+                    bold: true
+                  }
+                }
+              },
+              fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
+            }
+          })
+          colorRequestArr.push({
+            repeatCell: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i,
+                endRowIndex: i + 1,
+                startColumnIndex: 1,
               },
               cell: {
                 userEnteredFormat: {
@@ -7446,7 +7546,120 @@ DataRouter.prototype.rou_post_cxDashboardSync = function () {
               fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
             }
           })
-        } else if (/^계/gi.test(caseMatrix[i][0])) {
+          colorRequestArr.push({
+            mergeCells: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i,
+                endRowIndex: i + 5,
+                startColumnIndex: 0,
+                endColumnIndex: 1,
+              },
+              mergeType: "MERGE_ALL"
+            },
+          })
+          colorRequestArr.push({
+            mergeCells: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i + 1,
+                endRowIndex: i + 4,
+                startColumnIndex: 1,
+                endColumnIndex: 2,
+              },
+              mergeType: "MERGE_ALL"
+            },
+          })
+          colorRequestArr.push({
+            mergeCells: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i + 1,
+                endRowIndex: i + 4,
+                startColumnIndex: 2,
+                endColumnIndex: 3,
+              },
+              mergeType: "MERGE_ALL"
+            },
+          })
+          colorRequestArr.push({
+            mergeCells: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i + 1,
+                endRowIndex: i + 4,
+                startColumnIndex: 3,
+                endColumnIndex: 4,
+              },
+              mergeType: "MERGE_ALL"
+            },
+          })
+          colorRequestArr.push({
+            repeatCell: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i + 1,
+                endRowIndex: i + 4,
+                startColumnIndex: 4,
+                endColumnIndex: 5,
+              },
+              cell: {
+                userEnteredFormat: {
+                  backgroundColor: {
+                    red: 1,
+                    green: 33,
+                    blue: 61,
+                  },
+                  horizontalAlignment: "CENTER",
+                  verticalAlignment: "MIDDLE",
+                  textFormat: {
+                    foregroundColor: {
+                      red: 0,
+                      green: 0,
+                      blue: 0,
+                    },
+                    fontSize: 10,
+                    bold: true
+                  }
+                }
+              },
+              fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
+            }
+          })
+          colorRequestArr.push({
+            repeatCell: {
+              range: {
+                sheetId: sheetsIndex,
+                startRowIndex: i + 1,
+                endRowIndex: i + 4,
+                startColumnIndex: 10,
+                endColumnIndex: 11,
+              },
+              cell: {
+                userEnteredFormat: {
+                  backgroundColor: {
+                    red: 1,
+                    green: 1,
+                    blue: 1,
+                  },
+                  horizontalAlignment: "CENTER",
+                  verticalAlignment: "MIDDLE",
+                  textFormat: {
+                    foregroundColor: {
+                      red: 1,
+                      green: 0,
+                      blue: 0,
+                    },
+                    fontSize: 10,
+                    bold: false
+                  }
+                }
+              },
+              fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment,verticalAlignment)"
+            }
+          })
+
+        } else if (/--/gi.test(caseMatrix[i][0])) {
   
           colorRequestArr.push({
             repeatCell: {
