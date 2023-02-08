@@ -12321,6 +12321,9 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     if (typeof getObj.download === "string") {
       if (getObj.download === "auto") {
         if (this.contentsRawInfo.raw.exist) {
+          if (mobile) {
+            window.alert("해당 사진 파일은 압축 형태이기 때문에 (zip 파일), 모바일에서 다운로드 할 경우 확인이 어려울 수 있습니다! PC에서 다운로드 해주세요!");
+          }
           const loading = instance.mother.whiteProgressLoading();
           instance.mother.greenAlert("다운로드를 진행합니다!").catch((err) => { console.log(err); });
           await GeneralJs.downloadFile(this.contentsRawInfo.raw.link, null, loading.progress.firstChild);
