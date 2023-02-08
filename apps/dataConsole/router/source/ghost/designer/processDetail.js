@@ -964,9 +964,13 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
   const desktop = !mobile;
   const manyBig = media[0];
   const generalSmall = !manyBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, uniqueValue } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainTitle = "프로젝트 일정";
+  const dragElementClassName = "dragElementClassName";
+  const dateToHangul = (dateObject) => {
+    return `${String(dateObject.getFullYear())}년 ${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일`;
+  }
   let paddingTop;
   let margin;
   let block;
@@ -991,6 +995,11 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
   let itemBetween;
   let smallBetween;
   let contentsPanPaddingTop;
+  let contentsWordingSize;
+  let contentsWordingBoldWeight;
+  let contentsWordingWeight;
+  let contentsWordingContentsWeight;
+  let hamburgerItemWidth;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1018,10 +1027,15 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
 
-  itemBetween = <%% 8, 8, 7, 6, 1 %%>;
+  itemBetween = <%% 7, 7, 7, 6, 1 %%>;
 
   contentsPanPaddingTop = <%% 18, 18, 16, 12, 3 %%>;
+  contentsWordingSize = <%% 15, 15, 14, 13, 2.9 %%>;
+  contentsWordingBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
+  contentsWordingWeight = <%% 700, 700, 700, 700, 700 %%>;
+  contentsWordingContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
 
+  hamburgerItemWidth = <%% 14, 14, 14, 14, 14 %%>;
 
   mobileInnerPaddingBottom = 0;
 
@@ -1207,15 +1221,67 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
     }
   }).firstChild;
 
-  for (let i = 0; i < contents.schedule.length; i++) {
+  for (let i = -1; i < contents.schedule.length; i++) {
     createNode({
       mother: panMother,
+      attribute: {
+        draggable: "true",
+      },
+      class: [ dragElementClassName ],
+      id: dragElementClassName + "_" + uniqueValue("hex"),
+      event: {
+        selectstart: (e) => {
+          e.preventDefault();
+        },
+        dragstart: function (e) {
+          this.style.height = String(0);
+          this.style.opacity = String(0);
+          this.style.marginBottom = String(0);
+          e.dataTransfer.setData("dragData", this.id);
+        },
+        dragend: function (e) {
+          this.style.height = String(panTitleBoxHeight) + ea;
+          this.style.opacity = String(1);
+          this.style.marginBottom = String(itemBetween) + ea;
+          e.preventDefault();
+        },
+        dragenter: function (e) {
+          this.style.paddingBottom = String(panTitleBoxHeight) + ea;
+          e.preventDefault();
+        },
+        dragleave: function (e) {
+          this.style.paddingBottom = String(0) + ea;
+          e.preventDefault();
+        },
+        dragover: function (e) {
+          e.preventDefault();
+        },
+        drop: function (e) {
+          let toTarget, fromTarget;
+          e.preventDefault();
+          toTarget = e.toElement;
+          while (!(new RegExp(dragElementClassName, "gi")).test(toTarget.className === null ? '' : toTarget.className)) {
+            toTarget = toTarget.parentElement;
+          }
+          toTarget.style.paddingBottom = String(0) + ea;
+
+          fromTarget = document.getElementById(e.dataTransfer.getData("dragData"));
+
+          if (toTarget.nextElementSibling === null) {
+            this.parentElement.appendChild(fromTarget);
+          } else {
+            this.parentElement.insertBefore(fromTarget, toTarget.nextElementSibling)
+          }
+        },
+      },
       style: {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
         height: String(panTitleBoxHeight) + ea,
         marginBottom: String(itemBetween) + ea,
+        paddingBottom: String(0) + ea,
+        transition: "all 0.3s ease",
       },
       children: [
         {
@@ -1228,6 +1294,20 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
             borderRadius: String(5) + "px",
             boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
             marginRight: String(smallBetween) + ea,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            cursor: "pointer",
+          },
+          child: {
+            mode: "svg",
+            source: svgMaker.hamburgerIcon(colorChip.deactive),
+            style: {
+              display: i === -1 ? "none" : "inline-block",
+              position: "relative",
+              width: String(hamburgerItemWidth) + ea,
+            }
           }
         },
         {
@@ -1240,6 +1320,26 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
             borderRadius: String(5) + "px",
             boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
             marginRight: String(smallBetween) + ea,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          },
+          child: {
+            text: i === -1 ? "계획명" : contents.schedule[i].title,
+            event: {
+              selectstart: (e) => {
+                e.preventDefault();
+              }
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingWeight),
+              color: i === -1 ? colorChip.white : colorChip.black,
+              top: String(-1) + ea,
+            }
           }
         },
         {
@@ -1252,6 +1352,26 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
             borderRadius: String(5) + "px",
             boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
             marginRight: String(smallBetween) + ea,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          },
+          child: {
+            text: i === -1 ? "설명" : contents.schedule[i].description,
+            event: {
+              selectstart: (e) => {
+                e.preventDefault();
+              }
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+              color: i === -1 ? colorChip.white : colorChip.black,
+              top: String(-1) + ea,
+            }
           }
         },
         {
@@ -1264,6 +1384,26 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
             borderRadius: String(5) + "px",
             boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
             marginRight: String(smallBetween) + ea,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          },
+          child: {
+            text: i === -1 ? "시작일" : dateToHangul(contents.schedule[i].date.start),
+            event: {
+              selectstart: (e) => {
+                e.preventDefault();
+              }
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+              color: i === -1 ? colorChip.white : colorChip.black,
+              top: String(-1) + ea,
+            }
           }
         },
         {
@@ -1275,6 +1415,26 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
             background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
             borderRadius: String(5) + "px",
             boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          },
+          child: {
+            text: i === -1 ? "종료일" : dateToHangul(contents.schedule[i].date.end),
+            event: {
+              selectstart: (e) => {
+                e.preventDefault();
+              }
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+              color: i === -1 ? colorChip.white : colorChip.black,
+              top: String(-1) + ea,
+            }
           }
         },
       ]

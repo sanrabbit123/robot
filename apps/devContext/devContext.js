@@ -150,11 +150,106 @@ DevContext.prototype.launching = async function () {
 
 
     
+    // await this.MONGOLOGC.connect();
+    // const selfMongo = this.MONGOLOGC;
+    // const collection = "dailyClients";
+    // let rawRows;
+    // let clientsTong;
+    // let allProjects;
+    // let thisClients;
+    // let thisClient;
+    // let matrix;
+    // let targetUser;
+    // let sheetsId;
+    // let total, nonCount, thisCount;
+
+    // rawRows = await back.mongoRead(collection, {}, { selfMongo });
+    // allProjects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo: this.MONGOC });
+    // allProjects = allProjects.toNormal().filter((obj) => {
+    //   return obj.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+    // })
+    // thisClients = await back.getClientsByQuery({ $or: allProjects.map((o) => { return { cliid: o.cliid } }) }, { selfMongo: this.MONGOC });
+
+    // clientsTong = [];
+    // for (let obj of rawRows) {
+    //   for (let i = 0; i < obj.data.detail.length; i++) {
+    //     clientsTong.push(obj.data.detail[i])
+    //   }
+    // }
+
+    // clientsTong = clientsTong.filter((obj) => {
+    //   return allProjects.map((o) => { return o.cliid }).includes(obj.cliid);
+    // })
+
+    // await fileSystem("writeJson", [ `${process.cwd()}/temp/tong.json`, clientsTong ])
     
 
+    // matrix = [
+    //   [
+    //     "아이디",
+    //     "성함",
+    //     "소스",
+    //     "캠패인",
+    //   ]
+    // ]
+
+    // for (let obj of clientsTong) {
+    //   thisClient = thisClients.find((o) => { return o.cliid === obj.cliid });
+    //   targetUser = obj.users.find((obj2) => {
+    //     if (obj2 === null) {
+    //       return false;
+    //     } else {
+    //       return !/not set/gi.test(obj2.source.campaign);
+    //     }
+    //   })
+    //   if (targetUser === undefined || targetUser === null) {
+    //     if (obj.users.length > 0 && obj.users[0] !== null) {
+    //       targetUser = obj.users[0];
+    //     } else {
+    //       targetUser = {
+    //         source: {
+    //           mother: "(direct)",
+    //           campaign: "(not set)" 
+    //         }
+    //       };
+    //     }
+    //   }
+
+    //   matrix.push([
+    //     obj.cliid,
+    //     thisClient.name,
+    //     (/home-liaison/gi.test(targetUser.source.mother) ? "(direct)" : targetUser.source.mother),
+    //     targetUser.source.campaign,
+    //   ]);
+    // }
+
+    // total = 0;
+    // nonCount = 0;
+    // thisCount = 0;
+    // for (let arr of matrix) {
+    //   total++;
+    //   if (/not set/gi.test(arr[3])) {
+    //     nonCount++;
+    //   } else {
+    //     thisCount++;
+    //   }
+    // }
+
+    // matrix.push([
+    //   "전체 " + String(total) + "명",
+    //   "비광고 " + String(nonCount) + "명",
+    //   "광고 " + String(thisCount) + "명",
+    //   "광고 비율 " + String(Math.floor((thisCount / total) * 10000) / 100) + '%'
+    // ])
+
+    // sheetsId = await sheets.create_newSheets_inPython("계약자 광고 비율", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
+
+    // await this.MONGOLOGC.close();
 
 
-    
+
 
 
 
