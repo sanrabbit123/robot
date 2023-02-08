@@ -968,9 +968,16 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainTitle = "프로젝트 일정";
   const dragElementClassName = "dragElementClassName";
+  const tempInputClassName = "tempInputClassName";
   const dateToHangul = (dateObject) => {
     return `${String(dateObject.getFullYear())}년 ${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일`;
   }
+  const hangulToDate = (hangul) => {
+    hangul = hangul.replace(/ /gi, '');
+    const [ year, month, date ] = hangul.split(/[가-힣]/gi);
+    return new Date(Number(year), Number(month) - 1, Number(date));
+  }
+  let updateTextValue;
   let paddingTop;
   let margin;
   let block;
@@ -1000,6 +1007,11 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
   let contentsWordingWeight;
   let contentsWordingContentsWeight;
   let hamburgerItemWidth;
+  let contentsTextTop;
+  let widthRatio0, widthRatio1;
+  let updateDateValue;
+  let calendarWidth;
+  let calendarPadding;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1030,16 +1042,197 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
   itemBetween = <%% 7, 7, 7, 6, 1 %%>;
 
   contentsPanPaddingTop = <%% 18, 18, 16, 12, 3 %%>;
-  contentsWordingSize = <%% 15, 15, 14, 13, 2.9 %%>;
+  contentsWordingSize = <%% 14, 14, 13, 12, 2.9 %%>;
   contentsWordingBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
   contentsWordingWeight = <%% 700, 700, 700, 700, 700 %%>;
   contentsWordingContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
   hamburgerItemWidth = <%% 14, 14, 14, 14, 14 %%>;
+
+  widthRatio0 = <%% 4, 4, 4, 4, 4 %%>;
+  widthRatio1 = <%% 11, 11, 11, 11, 11 %%>;
+
+  calendarWidth = <%% 260, 260, 260, 260, 26 %%>;
+  calendarPadding = <%% 4, 4, 4, 4, 4 %%>;
 
   mobileInnerPaddingBottom = 0;
 
   this.whiteMargin = (desktop ? margin : 0);
+
+  updateTextValue = (order, widthRatio, weight) => {
+    return async function (e) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const mother = this.parentElement.parentElement;
+        const base = this.parentElement;
+        const zIndex = 4;
+        const thisChildOrder = order;
+        let cancelBack;
+        let valueInput;
+
+        cancelBack = {};
+        valueInput = {};
+
+        cancelBack = createNode({
+          mother,
+          attribute: {
+            baseid: base.id,
+          },
+          class: [ tempInputClassName ],
+          event: {
+            click: function (e) {
+              document.getElementById(this.getAttribute("baseid")).children[thisChildOrder].firstChild.textContent = valueInput.value;
+              removeByClass(tempInputClassName);
+            }
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            background: "transparent",
+            zIndex: String(zIndex),
+          }
+        });
+
+        valueInput = createNode({
+          mother,
+          class: [ tempInputClassName ],
+          attribute: {
+            baseid: base.id,
+          },
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(base.getBoundingClientRect().top - mother.getBoundingClientRect().top) + "px",
+            left: String(this.getBoundingClientRect().left - mother.getBoundingClientRect().left) + "px",
+            height: String(panTitleBoxHeight) + ea,
+            width: String(panTitleBoxHeight * widthRatio) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            zIndex: String(zIndex),
+          },
+          child: {
+            mode: "input",
+            attribute: {
+              type: "text",
+              baseid: base.id,
+            },
+            event: {
+              keypress: function (e) {
+                if (e.key === "Enter") {
+                  document.getElementById(this.getAttribute("baseid")).children[thisChildOrder].firstChild.textContent = valueInput.value;
+                  removeByClass(tempInputClassName);    
+                }
+              }
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(weight),
+              color: colorChip.green,
+              top: String(contentsTextTop) + ea,
+              border: String(0),
+              outline: String(0),
+              width: withOut(0, ea),
+              textAlign: "center",
+            }
+          }
+        }).firstChild;
+
+        valueInput.value = this.firstChild.textContent;
+        valueInput.focus();
+        
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  updateDateValue = (order) => {
+    return async function (e) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const mother = this.parentElement.parentElement;
+        const base = this.parentElement;
+        const zIndex = 4;
+        const thisChildOrder = order;
+        let cancelBack;
+        let valueInput;
+        let calendar;
+
+        cancelBack = {};
+        valueInput = {};
+
+        cancelBack = createNode({
+          mother,
+          attribute: {
+            baseid: base.id,
+          },
+          class: [ tempInputClassName ],
+          event: {
+            click: function (e) {
+              removeByClass(tempInputClassName);
+            }
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            background: "transparent",
+            zIndex: String(zIndex),
+          }
+        });
+
+        valueInput = createNode({
+          mother,
+          class: [ tempInputClassName ],
+          attribute: {
+            baseid: base.id,
+          },
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(base.getBoundingClientRect().top - mother.getBoundingClientRect().top + this.getBoundingClientRect().height + calendarPadding) + "px",
+            left: String(this.getBoundingClientRect().left - mother.getBoundingClientRect().left + (this.getBoundingClientRect().width / 2) - (calendarWidth / 2)) + "px",
+            width: String(calendarWidth) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            zIndex: String(zIndex),
+            boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+          },
+        })
+
+        calendar = instance.mother.makeCalendar(hangulToDate(base.children[thisChildOrder].firstChild.textContent), async function (e) {
+          try {
+            const thisDate = stringToDate(this.getAttribute("buttonValue"));
+            document.getElementById(base.id).children[thisChildOrder].firstChild.textContent = dateToHangul(thisDate);
+            removeByClass(tempInputClassName);
+          } catch (e) {
+            console.log(e);
+          }
+        });
+        valueInput.appendChild(calendar.calendarBase);
+        
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
 
   contents = {
     schedule: [
@@ -1054,7 +1247,7 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
       },
       {
         title: "계약 시작일",
-        description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+        description: "계약서상 프로젝트의 시작일입니다. 본격적인 디자인 작업이 시작됩니다.",
         date: {
           start: new Date(),
           end: new Date(),
@@ -1062,8 +1255,8 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
         color: colorChip.red,
       },
       {
-        title: "현장 미팅",
-        description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+        title: "컨셉 제안서",
+        description: "전체적인 디자인 방향을 정할 컨셉 제안서 입니다.",
         date: {
           start: new Date(),
           end: new Date(),
@@ -1071,8 +1264,8 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
         color: colorChip.red,
       },
       {
-        title: "계약 시작일",
-        description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+        title: "1차 디자인 제안서",
+        description: "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다.",
         date: {
           start: new Date(),
           end: new Date(),
@@ -1080,8 +1273,8 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
         color: colorChip.red,
       },
       {
-        title: "현장 미팅",
-        description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+        title: "제안서 수정 작업",
+        description: "1차 디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다.",
         date: {
           start: new Date(),
           end: new Date(),
@@ -1089,8 +1282,8 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
         color: colorChip.red,
       },
       {
-        title: "계약 시작일",
-        description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+        title: "제품 리스트",
+        description: "확정된 디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다.",
         date: {
           start: new Date(),
           end: new Date(),
@@ -1098,8 +1291,8 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
         color: colorChip.red,
       },
       {
-        title: "현장 미팅",
-        description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+        title: "시공 의뢰서",
+        description: "디자인을 바탕으로 구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다.",
         date: {
           start: new Date(),
           end: new Date(),
@@ -1107,8 +1300,35 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
         color: colorChip.red,
       },
       {
-        title: "계약 시작일",
-        description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+        title: "시공 견적서",
+        description: "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다.",
+        date: {
+          start: new Date(),
+          end: new Date(),
+        },
+        color: colorChip.red,
+      },
+      {
+        title: "시공 진행",
+        description: "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다.",
+        date: {
+          start: new Date(),
+          end: new Date(),
+        },
+        color: colorChip.red,
+      },
+      {
+        title: "제품 구매 및 배송",
+        description: "제품 리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다.",
+        date: {
+          start: new Date(),
+          end: new Date(),
+        },
+        color: colorChip.red,
+      },
+      {
+        title: "제품 설치 및 세팅",
+        description: "배송된 가구, 가전, 패브릭, 소품 등의 설치와 세팅이 진행되는 기간입니다.",
         date: {
           start: new Date(),
           end: new Date(),
@@ -1183,7 +1403,6 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
           position: "relative",
           width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
           borderRadius: mobile ? String(1) + ea : "",
-          overflow: "hidden",
           marginBottom: String(0) + ea,
           marginTop: desktop ? "" : String(14) + ea,
           paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
@@ -1311,10 +1530,16 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
           }
         },
         {
+          attribute: {
+            index: String(i)
+          },
+          event: {
+            click: updateTextValue(1, widthRatio0, contentsWordingWeight),
+          },
           style: {
             display: "inline-flex",
             position: "relative",
-            width: String(panTitleBoxHeight * 4) + ea,
+            width: String(panTitleBoxHeight * widthRatio0) + ea,
             height: String(panTitleBoxHeight) + ea,
             background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
             borderRadius: String(5) + "px",
@@ -1324,6 +1549,7 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
             justifyContent: "center",
             alignItems: "center",
             textAlign: "center",
+            cursor: "pointer",
           },
           child: {
             text: i === -1 ? "계획명" : contents.schedule[i].title,
@@ -1338,15 +1564,21 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
               fontSize: String(contentsWordingSize) + ea,
               fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingWeight),
               color: i === -1 ? colorChip.white : colorChip.black,
-              top: String(-1) + ea,
+              top: String(contentsTextTop) + ea,
             }
           }
         },
         {
+          attribute: {
+            index: String(i)
+          },
+          event: {
+            click: updateTextValue(2, widthRatio1, contentsWordingContentsWeight),
+          },
           style: {
             display: "inline-flex",
             position: "relative",
-            width: String(panTitleBoxHeight * 11) + ea,
+            width: String(panTitleBoxHeight * widthRatio1) + ea,
             height: String(panTitleBoxHeight) + ea,
             background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
             borderRadius: String(5) + "px",
@@ -1356,6 +1588,7 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
             justifyContent: "center",
             alignItems: "center",
             textAlign: "center",
+            cursor: "pointer",
           },
           child: {
             text: i === -1 ? "설명" : contents.schedule[i].description,
@@ -1370,15 +1603,21 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
               fontSize: String(contentsWordingSize) + ea,
               fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
               color: i === -1 ? colorChip.white : colorChip.black,
-              top: String(-1) + ea,
+              top: String(contentsTextTop) + ea,
             }
           }
         },
         {
+          attribute: {
+            index: String(i)
+          },
+          event: {
+            click: updateDateValue(3),
+          },
           style: {
             display: "inline-flex",
             position: "relative",
-            width: "calc(" + withOut((panTitleBoxHeight * (1 + 4 + 11)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
+            width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
             height: String(panTitleBoxHeight) + ea,
             background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
             borderRadius: String(5) + "px",
@@ -1388,6 +1627,7 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
             justifyContent: "center",
             alignItems: "center",
             textAlign: "center",
+            cursor: "pointer",
           },
           child: {
             text: i === -1 ? "시작일" : dateToHangul(contents.schedule[i].date.start),
@@ -1402,15 +1642,21 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
               fontSize: String(contentsWordingSize) + ea,
               fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
               color: i === -1 ? colorChip.white : colorChip.black,
-              top: String(-1) + ea,
+              top: String(contentsTextTop) + ea,
             }
           }
         },
         {
+          attribute: {
+            index: String(i)
+          },
+          event: {
+            click: updateDateValue(4),
+          },
           style: {
             display: "inline-flex",
             position: "relative",
-            width: "calc(" + withOut((panTitleBoxHeight * (1 + 4 + 11)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
+            width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
             height: String(panTitleBoxHeight) + ea,
             background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
             borderRadius: String(5) + "px",
@@ -1419,6 +1665,7 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
             justifyContent: "center",
             alignItems: "center",
             textAlign: "center",
+            cursor: "pointer",
           },
           child: {
             text: i === -1 ? "종료일" : dateToHangul(contents.schedule[i].date.end),
@@ -1433,7 +1680,7 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
               fontSize: String(contentsWordingSize) + ea,
               fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
               color: i === -1 ? colorChip.white : colorChip.black,
-              top: String(-1) + ea,
+              top: String(contentsTextTop) + ea,
             }
           }
         },

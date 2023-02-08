@@ -149,7 +149,18 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+    // mini project
+    // const client = await back.getClientById("c1801_aa01s", { selfMongo: this.MONGOC });
+    // const res = BillMaker.designerCalculation(200000, "프리랜서", 25, client, { toArray: true });
+    // console.log(res);
+
     
+
+    
+
     // await this.MONGOLOGC.connect();
     // const selfMongo = this.MONGOLOGC;
     // const collection = "dailyClients";
