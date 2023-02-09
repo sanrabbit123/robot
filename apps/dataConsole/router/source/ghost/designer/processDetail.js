@@ -1016,6 +1016,8 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
   let calendarWidth;
   let calendarPadding;
   let contentsBlock;
+  let startDate;
+  let after7, after14, after21, after28, after35, after42, after49, after56, after63, after70;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1063,6 +1065,28 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
   mobileInnerPaddingBottom = 0;
 
   this.whiteMargin = (desktop ? margin : 0);
+
+  startDate = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+  after7 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+  after7.setDate(after7.getDate() + 7);
+  after14 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+  after14.setDate(after14.getDate() + 14);
+  after21 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+  after21.setDate(after21.getDate() + 21);
+  after28 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+  after28.setDate(after28.getDate() + 28);
+  after35 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+  after35.setDate(after35.getDate() + 35);
+  after42 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+  after42.setDate(after42.getDate() + 42);
+  after49 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+  after49.setDate(after49.getDate() + 49);
+  after56 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+  after56.setDate(after56.getDate() + 56);
+  after63 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+  after63.setDate(after63.getDate() + 63);
+  after70 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+  after70.setDate(after70.getDate() + 70);
 
   updateTextValue = (order, widthRatio, weight) => {
     return async function (e) {
@@ -1238,109 +1262,301 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
     }
   }
 
-  contents = {
-    schedule: [
-      {
-        title: "현장 미팅",
-        description: (!media[3] ? "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다." : "현장에서 미팅 후 실측과 스타일링의 방향을 정합니다."),
-        date: {
-          start: new Date(),
-          end: new Date(),
+
+  if (/홈퍼니싱/gi.test(serviceParsing(project.service))) {
+
+
+    contents = {
+      schedule: [
+        {
+          title: "현장 미팅",
+          description: (!media[3] ? "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다." : "현장에서 미팅 후 실측과 스타일링의 방향을 정합니다."),
+          date: {
+            start: project.process.contract.meeting.date,
+            end: project.process.contract.meeting.date,
+          },
+          color: colorChip.red,
         },
-        color: colorChip.red,
-      },
-      {
-        title: "계약 시작일",
-        description: (!media[3] ? "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다." : "프로젝트의 시작일입니다. 디자인 작업이 시작됩니다."),
-        date: {
-          start: new Date(),
-          end: new Date(),
+        {
+          title: "계약 시작일",
+          description: (!media[3] ? "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다." : "프로젝트의 시작일입니다. 디자인 작업이 시작됩니다."),
+          date: {
+            start: startDate,
+            end: startDate,
+          },
+          color: colorChip.red,
         },
-        color: colorChip.red,
-      },
-      {
-        title: "컨셉 제안서",
-        description: (!media[3] ? "전체적인 디자인 방향을 정할 컨셉 제안서 입니다." : "전체적인 디자인 방향을 정할 컨셉 제안서 입니다."),
-        date: {
-          start: new Date(),
-          end: new Date(),
+        {
+          title: "컨셉 제안서",
+          description: (!media[3] ? "전체적인 디자인 방향을 정할 컨셉 제안서 입니다." : "전체적인 디자인 방향을 정할 컨셉 제안서 입니다."),
+          date: {
+            start: startDate,
+            end: after7,
+          },
+          color: colorChip.red,
         },
-        color: colorChip.red,
-      },
-      {
-        title: "1차 디자인 제안서",
-        description: (!media[3] ? "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다." : "컨셉을 바탕으로 디자인 시안을 제공드립니다."),
-        date: {
-          start: new Date(),
-          end: new Date(),
+        {
+          title: "1차 디자인 제안서",
+          description: (!media[3] ? "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다." : "컨셉을 바탕으로 디자인 시안을 제공드립니다."),
+          date: {
+            start: after7,
+            end: after14,
+          },
+          color: colorChip.red,
         },
-        color: colorChip.red,
-      },
-      {
-        title: "제안서 수정 작업",
-        description: (!media[3] ? "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다." : "수정 사항을 반영하여 작업을 진행하는 기간입니다."),
-        date: {
-          start: new Date(),
-          end: new Date(),
+        {
+          title: "제안서 수정 작업",
+          description: (!media[3] ? "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다." : "수정 사항을 반영하여 작업을 진행하는 기간입니다."),
+          date: {
+            start: after14,
+            end: after21,
+          },
+          color: colorChip.red,
         },
-        color: colorChip.red,
-      },
-      {
-        title: "제품 리스트",
-        description: (big ? "확정된 디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다." : "디자인 제안서에 나와 있는 제품의 리스트를 제공합니다."),
-        date: {
-          start: new Date(),
-          end: new Date(),
+        {
+          title: "제품 리스트",
+          description: (big ? "확정된 디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다." : "디자인 제안서에 나와 있는 제품의 리스트를 제공합니다."),
+          date: {
+            start: after14,
+            end: after21,
+          },
+          color: colorChip.red,
         },
-        color: colorChip.red,
-      },
-      {
-        title: "시공 의뢰서",
-        description: (!media[3] ? "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다." : "어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다."),
-        date: {
-          start: new Date(),
-          end: new Date(),
+        {
+          title: "제품 구매 및 배송",
+          description: (!media[3] ? "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다." : "제품들을 구매하고 배송을 기다리는 기간입니다."),
+          date: {
+            start: after21,
+            end: after28,
+          },
+          color: colorChip.red,
         },
-        color: colorChip.red,
-      },
-      {
-        title: "시공 견적서",
-        description: (!media[3] ? "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다." : "의뢰서를 바탕으로 시공 내역에 대한 견적서 입니다."),
-        date: {
-          start: new Date(),
-          end: new Date(),
+        {
+          title: "제품 설치 및 세팅",
+          description: (!media[3] ? "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다." : "배송된 가구, 가전, 패브릭 등의 설치, 세팅이 진행됩니다."),
+          date: {
+            start: after21,
+            end: after35,
+          },
+          color: colorChip.red,
         },
-        color: colorChip.red,
-      },
-      {
-        title: "시공 진행",
-        description: (!media[3] ? "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다." : "시공 내역대로 실제 시공을 진행하는 기간입니다."),
-        date: {
-          start: new Date(),
-          end: new Date(),
+      ]
+    };
+
+
+  } else if (/홈스타일링/gi.test(serviceParsing(project.service))) {
+
+    contents = {
+      schedule: [
+        {
+          title: "현장 미팅",
+          description: (!media[3] ? "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다." : "현장에서 미팅 후 실측과 스타일링의 방향을 정합니다."),
+          date: {
+            start: project.process.contract.meeting.date,
+            end: project.process.contract.meeting.date,
+          },
+          color: colorChip.red,
         },
-        color: colorChip.red,
-      },
-      {
-        title: "제품 구매 및 배송",
-        description: (!media[3] ? "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다." : "제품들을 구매하고 배송을 기다리는 기간입니다."),
-        date: {
-          start: new Date(),
-          end: new Date(),
+        {
+          title: "계약 시작일",
+          description: (!media[3] ? "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다." : "프로젝트의 시작일입니다. 디자인 작업이 시작됩니다."),
+          date: {
+            start: startDate,
+            end: startDate,
+          },
+          color: colorChip.red,
         },
-        color: colorChip.red,
-      },
-      {
-        title: "제품 설치 및 세팅",
-        description: (!media[3] ? "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다." : "배송된 가구, 가전, 패브릭 등의 설치, 세팅이 진행됩니다."),
-        date: {
-          start: new Date(),
-          end: new Date(),
+        {
+          title: "컨셉 제안서",
+          description: (!media[3] ? "전체적인 디자인 방향을 정할 컨셉 제안서 입니다." : "전체적인 디자인 방향을 정할 컨셉 제안서 입니다."),
+          date: {
+            start: startDate,
+            end: after7,
+          },
+          color: colorChip.red,
         },
-        color: colorChip.red,
-      },
-    ]
-  };
+        {
+          title: "1차 디자인 제안서",
+          description: (!media[3] ? "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다." : "컨셉을 바탕으로 디자인 시안을 제공드립니다."),
+          date: {
+            start: after7,
+            end: after14,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "제안서 수정 작업",
+          description: (!media[3] ? "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다." : "수정 사항을 반영하여 작업을 진행하는 기간입니다."),
+          date: {
+            start: after14,
+            end: after21,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "제품 리스트",
+          description: (big ? "확정된 디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다." : "디자인 제안서에 나와 있는 제품의 리스트를 제공합니다."),
+          date: {
+            start: after14,
+            end: after21,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "시공 의뢰서",
+          description: (!media[3] ? "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다." : "어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다."),
+          date: {
+            start: after14,
+            end: after21,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "시공 견적서",
+          description: (!media[3] ? "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다." : "의뢰서를 바탕으로 시공 내역에 대한 견적서 입니다."),
+          date: {
+            start: after21,
+            end: after28,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "시공 진행",
+          description: (!media[3] ? "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다." : "시공 내역대로 실제 시공을 진행하는 기간입니다."),
+          date: {
+            start: after28,
+            end: after49,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "제품 구매 및 배송",
+          description: (!media[3] ? "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다." : "제품들을 구매하고 배송을 기다리는 기간입니다."),
+          date: {
+            start: after42,
+            end: after56,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "제품 설치 및 세팅",
+          description: (!media[3] ? "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다." : "배송된 가구, 가전, 패브릭 등의 설치, 세팅이 진행됩니다."),
+          date: {
+            start: after49,
+            end: after56,
+          },
+          color: colorChip.red,
+        },
+      ]
+    };
+
+  } else {
+
+    contents = {
+      schedule: [
+        {
+          title: "현장 미팅",
+          description: (!media[3] ? "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다." : "현장에서 미팅 후 실측과 스타일링의 방향을 정합니다."),
+          date: {
+            start: project.process.contract.meeting.date,
+            end: project.process.contract.meeting.date,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "계약 시작일",
+          description: (!media[3] ? "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다." : "프로젝트의 시작일입니다. 디자인 작업이 시작됩니다."),
+          date: {
+            start: startDate,
+            end: startDate,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "컨셉 제안서",
+          description: (!media[3] ? "전체적인 디자인 방향을 정할 컨셉 제안서 입니다." : "전체적인 디자인 방향을 정할 컨셉 제안서 입니다."),
+          date: {
+            start: startDate,
+            end: after7,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "1차 디자인 제안서",
+          description: (!media[3] ? "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다." : "컨셉을 바탕으로 디자인 시안을 제공드립니다."),
+          date: {
+            start: after7,
+            end: after14,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "제안서 수정 작업",
+          description: (!media[3] ? "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다." : "수정 사항을 반영하여 작업을 진행하는 기간입니다."),
+          date: {
+            start: after14,
+            end: after21,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "제품 리스트",
+          description: (big ? "확정된 디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다." : "디자인 제안서에 나와 있는 제품의 리스트를 제공합니다."),
+          date: {
+            start: after14,
+            end: after21,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "시공 의뢰서",
+          description: (!media[3] ? "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다." : "어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다."),
+          date: {
+            start: after14,
+            end: after21,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "시공 견적서",
+          description: (!media[3] ? "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다." : "의뢰서를 바탕으로 시공 내역에 대한 견적서 입니다."),
+          date: {
+            start: after21,
+            end: after28,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "시공 진행",
+          description: (!media[3] ? "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다." : "시공 내역대로 실제 시공을 진행하는 기간입니다."),
+          date: {
+            start: after28,
+            end: after56,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "제품 구매 및 배송",
+          description: (!media[3] ? "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다." : "제품들을 구매하고 배송을 기다리는 기간입니다."),
+          date: {
+            start: after42,
+            end: after63,
+          },
+          color: colorChip.red,
+        },
+        {
+          title: "제품 설치 및 세팅",
+          description: (!media[3] ? "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다." : "배송된 가구, 가전, 패브릭 등의 설치, 세팅이 진행됩니다."),
+          date: {
+            start: after56,
+            end: after70,
+          },
+          color: colorChip.red,
+        },
+      ]
+    };
+
+  }
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -1504,7 +1720,7 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
         height: desktop ? String(panTitleBoxHeight) + ea : "",
         marginBottom: String(itemBetween) + ea,
         paddingBottom: desktop ? String(0) + ea : String(itemBetween) + ea,
-        borderBottom: "1px dashed " + colorChip.gray4,
+        borderBottom: mobile ? "1px dashed " + colorChip.gray4 : "",
         transition: "all 0.3s ease",
       },
       children: [
