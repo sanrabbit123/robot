@@ -956,7 +956,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   return whiteBlock;
 }
 
-ProcessDetailJs.prototype.insertScheduleBox = function () {
+ProcessDetailJs.prototype.insertScheduleBox = async function () {
   const instance = this;
   const mother = this.mother;
   const { client, ea, baseTong, media, project, contentsRawInfo, totalContents, requestNumber } = this;
@@ -981,923 +981,969 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
     const [ year, month, date ] = hangul.split(/[가-힣]/gi);
     return new Date(2000 + Number(year), Number(month) - 1, Number(date));
   }
-  let updateTextValue;
-  let paddingTop;
-  let margin;
-  let block;
-  let whiteBottomMargin;
-  let whiteBlock, whiteTong;
-  let bottomMargin;
-  let titleFontSize;
-  let numberRight;
-  let titleTop, titleTopNumber;
-  let titleBottom;
-  let mobileTitleLeft, mobileTitleTop;
-  let mobilePaddingLeft;
-  let mobileInnerPaddingBottom;
-  let contentsAreaPaddingTop;
-  let panMother;
-  let panMotherInnerPadding;
-  let panBetween;
-  let panTitleBoxWidth;
-  let panTitleBoxHeight;
-  let panMotherBetween;
-  let contents;
-  let itemBetween;
-  let smallBetween;
-  let contentsPanPaddingTop;
-  let contentsWordingSize;
-  let contentsWordingBoldWeight;
-  let contentsWordingWeight;
-  let contentsWordingContentsWeight;
-  let hamburgerItemWidth;
-  let contentsTextTop;
-  let widthRatio0, widthRatio1;
-  let updateDateValue;
-  let calendarWidth;
-  let calendarPadding;
-  let contentsBlock;
-  let startDate;
-  let after7, after14, after21, after28, after35, after42, after49, after56, after63, after70;
-  let updateDateMobileValue;
-
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 4.7 %%>;
-  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
-
-  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
-
-  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
-  numberRight = <%% 12, 12, 12, 12, 3 %%>;
-
-  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
-  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
-
-  titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
-  contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
-
-  panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
-  panBetween = <%% 8, 8, 8, 8, 1 %%>;
-  panTitleBoxWidth = <%% 124, 120, 114, 108, 21 %%>;
-  panTitleBoxHeight = <%% 52, 48, 40, 35, 8.2 %%>;
-
-  panMotherBetween = <%% 8, 7, 6, 5, 1 %%>;
-  smallBetween = <%% 3, 3, 2, 2, 0.6 %%>;
-
-  mobileTitleLeft = 1.5;
-  mobileTitleTop = -8.7;
-
-  itemBetween = <%% 7, 7, 7, 6, 1.5 %%>;
-
-  contentsPanPaddingTop = <%% 18, 18, 16, 12, 3 %%>;
-  contentsWordingSize = <%% 14, 14, 12, 11, 2.7 %%>;
-  contentsWordingBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
-  contentsWordingWeight = <%% 700, 700, 700, 700, 700 %%>;
-  contentsWordingContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
-  contentsTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.1 %%>;
-
-  hamburgerItemWidth = <%% 14, 13, 13, 12, 2 %%>;
-
-  widthRatio0 = <%% 4, 3, 3, 3, 3.5 %%>;
-  widthRatio1 = <%% 12, 10, 10, 8, 1 %%>;
-
-  calendarWidth = <%% 260, 260, 260, 260, 260 %%>;
-  calendarPadding = <%% 4, 4, 4, 4, 3 %%>;
-
-  mobileInnerPaddingBottom = 0;
-
-  this.whiteMargin = (desktop ? margin : 0);
-
-  startDate = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
-  after7 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
-  after7.setDate(after7.getDate() + 7);
-  after14 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
-  after14.setDate(after14.getDate() + 14);
-  after21 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
-  after21.setDate(after21.getDate() + 21);
-  after28 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
-  after28.setDate(after28.getDate() + 28);
-  after35 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
-  after35.setDate(after35.getDate() + 35);
-  after42 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
-  after42.setDate(after42.getDate() + 42);
-  after49 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
-  after49.setDate(after49.getDate() + 49);
-  after56 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
-  after56.setDate(after56.getDate() + 56);
-  after63 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
-  after63.setDate(after63.getDate() + 63);
-  after70 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
-  after70.setDate(after70.getDate() + 70);
-
-  updateTextValue = (order, widthRatio, weight) => {
-    return async function (e) {
-      try {
-        const index = Number(this.getAttribute("index"));
-        const mother = this.parentElement.parentElement;
-        const base = this.parentElement;
-        const zIndex = 4;
-        const thisChildOrder = order;
-        let cancelBack;
-        let valueInput;
-
-        cancelBack = {};
-        valueInput = {};
-
-        cancelBack = createNode({
-          mother,
-          attribute: {
-            baseid: base.id,
-          },
-          class: [ tempInputClassName ],
-          event: {
-            click: function (e) {
-              document.getElementById(this.getAttribute("baseid")).children[thisChildOrder].firstChild.textContent = valueInput.value;
-              removeByClass(tempInputClassName);
-            }
-          },
-          style: {
-            position: "fixed",
-            top: String(0),
-            left: String(0),
-            width: withOut(0, ea),
-            height: withOut(0, ea),
-            background: "transparent",
-            zIndex: String(zIndex),
-          }
-        });
-
-        valueInput = createNode({
-          mother,
-          class: [ tempInputClassName ],
-          attribute: {
-            baseid: base.id,
-          },
-          style: {
-            display: "inline-flex",
-            position: "absolute",
-            top: String((widthRatio !== 100 ? base.getBoundingClientRect().top : this.getBoundingClientRect().top) - mother.getBoundingClientRect().top) + "px",
-            left: String(this.getBoundingClientRect().left - mother.getBoundingClientRect().left) + "px",
-            height: String(panTitleBoxHeight) + ea,
-            width: widthRatio !== 100 ? String(panTitleBoxHeight * widthRatio) + ea : String(base.getBoundingClientRect().width) + "px",
-            background: colorChip.white,
-            borderRadius: String(5) + "px",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            zIndex: String(zIndex),
-          },
-          child: {
-            mode: "input",
+  try {
+    let updateTextValue;
+    let paddingTop;
+    let margin;
+    let block;
+    let whiteBottomMargin;
+    let whiteBlock, whiteTong;
+    let bottomMargin;
+    let titleFontSize;
+    let numberRight;
+    let titleTop, titleTopNumber;
+    let titleBottom;
+    let mobileTitleLeft, mobileTitleTop;
+    let mobilePaddingLeft;
+    let mobileInnerPaddingBottom;
+    let contentsAreaPaddingTop;
+    let panMother;
+    let panMotherInnerPadding;
+    let panBetween;
+    let panTitleBoxWidth;
+    let panTitleBoxHeight;
+    let panMotherBetween;
+    let contents;
+    let itemBetween;
+    let smallBetween;
+    let contentsPanPaddingTop;
+    let contentsWordingSize;
+    let contentsWordingBoldWeight;
+    let contentsWordingWeight;
+    let contentsWordingContentsWeight;
+    let hamburgerItemWidth;
+    let contentsTextTop;
+    let widthRatio0, widthRatio1;
+    let updateDateValue;
+    let calendarWidth;
+    let calendarPadding;
+    let contentsBlock;
+    let startDate;
+    let after7, after14, after21, after28, after35, after42, after49, after56, after63, after70;
+    let updateDateMobileValue;
+  
+    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+    margin = <%% 55, 55, 47, 39, 4.7 %%>;
+    paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+  
+    whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  
+    titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+    numberRight = <%% 12, 12, 12, 12, 3 %%>;
+  
+    titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+    titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+  
+    titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
+    contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
+  
+    panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
+    panBetween = <%% 8, 8, 8, 8, 1 %%>;
+    panTitleBoxWidth = <%% 124, 120, 114, 108, 21 %%>;
+    panTitleBoxHeight = <%% 52, 48, 40, 35, 8.2 %%>;
+  
+    panMotherBetween = <%% 8, 7, 6, 5, 1 %%>;
+    smallBetween = <%% 3, 3, 2, 2, 0.6 %%>;
+  
+    mobileTitleLeft = 1.5;
+    mobileTitleTop = -8.7;
+  
+    itemBetween = <%% 7, 7, 7, 6, 1.5 %%>;
+  
+    contentsPanPaddingTop = <%% 18, 18, 16, 12, 3 %%>;
+    contentsWordingSize = <%% 14, 14, 12, 11, 2.7 %%>;
+    contentsWordingBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
+    contentsWordingWeight = <%% 700, 700, 700, 700, 700 %%>;
+    contentsWordingContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+    contentsTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.1 %%>;
+  
+    hamburgerItemWidth = <%% 14, 13, 13, 12, 2 %%>;
+  
+    widthRatio0 = <%% 4, 3, 3, 3, 3.5 %%>;
+    widthRatio1 = <%% 12, 10, 10, 8, 1 %%>;
+  
+    calendarWidth = <%% 260, 260, 260, 260, 260 %%>;
+    calendarPadding = <%% 4, 4, 4, 4, 3 %%>;
+  
+    mobileInnerPaddingBottom = 0;
+  
+    this.whiteMargin = (desktop ? margin : 0);
+  
+    startDate = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+    after7 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+    after7.setDate(after7.getDate() + 7);
+    after14 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+    after14.setDate(after14.getDate() + 14);
+    after21 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+    after21.setDate(after21.getDate() + 21);
+    after28 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+    after28.setDate(after28.getDate() + 28);
+    after35 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+    after35.setDate(after35.getDate() + 35);
+    after42 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+    after42.setDate(after42.getDate() + 42);
+    after49 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+    after49.setDate(after49.getDate() + 49);
+    after56 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+    after56.setDate(after56.getDate() + 56);
+    after63 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+    after63.setDate(after63.getDate() + 63);
+    after70 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
+    after70.setDate(after70.getDate() + 70);
+  
+    updateTextValue = (order, widthRatio, weight) => {
+      return async function (e) {
+        try {
+          const index = Number(this.getAttribute("index"));
+          const mother = this.parentElement.parentElement;
+          const base = this.parentElement;
+          const zIndex = 4;
+          const thisChildOrder = order;
+          let cancelBack;
+          let valueInput;
+  
+          cancelBack = {};
+          valueInput = {};
+  
+          cancelBack = createNode({
+            mother,
             attribute: {
-              type: "text",
               baseid: base.id,
             },
+            class: [ tempInputClassName ],
             event: {
-              keypress: function (e) {
-                if (e.key === "Enter") {
-                  document.getElementById(this.getAttribute("baseid")).children[thisChildOrder].firstChild.textContent = valueInput.value;
-                  removeByClass(tempInputClassName);    
-                }
+              click: function (e) {
+                document.getElementById(this.getAttribute("baseid")).children[thisChildOrder].firstChild.textContent = valueInput.value;
+                removeByClass(tempInputClassName);
               }
             },
             style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(weight),
-              color: colorChip.green,
-              top: String(contentsTextTop) + ea,
-              border: String(0),
-              outline: String(0),
+              position: "fixed",
+              top: String(0),
+              left: String(0),
               width: withOut(0, ea),
-              textAlign: "center",
-            }
-          }
-        }).firstChild;
-
-        valueInput.value = this.firstChild.textContent;
-        valueInput.focus();
-        
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
-
-  updateDateValue = (order) => {
-    return async function (e) {
-      try {
-        const index = Number(this.getAttribute("index"));
-        const mother = this.parentElement.parentElement;
-        const base = this.parentElement;
-        const zIndex = 4;
-        const thisChildOrder = order;
-        let cancelBack;
-        let valueInput;
-        let calendar;
-
-        cancelBack = {};
-        valueInput = {};
-
-        cancelBack = createNode({
-          mother,
-          attribute: {
-            baseid: base.id,
-          },
-          class: [ tempInputClassName ],
-          event: {
-            click: function (e) {
-              removeByClass(tempInputClassName);
-            }
-          },
-          style: {
-            position: "fixed",
-            top: String(0),
-            left: String(0),
-            width: withOut(0, ea),
-            height: withOut(0, ea),
-            background: "transparent",
-            zIndex: String(zIndex),
-          }
-        });
-
-        valueInput = createNode({
-          mother,
-          class: [ tempInputClassName ],
-          attribute: {
-            baseid: base.id,
-          },
-          style: {
-            display: "inline-flex",
-            position: "absolute",
-            top: String(base.getBoundingClientRect().top - mother.getBoundingClientRect().top + this.getBoundingClientRect().height + calendarPadding) + "px",
-            left: String(this.getBoundingClientRect().left - mother.getBoundingClientRect().left + (this.getBoundingClientRect().width / 2) - (calendarWidth / 2)) + "px",
-            width: String(calendarWidth) + ea,
-            background: colorChip.white,
-            borderRadius: String(5) + "px",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            zIndex: String(zIndex),
-            boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
-            animation: "fadeuplite 0.3s ease forwards",
-          },
-        })
-
-        calendar = instance.mother.makeCalendar(hangulToDate(base.children[thisChildOrder].firstChild.textContent), async function (e) {
-          try {
-            const thisDate = stringToDate(this.getAttribute("buttonValue"));
-            document.getElementById(base.id).children[thisChildOrder].firstChild.textContent = dateToHangul(thisDate);
-            removeByClass(tempInputClassName);
-          } catch (e) {
-            console.log(e);
-          }
-        });
-        valueInput.appendChild(calendar.calendarBase);
-        
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
-
-  updateDateMobileValue = () => {
-    return async function (e) {
-      try {
-        const index = Number(this.getAttribute("index"));
-        const mother = this.parentElement.parentElement;
-        const base = this.parentElement;
-        const zIndex = 4;
-        const thisChildOrder = 2;
-        let cancelBack;
-        let valueInput;
-        let calendar;
-        let thisDate, oppositeDate;
-
-        cancelBack = {};
-        valueInput = {};
-
-        cancelBack = createNode({
-          mother,
-          attribute: {
-            baseid: base.id,
-          },
-          class: [ tempInputClassName ],
-          event: {
-            click: function (e) {
-              removeByClass(tempInputClassName);
-            }
-          },
-          style: {
-            position: "fixed",
-            top: String(0),
-            left: String(0),
-            width: withOut(0, ea),
-            height: withOut(0, ea),
-            background: "transparent",
-            zIndex: String(zIndex),
-          }
-        });
-
-        valueInput = createNode({
-          mother,
-          class: [ tempInputClassName ],
-          attribute: {
-            baseid: base.id,
-          },
-          style: {
-            display: "inline-flex",
-            position: "absolute",
-            top: String(base.getBoundingClientRect().top - mother.getBoundingClientRect().top + this.getBoundingClientRect().height + calendarPadding) + "px",
-            right: String(3) + ea,
-            width: String(calendarWidth) + "px",
-            background: colorChip.white,
-            borderRadius: String(5) + "px",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            zIndex: String(zIndex),
-            boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
-            animation: "fadeuplite 0.3s ease forwards",
-          },
-        });
-
-        if (e.clientX > this.querySelector('b').getBoundingClientRect().left) {
-
-          thisDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[1];
-          oppositeDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[0];
-
-          calendar = instance.mother.makeCalendar(hangulToDate(thisDate), async function (e) {
-            try {
-              const thisDate = stringToDate(this.getAttribute("buttonValue"));
-
-              document.getElementById(base.id).children[thisChildOrder].firstChild.lastChild.textContent = dateToHangul(thisDate);
-              removeByClass(tempInputClassName);
-            } catch (e) {
-              console.log(e);
+              height: withOut(0, ea),
+              background: "transparent",
+              zIndex: String(zIndex),
             }
           });
-          valueInput.appendChild(calendar.calendarBase);
-
-        } else {
-
-          thisDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[0];
-          oppositeDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[1];
-
-          calendar = instance.mother.makeCalendar(hangulToDate(thisDate), async function (e) {
-            try {
-              const thisDate = stringToDate(this.getAttribute("buttonValue"));
-              document.getElementById(base.id).children[thisChildOrder].firstChild.firstChild.textContent = dateToHangul(thisDate);
-              removeByClass(tempInputClassName);
-            } catch (e) {
-              console.log(e);
-            }
-          });
-          valueInput.appendChild(calendar.calendarBase);
-
-        }
-        
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
-
-  if (/홈퍼니싱/gi.test(serviceParsing(project.service))) {
-
-    contents = {
-      schedule: [
-        {
-          title: "현장 미팅",
-          description: (!media[3] ? "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다." : "현장에서 미팅 후 실측과 스타일링의 방향을 정합니다."),
-          date: {
-            start: project.process.contract.meeting.date,
-            end: project.process.contract.meeting.date,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "계약 시작일",
-          description: (!media[3] ? "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다." : "프로젝트의 시작일입니다. 디자인 작업이 시작됩니다."),
-          date: {
-            start: startDate,
-            end: startDate,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "컨셉 제안서",
-          description: (!media[3] ? "전체적인 디자인 방향을 정할 컨셉 제안서 입니다." : "전체적인 디자인 방향을 정할 컨셉 제안서 입니다."),
-          date: {
-            start: startDate,
-            end: after7,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "1차 디자인 제안서",
-          description: (!media[3] ? "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다." : "컨셉을 바탕으로 디자인 시안을 제공드립니다."),
-          date: {
-            start: after7,
-            end: after14,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "제안서 수정 작업",
-          description: (!media[3] ? "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다." : "수정 사항을 반영하여 작업을 진행하는 기간입니다."),
-          date: {
-            start: after14,
-            end: after21,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "제품 리스트",
-          description: (big ? "확정된 디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다." : "디자인 제안서에 나와 있는 제품의 리스트를 제공합니다."),
-          date: {
-            start: after14,
-            end: after21,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "제품 구매 및 배송",
-          description: (!media[3] ? "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다." : "제품들을 구매하고 배송을 기다리는 기간입니다."),
-          date: {
-            start: after21,
-            end: after28,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "제품 설치 및 세팅",
-          description: (!media[3] ? "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다." : "배송된 가구, 가전, 패브릭 등의 설치, 세팅이 진행됩니다."),
-          date: {
-            start: after21,
-            end: after35,
-          },
-          color: colorChip.red,
-        },
-      ]
-    };
-
-
-  } else if (/홈스타일링/gi.test(serviceParsing(project.service))) {
-
-    contents = {
-      schedule: [
-        {
-          title: "현장 미팅",
-          description: (!media[3] ? "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다." : "현장에서 미팅 후 실측과 스타일링의 방향을 정합니다."),
-          date: {
-            start: project.process.contract.meeting.date,
-            end: project.process.contract.meeting.date,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "계약 시작일",
-          description: (!media[3] ? "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다." : "프로젝트의 시작일입니다. 디자인 작업이 시작됩니다."),
-          date: {
-            start: startDate,
-            end: startDate,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "컨셉 제안서",
-          description: (!media[3] ? "전체적인 디자인 방향을 정할 컨셉 제안서 입니다." : "전체적인 디자인 방향을 정할 컨셉 제안서 입니다."),
-          date: {
-            start: startDate,
-            end: after7,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "1차 디자인 제안서",
-          description: (!media[3] ? "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다." : "컨셉을 바탕으로 디자인 시안을 제공드립니다."),
-          date: {
-            start: after7,
-            end: after14,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "제안서 수정 작업",
-          description: (!media[3] ? "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다." : "수정 사항을 반영하여 작업을 진행하는 기간입니다."),
-          date: {
-            start: after14,
-            end: after21,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "제품 리스트",
-          description: (big ? "확정된 디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다." : "디자인 제안서에 나와 있는 제품의 리스트를 제공합니다."),
-          date: {
-            start: after14,
-            end: after21,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "시공 의뢰서",
-          description: (!media[3] ? "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다." : "어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다."),
-          date: {
-            start: after14,
-            end: after21,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "시공 견적서",
-          description: (!media[3] ? "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다." : "의뢰서를 바탕으로 시공 내역에 대한 견적서 입니다."),
-          date: {
-            start: after21,
-            end: after28,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "시공 진행",
-          description: (!media[3] ? "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다." : "시공 내역대로 실제 시공을 진행하는 기간입니다."),
-          date: {
-            start: after28,
-            end: after49,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "제품 구매 및 배송",
-          description: (!media[3] ? "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다." : "제품들을 구매하고 배송을 기다리는 기간입니다."),
-          date: {
-            start: after42,
-            end: after56,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "제품 설치 및 세팅",
-          description: (!media[3] ? "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다." : "배송된 가구, 가전, 패브릭 등의 설치, 세팅이 진행됩니다."),
-          date: {
-            start: after49,
-            end: after56,
-          },
-          color: colorChip.red,
-        },
-      ]
-    };
-
-  } else {
-
-    contents = {
-      schedule: [
-        {
-          title: "현장 미팅",
-          description: (!media[3] ? "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다." : "현장에서 미팅 후 실측과 스타일링의 방향을 정합니다."),
-          date: {
-            start: project.process.contract.meeting.date,
-            end: project.process.contract.meeting.date,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "계약 시작일",
-          description: (!media[3] ? "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다." : "프로젝트의 시작일입니다. 디자인 작업이 시작됩니다."),
-          date: {
-            start: startDate,
-            end: startDate,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "컨셉 제안서",
-          description: (!media[3] ? "전체적인 디자인 방향을 정할 컨셉 제안서 입니다." : "전체적인 디자인 방향을 정할 컨셉 제안서 입니다."),
-          date: {
-            start: startDate,
-            end: after7,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "1차 디자인 제안서",
-          description: (!media[3] ? "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다." : "컨셉을 바탕으로 디자인 시안을 제공드립니다."),
-          date: {
-            start: after7,
-            end: after14,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "제안서 수정 작업",
-          description: (!media[3] ? "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다." : "수정 사항을 반영하여 작업을 진행하는 기간입니다."),
-          date: {
-            start: after14,
-            end: after21,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "제품 리스트",
-          description: (big ? "확정된 디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다." : "디자인 제안서에 나와 있는 제품의 리스트를 제공합니다."),
-          date: {
-            start: after14,
-            end: after21,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "시공 의뢰서",
-          description: (!media[3] ? "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다." : "어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다."),
-          date: {
-            start: after14,
-            end: after21,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "시공 견적서",
-          description: (!media[3] ? "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다." : "의뢰서를 바탕으로 시공 내역에 대한 견적서 입니다."),
-          date: {
-            start: after21,
-            end: after28,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "시공 진행",
-          description: (!media[3] ? "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다." : "시공 내역대로 실제 시공을 진행하는 기간입니다."),
-          date: {
-            start: after28,
-            end: after56,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "제품 구매 및 배송",
-          description: (!media[3] ? "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다." : "제품들을 구매하고 배송을 기다리는 기간입니다."),
-          date: {
-            start: after42,
-            end: after63,
-          },
-          color: colorChip.red,
-        },
-        {
-          title: "제품 설치 및 세팅",
-          description: (!media[3] ? "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다." : "배송된 가구, 가전, 패브릭 등의 설치, 세팅이 진행됩니다."),
-          date: {
-            start: after56,
-            end: after70,
-          },
-          color: colorChip.red,
-        },
-      ]
-    };
-
-  }
-
-  whiteBlock = createNode({
-    mother: baseTong,
-    attribute: { toggle: "on" },
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      background: desktop ? colorChip.white : "",
-      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
-      paddingBottom: desktop ? String(margin) + ea : "",
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
-    },
-    children: [
-      {
-        display: "block",
-        position: "relative",
-        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
-        height: String(100) + '%',
-        marginLeft: String(desktop ? margin : 0) + ea,
-      }
-    ]
-  });
-  whiteTong = whiteBlock.firstChild;
-
-  block = createNode({
-    mother: whiteTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-    },
-    children: [
-      {
-        style: {
-          display: "block",
-          position: mobile ? "absolute" : "relative",
-          left: desktop ? "" : String(mobileTitleLeft) + ea,
-          top: desktop ? "" : String(mobileTitleTop) + ea,
-          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
-          marginBottom: String(titleBottom) + ea,
-          zIndex: mobile ? String(1) : "",
-        },
-        children: [
-          {
-            text: mainTitle,
+  
+          valueInput = createNode({
+            mother,
+            class: [ tempInputClassName ],
+            attribute: {
+              baseid: base.id,
+            },
             style: {
-              position: "relative",
-              display: "inline-block",
-              top: String(titleTopNumber) + ea,
-              fontSize: String(titleFontSize) + ea,
-              fontWeight: String(600),
-              background: desktop ? colorChip.white : colorChip.gray1,
-              paddingRight: String(numberRight) + ea,
-              color: colorChip.black,
+              display: "inline-flex",
+              position: "absolute",
+              top: String((widthRatio !== 100 ? base.getBoundingClientRect().top : this.getBoundingClientRect().top) - mother.getBoundingClientRect().top) + "px",
+              left: String(this.getBoundingClientRect().left - mother.getBoundingClientRect().left) + "px",
+              height: String(panTitleBoxHeight) + ea,
+              width: widthRatio !== 100 ? String(panTitleBoxHeight * widthRatio) + ea : String(base.getBoundingClientRect().width) + "px",
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              zIndex: String(zIndex),
+            },
+            child: {
+              mode: "input",
+              attribute: {
+                type: "text",
+                baseid: base.id,
+              },
+              event: {
+                keypress: function (e) {
+                  if (e.key === "Enter") {
+                    document.getElementById(this.getAttribute("baseid")).children[thisChildOrder].firstChild.textContent = valueInput.value;
+                    removeByClass(tempInputClassName);    
+                  }
+                }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(weight),
+                color: colorChip.green,
+                top: String(contentsTextTop) + ea,
+                border: String(0),
+                outline: String(0),
+                width: withOut(0, ea),
+                textAlign: "center",
+              }
             }
+          }).firstChild;
+  
+          valueInput.value = this.firstChild.textContent;
+          valueInput.focus();
+          
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+  
+    updateDateValue = (order) => {
+      return async function (e) {
+        try {
+          const index = Number(this.getAttribute("index"));
+          const mother = this.parentElement.parentElement;
+          const base = this.parentElement;
+          const zIndex = 4;
+          const thisChildOrder = order;
+          let cancelBack;
+          let valueInput;
+          let calendar;
+  
+          cancelBack = {};
+          valueInput = {};
+  
+          cancelBack = createNode({
+            mother,
+            attribute: {
+              baseid: base.id,
+            },
+            class: [ tempInputClassName ],
+            event: {
+              click: function (e) {
+                removeByClass(tempInputClassName);
+              }
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              background: "transparent",
+              zIndex: String(zIndex),
+            }
+          });
+  
+          valueInput = createNode({
+            mother,
+            class: [ tempInputClassName ],
+            attribute: {
+              baseid: base.id,
+            },
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              top: String(base.getBoundingClientRect().top - mother.getBoundingClientRect().top + this.getBoundingClientRect().height + calendarPadding) + "px",
+              left: String(this.getBoundingClientRect().left - mother.getBoundingClientRect().left + (this.getBoundingClientRect().width / 2) - (calendarWidth / 2)) + "px",
+              width: String(calendarWidth) + ea,
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              zIndex: String(zIndex),
+              boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
+              animation: "fadeuplite 0.3s ease forwards",
+            },
+          })
+  
+          calendar = instance.mother.makeCalendar(hangulToDate(base.children[thisChildOrder].firstChild.textContent), async function (e) {
+            try {
+              const thisDate = stringToDate(this.getAttribute("buttonValue"));
+              document.getElementById(base.id).children[thisChildOrder].firstChild.textContent = dateToHangul(thisDate);
+              removeByClass(tempInputClassName);
+            } catch (e) {
+              console.log(e);
+            }
+          });
+          valueInput.appendChild(calendar.calendarBase);
+          
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+  
+    updateDateMobileValue = () => {
+      return async function (e) {
+        try {
+          const index = Number(this.getAttribute("index"));
+          const mother = this.parentElement.parentElement;
+          const base = this.parentElement;
+          const zIndex = 4;
+          const thisChildOrder = 2;
+          let cancelBack;
+          let valueInput;
+          let calendar;
+          let thisDate, oppositeDate;
+  
+          cancelBack = {};
+          valueInput = {};
+  
+          cancelBack = createNode({
+            mother,
+            attribute: {
+              baseid: base.id,
+            },
+            class: [ tempInputClassName ],
+            event: {
+              click: function (e) {
+                removeByClass(tempInputClassName);
+              }
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              background: "transparent",
+              zIndex: String(zIndex),
+            }
+          });
+  
+          valueInput = createNode({
+            mother,
+            class: [ tempInputClassName ],
+            attribute: {
+              baseid: base.id,
+            },
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              top: String(base.getBoundingClientRect().top - mother.getBoundingClientRect().top + this.getBoundingClientRect().height + calendarPadding) + "px",
+              right: String(3) + ea,
+              width: String(calendarWidth) + "px",
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              zIndex: String(zIndex),
+              boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
+              animation: "fadeuplite 0.3s ease forwards",
+            },
+          });
+  
+          if (e.clientX > this.querySelector('b').getBoundingClientRect().left) {
+  
+            thisDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[1];
+            oppositeDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[0];
+  
+            calendar = instance.mother.makeCalendar(hangulToDate(thisDate), async function (e) {
+              try {
+                const thisDate = stringToDate(this.getAttribute("buttonValue"));
+  
+                document.getElementById(base.id).children[thisChildOrder].firstChild.lastChild.textContent = dateToHangul(thisDate);
+                removeByClass(tempInputClassName);
+              } catch (e) {
+                console.log(e);
+              }
+            });
+            valueInput.appendChild(calendar.calendarBase);
+  
+          } else {
+  
+            thisDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[0];
+            oppositeDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[1];
+  
+            calendar = instance.mother.makeCalendar(hangulToDate(thisDate), async function (e) {
+              try {
+                const thisDate = stringToDate(this.getAttribute("buttonValue"));
+                document.getElementById(base.id).children[thisChildOrder].firstChild.firstChild.textContent = dateToHangul(thisDate);
+                removeByClass(tempInputClassName);
+              } catch (e) {
+                console.log(e);
+              }
+            });
+            valueInput.appendChild(calendar.calendarBase);
+  
+          }
+          
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+  
+    if (/홈퍼니싱/gi.test(serviceParsing(project.service))) {
+  
+      contents = {
+        schedule: [
+          {
+            title: "현장 미팅",
+            description: (!media[3] ? "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다." : "현장에서 미팅 후 실측과 스타일링의 방향을 정합니다."),
+            date: {
+              start: project.process.contract.meeting.date,
+              end: project.process.contract.meeting.date,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "계약 시작일",
+            description: (!media[3] ? "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다." : "프로젝트의 시작일입니다. 디자인 작업이 시작됩니다."),
+            date: {
+              start: startDate,
+              end: startDate,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "컨셉 제안서",
+            description: (!media[3] ? "전체적인 디자인 방향을 정할 컨셉 제안서 입니다." : "전체적인 디자인 방향을 정할 컨셉 제안서 입니다."),
+            date: {
+              start: startDate,
+              end: after7,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "1차 디자인 제안서",
+            description: (!media[3] ? "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다." : "컨셉을 바탕으로 디자인 시안을 제공드립니다."),
+            date: {
+              start: after7,
+              end: after14,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "제안서 수정 작업",
+            description: (!media[3] ? "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다." : "수정 사항을 반영하여 작업을 진행하는 기간입니다."),
+            date: {
+              start: after14,
+              end: after21,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "제품 리스트",
+            description: (big ? "확정된 디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다." : "디자인 제안서에 나와 있는 제품의 리스트를 제공합니다."),
+            date: {
+              start: after14,
+              end: after21,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "제품 구매 및 배송",
+            description: (!media[3] ? "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다." : "제품들을 구매하고 배송을 기다리는 기간입니다."),
+            date: {
+              start: after21,
+              end: after28,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "제품 설치 및 세팅",
+            description: (!media[3] ? "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다." : "배송된 가구, 가전, 패브릭 등의 설치, 세팅이 진행됩니다."),
+            date: {
+              start: after21,
+              end: after35,
+            },
+            color: colorChip.red,
           },
         ]
+      };
+  
+  
+    } else if (/홈스타일링/gi.test(serviceParsing(project.service))) {
+  
+      contents = {
+        schedule: [
+          {
+            title: "현장 미팅",
+            description: (!media[3] ? "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다." : "현장에서 미팅 후 실측과 스타일링의 방향을 정합니다."),
+            date: {
+              start: project.process.contract.meeting.date,
+              end: project.process.contract.meeting.date,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "계약 시작일",
+            description: (!media[3] ? "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다." : "프로젝트의 시작일입니다. 디자인 작업이 시작됩니다."),
+            date: {
+              start: startDate,
+              end: startDate,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "컨셉 제안서",
+            description: (!media[3] ? "전체적인 디자인 방향을 정할 컨셉 제안서 입니다." : "전체적인 디자인 방향을 정할 컨셉 제안서 입니다."),
+            date: {
+              start: startDate,
+              end: after7,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "1차 디자인 제안서",
+            description: (!media[3] ? "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다." : "컨셉을 바탕으로 디자인 시안을 제공드립니다."),
+            date: {
+              start: after7,
+              end: after14,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "제안서 수정 작업",
+            description: (!media[3] ? "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다." : "수정 사항을 반영하여 작업을 진행하는 기간입니다."),
+            date: {
+              start: after14,
+              end: after21,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "제품 리스트",
+            description: (big ? "확정된 디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다." : "디자인 제안서에 나와 있는 제품의 리스트를 제공합니다."),
+            date: {
+              start: after14,
+              end: after21,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "시공 의뢰서",
+            description: (!media[3] ? "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다." : "어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다."),
+            date: {
+              start: after14,
+              end: after21,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "시공 견적서",
+            description: (!media[3] ? "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다." : "의뢰서를 바탕으로 시공 내역에 대한 견적서 입니다."),
+            date: {
+              start: after21,
+              end: after28,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "시공 진행",
+            description: (!media[3] ? "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다." : "시공 내역대로 실제 시공을 진행하는 기간입니다."),
+            date: {
+              start: after28,
+              end: after49,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "제품 구매 및 배송",
+            description: (!media[3] ? "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다." : "제품들을 구매하고 배송을 기다리는 기간입니다."),
+            date: {
+              start: after42,
+              end: after56,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "제품 설치 및 세팅",
+            description: (!media[3] ? "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다." : "배송된 가구, 가전, 패브릭 등의 설치, 세팅이 진행됩니다."),
+            date: {
+              start: after49,
+              end: after56,
+            },
+            color: colorChip.red,
+          },
+        ]
+      };
+  
+    } else {
+  
+      contents = {
+        schedule: [
+          {
+            title: "현장 미팅",
+            description: (!media[3] ? "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다." : "현장에서 미팅 후 실측과 스타일링의 방향을 정합니다."),
+            date: {
+              start: project.process.contract.meeting.date,
+              end: project.process.contract.meeting.date,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "계약 시작일",
+            description: (!media[3] ? "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다." : "프로젝트의 시작일입니다. 디자인 작업이 시작됩니다."),
+            date: {
+              start: startDate,
+              end: startDate,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "컨셉 제안서",
+            description: (!media[3] ? "전체적인 디자인 방향을 정할 컨셉 제안서 입니다." : "전체적인 디자인 방향을 정할 컨셉 제안서 입니다."),
+            date: {
+              start: startDate,
+              end: after7,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "1차 디자인 제안서",
+            description: (!media[3] ? "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다." : "컨셉을 바탕으로 디자인 시안을 제공드립니다."),
+            date: {
+              start: after7,
+              end: after14,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "제안서 수정 작업",
+            description: (!media[3] ? "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다." : "수정 사항을 반영하여 작업을 진행하는 기간입니다."),
+            date: {
+              start: after14,
+              end: after21,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "제품 리스트",
+            description: (big ? "확정된 디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다." : "디자인 제안서에 나와 있는 제품의 리스트를 제공합니다."),
+            date: {
+              start: after14,
+              end: after21,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "시공 의뢰서",
+            description: (!media[3] ? "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다." : "어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다."),
+            date: {
+              start: after14,
+              end: after21,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "시공 견적서",
+            description: (!media[3] ? "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다." : "의뢰서를 바탕으로 시공 내역에 대한 견적서 입니다."),
+            date: {
+              start: after21,
+              end: after28,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "시공 진행",
+            description: (!media[3] ? "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다." : "시공 내역대로 실제 시공을 진행하는 기간입니다."),
+            date: {
+              start: after28,
+              end: after56,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "제품 구매 및 배송",
+            description: (!media[3] ? "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다." : "제품들을 구매하고 배송을 기다리는 기간입니다."),
+            date: {
+              start: after42,
+              end: after63,
+            },
+            color: colorChip.red,
+          },
+          {
+            title: "제품 설치 및 세팅",
+            description: (!media[3] ? "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다." : "배송된 가구, 가전, 패브릭 등의 설치, 세팅이 진행됩니다."),
+            date: {
+              start: after56,
+              end: after70,
+            },
+            color: colorChip.red,
+          },
+        ]
+      };
+  
+    }
+  
+    whiteBlock = createNode({
+      mother: baseTong,
+      attribute: { toggle: "on" },
+      style: {
+        position: "relative",
+        borderRadius: String(desktop ? 8 : 1) + ea,
+        width: String(100) + '%',
+        background: desktop ? colorChip.white : "",
+        paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+        paddingBottom: desktop ? String(margin) + ea : "",
+        marginBottom: String(bottomMargin) + ea,
+        boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
       },
-      {
-        style: {
+      children: [
+        {
           display: "block",
           position: "relative",
-          width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
-          borderRadius: mobile ? String(1) + ea : "",
-          marginBottom: String(0) + ea,
-          marginTop: desktop ? "" : String(14) + ea,
-          paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingBottom: desktop ? "" : String(mobileInnerPaddingBottom) + ea,
+          width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+          height: String(100) + '%',
+          marginLeft: String(desktop ? margin : 0) + ea,
         }
+      ]
+    });
+    whiteTong = whiteBlock.firstChild;
+  
+    block = createNode({
+      mother: whiteTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
       },
-    ]
-  });
-  tong = block.lastChild;
-
-  panMother = createNode({
-    mother: tong,
-    style: {
-      display: "flex",
-      flexDirection: "column",
-      position: "relative",
-      borderRadius: String(5) + "px",
-      background: desktop ? colorChip.gray3 : colorChip.gray1,
-      width: withOut(panMotherInnerPadding * 2, ea),
-      padding: String(panMotherInnerPadding) + ea,
-      verticalAlign: "top",
-    },
-    child: {
+      children: [
+        {
+          style: {
+            display: "block",
+            position: mobile ? "absolute" : "relative",
+            left: desktop ? "" : String(mobileTitleLeft) + ea,
+            top: desktop ? "" : String(mobileTitleTop) + ea,
+            width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+            marginBottom: String(titleBottom) + ea,
+            zIndex: mobile ? String(1) : "",
+          },
+          children: [
+            {
+              text: mainTitle,
+              style: {
+                position: "relative",
+                display: "inline-block",
+                top: String(titleTopNumber) + ea,
+                fontSize: String(titleFontSize) + ea,
+                fontWeight: String(600),
+                background: desktop ? colorChip.white : colorChip.gray1,
+                paddingRight: String(numberRight) + ea,
+                color: colorChip.black,
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
+            borderRadius: mobile ? String(1) + ea : "",
+            marginBottom: String(0) + ea,
+            marginTop: desktop ? "" : String(14) + ea,
+            paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
+            paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
+            paddingBottom: desktop ? "" : String(mobileInnerPaddingBottom) + ea,
+          }
+        },
+      ]
+    });
+    tong = block.lastChild;
+  
+    panMother = createNode({
+      mother: tong,
       style: {
         display: "flex",
         flexDirection: "column",
         position: "relative",
         borderRadius: String(5) + "px",
-        background: desktop ? colorChip.gray1 : colorChip.gray3,
-        width: withOut(contentsPanPaddingTop * 2, ea),
-        padding: String(contentsPanPaddingTop) + ea,
+        background: desktop ? colorChip.gray3 : colorChip.gray1,
+        width: withOut(panMotherInnerPadding * 2, ea),
+        padding: String(panMotherInnerPadding) + ea,
         verticalAlign: "top",
+      },
+      child: {
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          borderRadius: String(5) + "px",
+          background: desktop ? colorChip.gray1 : colorChip.gray3,
+          width: withOut(contentsPanPaddingTop * 2, ea),
+          padding: String(contentsPanPaddingTop) + ea,
+          verticalAlign: "top",
+        }
       }
-    }
-  }).firstChild;
-
-  for (let i = -1; i < contents.schedule.length; i++) {
-    contentsBlock = createNode({
-      mother: panMother,
-      attribute: {
-        draggable: "true",
-      },
-      class: [ dragElementClassName ],
-      id: dragElementClassName + "_" + uniqueValue("hex"),
-      event: {
-        selectstart: (e) => {
-          e.preventDefault();
+    }).firstChild;
+  
+    for (let i = -1; i < contents.schedule.length; i++) {
+      contentsBlock = createNode({
+        mother: panMother,
+        attribute: {
+          draggable: "true",
         },
-        dragstart: function (e) {
-          this.style.height = String(0);
-          this.style.opacity = String(0);
-          this.style.marginBottom = String(0);
-          e.dataTransfer.setData("dragData", this.id);
-        },
-        dragend: function (e) {
-          this.style.height = String(panTitleBoxHeight) + ea;
-          this.style.opacity = String(1);
-          this.style.marginBottom = String(itemBetween) + ea;
-          e.preventDefault();
-        },
-        dragenter: function (e) {
-          this.style.paddingBottom = String(panTitleBoxHeight) + ea;
-          e.preventDefault();
-        },
-        dragleave: function (e) {
-          this.style.paddingBottom = String(0) + ea;
-          e.preventDefault();
-        },
-        dragover: function (e) {
-          e.preventDefault();
-        },
-        drop: function (e) {
-          let toTarget, fromTarget;
-          e.preventDefault();
-          toTarget = e.toElement;
-          while (!(new RegExp(dragElementClassName, "gi")).test(toTarget.className === null ? '' : toTarget.className)) {
-            toTarget = toTarget.parentElement;
-          }
-          toTarget.style.paddingBottom = String(0) + ea;
-
-          fromTarget = document.getElementById(e.dataTransfer.getData("dragData"));
-
-          if (toTarget.nextElementSibling === null) {
-            this.parentElement.appendChild(fromTarget);
-          } else {
-            this.parentElement.insertBefore(fromTarget, toTarget.nextElementSibling)
-          }
-        },
-      },
-      style: {
-        display: desktop ? "flex" : "block",
-        position: "relative",
-        width: withOut(0, ea),
-        height: desktop ? String(panTitleBoxHeight) + ea : "",
-        marginBottom: String(itemBetween) + ea,
-        paddingBottom: desktop ? String(0) + ea : String(itemBetween) + ea,
-        borderBottom: mobile ? "1px dashed " + colorChip.gray4 : "",
-        transition: "all 0.3s ease",
-      },
-      children: [
-        {
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            width: String(panTitleBoxHeight) + ea,
-            height: String(panTitleBoxHeight) + ea,
-            background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            marginRight: String(smallBetween) + ea,
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            cursor: "pointer",
-            verticalAlign: "top",
+        class: [ dragElementClassName ],
+        id: dragElementClassName + "_" + uniqueValue("hex"),
+        event: {
+          selectstart: (e) => {
+            e.preventDefault();
           },
-          children: variableArray(1).map((index) => {
-            if (desktop) {
-              return {
-                mode: "svg",
-                source: svgMaker.hamburgerIcon(colorChip.deactive),
-                style: {
-                  display: i === -1 ? "none" : "inline-block",
-                  position: "relative",
-                  width: String(hamburgerItemWidth) + ea,
+          dragstart: function (e) {
+            this.style.height = String(0);
+            this.style.opacity = String(0);
+            this.style.marginBottom = String(0);
+            e.dataTransfer.setData("dragData", this.id);
+          },
+          dragend: function (e) {
+            this.style.height = String(panTitleBoxHeight) + ea;
+            this.style.opacity = String(1);
+            this.style.marginBottom = String(itemBetween) + ea;
+            e.preventDefault();
+          },
+          dragenter: function (e) {
+            this.style.paddingBottom = String(panTitleBoxHeight) + ea;
+            e.preventDefault();
+          },
+          dragleave: function (e) {
+            this.style.paddingBottom = String(0) + ea;
+            e.preventDefault();
+          },
+          dragover: function (e) {
+            e.preventDefault();
+          },
+          drop: function (e) {
+            let toTarget, fromTarget;
+            e.preventDefault();
+            toTarget = e.toElement;
+            while (!(new RegExp(dragElementClassName, "gi")).test(toTarget.className === null ? '' : toTarget.className)) {
+              toTarget = toTarget.parentElement;
+            }
+            toTarget.style.paddingBottom = String(0) + ea;
+  
+            fromTarget = document.getElementById(e.dataTransfer.getData("dragData"));
+  
+            if (toTarget.nextElementSibling === null) {
+              this.parentElement.appendChild(fromTarget);
+            } else {
+              this.parentElement.insertBefore(fromTarget, toTarget.nextElementSibling)
+            }
+          },
+        },
+        style: {
+          display: desktop ? "flex" : "block",
+          position: "relative",
+          width: withOut(0, ea),
+          height: desktop ? String(panTitleBoxHeight) + ea : "",
+          marginBottom: String(itemBetween) + ea,
+          paddingBottom: desktop ? String(0) + ea : String(itemBetween) + ea,
+          borderBottom: mobile ? "1px dashed " + colorChip.gray4 : "",
+          transition: "all 0.3s ease",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(panTitleBoxHeight) + ea,
+              height: String(panTitleBoxHeight) + ea,
+              background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              marginRight: String(smallBetween) + ea,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              cursor: "pointer",
+              verticalAlign: "top",
+            },
+            children: variableArray(1).map((index) => {
+              if (desktop) {
+                return {
+                  mode: "svg",
+                  source: svgMaker.hamburgerIcon(colorChip.deactive),
+                  style: {
+                    display: i === -1 ? "none" : "inline-block",
+                    position: "relative",
+                    width: String(hamburgerItemWidth) + ea,
+                  }
+                }
+              } else {
+                return {
+                  text: String(i + 1),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontFamily: "graphik",
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontStyle: "italic",
+                    fontWeight: String(600),
+                    color: i === -1 ? colorChip.white : colorChip.green,
+                    top: String(contentsTextTop) + ea,
+                  }
                 }
               }
-            } else {
-              return {
-                text: String(i + 1),
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontFamily: "graphik",
-                  fontSize: String(contentsWordingSize) + ea,
-                  fontStyle: "italic",
-                  fontWeight: String(600),
-                  color: i === -1 ? colorChip.white : colorChip.green,
-                  top: String(contentsTextTop) + ea,
+            }),
+          },
+          {
+            attribute: {
+              index: String(i)
+            },
+            event: {
+              click: updateTextValue(1, widthRatio0, contentsWordingWeight),
+            },
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(panTitleBoxHeight * widthRatio0) + ea,
+              height: String(panTitleBoxHeight) + ea,
+              background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              marginRight: String(smallBetween) + ea,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              cursor: "pointer",
+              verticalAlign: "top",
+              marginBottom: desktop ? "" : String(smallBetween) + ea,
+            },
+            child: {
+              text: i === -1 ? "계획명" : contents.schedule[i].title,
+              event: {
+                selectstart: (e) => {
+                  e.preventDefault();
                 }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingWeight),
+                color: i === -1 ? colorChip.white : colorChip.black,
+                top: String(contentsTextTop) + ea,
               }
             }
-          }),
-        },
-        {
+          },
+        ]
+      });
+  
+      if (desktop) {
+        createNode({
+          mother: contentsBlock,
           attribute: {
             index: String(i)
           },
           event: {
-            click: updateTextValue(1, widthRatio0, contentsWordingWeight),
+            click: updateTextValue(2, widthRatio1, contentsWordingContentsWeight),
           },
           style: {
             display: "inline-flex",
             position: "relative",
-            width: String(panTitleBoxHeight * widthRatio0) + ea,
+            width: desktop ? String(panTitleBoxHeight * widthRatio1) + ea : withOut(0, ea),
             height: String(panTitleBoxHeight) + ea,
             background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
             borderRadius: String(5) + "px",
             boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            marginRight: String(smallBetween) + ea,
+            marginRight: desktop ? String(smallBetween) + ea : "",
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
             textAlign: "center",
             cursor: "pointer",
             verticalAlign: "top",
-            marginBottom: desktop ? "" : String(smallBetween) + ea,
           },
           child: {
-            text: i === -1 ? "계획명" : contents.schedule[i].title,
+            text: i === -1 ? "설명" : contents.schedule[i].description,
             event: {
               selectstart: (e) => {
                 e.preventDefault();
@@ -1907,235 +1953,193 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
               display: "inline-block",
               position: "relative",
               fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingWeight),
+              fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
               color: i === -1 ? colorChip.white : colorChip.black,
               top: String(contentsTextTop) + ea,
             }
           }
-        },
-      ]
-    });
-
-    if (desktop) {
-      createNode({
-        mother: contentsBlock,
-        attribute: {
-          index: String(i)
-        },
-        event: {
-          click: updateTextValue(2, widthRatio1, contentsWordingContentsWeight),
-        },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: desktop ? String(panTitleBoxHeight * widthRatio1) + ea : withOut(0, ea),
-          height: String(panTitleBoxHeight) + ea,
-          background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
-          borderRadius: String(5) + "px",
-          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          marginRight: desktop ? String(smallBetween) + ea : "",
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          cursor: "pointer",
-          verticalAlign: "top",
-        },
-        child: {
-          text: i === -1 ? "설명" : contents.schedule[i].description,
+        });
+        createNode({
+          mother: contentsBlock,
+          attribute: {
+            index: String(i)
+          },
           event: {
-            selectstart: (e) => {
-              e.preventDefault();
-            }
+            click: updateDateValue(3),
           },
           style: {
-            display: "inline-block",
+            display: "inline-flex",
             position: "relative",
-            fontSize: String(contentsWordingSize) + ea,
-            fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
-            color: i === -1 ? colorChip.white : colorChip.black,
-            top: String(contentsTextTop) + ea,
-          }
-        }
-      });
-      createNode({
-        mother: contentsBlock,
-        attribute: {
-          index: String(i)
-        },
-        event: {
-          click: updateDateValue(3),
-        },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
-          height: String(panTitleBoxHeight) + ea,
-          background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
-          borderRadius: String(5) + "px",
-          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          marginRight: String(smallBetween) + ea,
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          cursor: "pointer",
-          verticalAlign: "top",
-        },
-        child: {
-          text: i === -1 ? "시작일" : dateToHangul(contents.schedule[i].date.start),
-          event: {
-            selectstart: (e) => {
-              e.preventDefault();
+            width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
+            height: String(panTitleBoxHeight) + ea,
+            background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            marginRight: String(smallBetween) + ea,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            cursor: "pointer",
+            verticalAlign: "top",
+          },
+          child: {
+            text: i === -1 ? "시작일" : dateToHangul(contents.schedule[i].date.start),
+            event: {
+              selectstart: (e) => {
+                e.preventDefault();
+              }
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+              color: i === -1 ? colorChip.white : colorChip.black,
+              top: String(contentsTextTop) + ea,
             }
+          }
+        });
+        createNode({
+          mother: contentsBlock,
+          attribute: {
+            index: String(i)
+          },
+          event: {
+            click: updateDateValue(4),
           },
           style: {
-            display: "inline-block",
+            display: "inline-flex",
             position: "relative",
-            fontSize: String(contentsWordingSize) + ea,
-            fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
-            color: i === -1 ? colorChip.white : colorChip.black,
-            top: String(contentsTextTop) + ea,
-          }
-        }
-      });
-      createNode({
-        mother: contentsBlock,
-        attribute: {
-          index: String(i)
-        },
-        event: {
-          click: updateDateValue(4),
-        },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
-          height: String(panTitleBoxHeight) + ea,
-          background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
-          borderRadius: String(5) + "px",
-          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          cursor: "pointer",
-          verticalAlign: "top",
-        },
-        child: {
-          text: i === -1 ? "종료일" : dateToHangul(contents.schedule[i].date.end),
-          event: {
-            selectstart: (e) => {
-              e.preventDefault();
+            width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
+            height: String(panTitleBoxHeight) + ea,
+            background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            cursor: "pointer",
+            verticalAlign: "top",
+          },
+          child: {
+            text: i === -1 ? "종료일" : dateToHangul(contents.schedule[i].date.end),
+            event: {
+              selectstart: (e) => {
+                e.preventDefault();
+              }
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+              color: i === -1 ? colorChip.white : colorChip.black,
+              top: String(contentsTextTop) + ea,
             }
+          }
+        });
+      } else {
+        createNode({
+          mother: contentsBlock,
+          attribute: {
+            index: String(i)
+          },
+          event: {
+            click: updateDateMobileValue(),
           },
           style: {
-            display: "inline-block",
+            display: "inline-flex",
             position: "relative",
-            fontSize: String(contentsWordingSize) + ea,
-            fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
-            color: i === -1 ? colorChip.white : colorChip.black,
-            top: String(contentsTextTop) + ea,
-          }
-        }
-      });
-    } else {
-      createNode({
-        mother: contentsBlock,
-        attribute: {
-          index: String(i)
-        },
-        event: {
-          click: updateDateMobileValue(),
-        },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0)) + (smallBetween * 2), ea) + " / " + String(1) + ")",
-          height: String(panTitleBoxHeight) + ea,
-          background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
-          borderRadius: String(5) + "px",
-          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          cursor: "pointer",
-          verticalAlign: "top",
-        },
-        child: {
-          text: i === -1 ? "해당 일정 시작일 ~ 종료일" : dateToHangul(contents.schedule[i].date.start) + duringToken + dateToHangul(contents.schedule[i].date.end),
-          event: {
-            selectstart: (e) => {
-              e.preventDefault();
+            width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0)) + (smallBetween * 2), ea) + " / " + String(1) + ")",
+            height: String(panTitleBoxHeight) + ea,
+            background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            cursor: "pointer",
+            verticalAlign: "top",
+          },
+          child: {
+            text: i === -1 ? "해당 일정 시작일 ~ 종료일" : dateToHangul(contents.schedule[i].date.start) + duringToken + dateToHangul(contents.schedule[i].date.end),
+            event: {
+              selectstart: (e) => {
+                e.preventDefault();
+              }
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(i === -1 ? contentsWordingBoldWeight : 700),
+              color: i === -1 ? colorChip.white : colorChip.black,
+              top: String(contentsTextTop) + ea,
+              fontStyle: "italic",
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+              color: i === -1 ? colorChip.white : colorChip.deactive,
             }
+          }
+        });
+        createNode({
+          mother: contentsBlock,
+          attribute: {
+            index: String(i)
+          },
+          event: {
+            click: updateTextValue(3, 100, contentsWordingContentsWeight),
           },
           style: {
-            display: "inline-block",
+            display: "inline-flex",
             position: "relative",
-            fontSize: String(contentsWordingSize) + ea,
-            fontWeight: String(i === -1 ? contentsWordingBoldWeight : 700),
-            color: i === -1 ? colorChip.white : colorChip.black,
-            top: String(contentsTextTop) + ea,
-            fontStyle: "italic",
+            width: desktop ? String(panTitleBoxHeight * widthRatio1) + ea : withOut(0, ea),
+            height: String(panTitleBoxHeight) + ea,
+            background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            marginRight: desktop ? String(smallBetween) + ea : "",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            cursor: "pointer",
+            verticalAlign: "top",
           },
-          bold: {
-            fontSize: String(contentsWordingSize) + ea,
-            fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
-            color: i === -1 ? colorChip.white : colorChip.deactive,
-          }
-        }
-      });
-      createNode({
-        mother: contentsBlock,
-        attribute: {
-          index: String(i)
-        },
-        event: {
-          click: updateTextValue(3, 100, contentsWordingContentsWeight),
-        },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: desktop ? String(panTitleBoxHeight * widthRatio1) + ea : withOut(0, ea),
-          height: String(panTitleBoxHeight) + ea,
-          background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
-          borderRadius: String(5) + "px",
-          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          marginRight: desktop ? String(smallBetween) + ea : "",
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          cursor: "pointer",
-          verticalAlign: "top",
-        },
-        child: {
-          text: i === -1 ? "해당 일정에 대한 자세한 설명" : contents.schedule[i].description,
-          event: {
-            selectstart: (e) => {
-              e.preventDefault();
+          child: {
+            text: i === -1 ? "해당 일정에 대한 자세한 설명" : contents.schedule[i].description,
+            event: {
+              selectstart: (e) => {
+                e.preventDefault();
+              }
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+              color: i === -1 ? colorChip.white : colorChip.black,
+              top: String(contentsTextTop) + ea,
             }
-          },
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(contentsWordingSize) + ea,
-            fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
-            color: i === -1 ? colorChip.white : colorChip.black,
-            top: String(contentsTextTop) + ea,
           }
+        });
+        if (i === contents.schedule.length - 1) {
+          contentsBlock.style.marginBottom = "";
+          contentsBlock.style.paddingBottom = "";
+          contentsBlock.style.borderBottom = "";
         }
-      });
-      if (i === contents.schedule.length - 1) {
-        contentsBlock.style.marginBottom = "";
-        contentsBlock.style.paddingBottom = "";
-        contentsBlock.style.borderBottom = "";
       }
+  
     }
-
+  
+  } catch (e) {
+    console.log(e);
   }
-
 }
 
 ProcessDetailJs.prototype.insertControlBox = function () {
@@ -13641,7 +13645,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             instance.insertInitBox();
             instance.insertScheduleStartBox();
             instance.insertScheduleAboutBox();
-            instance.insertScheduleBox();
+            await instance.insertScheduleBox();
             instance.insertNumbersBox();
             instance.insertUploadBox();
             instance.insertControlBox();
@@ -13678,7 +13682,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             }
             instance.insertNumbersBox();
             instance.insertUploadBox();
-            instance.insertScheduleBox();
+            await instance.insertScheduleBox();
             instance.insertControlBox();
             if (mobile) {
               instance.insertBelowBox();
