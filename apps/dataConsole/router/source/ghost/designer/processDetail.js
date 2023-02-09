@@ -1054,7 +1054,7 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
   contentsWordingBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
   contentsWordingWeight = <%% 700, 700, 700, 700, 700 %%>;
   contentsWordingContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
-  contentsTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.1 %%>;
+  contentsTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.1 %%>;
 
   hamburgerItemWidth = <%% 14, 13, 13, 12, 2 %%>;
 
