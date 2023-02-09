@@ -1631,7 +1631,7 @@ DevContext.prototype.launching = async function () {
 
     // long
 
-    from = new Date(2022, 1, 1);
+    from = new Date(2022, 1, 10);
     to = new Date();
     longTimes = longTimes.filter(({ request }) => {
       return request.timeline.valueOf() >= from.valueOf() && request.timeline.valueOf() < to.valueOf()
@@ -1667,7 +1667,7 @@ DevContext.prototype.launching = async function () {
 
     // drop
 
-    from = new Date(2022, 6, 1);
+    from = new Date(2022, 1, 10);
     to = new Date();
     dropRequests = dropRequests.filter(({ request }) => {
       return request.timeline.valueOf() >= from.valueOf() && request.timeline.valueOf() < to.valueOf()
