@@ -971,7 +971,8 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
   const mainTitle = "프로젝트 일정";
   const dragElementClassName = "dragElementClassName";
   const tempInputClassName = "tempInputClassName";
-  const duringToken = "<b%&nbsp;&nbsp;~&nbsp;&nbsp;%b>";
+  const duringTextToken = "~";
+  const duringToken = "<b%&nbsp;&nbsp;" + duringTextToken + "&nbsp;&nbsp;%b>";
   const dateToHangul = (dateObject) => {
     return `${String(dateObject.getFullYear()).slice(2)}년 ${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일`;
   }
@@ -1018,6 +1019,7 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
   let contentsBlock;
   let startDate;
   let after7, after14, after21, after28, after35, after42, after49, after56, after63, after70;
+  let updateDateMobileValue;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1059,8 +1061,8 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
   widthRatio0 = <%% 4, 3, 3, 3, 3.5 %%>;
   widthRatio1 = <%% 12, 10, 10, 8, 1 %%>;
 
-  calendarWidth = <%% 260, 260, 260, 260, 26 %%>;
-  calendarPadding = <%% 4, 4, 4, 4, 4 %%>;
+  calendarWidth = <%% 260, 260, 260, 260, 260 %%>;
+  calendarPadding = <%% 4, 4, 4, 4, 3 %%>;
 
   mobileInnerPaddingBottom = 0;
 
@@ -1134,10 +1136,10 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
           style: {
             display: "inline-flex",
             position: "absolute",
-            top: String(base.getBoundingClientRect().top - mother.getBoundingClientRect().top) + "px",
+            top: String((widthRatio !== 100 ? base.getBoundingClientRect().top : this.getBoundingClientRect().top) - mother.getBoundingClientRect().top) + "px",
             left: String(this.getBoundingClientRect().left - mother.getBoundingClientRect().left) + "px",
             height: String(panTitleBoxHeight) + ea,
-            width: String(panTitleBoxHeight * widthRatio) + ea,
+            width: widthRatio !== 100 ? String(panTitleBoxHeight * widthRatio) + ea : String(base.getBoundingClientRect().width) + "px",
             background: colorChip.white,
             borderRadius: String(5) + "px",
             flexDirection: "row",
@@ -1262,9 +1264,110 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
     }
   }
 
+  updateDateMobileValue = () => {
+    return async function (e) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const mother = this.parentElement.parentElement;
+        const base = this.parentElement;
+        const zIndex = 4;
+        const thisChildOrder = 2;
+        let cancelBack;
+        let valueInput;
+        let calendar;
+        let thisDate, oppositeDate;
+
+        cancelBack = {};
+        valueInput = {};
+
+        cancelBack = createNode({
+          mother,
+          attribute: {
+            baseid: base.id,
+          },
+          class: [ tempInputClassName ],
+          event: {
+            click: function (e) {
+              removeByClass(tempInputClassName);
+            }
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            background: "transparent",
+            zIndex: String(zIndex),
+          }
+        });
+
+        valueInput = createNode({
+          mother,
+          class: [ tempInputClassName ],
+          attribute: {
+            baseid: base.id,
+          },
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(base.getBoundingClientRect().top - mother.getBoundingClientRect().top + this.getBoundingClientRect().height + calendarPadding) + "px",
+            right: String(3) + ea,
+            width: String(calendarWidth) + "px",
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            zIndex: String(zIndex),
+            boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+          },
+        });
+
+        if (e.clientX > this.querySelector('b').getBoundingClientRect().left) {
+
+          thisDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[1];
+          oppositeDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[0];
+
+          calendar = instance.mother.makeCalendar(hangulToDate(thisDate), async function (e) {
+            try {
+              const thisDate = stringToDate(this.getAttribute("buttonValue"));
+
+              document.getElementById(base.id).children[thisChildOrder].firstChild.lastChild.textContent = dateToHangul(thisDate);
+              removeByClass(tempInputClassName);
+            } catch (e) {
+              console.log(e);
+            }
+          });
+          valueInput.appendChild(calendar.calendarBase);
+
+        } else {
+
+          thisDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[0];
+          oppositeDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[1];
+
+          calendar = instance.mother.makeCalendar(hangulToDate(thisDate), async function (e) {
+            try {
+              const thisDate = stringToDate(this.getAttribute("buttonValue"));
+              document.getElementById(base.id).children[thisChildOrder].firstChild.firstChild.textContent = dateToHangul(thisDate);
+              removeByClass(tempInputClassName);
+            } catch (e) {
+              console.log(e);
+            }
+          });
+          valueInput.appendChild(calendar.calendarBase);
+
+        }
+        
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
 
   if (/홈퍼니싱/gi.test(serviceParsing(project.service))) {
-
 
     contents = {
       schedule: [
@@ -1943,7 +2046,7 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
           index: String(i)
         },
         event: {
-          click: updateDateValue(3),
+          click: updateDateMobileValue(),
         },
         style: {
           display: "inline-flex",
@@ -1989,7 +2092,7 @@ ProcessDetailJs.prototype.insertScheduleBox = function () {
           index: String(i)
         },
         event: {
-          click: updateTextValue(2, widthRatio1, contentsWordingContentsWeight),
+          click: updateTextValue(3, 100, contentsWordingContentsWeight),
         },
         style: {
           display: "inline-flex",
