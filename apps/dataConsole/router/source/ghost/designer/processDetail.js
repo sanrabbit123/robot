@@ -12678,6 +12678,25 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             if (getObj.green !== "deactive") {
               instance.insertGreenButtons();
             }
+
+          } else if (typeof getObj.mode === "string" && getObj.mode === "schedule") {
+
+            instance.insertInitBox();
+            instance.insertContractConfirmBox();
+            instance.insertScheduleBox();
+            instance.insertNumbersBox();
+            instance.insertUploadBox();
+            instance.insertControlBox();
+            if (mobile) {
+              instance.insertBelowBox();
+            } else {
+              instance.insertInformationBox();
+            }
+            instance.insertDetailBox();
+            instance.insertStyleBox();
+            instance.insertNoticeBox();
+            instance.insertGreenButtons();
+
           } else {
             instance.insertInitBox();
             if (getObj.mode === "photopay") {
