@@ -13630,7 +13630,6 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             instance.insertDetailBox();
             instance.insertStyleBox();
             instance.insertUploadBox();
-            instance.insertScheduleBox();
             instance.insertControlBox();
             instance.insertNoticeBox();
             if (getObj.green !== "deactive") {
