@@ -570,84 +570,14 @@ DevContext.prototype.launching = async function () {
 
     /*
 
+
+    // 프로젝트 케어 project care projectCare
+
     await this.MONGOCONSOLEC.connect();
 
     const selfMongo = this.MONGOC;
     const selfConsoleMongo = this.MONGOCONSOLEC;
-    const firstResponseLink = "https://docs.google.com/spreadsheets/d/1EsYgzt-itSq_hWjYBkSwOgorpOWCjoe9_gmfCtBtlZ4/edit?usp=sharing";
-    const divider = () => {
-      return {
-        "type": "divider"
-      };
-    }
-    const header = (text) => {
-      return {
-        "type": "header",
-        "text": {
-          "type": "plain_text",
-          "text": text,
-          "emoji": true
-        }
-      }
-    }
-    const blank = () => {
-      return {
-        "type": "section",
-        "text": {
-          "type": "plain_text",
-          "text": " ",
-          "emoji": true
-        }
-      };
-    }
-    const blankDivider = () => {
-      return [
-        blank(),
-        divider()
-      ]
-    }
-    const linkButtonSection = (text, buttonText, buttonLink) => {
-      return {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": text
-        },
-        "accessory": {
-          "type": "button",
-          "text": {
-            "type": "plain_text",
-            "text": buttonText,
-            "emoji": true
-          },
-          "value": "click_me_123",
-          "url": buttonLink,
-          "action_id": "button-action"
-        }
-      }
-    }
-    const normalButtonSection = (text, buttonText, actionId, buttonValue) => {
-      return {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": text
-        },
-        "accessory": {
-          "type": "button",
-          "text": {
-            "type": "plain_text",
-            "text": buttonText,
-            "emoji": true
-          },
-          "value": buttonValue,
-          "action_id": actionId
-        }
-      };
-    }
-    let type;
-    let blocks;
-    let res;
+
     let designers;
     let designerHistories;
     let todayString;
@@ -655,7 +585,6 @@ DevContext.prototype.launching = async function () {
     let thisDesigner;
     let allProjects;
     let thisProjects;
-    let designerWording;
     let processLength, stayLength;
     let processArr, stayArr;
     let allClients;
@@ -683,32 +612,22 @@ DevContext.prototype.launching = async function () {
     designerHistories = await back.mongoRead("designerHistory", {}, { selfMongo: selfConsoleMongo });
     allProjects = (await back.getProjectsByQuery({ "process.contract.first.date": { $gte: new Date(2000, 0, 1) } }, { selfMongo })).toNormal();
 
-    type = "home";
-
-    blocks = [
-      header(todayString),
-      ...blankDivider(),
-      header("1차 응대 현황"),
-      linkButtonSection("Jini " + String(currentCliids.filter((arr) => { return /강해진/gi.test(arr[1]) }).length) + "명 / 이큰별 " + String(currentCliids.filter((arr) => { return /이큰별/gi.test(arr[1]) }).length) + "명 / Pepper " + String(currentCliids.filter((arr) => { return /임지민/gi.test(arr[1]) }).length) + "명", "구글 시트", firstResponseLink),
-      ...blankDivider(),
-      header("프로젝트 관리"),
-      blank(),
-    ];
-
 
     matrix = [
       [
         "담당자",
-        "디자이너",
         "고객명",
+        "디자이너",
+        "진행 서비스",
         "상태",
         "응대",
+        "계약금 입금일",
+        "현장 미팅일",
+        "잔금 입금일",
         "프로젝트 시작일",
         "프로젝트 종료일",
       ]
-    ]
-
-
+    ];
 
     filtered = designerHistories.filter((obj) => { return /이큰별/gi.test(obj.manager) });
     processLength = 0;
@@ -719,8 +638,7 @@ DevContext.prototype.launching = async function () {
       processLength += thisProjects.filter((p) => { return /진행/gi.test(p.process.status) }).length;
       stayLength += thisProjects.filter((p) => { return /대기/gi.test(p.process.status) }).length;
     }
-    blocks.push(header("이큰별 : 디자이너 " + String(filtered.length) + "명 => " + "진행중 " + String(processLength) + "건 / " + "대기 " + String(stayLength) + "건"));
-    blocks.push(blank());
+
     for (let { desid } of filtered) {
       thisDesigner = designers.find((d) => { return d.desid === desid });
       thisProjects = allProjects.filter((p) => { return p.desid === desid });
@@ -733,36 +651,19 @@ DevContext.prototype.launching = async function () {
         thisClient = allClients.toNormal().find((c) => { return c.cliid === project.cliid });
         matrix.push([
           "이큰별",
-          thisDesigner.designer,
           thisClient.name,
+          thisDesigner.designer,
+          serviceParsing(project.service),
           project.process.status,
           project.process.action,
+          dateToString(project.process.contract.first.date),
+          dateToString(project.process.contract.meeting.date),
+          dateToString(project.process.contract.remain.date),
           dateToString(project.process.contract.form.date.from),
           dateToString(project.process.contract.form.date.to),
         ]);
       }
-
-      designerWording = "";
-      designerWording += thisDesigner.designer + " 디자이너";
-      designerWording += " => ";
-
-      designerWording += "진행중 " + String(processArr.length) + "건";
-      designerWording += " / ";
-      designerWording += "대기 " + String(stayArr.length) + "건";
-
-      blocks.push(normalButtonSection(
-        designerWording,
-        thisDesigner.designer + " 프로젝트 (" + String(processArr.length + stayArr.length) + "건) 상세",
-        thisDesigner.desid + "_projects_button",
-        thisDesigner.desid,
-      ));
     }
-
-    blocks.push(blank());
-    blocks.push(blank());
-    blocks.push(divider());
-    blocks.push(blank());
-
 
 
     filtered = designerHistories.filter((obj) => { return /임지민/gi.test(obj.manager) });
@@ -774,8 +675,8 @@ DevContext.prototype.launching = async function () {
       processLength += thisProjects.filter((p) => { return /진행/gi.test(p.process.status) }).length;
       stayLength += thisProjects.filter((p) => { return /대기/gi.test(p.process.status) }).length;
     }
-    blocks.push(header("임지민 : 디자이너 " + String(filtered.length) + "명 => " + "진행중 " + String(processLength) + "건 / " + "대기 " + String(stayLength) + "건"));
-    blocks.push(blank());
+
+    
     for (let { desid } of filtered) {
       thisDesigner = designers.find((d) => { return d.desid === desid });
       thisProjects = allProjects.filter((p) => { return p.desid === desid });
@@ -788,29 +689,18 @@ DevContext.prototype.launching = async function () {
         thisClient = allClients.toNormal().find((c) => { return c.cliid === project.cliid });
         matrix.push([
           "임지민",
-          thisDesigner.designer,
           thisClient.name,
+          thisDesigner.designer,
+          serviceParsing(project.service),
           project.process.status,
           project.process.action,
+          dateToString(project.process.contract.first.date),
+          dateToString(project.process.contract.meeting.date),
+          dateToString(project.process.contract.remain.date),
           dateToString(project.process.contract.form.date.from),
           dateToString(project.process.contract.form.date.to),
         ]);
       }
-
-      designerWording = "";
-      designerWording += thisDesigner.designer + " 디자이너";
-      designerWording += " => ";
-
-      designerWording += "진행중 " + String(processArr.length) + "건";
-      designerWording += " / ";
-      designerWording += "대기 " + String(stayArr.length) + "건";
-
-      blocks.push(normalButtonSection(
-        designerWording,
-        thisDesigner.designer + " 프로젝트 (" + String(processArr.length + stayArr.length) + "건) 상세",
-        thisDesigner.desid + "_projects_button",
-        thisDesigner.desid,
-      ));
     }
 
 
@@ -819,21 +709,6 @@ DevContext.prototype.launching = async function () {
     await sheets.update_value_inPython(sheetsId, "", matrix);
 
     console.log(matrix);
-
-
-
-
-
-
-
-    // const slack_userToken = "xoxb-717757271335-4566120587107-i7TxxYzbPWPzdBMPoZDo2kxn";
-    // res = await requestSystem("https://slack.com/api/views.publish", { user_id: "U04LDNEUFDZ", view: { type, blocks, callback_id: "projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
-    // console.log(res);
-    // res = await requestSystem("https://slack.com/api/views.publish", { user_id: "UM1S7H3GQ", view: { type, blocks, callback_id: "projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
-    // console.log(res);
-    // res = await requestSystem("https://slack.com/api/views.publish", { user_id: "U02U8GH963C", view: { type, blocks, callback_id: "projectCare" } }, { headers: { "Content-Type": "application/json", "Authorization": "Bearer " + slack_userToken } });
-    // console.log(res);
-
     
     await this.MONGOCONSOLEC.close();
 
