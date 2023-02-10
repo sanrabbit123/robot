@@ -1021,6 +1021,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     let startDate;
     let after7, after14, after21, after28, after35, after42, after49, after56, after63, after70;
     let updateDateMobileValue;
+    let setScheduleContents;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1764,141 +1765,187 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
       }
     }).firstChild;
   
-    for (let i = -1; i < contents.schedule.length; i++) {
-      contentsBlock = createNode({
-        mother: panMother,
-        attribute: {
-          draggable: "true",
-        },
-        class: [ dragElementClassName ],
-        id: dragElementClassName + "_" + uniqueValue("hex"),
-        event: {
-          selectstart: (e) => {
-            e.preventDefault();
+    setScheduleContents = (contents) => {
+      for (let i = -1; i < contents.schedule.length; i++) {
+        contentsBlock = createNode({
+          mother: panMother,
+          attribute: {
+            draggable: "true",
           },
-          dragstart: function (e) {
-            this.style.height = String(0);
-            this.style.opacity = String(0);
-            this.style.marginBottom = String(0);
-            e.dataTransfer.setData("dragData", this.id);
-          },
-          dragend: function (e) {
-            this.style.height = String(panTitleBoxHeight) + ea;
-            this.style.opacity = String(1);
-            this.style.marginBottom = String(itemBetween) + ea;
-            e.preventDefault();
-          },
-          dragenter: function (e) {
-            this.style.paddingBottom = String(panTitleBoxHeight) + ea;
-            e.preventDefault();
-          },
-          dragleave: function (e) {
-            this.style.paddingBottom = String(0) + ea;
-            e.preventDefault();
-          },
-          dragover: function (e) {
-            e.preventDefault();
-          },
-          drop: function (e) {
-            let toTarget, fromTarget;
-            e.preventDefault();
-            toTarget = e.toElement;
-            while (!(new RegExp(dragElementClassName, "gi")).test(toTarget.className === null ? '' : toTarget.className)) {
-              toTarget = toTarget.parentElement;
-            }
-            toTarget.style.paddingBottom = String(0) + ea;
-  
-            fromTarget = document.getElementById(e.dataTransfer.getData("dragData"));
-  
-            if (toTarget.nextElementSibling === null) {
-              this.parentElement.appendChild(fromTarget);
-            } else {
-              this.parentElement.insertBefore(fromTarget, toTarget.nextElementSibling)
-            }
-          },
-        },
-        style: {
-          display: desktop ? "flex" : "block",
-          position: "relative",
-          width: withOut(0, ea),
-          height: desktop ? String(panTitleBoxHeight) + ea : "",
-          marginBottom: String(itemBetween) + ea,
-          paddingBottom: desktop ? String(0) + ea : String(itemBetween) + ea,
-          borderBottom: mobile ? "1px dashed " + colorChip.gray4 : "",
-          transition: "all 0.3s ease",
-        },
-        children: [
-          {
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              width: String(panTitleBoxHeight) + ea,
-              height: String(panTitleBoxHeight) + ea,
-              background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
-              borderRadius: String(5) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              marginRight: String(smallBetween) + ea,
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
-              cursor: "pointer",
-              verticalAlign: "top",
+          class: [ dragElementClassName ],
+          id: dragElementClassName + "_" + uniqueValue("hex"),
+          event: {
+            selectstart: (e) => {
+              e.preventDefault();
             },
-            children: variableArray(1).map((index) => {
-              if (desktop) {
-                return {
-                  mode: "svg",
-                  source: svgMaker.hamburgerIcon(colorChip.deactive),
-                  style: {
-                    display: i === -1 ? "none" : "inline-block",
-                    position: "relative",
-                    width: String(hamburgerItemWidth) + ea,
+            dragstart: function (e) {
+              this.style.height = String(0);
+              this.style.opacity = String(0);
+              this.style.marginBottom = String(0);
+              e.dataTransfer.setData("dragData", this.id);
+            },
+            dragend: function (e) {
+              this.style.height = String(panTitleBoxHeight) + ea;
+              this.style.opacity = String(1);
+              this.style.marginBottom = String(itemBetween) + ea;
+              e.preventDefault();
+            },
+            dragenter: function (e) {
+              this.style.paddingBottom = String(panTitleBoxHeight) + ea;
+              e.preventDefault();
+            },
+            dragleave: function (e) {
+              this.style.paddingBottom = String(0) + ea;
+              e.preventDefault();
+            },
+            dragover: function (e) {
+              e.preventDefault();
+            },
+            drop: function (e) {
+              let toTarget, fromTarget;
+              e.preventDefault();
+              toTarget = e.toElement;
+              while (!(new RegExp(dragElementClassName, "gi")).test(toTarget.className === null ? '' : toTarget.className)) {
+                toTarget = toTarget.parentElement;
+              }
+              toTarget.style.paddingBottom = String(0) + ea;
+    
+              fromTarget = document.getElementById(e.dataTransfer.getData("dragData"));
+    
+              if (toTarget.nextElementSibling === null) {
+                this.parentElement.appendChild(fromTarget);
+              } else {
+                this.parentElement.insertBefore(fromTarget, toTarget.nextElementSibling)
+              }
+            },
+          },
+          style: {
+            display: desktop ? "flex" : "block",
+            position: "relative",
+            width: withOut(0, ea),
+            height: desktop ? String(panTitleBoxHeight) + ea : "",
+            marginBottom: String(itemBetween) + ea,
+            paddingBottom: desktop ? String(0) + ea : String(itemBetween) + ea,
+            borderBottom: mobile ? "1px dashed " + colorChip.gray4 : "",
+            transition: "all 0.3s ease",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(panTitleBoxHeight) + ea,
+                height: String(panTitleBoxHeight) + ea,
+                background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+                borderRadius: String(5) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                marginRight: String(smallBetween) + ea,
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                cursor: "pointer",
+                verticalAlign: "top",
+              },
+              children: variableArray(1).map((index) => {
+                if (desktop) {
+                  return {
+                    mode: "svg",
+                    source: svgMaker.hamburgerIcon(colorChip.deactive),
+                    style: {
+                      display: i === -1 ? "none" : "inline-block",
+                      position: "relative",
+                      width: String(hamburgerItemWidth) + ea,
+                    }
+                  }
+                } else {
+                  return {
+                    text: String(i + 1),
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      fontFamily: "graphik",
+                      fontSize: String(contentsWordingSize) + ea,
+                      fontStyle: "italic",
+                      fontWeight: String(600),
+                      color: i === -1 ? colorChip.white : colorChip.green,
+                      top: String(contentsTextTop) + ea,
+                    }
                   }
                 }
-              } else {
-                return {
-                  text: String(i + 1),
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    fontFamily: "graphik",
-                    fontSize: String(contentsWordingSize) + ea,
-                    fontStyle: "italic",
-                    fontWeight: String(600),
-                    color: i === -1 ? colorChip.white : colorChip.green,
-                    top: String(contentsTextTop) + ea,
+              }),
+            },
+            {
+              attribute: {
+                index: String(i)
+              },
+              event: {
+                click: updateTextValue(1, widthRatio0, contentsWordingWeight),
+              },
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(panTitleBoxHeight * widthRatio0) + ea,
+                height: String(panTitleBoxHeight) + ea,
+                background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+                borderRadius: String(5) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                marginRight: String(smallBetween) + ea,
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                cursor: "pointer",
+                verticalAlign: "top",
+                marginBottom: desktop ? "" : String(smallBetween) + ea,
+              },
+              child: {
+                text: i === -1 ? "계획명" : contents.schedule[i].title,
+                event: {
+                  selectstart: (e) => {
+                    e.preventDefault();
                   }
+                },
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(contentsWordingSize) + ea,
+                  fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingWeight),
+                  color: i === -1 ? colorChip.white : colorChip.black,
+                  top: String(contentsTextTop) + ea,
                 }
               }
-            }),
-          },
-          {
+            },
+          ]
+        });
+    
+        if (desktop) {
+          createNode({
+            mother: contentsBlock,
             attribute: {
               index: String(i)
             },
             event: {
-              click: updateTextValue(1, widthRatio0, contentsWordingWeight),
+              click: updateTextValue(2, widthRatio1, contentsWordingContentsWeight),
             },
             style: {
               display: "inline-flex",
               position: "relative",
-              width: String(panTitleBoxHeight * widthRatio0) + ea,
+              width: desktop ? String(panTitleBoxHeight * widthRatio1) + ea : withOut(0, ea),
               height: String(panTitleBoxHeight) + ea,
               background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
               borderRadius: String(5) + "px",
               boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              marginRight: String(smallBetween) + ea,
+              marginRight: desktop ? String(smallBetween) + ea : "",
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
               textAlign: "center",
               cursor: "pointer",
               verticalAlign: "top",
-              marginBottom: desktop ? "" : String(smallBetween) + ea,
             },
             child: {
-              text: i === -1 ? "계획명" : contents.schedule[i].title,
+              text: i === -1 ? "설명" : contents.schedule[i].description,
               event: {
                 selectstart: (e) => {
                   e.preventDefault();
@@ -1908,235 +1955,199 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                 display: "inline-block",
                 position: "relative",
                 fontSize: String(contentsWordingSize) + ea,
-                fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingWeight),
+                fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
                 color: i === -1 ? colorChip.white : colorChip.black,
                 top: String(contentsTextTop) + ea,
               }
             }
-          },
-        ]
-      });
-  
-      if (desktop) {
-        createNode({
-          mother: contentsBlock,
-          attribute: {
-            index: String(i)
-          },
-          event: {
-            click: updateTextValue(2, widthRatio1, contentsWordingContentsWeight),
-          },
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            width: desktop ? String(panTitleBoxHeight * widthRatio1) + ea : withOut(0, ea),
-            height: String(panTitleBoxHeight) + ea,
-            background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            marginRight: desktop ? String(smallBetween) + ea : "",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            cursor: "pointer",
-            verticalAlign: "top",
-          },
-          child: {
-            text: i === -1 ? "설명" : contents.schedule[i].description,
+          });
+          createNode({
+            mother: contentsBlock,
+            attribute: {
+              index: String(i)
+            },
             event: {
-              selectstart: (e) => {
-                e.preventDefault();
-              }
+              click: updateDateValue(3),
             },
             style: {
-              display: "inline-block",
+              display: "inline-flex",
               position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
-              color: i === -1 ? colorChip.white : colorChip.black,
-              top: String(contentsTextTop) + ea,
-            }
-          }
-        });
-        createNode({
-          mother: contentsBlock,
-          attribute: {
-            index: String(i)
-          },
-          event: {
-            click: updateDateValue(3),
-          },
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
-            height: String(panTitleBoxHeight) + ea,
-            background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            marginRight: String(smallBetween) + ea,
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            cursor: "pointer",
-            verticalAlign: "top",
-          },
-          child: {
-            text: i === -1 ? "시작일" : dateToHangul(contents.schedule[i].date.start),
-            event: {
-              selectstart: (e) => {
-                e.preventDefault();
+              width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
+              height: String(panTitleBoxHeight) + ea,
+              background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              marginRight: String(smallBetween) + ea,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              cursor: "pointer",
+              verticalAlign: "top",
+            },
+            child: {
+              text: i === -1 ? "시작일" : dateToHangul(contents.schedule[i].date.start),
+              event: {
+                selectstart: (e) => {
+                  e.preventDefault();
+                }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+                color: i === -1 ? colorChip.white : colorChip.black,
+                top: String(contentsTextTop) + ea,
               }
+            }
+          });
+          createNode({
+            mother: contentsBlock,
+            attribute: {
+              index: String(i)
+            },
+            event: {
+              click: updateDateValue(4),
             },
             style: {
-              display: "inline-block",
+              display: "inline-flex",
               position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
-              color: i === -1 ? colorChip.white : colorChip.black,
-              top: String(contentsTextTop) + ea,
-            }
-          }
-        });
-        createNode({
-          mother: contentsBlock,
-          attribute: {
-            index: String(i)
-          },
-          event: {
-            click: updateDateValue(4),
-          },
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
-            height: String(panTitleBoxHeight) + ea,
-            background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            cursor: "pointer",
-            verticalAlign: "top",
-          },
-          child: {
-            text: i === -1 ? "종료일" : dateToHangul(contents.schedule[i].date.end),
-            event: {
-              selectstart: (e) => {
-                e.preventDefault();
+              width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
+              height: String(panTitleBoxHeight) + ea,
+              background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              cursor: "pointer",
+              verticalAlign: "top",
+            },
+            child: {
+              text: i === -1 ? "종료일" : dateToHangul(contents.schedule[i].date.end),
+              event: {
+                selectstart: (e) => {
+                  e.preventDefault();
+                }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+                color: i === -1 ? colorChip.white : colorChip.black,
+                top: String(contentsTextTop) + ea,
               }
+            }
+          });
+        } else {
+          createNode({
+            mother: contentsBlock,
+            attribute: {
+              index: String(i)
+            },
+            event: {
+              click: updateDateMobileValue(),
             },
             style: {
-              display: "inline-block",
+              display: "inline-flex",
               position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
-              color: i === -1 ? colorChip.white : colorChip.black,
-              top: String(contentsTextTop) + ea,
-            }
-          }
-        });
-      } else {
-        createNode({
-          mother: contentsBlock,
-          attribute: {
-            index: String(i)
-          },
-          event: {
-            click: updateDateMobileValue(),
-          },
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0)) + (smallBetween * 2), ea) + " / " + String(1) + ")",
-            height: String(panTitleBoxHeight) + ea,
-            background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            cursor: "pointer",
-            verticalAlign: "top",
-          },
-          child: {
-            text: i === -1 ? "해당 일정 시작일 ~ 종료일" : dateToHangul(contents.schedule[i].date.start) + duringToken + dateToHangul(contents.schedule[i].date.end),
-            event: {
-              selectstart: (e) => {
-                e.preventDefault();
+              width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0)) + (smallBetween * 2), ea) + " / " + String(1) + ")",
+              height: String(panTitleBoxHeight) + ea,
+              background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              cursor: "pointer",
+              verticalAlign: "top",
+            },
+            child: {
+              text: i === -1 ? "해당 일정 시작일 ~ 종료일" : dateToHangul(contents.schedule[i].date.start) + duringToken + dateToHangul(contents.schedule[i].date.end),
+              event: {
+                selectstart: (e) => {
+                  e.preventDefault();
+                }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(i === -1 ? contentsWordingBoldWeight : 700),
+                color: i === -1 ? colorChip.white : colorChip.black,
+                top: String(contentsTextTop) + ea,
+                fontStyle: "italic",
+              },
+              bold: {
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+                color: i === -1 ? colorChip.white : colorChip.deactive,
               }
+            }
+          });
+          createNode({
+            mother: contentsBlock,
+            attribute: {
+              index: String(i)
+            },
+            event: {
+              click: updateTextValue(3, 100, contentsWordingContentsWeight),
             },
             style: {
-              display: "inline-block",
+              display: "inline-flex",
               position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(i === -1 ? contentsWordingBoldWeight : 700),
-              color: i === -1 ? colorChip.white : colorChip.black,
-              top: String(contentsTextTop) + ea,
-              fontStyle: "italic",
+              width: desktop ? String(panTitleBoxHeight * widthRatio1) + ea : withOut(0, ea),
+              height: String(panTitleBoxHeight) + ea,
+              background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              marginRight: desktop ? String(smallBetween) + ea : "",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              cursor: "pointer",
+              verticalAlign: "top",
             },
-            bold: {
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
-              color: i === -1 ? colorChip.white : colorChip.deactive,
-            }
-          }
-        });
-        createNode({
-          mother: contentsBlock,
-          attribute: {
-            index: String(i)
-          },
-          event: {
-            click: updateTextValue(3, 100, contentsWordingContentsWeight),
-          },
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            width: desktop ? String(panTitleBoxHeight * widthRatio1) + ea : withOut(0, ea),
-            height: String(panTitleBoxHeight) + ea,
-            background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            marginRight: desktop ? String(smallBetween) + ea : "",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            cursor: "pointer",
-            verticalAlign: "top",
-          },
-          child: {
-            text: i === -1 ? "해당 일정에 대한 자세한 설명" : contents.schedule[i].description,
-            event: {
-              selectstart: (e) => {
-                e.preventDefault();
+            child: {
+              text: i === -1 ? "해당 일정에 대한 자세한 설명" : contents.schedule[i].description,
+              event: {
+                selectstart: (e) => {
+                  e.preventDefault();
+                }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+                color: i === -1 ? colorChip.white : colorChip.black,
+                top: String(contentsTextTop) + ea,
               }
-            },
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
-              color: i === -1 ? colorChip.white : colorChip.black,
-              top: String(contentsTextTop) + ea,
             }
+          });
+          if (i === contents.schedule.length - 1) {
+            contentsBlock.style.marginBottom = "";
+            contentsBlock.style.paddingBottom = "";
+            contentsBlock.style.borderBottom = "";
           }
-        });
-        if (i === contents.schedule.length - 1) {
-          contentsBlock.style.marginBottom = "";
-          contentsBlock.style.paddingBottom = "";
-          contentsBlock.style.borderBottom = "";
         }
+    
       }
-  
     }
-  
+
+    setScheduleContents(contents);
+
+    ajaxJson({ mode: "get", proid: project.proid, desid: instance.designer.desid }, SECONDHOST + "/projectDesignerSchedule", { equal: true }).then((obj) => {
+      console.log(obj);
+    }).catch((err) => {
+      console.log(err);
+    });
+
   } catch (e) {
     console.log(e);
   }

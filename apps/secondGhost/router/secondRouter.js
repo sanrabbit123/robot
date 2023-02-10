@@ -856,6 +856,61 @@ SecondRouter.prototype.rou_post_projectDesignerRaw = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
+  const instance = this;
+  const back = this.back;
+  const { errorLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/projectDesignerSchedule" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.mode === undefined || req.body.desid === undefined || req.body.proid === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const collection = "projectDesignerSchedule";
+      const { mode, desid, proid } = req.body;
+      let resultObj;
+      let rows;
+
+      if (mode === "get") {
+
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+
+        resultObj = rows;
+
+      } else if (mode === "update") {
+
+        // rows = await back.mongoRead(collection, { key: id }, { selfMongo });
+        // if (rows.length === 0) {
+        //   await back.mongoCreate(collection, json, { selfMongo });
+        // } else {
+        //   await back.mongoUpdate(collection, [ { key: id }, { "contents.memo": memo } ], { selfMongo });
+        // }
+
+        // resultObj = { message: "success" };
+
+      }
+
+      res.send(JSON.stringify(resultObj));
+
+    } catch (e) {
+      errorLog("Second Ghost 서버 문제 생김 (rou_post_projectDesignerSchedule): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_voice = function () {
   const instance = this;
   const address = this.address;
