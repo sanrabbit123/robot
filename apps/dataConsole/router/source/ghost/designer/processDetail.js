@@ -1071,16 +1071,16 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     calendarWidth = <%% 260, 260, 260, 260, 260 %%>;
     calendarPadding = <%% 4, 4, 4, 4, 3 %%>;
   
-    buttonTongHeight = <%% 42, 42, 42, 42, 42 %%>;
-    buttonTongPaddingTop = <%% 11, 11, 11, 11, 11 %%>;
+    buttonTongHeight = <%% 42, 42, 32, 30, 14 %%>;
+    buttonTongPaddingTop = <%% 11, 11, 8, 6, 2 %%>;
 
-    buttonHeight = <%% 36, 36, 36, 36, 36 %%>;
-    buttonPadding = <%% 22, 22, 22, 22, 22 %%>;
-    buttonBetween = <%% 6, 6, 6, 6, 6 %%>;
+    buttonHeight = <%% 36, 36, 30, 28, 7 %%>;
+    buttonPadding = <%% 22, 18, 16, 14, 4 %%>;
+    buttonBetween = <%% 6, 6, 6, 6, 1 %%>;
 
-    buttonSize = <%% 14, 14, 14, 14, 14 %%>;
+    buttonSize = <%% 14, 14, 12, 11, 2.7 %%>;
     buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
-    buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.1 %%>;
 
     mobileInnerPaddingBottom = 0;
   
@@ -2294,7 +2294,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
           height: String(buttonTongHeight) + ea,
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "end",
+          justifyContent: desktop ? "end" : "center",
           paddingTop: String(buttonTongPaddingTop) + ea,
         },
         children: [
@@ -2303,8 +2303,8 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               click: async function (e) {
                 try {
 
-
-
+                  // dev
+                  window.alert("준비중인 기능입니다!");
 
                 } catch (e) {
                   console.log(e);
@@ -2314,7 +2314,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             style: {
               display: "inline-flex",
               height: String(buttonHeight) + ea,
-              background: colorChip.gradientGreen,
+              background: desktop ? colorChip.gradientGreen : colorChip.gradientGray,
               borderRadius: String(5) + "px",
               marginRight: String(buttonBetween) + ea,
               flexDirection: "row",
@@ -2359,7 +2359,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             style: {
               display: "inline-flex",
               height: String(buttonHeight) + ea,
-              background: colorChip.gradientGreen,
+              background: desktop ? colorChip.gradientGreen : colorChip.gradientGray,
               borderRadius: String(5) + "px",
               flexDirection: "row",
               justifyContent: "center",
