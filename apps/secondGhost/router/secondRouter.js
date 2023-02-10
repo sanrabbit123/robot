@@ -907,6 +907,12 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
         
         resultObj = { message: "success" };
 
+      } else if (mode === "delete") {
+
+        whereQuery = { proid };
+        await back.mongoDelete(collection, whereQuery, { selfMongo });
+        resultObj = { message: "success" };
+
       }
 
       res.send(JSON.stringify(resultObj));

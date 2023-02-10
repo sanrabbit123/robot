@@ -1026,6 +1026,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     let buttonTongHeight, buttonTongPaddingTop;
     let buttonHeight, buttonPadding, buttonBetween;
     let buttonSize, buttonWeight, buttonTextTop;
+    let originalContents;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1560,6 +1561,263 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
       }
     }
   
+    if (/홈퍼니싱/gi.test(serviceParsing(project.service))) {
+      originalContents = {
+        schedule: [
+          {
+            title: "현장 미팅",
+            description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+            date: {
+              start: project.process.contract.meeting.date,
+              end: project.process.contract.meeting.date,
+            },
+          },
+          {
+            title: "계약 시작일",
+            description: "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다.",
+            date: {
+              start: startDate,
+              end: startDate,
+            },
+          },
+          {
+            title: "컨셉 제안서",
+            description: "전체적인 디자인 방향을 정할 컨셉 제안서 입니다.",
+            date: {
+              start: startDate,
+              end: after7,
+            },
+          },
+          {
+            title: "1차 디자인 제안서",
+            description: "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다.",
+            date: {
+              start: after7,
+              end: after14,
+            },
+          },
+          {
+            title: "제안서 수정 작업",
+            description: "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다.",
+            date: {
+              start: after14,
+              end: after21,
+            },
+          },
+          {
+            title: "제품 리스트",
+            description: "디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다.",
+            date: {
+              start: after14,
+              end: after21,
+            },
+          },
+          {
+            title: "제품 구매 및 배송",
+            description: "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다.",
+            date: {
+              start: after21,
+              end: after28,
+            },
+          },
+          {
+            title: "제품 설치 및 세팅",
+            description: "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다.",
+            date: {
+              start: after21,
+              end: after35,
+            },
+          },
+        ]
+      };
+    } else if (/홈스타일링/gi.test(serviceParsing(project.service))) {
+      originalContents = {
+        schedule: [
+          {
+            title: "현장 미팅",
+            description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+            date: {
+              start: project.process.contract.meeting.date,
+              end: project.process.contract.meeting.date,
+            },
+          },
+          {
+            title: "계약 시작일",
+            description: "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다.",
+            date: {
+              start: startDate,
+              end: startDate,
+            },
+          },
+          {
+            title: "컨셉 제안서",
+            description: "전체적인 디자인 방향을 정할 컨셉 제안서 입니다.",
+            date: {
+              start: startDate,
+              end: after7,
+            },
+          },
+          {
+            title: "1차 디자인 제안서",
+            description: "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다.",
+            date: {
+              start: after7,
+              end: after14,
+            },
+          },
+          {
+            title: "제안서 수정 작업",
+            description: "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다.",
+            date: {
+              start: after14,
+              end: after21,
+            },
+          },
+          {
+            title: "제품 리스트",
+            description: "디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다.",
+            date: {
+              start: after14,
+              end: after21,
+            },
+          },
+          {
+            title: "시공 의뢰서",
+            description: "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다.",
+            date: {
+              start: after14,
+              end: after21,
+            },
+          },
+          {
+            title: "시공 견적서",
+            description: "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다.",
+            date: {
+              start: after21,
+              end: after28,
+            },
+          },
+          {
+            title: "시공 진행",
+            description: "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다.",
+            date: {
+              start: after28,
+              end: after49,
+            },
+          },
+          {
+            title: "제품 구매 및 배송",
+            description: "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다.",
+            date: {
+              start: after42,
+              end: after56,
+            },
+          },
+          {
+            title: "제품 설치 및 세팅",
+            description: "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다.",
+            date: {
+              start: after49,
+              end: after56,
+            },
+          },
+        ]
+      };
+    } else {
+      originalContents = {
+        schedule: [
+          {
+            title: "현장 미팅",
+            description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
+            date: {
+              start: project.process.contract.meeting.date,
+              end: project.process.contract.meeting.date,
+            },
+          },
+          {
+            title: "계약 시작일",
+            description: "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다.",
+            date: {
+              start: startDate,
+              end: startDate,
+            },
+          },
+          {
+            title: "컨셉 제안서",
+            description: "전체적인 디자인 방향을 정할 컨셉 제안서 입니다.",
+            date: {
+              start: startDate,
+              end: after7,
+            },
+          },
+          {
+            title: "1차 디자인 제안서",
+            description: "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다.",
+            date: {
+              start: after7,
+              end: after14,
+            },
+          },
+          {
+            title: "제안서 수정 작업",
+            description: "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다.",
+            date: {
+              start: after14,
+              end: after21,
+            },
+          },
+          {
+            title: "제품 리스트",
+            description: "디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다.",
+            date: {
+              start: after14,
+              end: after21,
+            },
+          },
+          {
+            title: "시공 의뢰서",
+            description: "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다.",
+            date: {
+              start: after14,
+              end: after21,
+            },
+          },
+          {
+            title: "시공 견적서",
+            description: "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다.",
+            date: {
+              start: after21,
+              end: after28,
+            },
+          },
+          {
+            title: "시공 진행",
+            description: "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다.",
+            date: {
+              start: after28,
+              end: after56,
+            },
+          },
+          {
+            title: "제품 구매 및 배송",
+            description: "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다.",
+            date: {
+              start: after42,
+              end: after63,
+            },
+          },
+          {
+            title: "제품 설치 및 세팅",
+            description: "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다.",
+            date: {
+              start: after56,
+              end: after70,
+            },
+          },
+        ]
+      };
+    }
+
     whiteBlock = createNode({
       mother: baseTong,
       attribute: { toggle: "on" },
@@ -2041,6 +2299,18 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
         },
         children: [
           {
+            event: {
+              click: async function (e) {
+                try {
+
+
+
+
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
             style: {
               display: "inline-flex",
               height: String(buttonHeight) + ea,
@@ -2067,6 +2337,25 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             }
           },
           {
+            event: {
+              click: async function (e) {
+                try {
+                  let newContents;
+                  if (window.confirm("일정을 초기화 하시겠습니까?")) {
+                    await ajaxJson({
+                      mode: "delete",
+                      proid: project.proid,
+                      desid: instance.designer.desid,
+                    }, SECONDHOST + "/projectDesignerSchedule");
+                    newContents = equalJson(JSON.stringify(originalContents));
+                    await ajaxJson({ mode: "create", proid: project.proid, desid: instance.designer.desid, schedule: newContents.schedule }, SECONDHOST + "/projectDesignerSchedule");
+                    setScheduleContents(newContents);
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
             style: {
               display: "inline-flex",
               height: String(buttonHeight) + ea,
@@ -2098,269 +2387,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
 
     ajaxJson({ mode: "get", proid: project.proid, desid: instance.designer.desid }, SECONDHOST + "/projectDesignerSchedule", { equal: true }).then((rows) => {
       if (rows.length === 0) {
-        if (/홈퍼니싱/gi.test(serviceParsing(project.service))) {
-  
-          contents = {
-            schedule: [
-              {
-                title: "현장 미팅",
-                description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
-                date: {
-                  start: project.process.contract.meeting.date,
-                  end: project.process.contract.meeting.date,
-                },
-              },
-              {
-                title: "계약 시작일",
-                description: "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다.",
-                date: {
-                  start: startDate,
-                  end: startDate,
-                },
-              },
-              {
-                title: "컨셉 제안서",
-                description: "전체적인 디자인 방향을 정할 컨셉 제안서 입니다.",
-                date: {
-                  start: startDate,
-                  end: after7,
-                },
-              },
-              {
-                title: "1차 디자인 제안서",
-                description: "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다.",
-                date: {
-                  start: after7,
-                  end: after14,
-                },
-              },
-              {
-                title: "제안서 수정 작업",
-                description: "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다.",
-                date: {
-                  start: after14,
-                  end: after21,
-                },
-              },
-              {
-                title: "제품 리스트",
-                description: "디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다.",
-                date: {
-                  start: after14,
-                  end: after21,
-                },
-              },
-              {
-                title: "제품 구매 및 배송",
-                description: "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다.",
-                date: {
-                  start: after21,
-                  end: after28,
-                },
-              },
-              {
-                title: "제품 설치 및 세팅",
-                description: "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다.",
-                date: {
-                  start: after21,
-                  end: after35,
-                },
-              },
-            ]
-          };
-      
-      
-        } else if (/홈스타일링/gi.test(serviceParsing(project.service))) {
-      
-          contents = {
-            schedule: [
-              {
-                title: "현장 미팅",
-                description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
-                date: {
-                  start: project.process.contract.meeting.date,
-                  end: project.process.contract.meeting.date,
-                },
-              },
-              {
-                title: "계약 시작일",
-                description: "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다.",
-                date: {
-                  start: startDate,
-                  end: startDate,
-                },
-              },
-              {
-                title: "컨셉 제안서",
-                description: "전체적인 디자인 방향을 정할 컨셉 제안서 입니다.",
-                date: {
-                  start: startDate,
-                  end: after7,
-                },
-              },
-              {
-                title: "1차 디자인 제안서",
-                description: "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다.",
-                date: {
-                  start: after7,
-                  end: after14,
-                },
-              },
-              {
-                title: "제안서 수정 작업",
-                description: "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다.",
-                date: {
-                  start: after14,
-                  end: after21,
-                },
-              },
-              {
-                title: "제품 리스트",
-                description: "디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다.",
-                date: {
-                  start: after14,
-                  end: after21,
-                },
-              },
-              {
-                title: "시공 의뢰서",
-                description: "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다.",
-                date: {
-                  start: after14,
-                  end: after21,
-                },
-              },
-              {
-                title: "시공 견적서",
-                description: "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다.",
-                date: {
-                  start: after21,
-                  end: after28,
-                },
-              },
-              {
-                title: "시공 진행",
-                description: "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다.",
-                date: {
-                  start: after28,
-                  end: after49,
-                },
-              },
-              {
-                title: "제품 구매 및 배송",
-                description: "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다.",
-                date: {
-                  start: after42,
-                  end: after56,
-                },
-              },
-              {
-                title: "제품 설치 및 세팅",
-                description: "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다.",
-                date: {
-                  start: after49,
-                  end: after56,
-                },
-              },
-            ]
-          };
-      
-        } else {
-      
-          contents = {
-            schedule: [
-              {
-                title: "현장 미팅",
-                description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
-                date: {
-                  start: project.process.contract.meeting.date,
-                  end: project.process.contract.meeting.date,
-                },
-              },
-              {
-                title: "계약 시작일",
-                description: "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다.",
-                date: {
-                  start: startDate,
-                  end: startDate,
-                },
-              },
-              {
-                title: "컨셉 제안서",
-                description: "전체적인 디자인 방향을 정할 컨셉 제안서 입니다.",
-                date: {
-                  start: startDate,
-                  end: after7,
-                },
-              },
-              {
-                title: "1차 디자인 제안서",
-                description: "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다.",
-                date: {
-                  start: after7,
-                  end: after14,
-                },
-              },
-              {
-                title: "제안서 수정 작업",
-                description: "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다.",
-                date: {
-                  start: after14,
-                  end: after21,
-                },
-              },
-              {
-                title: "제품 리스트",
-                description: "디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다.",
-                date: {
-                  start: after14,
-                  end: after21,
-                },
-              },
-              {
-                title: "시공 의뢰서",
-                description: "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다.",
-                date: {
-                  start: after14,
-                  end: after21,
-                },
-              },
-              {
-                title: "시공 견적서",
-                description: "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다.",
-                date: {
-                  start: after21,
-                  end: after28,
-                },
-              },
-              {
-                title: "시공 진행",
-                description: "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다.",
-                date: {
-                  start: after28,
-                  end: after56,
-                },
-              },
-              {
-                title: "제품 구매 및 배송",
-                description: "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다.",
-                date: {
-                  start: after42,
-                  end: after63,
-                },
-              },
-              {
-                title: "제품 설치 및 세팅",
-                description: "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다.",
-                date: {
-                  start: after56,
-                  end: after70,
-                },
-              },
-            ]
-          };
-      
-        }
+        contents = equalJson(JSON.stringify(originalContents));
         ajaxJson({ mode: "create", proid: project.proid, desid: instance.designer.desid, schedule: contents.schedule }, SECONDHOST + "/projectDesignerSchedule", { equal: true }).catch((err) => {
           console.log(err);
         });
