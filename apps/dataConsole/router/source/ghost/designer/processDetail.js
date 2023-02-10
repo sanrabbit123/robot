@@ -1061,8 +1061,8 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
   
     hamburgerItemWidth = <%% 14, 13, 13, 12, 2 %%>;
   
-    widthRatio0 = <%% 4, 3, 3, 3, 3.5 %%>;
-    widthRatio1 = <%% 12, 10, 10, 8, 1 %%>;
+    widthRatio0 = <%% 4, 3, 3, 2.5, 3.5 %%>;
+    widthRatio1 = <%% 12, 10, 10, 9, 1 %%>;
   
     calendarWidth = <%% 260, 260, 260, 260, 260 %%>;
     calendarPadding = <%% 4, 4, 4, 4, 3 %%>;
@@ -1117,6 +1117,8 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               if (thisChildOrder === 1) {
                 column = "title";
               } else if (thisChildOrder === 2) {
+                column = "description";
+              } else if (thisChildOrder === 3) {
                 column = "description";
               }
 
@@ -1230,10 +1232,44 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
           let cancelBack;
           let valueInput;
           let calendar;
+          let updateEvent;
+          let column;
+          let whereQuery, updateQuery;
   
           cancelBack = {};
           valueInput = {};
   
+          updateEvent = function (value) {
+            return async function (e) {
+              try {
+                const thisDate = stringToDate(value);
+                document.getElementById(base.id).children[thisChildOrder].firstChild.textContent = dateToHangul(thisDate);
+
+                if (thisChildOrder === 3) {
+                  column = "date.start";
+                } else if (thisChildOrder === 4) {
+                  column = "date.end";
+                }
+  
+                whereQuery = { proid: project.proid };
+                updateQuery = {};
+                updateQuery["schedule." + String(index) + "." + column] = thisDate;
+  
+                await ajaxJson({
+                  mode: "update",
+                  proid: project.proid,
+                  desid: instance.designer.desid,
+                  whereQuery,
+                  updateQuery
+                }, SECONDHOST + "/projectDesignerSchedule");
+
+                removeByClass(tempInputClassName);
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          }
+
           cancelBack = createNode({
             mother,
             attribute: {
@@ -1282,9 +1318,8 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
   
           calendar = instance.mother.makeCalendar(hangulToDate(base.children[thisChildOrder].firstChild.textContent), async function (e) {
             try {
-              const thisDate = stringToDate(this.getAttribute("buttonValue"));
-              document.getElementById(base.id).children[thisChildOrder].firstChild.textContent = dateToHangul(thisDate);
-              removeByClass(tempInputClassName);
+              const updateFunc = updateEvent(this.getAttribute("buttonValue"));
+              await updateFunc(e);
             } catch (e) {
               console.log(e);
             }
@@ -1309,7 +1344,9 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
           let valueInput;
           let calendar;
           let thisDate, oppositeDate;
-  
+          let column;
+          let whereQuery, updateQuery;
+
           cancelBack = {};
           valueInput = {};
   
@@ -1359,6 +1396,8 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             },
           });
   
+
+
           if (e.clientX > this.querySelector('b').getBoundingClientRect().left) {
   
             thisDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[1];
@@ -1369,6 +1408,20 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                 const thisDate = stringToDate(this.getAttribute("buttonValue"));
   
                 document.getElementById(base.id).children[thisChildOrder].firstChild.lastChild.textContent = dateToHangul(thisDate);
+
+                column = "date.end";
+                whereQuery = { proid: project.proid };
+                updateQuery = {};
+                updateQuery["schedule." + String(index) + "." + column] = thisDate;
+                
+                await ajaxJson({
+                  mode: "update",
+                  proid: project.proid,
+                  desid: instance.designer.desid,
+                  whereQuery,
+                  updateQuery
+                }, SECONDHOST + "/projectDesignerSchedule");
+
                 removeByClass(tempInputClassName);
               } catch (e) {
                 console.log(e);
@@ -1385,6 +1438,20 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               try {
                 const thisDate = stringToDate(this.getAttribute("buttonValue"));
                 document.getElementById(base.id).children[thisChildOrder].firstChild.firstChild.textContent = dateToHangul(thisDate);
+
+                column = "date.start";
+                whereQuery = { proid: project.proid };
+                updateQuery = {};
+                updateQuery["schedule." + String(index) + "." + column] = thisDate;
+                
+                await ajaxJson({
+                  mode: "update",
+                  proid: project.proid,
+                  desid: instance.designer.desid,
+                  whereQuery,
+                  updateQuery
+                }, SECONDHOST + "/projectDesignerSchedule");
+
                 removeByClass(tempInputClassName);
               } catch (e) {
                 console.log(e);
@@ -1403,7 +1470,15 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     updateOrderValue = () => {
       return async function (e) {
         try {
+          const base = this.parentElement;
           let toTarget, fromTarget;
+          let refreshTargets;
+          let num;
+          let childrenTarget;
+          let newContents;
+          let tempObj;
+          let whereQuery, updateQuery;
+
           e.preventDefault();
           toTarget = e.toElement;
           while (!(new RegExp(dragElementClassName, "gi")).test(toTarget.className === null ? '' : toTarget.className)) {
@@ -1414,10 +1489,56 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
           fromTarget = document.getElementById(e.dataTransfer.getData("dragData"));
 
           if (toTarget.nextElementSibling === null) {
-            this.parentElement.appendChild(fromTarget);
+            base.appendChild(fromTarget);
           } else {
-            this.parentElement.insertBefore(fromTarget, toTarget.nextElementSibling)
+            base.insertBefore(fromTarget, toTarget.nextElementSibling)
           }
+
+          if (desktop) {
+
+            refreshTargets = [ ...base.children ];
+
+            num = -1;
+            newContents = [];
+            for (let dom of refreshTargets) {
+              dom.setAttribute("index", String(num));
+              childrenTarget = [ ...dom.children ];
+              for (let child of childrenTarget) {
+                child.setAttribute("index", String(num));
+              }
+              if (num !== -1) {
+                tempObj = {};
+                tempObj.date = {};
+                for (let i = 0; i < childrenTarget.length; i++) {
+                  if (i === 1) {
+                    tempObj.title = childrenTarget[i].textContent;
+                  } else if (i === 2) {
+                    tempObj.description = childrenTarget[i].textContent;
+                  } else if (i === 3) {
+                    tempObj.date.start = hangulToDate(childrenTarget[i].textContent);
+                  } else if (i === 4) {
+                    tempObj.date.end = hangulToDate(childrenTarget[i].textContent);
+                  }
+                }
+                newContents.push(tempObj);
+              }
+              num++;
+            }
+
+            whereQuery = { proid: project.proid };
+            updateQuery = {};
+            updateQuery["schedule"] = newContents;
+
+            await ajaxJson({
+              mode: "update",
+              proid: project.proid,
+              desid: instance.designer.desid,
+              whereQuery,
+              updateQuery
+            }, SECONDHOST + "/projectDesignerSchedule");
+
+          }
+          
         } catch (e) {
           console.log(e);
         }
@@ -1577,6 +1698,9 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
           },
           children: [
             {
+              attribute: {
+                index: String(i),
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -1894,7 +2018,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             schedule: [
               {
                 title: "현장 미팅",
-                description: (!media[3] ? "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다." : "현장에서 미팅 후 실측과 스타일링의 방향을 정합니다."),
+                description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
                 date: {
                   start: project.process.contract.meeting.date,
                   end: project.process.contract.meeting.date,
@@ -1902,7 +2026,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "계약 시작일",
-                description: (!media[3] ? "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다." : "프로젝트의 시작일입니다. 디자인 작업이 시작됩니다."),
+                description: "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다.",
                 date: {
                   start: startDate,
                   end: startDate,
@@ -1910,7 +2034,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "컨셉 제안서",
-                description: (!media[3] ? "전체적인 디자인 방향을 정할 컨셉 제안서 입니다." : "전체적인 디자인 방향을 정할 컨셉 제안서 입니다."),
+                description: "전체적인 디자인 방향을 정할 컨셉 제안서 입니다.",
                 date: {
                   start: startDate,
                   end: after7,
@@ -1918,7 +2042,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "1차 디자인 제안서",
-                description: (!media[3] ? "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다." : "컨셉을 바탕으로 디자인 시안을 제공드립니다."),
+                description: "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다.",
                 date: {
                   start: after7,
                   end: after14,
@@ -1926,7 +2050,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "제안서 수정 작업",
-                description: (!media[3] ? "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다." : "수정 사항을 반영하여 작업을 진행하는 기간입니다."),
+                description: "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다.",
                 date: {
                   start: after14,
                   end: after21,
@@ -1934,7 +2058,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "제품 리스트",
-                description: (big ? "확정된 디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다." : "디자인 제안서에 나와 있는 제품의 리스트를 제공합니다."),
+                description: "디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다.",
                 date: {
                   start: after14,
                   end: after21,
@@ -1942,7 +2066,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "제품 구매 및 배송",
-                description: (!media[3] ? "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다." : "제품들을 구매하고 배송을 기다리는 기간입니다."),
+                description: "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다.",
                 date: {
                   start: after21,
                   end: after28,
@@ -1950,7 +2074,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "제품 설치 및 세팅",
-                description: (!media[3] ? "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다." : "배송된 가구, 가전, 패브릭 등의 설치, 세팅이 진행됩니다."),
+                description: "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다.",
                 date: {
                   start: after21,
                   end: after35,
@@ -1966,7 +2090,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             schedule: [
               {
                 title: "현장 미팅",
-                description: (!media[3] ? "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다." : "현장에서 미팅 후 실측과 스타일링의 방향을 정합니다."),
+                description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
                 date: {
                   start: project.process.contract.meeting.date,
                   end: project.process.contract.meeting.date,
@@ -1974,7 +2098,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "계약 시작일",
-                description: (!media[3] ? "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다." : "프로젝트의 시작일입니다. 디자인 작업이 시작됩니다."),
+                description: "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다.",
                 date: {
                   start: startDate,
                   end: startDate,
@@ -1982,7 +2106,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "컨셉 제안서",
-                description: (!media[3] ? "전체적인 디자인 방향을 정할 컨셉 제안서 입니다." : "전체적인 디자인 방향을 정할 컨셉 제안서 입니다."),
+                description: "전체적인 디자인 방향을 정할 컨셉 제안서 입니다.",
                 date: {
                   start: startDate,
                   end: after7,
@@ -1990,7 +2114,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "1차 디자인 제안서",
-                description: (!media[3] ? "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다." : "컨셉을 바탕으로 디자인 시안을 제공드립니다."),
+                description: "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다.",
                 date: {
                   start: after7,
                   end: after14,
@@ -1998,7 +2122,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "제안서 수정 작업",
-                description: (!media[3] ? "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다." : "수정 사항을 반영하여 작업을 진행하는 기간입니다."),
+                description: "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다.",
                 date: {
                   start: after14,
                   end: after21,
@@ -2006,7 +2130,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "제품 리스트",
-                description: (big ? "확정된 디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다." : "디자인 제안서에 나와 있는 제품의 리스트를 제공합니다."),
+                description: "디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다.",
                 date: {
                   start: after14,
                   end: after21,
@@ -2014,7 +2138,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "시공 의뢰서",
-                description: (!media[3] ? "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다." : "어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다."),
+                description: "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다.",
                 date: {
                   start: after14,
                   end: after21,
@@ -2022,7 +2146,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "시공 견적서",
-                description: (!media[3] ? "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다." : "의뢰서를 바탕으로 시공 내역에 대한 견적서 입니다."),
+                description: "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다.",
                 date: {
                   start: after21,
                   end: after28,
@@ -2030,7 +2154,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "시공 진행",
-                description: (!media[3] ? "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다." : "시공 내역대로 실제 시공을 진행하는 기간입니다."),
+                description: "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다.",
                 date: {
                   start: after28,
                   end: after49,
@@ -2038,7 +2162,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "제품 구매 및 배송",
-                description: (!media[3] ? "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다." : "제품들을 구매하고 배송을 기다리는 기간입니다."),
+                description: "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다.",
                 date: {
                   start: after42,
                   end: after56,
@@ -2046,7 +2170,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "제품 설치 및 세팅",
-                description: (!media[3] ? "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다." : "배송된 가구, 가전, 패브릭 등의 설치, 세팅이 진행됩니다."),
+                description: "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다.",
                 date: {
                   start: after49,
                   end: after56,
@@ -2061,7 +2185,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             schedule: [
               {
                 title: "현장 미팅",
-                description: (!media[3] ? "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다." : "현장에서 미팅 후 실측과 스타일링의 방향을 정합니다."),
+                description: "현장에서 고객님과 미팅 후 실측과 스타일링의 방향을 정합니다.",
                 date: {
                   start: project.process.contract.meeting.date,
                   end: project.process.contract.meeting.date,
@@ -2069,7 +2193,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "계약 시작일",
-                description: (!media[3] ? "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다." : "프로젝트의 시작일입니다. 디자인 작업이 시작됩니다."),
+                description: "계약서상 프로젝트 시작일입니다. 본격적인 디자인 작업이 시작됩니다.",
                 date: {
                   start: startDate,
                   end: startDate,
@@ -2077,7 +2201,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "컨셉 제안서",
-                description: (!media[3] ? "전체적인 디자인 방향을 정할 컨셉 제안서 입니다." : "전체적인 디자인 방향을 정할 컨셉 제안서 입니다."),
+                description: "전체적인 디자인 방향을 정할 컨셉 제안서 입니다.",
                 date: {
                   start: startDate,
                   end: after7,
@@ -2085,7 +2209,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "1차 디자인 제안서",
-                description: (!media[3] ? "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다." : "컨셉을 바탕으로 디자인 시안을 제공드립니다."),
+                description: "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다.",
                 date: {
                   start: after7,
                   end: after14,
@@ -2093,7 +2217,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "제안서 수정 작업",
-                description: (!media[3] ? "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다." : "수정 사항을 반영하여 작업을 진행하는 기간입니다."),
+                description: "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다.",
                 date: {
                   start: after14,
                   end: after21,
@@ -2101,7 +2225,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "제품 리스트",
-                description: (big ? "확정된 디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다." : "디자인 제안서에 나와 있는 제품의 리스트를 제공합니다."),
+                description: "디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다.",
                 date: {
                   start: after14,
                   end: after21,
@@ -2109,7 +2233,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "시공 의뢰서",
-                description: (!media[3] ? "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다." : "어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다."),
+                description: "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다.",
                 date: {
                   start: after14,
                   end: after21,
@@ -2117,7 +2241,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "시공 견적서",
-                description: (!media[3] ? "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다." : "의뢰서를 바탕으로 시공 내역에 대한 견적서 입니다."),
+                description: "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다.",
                 date: {
                   start: after21,
                   end: after28,
@@ -2125,7 +2249,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "시공 진행",
-                description: (!media[3] ? "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다." : "시공 내역대로 실제 시공을 진행하는 기간입니다."),
+                description: "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다.",
                 date: {
                   start: after28,
                   end: after56,
@@ -2133,7 +2257,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "제품 구매 및 배송",
-                description: (!media[3] ? "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다." : "제품들을 구매하고 배송을 기다리는 기간입니다."),
+                description: "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다.",
                 date: {
                   start: after42,
                   end: after63,
@@ -2141,7 +2265,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               {
                 title: "제품 설치 및 세팅",
-                description: (!media[3] ? "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다." : "배송된 가구, 가전, 패브릭 등의 설치, 세팅이 진행됩니다."),
+                description: "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다.",
                 date: {
                   start: after56,
                   end: after70,
