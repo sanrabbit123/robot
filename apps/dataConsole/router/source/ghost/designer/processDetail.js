@@ -1027,6 +1027,8 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     let buttonHeight, buttonPadding, buttonBetween;
     let buttonSize, buttonWeight, buttonTextTop;
     let originalContents;
+    let contextMenuValue;
+    let refreshUpdate;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1086,6 +1088,8 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
   
     this.whiteMargin = (desktop ? margin : 0);
   
+    setScheduleContents = () => {};
+
     startDate = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
     after7 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
     after7.setDate(after7.getDate() + 7);
@@ -1108,6 +1112,63 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     after70 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
     after70.setDate(after70.getDate() + 70);
   
+    refreshUpdate = async function (base) {
+      try {
+        let refreshTargets;
+        let num;
+        let newContents;
+        let childrenTarget;
+        let tempObj;
+        let whereQuery, updateQuery;
+
+        refreshTargets = [ ...base.children ];
+        refreshTargets.pop();
+
+        num = -1;
+        newContents = [];
+        for (let dom of refreshTargets) {
+          dom.setAttribute("index", String(num));
+          childrenTarget = [ ...dom.children ];
+          for (let child of childrenTarget) {
+            child.setAttribute("index", String(num));
+          }
+          if (num !== -1) {
+            tempObj = {};
+            tempObj.date = {};
+            for (let i = 0; i < childrenTarget.length; i++) {
+              if (i === 1) {
+                tempObj.title = childrenTarget[i].textContent;
+              } else if (i === 2) {
+                tempObj.description = childrenTarget[i].textContent;
+              } else if (i === 3) {
+                tempObj.date.start = hangulToDate(childrenTarget[i].textContent);
+              } else if (i === 4) {
+                tempObj.date.end = hangulToDate(childrenTarget[i].textContent);
+              }
+            }
+            newContents.push(tempObj);
+          }
+          num++;
+        }
+
+        whereQuery = { proid: project.proid };
+        updateQuery = {};
+        updateQuery["schedule"] = newContents;
+
+        await ajaxJson({
+          mode: "update",
+          proid: project.proid,
+          desid: instance.designer.desid,
+          whereQuery,
+          updateQuery
+        }, SECONDHOST + "/projectDesignerSchedule");
+
+        return { schedule: newContents };
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
     updateTextValue = (order, widthRatio, weight) => {
       return async function (e) {
         try {
@@ -1236,6 +1297,154 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
       }
     }
   
+    contextMenuValue = (order) => {
+      return async function (e) {
+        try {
+
+          e.preventDefault();
+
+          const self = this;
+          const index = Number(this.getAttribute("index"));
+          const mother = this.parentElement.parentElement;
+          const base = this.parentElement;
+          const zIndex = 4;
+          const thisChildOrder = order;
+          let cancelBack;
+          let valueInput;
+          let menu;
+          let clone;
+          let whereQuery;
+          let updateQuery;
+  
+          cancelBack = {};
+          valueInput = {};
+
+          menu = [
+            {
+              title: "수정하기",
+              event: () => {
+                return function (e) {
+                  removeByClass(tempInputClassName);
+                  self.click();
+                }
+              }
+            },
+            {
+              title: "블록 지우기",
+              event: () => {
+                return async function (e) {
+                  try {
+                    removeByClass(tempInputClassName);
+                    base.remove();
+                    setScheduleContents(await refreshUpdate(mother));
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
+              title: "새 볼록 추가",
+              event: () => {
+                return async function (e) {
+                  try {
+                    removeByClass(tempInputClassName);
+                    clone = base.cloneNode(true);
+                    mother.insertBefore(clone, base.nextElementSibling);
+                    setScheduleContents(await refreshUpdate(mother));
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+          ]
+
+          cancelBack = createNode({
+            mother,
+            attribute: {
+              baseid: base.id,
+            },
+            class: [ tempInputClassName ],
+            event: {
+              click: function (e) {
+                removeByClass(tempInputClassName);
+              },
+              contextmenu: function (e) {
+                e.preventDefault();
+                removeByClass(tempInputClassName);
+              }
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              background: "transparent",
+              zIndex: String(zIndex),
+            }
+          });
+
+          valueInput = createNode({
+            mother,
+            attribute: {
+              baseid: base.id,
+            },
+            class: [ tempInputClassName ],
+            event: {
+              click: function (e) {
+
+              }
+            },
+            style: {
+              position: "fixed",
+              top: String(e.clientY - baseTong.getBoundingClientRect().top) + "px",
+              left: String(e.clientX - baseTong.getBoundingClientRect().left) + "px",
+              background: colorChip.white,
+              padding: String(6) + ea,
+              zIndex: String(zIndex),
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              animation: "fadeuplite 0.3s ease forwards",
+            },
+            children: menu.map((obj, index) => {
+              return {
+                event: {
+                  click: obj.event(),
+                },
+                style: {
+                  display: "flex",
+                  width: String(110) + ea,
+                  height: String(32) + ea,
+                  background: colorChip.gradientGreen,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  borderRadius: String(5) + "px",
+                  marginBottom: index !== menu.length - 1 ? String(4) + ea : "",
+                  cursor: "pointer",
+                },
+                child: {
+                  text: obj.title,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(-1) + ea,
+                    fontSize: String(13) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.white,
+                  }
+                }
+              };
+            })
+          });
+          
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
     updateDateValue = (order) => {
       return async function (e) {
         try {
@@ -1487,12 +1696,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
         try {
           const base = this.parentElement;
           let toTarget, fromTarget;
-          let refreshTargets;
-          let num;
-          let childrenTarget;
-          let newContents;
-          let tempObj;
-          let whereQuery, updateQuery;
 
           e.preventDefault();
           toTarget = e.toElement;
@@ -1510,49 +1713,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
           }
 
           if (desktop) {
-
-            refreshTargets = [ ...base.children ];
-            refreshTargets.pop();
-
-            num = -1;
-            newContents = [];
-            for (let dom of refreshTargets) {
-              dom.setAttribute("index", String(num));
-              childrenTarget = [ ...dom.children ];
-              for (let child of childrenTarget) {
-                child.setAttribute("index", String(num));
-              }
-              if (num !== -1) {
-                tempObj = {};
-                tempObj.date = {};
-                for (let i = 0; i < childrenTarget.length; i++) {
-                  if (i === 1) {
-                    tempObj.title = childrenTarget[i].textContent;
-                  } else if (i === 2) {
-                    tempObj.description = childrenTarget[i].textContent;
-                  } else if (i === 3) {
-                    tempObj.date.start = hangulToDate(childrenTarget[i].textContent);
-                  } else if (i === 4) {
-                    tempObj.date.end = hangulToDate(childrenTarget[i].textContent);
-                  }
-                }
-                newContents.push(tempObj);
-              }
-              num++;
-            }
-
-            whereQuery = { proid: project.proid };
-            updateQuery = {};
-            updateQuery["schedule"] = newContents;
-
-            await ajaxJson({
-              mode: "update",
-              proid: project.proid,
-              desid: instance.designer.desid,
-              whereQuery,
-              updateQuery
-            }, SECONDHOST + "/projectDesignerSchedule");
-
+            await refreshUpdate(base);
           }
           
         } catch (e) {
@@ -2027,6 +2188,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               },
               event: {
                 click: updateTextValue(1, widthRatio0, contentsWordingWeight),
+                contextmenu: contextMenuValue(1),
               },
               style: {
                 display: "inline-flex",
