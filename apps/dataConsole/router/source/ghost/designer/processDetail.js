@@ -1022,6 +1022,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     let after7, after14, after21, after28, after35, after42, after49, after56, after63, after70;
     let updateDateMobileValue;
     let setScheduleContents;
+    let updateOrderValue;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1100,12 +1101,44 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
           const base = this.parentElement;
           const zIndex = 4;
           const thisChildOrder = order;
+          let updateEvent;
           let cancelBack;
           let valueInput;
+          let column;
+          let whereQuery, updateQuery;
   
           cancelBack = {};
           valueInput = {};
   
+          updateEvent = async function (e) {
+            try {
+              document.getElementById(base.id).children[thisChildOrder].firstChild.textContent = valueInput.value;
+
+              if (thisChildOrder === 1) {
+                column = "title";
+              } else if (thisChildOrder === 2) {
+                column = "description";
+              }
+
+              whereQuery = { proid: project.proid };
+              updateQuery = {};
+              updateQuery["schedule." + String(index) + "." + column] = valueInput.value;
+
+              await ajaxJson({
+                mode: "update",
+                proid: project.proid,
+                desid: instance.designer.desid,
+                whereQuery,
+                updateQuery
+              }, SECONDHOST + "/projectDesignerSchedule");
+
+              removeByClass(tempInputClassName);
+
+            } catch (e) {
+              console.log(e);
+            }
+          }
+
           cancelBack = createNode({
             mother,
             attribute: {
@@ -1114,8 +1147,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             class: [ tempInputClassName ],
             event: {
               click: function (e) {
-                document.getElementById(this.getAttribute("baseid")).children[thisChildOrder].firstChild.textContent = valueInput.value;
-                removeByClass(tempInputClassName);
+                updateEvent(e).catch((err) => { console.log(err); });
               }
             },
             style: {
@@ -1159,8 +1191,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               event: {
                 keypress: function (e) {
                   if (e.key === "Enter") {
-                    document.getElementById(this.getAttribute("baseid")).children[thisChildOrder].firstChild.textContent = valueInput.value;
-                    removeByClass(tempInputClassName);    
+                    updateEvent(e).catch((err) => { console.log(err); });
                   }
                 }
               },
@@ -1368,6 +1399,30 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
         }
       }
     }
+
+    updateOrderValue = () => {
+      return async function (e) {
+        try {
+          let toTarget, fromTarget;
+          e.preventDefault();
+          toTarget = e.toElement;
+          while (!(new RegExp(dragElementClassName, "gi")).test(toTarget.className === null ? '' : toTarget.className)) {
+            toTarget = toTarget.parentElement;
+          }
+          toTarget.style.paddingBottom = String(0) + ea;
+
+          fromTarget = document.getElementById(e.dataTransfer.getData("dragData"));
+
+          if (toTarget.nextElementSibling === null) {
+            this.parentElement.appendChild(fromTarget);
+          } else {
+            this.parentElement.insertBefore(fromTarget, toTarget.nextElementSibling)
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
   
     whiteBlock = createNode({
       mother: baseTong,
@@ -1477,6 +1532,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
           mother: panMother,
           attribute: {
             draggable: "true",
+            index: String(i),
           },
           class: [ dragElementClassName ],
           id: dragElementClassName + "_" + uniqueValue("hex"),
@@ -1507,23 +1563,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             dragover: function (e) {
               e.preventDefault();
             },
-            drop: function (e) {
-              let toTarget, fromTarget;
-              e.preventDefault();
-              toTarget = e.toElement;
-              while (!(new RegExp(dragElementClassName, "gi")).test(toTarget.className === null ? '' : toTarget.className)) {
-                toTarget = toTarget.parentElement;
-              }
-              toTarget.style.paddingBottom = String(0) + ea;
-    
-              fromTarget = document.getElementById(e.dataTransfer.getData("dragData"));
-    
-              if (toTarget.nextElementSibling === null) {
-                this.parentElement.appendChild(fromTarget);
-              } else {
-                this.parentElement.insertBefore(fromTarget, toTarget.nextElementSibling)
-              }
-            },
+            drop: updateOrderValue(),
           },
           style: {
             display: desktop ? "flex" : "block",
@@ -1859,7 +1899,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: project.process.contract.meeting.date,
                   end: project.process.contract.meeting.date,
                 },
-                color: colorChip.red,
               },
               {
                 title: "계약 시작일",
@@ -1868,7 +1907,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: startDate,
                   end: startDate,
                 },
-                color: colorChip.red,
               },
               {
                 title: "컨셉 제안서",
@@ -1877,7 +1915,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: startDate,
                   end: after7,
                 },
-                color: colorChip.red,
               },
               {
                 title: "1차 디자인 제안서",
@@ -1886,7 +1923,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after7,
                   end: after14,
                 },
-                color: colorChip.red,
               },
               {
                 title: "제안서 수정 작업",
@@ -1895,7 +1931,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after14,
                   end: after21,
                 },
-                color: colorChip.red,
               },
               {
                 title: "제품 리스트",
@@ -1904,7 +1939,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after14,
                   end: after21,
                 },
-                color: colorChip.red,
               },
               {
                 title: "제품 구매 및 배송",
@@ -1913,7 +1947,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after21,
                   end: after28,
                 },
-                color: colorChip.red,
               },
               {
                 title: "제품 설치 및 세팅",
@@ -1922,7 +1955,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after21,
                   end: after35,
                 },
-                color: colorChip.red,
               },
             ]
           };
@@ -1939,7 +1971,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: project.process.contract.meeting.date,
                   end: project.process.contract.meeting.date,
                 },
-                color: colorChip.red,
               },
               {
                 title: "계약 시작일",
@@ -1948,7 +1979,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: startDate,
                   end: startDate,
                 },
-                color: colorChip.red,
               },
               {
                 title: "컨셉 제안서",
@@ -1957,7 +1987,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: startDate,
                   end: after7,
                 },
-                color: colorChip.red,
               },
               {
                 title: "1차 디자인 제안서",
@@ -1966,7 +1995,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after7,
                   end: after14,
                 },
-                color: colorChip.red,
               },
               {
                 title: "제안서 수정 작업",
@@ -1975,7 +2003,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after14,
                   end: after21,
                 },
-                color: colorChip.red,
               },
               {
                 title: "제품 리스트",
@@ -1984,7 +2011,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after14,
                   end: after21,
                 },
-                color: colorChip.red,
               },
               {
                 title: "시공 의뢰서",
@@ -1993,7 +2019,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after14,
                   end: after21,
                 },
-                color: colorChip.red,
               },
               {
                 title: "시공 견적서",
@@ -2002,7 +2027,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after21,
                   end: after28,
                 },
-                color: colorChip.red,
               },
               {
                 title: "시공 진행",
@@ -2011,7 +2035,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after28,
                   end: after49,
                 },
-                color: colorChip.red,
               },
               {
                 title: "제품 구매 및 배송",
@@ -2020,7 +2043,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after42,
                   end: after56,
                 },
-                color: colorChip.red,
               },
               {
                 title: "제품 설치 및 세팅",
@@ -2029,7 +2051,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after49,
                   end: after56,
                 },
-                color: colorChip.red,
               },
             ]
           };
@@ -2045,7 +2066,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: project.process.contract.meeting.date,
                   end: project.process.contract.meeting.date,
                 },
-                color: colorChip.red,
               },
               {
                 title: "계약 시작일",
@@ -2054,7 +2074,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: startDate,
                   end: startDate,
                 },
-                color: colorChip.red,
               },
               {
                 title: "컨셉 제안서",
@@ -2063,7 +2082,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: startDate,
                   end: after7,
                 },
-                color: colorChip.red,
               },
               {
                 title: "1차 디자인 제안서",
@@ -2072,7 +2090,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after7,
                   end: after14,
                 },
-                color: colorChip.red,
               },
               {
                 title: "제안서 수정 작업",
@@ -2081,7 +2098,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after14,
                   end: after21,
                 },
-                color: colorChip.red,
               },
               {
                 title: "제품 리스트",
@@ -2090,7 +2106,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after14,
                   end: after21,
                 },
-                color: colorChip.red,
               },
               {
                 title: "시공 의뢰서",
@@ -2099,7 +2114,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after14,
                   end: after21,
                 },
-                color: colorChip.red,
               },
               {
                 title: "시공 견적서",
@@ -2108,7 +2122,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after21,
                   end: after28,
                 },
-                color: colorChip.red,
               },
               {
                 title: "시공 진행",
@@ -2117,7 +2130,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after28,
                   end: after56,
                 },
-                color: colorChip.red,
               },
               {
                 title: "제품 구매 및 배송",
@@ -2126,7 +2138,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after42,
                   end: after63,
                 },
-                color: colorChip.red,
               },
               {
                 title: "제품 설치 및 세팅",
@@ -2135,7 +2146,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   start: after56,
                   end: after70,
                 },
-                color: colorChip.red,
               },
             ]
           };

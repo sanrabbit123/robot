@@ -883,6 +883,7 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
       let rows;
       let schedule;
       let createQuery;
+      let whereQuery, updateQuery;
 
       if (mode === "get") {
 
@@ -899,13 +900,12 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
 
       } else if (mode === "update") {
 
-        // rows = await back.mongoRead(collection, { key: id }, { selfMongo });
-        // if (rows.length === 0) {
-        //   await back.mongoCreate(collection, json, { selfMongo });
-        // } else {
-        //   await back.mongoUpdate(collection, [ { key: id }, { "contents.memo": memo } ], { selfMongo });
-        // }
-        // resultObj = { message: "success" };
+        whereQuery = equalJson(req.body.whereQuery);
+        updateQuery = equalJson(req.body.updateQuery);
+
+        await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+        
+        resultObj = { message: "success" };
 
       }
 
