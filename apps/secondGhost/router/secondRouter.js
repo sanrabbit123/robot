@@ -859,7 +859,7 @@ SecondRouter.prototype.rou_post_projectDesignerRaw = function () {
 SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
   const instance = this;
   const back = this.back;
-  const { errorLog } = this.mother;
+  const { errorLog, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/projectDesignerSchedule" ];
   obj.func = async function (req, res) {
@@ -881,12 +881,21 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
       const { mode, desid, proid } = req.body;
       let resultObj;
       let rows;
+      let schedule;
+      let createQuery;
 
       if (mode === "get") {
 
         rows = await back.mongoRead(collection, { proid }, { selfMongo });
-
         resultObj = rows;
+
+      } else if (mode === "create") {
+
+        schedule = equalJson(req.body.schedule);
+        createQuery = { proid, desid, schedule };
+        await back.mongoCreate(collection, createQuery, { selfMongo });
+
+        resultObj = createQuery;
 
       } else if (mode === "update") {
 
@@ -896,7 +905,6 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
         // } else {
         //   await back.mongoUpdate(collection, [ { key: id }, { "contents.memo": memo } ], { selfMongo });
         // }
-
         // resultObj = { message: "success" };
 
       }
