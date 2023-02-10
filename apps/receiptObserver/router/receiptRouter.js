@@ -3530,13 +3530,13 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
                           await messageSend({ text, channel: "#cx", voice: true });
 
                           if (thisDesigner !== null) {
-                            await kakao.sendTalk("contractConfirmDesigner", thisDesigner.designer, thisDesigner.information.phone, {
-                              client: thisClient.name,
-                              designer: thisDesigner.designer,
-                              host: address.frontinfo.host,
-                              proid: thisProject.proid,
-                            });
-                            await messageSend(thisDesigner.designer + " 실장님께 계약서 서명 완료 알림을 전송하였어요.", "#300_designer", false);
+                            // await kakao.sendTalk("contractConfirmDesigner", thisDesigner.designer, thisDesigner.information.phone, {
+                            //   client: thisClient.name,
+                            //   designer: thisDesigner.designer,
+                            //   host: address.frontinfo.host,
+                            //   proid: thisProject.proid,
+                            // });
+                            // await messageSend(thisDesigner.designer + " 실장님께 계약서 서명 완료 알림을 전송하였어요.", "#300_designer", false);
                           }
 
                         }

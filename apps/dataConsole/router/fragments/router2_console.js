@@ -5716,8 +5716,8 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
     });
     try {
       firstMeetingAlarmFunc(instance.mongo).then(() => {
-        return afterMeetingAlarmFunc(instance.mongo);
-      }).then(() => {
+      //   return afterMeetingAlarmFunc(instance.mongo);
+      // }).then(() => {
         return photoDesignerAlarmFunc(instance.mongo);
       }).then(() => {
         return contractStartAlarmFunc(instance.mongo);

@@ -1023,6 +1023,9 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     let updateDateMobileValue;
     let setScheduleContents;
     let updateOrderValue;
+    let buttonTongHeight, buttonTongPaddingTop;
+    let buttonHeight, buttonPadding, buttonBetween;
+    let buttonSize, buttonWeight, buttonTextTop;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1067,6 +1070,17 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     calendarWidth = <%% 260, 260, 260, 260, 260 %%>;
     calendarPadding = <%% 4, 4, 4, 4, 3 %%>;
   
+    buttonTongHeight = <%% 42, 42, 42, 42, 42 %%>;
+    buttonTongPaddingTop = <%% 11, 11, 11, 11, 11 %%>;
+
+    buttonHeight = <%% 36, 36, 36, 36, 36 %%>;
+    buttonPadding = <%% 22, 22, 22, 22, 22 %%>;
+    buttonBetween = <%% 6, 6, 6, 6, 6 %%>;
+
+    buttonSize = <%% 14, 14, 14, 14, 14 %%>;
+    buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+    buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
     mobileInnerPaddingBottom = 0;
   
     this.whiteMargin = (desktop ? margin : 0);
@@ -1497,6 +1511,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
           if (desktop) {
 
             refreshTargets = [ ...base.children ];
+            refreshTargets.pop();
 
             num = -1;
             newContents = [];
@@ -1648,6 +1663,9 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     }).firstChild;
   
     setScheduleContents = (contents) => {
+
+      cleanChildren(panMother);
+
       for (let i = -1; i < contents.schedule.length; i++) {
         contentsBlock = createNode({
           mother: panMother,
@@ -2008,6 +2026,74 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
         }
     
       }
+
+      createNode({
+        mother: panMother,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(buttonTongHeight) + ea,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "end",
+          paddingTop: String(buttonTongPaddingTop) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              height: String(buttonHeight) + ea,
+              background: colorChip.gradientGreen,
+              borderRadius: String(5) + "px",
+              marginRight: String(buttonBetween) + ea,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              paddingLeft: String(buttonPadding) + ea,
+              paddingRight: String(buttonPadding) + ea,
+              cursor: "pointer",
+            },
+            child: {
+              text: "고객에게 일정표 알림 보내기",
+              style: {
+                display: "block",
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(buttonWeight),
+                color: colorChip.white,
+                position: "relative",
+                top: String(buttonTextTop) + ea,
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              height: String(buttonHeight) + ea,
+              background: colorChip.gradientGreen,
+              borderRadius: String(5) + "px",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              paddingLeft: String(buttonPadding) + ea,
+              paddingRight: String(buttonPadding) + ea,
+              cursor: "pointer",
+            },
+            child: {
+              text: "전체 일정 초기화",
+              style: {
+                display: "block",
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(buttonWeight),
+                color: colorChip.white,
+                position: "relative",
+                top: String(buttonTextTop) + ea,
+              }
+            }
+          },
+        ]
+      });
+
     }
 
     ajaxJson({ mode: "get", proid: project.proid, desid: instance.designer.desid }, SECONDHOST + "/projectDesignerSchedule", { equal: true }).then((rows) => {
