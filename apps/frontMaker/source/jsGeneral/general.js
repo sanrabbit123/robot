@@ -2101,6 +2101,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
     throw new Error("children model => { contents: { color: String, description: String, title: String }, date: { start: Date, end: Date } }");
   }
   const today = new Date();
+  const touchStartConst = "calendarTouchStartConstName";
   const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num) }
   const dateToNumber = (date) => { return (date.getFullYear() * 100000) + ((date.getMonth() + 1) * 100) + date.getDate() }
   let ea;
@@ -2139,8 +2140,11 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
   let calendarTitlePaddingLeft;
   let calendarTitlePaddingRight;
   let standardDate;
+  let desktop, mobile;
 
   if (option.heightMode !== true) {
+    desktop = true;
+    mobile = false;
     if (window.innerWidth > 1450) {
       if (option.smallMode !== true) {
         ea = "px";
@@ -2406,6 +2410,8 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
         calendarTitlePaddingRight = 8;
       }
     } else if (window.innerWidth <= 760) {
+      desktop = false;
+      mobile = true;  
       if (option.smallMode !== true) {
         ea = "vw";
         calendarVisualLeft = 0;
@@ -2416,8 +2422,8 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
         weekBlockSize = 2.5;
         weekBlockWeight = 600;
         weekBlockTextTop = 0;
-        arrowWidth = 2.2;
-        arrowTop = 2.6;
+        arrowWidth = 2.6;
+        arrowTop = 2.4;
         dateBlockHeight = 12;
         dateBlockPaddingTop = 5;
         dateBlockPaddingBottom = 1;
@@ -2426,10 +2432,10 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
         datePositionLeft = 1;
         barMotherHeight = 5;
         colorSqureTop = 0.25;
-        colorSqureHeight = 3.5;
+        colorSqureHeight = 4;
         colorSqureIndent = 20;
-        colorSqureWordingSize = 1.9;
-        colorSqureWordingTop = 0.25;
+        colorSqureWordingSize = 2;
+        colorSqureWordingTop = 0.35;
         colorSqureWordingLeft = 1.4;
         colorSqureWordingWeight = 800;
         calendarTitleTop = -3.2;
@@ -2448,8 +2454,8 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
         weekBlockSize = 2.5;
         weekBlockWeight = 600;
         weekBlockTextTop = 0;
-        arrowWidth = 2;
-        arrowTop = 2.3;
+        arrowWidth = 2.6;
+        arrowTop = 2.4;
         dateBlockHeight = 12;
         dateBlockPaddingTop = 5;
         dateBlockPaddingBottom = 1;
@@ -2458,10 +2464,10 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
         datePositionLeft = 1;
         barMotherHeight = 5;
         colorSqureTop = 0.25;
-        colorSqureHeight = 3.5;
+        colorSqureHeight = 4;
         colorSqureIndent = 20;
-        colorSqureWordingSize = 1.9;
-        colorSqureWordingTop = 0.25;
+        colorSqureWordingSize = 2;
+        colorSqureWordingTop = 0.35;
         colorSqureWordingLeft = 1.4;
         colorSqureWordingWeight = 800;
         calendarTitleTop = -3.2;
@@ -2473,6 +2479,8 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
       }
     }
   } else {
+    desktop = true;
+    mobile = false;
     if (typeof option.height !== "number") {
       throw new Error("in height mode, must be standard height");
     }
@@ -2731,38 +2739,40 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
             event: {
               mouseenter: function (e) {
                 e.stopPropagation();
-                GeneralJs.createNode({
-                  mode: "aside",
-                  mother: this.parentElement,
-                  text: title,
-                  style: {
-                    position: "absolute",
-                    top: String(calendarTitleTop) + ea,
-                    width: String(100) + '%',
-                    textAlign: "center",
-                    zIndex: String(1),
-                  },
-                  children: [
-                    {
-                      text: title,
-                      style: {
-                        display: "inline-block",
-                        position: "relative",
-                        fontSize: String(calendarTitleSize) + ea,
-                        fontWeight: String(600),
-                        paddingTop: String(calendarTitlePaddingTop) + ea,
-                        paddingBottom: String(calendarTitlePaddingBottom) + ea,
-                        paddingLeft: String(calendarTitlePaddingLeft) + ea,
-                        paddingRight: String(calendarTitlePaddingRight) + ea,
-                        background: GeneralJs.colorChip.white,
-                        borderRadius: String(5) + "px",
-                        boxShadow: "0px 3px 16px -9px " + GeneralJs.colorChip.darkShadow,
-                        color,
-                        zIndex: String(1),
+                if (desktop) {
+                  GeneralJs.createNode({
+                    mode: "aside",
+                    mother: this.parentElement,
+                    text: title,
+                    style: {
+                      position: "absolute",
+                      top: String(calendarTitleTop) + ea,
+                      width: String(100) + '%',
+                      textAlign: "center",
+                      zIndex: String(1),
+                    },
+                    children: [
+                      {
+                        text: title,
+                        style: {
+                          display: "inline-block",
+                          position: "relative",
+                          fontSize: String(calendarTitleSize) + ea,
+                          fontWeight: String(600),
+                          paddingTop: String(calendarTitlePaddingTop) + ea,
+                          paddingBottom: String(calendarTitlePaddingBottom) + ea,
+                          paddingLeft: String(calendarTitlePaddingLeft) + ea,
+                          paddingRight: String(calendarTitlePaddingRight) + ea,
+                          background: GeneralJs.colorChip.white,
+                          borderRadius: String(5) + "px",
+                          boxShadow: "0px 3px 16px -9px " + GeneralJs.colorChip.darkShadow,
+                          color,
+                          zIndex: String(1),
+                        }
                       }
-                    }
-                  ]
-                })
+                    ]
+                  })
+                }
               },
               mouseleave: function (e) {
                 e.stopPropagation();
@@ -2807,38 +2817,40 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
             event: {
               mouseenter: function (e) {
                 e.stopPropagation();
-                GeneralJs.createNode({
-                  mode: "aside",
-                  mother: this.parentElement,
-                  text: title,
-                  style: {
-                    position: "absolute",
-                    top: String(calendarTitleTop) + ea,
-                    width: String(100) + '%',
-                    textAlign: "center",
-                    zIndex: String(1),
-                  },
-                  children: [
-                    {
-                      text: title,
-                      style: {
-                        display: "inline-block",
-                        position: "relative",
-                        fontSize: String(calendarTitleSize) + ea,
-                        fontWeight: String(600),
-                        paddingTop: String(calendarTitlePaddingTop) + ea,
-                        paddingBottom: String(calendarTitlePaddingBottom) + ea,
-                        paddingLeft: String(calendarTitlePaddingLeft) + ea,
-                        paddingRight: String(calendarTitlePaddingRight) + ea,
-                        background: GeneralJs.colorChip.white,
-                        borderRadius: String(5) + "px",
-                        boxShadow: "0px 3px 16px -9px " + GeneralJs.colorChip.darkShadow,
-                        color,
-                        zIndex: String(1),
+                if (desktop) {
+                  GeneralJs.createNode({
+                    mode: "aside",
+                    mother: this.parentElement,
+                    text: title,
+                    style: {
+                      position: "absolute",
+                      top: String(calendarTitleTop) + ea,
+                      width: String(100) + '%',
+                      textAlign: "center",
+                      zIndex: String(1),
+                    },
+                    children: [
+                      {
+                        text: title,
+                        style: {
+                          display: "inline-block",
+                          position: "relative",
+                          fontSize: String(calendarTitleSize) + ea,
+                          fontWeight: String(600),
+                          paddingTop: String(calendarTitlePaddingTop) + ea,
+                          paddingBottom: String(calendarTitlePaddingBottom) + ea,
+                          paddingLeft: String(calendarTitlePaddingLeft) + ea,
+                          paddingRight: String(calendarTitlePaddingRight) + ea,
+                          background: GeneralJs.colorChip.white,
+                          borderRadius: String(5) + "px",
+                          boxShadow: "0px 3px 16px -9px " + GeneralJs.colorChip.darkShadow,
+                          color,
+                          zIndex: String(1),
+                        }
                       }
-                    }
-                  ]
-                })
+                    ]
+                  })
+                }
               },
               mouseleave: function (e) {
                 e.stopPropagation();
@@ -2883,38 +2895,40 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
             event: {
               mouseenter: function (e) {
                 e.stopPropagation();
-                GeneralJs.createNode({
-                  mode: "aside",
-                  mother: this.parentElement,
-                  text: title,
-                  style: {
-                    position: "absolute",
-                    top: String(calendarTitleTop) + ea,
-                    width: String(100) + '%',
-                    textAlign: "center",
-                    zIndex: String(1),
-                  },
-                  children: [
-                    {
-                      text: title,
-                      style: {
-                        display: "inline-block",
-                        position: "relative",
-                        fontSize: String(calendarTitleSize) + ea,
-                        fontWeight: String(600),
-                        paddingTop: String(calendarTitlePaddingTop) + ea,
-                        paddingBottom: String(calendarTitlePaddingBottom) + ea,
-                        paddingLeft: String(calendarTitlePaddingLeft) + ea,
-                        paddingRight: String(calendarTitlePaddingRight) + ea,
-                        background: GeneralJs.colorChip.white,
-                        borderRadius: String(5) + "px",
-                        boxShadow: "0px 3px 16px -9px " + GeneralJs.colorChip.darkShadow,
-                        color,
-                        zIndex: String(1),
+                if (desktop) {
+                  GeneralJs.createNode({
+                    mode: "aside",
+                    mother: this.parentElement,
+                    text: title,
+                    style: {
+                      position: "absolute",
+                      top: String(calendarTitleTop) + ea,
+                      width: String(100) + '%',
+                      textAlign: "center",
+                      zIndex: String(1),
+                    },
+                    children: [
+                      {
+                        text: title,
+                        style: {
+                          display: "inline-block",
+                          position: "relative",
+                          fontSize: String(calendarTitleSize) + ea,
+                          fontWeight: String(600),
+                          paddingTop: String(calendarTitlePaddingTop) + ea,
+                          paddingBottom: String(calendarTitlePaddingBottom) + ea,
+                          paddingLeft: String(calendarTitlePaddingLeft) + ea,
+                          paddingRight: String(calendarTitlePaddingRight) + ea,
+                          background: GeneralJs.colorChip.white,
+                          borderRadius: String(5) + "px",
+                          boxShadow: "0px 3px 16px -9px " + GeneralJs.colorChip.darkShadow,
+                          color,
+                          zIndex: String(1),
+                        }
                       }
-                    }
-                  ]
-                })
+                    ]
+                  })
+                }
               },
               mouseleave: function (e) {
                 e.stopPropagation();
@@ -2941,38 +2955,40 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
             event: {
               mouseenter: function (e) {
                 e.stopPropagation();
-                GeneralJs.createNode({
-                  mode: "aside",
-                  mother: this.parentElement,
-                  text: title,
-                  style: {
-                    position: "absolute",
-                    top: String(calendarTitleTop) + ea,
-                    width: String(100) + '%',
-                    textAlign: "center",
-                    zIndex: String(1),
-                  },
-                  children: [
-                    {
-                      text: title,
-                      style: {
-                        display: "inline-block",
-                        position: "relative",
-                        fontSize: String(calendarTitleSize) + ea,
-                        fontWeight: String(600),
-                        paddingTop: String(calendarTitlePaddingTop) + ea,
-                        paddingBottom: String(calendarTitlePaddingBottom) + ea,
-                        paddingLeft: String(calendarTitlePaddingLeft) + ea,
-                        paddingRight: String(calendarTitlePaddingRight) + ea,
-                        background: GeneralJs.colorChip.white,
-                        borderRadius: String(5) + "px",
-                        boxShadow: "0px 3px 16px -9px " + GeneralJs.colorChip.darkShadow,
-                        color,
-                        zIndex: String(1),
+                if (desktop) {
+                  GeneralJs.createNode({
+                    mode: "aside",
+                    mother: this.parentElement,
+                    text: title,
+                    style: {
+                      position: "absolute",
+                      top: String(calendarTitleTop) + ea,
+                      width: String(100) + '%',
+                      textAlign: "center",
+                      zIndex: String(1),
+                    },
+                    children: [
+                      {
+                        text: title,
+                        style: {
+                          display: "inline-block",
+                          position: "relative",
+                          fontSize: String(calendarTitleSize) + ea,
+                          fontWeight: String(600),
+                          paddingTop: String(calendarTitlePaddingTop) + ea,
+                          paddingBottom: String(calendarTitlePaddingBottom) + ea,
+                          paddingLeft: String(calendarTitlePaddingLeft) + ea,
+                          paddingRight: String(calendarTitlePaddingRight) + ea,
+                          background: GeneralJs.colorChip.white,
+                          borderRadius: String(5) + "px",
+                          boxShadow: "0px 3px 16px -9px " + GeneralJs.colorChip.darkShadow,
+                          color,
+                          zIndex: String(1),
+                        }
                       }
-                    }
-                  ]
-                })
+                    ]
+                  })
+                }
               },
               mouseleave: function (e) {
                 e.stopPropagation();
@@ -3094,7 +3110,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
             this.parentElement.firstChild.textContent = String(dateMatrix.year) + ". " + zeroAddition(dateMatrix.month + 1)
             blockInsert(dateMatrix, children, this.parentElement.nextElementSibling);
           },
-          selectstart: (e) => { e.preventDefault(); }
+          selectstart: (e) => { e.preventDefault(); },
         },
         style: {
           position: "absolute",
@@ -3111,9 +3127,9 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
           click: function (e) {
             dateMatrix = dateMatrix.nextSundayMatrix();
             this.parentElement.firstChild.textContent = String(dateMatrix.year) + ". " + zeroAddition(dateMatrix.month + 1)
-            blockInsert(dateMatrix, children, this.parentElement.nextElementSibling);
+            blockInsert(dateMatrix, children, this.parentElement.nextElementSibling);  
           },
-          selectstart: (e) => { e.preventDefault(); }
+          selectstart: (e) => { e.preventDefault(); },
         },
         style: {
           position: "absolute",
@@ -3137,6 +3153,19 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
     },
   });
   blockInsert(dateMatrix, children, bigCalendarContentsZone);
+
+  if (mobile) {
+    GeneralJs.swipePatch("left", () => {
+      dateMatrix = dateMatrix.nextSundayMatrix();
+      bigCalendarTitleZone.firstChild.textContent = String(dateMatrix.year) + ". " + zeroAddition(dateMatrix.month + 1)
+      blockInsert(dateMatrix, children, bigCalendarTitleZone.nextElementSibling);
+    }, bigCalendar, "bigCalendarSwipeStack_");  
+    GeneralJs.swipePatch("right", () => {
+      dateMatrix = dateMatrix.previousSundayMatrix();
+      bigCalendarTitleZone.firstChild.textContent = String(dateMatrix.year) + ". " + zeroAddition(dateMatrix.month + 1)
+      blockInsert(dateMatrix, children, bigCalendarTitleZone.nextElementSibling);
+    }, bigCalendar, "bigCalendarSwipeStack_");  
+  }
 
   return bigCalendar;
 }

@@ -1069,7 +1069,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     contentsWordingContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
     contentsTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.1 %%>;
   
-    calendarTongPaddingTop = <%% 24, 24, 22, 20, 3 %%>;
+    calendarTongPaddingTop = <%% 24, 24, 20, 16, 3 %%>;
     calendarTongPaddingBottom = <%% 20, 20, 18, 14, 3 %%>;
 
     hamburgerItemWidth = <%% 14, 13, 13, 12, 2 %%>;
@@ -1209,15 +1209,16 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
               updateQuery = {};
               updateQuery["schedule." + String(index) + "." + column] = valueInput.value;
 
-              await ajaxJson({
+              updatedContents = await ajaxJson({
                 mode: "update",
                 proid: project.proid,
                 desid: instance.designer.desid,
                 whereQuery,
                 updateQuery
-              }, SECONDHOST + "/projectDesignerSchedule");
+              }, SECONDHOST + "/projectDesignerSchedule", { equal: true });
 
               removeByClass(tempInputClassName);
+              setScheduleContents(updatedContents);
 
             } catch (e) {
               console.log(e);
@@ -1492,11 +1493,11 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   desid: instance.designer.desid,
                   whereQuery,
                   updateQuery
-                }, SECONDHOST + "/projectDesignerSchedule");
-
-                console.log(updatedContents);
+                }, SECONDHOST + "/projectDesignerSchedule", { equal: true });
 
                 removeByClass(tempInputClassName);
+                setScheduleContents(updatedContents);
+
               } catch (e) {
                 console.log(e);
               }
@@ -1647,15 +1648,17 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                 updateQuery = {};
                 updateQuery["schedule." + String(index) + "." + column] = thisDate;
                 
-                await ajaxJson({
+                updatedContents = await ajaxJson({
                   mode: "update",
                   proid: project.proid,
                   desid: instance.designer.desid,
                   whereQuery,
                   updateQuery
-                }, SECONDHOST + "/projectDesignerSchedule");
+                }, SECONDHOST + "/projectDesignerSchedule", { equal: true });
 
                 removeByClass(tempInputClassName);
+                setScheduleContents(updatedContents);
+
               } catch (e) {
                 console.log(e);
               }
@@ -1677,15 +1680,17 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                 updateQuery = {};
                 updateQuery["schedule." + String(index) + "." + column] = thisDate;
                 
-                await ajaxJson({
+                updatedContents = await ajaxJson({
                   mode: "update",
                   proid: project.proid,
                   desid: instance.designer.desid,
                   whereQuery,
                   updateQuery
-                }, SECONDHOST + "/projectDesignerSchedule");
+                }, SECONDHOST + "/projectDesignerSchedule", { equal: true });
 
                 removeByClass(tempInputClassName);
+                setScheduleContents(updatedContents);
+
               } catch (e) {
                 console.log(e);
               }
@@ -2103,7 +2108,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
         paddingRight: String(contentsPanPaddingTop) + ea,
         paddingTop: String(calendarTongPaddingTop) + ea,
         paddingBottom: String(calendarTongPaddingBottom) + ea,
-        marginTop: String(panMotherInnerPadding) + ea,
+        marginTop: String(desktop ? panMotherInnerPadding : 2) + ea,
         verticalAlign: "top",
       },
     });
