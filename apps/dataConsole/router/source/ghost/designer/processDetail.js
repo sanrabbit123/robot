@@ -1032,6 +1032,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     let calendarMother;
     let calendarTongPaddingTop, calendarTongPaddingBottom;
     let calendarDateArr;
+    let updatedContents;
 
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -1485,13 +1486,15 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                 updateQuery = {};
                 updateQuery["schedule." + String(index) + "." + column] = thisDate;
   
-                await ajaxJson({
+                updatedContents = await ajaxJson({
                   mode: "update",
                   proid: project.proid,
                   desid: instance.designer.desid,
                   whereQuery,
                   updateQuery
                 }, SECONDHOST + "/projectDesignerSchedule");
+
+                console.log(updatedContents);
 
                 removeByClass(tempInputClassName);
               } catch (e) {

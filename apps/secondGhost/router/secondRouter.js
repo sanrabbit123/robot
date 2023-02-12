@@ -884,6 +884,7 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
       let schedule;
       let createQuery;
       let whereQuery, updateQuery;
+      let thisRow;
 
       if (mode === "get") {
 
@@ -905,7 +906,13 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
 
         await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
         
-        resultObj = { message: "success" };
+        thisRow = await back.mongoRead(collection, whereQuery, { selfMongo });
+
+        if (thisRow.length === 0) {
+          resultObj = { message: "error" };
+        } else {
+          resultObj = thisRow[0];
+        }
 
       } else if (mode === "delete") {
 
