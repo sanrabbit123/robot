@@ -966,7 +966,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
   const small = !big;
   const manyBig = media[0];
   const generalSmall = !manyBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, uniqueValue, variableArray } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, uniqueValue, variableArray, colorCalendar } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainTitle = "프로젝트 일정";
   const dragElementClassName = "dragElementClassName";
@@ -1029,7 +1029,10 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     let originalContents;
     let contextMenuValue;
     let refreshUpdate;
-  
+    let calendarMother;
+    let calendarTongPaddingTop, calendarTongPaddingBottom;
+    let calendarDateArr;
+
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 4.7 %%>;
     paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
@@ -1044,7 +1047,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
   
     titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
     contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
-  
+
     panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
     panBetween = <%% 8, 8, 8, 8, 1 %%>;
     panTitleBoxWidth = <%% 124, 120, 114, 108, 21 %%>;
@@ -1065,6 +1068,9 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
     contentsWordingContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
     contentsTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.1 %%>;
   
+    calendarTongPaddingTop = <%% 24, 24, 22, 20, 3 %%>;
+    calendarTongPaddingBottom = <%% 20, 20, 18, 14, 3 %%>;
+
     hamburgerItemWidth = <%% 14, 13, 13, 12, 2 %%>;
   
     widthRatio0 = <%% 4, 3, 3, 2.5, 3.5 %%>;
@@ -2081,9 +2087,42 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
       }
     }).firstChild;
   
+    calendarMother = createNode({
+      mother: panMother.parentElement,
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        borderRadius: String(5) + "px",
+        background: desktop ? colorChip.gray1 : colorChip.gray3,
+        width: withOut(contentsPanPaddingTop * 2, ea),
+        paddingLeft: String(contentsPanPaddingTop) + ea,
+        paddingRight: String(contentsPanPaddingTop) + ea,
+        paddingTop: String(calendarTongPaddingTop) + ea,
+        paddingBottom: String(calendarTongPaddingBottom) + ea,
+        marginTop: String(panMotherInnerPadding) + ea,
+        verticalAlign: "top",
+      },
+    });
+
     setScheduleContents = (contents) => {
 
       cleanChildren(panMother);
+      cleanChildren(calendarMother);
+
+      calendarDateArr = [
+        {
+          contents: {
+            color: colorChip.red,
+            description: "",
+            title: "오늘",
+          },
+          date: {
+            start: new Date(),
+            end: new Date(),
+          }
+        },
+      ];
 
       for (let i = -1; i < contents.schedule.length; i++) {
         contentsBlock = createNode({
@@ -2226,7 +2265,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             },
           ]
         });
-    
         if (desktop) {
           createNode({
             mother: contentsBlock,
@@ -2235,6 +2273,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             },
             event: {
               click: updateTextValue(2, widthRatio1, contentsWordingContentsWeight),
+              contextmenu: contextMenuValue(2),
             },
             style: {
               display: "inline-flex",
@@ -2276,6 +2315,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             },
             event: {
               click: updateDateValue(3),
+              contextmenu: contextMenuValue(3),
             },
             style: {
               display: "inline-flex",
@@ -2317,6 +2357,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             },
             event: {
               click: updateDateValue(4),
+              contextmenu: contextMenuValue(4),
             },
             style: {
               display: "inline-flex",
@@ -2444,7 +2485,24 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             contentsBlock.style.borderBottom = "";
           }
         }
-    
+        if (i !== -1) {
+          calendarDateArr.push({
+            contents: {
+              color: [
+                colorChip.yellow,
+                colorChip.green,
+                colorChip.purple,
+                colorChip.red,
+              ][i % 4],
+              description: contents.schedule[i].description,
+              title: contents.schedule[i].title,
+            },
+            date: {
+              start: contents.schedule[i].date.start,
+              end: contents.schedule[i].date.end,
+            }
+          })
+        }
       }
 
       createNode({
@@ -2545,6 +2603,8 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
         ]
       });
 
+      colorCalendar(calendarMother, calendarDateArr, { standardDate: new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1)) });
+
     }
 
     ajaxJson({ mode: "get", proid: project.proid, desid: instance.designer.desid }, SECONDHOST + "/projectDesignerSchedule", { equal: true }).then((rows) => {
@@ -2556,12 +2616,11 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
       } else {
         contents = rows[0];
       }
-
       setScheduleContents(contents);
-
     }).catch((err) => {
       console.log(err);
     });
+
 
   } catch (e) {
     console.log(e);
