@@ -21,7 +21,7 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
   const collection = "aliveLog";
   const selfMongo = MONGOC;
   let res, targets, targetNumber, successNum, failNum, message;
-  let instnaces;
+  let instances;
   let thisObj;
   try {
 
@@ -41,11 +41,11 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
     failNum = 0;
     message = '';
 
-    instnaces = await aws.getInstancesStatus();
+    instances = await aws.getInstancesStatus();
 
     for (let { name, protocol, host, port } of targets) {
 
-      thisObj = instnaces.find((obj) => { return obj.name === name; });
+      thisObj = instances.find((obj) => { return obj.name === name; });
 
       boo = false;
       if (thisObj !== undefined) {
@@ -101,7 +101,7 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
       throw new Error(e);
     });
 
-    for (let json of instnaces) {
+    for (let json of instances) {
       await back.mongoCreate(collection, json, { selfMongo });
     }
 

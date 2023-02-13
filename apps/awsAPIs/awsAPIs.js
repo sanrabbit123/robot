@@ -377,4 +377,98 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
   }
 }
 
+AwsAPIs.prototype.getCostByDate = async function (startDate, endDate) {
+  if (!(startDate instanceof Date) || !(endDate instanceof Date)) {
+    throw new Error("invalid input");
+  }
+  const instance = this;
+  const { equalJson, errorLog, dateToString, stringToDate, zeroAddition, orderSystem } = this.mother;
+  const { CostExplorerClient, GetCostAndUsageCommand } = require("@aws-sdk/client-cost-explorer");
+  const client = new CostExplorerClient({ region: "ap-northeast-2" });
+  const idKeyword = "cost_";
+  try {
+    let params0, params1;
+    let data, data2;
+    let tong;
+    let tempObj;
+    let num;
+    let obj2;
+    let standardDate;
+    let str;
+
+    params0 = {
+      TimePeriod: {
+        Start: dateToString(startDate),
+        End: dateToString(endDate),
+      },
+      Filter: {
+        Not: {
+          Dimensions: {
+            Key: "RECORD_TYPE",
+            Values: [ "Refund", "Credit" ]
+          }
+        }
+      },
+      Granularity: 'DAILY',
+      Metrics: [
+        "UNBLENDED_COST",
+      ]
+    };
+
+    params1 = equalJson(JSON.stringify(params0));
+    params1.GroupBy = [
+      {
+        Type: "DIMENSION",
+        Key: "SERVICE",
+      }
+    ];
+
+    data = await client.send(new GetCostAndUsageCommand(params0));
+    data2 = await client.send(new GetCostAndUsageCommand(params1));
+
+    tong = [];
+    num = 0;
+    for (let obj of data.ResultsByTime) {
+
+      obj2 = data2.ResultsByTime.find((o) => { return o.TimePeriod.Start === obj.TimePeriod.Start });
+
+      tempObj = {};
+
+      standardDate = stringToDate(obj.TimePeriod.Start);
+      str = orderSystem("encode", Number(String(standardDate.getFullYear()).slice(0, 2)));
+      str += orderSystem("encode", Number(String(standardDate.getFullYear()).slice(2) + zeroAddition(standardDate.getMonth() + 1) + zeroAddition(standardDate.getDate())));
+      str += orderSystem("encode", Number(zeroAddition(standardDate.getHours()) + zeroAddition(standardDate.getMinutes())));
+      str += orderSystem("encode", standardDate.getSeconds());
+  
+      tempObj.id = idKeyword + "aws0000" + "_" + str;
+
+      tempObj.date = {};
+      tempObj.date.start = stringToDate(obj.TimePeriod.Start);
+      tempObj.date.end = stringToDate(obj.TimePeriod.End);
+
+      tempObj.cost = {};
+      tempObj.cost.unit = obj.Total.UnblendedCost.Unit;
+      tempObj.cost.amount = Number(obj.Total.UnblendedCost.Amount);
+      tempObj.cost.composition = [];
+
+      for (let g of obj2.Groups) {
+        tempObj.cost.composition.push({
+          name: g.Keys[0],
+          amount: Number(g.Metrics.UnblendedCost.Amount),
+          ratio: Number(obj.Total.UnblendedCost.Amount) === 0 ? 0 : (Number(g.Metrics.UnblendedCost.Amount) / Number(obj.Total.UnblendedCost.Amount))
+        })
+      }
+
+      tong.push(tempObj);
+      num++;
+    }
+
+    return tong;
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 module.exports = AwsAPIs;

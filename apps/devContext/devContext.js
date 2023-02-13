@@ -151,91 +151,16 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-
-    
-
-    
-
-
-
-
-
-
-
-    // github action, commit log
-
-    // const model = {
-    //   id: "747cfd4b6c8075f7109399773f59eca51acc9af0",
-    //   date: new Date(),
-    //   author: {
-    //     name: "uragen",
-    //     email: "homeliaisonphoto@gmail.com",
-    //   },
-    //   message: "👽🤡👻🤖🐨_230210_v10",
-    //   total: 30,
-    //   detail: {
-    //     addition: 10,
-    //     modify: 10,
-    //     delete: 10,
-    //   }
-    // }
-
-
     // aws cost
 
-    // const { CostExplorerClient, GetCostAndUsageCommand } = require("@aws-sdk/client-cost-explorer");
-    // const client = new CostExplorerClient({ region: "ap-northeast-2" });
-    // let params0, params1;
-    // let command;
-    // let data;
-    // params0 = {
-    //   TimePeriod: {
-    //     Start: dateToString(new Date(2023, 1, 1)),
-    //     End: dateToString(new Date(2023, 1, 4)),
-    //   },
-    //   GroupBy: [
-    //     {
-    //       Type: "DIMENSION",
-    //       Key: "SERVICE",
-    //     },
-    //   ],
-    //   Filter: {
-    //     Not: {
-    //       Dimensions: {
-    //         Key: "RECORD_TYPE",
-    //         Values: [ "Refund", "Credit" ]
-    //       }
-    //     }
-    //   },
-    //   Granularity: 'DAILY',
-    //   Metrics: [
-    //     "UNBLENDED_COST",
-    //   ]
-    // };
-    // params1 = {
-    //   TimePeriod: {
-    //     Start: dateToString(new Date(2023, 1, 1)),
-    //     End: dateToString(new Date(2023, 1, 4)),
-    //   },
-    //   Filter: {
-    //     Not: {
-    //       Dimensions: {
-    //         Key: "RECORD_TYPE",
-    //         Values: [ "Refund", "Credit" ]
-    //       }
-    //     }
-    //   },
-    //   Granularity: 'DAILY',
-    //   Metrics: [
-    //     "UNBLENDED_COST",
-    //   ]
-    // };
-    // command = new GetCostAndUsageCommand(params0);
-    // data = await client.send(command);
-    // console.log(data.ResultsByTime[0].Groups[0]);
+    // const aws = new AwsAPIs();
+    // const tong = await aws.getCostByDate(new Date(2023, 1, 1), new Date());
+    // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/tong.json`, tong ]);
+    // console.log(tong);
 
 
+
+    
 
 
 
