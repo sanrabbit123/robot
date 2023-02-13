@@ -873,6 +873,7 @@ Robot.prototype.gitLogToJson = async function () {
     };
 
     await requestSystem("https://" + instance.address.croninfo.host + ":" + String(3000) + "/receiveGitLog", { log }, { headers: { "Content-Type": "application/json" } });
+    
     console.log("done : ", log);
 
   } catch (e) {
