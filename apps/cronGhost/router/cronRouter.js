@@ -87,7 +87,8 @@ CronRouter.prototype.rou_get_First = function () {
 
 CronRouter.prototype.rou_post_receiveGitLog = function () {
   const instance = this;
-  const { errorLog } = this.mother;
+  const back = this.back;
+  const { errorLog, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/receiveGitLog" ];
   obj.func = async function (req, res) {
@@ -98,11 +99,27 @@ CronRouter.prototype.rou_post_receiveGitLog = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      if (req.body.log === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongolocal;
+      const collection = "commitLog";
+      const { log } = equalJson(req.body);
+      let thisId;
+      let rows;
 
+      if (typeof log.id !== "string") {
+        throw new Error("invalid structure");
+      }
 
+      thisId = log.id;
 
+      rows = await back.mongoRead(collection, { id: thisId }, { selfMongo });
+      if (rows.length === 0) {
+        await back.mongoCreate(collection, log, { selfMongo });
+      }
 
-      res.send(JSON.stringify({ message: "hi" }));
+      res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       errorLog("Cron launcher 서버 문제 생김 (rou_get_receiveGitLog): " + e.message).catch((e) => { console.log(e); });
       console.log(e);

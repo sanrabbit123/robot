@@ -805,12 +805,15 @@ Robot.prototype.gitLogToJson = async function () {
     let name, email;
     let dateRawArr;
     let date;
-    let model;
+    let log;
     let files;
     let insertions;
     let deletions;
+    let diffArr;
+    let previousCommitRaw;
+    let previoustCommitId;
 
-    rawStdout = await shellExec("git log -n 1");
+    rawStdout = await shellExec("git log -n 2");
     stdoutArr = rawStdout.split("\n").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
 
     commitRaw = stdoutArr.find((str) => { return /^commit/i.test(str) });
@@ -831,12 +834,37 @@ Robot.prototype.gitLogToJson = async function () {
 
     date = new Date(dateRawArr[dateRawArr.length - 1]);
 
-    rawStdout = await shellExec("git diff --stat");
+    previousCommitRaw = stdoutArr.slice(4).find((str) => { return /^commit/i.test(str) });
+
+    previoustCommitId = previousCommitRaw.split(" ").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
+    previoustCommitId = previoustCommitId[previoustCommitId.length - 1];
+
+    rawStdout = await shellExec("git diff --stat " + previoustCommitId + " " + commitId);
     stdoutArr = rawStdout.split("\n").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
     
-    [ files, insertions, deletions ] = stdoutArr[stdoutArr.length - 1].split(", ").map((str) => { return Number(str.replace(/[^0-9]/gi, '')) })
+    diffArr = stdoutArr[stdoutArr.length - 1].split(", ").map((str) => { return str.trim() });
 
-    model = {
+    files = diffArr.find((str) => { return /file/gi.test(str) });
+    insertions = diffArr.find((str) => { return /insertions/gi.test(str) });
+    deletions = diffArr.find((str) => { return /deletions/gi.test(str) });
+
+    if (files === undefined) {
+      files = 0;
+    } else {
+      files = Number(files.replace(/[^0-9]/gi, ''));
+    }
+    if (insertions === undefined) {
+      insertions = 0;
+    } else {
+      insertions = Number(insertions.replace(/[^0-9]/gi, ''));
+    }
+    if (deletions === undefined) {
+      deletions = 0;
+    } else {
+      deletions = Number(deletions.replace(/[^0-9]/gi, ''));
+    }
+
+    log = {
       id: commitId,
       date,
       author: { name, email },
@@ -844,11 +872,8 @@ Robot.prototype.gitLogToJson = async function () {
       detail: { files, insertions, deletions }
     };
 
-    
-
-    console.log(model);
-
-
+    await requestSystem("https://" + instance.address.croninfo.host + ":" + String(3000) + "/receiveGitLog", { log }, { headers: { "Content-Type": "application/json" } });
+    console.log("done : ", log);
 
   } catch (e) {
     console.log(e);
