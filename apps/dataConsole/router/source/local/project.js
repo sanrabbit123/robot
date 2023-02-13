@@ -5202,6 +5202,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                 pay = pay.map((obj, index) => {
                                   let total, amount;
                                   let refundReceipt;
+                                  let cancelAmount;
+
                                   obj.payMethod = /CARD/gi.test(infoCopied[index].data.payMethod) ? "카드" : (infoCopied[index].data.payMethod !== "ACCOUNT" ? "무통장" : "계좌 이체");
                                   obj.detail = obj.payMethod === "카드" ? infoCopied[index].data.P_FN_NM : infoCopied[index].data.vactBankName;
                                   if (typeof obj.detail === "string") {
@@ -5214,14 +5216,19 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                   obj.cancel = false;
                                   obj.cancelDetail = "";
 
+                                  cancelAmount = 0;
                                   for (let i of cancel) {
                                     if (obj.oid === i.oid) {
                                       obj.cancel = true;
-                                      if (obj.amount === i.amount) {
-                                        obj.cancelDetail = "전체 환불";
-                                      } else {
-                                        obj.cancelDetail = String(Math.round((i.amount / obj.amount) * 100)) + "% 환불";
-                                      }
+                                      cancelAmount += i.amount;
+                                    }
+                                  }
+
+                                  if (obj.cancel) {
+                                    if (obj.amount === cancelAmount) {
+                                      obj.cancelDetail = "전체 환불";
+                                    } else {
+                                      obj.cancelDetail = String(Math.round((cancelAmount / obj.amount) * 100)) + "% 환불";
                                     }
                                   }
 
