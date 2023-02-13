@@ -792,6 +792,69 @@ Robot.prototype.magazineMaker = function (mid) {
   app.magazineMaker(mid).catch((err) => { console.log(err); })
 }
 
+Robot.prototype.gitLogToJson = async function () {
+  const instance = this;
+  const { shellExec, requestSystem } = this.mother;
+  try {
+    let rawStdout;
+    let stdoutArr;
+    let commitRaw, authorRaw, dateRaw;
+    let message;
+    let commitId;
+    let authorRawArr;
+    let name, email;
+    let dateRawArr;
+    let date;
+    let model;
+    let files;
+    let insertions;
+    let deletions;
+
+    rawStdout = await shellExec("git log -n 1");
+    stdoutArr = rawStdout.split("\n").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
+
+    commitRaw = stdoutArr.find((str) => { return /^commit/i.test(str) });
+    authorRaw = stdoutArr.find((str) => { return /^Author/i.test(str) });
+    dateRaw = stdoutArr.find((str) => { return /^Date/i.test(str) });
+
+    message = stdoutArr[stdoutArr.length - 1];
+
+    commitId = commitRaw.split(" ").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
+    commitId = commitId[commitId.length - 1];
+
+    authorRawArr = authorRaw.split(":").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
+    [ name, email ] = authorRawArr[authorRawArr.length - 1].split(' ');
+    name = name.trim();
+    email = email.trim().slice(1, -1);
+
+    dateRawArr = dateRaw.split(": ").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
+
+    date = new Date(dateRawArr[dateRawArr.length - 1]);
+
+    rawStdout = await shellExec("git diff --stat");
+    stdoutArr = rawStdout.split("\n").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
+    
+    [ files, insertions, deletions ] = stdoutArr[stdoutArr.length - 1].split(", ").map((str) => { return Number(str.replace(/[^0-9]/gi, '')) })
+
+    model = {
+      id: commitId,
+      date,
+      author: { name, email },
+      message,
+      detail: { files, insertions, deletions }
+    };
+
+    
+
+    console.log(model);
+
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
@@ -1255,6 +1318,13 @@ const MENU = {
   basic: async function () {
     try {
       await robot.basicConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  gitLogToJson: async function () {
+    try {
+      await robot.gitLogToJson();
     } catch (e) {
       console.log(e);
     }

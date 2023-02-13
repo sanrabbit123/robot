@@ -150,7 +150,14 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // console.log(await shellExec("git log -n 3"));
+
+    
+
+    
+
+    
+
+
 
 
 
@@ -346,7 +353,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    
 
 
 
