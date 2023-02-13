@@ -820,7 +820,7 @@ Robot.prototype.gitLogToJson = async function () {
     authorRaw = stdoutArr.find((str) => { return /^Author/i.test(str) });
     dateRaw = stdoutArr.find((str) => { return /^Date/i.test(str) });
 
-    message = stdoutArr[stdoutArr.length - 1];
+    message = stdoutArr[3];
 
     commitId = commitRaw.split(" ").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
     commitId = commitId[commitId.length - 1];
@@ -873,7 +873,7 @@ Robot.prototype.gitLogToJson = async function () {
     };
 
     await requestSystem("https://" + instance.address.croninfo.host + ":" + String(3000) + "/receiveGitLog", { log }, { headers: { "Content-Type": "application/json" } });
-    
+
     console.log("done : ", log);
 
   } catch (e) {

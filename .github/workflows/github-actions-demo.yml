@@ -5,6 +5,5 @@ jobs:
   pullAndCommitLog:
     runs-on: self-hosted
     steps:
-      - run: "cd /Users/ubuntu/robot; git pull;"
-      - run: "cd /Users/ubuntu/robot; node robot.js gitLogToJson;"
+      - run: "cd /Users/ubuntu/robot; git pull;  node robot.js gitLogToJson;"
 
