@@ -147,13 +147,32 @@ DevContext.prototype.launching = async function () {
     // }
 
 
+
+
     
-    
 
 
 
 
 
+
+    // github action, commit log
+
+    // const model = {
+    //   id: "747cfd4b6c8075f7109399773f59eca51acc9af0",
+    //   date: new Date(),
+    //   author: {
+    //     name: "uragen",
+    //     email: "homeliaisonphoto@gmail.com",
+    //   },
+    //   message: "👽🤡👻🤖🐨_230210_v10",
+    //   total: 30,
+    //   detail: {
+    //     addition: 10,
+    //     modify: 10,
+    //     delete: 10,
+    //   }
+    // }
 
 
     // aws cost
