@@ -1,12 +1,10 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+name: gitCommitLog
+run-name: ${{ github.repository }} commit log
 on: [ push ]
 jobs:
-  Explore-GitHub-Actions:
+  pullAndCommitLog:
     runs-on: self-hosted
     steps:
-      - run: echo "${{ github.repository_id }}"
-      - run: echo "${{ github.repository }}"
-      - run: echo "${{ github.repository_owner }}"
-      - run: echo "${{ github.repository_owner_id }}"
+      - run: "cd /Users/ubuntu/robot; git pull;"
+
 
