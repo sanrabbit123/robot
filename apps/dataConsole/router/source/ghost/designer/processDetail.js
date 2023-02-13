@@ -2350,7 +2350,6 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
       console.log(err);
     });
 
-
   } catch (e) {
     console.log(e);
   }
