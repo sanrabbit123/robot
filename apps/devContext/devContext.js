@@ -1,5 +1,3 @@
-const { CloudWatch } = require("@aws-sdk/client-cloudwatch");
-
 const ROBOT_PATH = process.cwd();
 const APP_PATH = ROBOT_PATH + "/apps";
 const Mother = require(APP_PATH + "/mother.js");
@@ -150,10 +148,73 @@ DevContext.prototype.launching = async function () {
 
 
     
+    
 
 
-    
-    
+
+
+
+
+
+    // aws cost
+
+    // const { CostExplorerClient, GetCostAndUsageCommand } = require("@aws-sdk/client-cost-explorer");
+    // const client = new CostExplorerClient({ region: "ap-northeast-2" });
+    // let params0, params1;
+    // let command;
+    // let data;
+    // params0 = {
+    //   TimePeriod: {
+    //     Start: dateToString(new Date(2023, 1, 1)),
+    //     End: dateToString(new Date(2023, 1, 4)),
+    //   },
+    //   GroupBy: [
+    //     {
+    //       Type: "DIMENSION",
+    //       Key: "SERVICE",
+    //     },
+    //   ],
+    //   Filter: {
+    //     Not: {
+    //       Dimensions: {
+    //         Key: "RECORD_TYPE",
+    //         Values: [ "Refund", "Credit" ]
+    //       }
+    //     }
+    //   },
+    //   Granularity: 'DAILY',
+    //   Metrics: [
+    //     "UNBLENDED_COST",
+    //   ]
+    // };
+    // params1 = {
+    //   TimePeriod: {
+    //     Start: dateToString(new Date(2023, 1, 1)),
+    //     End: dateToString(new Date(2023, 1, 4)),
+    //   },
+    //   Filter: {
+    //     Not: {
+    //       Dimensions: {
+    //         Key: "RECORD_TYPE",
+    //         Values: [ "Refund", "Credit" ]
+    //       }
+    //     }
+    //   },
+    //   Granularity: 'DAILY',
+    //   Metrics: [
+    //     "UNBLENDED_COST",
+    //   ]
+    // };
+    // command = new GetCostAndUsageCommand(params0);
+    // data = await client.send(command);
+    // console.log(data.ResultsByTime[0].Groups[0]);
+
+
+
+
+
+
+
 
 
 
@@ -575,13 +636,13 @@ DevContext.prototype.launching = async function () {
 
     /*
 
-
     // 프로젝트 케어 project care projectCare
 
     await this.MONGOCONSOLEC.connect();
 
     const selfMongo = this.MONGOC;
     const selfConsoleMongo = this.MONGOCONSOLEC;
+    const sheetsId = "1EsYgzt-itSq_hWjYBkSwOgorpOWCjoe9_gmfCtBtlZ4";
 
     let designers;
     let designerHistories;
@@ -599,7 +660,6 @@ DevContext.prototype.launching = async function () {
     let matrix;
     let thisClient;
     let targetArr;
-    let sheetsId;
 
     todayString = dateToString(new Date()).split("-").map((str, index) => { return String(Number(str)) + ([ "년 ", "월 ", "일" ][index]) }).join("");
 
@@ -708,10 +768,7 @@ DevContext.prototype.launching = async function () {
       }
     }
 
-
-    sheetsId = await sheets.create_newSheets_inPython("현재 프로젝트 상황", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
-    await sheets.setting_cleanView_inPython(sheetsId);
-    await sheets.update_value_inPython(sheetsId, "", matrix);
+    await sheets.update_value_inPython(sheetsId, "project", matrix);
 
     console.log(matrix);
     

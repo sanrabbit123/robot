@@ -455,6 +455,274 @@ ProjectDetailJs.prototype.insertProcessBox = function () {
 
 }
 
+ProjectDetailJs.prototype.insertNumbersBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, selfHref, scrollTo } = GeneralJs;
+  const buttonsClassName = "buttonsClassName";
+  let margin;
+  let paddingTop;
+  let whiteBottomMargin;
+  let titleFontSize;
+  let bottomMargin;
+  let whiteBlock;
+  let grayTong;
+  let contents;
+  let innerMargin;
+  let arrowWidth, arrowHeight;
+  let textTop;
+  let textSize, textWeight;
+  let textMarginLeft;
+  let mobileVisualPaddingValue;
+  let button, buttons;
+  let blockBetween;
+  let blockBetweenBottom;
+  let blockHeight;
+  let lineTop;
+  let columnsNumber;
+  let textFileWeight;
+  let whitePadding;
+  let smallSize, smallWeight, smallBetween;
+  let textTextTop;
+  let smallTextTop;
+  let panDom;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 6 %%>;
+  paddingTop = <%% 44, 44, 36, 28, 5.4 %%>;
+
+  whiteBottomMargin = <%% 46, 46, 38, 30, 5.6 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+
+  innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+
+  textTextTop = <%% (isMac() ? 1 : 3), (isMac() ? 1 : 3), (isMac() ? 0 : 2), (isMac() ? 0 : 1), 0 %%>;
+  smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
+
+  textSize = <%% 16, 15, 14, 13, 2.9 %%>;
+  textWeight = <%% 700, 700, 700, 700, 700 %%>;
+  textFileWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  whitePadding = <%% 12, 12, 8, 8, 2.2 %%>;
+
+  blockBetween = <%% 36, 28, 26, 24, 5 %%>;
+  blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
+  blockHeight = <%% 36, 36, 32, 26, 4 %%>;
+
+  lineTop = <%% 18, 18, 16, 13, 1.9 %%>;
+
+  columnsNumber = <%% 4, 3, 3, 3, 2 %%>;
+
+  smallSize = <%% 11, 11, 10, 10, 2.5 %%>;
+  smallWeight = <%% 400, 400, 400, 400, 400 %%>;
+  smallBetween = <%% 5, 5, 4, 4, 0 %%>;
+
+  mobileVisualPaddingValue = 0.2;
+
+  contents = {
+    process: this.contents,
+  };
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: colorChip.white,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(whiteBottomMargin - blockBetweenBottom) + ea,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(margin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(margin) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  grayTong = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingTop: String(innerMargin) + ea,
+      paddingBottom: String(desktop ? innerMargin : 0) + ea,
+      paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+      paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
+      width: withOut(innerMargin * 2, ea),
+      background: colorChip.white,
+      borderRadius: String(8) + "px",
+    }
+  });
+
+  this.panNumbers = [];
+  for (let i = 0; i < this.panContents.length; i++) {
+    panDom = createNode({
+      mother: grayTong,
+      attribute: {
+        index: String(i),
+        key: this.panContents[i].key,
+      },
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: "calc(calc(100% - " + String(blockBetween * (columnsNumber - 1)) + ea + ") / " + String(columnsNumber) + ")",
+        height: String(blockHeight) + ea,
+        marginRight: String((i % columnsNumber !== columnsNumber - 1) ? blockBetween : 0) + ea,
+        marginBottom: String(blockBetweenBottom) + ea,
+        justifyContent: "start",
+        alignItems: "center",
+        flexDirection: "row",
+      },
+      children: [
+        {
+          style: {
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(0),
+            height: String(lineTop) + ea,
+            borderBottom: "1px solid " + colorChip.gray3,
+            width: withOut(0, ea),
+          }
+        },
+        {
+          text: this.panContents[i].title,
+          style: {
+            position: "relative",
+            top: String(textTextTop) + ea,
+            fontSize: String(textSize) + ea,
+            fontWeight: String(textWeight),
+            color: colorChip.black,
+            background: colorChip.white,
+            paddingRight: String(whitePadding) + ea,
+          }
+        },
+        {
+          style: {
+            right: String(0),
+            position: "absolute",
+            display: "inline-flex",
+            alignItems: "end",
+            justifyContent: "start",
+            flexDirection: "row",
+            background: colorChip.white,
+            paddingLeft: String(whitePadding) + ea,
+          },
+          children: [
+            {
+              attribute: {
+                value: String(0),
+              },
+              text: "0 file",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(textSize) + ea,
+                fontWeight: String(textFileWeight),
+                fontFamily: "graphik",
+                color: colorChip.green,
+                fontStyle: "italic",
+                marginRight: String(smallBetween) + ea,
+                background: colorChip.white,
+              }
+            },
+            {
+              attribute: {
+                date: "0000-00-00",
+              },
+              text: big ? "최신 업로드 0000-00-00" : "00-00-00",
+              style: {
+                display: desktop ? "inline-block" : "none",
+                position: "relative",
+                top: String(smallTextTop) + ea,
+                fontSize: String(smallSize) + ea,
+                fontWeight: String(smallWeight),
+                color: colorChip.green,
+                background: colorChip.white,
+              }
+            },
+          ]
+        },
+      ]
+    });
+    this.panNumbers.push(panDom);
+  }
+}
+
+ProjectDetailJs.prototype.reloadNumbers = function (itemList) {
+  const instance = this;
+  const mother = this.mother;
+  const { ea, baseTong, media } = this;
+  const { dateToString } = GeneralJs;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  let keyArr;
+  let keyTong;
+  let keyOptionArr;
+  let targets, target;
+  let filteredItems;
+
+  targets = this.panNumbers;
+
+  keyArr = itemList.map((obj) => { return obj.key });
+  keyTong = {};
+  for (let key of keyArr) {
+    if (keyTong[key] === undefined) {
+      keyTong[key] = [];
+    }
+    keyTong[key].push(key);
+  }
+
+  keyOptionArr = [];
+  for (let key in keyTong) {
+    keyOptionArr.push({
+      key,
+      number: keyTong[key].length,
+    })
+  }
+
+  for (let { key, number } of keyOptionArr) {
+    target = targets.find((dom) => { return dom.getAttribute("key") === key });
+    if (target !== undefined) {
+
+      if (number === 1 || number === 0) {
+        target.children[2].firstChild.textContent = String(number) + " file";
+      } else {
+        target.children[2].firstChild.textContent = String(number) + " files";
+      }
+      target.children[2].firstChild.setAttribute("value", String(number));
+
+      filteredItems = itemList.filter((obj) => { return obj.key === key });
+      if (filteredItems.length > 0) {
+        filteredItems.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        target.children[2].lastChild.setAttribute("date", dateToString(filteredItems[0].date));
+        if (big) {
+          target.children[2].lastChild.textContent = "최신 업로드 " + dateToString(filteredItems[0].date);
+        } else {
+          target.children[2].lastChild.textContent = dateToString(filteredItems[0].date).slice(2);
+        }
+      }
+
+    }
+  }
+
+}
+
 ProjectDetailJs.prototype.insertUploadBox = function () {
   const instance = this;
   const mother = this.mother;
@@ -1872,6 +2140,8 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
 
     motherMaxNumber = motherMatrix.reduce((acc, curr) => { return (acc >= curr ? acc : curr) }, 0);
     transparentItemsMatrix = motherMatrix.map((num) => { return Math.abs(motherMaxNumber - num) });
+
+    this.reloadNumbers(itemList);
 
     this.itemList = [];
     this.reloadGreenButtons();
@@ -3410,8 +3680,9 @@ ProjectDetailJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
-          instance.insertProcessBox();
+          instance.insertNumbersBox();
           instance.insertUploadBox();
+          // await instance.insertScheduleBox();
           instance.insertInformationBox();
           instance.insertGreenButtons();
 
