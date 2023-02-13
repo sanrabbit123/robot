@@ -83,6 +83,36 @@ CronRouter.prototype.rou_get_First = function () {
   return obj;
 }
 
+//POST ---------------------------------------------------------------------------------------------
+
+CronRouter.prototype.rou_post_receiveGitLog = function () {
+  const instance = this;
+  const { errorLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/receiveGitLog" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+
+
+
+
+      res.send(JSON.stringify({ message: "hi" }));
+    } catch (e) {
+      errorLog("Cron launcher 서버 문제 생김 (rou_get_receiveGitLog): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 CronRouter.prototype.getAll = function () {
