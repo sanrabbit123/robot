@@ -14210,7 +14210,14 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue } = GeneralJs;
-  const buttonsClassName = "buttonsClassName";
+  const dateToHangul = (dateObject) => {
+    return `${String(dateObject.getFullYear()).slice(2)}년 ${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일`;
+  }
+  const hangulToDate = (hangul) => {
+    hangul = hangul.replace(/ /gi, '');
+    const [ year, month, date ] = hangul.split(/[가-힣]/gi);
+    return new Date(2000 + Number(year), Number(month) - 1, Number(date));
+  }
   let margin;
   let paddingTop;
   let whiteBottomMargin;
@@ -14254,6 +14261,15 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
   let wordingPaddingTop0, wordingPaddingTop1;
   let mainTong;
   let wordingBoxWidth;
+  let contentsTong;
+  let contentsTongPaddingBottom;
+  let bigTextSize;
+  let bigTextWeight;
+  let bigTextTextTop;
+  let clock;
+  let formPanBase;
+  let thisPan;
+  let panBetween;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -14262,6 +14278,10 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
   whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+
+  bigTextSize = <%% 35, 35, 35, 35, 4.4 %%>;
+  bigTextWeight = <%% 100, 100, 100, 100, 100 %%>;
+  bigTextTextTop = <%% -2, -2, -2, -2, -1 %%>;
 
   veryBigSize = <%% 23, 21, 20, 16, 4.4 %%>;
   veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -14325,43 +14345,112 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
 
   wordingBoxWidth = <%% 175, 185, 175, 115, 175 %%>;
 
+  contentsTongPaddingBottom = <%% 15, 15, 15, 15, 15 %%>;
+  panBetween = <%% 30, 30, 30, 30, 30 %%>;
+
   contents = {
     title: [
       "고객님은 현재",
       "어느 단계인가요?"
     ],
     description: [
-      (big ? [
-        "일정표는 계획명, 설명, 시작일, 종료일의 구성으로",
-        "짜여진 표입니다.\n계약서상 시작일 기준으로",
-        "미리 작성되어 있으며 실장님께서는 이 표를 수정하셔서",
-        "고객님께 공유해주시면 됩니다.",
-      ] : (desktop ? [
-        "일정표는 계약서상 시작일을 기준으로",
-        "미리 작성되어 있습니다.\n실장님께서는 이 표를 수정하셔서",
-        "고객님께 공유해주시면 됩니다.",
-      ] : [
-        "일정표는 계약서상 시작일을 기준으로 미리",
-        "작성되어 있습니다. 실장님께서는 이 표를 수정하셔서",
-        "고객님께 공유해주시면 됩니다.",
-      ])),
-      (big ? [
-        "표를 수정하는 방법은 각각 항목을 클릭하시면 수정할 수 있습니다.",
-        "\n특히 시작일과 종료일의 경우 정확한 날짜를 적는 것이 가장 중요하니",
-        "해당 항목을 클릭하셔서 날짜를 입력해주시길 바랍니다.",
-      ] : (desktop ? [
-        "수정하는 방법은 각각 항목을 클릭하시면 수정할 수 있습니다.",
-        "\n시작일과 종료일의 경우 정확한 날짜를 적는 것이 중요하니",
-        "해당 항목을 클릭하셔서 날짜를 입력해주시길 바랍니다.",
-      ] : [
-        "수정하는 방법은 각각의 항목을 터치해보시면",
-        "값을 수정할 수 있게 됩니다. 시작일과 종료일의 경우",
-        "해당 날짜를 터치하시면 달력이 나옵니다.",
-      ]))
+      dateToHangul(new Date()) + " 현재를 기준으로",
+      "고객님께 해당되는 상태를 모두 체크해주세요!",
     ],
-    about: [
-      <&& ProcessDetailJs.binaryPath + "/consoleScheduleDesktop0.png" | ProcessDetailJs.binaryPath + "/consoleScheduleDesktop0.png" | ProcessDetailJs.binaryPath + "/consoleScheduleTablet0.png" | ProcessDetailJs.binaryPath + "/consoleScheduleTablet0.png" | ProcessDetailJs.binaryPath + "/consoleScheduleMobile0.png" &&>,
-      <&& ProcessDetailJs.binaryPath + "/consoleScheduleDesktop1.png" | ProcessDetailJs.binaryPath + "/consoleScheduleDesktop1.png" | ProcessDetailJs.binaryPath + "/consoleScheduleTablet1.png" | ProcessDetailJs.binaryPath + "/consoleScheduleTablet1.png" | ProcessDetailJs.binaryPath + "/consoleScheduleMobile1.png" &&>,
+    form: [
+      {
+        title: "디자인",
+        children: [
+          {
+            title: "현장 미팅 이후 대기중",
+          },
+          {
+            title: "일정표 공유 대기중",
+          },
+          {
+            title: "일정표 공유됨",
+          },
+          {
+            title: "컨셉 제안서 수령, 수정 논의중",
+          },
+          {
+            title: "컨셉 제안서 컨펌",
+          },
+          {
+            title: "1차 디자인 제안서 대기중",
+          },
+          {
+            title: "1차 디자인 제안서 수령, 수정 논의중",
+          },
+          {
+            title: "수정 디자인 제안서 대기중",
+          },
+          {
+            title: "수정 디자인 제안서 대기중",
+          },
+          {
+            title: "디자인 제안서 최종 컨펌",
+          },
+        ]
+      },
+      {
+        title: "시공",
+        children: [
+          {
+            title: "현장 미팅 이후 대기중",
+          },
+          {
+            title: "일정표 공유 대기중",
+          },
+          {
+            title: "일정표 공유됨",
+          },
+          {
+            title: "컨셉 제안서 수령, 수정 논의중",
+          },
+          {
+            title: "컨셉 제안서 컨펌",
+          },
+          {
+            title: "1차 디자인 제안서 대기중",
+          },
+          {
+            title: "1차 디자인 제안서 수령, 수정 논의중",
+          },
+          {
+            title: "수정 디자인 제안서 대기중",
+          },
+          {
+            title: "수정 디자인 제안서 대기중",
+          },
+          {
+            title: "디자인 제안서 최종 컨펌",
+          },
+        ]
+      },
+      {
+        title: "구매",
+        children: [
+          {
+            title: "현장 미팅 이후 대기중",
+          },
+          {
+            title: "일정표 공유 대기중",
+          },
+          {
+            title: "일정표 공유됨",
+          },
+          {
+            title: "컨셉 제안서 수령, 수정 논의중",
+          },
+          {
+            title: "컨셉 제안서 컨펌",
+          },
+          {
+            title: "1차 디자인 제안서 대기중",
+          },
+        ]
+      },
     ]
   };
 
@@ -14418,14 +14507,10 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
       children: [
         {
           style: {
-            display: desktop ? "inline-flex" : "flex",
+            display: "inline-flex",
             position: "relative",
-            width: desktop ? String(firstWidth) + ea : withOut(0, ea),
-            justifyContent: desktop ? "" : "center",
-            alignItems: desktop ? "" : "center",
-            textAlign: desktop ? "" : "center",
-            marginTop: desktop ? "" : String(2.8) + ea,
-            marginBottom: desktop ? "" : String(3) + ea,
+            width: String(firstWidth) + ea,
+            verticalAlign: "top",
           },
           children: [
             {
@@ -14456,126 +14541,142 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         },
         {
           style: {
-            display: desktop ? "inline-flex" : "flex",
+            display: "inline-flex",
             position: "relative",
-            width: desktop ? withOut(firstWidth + thirdWidth, ea) : withOut(0, ea),
+            width: withOut(firstWidth, ea),
+            verticalAlign: "top",
             flexDirection: "column",
-            marginBottom: desktop ? "" : String(7.2) + ea,
-            paddingBottom: String(imageBoxVisualPaddingBottom) + ea,
-          },
-          children: [
-            {
-              mode: "img",
-              attribute: {
-                src: contents.about[0],
-              },
-              style: {
-                display: "block",
-                position: "relative",
-                width: withOut(0),
-                borderRadius: String(8) + "px",
-                boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
-                marginBottom: String(imageBetween) + ea,
-              }
-            },
-            {
-              mode: "img",
-              attribute: {
-                src: contents.about[1],
-              },
-              style: {
-                display: "block",
-                position: "relative",
-                width: withOut(0),
-                borderRadius: String(8) + "px",
-                boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
-              }
-            },
-          ]
+          }
         }
       ]
     });
-  
-    createNode({
-      mother: mainTong,
+
+    contentsTong = mainTong.children[1];
+
+    clock = createNode({
+      mother: contentsTong,
       style: {
-        display: desktop ? "inline-flex" : "flex",
-        position: media[0] ? "relative" : "absolute",
-        width: media[0] ? String(thirdWidth) + ea : "",
-        flexDirection: "column",
-        left: media[0] ? "" : String(0),
-        bottom: media[0] ? "" : String(imageBoxVisualPaddingBottom) + ea,
+        display: "flex",
+        position: "relative",
+        flexDirection: "row",
+        width: withOut(0),
+        paddingBottom: String(contentsTongPaddingBottom) + ea,
+        borderBottom: "1px dashed " + colorChip.gray3,
       },
       children: [
         {
+          text: contents.description.join("\n"),
           style: {
-            paddingLeft: String(imageBetween) + ea,
-            width: withOut(imageBetween, ea),
-            display: media[0] ? "block" : "none",
-            paddingTop: String(wordingPaddingTop0) + ea,
-          },
-          children: [
-            {
-              text: contents.description[0].join(" "),
-              style: {
-                position: "relative",
-                fontSize: String(textSize) + ea,
-                fontWeight: String(textFileWeight),
-                color: colorChip.black,
-                lineHeight: String(1.6),
-                textAlign: "left",
-                marginBottom: String(panBoxBetween) + ea,
-              }
-            },
-            {
-              style: {
-                display: "display",
-                position: "relative",
-                top: String(0),
-                width: String(panWidth) + ea,
-                height: String(0) + ea,
-                borderBottom: String(3) + "px solid " + colorChip.black,
-                boxSizing: "border-box",
-              }
-            },
-          ]
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(textSize) + ea,
+            fontWeight: String(textFileWeight),
+            color: colorChip.black,
+            lineHeight: String(1.6),
+          }
         },
         {
+          text: dateToString(new Date(), true).slice(0, -3),
           style: {
-            paddingLeft: media[0] ? String(imageBetween) + ea : "",
-            width: media[0] ? withOut(imageBetween, ea) : "",
-            display: "block",
-            paddingTop: media[0] ? String(wordingPaddingTop1) + ea : "",
-          },
-          children: [
-            {
-              text: media[0] ? contents.description[1].join(" ") : contents.description[0].join(" ") + "\n\n" + contents.description[1].join(" "),
-              style: {
-                position: "relative",
-                fontSize: String(textSize) + ea,
-                fontWeight: String(textFileWeight),
-                color: colorChip.black,
-                lineHeight: String(1.6),
-                textAlign: "left",
-                marginBottom: String(panBoxBetween) + ea,
-                width: media[0] ? "" : String(wordingBoxWidth) + ea,
-              }
-            },
-            {
-              style: {
-                display: "display",
-                position: "relative",
-                top: String(0),
-                width: String(panWidth) + ea,
-                height: String(0) + ea,
-                borderBottom: String(3) + "px solid " + colorChip.black,
-                boxSizing: "border-box",
-              }
-            },
-          ]
-        },
+            display: "inline-block",
+            position: "absolute",
+            right: String(0),
+            top: String(bigTextTextTop) + ea,
+            fontSize: String(bigTextSize) + ea,
+            fontWeight: String(bigTextWeight),
+            color: colorChip.green,
+          }
+        }
       ]
+    }).children[1];
+
+    setInterval(() => {
+      clock.textContent = dateToString(new Date(), true).slice(0, -3);
+    }, 60 * 1000);
+
+
+    formPanBase = createNode({
+      mother: contentsTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        flexDirection: "row",
+        width: withOut(0),
+        justifyContent: "start",
+        alignItems: "start",
+      },
     });
+
+    for (let i = 0; i < contents.form.length; i++) {
+
+      thisPan = createNode({
+        mother: formPanBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "column",
+          width: "calc(calc(100% - " + String(panBetween * (contents.form.length - 1)) + ea + ") / " + String(contents.form.length) + ")",
+          marginRight: (i === contents.form.length - 1 ? "" : String(panBetween) + ea),
+          paddingTop: String(20) + ea,
+          verticalAlign: "top",
+        }
+      });
+
+      createNode({
+        mother: thisPan,
+        style: {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: withOut(0, ea),
+          height: String(52) + ea,
+        },
+        child: {
+          text: contents.form[i].title,
+          style: {
+            fontSize: String(16) + ea,
+            fontWeight: String(700),
+            color: colorChip.black,
+          }
+        }
+      });
+
+      for (let j = 0; j < contents.form[i].children.length; j++) {
+
+        createNode({
+          mother: thisPan,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: withOut(0, ea),
+            height: String(50) + ea,
+            background: colorChip.gray2,
+            borderRadius: String(5) + "px",
+            marginBottom: String(8) + ea,
+          },
+          child: {
+            text: contents.form[i].children[j].title,
+            style: {
+              fontSize: String(14) + ea,
+              fontWeight: String(600),
+              color: colorChip.black,
+            }
+          }
+        });
+
+      }
+
+
+
+
+
+    }
+
+
+
+
+
 
   } else {
 
@@ -14627,78 +14728,6 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
             }
           ]
         },
-        {
-          style: {
-            display: "flex",
-            position: "relative",
-            width: withOut(0, ea),
-            flexDirection: "column",
-            marginBottom: String(7.2) + ea,
-          },
-          children: [
-            {
-              text: contents.description[0].join("\n"),
-              style: {
-                position: "relative",
-                fontSize: String(textSize) + ea,
-                fontWeight: String(textFileWeight),
-                color: colorChip.black,
-                lineHeight: String(1.6),
-                marginBottom: String(descriptionBetween) + ea,
-                textAlign: desktop ? "" : "center",
-              }
-            },
-            {
-              text: contents.description[1].join("\n"),
-              style: {
-                position: "relative",
-                fontSize: String(textSize) + ea,
-                fontWeight: String(textFileWeight),
-                color: colorChip.black,
-                lineHeight: String(1.6),
-                textAlign: desktop ? "" : "center",
-              }
-            },
-          ]
-        },
-        {
-          style: {
-            display: desktop ? "inline-flex" : "flex",
-            position: "relative",
-            width: desktop ? withOut(firstWidth + thirdWidth, ea) : withOut(0, ea),
-            flexDirection: "column",
-            paddingBottom: String(imageBoxVisualPaddingBottom) + ea,
-          },
-          children: [
-            {
-              mode: "img",
-              attribute: {
-                src: contents.about[0],
-              },
-              style: {
-                display: "block",
-                position: "relative",
-                width: withOut(0),
-                borderRadius: String(8) + "px",
-                boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
-                marginBottom: String(imageBetween) + ea,
-              }
-            },
-            {
-              mode: "img",
-              attribute: {
-                src: contents.about[1],
-              },
-              style: {
-                display: "block",
-                position: "relative",
-                width: withOut(0),
-                borderRadius: String(8) + "px",
-                boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
-              }
-            },
-          ]
-        }
       ]
     });
   
