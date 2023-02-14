@@ -14346,7 +14346,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
   wordingBoxWidth = <%% 175, 185, 175, 115, 175 %%>;
 
   contentsTongPaddingBottom = <%% 15, 15, 15, 15, 15 %%>;
-  panBetween = <%% 30, 30, 30, 30, 30 %%>;
+  panBetween = <%% 60, 60, 60, 60, 60 %%>;
 
   contents = {
     title: [
@@ -14362,34 +14362,32 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         title: "디자인",
         children: [
           {
-            title: "현장 미팅 이후 대기중",
-          },
-          {
-            title: "일정표 공유 대기중",
+            title: "일정표 공유 전",
+            margin: false,
           },
           {
             title: "일정표 공유됨",
+            margin: true,
           },
           {
-            title: "컨셉 제안서 수령, 수정 논의중",
+            title: "컨셉 제안서 공유, 수정 논의중",
+            margin: false,
           },
           {
             title: "컨셉 제안서 컨펌",
+            margin: true,
           },
           {
-            title: "1차 디자인 제안서 대기중",
+            title: "1차 디자인 제안서 공유, 수정 논의중",
+            margin: false,
           },
           {
-            title: "1차 디자인 제안서 수령, 수정 논의중",
-          },
-          {
-            title: "수정 디자인 제안서 대기중",
-          },
-          {
-            title: "수정 디자인 제안서 대기중",
+            title: "수정 디자인 제안서 공유, 수정 논의중",
+            margin: false,
           },
           {
             title: "디자인 제안서 최종 컨펌",
+            margin: false,
           },
         ]
       },
@@ -14397,34 +14395,32 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         title: "시공",
         children: [
           {
-            title: "현장 미팅 이후 대기중",
+            title: "시공 의뢰서 공유",
+            margin: true,
           },
           {
-            title: "일정표 공유 대기중",
+            title: "시공 견적서 비교 / 수정중",
+            margin: false,
           },
           {
-            title: "일정표 공유됨",
+            title: "시공 견적서 컨펌",
+            margin: true,
           },
           {
-            title: "컨셉 제안서 수령, 수정 논의중",
+            title: "시공 진행중",
+            margin: false,
           },
           {
-            title: "컨셉 제안서 컨펌",
+            title: "시공 완료",
+            margin: true,
           },
           {
-            title: "1차 디자인 제안서 대기중",
+            title: "시공 AS 진행중",
+            margin: false,
           },
           {
-            title: "1차 디자인 제안서 수령, 수정 논의중",
-          },
-          {
-            title: "수정 디자인 제안서 대기중",
-          },
-          {
-            title: "수정 디자인 제안서 대기중",
-          },
-          {
-            title: "디자인 제안서 최종 컨펌",
+            title: "시공 AS 최종 완료, 고객 컨펌",
+            margin: true,
           },
         ]
       },
@@ -14432,22 +14428,20 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         title: "구매",
         children: [
           {
-            title: "현장 미팅 이후 대기중",
+            title: "제품 리스트 공유, 수정중",
+            margin: false,
           },
           {
-            title: "일정표 공유 대기중",
+            title: "제품 리스트 컨펌",
+            margin: true,
           },
           {
-            title: "일정표 공유됨",
+            title: "제품 구매, 배송중",
+            margin: true,
           },
           {
-            title: "컨셉 제안서 수령, 수정 논의중",
-          },
-          {
-            title: "컨셉 제안서 컨펌",
-          },
-          {
-            title: "1차 디자인 제안서 대기중",
+            title: "배송 및 세팅 완료",
+            margin: true,
           },
         ]
       },
@@ -14604,6 +14598,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         width: withOut(0),
         justifyContent: "start",
         alignItems: "start",
+        marginBottom: String(10) + ea,
       },
     });
 
@@ -14617,7 +14612,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
           flexDirection: "column",
           width: "calc(calc(100% - " + String(panBetween * (contents.form.length - 1)) + ea + ") / " + String(contents.form.length) + ")",
           marginRight: (i === contents.form.length - 1 ? "" : String(panBetween) + ea),
-          paddingTop: String(20) + ea,
+          paddingTop: String(16) + ea,
           verticalAlign: "top",
         }
       });
@@ -14629,20 +14624,19 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
           justifyContent: "center",
           alignItems: "center",
           width: withOut(0, ea),
-          height: String(52) + ea,
+          height: String(50) + ea,
         },
         child: {
           text: contents.form[i].title,
           style: {
             fontSize: String(16) + ea,
-            fontWeight: String(700),
+            fontWeight: String(800),
             color: colorChip.black,
           }
         }
       });
 
       for (let j = 0; j < contents.form[i].children.length; j++) {
-
         createNode({
           mother: thisPan,
           style: {
@@ -14651,29 +14645,91 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
             alignItems: "center",
             width: withOut(0, ea),
             height: String(50) + ea,
-            background: colorChip.gray2,
+            background: colorChip.gray1,
             borderRadius: String(5) + "px",
-            marginBottom: String(8) + ea,
+            marginBottom: j === contents.form[i].children.length - 1 ? "" : (contents.form[i].children[j].margin ? String(24) + ea : String(8) + ea),
+            flexDirection: "row",
           },
-          child: {
-            text: contents.form[i].children[j].title,
-            style: {
-              fontSize: String(14) + ea,
-              fontWeight: String(600),
-              color: colorChip.black,
+          children: [
+            {
+              style: {
+                width: String(32) + ea,
+                marginRight: String(4) + ea,
+                display: "inline-flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: withOut(4 * 2, ea),
+                display: "inline-flex",
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                mode: "svg",
+                source: svgMaker.checkBox(colorChip.gray4),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: String(13) + ea,
+                }
+              }
+            },
+            {
+              style: {
+                width: withOut(32 + (4 * 3) + 16, ea),
+                height: withOut(4 * 2, ea),
+                background: colorChip.white,
+                borderRadius: String(5) + "px",
+                display: "inline-flex",
+                justifyContent: "start",
+                alignItems: "center",
+                paddingLeft: String(16) + ea,
+              },
+              child: {
+                text: contents.form[i].children[j].title,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(14) + ea,
+                  fontWeight: String(600),
+                  color: colorChip.black,
+                  top: String(-1) + ea,
+                }
+              }
             }
-          }
+          ]
         });
-
       }
-
-
-
-
-
     }
 
-
+    createNode({
+      mother: formPanBase,
+      style: {
+        display: "inline-flex",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "absolute",
+        width: String(100) + ea,
+        height: String(36) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.gradientGreen,
+        bottom: String(0),
+        right: String(0),
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        cursor: "pointer",
+      },
+      child: {
+        text: "제출하기",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(15) + ea,
+          fontWeight: String(800),
+          top: String(-1) + ea,
+          color: colorChip.white,
+          cursor: "pointer",
+        }
+      }
+    })
 
 
 

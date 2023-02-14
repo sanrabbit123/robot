@@ -971,7 +971,6 @@ GeneralJs.prototype.returnCheckBox = function (color, uncheck = false, forceUnch
       uncheck = true;
     }
   }
-
   if (uncheck) {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160.654 160.654"><path d="M145.66 0H14.993C6.713 0 0 6.713 0 14.993v130.667c0 8.281 6.713 14.993 14.993 14.993h130.667c8.281 0 14.993-6.713 14.993-14.993V14.993C160.654 6.713 153.941 0 145.66 0z" fill="${color}"/></svg>`;
   } else {
