@@ -2251,10 +2251,19 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             event: {
               click: async function (e) {
                 try {
-
-                  // dev
-                  window.alert("준비중인 기능입니다!");
-
+                  const host = FRONTHOST.replace(/^https\:\/\//gi, '');
+                  const path = "project";
+                  await ajaxJson({
+                    method: "scheduleClient",
+                    name: instance.client.name,
+                    phone: instance.client.phone,
+                    option: {
+                      client: instance.client.name,
+                      host: host,
+                      proid: instance.project.proid,
+                    }
+                  }, BACKHOST + "/alimTalk");
+                  window.alert(instance.client.name + " 고객님에게 일정 알림톡을 전송하였습니다!");
                 } catch (e) {
                   console.log(e);
                 }
