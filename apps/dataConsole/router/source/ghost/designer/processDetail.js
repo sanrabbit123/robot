@@ -14270,6 +14270,11 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
   let formPanBase;
   let thisPan;
   let panBetween;
+  let panHeight, panInnerMargin;
+  let panCheckBoxWidth;
+  let panWhitePaddingLeft;
+  let panBlockBetween, panBlockBigBetween;
+  let buttonSize, buttonWeight, buttonTextTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -14304,21 +14309,10 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
 
   lineTop = <%% 18, 18, 16, 13, 1.9 %%>;
 
-  columnsNumber = <%% 4, 3, 3, 3, 2 %%>;
-
-  smallSize = <%% 11, 11, 10, 10, 2.5 %%>;
-  smallWeight = <%% 400, 400, 400, 400, 400 %%>;
-  smallBetween = <%% 5, 5, 4, 4, 0 %%>;
-
   firstWidth = <%% 298, 230, 213, 142, 300 %%>;
 
-  buttonWidth = <%% 490, 320, 285, 230, 72 %%>;
-  buttonHeight = <%% 36, 40, 33, 31, 8 %%>;
-
-  buttonOuterPadding = <%% 4, 4, 4, 3, 1 %%>;
-  buttonInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
-
-  descriptionBetween = <%% 13, 14, 14, 12, 1 %%>;
+  buttonWidth = <%% 100, 100, 100, 100, 72 %%>;
+  buttonHeight = <%% 36, 36, 36, 36, 8 %%>;
 
   panWidth = <%% 20, 20, 20, 20, 2 %%>;
   panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
@@ -14347,6 +14341,19 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
 
   contentsTongPaddingBottom = <%% 15, 15, 15, 15, 15 %%>;
   panBetween = <%% 60, 60, 60, 60, 60 %%>;
+
+  panHeight = <%% 50, 50, 50, 50, 50 %%>;
+  panInnerMargin = <%% 4, 4, 4, 4, 4 %%>;
+
+  panCheckBoxWidth = <%% 32, 32, 32, 32, 32 %%>;
+
+  panWhitePaddingLeft = <%% 16, 16, 16, 16, 16 %%>; 
+  panBlockBetween = <%% 8, 8, 8, 8, 8 %%>; 
+  panBlockBigBetween = <%% 20, 20, 20, 20, 20 %%>; 
+
+  buttonSize = <%% 15, 15, 15, 15, 15 %%>;
+  buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
+  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
   contents = {
     title: [
@@ -14445,7 +14452,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
           },
         ]
       },
-    ]
+    ],
+    button: "제출하기",
   };
 
   whiteBlock = createNode({
@@ -14624,7 +14632,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
           justifyContent: "center",
           alignItems: "center",
           width: withOut(0, ea),
-          height: String(50) + ea,
+          height: String(panHeight) + ea,
         },
         child: {
           text: contents.form[i].title,
@@ -14644,21 +14652,21 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
             justifyContent: "center",
             alignItems: "center",
             width: withOut(0, ea),
-            height: String(50) + ea,
+            height: String(panHeight) + ea,
             background: colorChip.gray1,
             borderRadius: String(5) + "px",
-            marginBottom: j === contents.form[i].children.length - 1 ? "" : (contents.form[i].children[j].margin ? String(24) + ea : String(8) + ea),
+            marginBottom: j === contents.form[i].children.length - 1 ? "" : (contents.form[i].children[j].margin ? String(panBlockBigBetween) + ea : String(panBlockBetween) + ea),
             flexDirection: "row",
           },
           children: [
             {
               style: {
-                width: String(32) + ea,
-                marginRight: String(4) + ea,
+                width: String(panCheckBoxWidth) + ea,
+                marginRight: String(panInnerMargin) + ea,
                 display: "inline-flex",
                 justifyContent: "center",
                 alignItems: "center",
-                height: withOut(4 * 2, ea),
+                height: withOut(panInnerMargin * 2, ea),
                 display: "inline-flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -14675,24 +14683,24 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
             },
             {
               style: {
-                width: withOut(32 + (4 * 3) + 16, ea),
-                height: withOut(4 * 2, ea),
+                width: withOut(panCheckBoxWidth + (panInnerMargin * 3) + panWhitePaddingLeft, ea),
+                height: withOut(panInnerMargin * 2, ea),
                 background: colorChip.white,
                 borderRadius: String(5) + "px",
                 display: "inline-flex",
                 justifyContent: "start",
                 alignItems: "center",
-                paddingLeft: String(16) + ea,
+                paddingLeft: String(panWhitePaddingLeft) + ea,
               },
               child: {
                 text: contents.form[i].children[j].title,
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(14) + ea,
+                  fontSize: String(textSize) + ea,
                   fontWeight: String(600),
                   color: colorChip.black,
-                  top: String(-1) + ea,
+                  top: String(textTextTop) + ea,
                 }
               }
             }
@@ -14708,8 +14716,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         justifyContent: "center",
         alignItems: "center",
         position: "absolute",
-        width: String(100) + ea,
-        height: String(36) + ea,
+        width: String(buttonWidth) + ea,
+        height: String(buttonHeight) + ea,
         borderRadius: String(5) + "px",
         background: colorChip.gradientGreen,
         bottom: String(0),
@@ -14718,13 +14726,13 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         cursor: "pointer",
       },
       child: {
-        text: "제출하기",
+        text: contents.button,
         style: {
           display: "inline-block",
           position: "relative",
-          fontSize: String(15) + ea,
-          fontWeight: String(800),
-          top: String(-1) + ea,
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
+          top: String(buttonTextTop) + ea,
           color: colorChip.white,
           cursor: "pointer",
         }
