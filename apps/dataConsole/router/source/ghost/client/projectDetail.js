@@ -4938,10 +4938,10 @@ ProjectDetailJs.prototype.launching = async function (loading) {
           if (getObj.mode === "schedule") {
             await instance.insertScheduleBox();
             instance.insertUploadBox();
-            await instance.insertScheduleBox();
           } else {
+            // dev
             instance.insertUploadBox();
-            await instance.insertScheduleBox();
+            // await instance.insertScheduleBox();
           }
           instance.insertInformationBox();
           instance.insertGreenButtons();
