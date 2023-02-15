@@ -14275,6 +14275,11 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
   let panWhitePaddingLeft;
   let panBlockBetween, panBlockBigBetween;
   let buttonSize, buttonWeight, buttonTextTop;
+  let panPaddingTop;
+  let panTitleSize, panTitleWeight;
+  let formPanBaseMarginBottom;
+  let checkBoxWidth;
+  let blockTextSize, blockTextWeight;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -14284,9 +14289,9 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
 
-  bigTextSize = <%% 35, 35, 35, 35, 4.4 %%>;
+  bigTextSize = <%% 36, 36, 36, 36, 4.4 %%>;
   bigTextWeight = <%% 100, 100, 100, 100, 100 %%>;
-  bigTextTextTop = <%% -2, -2, -2, -2, -1 %%>;
+  bigTextTextTop = <%% -7, -7, -7, -7, -1 %%>;
 
   veryBigSize = <%% 23, 21, 20, 16, 4.4 %%>;
   veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -14310,9 +14315,6 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
   lineTop = <%% 18, 18, 16, 13, 1.9 %%>;
 
   firstWidth = <%% 298, 230, 213, 142, 300 %%>;
-
-  buttonWidth = <%% 100, 100, 100, 100, 72 %%>;
-  buttonHeight = <%% 36, 36, 36, 36, 8 %%>;
 
   panWidth = <%% 20, 20, 20, 20, 2 %%>;
   panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
@@ -14340,20 +14342,34 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
   wordingBoxWidth = <%% 175, 185, 175, 115, 175 %%>;
 
   contentsTongPaddingBottom = <%% 15, 15, 15, 15, 15 %%>;
-  panBetween = <%% 60, 60, 60, 60, 60 %%>;
+  panBetween = <%% 48, 30, 20, 20, 60 %%>;
 
-  panHeight = <%% 50, 50, 50, 50, 50 %%>;
-  panInnerMargin = <%% 4, 4, 4, 4, 4 %%>;
+  panHeight = <%% 50, 48, 45, 42, 50 %%>;
+  panInnerMargin = <%% 4, 4, 4, 3, 4 %%>;
 
-  panCheckBoxWidth = <%% 32, 32, 32, 32, 32 %%>;
+  panCheckBoxWidth = <%% 32, 24, 20, 20, 32 %%>;
+  checkBoxWidth = <%% 13, 11, 9, 9, 13 %%>;
 
-  panWhitePaddingLeft = <%% 16, 16, 16, 16, 16 %%>; 
-  panBlockBetween = <%% 8, 8, 8, 8, 8 %%>; 
-  panBlockBigBetween = <%% 20, 20, 20, 20, 20 %%>; 
+  panWhitePaddingLeft = <%% 16, 14, 14, 12, 16 %%>; 
+  panBlockBetween = <%% 8, 8, 6, 5, 1 %%>; 
+  panBlockBigBetween = <%% 8, 8, 6, 5, 1 %%>; 
 
-  buttonSize = <%% 15, 15, 15, 15, 15 %%>;
+  buttonWidth = <%% 100, 90, 90, 80, 72 %%>;
+  buttonHeight = <%% 36, 36, 32, 30, 8 %%>;
+
+  buttonSize = <%% 15, 14, 14, 13, 15 %%>;
   buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
   buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+  panPaddingTop = <%% 18, 12, 12, 12, 18 %%>;
+
+  panTitleSize = <%% 16, 15, 14, 13, 4 %%>;
+  panTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+  formPanBaseMarginBottom = <%% 12, 8, 6, 6, 12 %%>;
+
+  blockTextSize = <%% 14, 13, 12, 11, 3.2 %%>;
+  blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
 
   contents = {
     title: [
@@ -14362,7 +14378,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
     ],
     description: [
       dateToHangul(new Date()) + " 현재를 기준으로",
-      "고객님께 해당되는 상태를 모두 체크해주세요!",
+      "고객님께 해당되는 상태를 <b%모두 체크%b>해주세요!",
     ],
     form: [
       {
@@ -14377,7 +14393,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
             margin: true,
           },
           {
-            title: "컨셉 제안서 공유, 수정 논의중",
+            title: "컨셉 제안서 공유",
             margin: false,
           },
           {
@@ -14385,11 +14401,11 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
             margin: true,
           },
           {
-            title: "1차 디자인 제안서 공유, 수정 논의중",
+            title: "1차 디자인 제안서 공유",
             margin: false,
           },
           {
-            title: "수정 디자인 제안서 공유, 수정 논의중",
+            title: "수정 제안서 공유",
             margin: false,
           },
           {
@@ -14406,7 +14422,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
             margin: true,
           },
           {
-            title: "시공 견적서 비교 / 수정중",
+            title: "시공 견적서 비교",
             margin: false,
           },
           {
@@ -14426,7 +14442,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
             margin: false,
           },
           {
-            title: "시공 AS 최종 완료, 고객 컨펌",
+            title: "시공 AS 최종 완료",
             margin: true,
           },
         ]
@@ -14435,7 +14451,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         title: "구매",
         children: [
           {
-            title: "제품 리스트 공유, 수정중",
+            title: "제품 리스트 공유",
             margin: false,
           },
           {
@@ -14575,12 +14591,18 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
             fontWeight: String(textFileWeight),
             color: colorChip.black,
             lineHeight: String(1.6),
+          },
+          bold: {
+            fontSize: String(textSize) + ea,
+            fontWeight: String(800),
+            color: colorChip.green,
+            lineHeight: String(1.6),
           }
         },
         {
           text: dateToString(new Date(), true).slice(0, -3),
           style: {
-            display: "inline-block",
+            display: (media[0] || media[1]) ? "inline-block" : "none",
             position: "absolute",
             right: String(0),
             top: String(bigTextTextTop) + ea,
@@ -14606,7 +14628,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         width: withOut(0),
         justifyContent: "start",
         alignItems: "start",
-        marginBottom: String(10) + ea,
+        marginBottom: String(formPanBaseMarginBottom) + ea,
       },
     });
 
@@ -14620,7 +14642,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
           flexDirection: "column",
           width: "calc(calc(100% - " + String(panBetween * (contents.form.length - 1)) + ea + ") / " + String(contents.form.length) + ")",
           marginRight: (i === contents.form.length - 1 ? "" : String(panBetween) + ea),
-          paddingTop: String(16) + ea,
+          paddingTop: String(panPaddingTop) + ea,
           verticalAlign: "top",
         }
       });
@@ -14637,8 +14659,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         child: {
           text: contents.form[i].title,
           style: {
-            fontSize: String(16) + ea,
-            fontWeight: String(800),
+            fontSize: String(panTitleSize) + ea,
+            fontWeight: String(panTitleWeight),
             color: colorChip.black,
           }
         }
@@ -14677,7 +14699,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  width: String(13) + ea,
+                  width: String(checkBoxWidth) + ea,
                 }
               }
             },
@@ -14697,8 +14719,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
                 style: {
                   display: "inline-block",
                   position: "relative",
-                  fontSize: String(textSize) + ea,
-                  fontWeight: String(600),
+                  fontSize: String(blockTextSize) + ea,
+                  fontWeight: String(blockTextWeight),
                   color: colorChip.black,
                   top: String(textTextTop) + ea,
                 }
