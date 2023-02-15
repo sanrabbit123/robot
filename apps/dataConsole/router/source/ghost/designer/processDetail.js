@@ -14293,7 +14293,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
 
   bigTextSize = <%% 36, 36, 36, 36, 4.4 %%>;
   bigTextWeight = <%% 100, 100, 100, 100, 100 %%>;
-  bigTextTextTop = <%% -7, -7, -7, -7, -1 %%>;
+  bigTextTextTop = <%% (isMac() ? -7 : -5), (isMac() ? -7 : -5), -7, -7, -1 %%>;
 
   veryBigSize = <%% 23, 21, 20, 16, 4.4 %%>;
   veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
@@ -14361,7 +14361,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
 
   buttonSize = <%% 15, 14, 14, 13, 3.5 %%>;
   buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
-  buttonTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
   panPaddingTop = <%% 18, 12, 12, 12, 4 %%>;
 
