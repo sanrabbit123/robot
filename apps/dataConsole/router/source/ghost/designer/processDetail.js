@@ -14341,32 +14341,32 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
 
   wordingBoxWidth = <%% 175, 185, 175, 115, 175 %%>;
 
-  contentsTongPaddingBottom = <%% 15, 15, 15, 15, 15 %%>;
-  panBetween = <%% 48, 30, 20, 20, 60 %%>;
+  contentsTongPaddingBottom = <%% 15, 15, 15, 15, 7 %%>;
+  panBetween = <%% 48, 30, 20, 20, 2 %%>;
 
-  panHeight = <%% 50, 48, 45, 42, 50 %%>;
-  panInnerMargin = <%% 4, 4, 4, 3, 4 %%>;
+  panHeight = <%% 50, 48, 45, 42, 11.5 %%>;
+  panInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
 
-  panCheckBoxWidth = <%% 32, 24, 20, 20, 32 %%>;
-  checkBoxWidth = <%% 13, 11, 9, 9, 13 %%>;
+  panCheckBoxWidth = <%% 32, 24, 20, 20, 8 %%>;
+  checkBoxWidth = <%% 13, 11, 9, 9, 3 %%>;
 
-  panWhitePaddingLeft = <%% 16, 14, 14, 12, 16 %%>; 
+  panWhitePaddingLeft = <%% 16, 14, 14, 12, 3.5 %%>; 
   panBlockBetween = <%% 8, 8, 6, 5, 1 %%>; 
   panBlockBigBetween = <%% 8, 8, 6, 5, 1 %%>; 
 
-  buttonWidth = <%% 100, 90, 90, 80, 72 %%>;
-  buttonHeight = <%% 36, 36, 32, 30, 8 %%>;
+  buttonWidth = <%% 100, 90, 90, 80, 24 %%>;
+  buttonHeight = <%% 36, 36, 32, 30, 8.2 %%>;
 
-  buttonSize = <%% 15, 14, 14, 13, 15 %%>;
+  buttonSize = <%% 15, 14, 14, 13, 3.5 %%>;
   buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
-  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  buttonTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
 
-  panPaddingTop = <%% 18, 12, 12, 12, 18 %%>;
+  panPaddingTop = <%% 18, 12, 12, 12, 4 %%>;
 
-  panTitleSize = <%% 16, 15, 14, 13, 4 %%>;
+  panTitleSize = <%% 16, 15, 14, 13, 3.6 %%>;
   panTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-  formPanBaseMarginBottom = <%% 12, 8, 6, 6, 12 %%>;
+  formPanBaseMarginBottom = <%% 12, 8, 6, 6, 4 %%>;
 
   blockTextSize = <%% 14, 13, 12, 11, 3.2 %%>;
   blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
@@ -14511,142 +14511,169 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
     }
   });
 
-  if (desktop) {
-
-    mainTong = createNode({
-      mother: grayTong,
-      style: {
-        display: desktop ? "flex" : "block",
-        width: withOut(0),
-        flexDirection: desktop ? "row" : "",
-        justifyContent: desktop ? "start" : "",
-        alignItems: desktop ? "start" : "",
-      },
-      children: [
-        {
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            width: String(firstWidth) + ea,
-            verticalAlign: "top",
-          },
-          children: [
-            {
-              text: contents.title.join(desktop ? "\n" : " "),
+  mainTong = createNode({
+    mother: grayTong,
+    style: {
+      display: desktop ? "flex" : "block",
+      width: withOut(0),
+      flexDirection: desktop ? "row" : "",
+      justifyContent: desktop ? "start" : "",
+      alignItems: desktop ? "start" : "",
+    },
+    children: [
+      {
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: desktop ? String(firstWidth) + ea : withOut(0, ea),
+          verticalAlign: "top",
+          justifyContent: desktop ? "" : "center",
+          alignItems: desktop ? "" : "center",
+          marginTop: desktop ? "" : String(2.8) + ea,
+          marginBottom: desktop ? "" : String(3) + ea,
+        },
+        children: [
+          {
+            text: contents.title.join(desktop ? "\n" : " "),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(veryBigSize) + ea,
+              fontWeight: String(veryBigWeight),
+              color: colorChip.black,
+              lineHeight: String(1.5),
+              top: desktop ? String(veryBigTextTop) + ea : "",
+            },
+            child: {
               style: {
                 display: "inline-block",
-                position: "relative",
-                fontSize: String(veryBigSize) + ea,
-                fontWeight: String(veryBigWeight),
-                color: colorChip.black,
-                lineHeight: String(1.5),
-                top: desktop ? String(veryBigTextTop) + ea : "",
-              },
-              child: {
-                style: {
-                  display: "inline-block",
-                  position: "absolute",
-                  top: String(circleTop) + ea,
-                  left: String(circleLeft) + ea,
-                  width: String(circleWidth) + ea,
-                  height: String(circleWidth) + ea,
-                  borderRadius: String(circleWidth) + ea,
-                  background: colorChip.gray4,
-                }
+                position: "absolute",
+                top: String(circleTop) + ea,
+                left: String(circleLeft) + ea,
+                width: String(circleWidth) + ea,
+                height: String(circleWidth) + ea,
+                borderRadius: String(circleWidth) + ea,
+                background: colorChip.gray4,
               }
             }
-          ]
-        },
-        {
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            width: withOut(firstWidth, ea),
-            verticalAlign: "top",
-            flexDirection: "column",
           }
-        }
-      ]
-    });
-
-    contentsTong = mainTong.children[1];
-
-    clock = createNode({
-      mother: contentsTong,
-      style: {
-        display: "flex",
-        position: "relative",
-        flexDirection: "row",
-        width: withOut(0),
-        paddingBottom: String(contentsTongPaddingBottom) + ea,
-        borderBottom: "1px dashed " + colorChip.gray3,
+        ]
       },
-      children: [
-        {
-          text: contents.description.join("\n"),
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(textSize) + ea,
-            fontWeight: String(textFileWeight),
-            color: colorChip.black,
-            lineHeight: String(1.6),
-          },
-          bold: {
-            fontSize: String(textSize) + ea,
-            fontWeight: String(800),
-            color: colorChip.green,
-            lineHeight: String(1.6),
-          }
-        },
-        {
-          text: dateToString(new Date(), true).slice(0, -3),
-          style: {
-            display: (media[0] || media[1]) ? "inline-block" : "none",
-            position: "absolute",
-            right: String(0),
-            top: String(bigTextTextTop) + ea,
-            fontSize: String(bigTextSize) + ea,
-            fontWeight: String(bigTextWeight),
-            color: colorChip.green,
-          }
+      {
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: desktop ? withOut(firstWidth, ea) : withOut(0, ea),
+          verticalAlign: "top",
+          flexDirection: "column",
         }
-      ]
-    }).children[1];
+      }
+    ]
+  });
 
+  contentsTong = mainTong.children[1];
+
+  clock = createNode({
+    mother: contentsTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: "row",
+      width: withOut(0),
+      paddingBottom: String(contentsTongPaddingBottom) + ea,
+      borderBottom: "1px dashed " + colorChip.gray3,
+      justifyContent: desktop ? "" : "center",
+      alignItems: desktop ? "" : "center",
+    },
+    children: [
+      {
+        text: contents.description.join("\n"),
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textFileWeight),
+          color: colorChip.black,
+          lineHeight: String(1.6),
+          textAlign: desktop ? "" : "center",
+        },
+        bold: {
+          fontSize: String(textSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.green,
+          lineHeight: String(1.6),
+        }
+      },
+      {
+        text: dateToString(new Date(), true).slice(0, -3),
+        style: {
+          display: (media[0] || media[1]) ? "inline-block" : "none",
+          position: "absolute",
+          right: String(0),
+          top: String(bigTextTextTop) + ea,
+          fontSize: String(bigTextSize) + ea,
+          fontWeight: String(bigTextWeight),
+          color: colorChip.green,
+        }
+      }
+    ]
+  }).children[1];
+
+  if (media[0] || media[1]) {
     setInterval(() => {
       clock.textContent = dateToString(new Date(), true).slice(0, -3);
     }, 60 * 1000);
+  }
 
+  formPanBase = createNode({
+    mother: contentsTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: desktop ? "row" : "column",
+      width: withOut(0),
+      justifyContent: "start",
+      alignItems: "start",
+      marginBottom: String(formPanBaseMarginBottom) + ea,
+      paddingBottom: desktop ? "" : String(16) + ea,
+    },
+  });
 
-    formPanBase = createNode({
-      mother: contentsTong,
+  for (let i = 0; i < contents.form.length; i++) {
+
+    thisPan = createNode({
+      mother: formPanBase,
       style: {
         display: "flex",
         position: "relative",
-        flexDirection: "row",
-        width: withOut(0),
-        justifyContent: "start",
-        alignItems: "start",
-        marginBottom: String(formPanBaseMarginBottom) + ea,
-      },
+        flexDirection: "column",
+        width: desktop ? "calc(calc(100% - " + String(panBetween * (contents.form.length - 1)) + ea + ") / " + String(contents.form.length) + ")" : withOut(0, ea),
+        marginRight: desktop ? (i === contents.form.length - 1 ? "" : String(panBetween) + ea) : "",
+        paddingTop: String(panPaddingTop) + ea,
+        verticalAlign: "top",
+      }
     });
 
-    for (let i = 0; i < contents.form.length; i++) {
-
-      thisPan = createNode({
-        mother: formPanBase,
+    createNode({
+      mother: thisPan,
+      style: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: withOut(0, ea),
+        height: String(panHeight) + ea,
+      },
+      child: {
+        text: contents.form[i].title,
         style: {
-          display: "flex",
-          position: "relative",
-          flexDirection: "column",
-          width: "calc(calc(100% - " + String(panBetween * (contents.form.length - 1)) + ea + ") / " + String(contents.form.length) + ")",
-          marginRight: (i === contents.form.length - 1 ? "" : String(panBetween) + ea),
-          paddingTop: String(panPaddingTop) + ea,
-          verticalAlign: "top",
+          fontSize: String(panTitleSize) + ea,
+          fontWeight: String(panTitleWeight),
+          color: colorChip.black,
         }
-      });
+      }
+    });
 
+    for (let j = 0; j < contents.form[i].children.length; j++) {
       createNode({
         mother: thisPan,
         style: {
@@ -14655,169 +14682,92 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
           alignItems: "center",
           width: withOut(0, ea),
           height: String(panHeight) + ea,
+          background: colorChip.gray1,
+          borderRadius: String(5) + "px",
+          marginBottom: j === contents.form[i].children.length - 1 ? "" : (contents.form[i].children[j].margin ? String(panBlockBigBetween) + ea : String(panBlockBetween) + ea),
+          flexDirection: "row",
         },
-        child: {
-          text: contents.form[i].title,
-          style: {
-            fontSize: String(panTitleSize) + ea,
-            fontWeight: String(panTitleWeight),
-            color: colorChip.black,
-          }
-        }
-      });
-
-      for (let j = 0; j < contents.form[i].children.length; j++) {
-        createNode({
-          mother: thisPan,
-          style: {
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: withOut(0, ea),
-            height: String(panHeight) + ea,
-            background: colorChip.gray1,
-            borderRadius: String(5) + "px",
-            marginBottom: j === contents.form[i].children.length - 1 ? "" : (contents.form[i].children[j].margin ? String(panBlockBigBetween) + ea : String(panBlockBetween) + ea),
-            flexDirection: "row",
-          },
-          children: [
-            {
-              style: {
-                width: String(panCheckBoxWidth) + ea,
-                marginRight: String(panInnerMargin) + ea,
-                display: "inline-flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: withOut(panInnerMargin * 2, ea),
-                display: "inline-flex",
-                justifyContent: "center",
-                alignItems: "center",
-              },
-              child: {
-                mode: "svg",
-                source: svgMaker.checkBox(colorChip.gray4),
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  width: String(checkBoxWidth) + ea,
-                }
-              }
+        children: [
+          {
+            style: {
+              width: String(panCheckBoxWidth) + ea,
+              marginRight: String(panInnerMargin) + ea,
+              display: "inline-flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: withOut(panInnerMargin * 2, ea),
+              display: "inline-flex",
+              justifyContent: "center",
+              alignItems: "center",
             },
-            {
-              style: {
-                width: withOut(panCheckBoxWidth + (panInnerMargin * 3) + panWhitePaddingLeft, ea),
-                height: withOut(panInnerMargin * 2, ea),
-                background: colorChip.white,
-                borderRadius: String(5) + "px",
-                display: "inline-flex",
-                justifyContent: "start",
-                alignItems: "center",
-                paddingLeft: String(panWhitePaddingLeft) + ea,
-              },
-              child: {
-                text: contents.form[i].children[j].title,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontSize: String(blockTextSize) + ea,
-                  fontWeight: String(blockTextWeight),
-                  color: colorChip.black,
-                  top: String(textTextTop) + ea,
-                }
-              }
-            }
-          ]
-        });
-      }
-    }
-
-    createNode({
-      mother: formPanBase,
-      style: {
-        display: "inline-flex",
-        justifyContent: "center",
-        alignItems: "center",
-        position: "absolute",
-        width: String(buttonWidth) + ea,
-        height: String(buttonHeight) + ea,
-        borderRadius: String(5) + "px",
-        background: colorChip.gradientGreen,
-        bottom: String(0),
-        right: String(0),
-        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-        cursor: "pointer",
-      },
-      child: {
-        text: contents.button,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(buttonSize) + ea,
-          fontWeight: String(buttonWeight),
-          top: String(buttonTextTop) + ea,
-          color: colorChip.white,
-          cursor: "pointer",
-        }
-      }
-    })
-
-
-
-
-  } else {
-
-    mainTong = createNode({
-      mother: grayTong,
-      style: {
-        display: desktop ? "flex" : "block",
-        width: withOut(0),
-        flexDirection: desktop ? "row" : "",
-        justifyContent: desktop ? "start" : "",
-        alignItems: desktop ? "start" : "",
-      },
-      children: [
-        {
-          style: {
-            display: desktop ? "inline-flex" : "flex",
-            position: "relative",
-            width: desktop ? String(firstWidth) + ea : withOut(0, ea),
-            justifyContent: desktop ? "" : "center",
-            alignItems: desktop ? "" : "center",
-            textAlign: desktop ? "" : "center",
-            marginTop: desktop ? "" : String(2.8) + ea,
-            marginBottom: desktop ? "" : String(3) + ea,
-          },
-          children: [
-            {
-              text: contents.title.join(desktop ? "\n" : " "),
+            child: {
+              mode: "svg",
+              source: svgMaker.checkBox(colorChip.gray4),
               style: {
                 display: "inline-block",
                 position: "relative",
-                fontSize: String(veryBigSize) + ea,
-                fontWeight: String(veryBigWeight),
-                color: colorChip.black,
-                lineHeight: String(1.5),
-                top: desktop ? String(veryBigTextTop) + ea : "",
-              },
-              child: {
-                style: {
-                  display: "inline-block",
-                  position: "absolute",
-                  top: String(circleTop) + ea,
-                  left: String(circleLeft) + ea,
-                  width: String(circleWidth) + ea,
-                  height: String(circleWidth) + ea,
-                  borderRadius: String(circleWidth) + ea,
-                  background: colorChip.gray4,
-                }
+                width: String(checkBoxWidth) + ea,
               }
             }
-          ]
-        },
-      ]
-    });
-  
+          },
+          {
+            style: {
+              width: withOut(panCheckBoxWidth + (panInnerMargin * 3) + panWhitePaddingLeft, ea),
+              height: withOut(panInnerMargin * 2, ea),
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              display: "inline-flex",
+              justifyContent: "start",
+              alignItems: "center",
+              paddingLeft: String(panWhitePaddingLeft) + ea,
+            },
+            child: {
+              text: contents.form[i].children[j].title,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(blockTextSize) + ea,
+                fontWeight: String(blockTextWeight),
+                color: colorChip.black,
+                top: String(textTextTop) + ea,
+              }
+            }
+          }
+        ]
+      });
+    }
   }
+
+  createNode({
+    mother: formPanBase,
+    style: {
+      display: "inline-flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "absolute",
+      width: String(buttonWidth) + ea,
+      height: String(buttonHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gradientGreen,
+      bottom: String(0),
+      right: desktop ? String(0) : withOut(50, buttonWidth / 2, ea),
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      cursor: "pointer",
+    },
+    child: {
+      text: contents.button,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(buttonSize) + ea,
+        fontWeight: String(buttonWeight),
+        top: String(buttonTextTop) + ea,
+        color: colorChip.white,
+        cursor: "pointer",
+      }
+    }
+  })
+
 
 }
 
