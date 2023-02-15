@@ -51,13 +51,14 @@ const CronGhost = require(APP_PATH + "/cronGhost/cronGhost.js");
 const DevContext = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
-  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, mongocroninfo } = this.mother;
   this.MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   this.MONGOPYTHONC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
   this.MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
   this.MONGOLOGC = new mongo(mongotestinfo, { useUnifiedTopology: true });
   this.MONGOSECONDC = new mongo(mongosecondinfo, { useUnifiedTopology: true });
+  this.MONGOCRONC = new mongo(mongocroninfo, { useUnifiedTopology: true });
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = `${process.cwd()}/apps/devContext`;
 }
@@ -148,11 +149,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
     
-
+    
 
 
     // aws cost

@@ -110,7 +110,7 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
   }
 }
 
-CronGhost.prototype.diskTest = async function () {
+CronGhost.prototype.diskTest = async function (MONGOC) {
   const instance = this;
   const { requestSystem, errorLog } = this.mother;
   try {
@@ -125,7 +125,15 @@ CronGhost.prototype.diskTest = async function () {
     const robotPort = 3000;
     const pathConst = "/disk";
     const protocol = "https:";
+    const aws = this.aws;
+    const back = this.back;
+    const collection = "costLog";
+    const selfMongo = MONGOC;  
     let response;
+    let tong;
+    let rows;
+    let start, end;
+
     for (let { name, host } of targets) {
       response = await requestSystem(protocol + "//" + host + ":" + String(robotPort) + pathConst);
       console.log(response.data.disk);
@@ -133,6 +141,22 @@ CronGhost.prototype.diskTest = async function () {
         await errorLog(name + " " + "disk warning");
       }
     }
+
+    start = new Date();
+    end = new Date();
+
+    start.setDate(start.getDate() - 4);
+    end.setDate(end.getDate() - 1);
+
+    tong = await aws.getCostByDate(start, end);
+
+    for (let obj of tong) {
+      rows = await back.mongoRead(collection, { id: obj.id }, { selfMongo });
+      if (rows.length === 0) {
+        await back.mongoCreate(collection, obj, { selfMongo });
+      }
+    }
+
     await errorLog("disk check done");
   } catch (e) {
     console.log(e);
@@ -243,7 +267,7 @@ CronGhost.prototype.cronServer = async function () {
 
     intervalFunc0 = async () => {
       try {
-        await instance.diskTest();
+        await instance.diskTest(MONGOLOCALC);
       } catch (e) {
         console.log(e);
       }
