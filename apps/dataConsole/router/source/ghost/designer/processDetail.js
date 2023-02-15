@@ -14344,7 +14344,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
   contentsTongPaddingBottom = <%% 15, 15, 15, 15, 7 %%>;
   panBetween = <%% 48, 30, 20, 20, 2 %%>;
 
-  panHeight = <%% 50, 48, 45, 42, 11.5 %%>;
+  panHeight = <%% 50, 48, 45, 42, 12 %%>;
   panInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
 
   panCheckBoxWidth = <%% 32, 24, 20, 20, 8 %%>;
