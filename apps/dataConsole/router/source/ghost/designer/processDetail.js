@@ -14218,6 +14218,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
     const [ year, month, date ] = hangul.split(/[가-힣]/gi);
     return new Date(2000 + Number(year), Number(month) - 1, Number(date));
   }
+  const siblingKeywords = "siblingKeywords__";
   let margin;
   let paddingTop;
   let whiteBottomMargin;
@@ -14280,6 +14281,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
   let formPanBaseMarginBottom;
   let checkBoxWidth;
   let blockTextSize, blockTextWeight;
+  let siblings;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -14676,6 +14678,55 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
     for (let j = 0; j < contents.form[i].children.length; j++) {
       createNode({
         mother: thisPan,
+        class: [ siblingKeywords + String(i) ],
+        attribute: {
+          toggle: "off",
+          x: String(i),
+          y: String(j),
+        },
+        event: {
+          click: function (e) {
+            const toggle = this.getAttribute("toggle");
+            const x = Number(this.getAttribute("x"));
+            const y = Number(this.getAttribute("y"));
+
+            if (toggle === "off") {
+              siblings = document.querySelectorAll('.' + siblingKeywords + String(x));
+              for (let dom of siblings) {
+                if (dom === this) {
+                  this.style.background = colorChip.gradientGreen;
+                  this.children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                  this.children[1].children[0].style.color = colorChip.green;
+                  this.setAttribute("toggle", "on");
+                } else {
+                  dom.style.background = colorChip.gray1;
+                  dom.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                  dom.children[1].children[0].style.color = colorChip.black;
+                  dom.setAttribute("toggle", "off");
+                }
+              }
+            } else {
+              this.style.background = colorChip.gray1;
+              this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+              this.children[1].children[0].style.color = colorChip.black;
+              this.setAttribute("toggle", "off");
+            }
+          },
+          mouseenter: function (e) {
+            if (this.getAttribute("toggle") === "off") {
+              this.style.background = colorChip.whiteGreen;
+              this.children[0].children[0].children[0].setAttribute("fill", colorChip.softGreen);
+              this.children[1].children[0].style.color = colorChip.green;
+            }
+          },
+          mouseleave: function (e) {
+            if (this.getAttribute("toggle") === "off") {
+              this.style.background = colorChip.gray1;
+              this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+              this.children[1].children[0].style.color = colorChip.black;
+            }
+          },
+        },
         style: {
           display: "flex",
           justifyContent: "center",
@@ -14686,6 +14737,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
           borderRadius: String(5) + "px",
           marginBottom: j === contents.form[i].children.length - 1 ? "" : (contents.form[i].children[j].margin ? String(panBlockBigBetween) + ea : String(panBlockBetween) + ea),
           flexDirection: "row",
+          cursor: "pointer",
+          transition: "all 0s ease",
         },
         children: [
           {
@@ -14699,6 +14752,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
               display: "inline-flex",
               justifyContent: "center",
               alignItems: "center",
+              transition: "all 0s ease",
             },
             child: {
               mode: "svg",
@@ -14707,6 +14761,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
                 display: "inline-block",
                 position: "relative",
                 width: String(checkBoxWidth) + ea,
+                transition: "all 0s ease",
               }
             }
           },
@@ -14720,6 +14775,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
               justifyContent: "start",
               alignItems: "center",
               paddingLeft: String(panWhitePaddingLeft) + ea,
+              transition: "all 0s ease",
             },
             child: {
               text: contents.form[i].children[j].title,
@@ -14730,6 +14786,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
                 fontWeight: String(blockTextWeight),
                 color: colorChip.black,
                 top: String(textTextTop) + ea,
+                transition: "all 0s ease",
               }
             }
           }
