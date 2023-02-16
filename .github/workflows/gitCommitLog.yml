@@ -1,9 +1,0 @@
-name: gitCommitLog
-run-name: ${{ github.repository }} commit log
-on: [ push ]
-jobs:
-  pullAndCommitLog:
-    runs-on: self-hosted
-    steps:
-      - run: "cd /Users/ubuntu/robot; git pull;  node robot.js gitLogToJson;"
-
