@@ -7,12 +7,12 @@ module.exports = {
       exec_mode: "cluster",
       args: [ "static" ]
     },
-    {
-      name: "clown",
-      script: "./clown.js",
-      instances: 1,
-      exec_mode: "cluster",
-      args: [ "graphicServer" ]
-    }
+    // {
+    //   name: "clown",
+    //   script: "./clown.js",
+    //   instances: 1,
+    //   exec_mode: "cluster",
+    //   args: [ "graphicServer" ]
+    // }
   ]
 };
