@@ -341,8 +341,6 @@ PortfolioFilter.prototype.ghost_filter = async function (start_num) {
 PortfolioFilter.prototype.total_make = async function (liteMode = false) {
   const instance = this;
   const { fileSystem, shellExec, shellLink, ghostFileUpload, sleep, messageSend, requestSystem } = this.mother;
-  const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
-  const drive = new GoogleDrive();
   const idFilterNum = function (past) {
     let newNumber;
     past = past.split('_')[2];
@@ -358,7 +356,6 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     const photoFolderConst = "사진_등록_포트폴리오";
     await this.static_setting();
 
-    let thisFolderId, folderId_780, folderId_original;
     let pidFolder, fromArr, toArr;
     let resultFolder;
     let ghostPhotos, ghostPhotosTarget;
@@ -423,14 +420,8 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
 
     }
 
-    do {
-      console.log("search id...");
-      await sleep(3000);
-      thisFolderId = await drive.searchId_inPython(this.folderName);
-    } while (thisFolderId === null);
-
     //slack
-    await messageSend({ text: `${this.folderName} 사진을 공유하였습니다!\n${("https://drive.google.com/drive/folders/" + thisFolderId + "?usp=sharing")}`, channel: `#502_sns_contents` });
+    await messageSend({ text: `${this.folderName} 사진을 공유하였습니다!`, channel: `#502_sns_contents` });
 
     //ghost upload
     if (!liteMode) {
