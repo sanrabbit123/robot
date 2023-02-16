@@ -13,7 +13,7 @@ const CronGhost = function () {
 CronGhost.prototype.aliveTest = async function (MONGOC) {
   const instance = this;
   const address = this.address;
-  const { requestSystem, messageLog, errorLog } = this.mother;
+  const { requestSystem, messageLog, errorLog, emergencyAlarm } = this.mother;
   const generalPort = 3000;
   const controlPath = "/ssl";
   const aws = this.aws;
@@ -71,11 +71,11 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
             }
             if (successNum === targetNumber) {
               message = "server all alive";
-              await errorLog(message);
+              await emergencyAlarm(message);
             } else if (successNum + failNum === targetNumber) {
               message += "\n======================================";
               message += "\nsomething death";
-              await errorLog(message);
+              await emergencyAlarm(message);
             }
           }
         }
@@ -87,11 +87,28 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
         if (successNum + failNum === targetNumber) {
           message += "\n======================================";
           message += "\nsomething death";
-          await errorLog(message);
+          await emergencyAlarm(message);
         }
       }
 
     }
+
+    for (let json of instances) {
+      await back.mongoCreate(collection, json, { selfMongo });
+    }
+
+  } catch (e) {
+    await emergencyAlarm("alive test error : " + e.message);
+  }
+}
+
+CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
+  const instance = this;
+  const address = this.address;
+  const { requestSystem, messageLog, errorLog } = this.mother;
+  const generalPort = 3000;
+  const selfMongo = MONGOC;
+  try {
 
     requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/parsingCashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
       return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
@@ -101,16 +118,12 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
       throw new Error(e);
     });
 
-    for (let json of instances) {
-      await back.mongoCreate(collection, json, { selfMongo });
-    }
-
   } catch (e) {
-    await errorLog("alive test error : " + e.message);
+    await errorLog("basic async request error : " + e.message);
   }
 }
 
-CronGhost.prototype.diskTest = async function (MONGOC) {
+CronGhost.prototype.diskTestAndCost = async function (MONGOC) {
   const instance = this;
   const { requestSystem, errorLog } = this.mother;
   try {
@@ -157,7 +170,7 @@ CronGhost.prototype.diskTest = async function (MONGOC) {
       }
     }
 
-    await errorLog("disk check done");
+    await errorLog("disk test and cost save done");
   } catch (e) {
     console.log(e);
   }
@@ -190,7 +203,7 @@ CronGhost.prototype.cronServer = async function () {
     let keyDir;
     let caDir;
     let intervalFunc, startTime, today;
-    let intervalFunc0, intervalFunc1;
+    let intervalFunc0, intervalFunc1, intervalFunc2;
 
     app.use(express.json({ limit: "50mb" }));
     app.use(express.urlencoded({ limit: "50mb", extended: true }));
@@ -267,13 +280,21 @@ CronGhost.prototype.cronServer = async function () {
 
     intervalFunc0 = async () => {
       try {
-        await instance.diskTest(MONGOLOCALC);
+        await instance.diskTestAndCost(MONGOLOCALC);
       } catch (e) {
         console.log(e);
       }
     }
 
     intervalFunc1 = async () => {
+      try {
+        await instance.basicAsyncRequest(MONGOLOCALC);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    intervalFunc2 = async () => {
       try {
         await instance.aliveTest(MONGOLOCALC);
       } catch (e) {
@@ -291,9 +312,11 @@ CronGhost.prototype.cronServer = async function () {
     setTimeout(() => {
       intervalFunc().catch((err) => { console.log(err); });
       intervalFunc0().catch((err) => { console.log(err); });
+      intervalFunc2().catch((err) => { console.log(err); });
       setInterval(intervalFunc, interval);
       setInterval(intervalFunc0, 4 * 60 * 60 * 1000);
       setInterval(intervalFunc1, 1 * 30 * 60 * 1000);
+      setInterval(intervalFunc2, 1 * 10 * 60 * 1000);
     }, startTime);
 
     setInterval(async () => {

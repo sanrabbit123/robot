@@ -5462,7 +5462,7 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
             rawDelta = (((Math.abs(meetingDate.valueOf() - todayValue) / 1000) / 60) / 60) / 24;
             delta = Math.floor(rawDelta);
 
-            if (delta === 3 || delta === 7) {
+            if (delta === 1 || delta === 7) {
 
               designer = await back.getDesignerById(project.desid, { selfMongo });
 
