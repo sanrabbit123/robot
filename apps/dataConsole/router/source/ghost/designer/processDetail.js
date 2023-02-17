@@ -13940,7 +13940,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
             deactive: false,
           },
           {
-            title: "일정표 공유됨",
+            title: "일정표 공유",
             deactive: false,
           },
           {
@@ -13981,6 +13981,10 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
             deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
           },
           {
+            title: "시공 착수",
+            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+          },
+          {
             title: "시공 진행중",
             deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
           },
@@ -13989,11 +13993,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
             deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
           },
           {
-            title: "시공 AS 진행중",
-            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
-          },
-          {
-            title: "시공 AS 최종 완료",
+            title: "시공 AS 완료",
             deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
           },
         ]
@@ -14024,6 +14024,10 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         children: [
           {
             title: "촬영 여부 확인",
+            deactive: false,
+          },
+          {
+            title: "촬영일 확인 완료",
             deactive: false,
           },
           {

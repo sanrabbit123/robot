@@ -6389,6 +6389,7 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
           { "desid": { $regex: "^d" } },
           { "process.status": { $regex: "^[대진완홀]" } },
           { "process.contract.form.date.from": { $gte: ago } },
+          { "process.remain.date": { $gte: new Date(2000, 0, 1) } },
         ]
       }, { selfMongo });
 
