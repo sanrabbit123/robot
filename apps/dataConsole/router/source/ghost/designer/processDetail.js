@@ -13893,7 +13893,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
   wordingBoxWidth = <%% 175, 185, 175, 115, 175 %%>;
 
   contentsTongPaddingBottom = <%% 15, 15, 15, 15, 7 %%>;
-  panBetween = <%% 48, 30, 20, 20, 2 %%>;
+  panBetween = <%% 28, 28, 24, 20, 2 %%>;
 
   panHeight = <%% 50, 48, 45, 42, 12 %%>;
   panInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
@@ -13936,7 +13936,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         title: "디자인",
         children: [
           {
-            title: "일정표 공유 전",
+            title: "현장 미팅 완료",
             margin: false,
           },
           {
@@ -13948,15 +13948,15 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
             margin: false,
           },
           {
-            title: "컨셉 제안서 컨펌",
-            margin: true,
-          },
-          {
             title: "1차 디자인 제안서 공유",
             margin: false,
           },
           {
             title: "수정 제안서 공유",
+            margin: false,
+          },
+          {
+            title: "제품 리스트 공유",
             margin: false,
           },
           {
@@ -13973,11 +13973,11 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
             margin: true,
           },
           {
-            title: "시공 견적서 비교",
-            margin: false,
+            title: "시공 견적서 공유",
+            margin: true,
           },
           {
-            title: "시공 견적서 컨펌",
+            title: "공정표 공유",
             margin: true,
           },
           {
@@ -14002,19 +14002,32 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         title: "구매",
         children: [
           {
-            title: "제품 리스트 공유",
-            margin: false,
-          },
-          {
-            title: "제품 리스트 컨펌",
+            title: "제품 구매 시작 전",
             margin: true,
           },
           {
-            title: "제품 구매, 배송중",
+            title: "제품 구매 진행중",
+            margin: true,
+          },
+          {
+            title: "구매 완료, 배송중",
             margin: true,
           },
           {
             title: "배송 및 세팅 완료",
+            margin: true,
+          },
+        ]
+      },
+      {
+        title: "세팅",
+        children: [
+          {
+            title: "촬영 여부 확인",
+            margin: false,
+          },
+          {
+            title: "세팅 및 촬영 완료",
             margin: true,
           },
         ]
@@ -14179,7 +14192,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
   formPanBase = createNode({
     mother: contentsTong,
     style: {
-      display: "flex",
+      display: (media[0] || media[4] ? "flex" : "block"),
       position: "relative",
       flexDirection: desktop ? "row" : "column",
       width: withOut(0),
@@ -14195,11 +14208,11 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
     thisPan = createNode({
       mother: formPanBase,
       style: {
-        display: "flex",
+        display: "inline-flex",
         position: "relative",
         flexDirection: "column",
-        width: desktop ? "calc(calc(100% - " + String(panBetween * (contents.form.length - 1)) + ea + ") / " + String(contents.form.length) + ")" : withOut(0, ea),
-        marginRight: desktop ? (i === contents.form.length - 1 ? "" : String(panBetween) + ea) : "",
+        width: desktop ? (media[0] ? "calc(calc(100% - " + String(panBetween * (contents.form.length - 1)) + ea + ") / " + String(contents.form.length) + ")" : "calc(calc(100% - " + String(panBetween * ((contents.form.length / 2) - 1)) + ea + ") / " + String(contents.form.length / 2) + ")") : withOut(0, ea),
+        marginRight: desktop ? (media[0] ? (i === contents.form.length - 1 ? "" : String(panBetween) + ea) : (i === contents.form.length - 1 || i === (contents.form.length / 2) - 1 ? "" : String(panBetween) + ea)) : "",
         paddingTop: String(panPaddingTop) + ea,
         verticalAlign: "top",
       }
