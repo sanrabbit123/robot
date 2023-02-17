@@ -14033,7 +14033,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         ]
       },
     ],
-    button: "제출하기",
+    button: "공유하기",
   };
 
   whiteBlock = createNode({
