@@ -13937,31 +13937,31 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         children: [
           {
             title: "현장 미팅 완료",
-            margin: false,
+            deactive: false,
           },
           {
             title: "일정표 공유됨",
-            margin: true,
+            deactive: false,
           },
           {
             title: "컨셉 제안서 공유",
-            margin: false,
+            deactive: false,
           },
           {
             title: "1차 디자인 제안서 공유",
-            margin: false,
+            deactive: false,
           },
           {
             title: "수정 제안서 공유",
-            margin: false,
+            deactive: false,
           },
           {
             title: "제품 리스트 공유",
-            margin: false,
+            deactive: false,
           },
           {
             title: "디자인 제안서 최종 컨펌",
-            margin: false,
+            deactive: false,
           },
         ]
       },
@@ -13970,31 +13970,31 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         children: [
           {
             title: "시공 의뢰서 공유",
-            margin: true,
+            deactive: false,
           },
           {
             title: "시공 견적서 공유",
-            margin: true,
+            deactive: false,
           },
           {
             title: "공정표 공유",
-            margin: true,
+            deactive: false,
           },
           {
             title: "시공 진행중",
-            margin: false,
+            deactive: false,
           },
           {
             title: "시공 완료",
-            margin: true,
+            deactive: false,
           },
           {
             title: "시공 AS 진행중",
-            margin: false,
+            deactive: false,
           },
           {
             title: "시공 AS 최종 완료",
-            margin: true,
+            deactive: false,
           },
         ]
       },
@@ -14003,19 +14003,19 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         children: [
           {
             title: "제품 구매 시작 전",
-            margin: true,
+            deactive: false,
           },
           {
             title: "제품 구매 진행중",
-            margin: true,
+            deactive: false,
           },
           {
             title: "구매 완료, 배송중",
-            margin: true,
+            deactive: false,
           },
           {
             title: "배송 및 세팅 완료",
-            margin: true,
+            deactive: false,
           },
         ]
       },
@@ -14024,11 +14024,11 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         children: [
           {
             title: "촬영 여부 확인",
-            margin: false,
+            deactive: false,
           },
           {
             title: "세팅 및 촬영 완료",
-            margin: true,
+            deactive: false,
           },
         ]
       },
@@ -14297,7 +14297,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
           height: String(panHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(5) + "px",
-          marginBottom: j === contents.form[i].children.length - 1 ? "" : (contents.form[i].children[j].margin ? String(panBlockBigBetween) + ea : String(panBlockBetween) + ea),
+          marginBottom: j === contents.form[i].children.length - 1 ? "" : String(panBlockBetween) + ea,
           flexDirection: "row",
           cursor: "pointer",
           transition: "all 0s ease",
