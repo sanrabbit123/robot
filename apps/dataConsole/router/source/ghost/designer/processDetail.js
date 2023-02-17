@@ -13758,7 +13758,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, serviceParsing } = GeneralJs;
   const dateToHangul = (dateObject) => {
     return `${String(dateObject.getFullYear()).slice(2)}년 ${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일`;
   }
@@ -13928,7 +13928,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
       "어느 단계인가요?"
     ],
     description: [
-      dateToHangul(new Date()) + " 현재를 기준으로",
+      project.name + " 고객님 : " + "<u%" + serviceParsing(project.service) + "%u>",
       "고객님께 해당되는 상태를 <b%모두 체크%b>해주세요!",
     ],
     form: [
@@ -13970,31 +13970,31 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
         children: [
           {
             title: "시공 의뢰서 공유",
-            deactive: false,
+            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
           },
           {
             title: "시공 견적서 공유",
-            deactive: false,
+            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
           },
           {
             title: "공정표 공유",
-            deactive: false,
+            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
           },
           {
             title: "시공 진행중",
-            deactive: false,
+            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
           },
           {
             title: "시공 완료",
-            deactive: false,
+            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
           },
           {
             title: "시공 AS 진행중",
-            deactive: false,
+            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
           },
           {
             title: "시공 AS 최종 완료",
-            deactive: false,
+            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
           },
         ]
       },
@@ -14166,6 +14166,12 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
           fontWeight: String(800),
           color: colorChip.green,
           lineHeight: String(1.6),
+        },
+        under: {
+          fontSize: String(textSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
+          lineHeight: String(1.6),
         }
       },
       {
@@ -14245,47 +14251,55 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
           toggle: "off",
           x: String(i),
           y: String(j),
+          deactive: contents.form[i].children[j].deactive ? "true" : "false",
         },
         event: {
           click: function (e) {
             const toggle = this.getAttribute("toggle");
             const x = Number(this.getAttribute("x"));
             const y = Number(this.getAttribute("y"));
+            const deactive = (this.getAttribute("deactive") === "true");
 
             if (toggle === "off") {
-              siblings = document.querySelectorAll('.' + siblingKeywords + String(x));
-              for (let dom of siblings) {
-                if (dom === this) {
-                  this.style.background = colorChip.gradientGreen;
-                  this.children[0].children[0].children[0].setAttribute("fill", colorChip.white);
-                  this.children[1].children[0].style.color = colorChip.green;
-                  this.setAttribute("toggle", "on");
-                } else {
-                  dom.style.background = colorChip.gray1;
-                  dom.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                  dom.children[1].children[0].style.color = colorChip.black;
-                  dom.setAttribute("toggle", "off");
+              if (!deactive) {
+                siblings = document.querySelectorAll('.' + siblingKeywords + String(x));
+                for (let dom of siblings) {
+                  if (dom === this) {
+                    this.style.background = colorChip.gradientGreen;
+                    this.children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                    this.children[1].children[0].style.color = colorChip.green;
+                    this.setAttribute("toggle", "on");
+                  } else {
+                    dom.style.background = colorChip.gray1;
+                    dom.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                    dom.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.black;
+                    dom.setAttribute("toggle", "off");
+                  }
                 }
               }
             } else {
               this.style.background = colorChip.gray1;
               this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-              this.children[1].children[0].style.color = colorChip.black;
+              this.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.black;
               this.setAttribute("toggle", "off");
             }
           },
           mouseenter: function (e) {
-            if (this.getAttribute("toggle") === "off") {
-              this.style.background = colorChip.whiteGreen;
-              this.children[0].children[0].children[0].setAttribute("fill", colorChip.softGreen);
-              this.children[1].children[0].style.color = colorChip.green;
+            const deactive = (this.getAttribute("deactive") === "true");
+            if (!deactive) {
+              if (this.getAttribute("toggle") === "off") {
+                this.style.background = colorChip.whiteGreen;
+                this.children[0].children[0].children[0].setAttribute("fill", colorChip.softGreen);
+                this.children[1].children[0].style.color = colorChip.green;
+              }
             }
           },
           mouseleave: function (e) {
+            const deactive = (this.getAttribute("deactive") === "true");
             if (this.getAttribute("toggle") === "off") {
               this.style.background = colorChip.gray1;
               this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-              this.children[1].children[0].style.color = colorChip.black;
+              this.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.black;
             }
           },
         },
@@ -14331,7 +14345,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
             style: {
               width: withOut(panCheckBoxWidth + (panInnerMargin * 3) + panWhitePaddingLeft, ea),
               height: withOut(panInnerMargin * 2, ea),
-              background: colorChip.white,
+              background: contents.form[i].children[j].deactive ? colorChip.gray2 : colorChip.white,
               borderRadius: String(5) + "px",
               display: "inline-flex",
               justifyContent: "start",
@@ -14346,7 +14360,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
                 position: "relative",
                 fontSize: String(blockTextSize) + ea,
                 fontWeight: String(blockTextWeight),
-                color: colorChip.black,
+                color: contents.form[i].children[j].deactive ? colorChip.deactive : colorChip.black,
                 top: String(textTextTop) + ea,
                 transition: "all 0s ease",
               }
@@ -14512,6 +14526,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             instance.insertScheduleStartBox();
             instance.insertScheduleAboutBox();
             await instance.insertScheduleBox();
+            instance.insertFormStatusBox();
             instance.insertNumbersBox();
             instance.insertUploadBox();
             instance.insertControlBox();
