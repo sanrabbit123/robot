@@ -13769,6 +13769,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     return new Date(2000 + Number(year), Number(month) - 1, Number(date));
   }
   const siblingKeywords = "siblingKeywords__";
+  const valueBlockClassName = "valueBlockClassName__";
   try {
     let margin;
     let paddingTop;
@@ -14118,6 +14119,9 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
   
       thisPan = createNode({
         mother: formPanBase,
+        attribute: {
+          index: String(i),
+        },
         style: {
           display: "inline-flex",
           position: "relative",
@@ -14151,42 +14155,93 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
       for (let j = 0; j < contents.form[i].children.length; j++) {
         createNode({
           mother: thisPan,
-          class: [ siblingKeywords + String(i) ],
+          class: [ valueBlockClassName, siblingKeywords + String(i) ],
           attribute: {
-            toggle: "off",
+            toggle: contents.form[i].children[j].value === 0 ? "off" : "on",
             x: String(i),
             y: String(j),
+            mother: contents.form[i].title,
+            title: contents.form[i].children[j].title,
             deactive: contents.form[i].children[j].deactive ? "true" : "false",
+            proid,
+            desid,
           },
           event: {
-            click: function (e) {
+            click: async function (e) {
               const toggle = this.getAttribute("toggle");
               const x = Number(this.getAttribute("x"));
               const y = Number(this.getAttribute("y"));
               const deactive = (this.getAttribute("deactive") === "true");
-  
-              if (toggle === "off") {
-                if (!deactive) {
-                  siblings = document.querySelectorAll('.' + siblingKeywords + String(x));
-                  for (let dom of siblings) {
-                    if (dom === this) {
-                      this.style.background = colorChip.gradientGreen;
-                      this.children[0].children[0].children[0].setAttribute("fill", colorChip.white);
-                      this.children[1].children[0].style.color = colorChip.green;
-                      this.setAttribute("toggle", "on");
-                    } else {
-                      dom.style.background = colorChip.gray1;
-                      dom.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                      dom.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.black;
-                      dom.setAttribute("toggle", "off");
+              const proid = this.getAttribute("proid");
+              const desid = this.getAttribute("desid");
+              try {
+                let totalDom;
+                let matrix;
+                let maxX, maxY;
+                let xArr, yArr;
+                let tempObj;
+                let targetDoms;
+
+                if (toggle === "off") {
+                  if (!deactive) {
+                    siblings = document.querySelectorAll('.' + siblingKeywords + String(x));
+                    for (let dom of siblings) {
+                      if (dom === this) {
+                        this.style.background = colorChip.gradientGreen;
+                        this.children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                        this.children[1].children[0].style.color = colorChip.green;
+                        this.setAttribute("toggle", "on");
+                      } else {
+                        dom.style.background = colorChip.gray1;
+                        dom.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                        dom.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.black;
+                        dom.setAttribute("toggle", "off");
+                      }
                     }
                   }
+                } else {
+                  this.style.background = colorChip.gray1;
+                  this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                  this.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.black;
+                  this.setAttribute("toggle", "off");
                 }
-              } else {
-                this.style.background = colorChip.gray1;
-                this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                this.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.black;
-                this.setAttribute("toggle", "off");
+
+                totalDom = [ ...document.querySelectorAll('.' + valueBlockClassName) ];
+                
+                xArr = [];
+                for (let dom of totalDom) {
+                  xArr.push(Number(dom.getAttribute("x")));
+                }
+                xArr.sort((a, b) => { return b - a; });
+                maxX = xArr[0] + 1;
+
+                matrix = [];
+                for (let z = 0; z < maxX; z++) {
+                  targetDoms = totalDom.filter((dom) => { return Number(dom.getAttribute("x")) === z });
+                  targetDoms.sort((a, b) => { return Number(a.getAttribute("y")) - Number(b.getAttribute("y")); });
+                  tempObj = {
+                    title: targetDoms[0].getAttribute("mother"),
+                    children: []
+                  };
+                  for (let w = 0; w < targetDoms.length; w++) {
+                    tempObj.children.push({
+                      title: targetDoms[w].getAttribute("title"),
+                      deactive: targetDoms[w].getAttribute("true") === "true",
+                      value: targetDoms[w].getAttribute("toggle") === "on" ? 1 : 0,
+                    });
+                  }
+                  matrix.push(tempObj);
+                }
+                
+                await ajaxJson({
+                  mode: "update",
+                  proid,
+                  desid,
+                  matrix
+                }, SECONDHOST + "/projectDesignerStatus");
+
+              } catch (e) {
+                console.log(e);
               }
             },
             mouseenter: function (e) {
@@ -14214,7 +14269,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
             alignItems: "center",
             width: withOut(0, ea),
             height: String(panHeight) + ea,
-            background: colorChip.gray1,
+            background: contents.form[i].children[j].value === 0 ? colorChip.gray1 : colorChip.gradientGreen,
             borderRadius: String(5) + "px",
             marginBottom: j === contents.form[i].children.length - 1 ? "" : String(panBlockBetween) + ea,
             flexDirection: "row",
@@ -14237,7 +14292,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
               },
               child: {
                 mode: "svg",
-                source: svgMaker.checkBox(colorChip.gray4),
+                source: svgMaker.checkBox(contents.form[i].children[j].value === 0 ? colorChip.gray4 : colorChip.white),
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -14265,7 +14320,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                   position: "relative",
                   fontSize: String(blockTextSize) + ea,
                   fontWeight: String(blockTextWeight),
-                  color: contents.form[i].children[j].deactive ? colorChip.deactive : colorChip.black,
+                  color: contents.form[i].children[j].value === 0 ? (contents.form[i].children[j].deactive ? colorChip.deactive : colorChip.black) : colorChip.green,
                   top: String(textTextTop) + ea,
                   transition: "all 0s ease",
                 }

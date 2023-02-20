@@ -1257,6 +1257,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
       let resultObj;
       let project;
       let defaultObj;
+      let matrix;
 
       resultObj = { message: "done" };
 
@@ -1401,6 +1402,23 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
         } else {
           resultObj = rows[0].matrix;
         }
+
+      } else if (mode === "update") {
+
+        matrix = equalJson(req.body.matrix);
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        if (rows.length === 0) {
+          await back.mongoCreate(collection, {
+            proid, desid, matrix
+          }, { selfMongo });
+        } else {
+          await back.mongoUpdate(collection, [
+            { proid },
+            { matrix }
+          ], { selfMongo });
+        }
+
+        resultObj = { message: "done" };
 
       }
 
