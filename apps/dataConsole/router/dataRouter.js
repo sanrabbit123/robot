@@ -6447,8 +6447,8 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
       firstMeetingAlarmFunc(instance.mongo).then(() => {
       //   return afterMeetingAlarmFunc(instance.mongo);
       // }).then(() => {
-        return photoDesignerAlarmFunc(instance.mongo);
-      }).then(() => {
+      //   return photoDesignerAlarmFunc(instance.mongo);
+      // }).then(() => {
         return contractStartAlarmFunc(instance.mongo);
       }).then(() => {
         return errorLog("time delta alarm done : " + JSON.stringify(new Date()));
