@@ -1511,6 +1511,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
             paddingBottom: desktop ? "" : String(grayPadding - 0.8) + ea,
           },
         });
+        
         for (let j = 0; j < widthMap.length; j++) {
 
           if (boxTarget[j] === null) {
