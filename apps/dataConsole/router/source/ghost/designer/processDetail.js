@@ -13748,10 +13748,11 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function (feedback = false) {
 
 }
 
-ProcessDetailJs.prototype.insertFormStatusBox = function () {
+ProcessDetailJs.prototype.insertFormStatusBox = async function () {
   const instance = this;
   const mother = this.mother;
   const { ea, baseTong, media, client, project } = this;
+  const { proid, desid } = project;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -13768,645 +13769,648 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
     return new Date(2000 + Number(year), Number(month) - 1, Number(date));
   }
   const siblingKeywords = "siblingKeywords__";
-  let margin;
-  let paddingTop;
-  let whiteBottomMargin;
-  let titleFontSize;
-  let bottomMargin;
-  let whiteBlock;
-  let grayTong;
-  let contents;
-  let innerMargin;
-  let arrowWidth, arrowHeight;
-  let textTop;
-  let textSize, textWeight;
-  let textMarginLeft;
-  let mobileVisualPaddingValue;
-  let button, buttons;
-  let blockBetween;
-  let blockBetweenBottom;
-  let blockHeight;
-  let lineTop;
-  let columnsNumber;
-  let textFileWeight;
-  let whitePadding;
-  let smallSize, smallWeight, smallBetween;
-  let textTextTop;
-  let smallTextTop;
-  let panDom;
-  let veryBigSize;
-  let veryBigWeight;
-  let firstWidth;
-  let buttonWidth, buttonHeight;
-  let buttonOuterPadding, buttonInnerMargin;
-  let descriptionBetween;
-  let panWidth, panVisualLeft;
-  let veryBigTextTop;
-  let circleWidth, circleTop, circleLeft;
-  let subButtonWidth;
-  let thirdWidth;
-  let imageBoxVisualPaddingBottom;
-  let imageBetween;
-  let panBoxBetween;
-  let wordingPaddingTop0, wordingPaddingTop1;
-  let mainTong;
-  let wordingBoxWidth;
-  let contentsTong;
-  let contentsTongPaddingBottom;
-  let bigTextSize;
-  let bigTextWeight;
-  let bigTextTextTop;
-  let clock;
-  let formPanBase;
-  let thisPan;
-  let panBetween;
-  let panHeight, panInnerMargin;
-  let panCheckBoxWidth;
-  let panWhitePaddingLeft;
-  let panBlockBetween, panBlockBigBetween;
-  let buttonSize, buttonWeight, buttonTextTop;
-  let panPaddingTop;
-  let panTitleSize, panTitleWeight;
-  let formPanBaseMarginBottom;
-  let checkBoxWidth;
-  let blockTextSize, blockTextWeight;
-  let siblings;
-
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
-
-  whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
-
-  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
-
-  bigTextSize = <%% 36, 36, 36, 36, 4.4 %%>;
-  bigTextWeight = <%% 100, 100, 100, 100, 100 %%>;
-  bigTextTextTop = <%% (isMac() ? -7 : -5), (isMac() ? -7 : -5), -7, -7, -1 %%>;
-
-  veryBigSize = <%% 23, 21, 20, 16, 4.4 %%>;
-  veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
-  veryBigTextTop = <%% -1, -1, -2, -1, -1 %%>;
-
-  innerMargin = <%% 0, 0, 0, 0, 1 %%>;
-
-  textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
-  smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
-
-  textSize = <%% 14, 14, 13, 12, 3.2 %%>;
-  textWeight = <%% 700, 700, 700, 700, 700 %%>;
-  textFileWeight = <%% 400, 400, 400, 400, 400 %%>;
-
-  whitePadding = <%% 12, 12, 8, 8, 2.2 %%>;
-
-  blockBetween = <%% 36, 28, 26, 24, 5 %%>;
-  blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
-  blockHeight = <%% 36, 36, 32, 26, 4 %%>;
-
-  lineTop = <%% 18, 18, 16, 13, 1.9 %%>;
-
-  firstWidth = <%% 298, 230, 213, 142, 300 %%>;
-
-  panWidth = <%% 20, 20, 20, 20, 2 %%>;
-  panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
-
-  circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
-  circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
-  circleLeft = <%% -7, -7, -7, -5, -0.8 %%>;
-
-  arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
-  arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
-
-  subButtonWidth = <%% 90, 72, 72, 64, 16 %%>;
-
-  mobileVisualPaddingValue = 0.2;
-
-  thirdWidth = <%% 240, 0, 0, 0, 0 %%>;
-
-  imageBoxVisualPaddingBottom = <%% 4, 2, 2, 2, 0 %%>;
-  imageBetween = <%% 32, 16, 12, 12, 6 %%>;
-  panBoxBetween = <%% 12, 32, 26, 24, 12 %%>;
-
-  wordingPaddingTop0 = <%% 300, 213, 213, 213, 213 %%>;
-  wordingPaddingTop1 = <%% 309, 243, 243, 243, 243 %%>;
-
-  wordingBoxWidth = <%% 175, 185, 175, 115, 175 %%>;
-
-  contentsTongPaddingBottom = <%% 15, 15, 15, 15, 7 %%>;
-  panBetween = <%% 28, 28, 24, 20, 2 %%>;
-
-  panHeight = <%% 50, 48, 45, 42, 12 %%>;
-  panInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
-
-  panCheckBoxWidth = <%% 32, 24, 20, 20, 8 %%>;
-  checkBoxWidth = <%% 13, 11, 9, 9, 3 %%>;
-
-  panWhitePaddingLeft = <%% 16, 14, 14, 12, 3.5 %%>; 
-  panBlockBetween = <%% 8, 8, 6, 5, 1 %%>; 
-  panBlockBigBetween = <%% 8, 8, 6, 5, 1 %%>; 
-
-  buttonWidth = <%% 100, 90, 90, 80, 24 %%>;
-  buttonHeight = <%% 36, 36, 32, 30, 8.2 %%>;
-
-  buttonSize = <%% 15, 14, 14, 13, 3.5 %%>;
-  buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
-  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
-
-  panPaddingTop = <%% 18, 12, 12, 12, 4 %%>;
-
-  panTitleSize = <%% 16, 15, 14, 13, 3.6 %%>;
-  panTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-
-  formPanBaseMarginBottom = <%% 12, 8, 6, 6, 4 %%>;
-
-  blockTextSize = <%% 14, 13, 12, 11, 3.2 %%>;
-  blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
-
+  try {
+    let margin;
+    let paddingTop;
+    let whiteBottomMargin;
+    let titleFontSize;
+    let bottomMargin;
+    let whiteBlock;
+    let grayTong;
+    let contents;
+    let innerMargin;
+    let arrowWidth, arrowHeight;
+    let textTop;
+    let textSize, textWeight;
+    let textMarginLeft;
+    let mobileVisualPaddingValue;
+    let button, buttons;
+    let blockBetween;
+    let blockBetweenBottom;
+    let blockHeight;
+    let lineTop;
+    let columnsNumber;
+    let textFileWeight;
+    let whitePadding;
+    let smallSize, smallWeight, smallBetween;
+    let textTextTop;
+    let smallTextTop;
+    let panDom;
+    let veryBigSize;
+    let veryBigWeight;
+    let firstWidth;
+    let buttonWidth, buttonHeight;
+    let buttonOuterPadding, buttonInnerMargin;
+    let descriptionBetween;
+    let panWidth, panVisualLeft;
+    let veryBigTextTop;
+    let circleWidth, circleTop, circleLeft;
+    let subButtonWidth;
+    let thirdWidth;
+    let imageBoxVisualPaddingBottom;
+    let imageBetween;
+    let panBoxBetween;
+    let wordingPaddingTop0, wordingPaddingTop1;
+    let mainTong;
+    let wordingBoxWidth;
+    let contentsTong;
+    let contentsTongPaddingBottom;
+    let bigTextSize;
+    let bigTextWeight;
+    let bigTextTextTop;
+    let clock;
+    let formPanBase;
+    let thisPan;
+    let panBetween;
+    let panHeight, panInnerMargin;
+    let panCheckBoxWidth;
+    let panWhitePaddingLeft;
+    let panBlockBetween, panBlockBigBetween;
+    let buttonSize, buttonWeight, buttonTextTop;
+    let panPaddingTop;
+    let panTitleSize, panTitleWeight;
+    let formPanBaseMarginBottom;
+    let checkBoxWidth;
+    let blockTextSize, blockTextWeight;
+    let siblings;
   
-  contents = {
-    title: [
-      project.name + "님은 현재",
-      "어느 단계인가요?"
-    ],
-    description: [
-      project.name + " 고객님 : " + "<u%" + serviceParsing(project.service) + "%u>",
-      "고객님께 해당되는 상태를 <b%모두 체크%b>해주세요!",
-    ],
-    form: [
-      {
-        title: "디자인",
-        children: [
-          {
-            title: "현장 미팅 완료",
-            deactive: false,
-          },
-          {
-            title: "일정표 공유",
-            deactive: false,
-          },
-          {
-            title: "컨셉 제안서 공유",
-            deactive: false,
-          },
-          {
-            title: "1차 디자인 제안서 공유",
-            deactive: false,
-          },
-          {
-            title: "수정 제안서 공유",
-            deactive: false,
-          },
-          {
-            title: "제품 리스트 공유",
-            deactive: false,
-          },
-          {
-            title: "디자인 제안서 최종 컨펌",
-            deactive: false,
-          },
-        ]
+    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+    margin = <%% 55, 55, 47, 39, 6 %%>;
+    paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
+  
+    whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
+  
+    titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  
+    bigTextSize = <%% 36, 36, 36, 36, 4.4 %%>;
+    bigTextWeight = <%% 100, 100, 100, 100, 100 %%>;
+    bigTextTextTop = <%% (isMac() ? -7 : -5), (isMac() ? -7 : -5), -7, -7, -1 %%>;
+  
+    veryBigSize = <%% 23, 21, 20, 16, 4.4 %%>;
+    veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
+    veryBigTextTop = <%% -1, -1, -2, -1, -1 %%>;
+  
+    innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+  
+    textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+    smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
+  
+    textSize = <%% 14, 14, 13, 12, 3.2 %%>;
+    textWeight = <%% 700, 700, 700, 700, 700 %%>;
+    textFileWeight = <%% 400, 400, 400, 400, 400 %%>;
+  
+    whitePadding = <%% 12, 12, 8, 8, 2.2 %%>;
+  
+    blockBetween = <%% 36, 28, 26, 24, 5 %%>;
+    blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
+    blockHeight = <%% 36, 36, 32, 26, 4 %%>;
+  
+    lineTop = <%% 18, 18, 16, 13, 1.9 %%>;
+  
+    firstWidth = <%% 298, 230, 213, 142, 300 %%>;
+  
+    panWidth = <%% 20, 20, 20, 20, 2 %%>;
+    panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
+  
+    circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
+    circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
+    circleLeft = <%% -7, -7, -7, -5, -0.8 %%>;
+  
+    arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
+    arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
+  
+    subButtonWidth = <%% 90, 72, 72, 64, 16 %%>;
+  
+    mobileVisualPaddingValue = 0.2;
+  
+    thirdWidth = <%% 240, 0, 0, 0, 0 %%>;
+  
+    imageBoxVisualPaddingBottom = <%% 4, 2, 2, 2, 0 %%>;
+    imageBetween = <%% 32, 16, 12, 12, 6 %%>;
+    panBoxBetween = <%% 12, 32, 26, 24, 12 %%>;
+  
+    wordingPaddingTop0 = <%% 300, 213, 213, 213, 213 %%>;
+    wordingPaddingTop1 = <%% 309, 243, 243, 243, 243 %%>;
+  
+    wordingBoxWidth = <%% 175, 185, 175, 115, 175 %%>;
+  
+    contentsTongPaddingBottom = <%% 15, 15, 15, 15, 7 %%>;
+    panBetween = <%% 28, 28, 24, 20, 2 %%>;
+  
+    panHeight = <%% 50, 48, 45, 42, 12 %%>;
+    panInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
+  
+    panCheckBoxWidth = <%% 32, 24, 20, 20, 8 %%>;
+    checkBoxWidth = <%% 13, 11, 9, 9, 3 %%>;
+  
+    panWhitePaddingLeft = <%% 16, 14, 14, 12, 3.5 %%>; 
+    panBlockBetween = <%% 8, 8, 6, 5, 1 %%>; 
+    panBlockBigBetween = <%% 8, 8, 6, 5, 1 %%>; 
+  
+    buttonWidth = <%% 100, 90, 90, 80, 24 %%>;
+    buttonHeight = <%% 36, 36, 32, 30, 8.2 %%>;
+  
+    buttonSize = <%% 15, 14, 14, 13, 3.5 %%>;
+    buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+  
+    panPaddingTop = <%% 18, 12, 12, 12, 4 %%>;
+  
+    panTitleSize = <%% 16, 15, 14, 13, 3.6 %%>;
+    panTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  
+    formPanBaseMarginBottom = <%% 12, 8, 6, 6, 4 %%>;
+  
+    blockTextSize = <%% 14, 13, 12, 11, 3.2 %%>;
+    blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
+  
+  
+    contents = {
+      title: [
+        project.name + "님은 현재",
+        "어느 단계인가요?"
+      ],
+      description: [
+        project.name + " 고객님 : " + "<u%" + serviceParsing(project.service) + "%u>",
+        "고객님께 해당되는 상태를 <b%모두 체크%b>해주세요!",
+      ],
+      form: [
+        {
+          title: "디자인",
+          children: [
+            {
+              title: "현장 미팅 완료",
+              deactive: false,
+            },
+            {
+              title: "일정표 공유",
+              deactive: false,
+            },
+            {
+              title: "컨셉 제안서 공유",
+              deactive: false,
+            },
+            {
+              title: "1차 디자인 제안서 공유",
+              deactive: false,
+            },
+            {
+              title: "수정 제안서 공유",
+              deactive: false,
+            },
+            {
+              title: "제품 리스트 공유",
+              deactive: false,
+            },
+            {
+              title: "디자인 제안서 최종 컨펌",
+              deactive: false,
+            },
+          ]
+        },
+        {
+          title: "시공",
+          children: [
+            {
+              title: "시공 의뢰서 공유",
+              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+            },
+            {
+              title: "시공 견적서 공유",
+              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+            },
+            {
+              title: "공정표 공유",
+              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+            },
+            {
+              title: "시공 착수",
+              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+            },
+            {
+              title: "시공 진행중",
+              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+            },
+            {
+              title: "시공 완료",
+              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+            },
+            {
+              title: "시공 AS 완료",
+              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+            },
+          ]
+        },
+        {
+          title: "구매",
+          children: [
+            {
+              title: "제품 구매 시작 전",
+              deactive: false,
+            },
+            {
+              title: "제품 구매 진행중",
+              deactive: false,
+            },
+            {
+              title: "구매 완료, 배송중",
+              deactive: false,
+            },
+            {
+              title: "배송 및 세팅 완료",
+              deactive: false,
+            },
+          ]
+        },
+        {
+          title: "세팅",
+          children: [
+            {
+              title: "촬영 여부 확인",
+              deactive: false,
+            },
+            {
+              title: "촬영일 확인 완료",
+              deactive: false,
+            },
+            {
+              title: "세팅 및 촬영 완료",
+              deactive: false,
+            },
+          ]
+        },
+      ],
+      button: "공유하기",
+    };
+  
+    whiteBlock = createNode({
+      mother: baseTong,
+      style: {
+        position: "relative",
+        borderRadius: String(desktop ? 8 : 1) + ea,
+        width: String(100) + '%',
+        background: colorChip.white,
+        paddingTop: String(paddingTop) + ea,
+        paddingBottom: String(desktop ? whiteBottomMargin - blockBetweenBottom : 6.6) + ea,
+        marginBottom: String(bottomMargin) + ea,
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       },
-      {
-        title: "시공",
-        children: [
-          {
-            title: "시공 의뢰서 공유",
-            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
-          },
-          {
-            title: "시공 견적서 공유",
-            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
-          },
-          {
-            title: "공정표 공유",
-            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
-          },
-          {
-            title: "시공 착수",
-            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
-          },
-          {
-            title: "시공 진행중",
-            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
-          },
-          {
-            title: "시공 완료",
-            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
-          },
-          {
-            title: "시공 AS 완료",
-            deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
-          },
-        ]
-      },
-      {
-        title: "구매",
-        children: [
-          {
-            title: "제품 구매 시작 전",
-            deactive: false,
-          },
-          {
-            title: "제품 구매 진행중",
-            deactive: false,
-          },
-          {
-            title: "구매 완료, 배송중",
-            deactive: false,
-          },
-          {
-            title: "배송 및 세팅 완료",
-            deactive: false,
-          },
-        ]
-      },
-      {
-        title: "세팅",
-        children: [
-          {
-            title: "촬영 여부 확인",
-            deactive: false,
-          },
-          {
-            title: "촬영일 확인 완료",
-            deactive: false,
-          },
-          {
-            title: "세팅 및 촬영 완료",
-            deactive: false,
-          },
-        ]
-      },
-    ],
-    button: "공유하기",
-  };
-
-  whiteBlock = createNode({
-    mother: baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      background: colorChip.white,
-      paddingTop: String(paddingTop) + ea,
-      paddingBottom: String(desktop ? whiteBottomMargin - blockBetweenBottom : 6.6) + ea,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-    },
-    children: [
-      {
+      children: [
+        {
+          display: "block",
+          position: "relative",
+          width: withOut(margin * 2, ea),
+          height: String(100) + '%',
+          marginLeft: String(margin) + ea,
+        }
+      ]
+    });
+    whiteTong = whiteBlock.firstChild;
+  
+    grayTong = createNode({
+      mother: whiteTong,
+      style: {
         display: "block",
         position: "relative",
-        width: withOut(margin * 2, ea),
-        height: String(100) + '%',
-        marginLeft: String(margin) + ea,
+        paddingTop: String(innerMargin) + ea,
+        paddingBottom: String(desktop ? innerMargin : 0) + ea,
+        paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+        paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
+        width: withOut(innerMargin * 2, ea),
+        background: colorChip.white,
+        borderRadius: String(8) + "px",
       }
-    ]
-  });
-  whiteTong = whiteBlock.firstChild;
-
-  grayTong = createNode({
-    mother: whiteTong,
-    style: {
-      display: "block",
-      position: "relative",
-      paddingTop: String(innerMargin) + ea,
-      paddingBottom: String(desktop ? innerMargin : 0) + ea,
-      paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
-      paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
-      width: withOut(innerMargin * 2, ea),
-      background: colorChip.white,
-      borderRadius: String(8) + "px",
-    }
-  });
-
-  mainTong = createNode({
-    mother: grayTong,
-    style: {
-      display: desktop ? "flex" : "block",
-      width: withOut(0),
-      flexDirection: desktop ? "row" : "",
-      justifyContent: desktop ? "start" : "",
-      alignItems: desktop ? "start" : "",
-    },
-    children: [
-      {
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: desktop ? String(firstWidth) + ea : withOut(0, ea),
-          verticalAlign: "top",
-          justifyContent: desktop ? "" : "center",
-          alignItems: desktop ? "" : "center",
-          marginTop: desktop ? "" : String(2.8) + ea,
-          marginBottom: desktop ? "" : String(3) + ea,
-        },
-        children: [
-          {
-            text: contents.title.join(desktop ? "\n" : " "),
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(veryBigSize) + ea,
-              fontWeight: String(veryBigWeight),
-              color: colorChip.black,
-              lineHeight: String(1.5),
-              top: desktop ? String(veryBigTextTop) + ea : "",
-            },
-            child: {
+    });
+  
+    mainTong = createNode({
+      mother: grayTong,
+      style: {
+        display: desktop ? "flex" : "block",
+        width: withOut(0),
+        flexDirection: desktop ? "row" : "",
+        justifyContent: desktop ? "start" : "",
+        alignItems: desktop ? "start" : "",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: desktop ? String(firstWidth) + ea : withOut(0, ea),
+            verticalAlign: "top",
+            justifyContent: desktop ? "" : "center",
+            alignItems: desktop ? "" : "center",
+            marginTop: desktop ? "" : String(2.8) + ea,
+            marginBottom: desktop ? "" : String(3) + ea,
+          },
+          children: [
+            {
+              text: contents.title.join(desktop ? "\n" : " "),
               style: {
                 display: "inline-block",
-                position: "absolute",
-                top: String(circleTop) + ea,
-                left: String(circleLeft) + ea,
-                width: String(circleWidth) + ea,
-                height: String(circleWidth) + ea,
-                borderRadius: String(circleWidth) + ea,
-                background: colorChip.gray4,
+                position: "relative",
+                fontSize: String(veryBigSize) + ea,
+                fontWeight: String(veryBigWeight),
+                color: colorChip.black,
+                lineHeight: String(1.5),
+                top: desktop ? String(veryBigTextTop) + ea : "",
+              },
+              child: {
+                style: {
+                  display: "inline-block",
+                  position: "absolute",
+                  top: String(circleTop) + ea,
+                  left: String(circleLeft) + ea,
+                  width: String(circleWidth) + ea,
+                  height: String(circleWidth) + ea,
+                  borderRadius: String(circleWidth) + ea,
+                  background: colorChip.gray4,
+                }
               }
             }
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: desktop ? withOut(firstWidth, ea) : withOut(0, ea),
+            verticalAlign: "top",
+            flexDirection: "column",
           }
-        ]
+        }
+      ]
+    });
+  
+    contentsTong = mainTong.children[1];
+  
+    clock = createNode({
+      mother: contentsTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        flexDirection: "row",
+        width: withOut(0),
+        paddingBottom: String(contentsTongPaddingBottom) + ea,
+        borderBottom: "1px dashed " + colorChip.gray3,
+        justifyContent: desktop ? "" : "center",
+        alignItems: desktop ? "" : "center",
       },
-      {
+      children: [
+        {
+          text: contents.description.join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(textSize) + ea,
+            fontWeight: String(textFileWeight),
+            color: colorChip.black,
+            lineHeight: String(1.6),
+            textAlign: desktop ? "" : "center",
+          },
+          bold: {
+            fontSize: String(textSize) + ea,
+            fontWeight: String(800),
+            color: colorChip.green,
+            lineHeight: String(1.6),
+          },
+          under: {
+            fontSize: String(textSize) + ea,
+            fontWeight: String(800),
+            color: colorChip.black,
+            lineHeight: String(1.6),
+          }
+        },
+        {
+          text: dateToString(new Date(), true).slice(0, -3),
+          style: {
+            display: (media[0] || media[1]) ? "inline-block" : "none",
+            position: "absolute",
+            right: String(0),
+            top: String(bigTextTextTop) + ea,
+            fontSize: String(bigTextSize) + ea,
+            fontWeight: String(bigTextWeight),
+            color: colorChip.green,
+          }
+        }
+      ]
+    }).children[1];
+  
+    if (media[0] || media[1]) {
+      setInterval(() => {
+        clock.textContent = dateToString(new Date(), true).slice(0, -3);
+      }, 60 * 1000);
+    }
+  
+    formPanBase = createNode({
+      mother: contentsTong,
+      style: {
+        display: (media[0] || media[4] ? "flex" : "block"),
+        position: "relative",
+        flexDirection: desktop ? "row" : "column",
+        width: withOut(0),
+        justifyContent: "start",
+        alignItems: "start",
+        marginBottom: String(formPanBaseMarginBottom) + ea,
+        paddingBottom: desktop ? "" : String(16) + ea,
+      },
+    });
+  
+    for (let i = 0; i < contents.form.length; i++) {
+  
+      thisPan = createNode({
+        mother: formPanBase,
         style: {
           display: "inline-flex",
           position: "relative",
-          width: desktop ? withOut(firstWidth, ea) : withOut(0, ea),
-          verticalAlign: "top",
           flexDirection: "column",
+          width: desktop ? (media[0] ? "calc(calc(100% - " + String(panBetween * (contents.form.length - 1)) + ea + ") / " + String(contents.form.length) + ")" : "calc(calc(100% - " + String(panBetween * ((contents.form.length / 2) - 1)) + ea + ") / " + String(contents.form.length / 2) + ")") : withOut(0, ea),
+          marginRight: desktop ? (media[0] ? (i === contents.form.length - 1 ? "" : String(panBetween) + ea) : (i === contents.form.length - 1 || i === (contents.form.length / 2) - 1 ? "" : String(panBetween) + ea)) : "",
+          paddingTop: String(panPaddingTop) + ea,
+          verticalAlign: "top",
         }
-      }
-    ]
-  });
-
-  contentsTong = mainTong.children[1];
-
-  clock = createNode({
-    mother: contentsTong,
-    style: {
-      display: "flex",
-      position: "relative",
-      flexDirection: "row",
-      width: withOut(0),
-      paddingBottom: String(contentsTongPaddingBottom) + ea,
-      borderBottom: "1px dashed " + colorChip.gray3,
-      justifyContent: desktop ? "" : "center",
-      alignItems: desktop ? "" : "center",
-    },
-    children: [
-      {
-        text: contents.description.join("\n"),
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(textSize) + ea,
-          fontWeight: String(textFileWeight),
-          color: colorChip.black,
-          lineHeight: String(1.6),
-          textAlign: desktop ? "" : "center",
-        },
-        bold: {
-          fontSize: String(textSize) + ea,
-          fontWeight: String(800),
-          color: colorChip.green,
-          lineHeight: String(1.6),
-        },
-        under: {
-          fontSize: String(textSize) + ea,
-          fontWeight: String(800),
-          color: colorChip.black,
-          lineHeight: String(1.6),
-        }
-      },
-      {
-        text: dateToString(new Date(), true).slice(0, -3),
-        style: {
-          display: (media[0] || media[1]) ? "inline-block" : "none",
-          position: "absolute",
-          right: String(0),
-          top: String(bigTextTextTop) + ea,
-          fontSize: String(bigTextSize) + ea,
-          fontWeight: String(bigTextWeight),
-          color: colorChip.green,
-        }
-      }
-    ]
-  }).children[1];
-
-  if (media[0] || media[1]) {
-    setInterval(() => {
-      clock.textContent = dateToString(new Date(), true).slice(0, -3);
-    }, 60 * 1000);
-  }
-
-  formPanBase = createNode({
-    mother: contentsTong,
-    style: {
-      display: (media[0] || media[4] ? "flex" : "block"),
-      position: "relative",
-      flexDirection: desktop ? "row" : "column",
-      width: withOut(0),
-      justifyContent: "start",
-      alignItems: "start",
-      marginBottom: String(formPanBaseMarginBottom) + ea,
-      paddingBottom: desktop ? "" : String(16) + ea,
-    },
-  });
-
-  for (let i = 0; i < contents.form.length; i++) {
-
-    thisPan = createNode({
-      mother: formPanBase,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        flexDirection: "column",
-        width: desktop ? (media[0] ? "calc(calc(100% - " + String(panBetween * (contents.form.length - 1)) + ea + ") / " + String(contents.form.length) + ")" : "calc(calc(100% - " + String(panBetween * ((contents.form.length / 2) - 1)) + ea + ") / " + String(contents.form.length / 2) + ")") : withOut(0, ea),
-        marginRight: desktop ? (media[0] ? (i === contents.form.length - 1 ? "" : String(panBetween) + ea) : (i === contents.form.length - 1 || i === (contents.form.length / 2) - 1 ? "" : String(panBetween) + ea)) : "",
-        paddingTop: String(panPaddingTop) + ea,
-        verticalAlign: "top",
-      }
-    });
-
-    createNode({
-      mother: thisPan,
-      style: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: withOut(0, ea),
-        height: String(panHeight) + ea,
-      },
-      child: {
-        text: contents.form[i].title,
-        style: {
-          fontSize: String(panTitleSize) + ea,
-          fontWeight: String(panTitleWeight),
-          color: colorChip.black,
-        }
-      }
-    });
-
-    for (let j = 0; j < contents.form[i].children.length; j++) {
+      });
+  
       createNode({
         mother: thisPan,
-        class: [ siblingKeywords + String(i) ],
-        attribute: {
-          toggle: "off",
-          x: String(i),
-          y: String(j),
-          deactive: contents.form[i].children[j].deactive ? "true" : "false",
-        },
-        event: {
-          click: function (e) {
-            const toggle = this.getAttribute("toggle");
-            const x = Number(this.getAttribute("x"));
-            const y = Number(this.getAttribute("y"));
-            const deactive = (this.getAttribute("deactive") === "true");
-
-            if (toggle === "off") {
-              if (!deactive) {
-                siblings = document.querySelectorAll('.' + siblingKeywords + String(x));
-                for (let dom of siblings) {
-                  if (dom === this) {
-                    this.style.background = colorChip.gradientGreen;
-                    this.children[0].children[0].children[0].setAttribute("fill", colorChip.white);
-                    this.children[1].children[0].style.color = colorChip.green;
-                    this.setAttribute("toggle", "on");
-                  } else {
-                    dom.style.background = colorChip.gray1;
-                    dom.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                    dom.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.black;
-                    dom.setAttribute("toggle", "off");
-                  }
-                }
-              }
-            } else {
-              this.style.background = colorChip.gray1;
-              this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-              this.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.black;
-              this.setAttribute("toggle", "off");
-            }
-          },
-          mouseenter: function (e) {
-            const deactive = (this.getAttribute("deactive") === "true");
-            if (!deactive) {
-              if (this.getAttribute("toggle") === "off") {
-                this.style.background = colorChip.whiteGreen;
-                this.children[0].children[0].children[0].setAttribute("fill", colorChip.softGreen);
-                this.children[1].children[0].style.color = colorChip.green;
-              }
-            }
-          },
-          mouseleave: function (e) {
-            const deactive = (this.getAttribute("deactive") === "true");
-            if (this.getAttribute("toggle") === "off") {
-              this.style.background = colorChip.gray1;
-              this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-              this.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.black;
-            }
-          },
-        },
         style: {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           width: withOut(0, ea),
           height: String(panHeight) + ea,
-          background: colorChip.gray1,
-          borderRadius: String(5) + "px",
-          marginBottom: j === contents.form[i].children.length - 1 ? "" : String(panBlockBetween) + ea,
-          flexDirection: "row",
-          cursor: "pointer",
-          transition: "all 0s ease",
         },
-        children: [
-          {
-            style: {
-              width: String(panCheckBoxWidth) + ea,
-              marginRight: String(panInnerMargin) + ea,
-              display: "inline-flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: withOut(panInnerMargin * 2, ea),
-              display: "inline-flex",
-              justifyContent: "center",
-              alignItems: "center",
-              transition: "all 0s ease",
-            },
-            child: {
-              mode: "svg",
-              source: svgMaker.checkBox(colorChip.gray4),
-              style: {
-                display: "inline-block",
-                position: "relative",
-                width: String(checkBoxWidth) + ea,
-                transition: "all 0s ease",
-              }
-            }
-          },
-          {
-            style: {
-              width: withOut(panCheckBoxWidth + (panInnerMargin * 3) + panWhitePaddingLeft, ea),
-              height: withOut(panInnerMargin * 2, ea),
-              background: contents.form[i].children[j].deactive ? colorChip.gray2 : colorChip.white,
-              borderRadius: String(5) + "px",
-              display: "inline-flex",
-              justifyContent: "start",
-              alignItems: "center",
-              paddingLeft: String(panWhitePaddingLeft) + ea,
-              transition: "all 0s ease",
-            },
-            child: {
-              text: contents.form[i].children[j].title,
-              style: {
-                display: "inline-block",
-                position: "relative",
-                fontSize: String(blockTextSize) + ea,
-                fontWeight: String(blockTextWeight),
-                color: contents.form[i].children[j].deactive ? colorChip.deactive : colorChip.black,
-                top: String(textTextTop) + ea,
-                transition: "all 0s ease",
-              }
-            }
+        child: {
+          text: contents.form[i].title,
+          style: {
+            fontSize: String(panTitleSize) + ea,
+            fontWeight: String(panTitleWeight),
+            color: colorChip.black,
           }
-        ]
+        }
       });
-    }
-  }
-
-  createNode({
-    mother: formPanBase,
-    style: {
-      display: "inline-flex",
-      justifyContent: "center",
-      alignItems: "center",
-      position: "absolute",
-      width: String(buttonWidth) + ea,
-      height: String(buttonHeight) + ea,
-      borderRadius: String(5) + "px",
-      background: colorChip.gradientGreen,
-      bottom: String(0),
-      right: desktop ? String(0) : withOut(50, buttonWidth / 2, ea),
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-      cursor: "pointer",
-    },
-    child: {
-      text: contents.button,
-      style: {
-        display: "inline-block",
-        position: "relative",
-        fontSize: String(buttonSize) + ea,
-        fontWeight: String(buttonWeight),
-        top: String(buttonTextTop) + ea,
-        color: colorChip.white,
-        cursor: "pointer",
+  
+      for (let j = 0; j < contents.form[i].children.length; j++) {
+        createNode({
+          mother: thisPan,
+          class: [ siblingKeywords + String(i) ],
+          attribute: {
+            toggle: "off",
+            x: String(i),
+            y: String(j),
+            deactive: contents.form[i].children[j].deactive ? "true" : "false",
+          },
+          event: {
+            click: function (e) {
+              const toggle = this.getAttribute("toggle");
+              const x = Number(this.getAttribute("x"));
+              const y = Number(this.getAttribute("y"));
+              const deactive = (this.getAttribute("deactive") === "true");
+  
+              if (toggle === "off") {
+                if (!deactive) {
+                  siblings = document.querySelectorAll('.' + siblingKeywords + String(x));
+                  for (let dom of siblings) {
+                    if (dom === this) {
+                      this.style.background = colorChip.gradientGreen;
+                      this.children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                      this.children[1].children[0].style.color = colorChip.green;
+                      this.setAttribute("toggle", "on");
+                    } else {
+                      dom.style.background = colorChip.gray1;
+                      dom.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                      dom.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.black;
+                      dom.setAttribute("toggle", "off");
+                    }
+                  }
+                }
+              } else {
+                this.style.background = colorChip.gray1;
+                this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                this.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.black;
+                this.setAttribute("toggle", "off");
+              }
+            },
+            mouseenter: function (e) {
+              const deactive = (this.getAttribute("deactive") === "true");
+              if (!deactive) {
+                if (this.getAttribute("toggle") === "off") {
+                  this.style.background = colorChip.whiteGreen;
+                  this.children[0].children[0].children[0].setAttribute("fill", colorChip.softGreen);
+                  this.children[1].children[0].style.color = colorChip.green;
+                }
+              }
+            },
+            mouseleave: function (e) {
+              const deactive = (this.getAttribute("deactive") === "true");
+              if (this.getAttribute("toggle") === "off") {
+                this.style.background = colorChip.gray1;
+                this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                this.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.black;
+              }
+            },
+          },
+          style: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: withOut(0, ea),
+            height: String(panHeight) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(5) + "px",
+            marginBottom: j === contents.form[i].children.length - 1 ? "" : String(panBlockBetween) + ea,
+            flexDirection: "row",
+            cursor: "pointer",
+            transition: "all 0s ease",
+          },
+          children: [
+            {
+              style: {
+                width: String(panCheckBoxWidth) + ea,
+                marginRight: String(panInnerMargin) + ea,
+                display: "inline-flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: withOut(panInnerMargin * 2, ea),
+                display: "inline-flex",
+                justifyContent: "center",
+                alignItems: "center",
+                transition: "all 0s ease",
+              },
+              child: {
+                mode: "svg",
+                source: svgMaker.checkBox(colorChip.gray4),
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: String(checkBoxWidth) + ea,
+                  transition: "all 0s ease",
+                }
+              }
+            },
+            {
+              style: {
+                width: withOut(panCheckBoxWidth + (panInnerMargin * 3) + panWhitePaddingLeft, ea),
+                height: withOut(panInnerMargin * 2, ea),
+                background: contents.form[i].children[j].deactive ? colorChip.gray2 : colorChip.white,
+                borderRadius: String(5) + "px",
+                display: "inline-flex",
+                justifyContent: "start",
+                alignItems: "center",
+                paddingLeft: String(panWhitePaddingLeft) + ea,
+                transition: "all 0s ease",
+              },
+              child: {
+                text: contents.form[i].children[j].title,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(blockTextSize) + ea,
+                  fontWeight: String(blockTextWeight),
+                  color: contents.form[i].children[j].deactive ? colorChip.deactive : colorChip.black,
+                  top: String(textTextTop) + ea,
+                  transition: "all 0s ease",
+                }
+              }
+            }
+          ]
+        });
       }
     }
-  })
-
-
+  
+    createNode({
+      mother: formPanBase,
+      style: {
+        display: "inline-flex",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "absolute",
+        width: String(buttonWidth) + ea,
+        height: String(buttonHeight) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.gradientGreen,
+        bottom: String(0),
+        right: desktop ? String(0) : withOut(50, buttonWidth / 2, ea),
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        cursor: "pointer",
+      },
+      child: {
+        text: contents.button,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
+          top: String(buttonTextTop) + ea,
+          color: colorChip.white,
+          cursor: "pointer",
+        }
+      }
+    });
+  
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 ProcessDetailJs.prototype.launching = async function (loading) {
@@ -14531,7 +14535,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             instance.insertScheduleStartBox();
             instance.insertScheduleAboutBox();
             await instance.insertScheduleBox();
-            instance.insertFormStatusBox();
+            await instance.insertFormStatusBox();
             instance.insertNumbersBox();
             instance.insertUploadBox();
             instance.insertControlBox();
@@ -14563,7 +14567,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
               instance.insertContractStartBox();
               instance.insertAboutConsoleBox(false);
             } else if (getObj.mode === "form") {
-              instance.insertFormStatusBox();
+              await instance.insertFormStatusBox();
             }
             if (instance.contentsArr.length > 0) {
               instance.insertContentsBox();

@@ -1230,6 +1230,190 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
+  const instance = this;
+  const back = this.back;
+  const { errorLog, equalJson, serviceParsing } = this.mother;
+  let obj = {};
+  obj.link = [ "/projectDesignerStatus" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.mode === undefined || req.body.desid === undefined || req.body.proid === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const collection = "projectDesignerStatus";
+      const { mode, desid, proid } = req.body;
+      let rows;
+      let resultObj;
+      let project;
+      let defaultObj;
+
+      resultObj = { message: "done" };
+
+      project = (await back.getProjectById(proid, { selfMongo: instance.mongo })).toNormal();
+
+      defaultObj = [
+        {
+          title: "디자인",
+          children: [
+            {
+              title: "현장 미팅 완료",
+              deactive: false,
+              value: 0,
+            },
+            {
+              title: "일정표 공유",
+              deactive: false,
+              value: 0,
+            },
+            {
+              title: "컨셉 제안서 공유",
+              deactive: false,
+              value: 0,
+            },
+            {
+              title: "1차 디자인 제안서 공유",
+              deactive: false,
+              value: 0,
+            },
+            {
+              title: "수정 제안서 공유",
+              deactive: false,
+              value: 0,
+            },
+            {
+              title: "제품 리스트 공유",
+              deactive: false,
+              value: 0,
+            },
+            {
+              title: "디자인 제안서 최종 컨펌",
+              deactive: false,
+              value: 0,
+            },
+          ]
+        },
+        {
+          title: "시공",
+          children: [
+            {
+              title: "시공 의뢰서 공유",
+              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+              value: 0,
+            },
+            {
+              title: "시공 견적서 공유",
+              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+              value: 0,
+            },
+            {
+              title: "공정표 공유",
+              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+              value: 0,
+            },
+            {
+              title: "시공 착수",
+              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+              value: 0,
+            },
+            {
+              title: "시공 진행중",
+              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+              value: 0,
+            },
+            {
+              title: "시공 완료",
+              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+              value: 0,
+            },
+            {
+              title: "시공 AS 완료",
+              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+              value: 0,
+            },
+          ]
+        },
+        {
+          title: "구매",
+          children: [
+            {
+              title: "제품 구매 시작 전",
+              deactive: false,
+              value: 0,
+            },
+            {
+              title: "제품 구매 진행중",
+              deactive: false,
+              value: 0,
+            },
+            {
+              title: "구매 완료, 배송중",
+              deactive: false,
+              value: 0,
+            },
+            {
+              title: "배송 및 세팅 완료",
+              deactive: false,
+              value: 0,
+            },
+          ]
+        },
+        {
+          title: "세팅",
+          children: [
+            {
+              title: "촬영 여부 확인",
+              deactive: false,
+              value: 0,
+            },
+            {
+              title: "촬영일 확인 완료",
+              deactive: false,
+              value: 0,
+            },
+            {
+              title: "세팅 및 촬영 완료",
+              deactive: false,
+              value: 0,
+            },
+          ]
+        },
+      ]
+
+      if (mode === "get") {
+
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        if (rows.length === 0) {
+          resultObj = equalJson(JSON.stringify(defaultObj));
+        } else {
+          resultObj = rows[0];
+        }
+
+      }
+
+
+
+
+      res.send(JSON.stringify(resultObj));
+
+    } catch (e) {
+      errorLog("Second Ghost 서버 문제 생김 (rou_post_projectDesignerStatus): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_voice = function () {
   const instance = this;
   const address = this.address;
