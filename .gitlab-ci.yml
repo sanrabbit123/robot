@@ -1,4 +1,4 @@
 commit-log:
   stage: build
   script:
-    - /home/ubuntu/log.sh;
+    - /home/gitlab-runner/log.sh;
