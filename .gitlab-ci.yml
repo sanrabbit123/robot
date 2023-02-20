@@ -1,9 +1,9 @@
-build-job:
+pull-robot:
   stage: build
   script:
-    - ls -al
+    - cd /home/ubuntu/robot;git pull;
 
-test-job1:
+commit-log:
   stage: test
   script:
-    - echo "This job tests something!"
+    - cd /home/ubuntu/robot;node robot.js gitLogToJson;
