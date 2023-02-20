@@ -13922,6 +13922,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
   blockTextSize = <%% 14, 13, 12, 11, 3.2 %%>;
   blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
 
+  
   contents = {
     title: [
       project.name + "님은 현재",
