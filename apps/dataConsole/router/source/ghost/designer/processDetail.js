@@ -13924,7 +13924,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = function () {
 
   contents = {
     title: [
-      "고객님은 현재",
+      project.name + "님은 현재",
       "어느 단계인가요?"
     ],
     description: [
