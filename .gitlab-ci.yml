@@ -1,9 +1,4 @@
-pull-robot:
+commit-log:
   stage: build
   script:
-    - cd /home/ubuntu/robot;git pull;
-
-commit-log:
-  stage: test
-  script:
-    - cd /home/ubuntu/robot;node robot.js gitLogToJson;
+    - /home/ubuntu/log.sh;
