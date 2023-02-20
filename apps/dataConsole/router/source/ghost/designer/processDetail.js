@@ -13833,6 +13833,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     let checkBoxWidth;
     let blockTextSize, blockTextWeight;
     let siblings;
+    let thisForm;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -13924,6 +13925,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     blockTextSize = <%% 14, 13, 12, 11, 3.2 %%>;
     blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
   
+
+    thisForm = await ajaxJson({ mode: "get", proid, desid }, SECONDHOST + "/projectDesignerStatus", { equal: true });
   
     contents = {
       title: [
@@ -13934,112 +13937,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
         project.name + " 고객님 : " + "<u%" + serviceParsing(project.service) + "%u>",
         "고객님께 해당되는 상태를 <b%모두 체크%b>해주세요!",
       ],
-      form: [
-        {
-          title: "디자인",
-          children: [
-            {
-              title: "현장 미팅 완료",
-              deactive: false,
-            },
-            {
-              title: "일정표 공유",
-              deactive: false,
-            },
-            {
-              title: "컨셉 제안서 공유",
-              deactive: false,
-            },
-            {
-              title: "1차 디자인 제안서 공유",
-              deactive: false,
-            },
-            {
-              title: "수정 제안서 공유",
-              deactive: false,
-            },
-            {
-              title: "제품 리스트 공유",
-              deactive: false,
-            },
-            {
-              title: "디자인 제안서 최종 컨펌",
-              deactive: false,
-            },
-          ]
-        },
-        {
-          title: "시공",
-          children: [
-            {
-              title: "시공 의뢰서 공유",
-              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
-            },
-            {
-              title: "시공 견적서 공유",
-              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
-            },
-            {
-              title: "공정표 공유",
-              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
-            },
-            {
-              title: "시공 착수",
-              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
-            },
-            {
-              title: "시공 진행중",
-              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
-            },
-            {
-              title: "시공 완료",
-              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
-            },
-            {
-              title: "시공 AS 완료",
-              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
-            },
-          ]
-        },
-        {
-          title: "구매",
-          children: [
-            {
-              title: "제품 구매 시작 전",
-              deactive: false,
-            },
-            {
-              title: "제품 구매 진행중",
-              deactive: false,
-            },
-            {
-              title: "구매 완료, 배송중",
-              deactive: false,
-            },
-            {
-              title: "배송 및 세팅 완료",
-              deactive: false,
-            },
-          ]
-        },
-        {
-          title: "세팅",
-          children: [
-            {
-              title: "촬영 여부 확인",
-              deactive: false,
-            },
-            {
-              title: "촬영일 확인 완료",
-              deactive: false,
-            },
-            {
-              title: "세팅 및 촬영 완료",
-              deactive: false,
-            },
-          ]
-        },
-      ],
+      form: thisForm,
       button: "공유하기",
     };
   

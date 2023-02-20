@@ -1388,21 +1388,21 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
           ]
         },
-      ]
+      ];
 
       if (mode === "get") {
 
         rows = await back.mongoRead(collection, { proid }, { selfMongo });
         if (rows.length === 0) {
           resultObj = equalJson(JSON.stringify(defaultObj));
+          await back.mongoCreate(collection, {
+            proid, desid, matrix: defaultObj
+          }, { selfMongo });
         } else {
-          resultObj = rows[0];
+          resultObj = rows[0].matrix;
         }
 
       }
-
-
-
 
       res.send(JSON.stringify(resultObj));
 
