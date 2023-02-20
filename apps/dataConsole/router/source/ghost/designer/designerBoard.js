@@ -636,7 +636,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   let colorBoxPadding;
   let colorBoxSize, colorBoxWeight, colorBoxTextTop;
   let targetLength;
-  let arrowHeight;
+  let arrowHeight, arrowWidth;
   let grayBetween;
   let whiteBaseTongDictionary;
   let setContents;
@@ -676,7 +676,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
-  circleWidth = <%% 21, 21, 20, 16, 4 %%>;
+  arrowWidth = <%% 21, 21, 20, 16, 4 %%>;
   circleTop = <%% 20, 20, 17, 17, 3 %%>;
   circleRight = <%% 20, 20, 20, 12, 2.7 %%>;
   arrowHeight = <%% 8, 8, 8, 6, 1.5 %%>;
@@ -1040,13 +1040,12 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
           attribute: {
             proid: targets[i].proid
           },
-          source: svgMaker.horizontalArrow(circleWidth, arrowHeight, (state === 0 ? colorChip.green : colorChip.deactive)),
+          source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, (state === 0 ? colorChip.green : colorChip.deactive)),
           style: {
             position: "absolute",
             right: String(circleRight) + ea,
             top: String(circleTop) + ea,
-            width: String(circleWidth) + ea,
-            borderRadius: String(circleWidth) + ea,
+            width: String(arrowWidth) + ea,
             cursor: "pointer",
           }
         });
@@ -1187,7 +1186,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
   let colorBoxPadding;
   let colorBoxSize, colorBoxWeight, colorBoxTextTop;
   let targetLength;
-  let arrowHeight;
+  let arrowHeight, arrowWidth;
   let grayBetween;
   let whiteBaseTongDictionary;
   let setContents;
@@ -1227,7 +1226,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
-  circleWidth = <%% 21, 21, 20, 16, 4 %%>;
+  arrowWidth = <%% 21, 21, 20, 16, 4 %%>;
   circleTop = <%% 20, 20, 17, 17, 3 %%>;
   circleRight = <%% 20, 20, 20, 12, 2.7 %%>;
   arrowHeight = <%% 8, 8, 8, 6, 1.5 %%>;
@@ -1593,13 +1592,12 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
           attribute: {
             proid: targets[i].proid
           },
-          source: svgMaker.horizontalArrow(circleWidth, arrowHeight, (state === 0 ? colorChip.green : colorChip.deactive)),
+          source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, (state === 0 ? colorChip.green : colorChip.deactive)),
           style: {
             position: "absolute",
             right: String(circleRight) + ea,
             top: String(circleTop) + ea,
-            width: String(circleWidth) + ea,
-            borderRadius: String(circleWidth) + ea,
+            width: String(arrowWidth) + ea,
             cursor: "pointer",
           }
         });
