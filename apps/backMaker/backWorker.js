@@ -809,7 +809,11 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                       }).length > 0);
                     }
                   } else {
-                    condition = false;
+                    if (/드랍/gi.test(designer.projects[i].process.status)) {
+                      condition = true;
+                    } else {
+                      condition = false;
+                    }
                   }
                 }
 
