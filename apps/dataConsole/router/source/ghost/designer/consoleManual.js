@@ -344,7 +344,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
         },
         children: [
           {
-            text: "디자이너 콘솔\n이용 안내",
+            text: contents.title.join("\n"),
             style: {
               display: "inline-block",
               position: "relative",
