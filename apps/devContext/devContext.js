@@ -5227,8 +5227,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/weeklyCalculation", { data: null }, { headers: { "Content-Type": "application/json" } });
 
+    
     
     
     
