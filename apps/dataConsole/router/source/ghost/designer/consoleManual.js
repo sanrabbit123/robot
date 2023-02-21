@@ -251,7 +251,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
+  paddingTop = <%% 46, 46, 38, 35, 5.4 %%>;
 
   whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
 
@@ -341,6 +341,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
           textAlign: desktop ? "" : "center",
           marginTop: desktop ? "" : String(2.8) + ea,
           marginBottom: desktop ? "" : String(3) + ea,
+          flexDirection: "column",
         },
         children: [
           {
@@ -357,8 +358,30 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
           }
         ]
       },
+      {
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: withOut(firstWidth, ea),
+          paddingTop: String(5) + ea,
+          paddingBottom: String(10) + ea,
+        },
+        child: {
+          mode: "img",
+          attribute: {
+            src: contents.images.list,
+          },
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          }
+        }
+      }
     ]
-  })
+  });
 
 }
 

@@ -5252,9 +5252,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김미나",
-    //     designer: "박미연",
-    //     link: "https://drive.google.com/drive/folders/1RdLOoBKcD4HwcBiZdgZeOjrG_9ihUBqm",
+    //     client: "정세빈",
+    //     designer: "전경화",
+    //     link: "https://drive.google.com/drive/folders/1z1xlpXgU996Iw4MyD3EZEIKch5ZHDpuL",
     //     pay: true
     //   },
     // ]);
@@ -5361,8 +5361,8 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "김희원";
-    // const amount = 2926000;
+    // const name = "김하나";
+    // const amount = 1061000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
