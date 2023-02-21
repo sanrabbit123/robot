@@ -14519,11 +14519,11 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             } else if (getObj.mode === "contractstart") {
               instance.insertContractStartBox();
               instance.insertAboutConsoleBox(false);
-            } else if (getObj.mode === "form") {
-              await instance.insertFormStatusBox();
             }
             if (instance.contentsArr.length > 0) {
               instance.insertContentsBox();
+            } else {
+              await instance.insertFormStatusBox();
             }
             instance.insertNumbersBox();
             instance.insertUploadBox();
@@ -14540,7 +14540,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             instance.insertGreenButtons();
           }
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "ProcessDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+          await GeneralJs.ajaxJson({ message: "ProcessDetailJs.launching.ghostDesignerLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });

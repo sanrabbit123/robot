@@ -4876,7 +4876,7 @@ PartnershipManualJs.prototype.launching = async function (loading) {
           instance.insertContentsBox();
           instance.insertProcessBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "PartnershipManualJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+          await GeneralJs.ajaxJson({ message: "PartnershipManualJs.launching.ghostDesignerLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
