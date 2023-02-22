@@ -3709,6 +3709,9 @@ BackMaker.prototype.mongoCreate = async function (collection, json, option = { l
       await MONGOC.db(`miro81`).collection(collection).insertOne(json);
       await MONGOC.close();
     } else {
+      if (option.hexaMode === true) {
+        json = await hexaJson(json, true);
+      }
       await option.selfMongo.db(`miro81`).collection(collection).insertOne(json);
     }
 
