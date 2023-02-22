@@ -84,6 +84,52 @@ SecondRouter.prototype.fireWall = function (req) {
   return __wallLogicBoo;
 }
 
+SecondRouter.prototype.telegramSend = async function (chat_id, text) {
+  const instance = this;
+  const { telegram } = this;
+  const { ajaxJson, sleep, errorLog } = this.mother;
+  try {
+    let result;
+    
+    result = true;
+
+    try {
+      await ajaxJson({ chat_id, text }, telegram.url(telegram.token));
+    } catch (e) {
+      await sleep(100);
+      try {
+        await ajaxJson({ chat_id, text }, telegram.url(telegram.token));
+      } catch (e) {
+        await sleep(500);
+        try {
+          await ajaxJson({ chat_id, text }, telegram.url(telegram.token));
+        } catch (e) {
+          await sleep(1000);
+          try {
+            await ajaxJson({ chat_id, text }, telegram.url(telegram.token));
+          } catch (e) {
+            await sleep(1500);
+            try {
+              await ajaxJson({ chat_id, text }, telegram.url(telegram.token));
+            } catch (e) {
+              await sleep(3000);
+              try {
+                await ajaxJson({ chat_id, text }, telegram.url(telegram.token));
+              } catch (e) {
+                result = false;
+              }
+            }
+          }
+        }
+      }
+    }
+    return result;
+  } catch (e) {
+    errorLog("SecondRouter.prototype.telegramSend error : " + e.message).catch((err) => { console.log(err) });
+    return false;
+  }
+}
+
 //GET ---------------------------------------------------------------------------------------------
 
 SecondRouter.prototype.rou_get_First = function () {
@@ -126,7 +172,7 @@ SecondRouter.prototype.rou_get_First = function () {
 SecondRouter.prototype.rou_post_messageLog = function () {
   const instance = this;
   const { telegram, slack_info } = this;
-  const { requestSystem, ajaxJson, equalJson } = this.mother;
+  const { requestSystem, ajaxJson, equalJson, sleep } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/messageLog" ];
@@ -204,9 +250,8 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       } else {
         thisChannel = "general";
       }
-      ajaxJson({ chat_id: telegram.bot[thisChannel], text: `(${channel}) ${slackText}` }, telegram.url(telegram.token)).catch((err) => {
-        instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_messageLog): " + err.message).catch((e) => { console.log(e); });
-      })
+
+      await instance.telegramSend(telegram.bot[thisChannel], `(${channel}) ${slackText}`);
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
@@ -220,7 +265,7 @@ SecondRouter.prototype.rou_post_messageLog = function () {
 SecondRouter.prototype.rou_post_emergencyAlarm = function () {
   const instance = this;
   const { telegram } = this;
-  const { requestSystem, ajaxJson } = this.mother;
+  const { requestSystem, ajaxJson, sleep } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/emergencyAlarm" ];
@@ -239,8 +284,7 @@ SecondRouter.prototype.rou_post_emergencyAlarm = function () {
       const channel = "#emergency_alarm";
 
       await instance.slack_bot.chat.postMessage({ text, channel });
-
-      await ajaxJson({ chat_id: telegram.bot["emergency"], text: `(${channel}) ${text}` }, telegram.url(telegram.token));
+      await instance.telegramSend(telegram.bot["emergency"], `(${channel}) ${text}`);
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
