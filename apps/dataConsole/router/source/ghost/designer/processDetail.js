@@ -14467,7 +14467,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                 display: "inline-block",
                 position: "relative",
                 height: String(barFactorHeight) + ea,
-                borderRadius: String(desktop ? 5 : 3) + "px",
+                borderRadius: String(desktop ? 5 : 2) + "px",
                 width: "calc(calc(100% - " + String(barFactorBetween * (childrenMaxNumber - 1)) + ea + ") / " + String(childrenMaxNumber) + ")",
                 background: thisValueNumber >= j ? colorChip.yellow : colorChip.gray1,
                 marginRight: j !== childrenMaxNumber - 1 ? String(barFactorBetween) + ea : "",
