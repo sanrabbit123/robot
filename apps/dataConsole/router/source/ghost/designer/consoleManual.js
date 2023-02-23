@@ -251,7 +251,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop = <%% 46, 46, 38, 35, 5.4 %%>;
+  paddingTop = <%% 50, 50, 42, 39, 6 %%>;
 
   whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
 
@@ -363,7 +363,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
           display: "inline-flex",
           position: "relative",
           width: withOut(firstWidth, ea),
-          paddingTop: String(5) + ea,
+          paddingTop: String(4) + ea,
           paddingBottom: String(10) + ea,
         },
         child: {
