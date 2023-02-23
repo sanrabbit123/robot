@@ -13938,13 +13938,13 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     blockTextSize = <%% 14, 13, 12, 11, 3.2 %%>;
     blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
   
-    barBaseHeight = <%% 40, 36, 32, 28, 7 %%>;
+    barBaseHeight = <%% 40, 36, 32, 28, 6.8 %%>;
     barFirstWidth = <%% 100, 90, 80, 64, 14 %%>;
-    barFactorHeight = <%% 20, 20, 18, 16, 4.8 %%>;
+    barFactorHeight = <%% 20, 20, 18, 16, 5 %%>;
     barFactorBetween = <%% 2, 2, 2, 2, 0.5 %%>;
 
-    barArrBasePaddingTop = <%% 38, 36, 32, 26, 9 %%>;
-    barArrBaseMarginTop = <%% 48, 46, 40, 32, 10 %%>;
+    barArrBasePaddingTop = <%% 38, 36, 32, 26, 8 %%>;
+    barArrBaseMarginTop = <%% 48, 46, 40, 32, 9.5 %%>;
 
     barArrTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
@@ -14372,7 +14372,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
         paddingTop: String(barArrBasePaddingTop) + ea,
         borderTop: "1px dashed " + colorChip.gray3,
         marginTop: String(barArrBaseMarginTop) + ea,
-        paddingBottom: desktop ? "" : String(16) + ea,
+        paddingBottom: desktop ? "" : String(17) + ea,
       }
     });
 
@@ -14460,7 +14460,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                 display: "inline-block",
                 position: "relative",
                 height: String(barFactorHeight) + ea,
-                borderRadius: String(5) + "px",
+                borderRadius: String(desktop ? 5 : 3) + "px",
                 width: "calc(calc(100% - " + String(barFactorBetween * (childrenMaxNumber - 1)) + ea + ") / " + String(childrenMaxNumber) + ")",
                 background: thisValueNumber >= j ? colorChip.yellow : colorChip.gray1,
                 marginRight: j !== childrenMaxNumber - 1 ? String(barFactorBetween) + ea : "",
