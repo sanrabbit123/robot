@@ -4843,6 +4843,629 @@ ProjectDetailJs.prototype.plusMemo = function (thisStatusNumber) {
   }
 }
 
+ProjectDetailJs.prototype.insertFormStatusBox = async function () {
+  const instance = this;
+  const mother = this.mother;
+  const { ea, baseTong, media, client, project } = this;
+  const { proid, desid } = project;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const veryBig = (media[0] || media[1]);
+  const generalSmall = !veryBig;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, serviceParsing } = GeneralJs;
+  const dateToHangul = (dateObject) => {
+    return `${String(dateObject.getFullYear()).slice(2)}년 ${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일`;
+  }
+  const hangulToDate = (hangul) => {
+    hangul = hangul.replace(/ /gi, '');
+    const [ year, month, date ] = hangul.split(/[가-힣]/gi);
+    return new Date(2000 + Number(year), Number(month) - 1, Number(date));
+  }
+  const siblingKeywords = "siblingKeywords__";
+  const valueBlockClassName = "valueBlockClassName__";
+  try {
+    let margin;
+    let paddingTop;
+    let whiteBottomMargin;
+    let titleFontSize;
+    let bottomMargin;
+    let whiteBlock;
+    let grayTong;
+    let contents;
+    let innerMargin;
+    let arrowWidth, arrowHeight;
+    let textTop;
+    let textSize, textWeight;
+    let textMarginLeft;
+    let mobileVisualPaddingValue;
+    let button, buttons;
+    let blockBetween;
+    let blockBetweenBottom;
+    let blockHeight;
+    let lineTop;
+    let columnsNumber;
+    let textFileWeight;
+    let whitePadding;
+    let smallSize, smallWeight, smallBetween;
+    let textTextTop;
+    let smallTextTop;
+    let panDom;
+    let veryBigSize;
+    let veryBigWeight;
+    let firstWidth;
+    let buttonWidth, buttonHeight;
+    let buttonOuterPadding, buttonInnerMargin;
+    let descriptionBetween;
+    let panWidth, panVisualLeft;
+    let veryBigTextTop;
+    let circleWidth, circleTop, circleLeft;
+    let subButtonWidth;
+    let thirdWidth;
+    let imageBoxVisualPaddingBottom;
+    let imageBetween;
+    let panBoxBetween;
+    let wordingPaddingTop0, wordingPaddingTop1;
+    let mainTong;
+    let wordingBoxWidth;
+    let contentsTong;
+    let contentsTongPaddingBottom;
+    let bigTextSize;
+    let bigTextWeight;
+    let bigTextTextTop;
+    let clock;
+    let formPanBase;
+    let thisPan;
+    let panBetween;
+    let panHeight, panInnerMargin;
+    let panCheckBoxWidth;
+    let panWhitePaddingLeft;
+    let panBlockBetween, panBlockBigBetween;
+    let buttonSize, buttonWeight, buttonTextTop;
+    let panPaddingTop;
+    let panTitleSize, panTitleWeight;
+    let formPanBaseMarginBottom;
+    let checkBoxWidth;
+    let blockTextSize, blockTextWeight;
+    let siblings;
+    let thisForm;
+    let colorArr;
+    let barArrBase;
+    let barArrBlock;
+    let barArrBlockValuesBase;
+    let childrenMaxNumber;
+    let thisValueNumber;
+    let reloadBarArr;
+    let barBaseHeight, barFactorHeight, barFactorBetween;
+    let barFirstWidth;
+    let barArrBasePaddingTop;
+    let barArrBaseMarginTop;
+    let barArrTitleTextTop;
+    let reloadMainButtons;
+    let panPaddingBottom;
+
+    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+    margin = <%% 55, 55, 47, 39, 6 %%>;
+    paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
+  
+    whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
+  
+    titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  
+    bigTextSize = <%% 36, 36, 36, 36, 4.4 %%>;
+    bigTextWeight = <%% 100, 100, 100, 100, 100 %%>;
+    bigTextTextTop = <%% (isMac() ? -7 : -5), (isMac() ? -7 : -5), -7, -7, -1 %%>;
+  
+    veryBigSize = <%% 23, 21, 20, 16, 4.4 %%>;
+    veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
+    veryBigTextTop = <%% (isMac() ? 3 : 4), (isMac() ? 3 : 4), (isMac() ? 2 : 3), (isMac() ? 1 : 2), -1 %%>;
+  
+    innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+  
+    textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+    smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
+  
+    textSize = <%% 14, 14, 13, 12, 3.2 %%>;
+    textWeight = <%% 700, 700, 700, 700, 700 %%>;
+    textFileWeight = <%% 400, 400, 400, 400, 400 %%>;
+  
+    whitePadding = <%% 12, 12, 8, 8, 2.2 %%>;
+  
+    blockBetween = <%% 36, 28, 26, 24, 5 %%>;
+    blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
+    blockHeight = <%% 36, 36, 32, 26, 4 %%>;
+  
+    lineTop = <%% 18, 18, 16, 13, 1.9 %%>;
+  
+    firstWidth = <%% 298, 230, 213, 142, 300 %%>;
+  
+    panWidth = <%% 20, 20, 20, 20, 2 %%>;
+    panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
+  
+    circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
+    circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
+    circleLeft = <%% -7, -7, -7, -5, -0.8 %%>;
+  
+    arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
+    arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
+  
+    subButtonWidth = <%% 90, 72, 72, 64, 16 %%>;
+  
+    mobileVisualPaddingValue = 0.2;
+  
+    thirdWidth = <%% 240, 0, 0, 0, 0 %%>;
+  
+    imageBoxVisualPaddingBottom = <%% 4, 2, 2, 2, 0 %%>;
+    imageBetween = <%% 32, 16, 12, 12, 6 %%>;
+    panBoxBetween = <%% 12, 32, 26, 24, 12 %%>;
+  
+    wordingPaddingTop0 = <%% 300, 213, 213, 213, 213 %%>;
+    wordingPaddingTop1 = <%% 309, 243, 243, 243, 243 %%>;
+  
+    wordingBoxWidth = <%% 175, 185, 175, 115, 175 %%>;
+  
+    contentsTongPaddingBottom = <%% 15, 15, 15, 15, 7 %%>;
+    panBetween = <%% 28, 28, 24, 20, 2 %%>;
+  
+    panHeight = <%% 50, 48, 45, 42, 12 %%>;
+    panInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
+  
+    panCheckBoxWidth = <%% 32, 24, 20, 20, 8 %%>;
+    checkBoxWidth = <%% 13, 11, 9, 9, 3 %%>;
+  
+    panWhitePaddingLeft = <%% 16, 14, 14, 12, 3.5 %%>; 
+    panBlockBetween = <%% 8, 8, 6, 5, 1 %%>; 
+    panBlockBigBetween = <%% 8, 8, 6, 5, 1 %%>; 
+  
+    buttonWidth = <%% 100, 90, 84, 80, 16.8 %%>;
+    buttonHeight = <%% 36, 36, 30, 28, 6 %%>;
+  
+    buttonSize = <%% 15, 14, 13, 12, 2.6 %%>;
+    buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isIphone() ? 0 : -0.2) %%>;
+  
+    panPaddingTop = <%% 16, 16, 14, 14, 3 %%>;
+    panPaddingBottom = <%% 6, 3, 2, 1, 1 %%>;
+
+    panTitleSize = <%% 16, 15, 14, 13, 3.6 %%>;
+    panTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  
+    formPanBaseMarginBottom = <%% 12, 8, 6, 6, 4 %%>;
+  
+    blockTextSize = <%% 14, 13, 12, 11, 3.2 %%>;
+    blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
+  
+    barBaseHeight = <%% 49, 40, 34, 34, 6.8 %%>;
+    barFirstWidth = <%% 100, 90, 80, 64, 14 %%>;
+    barFactorHeight = <%% 32, 26, 24, 22, 5 %%>;
+    barFactorBetween = <%% 2, 2, 2, 2, 0.4 %%>;
+
+    barArrBasePaddingTop = <%% 38, 36, 32, 26, 8 %%>;
+    barArrBaseMarginTop = <%% 48, 46, 40, 32, 9.5 %%>;
+
+    barArrTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+    thisForm = await ajaxJson({ mode: "get", proid, desid }, SECONDHOST + "/projectDesignerStatus", { equal: true });
+  
+    contents = {
+      title: [
+        project.name + "님의",
+        "프로젝트 상태"
+      ],
+      description: [
+        project.name + " 고객님 : " + "<u%" + serviceParsing(project.service) + "%u>",
+        "고객님께 해당되는 상태를 <b%모두 체크%b>해주세요!",
+      ],
+      form: thisForm,
+      button: "자세히 보기",
+    };
+
+    colorArr = [
+      colorChip.green,
+      colorChip.yellow,
+    ];
+  
+    reloadMainButtons = () => {};
+    formPanBase = {};
+
+    reloadBarArr = () => {};
+    barArrBase = {};
+
+    whiteBlock = createNode({
+      mother: baseTong,
+      style: {
+        position: "relative",
+        borderRadius: String(desktop ? 8 : 1) + ea,
+        width: String(100) + '%',
+        background: colorChip.white,
+        paddingTop: String(paddingTop) + ea,
+        paddingBottom: String(desktop ? whiteBottomMargin - blockBetweenBottom : 6.6) + ea,
+        marginBottom: String(bottomMargin) + ea,
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      },
+      children: [
+        {
+          display: "block",
+          position: "relative",
+          width: withOut(margin * 2, ea),
+          height: String(100) + '%',
+          marginLeft: String(margin) + ea,
+        }
+      ]
+    });
+    whiteTong = whiteBlock.firstChild;
+  
+    grayTong = createNode({
+      mother: whiteTong,
+      style: {
+        display: "block",
+        position: "relative",
+        paddingTop: String(innerMargin) + ea,
+        paddingBottom: String(desktop ? innerMargin : 0) + ea,
+        paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+        paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
+        width: withOut(innerMargin * 2, ea),
+        background: colorChip.white,
+        borderRadius: String(8) + "px",
+      }
+    });
+  
+    mainTong = createNode({
+      mother: grayTong,
+      style: {
+        display: desktop ? "flex" : "block",
+        width: withOut(0),
+        flexDirection: desktop ? "row" : "",
+        justifyContent: desktop ? "start" : "",
+        alignItems: desktop ? "start" : "",
+      },
+      children: [
+        {
+          style: {
+            display: desktop ? "inline-flex" : "none",
+            position: "relative",
+            width: desktop ? String(firstWidth) + ea : withOut(0, ea),
+            verticalAlign: "top",
+            justifyContent: desktop ? "" : "center",
+            alignItems: desktop ? "" : "center",
+            marginTop: desktop ? "" : String(2.8) + ea,
+            marginBottom: desktop ? "" : String(3) + ea,
+          },
+          children: [
+            {
+              text: contents.title.join(desktop ? "\n" : " "),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(veryBigSize) + ea,
+                fontWeight: String(veryBigWeight),
+                color: colorChip.black,
+                lineHeight: String(1.5),
+                top: desktop ? String(veryBigTextTop) + ea : "",
+              },
+              child: {
+                style: {
+                  display: "inline-block",
+                  position: "absolute",
+                  top: String(circleTop) + ea,
+                  left: String(circleLeft) + ea,
+                  width: String(circleWidth) + ea,
+                  height: String(circleWidth) + ea,
+                  borderRadius: String(circleWidth) + ea,
+                  background: colorChip.gray4,
+                }
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: desktop ? withOut(firstWidth, ea) : withOut(0, ea),
+            verticalAlign: "top",
+            flexDirection: "column",
+          }
+        }
+      ]
+    });
+  
+    contentsTong = mainTong.children[1];
+  
+    barArrBase = createNode({
+      mother: contentsTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        flexDirection: "column",
+        width: withOut(0),
+        justifyContent: "start",
+        alignItems: "start",
+      }
+    });
+
+    reloadBarArr = (barArrBase, thisForm) => {
+
+      cleanChildren(barArrBase);
+
+      childrenMaxNumber = thisForm.reduce((acc, curr) => {
+        return acc > curr.children.length ? acc : curr.children.length
+      }, 0)
+  
+      for (let i = 0; i < thisForm.length; i++) {
+  
+        barArrBlock = createNode({
+          mother: barArrBase,
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "center",
+            width: withOut(0),
+            height: String(barBaseHeight) + ea,
+          }
+        });
+  
+        createNode({
+          mother: barArrBlock,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: String(barFirstWidth) + ea,
+            height: withOut(0, ea),
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "start",
+          },
+          child: {
+            text: thisForm[i].title,
+            style: {
+              fontSize: String(desktop ? panTitleSize : 3.3) + ea,
+              fontWeight: String(panTitleWeight),
+              color: colorChip.black,
+              position: "relative",
+              top: String(barArrTitleTextTop) + ea,
+            }
+          }
+        })
+  
+        barArrBlockValuesBase = createNode({
+          mother: barArrBlock,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(barFirstWidth, ea),
+            height: withOut(0, ea),
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "start",
+          }
+        });
+        
+        thisValueNumber = thisForm[i].children.reduce((acc, curr, index) => {
+          if (acc === -1) {
+            if (curr.value === 0) {
+              return -1;
+            } else {
+              return index;
+            }
+          } else {
+            if (curr.value === 0) {
+              return acc;
+            } else {
+              return index;
+            }
+          }
+        }, -1);
+  
+        for (let j = 0; j < childrenMaxNumber; j++) {
+  
+          if (thisForm[i].children[j] !== undefined) {
+            createNode({
+              mother: barArrBlockValuesBase,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                height: String(barFactorHeight) + ea,
+                borderRadius: String(desktop ? 5 : 3) + "px",
+                width: "calc(calc(100% - " + String(barFactorBetween * (childrenMaxNumber - 1)) + ea + ") / " + String(childrenMaxNumber) + ")",
+                background: thisValueNumber >= j ? colorChip.yellow : colorChip.gray1,
+                marginRight: j !== childrenMaxNumber - 1 ? String(barFactorBetween) + ea : "",
+              }
+            });
+          }
+  
+        }
+  
+      }
+
+      createNode({
+        mother: barArrBase,
+        event: {
+          click: function (e) {
+            if (/간략히/gi.test(this.firstChild.textContent)) {
+              cleanChildren(formPanBase);
+              this.firstChild.textContent = "자세히 보기";
+            } else {
+              reloadMainButtons(formPanBase, thisForm);
+              this.firstChild.textContent = "간략히 보기";
+            }
+          }
+        },
+        style: {
+          display: "inline-flex",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          width: String(buttonWidth) + ea,
+          height: String(buttonHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGray,
+          bottom: String(0),
+          right: String(0),
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          cursor: "pointer",
+        },
+        child: {
+          text: contents.button,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(buttonWeight),
+            top: String(buttonTextTop) + ea,
+            color: colorChip.white,
+            cursor: "pointer",
+          }
+        }
+      });
+
+    }
+
+    formPanBase = createNode({
+      mother: contentsTong,
+      style: {
+        display: (media[0] || media[4] ? "flex" : "block"),
+        position: "relative",
+        flexDirection: desktop ? "row" : "column",
+        width: withOut(0),
+        justifyContent: "start",
+        alignItems: "start",
+      },
+    });
+  
+    reloadMainButtons = (formPanBase, thisForm) => {
+      cleanChildren(formPanBase);
+      for (let i = 0; i < thisForm.length; i++) {
+  
+        thisPan = createNode({
+          mother: formPanBase,
+          attribute: {
+            index: String(i),
+          },
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            flexDirection: "column",
+            width: desktop ? (media[0] ? "calc(calc(100% - " + String(panBetween * (thisForm.length - 1)) + ea + ") / " + String(thisForm.length) + ")" : "calc(calc(100% - " + String(panBetween * ((thisForm.length / 2) - 1)) + ea + ") / " + String(thisForm.length / 2) + ")") : withOut(0, ea),
+            marginRight: desktop ? (media[0] ? (i === thisForm.length - 1 ? "" : String(panBetween) + ea) : (i === thisForm.length - 1 || i === (thisForm.length / 2) - 1 ? "" : String(panBetween) + ea)) : "",
+            paddingTop: String(panPaddingTop) + ea,
+            paddingBottom: String(panPaddingBottom) + ea,
+            verticalAlign: "top",
+          }
+        });
+    
+        createNode({
+          mother: thisPan,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: withOut(0, ea),
+            height: String(panHeight) + ea,
+          },
+          child: {
+            text: thisForm[i].title,
+            style: {
+              fontSize: String(panTitleSize) + ea,
+              fontWeight: String(panTitleWeight),
+              color: colorChip.black,
+            }
+          }
+        });
+    
+        for (let j = 0; j < thisForm[i].children.length; j++) {
+          createNode({
+            mother: thisPan,
+            class: [ valueBlockClassName, siblingKeywords + String(i) ],
+            attribute: {
+              toggle: thisForm[i].children[j].value === 0 ? "off" : "on",
+              x: String(i),
+              y: String(j),
+              mother: thisForm[i].title,
+              title: thisForm[i].children[j].title,
+              deactive: thisForm[i].children[j].deactive ? "true" : "false",
+              proid,
+              desid,
+            },
+            style: {
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: withOut(0, ea),
+              height: String(panHeight) + ea,
+              background: thisForm[i].children[j].value === 0 ? colorChip.gray1 : colorArr[i % colorArr.length],
+              borderRadius: String(5) + "px",
+              marginBottom: j === thisForm[i].children.length - 1 ? "" : String(panBlockBetween) + ea,
+              flexDirection: "row",
+              cursor: "pointer",
+              transition: "all 0s ease",
+            },
+            children: [
+              {
+                style: {
+                  width: String(panCheckBoxWidth) + ea,
+                  marginRight: String(panInnerMargin) + ea,
+                  display: "inline-flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: withOut(panInnerMargin * 2, ea),
+                  display: "inline-flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  transition: "all 0s ease",
+                },
+                child: {
+                  mode: "svg",
+                  source: svgMaker.checkBox(thisForm[i].children[j].value === 0 ? colorChip.gray4 : colorChip.white),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(checkBoxWidth) + ea,
+                    transition: "all 0s ease",
+                  }
+                }
+              },
+              {
+                style: {
+                  width: withOut(panCheckBoxWidth + (panInnerMargin * 3) + panWhitePaddingLeft, ea),
+                  height: withOut(panInnerMargin * 2, ea),
+                  background: thisForm[i].children[j].deactive ? colorChip.gray2 : colorChip.white,
+                  borderRadius: String(5) + "px",
+                  display: "inline-flex",
+                  justifyContent: "start",
+                  alignItems: "center",
+                  paddingLeft: String(panWhitePaddingLeft) + ea,
+                  transition: "all 0s ease",
+                },
+                child: {
+                  text: thisForm[i].children[j].title,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(blockTextSize) + ea,
+                    fontWeight: String(blockTextWeight),
+                    color: thisForm[i].children[j].value === 0 ? (thisForm[i].children[j].deactive ? colorChip.deactive : colorChip.deactive) : colorChip.black,
+                    top: String(textTextTop) + ea,
+                    transition: "all 0s ease",
+                  }
+                }
+              }
+            ]
+          });
+        }
+      }
+    }
+
+    reloadBarArr(barArrBase, thisForm);
+  
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 ProjectDetailJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -4934,6 +5557,7 @@ ProjectDetailJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
+          await instance.insertFormStatusBox();
           instance.insertNumbersBox();
           if (getObj.mode === "schedule") {
             await instance.insertScheduleBox();

@@ -13847,6 +13847,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     let barArrBasePaddingTop;
     let barArrBaseMarginTop;
     let barArrTitleTextTop;
+    let reloadMainButtons;
 
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -13862,7 +13863,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
   
     veryBigSize = <%% 23, 21, 20, 16, 4.4 %%>;
     veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
-    veryBigTextTop = <%% -1, -1, -2, -1, -1 %%>;
+    veryBigTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 0), -1 %%>;
   
     innerMargin = <%% 0, 0, 0, 0, 1 %%>;
   
@@ -13921,10 +13922,10 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     panBlockBetween = <%% 8, 8, 6, 5, 1 %%>; 
     panBlockBigBetween = <%% 8, 8, 6, 5, 1 %%>; 
   
-    buttonWidth = <%% 100, 90, 90, 80, 24 %%>;
-    buttonHeight = <%% 36, 36, 32, 30, 8.2 %%>;
+    buttonWidth = <%% 100, 90, 84, 80, 24 %%>;
+    buttonHeight = <%% 36, 36, 30, 28, 8.2 %%>;
   
-    buttonSize = <%% 15, 14, 14, 13, 3.5 %%>;
+    buttonSize = <%% 15, 14, 13, 12, 3.5 %%>;
     buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
   
@@ -13941,7 +13942,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     barBaseHeight = <%% 40, 36, 32, 28, 6.8 %%>;
     barFirstWidth = <%% 100, 90, 80, 64, 14 %%>;
     barFactorHeight = <%% 20, 20, 18, 16, 5 %%>;
-    barFactorBetween = <%% 2, 2, 2, 2, 0.5 %%>;
+    barFactorBetween = <%% 2, 2, 2, 2, 0.4 %%>;
 
     barArrBasePaddingTop = <%% 38, 36, 32, 26, 8 %%>;
     barArrBaseMarginTop = <%% 48, 46, 40, 32, 9.5 %%>;
@@ -13968,6 +13969,9 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
       colorChip.yellow,
     ];
   
+    reloadMainButtons = () => {};
+    formPanBase = {};
+
     reloadBarArr = () => {};
     barArrBase = {};
 
@@ -14142,221 +14146,224 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
       },
     });
   
-    for (let i = 0; i < contents.form.length; i++) {
+    reloadMainButtons = (formPanBase, thisForm) => {
+      cleanChildren(formPanBase);
+      for (let i = 0; i < thisForm.length; i++) {
   
-      thisPan = createNode({
-        mother: formPanBase,
-        attribute: {
-          index: String(i),
-        },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          flexDirection: "column",
-          width: desktop ? (media[0] ? "calc(calc(100% - " + String(panBetween * (contents.form.length - 1)) + ea + ") / " + String(contents.form.length) + ")" : "calc(calc(100% - " + String(panBetween * ((contents.form.length / 2) - 1)) + ea + ") / " + String(contents.form.length / 2) + ")") : withOut(0, ea),
-          marginRight: desktop ? (media[0] ? (i === contents.form.length - 1 ? "" : String(panBetween) + ea) : (i === contents.form.length - 1 || i === (contents.form.length / 2) - 1 ? "" : String(panBetween) + ea)) : "",
-          paddingTop: String(panPaddingTop) + ea,
-          verticalAlign: "top",
-        }
-      });
-  
-      createNode({
-        mother: thisPan,
-        style: {
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: withOut(0, ea),
-          height: String(panHeight) + ea,
-        },
-        child: {
-          text: contents.form[i].title,
+        thisPan = createNode({
+          mother: formPanBase,
+          attribute: {
+            index: String(i),
+          },
           style: {
-            fontSize: String(panTitleSize) + ea,
-            fontWeight: String(panTitleWeight),
-            color: colorChip.black,
+            display: "inline-flex",
+            position: "relative",
+            flexDirection: "column",
+            width: desktop ? (media[0] ? "calc(calc(100% - " + String(panBetween * (thisForm.length - 1)) + ea + ") / " + String(thisForm.length) + ")" : "calc(calc(100% - " + String(panBetween * ((thisForm.length / 2) - 1)) + ea + ") / " + String(thisForm.length / 2) + ")") : withOut(0, ea),
+            marginRight: desktop ? (media[0] ? (i === thisForm.length - 1 ? "" : String(panBetween) + ea) : (i === thisForm.length - 1 || i === (thisForm.length / 2) - 1 ? "" : String(panBetween) + ea)) : "",
+            paddingTop: String(panPaddingTop) + ea,
+            verticalAlign: "top",
           }
-        }
-      });
-  
-      for (let j = 0; j < contents.form[i].children.length; j++) {
+        });
+    
         createNode({
           mother: thisPan,
-          class: [ valueBlockClassName, siblingKeywords + String(i) ],
-          attribute: {
-            toggle: contents.form[i].children[j].value === 0 ? "off" : "on",
-            x: String(i),
-            y: String(j),
-            mother: contents.form[i].title,
-            title: contents.form[i].children[j].title,
-            deactive: contents.form[i].children[j].deactive ? "true" : "false",
-            proid,
-            desid,
-          },
-          event: {
-            click: async function (e) {
-              const toggle = this.getAttribute("toggle");
-              const x = Number(this.getAttribute("x"));
-              const y = Number(this.getAttribute("y"));
-              const deactive = (this.getAttribute("deactive") === "true");
-              const proid = this.getAttribute("proid");
-              const desid = this.getAttribute("desid");
-              try {
-                let totalDom;
-                let matrix;
-                let maxX, maxY;
-                let xArr, yArr;
-                let tempObj;
-                let targetDoms;
-
-                if (toggle === "off") {
-                  if (!deactive) {
-                    siblings = document.querySelectorAll('.' + siblingKeywords + String(x));
-                    for (let dom of siblings) {
-                      if (dom === this) {
-                        this.style.background = colorArr[x % colorArr.length];
-                        this.children[0].children[0].children[0].setAttribute("fill", colorChip.white);
-                        this.children[1].children[0].style.color = colorChip.black;
-                        this.setAttribute("toggle", "on");
-                      } else {
-                        dom.style.background = colorChip.gray1;
-                        dom.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                        dom.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.deactive;
-                        dom.setAttribute("toggle", "off");
-                      }
-                    }
-                  }
-                } else {
-                  this.style.background = colorChip.gray1;
-                  this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                  this.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.deactive;
-                  this.setAttribute("toggle", "off");
-                }
-
-                totalDom = [ ...document.querySelectorAll('.' + valueBlockClassName) ];
-                
-                xArr = [];
-                for (let dom of totalDom) {
-                  xArr.push(Number(dom.getAttribute("x")));
-                }
-                xArr.sort((a, b) => { return b - a; });
-                maxX = xArr[0] + 1;
-
-                matrix = [];
-                for (let z = 0; z < maxX; z++) {
-                  targetDoms = totalDom.filter((dom) => { return Number(dom.getAttribute("x")) === z });
-                  targetDoms.sort((a, b) => { return Number(a.getAttribute("y")) - Number(b.getAttribute("y")); });
-                  tempObj = {
-                    title: targetDoms[0].getAttribute("mother"),
-                    children: []
-                  };
-                  for (let w = 0; w < targetDoms.length; w++) {
-                    tempObj.children.push({
-                      title: targetDoms[w].getAttribute("title"),
-                      deactive: targetDoms[w].getAttribute("true") === "true",
-                      value: targetDoms[w].getAttribute("toggle") === "on" ? 1 : 0,
-                    });
-                  }
-                  matrix.push(tempObj);
-                }
-                
-                await ajaxJson({
-                  mode: "update",
-                  proid,
-                  desid,
-                  matrix
-                }, SECONDHOST + "/projectDesignerStatus");
-
-                reloadBarArr(barArrBase, matrix);
-
-              } catch (e) {
-                console.log(e);
-              }
-            },
-            mouseenter: function (e) {
-              const deactive = (this.getAttribute("deactive") === "true");
-              if (!deactive) {
-                if (this.getAttribute("toggle") === "off") {
-                  this.style.background = colorChip.gray3;
-                  this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray5);
-                  this.children[1].children[0].style.color = colorChip.black;
-                }
-              }
-            },
-            mouseleave: function (e) {
-              const deactive = (this.getAttribute("deactive") === "true");
-              if (this.getAttribute("toggle") === "off") {
-                this.style.background = colorChip.gray1;
-                this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                this.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.deactive;
-              }
-            },
-          },
           style: {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             width: withOut(0, ea),
             height: String(panHeight) + ea,
-            background: contents.form[i].children[j].value === 0 ? colorChip.gray1 : colorArr[i % colorArr.length],
-            borderRadius: String(5) + "px",
-            marginBottom: j === contents.form[i].children.length - 1 ? "" : String(panBlockBetween) + ea,
-            flexDirection: "row",
-            cursor: "pointer",
-            transition: "all 0s ease",
           },
-          children: [
-            {
-              style: {
-                width: String(panCheckBoxWidth) + ea,
-                marginRight: String(panInnerMargin) + ea,
-                display: "inline-flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: withOut(panInnerMargin * 2, ea),
-                display: "inline-flex",
-                justifyContent: "center",
-                alignItems: "center",
-                transition: "all 0s ease",
-              },
-              child: {
-                mode: "svg",
-                source: svgMaker.checkBox(contents.form[i].children[j].value === 0 ? colorChip.gray4 : colorChip.white),
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  width: String(checkBoxWidth) + ea,
-                  transition: "all 0s ease",
-                }
-              }
-            },
-            {
-              style: {
-                width: withOut(panCheckBoxWidth + (panInnerMargin * 3) + panWhitePaddingLeft, ea),
-                height: withOut(panInnerMargin * 2, ea),
-                background: contents.form[i].children[j].deactive ? colorChip.gray2 : colorChip.white,
-                borderRadius: String(5) + "px",
-                display: "inline-flex",
-                justifyContent: "start",
-                alignItems: "center",
-                paddingLeft: String(panWhitePaddingLeft) + ea,
-                transition: "all 0s ease",
-              },
-              child: {
-                text: contents.form[i].children[j].title,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontSize: String(blockTextSize) + ea,
-                  fontWeight: String(blockTextWeight),
-                  color: contents.form[i].children[j].value === 0 ? (contents.form[i].children[j].deactive ? colorChip.deactive : colorChip.deactive) : colorChip.black,
-                  top: String(textTextTop) + ea,
-                  transition: "all 0s ease",
-                }
-              }
+          child: {
+            text: thisForm[i].title,
+            style: {
+              fontSize: String(panTitleSize) + ea,
+              fontWeight: String(panTitleWeight),
+              color: colorChip.black,
             }
-          ]
+          }
         });
+    
+        for (let j = 0; j < thisForm[i].children.length; j++) {
+          createNode({
+            mother: thisPan,
+            class: [ valueBlockClassName, siblingKeywords + String(i) ],
+            attribute: {
+              toggle: thisForm[i].children[j].value === 0 ? "off" : "on",
+              x: String(i),
+              y: String(j),
+              mother: thisForm[i].title,
+              title: thisForm[i].children[j].title,
+              deactive: thisForm[i].children[j].deactive ? "true" : "false",
+              proid,
+              desid,
+            },
+            event: {
+              click: async function (e) {
+                const toggle = this.getAttribute("toggle");
+                const x = Number(this.getAttribute("x"));
+                const y = Number(this.getAttribute("y"));
+                const deactive = (this.getAttribute("deactive") === "true");
+                const proid = this.getAttribute("proid");
+                const desid = this.getAttribute("desid");
+                try {
+                  let totalDom;
+                  let matrix;
+                  let maxX, maxY;
+                  let xArr, yArr;
+                  let tempObj;
+                  let targetDoms;
+  
+                  if (toggle === "off") {
+                    if (!deactive) {
+                      siblings = document.querySelectorAll('.' + siblingKeywords + String(x));
+                      for (let dom of siblings) {
+                        if (dom === this) {
+                          this.style.background = colorArr[x % colorArr.length];
+                          this.children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                          this.children[1].children[0].style.color = colorChip.black;
+                          this.setAttribute("toggle", "on");
+                        } else {
+                          dom.style.background = colorChip.gray1;
+                          dom.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                          dom.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.deactive;
+                          dom.setAttribute("toggle", "off");
+                        }
+                      }
+                    }
+                  } else {
+                    this.style.background = colorChip.gray1;
+                    this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                    this.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.deactive;
+                    this.setAttribute("toggle", "off");
+                  }
+  
+                  totalDom = [ ...document.querySelectorAll('.' + valueBlockClassName) ];
+                  
+                  xArr = [];
+                  for (let dom of totalDom) {
+                    xArr.push(Number(dom.getAttribute("x")));
+                  }
+                  xArr.sort((a, b) => { return b - a; });
+                  maxX = xArr[0] + 1;
+  
+                  matrix = [];
+                  for (let z = 0; z < maxX; z++) {
+                    targetDoms = totalDom.filter((dom) => { return Number(dom.getAttribute("x")) === z });
+                    targetDoms.sort((a, b) => { return Number(a.getAttribute("y")) - Number(b.getAttribute("y")); });
+                    tempObj = {
+                      title: targetDoms[0].getAttribute("mother"),
+                      children: []
+                    };
+                    for (let w = 0; w < targetDoms.length; w++) {
+                      tempObj.children.push({
+                        title: targetDoms[w].getAttribute("title"),
+                        deactive: targetDoms[w].getAttribute("true") === "true",
+                        value: targetDoms[w].getAttribute("toggle") === "on" ? 1 : 0,
+                      });
+                    }
+                    matrix.push(tempObj);
+                  }
+                  
+                  await ajaxJson({
+                    mode: "update",
+                    proid,
+                    desid,
+                    matrix
+                  }, SECONDHOST + "/projectDesignerStatus");
+  
+                  reloadBarArr(barArrBase, matrix);
+  
+                } catch (e) {
+                  console.log(e);
+                }
+              },
+              mouseenter: function (e) {
+                const deactive = (this.getAttribute("deactive") === "true");
+                if (!deactive) {
+                  if (this.getAttribute("toggle") === "off") {
+                    this.style.background = colorChip.gray3;
+                    this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray5);
+                    this.children[1].children[0].style.color = colorChip.black;
+                  }
+                }
+              },
+              mouseleave: function (e) {
+                const deactive = (this.getAttribute("deactive") === "true");
+                if (this.getAttribute("toggle") === "off") {
+                  this.style.background = colorChip.gray1;
+                  this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                  this.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.deactive;
+                }
+              },
+            },
+            style: {
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: withOut(0, ea),
+              height: String(panHeight) + ea,
+              background: thisForm[i].children[j].value === 0 ? colorChip.gray1 : colorArr[i % colorArr.length],
+              borderRadius: String(5) + "px",
+              marginBottom: j === thisForm[i].children.length - 1 ? "" : String(panBlockBetween) + ea,
+              flexDirection: "row",
+              cursor: "pointer",
+              transition: "all 0s ease",
+            },
+            children: [
+              {
+                style: {
+                  width: String(panCheckBoxWidth) + ea,
+                  marginRight: String(panInnerMargin) + ea,
+                  display: "inline-flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: withOut(panInnerMargin * 2, ea),
+                  display: "inline-flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  transition: "all 0s ease",
+                },
+                child: {
+                  mode: "svg",
+                  source: svgMaker.checkBox(thisForm[i].children[j].value === 0 ? colorChip.gray4 : colorChip.white),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(checkBoxWidth) + ea,
+                    transition: "all 0s ease",
+                  }
+                }
+              },
+              {
+                style: {
+                  width: withOut(panCheckBoxWidth + (panInnerMargin * 3) + panWhitePaddingLeft, ea),
+                  height: withOut(panInnerMargin * 2, ea),
+                  background: thisForm[i].children[j].deactive ? colorChip.gray2 : colorChip.white,
+                  borderRadius: String(5) + "px",
+                  display: "inline-flex",
+                  justifyContent: "start",
+                  alignItems: "center",
+                  paddingLeft: String(panWhitePaddingLeft) + ea,
+                  transition: "all 0s ease",
+                },
+                child: {
+                  text: thisForm[i].children[j].title,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(blockTextSize) + ea,
+                    fontWeight: String(blockTextWeight),
+                    color: thisForm[i].children[j].value === 0 ? (thisForm[i].children[j].deactive ? colorChip.deactive : colorChip.deactive) : colorChip.black,
+                    top: String(textTextTop) + ea,
+                    transition: "all 0s ease",
+                  }
+                }
+              }
+            ]
+          });
+        }
       }
     }
 
@@ -14504,6 +14511,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
 
     }
 
+    reloadMainButtons(formPanBase, thisForm);
     reloadBarArr(barArrBase, thisForm);
   
   } catch (e) {
