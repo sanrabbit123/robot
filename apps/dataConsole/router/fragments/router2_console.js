@@ -1753,8 +1753,8 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         date: new Date(),
         mode: null,
         who: {
-          name: cookies.homeliaisonConsoleLoginedName,
-          email: cookies.homeliaisonConsoleLoginedEmail
+          name: cookies === null ? "unknown" : cookies.homeliaisonConsoleLoginedName,
+          email: cookies === null ? "unknown" : cookies.homeliaisonConsoleLoginedEmail
         }
       };
       if (Array.isArray(historyObj.curation.analytics.send)) {
