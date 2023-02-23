@@ -13836,7 +13836,18 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     let siblings;
     let thisForm;
     let colorArr;
-  
+    let barArrBase;
+    let barArrBlock;
+    let barArrBlockValuesBase;
+    let childrenMaxNumber;
+    let thisValueNumber;
+    let reloadBarArr;
+    let barBaseHeight, barFactorHeight, barFactorBetween;
+    let barFirstWidth;
+    let barArrBasePaddingTop;
+    let barArrBaseMarginTop;
+    let barArrTitleTextTop;
+
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 6 %%>;
     paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
@@ -13917,7 +13928,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
   
-    panPaddingTop = <%% 18, 12, 12, 12, 4 %%>;
+    panPaddingTop = <%% 22, 16, 14, 14, 4 %%>;
   
     panTitleSize = <%% 16, 15, 14, 13, 3.6 %%>;
     panTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
@@ -13927,6 +13938,15 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     blockTextSize = <%% 14, 13, 12, 11, 3.2 %%>;
     blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
   
+    barBaseHeight = <%% 40, 36, 32, 28, 7 %%>;
+    barFirstWidth = <%% 100, 90, 80, 64, 14 %%>;
+    barFactorHeight = <%% 20, 20, 18, 16, 4.8 %%>;
+    barFactorBetween = <%% 2, 2, 2, 2, 0.5 %%>;
+
+    barArrBasePaddingTop = <%% 38, 36, 32, 26, 9 %%>;
+    barArrBaseMarginTop = <%% 48, 46, 40, 32, 10 %%>;
+
+    barArrTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
     thisForm = await ajaxJson({ mode: "get", proid, desid }, SECONDHOST + "/projectDesignerStatus", { equal: true });
   
@@ -13948,6 +13968,9 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
       colorChip.yellow,
     ];
   
+    reloadBarArr = () => {};
+    barArrBase = {};
+
     whiteBlock = createNode({
       mother: baseTong,
       style: {
@@ -14116,8 +14139,6 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
         width: withOut(0),
         justifyContent: "start",
         alignItems: "start",
-        marginBottom: String(formPanBaseMarginBottom) + ea,
-        paddingBottom: desktop ? "" : String(16) + ea,
       },
     });
   
@@ -14246,6 +14267,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                   matrix
                 }, SECONDHOST + "/projectDesignerStatus");
 
+                reloadBarArr(barArrBase, matrix);
+
               } catch (e) {
                 console.log(e);
               }
@@ -14336,36 +14359,152 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
         });
       }
     }
-  
-    createNode({
-      mother: formPanBase,
+
+    barArrBase = createNode({
+      mother: contentsTong,
       style: {
-        display: "inline-flex",
-        justifyContent: "center",
-        alignItems: "center",
-        position: "absolute",
-        width: String(buttonWidth) + ea,
-        height: String(buttonHeight) + ea,
-        borderRadius: String(5) + "px",
-        background: colorChip.gradientGray,
-        bottom: String(0),
-        right: desktop ? String(0) : withOut(50, buttonWidth / 2, ea),
-        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-        cursor: "pointer",
-      },
-      child: {
-        text: contents.button,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(buttonSize) + ea,
-          fontWeight: String(buttonWeight),
-          top: String(buttonTextTop) + ea,
-          color: colorChip.white,
-          cursor: "pointer",
-        }
+        display: "flex",
+        position: "relative",
+        flexDirection: "column",
+        width: withOut(0),
+        justifyContent: "start",
+        alignItems: "start",
+        paddingTop: String(barArrBasePaddingTop) + ea,
+        borderTop: "1px dashed " + colorChip.gray3,
+        marginTop: String(barArrBaseMarginTop) + ea,
+        paddingBottom: desktop ? "" : String(16) + ea,
       }
     });
+
+    reloadBarArr = (barArrBase, thisForm) => {
+
+      cleanChildren(barArrBase);
+
+      childrenMaxNumber = thisForm.reduce((acc, curr) => {
+        return acc > curr.children.length ? acc : curr.children.length
+      }, 0)
+  
+      for (let i = 0; i < thisForm.length; i++) {
+  
+        barArrBlock = createNode({
+          mother: barArrBase,
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "center",
+            width: withOut(0),
+            height: String(barBaseHeight) + ea,
+          }
+        });
+  
+        createNode({
+          mother: barArrBlock,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: String(barFirstWidth) + ea,
+            height: withOut(0, ea),
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "start",
+          },
+          child: {
+            text: thisForm[i].title,
+            style: {
+              fontSize: String(desktop ? panTitleSize : 3.3) + ea,
+              fontWeight: String(panTitleWeight),
+              color: colorChip.black,
+              position: "relative",
+              top: String(barArrTitleTextTop) + ea,
+            }
+          }
+        })
+  
+        barArrBlockValuesBase = createNode({
+          mother: barArrBlock,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(barFirstWidth, ea),
+            height: withOut(0, ea),
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "start",
+          }
+        });
+        
+        thisValueNumber = thisForm[i].children.reduce((acc, curr, index) => {
+          if (acc === -1) {
+            if (curr.value === 0) {
+              return -1;
+            } else {
+              return index;
+            }
+          } else {
+            if (curr.value === 0) {
+              return acc;
+            } else {
+              return index;
+            }
+          }
+        }, -1);
+  
+        for (let j = 0; j < childrenMaxNumber; j++) {
+  
+          if (thisForm[i].children[j] !== undefined) {
+            createNode({
+              mother: barArrBlockValuesBase,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                height: String(barFactorHeight) + ea,
+                borderRadius: String(5) + "px",
+                width: "calc(calc(100% - " + String(barFactorBetween * (childrenMaxNumber - 1)) + ea + ") / " + String(childrenMaxNumber) + ")",
+                background: thisValueNumber >= j ? colorChip.yellow : colorChip.gray1,
+                marginRight: j !== childrenMaxNumber - 1 ? String(barFactorBetween) + ea : "",
+              }
+            });
+          }
+  
+        }
+  
+      }
+
+      createNode({
+        mother: barArrBase,
+        style: {
+          display: "inline-flex",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          width: String(buttonWidth) + ea,
+          height: String(buttonHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGray,
+          bottom: String(0),
+          right: desktop ? String(0) : withOut(50, buttonWidth / 2, ea),
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          cursor: "pointer",
+        },
+        child: {
+          text: contents.button,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(buttonWeight),
+            top: String(buttonTextTop) + ea,
+            color: colorChip.white,
+            cursor: "pointer",
+          }
+        }
+      });
+
+    }
+
+    reloadBarArr(barArrBase, thisForm);
   
   } catch (e) {
     console.log(e);
