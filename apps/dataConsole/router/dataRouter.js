@@ -2272,8 +2272,8 @@ DataRouter.prototype.rou_post_updateHistory = function () {
           date: new Date(),
           mode: query,
           who: {
-            name: typeof cookies.homeliaisonConsoleLoginedName === "string" ? cookies.homeliaisonConsoleLoginedName : "unknown",
-            email: typeof cookies.homeliaisonConsoleLoginedEmail === "string" ? cookies.homeliaisonConsoleLoginedEmail : "unknown"
+            name: (cookies !== null && typeof cookies.homeliaisonConsoleLoginedName === "string") ? cookies.homeliaisonConsoleLoginedName : "unknown",
+            email: (cookies !== null && typeof cookies.homeliaisonConsoleLoginedEmail === "string") ? cookies.homeliaisonConsoleLoginedEmail : "unknown"
           }
         };
         if (Array.isArray(historyObj.curation.analytics.send)) {
