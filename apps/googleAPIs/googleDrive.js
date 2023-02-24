@@ -5,6 +5,17 @@ const GoogleDrive = function () {
   this.pythonApp = this.dir + "/python/app.py";
 }
 
+GoogleDrive.prototype.get_file_inPython = async function (file_id, target_folder) {
+  const instance = this;
+  const { pythonExecute } = this.mother;
+  try {
+    const res = await pythonExecute(instance.pythonApp, [ "drive", "downloadFile" ], { targetId: file_id, targetFolder: target_folder });
+    return res;
+  } catch (e) {
+    console.log("error : " + e.message);
+  }
+}
+
 GoogleDrive.prototype.get_folder_inPython = async function (folder_id, folder_name = null, is_photo = false) {
   const instance = this;
   const { fileSystem, shellExec, shellLink, sleep, pythonExecute } = this.mother;
