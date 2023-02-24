@@ -5153,7 +5153,7 @@ DataPatch.prototype.projectMap = function () {
       let finalValue;
       let items;
 
-      items = [ '대기', '진행중', '홀딩' ];
+      items = [ '대기', '진행중', '홀딩', '완료' ];
       dropCase = [ '드랍' ];
       completeCase = [ '완료' ];
 
