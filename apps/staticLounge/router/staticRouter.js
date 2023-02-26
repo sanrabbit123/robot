@@ -1170,9 +1170,9 @@ StaticRouter.prototype.rou_post_getUtilization = function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, dateToString, errorLog } = this.mother;
   const fileTargetFolder = process.env.HOME + "/nmontong";
-  const delta = 30;
+  const delta = 10;
   const fileKeyWords = "homeliaison_";
-  const utilizationByDate = async function (standardDate, delta = 30) {
+  const utilizationByDate = async function (standardDate, delta = 10) {
     try {
       const fileToMatrix = async function (fileName) {
         try {

@@ -161,6 +161,7 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
     const region = "ap-northeast-2";
     const client = new EC2Client({ region });
     const watch = new CloudWatchClient({ region });
+    const delta = 10;
     let instances, data;
     let ago;
     let now;
@@ -169,7 +170,7 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
 
     ago = new Date();
     now = new Date(JSON.stringify(ago).slice(1, -1));
-    ago.setMinutes(ago.getMinutes() - 30);
+    ago.setMinutes(ago.getMinutes() - delta);
 
     str = orderSystem("encode", Number(String(now.getFullYear()).slice(0, 2)));
     str += orderSystem("encode", Number(String(now.getFullYear()).slice(2) + zeroAddition(now.getMonth() + 1) + zeroAddition(now.getDate())));
@@ -242,7 +243,7 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
                   },
                 ]
               },
-              Period: 30 * 60,
+              Period: delta * 60,
               Stat: "Average",
             },
           }
@@ -267,7 +268,7 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
                   },
                 ]
               },
-              Period: 30 * 60,
+              Period: delta * 60,
               Stat: "Maximum",
             },
           }
@@ -293,7 +294,7 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
                   },
                 ]
               },
-              Period: 30 * 60,
+              Period: delta * 60,
               Stat: "Average",
             },
           }
@@ -318,7 +319,7 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
                   },
                 ]
               },
-              Period: 30 * 60,
+              Period: delta * 60,
               Stat: "Average",
             },
           }
