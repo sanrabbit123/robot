@@ -187,16 +187,10 @@ CronGhost.prototype.cronServer = async function () {
   const CronSource = require(`${this.dir}/source/cronSource.js`);
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-  const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
   try {
-    const human = new HumanPacket();
     const https = require("https");
     const express = require("express");
     const app = express();
-    const id = "help";
-    const pwd = "hlofwis83!";
-    const targetEmail = "hometaxadmin@hometax.go.kr";
-    const standardFile = process.cwd() + "/temp/mailStandard.json";
     let pems;
     let pemsLink;
     let certDir;
@@ -318,44 +312,6 @@ CronGhost.prototype.cronServer = async function () {
       setInterval(intervalFunc1, 1 * 30 * 60 * 1000);
       setInterval(intervalFunc2, 1 * 10 * 60 * 1000);
     }, startTime);
-
-    setInterval(async () => {
-      try {
-        const client = await human.homeliaisonLogin(id, pwd);
-        let standardString;
-        let pastString;
-        let count;
-        let newMail;
-        let length;
-
-        const { data } = await client.list();
-        const arr = data.split("\r\n").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
-        standardString = JSON.stringify(arr);
-        try {
-          pastString = await fileSystem(`readString`, [ standardFile ]);
-        } catch (e) {
-          await fileSystem(`write`, [ standardFile, "[]" ]);
-          pastString = await fileSystem(`readString`, [ standardFile ]);
-        }
-        if (standardString !== pastString) {
-          ({ count } = await client.list());
-          length = count - JSON.parse(pastString).length;
-          for (let i = 0; i < length; i++) {
-            [ newMail ] = await human.getMails(id, pwd, [ count - i ]);
-            await messageSend({ text: newMail.from + " 으로부터 새로운 메일이 도착했습니다! : " + Buffer.from(newMail.subject, "base64").toString("utf8"), channel: "#702_mail" });
-            if ((new RegExp(targetEmail, "gi")).test(newMail.from)) {
-              await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/taxBill", { count: count - i }, { headers: { "Content-Type": "application/json" } });
-            }
-          }
-        }
-        await fileSystem(`write`, [ standardFile, standardString ]);
-
-        await client.quit();
-      } catch (e) {
-        console.log(e);
-      }
-    }, 1000 * 10);
-
 
     pems = {};
     pemsLink = process.cwd() + "/pems/" + address.croninfo.host;

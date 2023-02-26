@@ -270,7 +270,9 @@ Alien.prototype.wssLaunching = async function () {
 
 Alien.prototype.smsLaunching = async function () {
   const instance = this;
-  const { fileSystem, dateToString, messageLog, errorLog, equalJson, requestSystem } = this.mother;
+  const { fileSystem, dateToString, messageLog, messageSend, errorLog, equalJson, requestSystem } = this.mother;
+  const address = this.address;
+  const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
   const sender = [ "15662566", "01027473403", "0220392252" ];
   const myname = "배창규";
   const token = "o.u4wyBN6vM9IxqjHq8SLoFE0b1D82kbGr";
@@ -285,6 +287,11 @@ Alien.prototype.smsLaunching = async function () {
     const WebSocket = require("ws");
     const port = 35000;
     const telegramStackName = "telegramStackName";
+    const human = new HumanPacket();
+    const id = "help";
+    const pwd = "hlofwis83!";
+    const targetEmail = "hometaxadmin@hometax.go.kr";
+    const standardFile = process.cwd() + "/temp/mailStandard.json";
     let server;
     let pems, pemsLink;
     let certDir, keyDir, caDir;
@@ -408,6 +415,44 @@ Alien.prototype.smsLaunching = async function () {
       });
       res.send(JSON.stringify({ message: "done" }));
     });
+
+    // read mail
+    setInterval(async () => {
+      try {
+        const client = await human.homeliaisonLogin(id, pwd);
+        let standardString;
+        let pastString;
+        let count;
+        let newMail;
+        let length;
+
+        const { data } = await client.list();
+        const arr = data.split("\r\n").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
+        standardString = JSON.stringify(arr);
+        try {
+          pastString = await fileSystem(`readString`, [ standardFile ]);
+        } catch (e) {
+          await fileSystem(`write`, [ standardFile, "[]" ]);
+          pastString = await fileSystem(`readString`, [ standardFile ]);
+        }
+        if (standardString !== pastString) {
+          ({ count } = await client.list());
+          length = count - JSON.parse(pastString).length;
+          for (let i = 0; i < length; i++) {
+            [ newMail ] = await human.getMails(id, pwd, [ count - i ]);
+            await messageSend({ text: newMail.from + " 으로부터 새로운 메일이 도착했습니다! : " + Buffer.from(newMail.subject, "base64").toString("utf8"), channel: "#702_mail" });
+            if ((new RegExp(targetEmail, "gi")).test(newMail.from)) {
+              await requestSystem("https://" + address.pythoninfo.host + ":" + String(3000) + "/taxBill", { count: count - i }, { headers: { "Content-Type": "application/json" } });
+            }
+          }
+        }
+        await fileSystem(`write`, [ standardFile, standardString ]);
+
+        await client.quit();
+      } catch (e) {
+        console.log(e);
+      }
+    }, 1000 * 10);
 
     pems = {};
     pemsLink = process.cwd() + "/pems/" + this.address.officeinfo.ghost.host;
