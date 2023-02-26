@@ -334,7 +334,7 @@ CronGhost.prototype.cronServer = async function () {
         try {
           pastString = await fileSystem(`readString`, [ standardFile ]);
         } catch (e) {
-          await fileSystem(`write`, [ standardFile, "" ]);
+          await fileSystem(`write`, [ standardFile, "[]" ]);
           pastString = await fileSystem(`readString`, [ standardFile ]);
         }
         if (standardString !== pastString) {
