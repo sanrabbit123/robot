@@ -13965,8 +13965,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     };
 
     colorArr = [
-      colorChip.green,
-      colorChip.yellow,
+      colorChip.gradientGreen,
     ];
   
     reloadMainButtons = () => {};
