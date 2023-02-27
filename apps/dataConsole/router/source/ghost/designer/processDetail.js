@@ -13848,6 +13848,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     let barArrBaseMarginTop;
     let barArrTitleTextTop;
     let reloadMainButtons;
+    let valueIndex;
 
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -14179,11 +14180,12 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
             style: {
               fontSize: String(panTitleSize) + ea,
               fontWeight: String(panTitleWeight),
-              color: colorChip.black,
+              color: thisForm[i].children.every((obj) => { return obj.deactive === true }) ? colorChip.deactive : colorChip.black,
             }
           }
         });
-    
+  
+        valueIndex = thisForm[i].children.findIndex((obj) => { return obj.value !== 0 });
         for (let j = 0; j < thisForm[i].children.length; j++) {
           createNode({
             mother: thisPan,
@@ -14200,6 +14202,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
             },
             event: {
               click: async function (e) {
+                const self = this;
                 const toggle = this.getAttribute("toggle");
                 const x = Number(this.getAttribute("x"));
                 const y = Number(this.getAttribute("y"));
@@ -14213,29 +14216,39 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                   let xArr, yArr;
                   let tempObj;
                   let targetDoms;
+                  let thisIndex;
   
+                  siblings = [ ...document.querySelectorAll('.' + siblingKeywords + String(x)) ];
+                  thisIndex = siblings.findIndex((dom) => { return dom === self });
+
                   if (toggle === "off") {
                     if (!deactive) {
-                      siblings = document.querySelectorAll('.' + siblingKeywords + String(x));
-                      for (let dom of siblings) {
-                        if (dom === this) {
-                          this.style.background = colorArr[x % colorArr.length];
-                          this.children[0].children[0].children[0].setAttribute("fill", colorChip.white);
-                          this.children[1].children[0].style.color = colorChip.black;
-                          this.setAttribute("toggle", "on");
+                      for (let i = 0; i < siblings.length; i++) {
+                        if (i < thisIndex) {
+                          siblings[i].style.background = colorChip.whiteGreen;
+                          siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.green);
+                          siblings[i].children[1].children[0].style.color = colorChip.softGreen;
+                          siblings[i].setAttribute("toggle", "off");
+                        } else if (i === thisIndex) {
+                          siblings[i].style.background = colorArr[x % colorArr.length];
+                          siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                          siblings[i].children[1].children[0].style.color = colorChip.black;
+                          siblings[i].setAttribute("toggle", "on");
                         } else {
-                          dom.style.background = colorChip.gray1;
-                          dom.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                          dom.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.deactive;
-                          dom.setAttribute("toggle", "off");
+                          siblings[i].style.background = colorChip.gray1;
+                          siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                          siblings[i].children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.deactive;
+                          siblings[i].setAttribute("toggle", "off");
                         }
                       }
                     }
                   } else {
-                    this.style.background = colorChip.gray1;
-                    this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                    this.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.deactive;
-                    this.setAttribute("toggle", "off");
+                    for (let i = 0; i < siblings.length; i++) {
+                      siblings[i].style.background = colorChip.gray1;
+                      siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                      siblings[i].children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.deactive;
+                      siblings[i].setAttribute("toggle", "off");
+                    }
                   }
   
                   totalDom = [ ...document.querySelectorAll('.' + valueBlockClassName) ];
@@ -14258,7 +14271,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                     for (let w = 0; w < targetDoms.length; w++) {
                       tempObj.children.push({
                         title: targetDoms[w].getAttribute("title"),
-                        deactive: targetDoms[w].getAttribute("true") === "true",
+                        deactive: targetDoms[w].getAttribute("deactive") === "true",
                         value: targetDoms[w].getAttribute("toggle") === "on" ? 1 : 0,
                       });
                     }
@@ -14278,24 +14291,6 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                   console.log(e);
                 }
               },
-              mouseenter: function (e) {
-                const deactive = (this.getAttribute("deactive") === "true");
-                if (!deactive) {
-                  if (this.getAttribute("toggle") === "off") {
-                    this.style.background = colorChip.gray3;
-                    this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray5);
-                    this.children[1].children[0].style.color = colorChip.black;
-                  }
-                }
-              },
-              mouseleave: function (e) {
-                const deactive = (this.getAttribute("deactive") === "true");
-                if (this.getAttribute("toggle") === "off") {
-                  this.style.background = colorChip.gray1;
-                  this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                  this.children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.deactive;
-                }
-              },
             },
             style: {
               display: "flex",
@@ -14303,7 +14298,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
               alignItems: "center",
               width: withOut(0, ea),
               height: String(panHeight) + ea,
-              background: thisForm[i].children[j].value === 0 ? colorChip.gray1 : colorArr[i % colorArr.length],
+              background: j > valueIndex ? colorChip.gray1 : (j === valueIndex ? colorChip.gradientGreen : colorChip.whiteGreen),
               borderRadius: String(5) + "px",
               marginBottom: j === thisForm[i].children.length - 1 ? "" : String(panBlockBetween) + ea,
               flexDirection: "row",
@@ -14326,7 +14321,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                 },
                 child: {
                   mode: "svg",
-                  source: svgMaker.checkBox(thisForm[i].children[j].value === 0 ? colorChip.gray4 : colorChip.white),
+                  source: svgMaker.checkBox(j > valueIndex ? colorChip.gray4 : (j === valueIndex ? colorChip.white : colorChip.green)),
                   style: {
                     display: "inline-block",
                     position: "relative",
@@ -14354,7 +14349,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                     position: "relative",
                     fontSize: String(blockTextSize) + ea,
                     fontWeight: String(blockTextWeight),
-                    color: thisForm[i].children[j].value === 0 ? (thisForm[i].children[j].deactive ? colorChip.deactive : colorChip.deactive) : colorChip.black,
+                    color: thisForm[i].children[j].deactive ? colorChip.deactive : (j > valueIndex ? colorChip.deactive : (j === valueIndex ? colorChip.black : colorChip.softGreen)),
                     top: String(textTextTop) + ea,
                     transition: "all 0s ease",
                   }
