@@ -5586,7 +5586,7 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
             left: desktop ? String(0) : withOut(50, buttonWidth / 2, ea),
             boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
             cursor: "pointer",
-            marginTop: String(5.6) + ea,
+            marginTop: String(5.2) + ea,
           },
           child: {
             text: "상세 보기",
