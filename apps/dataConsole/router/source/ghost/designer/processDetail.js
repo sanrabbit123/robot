@@ -13916,7 +13916,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     contentsTongPaddingBottom = <%% 15, 15, 15, 15, 5 %%>;
     panBetween = <%% 28, 28, 24, 20, 2 %%>;
   
-    panHeight = <%% 50, 48, 45, 42, 12 %%>;
+    panHeight = <%% 50, 48, 45, 42, 11 %%>;
     panInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
   
     panCheckBoxWidth = <%% 32, 24, 20, 20, 8 %%>;
@@ -13953,7 +13953,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
 
     barArrTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
-    percentageSize = <%% 20, 20, 17, 14, 7 %%>;
+    percentageSize = <%% 20, 20, 17, 14, 8 %%>;
     percentageTextTop = <%% -1, -1, -1, -1, 0 %%>;
 
     thisForm = await ajaxJson({ mode: "get", proid, desid }, SECONDHOST + "/projectDesignerStatus", { equal: true });
@@ -14181,8 +14181,6 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
           justifyContent: "start",
           alignItems: "start",
           paddingBottom: String(11) + ea,
-          borderBottom: "1px dashed " + colorChip.gray3,
-          marginBottom: String(2) + ea,
         }
       });
 
@@ -14196,6 +14194,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
           justifyContent: "start",
           alignItems: "start",
           paddingBottom: desktop ? "" : String(18) + ea,
+          borderTop: "1px dashed " + colorChip.gray3,
+          paddingTop: String(2) + ea,
         },
       });
 
@@ -14543,10 +14543,6 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
             width: "calc(calc(100% - " + String(barFactorBetween * (childrenMaxNumber - 1)) + ea + ") / " + String(childrenMaxNumber) + ")",
             background: j < finalValueNumber ? "transparent" : colorChip.gray2,
             marginRight: j !== childrenMaxNumber - 1 ? String(barFactorBetween) + ea : "",
-            borderBottomLeftRadius: j === 0 ? String(5) + "px" : "",
-            borderTopLeftRadius: j === 0 ? String(5) + "px" : "",
-            borderBottomRightRadius: j === childrenMaxNumber - 1 ? String(5) + "px" : "",
-            borderTopRightRadius: j === childrenMaxNumber - 1 ? String(5) + "px" : "",
           }
         });
 
