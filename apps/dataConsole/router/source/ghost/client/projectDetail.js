@@ -5049,7 +5049,7 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
 
     barArrTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
-    percentageSize = <%% 20, 20, 17, 14, 8 %%>;
+    percentageSize = <%% 20, 20, 17, 14, 7.5 %%>;
     percentageTextTop = <%% -1, -1, -1, -1, 0 %%>;
 
     formPanBasePaddingBottom = <%% 16, 14, 12, 8, 2 %%>;
