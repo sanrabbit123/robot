@@ -5705,7 +5705,7 @@ ProjectDetailJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           await instance.insertFormStatusBox();
-          instance.insertNumbersBox();
+
           if (getObj.mode === "schedule") {
             await instance.insertScheduleBox();
             instance.insertUploadBox();
