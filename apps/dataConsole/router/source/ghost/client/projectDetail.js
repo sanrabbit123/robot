@@ -5012,7 +5012,7 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
     contentsTongPaddingBottom = <%% 15, 15, 15, 15, 5 %%>;
     panBetween = <%% 28, 28, 24, 20, 2 %%>;
   
-    panHeight = <%% 50, 48, 45, 42, 11 %%>;
+    panHeight = <%% 48, 48, 45, 42, 11 %%>;
     panInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
   
     panCheckBoxWidth = <%% 32, 24, 20, 20, 8 %%>;
