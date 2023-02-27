@@ -81,6 +81,7 @@ DevContext.prototype.launching = async function () {
     const chrome = new GoogleChrome();
     const findCode = this.findCode.bind(this);
     const human = new HumanPacket();
+    const decorator = new TextDecorator();
     const print = async (cliid) => {
       try {
         await instance.MONGOCONSOLEC.connect();
