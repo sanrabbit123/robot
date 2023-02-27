@@ -14681,7 +14681,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             instance.insertScheduleAboutBox();
             await instance.insertScheduleBox();
             await instance.insertFormStatusBox();
-            instance.insertNumbersBox();
+            // instance.insertNumbersBox();
             instance.insertUploadBox();
             instance.insertControlBox();
             if (mobile) {
@@ -14717,7 +14717,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             } else {
               await instance.insertFormStatusBox();
             }
-            instance.insertNumbersBox();
+            // instance.insertNumbersBox();
             instance.insertUploadBox();
             await instance.insertScheduleBox();
             instance.insertControlBox();
