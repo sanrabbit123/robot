@@ -47,6 +47,7 @@ const HtmlMaker = require(APP_PATH + "/htmlMaker/htmlMaker.js");
 const ReadDocuments = require(APP_PATH + "/readDocuments/readDocuments.js");
 const AwsAPIs = require(APP_PATH + "/awsAPIs/awsAPIs.js");
 const CronGhost = require(APP_PATH + "/cronGhost/cronGhost.js");
+const TextDecorator = require(APP_PATH + "/textDecorator/textDecorator.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -152,13 +153,7 @@ DevContext.prototype.launching = async function () {
     // const openAiToken = "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";
     
 
-    
 
-
-
-
-
-    
     
     
     
