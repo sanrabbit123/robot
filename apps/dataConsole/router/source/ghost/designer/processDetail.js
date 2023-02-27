@@ -13849,6 +13849,9 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     let barArrTitleTextTop;
     let reloadMainButtons;
     let valueIndex;
+    let finalValueNumber;
+    let percentageSize;
+    let percentageTextTop;
 
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -13910,7 +13913,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
   
     wordingBoxWidth = <%% 175, 185, 175, 115, 175 %%>;
   
-    contentsTongPaddingBottom = <%% 15, 15, 15, 15, 7 %%>;
+    contentsTongPaddingBottom = <%% 15, 15, 15, 15, 5 %%>;
     panBetween = <%% 28, 28, 24, 20, 2 %%>;
   
     panHeight = <%% 50, 48, 45, 42, 12 %%>;
@@ -13923,16 +13926,16 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     panBlockBetween = <%% 8, 8, 6, 5, 1 %%>; 
     panBlockBigBetween = <%% 8, 8, 6, 5, 1 %%>; 
   
-    buttonWidth = <%% 100, 90, 84, 80, 24 %%>;
-    buttonHeight = <%% 36, 36, 30, 28, 8.2 %%>;
+    buttonWidth = <%% 100, 80, 70, 60, 24 %%>;
+    buttonHeight = <%% 36, 28, 26, 24, 8.2 %%>;
   
-    buttonSize = <%% 15, 14, 13, 12, 3.5 %%>;
+    buttonSize = <%% 15, 13, 12, 11, 3.5 %%>;
     buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
   
     panPaddingTop = <%% 22, 16, 14, 14, 4 %%>;
   
-    panTitleSize = <%% 16, 15, 14, 13, 3.6 %%>;
+    panTitleSize = <%% 16, 15, 14, 13, 3.8 %%>;
     panTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   
     formPanBaseMarginBottom = <%% 12, 8, 6, 6, 4 %%>;
@@ -13941,14 +13944,17 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
   
     barBaseHeight = <%% 40, 36, 32, 28, 6.8 %%>;
-    barFirstWidth = <%% 100, 90, 80, 64, 14 %%>;
+    barFirstWidth = <%% 70, 60, 50, 42, 14 %%>;
     barFactorHeight = <%% 20, 20, 18, 16, 5 %%>;
-    barFactorBetween = <%% 2, 2, 2, 2, 0.4 %%>;
+    barFactorBetween = <%% 0, 0, 0, 0, 0 %%>;
 
     barArrBasePaddingTop = <%% 38, 36, 32, 26, 8 %%>;
     barArrBaseMarginTop = <%% 48, 46, 40, 32, 9.5 %%>;
 
     barArrTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+    percentageSize = <%% 20, 20, 17, 14, 7 %%>;
+    percentageTextTop = <%% -1, -1, -1, -1, 0 %%>;
 
     thisForm = await ajaxJson({ mode: "get", proid, desid }, SECONDHOST + "/projectDesignerStatus", { equal: true });
   
@@ -14084,7 +14090,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
         flexDirection: "row",
         width: withOut(0),
         paddingBottom: String(contentsTongPaddingBottom) + ea,
-        borderBottom: "1px dashed " + colorChip.gray3,
+        borderBottom: desktop ? "1px dashed " + colorChip.gray3 : "",
         justifyContent: desktop ? "" : "center",
         alignItems: desktop ? "" : "center",
       },
@@ -14134,18 +14140,67 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
       }, 60 * 1000);
     }
   
-    formPanBase = createNode({
-      mother: contentsTong,
-      style: {
-        display: (media[0] || media[4] ? "flex" : "block"),
-        position: "relative",
-        flexDirection: desktop ? "row" : "column",
-        width: withOut(0),
-        justifyContent: "start",
-        alignItems: "start",
-      },
-    });
+    if (desktop) {
+
+      formPanBase = createNode({
+        mother: contentsTong,
+        style: {
+          display: (media[0] || media[4] ? "flex" : "block"),
+          position: "relative",
+          flexDirection: desktop ? "row" : "column",
+          width: withOut(0),
+          justifyContent: "start",
+          alignItems: "start",
+        },
+      });
   
+      barArrBase = createNode({
+        mother: contentsTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "column",
+          width: withOut(0),
+          justifyContent: "start",
+          alignItems: "start",
+          paddingTop: String(barArrBasePaddingTop) + ea,
+          borderTop: "1px dashed " + colorChip.gray3,
+          marginTop: String(barArrBaseMarginTop) + ea,
+        }
+      });
+
+    } else {
+
+      barArrBase = createNode({
+        mother: contentsTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "column",
+          width: withOut(0),
+          justifyContent: "start",
+          alignItems: "start",
+          paddingBottom: String(11) + ea,
+          borderBottom: "1px dashed " + colorChip.gray3,
+          marginBottom: String(2) + ea,
+        }
+      });
+
+      formPanBase = createNode({
+        mother: contentsTong,
+        style: {
+          display: (media[0] || media[4] ? "flex" : "block"),
+          position: "relative",
+          flexDirection: desktop ? "row" : "column",
+          width: withOut(0),
+          justifyContent: "start",
+          alignItems: "start",
+          paddingBottom: desktop ? "" : String(18) + ea,
+        },
+      });
+
+    }
+
     reloadMainButtons = (formPanBase, thisForm) => {
       cleanChildren(formPanBase);
       for (let i = 0; i < thisForm.length; i++) {
@@ -14359,122 +14414,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
           });
         }
       }
-    }
-
-    barArrBase = createNode({
-      mother: contentsTong,
-      style: {
-        display: "flex",
-        position: "relative",
-        flexDirection: "column",
-        width: withOut(0),
-        justifyContent: "start",
-        alignItems: "start",
-        paddingTop: String(barArrBasePaddingTop) + ea,
-        borderTop: "1px dashed " + colorChip.gray3,
-        marginTop: String(barArrBaseMarginTop) + ea,
-        paddingBottom: desktop ? "" : String(17) + ea,
-      }
-    });
-
-    reloadBarArr = (barArrBase, thisForm) => {
-
-      cleanChildren(barArrBase);
-
-      childrenMaxNumber = thisForm.reduce((acc, curr) => {
-        return acc > curr.children.length ? acc : curr.children.length
-      }, 0)
-  
-      for (let i = 0; i < thisForm.length; i++) {
-  
-        barArrBlock = createNode({
-          mother: barArrBase,
-          style: {
-            display: "flex",
-            position: "relative",
-            flexDirection: "row",
-            justifyContent: "start",
-            alignItems: "center",
-            width: withOut(0),
-            height: String(barBaseHeight) + ea,
-          }
-        });
-  
-        createNode({
-          mother: barArrBlock,
-          style: {
-            display: "flex",
-            position: "relative",
-            width: String(barFirstWidth) + ea,
-            height: withOut(0, ea),
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "start",
-          },
-          child: {
-            text: thisForm[i].title,
-            style: {
-              fontSize: String(desktop ? panTitleSize : 3.3) + ea,
-              fontWeight: String(panTitleWeight),
-              color: colorChip.black,
-              position: "relative",
-              top: String(barArrTitleTextTop) + ea,
-            }
-          }
-        })
-  
-        barArrBlockValuesBase = createNode({
-          mother: barArrBlock,
-          style: {
-            display: "flex",
-            position: "relative",
-            width: withOut(barFirstWidth, ea),
-            height: withOut(0, ea),
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "start",
-          }
-        });
-        
-        thisValueNumber = thisForm[i].children.reduce((acc, curr, index) => {
-          if (acc === -1) {
-            if (curr.value === 0) {
-              return -1;
-            } else {
-              return index;
-            }
-          } else {
-            if (curr.value === 0) {
-              return acc;
-            } else {
-              return index;
-            }
-          }
-        }, -1);
-  
-        for (let j = 0; j < childrenMaxNumber; j++) {
-  
-          if (thisForm[i].children[j] !== undefined) {
-            createNode({
-              mother: barArrBlockValuesBase,
-              style: {
-                display: "inline-block",
-                position: "relative",
-                height: String(barFactorHeight) + ea,
-                borderRadius: String(desktop ? 5 : 2) + "px",
-                width: "calc(calc(100% - " + String(barFactorBetween * (childrenMaxNumber - 1)) + ea + ") / " + String(childrenMaxNumber) + ")",
-                background: thisValueNumber >= j ? colorChip.yellow : colorChip.gray1,
-                marginRight: j !== childrenMaxNumber - 1 ? String(barFactorBetween) + ea : "",
-              }
-            });
-          }
-  
-        }
-  
-      }
-
       createNode({
-        mother: barArrBase,
+        mother: formPanBase,
         style: {
           display: "inline-flex",
           justifyContent: "center",
@@ -14502,6 +14443,114 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
           }
         }
       });
+    }
+
+    reloadBarArr = (barArrBase, thisForm) => {
+
+      cleanChildren(barArrBase);
+
+      childrenMaxNumber = thisForm.reduce((acc, curr) => {
+        return acc + curr.children.filter((obj) => { return obj.deactive !== true }).length;
+      }, 0);
+  
+      finalValueNumber = 0;
+      for (let i = 0; i < thisForm.length; i++) {
+        thisValueNumber = thisForm[i].children.findIndex((obj) => { return obj.value !== 0 });
+        if (thisValueNumber === -1) {
+          finalValueNumber += 0;
+        } else {
+          finalValueNumber += thisValueNumber + 1;
+        }
+      }
+
+      barArrBlock = createNode({
+        mother: barArrBase,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: desktop ? "row" : "column",
+          justifyContent: "start",
+          alignItems: "center",
+          width: withOut(0),
+          height: desktop ? String(barBaseHeight) + ea : "",
+        }
+      });
+
+      createNode({
+        mother: barArrBlock,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: desktop ? String(barFirstWidth) + ea : "",
+          height: withOut(0, ea),
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "start",
+          marginBottom: desktop ? "" : String(2) + ea,
+        },
+        child: {
+          text: String(Math.round((finalValueNumber / childrenMaxNumber) * 100)) + "<b%%%b>",
+          style: {
+            fontSize: String(percentageSize) + ea,
+            fontWeight: String(500),
+            fontFamily: "graphik",
+            color: colorChip.black,
+            position: "relative",
+            top: String(percentageTextTop) + ea,
+          },
+          bold: {
+            fontSize: String(percentageSize) + ea,
+            fontWeight: String(500),
+            fontFamily: "graphik",
+            color: colorChip.softGreen,
+          }
+        }
+      })
+
+      barArrBlockValuesBase = createNode({
+        mother: barArrBlock,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "center",
+          width: desktop ? withOut(barFirstWidth, ea) : withOut(0, ea),
+          height: String(barFactorHeight) + ea,
+          borderRadius: String(5) + "px",
+          overflow: "hidden",
+        },
+        child: {
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: withOut(0),
+            height: withOut(0),
+            background: colorChip.gradientGreen,
+          }
+        }
+      });
+
+      for (let j = 0; j < childrenMaxNumber; j++) {
+  
+        createNode({
+          mother: barArrBlockValuesBase,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            height: String(barFactorHeight) + ea,
+            width: "calc(calc(100% - " + String(barFactorBetween * (childrenMaxNumber - 1)) + ea + ") / " + String(childrenMaxNumber) + ")",
+            background: j < finalValueNumber ? "transparent" : colorChip.gray2,
+            marginRight: j !== childrenMaxNumber - 1 ? String(barFactorBetween) + ea : "",
+            borderBottomLeftRadius: j === 0 ? String(5) + "px" : "",
+            borderTopLeftRadius: j === 0 ? String(5) + "px" : "",
+            borderBottomRightRadius: j === childrenMaxNumber - 1 ? String(5) + "px" : "",
+            borderTopRightRadius: j === childrenMaxNumber - 1 ? String(5) + "px" : "",
+          }
+        });
+
+      }
 
     }
 
