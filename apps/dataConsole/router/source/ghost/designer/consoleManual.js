@@ -257,6 +257,8 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
   let imageVisualPaddingBottom;
   let detailImageHeight0, detailImageHeight1;
   let detailBlockHeight;
+  let mobileLineMargin;
+  let numberMargin;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -277,12 +279,12 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
   textFileWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   firstWidth = <%% 350, 300, 260, 174, 300 %%>;
-  firstMargin = <%% 36, 36, 28, 22, 10 %%>;
+  firstMargin = <%% 36, 36, 28, 22, 7.2 %%>;
 
-  numberSize = <%% 16, 16, 14, 12, 3.5 %%>;
+  numberSize = <%% 16, 16, 14, 12, 3.3 %%>;
   numberWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  titleMargin = <%% 8, 8, 4, 4, 1 %%>;
+  titleMargin = <%% 8, 8, 4, 4, 1.5 %%>;
 
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
@@ -298,6 +300,9 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
 
   detailBlockHeight = <%% 188, 205, 174, 151, 188 %%>;
 
+  mobileLineMargin = 14;
+  numberMargin = 0.3;
+
   contents = {
     title: [
       "디자이너 콘솔",
@@ -307,12 +312,15 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
       "디자이너 콘솔에 대해 설명드립니다.",
       "옆모습은 디자이너 콘솔에 들어가셨을 때",
       "가장 처음 보게 되는 화면입니다.",
-    ] : [
+    ] : (desktop ? [
       "콘솔에 대해 설명드립니다.",
       "디자이너 콘솔에 들어가셨을 때",
       "처음 보게 되는 화면입니다.",
-    ],
-    margin: <&& 110 | 140 | 148 | 124 | 11 &&>,
+    ] : [
+      "콘솔에 대해 설명드립니다. 디자이너 콘솔에",
+      "들어가셨을 때 처음 보게 되는 화면입니다.",
+    ]),
+    margin: <&& 110 | 140 | 148 | 124 | 3 &&>,
     images: {
       list: [
         <&& ConsoleManualJs.binaryPath + "/back_desktop_0.jpg" | ConsoleManualJs.binaryPath + "/back_small_0.jpg" | ConsoleManualJs.binaryPath + "/back_tablet_0.jpg" | ConsoleManualJs.binaryPath + "/back_tablet_0.jpg" | ConsoleManualJs.binaryPath + "/back_mobile_0.jpg" &&>,
@@ -416,7 +424,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
             "각 파일을 클릭하시면 수정, 삭제와",
             "같은 여러 액션을 하실 수 있으며",
             "고객 공유 또한 간편하게 하실 수",
-            "있으므로 적극 이용 부탁드립니다.",
+            "있으므로 이용 부탁드립니다.",
           ],
           margin: <&& 9 | 91 | 82 | 48 | 11 &&>,
         },
@@ -446,7 +454,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
             "프로젝트 일정표를 수정하시게",
             "되면 캘린더에도 자동 표시가 되며",
             "이는 고객님께 공유될 예정이므로",
-            "꼭 일정표를 작성해 주셔서 원활한",
+            "일정표를 작성해 주셔서 원활한",
             "공유가 될 수 있도록 부탁드립니다.",
           ],
           margin: <&& 225 | 325 | 272 | 213 | 11 &&>,
@@ -470,340 +478,654 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
     }
   }
 
-  createNode({
-    mother: baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      background: colorChip.white,
-      paddingTop: String(paddingTop) + ea,
-      paddingBottom: String(whiteBottomMargin) + ea,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-    },
-    child: {
-      style: {
-        display: "block",
-        position: "relative",
-        width: withOut(margin * 2, ea),
-        height: String(100) + '%',
-        marginLeft: String(margin) + ea,
-      },
-      child: {
-        style: {
-          display: "block",
-          position: "relative",
-          paddingTop: String(innerMargin) + ea,
-          paddingBottom: String(desktop ? innerMargin : 0) + ea,
-          paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
-          paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
-          width: withOut(innerMargin * 2, ea),
-          background: colorChip.white,
-          borderRadius: String(8) + "px",
-        },
-        child: {
-          style: {
-            display: desktop ? "flex" : "block",
-            width: withOut(0),
-            flexDirection: desktop ? "row" : "",
-            justifyContent: desktop ? "start" : "",
-            alignItems: desktop ? "start" : "",
-          },
-          children: [
-            {
-              style: {
-                display: desktop ? "inline-flex" : "flex",
-                position: "relative",
-                width: desktop ? String(firstWidth - firstMargin) + ea : withOut(0, ea),
-                justifyContent: desktop ? "" : "center",
-                alignItems: desktop ? "" : "center",
-                textAlign: desktop ? "" : "center",
-                marginTop: desktop ? "" : String(2.8) + ea,
-                marginBottom: desktop ? "" : String(3) + ea,
-                flexDirection: "column",
-                paddingRight: String(firstMargin) + ea,
-              },
-              children: [
-                {
-                  text: contents.title.join("\n"),
-                  style: {
-                    display: "block",
-                    position: "relative",
-                    fontSize: String(veryBigSize) + ea,
-                    fontWeight: String(veryBigWeight),
-                    color: colorChip.black,
-                    lineHeight: String(1.4),
-                    textAlign: "left",
-                    marginBottom: String(contents.margin) + ea,
-                    top: String(textTextTop) + ea,
-                  },
-                },
-                {
-                  text: contents.description.join("\n"),
-                  style: {
-                    display: "block",
-                    position: "relative",
-                    fontSize: String(textSize) + ea,
-                    fontWeight: String(textFileWeight),
-                    color: colorChip.black,
-                    lineHeight: String(descriptionLineHeight),
-                    textAlign: "right",
-                  },
-                },
-                {
-                  style: {
-                    display: "block",
-                    position: "relative",
-                    height: String(firstMargin) + ea,
-                    borderBottom: "1px dashed " + colorChip.gray4,
-                    width: "calc(100% + " + String(firstMargin) + ea + ")",
-                    marginBottom: String(firstMargin) + ea,
-                  }
-                },
-                ...variableArray(contents.descriptions.list.length).map((index) => {
-                  return [
-                    {
-                      text: zeroAddition(index + 1),
-                      style: {
-                        display: "block",
-                        position: "relative",
-                        fontSize: String(numberSize) + ea,
-                        fontWeight: String(numberWeight),
-                        color: colorChip.green,
-                        fontFamily: "graphik",
-                        marginBottom: String(contents.descriptions.list[index].margin) + ea,
-                      },
-                    },
-                    {
-                      text: contents.descriptions.list[index].title,
-                      style: {
-                        display: "block",
-                        position: "relative",
-                        fontSize: String(textSize) + ea,
-                        fontWeight: String(textWeight),
-                        color: colorChip.black,
-                        lineHeight: String(descriptionLineHeight),
-                        textAlign: "right",
-                        marginBottom: String(titleMargin) + ea,
-                      },
-                    },
-                    {
-                      text: contents.descriptions.list[index].description.join("\n"),
-                      style: {
-                        display: "block",
-                        position: "relative",
-                        fontSize: String(textSize) + ea,
-                        fontWeight: String(textFileWeight),
-                        color: colorChip.black,
-                        lineHeight: String(descriptionLineHeight),
-                        textAlign: "right",
-                      },
-                    },
-                    {
-                      style: {
-                        display: "block",
-                        position: "relative",
-                        height: String(firstMargin) + ea,
-                        borderBottom: "1px dashed " + colorChip.gray4,
-                        width: "calc(100% + " + String(firstMargin) + ea + ")",
-                        marginBottom: String(firstMargin) + ea,
-                      }
-                    },
-                  ]
-                }).flat(),
-              ]
-            },
-            {
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                width: withOut(firstWidth, ea),
-                paddingTop: String(imageVisualPaddingTop) + ea,
-                paddingBottom: String(imageVisualPaddingBottom) + ea,
-              },
-              child: {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  width: withOut(0, ea),
-                  borderRadius: String(5) + "px",
-                  boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                  height: String(listImageHeight) + ea,
-                  backgroundSize: "100% auto",
-                  backgroundPosition: "50% 0%",
-                  backgroundImage: "url('" + contents.images.list[0] + "')",
-                }
-              }
-            }
-          ]
-        }
-      }
-    }
-  });
 
-  createNode({
-    mother: baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      background: colorChip.white,
-      paddingTop: String(paddingTop) + ea,
-      paddingBottom: String(whiteBottomMargin) + ea,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-    },
-    child: {
+  if (desktop) {
+
+    createNode({
+      mother: baseTong,
       style: {
-        display: "block",
         position: "relative",
-        width: withOut(margin * 2, ea),
-        height: String(100) + '%',
-        marginLeft: String(margin) + ea,
+        borderRadius: String(desktop ? 8 : 1) + ea,
+        width: String(100) + '%',
+        background: colorChip.white,
+        paddingTop: String(paddingTop) + ea,
+        paddingBottom: String(whiteBottomMargin) + ea,
+        marginBottom: String(bottomMargin) + ea,
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       },
       child: {
         style: {
           display: "block",
           position: "relative",
-          paddingTop: String(innerMargin) + ea,
-          paddingBottom: String(desktop ? innerMargin : 0) + ea,
-          paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
-          paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
-          width: withOut(innerMargin * 2, ea),
-          background: colorChip.white,
-          borderRadius: String(8) + "px",
+          width: withOut(margin * 2, ea),
+          height: String(100) + '%',
+          marginLeft: String(margin) + ea,
         },
         child: {
           style: {
-            display: desktop ? "flex" : "block",
-            width: withOut(0),
-            flexDirection: desktop ? "row" : "",
-            justifyContent: desktop ? "start" : "",
-            alignItems: desktop ? "start" : "",
+            display: "block",
+            position: "relative",
+            paddingTop: String(innerMargin) + ea,
+            paddingBottom: String(desktop ? innerMargin : 0) + ea,
+            paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+            paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
+            width: withOut(innerMargin * 2, ea),
+            background: colorChip.white,
+            borderRadius: String(8) + "px",
           },
-          children: [
-            {
-              style: {
-                display: "inline-flex",
-                flexDirection: "column",
-                position: "relative",
-                width: withOut(firstWidth, ea),
-                paddingTop: String(imageVisualPaddingTop) + ea,
-                paddingBottom: String(imageVisualPaddingBottom) + ea,
-              },
-              child: {
+          child: {
+            style: {
+              display: desktop ? "flex" : "block",
+              width: withOut(0),
+              flexDirection: desktop ? "row" : "",
+              justifyContent: desktop ? "start" : "",
+              alignItems: desktop ? "start" : "",
+            },
+            children: [
+              {
                 style: {
-                  display: "block",
+                  display: desktop ? "inline-flex" : "flex",
                   position: "relative",
-                  width: withOut(0, ea),
-                  borderRadius: String(5) + "px",
-                  boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                  height: String(detailImageHeight0) + ea,
-                  backgroundSize: "100% auto",
-                  backgroundPosition: "50% 0%",
-                  backgroundImage: "url('" + contents.images.detail[0] + "')",
-                  marginBottom: String(firstMargin) + ea,
+                  width: desktop ? String(firstWidth - firstMargin) + ea : withOut(0, ea),
+                  justifyContent: desktop ? "" : "center",
+                  alignItems: desktop ? "" : "center",
+                  textAlign: desktop ? "" : "center",
+                  marginTop: desktop ? "" : String(2.8) + ea,
+                  marginBottom: desktop ? "" : String(3) + ea,
+                  flexDirection: "column",
+                  paddingRight: String(firstMargin) + ea,
                 },
-                next: {
+                children: [
+                  {
+                    text: contents.title.join("\n"),
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      fontSize: String(veryBigSize) + ea,
+                      fontWeight: String(veryBigWeight),
+                      color: colorChip.black,
+                      lineHeight: String(1.4),
+                      textAlign: "left",
+                      marginBottom: String(contents.margin) + ea,
+                      top: String(textTextTop) + ea,
+                    },
+                  },
+                  {
+                    text: contents.description.join("\n"),
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textFileWeight),
+                      color: colorChip.black,
+                      lineHeight: String(descriptionLineHeight),
+                      textAlign: "right",
+                    },
+                  },
+                  {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      height: String(firstMargin) + ea,
+                      borderBottom: "1px dashed " + colorChip.gray4,
+                      width: "calc(100% + " + String(firstMargin) + ea + ")",
+                      marginBottom: String(firstMargin) + ea,
+                    }
+                  },
+                  ...variableArray(contents.descriptions.list.length).map((index) => {
+                    return [
+                      {
+                        text: zeroAddition(index + 1),
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          fontSize: String(numberSize) + ea,
+                          fontWeight: String(numberWeight),
+                          color: colorChip.green,
+                          fontFamily: "graphik",
+                          marginBottom: String(contents.descriptions.list[index].margin) + ea,
+                        },
+                      },
+                      {
+                        text: contents.descriptions.list[index].title,
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(textWeight),
+                          color: colorChip.black,
+                          lineHeight: String(descriptionLineHeight),
+                          textAlign: "right",
+                          marginBottom: String(titleMargin) + ea,
+                        },
+                      },
+                      {
+                        text: contents.descriptions.list[index].description.join("\n"),
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(textFileWeight),
+                          color: colorChip.black,
+                          lineHeight: String(descriptionLineHeight),
+                          textAlign: "right",
+                        },
+                      },
+                      {
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          height: String(firstMargin) + ea,
+                          borderBottom: "1px dashed " + colorChip.gray4,
+                          width: "calc(100% + " + String(firstMargin) + ea + ")",
+                          marginBottom: String(firstMargin) + ea,
+                        }
+                      },
+                    ]
+                  }).flat(),
+                ]
+              },
+              {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: withOut(firstWidth, ea),
+                  paddingTop: String(imageVisualPaddingTop) + ea,
+                  paddingBottom: String(imageVisualPaddingBottom) + ea,
+                },
+                child: {
                   style: {
                     display: "block",
                     position: "relative",
                     width: withOut(0, ea),
                     borderRadius: String(5) + "px",
                     boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                    height: String(detailImageHeight1) + ea,
+                    height: String(listImageHeight) + ea,
                     backgroundSize: "100% auto",
-                    backgroundPosition: "50% 100%",
-                    backgroundImage: "url('" + contents.images.detail[1] + "')",
-                  },
+                    backgroundPosition: "50% 0%",
+                    backgroundImage: "url('" + contents.images.list[0] + "')",
+                  }
                 }
               }
+            ]
+          }
+        }
+      }
+    });
+  
+    createNode({
+      mother: baseTong,
+      style: {
+        position: "relative",
+        borderRadius: String(desktop ? 8 : 1) + ea,
+        width: String(100) + '%',
+        background: colorChip.white,
+        paddingTop: String(paddingTop) + ea,
+        paddingBottom: String(whiteBottomMargin) + ea,
+        marginBottom: String(bottomMargin) + ea,
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      },
+      child: {
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(margin * 2, ea),
+          height: String(100) + '%',
+          marginLeft: String(margin) + ea,
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "relative",
+            paddingTop: String(innerMargin) + ea,
+            paddingBottom: String(desktop ? innerMargin : 0) + ea,
+            paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+            paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
+            width: withOut(innerMargin * 2, ea),
+            background: colorChip.white,
+            borderRadius: String(8) + "px",
+          },
+          child: {
+            style: {
+              display: desktop ? "flex" : "block",
+              width: withOut(0),
+              flexDirection: desktop ? "row" : "",
+              justifyContent: desktop ? "start" : "",
+              alignItems: desktop ? "start" : "",
             },
-            {
-              style: {
-                display: desktop ? "inline-flex" : "flex",
-                position: "relative",
-                width: desktop ? String(firstWidth - firstMargin) + ea : withOut(0, ea),
-                justifyContent: desktop ? "" : "center",
-                alignItems: desktop ? "" : "center",
-                textAlign: desktop ? "" : "center",
-                marginTop: desktop ? "" : String(2.8) + ea,
-                marginBottom: desktop ? "" : String(3) + ea,
-                flexDirection: "column",
-                paddingLeft: String(firstMargin) + ea,
-              },
-              children: [
-                {
+            children: [
+              {
+                style: {
+                  display: "inline-flex",
+                  flexDirection: "column",
+                  position: "relative",
+                  width: withOut(firstWidth, ea),
+                  paddingTop: String(imageVisualPaddingTop) + ea,
+                  paddingBottom: String(imageVisualPaddingBottom) + ea,
+                },
+                child: {
                   style: {
                     display: "block",
                     position: "relative",
-                    height: String(detailBlockHeight) + ea,
-                    borderBottom: "1px dashed " + colorChip.gray4,
-                    width: "calc(100% + " + String(firstMargin) + ea + ")",
+                    width: withOut(0, ea),
+                    borderRadius: String(5) + "px",
+                    boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                    height: String(detailImageHeight0) + ea,
+                    backgroundSize: "100% auto",
+                    backgroundPosition: "50% 0%",
+                    backgroundImage: "url('" + contents.images.detail[0] + "')",
                     marginBottom: String(firstMargin) + ea,
-                    left: String(-1 * firstMargin) + ea,
+                  },
+                  next: {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      width: withOut(0, ea),
+                      borderRadius: String(5) + "px",
+                      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                      height: String(detailImageHeight1) + ea,
+                      backgroundSize: "100% auto",
+                      backgroundPosition: "50% 100%",
+                      backgroundImage: "url('" + contents.images.detail[1] + "')",
+                    },
                   }
+                }
+              },
+              {
+                style: {
+                  display: desktop ? "inline-flex" : "flex",
+                  position: "relative",
+                  width: desktop ? String(firstWidth - firstMargin) + ea : withOut(0, ea),
+                  justifyContent: desktop ? "" : "center",
+                  alignItems: desktop ? "" : "center",
+                  textAlign: desktop ? "" : "center",
+                  marginTop: desktop ? "" : String(2.8) + ea,
+                  marginBottom: desktop ? "" : String(3) + ea,
+                  flexDirection: "column",
+                  paddingLeft: String(firstMargin) + ea,
                 },
-                ...variableArray(contents.descriptions.detail.length).map((index) => {
-                  return [
-                    {
-                      text: zeroAddition(index + 1 + contents.descriptions.list.length),
-                      style: {
-                        display: "block",
-                        position: "relative",
-                        fontSize: String(numberSize) + ea,
-                        fontWeight: String(numberWeight),
-                        color: colorChip.green,
-                        fontFamily: "graphik",
-                        marginBottom: String(contents.descriptions.detail[index].margin) + ea,
+                children: [
+                  {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      height: String(detailBlockHeight) + ea,
+                      borderBottom: "1px dashed " + colorChip.gray4,
+                      width: "calc(100% + " + String(firstMargin) + ea + ")",
+                      marginBottom: String(firstMargin) + ea,
+                      left: String(-1 * firstMargin) + ea,
+                    }
+                  },
+                  ...variableArray(contents.descriptions.detail.length).map((index) => {
+                    return [
+                      {
+                        text: zeroAddition(index + 1 + contents.descriptions.list.length),
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          fontSize: String(numberSize) + ea,
+                          fontWeight: String(numberWeight),
+                          color: colorChip.green,
+                          fontFamily: "graphik",
+                          marginBottom: String(contents.descriptions.detail[index].margin) + ea,
+                        },
                       },
-                    },
-                    {
-                      text: contents.descriptions.detail[index].title,
-                      style: {
-                        display: "block",
-                        position: "relative",
-                        fontSize: String(textSize) + ea,
-                        fontWeight: String(textWeight),
-                        color: colorChip.black,
-                        lineHeight: String(descriptionLineHeight),
-                        textAlign: "right",
-                        marginBottom: String(titleMargin) + ea,
+                      {
+                        text: contents.descriptions.detail[index].title,
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(textWeight),
+                          color: colorChip.black,
+                          lineHeight: String(descriptionLineHeight),
+                          textAlign: "right",
+                          marginBottom: String(titleMargin) + ea,
+                        },
                       },
-                    },
-                    {
-                      text: contents.descriptions.detail[index].description.join("\n"),
-                      style: {
-                        display: "block",
-                        position: "relative",
-                        fontSize: String(textSize) + ea,
-                        fontWeight: String(textFileWeight),
-                        color: colorChip.black,
-                        lineHeight: String(descriptionLineHeight),
-                        textAlign: "right",
+                      {
+                        text: contents.descriptions.detail[index].description.join("\n"),
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(textFileWeight),
+                          color: colorChip.black,
+                          lineHeight: String(descriptionLineHeight),
+                          textAlign: "right",
+                        },
                       },
-                    },
-                    {
-                      style: {
-                        display: "block",
-                        position: "relative",
-                        height: String(firstMargin) + ea,
-                        borderBottom: "1px dashed " + colorChip.gray4,
-                        width: "calc(100% + " + String(firstMargin) + ea + ")",
-                        left: String(-1 * firstMargin) + ea,
-                        marginBottom: String(firstMargin) + ea,
-                      }
-                    },
-                  ]
-                }).flat(),
-              ]
-            },
-          ]
+                      {
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          height: String(firstMargin) + ea,
+                          borderBottom: "1px dashed " + colorChip.gray4,
+                          width: "calc(100% + " + String(firstMargin) + ea + ")",
+                          left: String(-1 * firstMargin) + ea,
+                          marginBottom: String(firstMargin) + ea,
+                        }
+                      },
+                    ]
+                  }).flat(),
+                ]
+              },
+            ]
+          }
         }
       }
-    }
-  });
+    });
+
+  } else {
+
+    createNode({
+      mother: baseTong,
+      style: {
+        position: "relative",
+        borderRadius: String(desktop ? 8 : 1) + ea,
+        width: String(100) + '%',
+        background: colorChip.white,
+        paddingTop: String(paddingTop) + ea,
+        paddingBottom: String(whiteBottomMargin) + ea,
+        marginBottom: String(bottomMargin) + ea,
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      },
+      child: {
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(margin * 2, ea),
+          height: String(100) + '%',
+          marginLeft: String(margin) + ea,
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "relative",
+            paddingTop: String(innerMargin) + ea,
+            paddingBottom: String(desktop ? innerMargin : 0) + ea,
+            paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+            paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
+            width: withOut(innerMargin * 2, ea),
+            background: colorChip.white,
+            borderRadius: String(8) + "px",
+          },
+          child: {
+            style: {
+              display: desktop ? "flex" : "block",
+              width: withOut(0),
+              flexDirection: desktop ? "row" : "",
+              justifyContent: desktop ? "start" : "",
+              alignItems: desktop ? "start" : "",
+            },
+            children: [
+              {
+                style: {
+                  display: desktop ? "inline-flex" : "flex",
+                  position: "relative",
+                  width: desktop ? String(firstWidth - firstMargin) + ea : withOut(0, ea),
+                  justifyContent: desktop ? "" : "center",
+                  alignItems: desktop ? "" : "center",
+                  textAlign: desktop ? "" : "center",
+                  marginTop: desktop ? "" : String(2.8) + ea,
+                  marginBottom: desktop ? "" : String(3) + ea,
+                  flexDirection: "column",
+                  paddingRight: String(firstMargin) + ea,
+                },
+                children: [
+                  {
+                    text: contents.title.join(" "),
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      fontSize: String(veryBigSize) + ea,
+                      fontWeight: String(veryBigWeight),
+                      color: colorChip.black,
+                      lineHeight: String(1.4),
+                      textAlign: "left",
+                      marginBottom: String(contents.margin) + ea,
+                      top: String(textTextTop) + ea,
+                    },
+                  },
+                  {
+                    text: contents.description.join("\n"),
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textFileWeight),
+                      color: colorChip.black,
+                      lineHeight: String(descriptionLineHeight),
+                      textAlign: "right",
+                    },
+                  },
+                  {
+                    mode: "img",
+                    attribute: {
+                      src: ConsoleManualJs.binaryPath + "/back_mobile_0.jpg"
+                    },
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      width: withOut(0, ea),
+                      borderRadius: String(5) + "px",
+                      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                      marginTop: String(firstMargin) + ea,
+                    }
+                  },
+                  {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      height: String(mobileLineMargin) + ea,
+                      borderBottom: "1px dashed " + colorChip.gray4,
+                      width: withOut(0, ea),
+                      marginBottom: String(mobileLineMargin) + ea,
+                    }
+                  },
+                  ...variableArray(contents.descriptions.list.length).map((index) => {
+                    return [
+                      {
+                        text: zeroAddition(index + 1),
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          fontSize: String(numberSize) + ea,
+                          fontWeight: String(numberWeight),
+                          color: colorChip.green,
+                          fontFamily: "graphik",
+                          marginBottom: String(numberMargin) + ea,
+                        },
+                      },
+                      {
+                        text: contents.descriptions.list[index].title,
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          fontSize: String(3.7) + ea,
+                          fontWeight: String(textWeight),
+                          color: colorChip.black,
+                          lineHeight: String(descriptionLineHeight),
+                          textAlign: "center",
+                          marginBottom: String(titleMargin) + ea,
+                        },
+                      },
+                      {
+                        text: contents.descriptions.list[index].description.join(" "),
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(textFileWeight),
+                          color: colorChip.black,
+                          lineHeight: String(descriptionLineHeight),
+                          textAlign: "center",
+                          width: String(90) + '%',
+                        },
+                      },
+                      {
+                        mode: "img",
+                        attribute: {
+                          src: ConsoleManualJs.binaryPath + "/back_mobile_" + String(index + 1) + ".jpg"
+                        },
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          width: withOut(0, ea),
+                          borderRadius: String(5) + "px",
+                          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                          marginTop: String(firstMargin) + ea,
+                        }
+                      },
+                      {
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          height: String(contents.descriptions.list.length - 1 === index ? 0 : mobileLineMargin) + ea,
+                          borderBottom: contents.descriptions.list.length - 1 === index ? "" : "1px dashed " + colorChip.gray4,
+                          width: withOut(0, ea),
+                          marginBottom: contents.descriptions.list.length - 1 === index ? "" : String(mobileLineMargin) + ea,
+                        }
+                      },
+                    ]
+                  }).flat(),
+                ]
+              }
+            ]
+          }
+        }
+      }
+    });
+  
+    createNode({
+      mother: baseTong,
+      style: {
+        position: "relative",
+        borderRadius: String(desktop ? 8 : 1) + ea,
+        width: String(100) + '%',
+        background: colorChip.white,
+        paddingTop: String(paddingTop) + ea,
+        paddingBottom: String(whiteBottomMargin) + ea,
+        marginBottom: String(bottomMargin) + ea,
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      },
+      child: {
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(margin * 2, ea),
+          height: String(100) + '%',
+          marginLeft: String(margin) + ea,
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "relative",
+            paddingTop: String(innerMargin) + ea,
+            paddingBottom: String(desktop ? innerMargin : 0) + ea,
+            paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+            paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
+            width: withOut(innerMargin * 2, ea),
+            background: colorChip.white,
+            borderRadius: String(8) + "px",
+          },
+          child: {
+            style: {
+              display: desktop ? "flex" : "block",
+              width: withOut(0),
+              flexDirection: desktop ? "row" : "",
+              justifyContent: desktop ? "start" : "",
+              alignItems: desktop ? "start" : "",
+            },
+            children: [
+              {
+                style: {
+                  display: desktop ? "inline-flex" : "flex",
+                  position: "relative",
+                  width: desktop ? String(firstWidth - firstMargin) + ea : withOut(0, ea),
+                  justifyContent: desktop ? "" : "center",
+                  alignItems: desktop ? "" : "center",
+                  textAlign: desktop ? "" : "center",
+                  marginTop: desktop ? "" : String(2.8) + ea,
+                  marginBottom: desktop ? "" : String(3) + ea,
+                  flexDirection: "column",
+                },
+                children: [
+                  ...variableArray(contents.descriptions.detail.length).map((index) => {
+                    return [
+                      {
+                        text: zeroAddition(index + 1 + contents.descriptions.list.length),
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          fontSize: String(numberSize) + ea,
+                          fontWeight: String(numberWeight),
+                          color: colorChip.green,
+                          fontFamily: "graphik",
+                          marginBottom: String(numberMargin) + ea,
+                        },
+                      },
+                      {
+                        text: contents.descriptions.detail[index].title,
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          fontSize: String(3.7) + ea,
+                          fontWeight: String(textWeight),
+                          color: colorChip.black,
+                          lineHeight: String(descriptionLineHeight),
+                          textAlign: "center",
+                          marginBottom: String(titleMargin) + ea,
+                        },
+                      },
+                      {
+                        text: contents.descriptions.detail[index].description.join(" "),
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          fontSize: String(textSize) + ea,
+                          fontWeight: String(textFileWeight),
+                          color: colorChip.black,
+                          lineHeight: String(descriptionLineHeight),
+                          textAlign: "center",
+                          width: String(92) + '%',
+                        },
+                      },
+                      {
+                        mode: "img",
+                        attribute: {
+                          src: ConsoleManualJs.binaryPath + "/back_mobile_" + String(index + 1 + contents.descriptions.list.length) + ".jpg"
+                        },
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          width: withOut(0, ea),
+                          borderRadius: String(5) + "px",
+                          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                          marginTop: String(firstMargin) + ea,
+                        }
+                      },
+                      {
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          height: String(contents.descriptions.detail.length - 1 === index ? 0 : mobileLineMargin) + ea,
+                          borderBottom: contents.descriptions.detail.length - 1 === index ? "" : "1px dashed " + colorChip.gray4,
+                          width: withOut(0, ea),
+                          marginBottom: contents.descriptions.detail.length - 1 === index ? "" : String(mobileLineMargin) + ea,
+                        }
+                      },
+                    ]
+                  }).flat(),
+                ]
+              },
+            ]
+          }
+        }
+      }
+    });
+
+  }
 
 }
 
