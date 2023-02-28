@@ -256,6 +256,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
   let imageVisualPaddingTop;
   let imageVisualPaddingBottom;
   let detailImageHeight0, detailImageHeight1;
+  let detailBlockHeight;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -263,151 +264,207 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
 
   whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
 
-  veryBigSize = <%% 24, 22, 20, 16, 4.4 %%>;
+  veryBigSize = <%% 24, 22, 20, 18, 4.4 %%>;
   veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
   veryBigTextTop = <%% -1, -1, -2, -1, -1 %%>;
 
   innerMargin = <%% 0, 0, 0, 0, 1 %%>;
 
-  textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+  textTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), -0.3 %%>;
 
-  textSize = <%% 14, 14, 13, 12, 3.2 %%>;
+  textSize = <%% 14, 13, 12, 11, 3.2 %%>;
   textWeight = <%% 700, 700, 700, 700, 700 %%>;
   textFileWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  firstWidth = <%% 350, 230, 213, 134, 300 %%>;
-  firstMargin = <%% 36, 36, 32, 20, 10 %%>;
+  firstWidth = <%% 350, 300, 260, 174, 300 %%>;
+  firstMargin = <%% 36, 36, 28, 22, 10 %%>;
 
-  numberSize = <%% 16, 16, 16, 16, 16 %%>;
+  numberSize = <%% 16, 16, 14, 12, 3.5 %%>;
   numberWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  titleMargin = <%% 8, 8, 8, 8, 8 %%>;
+  titleMargin = <%% 8, 8, 4, 4, 1 %%>;
 
   descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  listImageHeight = <%% 1234, 1234, 1234, 1234, 1234 %%>;
+  listImageHeight = <%% 1234, 1385, 1300, 1120, 1234 %%>;
 
   imageVisualPaddingTop = <%% 4, 4, 4, 4, 4 %%>;
   imageVisualPaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
 
   mobileVisualPaddingValue = 0.2;
 
-  detailImageHeight0 = <%% 770, 770, 770, 770, 770 %%>;
-  detailImageHeight1 = <%% 1500, 1500, 1500, 1500, 1500 %%>;
+  detailImageHeight0 = <%% 770, 1060, 920, 810, 770 %%>;
+  detailImageHeight1 = <%% 1500, 1880, 1880, 1610, 1500 %%>;
+
+  detailBlockHeight = <%% 188, 205, 174, 151, 188 %%>;
 
   contents = {
     title: [
       "디자이너 콘솔",
       "이용 안내",
     ],
-    description: [
+    description: big ? [
       "디자이너 콘솔에 대해 설명드립니다.",
       "옆모습은 디자이너 콘솔에 들어가셨을 때",
       "가장 처음 보게 되는 화면입니다.",
+    ] : [
+      "콘솔에 대해 설명드립니다.",
+      "디자이너 콘솔에 들어가셨을 때",
+      "처음 보게 되는 화면입니다.",
     ],
-    margin: <&& 110 | 110 | 110 | 110 | 11 &&>,
+    margin: <&& 110 | 140 | 148 | 124 | 11 &&>,
     images: {
       list: [
-        ConsoleManualJs.binaryPath + "/back_desktop_0.jpg"
+        <&& ConsoleManualJs.binaryPath + "/back_desktop_0.jpg" | ConsoleManualJs.binaryPath + "/back_small_0.jpg" | ConsoleManualJs.binaryPath + "/back_tablet_0.jpg" | ConsoleManualJs.binaryPath + "/back_tablet_0.jpg" | ConsoleManualJs.binaryPath + "/back_mobile_0.jpg" &&>,
       ],
       detail: [
-        ConsoleManualJs.binaryPath + "/back_desktop_2.jpg",
-        ConsoleManualJs.binaryPath + "/back_desktop_1.jpg",
+        <&& ConsoleManualJs.binaryPath + "/back_desktop_2.jpg" | ConsoleManualJs.binaryPath + "/back_small_2.jpg" | ConsoleManualJs.binaryPath + "/back_tablet_2.jpg" | ConsoleManualJs.binaryPath + "/back_tablet_2.jpg" | ConsoleManualJs.binaryPath + "/back_mobile_2.jpg" &&>,
+        <&& ConsoleManualJs.binaryPath + "/back_desktop_1.jpg" | ConsoleManualJs.binaryPath + "/back_small_1.jpg" | ConsoleManualJs.binaryPath + "/back_tablet_1.jpg" | ConsoleManualJs.binaryPath + "/back_tablet_1.jpg" | ConsoleManualJs.binaryPath + "/back_mobile_1.jpg" &&>,
       ],
     },
     descriptions: {
       list: [
         {
           title: "진행중 프로젝트",
-          description: [
+          description: big ? [
             "먼저, 디자이너 콘솔은 진행중 프로젝트로",
             "시작합니다. 홈리에종과 계약하신 모든 프로젝트가",
             "리스트업이 되어 있으며, 진행중 프로젝트만",
             "활성화된 상태로 보실 수 있게 되어 있습니다.",
+          ] : [
+            "디자이너 콘솔은 진행중 프로젝트로",
+            "시작합니다. 홈리에종과 계약하신",
+            "모든 프로젝트가 있으며, 진행중",
+            "프로젝트만 활성 상태로 보실 수",
+            "있게 되어 있습니다.",
           ],
-          margin: <&& 104 | 104 | 104 | 96 | 11 &&>,
+          margin: <&& 104 | 137 | 149 | 108 | 11 &&>,
         },
         {
           title: "발행된 프로젝트",
-          description: [
+          description: big ? [
             "진행중 프로젝트 다음으로 나오는 것은 발행된",
             "프로젝트들로 홈리에종 웹에 게시된 건들의",
             "리스트입니다. 각 항목을 클릭해 보시면 컨텐츠와",
             "관련된 설정을 하실 수 있게 되어 있습니다.",
+          ] : [
+            "진행중 프로젝트 밑으로 나오는 것은",
+            "홈리에종 웹에 게시된 건들의",
+            "리스트입니다. 각 항목을 클릭해",
+            "보면 컨텐츠 설정을 할 수 있습니다.",
           ],
-          margin: <&& 52 | 52 | 52 | 52 | 11 &&>,
+          margin: <&& 52 | 78 | 90 | 75 | 11 &&>,
         },
         {
           title: "발행된 컨텐츠",
-          description: [
+          description: big ? [
             "발행된 프로젝트가 홈리에종 웹에서 어떻게",
             "보이는지 미리 볼 수 있는 칸으로 홈리에종 웹의",
             "디자이너 탭의 실장님 섹션으로 가셨을 때와",
             "같은 리스트를 보여주고 있습니다.",
+          ] : [
+            "발행된 프로젝트가 홈리에종 웹에서",
+            "어떻게 보이는 지 볼 수 있는 칸으로",
+            "웹의 디자이너 탭의 실장님 섹션으로",
+            "가셨을 때와 같은 리스트입니다."
           ],
-          margin: <&& 125 | 125 | 125 | 125 | 11 &&>,
+          margin: <&& 125 | 168 | 130 | 113 | 11 &&>,
         },
       ],
       detail: [
         {
           title: "고객님의 현재 단계",
-          description: [
+          description: big ? [
             "프로젝트 상세에 들어와 보시면 가장 먼저",
             "보이는 것은 고객님의 현재 단계를 체크하는",
             "란입니다. 디자인 / 시공 / 구매 / 세팅의",
             "분류 아래 해당 단계를 클릭해 주시면 됩니다.",
+          ] : [
+            "프로젝트 상세에 들어와 보시면",
+            "먼저 보이는 것은 고객님의 단계를",
+            "체크하는 란입니다. 각 카테고리",
+            "별로 고객님께 해당되는 단계를",
+            "클릭해 주시면 됩니다."
           ],
-          margin: <&& 148 | 148 | 148 | 148 | 11 &&>,
+          margin: <&& 148 | 351 | 331 | 264 | 11 &&>,
         },
         {
           title: "프로젝트 파일",
-          description: [
+          description: big ? [
             "밑으로 오는 것은 프로젝트에서 필요한 파일을",
             "아카이빙 할 수 있는 공간입니다. 각 주제별로",
             "업로드해주시면 쉽게 관리하실 수 있으며,",
             "공유 또한 한 번에 이루어질 수 있습니다.",
+          ] : [
+            "밑으로 오는 것은 프로젝트에서",
+            "필요한 파일을 각 주제별로",
+            "아카이빙 할 수 있는 공간입니다.",
+            "업로드해주시면 쉽게 관리하실 수",
+            "있으며, 공유도 할 수 있습니다.",
           ],
-          margin: <&& 46 | 46 | 46 | 46 | 11 &&>,
+          margin: <&& 46 | 95 | 66 | 57 | 11 &&>,
         },
         {
           title: "프로젝트 파일",
-          description: [
+          description: big ? [
             "파일을 올리시고, 메모를 남기신 뒤, 각 파일을",
             "클릭하시면 수정 / 삭제 / 공유와 같은 여러",
             "액션을 하실 수 있으며 고객 공유 또한 간편하게",
             "하실 수 있으므로 적극적 이용 부탁드립니다.",
+          ] : [
+            "파일을 올리시고, 메모를 남기신 뒤,",
+            "각 파일을 클릭하시면 수정, 삭제와",
+            "같은 여러 액션을 하실 수 있으며",
+            "고객 공유 또한 간편하게 하실 수",
+            "있으므로 적극 이용 부탁드립니다.",
           ],
-          margin: <&& 9 | 9 | 9 | 9 | 11 &&>,
+          margin: <&& 9 | 91 | 82 | 48 | 11 &&>,
         },
         {
           title: "프로젝트 일정표 기입",
-          description: [
+          description: big ? [
             "프로젝트의 일정표입니다. 계약서상 시작일을",
             "기준으로 미리 세팅되어 있으며 실장님께서는",
             "각 항목의 순서 변경과 날짜 수정을 통해",
             "프로젝트의 일정을 기입해 주시면 됩니다.",
+          ] : [
+            "프로젝트의 일정표입니다. 계약서상",
+            "시작일을 기준으로 세팅되어 있으며",
+            "각 항목의 순서 변경, 날짜 수정을",
+            "통해 일정을 기입해 주시면 됩니다.",
           ],
-          margin: <&& 236 | 236 | 236 | 236 | 11 &&>,
+          margin: <&& 236 | 254 | 220 | 188 | 11 &&>,
         },
         {
           title: "프로젝트 일정표 캘린더",
-          description: [
+          description: big ? [
             "프로젝트 일정표를 수정하시게 되면 자동으로",
             "캘린더에도 표시가 되며, 이는 고객님께",
             "공유될 예정이므로 꼭 일정표를 작성해 주셔서",
             "원활한 공유가 될 수 있도록 부탁드립니다.",
+          ] : [
+            "프로젝트 일정표를 수정하시게",
+            "되면 캘린더에도 자동 표시가 되며",
+            "이는 고객님께 공유될 예정이므로",
+            "꼭 일정표를 작성해 주셔서 원활한",
+            "공유가 될 수 있도록 부탁드립니다.",
           ],
-          margin: <&& 225 | 225 | 225 | 225 | 11 &&>,
+          margin: <&& 225 | 325 | 272 | 213 | 11 &&>,
         },
         {
           title: "프로젝트 상태",
-          description: [
+          description: big ? [
             "기타 프로젝트 상태에 대한 표기입니다.",
             "촬영비 관련, 컨텐츠 관련, 디자이너 글 관련",
             "여러 액션을 하실 수 있습니다. 기타 기능이 모여",
             "있는 곳이므로 필요할 때 찾아 주시면 됩니다.",
+          ] : [
+            "기타 프로젝트 상태에 대한",
+            "표기입니다. 촬영비, 컨텐츠 관련,",
+            "디자이너 글 관련 등 상태 확인과",
+            "여러 액션을 하실 수 있습니다.",
           ],
-          margin: <&& 112 | 112 | 112 | 112 | 11 &&>,
+          margin: <&& 112 | 18 | 14 | 10 | 11 &&>,
         },
       ],
     }
@@ -479,6 +536,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
                     lineHeight: String(1.4),
                     textAlign: "left",
                     marginBottom: String(contents.margin) + ea,
+                    top: String(textTextTop) + ea,
                   },
                 },
                 {
@@ -680,7 +738,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
                   style: {
                     display: "block",
                     position: "relative",
-                    height: String(188) + ea,
+                    height: String(detailBlockHeight) + ea,
                     borderBottom: "1px dashed " + colorChip.gray4,
                     width: "calc(100% + " + String(firstMargin) + ea + ")",
                     marginBottom: String(firstMargin) + ea,
