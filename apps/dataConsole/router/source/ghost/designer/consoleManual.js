@@ -960,7 +960,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
                           color: colorChip.black,
                           lineHeight: String(descriptionLineHeight),
                           textAlign: "center",
-                          width: String(90) + '%',
+                          width: String(94) + '%',
                         },
                       },
                       {
@@ -1088,7 +1088,7 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
                           color: colorChip.black,
                           lineHeight: String(descriptionLineHeight),
                           textAlign: "center",
-                          width: String(92) + '%',
+                          width: String(94) + '%',
                         },
                       },
                       {

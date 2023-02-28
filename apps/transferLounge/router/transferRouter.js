@@ -909,7 +909,7 @@ TransferRouter.prototype.rou_post_middlePhotoAlarm = function () {
       }
       const { designer, client, desid, proid, title, mode } = equalJson(req.body);
       const channel = "#301_console";
-      const voice = true;
+      const voice = false;
       let text;
 
       if (mode === "designer") {
