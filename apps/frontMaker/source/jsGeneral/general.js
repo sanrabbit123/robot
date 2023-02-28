@@ -3659,6 +3659,8 @@ GeneralJs.dateToString = function (date, detail = false, dayOption = false) {
   }
 }
 
+GeneralJs.zeroAddition = function (num) { return (num < 10) ? `0${String(num)}` : String(num); }
+
 GeneralJs.stringToDate = function (str) {
   if (str instanceof Date) {
     return str;
