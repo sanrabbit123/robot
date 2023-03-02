@@ -5337,7 +5337,14 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
           }
         });
   
-        valueIndex = thisForm[i].children.findIndex((obj) => { return obj.value !== 0 });
+        valueIndex = thisForm[i].children.reduce((acc, curr, index) => {
+          if (curr.value === 0) {
+            return acc;
+          } else {
+            return index;
+          }
+        }, -1);
+
         for (let j = 0; j < thisForm[i].children.length; j++) {
           createNode({
             mother: thisPan,
@@ -5351,6 +5358,8 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
               deactive: thisForm[i].children[j].deactive ? "true" : "false",
               proid,
               desid,
+              red: thisForm[i].children[j].value !== 0 ? "off" : (j < valueIndex ? "on" : "off"),
+              middle: thisForm[i].children[j].value === 0 ? "off" : (j < valueIndex ? "on" : "off"),
             },
             style: {
               display: "flex",
@@ -5358,7 +5367,7 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
               alignItems: "center",
               width: withOut(0, ea),
               height: String(panHeight) + ea,
-              background: j > valueIndex ? colorChip.gray1 : (j === valueIndex ? colorChip.gradientGreen : colorChip.whiteGreen),
+              background: j > valueIndex ? colorChip.gray1 : (j === valueIndex ? colorChip.gradientGreen : (thisForm[i].children[j].value !== 0 ? colorChip.whiteGreen : colorChip.gray1)),
               borderRadius: String(5) + "px",
               marginBottom: j === thisForm[i].children.length - 1 ? "" : String(panBlockBetween) + ea,
               flexDirection: "row",
@@ -5381,7 +5390,7 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
                 },
                 child: {
                   mode: "svg",
-                  source: svgMaker.checkBox(j > valueIndex ? colorChip.gray4 : (j === valueIndex ? colorChip.white : colorChip.green)),
+                  source: svgMaker.checkBox(j > valueIndex ? colorChip.gray4 : (j === valueIndex ? colorChip.white : (thisForm[i].children[j].value !== 0 ? colorChip.green : colorChip.red))),
                   style: {
                     display: "inline-block",
                     position: "relative",
@@ -5409,7 +5418,7 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
                     position: "relative",
                     fontSize: String(blockTextSize) + ea,
                     fontWeight: String(blockTextWeight),
-                    color: thisForm[i].children[j].deactive ? colorChip.deactive : (j > valueIndex ? colorChip.deactive : (j === valueIndex ? colorChip.black : colorChip.softGreen)),
+                    color: thisForm[i].children[j].deactive ? colorChip.deactive : (j > valueIndex ? colorChip.deactive : (j === valueIndex ? colorChip.black : (thisForm[i].children[j].value !== 0 ? colorChip.softGreen : colorChip.red))),
                     top: String(textTextTop) + ea,
                     transition: "all 0s ease",
                   }
@@ -5471,12 +5480,8 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
   
       finalValueNumber = 0;
       for (let i = 0; i < thisForm.length; i++) {
-        thisValueNumber = thisForm[i].children.findIndex((obj) => { return obj.value !== 0 });
-        if (thisValueNumber === -1) {
-          finalValueNumber += 0;
-        } else {
-          finalValueNumber += thisValueNumber + 1;
-        }
+        thisValueNumber = thisForm[i].children.filter((obj) => { return obj.value !== 0 }).length;
+        finalValueNumber = thisValueNumber + finalValueNumber;
       }
 
       barArrBlock = createNode({

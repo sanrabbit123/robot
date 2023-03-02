@@ -14247,8 +14247,6 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
           }
         });
   
-        // valueIndex = thisForm[i].children.findIndex((obj) => { return obj.value !== 0 });
-
         valueIndex = thisForm[i].children.reduce((acc, curr, index) => {
           if (curr.value === 0) {
             return acc;
@@ -14447,8 +14445,6 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                     }
                     matrix.push(tempObj);
                   }
-
-                  console.log(matrix);
                   
                   await ajaxJson({
                     mode: "update",
