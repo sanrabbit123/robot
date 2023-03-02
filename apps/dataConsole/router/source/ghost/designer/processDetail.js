@@ -14247,7 +14247,16 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
           }
         });
   
-        valueIndex = thisForm[i].children.findIndex((obj) => { return obj.value !== 0 });
+        // valueIndex = thisForm[i].children.findIndex((obj) => { return obj.value !== 0 });
+
+        valueIndex = thisForm[i].children.reduce((acc, curr, index) => {
+          if (curr.value === 0) {
+            return acc;
+          } else {
+            return index;
+          }
+        }, -1);
+
         for (let j = 0; j < thisForm[i].children.length; j++) {
           createNode({
             mother: thisPan,
@@ -14261,11 +14270,15 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
               deactive: thisForm[i].children[j].deactive ? "true" : "false",
               proid,
               desid,
+              red: thisForm[i].children[j].value !== 0 ? "off" : (j < valueIndex ? "on" : "off"),
+              middle: thisForm[i].children[j].value === 0 ? "off" : (j < valueIndex ? "on" : "off"),
             },
             event: {
               click: async function (e) {
                 const self = this;
                 const toggle = this.getAttribute("toggle");
+                const middle = this.getAttribute("middle");
+                const red = this.getAttribute("red");
                 const x = Number(this.getAttribute("x"));
                 const y = Number(this.getAttribute("y"));
                 const deactive = (this.getAttribute("deactive") === "true");
@@ -14279,37 +14292,132 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                   let tempObj;
                   let targetDoms;
                   let thisIndex;
+                  let finalIndex;
   
                   siblings = [ ...document.querySelectorAll('.' + siblingKeywords + String(x)) ];
                   thisIndex = siblings.findIndex((dom) => { return dom === self });
 
-                  if (toggle === "off") {
-                    if (!deactive) {
-                      for (let i = 0; i < siblings.length; i++) {
-                        if (i < thisIndex) {
-                          siblings[i].style.background = colorChip.whiteGreen;
-                          siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.green);
-                          siblings[i].children[1].children[0].style.color = colorChip.softGreen;
-                          siblings[i].setAttribute("toggle", "off");
-                        } else if (i === thisIndex) {
-                          siblings[i].style.background = colorArr[x % colorArr.length];
-                          siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
-                          siblings[i].children[1].children[0].style.color = colorChip.black;
-                          siblings[i].setAttribute("toggle", "on");
-                        } else {
-                          siblings[i].style.background = colorChip.gray1;
-                          siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                          siblings[i].children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.deactive;
-                          siblings[i].setAttribute("toggle", "off");
+                  if (!deactive) {
+                    if (toggle === "off") {
+                      if (red === "off") {
+
+                        for (let i = 0; i < siblings.length; i++) {
+                          if (i < thisIndex) {
+                            if (siblings[i].getAttribute("red") !== "on") {
+                              siblings[i].style.background = colorChip.whiteGreen;
+                              siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.green);
+                              siblings[i].children[1].children[0].style.color = colorChip.softGreen;
+                              siblings[i].setAttribute("toggle", "on");
+                              siblings[i].setAttribute("middle", "on");
+                              siblings[i].setAttribute("red", "off");
+                            }
+                          } else if (i === thisIndex) {
+                            siblings[i].style.background = colorChip.gradientGreen;
+                            siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                            siblings[i].children[1].children[0].style.color = colorChip.black;
+                            siblings[i].setAttribute("toggle", "on");
+                            siblings[i].setAttribute("middle", "off");
+                            siblings[i].setAttribute("red", "off");
+                          } else {
+                            siblings[i].style.background = colorChip.gray1;
+                            siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                            siblings[i].children[1].children[0].style.color = colorChip.deactive;
+                            siblings[i].setAttribute("toggle", "off");
+                            siblings[i].setAttribute("middle", "off");
+                            siblings[i].setAttribute("red", "off");
+                          }
                         }
+
+                      } else {
+
+                        siblings[thisIndex].style.background = colorChip.whiteGreen;
+                        siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.green);
+                        siblings[thisIndex].children[1].children[0].style.color = colorChip.softGreen;
+                        siblings[thisIndex].setAttribute("toggle", "on");
+                        siblings[thisIndex].setAttribute("middle", "on");
+                        siblings[thisIndex].setAttribute("red", "off");
+
                       }
-                    }
-                  } else {
-                    for (let i = 0; i < siblings.length; i++) {
-                      siblings[i].style.background = colorChip.gray1;
-                      siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                      siblings[i].children[1].children[0].style.color = deactive ? colorChip.deactive : colorChip.deactive;
-                      siblings[i].setAttribute("toggle", "off");
+                    } else {
+
+                      if (middle === "off") {
+
+                        if (siblings[thisIndex - 1] === undefined) {
+
+                          siblings[thisIndex].style.background = colorChip.gray1;
+                          siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                          siblings[thisIndex].children[1].children[0].style.color = colorChip.deactive;
+                          siblings[thisIndex].setAttribute("toggle", "off");
+                          siblings[thisIndex].setAttribute("middle", "off");
+                          siblings[thisIndex].setAttribute("red", "off");
+
+                        } else {
+
+                          if (siblings[thisIndex - 1].getAttribute("middle") === "on") {
+
+                            siblings[thisIndex].style.background = colorChip.gray1;
+                            siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                            siblings[thisIndex].children[1].children[0].style.color = colorChip.deactive;
+                            siblings[thisIndex].setAttribute("toggle", "off");
+                            siblings[thisIndex].setAttribute("middle", "off");
+                            siblings[thisIndex].setAttribute("red", "off");
+
+                            siblings[thisIndex - 1].style.background = colorChip.gradientGreen;
+                            siblings[thisIndex - 1].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                            siblings[thisIndex - 1].children[1].children[0].style.color = colorChip.black;
+                            siblings[thisIndex - 1].setAttribute("toggle", "on");
+                            siblings[thisIndex - 1].setAttribute("middle", "off");
+                            siblings[thisIndex - 1].setAttribute("red", "off");
+
+                          } else {
+
+                            siblings[thisIndex].style.background = colorChip.gray1;
+                            siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                            siblings[thisIndex].children[1].children[0].style.color = colorChip.deactive;
+                            siblings[thisIndex].setAttribute("toggle", "off");
+                            siblings[thisIndex].setAttribute("middle", "off");
+                            siblings[thisIndex].setAttribute("red", "off");
+
+                            finalIndex = siblings.reduce((acc, curr, index) => {
+                              if (curr.getAttribute("toggle") === "off") {
+                                return acc;
+                              } else {
+                                return index;
+                              }
+                            }, -1);
+                            
+                            for (let i = 0; i < siblings.length; i++) {
+                              if (i < finalIndex) {
+                                // pass
+                              } else if (i === finalIndex) {
+                                siblings[i].style.background = colorChip.gradientGreen;
+                                siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                                siblings[i].children[1].children[0].style.color = colorChip.black;
+                                siblings[i].setAttribute("toggle", "on");
+                                siblings[i].setAttribute("middle", "off");
+                                siblings[i].setAttribute("red", "off");
+                              } else {
+                                siblings[i].style.background = colorChip.gray1;
+                                siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                                siblings[i].children[1].children[0].style.color = colorChip.deactive;
+                                siblings[i].setAttribute("toggle", "off");
+                                siblings[i].setAttribute("middle", "off");
+                                siblings[i].setAttribute("red", "off");
+                              }
+                            }
+
+                          }
+                        }
+
+                      } else {
+                        siblings[thisIndex].style.background = colorChip.gray1;
+                        siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.red);
+                        siblings[thisIndex].children[1].children[0].style.color = colorChip.red;
+                        siblings[thisIndex].setAttribute("toggle", "off");
+                        siblings[thisIndex].setAttribute("middle", "off");
+                        siblings[thisIndex].setAttribute("red", "on");
+                      }
+                      
                     }
                   }
   
@@ -14339,6 +14447,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                     }
                     matrix.push(tempObj);
                   }
+
+                  console.log(matrix);
                   
                   await ajaxJson({
                     mode: "update",
@@ -14360,7 +14470,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
               alignItems: "center",
               width: withOut(0, ea),
               height: String(panHeight) + ea,
-              background: j > valueIndex ? colorChip.gray1 : (j === valueIndex ? colorChip.gradientGreen : colorChip.whiteGreen),
+              background: j > valueIndex ? colorChip.gray1 : (j === valueIndex ? colorChip.gradientGreen : (thisForm[i].children[j].value !== 0 ? colorChip.whiteGreen : colorChip.gray1)),
               borderRadius: String(5) + "px",
               marginBottom: j === thisForm[i].children.length - 1 ? "" : String(panBlockBetween) + ea,
               flexDirection: "row",
@@ -14383,7 +14493,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                 },
                 child: {
                   mode: "svg",
-                  source: svgMaker.checkBox(j > valueIndex ? colorChip.gray4 : (j === valueIndex ? colorChip.white : colorChip.green)),
+                  source: svgMaker.checkBox(j > valueIndex ? colorChip.gray4 : (j === valueIndex ? colorChip.white : (thisForm[i].children[j].value !== 0 ? colorChip.green : colorChip.red))),
                   style: {
                     display: "inline-block",
                     position: "relative",
@@ -14411,7 +14521,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                     position: "relative",
                     fontSize: String(blockTextSize) + ea,
                     fontWeight: String(blockTextWeight),
-                    color: thisForm[i].children[j].deactive ? colorChip.deactive : (j > valueIndex ? colorChip.deactive : (j === valueIndex ? colorChip.black : colorChip.softGreen)),
+                    color: thisForm[i].children[j].deactive ? colorChip.deactive : (j > valueIndex ? colorChip.deactive : (j === valueIndex ? colorChip.black : (thisForm[i].children[j].value !== 0 ? colorChip.softGreen : colorChip.red))),
                     top: String(textTextTop) + ea,
                     transition: "all 0s ease",
                   }
@@ -14462,12 +14572,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
   
       finalValueNumber = 0;
       for (let i = 0; i < thisForm.length; i++) {
-        thisValueNumber = thisForm[i].children.findIndex((obj) => { return obj.value !== 0 });
-        if (thisValueNumber === -1) {
-          finalValueNumber += 0;
-        } else {
-          finalValueNumber += thisValueNumber + 1;
-        }
+        thisValueNumber = thisForm[i].children.filter((obj) => { return obj.value !== 0 }).length;
+        finalValueNumber = thisValueNumber + finalValueNumber;
       }
 
       barArrBlock = createNode({
