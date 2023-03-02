@@ -7292,11 +7292,6 @@ GeneralJs.prototype.finalSubmit = function () {
                 if (firstDom.value.trim() === '') {
                   throw new Error("상세 주소를 적어주세요!");
                 }
-              } else if (p === "email") {
-                firstDom.value = firstDom.value.trim();
-                if (firstDom.value.trim() === '') {
-                  throw new Error("이메일 주소를 적어주세요!");
-                }
               } else if (p === "pyeong") {
                 firstDom.value = firstDom.value.replace(/[^0-9\.]/gi, '');
                 if (firstDom.value.trim() === '' || Number.isNaN(Number(firstDom.value.trim())) || Number(firstDom.value.trim()) === 0) {
