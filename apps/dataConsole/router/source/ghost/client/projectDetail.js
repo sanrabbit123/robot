@@ -5690,6 +5690,7 @@ ProjectDetailJs.prototype.launching = async function (loading) {
     this.targetDrive = "/" + this.designer.desid + "/" + this.project.proid;
     this.panList = [];
     this.itemList = [];
+    this.panNumbers = [];
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",

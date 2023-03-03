@@ -13766,7 +13766,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, serviceParsing } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, serviceParsing, removeByClass } = GeneralJs;
   const dateToHangul = (dateObject) => {
     return `${String(dateObject.getFullYear()).slice(2)}년 ${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일`;
   }
@@ -13777,6 +13777,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
   }
   const siblingKeywords = "siblingKeywords__";
   const valueBlockClassName = "valueBlockClassName__";
+  const blockContextMenuClassName = "blockContextMenuClassName__";
   try {
     let margin;
     let paddingTop;
@@ -14455,6 +14456,67 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
   
                   reloadBarArr(barArrBase, matrix);
   
+                } catch (e) {
+                  console.log(e);
+                }
+              },
+              contextmenu: async function (e) {
+                try {
+
+                  e.preventDefault();
+                  e.stopPropagation();
+
+                  const self = this;
+                  const x = Number(this.getAttribute("x"));
+                  const y = Number(this.getAttribute("y"));
+                  const proid = this.getAttribute("proid");
+                  const desid = this.getAttribute("desid");
+                  const deactive = (this.getAttribute("deactive") === "true");
+                  const zIndex = 4;
+                  let cancelBack, whitePrompt;
+
+                  if (!deactive) {
+
+                    cancelBack = createNode({
+                      mother: formPanBase,
+                      class: [ blockContextMenuClassName ],
+                      event: {
+                        click: function (e) {
+                          removeByClass(blockContextMenuClassName);
+                        }
+                      },
+                      style: {
+                        display: "block",
+                        position: "fixed",
+                        top: String(0),
+                        left: String(0),
+                        width: withOut(0, ea),
+                        height: withOut(0, ea),
+                        background: "transparent",
+                        zIndex: String(zIndex),
+                      }
+                    });
+  
+                    whitePrompt = createNode({
+                      mother: formPanBase,
+                      class: [ blockContextMenuClassName ],
+                      style: {
+                        display: "inline-block",
+                        position: "fixed",
+                        top: String(e.clientY - baseTong.getBoundingClientRect().top) + "px",
+                        left: String(e.clientX - baseTong.getBoundingClientRect().left) + "px",
+                        width: String(100) + ea,
+                        height: String(100) + ea,
+                        background: colorChip.white,
+                        borderRadius: String(5) + "px",
+                        boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+                        animation: "fadeuplite 0.3s ease forwards",
+                        zIndex: String(zIndex),
+                      }
+                    });
+
+                  }
+
                 } catch (e) {
                   console.log(e);
                 }

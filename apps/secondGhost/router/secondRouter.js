@@ -1315,36 +1315,86 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "현장 미팅 완료",
               deactive: false,
               value: 0,
+              children: [
+                {
+                  title: "현장 사진 업로드",
+                },
+                {
+                  title: "현장 사진 메모",
+                },
+              ],
             },
             {
               title: "일정표 공유됨",
               deactive: false,
               value: 0,
+              children: [
+                {
+                  title: "일정표 메모",
+                },
+              ],
             },
             {
               title: "컨셉 제안서 공유됨",
               deactive: false,
               value: 0,
+              children: [
+                {
+                  title: "컨셉 제안서 업로드",
+                },
+                {
+                  title: "컨셉 제안서 메모",
+                },
+              ],
             },
             {
               title: "1차 디자인 제안서 공유됨",
               deactive: false,
               value: 0,
+              children: [
+                {
+                  title: "디자인 제안서 업로드",
+                },
+                {
+                  title: "디자인 제안서 메모",
+                },
+              ],
             },
             {
               title: "수정 제안서 공유됨",
               deactive: false,
               value: 0,
+              children: [
+                {
+                  title: "디자인 제안서 업로드",
+                },
+                {
+                  title: "디자인 제안서 메모",
+                },
+              ],
             },
             {
               title: "제품 리스트 공유됨",
               deactive: false,
               value: 0,
+              children: [
+                {
+                  title: "제품 리스트 업로드",
+                },
+                {
+                  title: "제품 리스트 메모",
+                },
+              ],
             },
             {
               title: "디자인 제안서 최종 컨펌",
               deactive: false,
               value: 0,
+              children: [
+                {
+                  title: "최종 완료 메모",
+                },
+              ],
             },
           ]
         },
@@ -1355,41 +1405,96 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "시공 의뢰서 공유됨",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              children: [
+                {
+                  title: "시공 의뢰서 업로드",
+                },
+                {
+                  title: "시공 의뢰서 메모",
+                },
+              ],
             },
             {
               title: "시공 견적서 공유됨",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              children: [
+                {
+                  title: "시공 견적서 업로드",
+                },
+                {
+                  title: "시공 견적서 메모",
+                },
+              ],
             },
             {
               title: "시공사 선택 완료",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              children: [
+                {
+                  title: "홈리에종 시공사",
+                },
+                {
+                  title: "디자이너 시공사",
+                },
+                {
+                  title: "고객 시공사",
+                },
+              ]
             },
             {
               title: "공정표 공유됨",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              children: [
+                {
+                  title: "시공 공정표 메모",
+                },
+              ],
             },
             {
               title: "시공 착수",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              children: [
+                {
+                  title: "시공 착수 메모",
+                },
+              ],
             },
             {
               title: "시공 진행중",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              children: [
+                {
+                  title: "시공 진행 메모",
+                },
+              ],
             },
             {
               title: "시공 완료",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              children: [
+                {
+                  title: "시공 사진 업로드",
+                },
+                {
+                  title: "시공 사진 메모",
+                },
+              ],
             },
             {
               title: "시공 AS 완료",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              children: [
+                {
+                  title: "시공 AS 메모",
+                },
+              ],
             },
           ]
         },
@@ -1400,21 +1505,47 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "제품 구매 시작 전",
               deactive: false,
               value: 0,
+              children: [
+                {
+                  title: "제품 리스트 업로드",
+                },
+                {
+                  title: "제품 리스트 메모",
+                },
+              ],
             },
             {
               title: "제품 구매 진행중",
               deactive: false,
               value: 0,
+              children: [
+                {
+                  title: "제품 구매 메모"
+                }
+              ]
             },
             {
               title: "구매 완료, 배송중",
               deactive: false,
               value: 0,
+              children: [
+                {
+                  title: "배송중 메모"
+                }
+              ]
             },
             {
               title: "배송 및 세팅 완료",
               deactive: false,
               value: 0,
+              children: [
+                {
+                  title: "제품 배치도 업로드"
+                },
+                {
+                  title: "제품 배치도 메모"
+                },
+              ]
             },
           ]
         },
@@ -1425,16 +1556,34 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "촬영 여부 확인",
               deactive: false,
               value: 0,
+              children: [
+                {
+                  title: "촬영 진행 희망",
+                },
+                {
+                  title: "촬영 진행 안 함",
+                }
+              ]
             },
             {
               title: "촬영일 확인 완료",
               deactive: false,
               value: 0,
+              children: [
+                {
+                  title: "촬영일 메모"
+                }
+              ]
             },
             {
               title: "세팅 및 촬영 완료",
               deactive: false,
               value: 0,
+              children: [
+                {
+                  title: "세팅 관련 메모"
+                }
+              ]
             },
           ]
         },
