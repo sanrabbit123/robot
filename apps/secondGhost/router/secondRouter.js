@@ -1335,9 +1335,15 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               value: 0,
               children: [
                 {
+                  title: "일정표 업로드",
+                  type: "upload",
+                  key: "scheduleInfo",
+                  photo: true,
+                },
+                {
                   title: "일정표 메모",
                   type: "memo",
-                  key: "designSchedule",
+                  key: "scheduleInfo",
                 },
               ],
             },

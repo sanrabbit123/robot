@@ -14544,11 +14544,12 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                             const x = Number(this.getAttribute("x"));
                             const y = Number(this.getAttribute("y"));
                             const z = Number(this.getAttribute("z"));
+                            const type = thisForm[x].children[y].children[z].type;
                             try {
                               let tempFunction;
                               let key, photoBoo, thisStatusNumber;
 
-                              if (typeof thisForm[x].children[y].children[z].type === "upload") {
+                              if (type === "upload") {
 
                                 key = thisForm[x].children[y].children[z].key;
                                 photoBoo = thisForm[x].children[y].children[z].photo;
@@ -14556,6 +14557,14 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
   
                                 removeByClass(blockContextMenuClassName);
                                 instance.uploadFiles(thisStatusNumber, photoBoo).call(this, e);
+
+                              } else if (type === "memo") {
+
+                                key = thisForm[x].children[y].children[z].key;
+                                thisStatusNumber = instance.panContents.findIndex((o) => { return o.key === key });
+
+                                removeByClass(blockContextMenuClassName);
+                                instance.plusMemo(thisStatusNumber).call(this, e);
 
                               }
 
