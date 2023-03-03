@@ -765,7 +765,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
       let name;
       let ipObj, custom;
 
-      name = "fromServer_" + req.body.action + "_" + req.body.page;
+      name = "fromServer_" + req.body.action;
 
       ipObj = await ipParsing(ip);
       custom = {
