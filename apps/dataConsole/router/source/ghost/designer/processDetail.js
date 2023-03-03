@@ -7822,7 +7822,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
       } catch (e) {
         console.log(e);
         window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-        window.location.reload();
+        // window.location.reload();
       }
     }
   } else {
@@ -13766,7 +13766,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, serviceParsing, removeByClass } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, serviceParsing, removeByClass, equalJson } = GeneralJs;
   const dateToHangul = (dateObject) => {
     return `${String(dateObject.getFullYear()).slice(2)}년 ${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일`;
   }
@@ -13860,6 +13860,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     let finalValueNumber;
     let percentageSize;
     let percentageTextTop;
+    let blackButtonWidth, blackButtonHeight, blackButtonBetween, blackButtonMargin;
+    let blackButtonSize, blackButtonWeight, blackButtonTextTop;
 
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -13963,6 +13965,14 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
 
     percentageSize = <%% 20, 20, 17, 14, 7.5 %%>;
     percentageTextTop = <%% -1, -1, -1, -1, 0 %%>;
+
+    blackButtonWidth = <%% 132, 120, 120, 120, 120 %%>;
+    blackButtonHeight = <%% 34, 32, 30, 28, 32 %%>;
+    blackButtonBetween = <%% 4, 4, 4, 4, 4 %%>;
+    blackButtonMargin = <%% 6, 6, 6, 6, 6 %%>;
+    blackButtonSize = <%% 13, 12, 11, 10, 2.5 %%>;
+    blackButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
+    blackButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
 
     thisForm = await ajaxJson({ mode: "get", proid, desid }, SECONDHOST + "/projectDesignerStatus", { equal: true });
   
@@ -14442,6 +14452,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                         title: targetDoms[w].getAttribute("title"),
                         deactive: targetDoms[w].getAttribute("deactive") === "true",
                         value: targetDoms[w].getAttribute("toggle") === "on" ? 1 : 0,
+                        children: equalJson(JSON.stringify(thisForm[z].children[w].children)),
                       });
                     }
                     matrix.push(tempObj);
@@ -14505,16 +14516,80 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                         position: "fixed",
                         top: String(e.clientY - baseTong.getBoundingClientRect().top) + "px",
                         left: String(e.clientX - baseTong.getBoundingClientRect().left) + "px",
-                        width: String(100) + ea,
-                        height: String(100) + ea,
+                        width: String(blackButtonWidth) + ea,
                         background: colorChip.white,
                         borderRadius: String(5) + "px",
                         boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
                         animation: "fadeuplite 0.3s ease forwards",
                         zIndex: String(zIndex),
+                        padding: String(blackButtonMargin) + ea,
+                        paddingBottom: String(blackButtonMargin - blackButtonBetween) + ea,
                       }
                     });
 
+                    for (let z = 0; z < thisForm[x].children[y].children.length; z++) {
+                      createNode({
+                        mother: whitePrompt,
+                        attribute: {
+                          x: String(x),
+                          y: String(y),
+                          z: String(z),
+                          proid,
+                          desid,
+                          name: instance.client.name,
+                          designer: instance.designer.designer,
+                        },
+                        event: {
+                          click: async function (e) {
+                            const x = Number(this.getAttribute("x"));
+                            const y = Number(this.getAttribute("y"));
+                            const z = Number(this.getAttribute("z"));
+                            try {
+                              let tempFunction;
+                              let key, photoBoo, thisStatusNumber;
+
+                              if (typeof thisForm[x].children[y].children[z].type === "upload") {
+
+                                key = thisForm[x].children[y].children[z].key;
+                                photoBoo = thisForm[x].children[y].children[z].photo;
+                                thisStatusNumber = instance.panContents.findIndex((o) => { return o.key === key });
+  
+                                removeByClass(blockContextMenuClassName);
+                                instance.uploadFiles(thisStatusNumber, photoBoo).call(this, e);
+
+                              }
+
+                            } catch (e) {
+                              console.log(e);
+                            }
+                          },
+                        },
+                        style: {
+                          display: "flex",
+                          height: String(blackButtonHeight) + ea,
+                          width: String(blackButtonWidth) + ea,
+                          borderRadius: String(5) + "px",
+                          background: colorChip.gradientGray,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          marginBottom: String(blackButtonBetween) + ea,
+                          cursor: "pointer",
+                        },
+                        child: {
+                          text: thisForm[x].children[y].children[z].title,
+                          style: {
+                            display: "inline-block",
+                            position: "relative",
+                            fontSize: String(blackButtonSize) + ea,
+                            fontWeight: String(blackButtonWeight),
+                            color: colorChip.white,
+                            top: String(blackButtonTextTop) + ea,
+                            cursor: "pointer",
+                          }
+                        }
+                      });
+
+                    }
                   }
 
                 } catch (e) {

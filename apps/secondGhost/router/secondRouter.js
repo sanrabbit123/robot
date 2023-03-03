@@ -1318,9 +1318,14 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "현장 사진 업로드",
+                  type: "upload",
+                  key: "firstPhoto",
+                  photo: true,
                 },
                 {
                   title: "현장 사진 메모",
+                  type: "memo",
+                  key: "firstPhoto",
                 },
               ],
             },
@@ -1331,6 +1336,8 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "일정표 메모",
+                  type: "memo",
+                  key: "designSchedule",
                 },
               ],
             },
@@ -1341,9 +1348,14 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "컨셉 제안서 업로드",
+                  type: "upload",
+                  key: "designProposal",
+                  photo: false,
                 },
                 {
                   title: "컨셉 제안서 메모",
+                  type: "memo",
+                  key: "designProposal",
                 },
               ],
             },
@@ -1354,9 +1366,14 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "디자인 제안서 업로드",
+                  type: "upload",
+                  key: "designDevelop",
+                  photo: false,
                 },
                 {
                   title: "디자인 제안서 메모",
+                  type: "memo",
+                  key: "designDevelop",
                 },
               ],
             },
@@ -1367,9 +1384,14 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "디자인 제안서 업로드",
+                  type: "upload",
+                  key: "designDevelop",
+                  photo: false,
                 },
                 {
                   title: "디자인 제안서 메모",
+                  type: "memo",
+                  key: "designDevelop",
                 },
               ],
             },
@@ -1380,9 +1402,14 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "제품 리스트 업로드",
+                  type: "upload",
+                  key: "productList",
+                  photo: false,
                 },
                 {
                   title: "제품 리스트 메모",
+                  type: "memo",
+                  key: "productList",
                 },
               ],
             },
@@ -1393,6 +1420,8 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "최종 완료 메모",
+                  type: "memo",
+                  key: "finalDesign",
                 },
               ],
             },
@@ -1408,9 +1437,14 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "시공 의뢰서 업로드",
+                  type: "upload",
+                  key: "constructInfo",
+                  photo: false,
                 },
                 {
                   title: "시공 의뢰서 메모",
+                  type: "memo",
+                  key: "constructInfo",
                 },
               ],
             },
@@ -1421,9 +1455,14 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "시공 견적서 업로드",
+                  type: "upload",
+                  key: "constructEstimate",
+                  photo: false,
                 },
                 {
                   title: "시공 견적서 메모",
+                  type: "memo",
+                  key: "constructEstimate",
                 },
               ],
             },
@@ -1434,12 +1473,18 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "홈리에종 시공사",
+                  type: "selection",
+                  value: 0,
                 },
                 {
                   title: "디자이너 시공사",
+                  type: "selection",
+                  value: 0,
                 },
                 {
                   title: "고객 시공사",
+                  type: "selection",
+                  value: 0,
                 },
               ]
             },
@@ -1450,6 +1495,8 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "시공 공정표 메모",
+                  type: "memo",
+                  key: "constructSchedule",
                 },
               ],
             },
@@ -1460,6 +1507,8 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "시공 착수 메모",
+                  type: "memo",
+                  key: "constructStart",
                 },
               ],
             },
@@ -1470,6 +1519,8 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "시공 진행 메모",
+                  type: "memo",
+                  key: "constructProgress",
                 },
               ],
             },
@@ -1480,9 +1531,14 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "시공 사진 업로드",
+                  type: "upload",
+                  key: "middlePhoto",
+                  photo: true,
                 },
                 {
                   title: "시공 사진 메모",
+                  type: "memo",
+                  key: "middlePhoto",
                 },
               ],
             },
@@ -1493,6 +1549,8 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "시공 AS 메모",
+                  type: "memo",
+                  key: "constructFinal",
                 },
               ],
             },
@@ -1508,9 +1566,14 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "제품 리스트 업로드",
+                  type: "upload",
+                  key: "productList",
+                  photo: false,
                 },
                 {
                   title: "제품 리스트 메모",
+                  type: "memo",
+                  key: "productList",
                 },
               ],
             },
@@ -1520,7 +1583,9 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               value: 0,
               children: [
                 {
-                  title: "제품 구매 메모"
+                  title: "제품 구매 메모",
+                  type: "memo",
+                  key: "productPurchase",
                 }
               ]
             },
@@ -1530,7 +1595,9 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               value: 0,
               children: [
                 {
-                  title: "배송중 메모"
+                  title: "배송중 메모",
+                  type: "memo",
+                  key: "productProgress",
                 }
               ]
             },
@@ -1540,10 +1607,15 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               value: 0,
               children: [
                 {
-                  title: "제품 배치도 업로드"
+                  title: "제품 배치도 업로드",
+                  type: "upload",
+                  key: "settingGuide",
+                  photo: false,
                 },
                 {
-                  title: "제품 배치도 메모"
+                  title: "제품 배치도 메모",
+                  type: "memo",
+                  key: "settingGuide",
                 },
               ]
             },
@@ -1559,9 +1631,13 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               children: [
                 {
                   title: "촬영 진행 희망",
+                  type: "selection",
+                  value: 0,
                 },
                 {
                   title: "촬영 진행 안 함",
+                  type: "selection",
+                  value: 0,
                 }
               ]
             },
@@ -1571,7 +1647,9 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               value: 0,
               children: [
                 {
-                  title: "촬영일 메모"
+                  title: "촬영일 메모",
+                  type: "memo",
+                  key: "contentsPhoto",
                 }
               ]
             },
@@ -1581,7 +1659,9 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               value: 0,
               children: [
                 {
-                  title: "세팅 관련 메모"
+                  title: "세팅 관련 메모",
+                  type: "memo",
+                  key: "projectFinal",
                 }
               ]
             },
