@@ -1338,7 +1338,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
                   title: "일정표 업로드",
                   type: "upload",
                   key: "scheduleInfo",
-                  photo: true,
+                  photo: false,
                 },
                 {
                   title: "일정표 메모",
