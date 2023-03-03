@@ -8236,7 +8236,7 @@ ProcessDetailJs.prototype.uploadLink = function (thisStatusNumber) {
 
 }
 
-ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
+ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber, customKey = null, customTitle = null) {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
@@ -8264,8 +8264,13 @@ ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber) {
   let memoJson;
 
   serviceContents = this.panContents;
-  thisKey = serviceContents[thisStatusNumber].key;
-  thisTitle = serviceContents[thisStatusNumber].title;
+  if (thisStatusNumber === -1 && typeof customKey === "string" && typeof customTitle === "string") {
+    thisKey = customKey;
+    thisTitle = customTitle;
+  } else {
+    thisKey = serviceContents[thisStatusNumber].key;
+    thisTitle = serviceContents[thisStatusNumber].title;
+  }
 
   whitePromptWidth = <%% 900, 800, 700, 600, 88 %%>;
   whitePromptHeight = <%% 492, 492, 492, 420, 120 %%>;
@@ -13966,10 +13971,10 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     percentageSize = <%% 20, 20, 17, 14, 7.5 %%>;
     percentageTextTop = <%% -1, -1, -1, -1, 0 %%>;
 
-    blackButtonWidth = <%% 132, 120, 120, 120, 120 %%>;
-    blackButtonHeight = <%% 34, 32, 30, 28, 32 %%>;
-    blackButtonBetween = <%% 4, 4, 4, 4, 4 %%>;
-    blackButtonMargin = <%% 6, 6, 6, 6, 6 %%>;
+    blackButtonWidth = <%% 132, 122, 114, 104, 12 %%>;
+    blackButtonHeight = <%% 34, 30, 28, 26, 32 %%>;
+    blackButtonBetween = <%% 4, 4, 3, 2, 4 %%>;
+    blackButtonMargin = <%% 6, 6, 5, 4, 6 %%>;
     blackButtonSize = <%% 13, 12, 11, 10, 2.5 %%>;
     blackButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
     blackButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
@@ -14486,121 +14491,164 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                   const zIndex = 4;
                   let cancelBack, whitePrompt;
 
-                  if (!deactive) {
+                  if (desktop) {
+                    if (!deactive) {
 
-                    cancelBack = createNode({
-                      mother: formPanBase,
-                      class: [ blockContextMenuClassName ],
-                      event: {
-                        click: function (e) {
-                          removeByClass(blockContextMenuClassName);
-                        }
-                      },
-                      style: {
-                        display: "block",
-                        position: "fixed",
-                        top: String(0),
-                        left: String(0),
-                        width: withOut(0, ea),
-                        height: withOut(0, ea),
-                        background: "transparent",
-                        zIndex: String(zIndex),
-                      }
-                    });
-  
-                    whitePrompt = createNode({
-                      mother: formPanBase,
-                      class: [ blockContextMenuClassName ],
-                      style: {
-                        display: "inline-block",
-                        position: "fixed",
-                        top: String(e.clientY - baseTong.getBoundingClientRect().top) + "px",
-                        left: String(e.clientX - baseTong.getBoundingClientRect().left) + "px",
-                        width: String(blackButtonWidth) + ea,
-                        background: colorChip.white,
-                        borderRadius: String(5) + "px",
-                        boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
-                        animation: "fadeuplite 0.3s ease forwards",
-                        zIndex: String(zIndex),
-                        padding: String(blackButtonMargin) + ea,
-                        paddingBottom: String(blackButtonMargin - blackButtonBetween) + ea,
-                      }
-                    });
-
-                    for (let z = 0; z < thisForm[x].children[y].children.length; z++) {
-                      createNode({
-                        mother: whitePrompt,
-                        attribute: {
-                          x: String(x),
-                          y: String(y),
-                          z: String(z),
-                          proid,
-                          desid,
-                          name: instance.client.name,
-                          designer: instance.designer.designer,
-                        },
+                      cancelBack = createNode({
+                        mother: formPanBase,
+                        class: [ blockContextMenuClassName ],
                         event: {
-                          click: async function (e) {
-                            const x = Number(this.getAttribute("x"));
-                            const y = Number(this.getAttribute("y"));
-                            const z = Number(this.getAttribute("z"));
-                            const type = thisForm[x].children[y].children[z].type;
-                            try {
-                              let tempFunction;
-                              let key, photoBoo, thisStatusNumber;
-
-                              if (type === "upload") {
-
-                                key = thisForm[x].children[y].children[z].key;
-                                photoBoo = thisForm[x].children[y].children[z].photo;
-                                thisStatusNumber = instance.panContents.findIndex((o) => { return o.key === key });
-  
-                                removeByClass(blockContextMenuClassName);
-                                instance.uploadFiles(thisStatusNumber, photoBoo).call(this, e);
-
-                              } else if (type === "memo") {
-
-                                key = thisForm[x].children[y].children[z].key;
-                                thisStatusNumber = instance.panContents.findIndex((o) => { return o.key === key });
-
-                                removeByClass(blockContextMenuClassName);
-                                instance.plusMemo(thisStatusNumber).call(this, e);
-
-                              }
-
-                            } catch (e) {
-                              console.log(e);
-                            }
-                          },
+                          click: function (e) {
+                            removeByClass(blockContextMenuClassName);
+                          }
                         },
                         style: {
-                          display: "flex",
-                          height: String(blackButtonHeight) + ea,
-                          width: String(blackButtonWidth) + ea,
-                          borderRadius: String(5) + "px",
-                          background: colorChip.gradientGray,
-                          justifyContent: "center",
-                          alignItems: "center",
-                          marginBottom: String(blackButtonBetween) + ea,
-                          cursor: "pointer",
-                        },
-                        child: {
-                          text: thisForm[x].children[y].children[z].title,
-                          style: {
-                            display: "inline-block",
-                            position: "relative",
-                            fontSize: String(blackButtonSize) + ea,
-                            fontWeight: String(blackButtonWeight),
-                            color: colorChip.white,
-                            top: String(blackButtonTextTop) + ea,
-                            cursor: "pointer",
-                          }
+                          display: "block",
+                          position: "fixed",
+                          top: String(0),
+                          left: String(0),
+                          width: withOut(0, ea),
+                          height: withOut(0, ea),
+                          background: "transparent",
+                          zIndex: String(zIndex),
                         }
                       });
+    
+                      whitePrompt = createNode({
+                        mother: formPanBase,
+                        class: [ blockContextMenuClassName ],
+                        style: {
+                          display: "inline-block",
+                          position: "fixed",
+                          top: String(e.clientY - baseTong.getBoundingClientRect().top) + "px",
+                          left: String(e.clientX - baseTong.getBoundingClientRect().left) + "px",
+                          width: String(blackButtonWidth) + ea,
+                          background: colorChip.white,
+                          borderRadius: String(5) + "px",
+                          boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+                          animation: "fadeuplite 0.3s ease forwards",
+                          zIndex: String(zIndex),
+                          padding: String(blackButtonMargin) + ea,
+                          paddingBottom: String(blackButtonMargin - blackButtonBetween) + ea,
+                        }
+                      });
+  
+                      for (let z = 0; z < thisForm[x].children[y].children.length; z++) {
+                        createNode({
+                          mother: whitePrompt,
+                          attribute: {
+                            x: String(x),
+                            y: String(y),
+                            z: String(z),
+                            proid,
+                            desid,
+                            name: instance.client.name,
+                            designer: instance.designer.designer,
+                          },
+                          event: {
+                            click: async function (e) {
+                              const self = this;
+                              const x = Number(this.getAttribute("x"));
+                              const y = Number(this.getAttribute("y"));
+                              const z = Number(this.getAttribute("z"));
+                              const proid = this.getAttribute("proid");
+                              const desid = this.getAttribute("desid");
+                              const type = thisForm[x].children[y].children[z].type;
+                              try {
+                                let tempFunction;
+                                let key, photoBoo, thisStatusNumber;
+                                let matrix;
+                                let siblings;
+  
+                                if (type === "upload") {
+  
+                                  key = thisForm[x].children[y].children[z].key;
+                                  photoBoo = thisForm[x].children[y].children[z].photo;
+                                  thisStatusNumber = instance.panContents.findIndex((o) => { return o.key === key });
+    
+                                  removeByClass(blockContextMenuClassName);
+                                  instance.uploadFiles(thisStatusNumber, photoBoo).call(this, e);
+  
+                                } else if (type === "memo") {
+  
+                                  key = thisForm[x].children[y].children[z].key;
+                                  thisStatusNumber = instance.panContents.findIndex((o) => { return o.key === key });
+  
+                                  removeByClass(blockContextMenuClassName);
+                                  if (thisStatusNumber === -1) {
+                                    instance.plusMemo(thisStatusNumber, key, thisForm[x].children[y].children[z].title.replace(/메모/gi, "").trim()).call(this, e);
+                                  } else {
+                                    instance.plusMemo(thisStatusNumber).call(this, e);
+                                  }
+  
+                                } else if (type === "selection") {
+  
+                                  matrix = equalJson(JSON.stringify(thisForm));
+  
+                                  if (thisForm[x].children[y].children[z].value === 0) {
+                                    siblings = [ ...this.parentElement.children ];
+                                    for (let k = 0; k < thisForm[x].children[y].children.length; k++) {
+                                      thisForm[x].children[y].children[k].value = k === z ? 1 : 0;
+                                      matrix[x].children[y].children[k].value = k === z ? 1 : 0;
+                                      siblings[k].style.background = k === z ? colorChip.gradientGreen : colorChip.gray2;
+                                      siblings[k].firstChild.style.color = k === z ? colorChip.white : colorChip.deactive;  
+                                    }
+                                  } else {
+                                    this.style.background = colorChip.gray2;
+                                    this.firstChild.style.color = colorChip.deactive;
+                                    thisForm[x].children[y].children[z].value = 0;
+                                    matrix[x].children[y].children[z].value = 0;
+                                  }
+  
+                                  await ajaxJson({
+                                    mode: "update",
+                                    proid,
+                                    desid,
+                                    matrix
+                                  }, SECONDHOST + "/projectDesignerStatus");
 
+                                  setQueue(() => {
+                                    self.parentElement.style.animation = "fadedownlite 0.3s ease forwards";
+                                    setQueue(() => {
+                                      removeByClass(blockContextMenuClassName);
+                                    }, 301);
+                                  }, 200);
+
+                                }
+  
+                              } catch (e) {
+                                console.log(e);
+                              }
+                            },
+                          },
+                          style: {
+                            display: "flex",
+                            height: String(blackButtonHeight) + ea,
+                            width: String(blackButtonWidth) + ea,
+                            borderRadius: String(5) + "px",
+                            background: thisForm[x].children[y].children[z].type !== "selection" ? colorChip.gradientGray : (thisForm[x].children[y].children[z].value === 0 ? colorChip.gray2 : colorChip.gradientGreen),
+                            justifyContent: "center",
+                            alignItems: "center",
+                            marginBottom: String(blackButtonBetween) + ea,
+                            cursor: "pointer",
+                          },
+                          child: {
+                            text: thisForm[x].children[y].children[z].title,
+                            style: {
+                              display: "inline-block",
+                              position: "relative",
+                              fontSize: String(blackButtonSize) + ea,
+                              fontWeight: String(blackButtonWeight),
+                              color: thisForm[x].children[y].children[z].type !== "selection" ? colorChip.white : (thisForm[x].children[y].children[z].value === 0 ? colorChip.deactive : colorChip.white),
+                              top: String(blackButtonTextTop) + ea,
+                              cursor: "pointer",
+                            }
+                          }
+                        });
+  
+                      }
                     }
                   }
-
                 } catch (e) {
                   console.log(e);
                 }
