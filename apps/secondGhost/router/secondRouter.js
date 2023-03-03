@@ -1362,6 +1362,11 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               value: 0,
             },
             {
+              title: "시공사 선택 완료",
+              deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
+              value: 0,
+            },
+            {
               title: "공정표 공유됨",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
