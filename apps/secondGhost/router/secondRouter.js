@@ -1750,6 +1750,9 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             whereQuery = { proid };
             updateQuery = {};
             updateQuery["matrix." + String(x) + ".children." + String(y) + ".value"] = 1;
+
+            console.log(updateQuery);
+
             await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
           }
         }
