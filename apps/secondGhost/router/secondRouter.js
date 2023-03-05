@@ -1743,9 +1743,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
         target = rows[0];
         key = req.body.key;
         x = target.matrix.findIndex((obj) => { return obj.children.some((o) => { return o.key === key }); });
-
-        console.log(x);
-
+        
         if (x !== -1) {
           y = target.matrix[x].children.findIndex((obj) => { return obj.key === key });
           if (y !== -1) {

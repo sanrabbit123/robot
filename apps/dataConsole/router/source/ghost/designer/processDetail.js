@@ -14461,6 +14461,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                         title: targetDoms[w].getAttribute("title"),
                         deactive: targetDoms[w].getAttribute("deactive") === "true",
                         value: targetDoms[w].getAttribute("toggle") === "on" ? 1 : 0,
+                        key: equalJson(JSON.stringify(thisForm[z].children[w].key)),
                         children: equalJson(JSON.stringify(thisForm[z].children[w].children)),
                       });
                     }
