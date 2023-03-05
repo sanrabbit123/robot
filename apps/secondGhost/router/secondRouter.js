@@ -1303,6 +1303,10 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
       let project;
       let defaultObj;
       let matrix;
+      let target;
+      let key;
+      let x, y;
+      let whereQuery, updateQuery;
 
       resultObj = { message: "done" };
 
@@ -1316,6 +1320,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "현장 미팅 완료",
               deactive: false,
               value: 0,
+              key: "firstPhoto",
               children: [
                 {
                   title: "현장 사진 업로드",
@@ -1334,6 +1339,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "일정표 공유됨",
               deactive: false,
               value: 0,
+              key: "scheduleInfo",
               children: [
                 {
                   title: "일정표 업로드",
@@ -1352,6 +1358,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "컨셉 제안서 공유됨",
               deactive: false,
               value: 0,
+              key: "designProposal",
               children: [
                 {
                   title: "컨셉 제안서 업로드",
@@ -1370,6 +1377,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "1차 디자인 제안서 공유됨",
               deactive: false,
               value: 0,
+              key: "designDevelop",
               children: [
                 {
                   title: "디자인 제안서 업로드",
@@ -1388,6 +1396,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "수정 제안서 공유됨",
               deactive: false,
               value: 0,
+              key: "designFix",
               children: [
                 {
                   title: "디자인 제안서 업로드",
@@ -1406,6 +1415,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "제품 리스트 공유됨",
               deactive: false,
               value: 0,
+              key: "productList",
               children: [
                 {
                   title: "제품 리스트 업로드",
@@ -1424,6 +1434,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "디자인 제안서 최종 컨펌",
               deactive: false,
               value: 0,
+              key: "finalDesign",
               children: [
                 {
                   title: "최종 완료 메모",
@@ -1441,6 +1452,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "시공 의뢰서 공유됨",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              key: "constructInfo",
               children: [
                 {
                   title: "시공 의뢰서 업로드",
@@ -1459,6 +1471,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "시공 견적서 공유됨",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              key: "constructEstimate",
               children: [
                 {
                   title: "시공 견적서 업로드",
@@ -1477,6 +1490,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "시공사 선택 완료",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              key: "constructSelection",
               children: [
                 {
                   title: "홈리에종 시공사",
@@ -1499,6 +1513,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "공정표 공유됨",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              key: "constructSchedule",
               children: [
                 {
                   title: "시공 공정표 메모",
@@ -1511,6 +1526,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "시공 착수",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              key: "constructStart",
               children: [
                 {
                   title: "시공 착수 메모",
@@ -1523,6 +1539,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "시공 진행중",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              key: "constructProgress",
               children: [
                 {
                   title: "시공 진행 메모",
@@ -1535,6 +1552,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "시공 완료",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              key: "constructMiddleFinal",
               children: [
                 {
                   title: "시공 사진 업로드",
@@ -1553,6 +1571,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "시공 AS 완료",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
+              key: "constructFinal",
               children: [
                 {
                   title: "시공 AS 메모",
@@ -1570,6 +1589,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "제품 구매 시작 전",
               deactive: false,
               value: 0,
+              key: "productReady",
               children: [
                 {
                   title: "제품 리스트 업로드",
@@ -1588,6 +1608,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "제품 구매 진행중",
               deactive: false,
               value: 0,
+              key: "productPurchase",
               children: [
                 {
                   title: "제품 구매 메모",
@@ -1600,6 +1621,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "구매 완료, 배송중",
               deactive: false,
               value: 0,
+              key: "productProgress",
               children: [
                 {
                   title: "배송중 메모",
@@ -1612,6 +1634,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "배송 및 세팅 완료",
               deactive: false,
               value: 0,
+              key: "productComplete",
               children: [
                 {
                   title: "제품 배치도 업로드",
@@ -1635,6 +1658,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "촬영 여부 확인",
               deactive: false,
               value: 0,
+              key: "photoSelection",
               children: [
                 {
                   title: "촬영 진행 희망",
@@ -1652,6 +1676,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "촬영일 확인 완료",
               deactive: false,
               value: 0,
+              key: "contentsPhoto",
               children: [
                 {
                   title: "촬영일 메모",
@@ -1664,6 +1689,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
               title: "세팅 및 촬영 완료",
               deactive: false,
               value: 0,
+              key: "projectFinal",
               children: [
                 {
                   title: "세팅 관련 메모",
@@ -1705,6 +1731,29 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
 
         resultObj = { message: "done" };
 
+      } else if (mode === "chain") {
+
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        if (rows.length === 0) {
+          await back.mongoCreate(collection, {
+            proid, desid, matrix: defaultObj
+          }, { selfMongo });
+          rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        }
+        target = rows[0];
+        key = req.body.key;
+
+        x = target.matrix.findIndex((obj) => { return obj.children.some((o) => { return o.key === key }); });
+        if (x !== -1) {
+          y = target.matrix[x].children.findIndex((obj) => { return obj.key === key });
+          if (y !== -1) {
+            whereQuery = { proid };
+            updateQuery = {};
+            updateQuery["matrix." + String(x) + ".children." + String(y) + ".value"] = 1;
+            await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+          }
+        }
+        
       }
 
       res.send(JSON.stringify(resultObj));

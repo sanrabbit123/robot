@@ -7777,9 +7777,10 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                       ({ hash } = await ajaxJson({ mode: "crypto", string: String((new Date()).valueOf()) }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
                       formData.append("name", hash);
     
-                      res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                      res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
                       await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
-    
+                      await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
+
                       window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
   
                     } else {
@@ -7822,7 +7823,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
       } catch (e) {
         console.log(e);
         window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
-        // window.location.reload();
+        window.location.reload();
       }
     }
   } else {
@@ -7887,6 +7888,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
     
                       res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
                       await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
+                      await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
     
                       window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
   
@@ -8006,8 +8008,9 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
                   ({ hash } = await ajaxJson({ mode: "crypto", string: String((new Date()).valueOf()) }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
                   formData.append("name", hash);
     
-                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
                   await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
+                  await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
     
                   window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
   
@@ -8119,8 +8122,9 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
                   ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
                   formData.append("name", hash);
     
-                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary");
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
                   await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
+                  await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
     
                   window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
   
