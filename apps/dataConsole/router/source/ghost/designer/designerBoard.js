@@ -2354,17 +2354,18 @@ DesignerBoardJs.prototype.portfolioBlock = function (baseBlock) {
 
 }
 
-DesignerBoardJs.prototype.insertFormStatusBox = function (project) {
+DesignerBoardJs.prototype.insertFormStatusBox = async function (whiteTong, client, project) {
   const instance = this;
   const mother = this.mother;
   const { ea, baseTong, media } = this;
+  const { proid, desid } = project;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, serviceParsing } = GeneralJs;
   const dateToHangul = (dateObject) => {
     return `${String(dateObject.getFullYear()).slice(2)}년 ${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일`;
   }
@@ -2374,616 +2375,409 @@ DesignerBoardJs.prototype.insertFormStatusBox = function (project) {
     return new Date(2000 + Number(year), Number(month) - 1, Number(date));
   }
   const siblingKeywords = "siblingKeywords__";
-  let margin;
-  let paddingTop;
-  let whiteBottomMargin;
-  let titleFontSize;
-  let bottomMargin;
-  let whiteBlock;
-  let grayTong;
-  let contents;
-  let innerMargin;
-  let arrowWidth, arrowHeight;
-  let textTop;
-  let textSize, textWeight;
-  let textMarginLeft;
-  let mobileVisualPaddingValue;
-  let button, buttons;
-  let blockBetween;
-  let blockBetweenBottom;
-  let blockHeight;
-  let lineTop;
-  let columnsNumber;
-  let textFileWeight;
-  let whitePadding;
-  let smallSize, smallWeight, smallBetween;
-  let textTextTop;
-  let smallTextTop;
-  let panDom;
-  let veryBigSize;
-  let veryBigWeight;
-  let firstWidth;
-  let buttonWidth, buttonHeight;
-  let buttonOuterPadding, buttonInnerMargin;
-  let descriptionBetween;
-  let panWidth, panVisualLeft;
-  let veryBigTextTop;
-  let circleWidth, circleTop, circleLeft;
-  let subButtonWidth;
-  let thirdWidth;
-  let imageBoxVisualPaddingBottom;
-  let imageBetween;
-  let panBoxBetween;
-  let wordingPaddingTop0, wordingPaddingTop1;
-  let mainTong;
-  let wordingBoxWidth;
-  let contentsTong;
-  let contentsTongPaddingBottom;
-  let bigTextSize;
-  let bigTextWeight;
-  let bigTextTextTop;
-  let clock;
-  let formPanBase;
-  let thisPan;
-  let panBetween;
-  let panHeight, panInnerMargin;
-  let panCheckBoxWidth;
-  let panWhitePaddingLeft;
-  let panBlockBetween, panBlockBigBetween;
-  let buttonSize, buttonWeight, buttonTextTop;
-  let panPaddingTop;
-  let panTitleSize, panTitleWeight;
-  let formPanBaseMarginBottom;
-  let checkBoxWidth;
-  let blockTextSize, blockTextWeight;
-  let siblings;
+  const valueBlockClassName = "valueBlockClassName__";
+  try {
+    let margin;
+    let paddingTop;
+    let whiteBottomMargin;
+    let titleFontSize;
+    let bottomMargin;
+    let whiteBlock;
+    let grayTong;
+    let contents;
+    let innerMargin;
+    let arrowWidth, arrowHeight;
+    let textTop;
+    let textSize, textWeight;
+    let textMarginLeft;
+    let mobileVisualPaddingValue;
+    let button, buttons;
+    let blockBetween;
+    let blockBetweenBottom;
+    let blockHeight;
+    let lineTop;
+    let columnsNumber;
+    let textFileWeight;
+    let whitePadding;
+    let smallSize, smallWeight, smallBetween;
+    let textTextTop;
+    let smallTextTop;
+    let panDom;
+    let veryBigSize;
+    let veryBigWeight;
+    let firstWidth;
+    let buttonWidth, buttonHeight;
+    let buttonOuterPadding, buttonInnerMargin;
+    let descriptionBetween;
+    let panWidth, panVisualLeft;
+    let veryBigTextTop;
+    let circleWidth, circleTop, circleLeft;
+    let subButtonWidth;
+    let thirdWidth;
+    let imageBoxVisualPaddingBottom;
+    let imageBetween;
+    let panBoxBetween;
+    let wordingPaddingTop0, wordingPaddingTop1;
+    let mainTong;
+    let wordingBoxWidth;
+    let contentsTong;
+    let contentsTongPaddingBottom;
+    let bigTextSize;
+    let bigTextWeight;
+    let bigTextTextTop;
+    let clock;
+    let formPanBase;
+    let thisPan;
+    let panBetween;
+    let panHeight, panInnerMargin;
+    let panCheckBoxWidth;
+    let panWhitePaddingLeft;
+    let panBlockBetween, panBlockBigBetween;
+    let buttonSize, buttonWeight, buttonTextTop;
+    let panPaddingTop;
+    let panTitleSize, panTitleWeight;
+    let formPanBaseMarginBottom;
+    let checkBoxWidth;
+    let blockTextSize, blockTextWeight;
+    let siblings;
+    let thisForm;
+    let colorArr;
+    let barArrBase;
+    let barArrBlock;
+    let barArrBlockValuesBase;
+    let childrenMaxNumber;
+    let thisValueNumber;
+    let reloadBarArr;
+    let barBaseHeight, barFactorHeight, barFactorBetween;
+    let barFirstWidth;
+    let barArrBasePaddingTop;
+    let barArrBaseMarginTop;
+    let barArrTitleTextTop;
+    let reloadMainButtons;
+    let valueIndex;
+    let finalValueNumber;
+    let percentageSize;
+    let percentageTextTop;
+    let formPanBasePaddingBottom;
+    let printSize;
 
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
+    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+    margin = <%% 55, 55, 47, 39, 6 %%>;
+    paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
+    whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
+  
+    titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+    printSize = <%% 13, 12, 11, 10, 2.5 %%>;
 
-  whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
+    bigTextSize = <%% 36, 36, 36, 36, 4.4 %%>;
+    bigTextWeight = <%% 100, 100, 100, 100, 100 %%>;
+    bigTextTextTop = <%% (isMac() ? -7 : -5), (isMac() ? -7 : -5), -7, -7, -1 %%>;
+  
+    veryBigSize = <%% 17, 16, 14, 14, 3.4 %%>;
+    veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
+    veryBigTextTop = <%% (isMac() ? 1 : 3), (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 1 : 3), -1 %%>;
+  
+    innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+  
+    textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+    smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
+  
+    textSize = <%% 13, 13, 12, 11, 3.2 %%>;
+    textWeight = <%% 700, 700, 700, 700, 700 %%>;
+    textFileWeight = <%% 400, 400, 400, 400, 400 %%>;
+  
+    whitePadding = <%% 12, 12, 8, 8, 2.2 %%>;
+  
+    blockBetween = <%% 36, 28, 26, 24, 5 %%>;
+    blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
+    blockHeight = <%% 30, 30, 28, 26, 4 %%>;
+  
+    lineTop = <%% 18, 18, 16, 13, 1.9 %%>;
+  
+    firstWidth = <%% 230, 210, 190, 160, 28 %%>;
+  
+    panWidth = <%% 20, 20, 20, 20, 2 %%>;
+    panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
+  
+    circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
+    circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
+    circleLeft = <%% -7, -7, -7, -5, -0.8 %%>;
+  
+    arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
+    arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
+  
+    subButtonWidth = <%% 90, 72, 72, 64, 16 %%>;
+  
+    mobileVisualPaddingValue = 0.2;
+  
+    thirdWidth = <%% 240, 0, 0, 0, 0 %%>;
+  
+    imageBoxVisualPaddingBottom = <%% 4, 2, 2, 2, 0 %%>;
+    imageBetween = <%% 32, 16, 12, 12, 6 %%>;
+    panBoxBetween = <%% 12, 32, 26, 24, 12 %%>;
+  
+    wordingPaddingTop0 = <%% 300, 213, 213, 213, 213 %%>;
+    wordingPaddingTop1 = <%% 309, 243, 243, 243, 243 %%>;
+  
+    wordingBoxWidth = <%% 175, 185, 175, 115, 175 %%>;
+  
+    contentsTongPaddingBottom = <%% 15, 15, 15, 15, 5 %%>;
+    panBetween = <%% 28, 28, 24, 20, 2 %%>;
+  
+    panHeight = <%% 48, 48, 45, 42, 11 %%>;
+    panInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
+  
+    panCheckBoxWidth = <%% 32, 24, 20, 20, 8 %%>;
+    checkBoxWidth = <%% 13, 11, 9, 9, 3 %%>;
+  
+    panWhitePaddingLeft = <%% 16, 14, 14, 12, 3.5 %%>; 
+    panBlockBetween = <%% 8, 8, 6, 5, 1 %%>; 
+    panBlockBigBetween = <%% 8, 8, 6, 5, 1 %%>; 
+  
+    buttonWidth = <%% 100, 80, 70, 60, 20 %%>;
+    buttonHeight = <%% 36, 28, 26, 24, 7.8 %%>;
+  
+    buttonSize = <%% 15, 13, 12, 11, 3.2 %%>;
+    buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+  
+    panPaddingTop = <%% 22, 18, 14, 14, 4 %%>;
+  
+    panTitleSize = <%% 16, 15, 14, 13, 3.8 %%>;
+    panTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  
+    formPanBaseMarginBottom = <%% 12, 8, 6, 6, 4 %%>;
+  
+    blockTextSize = <%% 14, 13, 12, 11, 3.2 %%>;
+    blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
+  
+    barBaseHeight = <%% 30, 30, 26, 24, 6.8 %%>;
+    barFirstWidth = <%% 60, 56, 50, 42, 11 %%>;
+    barFactorHeight = <%% 20, 20, 18, 16, 4 %%>;
+    barFactorBetween = <%% 0, 0, 0, 0, 0 %%>;
 
-  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+    barArrBasePaddingTop = <%% 36, 32, 28, 25, 8 %%>;
+    barArrBaseMarginTop = <%% 48, 46, 40, 32, 9.5 %%>;
 
-  bigTextSize = <%% 36, 36, 36, 36, 4.4 %%>;
-  bigTextWeight = <%% 100, 100, 100, 100, 100 %%>;
-  bigTextTextTop = <%% (isMac() ? -7 : -5), (isMac() ? -7 : -5), -7, -7, -1 %%>;
+    barArrTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
-  veryBigSize = <%% 23, 21, 20, 16, 4.4 %%>;
-  veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
-  veryBigTextTop = <%% -1, -1, -2, -1, -1 %%>;
+    percentageSize = <%% 18, 18, 16, 14, 3.3 %%>;
+    percentageTextTop = <%% -2, -2, -2, -2, 0.2 %%>;
 
-  innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+    formPanBasePaddingBottom = <%% 16, 14, 12, 8, 2 %%>;
 
-  textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
-  smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
+    thisForm = await ajaxJson({ mode: "get", proid, desid }, SECONDHOST + "/projectDesignerStatus", { equal: true });
+  
+    contents = {
+      title: [
+        desktop ? project.name + "님&nbsp;&nbsp;<b%상태 관리하기 >%b>" : project.name + "&nbsp;&nbsp;<b%관리하기 >%b>",
+      ],
+      description: [
+        "고객님의 프로젝트 진행 상황을 알려드립니다.",
+        "문제가 있는 부분이 있다면 홈리에종에 연락 주세요!",
+      ],
+      form: thisForm,
+      button: "공유하기",
+    };
 
-  textSize = <%% 14, 14, 13, 12, 3.2 %%>;
-  textWeight = <%% 700, 700, 700, 700, 700 %%>;
-  textFileWeight = <%% 400, 400, 400, 400, 400 %%>;
+    colorArr = [
+      colorChip.gradientGreen,
+    ];
 
-  whitePadding = <%% 12, 12, 8, 8, 2.2 %%>;
+    reloadBarArr = () => {};
+    barArrBase = {};
 
-  blockBetween = <%% 36, 28, 26, 24, 5 %%>;
-  blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
-  blockHeight = <%% 36, 36, 32, 26, 4 %%>;
-
-  lineTop = <%% 18, 18, 16, 13, 1.9 %%>;
-
-  firstWidth = <%% 298, 230, 213, 142, 300 %%>;
-
-  panWidth = <%% 20, 20, 20, 20, 2 %%>;
-  panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
-
-  circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
-  circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
-  circleLeft = <%% -7, -7, -7, -5, -0.8 %%>;
-
-  arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
-  arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
-
-  subButtonWidth = <%% 90, 72, 72, 64, 16 %%>;
-
-  mobileVisualPaddingValue = 0.2;
-
-  thirdWidth = <%% 240, 0, 0, 0, 0 %%>;
-
-  imageBoxVisualPaddingBottom = <%% 4, 2, 2, 2, 0 %%>;
-  imageBetween = <%% 32, 16, 12, 12, 6 %%>;
-  panBoxBetween = <%% 12, 32, 26, 24, 12 %%>;
-
-  wordingPaddingTop0 = <%% 300, 213, 213, 213, 213 %%>;
-  wordingPaddingTop1 = <%% 309, 243, 243, 243, 243 %%>;
-
-  wordingBoxWidth = <%% 175, 185, 175, 115, 175 %%>;
-
-  contentsTongPaddingBottom = <%% 15, 15, 15, 15, 7 %%>;
-  panBetween = <%% 48, 30, 20, 20, 2 %%>;
-
-  panHeight = <%% 50, 48, 45, 42, 12 %%>;
-  panInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
-
-  panCheckBoxWidth = <%% 32, 24, 20, 20, 8 %%>;
-  checkBoxWidth = <%% 13, 11, 9, 9, 3 %%>;
-
-  panWhitePaddingLeft = <%% 16, 14, 14, 12, 3.5 %%>; 
-  panBlockBetween = <%% 8, 8, 6, 5, 1 %%>; 
-  panBlockBigBetween = <%% 8, 8, 6, 5, 1 %%>; 
-
-  buttonWidth = <%% 100, 90, 90, 80, 24 %%>;
-  buttonHeight = <%% 36, 36, 32, 30, 8.2 %%>;
-
-  buttonSize = <%% 15, 14, 14, 13, 3.5 %%>;
-  buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
-  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
-
-  panPaddingTop = <%% 18, 12, 12, 12, 4 %%>;
-
-  panTitleSize = <%% 16, 15, 14, 13, 3.6 %%>;
-  panTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-
-  formPanBaseMarginBottom = <%% 12, 8, 6, 6, 4 %%>;
-
-  blockTextSize = <%% 14, 13, 12, 11, 3.2 %%>;
-  blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
-
-  contents = {
-    title: [
-      project.name + "님은 현재",
-      "어느 단계인가요?"
-    ],
-    description: [
-      dateToHangul(new Date()) + " 현재를 기준으로",
-      project.name + "님께 해당되는 상태를 <b%모두 체크%b>해주세요!",
-    ],
-    form: [
-      {
-        title: "디자인",
-        children: [
-          {
-            title: "일정표 공유 전",
-            margin: false,
-          },
-          {
-            title: "일정표 공유됨",
-            margin: true,
-          },
-          {
-            title: "컨셉 제안서 공유",
-            margin: false,
-          },
-          {
-            title: "컨셉 제안서 컨펌",
-            margin: true,
-          },
-          {
-            title: "1차 디자인 제안서 공유",
-            margin: false,
-          },
-          {
-            title: "수정 제안서 공유",
-            margin: false,
-          },
-          {
-            title: "디자인 제안서 최종 컨펌",
-            margin: false,
-          },
-        ]
-      },
-      {
-        title: "시공",
-        children: [
-          {
-            title: "시공 의뢰서 공유",
-            margin: true,
-          },
-          {
-            title: "시공 견적서 비교",
-            margin: false,
-          },
-          {
-            title: "시공 견적서 컨펌",
-            margin: true,
-          },
-          {
-            title: "시공 진행중",
-            margin: false,
-          },
-          {
-            title: "시공 완료",
-            margin: true,
-          },
-          {
-            title: "시공 AS 진행중",
-            margin: false,
-          },
-          {
-            title: "시공 AS 최종 완료",
-            margin: true,
-          },
-        ]
-      },
-      {
-        title: "구매",
-        children: [
-          {
-            title: "제품 리스트 공유",
-            margin: false,
-          },
-          {
-            title: "제품 리스트 컨펌",
-            margin: true,
-          },
-          {
-            title: "제품 구매, 배송중",
-            margin: true,
-          },
-          {
-            title: "배송 및 세팅 완료",
-            margin: true,
-          },
-        ]
-      },
-    ],
-    button: "제출하기",
-  };
-
-  whiteBlock = createNode({
-    mother: baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      background: colorChip.white,
-      paddingTop: String(paddingTop) + ea,
-      paddingBottom: String(desktop ? whiteBottomMargin - blockBetweenBottom : 6.6) + ea,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-    },
-    children: [
-      {
+    grayTong = createNode({
+      mother: whiteTong,
+      style: {
         display: "block",
         position: "relative",
-        width: withOut(margin * 2, ea),
-        height: String(100) + '%',
-        marginLeft: String(margin) + ea,
+        paddingTop: String(innerMargin) + ea,
+        paddingBottom: String(desktop ? innerMargin : 0) + ea,
+        paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+        paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
+        width: withOut(innerMargin * 2, ea),
+        background: colorChip.white,
       }
-    ]
-  });
-  whiteTong = whiteBlock.firstChild;
-
-  grayTong = createNode({
-    mother: whiteTong,
-    style: {
-      display: "block",
-      position: "relative",
-      paddingTop: String(innerMargin) + ea,
-      paddingBottom: String(desktop ? innerMargin : 0) + ea,
-      paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
-      paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
-      width: withOut(innerMargin * 2, ea),
-      background: colorChip.white,
-      borderRadius: String(8) + "px",
-    }
-  });
-
-  mainTong = createNode({
-    mother: grayTong,
-    style: {
-      display: desktop ? "flex" : "block",
-      width: withOut(0),
-      flexDirection: desktop ? "row" : "",
-      justifyContent: desktop ? "start" : "",
-      alignItems: desktop ? "start" : "",
-    },
-    children: [
-      {
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: desktop ? String(firstWidth) + ea : withOut(0, ea),
-          verticalAlign: "top",
-          justifyContent: desktop ? "" : "center",
-          alignItems: desktop ? "" : "center",
-          marginTop: desktop ? "" : String(2.8) + ea,
-          marginBottom: desktop ? "" : String(3) + ea,
-        },
-        children: [
-          {
-            text: contents.title.join(desktop ? "\n" : " "),
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(veryBigSize) + ea,
-              fontWeight: String(veryBigWeight),
-              color: colorChip.black,
-              lineHeight: String(1.5),
-              top: desktop ? String(veryBigTextTop) + ea : "",
-            },
-            child: {
+    });
+  
+    mainTong = createNode({
+      mother: grayTong,
+      style: {
+        display: "flex",
+        width: withOut(0),
+        flexDirection: desktop ? "row" : "",
+        justifyContent: desktop ? "start" : "",
+        alignItems: desktop ? "start" : "",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(firstWidth) + ea,
+            verticalAlign: "top",
+            top: mobile ? String(isIphone() ? 0.3 : 0.1) + ea : ""
+          },
+          children: [
+            {
+              text: contents.title.join(desktop ? "\n" : " "),
               style: {
                 display: "inline-block",
-                position: "absolute",
-                top: String(circleTop) + ea,
-                left: String(circleLeft) + ea,
-                width: String(circleWidth) + ea,
-                height: String(circleWidth) + ea,
-                borderRadius: String(circleWidth) + ea,
-                background: colorChip.gray4,
+                position: "relative",
+                fontSize: String(veryBigSize) + ea,
+                fontWeight: String(veryBigWeight),
+                color: colorChip.black,
+                lineHeight: String(1.5),
+                top: desktop ? String(veryBigTextTop) + ea : "",
+              },
+              bold: {
+                fontSize: String(printSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.green,
+                cursor: "pointer",
               }
             }
-          }
-        ]
-      },
-      {
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          width: desktop ? withOut(firstWidth, ea) : withOut(0, ea),
-          verticalAlign: "top",
-          flexDirection: "column",
-        }
-      }
-    ]
-  });
-
-  contentsTong = mainTong.children[1];
-
-  clock = createNode({
-    mother: contentsTong,
-    style: {
-      display: "flex",
-      position: "relative",
-      flexDirection: "row",
-      width: withOut(0),
-      paddingBottom: String(contentsTongPaddingBottom) + ea,
-      borderBottom: "1px dashed " + colorChip.gray3,
-      justifyContent: desktop ? "" : "center",
-      alignItems: desktop ? "" : "center",
-    },
-    children: [
-      {
-        text: contents.description.join("\n"),
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(textSize) + ea,
-          fontWeight: String(textFileWeight),
-          color: colorChip.black,
-          lineHeight: String(1.6),
-          textAlign: desktop ? "" : "center",
+          ]
         },
-        bold: {
-          fontSize: String(textSize) + ea,
-          fontWeight: String(800),
-          color: colorChip.green,
-          lineHeight: String(1.6),
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: withOut(firstWidth, ea),
+            verticalAlign: "top",
+            flexDirection: "column",
+          }
         }
-      },
-      {
-        text: dateToString(new Date(), true).slice(0, -3),
-        style: {
-          display: (media[0] || media[1]) ? "inline-block" : "none",
-          position: "absolute",
-          right: String(0),
-          top: String(bigTextTextTop) + ea,
-          fontSize: String(bigTextSize) + ea,
-          fontWeight: String(bigTextWeight),
-          color: colorChip.green,
-        }
-      }
-    ]
-  }).children[1];
-
-  if (media[0] || media[1]) {
-    setInterval(() => {
-      clock.textContent = dateToString(new Date(), true).slice(0, -3);
-    }, 60 * 1000);
-  }
-
-  formPanBase = createNode({
-    mother: contentsTong,
-    style: {
-      display: "flex",
-      position: "relative",
-      flexDirection: desktop ? "row" : "column",
-      width: withOut(0),
-      justifyContent: "start",
-      alignItems: "start",
-      marginBottom: String(formPanBaseMarginBottom) + ea,
-      paddingBottom: desktop ? "" : String(16) + ea,
-    },
-  });
-
-  for (let i = 0; i < contents.form.length; i++) {
-
-    thisPan = createNode({
-      mother: formPanBase,
+      ]
+    });
+  
+    contentsTong = mainTong.children[1];
+  
+    barArrBase = createNode({
+      mother: contentsTong,
       style: {
         display: "flex",
         position: "relative",
         flexDirection: "column",
-        width: desktop ? "calc(calc(100% - " + String(panBetween * (contents.form.length - 1)) + ea + ") / " + String(contents.form.length) + ")" : withOut(0, ea),
-        marginRight: desktop ? (i === contents.form.length - 1 ? "" : String(panBetween) + ea) : "",
-        paddingTop: String(panPaddingTop) + ea,
-        verticalAlign: "top",
+        width: withOut(0),
+        justifyContent: "start",
+        alignItems: "start",
       }
     });
 
-    createNode({
-      mother: thisPan,
-      style: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: withOut(0, ea),
-        height: String(panHeight) + ea,
-      },
-      child: {
-        text: contents.form[i].title,
-        style: {
-          fontSize: String(panTitleSize) + ea,
-          fontWeight: String(panTitleWeight),
-          color: colorChip.black,
-        }
+    reloadBarArr = (barArrBase, thisForm) => {
+
+      cleanChildren(barArrBase);
+
+      childrenMaxNumber = thisForm.reduce((acc, curr) => {
+        return acc + curr.children.filter((obj) => { return obj.deactive !== true }).length;
+      }, 0);
+  
+      finalValueNumber = 0;
+      for (let i = 0; i < thisForm.length; i++) {
+        thisValueNumber = thisForm[i].children.filter((obj) => { return obj.value !== 0 }).length;
+        finalValueNumber = thisValueNumber + finalValueNumber;
       }
-    });
 
-    for (let j = 0; j < contents.form[i].children.length; j++) {
-      createNode({
-        mother: thisPan,
-        class: [ siblingKeywords + String(i) ],
-        attribute: {
-          toggle: "off",
-          x: String(i),
-          y: String(j),
-        },
-        event: {
-          click: function (e) {
-            const toggle = this.getAttribute("toggle");
-            const x = Number(this.getAttribute("x"));
-            const y = Number(this.getAttribute("y"));
-
-            if (toggle === "off") {
-              siblings = document.querySelectorAll('.' + siblingKeywords + String(x));
-              for (let dom of siblings) {
-                if (dom === this) {
-                  this.style.background = colorChip.gradientGreen;
-                  this.children[0].children[0].children[0].setAttribute("fill", colorChip.white);
-                  this.children[1].children[0].style.color = colorChip.green;
-                  this.setAttribute("toggle", "on");
-                } else {
-                  dom.style.background = colorChip.gray1;
-                  dom.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                  dom.children[1].children[0].style.color = colorChip.black;
-                  dom.setAttribute("toggle", "off");
-                }
-              }
-            } else {
-              this.style.background = colorChip.gray1;
-              this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-              this.children[1].children[0].style.color = colorChip.black;
-              this.setAttribute("toggle", "off");
-            }
-          },
-          mouseenter: function (e) {
-            if (this.getAttribute("toggle") === "off") {
-              this.style.background = colorChip.whiteGreen;
-              this.children[0].children[0].children[0].setAttribute("fill", colorChip.softGreen);
-              this.children[1].children[0].style.color = colorChip.green;
-            }
-          },
-          mouseleave: function (e) {
-            if (this.getAttribute("toggle") === "off") {
-              this.style.background = colorChip.gray1;
-              this.children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-              this.children[1].children[0].style.color = colorChip.black;
-            }
-          },
-        },
+      barArrBlock = createNode({
+        mother: barArrBase,
         style: {
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: withOut(0, ea),
-          height: String(panHeight) + ea,
-          background: colorChip.gray1,
-          borderRadius: String(5) + "px",
-          marginBottom: j === contents.form[i].children.length - 1 ? "" : (contents.form[i].children[j].margin ? String(panBlockBigBetween) + ea : String(panBlockBetween) + ea),
+          position: "relative",
           flexDirection: "row",
-          cursor: "pointer",
-          transition: "all 0s ease",
-        },
-        children: [
-          {
-            style: {
-              width: String(panCheckBoxWidth) + ea,
-              marginRight: String(panInnerMargin) + ea,
-              display: "inline-flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: withOut(panInnerMargin * 2, ea),
-              display: "inline-flex",
-              justifyContent: "center",
-              alignItems: "center",
-              transition: "all 0s ease",
-            },
-            child: {
-              mode: "svg",
-              source: svgMaker.checkBox(colorChip.gray4),
-              style: {
-                display: "inline-block",
-                position: "relative",
-                width: String(checkBoxWidth) + ea,
-                transition: "all 0s ease",
-              }
-            }
-          },
-          {
-            style: {
-              width: withOut(panCheckBoxWidth + (panInnerMargin * 3) + panWhitePaddingLeft, ea),
-              height: withOut(panInnerMargin * 2, ea),
-              background: colorChip.white,
-              borderRadius: String(5) + "px",
-              display: "inline-flex",
-              justifyContent: "start",
-              alignItems: "center",
-              paddingLeft: String(panWhitePaddingLeft) + ea,
-              transition: "all 0s ease",
-            },
-            child: {
-              text: contents.form[i].children[j].title,
-              style: {
-                display: "inline-block",
-                position: "relative",
-                fontSize: String(blockTextSize) + ea,
-                fontWeight: String(blockTextWeight),
-                color: colorChip.black,
-                top: String(textTextTop) + ea,
-                transition: "all 0s ease",
-              }
-            }
-          }
-        ]
+          justifyContent: "start",
+          alignItems: "center",
+          width: withOut(0),
+          height: desktop ? String(barBaseHeight) + ea : "",
+        }
       });
-    }
-  }
 
-  createNode({
-    mother: formPanBase,
-    style: {
-      display: "inline-flex",
-      justifyContent: "center",
-      alignItems: "center",
-      position: "absolute",
-      width: String(buttonWidth) + ea,
-      height: String(buttonHeight) + ea,
-      borderRadius: String(5) + "px",
-      background: colorChip.gradientGreen,
-      bottom: String(0),
-      right: desktop ? String(0) : withOut(50, buttonWidth / 2, ea),
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-      cursor: "pointer",
-    },
-    child: {
-      text: contents.button,
-      style: {
-        display: "inline-block",
-        position: "relative",
-        fontSize: String(buttonSize) + ea,
-        fontWeight: String(buttonWeight),
-        top: String(buttonTextTop) + ea,
-        color: colorChip.white,
-        cursor: "pointer",
+      createNode({
+        mother: barArrBlock,
+        style: {
+          display: "flex",
+          position: "relative",
+          width:  String(barFirstWidth) + ea,
+          height: withOut(0, ea),
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "start",
+          marginBottom: desktop ? "" : String(2) + ea,
+        },
+        child: {
+          text: String(Math.round((finalValueNumber / childrenMaxNumber) * 100)) + "<b%%%b>",
+          style: {
+            fontSize: String(percentageSize) + ea,
+            fontWeight: String(500),
+            fontFamily: "graphik",
+            color: colorChip.black,
+            position: "relative",
+            top: String(percentageTextTop) + ea,
+          },
+          bold: {
+            fontSize: String(percentageSize) + ea,
+            fontWeight: String(500),
+            fontFamily: "graphik",
+            color: colorChip.softGreen,
+          }
+        }
+      })
+
+      barArrBlockValuesBase = createNode({
+        mother: barArrBlock,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "center",
+          width: withOut(barFirstWidth, ea),
+          height: String(barFactorHeight) + ea,
+          borderRadius: String(5) + "px",
+          top: mobile ? String(-0.3) + ea : "",
+          overflow: "hidden",
+        },
+        child: {
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: withOut(0),
+            height: withOut(0),
+            background: colorChip.gradientGreen,
+          }
+        }
+      });
+
+      for (let j = 0; j < childrenMaxNumber; j++) {
+  
+        createNode({
+          mother: barArrBlockValuesBase,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            height: String(barFactorHeight) + ea,
+            width: "calc(calc(100% - " + String(barFactorBetween * (childrenMaxNumber - 1)) + ea + ") / " + String(childrenMaxNumber) + ")",
+            background: j < finalValueNumber ? "transparent" : colorChip.gray2,
+            marginRight: j !== childrenMaxNumber - 1 ? String(barFactorBetween) + ea : "",
+          }
+        });
+
       }
+
     }
-  })
 
+    reloadBarArr(barArrBase, thisForm);
+  
+    return grayTong;
 
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-DesignerBoardJs.prototype.insertFormsBox = function () {
+DesignerBoardJs.prototype.insertFormsBox = async function () {
   const instance = this;
   const mother = this.mother;
   const { clients, projects, requestNumber, ea, baseTong, media, desid } = this;
@@ -2992,13 +2786,92 @@ DesignerBoardJs.prototype.insertFormsBox = function () {
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, selfHref } = GeneralJs;
-  let currentTargets;
-  currentTargets = equalJson(JSON.stringify(projects));
-  currentTargets = currentTargets.filter((obj) => {
-    return (!/드[랍롭]/gi.test(obj.process.status) && !/홀[드딩]/gi.test(obj.process.status) && !/완료/gi.test(obj.process.status));
-  })
-  for (let project of currentTargets) {
-    instance.insertFormStatusBox(project);
+  try {
+    let currentTargets;
+    let whiteBlock;
+    let whiteTong;
+    let bottomMargin;
+    let margin;
+    let paddingTop;
+    let whiteBottomMargin;
+    let blockBetweenBottom;
+    let thisBase;
+    let num;
+    let blockBetween;
+
+    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+    margin = <%% 55, 55, 47, 39, 6 %%>;
+    paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
+    whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
+    blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
+    blockBetween = <%% 14, 14, 12, 10, 2 %%>;
+
+    currentTargets = equalJson(JSON.stringify(projects));
+    currentTargets = currentTargets.filter((obj) => {
+      return (!/드[랍롭]/gi.test(obj.process.status) && !/홀[드딩]/gi.test(obj.process.status) && !/완료/gi.test(obj.process.status));
+    })
+    currentTargets.sort((a, b) => {
+      const emptyValue = Math.abs((new Date(1200, 0, 1)).valueOf());
+      let aConst, bConst;
+
+      if (/드[랍롭]/gi.test(a.process.status) || /홀[드딩]/gi.test(a.process.status)) {
+        aConst = 1;
+      } else if (/완료/gi.test(a.process.status)) {
+        aConst = 10000;
+      } else {
+        aConst = 100000000;
+      }
+
+      if (/드[랍롭]/gi.test(b.process.status) || /홀[드딩]/gi.test(b.process.status)) {
+        bConst = 1;
+      } else if (/완료/gi.test(b.process.status)) {
+        bConst = 10000;
+      } else {
+        bConst = 100000000;
+      }
+
+      return ((b.process.contract.form.date.from.valueOf() + emptyValue) * bConst) - ((a.process.contract.form.date.from.valueOf() + emptyValue) * aConst);
+    });
+
+
+    whiteBlock = createNode({
+      mother: baseTong,
+      style: {
+        position: "relative",
+        borderRadius: String(desktop ? 8 : 1) + ea,
+        width: String(100) + '%',
+        background: colorChip.white,
+        paddingTop: String(paddingTop) + ea,
+        paddingBottom: String(desktop ? whiteBottomMargin - blockBetweenBottom : 6.6) + ea,
+        marginBottom: String(bottomMargin) + ea,
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      },
+      children: [
+        {
+          display: "block",
+          position: "relative",
+          width: withOut(margin * 2, ea),
+          height: String(100) + '%',
+          marginLeft: String(margin) + ea,
+        }
+      ]
+    });
+    whiteTong = whiteBlock.firstChild;
+
+    num = 0;
+    for (let project of currentTargets) {
+      thisBase = await instance.insertFormStatusBox(whiteTong, clients.find((obj) => { return obj.cliid === project.cliid }), project);
+
+      if (num !== currentTargets.length - 1) {
+        thisBase.style.paddingBottom = String(blockBetween) + ea;
+        thisBase.style.marginBottom = String(blockBetween) + ea;
+        thisBase.style.borderBottom = "1px dashed " + colorChip.gray3;
+      }
+
+      num++;
+    }  
+  } catch (e) {
+    console.log(e);
   }
 }
 
@@ -3106,7 +2979,7 @@ DesignerBoardJs.prototype.launching = async function (loading) {
           let whiteBlock;
           instance.insertInitBox();
           if (getObj.mode === "form") {
-            instance.insertFormsBox();
+            await instance.insertFormsBox();
           }
           instance.insertRouterBox();
           instance.insertProcessBox();

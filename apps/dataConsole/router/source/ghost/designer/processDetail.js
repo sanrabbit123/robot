@@ -257,6 +257,7 @@ ProcessDetailJs.prototype.insertNumbersBox = function () {
   let textTextTop;
   let smallTextTop;
   let panDom;
+  let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -8655,6 +8656,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   let promptPadding;
   let promptButtonWidth, promptButtonHeight, promptButtonBetween;
   let promptSize, promptWeight, promptTextTop;
+  let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -9771,6 +9773,7 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
   let panWidth, panVisualLeft;
   let veryBigTextTop;
   let circleWidth, circleTop, circleLeft;
+  let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -10172,6 +10175,7 @@ ProcessDetailJs.prototype.insertMeetingBackBox = function () {
   let panWidth, panVisualLeft;
   let veryBigTextTop;
   let circleWidth, circleTop, circleLeft;
+  let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -10594,6 +10598,7 @@ ProcessDetailJs.prototype.insertPayFirstBox = function () {
   let veryBigTextTop;
   let circleWidth, circleTop, circleLeft;
   let subButtonWidth;
+  let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -11029,6 +11034,7 @@ ProcessDetailJs.prototype.insertPayRemainBox = function () {
   let veryBigTextTop;
   let circleWidth, circleTop, circleLeft;
   let subButtonWidth;
+  let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -11464,6 +11470,7 @@ ProcessDetailJs.prototype.insertContractConfirmBox = function () {
   let veryBigTextTop;
   let circleWidth, circleTop, circleLeft;
   let subButtonWidth;
+  let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -11915,6 +11922,7 @@ ProcessDetailJs.prototype.insertContractStartBox = function () {
   let veryBigTextTop;
   let circleWidth, circleTop, circleLeft;
   let subButtonWidth;
+  let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -12366,6 +12374,7 @@ ProcessDetailJs.prototype.insertScheduleStartBox = function () {
   let veryBigTextTop;
   let circleWidth, circleTop, circleLeft;
   let subButtonWidth;
+  let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -12824,6 +12833,7 @@ ProcessDetailJs.prototype.insertScheduleAboutBox = function () {
   let wordingPaddingTop0, wordingPaddingTop1;
   let mainTong;
   let wordingBoxWidth;
+  let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -13331,6 +13341,7 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function (feedback = false) {
   let wordingPaddingTop0, wordingPaddingTop1;
   let mainTong;
   let wordingBoxWidth;
+  let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -13871,6 +13882,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     let percentageTextTop;
     let blackButtonWidth, blackButtonHeight, blackButtonBetween, blackButtonMargin;
     let blackButtonSize, blackButtonWeight, blackButtonTextTop;
+    let whiteTong;
 
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 6 %%>;

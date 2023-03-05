@@ -247,6 +247,7 @@ ProjectDetailJs.prototype.insertProcessBox = function () {
   let textMarginLeft;
   let mobileVisualPaddingValue;
   let button, buttons;
+  let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -491,6 +492,7 @@ ProjectDetailJs.prototype.insertNumbersBox = function () {
   let textTextTop;
   let smallTextTop;
   let panDom;
+  let whiteTong;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -4948,6 +4950,7 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
     let percentageSize;
     let percentageTextTop;
     let formPanBasePaddingBottom;
+    let whiteTong;
 
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 6 %%>;
