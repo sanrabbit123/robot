@@ -2365,7 +2365,7 @@ DesignerBoardJs.prototype.insertFormStatusBox = async function (whiteTong, clien
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, serviceParsing } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, blankHref, selfHref, scrollTo, variableArray, findByAttribute, setQueue, serviceParsing } = GeneralJs;
   const dateToHangul = (dateObject) => {
     return `${String(dateObject.getFullYear()).slice(2)}년 ${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일`;
   }
@@ -2622,6 +2622,15 @@ DesignerBoardJs.prototype.insertFormStatusBox = async function (whiteTong, clien
           children: [
             {
               text: contents.title.join(desktop ? "\n" : " "),
+              attribute: {
+                proid: project.proid,
+              },
+              event: {
+                click: function (e) {
+                  const proid = this.getAttribute("proid");
+                  blankHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+                }
+              },
               style: {
                 display: "inline-block",
                 position: "relative",
