@@ -1373,7 +1373,7 @@ ProjectDetailJs.prototype.insertScheduleBox = async function () {
     panTitleBoxHeight = <%% 52, 48, 40, 35, 8.2 %%>;
   
     panMotherBetween = <%% 8, 7, 6, 5, 1 %%>;
-    smallBetween = <%% 3, 3, 2, 2, 0.6 %%>;
+    smallBetween = <%% 3, 3, 2, 2, 1 %%>;
   
     mobileTitleLeft = 1.5;
     mobileTitleTop = -8.7;
@@ -2209,13 +2209,16 @@ ProjectDetailJs.prototype.insertScheduleBox = async function () {
                 background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
                 borderRadius: String(5) + "px",
                 boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                marginRight: String(smallBetween) + ea,
+                marginRight: String(smallBetween) + "px",
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
                 textAlign: "center",
                 cursor: "pointer",
                 verticalAlign: "top",
+                borderTopRightRadius: desktop ? String(5) + "px" : String(1) + "px",
+                borderBottomRightRadius: desktop ? String(5) + "px" : String(1) + "px",
+                borderBottomLeftRadius: desktop ? String(5) + "px" : String(1) + "px",
               },
               children: variableArray(1).map((index) => {
                 if (desktop) {
@@ -2255,16 +2258,16 @@ ProjectDetailJs.prototype.insertScheduleBox = async function () {
                 width: String(panTitleBoxHeight * widthRatio0) + ea,
                 height: String(panTitleBoxHeight) + ea,
                 background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
-                borderRadius: String(5) + "px",
+                borderRadius: String(desktop ? 5 : 1) + "px",
                 boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                marginRight: String(smallBetween) + ea,
+                marginRight: String(smallBetween) + "px",
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
                 textAlign: "center",
                 cursor: "pointer",
                 verticalAlign: "top",
-                marginBottom: desktop ? "" : String(smallBetween) + ea,
+                marginBottom: desktop ? "" : String(smallBetween) + "px",
               },
               child: {
                 text: i === -1 ? "계획명" : contents.schedule[i].title,
@@ -2332,12 +2335,12 @@ ProjectDetailJs.prototype.insertScheduleBox = async function () {
             style: {
               display: "inline-flex",
               position: "relative",
-              width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
+              width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), "px") + " / " + String(2) + ")",
               height: String(panTitleBoxHeight) + ea,
               background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
               borderRadius: String(5) + "px",
               boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              marginRight: String(smallBetween) + ea,
+              marginRight: String(smallBetween) + "px",
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
@@ -2370,7 +2373,7 @@ ProjectDetailJs.prototype.insertScheduleBox = async function () {
             style: {
               display: "inline-flex",
               position: "relative",
-              width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), ea) + " / " + String(2) + ")",
+              width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), "px") + " / " + String(2) + ")",
               height: String(panTitleBoxHeight) + ea,
               background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
               borderRadius: String(5) + "px",
@@ -2408,10 +2411,11 @@ ProjectDetailJs.prototype.insertScheduleBox = async function () {
             style: {
               display: "inline-flex",
               position: "relative",
-              width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0)) + (smallBetween * 2), ea) + " / " + String(1) + ")",
+              width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0)), ea) + " - " + String((smallBetween * 2)) + "px" + ")",
               height: String(panTitleBoxHeight) + ea,
               background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
-              borderRadius: String(5) + "px",
+              borderRadius: String(1) + "px",
+              borderTopRightRadius: String(5) + "px",
               boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
               flexDirection: "row",
               justifyContent: "center",
@@ -2454,9 +2458,12 @@ ProjectDetailJs.prototype.insertScheduleBox = async function () {
               width: desktop ? String(panTitleBoxHeight * widthRatio1) + ea : withOut(0, ea),
               height: String(panTitleBoxHeight) + ea,
               background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
-              borderRadius: String(5) + "px",
+              borderTopLeftRadius: String(1) + "px",
+              borderTopRightRadius: String(1) + "px",
+              borderBottomLeftRadius: String(5) + "px",
+              borderBottomRightRadius: String(5) + "px",
               boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              marginRight: desktop ? String(smallBetween) + ea : "",
+              marginRight: desktop ? String(smallBetween) + "px" : "",
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
@@ -5719,9 +5726,8 @@ ProjectDetailJs.prototype.launching = async function (loading) {
             await instance.insertScheduleBox();
             instance.insertUploadBox();
           } else {
-            // dev
             instance.insertUploadBox();
-            // await instance.insertScheduleBox();
+            await instance.insertScheduleBox();
           }
           instance.insertInformationBox();
           instance.insertGreenButtons();
