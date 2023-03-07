@@ -13798,6 +13798,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
   const siblingKeywords = "siblingKeywords__";
   const valueBlockClassName = "valueBlockClassName__";
   const blockContextMenuClassName = "blockContextMenuClassName__";
+  const svgArrowColorTargetClassName = "svgArrowColorTargetClassName__";
   try {
     let margin;
     let paddingTop;
@@ -13883,6 +13884,9 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     let blackButtonWidth, blackButtonHeight, blackButtonBetween, blackButtonMargin;
     let blackButtonSize, blackButtonWeight, blackButtonTextTop;
     let whiteTong;
+    let mainClickEvent, mainContextEvent;
+    let detailArrowAreaWidth, detailArrowWidth;
+    let detailArrowVisualTop;
 
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -13950,10 +13954,10 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     panHeight = <%% 48, 48, 45, 42, 11 %%>;
     panInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
   
-    panCheckBoxWidth = <%% 32, 24, 20, 20, 8 %%>;
-    checkBoxWidth = <%% 13, 11, 9, 9, 3 %%>;
+    panCheckBoxWidth = <%% 28, 24, 20, 20, 8 %%>;
+    checkBoxWidth = <%% 12, 11, 9, 9, 3 %%>;
   
-    panWhitePaddingLeft = <%% 16, 14, 14, 12, 3.5 %%>; 
+    panWhitePaddingLeft = <%% 13, 14, 14, 14, 3.5 %%>; 
     panBlockBetween = <%% 8, 8, 6, 5, 1 %%>; 
     panBlockBigBetween = <%% 8, 8, 6, 5, 1 %%>; 
   
@@ -13987,13 +13991,17 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
     percentageSize = <%% 20, 20, 17, 14, 7.5 %%>;
     percentageTextTop = <%% -1, -1, -1, -1, 0 %%>;
 
-    blackButtonWidth = <%% 132, 122, 114, 104, 12 %%>;
-    blackButtonHeight = <%% 34, 30, 28, 26, 32 %%>;
-    blackButtonBetween = <%% 4, 4, 3, 2, 4 %%>;
-    blackButtonMargin = <%% 6, 6, 5, 4, 6 %%>;
-    blackButtonSize = <%% 13, 12, 11, 10, 2.5 %%>;
+    blackButtonWidth = <%% 132, 122, 114, 104, 28 %%>;
+    blackButtonHeight = <%% 34, 30, 28, 26, 7 %%>;
+    blackButtonBetween = <%% 4, 4, 3, 2, 1 %%>;
+    blackButtonMargin = <%% 6, 6, 5, 4, 1.2 %%>;
+    blackButtonSize = <%% 13, 12, 11, 10, 2.8 %%>;
     blackButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
-    blackButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
+    blackButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+
+    detailArrowAreaWidth = <%% 28, 28, 28, 28, 6 %%>;
+    detailArrowVisualTop = <%% 0.5, 0.5, 0.5, 0.5, 0 %%>;
+    detailArrowWidth = <%% 8, 8, 7, 7, 2 %%>;
 
     thisForm = await ajaxJson({ mode: "get", proid, desid }, SECONDHOST + "/projectDesignerStatus", { equal: true });
   
@@ -14019,6 +14027,386 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
 
     reloadBarArr = () => {};
     barArrBase = {};
+
+    mainClickEvent = function () {
+      return async function (e) {
+        const self = this;
+        const toggle = this.getAttribute("toggle");
+        const middle = this.getAttribute("middle");
+        const red = this.getAttribute("red");
+        const x = Number(this.getAttribute("x"));
+        const y = Number(this.getAttribute("y"));
+        const deactive = (this.getAttribute("deactive") === "true");
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        try {
+          let totalDom;
+          let matrix;
+          let maxX, maxY;
+          let xArr, yArr;
+          let tempObj;
+          let targetDoms;
+          let thisIndex;
+          let finalIndex;
+
+          siblings = [ ...document.querySelectorAll('.' + siblingKeywords + String(x)) ];
+          thisIndex = siblings.findIndex((dom) => { return dom === self });
+
+          if (!deactive) {
+            if (toggle === "off") {
+              if (red === "off") {
+
+                for (let i = 0; i < siblings.length; i++) {
+                  if (i < thisIndex) {
+                    if (siblings[i].getAttribute("red") !== "on") {
+                      siblings[i].style.background = colorChip.whiteGreen;
+                      siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.green);
+                      siblings[i].children[1].children[0].style.color = colorChip.softGreen;
+                      siblings[i].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.softGreen;
+                      siblings[i].setAttribute("toggle", "on");
+                      siblings[i].setAttribute("middle", "on");
+                      siblings[i].setAttribute("red", "off");
+                    }
+                  } else if (i === thisIndex) {
+                    siblings[i].style.background = colorChip.gradientGreen;
+                    siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                    siblings[i].children[1].children[0].style.color = colorChip.black;
+                    siblings[i].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.green;
+                    siblings[i].setAttribute("toggle", "on");
+                    siblings[i].setAttribute("middle", "off");
+                    siblings[i].setAttribute("red", "off");
+                  } else {
+                    siblings[i].style.background = colorChip.gray1;
+                    siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                    siblings[i].children[1].children[0].style.color = colorChip.deactive;
+                    siblings[i].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.deactive;
+                    siblings[i].setAttribute("toggle", "off");
+                    siblings[i].setAttribute("middle", "off");
+                    siblings[i].setAttribute("red", "off");
+                  }
+                }
+
+              } else {
+
+                siblings[thisIndex].style.background = colorChip.whiteGreen;
+                siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.green);
+                siblings[thisIndex].children[1].children[0].style.color = colorChip.softGreen;
+                siblings[thisIndex].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.softGreen;
+                siblings[thisIndex].setAttribute("toggle", "on");
+                siblings[thisIndex].setAttribute("middle", "on");
+                siblings[thisIndex].setAttribute("red", "off");
+
+              }
+            } else {
+
+              if (middle === "off") {
+
+                if (siblings[thisIndex - 1] === undefined) {
+
+                  siblings[thisIndex].style.background = colorChip.gray1;
+                  siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                  siblings[thisIndex].children[1].children[0].style.color = colorChip.deactive;
+                  siblings[thisIndex].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.deactive;
+                  siblings[thisIndex].setAttribute("toggle", "off");
+                  siblings[thisIndex].setAttribute("middle", "off");
+                  siblings[thisIndex].setAttribute("red", "off");
+
+                } else {
+
+                  if (siblings[thisIndex - 1].getAttribute("middle") === "on") {
+
+                    siblings[thisIndex].style.background = colorChip.gray1;
+                    siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                    siblings[thisIndex].children[1].children[0].style.color = colorChip.deactive;
+                    siblings[thisIndex].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.deactive;
+                    siblings[thisIndex].setAttribute("toggle", "off");
+                    siblings[thisIndex].setAttribute("middle", "off");
+                    siblings[thisIndex].setAttribute("red", "off");
+
+                    siblings[thisIndex - 1].style.background = colorChip.gradientGreen;
+                    siblings[thisIndex - 1].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                    siblings[thisIndex - 1].children[1].children[0].style.color = colorChip.black;
+                    siblings[thisIndex - 1].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.green;
+                    siblings[thisIndex - 1].setAttribute("toggle", "on");
+                    siblings[thisIndex - 1].setAttribute("middle", "off");
+                    siblings[thisIndex - 1].setAttribute("red", "off");
+
+                  } else {
+
+                    siblings[thisIndex].style.background = colorChip.gray1;
+                    siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                    siblings[thisIndex].children[1].children[0].style.color = colorChip.deactive;
+                    siblings[thisIndex].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.deactive;
+                    siblings[thisIndex].setAttribute("toggle", "off");
+                    siblings[thisIndex].setAttribute("middle", "off");
+                    siblings[thisIndex].setAttribute("red", "off");
+
+                    finalIndex = siblings.reduce((acc, curr, index) => {
+                      if (curr.getAttribute("toggle") === "off") {
+                        return acc;
+                      } else {
+                        return index;
+                      }
+                    }, -1);
+                    
+                    for (let i = 0; i < siblings.length; i++) {
+                      if (i < finalIndex) {
+                        // pass
+                      } else if (i === finalIndex) {
+                        siblings[i].style.background = colorChip.gradientGreen;
+                        siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                        siblings[i].children[1].children[0].style.color = colorChip.black;
+                        siblings[i].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.green;
+                        siblings[i].setAttribute("toggle", "on");
+                        siblings[i].setAttribute("middle", "off");
+                        siblings[i].setAttribute("red", "off");
+                      } else {
+                        siblings[i].style.background = colorChip.gray1;
+                        siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                        siblings[i].children[1].children[0].style.color = colorChip.deactive;
+                        siblings[i].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.deactive;
+                        siblings[i].setAttribute("toggle", "off");
+                        siblings[i].setAttribute("middle", "off");
+                        siblings[i].setAttribute("red", "off");
+                      }
+                    }
+
+                  }
+                }
+
+              } else {
+                siblings[thisIndex].style.background = colorChip.gray1;
+                siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.red);
+                siblings[thisIndex].children[1].children[0].style.color = colorChip.red;
+                siblings[thisIndex].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.red;
+                siblings[thisIndex].setAttribute("toggle", "off");
+                siblings[thisIndex].setAttribute("middle", "off");
+                siblings[thisIndex].setAttribute("red", "on");
+              }
+              
+            }
+          }
+
+          totalDom = [ ...document.querySelectorAll('.' + valueBlockClassName) ];
+          
+          xArr = [];
+          for (let dom of totalDom) {
+            xArr.push(Number(dom.getAttribute("x")));
+          }
+          xArr.sort((a, b) => { return b - a; });
+          maxX = xArr[0] + 1;
+
+          matrix = [];
+          for (let z = 0; z < maxX; z++) {
+            targetDoms = totalDom.filter((dom) => { return Number(dom.getAttribute("x")) === z });
+            targetDoms.sort((a, b) => { return Number(a.getAttribute("y")) - Number(b.getAttribute("y")); });
+            tempObj = {
+              title: targetDoms[0].getAttribute("mother"),
+              children: []
+            };
+            for (let w = 0; w < targetDoms.length; w++) {
+              tempObj.children.push({
+                title: targetDoms[w].getAttribute("title"),
+                deactive: targetDoms[w].getAttribute("deactive") === "true",
+                value: targetDoms[w].getAttribute("toggle") === "on" ? 1 : 0,
+                key: thisForm[z].children[w].key,
+                children: equalJson(JSON.stringify(thisForm[z].children[w].children)),
+              });
+            }
+            matrix.push(tempObj);
+          }
+          
+          await ajaxJson({
+            mode: "update",
+            proid,
+            desid,
+            matrix
+          }, SECONDHOST + "/projectDesignerStatus");
+
+          reloadBarArr(barArrBase, matrix);
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    mainContextEvent = function () {
+      return async function (e) {
+        try {
+          e.preventDefault();
+          e.stopPropagation();
+          const self = this;
+          const x = Number(this.getAttribute("x"));
+          const y = Number(this.getAttribute("y"));
+          const proid = this.getAttribute("proid");
+          const desid = this.getAttribute("desid");
+          const deactive = (this.getAttribute("deactive") === "true");
+          const zIndex = 4;
+          let cancelBack, whitePrompt;
+
+          if (!deactive) {
+
+            cancelBack = createNode({
+              mother: formPanBase,
+              class: [ blockContextMenuClassName ],
+              event: {
+                click: function (e) {
+                  removeByClass(blockContextMenuClassName);
+                }
+              },
+              style: {
+                display: "block",
+                position: "fixed",
+                top: String(0),
+                left: String(0),
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                background: "transparent",
+                zIndex: String(zIndex),
+              }
+            });
+
+            whitePrompt = createNode({
+              mother: formPanBase,
+              class: [ blockContextMenuClassName ],
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: String(e.clientY - formPanBase.getBoundingClientRect().top) + "px",
+                left: desktop ? String(e.clientX - formPanBase.getBoundingClientRect().left) + "px" : "",
+                right: desktop ? "" : String(0) + "px",
+                width: String(blackButtonWidth) + ea,
+                background: colorChip.white,
+                borderRadius: String(5) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+                animation: "fadeuplite 0.3s ease forwards",
+                zIndex: String(zIndex),
+                padding: String(blackButtonMargin) + ea,
+                paddingBottom: String(blackButtonMargin - blackButtonBetween) + ea,
+              }
+            });
+
+            for (let z = 0; z < thisForm[x].children[y].children.length; z++) {
+              createNode({
+                mother: whitePrompt,
+                attribute: {
+                  x: String(x),
+                  y: String(y),
+                  z: String(z),
+                  proid,
+                  desid,
+                  name: instance.client.name,
+                  designer: instance.designer.designer,
+                },
+                event: {
+                  click: async function (e) {
+                    const self = this;
+                    const x = Number(this.getAttribute("x"));
+                    const y = Number(this.getAttribute("y"));
+                    const z = Number(this.getAttribute("z"));
+                    const proid = this.getAttribute("proid");
+                    const desid = this.getAttribute("desid");
+                    const type = thisForm[x].children[y].children[z].type;
+                    try {
+                      let tempFunction;
+                      let key, photoBoo, thisStatusNumber;
+                      let matrix;
+                      let siblings;
+
+                      if (type === "upload") {
+
+                        key = thisForm[x].children[y].children[z].key;
+                        photoBoo = thisForm[x].children[y].children[z].photo;
+                        thisStatusNumber = instance.panContents.findIndex((o) => { return o.key === key });
+
+                        removeByClass(blockContextMenuClassName);
+                        instance.uploadFiles(thisStatusNumber, photoBoo).call(this, e);
+
+                      } else if (type === "memo") {
+
+                        key = thisForm[x].children[y].children[z].key;
+                        thisStatusNumber = instance.panContents.findIndex((o) => { return o.key === key });
+
+                        removeByClass(blockContextMenuClassName);
+                        if (thisStatusNumber === -1) {
+                          instance.plusMemo(thisStatusNumber, key, thisForm[x].children[y].children[z].title.replace(/메모/gi, "").trim()).call(this, e);
+                        } else {
+                          instance.plusMemo(thisStatusNumber).call(this, e);
+                        }
+
+                      } else if (type === "selection") {
+
+                        matrix = equalJson(JSON.stringify(thisForm));
+
+                        if (thisForm[x].children[y].children[z].value === 0) {
+                          siblings = [ ...this.parentElement.children ];
+                          for (let k = 0; k < thisForm[x].children[y].children.length; k++) {
+                            thisForm[x].children[y].children[k].value = k === z ? 1 : 0;
+                            matrix[x].children[y].children[k].value = k === z ? 1 : 0;
+                            siblings[k].style.background = k === z ? colorChip.gradientGreen : colorChip.gray2;
+                            siblings[k].firstChild.style.color = k === z ? colorChip.white : colorChip.deactive;  
+                          }
+                        } else {
+                          this.style.background = colorChip.gray2;
+                          this.firstChild.style.color = colorChip.deactive;
+                          thisForm[x].children[y].children[z].value = 0;
+                          matrix[x].children[y].children[z].value = 0;
+                        }
+
+                        await ajaxJson({
+                          mode: "update",
+                          proid,
+                          desid,
+                          matrix
+                        }, SECONDHOST + "/projectDesignerStatus");
+
+                        setQueue(() => {
+                          self.parentElement.style.animation = "fadedownlite 0.3s ease forwards";
+                          setQueue(() => {
+                            removeByClass(blockContextMenuClassName);
+                          }, 301);
+                        }, 200);
+
+                      }
+
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  },
+                },
+                style: {
+                  display: "flex",
+                  height: String(blackButtonHeight) + ea,
+                  width: String(blackButtonWidth) + ea,
+                  borderRadius: String(5) + "px",
+                  background: thisForm[x].children[y].children[z].type !== "selection" ? colorChip.gradientGray : (thisForm[x].children[y].children[z].value === 0 ? colorChip.gray2 : colorChip.gradientGreen),
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: String(blackButtonBetween) + ea,
+                  cursor: "pointer",
+                },
+                child: {
+                  text: thisForm[x].children[y].children[z].title,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(blackButtonSize) + ea,
+                    fontWeight: String(blackButtonWeight),
+                    color: thisForm[x].children[y].children[z].type !== "selection" ? colorChip.white : (thisForm[x].children[y].children[z].value === 0 ? colorChip.deactive : colorChip.white),
+                    top: String(blackButtonTextTop) + ea,
+                    cursor: "pointer",
+                  }
+                }
+              });
+
+            }
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
 
     whiteBlock = createNode({
       mother: baseTong,
@@ -14304,372 +14692,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
               middle: thisForm[i].children[j].value === 0 ? "off" : (j < valueIndex ? "on" : "off"),
             },
             event: {
-              click: async function (e) {
-                const self = this;
-                const toggle = this.getAttribute("toggle");
-                const middle = this.getAttribute("middle");
-                const red = this.getAttribute("red");
-                const x = Number(this.getAttribute("x"));
-                const y = Number(this.getAttribute("y"));
-                const deactive = (this.getAttribute("deactive") === "true");
-                const proid = this.getAttribute("proid");
-                const desid = this.getAttribute("desid");
-                try {
-                  let totalDom;
-                  let matrix;
-                  let maxX, maxY;
-                  let xArr, yArr;
-                  let tempObj;
-                  let targetDoms;
-                  let thisIndex;
-                  let finalIndex;
-  
-                  siblings = [ ...document.querySelectorAll('.' + siblingKeywords + String(x)) ];
-                  thisIndex = siblings.findIndex((dom) => { return dom === self });
-
-                  if (!deactive) {
-                    if (toggle === "off") {
-                      if (red === "off") {
-
-                        for (let i = 0; i < siblings.length; i++) {
-                          if (i < thisIndex) {
-                            if (siblings[i].getAttribute("red") !== "on") {
-                              siblings[i].style.background = colorChip.whiteGreen;
-                              siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.green);
-                              siblings[i].children[1].children[0].style.color = colorChip.softGreen;
-                              siblings[i].setAttribute("toggle", "on");
-                              siblings[i].setAttribute("middle", "on");
-                              siblings[i].setAttribute("red", "off");
-                            }
-                          } else if (i === thisIndex) {
-                            siblings[i].style.background = colorChip.gradientGreen;
-                            siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
-                            siblings[i].children[1].children[0].style.color = colorChip.black;
-                            siblings[i].setAttribute("toggle", "on");
-                            siblings[i].setAttribute("middle", "off");
-                            siblings[i].setAttribute("red", "off");
-                          } else {
-                            siblings[i].style.background = colorChip.gray1;
-                            siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                            siblings[i].children[1].children[0].style.color = colorChip.deactive;
-                            siblings[i].setAttribute("toggle", "off");
-                            siblings[i].setAttribute("middle", "off");
-                            siblings[i].setAttribute("red", "off");
-                          }
-                        }
-
-                      } else {
-
-                        siblings[thisIndex].style.background = colorChip.whiteGreen;
-                        siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.green);
-                        siblings[thisIndex].children[1].children[0].style.color = colorChip.softGreen;
-                        siblings[thisIndex].setAttribute("toggle", "on");
-                        siblings[thisIndex].setAttribute("middle", "on");
-                        siblings[thisIndex].setAttribute("red", "off");
-
-                      }
-                    } else {
-
-                      if (middle === "off") {
-
-                        if (siblings[thisIndex - 1] === undefined) {
-
-                          siblings[thisIndex].style.background = colorChip.gray1;
-                          siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                          siblings[thisIndex].children[1].children[0].style.color = colorChip.deactive;
-                          siblings[thisIndex].setAttribute("toggle", "off");
-                          siblings[thisIndex].setAttribute("middle", "off");
-                          siblings[thisIndex].setAttribute("red", "off");
-
-                        } else {
-
-                          if (siblings[thisIndex - 1].getAttribute("middle") === "on") {
-
-                            siblings[thisIndex].style.background = colorChip.gray1;
-                            siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                            siblings[thisIndex].children[1].children[0].style.color = colorChip.deactive;
-                            siblings[thisIndex].setAttribute("toggle", "off");
-                            siblings[thisIndex].setAttribute("middle", "off");
-                            siblings[thisIndex].setAttribute("red", "off");
-
-                            siblings[thisIndex - 1].style.background = colorChip.gradientGreen;
-                            siblings[thisIndex - 1].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
-                            siblings[thisIndex - 1].children[1].children[0].style.color = colorChip.black;
-                            siblings[thisIndex - 1].setAttribute("toggle", "on");
-                            siblings[thisIndex - 1].setAttribute("middle", "off");
-                            siblings[thisIndex - 1].setAttribute("red", "off");
-
-                          } else {
-
-                            siblings[thisIndex].style.background = colorChip.gray1;
-                            siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                            siblings[thisIndex].children[1].children[0].style.color = colorChip.deactive;
-                            siblings[thisIndex].setAttribute("toggle", "off");
-                            siblings[thisIndex].setAttribute("middle", "off");
-                            siblings[thisIndex].setAttribute("red", "off");
-
-                            finalIndex = siblings.reduce((acc, curr, index) => {
-                              if (curr.getAttribute("toggle") === "off") {
-                                return acc;
-                              } else {
-                                return index;
-                              }
-                            }, -1);
-                            
-                            for (let i = 0; i < siblings.length; i++) {
-                              if (i < finalIndex) {
-                                // pass
-                              } else if (i === finalIndex) {
-                                siblings[i].style.background = colorChip.gradientGreen;
-                                siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
-                                siblings[i].children[1].children[0].style.color = colorChip.black;
-                                siblings[i].setAttribute("toggle", "on");
-                                siblings[i].setAttribute("middle", "off");
-                                siblings[i].setAttribute("red", "off");
-                              } else {
-                                siblings[i].style.background = colorChip.gray1;
-                                siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
-                                siblings[i].children[1].children[0].style.color = colorChip.deactive;
-                                siblings[i].setAttribute("toggle", "off");
-                                siblings[i].setAttribute("middle", "off");
-                                siblings[i].setAttribute("red", "off");
-                              }
-                            }
-
-                          }
-                        }
-
-                      } else {
-                        siblings[thisIndex].style.background = colorChip.gray1;
-                        siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.red);
-                        siblings[thisIndex].children[1].children[0].style.color = colorChip.red;
-                        siblings[thisIndex].setAttribute("toggle", "off");
-                        siblings[thisIndex].setAttribute("middle", "off");
-                        siblings[thisIndex].setAttribute("red", "on");
-                      }
-                      
-                    }
-                  }
-  
-                  totalDom = [ ...document.querySelectorAll('.' + valueBlockClassName) ];
-                  
-                  xArr = [];
-                  for (let dom of totalDom) {
-                    xArr.push(Number(dom.getAttribute("x")));
-                  }
-                  xArr.sort((a, b) => { return b - a; });
-                  maxX = xArr[0] + 1;
-  
-                  matrix = [];
-                  for (let z = 0; z < maxX; z++) {
-                    targetDoms = totalDom.filter((dom) => { return Number(dom.getAttribute("x")) === z });
-                    targetDoms.sort((a, b) => { return Number(a.getAttribute("y")) - Number(b.getAttribute("y")); });
-                    tempObj = {
-                      title: targetDoms[0].getAttribute("mother"),
-                      children: []
-                    };
-                    for (let w = 0; w < targetDoms.length; w++) {
-                      tempObj.children.push({
-                        title: targetDoms[w].getAttribute("title"),
-                        deactive: targetDoms[w].getAttribute("deactive") === "true",
-                        value: targetDoms[w].getAttribute("toggle") === "on" ? 1 : 0,
-                        key: thisForm[z].children[w].key,
-                        children: equalJson(JSON.stringify(thisForm[z].children[w].children)),
-                      });
-                    }
-                    matrix.push(tempObj);
-                  }
-                  
-                  await ajaxJson({
-                    mode: "update",
-                    proid,
-                    desid,
-                    matrix
-                  }, SECONDHOST + "/projectDesignerStatus");
-  
-                  reloadBarArr(barArrBase, matrix);
-  
-                } catch (e) {
-                  console.log(e);
-                }
-              },
-              contextmenu: async function (e) {
-                try {
-
-                  e.preventDefault();
-                  e.stopPropagation();
-
-                  const self = this;
-                  const x = Number(this.getAttribute("x"));
-                  const y = Number(this.getAttribute("y"));
-                  const proid = this.getAttribute("proid");
-                  const desid = this.getAttribute("desid");
-                  const deactive = (this.getAttribute("deactive") === "true");
-                  const zIndex = 4;
-                  let cancelBack, whitePrompt;
-
-                  if (desktop) {
-                    if (!deactive) {
-
-                      cancelBack = createNode({
-                        mother: formPanBase,
-                        class: [ blockContextMenuClassName ],
-                        event: {
-                          click: function (e) {
-                            removeByClass(blockContextMenuClassName);
-                          }
-                        },
-                        style: {
-                          display: "block",
-                          position: "fixed",
-                          top: String(0),
-                          left: String(0),
-                          width: withOut(0, ea),
-                          height: withOut(0, ea),
-                          background: "transparent",
-                          zIndex: String(zIndex),
-                        }
-                      });
-    
-                      whitePrompt = createNode({
-                        mother: formPanBase,
-                        class: [ blockContextMenuClassName ],
-                        style: {
-                          display: "inline-block",
-                          position: "fixed",
-                          top: String(e.clientY - baseTong.getBoundingClientRect().top) + "px",
-                          left: String(e.clientX - baseTong.getBoundingClientRect().left) + "px",
-                          width: String(blackButtonWidth) + ea,
-                          background: colorChip.white,
-                          borderRadius: String(5) + "px",
-                          boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
-                          animation: "fadeuplite 0.3s ease forwards",
-                          zIndex: String(zIndex),
-                          padding: String(blackButtonMargin) + ea,
-                          paddingBottom: String(blackButtonMargin - blackButtonBetween) + ea,
-                        }
-                      });
-  
-                      for (let z = 0; z < thisForm[x].children[y].children.length; z++) {
-                        createNode({
-                          mother: whitePrompt,
-                          attribute: {
-                            x: String(x),
-                            y: String(y),
-                            z: String(z),
-                            proid,
-                            desid,
-                            name: instance.client.name,
-                            designer: instance.designer.designer,
-                          },
-                          event: {
-                            click: async function (e) {
-                              const self = this;
-                              const x = Number(this.getAttribute("x"));
-                              const y = Number(this.getAttribute("y"));
-                              const z = Number(this.getAttribute("z"));
-                              const proid = this.getAttribute("proid");
-                              const desid = this.getAttribute("desid");
-                              const type = thisForm[x].children[y].children[z].type;
-                              try {
-                                let tempFunction;
-                                let key, photoBoo, thisStatusNumber;
-                                let matrix;
-                                let siblings;
-  
-                                if (type === "upload") {
-  
-                                  key = thisForm[x].children[y].children[z].key;
-                                  photoBoo = thisForm[x].children[y].children[z].photo;
-                                  thisStatusNumber = instance.panContents.findIndex((o) => { return o.key === key });
-    
-                                  removeByClass(blockContextMenuClassName);
-                                  instance.uploadFiles(thisStatusNumber, photoBoo).call(this, e);
-  
-                                } else if (type === "memo") {
-  
-                                  key = thisForm[x].children[y].children[z].key;
-                                  thisStatusNumber = instance.panContents.findIndex((o) => { return o.key === key });
-  
-                                  removeByClass(blockContextMenuClassName);
-                                  if (thisStatusNumber === -1) {
-                                    instance.plusMemo(thisStatusNumber, key, thisForm[x].children[y].children[z].title.replace(/메모/gi, "").trim()).call(this, e);
-                                  } else {
-                                    instance.plusMemo(thisStatusNumber).call(this, e);
-                                  }
-  
-                                } else if (type === "selection") {
-  
-                                  matrix = equalJson(JSON.stringify(thisForm));
-  
-                                  if (thisForm[x].children[y].children[z].value === 0) {
-                                    siblings = [ ...this.parentElement.children ];
-                                    for (let k = 0; k < thisForm[x].children[y].children.length; k++) {
-                                      thisForm[x].children[y].children[k].value = k === z ? 1 : 0;
-                                      matrix[x].children[y].children[k].value = k === z ? 1 : 0;
-                                      siblings[k].style.background = k === z ? colorChip.gradientGreen : colorChip.gray2;
-                                      siblings[k].firstChild.style.color = k === z ? colorChip.white : colorChip.deactive;  
-                                    }
-                                  } else {
-                                    this.style.background = colorChip.gray2;
-                                    this.firstChild.style.color = colorChip.deactive;
-                                    thisForm[x].children[y].children[z].value = 0;
-                                    matrix[x].children[y].children[z].value = 0;
-                                  }
-  
-                                  await ajaxJson({
-                                    mode: "update",
-                                    proid,
-                                    desid,
-                                    matrix
-                                  }, SECONDHOST + "/projectDesignerStatus");
-
-                                  setQueue(() => {
-                                    self.parentElement.style.animation = "fadedownlite 0.3s ease forwards";
-                                    setQueue(() => {
-                                      removeByClass(blockContextMenuClassName);
-                                    }, 301);
-                                  }, 200);
-
-                                }
-  
-                              } catch (e) {
-                                console.log(e);
-                              }
-                            },
-                          },
-                          style: {
-                            display: "flex",
-                            height: String(blackButtonHeight) + ea,
-                            width: String(blackButtonWidth) + ea,
-                            borderRadius: String(5) + "px",
-                            background: thisForm[x].children[y].children[z].type !== "selection" ? colorChip.gradientGray : (thisForm[x].children[y].children[z].value === 0 ? colorChip.gray2 : colorChip.gradientGreen),
-                            justifyContent: "center",
-                            alignItems: "center",
-                            marginBottom: String(blackButtonBetween) + ea,
-                            cursor: "pointer",
-                          },
-                          child: {
-                            text: thisForm[x].children[y].children[z].title,
-                            style: {
-                              display: "inline-block",
-                              position: "relative",
-                              fontSize: String(blackButtonSize) + ea,
-                              fontWeight: String(blackButtonWeight),
-                              color: thisForm[x].children[y].children[z].type !== "selection" ? colorChip.white : (thisForm[x].children[y].children[z].value === 0 ? colorChip.deactive : colorChip.white),
-                              top: String(blackButtonTextTop) + ea,
-                              cursor: "pointer",
-                            }
-                          }
-                        });
-  
-                      }
-                    }
-                  }
-                } catch (e) {
-                  console.log(e);
-                }
-              },
+              click: mainClickEvent(),
+              contextmenu: mainContextEvent(),
             },
             style: {
               display: "flex",
@@ -14716,6 +14740,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                   background: thisForm[i].children[j].deactive ? colorChip.gray2 : colorChip.white,
                   borderRadius: String(5) + "px",
                   display: "inline-flex",
+                  position: "relative",
                   justifyContent: "start",
                   alignItems: "center",
                   paddingLeft: String(panWhitePaddingLeft) + ea,
@@ -14731,6 +14756,41 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                     color: thisForm[i].children[j].deactive ? colorChip.deactive : (j > valueIndex ? colorChip.deactive : (j === valueIndex ? colorChip.black : (thisForm[i].children[j].value !== 0 ? colorChip.softGreen : colorChip.red))),
                     top: String(textTextTop) + ea,
                     transition: "all 0s ease",
+                  },
+                  next: {
+                    attribute: {
+                      x: String(i),
+                      y: String(j),
+                      mother: thisForm[i].title,
+                      title: thisForm[i].children[j].title,
+                      deactive: thisForm[i].children[j].deactive ? "true" : "false",
+                      proid,
+                      desid,
+                    },
+                    event: {
+                      click: mainContextEvent()
+                    },
+                    style: {
+                      display: "inline-flex",
+                      position: "absolute",
+                      right: String(0) + ea,
+                      top: "calc(" + withOut(50, (detailArrowAreaWidth / 2), ea) + " - " + String(detailArrowVisualTop) + ea + ")",
+                      width: String(detailArrowAreaWidth) + ea,
+                      height: String(detailArrowAreaWidth) + ea,
+                      cursor: "pointer",
+                      background: "transparent",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    child: {
+                      class: [ svgArrowColorTargetClassName ],
+                      mode: "svg",
+                      source: GeneralJs.prototype.returnArrow("right", thisForm[i].children[j].deactive ? colorChip.deactive : (j > valueIndex ? colorChip.deactive : (j === valueIndex ? colorChip.green : (thisForm[i].children[j].value !== 0 ? colorChip.softGreen : colorChip.red)))),
+                      style: {
+                        position: "relative",
+                        width: String(detailArrowWidth) + ea,
+                      }
+                    }
                   }
                 }
               }
