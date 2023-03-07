@@ -1129,6 +1129,223 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
 
 }
 
+ConsoleManualJs.prototype.insertMovieStartBox = function () {
+  const instance = this;
+  const { ea, baseTong, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const veryBig = (media[0] || media[1]);
+  const generalSmall = !veryBig;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, downloadFile, zeroAddition } = GeneralJs;
+  let margin;
+  let paddingTop;
+  let whiteBottomMargin;
+  let bottomMargin;
+  let whiteBlock, whiteTong;
+  let grayTong;
+  let innerMargin;
+  let mobileVisualPaddingValue;
+  let veryBigSize;
+  let veryBigWeight;
+  let firstWidth;
+  let veryBigTextTop;
+  let textSize;
+  let textWeight;
+  let textFileWeight;
+  let textTextTop;
+  let contents;
+  let firstMargin;
+  let numberSize, numberWeight;
+  let titleMargin;
+  let descriptionLineHeight;
+  let listImageHeight;
+  let imageVisualPaddingTop;
+  let imageVisualPaddingBottom;
+  let detailImageHeight0, detailImageHeight1;
+  let detailBlockHeight;
+  let mobileLineMargin;
+  let numberMargin;
+  let titleLineTop;
+  let whitePaddingRight;
+  let titleMarginBottom;
+  let videoWidth, videoHeight;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 6 %%>;
+  paddingTop = <%% 50, 50, 42, 39, 6 %%>;
+
+  whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
+
+  veryBigSize = <%% 24, 22, 20, 18, 3.7 %%>;
+  veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
+  veryBigTextTop = <%% -1, -1, -2, -1, -1 %%>;
+
+  innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+
+  textTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), -0.3 %%>;
+
+  textSize = <%% 14, 13, 12, 11, 3.2 %%>;
+  textWeight = <%% 700, 700, 700, 700, 700 %%>;
+  textFileWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  firstWidth = <%% 350, 300, 260, 174, 300 %%>;
+  firstMargin = <%% 36, 36, 28, 22, 7.2 %%>;
+
+  numberSize = <%% 16, 16, 14, 12, 3.3 %%>;
+  numberWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  titleMargin = <%% 8, 8, 4, 4, 1.5 %%>;
+
+  descriptionLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+
+  listImageHeight = <%% 1234, 1385, 1300, 1120, 1234 %%>;
+
+  imageVisualPaddingTop = <%% 4, 4, 4, 4, 0.5 %%>;
+  imageVisualPaddingBottom = <%% 10, 10, 10, 10, 2 %%>;
+
+  mobileVisualPaddingValue = 0.2;
+
+  detailImageHeight0 = <%% 770, 1060, 920, 810, 770 %%>;
+  detailImageHeight1 = <%% 1500, 1880, 1880, 1610, 1500 %%>;
+
+  detailBlockHeight = <%% 188, 205, 174, 151, 188 %%>;
+
+  mobileLineMargin = 14;
+  numberMargin = 0.3;
+
+  titleLineTop = <%% 16, 15, 13, 12, 2.1 %%>;
+  whitePaddingRight = <%% 16, 16, 14, 12, 2 %%>;
+  titleMarginBottom = <%% 25, 22, 20, 16, 0 %%>;
+
+  videoWidth = <%% 1290, 940, 806, 642, 74 %%>;
+  videoHeight = <%% 713, 520, 446, 355, 41 %%>;
+
+  contents = [
+    {
+      title: "프로젝트 관리",
+      link: "https://www.youtube.com/embed/myPj1dXddCY",
+    },
+    {
+      title: "프로젝트 상세",
+      link: "https://www.youtube.com/embed/uv36jnZKe2w",
+    },
+    {
+      title: "파일 업로드",
+      link: "https://www.youtube.com/embed/OOPXEm3HBIc",
+    },
+    {
+      title: "일정표 관리",
+      link: "https://www.youtube.com/embed/-GUMH_cYcYU",
+    },
+  ];
+
+  for (let i = 0; i < contents.length; i++) {
+    createNode({
+      mother: baseTong,
+      style: {
+        position: "relative",
+        borderRadius: String(desktop ? 8 : 1) + ea,
+        width: String(100) + '%',
+        background: colorChip.white,
+        paddingTop: String(paddingTop) + ea,
+        paddingBottom: String(whiteBottomMargin) + ea,
+        marginBottom: String(bottomMargin) + ea,
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      },
+      child: {
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(margin * 2, ea),
+          height: String(100) + '%',
+          marginLeft: String(margin) + ea,
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "relative",
+            paddingTop: String(innerMargin) + ea,
+            paddingBottom: String(desktop ? innerMargin : 0) + ea,
+            paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+            paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
+            width: withOut(innerMargin * 2, ea),
+            background: colorChip.white,
+            borderRadius: String(8) + "px",
+          },
+          child: {
+            style: {
+              display: desktop ? "flex" : "block",
+              width: withOut(0),
+              flexDirection: desktop ? "column" : "",
+              justifyContent: desktop ? "start" : "",
+              alignItems: desktop ? "start" : "",
+            },
+            children: [
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  marginBottom: desktop ? "" : String(3) + ea,
+                  flexDirection: "row",
+                },
+                children: [
+                  {
+                    style: {
+                      display: "block",
+                      position: "absolute",
+                      top: String(0),
+                      height: String(titleLineTop) + ea,
+                      left: String(0),
+                      width: withOut(0, ea),
+                      borderBottom: "1px dashed " + colorChip.gray3,
+                    }
+                  },
+                  {
+                    text: "콘솔 설명 영상 :&nbsp;&nbsp;<b%" + contents[i].title + "%b>",
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      fontSize: String(veryBigSize) + ea,
+                      fontWeight: String(veryBigWeight),
+                      color: colorChip.black,
+                      lineHeight: String(1.4),
+                      textAlign: "left",
+                      marginBottom: String(titleMarginBottom) + ea,
+                      top: String(textTextTop) + ea,
+                      backgroundColor: colorChip.white,
+                      paddingRight: String(whitePaddingRight) + ea,
+                    },
+                    bold: {
+                      fontSize: String(veryBigSize) + ea,
+                      fontWeight: String(200),
+                      color: colorChip.green,
+                      lineHeight: String(1.4),
+                    }
+                  },
+                ]
+              },
+              {
+                text: `<iframe src="${contents[i].link}" style="border-radius:5px;width:${String(videoWidth) + ea};height:${String(videoHeight) + ea}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`,
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  paddingTop: String(imageVisualPaddingTop) + ea,
+                  paddingBottom: String(imageVisualPaddingBottom) + ea,
+                },
+              }
+            ]
+          }
+        }
+      }
+    });
+  }
+
+}
+
 ConsoleManualJs.prototype.launching = async function (loading) {
   const instance = this;
   const { returnGet, ajaxJson, setQueue } = GeneralJs;
@@ -1168,6 +1385,7 @@ ConsoleManualJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertManualStartBox();
+          instance.insertMovieStartBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ConsoleManualJs.launching.ghostDesignerLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
