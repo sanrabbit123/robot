@@ -161,20 +161,10 @@ DevContext.prototype.launching = async function () {
     
     
 
-    // aws cost
-
-    // const aws = new AwsAPIs();
-    // const tong = await aws.getCostByDate(new Date(2023, 1, 1), new Date());
-    // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/tong.json`, tong ]);
-    // console.log(tong);
-
-
 
     
 
-
-
-
+    
 
 
 
