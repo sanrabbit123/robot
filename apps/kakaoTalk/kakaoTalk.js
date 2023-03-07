@@ -2931,8 +2931,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       }
     },
     "scheduleClient": {
-      "name": "일정표 안내 고객",
-      "id": "TL_8270",
+      "name": "일정표 안내 고객 수정",
+      "id": "TM_1069",
       "needs": [
         "client",
         "host",
@@ -2940,8 +2940,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       ],
       "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"proid\", to: obj.proid }\n        ];\n      }",
       "raw": {
-        "templtContent": "안녕하세요, #{client} 고객님!\n고객님 현장의 전체적인 일정표를 보내드립니다. 아래 링크를 통해 페이지의 형태로 확인하실 수 있으며, 해당 일정에 맞게 디자인 작업이 진행될 예정입니다.\n\n해당 일정표는 프로젝트 시작 시 대략적으로 예상되는 일정을 담고 있는 표이기에 상황에 따라 변동 가능하며, 정확하지 않을 수 있습니다! 이 점 참고하시어 일정표 확인 부탁드리겠습니다 :)\n\n* 일정표 확인\nhttps://#{host}/project.php?proid=#{proid}&mode=schedule",
-        "templtName": "일정표 안내 고객",
+        "templtContent": "안녕하세요, #{client} 고객님!\n\n고객님 현장의 전체적인 일정표를 보내드립니다. 아래 링크를 통해 확인하실 수 있으며, 해당 일정에 맞게 디자인 작업이 진행될 예정입니다!\n\n해당 일정표는 대략적으로 예상되는 일정을 담고 있는 표이기에, 상황에 따라 변동 가능하며 정확하지 않을 수 있습니다! 이 점 참고하시어 일정표 확인 부탁드리겠습니다 :)\n\n* 일정표 확인\nhttps://#{host}/project.php?proid=#{proid}&mode=schedule",
+        "templtName": "일정표 안내 고객 수정",
         "templateType": "BA",
         "templateEmType": "NONE",
         "templateExtra": "",
@@ -2957,16 +2957,58 @@ KakaoTalk.prototype.templateTong = function (target) {
         "inspStatus": "APR",
         "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
         "buttons": [],
-        "cdate": "2023-02-13 12:25:18",
-        "templtCode": "TL_8270",
+        "cdate": "2023-03-04 09:03:55",
+        "templtCode": "TM_1069",
         "comments": [
           {
-            "cdate": "2023-02-13 14:43:15",
+            "cdate": "2023-03-06 11:12:13",
             "name": "검수자",
-            "id": "2428815",
+            "id": "2470531",
             "userName": "검수자",
             "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
-            "createdAt": "2023-02-13 14:43:15",
+            "createdAt": "2023-03-06 11:12:13",
+            "status": "APR"
+          }
+        ]
+      }
+    },
+    "progressClient": {
+      "name": "프로젝트 상태 안내 고객",
+      "id": "TM_1131",
+      "needs": [
+        "client",
+        "host",
+        "proid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"proid\", to: obj.proid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client} 고객님!\n프로젝트의 현재 진행 상황 안내 드립니다.\n\n아래 링크를 통해 프로젝트의 진행율을 체크하실 수 있으며, 자세한 진행 상황과 예상 일정까지 확인하실 수 있습니다!\n\n기타 궁금하신 사항이 있다면, 디자이너를 통해, 또는 홈리에종 카카오 채널을 통해 언제든 문의 부탁드립니다 :) \n\n* 프로젝트 진행율\nhttps://#{host}/project.php?proid=#{proid}",
+        "templtName": "프로젝트 상태 안내 고객",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-03-06 09:31:51",
+        "templtCode": "TM_1131",
+        "comments": [
+          {
+            "cdate": "2023-03-06 12:01:29",
+            "name": "검수자",
+            "id": "2470799",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2023-03-06 12:01:29",
             "status": "APR"
           }
         ]
