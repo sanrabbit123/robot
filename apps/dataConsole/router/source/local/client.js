@@ -6499,16 +6499,12 @@ ClientJs.prototype.addExtractEvent = function () {
           valuesArr[i].push(obj[valuesArr[i].find((c) => { return /^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(c); })]);
         }
 
-        console.log(valuesArr);
-
-        GeneralJs.downloadString(JSON.stringify(valuesArr), "this", "json")
-
-        // return GeneralJs.ajaxJson({
-        //   values: valuesArr,
-        //   newMake: true,
-        //   parentId: parentId,
-        //   sheetName: "fromDB_client_" + String(today.getFullYear()) + instance.mother.todayMaker()
-        // }, "/sendSheets");
+        return GeneralJs.ajaxJson({
+          values: valuesArr,
+          newMake: true,
+          parentId: parentId,
+          sheetName: "fromDB_client_" + String(today.getFullYear()) + instance.mother.todayMaker()
+        }, "/sendSheets");
       }).then((res) => {
         const { link } = res;
         div_clone.classList.remove("justfadein");
