@@ -4299,7 +4299,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           if (/curation/gi.test(obj.page)) {
             pageName = "스타일 체크";
           } else if (/proposal/gi.test(obj.page)) {
-            pageName = "제안서";
+            pageName = "추천서";
           } else if (/estimation/gi.test(obj.page)) {
             pageName = "견적서";
           } else if (/pure/gi.test(obj.page)) {
@@ -5654,7 +5654,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     for (let z in matrixStyle1) {
       div_clone2.style[z] = matrixStyle1[z];
     }
-    div_clone2.textContent = "제안";
+    div_clone2.textContent = "추천";
     matrixBox.appendChild(div_clone2);
 
     //proposal
@@ -5852,7 +5852,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     b_clone.addEventListener("contextmenu", toProjectEvent);
     summaryBox.appendChild(b_clone);
 
-    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;제안 `);
+    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;추천 `);
 
     b_clone = GeneralJs.nodes.b.cloneNode(true);
     b_clone.style.color = colorChip.green;
@@ -5900,7 +5900,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     b_clone.addEventListener("contextmenu", toProjectEvent);
     summaryBox.appendChild(b_clone);
 
-    summaryBox.insertAdjacentHTML(`beforeend`, `명<br>제안율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.proposal / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;진행율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.process / summaryTong.client) * 100))}</b>%`);
+    summaryBox.insertAdjacentHTML(`beforeend`, `명<br>추천율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.proposal / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;계약율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.contract / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;진행율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.process / summaryTong.client) * 100))}</b>%`);
     div_clone.appendChild(summaryBox);
 
     totalSummary.client += summaryTong.client;
@@ -6055,7 +6055,7 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
         while (totalBox.firstChild) {
           totalBox.removeChild(totalBox.lastChild);
         }
-        totalBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;제안 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;열람 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("process_number")}</b>명`);
+        totalBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;추천 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;열람 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("process_number")}</b>명`);
       });
     }
   });
@@ -6076,7 +6076,7 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
     totalBox.style[i] = style[i];
   }
 
-  totalBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;제안 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;열람 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("process_number")}</b>명`);
+  totalBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;추천 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;열람 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("process_number")}</b>명`);
   div_clone.appendChild(totalBox);
 
   //end
@@ -6681,14 +6681,14 @@ ClientJs.prototype.globalChaining = async function (thisCase, column, value, pas
         const { cliid } = thisCase;
         try {
           if (value !== pastValue) {
-            if (window.confirm("제안서 리셋을 원하시나요?")) {
+            if (window.confirm("추천서 리셋을 원하시나요?")) {
               let project;
               [ project ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getProjects", { equal: true });
               if (project === undefined || project === null) {
-                window.alert("리셋할 제안서가 없습니다!");
+                window.alert("리셋할 추천서가 없습니다!");
               } else {
                 if (project.desid !== "") {
-                  window.alert("이미 계약된 제안서는 리셋할 수 없습니다! 리셋을 원할시 별도로 문의해주세요!");
+                  window.alert("이미 계약된 추천서는 리셋할 수 없습니다! 리셋을 원할시 별도로 문의해주세요!");
                 } else {
                   await ajaxJson({ cliid }, "/proposalReset");
                 }
@@ -6770,7 +6770,7 @@ ClientJs.prototype.communicationRender = function () {
             await ajaxJson({ cliid, serid, silent: true }, "/proposalCreate");
 
             await sleep(1000);
-            window.alert("제안서 제작 요청이 완료되었습니다!");
+            window.alert("추천서 제작 요청이 완료되었습니다!");
           }
         }
       } catch (e) {
