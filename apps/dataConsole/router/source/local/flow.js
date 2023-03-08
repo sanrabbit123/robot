@@ -1179,6 +1179,8 @@ FlowJs.prototype.launching = async function () {
     const targetCase = [ "고객", "디자이너", "홈리에종" ];
     let blocks;
 
+    window.location.href = window.location.protocol + "//" + window.location.host + "/client";
+
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
     this.grayBarWidth = this.mother.grayBarWidth;
