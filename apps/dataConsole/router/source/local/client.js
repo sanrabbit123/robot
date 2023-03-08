@@ -5900,7 +5900,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     b_clone.addEventListener("contextmenu", toProjectEvent);
     summaryBox.appendChild(b_clone);
 
-    summaryBox.insertAdjacentHTML(`beforeend`, `명<br>추천율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.proposal / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;계약율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.contract / summaryTong.client) * 100))}</b>%전환율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.contract / summaryTong.proposal) * 100))}</b>%&nbsp;&nbsp;진행율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.process / summaryTong.client) * 100))}</b>%`);
+    summaryBox.insertAdjacentHTML(`beforeend`, `명<br>추천율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.proposal / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;계약율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.contract / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;전환율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.contract / summaryTong.proposal) * 100))}</b>%&nbsp;&nbsp;진행율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.process / summaryTong.client) * 100))}</b>%`);
     div_clone.appendChild(summaryBox);
 
     totalSummary.client += summaryTong.client;
