@@ -305,8 +305,8 @@ ConsoleManualJs.prototype.insertManualStartBox = function () {
 
   contents = {
     title: [
-      "디자이너 콘솔",
-      "이용 안내",
+      "디자이너 콘솔의",
+      "전반적인 구성",
     ],
     description: big ? [
       "디자이너 콘솔에 대해 설명드립니다.",
@@ -1346,6 +1346,175 @@ ConsoleManualJs.prototype.insertMovieStartBox = function () {
 
 }
 
+ConsoleManualJs.prototype.insertDescriptionBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { ea, baseTong, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, selfHref, scrollTo } = GeneralJs;
+  let margin;
+  let paddingTop;
+  let whiteBottomMargin;
+  let titleFontSize;
+  let bottomMargin;
+  let whiteBlock;
+  let grayTong;
+  let arrowBetween;
+  let contents;
+  let innerMargin;
+  let arrowWidth, arrowHeight;
+  let textSize, textWeight;
+  let mobileVisualPaddingValue;
+  let button, buttons;
+  let whiteTong;
+  let veryBigSize;
+  let veryBigWeight;
+  let textTextTop;
+  let firstWidth;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 6 %%>;
+  paddingTop = <%% 52, 52, 44, 36, 6 %%>;
+
+  whiteBottomMargin = <%% 55, 55, 47, 39, 6 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+
+  innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+
+  arrowBetween = <%% 5, 5, 5, 3, 1 %%>;
+  arrowWidth = <%% 214, 160, 138, 109, 27 %%>;
+  arrowHeight = <%% 100, 90, 80, 60, 11 %%>;
+
+  textSize = <%% 14, 13, 12, 11, 3.2 %%>;
+  textWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  veryBigSize = <%% 24, 22, 20, 18, 4.4 %%>;
+  veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
+  textTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), -0.3 %%>;
+
+  firstWidth = <%% 348, 300, 260, 174, 34 %%>;
+
+  mobileVisualPaddingValue = 0.2;
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: colorChip.white,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(whiteBottomMargin) + ea,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(margin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(margin) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  grayTong = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingTop: String(innerMargin) + ea,
+      paddingBottom: String(desktop ? innerMargin : innerMargin - arrowBetween) + ea,
+      paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+      paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
+      width: withOut(innerMargin * 2, ea),
+      background: colorChip.white,
+      borderRadius: String(8) + "px",
+    }
+  });
+
+  createNode({
+    mother: grayTong,
+    style: {
+      display: desktop ? "inline-flex" : "flex",
+      position: "relative",
+      width: desktop ? String(firstWidth) + ea : withOut(0, ea),
+      flexDirection: "column",
+      verticalAlign: "top",
+    },
+    children: [
+      {
+        text: [
+          big ? "디자이너 콘솔에 대한" : "콘솔에 대한",
+          big ? "상세한 사용 설명서" : "사용 설명서",
+        ].join(desktop ? "\n" : " "),
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(veryBigSize) + ea,
+          fontWeight: String(veryBigWeight),
+          color: colorChip.black,
+          lineHeight: String(1.4),
+          textAlign: desktop ? "left" : "center",
+          marginTop: desktop ? "" : String(2.8) + ea,
+          marginBottom: desktop ? "" : String(5) + ea,
+          top: String(textTextTop) + ea,
+        },
+      },
+    ]
+  })
+
+  createNode({
+    mother: grayTong,
+    style: {
+      display: desktop ? "inline-flex" : "flex",
+      position: "relative",
+      width: desktop ? withOut(firstWidth, ea) : withOut(0, ea),
+      flexDirection: "column",
+      verticalAlign: "top",
+    },
+    children: [
+      {
+        text: [
+          "홈리에종은 디자이너님들의 편의 제공과 고객님께 더 신뢰 있는 서비스 제공을 위해 <b%'디자이너 콘솔'%b>을 구상하여 제작하였습니다. 디자이너 콘솔은 홈리에종과 협업 관계에 있으신 디자이너님들이 홈리에종을 통해 받으신 모든 홈스타일링 프로젝트를 더 편리하고, 직관적으로 관리할 수 있고, 공유할 수 있게 만들어진 관리자 콘솔입니다.",
+          "디자이너 콘솔을 이용하시면 프로젝트를 쉽게 관리할 수 있는 것뿐만 아니라, 고객님께 <u%더 편리한 방식으로 프로젝트 진행 상황과 파일을 공유%u>하실 수 있으며," + (media[0] ? "\n" : "") + "홈리에종에 별도로 연락하실 필요 없이 실시간으로 프로젝트에 대한 상황 공유가 가능해집니다. <u%실장님과 고객님 사이의 의사 소통을 더욱 더 원활%u>하게 할 목적으로 만들어진 것이니 적극적 이용 부탁드립니다.",
+          "이 페이지는 디자이너 콘솔에 대한 교육 자료입니다. 아래로 내려보시면, 전반적인 구성에 대한 설명과 각각의 이용법에 대해서 <u%상세히 설명한 영상%u>들을 보실 수 있습니다. 실장님께 이 페이지를 통해 디자이너 콘솔의 <u%이용법에 대해서 숙지하실 것%u>을 부탁드리겠습니다. 기타 궁금하신 사항은 홈리에종 카카오 채널을 통해 남겨주세요!",
+        ].join("\n\n"),
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.black,
+          lineHeight: String(1.7),
+          textAlign: "left",
+          marginBottom: desktop ? "" : String(3) + ea,
+          top: String(textTextTop) + ea,
+        },
+        bold: {
+          fontSize: String(textSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.green,
+          lineHeight: String(1.7),
+        },
+        under: {
+          fontSize: String(textSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
+          lineHeight: String(1.7),
+        }
+      },
+    ]
+  });
+
+}
+
 ConsoleManualJs.prototype.launching = async function (loading) {
   const instance = this;
   const { returnGet, ajaxJson, setQueue } = GeneralJs;
@@ -1384,6 +1553,7 @@ ConsoleManualJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
+          instance.insertDescriptionBox();
           instance.insertManualStartBox();
           instance.insertMovieStartBox();
         } catch (e) {
