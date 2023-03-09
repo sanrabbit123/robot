@@ -1229,7 +1229,7 @@ ConsoleManualJs.prototype.insertMovieStartBox = function () {
     },
     {
       title: "프로젝트 상세",
-      link: "https://www.youtube.com/embed/tHMDG7aCUcI",
+      link: "https://www.youtube.com/embed/NHgaX1qvbe0",
     },
     {
       title: "파일 업로드",
