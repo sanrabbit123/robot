@@ -3733,13 +3733,14 @@ ReceiptRouter.prototype.rou_post_calculationConsole = function () {
       const selfMongo = instance.mongolocal;
       const selfCoreMongo = instance.mongo;
       const { mode } = req.body;
+      const agoDateNumber = 28;
       let projects, clients, designers, bills;
       let ago;
       let preClients;
 
       if (mode === "init") {
         ago = new Date();
-        ago.setDate(ago.getDate() - 28);
+        ago.setDate(ago.getDate() - agoDateNumber);
         projects = await back.getProjectsByQuery({
           "process.contract.first.date": { $gte: ago }
         }, { selfMongo: selfCoreMongo });

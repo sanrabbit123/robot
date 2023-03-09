@@ -7256,3 +7256,83 @@ DataRouter.prototype.rou_post_workClientActionSync = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_processConsole = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/processConsole" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      const agoDateNumber = 180;
+      const { mode } = req.body;
+      let projects, clients, designers, history;
+      let ago;
+      let preClients;
+
+      if (mode === "init") {
+
+        ago = new Date();
+        ago.setDate(ago.getDate() - agoDateNumber);
+        projects = await back.getProjectsByQuery({
+          "process.contract.first.date": { $gte: ago }
+        }, { selfMongo: selfCoreMongo });
+
+      } else if (mode === "search") {
+
+        const { value } = req.body;
+        preClients = await back.getClientsByQuery({ name: { $regex: value } }, { selfMongo: selfCoreMongo });
+        if (preClients.length === 0) {
+          projects = [];
+        } else {
+          projects = await back.getProjectsByQuery({ $or: preClients.toNormal().map((c) => { return { cliid: c.cliid } }) }, { selfMongo: selfCoreMongo });
+          projects = projects.filter((project) => {
+            return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+          });
+        }
+
+      } else {
+
+        projects = await back.getProjectsByQuery({
+          "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
+        }, { selfMongo: selfCoreMongo });
+        
+      }
+
+      projects.sort((a, b) => { return b.process.contract.first.date.valueOf() - a.process.contract.first.date.valueOf() });
+
+      if (projects.length > 0) {
+
+        clients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
+        designers = await back.getDesignersByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.desid }))).map((desid) => { return { desid } }) }, { selfMongo: selfCoreMongo });
+  
+        history = await back.mongoRead("projectHistory", {
+          $or: projects.toNormal().map((project) => { return { proid: project.proid } })
+        }, { selfMongo });
+  
+        res.send(JSON.stringify({ projects: projects.toNormal(), clients: clients.toNormal(), designers: designers.toNormal(), history }));
+
+      } else {
+
+        res.send(JSON.stringify({ projects: [], clients: [], designers: [], history: [] }));
+
+      }
+
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_processConsole): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+

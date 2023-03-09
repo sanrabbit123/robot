@@ -3734,27 +3734,27 @@ ProcessJs.prototype.excuteRepay = async function (bilid, responseIndex, date, am
 
 ProcessJs.prototype.reloadProjects = function (serverResponse) {
   const instance = this;
-  let projects, clients, designers, bills;
+  let projects, clients, designers, history;
   let proid, cliid, desid, service;
-  let thisClient, thisDesigner, thisBill;
+  let thisClient, thisDesigner, thisHistory;
 
   projects = serverResponse.projects;
   clients = serverResponse.clients;
   designers = serverResponse.designers;
-  bills = serverResponse.bills;
+  history = serverResponse.history;
 
   for (let project of projects) {
     ({ proid, cliid, desid, service } = project);
 
     thisClient = clients.find((obj) => { return obj.cliid === cliid });
     thisDesigner = designers.find((obj) => { return obj.desid === desid });
-    thisBill = bills.find((obj) => {
-      return ((obj.links.proid === proid) && (obj.links.method === (service.online ? "online" : "offline")))
+    thisHistory = history.find((obj) => {
+      return obj.proid === proid
     });
 
     project.client = thisClient;
     project.designer = thisDesigner;
-    project.bill = thisBill;
+    project.history = thisHistory;
     project.name = thisClient.name;
     project.phone = thisClient.phone;
   }
@@ -3763,7 +3763,7 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
     return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
   });
 
-  this.bills = bills;
+  this.history = history;
   this.projects = projects;
 }
 
@@ -3783,7 +3783,7 @@ ProcessJs.prototype.launching = async function () {
 
     loading = this.mother.grayLoading();
 
-    serverResponse = await ajaxJson({ mode: "init" }, PYTHONHOST + "/calculationConsole", { equal: true });
+    serverResponse = await ajaxJson({ mode: "init" }, BACKHOST + "/processConsole", { equal: true });
 
     this.reloadProjects(serverResponse);
 
