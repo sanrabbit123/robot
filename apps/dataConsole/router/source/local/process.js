@@ -9,6 +9,7 @@ ProcessJs.prototype.baseMaker = function () {
   const instance = this;
   const { totalContents, ea, belowHeight, projects, media } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate } = GeneralJs;
+  const splitToken = "__split__";
   let outerMargin;
   let innerPadding;
   let grayBack;
@@ -62,13 +63,25 @@ ProcessJs.prototype.baseMaker = function () {
   let requestLength, responseLength, longLength;
   let requestArr, responseArr;
   let nameDom;
+  let managers;
+  let newProjectsTong;
+  let thisProjects, thisProjects2;
+  let designers;
+  let desid, designer;
+  let thisProject;
 
   mainColumns = [
     "담당자",
     "디자이너",
   ];
   requestColumns = [
-    "구분",
+    "고객",
+    "소비자가",
+    "확정가",
+    "입금일",
+    "환불액",
+    "환불일",
+    "고객",
     "소비자가",
     "확정가",
     "입금일",
@@ -141,13 +154,13 @@ ProcessJs.prototype.baseMaker = function () {
 
   tableBlockHeight = 34;
   tableValueBlockHeight = 28;
-  tableBlockFactorWidth = 120;
+  tableBlockFactorWidth = 132;
   tableBetween = 20;
 
   blockVisualPadding = 8;
 
-  nameWidth = 50;
-  designerWidth = 82;
+  nameWidth = 56;
+  designerWidth = 98;
   idWidth = 82;
   requestWidth = tableBlockFactorWidth * requestColumns.length;
   responseWidth = tableBlockFactorWidth * responseColumns.length;
@@ -155,7 +168,7 @@ ProcessJs.prototype.baseMaker = function () {
   tableSize = 13;
   tableWeight = 400;
   tableBoldWeight = 700;
-  tableTextTop = (isMac() ? -2 : 0);
+  tableTextTop = (isMac() ? -1 : 1);
 
   contentsLoad = () => {};
 
@@ -301,15 +314,32 @@ ProcessJs.prototype.baseMaker = function () {
     });
 
     instance.names = [];
-    for (let project of instance.projects) {
+
+    managers = [ ...new Set(instance.projects.map((obj) => { return obj.history.manager })) ];
+    managers.sort();
+    managers = managers.filter((str) => { return str !== '-' });
+    managers.push('-');
+
+    newProjectsTong = [];
+    for (let manager of managers) {
+      thisProjects = instance.projects.filter((obj) => { return obj.history.manager === manager });
+      designers = [ ...new Set(thisProjects.map((obj) => { return obj.designer.desid + splitToken + obj.designer.designer })) ];
+      for (let complex of designers) {
+        [ desid, designer ] = complex.split(splitToken);
+
+        thisProjects2 = thisProjects.filter((obj) => { return obj.designer.designer === designer && obj.designer.desid === desid });
+        newProjectsTong.push({ manager, designer, desid, projects: thisProjects2 });
+
+      }
+    }
+
+    for (let { manager, designer, desid, projects } of newProjectsTong) {
 
       instance.matrix.push(startRow);
 
       motherBlock = createNode({
         mother: grayTong,
-        attribute: {
-          proid: project.proid,
-        },
+        attribute: { desid },
         style: {
           display: "block",
           position: "relative",
@@ -323,9 +353,7 @@ ProcessJs.prototype.baseMaker = function () {
 
       baseBlock = createNode({
         mother: motherBlock,
-        attribute: {
-          proid: project.proid,
-        },
+        attribute: { desid },
         style: {
           display: "inline-block",
           width: withOut(0, ea),
@@ -337,9 +365,7 @@ ProcessJs.prototype.baseMaker = function () {
         },
         children: [
           {
-            attribute: {
-              proid: project.proid,
-            },
+            attribute: { desid },
             style: {
               display: "block",
               position: "relative",
@@ -352,16 +378,15 @@ ProcessJs.prototype.baseMaker = function () {
 
       targetTong = baseBlock.firstChild;
 
-      
       nameDom = createNode({
         mother: targetTong,
-        text: project.name.slice(0, 3) + "<b% C%b>",
-        attribute: {
-          name: project.proid + project.cliid + project.desid + project.name + project.designer.designer,
-        },
-        event: {
-          click: instance.whiteCardView(project.proid),
-        },
+        text: manager,
+        // attribute: {
+        //   name: project.proid + project.cliid + project.desid + project.name + project.designer.designer,
+        // },
+        // event: {
+        //   click: instance.whiteCardView(project.proid),
+        // },
         style: {
           width: String(nameWidth) + ea,
           display: "inline-block",
@@ -369,7 +394,7 @@ ProcessJs.prototype.baseMaker = function () {
           verticalAlign: "top",
           fontSize: String(textSize) + ea,
           fontWeight: String(700),
-          color: /^드/.test(project.process.status) ? colorChip.deactive : colorChip.black,
+          color: colorChip.black,
           top: String(textTop) + ea,
           marginLeft: String(firstMargin) + ea,
           cursor: "pointer",
@@ -383,10 +408,10 @@ ProcessJs.prototype.baseMaker = function () {
       instance.names.push(nameDom);
       createNode({
         mother: targetTong,
-        text: project.designer.designer.slice(0, 3) + "<b% D%b>",
-        event: {
-          click: instance.whiteCardView(project.proid),
-        },
+        text: designer,
+        // event: {
+        //   click: instance.whiteCardView(project.proid),
+        // },
         style: {
           width: String(designerWidth) + ea,
           display: "inline-block",
@@ -394,7 +419,7 @@ ProcessJs.prototype.baseMaker = function () {
           verticalAlign: "top",
           fontSize: String(textSize) + ea,
           fontWeight: String(700),
-          color: /^드/.test(project.process.status) ? colorChip.deactive : colorChip.black,
+          color: colorChip.black,
           top: String(textTop) + ea,
           marginLeft: String(minimumBetween) + ea,
           cursor: "pointer",
@@ -405,11 +430,159 @@ ProcessJs.prototype.baseMaker = function () {
           color: colorChip.deactive,
         }
       });
-
-
       
+      requestTable = createNode({
+        mother: targetTong,
+        style: {
+          width: String(requestWidth) + ea,
+          display: "inline-block",
+          verticalAlign: "top",
+          position: "relative",
+          marginTop: String(textTop) + ea,
+          marginLeft: String(minimumBetween) + ea,
+          marginBottom: String(textTop) + ea,
+          borderRadius: String(5) + "px",
+          border: "1px solid " + colorChip.gray3,
+          overflow: "hidden",
+        }
+      });
+      requestBlock = createNode({
+        mother: requestTable,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(tableBlockHeight) + ea,
+          overflow: "hidden",
+          borderRadius: String(5) + "px",
+        }
+      });
+      for (let i = 0; i < requestColumns.length; i++) {
+        createNode({
+          mother: requestBlock,
+          style: {
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+            background: colorChip.gray1,
+            height: withOut(0, ea),
+            width: i === requestColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
+            borderRight: i === requestColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
+          },
+          children: [
+            {
+              text: requestColumns[i],
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableBoldWeight),
+                color: colorChip.black,
+                top: String(tableTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
 
-      
+      for (let z = 0; z < projects.length; z++) {
+        thisProject = projects[z];
+
+        requestValueArr = [
+          {
+            value: thisProject.name,
+            color: colorChip.black,
+          },
+          {
+            value: thisProject.name,
+            color: colorChip.black,
+          },
+          {
+            value: "0000-00-00",
+            color: colorChip.black,
+          },
+          {
+            value: "0000-00-00",
+            color: colorChip.black,
+          },
+          {
+            value: "0000-00-00",
+            color: colorChip.black,
+          },
+          {
+            value: "0000-00-00",
+            color: colorChip.black,
+          },
+          {
+            value: "0000-00-00",
+            color: colorChip.black,
+          },
+          {
+            value: "0000-00-00",
+            color: colorChip.black,
+          },
+          {
+            value: "0000-00-00",
+            color: colorChip.black,
+          },
+          {
+            value: "0000-00-00",
+            color: colorChip.black,
+          },
+          {
+            value: "0000-00-00",
+            color: colorChip.black,
+          },
+          {
+            value: "0000-00-00",
+            color: colorChip.black,
+          },
+        ];
+
+        requestBlock = createNode({
+          mother: requestTable,
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            overflow: "hidden",
+            borderRadius: String(5) + "px",
+          }
+        });
+        for (let i = 0; i < requestValueArr.length; i++) {
+          createNode({
+            mother: requestBlock,
+            style: {
+              display: "inline-flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              background: colorChip.white,
+              height: String(tableValueBlockHeight) + ea,
+              paddingTop: String(z === 0 ? blockVisualPadding : 0) + ea,
+              paddingBottom: String(z === projects.length - 1 ? blockVisualPadding : 0) + ea,
+              width: i === requestColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
+              borderRight: i === requestColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
+            },
+            children: [
+              {
+                text: requestValueArr[i].value,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(tableSize) + ea,
+                  fontWeight: String(tableWeight),
+                  color: requestValueArr[i].color,
+                  top: String(tableTextTop) + ea,
+                }
+              }
+            ]
+          });
+        }
+
+      }
+
       instance.matrix.push(emptyRow);
 
     }

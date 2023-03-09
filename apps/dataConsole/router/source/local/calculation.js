@@ -159,7 +159,7 @@ CalculationJs.prototype.baseMaker = function () {
   tableSize = 13;
   tableWeight = 400;
   tableBoldWeight = 700;
-  tableTextTop = (isMac() ? -2 : 0);
+  tableTextTop = (isMac() ? -1 : 1);
 
   contentsLoad = () => {};
 
