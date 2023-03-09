@@ -244,6 +244,8 @@ DataRouter.prototype.rou_get_First = function () {
             target = "project";
           } else if (/^prop/i.test(req.params.id)) {
             target = "proposal";
+          } else if (/^proc/i.test(req.params.id)) {
+            target = "process";
           } else if (/^con/i.test(req.params.id)) {
             target = "contents";
           } else if (/^fil/i.test(req.params.id)) {
