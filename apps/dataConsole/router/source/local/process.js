@@ -57,6 +57,7 @@ ProcessJs.prototype.baseMaker = function () {
   let latestCall;
   let wordingWidth;
   let checkBoxWidth, checkBoxMargin, checkBoxVisualTop;
+  let latestCallNumber;
 
   clientColumns = [
     "고객",
@@ -416,6 +417,7 @@ ProcessJs.prototype.baseMaker = function () {
           });
         }
   
+        latestCallNumber = 0;
         for (let z = 0; z < projects.length; z++) {
           thisProject = projects[z];
           callHistory = equalJson(JSON.stringify(thisProject.clientHistory.curation.analytics.call.out.concat(thisProject.clientHistory.curation.analytics.call.in))).filter((obj) => { return obj.success });
@@ -424,6 +426,9 @@ ProcessJs.prototype.baseMaker = function () {
           latestCall = '-';
           if (callHistory.length > 0) {
             latestCall = dateToString(callHistory[0].date);
+          }
+          if (latestCall === '-') {
+            latestCallNumber = latestCallNumber + 1;
           }
           
           partner = (thisProject.process.design.construct === null ? '-' : (thisProject.process.design.construct.contract.partner === "디자이너" ? "디자이너" : (thisProject.process.design.construct.contract.partner === "고객" ? "고객" : (thisProject.process.design.construct.contract.partner.trim() === "" ? "-" : "홈리에종"))));
@@ -560,7 +565,7 @@ ProcessJs.prototype.baseMaker = function () {
             check: false,
           },
           {
-            value: '-',
+            value: String(projects.length),
             color: colorChip.black,
             check: false,
           },
@@ -570,12 +575,12 @@ ProcessJs.prototype.baseMaker = function () {
             check: false,
           },
           {
-            value: latestCall,
+            value: (latestCallNumber === 0 ? String(latestCallNumber) : "<b%" + String(latestCallNumber) + "%b>") + " <u%/%u> " + String(projects.length),
             color: colorChip.black,
             check: false,
           },
           {
-            value: dateConvert(thisProject.process.contract.first.date),
+            value: String(0) + " <u%/%u> " + String(projects.length),
             color: colorChip.black,
             check: false,
           },
@@ -654,8 +659,13 @@ ProcessJs.prototype.baseMaker = function () {
                 },
                 bold: {
                   fontSize: String(tableSize) + ea,
-                  fontWeight: String(200),
-                  color: colorChip.green,
+                  fontWeight: String(tableWeight),
+                  color: colorChip.red,
+                },
+                under: {
+                  fontSize: String(tableSize) + ea,
+                  fontWeight: String(tableWeight),
+                  color: colorChip.deactive,
                 }
               }
             ]
