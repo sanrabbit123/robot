@@ -3698,9 +3698,10 @@ GeneralJs.stringToDate = function (str) {
   }
 }
 
-GeneralJs.serviceParsing = function (serviceObj, startDateMode = false) {
+GeneralJs.serviceParsing = function (serviceObj, startDateMode = false, initialMode = false) {
   const onoffString = [ "온라인", "오프라인" ];
   const serviceString = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];
+  const serviceInitial = [ "F", "S", "T", "XT" ];
   const startDateNumbers = [ 30, 45, 60, 75 ];
   const xValueString = [ "mini", "basic", "premium" ];
 
@@ -3711,6 +3712,7 @@ GeneralJs.serviceParsing = function (serviceObj, startDateMode = false) {
     let { online, serid, xValue } = serviceObj;
     let finalWords;
     let startDateNumber;
+    let initial;
 
     if (online) {
       finalWords = onoffString[0] + " ";
@@ -3723,15 +3725,19 @@ GeneralJs.serviceParsing = function (serviceObj, startDateMode = false) {
       if (/aa01s/gi.test(serid)) {
         finalWords += serviceString[0] + " ";
         startDateNumber = startDateNumbers[0];
+        initial = serviceInitial[0];
       } else if (/aa02s/gi.test(serid)) {
         finalWords += serviceString[1] + " ";
         startDateNumber = startDateNumbers[1];
+        initial = serviceInitial[1];
       } else if (/aa03s/gi.test(serid)) {
         finalWords += serviceString[2] + " ";
         startDateNumber = startDateNumbers[2];
+        initial = serviceInitial[2];
       } else if (/aa04s/gi.test(serid)) {
         finalWords += serviceString[3] + " ";
         startDateNumber = startDateNumbers[3];
+        initial = serviceInitial[3];
       } else {
         throw new Error("invaild service object");
       }
@@ -3739,15 +3745,19 @@ GeneralJs.serviceParsing = function (serviceObj, startDateMode = false) {
       if (/1/gi.test(serid)) {
         finalWords += serviceString[0] + " ";
         startDateNumber = startDateNumbers[0];
+        initial = serviceInitial[0];
       } else if (/2/gi.test(serid)) {
         finalWords += serviceString[1] + " ";
         startDateNumber = startDateNumbers[1];
+        initial = serviceInitial[1];
       } else if (/3/gi.test(serid)) {
         finalWords += serviceString[2] + " ";
         startDateNumber = startDateNumbers[2];
+        initial = serviceInitial[2];
       } else if (/4/gi.test(serid)) {
         finalWords += serviceString[3] + " ";
         startDateNumber = startDateNumbers[3];
+        initial = serviceInitial[3];
       } else {
         throw new Error("invaild service object");
       }
@@ -3764,7 +3774,11 @@ GeneralJs.serviceParsing = function (serviceObj, startDateMode = false) {
     }
 
     if (!startDateMode) {
-      return finalWords;
+      if (!initialMode) {
+        return finalWords;
+      } else {
+        return initial;
+      }
     } else {
       return startDateNumber;
     }

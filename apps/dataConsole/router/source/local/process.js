@@ -8,7 +8,7 @@ const ProcessJs = function () {
 ProcessJs.prototype.baseMaker = function () {
   const instance = this;
   const { totalContents, ea, belowHeight, projects, media } = this;
-  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate } = GeneralJs;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing } = GeneralJs;
   const splitToken = "__split__";
   let outerMargin;
   let innerPadding;
@@ -67,6 +67,7 @@ ProcessJs.prototype.baseMaker = function () {
   let designers;
   let desid, designer;
   let thisProject;
+  let partner;
 
   clientColumns = [
     "고객",
@@ -279,7 +280,7 @@ ProcessJs.prototype.baseMaker = function () {
 
     for (let { manager, designer, desid, projects } of newProjectsTong) {
       if (projects.length > 0) {
-        
+
         motherBlock = createNode({
           mother: grayTong,
           attribute: { desid },
@@ -423,12 +424,16 @@ ProcessJs.prototype.baseMaker = function () {
   
         for (let z = 0; z < projects.length; z++) {
           thisProject = projects[z];
-  
-          console.log(thisProject);
-  
+          
+          console.log(thisProject.history)
+
+
+
+          partner = (thisProject.process.design.construct === null ? '-' : (thisProject.process.design.construct.contract.partner === "디자이너" ? "디자이너" : (thisProject.process.design.construct.contract.partner === "고객" ? "고객" : (thisProject.process.design.construct.contract.partner.trim() === "" ? "-" : "홈리에종"))));
+
           clientValueArr = [
             {
-              value: thisProject.name,
+              value: thisProject.name + "&nbsp;&nbsp;<b%" + serviceParsing(thisProject.service, false, true) + "%b>",
               color: colorChip.black,
             },
             {
@@ -436,8 +441,8 @@ ProcessJs.prototype.baseMaker = function () {
               color: colorChip.black,
             },
             {
-              value: thisProject.name,
-              color: colorChip.black,
+              value: partner,
+              color: partner === "홈리에종" ? colorChip.green : colorChip.black,
             },
             {
               value: "0000-00-00",
@@ -512,6 +517,11 @@ ProcessJs.prototype.baseMaker = function () {
                     fontWeight: String(tableWeight),
                     color: clientValueArr[i].color,
                     top: String(tableTextTop) + ea,
+                  },
+                  bold: {
+                    fontSize: String(tableSize) + ea,
+                    fontWeight: String(200),
+                    color: colorChip.green,
                   }
                 }
               ]
@@ -534,11 +544,13 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
   let projects, clients, designers, history;
   let proid, cliid, desid, service;
   let thisClient, thisDesigner, thisHistory;
+  let clientHistory, thisClientHistory;
 
   projects = serverResponse.projects;
   clients = serverResponse.clients;
   designers = serverResponse.designers;
   history = serverResponse.history;
+  clientHistory = serverResponse.clientHistory;
 
   for (let project of projects) {
     ({ proid, cliid, desid, service } = project);
@@ -548,10 +560,14 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
     thisHistory = history.find((obj) => {
       return obj.proid === proid
     });
+    thisClientHistory = clientHistory.find((obj) => {
+      return obj.cliid === thisClient.cliid
+    });
 
     project.client = thisClient;
     project.designer = thisDesigner;
     project.history = thisHistory;
+    project.clientHistory = thisClientHistory;
     project.name = thisClient.name;
     project.phone = thisClient.phone;
   }
@@ -560,6 +576,7 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
     return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
   });
 
+  this.clientHistory = clientHistory;
   this.history = history;
   this.projects = projects;
 }

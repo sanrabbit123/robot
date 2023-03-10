@@ -7278,6 +7278,7 @@ DataRouter.prototype.rou_post_processConsole = function () {
       let projects, clients, designers, history;
       let ago;
       let preClients;
+      let clientHistory;
 
       if (mode === "init") {
 
@@ -7337,11 +7338,15 @@ DataRouter.prototype.rou_post_processConsole = function () {
           $or: projects.toNormal().map((project) => { return { proid: project.proid } })
         }, { selfMongo });
   
-        res.send(JSON.stringify({ projects: projects.toNormal(), clients: clients.toNormal(), designers: designers.toNormal(), history }));
+        clientHistory = await back.mongoRead("clientHistory", {
+          $or: clients.toNormal().map((client) => { return { cliid: client.cliid } })
+        }, { selfMongo });
+
+        res.send(JSON.stringify({ projects: projects.toNormal(), clients: clients.toNormal(), designers: designers.toNormal(), history, clientHistory }));
 
       } else {
 
-        res.send(JSON.stringify({ projects: [], clients: [], designers: [], history: [] }));
+        res.send(JSON.stringify({ projects: [], clients: [], designers: [], history: [], clientHistory: [] }));
 
       }
 

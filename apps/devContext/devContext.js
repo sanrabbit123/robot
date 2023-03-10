@@ -64,6 +64,35 @@ const DevContext = function () {
   this.dir = `${process.cwd()}/apps/devContext`;
 }
 
+DevContext.prototype.chatGPT = async function (input) {
+  const instance = this;
+  const { requestSystem } = this.mother;
+  try {
+    const openAiToken = "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";
+    const url = "https://api.openai.com/v1/chat/completions";
+    const model = "gpt-3.5-turbo";
+    let res;
+    res = await requestSystem(url, {
+      model,
+      messages: [
+        {
+          role: "user",
+          content: input
+        }
+      ]
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + openAiToken,
+      }
+    });
+    return res.data.choices.map((obj) => { return obj.message.content }).join(" ").trim();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
@@ -89,6 +118,13 @@ DevContext.prototype.launching = async function () {
         const history = await back.getHistoryById("client", cliid, { selfMongo });
         await requestSystem("https://" + address.secondinfo.host + "/printClient", { cliid: cliid, curation: history.curation }, { headers: { "Content-Type": "application/json" } });
         await instance.MONGOCONSOLEC.close();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    const question = async (input) => {
+      try {
+        console.log(await instance.chatGPT(input));
       } catch (e) {
         console.log(e);
       }
@@ -150,15 +186,13 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-    // const openAiToken = "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";
-    
+    // await question("고객 세일즈 메뉴얼을 적는데 '고객님의 요구 사항 파악'을 주제로 300자 이상 적어봐");
 
 
     
     
     
-    
+
 
     
 
