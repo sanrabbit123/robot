@@ -508,8 +508,8 @@ ProcessJs.prototype.baseMaker = function () {
               check: true,
             },
             {
-              value: "0000-00-00",
-              color: colorChip.black,
+              value: dateConvert(thisProject.rawDate),
+              color: dateConvert(thisProject.rawDate) === '-' ? colorChip.red : colorChip.black,
               check: true,
             },
           ];
@@ -591,12 +591,14 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
   let proid, cliid, desid, service;
   let thisClient, thisDesigner, thisHistory;
   let clientHistory, thisClientHistory;
+  let rawContents, rawContent;
 
   projects = serverResponse.projects;
   clients = serverResponse.clients;
   designers = serverResponse.designers;
   history = serverResponse.history;
   clientHistory = serverResponse.clientHistory;
+  rawContents = serverResponse.rawContents;
 
   for (let project of projects) {
     ({ proid, cliid, desid, service } = project);
@@ -609,6 +611,9 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
     thisClientHistory = clientHistory.find((obj) => {
       return obj.cliid === thisClient.cliid
     });
+    rawContent = rawContents.find((obj) => {
+      return obj.proid === proid
+    });
 
     project.client = thisClient;
     project.designer = thisDesigner;
@@ -616,6 +621,12 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
     project.clientHistory = thisClientHistory;
     project.name = thisClient.name;
     project.phone = thisClient.phone;
+    if (rawContent !== undefined) {
+      project.rawDate = rawContent.date;
+    } else {
+      project.rawDate = new Date(1800, 0, 1);
+    }
+
   }
 
   projects = projects.filter((obj) => {
