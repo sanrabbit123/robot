@@ -5326,17 +5326,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2206_aa01s", [
-    //   { porlid: "a96", index: 4 },
-    //   { porlid: "a96", index: 2 },
-    //   { porlid: "a96", index: 12 },
-    //   { porlid: "a96", index: 15 },
-    //   { porlid: "a96", index: 7 },
-    //   { porlid: "a96", index: 8 },
+    // await this.setProposalSettingForDesigner("d2301_aa01s", [
+    //   { porlid: "ghost", index: 6 },
+    //   { porlid: "ghost", index: 3 },
+    //   { porlid: "ghost", index: 1 },
+    //   { porlid: "ghost", index: 8 },
+    //   { porlid: "ghost", index: 2 },
+    //   { porlid: "ghost", index: 4 },
     // ], [
-    //   "고객님의 라이프스타일과 취향이 반영된 공간이 될 수 있도록 함께 하겠습니다.",
-    //   "고객님만의 유니크한 스타일을 구현하는 데 초점을 맞추고 진행합니다.",
-    //   "가볍지 않으면서도 답답하지 않은, 안정감이 느껴지는 공간을 만들어 드립니다."
+    //   "감성적인 리터치와 레이아웃으로 공간의 분위기를 바꿔 드립니다.",
+    //   "고객님의 상황에 맞춰 스타일링을 진행하며 고객님만의 아이템을 적극 활용합니다.",
+    //   "식물을 활용한 플랜테리어에 능하여 생기 있는 공간을 만들어 냅니다."
     // ]);
 
 

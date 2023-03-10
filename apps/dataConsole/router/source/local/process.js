@@ -553,6 +553,116 @@ ProcessJs.prototype.baseMaker = function () {
   
         }
 
+        clientValueArr = [
+          {
+            value: "총계",
+            color: colorChip.black,
+            check: false,
+          },
+          {
+            value: '-',
+            color: colorChip.black,
+            check: false,
+          },
+          {
+            value: '-',
+            color: colorChip.black,
+            check: false,
+          },
+          {
+            value: latestCall,
+            color: colorChip.black,
+            check: false,
+          },
+          {
+            value: dateConvert(thisProject.process.contract.first.date),
+            color: colorChip.black,
+            check: false,
+          },
+          {
+            value: dateConvert(thisProject.process.contract.meeting.date),
+            color: dateConvert(thisProject.process.contract.meeting.date) === '-' ? colorChip.red : colorChip.black,
+            check: false,
+          },
+          {
+            value: dateConvert(thisProject.process.contract.remain.date),
+            color: dateConvert(thisProject.process.contract.remain.date) === '-' ? colorChip.red : colorChip.black,
+            check: false,
+          },
+          {
+            value: dateConvert(thisProject.process.contract.form.date.from),
+            color: colorChip.black,
+            check: false,
+          },
+          {
+            value: dateConvert(thisProject.process.contract.form.date.to),
+            color: colorChip.black,
+            check: false,
+          },
+          {
+            value: "0000-00-00",
+            color: colorChip.black,
+            check: false,
+          },
+          {
+            value: "0000-00-00",
+            color: colorChip.black,
+            check: false,
+          },
+          {
+            value: dateConvert(thisProject.rawDate),
+            color: dateConvert(thisProject.rawDate) === '-' ? colorChip.red : colorChip.black,
+            check: false,
+          },
+        ];
+
+        clientBlack = createNode({
+          mother: requestTable,
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            overflow: "hidden",
+            borderRadius: String(5) + "px",
+          }
+        });
+        for (let i = 0; i < clientValueArr.length; i++) {
+          createNode({
+            mother: clientBlack,
+            style: {
+              display: "inline-flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              background: colorChip.gray0,
+              height: String(tableBlockHeight) + ea,
+              width: i === clientColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
+              borderRight: i === clientColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
+              },
+            children: [
+              {
+                text: clientValueArr[i].value,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: String(wordingWidth) + ea,
+                  textAlign: "center",
+                  fontSize: String(tableSize) + ea,
+                  fontWeight: String(tableWeight),
+                  color: clientValueArr[i].color,
+                  top: String(tableTextTop) + ea,
+                },
+                bold: {
+                  fontSize: String(tableSize) + ea,
+                  fontWeight: String(200),
+                  color: colorChip.green,
+                }
+              }
+            ]
+          });
+        }
+
+
       }
     }
   }
