@@ -7281,10 +7281,21 @@ DataRouter.prototype.rou_post_processConsole = function () {
 
       if (mode === "init") {
 
-        ago = new Date();
-        ago.setDate(ago.getDate() - agoDateNumber);
+        // ago = new Date();
+        // ago.setDate(ago.getDate() - agoDateNumber);
+        // projects = await back.getProjectsByQuery({
+        //   "process.contract.first.date": { $gte: ago }
+        // }, { selfMongo: selfCoreMongo });
+
         projects = await back.getProjectsByQuery({
-          "process.contract.first.date": { $gte: ago }
+          $and: [
+            {
+              "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
+            },
+            {
+              "process.status": { $regex: "^[진대]" }
+            }
+          ]
         }, { selfMongo: selfCoreMongo });
 
       } else if (mode === "search") {
@@ -7303,9 +7314,16 @@ DataRouter.prototype.rou_post_processConsole = function () {
       } else {
 
         projects = await back.getProjectsByQuery({
-          "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
+          $and: [
+            {
+              "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
+            },
+            {
+              "process.status": { $regex: "^[진대]" }
+            }
+          ]
         }, { selfMongo: selfCoreMongo });
-        
+
       }
 
       projects.sort((a, b) => { return b.process.contract.first.date.valueOf() - a.process.contract.first.date.valueOf() });
