@@ -7988,7 +7988,8 @@ DataRouter.prototype.rou_post_workClientActionSync = function () {
 DataRouter.prototype.rou_post_processConsole = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson } = this.mother;
+  const address = this.address;
+  const { equalJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/processConsole" ];
   obj.func = async function (req, res) {
@@ -8007,6 +8008,8 @@ DataRouter.prototype.rou_post_processConsole = function () {
       let ago;
       let preClients;
       let clientHistory;
+      let proidArr;
+      let secondRes;
 
       if (mode === "init") {
 
@@ -8070,11 +8073,19 @@ DataRouter.prototype.rou_post_processConsole = function () {
           $or: clients.toNormal().map((client) => { return { cliid: client.cliid } })
         }, { selfMongo });
 
-        res.send(JSON.stringify({ projects: projects.toNormal(), clients: clients.toNormal(), designers: designers.toNormal(), history, clientHistory }));
+        proidArr = projects.toNormal().map((p) => { return p.proid })
+        secondRes = await requestSystem("https://" + address.secondinfo.host + ":3000/getRawContentsDate", { proidArr }, {
+          headers: {
+            "Content-Type": "application/json",
+            "origin": address.backinfo.host
+          }
+        });
+
+        res.send(JSON.stringify({ projects: projects.toNormal(), clients: clients.toNormal(), designers: designers.toNormal(), history, clientHistory, rawContents: secondRes.data }));
 
       } else {
 
-        res.send(JSON.stringify({ projects: [], clients: [], designers: [], history: [], clientHistory: [] }));
+        res.send(JSON.stringify({ projects: [], clients: [], designers: [], history: [], clientHistory: [], rawContents: [] }));
 
       }
 

@@ -901,6 +901,60 @@ SecondRouter.prototype.rou_post_projectDesignerRaw = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_getRawContentsDate = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, errorLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/getRawContentsDate" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.proidArr === undefined) {
+        throw new Error("invalid post 1");
+      }
+      const selfMongo = instance.mongolocal;
+      const collection = "designerRawContents";
+      const { proidArr } = equalJson(req.body);
+      let rows;
+      let tong;
+
+      if (!Array.isArray(proidArr)) {
+        throw new Error("invalid post 2");
+      }
+      if (proidArr.length === 0) {
+        throw new Error("invalid post 3");
+      }
+
+      rows = await back.mongoRead(collection, { $or: proidArr.map((proid) => { return { proid } }) }, { selfMongo });
+      tong = [];
+      for (let row of rows) {
+        tong.push({
+          proid: row.proid,
+          desid: row.desid,
+          cliid: row.cliid,
+          date: row.date
+        })
+      }
+
+      res.send(JSON.stringify(tong));
+
+    } catch (e) {
+      errorLog("Second Ghost 서버 문제 생김 (rou_post_getRawContentsDate): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
   const instance = this;
   const back = this.back;

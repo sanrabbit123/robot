@@ -8,8 +8,16 @@ const ProcessJs = function () {
 ProcessJs.prototype.baseMaker = function () {
   const instance = this;
   const { totalContents, ea, belowHeight, projects, media } = this;
-  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing } = GeneralJs;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing, equalJson, svgMaker } = GeneralJs;
   const splitToken = "__split__";
+  const dateConvert = (dateObject) => {
+    const res = dateToString(dateObject);
+    if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(res)) {
+      return res.trim();
+    } else {
+      return '-';
+    }
+  }
   let outerMargin;
   let innerPadding;
   let grayBack;
@@ -68,6 +76,10 @@ ProcessJs.prototype.baseMaker = function () {
   let desid, designer;
   let thisProject;
   let partner;
+  let callHistory;
+  let latestCall;
+  let wordingWidth;
+  let checkBoxWidth, checkBoxMargin, checkBoxVisualTop;
 
   clientColumns = [
     "고객",
@@ -117,6 +129,11 @@ ProcessJs.prototype.baseMaker = function () {
   tableWeight = 400;
   tableBoldWeight = 700;
   tableTextTop = (isMac() ? -1 : 1);
+
+  wordingWidth = 77;
+  checkBoxWidth = 10;
+  checkBoxMargin = 5;
+  checkBoxVisualTop = -0.5;
 
   contentsLoad = () => {};
 
@@ -424,61 +441,76 @@ ProcessJs.prototype.baseMaker = function () {
   
         for (let z = 0; z < projects.length; z++) {
           thisProject = projects[z];
+          callHistory = equalJson(JSON.stringify(thisProject.clientHistory.curation.analytics.call.out.concat(thisProject.clientHistory.curation.analytics.call.in))).filter((obj) => { return obj.success });
+          callHistory.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+
+          latestCall = '-';
+          if (callHistory.length > 0) {
+            latestCall = dateToString(callHistory[0].date);
+          }
           
-          console.log(thisProject.history)
-
-
-
           partner = (thisProject.process.design.construct === null ? '-' : (thisProject.process.design.construct.contract.partner === "디자이너" ? "디자이너" : (thisProject.process.design.construct.contract.partner === "고객" ? "고객" : (thisProject.process.design.construct.contract.partner.trim() === "" ? "-" : "홈리에종"))));
 
           clientValueArr = [
             {
               value: thisProject.name + "&nbsp;&nbsp;<b%" + serviceParsing(thisProject.service, false, true) + "%b>",
               color: colorChip.black,
+              check: false,
             },
             {
               value: thisProject.process.status,
               color: colorChip.black,
+              check: false,
             },
             {
               value: partner,
               color: partner === "홈리에종" ? colorChip.green : colorChip.black,
+              check: false,
+            },
+            {
+              value: latestCall,
+              color: colorChip.black,
+              check: true,
+            },
+            {
+              value: dateConvert(thisProject.process.contract.first.date),
+              color: colorChip.black,
+              check: true,
+            },
+            {
+              value: dateConvert(thisProject.process.contract.meeting.date),
+              color: dateConvert(thisProject.process.contract.meeting.date) === '-' ? colorChip.red : colorChip.black,
+              check: true,
+            },
+            {
+              value: dateConvert(thisProject.process.contract.remain.date),
+              color: dateConvert(thisProject.process.contract.remain.date) === '-' ? colorChip.red : colorChip.black,
+              check: true,
+            },
+            {
+              value: dateConvert(thisProject.process.contract.form.date.from),
+              color: colorChip.black,
+              check: true,
+            },
+            {
+              value: dateConvert(thisProject.process.contract.form.date.to),
+              color: colorChip.black,
+              check: true,
             },
             {
               value: "0000-00-00",
               color: colorChip.black,
+              check: true,
             },
             {
               value: "0000-00-00",
               color: colorChip.black,
+              check: true,
             },
             {
               value: "0000-00-00",
               color: colorChip.black,
-            },
-            {
-              value: "0000-00-00",
-              color: colorChip.black,
-            },
-            {
-              value: "0000-00-00",
-              color: colorChip.black,
-            },
-            {
-              value: "0000-00-00",
-              color: colorChip.black,
-            },
-            {
-              value: "0000-00-00",
-              color: colorChip.black,
-            },
-            {
-              value: "0000-00-00",
-              color: colorChip.black,
-            },
-            {
-              value: "0000-00-00",
-              color: colorChip.black,
+              check: true,
             },
           ];
   
@@ -497,6 +529,7 @@ ProcessJs.prototype.baseMaker = function () {
               mother: clientBlack,
               style: {
                 display: "inline-flex",
+                flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
                 position: "relative",
@@ -513,6 +546,8 @@ ProcessJs.prototype.baseMaker = function () {
                   style: {
                     display: "inline-block",
                     position: "relative",
+                    width: String(wordingWidth) + ea,
+                    textAlign: "center",
                     fontSize: String(tableSize) + ea,
                     fontWeight: String(tableWeight),
                     color: clientValueArr[i].color,
@@ -522,6 +557,17 @@ ProcessJs.prototype.baseMaker = function () {
                     fontSize: String(tableSize) + ea,
                     fontWeight: String(200),
                     color: colorChip.green,
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: svgMaker.checkBox(colorChip.green),
+                  style: {
+                    display: clientValueArr[i].check ? "inline-block" : "none",
+                    position: "relative",
+                    width: String(checkBoxWidth) + ea,
+                    marginLeft: String(checkBoxMargin) + ea,
+                    top: String(checkBoxVisualTop) + ea,
                   }
                 }
               ]

@@ -186,7 +186,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // await question("고객 세일즈 메뉴얼을 적는데 '고객님의 요구 사항 파악'을 주제로 300자 이상 적어봐");
+    // await question("일반적인 회사 전체 자료의 디렉토리를 정리해서 알려줘봐");
 
 
     
