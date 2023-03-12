@@ -972,86 +972,6 @@ ProcessJs.prototype.whiteCardView = function (proid) {
       buttonWeight = 700;
       buttonTextTop = isMac() ? -1 : 1;
 
-      leftColumns = [
-        "구분",
-        "공급가",
-        "VAT",
-        "소비자가",
-        "확정가",
-        "입금액",
-        "입금일",
-        "입금 수단",
-        "입금 증빙",
-        "환불액",
-        "환불일",
-        "환불 비율",
-        "환불 진행",
-      ];
-
-      rightColumns = [
-        "구분",
-        "종류",
-        "수수료",
-        "증빙",
-        "총액",
-        "미지급액",
-        "지급액",
-        "지급일",
-        "지급 수단",
-        "환수액",
-        "환수일",
-        "지급 진행",
-        "환수 확인",
-      ];
-
-      responsePlusButtonMenus = [
-        {
-          words: "시공 정산",
-          func: function () {
-            return async function (e) {
-              try {
-                const proid = this.getAttribute("proid");
-                const bilid = this.getAttribute("bilid");
-                const desid = this.getAttribute("desid");
-                const cliid = this.getAttribute("cliid");
-                let loading, res;
-                let thisBillIndex, thisProjectIndex
-                let amount, name;
-
-                amount = await GeneralJs.prompt("정산 금액을 숫자로만 알려주세요!");
-                if (typeof amount === "string") {
-                  amount = Number(amount.replace(/[^0-9]/gi, ''));
-                } else {
-                  amount = 0;
-                }
-                name = await GeneralJs.prompt("시공사 이름을 알려주세요!");
-                if (name === null) {
-                  name = "알 수 없음";
-                }
-
-                res = await ajaxJson({ bilid, amount, name }, PYTHONHOST + "/responseInjection", { equal: true });
-
-                thisBillIndex = instance.bills.findIndex((obj) => { return obj.bilid === bilid });
-                thisProjectIndex = instance.projects.findIndex((obj) => { return obj.proid === proid });
-
-                instance.bills[thisBillIndex] = res.bill;
-                instance.projects[thisProjectIndex].bill = res.bill;
-
-                loading = instance.mother.grayLoading();
-                setQueue(() => {
-                  instance.contentsLoad();
-                  (instance.whiteCardView(proid))();
-                  loading.remove();
-                });
-
-                removeByClass(responsePlusButtonPopupClassName);
-              } catch (e) {
-                console.log(e);
-              }
-            }
-          }
-        }
-      ];
 
       // base
 
@@ -1181,833 +1101,829 @@ ProcessJs.prototype.whiteCardView = function (proid) {
         }
       });
 
-      // contents area up - request
-
-      contentsAreaLeft = createNode({
-        mother: contentsArea,
-        style: {
-          display: "flex",
-          position: "relative",
-          height: "calc(calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2) - " + String(grayInnerPadding * 2) + ea + ")",
-          width: withOut(grayInnerPadding * 2, ea),
-          borderRadius: String(5) + "px",
-          padding: String(grayInnerPadding) + ea,
-          background: colorChip.gray2,
-          marginBottom: String(contentsAreaBetween) + ea,
-          alignItems: "center",
-          justifyContent: "center",
-        },
-        children: [
-          {
-            style: {
-              display: "block",
-              position: "relative",
-              width: withOut(0, ea),
-              height: withOut(0, ea),
-              overflow: "scroll",
-            }
-          }
-        ]
-      }).firstChild;
-
-      greenTong = createNode({
-        mother: contentsAreaLeft,
-        style: {
-          display: "flex",
-          position: "sticky",
-          flexDirection: "row",
-          top: String(0),
-          width: withOut(0),
-          height: String(blockHeight) + ea,
-          background: colorChip.gradientGreen,
-          borderRadius: String(5) + "px",
-          marginBottom: String(blockMarginBottom) + ea,
-          zIndex: String(1),
-        }
-      });
-      for (let column of leftColumns) {
-        createNode({
-          mother: greenTong,
-          style: {
-            display: "inline-flex",
-            width: "calc(100% / " + String(leftColumns.length) + ")",
-            height: withOut(0, ea),
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          },
-          children: [
-            {
-              text: column,
-              style: {
-                fontSize: String(valueSize) + ea,
-                fontWeight: String(valueBoldWeight),
-                color: colorChip.white,
-                position: "relative",
-                top: String(valueTextTop) + ea,
-              }
-            }
-          ]
-        });
-      }
-
-      requestSumConsumer = 0;
-      requestSumConfirm = 0;
-      requestSumRefund = 0;
-      requestSumIncome = 0;
-      requestSumVat = 0;
-      requestSumSupply = 0;
-      for (let z = 0; z < project.bill.requests.length; z++) {
-        thisRequest = project.bill.requests[z];
-        requestName = thisRequest.name;
-        confirmState = Math.floor(thisRequest.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0));
-
-        if (requestName === "홈리에종 잔금") {
-          currentState = 1 - project.process.contract.remain.calculation.discount;
-          currentState = Math.floor(project.process.contract.remain.calculation.amount.consumer / currentState);
-          currentState = Math.floor(currentState - project.process.contract.first.calculation.amount);
-        } else {
-          currentState = Math.floor(thisRequest.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0));
-        }
-
-        vatAmount = Math.floor(currentState / 11);
-        supplyAmount = Math.floor(currentState - vatAmount);
-
-        if (/^드/gi.test(project.process.status)) {
-          if (thisRequest.pay.length === 0) {
-            confirmState = 0;
-          }
-        }
-
-        payDate = '-';
-        payRealAmount = 0;
-        if (thisRequest.pay.length > 0) {
-          payDate = dateToString(thisRequest.pay[0].date);
-          payRealAmount = thisRequest.pay.reduce((acc, curr) => { return acc + curr.amount }, 0);
-        }
-
-        if (payDate === '-') {
-          payMethod = "-";
-          payProof = "-";
-        } else {
-          payMethod = "알 수 없음";
-          if (thisRequest.proofs.length > 0) {
-            payMethod = thisRequest.proofs[0].method;
-          }
-          payProof = "알 수 없음";
-          if (thisRequest.proofs.length > 0) {
-            payProof = thisRequest.proofs[0].proof;
-          }
-        }
-
-        cancelAmount = 0;
-        cancelDate = '-';
-
-        if (thisRequest.cancel.length > 0) {
-          cancelAmount = thisRequest.cancel.reduce((acc, curr) => { return acc + curr.amount }, 0);
-          cancelDate = dateToString(thisRequest.cancel[0].date);
-        }
-
-        refundGo = "환불 진행";
-        refundReceipt = null;
-        oidArr = thisRequest.pay.map((o) => { return o.oid }).filter((oid) => { return oid !== '' });
-        refundReceipt = thisRequest.info.find((o) => {
-          return typeof o === "object" && o.key === "refundReceipt" && oidArr.includes(o.oid)
-        });
-        if (refundReceipt !== null && refundReceipt !== undefined) {
-          refundGo = "환불 요청";
-        }
-        if (cancelAmount !== 0) {
-          refundGo = "환불 완료";
-        }
-
-        requestSumConsumer += currentState;
-        requestSumConfirm += confirmState;
-        requestSumRefund += cancelAmount;
-        requestSumIncome += (payDate === '-' ? 0 : confirmState);
-        requestSumVat += vatAmount;
-        requestSumSupply += supplyAmount;
-
-        requestValueArr = [
-          {
-            value: requestName,
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: autoComma(supplyAmount),
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: autoComma(vatAmount),
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: autoComma(currentState),
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: autoComma(confirmState),
-            color: confirmState === 0 ? colorChip.black : (payDate === '-' ? colorChip.red : colorChip.black),
-            pointer: false,
-            event: null,
-          },
-          {
-            value: payDate === '-' ? String(0) : autoComma(payRealAmount),
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: payDate,
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: payMethod,
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: payProof,
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: autoComma(cancelAmount),
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: cancelDate,
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: (payRealAmount === 0 ? "0%" : (String(Math.floor((cancelAmount / payRealAmount) * 10000) / 100) + '%')),
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: refundGo,
-            color: (/진행/gi.test(refundGo) ? colorChip.green : (/요청/gi.test(refundGo) ? colorChip.black : colorChip.deactive)),
-            pointer: /진행/gi.test(refundGo),
-            event: (/진행/gi.test(refundGo) ? instance.makeRefundEvent(project.bill.bilid, z, project.proid) : null),
-          },
-        ];
-
-        whiteTong = createNode({
-          mother: contentsAreaLeft,
-          style: {
-            display: "flex",
-            position: "relative",
-            flexDirection: "row",
-            width: withOut(0),
-            height: String(blockHeight) + ea,
-            background: colorChip.white,
-            borderRadius: String(5) + "px",
-            marginBottom: String(blockMarginBottom) + ea,
-          }
-        });
-        for (let { value, color, pointer, event } of requestValueArr) {
-          createNode({
-            mother: whiteTong,
-            event,
-            style: {
-              display: "inline-flex",
-              width: "calc(100% / " + String(leftColumns.length) + ")",
-              height: withOut(0, ea),
-              justifyContent: "center",
-              alignItems: "center",
-              position: "relative",
-              cursor: pointer ? "pointer" : "",
-            },
-            children: [
-              {
-                text: value,
-                style: {
-                  fontSize: String(valueSize) + ea,
-                  fontWeight: String(valueWeight),
-                  color: color,
-                  position: "relative",
-                  top: String(valueTextTop) + ea,
-                }
-              }
-            ]
-          });
-        }
-      }
-
-      requestValueArr = [
-        {
-          value: "총계",
-          color: colorChip.black,
-        },
-        {
-          value: autoComma(requestSumSupply),
-          color: colorChip.black,
-        },
-        {
-          value: autoComma(requestSumVat),
-          color: colorChip.black,
-        },
-        {
-          value: autoComma(requestSumConsumer),
-          color: colorChip.black,
-        },
-        {
-          value: autoComma(requestSumConfirm),
-          color: colorChip.black,
-        },
-        {
-          value: autoComma(requestSumIncome),
-          color: colorChip.black,
-        },
-        {
-          value: '-',
-          color: colorChip.black,
-        },
-        {
-          value: '-',
-          color: colorChip.black,
-        },
-        {
-          value: '-',
-          color: colorChip.black,
-        },
-        {
-          value: autoComma(requestSumRefund),
-          color: colorChip.black,
-        },
-        {
-          value: '-',
-          color: colorChip.black,
-        },
-        {
-          value: '-',
-          color: colorChip.black,
-        },
-        {
-          value: '-',
-          color: colorChip.black,
-        },
-      ];
-      grayTong = createNode({
-        mother: contentsAreaLeft,
-        style: {
-          display: "flex",
-          position: "relative",
-          flexDirection: "row",
-          width: withOut(0),
-          height: String(blockHeight) + ea,
-          background: colorChip.gray0,
-          borderRadius: String(5) + "px",
-          marginBottom: String(blockMarginBottom) + ea,
-        }
-      });
-      for (let { value, color } of requestValueArr) {
-        createNode({
-          mother: grayTong,
-          style: {
-            display: "inline-flex",
-            width: "calc(100% / " + String(leftColumns.length) + ")",
-            height: withOut(0, ea),
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          },
-          children: [
-            {
-              text: value,
-              style: {
-                fontSize: String(valueSize) + ea,
-                fontWeight: String(600),
-                color: colorChip.black,
-                position: "relative",
-                top: String(valueTextTop) + ea,
-              }
-            }
-          ]
-        });
-      }
-
-      // contents area down - response
-
-      contentsAreaRight = createNode({
-        mother: contentsArea,
-        style: {
-          display: "flex",
-          position: "relative",
-          height: "calc(calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2) - " + String(grayInnerPadding * 2) + ea + ")",
-          width: withOut(grayInnerPadding * 2, ea),
-          borderRadius: String(5) + "px",
-          padding: String(grayInnerPadding) + ea,
-          background: colorChip.gray2,
-          alignItems: "center",
-          justifyContent: "center",
-        },
-        children: [
-          {
-            style: {
-              display: "block",
-              position: "relative",
-              width: withOut(0, ea),
-              height: withOut(0, ea),
-              overflow: "scroll",
-            }
-          }
-        ]
-      }).firstChild;
-
-      blackTong = createNode({
-        mother: contentsAreaRight,
-        style: {
-          display: "flex",
-          position: "sticky",
-          flexDirection: "row",
-          top: String(0),
-          width: withOut(0),
-          height: String(blockHeight) + ea,
-          background: colorChip.gradientGray,
-          borderRadius: String(5) + "px",
-          marginBottom: String(blockMarginBottom) + ea,
-          zIndex: String(1),
-        }
-      });
-      for (let column of rightColumns) {
-        createNode({
-          mother: blackTong,
-          style: {
-            display: "inline-flex",
-            width: "calc(100% / " + String(leftColumns.length) + ")",
-            height: withOut(0, ea),
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          },
-          children: [
-            {
-              text: column,
-              style: {
-                fontSize: String(valueSize) + ea,
-                fontWeight: String(valueBoldWeight),
-                color: colorChip.white,
-                position: "relative",
-                top: String(valueTextTop) + ea,
-              }
-            }
-          ]
-        });
-      }
-
-      responseSumTotal = 0;
-      responseSumNon = 0;
-      responseSumPaid = 0;
-      responseSumRefund = 0;
-      for (let z = 0; z < project.bill.responses.length; z++) {
-        thisResponse = project.bill.responses[z];
-        responseName = thisResponse.name;
-
-        confirmState = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
-        payAmount = Math.floor(thisResponse.pay.reduce((acc, curr) => { return acc + curr.amount }, 0));
-        refundAmount = Math.floor(thisResponse.cancel.reduce((acc, curr) => { return acc + curr.amount }, 0));
-        nonPayAmount = confirmState - payAmount;
-        payDate = '-';
-        if (thisResponse.pay.length > 0) {
-          payDate = dateToString(thisResponse.pay[0].date);
-        }
-        refundDate = '-';
-        if (thisResponse.cancel.length > 0) {
-          refundDate = dateToString(thisResponse.cancel[0].date);
-        }
-        if (payDate === '-') {
-          payMethod = "-";
-          payProof = "-";
-        } else {
-          payMethod = "알 수 없음";
-          if (thisResponse.proofs.length > 0) {
-            payMethod = thisResponse.proofs[0].method;
-          }
-          payProof = "알 수 없음";
-          if (thisResponse.proofs.length > 0) {
-            payProof = thisResponse.proofs[0].proof;
-          }
-        }
-
-        responseSumTotal += confirmState;
-        responseSumNon += nonPayAmount;
-        responseSumPaid += payAmount;
-        responseSumRefund += refundAmount;
-
-        responseValueArr = [
-          {
-            value: responseName,
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: !/시공/gi.test(responseName) ? project.process.calculation.method : '-',
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: !/시공/gi.test(responseName) ? String(project.process.calculation.percentage) + '%' : '-',
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: '-',
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: autoComma(confirmState),
-            color: colorChip.black,
-            pointer: true,
-            event: instance.amountFixEvent(project.bill.bilid, z, project.proid),
-          },
-          {
-            value: autoComma(nonPayAmount),
-            color: nonPayAmount !== 0 ? colorChip.purple : colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: autoComma(payAmount),
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: payDate,
-            color: colorChip.black,
-            pointer: true,
-            event: instance.dateFixEvent(project.bill.bilid, z, project.proid),
-          },
-          {
-            value: payMethod,
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: autoComma(refundAmount),
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: refundDate,
-            color: colorChip.black,
-            pointer: false,
-            event: null,
-          },
-          {
-            value: "지급 진행",
-            color: colorChip.green,
-            pointer: true,
-            event: instance.makeExcuteEvent(project.bill.bilid, z, project.proid),
-          },
-          {
-            value: "환수 확인",
-            color: colorChip.green,
-            pointer: true,
-            event: instance.makeRepayEvent(project.bill.bilid, z, project.proid),
-          },
-        ];
-
-        whiteTong = createNode({
-          mother: contentsAreaRight,
-          style: {
-            display: "flex",
-            position: "relative",
-            flexDirection: "row",
-            width: withOut(0),
-            height: String(blockHeight) + ea,
-            background: colorChip.white,
-            borderRadius: String(5) + "px",
-            marginBottom: String(blockMarginBottom) + ea,
-          }
-        });
-        for (let { value, color, pointer, event } of responseValueArr) {
-          createNode({
-            mother: whiteTong,
-            event,
-            style: {
-              display: "inline-flex",
-              width: "calc(100% / " + String(leftColumns.length) + ")",
-              height: withOut(0, ea),
-              justifyContent: "center",
-              alignItems: "center",
-              position: "relative",
-              cursor: pointer ? "pointer" : "",
-            },
-            children: [
-              {
-                text: value,
-                style: {
-                  fontSize: String(valueSize) + ea,
-                  fontWeight: String(valueWeight),
-                  color: color,
-                  position: "relative",
-                  top: String(valueTextTop) + ea,
-                }
-              }
-            ]
-          });
-        }
-      }
-
-      responseValueArr = [
-        {
-          value: "총계",
-          color: colorChip.black,
-        },
-        {
-          value: '-',
-          color: colorChip.black,
-        },
-        {
-          value: '-',
-          color: colorChip.black,
-        },
-        {
-          value: '-',
-          color: colorChip.black,
-        },
-        {
-          value: autoComma(responseSumTotal),
-          color: colorChip.black,
-        },
-        {
-          value: autoComma(responseSumNon),
-          color: colorChip.black,
-        },
-        {
-          value: autoComma(responseSumPaid),
-          color: colorChip.black,
-        },
-        {
-          value: '-',
-          color: colorChip.black,
-        },
-        {
-          value: '-',
-          color: colorChip.black,
-        },
-        {
-          value: autoComma(responseSumRefund),
-          color: colorChip.black,
-        },
-        {
-          value: '-',
-          color: colorChip.black,
-        },
-        {
-          value: '-',
-          color: colorChip.black,
-        },
-        {
-          value: '-',
-          color: colorChip.black,
-        },
-      ];
-      grayTong = createNode({
-        mother: contentsAreaRight,
-        style: {
-          display: "flex",
-          position: "relative",
-          flexDirection: "row",
-          width: withOut(0),
-          height: String(blockHeight) + ea,
-          background: colorChip.gray0,
-          borderRadius: String(5) + "px",
-          marginBottom: String(blockMarginBottom) + ea,
-        }
-      });
-      for (let { value, color } of responseValueArr) {
-        createNode({
-          mother: grayTong,
-          style: {
-            display: "inline-flex",
-            width: "calc(100% / " + String(leftColumns.length) + ")",
-            height: withOut(0, ea),
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          },
-          children: [
-            {
-              text: value,
-              style: {
-                fontSize: String(valueSize) + ea,
-                fontWeight: String(600),
-                color: colorChip.black,
-                position: "relative",
-                top: String(valueTextTop) + ea,
-              }
-            }
-          ]
-        });
-      }
-
-
-      // response plus button
-
-      responsePlusButton = createNode({
-        mother: contentsAreaRight,
-        attribute: {
-          proid: project.proid,
-          bilid: project.bill.bilid,
-          desid: project.desid,
-          cliid: project.cliid,
-        },
-        event: {
-          selectstart: (e) => {
-            e.preventDefault();
-          },
-          click: function(e) {
-            const self = this;
-            const mother = self.parentElement;
-            const proid = this.getAttribute("proid");
-            const bilid = this.getAttribute("bilid");
-            const desid = this.getAttribute("desid");
-            const cliid = this.getAttribute("cliid");
-            let cancelBox, baseBox;
-
-            cancelBox = createNode({
-              mother,
-              class: [ responsePlusButtonPopupClassName ],
-              event: {
-                click: (e) => {
-                  removeByClass(responsePlusButtonPopupClassName);
-                }
-              },
-              style: {
-                position: "fixed",
-                top: String(0),
-                left: String(0),
-                width: withOut(0),
-                height: withOut(0),
-                zIndex: String(1),
-              }
-            });
-
-            baseBox = createNode({
-              mother,
-              attribute: { proid, bilid, desid, cliid },
-              class: [ responsePlusButtonPopupClassName ],
-              style: {
-                display: "inline-flex",
-                flexDirection: "column",
-                position: "absolute",
-                right: String(plusCircleMargin) + ea,
-                bottom: String(plusCircleMargin + plusCircleWidth + 8) + ea,
-                width: String(buttonWidth) + ea,
-                animation: "fadeuplite 0.2s ease forwards",
-                zIndex: String(1),
-              }
-            });
-
-            for (let { words, func } of responsePlusButtonMenus) {
-              createNode({
-                mother: baseBox,
-                attribute: { proid, bilid, desid, cliid },
-                event: {
-                  selectstart: (e) => {
-                    e.preventDefault();
-                  },
-                  click: func(),
-                },
-                style: {
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  width: String(buttonWidth) + ea,
-                  height: String(buttonHeight) + ea,
-                  background: colorChip.green,
-                  borderRadius: String(8) + "px",
-                  marginTop: String(buttonBetween) + ea,
-                  cursor: "pointer",
-                },
-                child: {
-                  text: words,
-                  event: {
-                    selectstart: (e) => {
-                      e.preventDefault();
-                    }
-                  },
-                  style: {
-                    position: "relative",
-                    display: "inline-block",
-                    fontSize: String(buttonSize) + ea,
-                    fontWeight: String(buttonWeight),
-                    color: colorChip.white,
-                    top: String(buttonTextTop) + ea,
-                    cursor: "pointer",
-                  }
-                }
-              });
-            }
-
-          },
-        },
-        style: {
-          display: "flex",
-          position: "absolute",
-          bottom: String(plusCircleMargin) + ea,
-          right: String(plusCircleMargin) + ea,
-          width: String(plusCircleWidth) + ea,
-          height: String(plusCircleWidth) + ea,
-          borderRadius: String(plusCircleWidth) + ea,
-          background: colorChip.gradientGreen,
-          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          cursor: "pointer",
-        },
-        child: {
-          text: "+",
-          event: {
-            selectstart: (e) => {
-              e.preventDefault();
-            },
-          },
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(plusSize) + ea,
-            fontWeight: String(plusWeight),
-            fontFamily: "graphik",
-            color: colorChip.white,
-            top: String(plusTextTop) + ea,
-            cursor: "pointer",
-          }
-        }
-      });
+      instance.insertFormStatusBox(project, contentsArea);
 
     } catch (e) {
       console.log(e);
     }
+  }
+}
+
+ProcessJs.prototype.insertFormStatusBox = async function (project, contentsArea) {
+  const instance = this;
+  const mother = this.mother;
+  const { ea, media } = this;
+  const { proid, desid } = project;
+  const client = project.client;
+  const designer = project.designer;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const veryBig = (media[0] || media[1]);
+  const generalSmall = !veryBig;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, serviceParsing, removeByClass, equalJson } = GeneralJs;
+  const dateToHangul = (dateObject) => {
+    return `${String(dateObject.getFullYear()).slice(2)}년 ${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일`;
+  }
+  const hangulToDate = (hangul) => {
+    hangul = hangul.replace(/ /gi, '');
+    const [ year, month, date ] = hangul.split(/[가-힣]/gi);
+    return new Date(2000 + Number(year), Number(month) - 1, Number(date));
+  }
+  const siblingKeywords = "siblingKeywords__";
+  const valueBlockClassName = "valueBlockClassName__";
+  const blockContextMenuClassName = "blockContextMenuClassName__";
+  const svgArrowColorTargetClassName = "svgArrowColorTargetClassName__";
+  try {
+    let margin;
+    let paddingTop;
+    let whiteBottomMargin;
+    let titleFontSize;
+    let bottomMargin;
+    let whiteBlock;
+    let grayTong;
+    let contents;
+    let innerMargin;
+    let arrowWidth, arrowHeight;
+    let textTop;
+    let textSize, textWeight;
+    let textMarginLeft;
+    let mobileVisualPaddingValue;
+    let button, buttons;
+    let blockBetween;
+    let blockBetweenBottom;
+    let blockHeight;
+    let lineTop;
+    let columnsNumber;
+    let textFileWeight;
+    let whitePadding;
+    let smallSize, smallWeight, smallBetween;
+    let textTextTop;
+    let smallTextTop;
+    let panDom;
+    let veryBigSize;
+    let veryBigWeight;
+    let firstWidth;
+    let buttonWidth, buttonHeight;
+    let buttonOuterPadding, buttonInnerMargin;
+    let descriptionBetween;
+    let panWidth, panVisualLeft;
+    let veryBigTextTop;
+    let circleWidth, circleTop, circleLeft;
+    let subButtonWidth;
+    let thirdWidth;
+    let imageBoxVisualPaddingBottom;
+    let imageBetween;
+    let panBoxBetween;
+    let wordingPaddingTop0, wordingPaddingTop1;
+    let mainTong;
+    let wordingBoxWidth;
+    let contentsTong;
+    let contentsTongPaddingBottom;
+    let bigTextSize;
+    let bigTextWeight;
+    let bigTextTextTop;
+    let clock;
+    let formPanBase;
+    let thisPan;
+    let panBetween;
+    let panHeight, panInnerMargin;
+    let panCheckBoxWidth;
+    let panWhitePaddingLeft;
+    let panBlockBetween, panBlockBigBetween;
+    let buttonSize, buttonWeight, buttonTextTop;
+    let panPaddingTop;
+    let panTitleSize, panTitleWeight;
+    let formPanBaseMarginBottom;
+    let checkBoxWidth;
+    let blockTextSize, blockTextWeight;
+    let siblings;
+    let thisForm;
+    let colorArr;
+    let barArrBase;
+    let barArrBlock;
+    let barArrBlockValuesBase;
+    let childrenMaxNumber;
+    let thisValueNumber;
+    let barBaseHeight, barFactorHeight, barFactorBetween;
+    let barFirstWidth;
+    let barArrBasePaddingTop;
+    let barArrBaseMarginTop;
+    let barArrTitleTextTop;
+    let reloadMainButtons;
+    let valueIndex;
+    let finalValueNumber;
+    let percentageSize;
+    let percentageTextTop;
+    let blackButtonWidth, blackButtonHeight, blackButtonBetween, blackButtonMargin;
+    let blackButtonSize, blackButtonWeight, blackButtonTextTop;
+    let whiteTong;
+    let mainClickEvent, mainContextEvent;
+    let detailArrowAreaWidth, detailArrowWidth;
+    let detailArrowVisualTop;
+
+    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+    margin = <%% 55, 55, 47, 39, 6 %%>;
+    paddingTop = <%% 44, 44, 36, 34, 5.4 %%>;
+  
+    whiteBottomMargin = <%% 52, 47, 39, 36, 5.6 %%>;
+  
+    titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  
+    bigTextSize = <%% 36, 36, 36, 36, 4.4 %%>;
+    bigTextWeight = <%% 100, 100, 100, 100, 100 %%>;
+    bigTextTextTop = <%% (isMac() ? -7 : -5), (isMac() ? -7 : -5), -7, -7, -1 %%>;
+  
+    veryBigSize = <%% 23, 21, 20, 16, 4.4 %%>;
+    veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
+    veryBigTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 0), -1 %%>;
+  
+    innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+  
+    textTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+    smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
+  
+    textSize = <%% 14, 14, 13, 12, 3.2 %%>;
+    textWeight = <%% 700, 700, 700, 700, 700 %%>;
+    textFileWeight = <%% 400, 400, 400, 400, 400 %%>;
+  
+    whitePadding = <%% 12, 12, 8, 8, 2.2 %%>;
+  
+    blockBetween = <%% 36, 28, 26, 24, 5 %%>;
+    blockBetweenBottom = <%% 10, 4, 4, 4, 2.2 %%>;
+    blockHeight = <%% 36, 36, 32, 26, 4 %%>;
+  
+    lineTop = <%% 18, 18, 16, 13, 1.9 %%>;
+  
+    firstWidth = <%% 298, 230, 213, 142, 300 %%>;
+  
+    panWidth = <%% 20, 20, 20, 20, 2 %%>;
+    panVisualLeft = <%% 1, 1, 1, 1, 1 %%>;
+  
+    circleWidth = <%% 5, 5, 5, 4, 0.8 %%>;
+    circleTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 4 : 3), (isMac() ? 4 : 3), 1.2 %%>;
+    circleLeft = <%% -7, -7, -7, -5, -0.8 %%>;
+  
+    arrowWidth = <%% 18, 16, 15, 14, 3.6 %%>;
+    arrowHeight = <%% 8, 8, 8, 7, 2 %%>;
+  
+    subButtonWidth = <%% 90, 72, 72, 64, 16 %%>;
+  
+    mobileVisualPaddingValue = 0.2;
+  
+    thirdWidth = <%% 240, 0, 0, 0, 0 %%>;
+  
+    imageBoxVisualPaddingBottom = <%% 4, 2, 2, 2, 0 %%>;
+    imageBetween = <%% 32, 16, 12, 12, 6 %%>;
+    panBoxBetween = <%% 12, 32, 26, 24, 12 %%>;
+  
+    wordingPaddingTop0 = <%% 300, 213, 213, 213, 213 %%>;
+    wordingPaddingTop1 = <%% 309, 243, 243, 243, 243 %%>;
+  
+    wordingBoxWidth = <%% 175, 185, 175, 115, 175 %%>;
+  
+    contentsTongPaddingBottom = <%% 15, 15, 15, 15, 5 %%>;
+    panBetween = <%% 28, 28, 24, 20, 2 %%>;
+  
+    panHeight = <%% 48, 48, 45, 42, 11 %%>;
+    panInnerMargin = <%% 4, 4, 4, 3, 1 %%>;
+  
+    panCheckBoxWidth = <%% 28, 24, 20, 20, 8 %%>;
+    checkBoxWidth = <%% 12, 11, 9, 9, 3 %%>;
+  
+    panWhitePaddingLeft = <%% 13, 14, 14, 14, 3.5 %%>; 
+    panBlockBetween = <%% 8, 8, 6, 5, 1 %%>; 
+    panBlockBigBetween = <%% 8, 8, 6, 5, 1 %%>; 
+  
+    buttonWidth = <%% 100, 80, 70, 60, 24 %%>;
+    buttonHeight = <%% 36, 28, 26, 24, 8.2 %%>;
+  
+    buttonSize = <%% 15, 13, 12, 11, 3.5 %%>;
+    buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+  
+    panPaddingTop = <%% 22, 16, 14, 14, 4 %%>;
+  
+    panTitleSize = <%% 16, 15, 14, 13, 3.8 %%>;
+    panTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  
+    formPanBaseMarginBottom = <%% 12, 8, 6, 6, 4 %%>;
+  
+    blockTextSize = <%% 14, 13, 12, 11, 3.2 %%>;
+    blockTextWeight = <%% 600, 600, 600, 600, 600 %%>;
+  
+    barBaseHeight = <%% 40, 36, 32, 28, 6.8 %%>;
+    barFirstWidth = <%% 70, 60, 50, 42, 14 %%>;
+    barFactorHeight = <%% 20, 20, 18, 16, 5 %%>;
+    barFactorBetween = <%% 0, 0, 0, 0, 0 %%>;
+
+    barArrBasePaddingTop = <%% 38, 36, 32, 26, 8 %%>;
+    barArrBaseMarginTop = <%% 48, 46, 40, 32, 9.5 %%>;
+
+    barArrTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+    percentageSize = <%% 20, 20, 17, 14, 7.5 %%>;
+    percentageTextTop = <%% -1, -1, -1, -1, 0 %%>;
+
+    blackButtonWidth = <%% 132, 122, 114, 104, 28 %%>;
+    blackButtonHeight = <%% 34, 30, 28, 26, 7 %%>;
+    blackButtonBetween = <%% 4, 4, 3, 2, 1 %%>;
+    blackButtonMargin = <%% 6, 6, 5, 4, 1.2 %%>;
+    blackButtonSize = <%% 13, 12, 11, 10, 2.8 %%>;
+    blackButtonWeight = <%% 600, 600, 600, 600, 600 %%>;
+    blackButtonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+
+    detailArrowAreaWidth = <%% 28, 28, 28, 28, 6 %%>;
+    detailArrowVisualTop = <%% 0.5, 0.5, 0.5, 0.5, 0 %%>;
+    detailArrowWidth = <%% 8, 8, 7, 7, 2 %%>;
+
+    thisForm = await ajaxJson({ mode: "get", proid, desid }, SECONDHOST + "/projectDesignerStatus", { equal: true });
+  
+    reloadMainButtons = () => {};
+    formPanBase = {};
+
+    mainClickEvent = function () {
+      return async function (e) {
+        const self = this;
+        const toggle = this.getAttribute("toggle");
+        const middle = this.getAttribute("middle");
+        const red = this.getAttribute("red");
+        const x = Number(this.getAttribute("x"));
+        const y = Number(this.getAttribute("y"));
+        const deactive = (this.getAttribute("deactive") === "true");
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        try {
+          let totalDom;
+          let matrix;
+          let maxX, maxY;
+          let xArr, yArr;
+          let tempObj;
+          let targetDoms;
+          let thisIndex;
+          let finalIndex;
+
+          siblings = [ ...document.querySelectorAll('.' + siblingKeywords + String(x)) ];
+          thisIndex = siblings.findIndex((dom) => { return dom === self });
+
+          if (!deactive) {
+            if (toggle === "off") {
+              if (red === "off") {
+
+                for (let i = 0; i < siblings.length; i++) {
+                  if (i < thisIndex) {
+                    if (siblings[i].getAttribute("red") !== "on") {
+                      siblings[i].style.background = colorChip.whiteGreen;
+                      siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.green);
+                      siblings[i].children[1].children[0].style.color = colorChip.softGreen;
+                      siblings[i].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.softGreen;
+                      siblings[i].setAttribute("toggle", "on");
+                      siblings[i].setAttribute("middle", "on");
+                      siblings[i].setAttribute("red", "off");
+                    }
+                  } else if (i === thisIndex) {
+                    siblings[i].style.background = colorChip.gradientGreen;
+                    siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                    siblings[i].children[1].children[0].style.color = colorChip.black;
+                    siblings[i].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.green;
+                    siblings[i].setAttribute("toggle", "on");
+                    siblings[i].setAttribute("middle", "off");
+                    siblings[i].setAttribute("red", "off");
+                  } else {
+                    siblings[i].style.background = colorChip.gray1;
+                    siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                    siblings[i].children[1].children[0].style.color = colorChip.deactive;
+                    siblings[i].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.deactive;
+                    siblings[i].setAttribute("toggle", "off");
+                    siblings[i].setAttribute("middle", "off");
+                    siblings[i].setAttribute("red", "off");
+                  }
+                }
+
+              } else {
+
+                siblings[thisIndex].style.background = colorChip.whiteGreen;
+                siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.green);
+                siblings[thisIndex].children[1].children[0].style.color = colorChip.softGreen;
+                siblings[thisIndex].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.softGreen;
+                siblings[thisIndex].setAttribute("toggle", "on");
+                siblings[thisIndex].setAttribute("middle", "on");
+                siblings[thisIndex].setAttribute("red", "off");
+
+              }
+            } else {
+
+              if (middle === "off") {
+
+                if (siblings[thisIndex - 1] === undefined) {
+
+                  siblings[thisIndex].style.background = colorChip.gray1;
+                  siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                  siblings[thisIndex].children[1].children[0].style.color = colorChip.deactive;
+                  siblings[thisIndex].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.deactive;
+                  siblings[thisIndex].setAttribute("toggle", "off");
+                  siblings[thisIndex].setAttribute("middle", "off");
+                  siblings[thisIndex].setAttribute("red", "off");
+
+                } else {
+
+                  if (siblings[thisIndex - 1].getAttribute("middle") === "on") {
+
+                    siblings[thisIndex].style.background = colorChip.gray1;
+                    siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                    siblings[thisIndex].children[1].children[0].style.color = colorChip.deactive;
+                    siblings[thisIndex].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.deactive;
+                    siblings[thisIndex].setAttribute("toggle", "off");
+                    siblings[thisIndex].setAttribute("middle", "off");
+                    siblings[thisIndex].setAttribute("red", "off");
+
+                    siblings[thisIndex - 1].style.background = colorChip.gradientGreen;
+                    siblings[thisIndex - 1].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                    siblings[thisIndex - 1].children[1].children[0].style.color = colorChip.black;
+                    siblings[thisIndex - 1].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.green;
+                    siblings[thisIndex - 1].setAttribute("toggle", "on");
+                    siblings[thisIndex - 1].setAttribute("middle", "off");
+                    siblings[thisIndex - 1].setAttribute("red", "off");
+
+                  } else {
+
+                    siblings[thisIndex].style.background = colorChip.gray1;
+                    siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                    siblings[thisIndex].children[1].children[0].style.color = colorChip.deactive;
+                    siblings[thisIndex].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.deactive;
+                    siblings[thisIndex].setAttribute("toggle", "off");
+                    siblings[thisIndex].setAttribute("middle", "off");
+                    siblings[thisIndex].setAttribute("red", "off");
+
+                    finalIndex = siblings.reduce((acc, curr, index) => {
+                      if (curr.getAttribute("toggle") === "off") {
+                        return acc;
+                      } else {
+                        return index;
+                      }
+                    }, -1);
+                    
+                    for (let i = 0; i < siblings.length; i++) {
+                      if (i < finalIndex) {
+                        // pass
+                      } else if (i === finalIndex) {
+                        siblings[i].style.background = colorChip.gradientGreen;
+                        siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.white);
+                        siblings[i].children[1].children[0].style.color = colorChip.black;
+                        siblings[i].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.green;
+                        siblings[i].setAttribute("toggle", "on");
+                        siblings[i].setAttribute("middle", "off");
+                        siblings[i].setAttribute("red", "off");
+                      } else {
+                        siblings[i].style.background = colorChip.gray1;
+                        siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.gray4);
+                        siblings[i].children[1].children[0].style.color = colorChip.deactive;
+                        siblings[i].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.deactive;
+                        siblings[i].setAttribute("toggle", "off");
+                        siblings[i].setAttribute("middle", "off");
+                        siblings[i].setAttribute("red", "off");
+                      }
+                    }
+
+                  }
+                }
+
+              } else {
+                siblings[thisIndex].style.background = colorChip.gray1;
+                siblings[thisIndex].children[0].children[0].children[0].setAttribute("fill", colorChip.red);
+                siblings[thisIndex].children[1].children[0].style.color = colorChip.red;
+                siblings[thisIndex].querySelector('.' + svgArrowColorTargetClassName).firstChild.style.fill = colorChip.red;
+                siblings[thisIndex].setAttribute("toggle", "off");
+                siblings[thisIndex].setAttribute("middle", "off");
+                siblings[thisIndex].setAttribute("red", "on");
+              }
+              
+            }
+          }
+
+          totalDom = [ ...document.querySelectorAll('.' + valueBlockClassName) ];
+          
+          xArr = [];
+          for (let dom of totalDom) {
+            xArr.push(Number(dom.getAttribute("x")));
+          }
+          xArr.sort((a, b) => { return b - a; });
+          maxX = xArr[0] + 1;
+
+          matrix = [];
+          for (let z = 0; z < maxX; z++) {
+            targetDoms = totalDom.filter((dom) => { return Number(dom.getAttribute("x")) === z });
+            targetDoms.sort((a, b) => { return Number(a.getAttribute("y")) - Number(b.getAttribute("y")); });
+            tempObj = {
+              title: targetDoms[0].getAttribute("mother"),
+              children: []
+            };
+            for (let w = 0; w < targetDoms.length; w++) {
+              tempObj.children.push({
+                title: targetDoms[w].getAttribute("title"),
+                deactive: targetDoms[w].getAttribute("deactive") === "true",
+                value: targetDoms[w].getAttribute("toggle") === "on" ? 1 : 0,
+                key: thisForm[z].children[w].key,
+                children: equalJson(JSON.stringify(thisForm[z].children[w].children)),
+              });
+            }
+            matrix.push(tempObj);
+          }
+          
+          await ajaxJson({
+            mode: "update",
+            proid,
+            desid,
+            matrix
+          }, SECONDHOST + "/projectDesignerStatus");
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    mainContextEvent = function () {
+      return async function (e) {
+        try {
+          e.preventDefault();
+          e.stopPropagation();
+          const self = this;
+          const x = Number(this.getAttribute("x"));
+          const y = Number(this.getAttribute("y"));
+          const proid = this.getAttribute("proid");
+          const desid = this.getAttribute("desid");
+          const deactive = (this.getAttribute("deactive") === "true");
+          const zIndex = 4;
+          let cancelBack, whitePrompt;
+
+          if (!deactive) {
+
+            cancelBack = createNode({
+              mother: formPanBase,
+              class: [ blockContextMenuClassName ],
+              event: {
+                click: function (e) {
+                  removeByClass(blockContextMenuClassName);
+                }
+              },
+              style: {
+                display: "block",
+                position: "fixed",
+                top: String(0),
+                left: String(0),
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                background: "transparent",
+                zIndex: String(zIndex),
+              }
+            });
+
+            whitePrompt = createNode({
+              mother: formPanBase,
+              class: [ blockContextMenuClassName ],
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: String(e.clientY - formPanBase.getBoundingClientRect().top) + "px",
+                left: desktop ? String(e.clientX - formPanBase.getBoundingClientRect().left) + "px" : "",
+                right: desktop ? "" : String(0) + "px",
+                width: String(blackButtonWidth) + ea,
+                background: colorChip.white,
+                borderRadius: String(5) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+                animation: "fadeuplite 0.3s ease forwards",
+                zIndex: String(zIndex),
+                padding: String(blackButtonMargin) + ea,
+                paddingBottom: String(blackButtonMargin - blackButtonBetween) + ea,
+              }
+            });
+
+            for (let z = 0; z < thisForm[x].children[y].children.length; z++) {
+              createNode({
+                mother: whitePrompt,
+                attribute: {
+                  x: String(x),
+                  y: String(y),
+                  z: String(z),
+                  proid,
+                  desid,
+                  name: client.name,
+                  designer: designer.designer,
+                },
+                event: {
+                  click: async function (e) {
+                    const self = this;
+                    const x = Number(this.getAttribute("x"));
+                    const y = Number(this.getAttribute("y"));
+                    const z = Number(this.getAttribute("z"));
+                    const proid = this.getAttribute("proid");
+                    const desid = this.getAttribute("desid");
+                    const type = thisForm[x].children[y].children[z].type;
+                    try {
+                      let tempFunction;
+                      let key, photoBoo, thisStatusNumber;
+                      let matrix;
+                      let siblings;
+
+                      if (type === "upload") {
+
+                        key = thisForm[x].children[y].children[z].key;
+                        photoBoo = thisForm[x].children[y].children[z].photo;
+                        thisStatusNumber = instance.panContents.findIndex((o) => { return o.key === key });
+
+                        removeByClass(blockContextMenuClassName);
+                        instance.uploadFiles(thisStatusNumber, photoBoo).call(this, e);
+
+                      } else if (type === "memo") {
+
+                        key = thisForm[x].children[y].children[z].key;
+                        thisStatusNumber = instance.panContents.findIndex((o) => { return o.key === key });
+
+                        removeByClass(blockContextMenuClassName);
+                        if (thisStatusNumber === -1) {
+                          instance.plusMemo(thisStatusNumber, key, thisForm[x].children[y].children[z].title.replace(/메모/gi, "").trim()).call(this, e);
+                        } else {
+                          instance.plusMemo(thisStatusNumber).call(this, e);
+                        }
+
+                      } else if (type === "selection") {
+
+                        matrix = equalJson(JSON.stringify(thisForm));
+
+                        if (thisForm[x].children[y].children[z].value === 0) {
+                          siblings = [ ...this.parentElement.children ];
+                          for (let k = 0; k < thisForm[x].children[y].children.length; k++) {
+                            thisForm[x].children[y].children[k].value = k === z ? 1 : 0;
+                            matrix[x].children[y].children[k].value = k === z ? 1 : 0;
+                            siblings[k].style.background = k === z ? colorChip.gradientGreen : colorChip.gray2;
+                            siblings[k].firstChild.style.color = k === z ? colorChip.white : colorChip.deactive;  
+                          }
+                        } else {
+                          this.style.background = colorChip.gray2;
+                          this.firstChild.style.color = colorChip.deactive;
+                          thisForm[x].children[y].children[z].value = 0;
+                          matrix[x].children[y].children[z].value = 0;
+                        }
+
+                        await ajaxJson({
+                          mode: "update",
+                          proid,
+                          desid,
+                          matrix
+                        }, SECONDHOST + "/projectDesignerStatus");
+
+                        setQueue(() => {
+                          self.parentElement.style.animation = "fadedownlite 0.3s ease forwards";
+                          setQueue(() => {
+                            removeByClass(blockContextMenuClassName);
+                          }, 301);
+                        }, 200);
+
+                      }
+
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  },
+                },
+                style: {
+                  display: "flex",
+                  height: String(blackButtonHeight) + ea,
+                  width: String(blackButtonWidth) + ea,
+                  borderRadius: String(5) + "px",
+                  background: thisForm[x].children[y].children[z].type !== "selection" ? colorChip.gradientGray : (thisForm[x].children[y].children[z].value === 0 ? colorChip.gray2 : colorChip.gradientGreen),
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: String(blackButtonBetween) + ea,
+                  cursor: "pointer",
+                },
+                child: {
+                  text: thisForm[x].children[y].children[z].title,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(blackButtonSize) + ea,
+                    fontWeight: String(blackButtonWeight),
+                    color: thisForm[x].children[y].children[z].type !== "selection" ? colorChip.white : (thisForm[x].children[y].children[z].value === 0 ? colorChip.deactive : colorChip.white),
+                    top: String(blackButtonTextTop) + ea,
+                    cursor: "pointer",
+                  }
+                }
+              });
+
+            }
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    formPanBase = createNode({
+      mother: contentsArea,
+      style: {
+        display: (media[0] || media[4] ? "flex" : "block"),
+        position: "relative",
+        flexDirection: desktop ? "row" : "column",
+        width: withOut(0),
+        justifyContent: "start",
+        alignItems: "start",
+      },
+    });
+
+    barArrBase = createNode({
+      mother: contentsArea,
+      style: {
+        display: "flex",
+        position: "relative",
+        flexDirection: "column",
+        width: withOut(0),
+        justifyContent: "start",
+        alignItems: "start",
+        paddingTop: String(barArrBasePaddingTop) + ea,
+        borderTop: "1px dashed " + colorChip.gray3,
+        marginTop: String(barArrBaseMarginTop) + ea,
+      }
+    });
+
+    reloadMainButtons = (formPanBase, thisForm) => {
+      cleanChildren(formPanBase);
+      for (let i = 0; i < thisForm.length; i++) {
+  
+        thisPan = createNode({
+          mother: formPanBase,
+          attribute: {
+            index: String(i),
+          },
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            flexDirection: "column",
+            width: desktop ? (media[0] ? "calc(calc(100% - " + String(panBetween * (thisForm.length - 1)) + ea + ") / " + String(thisForm.length) + ")" : "calc(calc(100% - " + String(panBetween * ((thisForm.length / 2) - 1)) + ea + ") / " + String(thisForm.length / 2) + ")") : withOut(0, ea),
+            marginRight: desktop ? (media[0] ? (i === thisForm.length - 1 ? "" : String(panBetween) + ea) : (i === thisForm.length - 1 || i === (thisForm.length / 2) - 1 ? "" : String(panBetween) + ea)) : "",
+            paddingTop: String(panPaddingTop) + ea,
+            verticalAlign: "top",
+          }
+        });
+    
+        createNode({
+          mother: thisPan,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: withOut(0, ea),
+            height: String(panHeight) + ea,
+          },
+          child: {
+            text: thisForm[i].title,
+            style: {
+              fontSize: String(panTitleSize) + ea,
+              fontWeight: String(panTitleWeight),
+              color: thisForm[i].children.every((obj) => { return obj.deactive === true }) ? colorChip.deactive : colorChip.black,
+            }
+          }
+        });
+  
+        valueIndex = thisForm[i].children.reduce((acc, curr, index) => {
+          if (curr.value === 0) {
+            return acc;
+          } else {
+            return index;
+          }
+        }, -1);
+
+        for (let j = 0; j < thisForm[i].children.length; j++) {
+          createNode({
+            mother: thisPan,
+            class: [ valueBlockClassName, siblingKeywords + String(i) ],
+            attribute: {
+              toggle: thisForm[i].children[j].value === 0 ? "off" : "on",
+              x: String(i),
+              y: String(j),
+              mother: thisForm[i].title,
+              title: thisForm[i].children[j].title,
+              deactive: thisForm[i].children[j].deactive ? "true" : "false",
+              proid,
+              desid,
+              red: thisForm[i].children[j].value !== 0 ? "off" : (j < valueIndex ? "on" : "off"),
+              middle: thisForm[i].children[j].value === 0 ? "off" : (j < valueIndex ? "on" : "off"),
+            },
+            event: {
+              click: mainClickEvent(),
+              contextmenu: mainContextEvent(),
+            },
+            style: {
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: withOut(0, ea),
+              height: String(panHeight) + ea,
+              background: j > valueIndex ? colorChip.gray1 : (j === valueIndex ? colorChip.gradientGreen : (thisForm[i].children[j].value !== 0 ? colorChip.whiteGreen : colorChip.gray1)),
+              borderRadius: String(5) + "px",
+              marginBottom: j === thisForm[i].children.length - 1 ? "" : String(panBlockBetween) + ea,
+              flexDirection: "row",
+              cursor: "pointer",
+              transition: "all 0s ease",
+            },
+            children: [
+              {
+                style: {
+                  width: String(panCheckBoxWidth) + ea,
+                  marginRight: String(panInnerMargin) + ea,
+                  display: "inline-flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: withOut(panInnerMargin * 2, ea),
+                  display: "inline-flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  transition: "all 0s ease",
+                },
+                child: {
+                  mode: "svg",
+                  source: svgMaker.checkBox(j > valueIndex ? colorChip.gray4 : (j === valueIndex ? colorChip.white : (thisForm[i].children[j].value !== 0 ? colorChip.green : colorChip.red))),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(checkBoxWidth) + ea,
+                    transition: "all 0s ease",
+                  }
+                }
+              },
+              {
+                style: {
+                  width: withOut(panCheckBoxWidth + (panInnerMargin * 3) + panWhitePaddingLeft, ea),
+                  height: withOut(panInnerMargin * 2, ea),
+                  background: thisForm[i].children[j].deactive ? colorChip.gray2 : colorChip.white,
+                  borderRadius: String(5) + "px",
+                  display: "inline-flex",
+                  position: "relative",
+                  justifyContent: "start",
+                  alignItems: "center",
+                  paddingLeft: String(panWhitePaddingLeft) + ea,
+                  transition: "all 0s ease",
+                },
+                child: {
+                  text: thisForm[i].children[j].title,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(blockTextSize) + ea,
+                    fontWeight: String(blockTextWeight),
+                    color: thisForm[i].children[j].deactive ? colorChip.deactive : (j > valueIndex ? colorChip.deactive : (j === valueIndex ? colorChip.black : (thisForm[i].children[j].value !== 0 ? colorChip.softGreen : colorChip.red))),
+                    top: String(textTextTop) + ea,
+                    transition: "all 0s ease",
+                  },
+                  next: {
+                    attribute: {
+                      x: String(i),
+                      y: String(j),
+                      mother: thisForm[i].title,
+                      title: thisForm[i].children[j].title,
+                      deactive: thisForm[i].children[j].deactive ? "true" : "false",
+                      proid,
+                      desid,
+                    },
+                    event: {
+                      click: mainContextEvent()
+                    },
+                    style: {
+                      display: "inline-flex",
+                      position: "absolute",
+                      right: String(0) + ea,
+                      top: "calc(" + withOut(50, (detailArrowAreaWidth / 2), ea) + " - " + String(detailArrowVisualTop) + ea + ")",
+                      width: String(detailArrowAreaWidth) + ea,
+                      height: String(detailArrowAreaWidth) + ea,
+                      cursor: "pointer",
+                      background: "transparent",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    child: {
+                      class: [ svgArrowColorTargetClassName ],
+                      mode: "svg",
+                      source: GeneralJs.prototype.returnArrow("right", thisForm[i].children[j].deactive ? colorChip.deactive : (j > valueIndex ? colorChip.deactive : (j === valueIndex ? colorChip.green : (thisForm[i].children[j].value !== 0 ? colorChip.softGreen : colorChip.red)))),
+                      style: {
+                        position: "relative",
+                        width: String(detailArrowWidth) + ea,
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          });
+        }
+      }
+    }
+
+    reloadMainButtons(formPanBase, thisForm);
+  
+  } catch (e) {
+    console.log(e);
   }
 }
 
