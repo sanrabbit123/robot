@@ -676,6 +676,12 @@ ProcessJs.prototype.baseMaker = function () {
           for (let i = 0; i < clientValueArr.length; i++) {
             createNode({
               mother: clientBlack,
+              attribute: {
+                proid: thisProject.proid,
+              },
+              event: {
+                click: instance.whiteCardView(thisProject.proid),
+              },
               style: {
                 display: "inline-flex",
                 flexDirection: "row",
@@ -688,6 +694,7 @@ ProcessJs.prototype.baseMaker = function () {
                 paddingBottom: String(z === projects.length - 1 ? blockVisualPadding : 0) + ea,
                 width: i === clientColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
                 borderRight: i === clientColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
+                cursor: "pointer",
               },
               children: [
                 {
@@ -847,6 +854,1161 @@ ProcessJs.prototype.baseMaker = function () {
   contentsLoad();
 
   this.contentsLoad = contentsLoad;
+}
+
+ProcessJs.prototype.whiteCardView = function (proid) {
+  const instance = this;
+  const { totalContents, ea, belowHeight, projects } = this;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue } = GeneralJs;
+  return async function (e) {
+    try {
+      const project = projects.find((obj) => { return obj.proid === proid });
+      const zIndex = 4;
+      const blank = "&nbsp;&nbsp;&nbsp;";
+      const whiteCardClassName = "whiteCardClassName";
+      const responsePlusButtonPopupClassName = "responsePlusButtonPopupClassName";
+      let cancelBack, whiteCard;
+      let whiteOuterMargin;
+      let whiteInnerMargin;
+      let titleArea, contentsArea, buttonArea;
+      let titleAreaHeight;
+      let titleAreaPaddingBottom;
+      let nameSize, nameWeight;
+      let subSize, subWeight, subMarginLeft, subTextTop;
+      let statusTextTop;
+      let contentsAreaBetween;
+      let contentsAreaPaddingTop;
+      let grayInnerPadding;
+      let contentsAreaLeft;
+      let contentsAreaRight;
+      let blockHeight;
+      let leftColumns;
+      let rightColumns;
+      let greenTong, whiteTong, blackTong, grayTong;
+      let thisRequest;
+      let requestName;
+      let currentState;
+      let confirmState;
+      let payDate;
+      let cancelAmount;
+      let cancelDate;
+      let valueSize, valueWeight, valueBoldWeight;
+      let valueTextTop;
+      let blockMarginBottom;
+      let requestSumConsumer;
+      let requestSumConfirm;
+      let requestSumRefund;
+      let requestSumIncome;
+      let requestValueArr, responseValueArr;
+      let thisResponse;
+      let responseName;
+      let payAmount;
+      let refundAmount;
+      let nonPayAmount;
+      let responseSumTotal;
+      let responseSumNon;
+      let responseSumPaid;
+      let responseSumRefund;
+      let refundDate;
+      let vatAmount, supplyAmount;
+      let payMethod, payProof;
+      let requestSumVat, requestSumSupply;
+      let whiteTongDom;
+      let payRealAmount;
+      let refundGo;
+      let oidArr;
+      let refundReceipt;
+      let responsePlusButton;
+      let responsePlusButtonMenus;
+      let plusCircleWidth;
+      let plusCircleMargin;
+      let plusSize, plusWeight, plusTextTop;
+      let buttonWidth, buttonHeight;
+      let buttonBetween;
+      let buttonSize, buttonWeight, buttonTextTop;
+
+      whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
+      whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
+
+      titleAreaHeight = <%% 63, 42, 42, 42, 42 %%>;
+
+      titleAreaPaddingBottom = 6;
+
+      nameSize = <%% 32, 24, 24, 24, 24 %%>;
+      nameWeight = 800;
+
+      subSize = <%% 17, 15, 15, 15, 15 %%>;
+      subWeight = 400;
+      subMarginLeft = 13;
+      subTextTop = <%% (isMac() ? 7 : 5), 5, 5, 5, 3 %%>;
+
+      statusTextTop = <%% 27, 18, 18, 18, 18 %%>;
+
+      contentsAreaBetween = 10;
+      contentsAreaPaddingTop = <%% 30, 15, 15, 15, 15 %%>;
+
+      grayInnerPadding = 10;
+
+      blockHeight = <%% 40, 36, 36, 36, 36 %%>;
+
+      valueSize = <%% 13, 12, 12, 11, 3 %%>;
+      valueWeight = 400;
+      valueBoldWeight = 800;
+      valueTextTop = isMac() ? -1 : 1;
+
+      blockMarginBottom = 2;
+
+      plusCircleWidth = 36;
+      plusCircleMargin = 10;
+
+      plusSize = 34;
+      plusWeight = 500;
+      plusTextTop = -3;
+
+      buttonWidth = 96;
+      buttonHeight = 30;
+      buttonBetween = 4;
+      buttonSize = 13;
+      buttonWeight = 700;
+      buttonTextTop = isMac() ? -1 : 1;
+
+      leftColumns = [
+        "구분",
+        "공급가",
+        "VAT",
+        "소비자가",
+        "확정가",
+        "입금액",
+        "입금일",
+        "입금 수단",
+        "입금 증빙",
+        "환불액",
+        "환불일",
+        "환불 비율",
+        "환불 진행",
+      ];
+
+      rightColumns = [
+        "구분",
+        "종류",
+        "수수료",
+        "증빙",
+        "총액",
+        "미지급액",
+        "지급액",
+        "지급일",
+        "지급 수단",
+        "환수액",
+        "환수일",
+        "지급 진행",
+        "환수 확인",
+      ];
+
+      responsePlusButtonMenus = [
+        {
+          words: "시공 정산",
+          func: function () {
+            return async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const bilid = this.getAttribute("bilid");
+                const desid = this.getAttribute("desid");
+                const cliid = this.getAttribute("cliid");
+                let loading, res;
+                let thisBillIndex, thisProjectIndex
+                let amount, name;
+
+                amount = await GeneralJs.prompt("정산 금액을 숫자로만 알려주세요!");
+                if (typeof amount === "string") {
+                  amount = Number(amount.replace(/[^0-9]/gi, ''));
+                } else {
+                  amount = 0;
+                }
+                name = await GeneralJs.prompt("시공사 이름을 알려주세요!");
+                if (name === null) {
+                  name = "알 수 없음";
+                }
+
+                res = await ajaxJson({ bilid, amount, name }, PYTHONHOST + "/responseInjection", { equal: true });
+
+                thisBillIndex = instance.bills.findIndex((obj) => { return obj.bilid === bilid });
+                thisProjectIndex = instance.projects.findIndex((obj) => { return obj.proid === proid });
+
+                instance.bills[thisBillIndex] = res.bill;
+                instance.projects[thisProjectIndex].bill = res.bill;
+
+                loading = instance.mother.grayLoading();
+                setQueue(() => {
+                  instance.contentsLoad();
+                  (instance.whiteCardView(proid))();
+                  loading.remove();
+                });
+
+                removeByClass(responsePlusButtonPopupClassName);
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          }
+        }
+      ];
+
+      // base
+
+      removeByClass(whiteCardClassName);
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ whiteCardClassName ],
+        event: (e) => {
+          removeByClass(whiteCardClassName);
+        },
+        set: "fixed",
+        style: {
+          height: withOut(belowHeight, ea),
+          background: colorChip.black,
+          opacity: String(0.4),
+          zIndex: String(zIndex),
+        }
+      });
+      whiteCard = createNode({
+        mother: totalContents,
+        class: [ whiteCardClassName ],
+        style: {
+          position: "fixed",
+          top: String(whiteOuterMargin) + ea,
+          left: String(whiteOuterMargin) + ea,
+          width: withOut((whiteOuterMargin * 2) + (whiteInnerMargin * 2), ea),
+          height: withOut((whiteOuterMargin * 2) + belowHeight + (whiteInnerMargin * 2), ea),
+          padding: String(whiteInnerMargin) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          animation: "fadeuplite 0.3s ease forwards",
+          zIndex: String(zIndex),
+        },
+        children: [
+          {
+            style: {
+              position: "relative",
+              display: "block",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              borderRadius: String(5) + "px",
+              overflow: "hidden",
+            },
+          }
+        ]
+      }).firstChild;
+
+
+      // title area
+
+      titleArea = createNode({
+        mother: whiteCard,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(titleAreaHeight) + ea,
+          paddingBottom: String(titleAreaPaddingBottom) + ea,
+          alignItems: "center",
+          borderBottom: "1px solid " + colorChip.gray3,
+        }
+      });
+      createNode({
+        mother: titleArea,
+        text: project.name,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          fontSize: String(nameSize) + ea,
+          fontWeight: String(nameWeight),
+          color: colorChip.black,
+        }
+      });
+      createNode({
+        mother: titleArea,
+        text: project.proid + blank + "/" + blank + project.designer.designer + " 디자이너",
+        style: {
+          display: "inline-flex",
+          fontSize: String(subSize) + ea,
+          fontWeight: String(subWeight),
+          color: colorChip.deactive,
+          marginLeft: String(subMarginLeft) + ea,
+          position: "relative",
+          top: String(subTextTop) + ea,
+        }
+      });
+      createNode({
+        mother: titleArea,
+        text: project.process.status,
+        style: {
+          display: "inline-flex",
+          fontSize: String(subSize) + ea,
+          fontWeight: String(subWeight),
+          color: ((status) => {
+            if (status === "대기") {
+              return colorChip.red;
+            } else if (status === "진행중") {
+              return colorChip.black;
+            } else if (status === "드랍") {
+              return colorChip.deactive;
+            } else if (status === "완료") {
+              return colorChip.green;
+            } else {
+              return colorChip.black;
+            }
+          })(project.process.status),
+          position: "absolute",
+          right: String(0),
+          top: String(statusTextTop) + ea,
+        }
+      });
+
+
+      // contents area
+
+      contentsArea = createNode({
+        mother: whiteCard,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "column",
+          paddingTop: String(contentsAreaPaddingTop) + ea,
+          height: withOut(titleAreaHeight + titleAreaPaddingBottom + contentsAreaPaddingTop, ea),
+          width: withOut(0, ea),
+        }
+      });
+
+      // contents area up - request
+
+      contentsAreaLeft = createNode({
+        mother: contentsArea,
+        style: {
+          display: "flex",
+          position: "relative",
+          height: "calc(calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2) - " + String(grayInnerPadding * 2) + ea + ")",
+          width: withOut(grayInnerPadding * 2, ea),
+          borderRadius: String(5) + "px",
+          padding: String(grayInnerPadding) + ea,
+          background: colorChip.gray2,
+          marginBottom: String(contentsAreaBetween) + ea,
+          alignItems: "center",
+          justifyContent: "center",
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              overflow: "scroll",
+            }
+          }
+        ]
+      }).firstChild;
+
+      greenTong = createNode({
+        mother: contentsAreaLeft,
+        style: {
+          display: "flex",
+          position: "sticky",
+          flexDirection: "row",
+          top: String(0),
+          width: withOut(0),
+          height: String(blockHeight) + ea,
+          background: colorChip.gradientGreen,
+          borderRadius: String(5) + "px",
+          marginBottom: String(blockMarginBottom) + ea,
+          zIndex: String(1),
+        }
+      });
+      for (let column of leftColumns) {
+        createNode({
+          mother: greenTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(leftColumns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: column,
+              style: {
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(valueBoldWeight),
+                color: colorChip.white,
+                position: "relative",
+                top: String(valueTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
+
+      requestSumConsumer = 0;
+      requestSumConfirm = 0;
+      requestSumRefund = 0;
+      requestSumIncome = 0;
+      requestSumVat = 0;
+      requestSumSupply = 0;
+      for (let z = 0; z < project.bill.requests.length; z++) {
+        thisRequest = project.bill.requests[z];
+        requestName = thisRequest.name;
+        confirmState = Math.floor(thisRequest.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0));
+
+        if (requestName === "홈리에종 잔금") {
+          currentState = 1 - project.process.contract.remain.calculation.discount;
+          currentState = Math.floor(project.process.contract.remain.calculation.amount.consumer / currentState);
+          currentState = Math.floor(currentState - project.process.contract.first.calculation.amount);
+        } else {
+          currentState = Math.floor(thisRequest.items.reduce((acc, curr) => { return acc + curr.amount.consumer }, 0));
+        }
+
+        vatAmount = Math.floor(currentState / 11);
+        supplyAmount = Math.floor(currentState - vatAmount);
+
+        if (/^드/gi.test(project.process.status)) {
+          if (thisRequest.pay.length === 0) {
+            confirmState = 0;
+          }
+        }
+
+        payDate = '-';
+        payRealAmount = 0;
+        if (thisRequest.pay.length > 0) {
+          payDate = dateToString(thisRequest.pay[0].date);
+          payRealAmount = thisRequest.pay.reduce((acc, curr) => { return acc + curr.amount }, 0);
+        }
+
+        if (payDate === '-') {
+          payMethod = "-";
+          payProof = "-";
+        } else {
+          payMethod = "알 수 없음";
+          if (thisRequest.proofs.length > 0) {
+            payMethod = thisRequest.proofs[0].method;
+          }
+          payProof = "알 수 없음";
+          if (thisRequest.proofs.length > 0) {
+            payProof = thisRequest.proofs[0].proof;
+          }
+        }
+
+        cancelAmount = 0;
+        cancelDate = '-';
+
+        if (thisRequest.cancel.length > 0) {
+          cancelAmount = thisRequest.cancel.reduce((acc, curr) => { return acc + curr.amount }, 0);
+          cancelDate = dateToString(thisRequest.cancel[0].date);
+        }
+
+        refundGo = "환불 진행";
+        refundReceipt = null;
+        oidArr = thisRequest.pay.map((o) => { return o.oid }).filter((oid) => { return oid !== '' });
+        refundReceipt = thisRequest.info.find((o) => {
+          return typeof o === "object" && o.key === "refundReceipt" && oidArr.includes(o.oid)
+        });
+        if (refundReceipt !== null && refundReceipt !== undefined) {
+          refundGo = "환불 요청";
+        }
+        if (cancelAmount !== 0) {
+          refundGo = "환불 완료";
+        }
+
+        requestSumConsumer += currentState;
+        requestSumConfirm += confirmState;
+        requestSumRefund += cancelAmount;
+        requestSumIncome += (payDate === '-' ? 0 : confirmState);
+        requestSumVat += vatAmount;
+        requestSumSupply += supplyAmount;
+
+        requestValueArr = [
+          {
+            value: requestName,
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: autoComma(supplyAmount),
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: autoComma(vatAmount),
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: autoComma(currentState),
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: autoComma(confirmState),
+            color: confirmState === 0 ? colorChip.black : (payDate === '-' ? colorChip.red : colorChip.black),
+            pointer: false,
+            event: null,
+          },
+          {
+            value: payDate === '-' ? String(0) : autoComma(payRealAmount),
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: payDate,
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: payMethod,
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: payProof,
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: autoComma(cancelAmount),
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: cancelDate,
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: (payRealAmount === 0 ? "0%" : (String(Math.floor((cancelAmount / payRealAmount) * 10000) / 100) + '%')),
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: refundGo,
+            color: (/진행/gi.test(refundGo) ? colorChip.green : (/요청/gi.test(refundGo) ? colorChip.black : colorChip.deactive)),
+            pointer: /진행/gi.test(refundGo),
+            event: (/진행/gi.test(refundGo) ? instance.makeRefundEvent(project.bill.bilid, z, project.proid) : null),
+          },
+        ];
+
+        whiteTong = createNode({
+          mother: contentsAreaLeft,
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "row",
+            width: withOut(0),
+            height: String(blockHeight) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            marginBottom: String(blockMarginBottom) + ea,
+          }
+        });
+        for (let { value, color, pointer, event } of requestValueArr) {
+          createNode({
+            mother: whiteTong,
+            event,
+            style: {
+              display: "inline-flex",
+              width: "calc(100% / " + String(leftColumns.length) + ")",
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              cursor: pointer ? "pointer" : "",
+            },
+            children: [
+              {
+                text: value,
+                style: {
+                  fontSize: String(valueSize) + ea,
+                  fontWeight: String(valueWeight),
+                  color: color,
+                  position: "relative",
+                  top: String(valueTextTop) + ea,
+                }
+              }
+            ]
+          });
+        }
+      }
+
+      requestValueArr = [
+        {
+          value: "총계",
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumSupply),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumVat),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumConsumer),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumConfirm),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumIncome),
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(requestSumRefund),
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+      ];
+      grayTong = createNode({
+        mother: contentsAreaLeft,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "row",
+          width: withOut(0),
+          height: String(blockHeight) + ea,
+          background: colorChip.gray0,
+          borderRadius: String(5) + "px",
+          marginBottom: String(blockMarginBottom) + ea,
+        }
+      });
+      for (let { value, color } of requestValueArr) {
+        createNode({
+          mother: grayTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(leftColumns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: value,
+              style: {
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                position: "relative",
+                top: String(valueTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
+
+      // contents area down - response
+
+      contentsAreaRight = createNode({
+        mother: contentsArea,
+        style: {
+          display: "flex",
+          position: "relative",
+          height: "calc(calc(calc(100% - " + String(contentsAreaBetween) + ea + ") / 2) - " + String(grayInnerPadding * 2) + ea + ")",
+          width: withOut(grayInnerPadding * 2, ea),
+          borderRadius: String(5) + "px",
+          padding: String(grayInnerPadding) + ea,
+          background: colorChip.gray2,
+          alignItems: "center",
+          justifyContent: "center",
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              overflow: "scroll",
+            }
+          }
+        ]
+      }).firstChild;
+
+      blackTong = createNode({
+        mother: contentsAreaRight,
+        style: {
+          display: "flex",
+          position: "sticky",
+          flexDirection: "row",
+          top: String(0),
+          width: withOut(0),
+          height: String(blockHeight) + ea,
+          background: colorChip.gradientGray,
+          borderRadius: String(5) + "px",
+          marginBottom: String(blockMarginBottom) + ea,
+          zIndex: String(1),
+        }
+      });
+      for (let column of rightColumns) {
+        createNode({
+          mother: blackTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(leftColumns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: column,
+              style: {
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(valueBoldWeight),
+                color: colorChip.white,
+                position: "relative",
+                top: String(valueTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
+
+      responseSumTotal = 0;
+      responseSumNon = 0;
+      responseSumPaid = 0;
+      responseSumRefund = 0;
+      for (let z = 0; z < project.bill.responses.length; z++) {
+        thisResponse = project.bill.responses[z];
+        responseName = thisResponse.name;
+
+        confirmState = Math.floor(thisResponse.items.reduce((acc, curr) => { return acc + curr.amount.pure }, 0));
+        payAmount = Math.floor(thisResponse.pay.reduce((acc, curr) => { return acc + curr.amount }, 0));
+        refundAmount = Math.floor(thisResponse.cancel.reduce((acc, curr) => { return acc + curr.amount }, 0));
+        nonPayAmount = confirmState - payAmount;
+        payDate = '-';
+        if (thisResponse.pay.length > 0) {
+          payDate = dateToString(thisResponse.pay[0].date);
+        }
+        refundDate = '-';
+        if (thisResponse.cancel.length > 0) {
+          refundDate = dateToString(thisResponse.cancel[0].date);
+        }
+        if (payDate === '-') {
+          payMethod = "-";
+          payProof = "-";
+        } else {
+          payMethod = "알 수 없음";
+          if (thisResponse.proofs.length > 0) {
+            payMethod = thisResponse.proofs[0].method;
+          }
+          payProof = "알 수 없음";
+          if (thisResponse.proofs.length > 0) {
+            payProof = thisResponse.proofs[0].proof;
+          }
+        }
+
+        responseSumTotal += confirmState;
+        responseSumNon += nonPayAmount;
+        responseSumPaid += payAmount;
+        responseSumRefund += refundAmount;
+
+        responseValueArr = [
+          {
+            value: responseName,
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: !/시공/gi.test(responseName) ? project.process.calculation.method : '-',
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: !/시공/gi.test(responseName) ? String(project.process.calculation.percentage) + '%' : '-',
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: '-',
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: autoComma(confirmState),
+            color: colorChip.black,
+            pointer: true,
+            event: instance.amountFixEvent(project.bill.bilid, z, project.proid),
+          },
+          {
+            value: autoComma(nonPayAmount),
+            color: nonPayAmount !== 0 ? colorChip.purple : colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: autoComma(payAmount),
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: payDate,
+            color: colorChip.black,
+            pointer: true,
+            event: instance.dateFixEvent(project.bill.bilid, z, project.proid),
+          },
+          {
+            value: payMethod,
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: autoComma(refundAmount),
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: refundDate,
+            color: colorChip.black,
+            pointer: false,
+            event: null,
+          },
+          {
+            value: "지급 진행",
+            color: colorChip.green,
+            pointer: true,
+            event: instance.makeExcuteEvent(project.bill.bilid, z, project.proid),
+          },
+          {
+            value: "환수 확인",
+            color: colorChip.green,
+            pointer: true,
+            event: instance.makeRepayEvent(project.bill.bilid, z, project.proid),
+          },
+        ];
+
+        whiteTong = createNode({
+          mother: contentsAreaRight,
+          style: {
+            display: "flex",
+            position: "relative",
+            flexDirection: "row",
+            width: withOut(0),
+            height: String(blockHeight) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            marginBottom: String(blockMarginBottom) + ea,
+          }
+        });
+        for (let { value, color, pointer, event } of responseValueArr) {
+          createNode({
+            mother: whiteTong,
+            event,
+            style: {
+              display: "inline-flex",
+              width: "calc(100% / " + String(leftColumns.length) + ")",
+              height: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              cursor: pointer ? "pointer" : "",
+            },
+            children: [
+              {
+                text: value,
+                style: {
+                  fontSize: String(valueSize) + ea,
+                  fontWeight: String(valueWeight),
+                  color: color,
+                  position: "relative",
+                  top: String(valueTextTop) + ea,
+                }
+              }
+            ]
+          });
+        }
+      }
+
+      responseValueArr = [
+        {
+          value: "총계",
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(responseSumTotal),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(responseSumNon),
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(responseSumPaid),
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: autoComma(responseSumRefund),
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+        },
+      ];
+      grayTong = createNode({
+        mother: contentsAreaRight,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "row",
+          width: withOut(0),
+          height: String(blockHeight) + ea,
+          background: colorChip.gray0,
+          borderRadius: String(5) + "px",
+          marginBottom: String(blockMarginBottom) + ea,
+        }
+      });
+      for (let { value, color } of responseValueArr) {
+        createNode({
+          mother: grayTong,
+          style: {
+            display: "inline-flex",
+            width: "calc(100% / " + String(leftColumns.length) + ")",
+            height: withOut(0, ea),
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          },
+          children: [
+            {
+              text: value,
+              style: {
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                position: "relative",
+                top: String(valueTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
+
+
+      // response plus button
+
+      responsePlusButton = createNode({
+        mother: contentsAreaRight,
+        attribute: {
+          proid: project.proid,
+          bilid: project.bill.bilid,
+          desid: project.desid,
+          cliid: project.cliid,
+        },
+        event: {
+          selectstart: (e) => {
+            e.preventDefault();
+          },
+          click: function(e) {
+            const self = this;
+            const mother = self.parentElement;
+            const proid = this.getAttribute("proid");
+            const bilid = this.getAttribute("bilid");
+            const desid = this.getAttribute("desid");
+            const cliid = this.getAttribute("cliid");
+            let cancelBox, baseBox;
+
+            cancelBox = createNode({
+              mother,
+              class: [ responsePlusButtonPopupClassName ],
+              event: {
+                click: (e) => {
+                  removeByClass(responsePlusButtonPopupClassName);
+                }
+              },
+              style: {
+                position: "fixed",
+                top: String(0),
+                left: String(0),
+                width: withOut(0),
+                height: withOut(0),
+                zIndex: String(1),
+              }
+            });
+
+            baseBox = createNode({
+              mother,
+              attribute: { proid, bilid, desid, cliid },
+              class: [ responsePlusButtonPopupClassName ],
+              style: {
+                display: "inline-flex",
+                flexDirection: "column",
+                position: "absolute",
+                right: String(plusCircleMargin) + ea,
+                bottom: String(plusCircleMargin + plusCircleWidth + 8) + ea,
+                width: String(buttonWidth) + ea,
+                animation: "fadeuplite 0.2s ease forwards",
+                zIndex: String(1),
+              }
+            });
+
+            for (let { words, func } of responsePlusButtonMenus) {
+              createNode({
+                mother: baseBox,
+                attribute: { proid, bilid, desid, cliid },
+                event: {
+                  selectstart: (e) => {
+                    e.preventDefault();
+                  },
+                  click: func(),
+                },
+                style: {
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  width: String(buttonWidth) + ea,
+                  height: String(buttonHeight) + ea,
+                  background: colorChip.green,
+                  borderRadius: String(8) + "px",
+                  marginTop: String(buttonBetween) + ea,
+                  cursor: "pointer",
+                },
+                child: {
+                  text: words,
+                  event: {
+                    selectstart: (e) => {
+                      e.preventDefault();
+                    }
+                  },
+                  style: {
+                    position: "relative",
+                    display: "inline-block",
+                    fontSize: String(buttonSize) + ea,
+                    fontWeight: String(buttonWeight),
+                    color: colorChip.white,
+                    top: String(buttonTextTop) + ea,
+                    cursor: "pointer",
+                  }
+                }
+              });
+            }
+
+          },
+        },
+        style: {
+          display: "flex",
+          position: "absolute",
+          bottom: String(plusCircleMargin) + ea,
+          right: String(plusCircleMargin) + ea,
+          width: String(plusCircleWidth) + ea,
+          height: String(plusCircleWidth) + ea,
+          borderRadius: String(plusCircleWidth) + ea,
+          background: colorChip.gradientGreen,
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        child: {
+          text: "+",
+          event: {
+            selectstart: (e) => {
+              e.preventDefault();
+            },
+          },
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(plusSize) + ea,
+            fontWeight: String(plusWeight),
+            fontFamily: "graphik",
+            color: colorChip.white,
+            top: String(plusTextTop) + ea,
+            cursor: "pointer",
+          }
+        }
+      });
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 ProcessJs.prototype.reloadProjects = function (serverResponse) {
