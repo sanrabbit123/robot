@@ -32,10 +32,10 @@ ProcessJs.prototype.baseMaker = function () {
   let barWidth, barMargin;
   let motherBlock;
   let alarmCircleRadius;
-  let nameWidth, designerWidth, idWidth, requestWidth, responseWidth;
+  let nameWidth, designerWidth, idWidth, requestWidth;
   let contentsLoad;
-  let requestTable, responseTable;
-  let clientBlack, responseBlock;
+  let clientTable;
+  let clientBlack;
   let tableBlockHeight;
   let tableBlockFactorWidth;
   let tableBetween;
@@ -63,6 +63,14 @@ ProcessJs.prototype.baseMaker = function () {
   let startDate, startDateNumber;
   let endDate, endDateNumber;
   let rawDate, rawDateNumber;
+  let designerDom;
+  let subArea;
+  let subAreaBottom;
+  let tableMiddleWeight;
+  let subAreaBetween;
+  let onlineCircleTop, onlineCircleWidth;
+  let onlineStatusSize, onlineStatusWeight;
+  let onlineCircleMarginRight;
 
   clientColumns = [
     "고객",
@@ -110,6 +118,7 @@ ProcessJs.prototype.baseMaker = function () {
 
   tableSize = 13;
   tableWeight = 400;
+  tableMiddleWeight = 500;
   tableBoldWeight = 700;
   tableTextTop = (isMac() ? -1 : 1);
 
@@ -117,6 +126,15 @@ ProcessJs.prototype.baseMaker = function () {
   checkBoxWidth = 10;
   checkBoxMargin = 5;
   checkBoxVisualTop = -0.5;
+
+  subAreaBottom = 18;
+  subAreaBetween = 4;
+
+  onlineCircleTop = 2.5;
+  onlineCircleWidth = 6;
+  onlineCircleMarginRight = 4;
+  onlineStatusSize = 14;
+  onlineStatusWeight = 400;
 
   contentsLoad = () => {};
 
@@ -322,6 +340,124 @@ ProcessJs.prototype.baseMaker = function () {
   
         targetTong = baseBlock.firstChild;
   
+        subArea = createNode({
+          mother: targetTong,
+          style: {
+            display: "inline-flex",
+            flexDirection: "column",
+            position: "absolute",
+            left: String(firstMargin) + ea,
+            bottom: String(subAreaBottom) + ea,
+            alignItems: "start",
+          }
+        });
+
+        createNode({
+          mother: subArea,
+          style: {
+            display: "flex",
+            flexDirection: "row",
+            position: "relative",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: String(subAreaBetween) + ea,
+          },
+          children: [
+            {
+              text: "전체 :&nbsp;&nbsp;",
+              style: {
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableMiddleWeight),
+                color: colorChip.black,
+              }
+            },
+            {
+              text: String(projects.length),
+              style: {
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableMiddleWeight),
+                color: colorChip.green,
+              }
+            },
+            {
+              text: "건",
+              style: {
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableMiddleWeight),
+                color: colorChip.black,
+              }
+            },
+            {
+              text: "&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;",
+              style: {
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableWeight),
+                color: colorChip.gray4,
+              }
+            },
+            {
+              text: "진행중 :&nbsp;&nbsp;",
+              style: {
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableMiddleWeight),
+                color: colorChip.black,
+              }
+            },
+            {
+              text: String(projects.filter((obj) => { return obj.process.contract.remain.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() }).filter((obj) => { return obj.process.contract.form.date.from.valueOf() <= (new Date()).valueOf() }).length),
+              style: {
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableMiddleWeight),
+                color: colorChip.green,
+              }
+            },
+            {
+              text: "건",
+              style: {
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableMiddleWeight),
+                color: colorChip.black,
+              }
+            },
+          ]
+        })
+
+
+        createNode({
+          mother: subArea,
+          style: {
+            display: "flex",
+            flexDirection: "row",
+            position: "relative",
+            alignItems: "center",
+            justifyContent: "center",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(onlineCircleTop) + ea,
+                width: String(onlineCircleWidth) + ea,
+                height: String(onlineCircleWidth) + ea,
+                borderRadius: String(onlineCircleWidth) + ea,
+                background: colorChip.gray3,
+                marginRight: String(onlineCircleMarginRight) + ea,
+              }
+            },
+            {
+              text: "offline",
+              style: {
+                fontSize: String(onlineStatusSize) + ea,
+                fontWeight: String(onlineStatusWeight),
+                color: colorChip.deactive,
+                fontFamily: "graphik",
+              }
+            }
+          ]
+        })
+
+
         nameDom = createNode({
           mother: targetTong,
           text: manager,
@@ -344,7 +480,7 @@ ProcessJs.prototype.baseMaker = function () {
           }
         });
   
-        createNode({
+        designerDom = createNode({
           mother: targetTong,
           text: designer,
           style: {
@@ -366,7 +502,7 @@ ProcessJs.prototype.baseMaker = function () {
           }
         });
         
-        requestTable = createNode({
+        clientTable = createNode({
           mother: targetTong,
           style: {
             width: String(requestWidth) + ea,
@@ -383,7 +519,7 @@ ProcessJs.prototype.baseMaker = function () {
         });
   
         clientBlack = createNode({
-          mother: requestTable,
+          mother: clientTable,
           style: {
             display: "block",
             position: "relative",
@@ -528,7 +664,7 @@ ProcessJs.prototype.baseMaker = function () {
           ];
   
           clientBlack = createNode({
-            mother: requestTable,
+            mother: clientTable,
             style: {
               display: "block",
               position: "relative",
@@ -653,7 +789,7 @@ ProcessJs.prototype.baseMaker = function () {
         ];
 
         clientBlack = createNode({
-          mother: requestTable,
+          mother: clientTable,
           style: {
             display: "block",
             position: "relative",
