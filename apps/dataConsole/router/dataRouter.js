@@ -8002,7 +8002,6 @@ DataRouter.prototype.rou_post_processConsole = function () {
     try {
       const selfMongo = instance.mongolocal;
       const selfCoreMongo = instance.mongo;
-      const agoDateNumber = 180;
       const { mode } = req.body;
       let projects, clients, designers, history;
       let ago;
@@ -8012,12 +8011,6 @@ DataRouter.prototype.rou_post_processConsole = function () {
       let secondRes;
 
       if (mode === "init") {
-
-        // ago = new Date();
-        // ago.setDate(ago.getDate() - agoDateNumber);
-        // projects = await back.getProjectsByQuery({
-        //   "process.contract.first.date": { $gte: ago }
-        // }, { selfMongo: selfCoreMongo });
 
         projects = await back.getProjectsByQuery({
           $and: [
@@ -8088,8 +8081,6 @@ DataRouter.prototype.rou_post_processConsole = function () {
         res.send(JSON.stringify({ projects: [], clients: [], designers: [], history: [], clientHistory: [], rawContents: [] }));
 
       }
-
-      res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_processConsole): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
