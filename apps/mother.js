@@ -955,10 +955,6 @@ Mother.prototype.ipCheck = function () {
 
         obj.name = "skt";
         obj.rawObj = ADDRESS[standardInfo];
-        obj.rawObj.host = "localhost";
-        obj.rawObj.ip.outer = ip;
-        networkInterfaces = require("os").networkInterfaces();
-        obj.rawObj.ip.inner = Object.values(networkInterfaces).flat().filter((obj) => { return /4/gi.test(obj.family) }).filter((obj) => { return !/127\.0\.0\.1/gi.test(obj.address) })[0].address;
         obj.rawObj.isGhost = false;
 
       } else {

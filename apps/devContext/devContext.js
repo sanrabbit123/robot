@@ -64,30 +64,77 @@ const DevContext = function () {
   this.dir = `${process.cwd()}/apps/devContext`;
 }
 
-DevContext.prototype.chatGPT = async function (input) {
+DevContext.prototype.chatGPT = async function () {
   const instance = this;
-  const { requestSystem } = this.mother;
+  const { requestSystem, consoleQ } = this.mother;
   try {
     const openAiToken = "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";
-    const url = "https://api.openai.com/v1/chat/completions";
+    const hostname = "api.openai.com";
+    const port = 443;
+    const path = "/v1/chat/completions";
+    const url = "https://" + hostname + path;
     const model = "gpt-3.5-turbo";
-    let res;
-    res = await requestSystem(url, {
-      model,
-      messages: [
-        {
-          role: "user",
-          content: input
+    const https = require("https");
+    const streamGPT = (input) => {
+      let options;
+      let req;  
+      return new Promise((resolve, reject) => {
+        options = {
+          hostname,
+          port,
+          path,
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + openAiToken,
+          }
         }
-      ]
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + openAiToken,
-      }
-    });
-    return res.data.choices.map((obj) => { return obj.message.content }).join(" ").trim();
+    
+        req = https.request(options, (res) => {
+          res.on('data', (chunk) => {
+            const rawResponse = String(chunk);
+            let rawArr;
+            let parsedChunk;
+            if (/^data\: /.test(rawResponse)) {
+              rawArr = rawResponse.split(": ");
+              if (rawArr.length > 0) {
+                try {
+                  parsedChunk = JSON.parse(rawArr[1]);
+                  process.stdout.write(parsedChunk.choices.filter((obj) => { return typeof obj.delta.content === "string" }).map((obj) => { return obj.delta.content }).join(""))
+                } catch {}
+              }
+            }
+          });
+          res.on('end', () => {
+            console.log("\n")
+            resolve(null);
+          });
+          res.on('error', (e) => {
+            reject(e);
+          });
+        });
+    
+        req.write(JSON.stringify({
+          model,
+          messages: [
+            {
+              role: "user",
+              content: input
+            }
+          ],
+          stream: true,
+        }));
+        req.end();
+
+      })
+    }
+    let input;
+
+    while (true) {
+      input = await consoleQ("\n");
+      await streamGPT(input);
+    }
+
   } catch (e) {
     console.log(e);
   }
@@ -122,9 +169,9 @@ DevContext.prototype.launching = async function () {
         console.log(e);
       }
     }
-    const question = async (input) => {
+    const question = async () => {
       try {
-        console.log(await instance.chatGPT(input));
+        await instance.chatGPT();
       } catch (e) {
         console.log(e);
       }
@@ -184,21 +231,13 @@ DevContext.prototype.launching = async function () {
     //   console.log(whereQuery, updateQuery);
     // }
 
-
-
-    // await question("일반적인 회사 전체 자료의 디렉토리를 정리해서 알려줘봐");
-
-
-    
-    
-    
-
-
+    // await question();
     
 
     
-
     
+    
+
 
 
 
