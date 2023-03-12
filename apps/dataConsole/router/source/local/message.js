@@ -87,10 +87,23 @@ MessageJs.prototype.baseMaker = function () {
         type: "text",
         placeholder: "질문을 입력하세요...",
       },
+      event: {
+        keypress: async function (e) {
+          try {
+            if (e.key === "Enter") {
+              await instance.sendValue(this.value);
+              this.value = "";
+              this.focus();
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
       style: {
         display: "inline-block",
         position: "relative",
-        fontSize: String(16) + ea,
+        fontSize: String(15) + ea,
         fontWeight: String(400),
         top: String(-1) + ea,
         colorChip: colorChip.black,
@@ -116,6 +129,18 @@ MessageJs.prototype.baseMaker = function () {
     }
   });
 
+}
+
+MessageJs.prototype.sendValue = async function (input) {
+  const instance = this;
+  const { ajaxJson } = GeneralJs;
+  try {
+
+    console.log(input);
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 MessageJs.prototype.launching = async function () {
