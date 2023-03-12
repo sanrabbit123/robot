@@ -58,6 +58,11 @@ ProcessJs.prototype.baseMaker = function () {
   let wordingWidth;
   let checkBoxWidth, checkBoxMargin, checkBoxVisualTop;
   let latestCallNumber;
+  let meetingDate, meetingDateNumber;
+  let remainDate, remainDateNumber;
+  let startDate, startDateNumber;
+  let endDate, endDateNumber;
+  let rawDate, rawDateNumber;
 
   clientColumns = [
     "고객",
@@ -418,6 +423,11 @@ ProcessJs.prototype.baseMaker = function () {
         }
   
         latestCallNumber = 0;
+        meetingDateNumber = 0;
+        remainDateNumber = 0;
+        startDateNumber = 0;
+        endDateNumber = 0;
+        rawDateNumber = 0;
         for (let z = 0; z < projects.length; z++) {
           thisProject = projects[z];
           callHistory = equalJson(JSON.stringify(thisProject.clientHistory.curation.analytics.call.out.concat(thisProject.clientHistory.curation.analytics.call.in))).filter((obj) => { return obj.success });
@@ -432,6 +442,27 @@ ProcessJs.prototype.baseMaker = function () {
           }
           
           partner = (thisProject.process.design.construct === null ? '-' : (thisProject.process.design.construct.contract.partner === "디자이너" ? "디자이너" : (thisProject.process.design.construct.contract.partner === "고객" ? "고객" : (thisProject.process.design.construct.contract.partner.trim() === "" ? "-" : "홈리에종"))));
+
+          meetingDate = dateConvert(thisProject.process.contract.meeting.date);
+          if (meetingDate === '-') {
+            meetingDateNumber = meetingDateNumber + 1;
+          }
+          remainDate = dateConvert(thisProject.process.contract.remain.date);
+          if (remainDate === '-') {
+            remainDateNumber = remainDateNumber + 1;
+          }
+          startDate = dateConvert(thisProject.process.contract.form.date.from);
+          if (startDate === '-') {
+            startDateNumber = startDateNumber + 1;
+          }
+          endDate = dateConvert(thisProject.process.contract.form.date.to);
+          if (endDate === '-') {
+            endDateNumber = endDateNumber + 1;
+          }
+          rawDate = dateConvert(thisProject.rawDate);
+          if (rawDate === '-') {
+            rawDateNumber = rawDateNumber + 1;
+          }
 
           clientValueArr = [
             {
@@ -460,38 +491,38 @@ ProcessJs.prototype.baseMaker = function () {
               check: true,
             },
             {
-              value: dateConvert(thisProject.process.contract.meeting.date),
-              color: dateConvert(thisProject.process.contract.meeting.date) === '-' ? colorChip.red : colorChip.black,
+              value: meetingDate,
+              color: meetingDate === '-' ? colorChip.red : colorChip.black,
               check: true,
             },
             {
-              value: dateConvert(thisProject.process.contract.remain.date),
-              color: dateConvert(thisProject.process.contract.remain.date) === '-' ? colorChip.red : colorChip.black,
+              value: remainDate,
+              color: remainDate === '-' ? colorChip.red : colorChip.black,
               check: true,
             },
             {
-              value: dateConvert(thisProject.process.contract.form.date.from),
-              color: colorChip.black,
+              value: startDate,
+              color: startDate === '-' ? colorChip.red : colorChip.black,
               check: true,
             },
             {
-              value: dateConvert(thisProject.process.contract.form.date.to),
-              color: colorChip.black,
+              value: endDate,
+              color: endDate === '-' ? colorChip.red : colorChip.black,
               check: true,
             },
             {
-              value: "0000-00-00",
-              color: colorChip.black,
+              value: remainDate,
+              color: remainDate === '-' ? colorChip.red : colorChip.black,
               check: true,
             },
             {
-              value: "0000-00-00",
-              color: colorChip.black,
+              value: remainDate,
+              color: remainDate === '-' ? colorChip.red : colorChip.black,
               check: true,
             },
             {
-              value: dateConvert(thisProject.rawDate),
-              color: dateConvert(thisProject.rawDate) === '-' ? colorChip.red : colorChip.black,
+              value: rawDate,
+              color: rawDate === '-' ? colorChip.red : colorChip.black,
               check: true,
             },
           ];
@@ -585,38 +616,38 @@ ProcessJs.prototype.baseMaker = function () {
             check: false,
           },
           {
-            value: dateConvert(thisProject.process.contract.meeting.date),
-            color: dateConvert(thisProject.process.contract.meeting.date) === '-' ? colorChip.red : colorChip.black,
-            check: false,
-          },
-          {
-            value: dateConvert(thisProject.process.contract.remain.date),
-            color: dateConvert(thisProject.process.contract.remain.date) === '-' ? colorChip.red : colorChip.black,
-            check: false,
-          },
-          {
-            value: dateConvert(thisProject.process.contract.form.date.from),
+            value: (meetingDateNumber === 0 ? String(meetingDateNumber) : "<b%" + String(meetingDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
             color: colorChip.black,
             check: false,
           },
           {
-            value: dateConvert(thisProject.process.contract.form.date.to),
+            value: (remainDateNumber === 0 ? String(remainDateNumber) : "<b%" + String(remainDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
             color: colorChip.black,
             check: false,
           },
           {
-            value: "0000-00-00",
+            value: (startDateNumber === 0 ? String(startDateNumber) : "<b%" + String(startDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
             color: colorChip.black,
             check: false,
           },
           {
-            value: "0000-00-00",
+            value: (endDateNumber === 0 ? String(endDateNumber) : "<b%" + String(endDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
             color: colorChip.black,
             check: false,
           },
           {
-            value: dateConvert(thisProject.rawDate),
-            color: dateConvert(thisProject.rawDate) === '-' ? colorChip.red : colorChip.black,
+            value: (remainDateNumber === 0 ? String(remainDateNumber) : "<b%" + String(remainDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
+            color: colorChip.black,
+            check: false,
+          },
+          {
+            value: (remainDateNumber === 0 ? String(remainDateNumber) : "<b%" + String(remainDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
+            color: colorChip.black,
+            check: false,
+          },
+          {
+            value: (rawDateNumber === 0 ? String(rawDateNumber) : "<b%" + String(rawDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
+            color: colorChip.black,
             check: false,
           },
         ];
