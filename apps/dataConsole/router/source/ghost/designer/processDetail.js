@@ -4302,7 +4302,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     motherMaxNumber = motherMatrix.reduce((acc, curr) => { return (acc >= curr ? acc : curr) }, 0);
     transparentItemsMatrix = motherMatrix.map((num) => { return Math.abs(motherMaxNumber - num) });
 
-    this.reloadNumbers(itemList);
+    // this.reloadNumbers(itemList);
 
     this.itemList = [];
     this.reloadGreenButtons();

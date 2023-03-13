@@ -566,7 +566,7 @@ ProcessJs.prototype.baseMaker = function () {
         rawDateNumber = 0;
         for (let z = 0; z < projects.length; z++) {
           thisProject = projects[z];
-          callHistory = equalJson(JSON.stringify(thisProject.clientHistory.curation.analytics.call.out.concat(thisProject.clientHistory.curation.analytics.call.in))).filter((obj) => { return obj.success });
+          callHistory = equalJson(JSON.stringify(thisProject.clientHistory.curation.analytics.call.out.concat(thisProject.clientHistory.curation.analytics.call.in)));
           callHistory.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
 
           latestCall = '-';
@@ -859,7 +859,7 @@ ProcessJs.prototype.baseMaker = function () {
 ProcessJs.prototype.whiteCardView = function (proid) {
   const instance = this;
   const { totalContents, ea, belowHeight, projects } = this;
-  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue } = GeneralJs;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue, serviceParsing, equalJson } = GeneralJs;
   return async function (e) {
     try {
       const project = projects.find((obj) => { return obj.proid === proid });
@@ -926,6 +926,16 @@ ProcessJs.prototype.whiteCardView = function (proid) {
       let buttonWidth, buttonHeight;
       let buttonBetween;
       let buttonSize, buttonWeight, buttonTextTop;
+      let memoArea, menuArea;
+      let memoAreaWidth;
+      let memoAreaMargin;
+      let memoTitleAreaHeight;
+      let memoTitleSize, memoTitleWeight;
+      let memoTitleTextTop, memoTitleVisualLeft;
+      let memoAreaInnerPadding;
+      let memoContentsSize, memoContentsWeight, memoContentsLineHeight;
+      let callHistory;
+      let latestCall;
 
       whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
       whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
@@ -972,6 +982,29 @@ ProcessJs.prototype.whiteCardView = function (proid) {
       buttonWeight = 700;
       buttonTextTop = isMac() ? -1 : 1;
 
+      memoAreaWidth = 400;
+      memoAreaMargin = 50;
+      memoTitleAreaHeight = 71;
+
+      memoTitleSize = 15;
+      memoTitleWeight = 700;
+      memoTitleTextTop = -7;
+      memoTitleVisualLeft = 1;
+
+      memoAreaInnerPadding = 20;
+
+      memoContentsSize = 14;
+      memoContentsWeight = 400;
+      memoContentsLineHeight = 1.6;
+
+
+      callHistory = equalJson(JSON.stringify(project.clientHistory.curation.analytics.call.out.concat(project.clientHistory.curation.analytics.call.in)));
+      callHistory.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+
+      latestCall = '-';
+      if (callHistory.length > 0) {
+        latestCall = dateToString(callHistory[0].date);
+      }
 
       // base
 
@@ -1015,7 +1048,6 @@ ProcessJs.prototype.whiteCardView = function (proid) {
               width: withOut(0, ea),
               height: withOut(0, ea),
               borderRadius: String(5) + "px",
-              overflow: "hidden",
             },
           }
         ]
@@ -1049,7 +1081,7 @@ ProcessJs.prototype.whiteCardView = function (proid) {
       });
       createNode({
         mother: titleArea,
-        text: project.proid + blank + "/" + blank + project.designer.designer + " 디자이너",
+        text: project.proid + blank + "/" + blank + project.designer.designer + " D" + blank + "/" + blank + serviceParsing(project.service),
         style: {
           display: "inline-flex",
           fontSize: String(subSize) + ea,
@@ -1062,24 +1094,12 @@ ProcessJs.prototype.whiteCardView = function (proid) {
       });
       createNode({
         mother: titleArea,
-        text: project.process.status,
+        text: "마지막 통화 : " + latestCall.slice(2),
         style: {
           display: "inline-flex",
           fontSize: String(subSize) + ea,
           fontWeight: String(subWeight),
-          color: ((status) => {
-            if (status === "대기") {
-              return colorChip.red;
-            } else if (status === "진행중") {
-              return colorChip.black;
-            } else if (status === "드랍") {
-              return colorChip.deactive;
-            } else if (status === "완료") {
-              return colorChip.green;
-            } else {
-              return colorChip.black;
-            }
-          })(project.process.status),
+          color: colorChip.red,
           position: "absolute",
           right: String(0),
           top: String(statusTextTop) + ea,
@@ -1094,14 +1114,122 @@ ProcessJs.prototype.whiteCardView = function (proid) {
         style: {
           display: "flex",
           position: "relative",
-          flexDirection: "column",
-          paddingTop: String(contentsAreaPaddingTop) + ea,
-          height: withOut(titleAreaHeight + titleAreaPaddingBottom + contentsAreaPaddingTop, ea),
+          flexDirection: "row",
+          height: withOut(titleAreaHeight + titleAreaPaddingBottom, ea),
           width: withOut(0, ea),
         }
       });
 
-      instance.insertFormStatusBox(project, contentsArea);
+      memoArea = createNode({
+        mother: contentsArea,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          flexDirection: "column",
+          width: String(memoAreaWidth - memoAreaMargin) + ea,
+          marginRight: String(memoAreaMargin) + ea,
+          height: withOut(0, ea),
+        },
+        children: [
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              flexDirection: "row",
+              width: withOut(0, ea),
+              height: String(memoTitleAreaHeight) + ea,
+              justifyContent: "start",
+              alignItems: "end",
+            },
+            child: {
+              text: "프로젝트 메모",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(memoTitleSize) + ea,
+                fontWeight: String(memoTitleWeight),
+                color: colorChip.black,
+                top: String(memoTitleTextTop) + ea,
+                left: String(memoTitleVisualLeft) + ea,
+              }
+            }
+          },
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              flexDirection: "column",
+              border: "1px solid " + colorChip.gray3,
+              width: withOut(0, ea),
+              height: withOut(memoTitleAreaHeight, ea),
+              borderRadius: String(5) + "px",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(memoAreaInnerPadding * 2, ea),
+                height: withOut(memoAreaInnerPadding * 2, ea),
+                overflow: "scroll",
+              },
+              child: {
+                mode: "textarea",
+                text: project.history.history,
+                event: {
+                  focus: function (e) {
+                    this.style.color = colorChip.black;
+                  },
+                  blur: async function (e) {
+                    try {
+
+
+
+                      // dev - memo save
+
+
+
+
+                      this.style.color = colorChip.deactive;
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                },
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  height: withOut(0, ea),
+                  fontSize: String(memoContentsSize) + ea,
+                  fontWeight: String(memoContentsWeight),
+                  color: colorChip.deactive,
+                  border: String(0),
+                  outline: String(0),
+                  background: "transparent",
+                  lineHeight: String(memoContentsLineHeight),
+                }
+              }
+            }
+          },
+        ]
+      });
+
+      menuArea = createNode({
+        mother: contentsArea,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: withOut(memoAreaWidth, ea),
+          height: withOut(0, ea),
+          overflow: "scroll",
+          borderBottom: "1px dashed " + colorChip.gray3,
+        }
+      })
+
+      await instance.insertFormStatusBox(project, menuArea);
+      instance.insertUploadBox(project, menuArea);
 
     } catch (e) {
       console.log(e);
@@ -1296,7 +1424,7 @@ ProcessJs.prototype.insertFormStatusBox = async function (project, contentsArea)
     panBlockBetween = <%% 8, 8, 6, 5, 1 %%>; 
     panBlockBigBetween = <%% 8, 8, 6, 5, 1 %%>; 
   
-    buttonWidth = <%% 100, 80, 70, 60, 24 %%>;
+    buttonWidth = <%% 140, 140, 140, 140, 24 %%>;
     buttonHeight = <%% 36, 28, 26, 24, 8.2 %%>;
   
     buttonSize = <%% 15, 13, 12, 11, 3.5 %%>;
@@ -1733,21 +1861,6 @@ ProcessJs.prototype.insertFormStatusBox = async function (project, contentsArea)
       },
     });
 
-    barArrBase = createNode({
-      mother: contentsArea,
-      style: {
-        display: "flex",
-        position: "relative",
-        flexDirection: "column",
-        width: withOut(0),
-        justifyContent: "start",
-        alignItems: "start",
-        paddingTop: String(barArrBasePaddingTop) + ea,
-        borderTop: "1px dashed " + colorChip.gray3,
-        marginTop: String(barArrBaseMarginTop) + ea,
-      }
-    });
-
     reloadMainButtons = (formPanBase, thisForm) => {
       cleanChildren(formPanBase);
       for (let i = 0; i < thisForm.length; i++) {
@@ -1918,12 +2031,2352 @@ ProcessJs.prototype.insertFormStatusBox = async function (project, contentsArea)
           });
         }
       }
+      createNode({
+        mother: formPanBase,
+        event: {
+          click: async function (e) {
+            try {
+              const host = FRONTHOST.replace(/^https\:\/\//gi, '');
+              const path = "project";
+              if (window.confirm(client.name + " 고객님께 프로젝트 진행율 알림톡을 보낼까요?")) {
+                await ajaxJson({
+                  method: "progressClient",
+                  name: client.name,
+                  phone: client.phone,
+                  option: {
+                    client: client.name,
+                    host: host,
+                    proid: project.proid,
+                  }
+                }, BACKHOST + "/alimTalk");
+                window.alert(client.name + " 고객님에게 프로젝트 진행율 알림톡을 전송하였습니다!");
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
+        style: {
+          display: "inline-flex",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          width: String(buttonWidth) + ea,
+          height: String(buttonHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGray,
+          bottom: String(0),
+          right: desktop ? String(0) : withOut(50, buttonWidth / 2, ea),
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          cursor: "pointer",
+        },
+        child: {
+          text: "디자이너에게 요청",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(buttonWeight),
+            top: String(buttonTextTop) + ea,
+            color: colorChip.white,
+            cursor: "pointer",
+          }
+        }
+      });
     }
 
     reloadMainButtons(formPanBase, thisForm);
   
   } catch (e) {
     console.log(e);
+  }
+}
+
+ProcessJs.prototype.insertUploadBox = function (project, baseTong) {
+  const instance = this;
+  const mother = this.mother;
+  const { ea, media } = this;
+  const client = project.client;
+  const designer = project.designer;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma } = GeneralJs;
+  const blank = "&nbsp;&nbsp;&nbsp;";
+  const uploadIconClassName = "uploadIconClassName";
+  const memoIconClassName = "memoIconClassName";
+  let paddingTop;
+  let block;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let titleFontSize;
+  let num, num2;
+  let numberRight;
+  let titleTop, titleTopNumber;
+  let titleBottom;
+  let index;
+  let mobileTitleLeft, mobileTitleTop;
+  let secondBlockWidth, secondBlockMargin;
+  let tong;
+  let contentsWordingSize;
+  let contentsBottom;
+  let whiteBottomMargin;
+  let contentsTitleMarginTop, contentsMarginTop;
+  let contentsPaddingLeft;
+  let arrowWidth;
+  let arrowTop;
+  let arrorLeft;
+  let bigNumberSize;
+  let bigNumberBetween;
+  let bigNumberMargin;
+  let bigNumberBetweenMargin;
+  let matrix;
+  let firstWidth, secondWidth, secondMarginRight;
+  let contentsAreaPaddingTop;
+  let zeroWidth, zeroMarginRight;
+  let checkBoxWidth, checkBoxTop;
+  let arrowBoxWidth, arrowBoxTop;
+  let contentsMarginBottom0, contentsMarginBottom1;
+  let mobilePaddingLeft;
+  let mobileContentsWordingSize;
+  let wordings;
+  let lineTop, linePadding;
+  let checkBoxAreaWidth;
+  let mobileInnerPaddingBottom;
+  let panMother;
+  let panMotherInnerPadding;
+  let panBetween;
+  let basePan;
+  let contentsTextTop;
+  let panTitleBoxHeight;
+  let uploadCircleWidth;
+  let uploadCirclePadding;
+  let uploadIconWidth;
+  let uploadIconTop;
+  let panMotherMinHeight;
+  let contentsPan;
+  let contentsPanPaddingTop;
+  let contentsPanPaddingBottom;
+  let panTitleBoxWidth;
+  let itemBetween;
+  let statusPadding;
+  let statusOpacity;
+  let subButtonPaddingRight;
+  let subButtonSize, subButtonWeight;
+  let subButtonVisualTop;
+  let subButtonPaddingBottom;
+  let subButtonPaddingTop;
+  let subButtonPaddingLeft;
+  let buttonBetween;
+  let plusIconTop, plusIconWidth;
+  let subButtonsBasePan;
+  let subButtonsBetween;
+  let subButtonsVisualTop;
+  let linkIconWidth;
+  let linkIconTop;
+  let panMotherMarginTop;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+
+  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
+  contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
+
+  mobileInnerPaddingBottom = 0;
+
+  secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
+  secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
+
+  contentsWordingSize = <%% 15, 15, 14, 13, 2.9 %%>;
+  contentsTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), -0.2 %%>;
+
+  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+
+  contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
+  contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
+  contentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
+  arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
+  arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
+  arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
+
+  bigNumberSize = <%% 37, 37, 37, 37, 5 %%>;
+  bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
+  bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
+  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
+
+  zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
+  zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
+  secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
+
+  checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
+  arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
+  checkBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
+  arrowBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
+
+  contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
+  contentsMarginBottom1 = <%% 32, 32, 30, 28, 0 %%>;
+
+  lineTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 9 : 7), 10 %%>;
+  linePadding = <%% 12, 12, 12, 10, 12 %%>;
+
+  mobilePaddingLeft = 0;
+
+  mobileContentsWordingSize = 3;
+
+  checkBoxAreaWidth = <%% 16, 16, 16, 16, 3 %%>;
+
+  panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
+  panBetween = <%% 8, 8, 8, 8, 1 %%>;
+  panTitleBoxWidth = <%% 124, 120, 114, 108, 21 %%>;
+  panTitleBoxHeight = <%% 52, 48, 45, 40, 8.2 %%>;
+
+  uploadCircleWidth = <%% 28, 28, 28, 24, 6 %%>;
+  uploadCirclePadding = <%% 16, 16, 16, 12, 4 %%>;
+  uploadIconWidth = <%% 13, 13, 13, 12, 3 %%>;
+  uploadIconTop = <%% 0, 0, 0, 0, 0 %%>;
+
+  linkIconWidth = <%% 15.5, 15.5, 15.5, 14, 3.4 %%>;
+  linkIconTop = <%% 0, 0, 0, 0, 0 %%>;
+
+  plusIconTop = <%% 0, 0, 0, 0, 0 %%>;
+  plusIconWidth = <%% 14, 14, 13, 12, 3 %%>;
+
+  panMotherMinHeight = <%% 500, 480, 420, 400, 54 %%>;
+
+  contentsPanPaddingTop = <%% 18, 18, 16, 12, 3 %%>;
+  contentsPanPaddingBottom = <%% 60, 60, 60, 54, 12 %%>;
+  itemBetween = <%% 6, 6, 5, 4, 1 %%>;
+
+  statusPadding = <%% 21, 21, 18, 18, 4 %%>;
+  statusOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
+
+  subButtonPaddingRight = <%% 18, 18, 16, 12, 1.6 %%>;
+  subButtonSize = <%% 12, 12, 11, 10, 2.4 %%>;
+  subButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
+  subButtonVisualTop = <%% 3, 3, 2, 1, 0.3 %%>;
+  subButtonPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 5 : 4), (isIphone() ? 1.2 : 1.4) %%>;
+  subButtonPaddingTop = <%% (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 3 : 5), (isIphone() ? 1.2 : 1.2) %%>;
+  subButtonPaddingLeft = <%% 11, 11, 10, 9, 2 %%>;
+  subButtonsVisualTop = <%% 2, 3, 3, 1, 0 %%>;
+
+  buttonBetween = <%% 5, 5, 5, 4, 1 %%>;
+
+  subButtonsBetween = <%% 18, 18, 16, 14, 3 %%>;
+
+  panMotherMarginTop = 60;
+
+  this.whiteMargin = (desktop ? margin : 0);
+
+  panMother = createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      borderRadius: String(5) + "px",
+      background: desktop ? colorChip.gray3 : colorChip.gray1,
+      width: withOut(panMotherInnerPadding * 2, ea),
+      padding: String(panMotherInnerPadding) + ea,
+      marginTop: String(panMotherMarginTop) + ea,
+    }
+  });
+
+  for (let i = 0; i < this.panContents.length; i++) {
+    basePan = createNode({
+      mother: panMother,
+      attribute: {
+        index: String(i),
+        proid: project.proid,
+        desid: designer.desid,
+        name: project.name,
+        designer: designer.designer,
+      },
+      event: {
+        drop: instance.dropFiles(i, (this.panContents[i].type === "photo")),
+        dragenter: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          this.style.background = colorChip.whiteGreen;
+        },
+        dragover: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        },
+        dragleave: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          this.style.background = colorChip.gray1;
+        },
+      },
+      style: {
+        display: "inline-block",
+        verticalAlign: "top",
+        position: "relative",
+        width: withOut(0),
+        marginBottom: String((i === (this.panContents.length - 1)) ? 0 : panBetween) + ea,
+        background: desktop ? colorChip.gray1 : colorChip.gray3,
+        borderRadius: String(5) + "px",
+        transition: "all 0.5s ease",
+      }
+    });
+
+    createNode({
+      mother: basePan,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        width: String(panTitleBoxWidth) + ea,
+        height: String(panTitleBoxHeight) + ea,
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      },
+      children: [
+        {
+          text: this.panContents[i].title,
+          style: {
+            position: "relative",
+            top: String(contentsTextTop) + ea,
+            fontSize: String(contentsWordingSize) + ea,
+            fontWeight: String(800),
+            color: colorChip.black,
+          }
+        }
+      ]
+    });
+
+    subButtonsBasePan = createNode({
+      mother: basePan,
+      style: {
+        display: "inline-flex",
+        position: "absolute",
+        alignItems: "center",
+        flexDirection: "row",
+        height: String(panTitleBoxHeight) + ea,
+        paddingRight: String(subButtonPaddingRight) + ea,
+        right: String(0),
+        top: String(subButtonVisualTop) + ea,
+      },
+    });
+
+    contentsPan = createNode({
+      mother: basePan,
+      attribute: {
+        index: String(i),
+        proid: project.proid,
+        desid: designer.desid,
+        name: project.name,
+        designer: designer.designer,
+        key: this.panContents[i].key,
+      },
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut((contentsPanPaddingTop * 2) - itemBetween, ea),
+        paddingTop: String(contentsPanPaddingTop) + ea,
+        paddingBottom: String(contentsPanPaddingBottom) + ea,
+        paddingLeft: String(contentsPanPaddingTop) + ea,
+        paddingRight: String(contentsPanPaddingTop - itemBetween) + ea,
+      }
+    });
+
+    createNode({
+      mother: basePan,
+      class: [ uploadIconClassName ],
+      attribute: {
+        index: String(i),
+        key: this.panContents[i].key,
+        proid: project.proid,
+        desid: designer.desid,
+        name: project.name,
+        designer: designer.designer,
+      },
+      event: {
+        click: (this.panContents[i].type === "link" ? instance.uploadLink(i) : instance.uploadFiles(i, (this.panContents[i].type === "photo"))),
+      },
+      style: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: String(uploadCircleWidth) + ea,
+        height: String(uploadCircleWidth) + ea,
+        position: "absolute",
+        bottom: String(uploadCirclePadding) + ea,
+        right: String(uploadCirclePadding) + ea,
+        borderRadius: String(uploadCircleWidth) + ea,
+        background: colorChip.gradientGray,
+        cursor: "pointer",
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnExtract(colorChip.white),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(uploadIconTop) + ea,
+            width: String(uploadIconWidth) + ea,
+          }
+        }
+      ]
+    });
+
+    createNode({
+      mother: basePan,
+      class: [ memoIconClassName ],
+      attribute: {
+        index: String(i),
+        key: this.panContents[i].key,
+        proid: project.proid,
+        desid: designer.desid,
+        name: project.name,
+        designer: designer.designer,
+      },
+      event: {
+        click: instance.plusMemo(i),
+      },
+      style: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: String(uploadCircleWidth) + ea,
+        height: String(uploadCircleWidth) + ea,
+        position: "absolute",
+        bottom: String(uploadCirclePadding) + ea,
+        right: String((uploadCirclePadding + uploadCircleWidth) + buttonBetween) + ea,
+        borderRadius: String(uploadCircleWidth) + ea,
+        background: colorChip.gradientGray,
+        cursor: "pointer",
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnPlus(colorChip.white),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(plusIconTop) + ea,
+            width: String(plusIconWidth) + ea,
+          }
+        }
+      ]
+    });
+
+    this.panList.push(contentsPan);
+  }
+
+  this.setPanBlocks(project).catch((err) => { console.log(err) });
+
+  return whiteBlock;
+}
+
+ProcessJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
+  const instance = this;
+  const mother = this.mother;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const fileInputClassName = "fileInputClassName";
+  let serviceContents;
+  let thisKey;
+  let thisTitle;
+
+  serviceContents = this.panContents;
+  thisKey = serviceContents[thisStatusNumber].key;
+  thisTitle = serviceContents[thisStatusNumber].title;
+
+  if (photoBoo) {
+    return async function (e) {
+      try {
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        const name = this.getAttribute("name");
+        const designer = this.getAttribute("designer");
+        let input, removeTargets;
+
+        if (!instance.nowUploading) {
+
+          removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+          for (let dom of removeTargets) {
+            dom.remove();
+          }
+  
+          input = createNode({
+            mother: document.body,
+            class: [ fileInputClassName ],
+            mode: "input",
+            event: {
+              change: async function (e) {
+                try {
+                  const proid = this.getAttribute("proid");
+                  const desid = this.getAttribute("desid");
+                  const client = this.getAttribute("client");
+                  const designer = this.getAttribute("designer");
+                  const thisKey = this.getAttribute("name");
+                  const thisTitle = this.getAttribute("title");
+                  let thisFiles, formData, res;
+                  let removeTargets;
+                  let loading;
+                  let hash;
+  
+                  thisFiles = [ ...this.files ];
+  
+                  if (thisFiles.length >= 1) {
+                    formData = new FormData();
+                    formData.enctype = "multipart/form-data";
+                    formData.append("proid", proid);
+                    formData.append("desid", desid);
+                    formData.append("client", client);
+                    formData.append("type", "photo");
+                    for (let i = 0; i < thisFiles.length; i++) {
+                      formData.append("file_" + thisKey + "_" + String(i), thisFiles[i]);
+                    }
+  
+                    if (!instance.nowUploading) {
+                      loading = instance.asyncLoadingBlock();
+  
+                      ({ hash } = await ajaxJson({ mode: "crypto", string: String((new Date()).valueOf()) }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                      formData.append("name", hash);
+    
+                      res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
+                      await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
+                      await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
+
+                      window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + project.proid;
+  
+                    } else {
+                      instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+                    }
+  
+                  }
+  
+                } catch (e) {
+                  console.log(e);
+                  window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                  window.location.reload();
+                }
+              }
+            },
+            attribute: {
+              type: "file",
+              name: thisKey,
+              title: thisTitle,
+              multiple: "true",
+              proid,
+              desid,
+              client: name,
+              designer,
+              accept: "image/*, application/pdf",
+            },
+            style: {
+              display: "none",
+            }
+          });
+  
+          input.click();
+
+        } else {
+
+          instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+
+        }
+
+      } catch (e) {
+        console.log(e);
+        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+        window.location.reload();
+      }
+    }
+  } else {
+    return async function (e) {
+      try {
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        const name = this.getAttribute("name");
+        const designer = this.getAttribute("designer");
+        let input, removeTargets;
+
+        if (!instance.nowUploading) {
+
+          removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+          for (let dom of removeTargets) {
+            dom.remove();
+          }
+  
+          input = createNode({
+            mother: document.body,
+            class: [ fileInputClassName ],
+            mode: "input",
+            event: {
+              change: async function (e) {
+                try {
+                  const proid = this.getAttribute("proid");
+                  const desid = this.getAttribute("desid");
+                  const client = this.getAttribute("client");
+                  const designer = this.getAttribute("designer");
+                  const thisKey = this.getAttribute("name");
+                  const thisTitle = this.getAttribute("title");
+                  let thisFiles, formData, res;
+                  let removeTargets;
+                  let loading;
+                  let hash;
+                  let rawResponse;
+  
+                  thisFiles = [ ...this.files ];
+  
+                  if (thisFiles.length >= 1) {
+                    formData = new FormData();
+                    formData.enctype = "multipart/form-data";
+                    formData.append("proid", proid);
+                    formData.append("desid", desid);
+                    formData.append("client", client);
+                    formData.append("type", "file");
+                    formData.append("file_" + thisKey + "_" + String(0), thisFiles[0]);
+  
+                    if (!instance.nowUploading) {
+  
+                      rawResponse = null;
+                      rawResponse = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1");
+                      if (typeof rawResponse !== "string" || rawResponse.trim() === '') {
+                        rawResponse = "메모 없음";
+                      }
+                      rawResponse = rawResponse.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
+  
+                      loading = instance.asyncLoadingBlock();
+  
+                      ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                      formData.append("name", hash);
+    
+                      res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
+                      await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
+                      await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
+    
+                      window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + project.proid;
+  
+                    } else {
+                      instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+                    }
+  
+                  }
+  
+                } catch (e) {
+                  console.log(e);
+                  window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                  window.location.reload();
+                }
+              }
+            },
+            attribute: {
+              type: "file",
+              name: thisKey,
+              title: thisTitle,
+              proid,
+              desid,
+              client: name,
+              designer,
+            },
+            style: {
+              display: "none",
+            }
+          });
+  
+          input.click();
+
+        } else {
+
+          instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+
+        }
+
+      } catch (e) {
+        console.log(e);
+        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+        window.location.reload();
+      }
+    }
+
+  }
+
+}
+
+ProcessJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
+  const instance = this;
+  const mother = this.mother;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, removeByClass } = GeneralJs;
+  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const fileInputClassName = "fileInputClassName";
+  let serviceContents;
+  let thisKey;
+  let thisTitle;
+
+  serviceContents = this.panContents;
+  thisKey = serviceContents[thisStatusNumber].key;
+  thisTitle = serviceContents[thisStatusNumber].title;
+
+  if (photoBoo) {
+    return async function (e) {
+      try {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        const name = this.getAttribute("name");
+        const designer = this.getAttribute("designer");
+        let input, changeEvent;
+
+        if (!instance.nowUploading) {
+
+          removeByClass(fileInputClassName);
+
+          changeEvent = async function (e) {
+            try {
+              const proid = this.getAttribute("proid");
+              const desid = this.getAttribute("desid");
+              const client = this.getAttribute("client");
+              const designer = this.getAttribute("designer");
+              const thisKey = this.getAttribute("name");
+              const thisTitle = this.getAttribute("title");
+              let thisFiles, formData, res;
+              let removeTargets;
+              let loading;
+              let hash;
+  
+              thisFiles = [ ...this.files ].filter((file) => {
+                return /^image/gi.test(file.type) || file.type.trim() === "application/pdf";
+              });
+  
+              if (thisFiles.length >= 1) {
+                formData = new FormData();
+                formData.enctype = "multipart/form-data";
+                formData.append("proid", proid);
+                formData.append("desid", desid);
+                formData.append("client", client);
+                formData.append("type", "photo");
+                for (let i = 0; i < thisFiles.length; i++) {
+                  formData.append("file_" + thisKey + "_" + String(i), thisFiles[i]);
+                }
+  
+                if (!instance.nowUploading) {
+  
+                  loading = instance.asyncLoadingBlock();
+  
+                  ({ hash } = await ajaxJson({ mode: "crypto", string: String((new Date()).valueOf()) }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                  formData.append("name", hash);
+    
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
+                  await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
+                  await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
+    
+                  window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + project.proid;
+  
+                } else {
+                  instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+                }
+  
+              }
+  
+            } catch (e) {
+              console.log(e);
+              window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+  
+          input = createNode({
+            mother: document.body,
+            class: [ fileInputClassName ],
+            mode: "input",
+            event: {
+              change: changeEvent
+            },
+            attribute: {
+              type: "file",
+              name: thisKey,
+              title: thisTitle,
+              multiple: "true",
+              proid,
+              desid,
+              client: name,
+              designer,
+              accept: "image/*, application/pdf",
+            },
+            style: {
+              display: "none",
+            }
+          });
+          input.files = e.dataTransfer.files;
+          changeEvent.call(input, e);
+
+        } else {
+
+          instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+
+        }
+
+        this.style.background = colorChip.gray1;
+
+      } catch (e) {
+        console.log(e);
+        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+        window.location.reload();
+      }
+    }
+  } else {
+    return async function (e) {
+      try {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        const name = this.getAttribute("name");
+        const designer = this.getAttribute("designer");
+        let input, changeEvent;
+
+        if (!instance.nowUploading) {
+
+          removeByClass(fileInputClassName);
+
+          changeEvent = async function (e) {
+            try {
+              const proid = this.getAttribute("proid");
+              const desid = this.getAttribute("desid");
+              const client = this.getAttribute("client");
+              const designer = this.getAttribute("designer");
+              const thisKey = this.getAttribute("name");
+              const thisTitle = this.getAttribute("title");
+              let thisFiles, formData, res;
+              let removeTargets;
+              let loading;
+              let hash;
+              let rawResponse;
+  
+              thisFiles = [ ...this.files ];
+  
+              if (thisFiles.length >= 1) {
+                formData = new FormData();
+                formData.enctype = "multipart/form-data";
+                formData.append("proid", proid);
+                formData.append("desid", desid);
+                formData.append("client", client);
+                formData.append("type", "file");
+                formData.append("file_" + thisKey + "_" + String(0), thisFiles[0]);
+  
+                if (!instance.nowUploading) {
+  
+                  rawResponse = null;
+                  rawResponse = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1");
+                  if (typeof rawResponse !== "string" || rawResponse.trim() === '') {
+                    rawResponse = "메모 없음";
+                  }
+                  rawResponse = rawResponse.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
+    
+                  loading = instance.asyncLoadingBlock();
+    
+                  ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                  formData.append("name", hash);
+    
+                  res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
+                  await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
+                  await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
+    
+                  window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + project.proid;
+  
+                } else {
+                  instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+                }
+  
+              }
+  
+            } catch (e) {
+              console.log(e);
+              window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+              window.location.reload();
+            }
+          }
+  
+          input = createNode({
+            mother: document.body,
+            class: [ fileInputClassName ],
+            mode: "input",
+            event: {
+              change: changeEvent
+            },
+            attribute: {
+              type: "file",
+              name: thisKey,
+              title: thisTitle,
+              multiple: "true",
+              proid,
+              desid,
+              client: name,
+              designer,
+            },
+            style: {
+              display: "none",
+            }
+          });
+          input.files = e.dataTransfer.files;
+          changeEvent.call(input, e);
+
+        } else {
+
+          instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+
+        }
+
+        this.style.background = colorChip.gray1;
+
+      } catch (e) {
+        console.log(e);
+        window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+        window.location.reload();
+      }
+    }
+  }
+
+}
+
+ProcessJs.prototype.uploadLink = function (thisStatusNumber) {
+  const instance = this;
+  const mother = this.mother;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  let serviceContents;
+  let thisKey;
+  let thisTitle;
+
+  serviceContents = this.panContents;
+  thisKey = serviceContents[thisStatusNumber].key;
+  thisTitle = serviceContents[thisStatusNumber].title;
+
+  return async function (e) {
+    try {
+      const cancelKeyword = "httpCancel";
+      const proid = this.getAttribute("proid");
+      const desid = this.getAttribute("desid");
+      const key = this.getAttribute("key");
+      let link, memo, loading;
+
+      loading = null;
+
+      do {
+        link = await GeneralJs.prompt("제품 링크를 복사 붙여넣기 해주세요!");
+        if (link === null) {
+          link = cancelKeyword;
+        }
+      } while (typeof link !== "string" || !/^http/.test(link));
+
+      if (link !== cancelKeyword) {
+        memo = await GeneralJs.prompt("링크에 대한 간단한 이름과 타입 등을 적어주세요! (예) 침실협탁_아이보리");
+        if (typeof memo !== "string" || memo.trim() === '') {
+          memo = "메모 없음";
+        }
+
+        loading = instance.mother.grayLoading();
+        await ajaxJson({ proid, desid, key, link: window.encodeURIComponent(link.trim()), memo: memo.trim() }, BRIDGEHOST + "/middleLinkSave");
+      }
+
+      await instance.setPanBlocks();
+      if (loading !== null) {
+        loading.remove();
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+}
+
+ProcessJs.prototype.plusMemo = function (thisStatusNumber, customKey = null, customTitle = null) {
+  const instance = this;
+  const mother = this.mother;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const memoFixedTargetsClassName = "memoFixedTargetsClassName";
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  let serviceContents;
+  let thisKey;
+  let thisTitle;
+  let whitePromptWidth, whitePromptHeight;
+  let whitePromptInnerPaddingTop;
+  let whitePromptInnerPaddingLeft;
+  let whitePromptInnerPaddingBottom;
+  let titleArea, contentsArea;
+  let cancelBack;
+  let whitePrompt;
+  let titleAreaHeight;
+  let memoContents;
+  let titleContentsBetween;
+  let titleSize, titleWeight;
+  let contentsSize, contentsWeight, contentsLineHeight;
+  let memoJson;
+
+  serviceContents = this.panContents;
+  if (thisStatusNumber === -1 && typeof customKey === "string" && typeof customTitle === "string") {
+    thisKey = customKey;
+    thisTitle = customTitle;
+  } else {
+    thisKey = serviceContents[thisStatusNumber].key;
+    thisTitle = serviceContents[thisStatusNumber].title;
+  }
+
+  whitePromptWidth = <%% 900, 800, 700, 600, 88 %%>;
+  whitePromptHeight = <%% 492, 492, 492, 420, 120 %%>;
+
+  whitePromptInnerPaddingLeft = <%% 44, 44, 40, 36, 6 %%>;
+  whitePromptInnerPaddingTop = <%% 38, 38, 36, 32, 6 %%>;
+  whitePromptInnerPaddingBottom = <%% 44, 44, 40, 36, 6 %%>;
+
+  titleAreaHeight = <%% 40, 40, 38, 36, 7.5 %%>;
+
+  titleContentsBetween = <%% 24, 24, 24, 16, 3.6 %%>;
+
+  titleSize = <%% 21, 21, 20, 18, 4 %%>;
+  titleWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  contentsSize = <%% 14, 14, 14, 13, 2.8 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+
+  return async function (e) {
+    try {
+      const proid = this.getAttribute("proid");
+      const desid = this.getAttribute("desid");
+      const name = this.getAttribute("name");
+      const designer = this.getAttribute("designer");
+      const zIndex = 4;
+
+      memoJson = await ajaxJson({
+        mode: "get",
+        proid: project.proid,
+        desid: instance.designer.desid,
+        key: thisKey,
+        memo: "",
+      }, SECONDHOST + "/projectDesignerMemo", { equal: true });
+
+      memoContents = memoJson.contents.memo;
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ memoFixedTargetsClassName ],
+        event: {
+          click: function (e) {
+            const removeTargets = document.querySelectorAll('.' + memoFixedTargetsClassName);
+            for (let dom of removeTargets) {
+              dom.remove();
+            }
+          }
+        },
+        style: {
+          display: "block",
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          width: withOut(0),
+          height: withOut(0),
+          background: colorChip.realBlack,
+          opacity: String(0.7),
+          zIndex: String(zIndex),
+        }
+      });
+
+      whitePrompt = createNode({
+        mother: totalContents,
+        class: [ memoFixedTargetsClassName ],
+        style: {
+          display: "block",
+          position: "fixed",
+          paddingLeft: String(whitePromptInnerPaddingLeft) + ea,
+          paddingRight: String(whitePromptInnerPaddingLeft) + ea,
+          paddingTop: String(whitePromptInnerPaddingTop) + ea,
+          paddingBottom: String(whitePromptInnerPaddingBottom) + ea,
+          width: String(whitePromptWidth - (whitePromptInnerPaddingLeft * 2)) + ea,
+          height: String(whitePromptHeight - (whitePromptInnerPaddingTop + whitePromptInnerPaddingBottom)) + ea,
+          top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + "px" + ") / 2) - " + String(whitePromptHeight / 2) + ea + ") + " + String(instance.naviHeight) + "px" + ")",
+          left: withOut(50, whitePromptWidth / 2, ea),
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+          animation: "fadeuplite 0.3s ease forwards",
+          zIndex: String(zIndex),
+        }
+      });
+
+      titleArea = createNode({
+        mother: whitePrompt,
+        style: {
+          display: "block",
+          position: "relative",
+          borderBottom: "1px solid " + colorChip.black,
+          height: String(titleAreaHeight) + ea,
+        },
+        children: [
+          {
+            text: thisTitle + " 관련 MEMO",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(titleWeight),
+              color: colorChip.black,
+            }
+          }
+        ]
+      });
+
+      contentsArea = createNode({
+        mother: whitePrompt,
+        style: {
+          display: "block",
+          position: "relative",
+          paddingTop: String(titleContentsBetween) + ea,
+          width: withOut(0),
+          height: withOut(titleAreaHeight + titleContentsBetween, ea),
+          borderBottom: "1px solid " + colorChip.gray3,
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              overflow: "scroll",
+              top: String(0),
+              left: String(0),
+              width: withOut(0),
+              height: withOut(0),
+            },
+            children: [
+              {
+                mode: "textarea",
+                text: memoContents,
+                event: {
+                  focus: function (e) {
+                    this.style.color = colorChip.green;
+                  },
+                  blur: async function (e) {
+                    try {
+                      this.style.color = colorChip.black;
+                      await ajaxJson({
+                        mode: "update",
+                        proid: project.proid,
+                        desid: instance.designer.desid,
+                        key: thisKey,
+                        memo: this.value.trim(),
+                      }, SECONDHOST + "/projectDesignerMemo");
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                },
+                style: {
+                  position: "relative",
+                  fontSize: String(contentsSize) + ea,
+                  fontWeight: String(contentsWeight),
+                  color: colorChip.black,
+                  lineHeight: String(contentsLineHeight),
+                  width: withOut(0),
+                  height: withOut(0),
+                  outline: String(0),
+                  border: String(0),
+                  background: "transparent",
+                }
+              }
+            ]
+          }
+        ]
+      });
+
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+ProcessJs.prototype.setPanBlocks = async function (project) {
+  const instance = this;
+  const { ea, media, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const client = project.client;
+  const requestNumber = project.requestNumber;
+  const designer = project.designer;
+  const hashConst = "homeliaisonHash";
+  const targetKeywords = "/photo/designer";
+  const targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + targetKeywords + "/" + designer.desid + "/" + project.proid;
+  const targetDrive = "/" + designer.desid + "/" + project.proid;
+  const { ajaxJson, createNode, colorChip, withOut, cleanChildren, dateToString, isMac, swipePatch, blankHref, removeByClass, downloadFile, equalJson } = GeneralJs;
+  const motherChildPhotoTongClassName = "motherChildPhotoTongClassName";
+  const photoItemInitClassName = "photoItemInitClassName";
+  const bigPhotoClassName = "bigPhotoClassName";
+  const bigPhotoFixedTargetsClassName = "bigPhotoFixedTargetsClassName";
+  const preItemMotherKey = "firstPhoto";
+  const preItemHex = "070a916ebdea87fae21233050e1b322eb4694980e1bced5012199be287e2e92d";
+  const whiteContextmenuClassName = "whiteContextmenuClassName";
+  const linkTargetKey = [ "productLink" ];
+  const emptyDate = client.requests[requestNumber].request.timeline;
+  try {
+    let itemList;
+    let mothers;
+    let itemBetween;
+    let itemTongHeight;
+    let itemTongMarginLeft;
+    let itemBlock;
+    let motherMatrix;
+    let motherMaxNumber;
+    let transparentItemsMatrix;
+    let index;
+    let textTop, textSize, textWeight;
+    let divideNumber;
+    let bigPhotoPadding;
+    let arrowButtonWidth;
+    let arrowButtonMargin;
+    let bigPhotoClickEvent;
+    let fileItemSelectEvent;
+    let photoItemSelectEvent;
+    let linkItemSelectEvent;
+    let itemDivide;
+    let preItemList;
+    let preIndex;
+    let linkTargets;
+    let linkContents;
+    let link, memo;
+    let linkPhotoHeight;
+    let linkPhotoMarginBottom;
+    let parsedHash;
+    let contextmenuEvent;
+    let contextSize;
+    let contextmenuPadding;
+    let contextWidth;
+    let contextHeight;
+    let preItemHexId;
+    let fileItemList, photoItemList, linkItemList;
+
+    itemBetween = <%% 6, 6, 5, 4, 1 %%>;
+    itemTongHeight = <%% 40, 40, 36, 32, 8 %%>;
+    itemTongMarginLeft = <%% 12, 12, 12, 10, 1 %%>;
+    itemDivide = <%% 5, 4, 3, 3, 2 %%>;
+
+    textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+    textSize = <%% 14, 14, 13, 12, 2.7 %%>;
+    textWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+    contextmenuPadding = <%% 8, 8, 7, 6, 1 %%>;
+    contextSize = <%% 13, 13, 12, 11, 2.5 %%>;
+    contextWidth = <%% 130, 130, 120, 100, 20 %%>;
+    contextHeight = <%% 32, 32, 30, 28, 6 %%>;
+
+    divideNumber = <%% 5, 4, 3, 3, 2 %%>;
+
+    bigPhotoPadding = <%% 48, 48, 48, 40, 24 %%>;
+
+    arrowButtonWidth = <%% 16, 16, 16, 16, 2.5 %%>;
+    arrowButtonMargin = <%% 20, 20, 20, 20, 2.5 %%>;
+
+    linkPhotoHeight = <%% 238, 211, 244, 195, 40 %%>;
+    linkPhotoMarginBottom = <%% 0, 0, 0, 0, 0 %%>;
+
+    bigPhotoClickEvent = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const self = this;
+      const totalContents = document.querySelector("#totalcontents");
+      const motherNumber = Number(this.getAttribute("number"));
+      const zIndex = 4;
+      let order, key, next, previous;
+      let cancelBack, photoPrompt;
+      let renderPhoto;
+
+      next = {};
+      previous = {};
+
+      renderPhoto = (targetDom) => {
+        const width = targetDom.getBoundingClientRect().width;
+        const height = targetDom.getBoundingClientRect().height;
+        const original = targetDom.getAttribute("original");
+        const ratio = width / height;
+        let thisWidth, thisHeight;
+        let bigPhoto;
+
+        order = Number(targetDom.getAttribute("order"));
+        key = targetDom.getAttribute("key");
+        next = document.querySelector('.' + photoItemInitClassName + "_" + key + "_" + String(order + 1));
+        if (next === null) {
+          next = document.querySelector('.' + photoItemInitClassName + "_" + key + "_" + String(0));
+        }
+        previous = document.querySelector('.' + photoItemInitClassName + "_" + key + "_" + String(order - 1));
+        if (previous === null) {
+          previous = document.querySelector('.' + photoItemInitClassName + "_" + key + "_" + String(motherMatrix[motherNumber] - 1));
+        }
+
+        if (document.querySelector('.' + bigPhotoClassName) !== null) {
+          document.querySelector('.' + bigPhotoClassName).remove();
+        }
+
+        if (((window.innerHeight - instance.naviHeight) - (bigPhotoPadding * 2)) * ratio > window.innerWidth - (bigPhotoPadding * 2)) {
+          thisWidth = window.innerWidth - (bigPhotoPadding * 2);
+          thisHeight = thisWidth / ratio;
+        } else {
+          thisHeight = (window.innerHeight - instance.naviHeight) - (bigPhotoPadding * 2);
+          thisWidth = thisHeight * ratio;
+        }
+
+        bigPhoto = createNode({
+          mother: totalContents,
+          mode: "img",
+          class: [ bigPhotoClassName, bigPhotoFixedTargetsClassName ],
+          event: {
+            selectstart: (e) => { e.preventDefault(); },
+          },
+          attribute: {
+            src: original
+          },
+          style: {
+            display: "block",
+            position: "fixed",
+            top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + "px" + ") / 2) - " + String(thisHeight / 2) + "px" + ") + " + String(instance.naviHeight) + "px" + ")",
+            left: withOut(50, (thisWidth / 2), "px"),
+            width: String(thisWidth) + "px",
+            height: String(thisHeight) + "px",
+            zIndex: String(zIndex),
+            borderRadius: String(5) + "px",
+          }
+        });
+
+        if (mobile) {
+          swipePatch("left", function () {
+            renderPhoto(next);
+          }, bigPhoto);
+          swipePatch("right", function () {
+            renderPhoto(previous);
+          }, bigPhoto);
+        }
+
+      }
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ bigPhotoFixedTargetsClassName ],
+        event: {
+          click: function (e) {
+            const removeTargets = document.querySelectorAll('.' + bigPhotoFixedTargetsClassName);
+            for (let dom of removeTargets) {
+              dom.remove();
+            }
+          }
+        },
+        style: {
+          display: "block",
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          width: withOut(0),
+          height: withOut(0),
+          background: colorChip.realBlack,
+          opacity: String(0.7),
+          zIndex: String(zIndex),
+        }
+      });
+
+      if (desktop) {
+        createNode({
+          mother: totalContents,
+          class: [ bigPhotoFixedTargetsClassName ],
+          mode: "svg",
+          source: instance.mother.returnArrow("left", colorChip.white),
+          event: {
+            selectstart: (e) => { e.preventDefault(); },
+            click: function (e) {
+              renderPhoto(previous);
+            }
+          },
+          style: {
+            display: "block",
+            position: "fixed",
+            top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + "px" + ") / 2) - " + String(arrowButtonWidth / 2) + ea + ") + " + String(instance.naviHeight) + "px" + ")",
+            left: String(arrowButtonMargin) + ea,
+            width: String(arrowButtonWidth) + ea,
+            zIndex: String(zIndex),
+            cursor: "pointer",
+          }
+        });
+
+        createNode({
+          mother: totalContents,
+          class: [ bigPhotoFixedTargetsClassName ],
+          mode: "svg",
+          source: instance.mother.returnArrow("right", colorChip.white),
+          event: {
+            selectstart: (e) => { e.preventDefault(); },
+            click: function (e) {
+              renderPhoto(next);
+            }
+          },
+          style: {
+            display: "block",
+            position: "fixed",
+            top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + "px" + ") / 2) - " + String(arrowButtonWidth / 2) + ea + ") + " + String(instance.naviHeight) + "px" + ")",
+            right: String(arrowButtonMargin) + ea,
+            width: String(arrowButtonWidth) + ea,
+            zIndex: String(zIndex),
+            cursor: "pointer",
+          }
+        });
+      }
+
+      renderPhoto(self);
+
+    }
+
+    fileItemSelectEvent = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const original = this.getAttribute("original");
+      const key = this.getAttribute("key");
+      const toggle = this.getAttribute("toggle");
+      const hex = this.getAttribute("hex");
+      const exe = this.getAttribute("exe");
+      const type = this.getAttribute("type");
+
+      if (toggle === "off") {
+
+        this.style.background = colorChip.green;
+        this.firstChild.style.color = colorChip.white;
+        if (this.firstChild.querySelector('b') !== null) {
+          this.firstChild.querySelector('b').style.color = colorChip.white;
+        }
+
+        this.setAttribute("toggle", "on");
+        instance.itemList.push({ original, key, hex, exe, type });
+      } else {
+
+        this.style.background = desktop ? colorChip.white : colorChip.gray0;
+        this.firstChild.style.color = colorChip.black;
+        if (this.firstChild.querySelector('b') !== null) {
+          this.firstChild.querySelector('b').style.color = colorChip.deactive;
+        }
+
+        instance.itemList.splice(instance.itemList.findIndex((obj) => {
+          return obj.original === original;
+        }), 1);
+        this.setAttribute("toggle", "off");
+      }
+
+    }
+
+    linkItemSelectEvent = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const original = this.getAttribute("original");
+      const key = this.getAttribute("key");
+      const toggle = this.getAttribute("toggle");
+      const hex = this.getAttribute("hex");
+      const exe = this.getAttribute("exe");
+      const type = this.getAttribute("type");
+
+      if (toggle === "off") {
+
+        this.lastChild.style.background = colorChip.green;
+        this.lastChild.firstChild.style.color = colorChip.white;
+        if (this.lastChild.firstChild.querySelector('b') !== null) {
+          this.lastChild.firstChild.querySelector('b').style.color = colorChip.white;
+        }
+
+        this.setAttribute("toggle", "on");
+        instance.itemList.push({ original, key, hex, exe, type });
+      } else {
+
+        this.lastChild.style.background = desktop ? colorChip.white : colorChip.gray0;
+        this.lastChild.firstChild.style.color = colorChip.black;
+        if (this.lastChild.firstChild.querySelector('b') !== null) {
+          this.lastChild.firstChild.querySelector('b').style.color = colorChip.deactive;
+        }
+
+        instance.itemList.splice(instance.itemList.findIndex((obj) => {
+          return obj.original === original;
+        }), 1);
+        this.setAttribute("toggle", "off");
+      }
+
+    }
+
+    photoItemSelectEvent = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const original = this.getAttribute("original");
+      const key = this.getAttribute("key");
+      const toggle = this.getAttribute("toggle");
+      const hex = this.getAttribute("hex");
+      const exe = this.getAttribute("exe");
+      const type = this.getAttribute("type");
+
+      if (toggle === "off") {
+
+        this.lastChild.style.opacity = String(0.6);
+
+        this.setAttribute("toggle", "on");
+        instance.itemList.push({ original, key, hex, exe, type });
+      } else {
+
+        this.lastChild.style.opacity = String(0);
+
+        instance.itemList.splice(instance.itemList.findIndex((obj) => {
+          return obj.original === original;
+        }), 1);
+        this.setAttribute("toggle", "off");
+      }
+
+    }
+
+    contextmenuEvent = (type) => {
+      return function (e) {
+        e.preventDefault();
+
+        let forceSelect;
+
+        forceSelect = 0;
+        if (this.getAttribute("toggle") === "off") {
+          if (type === "file") {
+            fileItemSelectEvent.call(this, e);
+          } else if (type === "photo") {
+            photoItemSelectEvent.call(this, e);
+          } else {
+            linkItemSelectEvent.call(this, e);
+          }
+          forceSelect = 1;
+        }
+
+        const self = this;
+        const { top, left, height, width } = this.getBoundingClientRect();
+        let cancelBack, whitePrompt;
+        let cancelEvent;
+        let link, original, key;
+
+        cancelEvent = function (e) {
+          removeByClass(whiteContextmenuClassName);
+          if (forceSelect === 1) {
+            if (type === "file") {
+              fileItemSelectEvent.call(self, e);
+            } else if (type === "photo") {
+              photoItemSelectEvent.call(self, e);
+            } else {
+              linkItemSelectEvent.call(self, e);
+            }
+          }
+        }
+
+        cancelBack = createNode({
+          mother: totalContents,
+          class: [ whiteContextmenuClassName ],
+          event: {
+            click: cancelEvent
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            background: "transparent",
+          }
+        });
+
+        whitePrompt = createNode({
+          mother: totalContents,
+          class: [ whiteContextmenuClassName ],
+          style: {
+            display: "block",
+            position: "fixed",
+            top: String(e.y) + "px",
+            left: String(e.x) + "px",
+            padding: String(contextmenuPadding) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+            animation: "fadeuplite 0.3s ease forwards",
+          }
+        });
+
+        if (type !== "link") {
+          createNode({
+            mother: whitePrompt,
+            event: {
+              click: async function (e) {
+                let parsedString, loading;
+                try {
+                  if (instance.itemList.length === 0) {
+                    window.alert("파일을 먼저 선택해주세요!");
+                  } else {
+                    for (let { original, type, hex, exe } of instance.itemList) {
+                      loading = instance.mother.whiteProgressLoading();
+                      if (type === "photo") {
+                        await downloadFile(original, null, loading.progress.firstChild);
+                      } else {
+                        parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true });
+                        await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe, loading.progress.firstChild);
+                      }
+                      loading.remove();
+                    }
+                    cancelEvent.call(self, e);
+                    await instance.setPanBlocks();
+                  }
+                } catch (e) {
+                  console.log(e);
+                  window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                }
+              }
+            },
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: String(contextWidth) + ea,
+              height: String(contextHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray1,
+              marginBottom: String(itemBetween) + ea,
+              cursor: "pointer",
+            },
+            child: {
+              text: "파일 다운로드",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contextSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.black,
+                top: String(textTop) + ea,
+              }
+            }
+          });
+          createNode({
+            mother: whitePrompt,
+            event: {
+              click: async function (e) {
+                let parsedString, fileMap;
+                try {
+                  if (instance.itemList.length === 0) {
+                    window.alert("파일을 먼저 선택해주세요!");
+                  } else {
+                    if (window.confirm("선택한 파일을 삭제하시겠습니까?")) {
+                      fileMap = instance.itemList.map(({ original }) => {
+                        if ((new RegExp(targetKeywords, "g")).test(original)) {
+                          const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                          return { desid, proid, fileName, mode: "designer" };
+                        } else {
+                          const [ protocol, host, const1, const2, folder, kind, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                          return { folder, kind, fileName, mode: "client" };
+                        }
+                      });
+                      await ajaxJson({ targets: fileMap }, BRIDGEHOST + "/middlePhotoRemove");
+                    }
+                    cancelEvent.call(self, e);
+                    await instance.setPanBlocks();
+                  }
+                } catch (e) {
+                  console.log(e);
+                  window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                }
+              }
+            },
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: String(contextWidth) + ea,
+              height: String(contextHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray1,
+              marginBottom: String(itemBetween) + ea,
+              cursor: "pointer",
+            },
+            child: {
+              text: "파일 삭제",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contextSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.black,
+                top: String(textTop) + ea,
+              }
+            }
+          });
+        } else {
+          link = this.getAttribute("link");
+          original = this.getAttribute("original");
+          key = this.getAttribute("key");
+          createNode({
+            mother: whitePrompt,
+            attribute: {
+              link,
+            },
+            event: {
+              click: function (e) {
+                const link = this.getAttribute("link");
+                blankHref(link);
+                cancelEvent.call(self, e);
+              },
+            },
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: String(contextWidth) + ea,
+              height: String(contextHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray1,
+              marginBottom: String(itemBetween) + ea,
+              cursor: "pointer",
+            },
+            child: {
+              text: "링크 열기",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contextSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.black,
+                top: String(textTop) + ea,
+              }
+            }
+          });
+          createNode({
+            mother: whitePrompt,
+            attribute: { original },
+            event: {
+              click: async function (e) {
+                const original = this.getAttribute("original");
+                let parsedString, fileMap;
+                try {
+                  if (instance.itemList.length === 0) {
+                    window.alert("파일을 먼저 선택해주세요!");
+                  } else {
+                    if (window.confirm("선택한 파일을 삭제하시겠습니까?")) {
+                      fileMap = instance.itemList.map(({ original }) => {
+                        if ((new RegExp(targetKeywords, "g")).test(original)) {
+                          const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                          return { desid, proid, fileName, mode: "designer" };
+                        } else {
+                          const [ protocol, host, const1, const2, folder, kind, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                          return { folder, kind, fileName, mode: "client" };
+                        }
+                      });
+                      await ajaxJson({ targets: fileMap }, BRIDGEHOST + "/middlePhotoRemove");
+                    }
+                    cancelEvent.call(self, e);
+                    await instance.setPanBlocks();
+                  }
+                } catch (e) {
+                  console.log(e);
+                  window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                }
+              }
+            },
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: String(contextWidth) + ea,
+              height: String(contextHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray1,
+              marginBottom: String(itemBetween) + ea,
+              cursor: "pointer",
+            },
+            child: {
+              text: "링크 삭제",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contextSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.black,
+                top: String(textTop) + ea,
+              }
+            }
+          });
+        }
+        createNode({
+          mother: whitePrompt,
+          event: {
+            click: async function (e) {
+              let parsedString, fileMap;
+              let string;
+              let newString;
+              let updateMap;
+              let hash;
+              let loading;
+              let hex, desid, proid, fileName;
+              let folder, kind;
+              let mode;
+
+              try {
+                if (instance.itemList.length === 0) {
+                  window.alert("파일을 먼저 선택해주세요!");
+                } else {
+
+                  fileMap = instance.itemList.map(({ original, hex }) => {
+                    if ((new RegExp(targetKeywords, "g")).test(original)) {
+                      const [ protocol, host, const1, const2, desid, proid, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                      return { desid, proid, fileName, hex, mode: "designer" };
+                    } else {
+                      const [ protocol, host, const1, const2, folder, kind, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                      return { folder, kind, fileName, hex, mode: "client" };
+                    }
+                  });
+
+                  updateMap = [];
+
+                  for (let obj of fileMap) {
+                    hex = obj.hex;
+                    fileName = obj.fileName;
+                    mode = obj.mode;
+
+                    ({ string } = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                    if (instance.isEmptyString(string)) {
+                      string = '';
+                    }
+
+                    newString = null;
+                    newString = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1", string);
+                    if (typeof newString !== "string" || newString.trim() === '') {
+                      newString = "메모 없음";
+                    }
+
+                    newString = newString.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
+                    ({ hash } = await ajaxJson({ mode: "crypto", string: newString }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+
+                    if (mode === "designer") {
+                      desid = obj.desid;
+                      proid = obj.proid;
+                      updateMap.push({ desid, proid, fileName, hash, mode });
+                    } else {
+                      folder = obj.folder;
+                      kind = obj.kind;
+                      updateMap.push({ folder, kind, fileName, hash, mode });
+                    }
+                  }
+
+                  loading = instance.mother.grayLoading();
+                  await ajaxJson({ targets: updateMap }, BRIDGEHOST + "/middlePhotoUpdate");
+                  cancelEvent.call(self, e);
+                  await instance.setPanBlocks();
+
+                  loading.remove();
+                }
+              } catch (e) {
+                console.log(e);
+                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              }
+            }
+          },
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            width: String(contextWidth) + ea,
+            height: String(contextHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gray1,
+            marginBottom: String(itemBetween) + ea,
+            cursor: "pointer",
+          },
+          child: {
+            text: "메모 수정",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contextSize) + ea,
+              fontWeight: String(textWeight),
+              color: colorChip.black,
+              top: String(textTop) + ea,
+            }
+          }
+        });
+        createNode({
+          mother: whitePrompt,
+          event: {
+            click: async function (e) {
+              try {
+                const host = FRONTHOST.replace(/^https\:\/\//gi, '');
+                const path = "project";
+
+                if (instance.itemList.length === 0) {
+                  window.alert("파일을 먼저 선택해주세요!");
+                } else {
+                  const targets = equalJson(JSON.stringify(instance.panContents));
+                  const target = targets.find((obj) => { return obj.key === instance.itemList[0].key })
+                  await ajaxJson({
+                    method: "projectDetail",
+                    name: client.name,
+                    phone: client.phone,
+                    option: {
+                      client: client.name,
+                      designer: designer.designer,
+                      file: target.action[0].name,
+                      host: host,
+                      path: path,
+                      proid: project.proid,
+                      key: instance.itemList[0].key,
+                    }
+                  }, BACKHOST + "/alimTalk");
+                  window.alert(client.name + " 고객님에게 알림톡을 전송하였습니다!");
+                  cancelEvent.call(self, e);
+                }
+
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          },
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            width: String(contextWidth) + ea,
+            height: String(contextHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gray1,
+            cursor: "pointer",
+          },
+          child: {
+            text: "고객 알림 보내기",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contextSize) + ea,
+              fontWeight: String(textWeight),
+              color: colorChip.black,
+              top: String(textTop) + ea,
+            }
+          }
+        });
+
+      }
+    }
+
+    mothers = this.panList;
+    itemList = await ajaxJson({ target: targetDrive }, BRIDGEHOST + "/middlePhotoRead", { equal: true });
+    preItemList = await ajaxJson({ cliid: client.cliid }, BRIDGEHOST + "/clientPhoto", { equal: true });
+
+    linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
+    linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: designer.desid, proid: project.proid, file } }) }, BRIDGEHOST + "/middleLinkParsing", { equal: true });
+
+    for (let mother of mothers) {
+      cleanChildren(mother);
+    }
+
+    itemList = itemList.map((raw) => {
+      const original = raw;
+      const [ key, time, order, hex ] = raw.split("_");
+      const [ hexId, exe ] = hex.split(".");
+      const id = key + "_" + time + "_" + String(order) + "_" + hexId;
+      return [ key, new Date(Number(time)), String(Number(order) + 1) + "." + exe, Number(order), targetHref + "/" + original, exe, id, hexId ];
+    }).map(([ key, date, name, order, original, exe, id, hexId ]) => {
+      return { key, date, name, order, original, exe, id, hexId };
+    });
+
+    itemList.forEach((obj) => {
+      if (obj.key === preItemMotherKey) {
+        obj.order = preItemList.sitePhoto.length + obj.order;
+        obj.name = String(obj.order) + "." + obj.exe;
+      }
+    });
+
+    preIndex = 1;
+    for (let original of preItemList.sitePhoto) {
+      preItemHexId = ((new RegExp("^" + hashConst + "_", "g")).test(original.split("/")[original.split("/").length - 1]) ? original.split("/")[original.split("/").length - 1].split("_")[1] : preItemHex);
+      itemList.push({
+        key: preItemMotherKey,
+        date: emptyDate,
+        name: String(preIndex) + "." + original.split(".")[original.split(".").length - 1],
+        order: preIndex,
+        original: original,
+        exe: original.split(".")[original.split(".").length - 1],
+        id: preItemMotherKey + "_" + String(emptyDate.valueOf()) + "_" + String(preIndex) + "_" + preItemHexId,
+        hexId: preItemHexId,
+      });
+      preIndex++;
+    }
+
+    itemList.sort((a, b) => { return a.order - b.order });
+    itemList.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
+
+    for (let item of itemList) {
+      for (let i = 0; i < this.panContents.length; i++) {
+        if (this.panContents[i].key === item.key) {
+          item.mother = mothers[i];
+          item.motherNumber = i;
+          item.type = this.panContents[i].type;
+        }
+      }
+    }
+
+    motherMatrix = (new Array(this.panContents.length)).fill(0, 0);
+
+    fileItemList = [];
+    photoItemList = [];
+    linkItemList = [];
+    for (let { mother, key, date, name, order, motherNumber, type, original, exe, id, hexId } of itemList) {
+
+      if (type === "file") {
+
+        itemBlock = createNode({
+          mother,
+          attribute: {
+            original,
+            key,
+            hex: hexId,
+            exe,
+            type,
+            toggle: "off",
+            date: dateToString(date).split("-").slice(1).join("/"),
+          },
+          event: {
+            click: fileItemSelectEvent,
+            contextmenu: contextmenuEvent(type),
+          },
+          style: {
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "calc(calc(100% - " + String(itemBetween * itemDivide) + ea + ") / " + String(itemDivide) + ")",
+            marginRight: String(itemBetween) + ea,
+            height: String(itemTongHeight) + ea,
+            marginBottom: String(itemBetween) + ea,
+            borderRadius: String(5) + "px",
+            background: desktop ? colorChip.white : colorChip.gray0,
+            cursor: "pointer",
+            textAlign: "center",
+            verticalAlign: "top",
+            overflow: "hidden",
+            boxShadow: "0px 1px 8px -6px " + colorChip.shadow,
+          },
+          children: [
+            {
+              id,
+              attribute: {
+                exe,
+                date: dateToString(date).split("-").slice(1).join("/"),
+              },
+              text: dateToString(date).slice(2) + "_" + name,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(textTop) + ea,
+                fontSize: String(textSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.black,
+              },
+              bold: {
+                fontSize: String(textSize) + ea,
+                fontWeight: String(textWeight),
+                color: colorChip.deactive,
+              }
+            }
+          ]
+        });
+
+        fileItemList.push({
+          hash: hexId,
+          target: id
+        });
+
+      } else if (type === "photo") {
+
+        if (mother.querySelector('.' + motherChildPhotoTongClassName) === null) {
+          for (let i = 0; i < divideNumber; i++) {
+            createNode({
+              mother,
+              class: [ motherChildPhotoTongClassName ],
+              style: {
+                display: "inline-block",
+                position: "relative",
+                verticalAlign: "top",
+                width: "calc(calc(100% - " + String(itemBetween * divideNumber) + ea + ") / " + String(divideNumber) + ")",
+                marginRight: String(itemBetween) + ea,
+                borderRadius: String(5) + "px",
+              },
+            });
+          }
+        }
+
+        itemBlock = createNode({
+          mother: [ ...mother.querySelectorAll('.' + motherChildPhotoTongClassName) ][(motherMatrix[motherNumber] % divideNumber)],
+          class: [ (photoItemInitClassName + "_" + key + "_" + String(motherMatrix[motherNumber])) ],
+          attribute: {
+            key,
+            original,
+            hex: hexId,
+            exe,
+            type,
+            order: String(motherMatrix[motherNumber]),
+            number: String(motherNumber),
+            toggle: "off"
+          },
+          event: {
+            click: photoItemSelectEvent,
+            contextmenu: contextmenuEvent(type),
+          },
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0),
+            borderRadius: String(5) + "px",
+            marginBottom: String(itemBetween) + ea,
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "img",
+              attribute: { src: original },
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0),
+                borderTopLeftRadius: String(5) + "px",
+                borderTopRightRadius: String(5) + "px",
+              }
+            },
+            {
+              id,
+              attribute: {
+                height: String(itemTongHeight) + ea,
+                date: dateToString(date).split("-").slice(1).join("/"),
+              },
+              style: {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: withOut(0, ea),
+                height: String(0),
+                borderBottomLeftRadius: String(5) + "px",
+                borderBottomRightRadius: String(5) + "px",
+                background: desktop ? colorChip.white : colorChip.gray0,
+                textAlign: "center",
+                overflow: "hidden",
+                boxShadow: "0px 1px 8px -6px " + colorChip.shadow,
+                transition: "all 0.3s ease",
+              },
+              child: {
+                text: "",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(textTop) + ea,
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.black,
+                },
+                bold: {
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.deactive,
+                }
+              }
+            },
+            {
+              style: {
+                display: "block",
+                position: "absolute",
+                top: String(0),
+                left: String(0),
+                width: withOut(0),
+                height: withOut(0),
+                background: colorChip.green,
+                opacity: String(0),
+                borderRadius: String(5) + "px",
+              }
+            }
+          ]
+        });
+
+        photoItemList.push({
+          hash: hexId,
+          target: id
+        });
+
+      } else if (type === "link") {
+
+        ({ link, memo } = linkContents.find(({ file }) => { return (targetHref + "/" + file) === original }));
+
+        itemBlock = createNode({
+          mother,
+          attribute: {
+            link,
+            original,
+            key,
+            toggle: "off",
+            hex: hexId,
+            exe,
+            type,
+            date: dateToString(date).split("-").slice(1).join("/"),
+          },
+          event: {
+            click: linkItemSelectEvent,
+            contextmenu: contextmenuEvent(type),
+          },
+          style: {
+            display: "inline-flex",
+            width: "calc(calc(100% - " + String(itemBetween * divideNumber) + ea + ") / " + String(divideNumber) + ")",
+            marginRight: String(itemBetween) + ea,
+            marginBottom: String(itemBetween) + ea,
+            cursor: "pointer",
+            flexDirection: "column",
+          },
+          children: [
+            {
+              id,
+              style: {
+                display: "block",
+                width: withOut(0, ea),
+                height: String(linkPhotoHeight) + ea,
+                borderTopLeftRadius: String(5) + "px",
+                borderTopRightRadius: String(5) + "px",
+                background: colorChip.white,
+                marginBottom: String(linkPhotoMarginBottom) + ea,
+                backgroundPosition: "50% 50%",
+                backgroundSize: "100% auto",
+                backgroundRepeat: "no-repeat",
+              }
+            },
+            {
+              style: {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: withOut(0, ea),
+                height: String(itemTongHeight) + ea,
+                borderBottomLeftRadius: String(5) + "px",
+                borderBottomRightRadius: String(5) + "px",
+                background: desktop ? colorChip.white : colorChip.gray0,
+                textAlign: "center",
+                overflow: "hidden",
+                boxShadow: "0px 1px 8px -6px " + colorChip.shadow,
+              },
+              child: {
+                text: memo.trim() !== "" ? memo.trim() + " <b%(" + dateToString(date).split("-").slice(1).join("/") + ")%b>" : dateToString(date) + "_" + name,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  top: String(textTop) + ea,
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.black,
+                },
+                bold: {
+                  fontSize: String(textSize) + ea,
+                  fontWeight: String(textWeight),
+                  color: colorChip.deactive,
+                }
+              }
+            }
+          ]
+        });
+
+        linkItemList.push({
+          url: window.encodeURIComponent(link),
+          target: id
+        });
+
+        ajaxJson({ mode: "image", url: window.encodeURIComponent(link), target: id }, BACKHOST + "/getOpenGraph").then(({ image, target }) => {
+          target = document.querySelector('#' + target);
+          if (image !== null && image !== "null") {
+            target.style.backgroundImage = "url('" + image + "')";
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+
+      }
+
+      motherMatrix[motherNumber] = motherMatrix[motherNumber] + 1;
+    }
+
+    ajaxJson({ mode: "decrypto", targets: fileItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
+      for (let { string, target } of targets) {
+        target = document.querySelector('#' + target);
+        if (string.trim() !== "") {
+          target.textContent = "";
+          target.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+        }
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    ajaxJson({ mode: "decrypto", targets: photoItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
+      for (let { string, target } of targets) {
+        target = document.querySelector('#' + target);
+        target.style.height = target.getAttribute("height");
+        target.firstChild.textContent = "";
+        if (!instance.isEmptyString(string)) {
+          target.firstChild.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+        } else {
+          target.firstChild.insertAdjacentHTML("beforeend", "- " + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+        }
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    motherMaxNumber = motherMatrix.reduce((acc, curr) => { return (acc >= curr ? acc : curr) }, 0);
+    transparentItemsMatrix = motherMatrix.map((num) => { return Math.abs(motherMaxNumber - num) });
+
+    this.itemList = [];
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ProcessJs.prototype.isEmptyString = function (string) {
+  const instance = this;
+  if (/^[0-9]/.test(string) && /[0-9]$/.test(string) && string.length > 5 && string.replace(/[0-9]/gi, '') === '') {
+    return true;
+  } else {
+    return false;
   }
 }
 
@@ -1934,6 +4387,7 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
   let thisClient, thisDesigner, thisHistory;
   let clientHistory, thisClientHistory;
   let rawContents, rawContent;
+  let requestNumber;
 
   projects = serverResponse.projects;
   clients = serverResponse.clients;
@@ -1957,7 +4411,16 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
       return obj.proid === proid
     });
 
+    requestNumber = 0;
+    for (let i = 0; i < thisClient.requests.length; i++) {
+      if (thisClient.requests[i].request.timeline.valueOf() <= project.proposal.date.valueOf()) {
+        requestNumber = i;
+        break;
+      }
+    }
+
     project.client = thisClient;
+    project.requestNumber = requestNumber;
     project.designer = thisDesigner;
     project.history = thisHistory;
     project.clientHistory = thisClientHistory;
@@ -1971,9 +4434,9 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
 
   }
 
-  projects = projects.filter((obj) => {
-    return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
-  });
+  // projects = projects.filter((obj) => {
+  //   return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
+  // });
 
   this.clientHistory = clientHistory;
   this.history = history;
@@ -1999,6 +4462,12 @@ ProcessJs.prototype.launching = async function () {
     serverResponse = await ajaxJson({ mode: "init" }, BACKHOST + "/processConsole", { equal: true });
 
     this.reloadProjects(serverResponse);
+
+    this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
+    this.panContents = this.contents.map((obj) => { return obj.children }).flat();
+    this.panList = [];
+    this.itemList = [];
+    this.panNumbers = [];
 
     this.matrix = [];
     this.names = [];
