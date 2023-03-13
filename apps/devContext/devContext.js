@@ -91,7 +91,7 @@ DevContext.prototype.chatGPT = async function () {
         }
     
         req = https.request(options, (res) => {
-          res.on('data', (chunk) => {
+          res.on("data", (chunk) => {
             const rawResponse = String(chunk);
             let rawArr;
             let parsedChunk;
@@ -105,11 +105,12 @@ DevContext.prototype.chatGPT = async function () {
               }
             }
           });
-          res.on('end', () => {
+          res.on("end", () => {
             console.log("\n")
             resolve(null);
           });
-          res.on('error', (e) => {
+          res.on("error", (e) => {
+            console.log(e);
             reject(e);
           });
         });
