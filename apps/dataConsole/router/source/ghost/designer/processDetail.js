@@ -765,6 +765,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
     }
   });
 
+  this.panList = [];
   for (let i = 0; i < this.panContents.length; i++) {
     basePan = createNode({
       mother: panMother,

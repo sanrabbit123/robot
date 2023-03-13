@@ -1228,12 +1228,28 @@ ProcessJs.prototype.whiteCardView = function (proid) {
         }
       })
 
+      instance.menuArea = menuArea;
+
       await instance.insertFormStatusBox(project, menuArea);
       instance.insertUploadBox(project, menuArea);
 
     } catch (e) {
       console.log(e);
     }
+  }
+}
+
+ProcessJs.prototype.reloadMenuArea = async function (project) {
+  const instance = this;
+  const { cleanChildren } = GeneralJs;
+  try {
+    if (this.menuArea !== null) {
+      cleanChildren(this.menuArea);
+      await instance.insertFormStatusBox(project, this.menuArea);
+      instance.insertUploadBox(project, this.menuArea);  
+    }
+  } catch (e) {
+    console.log(e);
   }
 }
 
@@ -1762,7 +1778,7 @@ ProcessJs.prototype.insertFormStatusBox = async function (project, contentsArea)
                         thisStatusNumber = instance.panContents.findIndex((o) => { return o.key === key });
 
                         removeByClass(blockContextMenuClassName);
-                        instance.uploadFiles(thisStatusNumber, photoBoo).call(this, e);
+                        instance.uploadFiles(project, thisStatusNumber, photoBoo).call(this, e);
 
                       } else if (type === "memo") {
 
@@ -1771,9 +1787,9 @@ ProcessJs.prototype.insertFormStatusBox = async function (project, contentsArea)
 
                         removeByClass(blockContextMenuClassName);
                         if (thisStatusNumber === -1) {
-                          instance.plusMemo(thisStatusNumber, key, thisForm[x].children[y].children[z].title.replace(/메모/gi, "").trim()).call(this, e);
+                          instance.plusMemo(project, thisStatusNumber, key, thisForm[x].children[y].children[z].title.replace(/메모/gi, "").trim()).call(this, e);
                         } else {
-                          instance.plusMemo(thisStatusNumber).call(this, e);
+                          instance.plusMemo(project, thisStatusNumber).call(this, e);
                         }
 
                       } else if (type === "selection") {
@@ -2293,6 +2309,7 @@ ProcessJs.prototype.insertUploadBox = function (project, baseTong) {
     }
   });
 
+  this.panList = [];
   for (let i = 0; i < this.panContents.length; i++) {
     basePan = createNode({
       mother: panMother,
@@ -2304,7 +2321,7 @@ ProcessJs.prototype.insertUploadBox = function (project, baseTong) {
         designer: designer.designer,
       },
       event: {
-        drop: instance.dropFiles(i, (this.panContents[i].type === "photo")),
+        drop: instance.dropFiles(project, i, (this.panContents[i].type === "photo")),
         dragenter: function (e) {
           e.preventDefault();
           e.stopPropagation();
@@ -2407,7 +2424,7 @@ ProcessJs.prototype.insertUploadBox = function (project, baseTong) {
         designer: designer.designer,
       },
       event: {
-        click: (this.panContents[i].type === "link" ? instance.uploadLink(i) : instance.uploadFiles(i, (this.panContents[i].type === "photo"))),
+        click: (this.panContents[i].type === "link" ? instance.uploadLink(project, i) : instance.uploadFiles(project, i, (this.panContents[i].type === "photo"))),
       },
       style: {
         display: "flex",
@@ -2448,7 +2465,7 @@ ProcessJs.prototype.insertUploadBox = function (project, baseTong) {
         designer: designer.designer,
       },
       event: {
-        click: instance.plusMemo(i),
+        click: instance.plusMemo(project, i),
       },
       style: {
         display: "flex",
@@ -2485,11 +2502,14 @@ ProcessJs.prototype.insertUploadBox = function (project, baseTong) {
   return whiteBlock;
 }
 
-ProcessJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
+ProcessJs.prototype.uploadFiles = function (project, thisStatusNumber, photoBoo) {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
-  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const { ea, media, totalContents } = this;
+  const client = project.client;
+  const designer = project.designer;
+  const requestNumber = project.requestNumber;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -2557,11 +2577,12 @@ ProcessJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                       formData.append("name", hash);
     
                       res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
-                      await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
                       await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
 
-                      window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + project.proid;
-  
+                      await instance.reloadMenuArea(project);
+
+                      loading.remove();
+                      
                     } else {
                       instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
                     }
@@ -2666,10 +2687,11 @@ ProcessJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                       formData.append("name", hash);
     
                       res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
-                      await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
                       await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
     
-                      window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + project.proid;
+                      await instance.reloadMenuArea(project);
+
+                      loading.remove();
   
                     } else {
                       instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
@@ -2717,11 +2739,14 @@ ProcessJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
 
 }
 
-ProcessJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
+ProcessJs.prototype.dropFiles = function (project, thisStatusNumber, photoBoo) {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, removeByClass } = GeneralJs;
-  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const { ea, media, totalContents } = this;
+  const client = project.client;
+  const designer = project.designer;
+  const requestNumber = project.requestNumber;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -2788,11 +2813,12 @@ ProcessJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
                   formData.append("name", hash);
     
                   res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
-                  await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
                   await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
     
-                  window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + project.proid;
-  
+                  await instance.reloadMenuArea(project);
+
+                  loading.remove();
+
                 } else {
                   instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
                 }
@@ -2902,11 +2928,12 @@ ProcessJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
                   formData.append("name", hash);
     
                   res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
-                  await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
                   await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
     
-                  window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + project.proid;
-  
+                  await instance.reloadMenuArea(project);
+
+                  loading.remove();
+                  
                 } else {
                   instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
                 }
@@ -2962,11 +2989,14 @@ ProcessJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
 
 }
 
-ProcessJs.prototype.uploadLink = function (thisStatusNumber) {
+ProcessJs.prototype.uploadLink = function (project, thisStatusNumber) {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
-  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const { ea, media, totalContents } = this;
+  const client = project.client;
+  const designer = project.designer;
+  const requestNumber = project.requestNumber;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -3006,7 +3036,8 @@ ProcessJs.prototype.uploadLink = function (thisStatusNumber) {
         await ajaxJson({ proid, desid, key, link: window.encodeURIComponent(link.trim()), memo: memo.trim() }, BRIDGEHOST + "/middleLinkSave");
       }
 
-      await instance.setPanBlocks();
+      await instance.reloadMenuArea(project);
+
       if (loading !== null) {
         loading.remove();
       }
@@ -3018,11 +3049,14 @@ ProcessJs.prototype.uploadLink = function (thisStatusNumber) {
 
 }
 
-ProcessJs.prototype.plusMemo = function (thisStatusNumber, customKey = null, customTitle = null) {
+ProcessJs.prototype.plusMemo = function (project, thisStatusNumber, customKey = null, customTitle = null) {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
-  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const client = project.client;
+  const requestNumber = project.requestNumber;
+  const designer = project.designer;
+  const { ea, media, totalContents } = this;
   const memoFixedTargetsClassName = "memoFixedTargetsClassName";
   const mobile = media[4];
   const desktop = !mobile;
@@ -3083,7 +3117,7 @@ ProcessJs.prototype.plusMemo = function (thisStatusNumber, customKey = null, cus
       memoJson = await ajaxJson({
         mode: "get",
         proid: project.proid,
-        desid: instance.designer.desid,
+        desid: designer.desid,
         key: thisKey,
         memo: "",
       }, SECONDHOST + "/projectDesignerMemo", { equal: true });
@@ -3126,7 +3160,7 @@ ProcessJs.prototype.plusMemo = function (thisStatusNumber, customKey = null, cus
           paddingBottom: String(whitePromptInnerPaddingBottom) + ea,
           width: String(whitePromptWidth - (whitePromptInnerPaddingLeft * 2)) + ea,
           height: String(whitePromptHeight - (whitePromptInnerPaddingTop + whitePromptInnerPaddingBottom)) + ea,
-          top: "calc(calc(calc(calc(100% - " + String(instance.naviHeight) + "px" + ") / 2) - " + String(whitePromptHeight / 2) + ea + ") + " + String(instance.naviHeight) + "px" + ")",
+          top: "calc(calc(calc(calc(100% - " + String(instance.belowHeight) + "px" + ") / 2) - " + String(whitePromptHeight / 2) + ea + ") + " + String(instance.naviHeight) + "px" + ")",
           left: withOut(50, whitePromptWidth / 2, ea),
           background: colorChip.white,
           borderRadius: String(5) + "px",
@@ -3193,7 +3227,7 @@ ProcessJs.prototype.plusMemo = function (thisStatusNumber, customKey = null, cus
                       await ajaxJson({
                         mode: "update",
                         proid: project.proid,
-                        desid: instance.designer.desid,
+                        desid: designer.desid,
                         key: thisKey,
                         memo: this.value.trim(),
                       }, SECONDHOST + "/projectDesignerMemo");
@@ -3612,6 +3646,7 @@ ProcessJs.prototype.setPanBlocks = async function (project) {
             width: withOut(0, ea),
             height: withOut(0, ea),
             background: "transparent",
+            zIndex: String(5),
           }
         });
 
@@ -3628,6 +3663,7 @@ ProcessJs.prototype.setPanBlocks = async function (project) {
             borderRadius: String(5) + "px",
             boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
             animation: "fadeuplite 0.3s ease forwards",
+            zIndex: String(5),
           }
         });
 
@@ -3652,7 +3688,7 @@ ProcessJs.prototype.setPanBlocks = async function (project) {
                       loading.remove();
                     }
                     cancelEvent.call(self, e);
-                    await instance.setPanBlocks();
+                    await instance.setPanBlocks(project);
                   }
                 } catch (e) {
                   console.log(e);
@@ -3706,7 +3742,7 @@ ProcessJs.prototype.setPanBlocks = async function (project) {
                       await ajaxJson({ targets: fileMap }, BRIDGEHOST + "/middlePhotoRemove");
                     }
                     cancelEvent.call(self, e);
-                    await instance.setPanBlocks();
+                    await instance.setPanBlocks(project);
                   }
                 } catch (e) {
                   console.log(e);
@@ -3802,7 +3838,7 @@ ProcessJs.prototype.setPanBlocks = async function (project) {
                       await ajaxJson({ targets: fileMap }, BRIDGEHOST + "/middlePhotoRemove");
                     }
                     cancelEvent.call(self, e);
-                    await instance.setPanBlocks();
+                    await instance.setPanBlocks(project);
                   }
                 } catch (e) {
                   console.log(e);
@@ -3899,7 +3935,7 @@ ProcessJs.prototype.setPanBlocks = async function (project) {
                   loading = instance.mother.grayLoading();
                   await ajaxJson({ targets: updateMap }, BRIDGEHOST + "/middlePhotoUpdate");
                   cancelEvent.call(self, e);
-                  await instance.setPanBlocks();
+                  await instance.setPanBlocks(project);
 
                   loading.remove();
                 }
@@ -4380,6 +4416,132 @@ ProcessJs.prototype.isEmptyString = function (string) {
   }
 }
 
+ProcessJs.prototype.asyncLoadingBlock = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const { ea, media, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let baseWidth;
+  let bottom;
+  let chatBaseWidth;
+  let chatBaseHeight;
+  let chatBaseBetween;
+  let right;
+  let zIndex;
+  let setButtons;
+  let buttonList;
+  let buttonBase;
+  let buttonPadding;
+  let buttonHeight;
+  let buttonMarginTop;
+  let buttonBetween;
+  let buttonTextTop;
+  let buttonSize;
+  let buttonWeight;
+  let basePadding;
+  let loadingWidth;
+  let loadingTop;
+  let progressSize;
+  let progressWeight;
+  let progressMarginBottom;
+  let pastButtonBase;
+
+  this.nowUploading = true;
+
+  const WhiteLoading = function (base, progress) {
+    this.base = base;
+    this.progress = progress;
+  }
+
+  WhiteLoading.prototype.remove = function () {
+    this.base.parentElement.removeChild(this.base);
+    instance.nowUploading = false;
+  }
+
+  baseWidth = desktop ? 68 : 12;
+  right = desktop ? 40 : 5.4;
+  bottom = desktop ? 6 : 6;
+
+  zIndex = 4;
+
+  chatBaseWidth = <%% 160, 160, 160, 160, 21 %%>;
+  chatBaseHeight = <%% 90, 90, 90, 90, 21 %%>;
+  chatBaseBetween = <%% 16, 16, 16, 16, 2 %%>;
+
+  buttonPadding = <%% 12, 12, 12, 10, 3.2 %%>;
+  buttonHeight = <%% 36, 36, 36, 33, 6.8 %%>;
+  buttonMarginTop = <%% 6, 6, 6, 6, 1 %%>;
+  buttonBetween = <%% 6, 6, 6, 6, 1 %%>;
+
+  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isIphone() ? -0.1 : -0.3) %%>;
+  buttonSize = <%% 14, 14, 14, 13, 2.6 %%>;
+  buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+
+  basePadding = <%% 12, 12, 12, 10, 1.6 %%>;
+
+  loadingWidth = <%% 40, 40, 40, 36, 8 %%>;
+  loadingTop = <%% -3, -3, -3, -2, -0.5 %%>;
+
+  progressSize = <%% 15, 15, 15, 14, 3.2 %%>;
+  progressWeight = <%% 400, 400, 400, 400, 400 %%>;
+  progressMarginBottom = <%% 1, 1, 1, 1, 0.5 %%>;
+
+  buttonBase = createNode({
+    mother: totalContents,
+    style: {
+      display: "inline-flex",
+      position: "fixed",
+      width: String(chatBaseWidth) + ea,
+      height: String(chatBaseHeight) + ea,
+      borderRadius: String(8) + "px",
+      right: String(right) + ea,
+      bottom: String(bottom + baseWidth + chatBaseBetween) + ea,
+      boxShadow: "0px 6px 20px -10px " + colorChip.shadow,
+      animation: "talkfade 0.3s ease forwards",
+      overflow: "hidden",
+      background: colorChip.white,
+      padding: String(basePadding) + ea,
+      paddingBottom: String(basePadding - buttonMarginTop) + ea,
+      zIndex: String(zIndex),
+      transition: "all 0.5s ease",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "column",
+    },
+    children: [
+      {
+        mode: "svg",
+        source: instance.mother.returnLoading(),
+        class: [ "loading" ],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(loadingWidth) + ea,
+          height: String(loadingWidth) + ea,
+          left: "auto",
+          top: String(loadingTop) + ea,
+        }
+      },
+      {
+        text: "0%",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(progressSize) + ea,
+          fontWeight: String(progressWeight),
+          fontFamily: "graphik",
+          color: colorChip.green,
+          marginBottom: String(progressMarginBottom) + ea,
+        }
+      }
+    ]
+  });
+
+  return (new WhiteLoading(buttonBase, buttonBase.lastChild));
+}
+
 ProcessJs.prototype.reloadProjects = function (serverResponse) {
   const instance = this;
   let projects, clients, designers, history;
@@ -4468,6 +4630,9 @@ ProcessJs.prototype.launching = async function () {
     this.panList = [];
     this.itemList = [];
     this.panNumbers = [];
+    this.naviHeight = 0;
+    this.nowUploading = false;
+    this.menuArea = null;
 
     this.matrix = [];
     this.names = [];
