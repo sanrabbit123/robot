@@ -7284,6 +7284,8 @@ DataRouter.prototype.rou_post_processConsole = function () {
       let values;
       let designerValue;
       let preDesigners;
+      let clientValues, designerValues;
+      let finalOr;
 
       if (mode === "init") {
 
@@ -7317,16 +7319,23 @@ DataRouter.prototype.rou_post_processConsole = function () {
           if (/\,/gi.test(value)) {
 
             values = value.split(",").map((str) => { return str.trim() });
-            if (values.length > 0) {
-              preClients = await back.getClientsByQuery({ $or: values.map((str) => { return { name: { $regex: str } } }) }, { selfMongo: selfCoreMongo });
-              if (preClients.length === 0) {
-                projects = [];
-              } else {
-                projects = await back.getProjectsByQuery({ $or: preClients.toNormal().map((c) => { return { cliid: c.cliid } }) }, { selfMongo: selfCoreMongo });
-                projects = projects.filter((project) => {
-                  return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
-                });
-              }
+            clientValues = value.filter((str) => { return !/^d\:/i.test(str) });
+            designerValues = value.filter((str) => { return /^d\:/i.test(str) });
+
+            if (clientValues.length > 0) {
+              preClients = await back.getClientsByQuery({ $or: clientValues.map((str) => { return { name: { $regex: str } } }) }, { selfMongo: selfCoreMongo });
+            }
+            if (designerValues.length > 0) {
+              preDesigners = await back.getDesignersByQuery({ $or: designerValues.map((str) => { return { designer: { $regex: str } } }) }, { selfMongo: selfCoreMongo });
+            }
+
+            finalOr = preClients.toNormal().map((c) => { return { cliid: c.cliid } }).concat(preDesigners.toNormal().map((c) => { return { desid: c.desid } }))
+
+            if (finalOr.length > 0) {
+              projects = await back.getProjectsByQuery({ $or: finalOr }, { selfMongo: selfCoreMongo });
+              projects = projects.filter((project) => {
+                return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+              });
             } else {
               projects = [];
             }
