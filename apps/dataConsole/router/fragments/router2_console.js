@@ -7319,8 +7319,8 @@ DataRouter.prototype.rou_post_processConsole = function () {
           if (/\,/gi.test(value)) {
 
             values = value.split(",").map((str) => { return str.trim() });
-            clientValues = value.filter((str) => { return !/^d\:/i.test(str) });
-            designerValues = value.filter((str) => { return /^d\:/i.test(str) });
+            clientValues = values.filter((str) => { return !/^d\:/i.test(str) });
+            designerValues = values.filter((str) => { return /^d\:/i.test(str) });
 
             if (clientValues.length > 0) {
               preClients = await back.getClientsByQuery({ $or: clientValues.map((str) => { return { name: { $regex: str } } }) }, { selfMongo: selfCoreMongo });
