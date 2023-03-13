@@ -9251,6 +9251,9 @@ ProjectJs.prototype.rawCommentUpload = function (proid) {
                 loading.remove();
 
                 cancelBack.click();
+
+                window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=" + proid + "&raw=contents";
+
               }
             } catch (e) {
               console.log(e);
