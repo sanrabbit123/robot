@@ -2054,18 +2054,20 @@ ProcessJs.prototype.insertFormStatusBox = async function (project, contentsArea)
             try {
               const host = FRONTHOST.replace(/^https\:\/\//gi, '');
               const path = "project";
-              if (window.confirm(client.name + " 고객님께 프로젝트 진행율 알림톡을 보낼까요?")) {
+              if (window.confirm(designer.designer + " 실장님께 프로젝트 상태 체크 요청 알림톡을 보낼까요?")) {
                 await ajaxJson({
-                  method: "progressClient",
-                  name: client.name,
-                  phone: client.phone,
+                  method: "progressDesignerSpecific",
+                  name: designer.designer,
+                  phone: designer.information.phone,
                   option: {
+                    designer: designer.designer,
                     client: client.name,
                     host: host,
                     proid: project.proid,
+                    desid: designer.desid,
                   }
                 }, BACKHOST + "/alimTalk");
-                window.alert(client.name + " 고객님에게 프로젝트 진행율 알림톡을 전송하였습니다!");
+                window.alert(designer.designer + " 실장님께 프로젝트 상태 체크 요청 알림톡을 보냈습니다!");
               }
             } catch (e) {
               console.log(e);

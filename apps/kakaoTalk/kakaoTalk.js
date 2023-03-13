@@ -3014,6 +3014,92 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       }
     },
+    "progressDesignerTotal": {
+      "name": "프로젝트 상태 체크 디자이너 전체 고객용",
+      "id": "TM_1338",
+      "needs": [
+        "designer",
+        "host",
+        "desid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"desid\", to: obj.desid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 실장님!\n진행중인 고객님들의 프로젝트가 현재 어느 단계 있는지, 확인 및 체크 부탁드리겠습니다.\n\n프로젝트 상태 체크를 해주시면 홈리에종에게 별도로 연락할 필요 없이 정확하게 진행 상황을 공유하실 수 있으며, 고객님께도 상황을 객관적으로 전달할 수 있으므로 적극적인 활용 부탁드리겠습니다!\n\n* 콘솔 (상태 체크)\nhttps://#{host}/designer/dashboard.php?desid=#{desid}&mode=status\n\n* 상태 변경 방법\nhttps://#{host}/designer/manual.php?desid=#{desid}",
+        "templtName": "프로젝트 상태 체크 디자이너 전체 고객용",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-03-07 14:17:50",
+        "templtCode": "TM_1338",
+        "comments": [
+          {
+            "cdate": "2023-03-07 16:12:44",
+            "name": "검수자",
+            "id": "2475471",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-03-07 16:12:44",
+            "status": "APR"
+          }
+        ]
+      }
+    },
+    "progressDesignerSpecific": {
+      "name": "프로젝트 상태 체크 디자이너 특정 고객용",
+      "id": "TM_1339",
+      "needs": [
+        "designer",
+        "client",
+        "host",
+        "proid",
+        "desid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"desid\", to: obj.desid },\n          { from: \"proid\", to: obj.proid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 실장님!\n#{client} 고객님의 프로젝트가 현재 어느 단계 있는지, 확인 및 체크 부탁드리겠습니다.\n\n프로젝트 상태 체크를 해주시면 홈리에종에게 별도로 연락할 필요 없이 정확하게 진행 상황을 공유하실 수 있으며, 고객님께도 상황을 객관적으로 전달할 수 있으므로 적극적인 활용 부탁드리겠습니다!\n\n* 콘솔 (상태 체크)\nhttps://#{host}/designer/process.php?proid=#{proid}\n\n* 상태 변경 방법\nhttps://#{host}/designer/manual.php?desid=#{desid}",
+        "templtName": "프로젝트 상태 체크 디자이너 특정 고객용",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-03-07 14:18:49",
+        "templtCode": "TM_1339",
+        "comments": [
+          {
+            "cdate": "2023-03-07 16:12:51",
+            "name": "검수자",
+            "id": "2475472",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-03-07 16:12:51",
+            "status": "APR"
+          }
+        ]
+      }
+    }
   };
   if (target === "$all") {
     return tong;
