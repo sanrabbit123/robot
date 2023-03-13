@@ -128,7 +128,7 @@ ProcessJs.prototype.baseMaker = function () {
   checkBoxVisualTop = -0.5;
 
   subAreaBottom = 18;
-  subAreaBetween = 4;
+  subAreaBetween = 2;
 
   onlineCircleTop = 2.5;
   onlineCircleWidth = 6;
@@ -421,42 +421,6 @@ ProcessJs.prototype.baseMaker = function () {
             },
           ]
         })
-
-
-        createNode({
-          mother: subArea,
-          style: {
-            display: "flex",
-            flexDirection: "row",
-            position: "relative",
-            alignItems: "center",
-            justifyContent: "center",
-          },
-          children: [
-            {
-              style: {
-                display: "inline-block",
-                position: "relative",
-                top: String(onlineCircleTop) + ea,
-                width: String(onlineCircleWidth) + ea,
-                height: String(onlineCircleWidth) + ea,
-                borderRadius: String(onlineCircleWidth) + ea,
-                background: colorChip.gray3,
-                marginRight: String(onlineCircleMarginRight) + ea,
-              }
-            },
-            {
-              text: "offline",
-              style: {
-                fontSize: String(onlineStatusSize) + ea,
-                fontWeight: String(onlineStatusWeight),
-                color: colorChip.deactive,
-                fontFamily: "graphik",
-              }
-            }
-          ]
-        })
-
 
         nameDom = createNode({
           mother: targetTong,
