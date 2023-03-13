@@ -71,6 +71,7 @@ ProcessJs.prototype.baseMaker = function () {
   let onlineCircleTop, onlineCircleWidth;
   let onlineStatusSize, onlineStatusWeight;
   let onlineCircleMarginRight;
+  let clientDom;
 
   clientColumns = [
     "고객",
@@ -296,6 +297,7 @@ ProcessJs.prototype.baseMaker = function () {
       }
     }
 
+    instance.clientDoms = [];
     for (let { manager, designer, desid, projects } of newProjectsTong) {
       if (projects.length > 0) {
 
@@ -629,6 +631,12 @@ ProcessJs.prototype.baseMaker = function () {
   
           clientBlack = createNode({
             mother: clientTable,
+            attribute: {
+              proid: thisProject.proid,
+            },
+            event: {
+              click: instance.whiteCardView(thisProject.proid),
+            },
             style: {
               display: "block",
               position: "relative",
@@ -638,13 +646,10 @@ ProcessJs.prototype.baseMaker = function () {
             }
           });
           for (let i = 0; i < clientValueArr.length; i++) {
-            createNode({
+            clientDom = createNode({
               mother: clientBlack,
               attribute: {
                 proid: thisProject.proid,
-              },
-              event: {
-                click: instance.whiteCardView(thisProject.proid),
               },
               style: {
                 display: "inline-flex",
@@ -693,6 +698,7 @@ ProcessJs.prototype.baseMaker = function () {
               ]
             });
           }
+          instance.clientDoms.push(clientBlack);
   
         }
 
@@ -961,7 +967,6 @@ ProcessJs.prototype.whiteCardView = function (proid) {
       memoContentsWeight = 400;
       memoContentsLineHeight = 1.6;
 
-
       callHistory = equalJson(JSON.stringify(project.clientHistory.curation.analytics.call.out.concat(project.clientHistory.curation.analytics.call.in)));
       callHistory.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
 
@@ -1063,7 +1068,7 @@ ProcessJs.prototype.whiteCardView = function (proid) {
           display: "inline-flex",
           fontSize: String(subSize) + ea,
           fontWeight: String(subWeight),
-          color: colorChip.red,
+          color: colorChip.black,
           position: "absolute",
           right: String(0),
           top: String(statusTextTop) + ea,
@@ -4605,12 +4610,20 @@ ProcessJs.prototype.launching = async function () {
 
     this.matrix = [];
     this.names = [];
+    this.clientDoms = [];
+
     this.baseMaker();
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
 
     loading.remove();
+
+    if (typeof getObj.proid === "string") {
+      if (this.clientDoms.find((dom) => { return dom.getAttribute("proid") === getObj.proid }) !== undefined) {
+        this.clientDoms.find((dom) => { return dom.getAttribute("proid") === getObj.proid }).click();
+      }
+    }
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
