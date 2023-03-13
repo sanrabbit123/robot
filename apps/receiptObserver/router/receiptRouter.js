@@ -3189,7 +3189,7 @@ ReceiptRouter.prototype.rou_post_excuteResponse = function () {
             host: address.frontinfo.host,
             proid: thisProject.proid,
           });
-          await messageSend({ text: thisDesigner.designer + " 실장님께 선금 정산 완료 알림을 보냈습니다!", channel: "#700_operation", voice: true });
+          await messageSend({ text: thisDesigner.designer + " 실장님께 선금 정산 완료 알림을 보냈습니다!", channel: "#700_operation", voice: false });
         } else {
           await kakao.sendTalk("paymentRemainDesigner", thisDesigner.designer, thisDesigner.information.phone, {
             designer: thisDesigner.designer,
@@ -3197,7 +3197,7 @@ ReceiptRouter.prototype.rou_post_excuteResponse = function () {
             host: address.frontinfo.host,
             proid: thisProject.proid,
           });
-          await messageSend({ text: thisDesigner.designer + " 실장님께 잔금 정산 완료 알림을 보냈습니다!", channel: "#700_operation", voice: true });
+          await messageSend({ text: thisDesigner.designer + " 실장님께 잔금 정산 완료 알림을 보냈습니다!", channel: "#700_operation", voice: false });
         }
 
       }
