@@ -1293,7 +1293,7 @@ DataRouter.prototype.rou_post_getHistory = function () {
     for (let text of originalValueArr) {
       if (!/^\<\%item\%\>/.test(text) && /[^ \n]/g.test(text.replace(/[\n ]/g, ''))) {
         tempString = text.trim().replace(/^- /g, '').replace(/^-/g, '').trim();
-        tong.push('- ' + tempString);
+        tong.push(tempString);
       } else if (/^\<\%item\%\>/.test(text)) {
         item = text;
       }

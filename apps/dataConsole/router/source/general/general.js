@@ -3260,9 +3260,11 @@ GeneralJs.prototype.loginBox = async function () {
       id = profile.getId();
 
       GeneralJs.stacks["GoogleClient"] = client;
-      GeneralJs.stacks["GoogleClientProfile"].homeliaisonConsoleLoginedName = name;
-      GeneralJs.stacks["GoogleClientProfile"].homeliaisonConsoleLoginedEmail = email;
-      GeneralJs.stacks["GoogleClientProfile"].homeliaisonConsoleLoginedBoolean = true;
+      GeneralJs.stacks["GoogleClientProfile"] = {
+        homeliaisonConsoleLoginedName: name,
+        homeliaisonConsoleLoginedEmail: email,
+        homeliaisonConsoleLoginedBoolean: true
+      };
 
       window.localStorage.setItem("GoogleClientProfile", JSON.stringify(GeneralJs.stacks["GoogleClientProfile"]));
 

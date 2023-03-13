@@ -7407,8 +7407,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   });
 
   //get textAreaTong
-  GeneralJs.ajax("id=" + thisCase[standard[1]], "/getProjectHistory", function (res) {
+  GeneralJs.ajax("id=" + thisCase[standard[1]], BACKHOST + "/getProjectHistory", function (res) {
     const dataArr = JSON.parse(res);
+    console.log(dataArr);
     for (let i = 0; i < textAreas.length; i++) {
       textAreas[i].value = dataArr[i];
     }

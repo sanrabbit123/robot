@@ -1183,14 +1183,13 @@ ProcessJs.prototype.whiteCardView = function (proid) {
                   },
                   blur: async function (e) {
                     try {
-
-
-
-                      // dev - memo save
-
-
-
-
+                      await ajaxJson({
+                        id: project.proid,
+                        column: "history",
+                        value: this.value.replace(/[\=\&]/g, ''),
+                        email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail
+                      }, BACKHOST + "/updateProjectHistory");
+                      instance.projects.find((p) => { return p.proid === project.proid }).history.history = this.value.replace(/[\=\&]/g, '');
                       this.style.color = colorChip.deactive;
                     } catch (e) {
                       console.log(e);
@@ -4375,9 +4374,11 @@ ProcessJs.prototype.setPanBlocks = async function (project) {
     ajaxJson({ mode: "decrypto", targets: fileItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
       for (let { string, target } of targets) {
         target = document.querySelector('#' + target);
-        if (string.trim() !== "") {
-          target.textContent = "";
-          target.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+        if (target !== null) {
+          if (string.trim() !== "") {
+            target.textContent = "";
+            target.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+          }
         }
       }
     }).catch((err) => {
@@ -4387,12 +4388,14 @@ ProcessJs.prototype.setPanBlocks = async function (project) {
     ajaxJson({ mode: "decrypto", targets: photoItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
       for (let { string, target } of targets) {
         target = document.querySelector('#' + target);
-        target.style.height = target.getAttribute("height");
-        target.firstChild.textContent = "";
-        if (!instance.isEmptyString(string)) {
-          target.firstChild.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
-        } else {
-          target.firstChild.insertAdjacentHTML("beforeend", "- " + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+        if (target !== null) {
+          target.style.height = target.getAttribute("height");
+          target.firstChild.textContent = "";
+          if (!instance.isEmptyString(string)) {
+            target.firstChild.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+          } else {
+            target.firstChild.insertAdjacentHTML("beforeend", "- " + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+          }
         }
       }
     }).catch((err) => {
