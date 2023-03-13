@@ -292,7 +292,9 @@ ProcessJs.prototype.baseMaker = function () {
       for (let complex of designers) {
         [ desid, designer ] = complex.split(splitToken);
         thisProjects2 = thisProjects.filter((obj) => { return obj.designer.designer === designer && obj.designer.desid === desid });
-        thisProjects2 = thisProjects2.filter((obj) => { return !/^[드완]/.test(obj.process.status) })
+        if (instance.projects.length !== 1) {
+          thisProjects2 = thisProjects2.filter((obj) => { return !/^[드완]/.test(obj.process.status) })
+        }
         newProjectsTong.push({ manager, designer, desid, projects: thisProjects2 });
       }
     }
