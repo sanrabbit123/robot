@@ -7336,8 +7336,8 @@ DataRouter.prototype.rou_post_processConsole = function () {
           if (/\,/gi.test(value)) {
 
             values = value.split(",").map((str) => { return str.trim() });
-            clientValues = values.filter((str) => { return !/^d\:/i.test(str) });
-            designerValues = values.filter((str) => { return /^d\:/i.test(str) });
+            clientValues = values.filter((str) => { return !(/^d\:/i.test(str) && str.length >= 3) });
+            designerValues = values.filter((str) => { return /^d\:/i.test(str) && str.length >= 3 });
 
             if (clientValues.length > 0) {
               preClients = await back.getClientsByQuery({ $or: clientValues.map((str) => { return { name: { $regex: str } } }) }, { selfMongo: selfCoreMongo });
@@ -7345,7 +7345,7 @@ DataRouter.prototype.rou_post_processConsole = function () {
               preClients = new NormalArray([]);
             }
             if (designerValues.length > 0) {
-              preDesigners = await back.getDesignersByQuery({ $or: designerValues.map((str) => { return { designer: { $regex: str } } }) }, { selfMongo: selfCoreMongo });
+              preDesigners = await back.getDesignersByQuery({ $or: designerValues.map((str) => { return str.split(":")[1].trim() }).map((str) => { return { designer: { $regex: str } } }) }, { selfMongo: selfCoreMongo });
             } else {
               preDesigners = new NormalArray([]);
             }
