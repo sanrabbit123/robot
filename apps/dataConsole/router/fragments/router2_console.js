@@ -7367,7 +7367,7 @@ DataRouter.prototype.rou_post_designerSubmit = function () {
   const address = this.address;
   const kakao = this.kakao;
   const ignorePhone = [ "010-2747-3403" ];
-  const { equalJson, requestSystem, errorLog, dateToString, stringToDate } = this.mother;
+  const { equalJson, requestSystem, errorLog, dateToString, stringToDate, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/designerSubmit" ];
   obj.func = async function (req, res) {
@@ -7680,7 +7680,7 @@ DataRouter.prototype.rou_post_designerSubmit = function () {
 
       }
 
-
+      console.log("done");
       res.send(JSON.stringify({ message: "success" }));
 
     } catch (e) {
