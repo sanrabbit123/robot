@@ -4328,8 +4328,10 @@ ProcessJs.prototype.setPanBlocks = async function (project) {
 
         ajaxJson({ mode: "image", url: window.encodeURIComponent(link), target: id }, BACKHOST + "/getOpenGraph").then(({ image, target }) => {
           target = document.querySelector('#' + target);
-          if (image !== null && image !== "null") {
-            target.style.backgroundImage = "url('" + image + "')";
+          if (target !== null) {
+            if (image !== null && image !== "null") {
+              target.style.backgroundImage = "url('" + image + "')";
+            }
           }
         }).catch((err) => {
           console.log(err);
@@ -4579,6 +4581,58 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
   this.projects = projects;
 }
 
+ProcessJs.prototype.searchProjects = function () {
+  const instance = this;
+  const { totalContents, ea, belowHeight } = this;
+  const { ajaxJson, uniqueValue, blankHref, setDebounce } = GeneralJs;
+  const whiteCardClassName = "whiteCardClassName";
+  let searchEvent;
+  let loading;
+  let removeTargets;
+
+  searchEvent = (value, e) => {
+    return () => {
+      loading = instance.mother.grayLoading();
+
+      removeTargets = document.querySelectorAll('.' + whiteCardClassName);
+      for (let dom of removeTargets) {
+        dom.remove();
+      }
+
+      if (value.trim() !== '' && value.trim() !== '.' && value.trim() !== "전체") {
+        ajaxJson({ mode: "search", value: value.trim() }, BACKHOST + "/processConsole", { equal: true }).then((serverResponse) => {
+          instance.reloadProjects(serverResponse);
+          instance.contentsLoad();
+    
+          loading.remove();
+
+          if (instance.clientDoms.length === 1) {
+            instance.clientDoms[0].click();
+          }
+
+        }).catch((err) => {
+          console.log(err);
+        });
+      } else {
+        ajaxJson({ mode: "init" }, BACKHOST + "/processConsole", { equal: true }).then((serverResponse) => {
+          instance.reloadProjects(serverResponse);
+          instance.contentsLoad();
+          loading.remove();
+
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
+    }
+  }
+
+  this.searchInput.addEventListener("keyup", function (e) {
+    if (e.key === "Enter") {
+      setDebounce(searchEvent(this.value, e), "__searchMatrix__", 200);
+    }
+  });
+}
+
 ProcessJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson, equalJson, returnGet } = GeneralJs;
@@ -4613,6 +4667,7 @@ ProcessJs.prototype.launching = async function () {
     this.clientDoms = [];
 
     this.baseMaker();
+    this.searchProjects();
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();

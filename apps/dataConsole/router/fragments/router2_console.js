@@ -7281,6 +7281,9 @@ DataRouter.prototype.rou_post_processConsole = function () {
       let clientHistory;
       let proidArr;
       let secondRes;
+      let values;
+      let designerValue;
+      let preDesigners;
 
       if (mode === "init") {
 
@@ -7298,14 +7301,60 @@ DataRouter.prototype.rou_post_processConsole = function () {
       } else if (mode === "search") {
 
         const { value } = req.body;
-        preClients = await back.getClientsByQuery({ name: { $regex: value } }, { selfMongo: selfCoreMongo });
-        if (preClients.length === 0) {
-          projects = [];
+
+        if (value === '' || value === '.') {
+          projects = await back.getProjectsByQuery({
+            $and: [
+              {
+                "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
+              },
+              {
+                "process.status": { $regex: "^[진대]" }
+              }
+            ]
+          }, { selfMongo: selfCoreMongo });
         } else {
-          projects = await back.getProjectsByQuery({ $or: preClients.toNormal().map((c) => { return { cliid: c.cliid } }) }, { selfMongo: selfCoreMongo });
-          projects = projects.filter((project) => {
-            return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
-          });
+          if (/\,/gi.test(value)) {
+
+            values = value.split(",").map((str) => { return str.trim() });
+            if (values.length > 0) {
+              preClients = await back.getClientsByQuery({ $or: values.map((str) => { return { name: { $regex: str } } }) }, { selfMongo: selfCoreMongo });
+              if (preClients.length === 0) {
+                projects = [];
+              } else {
+                projects = await back.getProjectsByQuery({ $or: preClients.toNormal().map((c) => { return { cliid: c.cliid } }) }, { selfMongo: selfCoreMongo });
+                projects = projects.filter((project) => {
+                  return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+                });
+              }
+            } else {
+              projects = [];
+            }
+            
+          } else if (/^d\:/i.test(value) && value.length >= 3) {
+
+            designerValue = value.split(":")[1].trim();
+            preDesigners = await back.getDesignersByQuery({ designer: { $regex: designerValue } }, { selfMongo: selfCoreMongo });
+            if (preDesigners.length === 0) {
+              projects = [];
+            } else {
+              projects = await back.getProjectsByQuery({ $or: preDesigners.toNormal().map((c) => { return { desid: c.desid } }) }, { selfMongo: selfCoreMongo });
+              projects = projects.filter((project) => {
+                return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+              });
+            }
+
+          } else {
+            preClients = await back.getClientsByQuery({ name: { $regex: value } }, { selfMongo: selfCoreMongo });
+            if (preClients.length === 0) {
+              projects = [];
+            } else {
+              projects = await back.getProjectsByQuery({ $or: preClients.toNormal().map((c) => { return { cliid: c.cliid } }) }, { selfMongo: selfCoreMongo });
+              projects = projects.filter((project) => {
+                return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+              });
+            }
+          }
         }
 
       } else {
