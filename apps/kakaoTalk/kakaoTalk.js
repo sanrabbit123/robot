@@ -62,8 +62,6 @@ KakaoTalk.prototype.setAuth = async function () {
 
     const { data } = await requestSystem("https://" + address.pythoninfo.host + ":3000");
 
-    console.log(data);
-
     if (this.ipRegExp.office.test(data.trim())) {
       this.authObj.token = this.token.office;
     } else if (this.ipRegExp.console.test(data.trim())) {
@@ -74,8 +72,6 @@ KakaoTalk.prototype.setAuth = async function () {
       this.authObj.token = this.token.test;
     } else if (this.ipRegExp.second.test(data.trim())) {
       this.authObj.token = this.token.second;
-    } else {
-      return false;
     }
 
     return true;
