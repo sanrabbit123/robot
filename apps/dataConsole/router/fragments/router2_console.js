@@ -7418,18 +7418,18 @@ DataRouter.prototype.rou_post_processConsole = function () {
         }, { selfMongo });
 
         proidArr = projects.toNormal().map((p) => { return p.proid })
-        secondRes = await requestSystem("https://" + address.secondinfo.host + ":3000/getRawContentsDate", { proidArr }, {
+        secondRes = await requestSystem("https://" + address.secondinfo.host + ":3000/getProcessData", { proidArr }, {
           headers: {
             "Content-Type": "application/json",
             "origin": address.backinfo.host
           }
         });
 
-        res.send(JSON.stringify({ projects: projects.toNormal(), clients: clients.toNormal(), designers: designers.toNormal(), history, clientHistory, rawContents: secondRes.data }));
+        res.send(JSON.stringify({ projects: projects.toNormal(), clients: clients.toNormal(), designers: designers.toNormal(), history, clientHistory, rawContents: secondRes.data.rawContents, sendStatus: secondRes.data.sendStatus, sendSchedule: secondRes.data.sendSchedule, sendFile: secondRes.data.sendFile }));
 
       } else {
 
-        res.send(JSON.stringify({ projects: [], clients: [], designers: [], history: [], clientHistory: [], rawContents: [] }));
+        res.send(JSON.stringify({ projects: [], clients: [], designers: [], history: [], clientHistory: [], rawContents: [], sendStatus: [], sendSchedule: [], sendFile: [] }));
 
       }
     } catch (e) {

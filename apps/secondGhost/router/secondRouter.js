@@ -904,12 +904,12 @@ SecondRouter.prototype.rou_post_projectDesignerRaw = function () {
   return obj;
 }
 
-SecondRouter.prototype.rou_post_getRawContentsDate = function () {
+SecondRouter.prototype.rou_post_getProcessData = function () {
   const instance = this;
   const back = this.back;
   const { equalJson, errorLog } = this.mother;
   let obj = {};
-  obj.link = [ "/getRawContentsDate" ];
+  obj.link = [ "/getProcessData" ];
   obj.func = async function (req, res) {
     res.set({
       "Content-Type": "application/json",
@@ -926,9 +926,12 @@ SecondRouter.prototype.rou_post_getRawContentsDate = function () {
       }
       const selfMongo = instance.mongolocal;
       const collection = "designerRawContents";
+      const logCollection = "projectDesignerSend";
       const { proidArr } = equalJson(req.body);
       let rows;
       let tong;
+      let rows2;
+      let tong2;
 
       if (!Array.isArray(proidArr)) {
         throw new Error("invalid post 2");
@@ -948,10 +951,27 @@ SecondRouter.prototype.rou_post_getRawContentsDate = function () {
         })
       }
 
-      res.send(JSON.stringify(tong));
+      rows2 = await back.mongoRead(logCollection, { $or: proidArr.map((proid) => { return { proid } }) }, { selfMongo });
+      tong2 = [];
+      for (let row of rows2) {
+        tong2.push({
+          proid: row.proid,
+          desid: row.designer.desid,
+          cliid: row.client.cliid,
+          date: row.date,
+          type: row.type,
+        })
+      }
+
+      res.send(JSON.stringify({
+        rawContents: tong,
+        sendStatus: tong2.filter((obj) => { return obj.type === "status" }),
+        sendSchedule: tong2.filter((obj) => { return obj.type === "schedule" }),
+        sendFile: tong2.filter((obj) => { return obj.type === "file" })
+      }));
 
     } catch (e) {
-      errorLog("Second Ghost 서버 문제 생김 (rou_post_getRawContentsDate): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Second Ghost 서버 문제 생김 (rou_post_getProcessData): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }

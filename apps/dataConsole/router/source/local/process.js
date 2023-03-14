@@ -72,6 +72,7 @@ ProcessJs.prototype.baseMaker = function () {
   let onlineStatusSize, onlineStatusWeight;
   let onlineCircleMarginRight;
   let clientDom;
+  let checkBoxVisualLeft;
 
   clientColumns = [
     "고객",
@@ -123,10 +124,11 @@ ProcessJs.prototype.baseMaker = function () {
   tableBoldWeight = 700;
   tableTextTop = (isMac() ? -1 : 1);
 
-  wordingWidth = 77;
+  wordingWidth = 80;
   checkBoxWidth = 10;
-  checkBoxMargin = 5;
-  checkBoxVisualTop = -0.5;
+  checkBoxMargin = 9;
+  checkBoxVisualTop = 0;
+  checkBoxVisualLeft = -19;
 
   subAreaBottom = 18;
   subAreaBetween = 2;
@@ -572,7 +574,7 @@ ProcessJs.prototype.baseMaker = function () {
             {
               value: thisProject.name + "&nbsp;&nbsp;<b%" + serviceParsing(thisProject.service, false, true) + "%b>",
               color: colorChip.black,
-              check: false,
+              check: true,
             },
             {
               value: thisProject.process.status,
@@ -587,47 +589,47 @@ ProcessJs.prototype.baseMaker = function () {
             {
               value: latestCall,
               color: colorChip.black,
-              check: true,
+              check: false,
             },
             {
               value: dateConvert(thisProject.process.contract.first.date),
               color: colorChip.black,
-              check: true,
+              check: false,
             },
             {
               value: meetingDate,
               color: meetingDate === '-' ? colorChip.red : colorChip.black,
-              check: true,
+              check: false,
             },
             {
               value: remainDate,
               color: remainDate === '-' ? colorChip.red : colorChip.black,
-              check: true,
+              check: false,
             },
             {
               value: startDate,
               color: startDate === '-' ? colorChip.red : colorChip.black,
-              check: true,
+              check: false,
             },
             {
               value: endDate,
               color: endDate === '-' ? colorChip.red : colorChip.black,
-              check: true,
+              check: false,
             },
             {
               value: remainDate,
               color: remainDate === '-' ? colorChip.red : colorChip.black,
-              check: true,
+              check: false,
             },
             {
               value: remainDate,
               color: remainDate === '-' ? colorChip.red : colorChip.black,
-              check: true,
+              check: false,
             },
             {
               value: rawDate,
               color: rawDate === '-' ? colorChip.red : colorChip.black,
-              check: true,
+              check: false,
             },
           ];
   
@@ -695,6 +697,7 @@ ProcessJs.prototype.baseMaker = function () {
                     width: String(checkBoxWidth) + ea,
                     marginLeft: String(checkBoxMargin) + ea,
                     top: String(checkBoxVisualTop) + ea,
+                    left: String(checkBoxVisualLeft) + ea,
                   }
                 }
               ]
