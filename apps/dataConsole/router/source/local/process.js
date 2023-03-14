@@ -8,9 +8,11 @@ const ProcessJs = function () {
 ProcessJs.prototype.baseMaker = function () {
   const instance = this;
   const { totalContents, ea, belowHeight, projects, media } = this;
-  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing, equalJson, svgMaker } = GeneralJs;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing, equalJson, svgMaker, removeByClass, findByAttribute } = GeneralJs;
   const splitToken = "__split__";
   const checkBoxLocalStorageName = "checkBoxLocalStorageName";
+  const filterMenuClassName = "filterMenuClassName";
+  const clientTableClassName = "clientTableClassName";
   const dateConvert = (dateObject) => {
     const res = dateToString(dateObject);
     if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(res)) {
@@ -77,20 +79,129 @@ ProcessJs.prototype.baseMaker = function () {
   let sendStatus, sendStatusNumber;
   let sendSchedule, sendScheduleNumber;
   let checkBoxLocalStorageObj;
+  let clientColumnsMenu;
+  let clientColumnsBlankTitle;
+  let clientColumnsBaseEvent;
+  let buttonOuterPadding, buttonInnerPadding;
+  let buttonWidth, buttonHeight;
+  let buttonSize, buttonWeight, buttonTextTop;
+  let clientColumnsFunctionsTong;
+  let matchingFilterMaker;
+
+  clientColumnsMenu = [
+    { title: "내림차순", key: "downSort" },
+    { title: "오름차순", key: "upSort" },
+  ];
+
+  clientColumnsBlankTitle = [
+    { title: "전체 보기", key: "totalFilter" },
+    { title: "O", key: "existFilter" },
+    { title: "X", key: "nonExistFilter" },
+  ];
 
   clientColumns = [
-    "고객",
-    "상태",
-    "시공사",
-    "마지막 연락",
-    "계약금",
-    "현장 미팅",
-    "잔금",
-    "시작일",
-    "종료일",
-    "일정표 공유",
-    "상태 공유",
-    "디자이너 글",
+    {
+      title: "고객",
+      menu: [],
+      blank: false,
+      type: "string",
+    },
+    {
+      title: "상태",
+      menu: [
+        {
+          title: "전체 보기",
+          key: "totalFilter"
+        },
+        {
+          title: "대기",
+          key: "clientReady"
+        },
+        {
+          title: "진행중",
+          key: "clientGoing"
+        },
+      ],
+      blank: false,
+      type: "string",
+    },
+    {
+      title: "시공사",
+      menu: [
+        {
+          title: "전체 보기",
+          key: "totalFilter"
+        },
+        {
+          title: "디자이너",
+          key: "constructDesigner"
+        },
+        {
+          title: "홈리에종",
+          key: "constructHomeliaison"
+        },
+        {
+          title: "고객",
+          key: "constructClient"
+        },
+      ],
+      blank: true,
+      type: "string",
+    },
+    {
+      title: "마지막 연락",
+      menu: [],
+      blank: true,
+      type: "date",
+    },
+    {
+      title: "계약금",
+      menu: [],
+      blank: true,
+      type: "date",
+    },
+    {
+      title: "현장 미팅",
+      menu: [],
+      blank: true,
+      type: "date",
+    },
+    {
+      title: "잔금",
+      menu: [],
+      blank: true,
+      type: "date",
+    },
+    {
+      title: "시작일",
+      menu: [],
+      blank: true,
+      type: "date",
+    },
+    {
+      title: "종료일",
+      menu: [],
+      blank: true,
+      type: "date",
+    },
+    {
+      title: "일정표 공유",
+      menu: [],
+      blank: true,
+      type: "date",
+    },
+    {
+      title: "상태 공유",
+      menu: [],
+      blank: true,
+      type: "date",
+    },
+    {
+      title: "디자이너 글",
+      menu: [],
+      blank: true,
+      type: "date",
+    },
   ];
 
   outerMargin = 30;
@@ -143,9 +254,763 @@ ProcessJs.prototype.baseMaker = function () {
   onlineStatusSize = 14;
   onlineStatusWeight = 400;
 
+  buttonOuterPadding = 6;
+  buttonInnerPadding = 4;
+  buttonWidth = 110;
+  buttonHeight = 30;
+
+  buttonSize = 13;
+  buttonWeight = 600;
+  buttonTextTop = -1;
+
   contentsLoad = () => {};
 
   buttonList = [];
+
+  clientColumnsBaseEvent = (desid) => {
+    return function (e) {
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      const index = Number(this.getAttribute("index"));
+      const { menu, blank } = clientColumns[index];
+      const zIndex = 4;
+      let thisMenu;
+      let cancelBack, menuPrompt;
+
+      thisMenu = equalJson(JSON.stringify(clientColumnsMenu));
+      if (blank) {
+        thisMenu = thisMenu.concat(equalJson(JSON.stringify(clientColumnsBlankTitle)));
+      }
+      thisMenu = thisMenu.concat(menu);
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ filterMenuClassName ],
+        event: {
+          click: function (e) {
+            removeByClass(filterMenuClassName);
+          }
+        },
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          background: "transparent",
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          zIndex: String(zIndex),
+        }
+      });
+
+      menuPrompt = createNode({
+        mother: totalContents,
+        class: [ filterMenuClassName ],
+        attribute: {
+          index: String(index),
+          desid,
+        },
+        style: {
+          position: "absolute",
+          top: String(e.y) + "px",
+          left: String(e.x) + "px",
+          padding: String(buttonOuterPadding) + ea,
+          paddingBottom: String(buttonOuterPadding - buttonInnerPadding) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.white,
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          animation: "fadeuplite 0.3s ease forwards",
+          zIndex: String(zIndex),
+        },
+        children: thisMenu.map((obj, index) => {
+          return {
+            attribute: {
+              key: obj.key
+            },
+            event: {
+              click: function (e) {
+                const key = this.getAttribute("key");
+                const thisFunction = clientColumnsFunctionsTong[key];
+                thisFunction.call(this.parentElement, e, false);
+                removeByClass(filterMenuClassName);
+              },
+              contextmenu : function (e) {
+                e.preventDefault();
+                const key = this.getAttribute("key");
+                const thisFunction = clientColumnsFunctionsTong[key];
+                thisFunction.call(this.parentElement, e, true);
+                removeByClass(filterMenuClassName);
+              }
+            },
+            style: {
+              display: "flex",
+              width: String(buttonWidth) + ea,
+              height: String(buttonHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gradientGreen,
+              marginBottom: String(buttonInnerPadding) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            },
+            child: {
+              text: obj.title,
+              style: {
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(buttonWeight),
+                color: colorChip.white,
+                top: String(buttonTextTop) + ea,
+                position: "relative",
+              }
+            }
+          }
+        })
+      })
+
+    }
+  }
+
+  matchingFilterMaker = (keyword) => {
+    return function (e, entireMode = false) {
+      const index = Number(this.getAttribute("index"));
+      const type = clientColumns[index].type;
+      let targetTable;
+      let targetTables;
+      let targets;
+      let titleDom;
+      let sumDom;
+      let number;
+
+      if (!entireMode) {
+
+        targetTable = findByAttribute([ ...document.querySelectorAll('.' + clientTableClassName) ], "desid", this.getAttribute("desid"))
+        targets = [ ...targetTable.children ].filter((dom) => { return typeof dom.getAttribute("proid") === "string" });
+        titleDom = targetTable.firstChild;
+        sumDom = targetTable.lastChild;
+  
+        targets = targets.map((dom) => {
+          let boo;
+          if ([ ...dom.children ][index].firstChild.textContent.trim() === keyword) {
+            boo = true;
+          } else {
+            boo = false;
+          }
+          return { dom, boo }
+        });
+  
+        targets.unshift({ dom: titleDom, boo: true });
+        targets.push({ dom: sumDom, boo: true });
+  
+        number = 0;
+        for (let { dom, boo } of targets) {
+          if (number === 1 && boo) {
+            if (number === targets.filter((obj) => { return obj.boo }).length - 2) {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(blockVisualPadding) + ea;
+                child.style.paddingBottom = String(blockVisualPadding) + ea;
+              }
+            } else {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(blockVisualPadding) + ea;
+                child.style.paddingBottom = String(0) + ea;
+              }
+            }
+          } else if (number === targets.filter((obj) => { return obj.boo }).length - 2 && boo) {
+            for (let child of dom.children) {
+              child.style.paddingTop = String(0) + ea;
+              child.style.paddingBottom = String(blockVisualPadding) + ea;
+            }
+          } else {
+            for (let child of dom.children) {
+              child.style.paddingTop = String(0) + ea;
+              child.style.paddingBottom = String(0) + ea;
+            }
+          }
+          if (boo) {
+            dom.style.display = "block";
+            number++;
+          } else {
+            dom.style.display = "none";
+          }
+        }
+
+      } else {
+
+
+        targetTables = [ ...document.querySelectorAll('.' + clientTableClassName) ];
+
+        for (let targetTable of targetTables) {
+
+          targets = [ ...targetTable.children ].filter((dom) => { return typeof dom.getAttribute("proid") === "string" });
+          titleDom = targetTable.firstChild;
+          sumDom = targetTable.lastChild;
+    
+          targets = targets.map((dom) => {
+            let boo;
+            if ([ ...dom.children ][index].firstChild.textContent.trim() === keyword) {
+              boo = true;
+            } else {
+              boo = false;
+            }
+            return { dom, boo }
+          });
+    
+          targets.unshift({ dom: titleDom, boo: true });
+          targets.push({ dom: sumDom, boo: true });
+    
+          number = 0;
+          for (let { dom, boo } of targets) {
+            if (number === 1 && boo) {
+              if (number === targets.filter((obj) => { return obj.boo }).length - 2) {
+                for (let child of dom.children) {
+                  child.style.paddingTop = String(blockVisualPadding) + ea;
+                  child.style.paddingBottom = String(blockVisualPadding) + ea;
+                }
+              } else {
+                for (let child of dom.children) {
+                  child.style.paddingTop = String(blockVisualPadding) + ea;
+                  child.style.paddingBottom = String(0) + ea;
+                }
+              }
+            } else if (number === targets.filter((obj) => { return obj.boo }).length - 2 && boo) {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(0) + ea;
+                child.style.paddingBottom = String(blockVisualPadding) + ea;
+              }
+            } else {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(0) + ea;
+                child.style.paddingBottom = String(0) + ea;
+              }
+            }
+            if (boo) {
+              dom.style.display = "block";
+              number++;
+            } else {
+              dom.style.display = "none";
+            }
+          }
+
+        }
+
+      }
+
+    }
+  }
+
+  clientColumnsFunctionsTong = {
+    downSort: function (e, entireMode = false) {
+      const index = Number(this.getAttribute("index"));
+      const type = clientColumns[index].type;
+      let targetTable;
+      let targetTables;
+      let targets;
+      let titleDom;
+      let sumDom;
+      let number;
+      let boo;
+
+      if (!entireMode) {
+        targetTable = findByAttribute([ ...document.querySelectorAll('.' + clientTableClassName) ], "desid", this.getAttribute("desid"))
+        targets = [ ...targetTable.children ].filter((dom) => { return typeof dom.getAttribute("proid") === "string" });
+        titleDom = targetTable.firstChild;
+        sumDom = targetTable.lastChild;
+  
+        if (type === "date") {
+          targets.sort((a, b) => {
+            const aValue = [ ...a.children ][index].firstChild.textContent;
+            const bValue = [ ...b.children ][index].firstChild.textContent;
+            return stringToDate(bValue).valueOf() - stringToDate(aValue).valueOf();
+          })
+        } else if (type === "string") {
+          targets.sort((a, b) => {
+            const aValue = [ ...a.children ][index].firstChild.textContent;
+            const bValue = [ ...b.children ][index].firstChild.textContent;
+            return bValue.charCodeAt(0) - aValue.charCodeAt(0);
+          })
+        }
+  
+        targets.unshift(titleDom);
+        targets.push(sumDom);
+  
+        number = 0;
+        for (let dom of targets) {
+          boo = (dom.style.display !== "none");
+          if (number === 1 && boo) {
+            if (number === targets.filter((obj) => { return obj.style.display !== "none" }).length - 2) {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(blockVisualPadding) + ea;
+                child.style.paddingBottom = String(blockVisualPadding) + ea;
+              }
+            } else {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(blockVisualPadding) + ea;
+                child.style.paddingBottom = String(0) + ea;
+              }
+            }
+          } else if (number === targets.filter((obj) => { return obj.style.display !== "none" }).length - 2 && boo) {
+            for (let child of dom.children) {
+              child.style.paddingTop = String(0) + ea;
+              child.style.paddingBottom = String(blockVisualPadding) + ea;
+            }
+          } else {
+            for (let child of dom.children) {
+              child.style.paddingTop = String(0) + ea;
+              child.style.paddingBottom = String(0) + ea;
+            }
+          }
+          targetTable.appendChild(dom);
+          if (boo) {
+            number++;
+          }
+        }
+        
+      } else {
+
+        targetTables = [ ...document.querySelectorAll('.' + clientTableClassName) ];
+
+        for (let targetTable of targetTables) {
+          targets = [ ...targetTable.children ].filter((dom) => { return typeof dom.getAttribute("proid") === "string" });
+          titleDom = targetTable.firstChild;
+          sumDom = targetTable.lastChild;
+    
+          if (type === "date") {
+            targets.sort((a, b) => {
+              const aValue = [ ...a.children ][index].firstChild.textContent;
+              const bValue = [ ...b.children ][index].firstChild.textContent;
+              return stringToDate(bValue).valueOf() - stringToDate(aValue).valueOf();
+            })
+          } else if (type === "string") {
+            targets.sort((a, b) => {
+              const aValue = [ ...a.children ][index].firstChild.textContent;
+              const bValue = [ ...b.children ][index].firstChild.textContent;
+              return bValue.charCodeAt(0) - aValue.charCodeAt(0);
+            })
+          }
+    
+          targets.unshift(titleDom);
+          targets.push(sumDom);
+    
+          number = 0;
+          for (let dom of targets) {
+            boo = (dom.style.display !== "none");
+            if (number === 1 && boo) {
+              if (number === targets.filter((obj) => { return obj.style.display !== "none" }).length - 2) {
+                for (let child of dom.children) {
+                  child.style.paddingTop = String(blockVisualPadding) + ea;
+                  child.style.paddingBottom = String(blockVisualPadding) + ea;
+                }
+              } else {
+                for (let child of dom.children) {
+                  child.style.paddingTop = String(blockVisualPadding) + ea;
+                  child.style.paddingBottom = String(0) + ea;
+                }
+              }
+            } else if (number === targets.filter((obj) => { return obj.style.display !== "none" }).length - 2 && boo) {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(0) + ea;
+                child.style.paddingBottom = String(blockVisualPadding) + ea;
+              }
+            } else {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(0) + ea;
+                child.style.paddingBottom = String(0) + ea;
+              }
+            }
+            targetTable.appendChild(dom);
+            if (boo) {
+              number++;
+            }
+          }
+
+        }
+      }
+    },
+    upSort: function (e, entireMode = false) {
+      const index = Number(this.getAttribute("index"));
+      const type = clientColumns[index].type;
+      let targetTable;
+      let targetTables;
+      let targets;
+      let titleDom;
+      let sumDom;
+      let number;
+      let boo;
+
+      if (!entireMode) {
+        targetTable = findByAttribute([ ...document.querySelectorAll('.' + clientTableClassName) ], "desid", this.getAttribute("desid"))
+        targets = [ ...targetTable.children ].filter((dom) => { return typeof dom.getAttribute("proid") === "string" });
+        titleDom = targetTable.firstChild;
+        sumDom = targetTable.lastChild;
+  
+        if (type === "date") {
+          targets.sort((a, b) => {
+            const aValue = [ ...a.children ][index].firstChild.textContent;
+            const bValue = [ ...b.children ][index].firstChild.textContent;
+            return stringToDate(aValue).valueOf() - stringToDate(bValue).valueOf();
+          })
+        } else if (type === "string") {
+          targets.sort((a, b) => {
+            const aValue = [ ...a.children ][index].firstChild.textContent;
+            const bValue = [ ...b.children ][index].firstChild.textContent;
+            return aValue.charCodeAt(0) - bValue.charCodeAt(0);
+          })
+        }
+  
+        targets.unshift(titleDom);
+        targets.push(sumDom);
+  
+        number = 0;
+        for (let dom of targets) {
+          boo = (dom.style.display !== "none");
+          if (number === 1 && boo) {
+            if (number === targets.filter((obj) => { return obj.style.display !== "none" }).length - 2) {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(blockVisualPadding) + ea;
+                child.style.paddingBottom = String(blockVisualPadding) + ea;
+              }
+            } else {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(blockVisualPadding) + ea;
+                child.style.paddingBottom = String(0) + ea;
+              }
+            }
+          } else if (number === targets.filter((obj) => { return obj.style.display !== "none" }).length - 2 && boo) {
+            for (let child of dom.children) {
+              child.style.paddingTop = String(0) + ea;
+              child.style.paddingBottom = String(blockVisualPadding) + ea;
+            }
+          } else {
+            for (let child of dom.children) {
+              child.style.paddingTop = String(0) + ea;
+              child.style.paddingBottom = String(0) + ea;
+            }
+          }
+          targetTable.appendChild(dom);
+          if (boo) {
+            number++;
+          }
+        }
+        
+      } else {
+
+        targetTables = [ ...document.querySelectorAll('.' + clientTableClassName) ];
+
+        for (let targetTable of targetTables) {
+          targets = [ ...targetTable.children ].filter((dom) => { return typeof dom.getAttribute("proid") === "string" });
+          titleDom = targetTable.firstChild;
+          sumDom = targetTable.lastChild;
+    
+          if (type === "date") {
+            targets.sort((a, b) => {
+              const aValue = [ ...a.children ][index].firstChild.textContent;
+              const bValue = [ ...b.children ][index].firstChild.textContent;
+              return stringToDate(aValue).valueOf() - stringToDate(bValue).valueOf();
+            })
+          } else if (type === "string") {
+            targets.sort((a, b) => {
+              const aValue = [ ...a.children ][index].firstChild.textContent;
+              const bValue = [ ...b.children ][index].firstChild.textContent;
+              return aValue.charCodeAt(0) - bValue.charCodeAt(0);
+            })
+          }
+    
+          targets.unshift(titleDom);
+          targets.push(sumDom);
+    
+          number = 0;
+          for (let dom of targets) {
+            boo = (dom.style.display !== "none");
+            if (number === 1 && boo) {
+              if (number === targets.filter((obj) => { return obj.style.display !== "none" }).length - 2) {
+                for (let child of dom.children) {
+                  child.style.paddingTop = String(blockVisualPadding) + ea;
+                  child.style.paddingBottom = String(blockVisualPadding) + ea;
+                }
+              } else {
+                for (let child of dom.children) {
+                  child.style.paddingTop = String(blockVisualPadding) + ea;
+                  child.style.paddingBottom = String(0) + ea;
+                }
+              }
+            } else if (number === targets.filter((obj) => { return obj.style.display !== "none" }).length - 2 && boo) {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(0) + ea;
+                child.style.paddingBottom = String(blockVisualPadding) + ea;
+              }
+            } else {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(0) + ea;
+                child.style.paddingBottom = String(0) + ea;
+              }
+            }
+            targetTable.appendChild(dom);
+            if (boo) {
+              number++;
+            }
+          }
+
+        }
+      }
+    },
+    totalFilter: function (e, entireMode = false) {
+      const index = Number(this.getAttribute("index"));
+      const type = clientColumns[index].type;
+      let targetTable;
+      let targetTables;
+      let targets;
+      let titleDom;
+      let sumDom;
+      let number;
+
+      if (!entireMode) {
+
+        targetTable = findByAttribute([ ...document.querySelectorAll('.' + clientTableClassName) ], "desid", this.getAttribute("desid"))
+        targets = [ ...targetTable.children ].filter((dom) => { return typeof dom.getAttribute("proid") === "string" });
+        titleDom = targetTable.firstChild;
+        sumDom = targetTable.lastChild;
+  
+        targets = targets.map((dom) => {
+          let boo;
+          if ([ ...dom.children ][index].firstChild.textContent.trim() === '-') {
+            boo = true;
+          } else {
+            boo = true;
+          }
+          return { dom, boo }
+        });
+  
+        targets.unshift({ dom: titleDom, boo: true });
+        targets.push({ dom: sumDom, boo: true });
+  
+        number = 0;
+        for (let { dom, boo } of targets) {
+          if (number === 1 && boo) {
+            if (number === targets.filter((obj) => { return obj.boo }).length - 2) {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(blockVisualPadding) + ea;
+                child.style.paddingBottom = String(blockVisualPadding) + ea;
+              }
+            } else {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(blockVisualPadding) + ea;
+                child.style.paddingBottom = String(0) + ea;
+              }
+            }
+          } else if (number === targets.filter((obj) => { return obj.boo }).length - 2 && boo) {
+            for (let child of dom.children) {
+              child.style.paddingTop = String(0) + ea;
+              child.style.paddingBottom = String(blockVisualPadding) + ea;
+            }
+          } else {
+            for (let child of dom.children) {
+              child.style.paddingTop = String(0) + ea;
+              child.style.paddingBottom = String(0) + ea;
+            }
+          }
+          if (boo) {
+            dom.style.display = "block";
+            number++;
+          } else {
+            dom.style.display = "none";
+          }
+        }
+
+      } else {
+
+
+        targetTables = [ ...document.querySelectorAll('.' + clientTableClassName) ];
+
+        for (let targetTable of targetTables) {
+
+          targets = [ ...targetTable.children ].filter((dom) => { return typeof dom.getAttribute("proid") === "string" });
+          titleDom = targetTable.firstChild;
+          sumDom = targetTable.lastChild;
+    
+          targets = targets.map((dom) => {
+            let boo;
+            if ([ ...dom.children ][index].firstChild.textContent.trim() === '-') {
+              boo = true;
+            } else {
+              boo = true;
+            }
+            return { dom, boo }
+          });
+    
+          targets.unshift({ dom: titleDom, boo: true });
+          targets.push({ dom: sumDom, boo: true });
+    
+          number = 0;
+          for (let { dom, boo } of targets) {
+            if (number === 1 && boo) {
+              if (number === targets.filter((obj) => { return obj.boo }).length - 2) {
+                for (let child of dom.children) {
+                  child.style.paddingTop = String(blockVisualPadding) + ea;
+                  child.style.paddingBottom = String(blockVisualPadding) + ea;
+                }
+              } else {
+                for (let child of dom.children) {
+                  child.style.paddingTop = String(blockVisualPadding) + ea;
+                  child.style.paddingBottom = String(0) + ea;
+                }
+              }
+            } else if (number === targets.filter((obj) => { return obj.boo }).length - 2 && boo) {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(0) + ea;
+                child.style.paddingBottom = String(blockVisualPadding) + ea;
+              }
+            } else {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(0) + ea;
+                child.style.paddingBottom = String(0) + ea;
+              }
+            }
+            if (boo) {
+              dom.style.display = "block";
+              number++;
+            } else {
+              dom.style.display = "none";
+            }
+          }
+
+        }
+
+      }
+
+    },
+    existFilter: function (e, entireMode = false) {
+      const index = Number(this.getAttribute("index"));
+      const type = clientColumns[index].type;
+      let targetTable;
+      let targetTables;
+      let targets;
+      let titleDom;
+      let sumDom;
+      let number;
+
+      if (!entireMode) {
+
+        targetTable = findByAttribute([ ...document.querySelectorAll('.' + clientTableClassName) ], "desid", this.getAttribute("desid"))
+        targets = [ ...targetTable.children ].filter((dom) => { return typeof dom.getAttribute("proid") === "string" });
+        titleDom = targetTable.firstChild;
+        sumDom = targetTable.lastChild;
+  
+        targets = targets.map((dom) => {
+          let boo;
+          if ([ ...dom.children ][index].firstChild.textContent.trim() === '-') {
+            boo = false;
+          } else {
+            boo = true;
+          }
+          return { dom, boo }
+        });
+  
+        targets.unshift({ dom: titleDom, boo: true });
+        targets.push({ dom: sumDom, boo: true });
+  
+        number = 0;
+        for (let { dom, boo } of targets) {
+          if (number === 1 && boo) {
+            if (number === targets.filter((obj) => { return obj.boo }).length - 2) {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(blockVisualPadding) + ea;
+                child.style.paddingBottom = String(blockVisualPadding) + ea;
+              }
+            } else {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(blockVisualPadding) + ea;
+                child.style.paddingBottom = String(0) + ea;
+              }
+            }
+          } else if (number === targets.filter((obj) => { return obj.boo }).length - 2 && boo) {
+            for (let child of dom.children) {
+              child.style.paddingTop = String(0) + ea;
+              child.style.paddingBottom = String(blockVisualPadding) + ea;
+            }
+          } else {
+            for (let child of dom.children) {
+              child.style.paddingTop = String(0) + ea;
+              child.style.paddingBottom = String(0) + ea;
+            }
+          }
+          if (boo) {
+            dom.style.display = "block";
+            number++;
+          } else {
+            dom.style.display = "none";
+          }
+        }
+
+      } else {
+
+
+        targetTables = [ ...document.querySelectorAll('.' + clientTableClassName) ];
+
+        for (let targetTable of targetTables) {
+
+          targets = [ ...targetTable.children ].filter((dom) => { return typeof dom.getAttribute("proid") === "string" });
+          titleDom = targetTable.firstChild;
+          sumDom = targetTable.lastChild;
+    
+          targets = targets.map((dom) => {
+            let boo;
+            if ([ ...dom.children ][index].firstChild.textContent.trim() === '-') {
+              boo = false;
+            } else {
+              boo = true;
+            }
+            return { dom, boo }
+          });
+    
+          targets.unshift({ dom: titleDom, boo: true });
+          targets.push({ dom: sumDom, boo: true });
+    
+          number = 0;
+          for (let { dom, boo } of targets) {
+            if (number === 1 && boo) {
+              if (number === targets.filter((obj) => { return obj.boo }).length - 2) {
+                for (let child of dom.children) {
+                  child.style.paddingTop = String(blockVisualPadding) + ea;
+                  child.style.paddingBottom = String(blockVisualPadding) + ea;
+                }
+              } else {
+                for (let child of dom.children) {
+                  child.style.paddingTop = String(blockVisualPadding) + ea;
+                  child.style.paddingBottom = String(0) + ea;
+                }
+              }
+            } else if (number === targets.filter((obj) => { return obj.boo }).length - 2 && boo) {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(0) + ea;
+                child.style.paddingBottom = String(blockVisualPadding) + ea;
+              }
+            } else {
+              for (let child of dom.children) {
+                child.style.paddingTop = String(0) + ea;
+                child.style.paddingBottom = String(0) + ea;
+              }
+            }
+            if (boo) {
+              dom.style.display = "block";
+              number++;
+            } else {
+              dom.style.display = "none";
+            }
+          }
+
+        }
+
+      }
+
+    },
+    nonExistFilter: matchingFilterMaker('-'),
+    clientReady: matchingFilterMaker("대기"),
+    clientGoing: matchingFilterMaker("진행중"),
+    constructDesigner: matchingFilterMaker("디자이너"),
+    constructHomeliaison: matchingFilterMaker("홈리에종"),
+    constructClient: matchingFilterMaker("고객"),
+  }
 
   grayBack = createNode({
     mother: totalContents,
@@ -478,6 +1343,8 @@ ProcessJs.prototype.baseMaker = function () {
         
         clientTable = createNode({
           mother: targetTong,
+          class: [ clientTableClassName ],
+          attribute: { desid },
           style: {
             width: String(requestWidth) + ea,
             display: "inline-block",
@@ -506,6 +1373,13 @@ ProcessJs.prototype.baseMaker = function () {
         for (let i = 0; i < clientColumns.length; i++) {
           createNode({
             mother: clientBlack,
+            attribute: {
+              index: String(i),
+            },
+            event: {
+              click: clientColumnsBaseEvent(desid),
+              contextmenu: clientColumnsBaseEvent(desid),
+            },
             style: {
               display: "inline-flex",
               justifyContent: "center",
@@ -515,10 +1389,11 @@ ProcessJs.prototype.baseMaker = function () {
               height: withOut(0, ea),
               width: i === clientColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
               borderRight: i === clientColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
+              cursor: "pointer",
             },
             children: [
               {
-                text: clientColumns[i],
+                text: clientColumns[i].title,
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -526,6 +1401,7 @@ ProcessJs.prototype.baseMaker = function () {
                   fontWeight: String(tableBoldWeight),
                   color: colorChip.black,
                   top: String(tableTextTop) + ea,
+                  cursor: "pointer",
                 }
               }
             ]
@@ -583,7 +1459,6 @@ ProcessJs.prototype.baseMaker = function () {
           if (sendSchedule === '-') {
             sendScheduleNumber = sendScheduleNumber + 1;
           }
-
 
           clientValueArr = [
             {
@@ -748,7 +1623,8 @@ ProcessJs.prototype.baseMaker = function () {
                 clientDom.children[1].firstChild.style.display = "block";
               }
 
-              clientDom.addEventListener("click", function (e) {
+              clientDom.addEventListener("contextmenu", function (e) {
+                e.preventDefault();
                 e.stopPropagation();
 
                 const toggle = this.getAttribute("toggle");
@@ -774,7 +1650,7 @@ ProcessJs.prototype.baseMaker = function () {
                   this.setAttribute("toggle", "off");
                   thisCheckBoxLocalStorageObj = thisCheckBoxLocalStorageObj.filter((str) => { return str !== proid });
                 }
-                
+
                 window.localStorage.setItem(checkBoxLocalStorageName, JSON.stringify(thisCheckBoxLocalStorageObj));
 
               })
@@ -900,7 +1776,6 @@ ProcessJs.prototype.baseMaker = function () {
             ]
           });
         }
-
 
       }
     }
