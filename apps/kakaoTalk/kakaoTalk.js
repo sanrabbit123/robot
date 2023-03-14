@@ -32,7 +32,7 @@ const KakaoTalk = function () {
     console: "03104da420fc46c60e3cef0be1539c7b1fd7c1ddfcc6255b70d34c8e75ae2f44a186e8a7686dbacdab6e5322f5b8ee8abc3692a9c8fc1200cbdead04389ee3dbL3L46vX2uxyCPrdq54Q8syIsPXc34KaKcg9ATptqShoshq1MM4562RPdv5TlPTK+PJ04FtXcKVY++HuRdDINKQ==",
     python: "53d2f480ce9e4087b03d0fd8b8fac1e87aa47d407fefff0cadcddb4e9301cc705f5ea3c27f3bd1ad0c537daaef82b2a1ff29e2d623e3176034a9be316d1adcd7bU9USuplgt2b2Ivow9XRAwQf7dYTr+naSe5eTD6GWQIJmcJ5ARB1wx8WE2Akvm02I9yfLXlTfyAJG84jAOFPnw==",
     test: "4e8e135049172aa7c2a6df73f93e97da14a44ae587a38dc5ad528d6392301aea364391ab92849acd22f583e5ab342f98b906c22d2b27648de4d880cdd4c4e467Y2Q2mND3WGO2LKixCNvwCOrwvJOoXD3Q6/UD0G7nKK3neoTxlqXG5mvlyVbs8gnWAgEafYfhLx3ZtymgnX4E7g==",
-    second: "",
+    second: "e1e36502986b4a34e99cdea702587d60c72071f0b7d9385ed226fdfee1acaef9891612f1cabb833b00bb1c312e5094a4835dc1dc954ff9d11795dfffd3b42ae8zxhtoDwoFtap5/YYh/opsGa7uNB4doMsj+WUgBFTHihNv9D6lFanued/VeDyhM/1xtyPTJuE5pMx8j830HMa5A==",
   };
   this.authObj = {};
   this.message = {};
