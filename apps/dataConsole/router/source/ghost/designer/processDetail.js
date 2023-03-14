@@ -2260,21 +2260,14 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
             event: {
               click: async function (e) {
                 try {
-                  const host = FRONTHOST.replace(/^https\:\/\//gi, '');
-                  const path = "project";
+                  const desid = instance.designer.desid;
+                  const proid = instance.project.proid;
+
                   if (window.confirm(instance.client.name + " 고객님께 일정 알림톡을 보낼까요?")) {
-                    await ajaxJson({
-                      method: "scheduleClient",
-                      name: instance.client.name,
-                      phone: instance.client.phone,
-                      option: {
-                        client: instance.client.name,
-                        host: host,
-                        proid: instance.project.proid,
-                      }
-                    }, BACKHOST + "/alimTalk");
-                    window.alert(instance.client.name + " 고객님에게 일정 알림톡을 전송하였습니다!");
+                    await ajaxJson({ mode: "send", type: "schedule", proid, desid, name: instance.client.name, phone: instance.client.phone }, SECONDHOST + "/projectDesignerStatus");
+                    window.alert(instance.client.name + " 고객님에게 일정 알림톡을 전송하였습니다!");  
                   }
+
                 } catch (e) {
                   console.log(e);
                 }
@@ -14807,13 +14800,10 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
             try {
               const proid = this.getAttribute("proid");
               const desid = this.getAttribute("desid");
-
               if (window.confirm(instance.client.name + " 고객님께 프로젝트 진행율 알림톡을 보낼까요?")) {
-                await ajaxJson({ mode: "send", proid, desid, name: instance.client.name, phone: instance.client.phone }, SECONDHOST + "/projectDesignerStatus");
+                await ajaxJson({ mode: "send", type: "status", proid, desid, name: instance.client.name, phone: instance.client.phone }, SECONDHOST + "/projectDesignerStatus");
                 window.alert(instance.client.name + " 고객님에게 프로젝트 진행율 알림톡을 전송하였습니다!");  
               }
-              console.log(proid, desid);
-
             } catch (e) {
               console.log(e);
             }

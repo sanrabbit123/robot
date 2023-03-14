@@ -1356,6 +1356,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
       }
       const selfMongo = instance.mongolocal;
       const collection = "projectDesignerStatus";
+      const logCollection = "projectDesignerSend";
       const { mode, desid, proid } = req.body;
       let rows;
       let resultObj;
@@ -1368,6 +1369,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
       let whereQuery, updateQuery;
       let name, phone;
       let host;
+      let type;
 
       resultObj = { message: "done" };
 
@@ -1821,7 +1823,13 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
         name = req.body.name;
         phone = req.body.phone;
         host = address.frontinfo.host;
-        await kakao.sendTalk("progressClient", name, phone, { client: name, host, proid });
+        type = req.body.type;
+
+        if (type === "status") {
+          await kakao.sendTalk("progressClient", name, phone, { client: name, host, proid });
+        } else if (type === "schedule") {
+          await kakao.sendTalk("scheduleClient", name, phone, { client: name, host, proid });
+        }
 
       }
 
