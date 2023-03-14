@@ -14801,24 +14801,19 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
       }
       createNode({
         mother: formPanBase,
+        attribute: { proid, desid },
         event: {
           click: async function (e) {
             try {
-              const host = FRONTHOST.replace(/^https\:\/\//gi, '');
-              const path = "project";
+              const proid = this.getAttribute("proid");
+              const desid = this.getAttribute("desid");
+
               if (window.confirm(instance.client.name + " 고객님께 프로젝트 진행율 알림톡을 보낼까요?")) {
-                await ajaxJson({
-                  method: "progressClient",
-                  name: instance.client.name,
-                  phone: instance.client.phone,
-                  option: {
-                    client: instance.client.name,
-                    host: host,
-                    proid: instance.project.proid,
-                  }
-                }, BACKHOST + "/alimTalk");
-                window.alert(instance.client.name + " 고객님에게 프로젝트 진행율 알림톡을 전송하였습니다!");
+                await ajaxJson({ mode: "send", proid, desid, name: instance.client.name, phone: instance.client.phone }, SECONDHOST + "/projectDesignerStatus");
+                window.alert(instance.client.name + " 고객님에게 프로젝트 진행율 알림톡을 전송하였습니다!");  
               }
+              console.log(proid, desid);
+
             } catch (e) {
               console.log(e);
             }

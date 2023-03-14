@@ -139,6 +139,14 @@ SecondGhost.prototype.ghostConnect = async function () {
     await MONGOC.connect();
     await MONGOLOCALC.connect();
 
+    //set kakao
+    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+    const kakaoInstance = new KakaoTalk();
+
+    //set human
+    const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
+    const humanInstance = new HumanPacket();
+
     //set pem key
     let pems, pemsLink;
     let certDir, keyDir, caDir;
@@ -170,7 +178,7 @@ SecondGhost.prototype.ghostConnect = async function () {
     
     //set router
     const SecondRouter = require(`${this.dir}/router/secondRouter.js`);
-    const router = new SecondRouter(this.slack_bot, this.slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, telegram);
+    const router = new SecondRouter(this.slack_bot, this.slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, telegram, kakaoInstance, humanInstance);
 
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {

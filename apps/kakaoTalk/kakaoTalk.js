@@ -70,7 +70,12 @@ KakaoTalk.prototype.setAuth = async function () {
       this.authObj.token = this.token.python;
     } else if (this.ipRegExp.test.test(data.trim())) {
       this.authObj.token = this.token.test;
+    } else if (this.ipRegExp.second.test(data.trim())) {
+      this.authObj.token = this.token.second;
+    } else {
+      return false;
     }
+
     return true;
   } catch (e) {
     console.log(e);

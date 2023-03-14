@@ -1,4 +1,4 @@
-const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, telegram) {
+const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, telegram, kakao, human) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
@@ -21,6 +21,9 @@ const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack
 
   this.secondPort = this.address.officeinfo.ghost.second.port;
   this.secondHost = this.address.officeinfo.ghost.host + ":" + String(this.secondPort);
+
+  this.kakao = kakao;
+  this.human = human;
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -1332,6 +1335,8 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
 SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
   const instance = this;
   const back = this.back;
+  const address = this.address;
+  const kakao = this.kakao;
   const { errorLog, equalJson, serviceParsing } = this.mother;
   let obj = {};
   obj.link = [ "/projectDesignerStatus" ];
@@ -1361,6 +1366,8 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
       let key;
       let x, y;
       let whereQuery, updateQuery;
+      let name, phone;
+      let host;
 
       resultObj = { message: "done" };
 
@@ -1809,6 +1816,13 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
           }
         }
         
+      } else if (mode === "send") {
+
+        name = req.body.name;
+        phone = req.body.phone;
+        host = address.frontinfo.host;
+        await kakao.sendTalk("progressClient", name, phone, { client: name, host, proid });
+
       }
 
       res.send(JSON.stringify(resultObj));
