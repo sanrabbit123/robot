@@ -1529,7 +1529,7 @@ ProcessJs.prototype.baseMaker = function () {
               proid: thisProject.proid,
             },
             event: {
-              click: instance.whiteCardView(thisProject.proid),
+              click: instance.whiteCardView(thisProject.proid, equalJson(JSON.stringify(clientColumns)).slice(1), equalJson(JSON.stringify(clientValueArr)).slice(1)),
             },
             style: {
               display: "block",
@@ -1786,7 +1786,7 @@ ProcessJs.prototype.baseMaker = function () {
   this.contentsLoad = contentsLoad;
 }
 
-ProcessJs.prototype.whiteCardView = function (proid) {
+ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
   const instance = this;
   const { totalContents, ea, belowHeight, projects } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue, serviceParsing, equalJson } = GeneralJs;
@@ -1866,6 +1866,8 @@ ProcessJs.prototype.whiteCardView = function (proid) {
       let memoContentsSize, memoContentsWeight, memoContentsLineHeight;
       let callHistory;
       let latestCall;
+      let secondMemoTitleAreaHeight;
+      let dateAreaHeight;
 
       whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
       whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
@@ -1912,7 +1914,7 @@ ProcessJs.prototype.whiteCardView = function (proid) {
       buttonWeight = 700;
       buttonTextTop = isMac() ? -1 : 1;
 
-      memoAreaWidth = 400;
+      memoAreaWidth = 456;
       memoAreaMargin = 50;
       memoTitleAreaHeight = 71;
 
@@ -1923,9 +1925,12 @@ ProcessJs.prototype.whiteCardView = function (proid) {
 
       memoAreaInnerPadding = 20;
 
-      memoContentsSize = 14;
+      memoContentsSize = 13;
       memoContentsWeight = 400;
       memoContentsLineHeight = 1.6;
+
+      secondMemoTitleAreaHeight = 50;
+      dateAreaHeight = 166;
 
       callHistory = equalJson(JSON.stringify(project.clientHistory.curation.analytics.call.out.concat(project.clientHistory.curation.analytics.call.in)));
       callHistory.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
@@ -2090,10 +2095,11 @@ ProcessJs.prototype.whiteCardView = function (proid) {
               flexDirection: "column",
               border: "1px solid " + colorChip.gray3,
               width: withOut(0, ea),
-              height: withOut(memoTitleAreaHeight, ea),
+              height: withOut(memoTitleAreaHeight + secondMemoTitleAreaHeight + dateAreaHeight, ea),
               borderRadius: String(5) + "px",
               justifyContent: "center",
               alignItems: "center",
+              boxSizing: "border-box",
             },
             child: {
               style: {
@@ -2141,9 +2147,117 @@ ProcessJs.prototype.whiteCardView = function (proid) {
               }
             }
           },
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              flexDirection: "row",
+              width: withOut(0, ea),
+              height: String(secondMemoTitleAreaHeight) + ea,
+              justifyContent: "start",
+              alignItems: "end",
+            },
+            child: {
+              text: "프로젝트 날짜",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(memoTitleSize) + ea,
+                fontWeight: String(memoTitleWeight),
+                color: colorChip.black,
+                top: String(memoTitleTextTop) + ea,
+                left: String(memoTitleVisualLeft) + ea,
+              }
+            }
+          },
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              flexDirection: "column",
+              border: "1px solid " + colorChip.gray3,
+              width: withOut(0, ea),
+              height: String(dateAreaHeight) + ea,
+              borderRadius: String(5) + "px",
+              justifyContent: "center",
+              alignItems: "center",
+              boxSizing: "border-box",
+            },
+            child: {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(memoAreaInnerPadding * 2, ea),
+                height: withOut(memoAreaInnerPadding * 2, ea),
+                flexDirection: "row",
+              },
+              children: [
+                {
+                  text: columnArr.slice(0, 6).map((obj) => { return obj.title }).join("\n"),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: "calc(100% / 4",
+                    height: withOut(0, ea),
+                    fontSize: String(memoContentsSize) + ea,
+                    fontWeight: String(memoContentsWeight),
+                    color: colorChip.black,
+                    background: "transparent",
+                    lineHeight: String(memoContentsLineHeight),
+                    textAlign: "left",
+                  }
+                },
+                {
+                  text: valueArr.slice(0, 6).map((obj) => { return obj.value }).join("\n"),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: "calc(100% / 4",
+                    height: withOut(0, ea),
+                    fontSize: String(memoContentsSize) + ea,
+                    fontWeight: String(memoContentsWeight),
+                    color: colorChip.green,
+                    background: "transparent",
+                    lineHeight: String(memoContentsLineHeight),
+                    textAlign: "left",
+                  }
+                },
+                {
+                  text: columnArr.slice(6).map((obj) => { return obj.title }).join("\n"),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: "calc(100% / 4",
+                    height: withOut(0, ea),
+                    fontSize: String(memoContentsSize) + ea,
+                    fontWeight: String(memoContentsWeight),
+                    color: colorChip.black,
+                    background: "transparent",
+                    lineHeight: String(memoContentsLineHeight),
+                    textAlign: "left",
+                  }
+                },
+                {
+                  text: valueArr.slice(6).map((obj) => { return obj.value }).join("\n"),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: "calc(100% / 4",
+                    height: withOut(0, ea),
+                    fontSize: String(memoContentsSize) + ea,
+                    fontWeight: String(memoContentsWeight),
+                    color: colorChip.green,
+                    background: "transparent",
+                    lineHeight: String(memoContentsLineHeight),
+                    textAlign: "left",
+                  }
+                },
+              ]
+            }
+          },
         ]
       });
-
+      
       menuArea = createNode({
         mother: contentsArea,
         style: {
