@@ -3234,10 +3234,12 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
       try {
         ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options));
       } catch (e) {
+        console.log(e);
         data = null;
       }
       boo = true;
     } catch (e) {
+      console.log(e);
       boo = false;
     }
 
