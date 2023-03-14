@@ -2264,7 +2264,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
                   const proid = instance.project.proid;
 
                   if (window.confirm(instance.client.name + " 고객님께 일정 알림톡을 보낼까요?")) {
-                    await ajaxJson({ mode: "send", type: "schedule", proid, desid, name: instance.client.name, phone: instance.client.phone }, SECONDHOST + "/projectDesignerStatus");
+                    await ajaxJson({ mode: "send", type: "schedule", proid, desid, designer: instance.designer.designer, name: instance.client.name, phone: instance.client.phone }, SECONDHOST + "/projectDesignerStatus");
                     window.alert(instance.client.name + " 고객님에게 일정 알림톡을 전송하였습니다!");  
                   }
 
@@ -14795,7 +14795,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
               const proid = this.getAttribute("proid");
               const desid = this.getAttribute("desid");
               if (window.confirm(instance.client.name + " 고객님께 프로젝트 진행율 알림톡을 보낼까요?")) {
-                await ajaxJson({ mode: "send", type: "status", proid, desid, name: instance.client.name, phone: instance.client.phone }, SECONDHOST + "/projectDesignerStatus");
+                await ajaxJson({ mode: "send", type: "status", proid, desid, designer: instance.designer.designer, name: instance.client.name, phone: instance.client.phone }, SECONDHOST + "/projectDesignerStatus");
                 window.alert(instance.client.name + " 고객님에게 프로젝트 진행율 알림톡을 전송하였습니다!");  
               }
             } catch (e) {

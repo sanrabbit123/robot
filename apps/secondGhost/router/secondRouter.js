@@ -1337,7 +1337,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
   const back = this.back;
   const address = this.address;
   const kakao = this.kakao;
-  const { errorLog, equalJson, serviceParsing } = this.mother;
+  const { errorLog, equalJson, serviceParsing, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/projectDesignerStatus" ];
   obj.func = async function (req, res) {
@@ -1823,6 +1823,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
 
         name = req.body.name;
         phone = req.body.phone;
+        designer = req.body.designer;
         host = address.frontinfo.host;
         path = "project";
         type = req.body.type;
@@ -1832,11 +1833,30 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
         } else if (type === "schedule") {
           await kakao.sendTalk("scheduleClient", name, phone, { client: name, host, proid });
         } else if (type === "file") {
-          designer = req.body.designer;
           file = req.body.file;
           itemKey = req.body.itemKey;
           await kakao.sendTalk("projectDetail", name, phone, { client: name, designer, file, host, path, proid, key: itemKey });
         }
+
+        await messageSend({
+          text: designer + " 실장님이 " + name + " 고객님께 " + (type === "status" ? "진행바" : (type === "schedule" ? "일정표" : "파일 링크")) + "를 보냈습니다!",
+          channel: "#301_console",
+          voice: false,
+        })
+
+        await back.mongoCreate(logCollection, {
+          type,
+          date: new Date(),
+          proid,
+          designer: {
+            desid,
+            designer,
+          },
+          client: {
+            cliid: project.cliid,
+            name,
+          }
+        }, { selfMongo });
 
       }
 
