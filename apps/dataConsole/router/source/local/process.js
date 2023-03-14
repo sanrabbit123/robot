@@ -10,6 +10,7 @@ ProcessJs.prototype.baseMaker = function () {
   const { totalContents, ea, belowHeight, projects, media } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing, equalJson, svgMaker } = GeneralJs;
   const splitToken = "__split__";
+  const checkBoxLocalStorageName = "checkBoxLocalStorageName";
   const dateConvert = (dateObject) => {
     const res = dateToString(dateObject);
     if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(res)) {
@@ -73,6 +74,9 @@ ProcessJs.prototype.baseMaker = function () {
   let onlineCircleMarginRight;
   let clientDom;
   let checkBoxVisualLeft;
+  let sendStatus, sendStatusNumber;
+  let sendSchedule, sendScheduleNumber;
+  let checkBoxLocalStorageObj;
 
   clientColumns = [
     "고객",
@@ -534,6 +538,8 @@ ProcessJs.prototype.baseMaker = function () {
         startDateNumber = 0;
         endDateNumber = 0;
         rawDateNumber = 0;
+        sendStatusNumber = 0;
+        sendScheduleNumber = 0;
         for (let z = 0; z < projects.length; z++) {
           thisProject = projects[z];
           callHistory = equalJson(JSON.stringify(thisProject.clientHistory.curation.analytics.call.out.concat(thisProject.clientHistory.curation.analytics.call.in)));
@@ -569,6 +575,15 @@ ProcessJs.prototype.baseMaker = function () {
           if (rawDate === '-') {
             rawDateNumber = rawDateNumber + 1;
           }
+          sendStatus = dateConvert(thisProject.sendStatus);
+          if (sendStatus === '-') {
+            sendStatusNumber = sendStatusNumber + 1;
+          }
+          sendSchedule = dateConvert(thisProject.sendSchedule);
+          if (sendSchedule === '-') {
+            sendScheduleNumber = sendScheduleNumber + 1;
+          }
+
 
           clientValueArr = [
             {
@@ -617,13 +632,13 @@ ProcessJs.prototype.baseMaker = function () {
               check: false,
             },
             {
-              value: remainDate,
-              color: remainDate === '-' ? colorChip.red : colorChip.black,
+              value: sendStatus,
+              color: sendStatus === '-' ? colorChip.red : colorChip.black,
               check: false,
             },
             {
-              value: remainDate,
-              color: remainDate === '-' ? colorChip.red : colorChip.black,
+              value: sendSchedule,
+              color: sendSchedule === '-' ? colorChip.red : colorChip.black,
               check: false,
             },
             {
@@ -654,6 +669,8 @@ ProcessJs.prototype.baseMaker = function () {
               mother: clientBlack,
               attribute: {
                 proid: thisProject.proid,
+                desid: thisProject.desid,
+                cliid: thisProject.cliid,
               },
               style: {
                 display: "inline-flex",
@@ -689,19 +706,82 @@ ProcessJs.prototype.baseMaker = function () {
                   }
                 },
                 {
-                  mode: "svg",
-                  source: svgMaker.checkBox(colorChip.green),
                   style: {
-                    display: clientValueArr[i].check ? "inline-block" : "none",
+                    display: clientValueArr[i].check ? "inline-flex" : "none",
                     position: "relative",
                     width: String(checkBoxWidth) + ea,
+                    height: String(checkBoxWidth) + ea,
+                    borderRadius: String(1) + "px",
+                    background: colorChip.gray2,
                     marginLeft: String(checkBoxMargin) + ea,
                     top: String(checkBoxVisualTop) + ea,
                     left: String(checkBoxVisualLeft) + ea,
+                    flexDirection: "center",
+                    alignItems: "center",
+                  },
+                  child: {
+                    mode: "svg",
+                    source: svgMaker.checkBox(colorChip.green),
+                    style: {
+                      display: "none",
+                      position: "relative",
+                      width: String(checkBoxWidth) + ea,
+                    }
                   }
                 }
               ]
             });
+
+            if (clientValueArr[i].check) {
+              clientDom.setAttribute("toggle", "off");
+
+              checkBoxLocalStorageObj = window.localStorage.getItem(checkBoxLocalStorageName);
+              if (checkBoxLocalStorageObj === null) {
+                checkBoxLocalStorageObj = [];
+                window.localStorage.setItem(checkBoxLocalStorageName, JSON.stringify([]));
+              } else {
+                checkBoxLocalStorageObj = JSON.parse(checkBoxLocalStorageObj);
+              }
+              if (checkBoxLocalStorageObj.includes(clientDom.getAttribute("proid"))) {
+                clientDom.setAttribute("toggle", "on");
+                clientDom.children[1].style.background = colorChip.white;
+                clientDom.children[1].firstChild.style.display = "block";
+              }
+
+              clientDom.addEventListener("click", function (e) {
+                e.stopPropagation();
+
+                const toggle = this.getAttribute("toggle");
+                const proid = this.getAttribute("proid");
+                let thisCheckBoxLocalStorageObj;
+
+                thisCheckBoxLocalStorageObj = window.localStorage.getItem(checkBoxLocalStorageName);
+                if (thisCheckBoxLocalStorageObj === null) {
+                  thisCheckBoxLocalStorageObj = [];
+                  window.localStorage.setItem(checkBoxLocalStorageName, JSON.stringify([]));
+                } else {
+                  thisCheckBoxLocalStorageObj = JSON.parse(thisCheckBoxLocalStorageObj);
+                }
+  
+                if (toggle === "off") {
+                  this.children[1].style.background = colorChip.white;
+                  this.children[1].firstChild.style.display = "block";
+                  this.setAttribute("toggle", "on");
+                  thisCheckBoxLocalStorageObj.push(proid);
+                } else {
+                  this.children[1].style.background = colorChip.gray2;
+                  this.children[1].firstChild.style.display = "none";
+                  this.setAttribute("toggle", "off");
+                  thisCheckBoxLocalStorageObj = thisCheckBoxLocalStorageObj.filter((str) => { return str !== proid });
+                }
+                
+                window.localStorage.setItem(checkBoxLocalStorageName, JSON.stringify(thisCheckBoxLocalStorageObj));
+
+              })
+
+            }
+
+
           }
           instance.clientDoms.push(clientBlack);
   
@@ -754,12 +834,12 @@ ProcessJs.prototype.baseMaker = function () {
             check: false,
           },
           {
-            value: (remainDateNumber === 0 ? String(remainDateNumber) : "<b%" + String(remainDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
+            value: (sendStatusNumber === 0 ? String(sendStatusNumber) : "<b%" + String(sendStatusNumber) + "%b>") + " <u%/%u> " + String(projects.length),
             color: colorChip.black,
             check: false,
           },
           {
-            value: (remainDateNumber === 0 ? String(remainDateNumber) : "<b%" + String(remainDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
+            value: (sendScheduleNumber === 0 ? String(sendScheduleNumber) : "<b%" + String(sendScheduleNumber) + "%b>") + " <u%/%u> " + String(projects.length),
             color: colorChip.black,
             check: false,
           },
@@ -4531,6 +4611,8 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
   let clientHistory, thisClientHistory;
   let rawContents, rawContent;
   let requestNumber;
+  let sendStatus, sendSchedule, sendFile;
+  let thisSendStatus, thisSendSchedule, thisSendFile;
 
   projects = serverResponse.projects;
   clients = serverResponse.clients;
@@ -4538,6 +4620,9 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
   history = serverResponse.history;
   clientHistory = serverResponse.clientHistory;
   rawContents = serverResponse.rawContents;
+  sendStatus = serverResponse.sendStatus;
+  sendSchedule = serverResponse.sendSchedule;
+  sendFile = serverResponse.sendFile;
 
   for (let project of projects) {
     ({ proid, cliid, desid, service } = project);
@@ -4553,6 +4638,10 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
     rawContent = rawContents.find((obj) => {
       return obj.proid === proid
     });
+
+    thisSendStatus = sendStatus.filter((obj) => { return obj.proid === proid });
+    thisSendSchedule = sendSchedule.filter((obj) => { return obj.proid === proid });
+    thisSendFile = sendFile.filter((obj) => { return obj.proid === proid });
 
     requestNumber = 0;
     for (let i = 0; i < thisClient.requests.length; i++) {
@@ -4573,6 +4662,24 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
       project.rawDate = rawContent.date;
     } else {
       project.rawDate = new Date(1800, 0, 1);
+    }
+    if (thisSendStatus.length > 0) {
+      thisSendStatus.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+      project.sendStatus = thisSendStatus[0].date;
+    } else {
+      project.sendStatus = new Date(1800, 0, 1);
+    }
+    if (thisSendSchedule.length > 0) {
+      thisSendSchedule.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+      project.sendSchedule = thisSendSchedule[0].date;
+    } else {
+      project.sendSchedule = new Date(1800, 0, 1);
+    }
+    if (thisSendFile.length > 0) {
+      thisSendFile.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+      project.sendFile = thisSendFile[0].date;
+    } else {
+      project.sendFile = new Date(1800, 0, 1);
     }
 
   }
