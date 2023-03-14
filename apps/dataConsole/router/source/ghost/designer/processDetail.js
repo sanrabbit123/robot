@@ -3870,28 +3870,24 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
           event: {
             click: async function (e) {
               try {
-                const host = FRONTHOST.replace(/^https\:\/\//gi, '');
-                const path = "project";
-
                 if (instance.itemList.length === 0) {
                   window.alert("파일을 먼저 선택해주세요!");
                 } else {
                   const targets = equalJson(JSON.stringify(instance.panContents));
-                  const target = targets.find((obj) => { return obj.key === instance.itemList[0].key })
+                  const target = targets.find((obj) => { return obj.key === instance.itemList[0].key });
+
                   await ajaxJson({
-                    method: "projectDetail",
+                    mode: "send",
+                    type: "file",
+                    proid: instance.project.proid,
+                    desid: instance.designer.desid,
+                    designer: instance.designer.designer,
                     name: instance.client.name,
                     phone: instance.client.phone,
-                    option: {
-                      client: instance.client.name,
-                      designer: instance.designer.designer,
-                      file: target.action[0].name,
-                      host: host,
-                      path: path,
-                      proid: instance.project.proid,
-                      key: instance.itemList[0].key,
-                    }
-                  }, BACKHOST + "/alimTalk");
+                    file: target.action[0].name,
+                    itemKey: instance.itemList[0].key,
+                  }, SECONDHOST + "/projectDesignerStatus");
+
                   window.alert(instance.client.name + " 고객님에게 알림톡을 전송하였습니다!");
                   cancelEvent.call(self, e);
                 }
@@ -6720,8 +6716,6 @@ ProcessDetailJs.prototype.returnButtonList = function () {
     event: function () {
       return async function (e) {
         try {
-          const host = FRONTHOST.replace(/^https\:\/\//gi, '');
-          const path = "project";
           const targets = equalJson(JSON.stringify(instance.panContents));
           let target;
 
@@ -6731,21 +6725,21 @@ ProcessDetailJs.prototype.returnButtonList = function () {
             target = targets.find((obj) => { return obj.key === instance.itemList[0].key })
           }
 
-          await ajaxJson({
-            method: "projectDetail",
-            name: instance.client.name,
-            phone: instance.client.phone,
-            option: {
-              client: instance.client.name,
-              designer: instance.designer.designer,
-              file: target.action[0].name,
-              host: host,
-              path: path,
+          if (target !== undefined) {
+            await ajaxJson({
+              mode: "send",
+              type: "file",
               proid: instance.project.proid,
-              key: target.key,
-            }
-          }, BACKHOST + "/alimTalk");
-          window.alert(instance.client.name + " 고객님에게 알림톡을 전송하였습니다!");
+              desid: instance.designer.desid,
+              designer: instance.designer.designer,
+              name: instance.client.name,
+              phone: instance.client.phone,
+              file: target.action[0].name,
+              itemKey: target.key,
+            }, SECONDHOST + "/projectDesignerStatus");
+  
+            window.alert(instance.client.name + " 고객님에게 알림톡을 전송하였습니다!");
+          }
 
         } catch (e) {
           console.log(e);

@@ -1370,6 +1370,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
       let name, phone;
       let host;
       let type;
+      let designer, file, itemKey, path;
 
       resultObj = { message: "done" };
 
@@ -1823,12 +1824,18 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
         name = req.body.name;
         phone = req.body.phone;
         host = address.frontinfo.host;
+        path = "project";
         type = req.body.type;
 
         if (type === "status") {
           await kakao.sendTalk("progressClient", name, phone, { client: name, host, proid });
         } else if (type === "schedule") {
           await kakao.sendTalk("scheduleClient", name, phone, { client: name, host, proid });
+        } else if (type === "file") {
+          designer = req.body.designer;
+          file = req.body.file;
+          itemKey = req.body.itemKey;
+          await kakao.sendTalk("projectDetail", name, phone, { client: name, designer, file, host, path, proid, key: itemKey });
         }
 
       }
