@@ -1665,7 +1665,11 @@ ProcessJs.prototype.baseMaker = function () {
 
           }
           instance.clientDoms.push(clientBlack);
-          instance.totalValues.push([ manager, designer + "&nbsp;&nbsp;<u%" + desid + "%u>" ].concat(clientValueArr.map((obj) => { return obj.value })))
+          if (!media[0]) {
+            instance.totalValues.push([ manager, designer ].concat(clientValueArr.map((obj) => { return obj.value })))
+          } else {
+            instance.totalValues.push([ manager, designer + "&nbsp;&nbsp;<u%" + desid + "%u>" ].concat(clientValueArr.map((obj) => { return obj.value })))
+          }
         }
 
         clientValueArr = [
