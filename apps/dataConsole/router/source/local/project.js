@@ -8247,8 +8247,11 @@ ProjectJs.prototype.reportViewMaker = function () {
 
 ProjectJs.prototype.addTransFormEvent = function () {
   const instance = this;
+  const { selfHref } = GeneralJs;
   const { square: { up, down, reportIcon, returnIcon } } = this.mother.belowButtons;
-  up.addEventListener("click", this.cardViewMaker());
+  up.addEventListener("click", function (e) {
+    selfHref(window.location.protocol + "//" + window.location.host + "/process");
+  });
   down.addEventListener("click", this.rowViewMaker());
   reportIcon.addEventListener("click", this.reportViewMaker());
   returnIcon.addEventListener("click", this.returnValueEventMaker());

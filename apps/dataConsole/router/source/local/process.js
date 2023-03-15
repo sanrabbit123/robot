@@ -6704,9 +6704,18 @@ ProcessJs.prototype.reportEvent = function () {
   reportIcon.addEventListener("click", this.dashBoardView());
 }
 
+ProcessJs.prototype.addTransFormEvent = function () {
+  const instance = this;
+  const { selfHref } = GeneralJs;
+  const { belowButtons: { square: { down } } } = this.mother;
+  down.addEventListener("click", function (e) {
+    selfHref(window.location.protocol + "//" + window.location.host + "/project");
+  });
+}
+
 ProcessJs.prototype.launching = async function () {
   const instance = this;
-  const { ajaxJson, equalJson, returnGet } = GeneralJs;
+  const { ajaxJson, equalJson, returnGet, ajaxMultiple } = GeneralJs;
   try {
     const getObj = returnGet();
     const emptyDate = () => { return new Date(1800, 0, 1) };
@@ -6727,41 +6736,6 @@ ProcessJs.prototype.launching = async function () {
     this.grayBarWidth = this.mother.grayBarWidth;
 
     loading = this.mother.grayLoading();
-
-    const ajaxMultiple = (matrix) => {
-      let responseTong;
-      let number;
-      let workers;
-      let responseResult;
-      let intervalId;
-
-      responseResult = (new Array(matrix.length)).fill(0, 0);
-      workers = (new Array(matrix.length)).fill(0, 0);
-      responseTong = (new Array(matrix.length)).fill(0, 0);
-
-      return new Promise((resolve, reject) => {
-        number = 0;
-        for (let [ data, url ] of matrix) {
-          workers[number] = new Worker(BACKHOST + "/worker/ajax.js");
-          workers[number].addEventListener("message", (e) => {
-            const { response, number } = GeneralJs.equalJson(e.data);
-            responseTong[number] = response;
-            responseResult[number] = true;
-          });
-          workers[number].addEventListener("error", (e) => {
-            reject(e);
-          })
-          workers[number].postMessage({ data, url, number });
-          number++;
-        }
-        intervalId = setInterval(() => {
-          if (responseResult.every((boo) => { return boo === true })) {
-            clearInterval(intervalId);
-            resolve(responseTong);
-          }
-        }, 1);
-      })
-    }
     
     if (typeof window.Worker === "function") {
       ({ projects, clients } = await ajaxJson({ mode: "pre" }, BACKHOST + "/processConsole", { equal: true }));
@@ -6777,7 +6751,7 @@ ProcessJs.prototype.launching = async function () {
         [ { method: "project", idArr: proidArr }, BACKHOST + "/getHistoryTotal" ],
         [ { method: "client", idArr: cliidArr }, BACKHOST + "/getHistoryTotal" ],
         [ { proidArr }, SECONDHOST + "/getProcessData" ],
-      ])
+      ]);
   
       designers = matrix[0];
       history = Object.values(matrix[1]);
@@ -6823,6 +6797,7 @@ ProcessJs.prototype.launching = async function () {
     this.baseMaker();
     this.searchProjects();
     this.reportEvent();
+    this.addTransFormEvent();
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();

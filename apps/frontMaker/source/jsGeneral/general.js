@@ -534,6 +534,41 @@ GeneralJs.ajaxJson = function (data, url, option = { equal: null }) {
   });
 }
 
+GeneralJs.ajaxMultiple = (matrix) => {
+  let responseTong;
+  let number;
+  let workers;
+  let responseResult;
+  let intervalId;
+
+  responseResult = (new Array(matrix.length)).fill(0, 0);
+  workers = (new Array(matrix.length)).fill(0, 0);
+  responseTong = (new Array(matrix.length)).fill(0, 0);
+
+  return new Promise((resolve, reject) => {
+    number = 0;
+    for (let [ data, url ] of matrix) {
+      workers[number] = new Worker("/worker/ajax.js");
+      workers[number].addEventListener("message", (e) => {
+        const { response, number } = GeneralJs.equalJson(e.data);
+        responseTong[number] = response;
+        responseResult[number] = true;
+      });
+      workers[number].addEventListener("error", (e) => {
+        reject(e);
+      })
+      workers[number].postMessage({ data, url, number });
+      number++;
+    }
+    intervalId = setInterval(() => {
+      if (responseResult.every((boo) => { return boo === true })) {
+        clearInterval(intervalId);
+        resolve(responseTong);
+      }
+    }, 1);
+  })
+}
+
 GeneralJs.request = function (url, callback) {
   if (url === undefined && callback === undefined) {
     throw new Error("must be arguments (url, callback)");
