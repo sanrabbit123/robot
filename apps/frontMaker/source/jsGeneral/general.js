@@ -562,6 +562,9 @@ GeneralJs.ajaxMultiple = (matrix) => {
     }
     intervalId = setInterval(() => {
       if (responseResult.every((boo) => { return boo === true })) {
+        for (let i = 0; i < matrix.length; i++) {
+          workers[i].terminate();
+        }
         clearInterval(intervalId);
         resolve(responseTong);
       }
