@@ -8032,24 +8032,9 @@ DataRouter.prototype.rou_post_processConsole = function () {
         }
       }
 
-      if (mode === "init") {
+      if (mode !== "pre") {
+        if (mode === "init") {
 
-        projects = await back.getProjectsByQuery({
-          $and: [
-            {
-              "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
-            },
-            {
-              "process.status": { $regex: "^[진대]" }
-            }
-          ]
-        }, { selfMongo: selfCoreMongo });
-
-      } else if (mode === "search") {
-
-        const { value } = req.body;
-
-        if (value === '' || value === '.') {
           projects = await back.getProjectsByQuery({
             $and: [
               {
@@ -8060,61 +8045,120 @@ DataRouter.prototype.rou_post_processConsole = function () {
               }
             ]
           }, { selfMongo: selfCoreMongo });
-        } else {
-          if (/\,/gi.test(value)) {
-
-            values = value.split(",").map((str) => { return str.trim() });
-            clientValues = values.filter((str) => { return !(/^d\:/i.test(str) && str.length >= 3) });
-            designerValues = values.filter((str) => { return /^d\:/i.test(str) && str.length >= 3 });
-
-            if (clientValues.length > 0) {
-              preClients = await back.getClientsByQuery({ $or: clientValues.map((str) => { return { name: { $regex: str } } }) }, { selfMongo: selfCoreMongo });
-            } else {
-              preClients = new NormalArray([]);
-            }
-            if (designerValues.length > 0) {
-              preDesigners = await back.getDesignersByQuery({ $or: designerValues.map((str) => { return str.split(":")[1].trim() }).map((str) => { return { designer: { $regex: str } } }) }, { selfMongo: selfCoreMongo });
-            } else {
-              preDesigners = new NormalArray([]);
-            }
-
-            finalOr = preClients.toNormal().map((c) => { return { cliid: c.cliid } }).concat(preDesigners.toNormal().map((c) => { return { desid: c.desid } }))
-
-            if (finalOr.length > 0) {
-              projects = await back.getProjectsByQuery({ $or: finalOr }, { selfMongo: selfCoreMongo });
-              projects = projects.filter((project) => {
-                return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
-              });
-            } else {
-              projects = [];
-            }
-            
-          } else if (/^d\:/i.test(value) && value.length >= 3) {
-
-            designerValue = value.split(":")[1].trim();
-            preDesigners = await back.getDesignersByQuery({ designer: { $regex: designerValue } }, { selfMongo: selfCoreMongo });
-            if (preDesigners.length === 0) {
-              projects = [];
-            } else {
-              projects = await back.getProjectsByQuery({ $or: preDesigners.toNormal().map((c) => { return { desid: c.desid } }) }, { selfMongo: selfCoreMongo });
-              projects = projects.filter((project) => {
-                return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
-              });
-            }
-
+  
+        } else if (mode === "search") {
+  
+          const { value } = req.body;
+  
+          if (value === '' || value === '.') {
+            projects = await back.getProjectsByQuery({
+              $and: [
+                {
+                  "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
+                },
+                {
+                  "process.status": { $regex: "^[진대]" }
+                }
+              ]
+            }, { selfMongo: selfCoreMongo });
           } else {
-            preClients = await back.getClientsByQuery({ name: { $regex: value } }, { selfMongo: selfCoreMongo });
-            if (preClients.length === 0) {
-              projects = [];
+            if (/\,/gi.test(value)) {
+  
+              values = value.split(",").map((str) => { return str.trim() });
+              clientValues = values.filter((str) => { return !(/^d\:/i.test(str) && str.length >= 3) });
+              designerValues = values.filter((str) => { return /^d\:/i.test(str) && str.length >= 3 });
+  
+              if (clientValues.length > 0) {
+                preClients = await back.getClientsByQuery({ $or: clientValues.map((str) => { return { name: { $regex: str } } }) }, { selfMongo: selfCoreMongo });
+              } else {
+                preClients = new NormalArray([]);
+              }
+              if (designerValues.length > 0) {
+                preDesigners = await back.getDesignersByQuery({ $or: designerValues.map((str) => { return str.split(":")[1].trim() }).map((str) => { return { designer: { $regex: str } } }) }, { selfMongo: selfCoreMongo });
+              } else {
+                preDesigners = new NormalArray([]);
+              }
+  
+              finalOr = preClients.toNormal().map((c) => { return { cliid: c.cliid } }).concat(preDesigners.toNormal().map((c) => { return { desid: c.desid } }))
+  
+              if (finalOr.length > 0) {
+                projects = await back.getProjectsByQuery({ $or: finalOr }, { selfMongo: selfCoreMongo });
+                projects = projects.filter((project) => {
+                  return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+                });
+              } else {
+                projects = [];
+              }
+              
+            } else if (/^d\:/i.test(value) && value.length >= 3) {
+  
+              designerValue = value.split(":")[1].trim();
+              preDesigners = await back.getDesignersByQuery({ designer: { $regex: designerValue } }, { selfMongo: selfCoreMongo });
+              if (preDesigners.length === 0) {
+                projects = [];
+              } else {
+                projects = await back.getProjectsByQuery({ $or: preDesigners.toNormal().map((c) => { return { desid: c.desid } }) }, { selfMongo: selfCoreMongo });
+                projects = projects.filter((project) => {
+                  return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+                });
+              }
+  
             } else {
-              projects = await back.getProjectsByQuery({ $or: preClients.toNormal().map((c) => { return { cliid: c.cliid } }) }, { selfMongo: selfCoreMongo });
-              projects = projects.filter((project) => {
-                return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
-              });
+              preClients = await back.getClientsByQuery({ name: { $regex: value } }, { selfMongo: selfCoreMongo });
+              if (preClients.length === 0) {
+                projects = [];
+              } else {
+                projects = await back.getProjectsByQuery({ $or: preClients.toNormal().map((c) => { return { cliid: c.cliid } }) }, { selfMongo: selfCoreMongo });
+                projects = projects.filter((project) => {
+                  return project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf();
+                });
+              }
             }
           }
+  
+        } else {
+  
+          projects = await back.getProjectsByQuery({
+            $and: [
+              {
+                "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
+              },
+              {
+                "process.status": { $regex: "^[진대]" }
+              }
+            ]
+          }, { selfMongo: selfCoreMongo });
+  
         }
-
+  
+        projects.sort((a, b) => { return b.process.contract.first.date.valueOf() - a.process.contract.first.date.valueOf() });
+  
+        if (projects.length > 0) {
+  
+          clients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
+          designers = await back.getDesignersByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.desid }))).map((desid) => { return { desid } }) }, { selfMongo: selfCoreMongo });
+    
+          history = await back.mongoRead("projectHistory", {
+            $or: projects.toNormal().map((project) => { return { proid: project.proid } })
+          }, { selfMongo });
+    
+          clientHistory = await back.mongoRead("clientHistory", {
+            $or: clients.toNormal().map((client) => { return { cliid: client.cliid } })
+          }, { selfMongo });
+  
+          proidArr = projects.toNormal().map((p) => { return p.proid })
+          secondRes = await requestSystem("https://" + address.secondinfo.host + ":3000/getProcessData", { proidArr }, {
+            headers: {
+              "Content-Type": "application/json",
+              "origin": address.backinfo.host
+            }
+          });
+  
+          res.send(JSON.stringify({ projects: projects.toNormal(), clients: clients.toNormal(), designers: designers.toNormal(), history, clientHistory, rawContents: secondRes.data.rawContents, sendStatus: secondRes.data.sendStatus, sendSchedule: secondRes.data.sendSchedule, sendFile: secondRes.data.sendFile }));
+  
+        } else {
+          res.send(JSON.stringify({ projects: [], clients: [], designers: [], history: [], clientHistory: [], rawContents: [], sendStatus: [], sendSchedule: [], sendFile: [] }));
+        }
       } else {
 
         projects = await back.getProjectsByQuery({
@@ -8127,39 +8171,16 @@ DataRouter.prototype.rou_post_processConsole = function () {
             }
           ]
         }, { selfMongo: selfCoreMongo });
-
+        projects.sort((a, b) => { return b.process.contract.first.date.valueOf() - a.process.contract.first.date.valueOf() });
+        if (projects.length > 0) {
+          clients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
+          res.send(JSON.stringify({ projects: projects.toNormal(), clients: clients.toNormal() }));
+        } else {
+          res.send(JSON.stringify({ projects: [], clients: [] }));
+        }
+        
       }
 
-      projects.sort((a, b) => { return b.process.contract.first.date.valueOf() - a.process.contract.first.date.valueOf() });
-
-      if (projects.length > 0) {
-
-        clients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
-        designers = await back.getDesignersByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.desid }))).map((desid) => { return { desid } }) }, { selfMongo: selfCoreMongo });
-  
-        history = await back.mongoRead("projectHistory", {
-          $or: projects.toNormal().map((project) => { return { proid: project.proid } })
-        }, { selfMongo });
-  
-        clientHistory = await back.mongoRead("clientHistory", {
-          $or: clients.toNormal().map((client) => { return { cliid: client.cliid } })
-        }, { selfMongo });
-
-        proidArr = projects.toNormal().map((p) => { return p.proid })
-        secondRes = await requestSystem("https://" + address.secondinfo.host + ":3000/getProcessData", { proidArr }, {
-          headers: {
-            "Content-Type": "application/json",
-            "origin": address.backinfo.host
-          }
-        });
-
-        res.send(JSON.stringify({ projects: projects.toNormal(), clients: clients.toNormal(), designers: designers.toNormal(), history, clientHistory, rawContents: secondRes.data.rawContents, sendStatus: secondRes.data.sendStatus, sendSchedule: secondRes.data.sendSchedule, sendFile: secondRes.data.sendFile }));
-
-      } else {
-
-        res.send(JSON.stringify({ projects: [], clients: [], designers: [], history: [], clientHistory: [], rawContents: [], sendStatus: [], sendSchedule: [], sendFile: [] }));
-
-      }
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_processConsole): " + e.message);
       res.send(JSON.stringify({ error: e.message }));

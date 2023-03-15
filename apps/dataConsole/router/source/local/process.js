@@ -1794,7 +1794,7 @@ ProcessJs.prototype.baseMaker = function () {
 ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
   const instance = this;
   const { totalContents, ea, belowHeight, projects } = this;
-  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue, serviceParsing, equalJson } = GeneralJs;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue, serviceParsing, equalJson, sleep } = GeneralJs;
   return async function (e) {
     try {
       const project = projects.find((obj) => { return obj.proid === proid });
@@ -1872,6 +1872,10 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
       let latestCall;
       let secondMemoTitleAreaHeight;
       let dateAreaHeight;
+
+      while (instance.contents === null) {
+        await sleep(3000);
+      }
 
       whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
       whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
@@ -6716,18 +6720,115 @@ ProcessJs.prototype.launching = async function () {
 
     loading = this.mother.grayLoading();
 
-    serverResponse = await ajaxJson({ mode: "init" }, BACKHOST + "/processConsole", { equal: true });
+    const ajaxMultiple = (matrix) => {
+      let responseTong;
+      let number;
+      let workers;
+      let responseResult;
+      let intervalId;
+
+      responseResult = (new Array(matrix.length)).fill(0, 0);
+      workers = (new Array(matrix.length)).fill(0, 0);
+      responseTong = (new Array(matrix.length)).fill(0, 0);
+
+      return new Promise((resolve, reject) => {
+        number = 0;
+        for (let [ data, url ] of matrix) {
+          workers[number] = new Worker("https://localhost:3000/test.js");
+          workers[number].addEventListener("message", (e) => {
+            const { response, number } = GeneralJs.equalJson(e.data);
+            responseTong[number] = response;
+            responseResult[number] = true;
+          });
+          workers[number].addEventListener("error", (e) => {
+            reject(e);
+          })
+          workers[number].postMessage({ data, url, number });
+          number++;
+        }
+        intervalId = setInterval(() => {
+          if (responseResult.every((boo) => { return boo === true })) {
+            clearInterval(intervalId);
+            resolve(responseTong);
+          }
+        }, 1);
+      })
+    }
+
+
+    let projects;
+    let clients, designers;
+    let proidArr;
+    let history;
+    let clientHistory;
+    let cliidArr;
+    let secondRes;
+    let matrix;
+
+    // projects = await ajaxJson({ noFlat: true, whereQuery: {
+    //   $and: [
+    //     {
+    //       "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
+    //     },
+    //     {
+    //       "process.status": { $regex: "^[진대]" }
+    //     }
+    //   ]
+    // } }, BACKHOST + "/getProjects", { equal: true });
+    // projects.sort((a, b) => { return b.process.contract.first.date.valueOf() - a.process.contract.first.date.valueOf() });
+    // proidArr = projects.map((p) => { return p.proid });
+
+    // clients = await ajaxJson({ noFlat: true, whereQuery: { $or: Array.from(new Set(projects.map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) } }, BACKHOST + "/getClients", { equal: true });
+    // cliidArr = clients.map((c) => { return c.cliid });
+
+    ({ projects, clients } = await ajaxJson({ mode: "pre" }, BACKHOST + "/processConsole", { equal: true }));
+    proidArr = projects.map((p) => { return p.proid });
+    cliidArr = clients.map((c) => { return c.cliid });
+
+    matrix = await ajaxMultiple([
+      [ { noFlat: true, whereQuery: { $or: Array.from(new Set(projects.map((p) => { return p.desid }))).map((desid) => { return { desid } }) } }, BACKHOST + "/getDesigners" ],
+      [ { method: "project", idArr: proidArr }, BACKHOST + "/getHistoryTotal" ],
+      [ { method: "client", idArr: cliidArr }, BACKHOST + "/getHistoryTotal" ],
+      [ { proidArr }, SECONDHOST + "/getProcessData" ],
+    ])
+
+    designers = matrix[0];
+    history = Object.values(matrix[1]);
+    clientHistory = Object.values(matrix[2]);
+    secondRes = matrix[3];
+
+    serverResponse = {
+      projects,
+      clients,
+      designers,
+      history,
+      clientHistory,
+      rawContents: secondRes.rawContents,
+      sendStatus: secondRes.sendStatus,
+      sendSchedule: secondRes.sendSchedule,
+      sendFile: secondRes.sendFile
+    }
+
+
+
+    // serverResponse = await ajaxJson({ mode: "init" }, BACKHOST + "/processConsole", { equal: true });
+
 
     this.reloadProjects(serverResponse);
 
-    this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
-    this.panContents = this.contents.map((obj) => { return obj.children }).flat();
-    this.panList = [];
-    this.itemList = [];
-    this.panNumbers = [];
-    this.naviHeight = 0;
-    this.nowUploading = false;
-    this.menuArea = null;
+    this.contents = null;
+    ajaxJson({}, SECONDHOST + "/getChecklist").then((contents) => {
+      instance.contents = contents;
+      instance.panContents = this.contents.map((obj) => { return obj.children }).flat();
+      instance.panList = [];
+      instance.itemList = [];
+      instance.panNumbers = [];
+      instance.naviHeight = 0;
+      instance.nowUploading = false;
+      instance.menuArea = null;
+    }).catch((err) => {
+      window.location.reload();
+    })
 
     this.matrix = [];
     this.names = [];
