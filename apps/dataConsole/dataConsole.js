@@ -14,7 +14,7 @@ const DataConsole = function () {
 
 DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch) {
   const instance = this;
-  const { fileSystem, shell, shellLink, sleep, mediaQuery } = this.mother;
+  const { fileSystem, shellExec, shellLink, sleep, mediaQuery } = this.mother;
   const S3HOST = "https://" + this.address.officeinfo.ghost.host;
   const SSEHOST = address.host;
   const SSEHOST_CONSOLE = this.address.backinfo.host;
@@ -32,6 +32,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   try {
 
     //set static
+    const workerName = "worker";
     const moduleName = "module";
     const staticDir = `${this.dir}/router/source/local`;
     const staticDirList_raw = await fileSystem(`readDir`, [ staticDir ]);
@@ -42,43 +43,50 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     let subModuleList;
 
     if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
-      shell.exec(`mkdir ${shellLink(staticFolder)}`);
+      await shellExec(`mkdir ${shellLink(staticFolder)}`);
     }
+
     const thisDirList = await fileSystem(`readDir`, [ this.dir ]);
     if (thisDirList.includes("log")) {
       folderSize = await fileSystem("size", [ this.dir + "/log" ]);
       if (folderSize > 100 * 100 * 100) {
-        shell.exec(`rm -rf ${shellLink(this.dir)}/log`);
-        shell.exec(`mkdir ${shellLink(this.dir)}/log`);
+        await shellExec(`rm -rf ${shellLink(this.dir)}/log`);
+        await shellExec(`mkdir ${shellLink(this.dir)}/log`);
       }
     } else {
-      shell.exec(`mkdir ${shellLink(this.dir)}/log`);
+      await shellExec(`mkdir ${shellLink(this.dir)}/log`);
     }
     const thisLogDirList = await fileSystem(`readDir`, [ this.dir + "/log" ]);
     if (!thisDirList.includes("client_latest.json")) {
-      shell.exec(`touch ${shellLink(this.dir)}/log/client_latest.json`);
+      await shellExec(`touch ${shellLink(this.dir)}/log/client_latest.json`);
     }
     if (!thisDirList.includes("designer_latest.json")) {
-      shell.exec(`touch ${shellLink(this.dir)}/log/designer_latest.json`);
+      await shellExec(`touch ${shellLink(this.dir)}/log/designer_latest.json`);
     }
     if (!thisDirList.includes("project_latest.json")) {
-      shell.exec(`touch ${shellLink(this.dir)}/log/project_latest.json`);
+      await shellExec(`touch ${shellLink(this.dir)}/log/project_latest.json`);
     }
     if (!thisDirList.includes("contents_latest.json")) {
-      shell.exec(`touch ${shellLink(this.dir)}/log/contents_latest.json`);
+      await shellExec(`touch ${shellLink(this.dir)}/log/contents_latest.json`);
     }
 
     const staticFolderList = await fileSystem(`readDir`, [ staticFolder ]);
+
     if (staticFolderList.includes(moduleName)) {
-      shell.exec(`rm -rf ${shellLink(staticFolder)}/${shellLink(moduleName)}`);
+      await shellExec(`rm -rf ${shellLink(staticFolder)}/${shellLink(moduleName)}`);
     }
-    shell.exec(`mkdir ${shellLink(staticFolder)}/${shellLink(moduleName)}`);
+    await shellExec(`mkdir ${shellLink(staticFolder)}/${shellLink(moduleName)}`);
+
+    if (staticFolderList.includes(workerName)) {
+      await shellExec(`rm -rf ${shellLink(staticFolder)}/${shellLink(workerName)}`);
+    }
+    await shellExec(`cp -r ${shellLink(this.dir)}/router/source/general/worker ${shellLink(staticFolder)}`);
 
     const staticModuleFolderList = await fileSystem(`readDir`, [ staticFolder + "/" + moduleName ]);
 
     for (let i of staticDirList) {
       if (!staticModuleFolderList.includes(i.replace(/\.js/gi, ''))) {
-        shell.exec(`mkdir ${shellLink(staticFolder)}/${shellLink(moduleName)}/${shellLink(i.replace(/\.js/gi, ''))}`);
+        await shellExec(`mkdir ${shellLink(staticFolder)}/${shellLink(moduleName)}/${shellLink(i.replace(/\.js/gi, ''))}`);
       }
     }
 

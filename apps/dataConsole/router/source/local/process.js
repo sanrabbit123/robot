@@ -6713,6 +6713,14 @@ ProcessJs.prototype.launching = async function () {
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
     let loading;
     let serverResponse;
+    let projects;
+    let clients, designers;
+    let proidArr;
+    let history;
+    let clientHistory;
+    let cliidArr;
+    let secondRes;
+    let matrix;
 
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
@@ -6734,7 +6742,7 @@ ProcessJs.prototype.launching = async function () {
       return new Promise((resolve, reject) => {
         number = 0;
         for (let [ data, url ] of matrix) {
-          workers[number] = new Worker("https://localhost:3000/test.js");
+          workers[number] = new Worker(BACKHOST + "/worker/ajax.js");
           workers[number].addEventListener("message", (e) => {
             const { response, number } = GeneralJs.equalJson(e.data);
             responseTong[number] = response;
@@ -6754,65 +6762,42 @@ ProcessJs.prototype.launching = async function () {
         }, 1);
       })
     }
-
-
-    let projects;
-    let clients, designers;
-    let proidArr;
-    let history;
-    let clientHistory;
-    let cliidArr;
-    let secondRes;
-    let matrix;
-
-    // projects = await ajaxJson({ noFlat: true, whereQuery: {
-    //   $and: [
-    //     {
-    //       "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
-    //     },
-    //     {
-    //       "process.status": { $regex: "^[진대]" }
-    //     }
-    //   ]
-    // } }, BACKHOST + "/getProjects", { equal: true });
-    // projects.sort((a, b) => { return b.process.contract.first.date.valueOf() - a.process.contract.first.date.valueOf() });
-    // proidArr = projects.map((p) => { return p.proid });
-
-    // clients = await ajaxJson({ noFlat: true, whereQuery: { $or: Array.from(new Set(projects.map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) } }, BACKHOST + "/getClients", { equal: true });
-    // cliidArr = clients.map((c) => { return c.cliid });
-
-    ({ projects, clients } = await ajaxJson({ mode: "pre" }, BACKHOST + "/processConsole", { equal: true }));
-    proidArr = projects.map((p) => { return p.proid });
-    cliidArr = clients.map((c) => { return c.cliid });
-
-    matrix = await ajaxMultiple([
-      [ { noFlat: true, whereQuery: { $or: Array.from(new Set(projects.map((p) => { return p.desid }))).map((desid) => { return { desid } }) } }, BACKHOST + "/getDesigners" ],
-      [ { method: "project", idArr: proidArr }, BACKHOST + "/getHistoryTotal" ],
-      [ { method: "client", idArr: cliidArr }, BACKHOST + "/getHistoryTotal" ],
-      [ { proidArr }, SECONDHOST + "/getProcessData" ],
-    ])
-
-    designers = matrix[0];
-    history = Object.values(matrix[1]);
-    clientHistory = Object.values(matrix[2]);
-    secondRes = matrix[3];
-
-    serverResponse = {
-      projects,
-      clients,
-      designers,
-      history,
-      clientHistory,
-      rawContents: secondRes.rawContents,
-      sendStatus: secondRes.sendStatus,
-      sendSchedule: secondRes.sendSchedule,
-      sendFile: secondRes.sendFile
+    
+    if (typeof window.Worker === "function") {
+      ({ projects, clients } = await ajaxJson({ mode: "pre" }, BACKHOST + "/processConsole", { equal: true }));
+      proidArr = projects.map((p) => { return p.proid });
+      cliidArr = clients.map((c) => { return c.cliid });
+  
+      if (proidArr.length === 0) {
+        throw new Error("invalid porid arr");
+      }
+  
+      matrix = await ajaxMultiple([
+        [ { noFlat: true, whereQuery: { $or: Array.from(new Set(projects.map((p) => { return p.desid }))).map((desid) => { return { desid } }) } }, BACKHOST + "/getDesigners" ],
+        [ { method: "project", idArr: proidArr }, BACKHOST + "/getHistoryTotal" ],
+        [ { method: "client", idArr: cliidArr }, BACKHOST + "/getHistoryTotal" ],
+        [ { proidArr }, SECONDHOST + "/getProcessData" ],
+      ])
+  
+      designers = matrix[0];
+      history = Object.values(matrix[1]);
+      clientHistory = Object.values(matrix[2]);
+      secondRes = matrix[3];
+  
+      serverResponse = {
+        projects,
+        clients,
+        designers,
+        history,
+        clientHistory,
+        rawContents: secondRes.rawContents,
+        sendStatus: secondRes.sendStatus,
+        sendSchedule: secondRes.sendSchedule,
+        sendFile: secondRes.sendFile
+      }
+    } else {
+      serverResponse = await ajaxJson({ mode: "init" }, BACKHOST + "/processConsole", { equal: true });
     }
-
-
-
-    // serverResponse = await ajaxJson({ mode: "init" }, BACKHOST + "/processConsole", { equal: true });
-
 
     this.reloadProjects(serverResponse);
 
@@ -6851,7 +6836,7 @@ ProcessJs.prototype.launching = async function () {
     }
 
   } catch (e) {
-    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+    GeneralJs.ajax("message=" + JSON.stringify(e.message).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
