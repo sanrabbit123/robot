@@ -204,6 +204,8 @@ ProcessJs.prototype.baseMaker = function () {
     },
   ];
 
+  this.clientColumns = clientColumns;
+
   outerMargin = 30;
   innerPadding = 20;
 
@@ -1171,6 +1173,7 @@ ProcessJs.prototype.baseMaker = function () {
     }
 
     instance.clientDoms = [];
+    instance.totalValues = [];
     for (let { manager, designer, desid, projects } of newProjectsTong) {
       if (projects.length > 0) {
 
@@ -1660,7 +1663,7 @@ ProcessJs.prototype.baseMaker = function () {
 
           }
           instance.clientDoms.push(clientBlack);
-  
+          instance.totalValues.push([ manager, designer + "&nbsp;&nbsp;<u%" + desid + "%u>" ].concat(clientValueArr.map((obj) => { return obj.value })))
         }
 
         clientValueArr = [
@@ -1796,7 +1799,6 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
       const zIndex = 4;
       const blank = "&nbsp;&nbsp;&nbsp;";
       const whiteCardClassName = "whiteCardClassName";
-      const responsePlusButtonPopupClassName = "responsePlusButtonPopupClassName";
       let cancelBack, whiteCard;
       let whiteOuterMargin;
       let whiteInnerMargin;
@@ -5734,6 +5736,700 @@ ProcessJs.prototype.searchProjects = function () {
   });
 }
 
+ProcessJs.prototype.dashBoardView = function () {
+  const instance = this;
+  const { totalContents, ea, belowHeight, projects } = this;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue, serviceParsing, equalJson, variableArray } = GeneralJs;
+  return async function (e) {
+    try {
+      const zIndex = 4;
+      const blank = "&nbsp;&nbsp;&nbsp;";
+      const slash = blank + "&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;" + blank;
+      const whiteCardClassName = "whiteCardClassName";
+      const splitToken = "__split__";
+      const vw = "vw";
+      let cancelBack, whiteCard;
+      let whiteOuterMargin;
+      let whiteInnerMargin;
+      let titleArea, contentsArea, buttonArea;
+      let titleAreaHeight;
+      let titleAreaPaddingBottom;
+      let nameSize, nameWeight;
+      let subSize, subWeight, subMarginLeft, subTextTop;
+      let statusTextTop;
+      let contentsAreaBetween;
+      let contentsAreaPaddingTop;
+      let grayInnerPadding;
+      let contentsAreaLeft;
+      let contentsAreaRight;
+      let blockHeight;
+      let leftColumns;
+      let rightColumns;
+      let greenTong, whiteTong, blackTong, grayTong;
+      let thisRequest;
+      let requestName;
+      let currentState;
+      let confirmState;
+      let payDate;
+      let cancelAmount;
+      let cancelDate;
+      let valueSize, valueWeight, valueBoldWeight;
+      let valueTextTop;
+      let blockMarginBottom;
+      let requestSumConsumer;
+      let requestSumConfirm;
+      let requestSumRefund;
+      let requestSumIncome;
+      let requestValueArr, responseValueArr;
+      let thisResponse;
+      let responseName;
+      let payAmount;
+      let refundAmount;
+      let nonPayAmount;
+      let responseSumTotal;
+      let responseSumNon;
+      let responseSumPaid;
+      let responseSumRefund;
+      let refundDate;
+      let vatAmount, supplyAmount;
+      let payMethod, payProof;
+      let requestSumVat, requestSumSupply;
+      let whiteTongDom;
+      let payRealAmount;
+      let refundGo;
+      let oidArr;
+      let refundReceipt;
+      let responsePlusButton;
+      let responsePlusButtonMenus;
+      let plusCircleWidth;
+      let plusCircleMargin;
+      let plusSize, plusWeight, plusTextTop;
+      let buttonWidth, buttonHeight;
+      let buttonBetween;
+      let buttonSize, buttonWeight, buttonTextTop;
+      let dashboardTable;
+      let tableColumns;
+      let columnsLength;
+      let columnPadding;
+      let blockBetween;
+      let nameWidth;
+      let nameIndexPoint;
+      let reportArea;
+      let reportAreaHeight;
+      let reportAreaPaddingTop;
+      let reportSize, reportWeight;
+      let reportBoldWeight;
+      let reportTextTop;
+      let managers;
+      let desidSize;
+      let dashboardTableLoad;
+      let dashboardTableNumberLoad;
+      let valuesArr, valuesNumberArr;
+      let managerDesignerSet;
+      let targetArr;
+      
+      whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
+      whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
+
+      titleAreaHeight = <%% 63, 42, 42, 42, 42 %%>;
+
+      titleAreaPaddingBottom = 6;
+
+      nameSize = <%% 32, 24, 24, 24, 24 %%>;
+      nameWeight = 800;
+
+      subSize = <%% 17, 15, 15, 15, 15 %%>;
+      subWeight = 400;
+      subMarginLeft = 13;
+      subTextTop = <%% (isMac() ? 7 : 5), 5, 5, 5, 3 %%>;
+
+      statusTextTop = <%% 27, 18, 18, 18, 18 %%>;
+
+      contentsAreaBetween = 10;
+      contentsAreaPaddingTop = <%% 30, 15, 15, 15, 15 %%>;
+
+      grayInnerPadding = 10;
+
+      blockHeight = <%% 36, 36, 36, 36, 36 %%>;
+
+      valueSize = <%% 13, 13, 13, 13, 3 %%>;
+      valueWeight = 400;
+      valueBoldWeight = 700;
+      valueTextTop = isMac() ? -1 : 1;
+
+      blockMarginBottom = 2;
+
+      plusCircleWidth = 36;
+      plusCircleMargin = 10;
+
+      plusSize = 34;
+      plusWeight = 500;
+      plusTextTop = -3;
+
+      buttonWidth = 96;
+      buttonHeight = 30;
+      buttonBetween = 4;
+      buttonSize = 13;
+      buttonWeight = 700;
+      buttonTextTop = isMac() ? -1 : 1;
+
+      columnPadding = 30;
+
+      blockBetween = 2;
+
+      nameWidth = 64;
+      nameIndexPoint = 1;
+
+      reportAreaHeight = 3;
+      reportAreaPaddingTop = 20;
+
+      reportSize = 0.85;
+      reportWeight = 400;
+      reportBoldWeight = 700;
+      reportTextTop = (isMac() ? -1 : 1);
+
+      desidSize = 10;
+
+      tableColumns = equalJson(JSON.stringify(instance.clientColumns)).map((obj) => { return obj.title });
+      tableColumns.unshift("디자이너");
+      tableColumns.unshift("담당자");
+      columnsLength = tableColumns.length;
+
+      managers = [ ...new Set(instance.totalValues.map((arr) => {
+        return arr[0]
+      })) ];
+
+      dashboardTableLoad = (dashboardTable) => {
+        cleanChildren(dashboardTable);
+
+        createNode({
+          mother: dashboardTable,
+          style: {
+            display: "flex",
+            position: "sticky",
+            top: String(0),
+            zIndex: String(1),
+            flexDirection: "row",
+            width: withOut(columnPadding * 2, ea),
+            height: String(blockHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gradientGray,
+            justifyContent: "start",
+            alignItems: "start",
+            paddingLeft: String(columnPadding) + ea,
+            paddingRight: String(columnPadding) + ea,
+          },
+          children: variableArray(columnsLength).map((index) => {
+            return {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: (index < nameIndexPoint ? String(nameWidth) + ea : ("calc(calc(100% - " + String(nameWidth * nameIndexPoint) + ea + ") / " + String(columnsLength - nameIndexPoint) + ")")),
+                height: withOut(0, ea),
+                justifyContent: "start",
+                alignItems: "center",
+              },
+              child: {
+                text: tableColumns[index],
+                style: {
+                  fontSize: String(valueSize) + ea,
+                  fontWeight: String(valueBoldWeight),
+                  color: colorChip.white,
+                  position: "relative",
+                  top: String(valueTextTop) + ea,
+                }
+              }
+            }
+          }),
+        });
+
+        valuesArr = equalJson(JSON.stringify(instance.totalValues));
+        for (let arr of valuesArr) {
+          createNode({
+            mother: dashboardTable,
+            style: {
+              display: "flex",
+              position: "relative",
+              flexDirection: "row",
+              width: withOut(columnPadding * 2, ea),
+              height: String(blockHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray0,
+              justifyContent: "start",
+              alignItems: "start",
+              paddingLeft: String(columnPadding) + ea,
+              paddingRight: String(columnPadding) + ea,
+              marginTop: String(blockBetween) + ea,
+            },
+            children: variableArray(columnsLength).map((index) => {
+              return {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: (index < nameIndexPoint ? String(nameWidth) + ea : ("calc(calc(100% - " + String(nameWidth * nameIndexPoint) + ea + ") / " + String(columnsLength - nameIndexPoint) + ")")),
+                  height: withOut(0, ea),
+                  justifyContent: "start",
+                  alignItems: "center",
+                },
+                child: {
+                  text: arr[index],
+                  style: {
+                    fontSize: String(valueSize) + ea,
+                    fontWeight: String(valueWeight),
+                    color: colorChip.black,
+                    position: "relative",
+                    top: String(valueTextTop) + ea,
+                  },
+                  bold: {
+                    fontSize: String(valueSize) + ea,
+                    fontWeight: String(valueWeight),
+                    color: colorChip.green,
+                  },
+                  under: {
+                    fontSize: String(desidSize) + ea,
+                    fontWeight: String(valueWeight),
+                    color: colorChip.deactive,
+                  }
+                }
+              }
+            }),
+          });
+        }
+      }
+
+      dashboardTableNumberLoad = (dashboardTable) => {
+        cleanChildren(dashboardTable);
+
+        createNode({
+          mother: dashboardTable,
+          style: {
+            display: "flex",
+            position: "sticky",
+            top: String(0),
+            zIndex: String(1),
+            flexDirection: "row",
+            width: withOut(columnPadding * 2, ea),
+            height: String(blockHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gradientGreen,
+            justifyContent: "start",
+            alignItems: "start",
+            paddingLeft: String(columnPadding) + ea,
+            paddingRight: String(columnPadding) + ea,
+          },
+          children: variableArray(columnsLength).map((index) => {
+            return {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: (index < nameIndexPoint ? String(nameWidth) + ea : ("calc(calc(100% - " + String(nameWidth * nameIndexPoint) + ea + ") / " + String(columnsLength - nameIndexPoint) + ")")),
+                height: withOut(0, ea),
+                justifyContent: "start",
+                alignItems: "center",
+              },
+              child: {
+                text: tableColumns[index],
+                style: {
+                  fontSize: String(valueSize) + ea,
+                  fontWeight: String(valueBoldWeight),
+                  color: colorChip.white,
+                  position: "relative",
+                  top: String(valueTextTop) + ea,
+                }
+              }
+            }
+          }),
+        });
+
+        valuesArr = equalJson(JSON.stringify(instance.totalValues));
+
+
+        managerDesignerSet = [ ...new Set(valuesArr.map((arr) => { return arr[0] + splitToken + arr[1] })) ];
+        managerDesignerSet = managerDesignerSet.map((str) => { return str.split(splitToken) });
+
+        valuesNumberArr = [];
+        for (let arr of managerDesignerSet) {
+
+          targetArr = valuesArr.filter((a) => {
+            return a[0] === arr[0] && a[1] === arr[1];
+          })
+
+          arr.push(String(targetArr.length));
+          arr.push(String(targetArr.filter((a) => { return !/진행/gi.test(a[3]) }).length) + " / <b%" + String(targetArr.filter((a) => { return /진행/gi.test(a[3]) }).length) + "%b>");
+          arr.push(String(targetArr.filter((a) => { return /홈리에종/gi.test(a[4]) }).length));
+          arr.push(String(targetArr.filter((a) => { return a[5] !== '-' }).length));
+          arr.push(String(targetArr.filter((a) => { return a[6] !== '-' }).length));
+          arr.push(String(targetArr.filter((a) => { return a[7] !== '-' }).length));
+          arr.push(String(targetArr.filter((a) => { return a[8] !== '-' }).length));
+          arr.push(String(targetArr.filter((a) => { return a[9] !== '-' }).length));
+          arr.push(String(targetArr.filter((a) => { return a[10] !== '-' }).length));
+          arr.push(String(targetArr.filter((a) => { return a[11] !== '-' }).length));
+          arr.push(String(targetArr.filter((a) => { return a[12] !== '-' }).length));
+          arr.push(String(targetArr.filter((a) => { return a[13] !== '-' }).length));
+          
+          valuesNumberArr.push(equalJson(JSON.stringify(arr)));
+        }
+
+        for (let arr of valuesNumberArr) {
+          createNode({
+            mother: dashboardTable,
+            style: {
+              display: "flex",
+              position: "relative",
+              flexDirection: "row",
+              width: withOut(columnPadding * 2, ea),
+              height: String(blockHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray0,
+              justifyContent: "start",
+              alignItems: "start",
+              paddingLeft: String(columnPadding) + ea,
+              paddingRight: String(columnPadding) + ea,
+              marginTop: String(blockBetween) + ea,
+            },
+            children: variableArray(columnsLength).map((index) => {
+              return {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: (index < nameIndexPoint ? String(nameWidth) + ea : ("calc(calc(100% - " + String(nameWidth * nameIndexPoint) + ea + ") / " + String(columnsLength - nameIndexPoint) + ")")),
+                  height: withOut(0, ea),
+                  justifyContent: "start",
+                  alignItems: "center",
+                },
+                child: {
+                  text: arr[index],
+                  style: {
+                    fontSize: String(valueSize) + ea,
+                    fontWeight: String(valueWeight),
+                    color: colorChip.black,
+                    position: "relative",
+                    top: String(valueTextTop) + ea,
+                  },
+                  bold: {
+                    fontSize: String(valueSize) + ea,
+                    fontWeight: String(valueWeight),
+                    color: colorChip.green,
+                  },
+                  under: {
+                    fontSize: String(desidSize) + ea,
+                    fontWeight: String(valueWeight),
+                    color: colorChip.deactive,
+                  }
+                }
+              }
+            }),
+          });
+        }
+      }
+      
+      dashboardTable = {};
+
+      // base
+
+      removeByClass(whiteCardClassName);
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ whiteCardClassName ],
+        event: (e) => {
+          removeByClass(whiteCardClassName);
+        },
+        set: "fixed",
+        style: {
+          height: withOut(belowHeight, ea),
+          background: colorChip.black,
+          opacity: String(0.4),
+          zIndex: String(zIndex),
+        }
+      });
+      whiteCard = createNode({
+        mother: totalContents,
+        class: [ whiteCardClassName ],
+        style: {
+          position: "fixed",
+          top: String(whiteOuterMargin) + ea,
+          left: String(whiteOuterMargin) + ea,
+          width: withOut((whiteOuterMargin * 2) + (whiteInnerMargin * 2), ea),
+          height: withOut((whiteOuterMargin * 2) + belowHeight + (whiteInnerMargin * 2), ea),
+          padding: String(whiteInnerMargin) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          animation: "fadeuplite 0.3s ease forwards",
+          zIndex: String(zIndex),
+        },
+        children: [
+          {
+            style: {
+              position: "relative",
+              display: "block",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              borderRadius: String(5) + "px",
+            },
+          }
+        ]
+      }).firstChild;
+
+
+      // title area
+
+      titleArea = createNode({
+        mother: whiteCard,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(titleAreaHeight) + ea,
+          paddingBottom: String(titleAreaPaddingBottom) + ea,
+          alignItems: "center",
+          borderBottom: "1px solid " + colorChip.gray3,
+        }
+      });
+      createNode({
+        mother: titleArea,
+        text: "현재 상황",
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          fontSize: String(nameSize) + ea,
+          fontWeight: String(nameWeight),
+          color: colorChip.black,
+        }
+      });
+      createNode({
+        mother: titleArea,
+        text: "프로젝트 대시보드",
+        style: {
+          display: "inline-flex",
+          fontSize: String(subSize) + ea,
+          fontWeight: String(subWeight),
+          color: colorChip.deactive,
+          marginLeft: String(subMarginLeft) + ea,
+          position: "relative",
+          top: String(subTextTop) + ea,
+        }
+      });
+      createNode({
+        mother: titleArea,
+        attribute: {
+          toggle: "off",
+        },
+        text: "숫자만 보기",
+        event: {
+          selectstart: (e) => { e.preventDefault() },
+          click: function (e) {
+            const toggle = this.getAttribute("toggle");
+            if (toggle === "off") {
+              this.textContent = "전체 보기";
+              dashboardTableNumberLoad(dashboardTable);
+              this.setAttribute("toggle", "on");
+            } else {
+              this.textContent = "숫자만 보기";
+              dashboardTableLoad(dashboardTable);
+              this.setAttribute("toggle", "off");
+            }
+          }
+        },
+        style: {
+          display: "inline-flex",
+          fontSize: String(subSize) + ea,
+          fontWeight: String(subWeight),
+          color: colorChip.green,
+          position: "absolute",
+          right: String(0),
+          top: String(statusTextTop) + ea,
+          cursor: "pointer",
+        },
+      });
+
+
+      // contents area
+
+      contentsArea = createNode({
+        mother: whiteCard,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "column",
+          height: "calc(" + withOut(titleAreaHeight + titleAreaPaddingBottom + contentsAreaPaddingTop + reportAreaPaddingTop, ea) + " - " + String(reportAreaHeight) + vw + ")",
+          width: withOut(0, ea),
+          marginTop: String(contentsAreaPaddingTop) + ea,
+          overflow: "scroll",
+        }
+      });
+
+      dashboardTable = createNode({
+        mother: contentsArea,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "column",
+          width: withOut(0, ea),
+          paddingBottom: String(200) + ea,
+        }
+      });
+      
+      dashboardTableLoad(dashboardTable);
+
+
+      // report area
+
+      reportArea = createNode({
+        mother: whiteCard,
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "row",
+          height: String(reportAreaHeight) + vw,
+          width: withOut(0, ea),
+          marginTop: String(reportAreaPaddingTop) + ea,
+          boxSizing: "border-box",
+          borderRadius: String(5) + "px",
+          border: "1px solid " + colorChip.gray3,
+          justifyContent: "center",
+          alignItems: "center",
+        }
+      });
+
+      createNode({
+        mother: reportArea,
+        text: "총 관리 프로젝트 :" + blank + "<b%" + String(instance.totalValues.length) + "%b> 개",
+        style: {
+          position: "relative",
+          fontSize: String(reportSize) + vw,
+          fontWeight: String(reportWeight),
+          color: colorChip.black,
+          top: String(reportTextTop) + ea,
+        },
+        bold: {
+          fontSize: String(reportSize) + vw,
+          fontWeight: String(reportBoldWeight),
+          color: colorChip.green,
+        }
+      })
+
+      createNode({
+        mother: reportArea,
+        text: slash,
+        style: {
+          position: "relative",
+          fontSize: String(reportSize) + vw,
+          fontWeight: String(reportWeight),
+          color: colorChip.gray4,
+          top: String(reportTextTop) + ea,
+        }
+      });
+
+      createNode({
+        mother: reportArea,
+        text: "진행중 프로젝트 :" + blank + "<b%" + String(instance.totalValues.filter((arr) => { return /진행/gi.test(arr[3]) }).length) + "%b> 개",
+        style: {
+          position: "relative",
+          fontSize: String(reportSize) + vw,
+          fontWeight: String(reportWeight),
+          color: colorChip.black,
+          top: String(reportTextTop) + ea,
+        },
+        bold: {
+          fontSize: String(reportSize) + vw,
+          fontWeight: String(reportBoldWeight),
+          color: colorChip.green,
+        }
+      })
+
+      createNode({
+        mother: reportArea,
+        text: slash,
+        style: {
+          position: "relative",
+          fontSize: String(reportSize) + vw,
+          fontWeight: String(reportWeight),
+          color: colorChip.gray4,
+          top: String(reportTextTop) + ea,
+        }
+      });
+
+      for (let manager of managers) {
+
+        createNode({
+          mother: reportArea,
+          text: manager + " 관리 :" + blank + "<b%" + String(instance.totalValues.filter((arr) => { return arr[0] === manager }).length) + "%b> 개",
+          style: {
+            position: "relative",
+            fontSize: String(reportSize) + vw,
+            fontWeight: String(reportWeight),
+            color: colorChip.black,
+            top: String(reportTextTop) + ea,
+          },
+          bold: {
+            fontSize: String(reportSize) + vw,
+            fontWeight: String(reportBoldWeight),
+            color: colorChip.green,
+          }
+        })
+  
+        createNode({
+          mother: reportArea,
+          text: slash,
+          style: {
+            position: "relative",
+            fontSize: String(reportSize) + vw,
+            fontWeight: String(reportWeight),
+            color: colorChip.gray4,
+            top: String(reportTextTop) + ea,
+          }
+        });
+
+        createNode({
+          mother: reportArea,
+          text: manager + " 진행 :" + blank + "<b%" + String(instance.totalValues.filter((arr) => { return arr[0] === manager }).filter((arr) => { return /진행/gi.test(arr[3]) }).length) + "%b> 개",
+          style: {
+            position: "relative",
+            fontSize: String(reportSize) + vw,
+            fontWeight: String(reportWeight),
+            color: colorChip.black,
+            top: String(reportTextTop) + ea,
+          },
+          bold: {
+            fontSize: String(reportSize) + vw,
+            fontWeight: String(reportBoldWeight),
+            color: colorChip.green,
+          }
+        })
+  
+        createNode({
+          mother: reportArea,
+          text: slash,
+          style: {
+            position: "relative",
+            fontSize: String(reportSize) + vw,
+            fontWeight: String(reportWeight),
+            color: colorChip.gray4,
+            top: String(reportTextTop) + ea,
+          }
+        });
+
+      }
+
+      reportArea.removeChild(reportArea.lastChild);
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+ProcessJs.prototype.reportEvent = function () {
+  const instance = this;
+  const { totalContents, ea, belowHeight, projects } = this;
+  const { ajaxJson, uniqueValue, blankHref } = GeneralJs;
+  const { belowButtons: { square: { reportIcon } } } = this.mother;
+
+  reportIcon.addEventListener("click", this.dashBoardView());
+}
+
 ProcessJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson, equalJson, returnGet } = GeneralJs;
@@ -5766,9 +6462,11 @@ ProcessJs.prototype.launching = async function () {
     this.matrix = [];
     this.names = [];
     this.clientDoms = [];
+    this.totalValues = [];
 
     this.baseMaker();
     this.searchProjects();
+    this.reportEvent();
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
