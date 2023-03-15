@@ -204,6 +204,8 @@ ProcessJs.prototype.baseMaker = function () {
     },
   ];
 
+  this.clientColumnsMenu = clientColumnsMenu;
+  this.clientColumnsBlankTitle = clientColumnsBlankTitle;
   this.clientColumns = clientColumns;
 
   outerMargin = 30;
@@ -5746,6 +5748,9 @@ ProcessJs.prototype.dashBoardView = function () {
       const blank = "&nbsp;&nbsp;&nbsp;";
       const slash = blank + "&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;" + blank;
       const whiteCardClassName = "whiteCardClassName";
+      const filterMenuClassName = "filterMenuClassName2";
+      const entireValueBlockClassName = "entireValueBlockClassName";
+      const targetTableClassName = "targetTableClassName";
       const splitToken = "__split__";
       const vw = "vw";
       let cancelBack, whiteCard;
@@ -5827,6 +5832,15 @@ ProcessJs.prototype.dashBoardView = function () {
       let valuesArr, valuesNumberArr;
       let managerDesignerSet;
       let targetArr;
+      let menuButtonOuterPadding;
+      let menuButtonInnerPadding;
+      let menuButtonWidth;
+      let menuButtonHeight;
+      let menuButtonSize;
+      let menuButtonWeight;
+      let menuButtonTextTop;
+      let clientColumnsFunctionsTong;
+      let matchingFilterMaker;
       
       whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
       whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
@@ -5890,6 +5904,15 @@ ProcessJs.prototype.dashBoardView = function () {
 
       desidSize = 10;
 
+      menuButtonOuterPadding = 4;
+      menuButtonInnerPadding = 3;
+      menuButtonWidth = 90;
+      menuButtonHeight = 26;
+    
+      menuButtonSize = 12;
+      menuButtonWeight = 600;
+      menuButtonTextTop = -1;
+
       tableColumns = equalJson(JSON.stringify(instance.clientColumns)).map((obj) => { return obj.title });
       tableColumns.unshift("디자이너");
       tableColumns.unshift("담당자");
@@ -5898,6 +5921,140 @@ ProcessJs.prototype.dashBoardView = function () {
       managers = [ ...new Set(instance.totalValues.map((arr) => {
         return arr[0]
       })) ];
+
+      matchingFilterMaker = (keyword) => {
+        return function (e) {
+          const index = Number(this.getAttribute("index"));
+          const type = this.getAttribute("type");
+          const targetTable = document.querySelector('.' + targetTableClassName);
+          let targets;
+
+          targets = [ ...document.querySelectorAll('.' + entireValueBlockClassName) ];
+          targets = targets.map((dom) => {
+            let boo;
+            if ([ ...dom.children ][index].firstChild.textContent.trim() === keyword) {
+              boo = true;
+            } else {
+              boo = false;
+            }
+            return { dom, boo }
+          });
+
+          for (let { dom, boo } of targets) {
+            if (boo) {
+              dom.style.display = "block";
+            } else {
+              dom.style.display = "none";
+            }
+          }
+  
+        }
+      }
+
+      clientColumnsFunctionsTong = {
+        downSort: function (e) {
+          const index = Number(this.getAttribute("index"));
+          const type = this.getAttribute("type");
+          const targets = [ ...document.querySelectorAll('.' + entireValueBlockClassName) ];
+          const targetTable = document.querySelector('.' + targetTableClassName);
+
+          if (type === "date") {
+            targets.sort((a, b) => {
+              const aValue = [ ...a.children ][index].firstChild.textContent;
+              const bValue = [ ...b.children ][index].firstChild.textContent;
+              return stringToDate(bValue).valueOf() - stringToDate(aValue).valueOf();
+            })
+          } else if (type === "string") {
+            targets.sort((a, b) => {
+              const aValue = [ ...a.children ][index].firstChild.textContent;
+              const bValue = [ ...b.children ][index].firstChild.textContent;
+              return bValue.charCodeAt(0) - aValue.charCodeAt(0);
+            })
+          }
+          for (let dom of targets) {
+            targetTable.appendChild(dom);
+          }
+        },
+        upSort: function (e) {
+          const index = Number(this.getAttribute("index"));
+          const type = this.getAttribute("type");
+          const targets = [ ...document.querySelectorAll('.' + entireValueBlockClassName) ];
+          const targetTable = document.querySelector('.' + targetTableClassName);
+
+          if (type === "date") {
+            targets.sort((a, b) => {
+              const aValue = [ ...a.children ][index].firstChild.textContent;
+              const bValue = [ ...b.children ][index].firstChild.textContent;
+              return stringToDate(aValue).valueOf() - stringToDate(bValue).valueOf();
+            })
+          } else if (type === "string") {
+            targets.sort((a, b) => {
+              const aValue = [ ...a.children ][index].firstChild.textContent;
+              const bValue = [ ...b.children ][index].firstChild.textContent;
+              return aValue.charCodeAt(0) - bValue.charCodeAt(0);
+            })
+          }
+          for (let dom of targets) {
+            targetTable.appendChild(dom);
+          }
+        },
+        totalFilter: function (e) {
+          const index = Number(this.getAttribute("index"));
+          const type = this.getAttribute("type");
+          const targetTable = document.querySelector('.' + targetTableClassName);
+          let targets;
+
+          targets = [ ...document.querySelectorAll('.' + entireValueBlockClassName) ];
+          targets = targets.map((dom) => {
+            let boo;
+            if ([ ...dom.children ][index].firstChild.textContent.trim() === '-') {
+              boo = true;
+            } else {
+              boo = true;
+            }
+            return { dom, boo }
+          });
+
+          for (let { dom, boo } of targets) {
+            if (boo) {
+              dom.style.display = "block";
+            } else {
+              dom.style.display = "none";
+            }
+          }
+        },
+        existFilter: function (e) {
+          const index = Number(this.getAttribute("index"));
+          const type = this.getAttribute("type");
+          const targetTable = document.querySelector('.' + targetTableClassName);
+          let targets;
+
+          targets = [ ...document.querySelectorAll('.' + entireValueBlockClassName) ];
+          targets = targets.map((dom) => {
+            let boo;
+            if ([ ...dom.children ][index].firstChild.textContent.trim() === '-') {
+              boo = false;
+            } else {
+              boo = true;
+            }
+            return { dom, boo }
+          });
+
+          for (let { dom, boo } of targets) {
+            if (boo) {
+              dom.style.display = "block";
+            } else {
+              dom.style.display = "none";
+            }
+          }
+        },
+        nonExistFilter: matchingFilterMaker('-'),
+        clientReady: matchingFilterMaker("대기"),
+        clientGoing: matchingFilterMaker("진행중"),
+        constructDesigner: matchingFilterMaker("디자이너"),
+        constructHomeliaison: matchingFilterMaker("홈리에종"),
+        constructClient: matchingFilterMaker("고객"),
+      }
 
       dashboardTableLoad = (dashboardTable) => {
         cleanChildren(dashboardTable);
@@ -5921,6 +6078,116 @@ ProcessJs.prototype.dashBoardView = function () {
           },
           children: variableArray(columnsLength).map((index) => {
             return {
+              attribute: {
+                length: String(columnsLength),
+                index: String(index),
+              },
+              event: {
+                click: function(e) {
+                  const length = Number(this.getAttribute("length"));
+                  const index = Number(this.getAttribute("index"));
+                  const delta = length - instance.clientColumns.length;
+                  const zIndex = 5;
+                  let thisObject;
+                  let thisMenu;
+                  let cancelBack, menuPrompt;
+                  let type;
+
+                  if (instance.clientColumns[index - delta] !== undefined) {
+                    thisObject = instance.clientColumns[index - delta];
+                    type = thisObject.type;
+                    if (type === "string") {
+                      thisMenu = equalJson(JSON.stringify(instance.clientColumnsMenu)).concat(thisObject.menu)
+                    } else {
+                      thisMenu = equalJson(JSON.stringify(instance.clientColumnsMenu)).concat(equalJson(JSON.stringify(instance.clientColumnsBlankTitle))).concat(thisObject.menu);
+                    }
+
+                    cancelBack = createNode({
+                      mother: totalContents,
+                      class: [ filterMenuClassName ],
+                      event: {
+                        click: function (e) {
+                          removeByClass(filterMenuClassName);
+                        }
+                      },
+                      style: {
+                        position: "fixed",
+                        top: String(0),
+                        left: String(0),
+                        background: "transparent",
+                        width: withOut(0, ea),
+                        height: withOut(0, ea),
+                        zIndex: String(zIndex),
+                      }
+                    });
+              
+                    menuPrompt = createNode({
+                      mother: totalContents,
+                      class: [ filterMenuClassName ],
+                      attribute: {
+                        index: String(index),
+                        type,
+                      },
+                      style: {
+                        position: "absolute",
+                        top: String(e.y) + "px",
+                        left: String(e.x) + "px",
+                        padding: String(menuButtonOuterPadding) + ea,
+                        paddingBottom: String(menuButtonOuterPadding - menuButtonInnerPadding) + ea,
+                        borderRadius: String(5) + "px",
+                        background: colorChip.white,
+                        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                        animation: "fadeuplite 0.3s ease forwards",
+                        zIndex: String(zIndex),
+                      },
+                      children: thisMenu.map((obj, index) => {
+                        return {
+                          attribute: {
+                            key: obj.key
+                          },
+                          event: {
+                            click: function (e) {
+                              const key = this.getAttribute("key");
+                              const thisFunction = clientColumnsFunctionsTong[key];
+                              thisFunction.call(this.parentElement, e);
+                              removeByClass(filterMenuClassName);
+                            },
+                            contextmenu : function (e) {
+                              e.preventDefault();
+                              const key = this.getAttribute("key");
+                              const thisFunction = clientColumnsFunctionsTong[key];
+                              thisFunction.call(this.parentElement, e);
+                              removeByClass(filterMenuClassName);
+                            }
+                          },
+                          style: {
+                            display: "flex",
+                            width: String(menuButtonWidth) + ea,
+                            height: String(menuButtonHeight) + ea,
+                            borderRadius: String(5) + "px",
+                            background: colorChip.gradientGray,
+                            marginBottom: String(menuButtonInnerPadding) + ea,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            cursor: "pointer",
+                          },
+                          child: {
+                            text: obj.title,
+                            style: {
+                              fontSize: String(menuButtonSize) + ea,
+                              fontWeight: String(menuButtonWeight),
+                              color: colorChip.white,
+                              top: String(menuButtonTextTop) + ea,
+                              position: "relative",
+                            }
+                          }
+                        }
+                      })
+                    })
+
+                  }
+                }
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -5928,6 +6195,7 @@ ProcessJs.prototype.dashBoardView = function () {
                 height: withOut(0, ea),
                 justifyContent: "start",
                 alignItems: "center",
+                cursor: "pointer",
               },
               child: {
                 text: tableColumns[index],
@@ -5947,6 +6215,7 @@ ProcessJs.prototype.dashBoardView = function () {
         for (let arr of valuesArr) {
           createNode({
             mother: dashboardTable,
+            class: [ entireValueBlockClassName ],
             style: {
               display: "flex",
               position: "relative",
@@ -6122,7 +6391,7 @@ ProcessJs.prototype.dashBoardView = function () {
           });
         }
       }
-      
+
       dashboardTable = {};
 
       // base
@@ -6262,6 +6531,7 @@ ProcessJs.prototype.dashBoardView = function () {
 
       dashboardTable = createNode({
         mother: contentsArea,
+        class: [ targetTableClassName ],
         style: {
           display: "flex",
           position: "relative",
