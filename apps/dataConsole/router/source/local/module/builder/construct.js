@@ -2,7 +2,7 @@
 
 BuilderJs.prototype.constructDataRender = function (project, titleMode) {
   const instance = this;
-  const { ea, resetWidthEvent } = this;
+  const { ea } = this;
   const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma, equalJson, ajaxJson, sleep } = GeneralJs;
   const { process, proid, address } = project;
   const { contract, design: { construct } } = process;
@@ -172,7 +172,6 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
     });
 
     stringArr.push(textMaker(map["status"].title, status, "black", "status"));
@@ -225,7 +224,6 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          resetWidthEvent();
 
         } catch (e) {
           console.log(e);
@@ -372,7 +370,6 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
           thisCase[column].style.color = colorChip[dateToColor(updateQuery[position], false)];
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -542,7 +539,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
           }
 
           thisCase[column].style.color = colorChip.black;
-          resetWidthEvent();
+
         } catch (e) {
           console.log(e);
         }
@@ -610,8 +607,8 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
           thisCase[column].style.color = colorChip.black;
-          resetWidthEvent();
 
+          
         } catch (e) {
           console.log(e);
         }
@@ -694,7 +691,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
           thisCase[column].style.color = colorChip[dateToColor(updateQuery[position], false)];
-          resetWidthEvent();
+
         } catch (e) {
           console.log(e);
         }
@@ -832,7 +829,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
           thisCase[column].style.color = colorChip[dateToColor(updateQuery[position], false)];
-          resetWidthEvent();
+
         } catch (e) {
           console.log(e);
         }
@@ -2129,7 +2126,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
       } else {
         window.alert("공사 기간, 파트너 시공사를 먼저 모두 설정해주세요!");
         cancelBox.parentNode.removeChild(cancelBox);
-        resetWidthEvent();
+
       }
 
     });
@@ -2138,7 +2135,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
+
     });
 
   } else if (this.type === "payment") {
@@ -2276,8 +2273,8 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          resetWidthEvent();
 
+          
         } catch (e) {
           console.log(e);
         }
@@ -2408,7 +2405,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
             mother.querySelector(".value").textContent = date;
             mother.querySelector(".value").style.color = colorChip.black;
             instance.projects.search("proid", proid).process.design.construct.contract.payments.first.guide = now;
-            resetWidthEvent();
+
           }).catch((err) => {
             console.log(err);
           });
@@ -2452,7 +2449,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
               mother.removeChild(dom);
             }
             thisCase[column].style.color = colorChip[dateToColor(dateValue, true)];
-            resetWidthEvent();
+
           } catch (e) {
             console.log(e);
           }
@@ -2546,21 +2543,21 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
 
       }
 
-      resetWidthEvent();
+
     });
 
     stringArr.push(textMaker(map["firstAmount"].title, autoComma(payments.first !== null ? payments.first.calculation.amount.consumer : 0) + '원', "black", "firstAmount"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
+
     });
 
     stringArr.push(textMaker(map["firstDate"].title, dateToString(payments.first !== null ? payments.first.date : emptyDate), dateToColor(payments.first !== null ? payments.first.date : emptyDate, true), "firstDate"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
+
     });
 
     tempValue = (payments.start !== null ? payments.start.guide : emptyDate);
@@ -2592,7 +2589,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
             mother.querySelector(".value").textContent = date;
             mother.querySelector(".value").style.color = colorChip.black;
             instance.projects.search("proid", proid).process.design.construct.contract.payments.start.guide = now;
-            resetWidthEvent();
+
           }).catch((err) => {
             console.log(err);
           });
@@ -2635,7 +2632,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
               mother.removeChild(dom);
             }
             thisCase[column].style.color = colorChip[dateToColor(dateValue, true)];
-            resetWidthEvent();
+
           } catch (e) {
             console.log(e);
           }
@@ -2729,21 +2726,21 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
 
       }
 
-      resetWidthEvent();
+
     });
 
     stringArr.push(textMaker(map["startAmount"].title, autoComma(payments.start !== null ? payments.start.calculation.amount.consumer : 0) + '원', "black", "startAmount"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
+
     });
 
     stringArr.push(textMaker(map["startDate"].title, dateToString(payments.start !== null ? payments.start.date : emptyDate), dateToColor(payments.start !== null ? payments.start.date : emptyDate, true), "startDate"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
+
     });
 
     tempValue = (payments.middle !== null ? payments.middle.guide : emptyDate);
@@ -2775,7 +2772,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
             mother.querySelector(".value").textContent = date;
             mother.querySelector(".value").style.color = colorChip.black;
             instance.projects.search("proid", proid).process.design.construct.contract.payments.middle.guide = now;
-            resetWidthEvent();
+
           }).catch((err) => {
             console.log(err);
           });
@@ -2818,7 +2815,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
               mother.removeChild(dom);
             }
             thisCase[column].style.color = colorChip[dateToColor(dateValue, true)];
-            resetWidthEvent();
+
           } catch (e) {
             console.log(e);
           }
@@ -2912,21 +2909,21 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
 
       }
 
-      resetWidthEvent();
+
     });
 
     stringArr.push(textMaker(map["middleAmount"].title, autoComma(payments.middle !== null ? payments.middle.calculation.amount.consumer : 0) + '원', "black", "middleAmount"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
+
     });
 
     stringArr.push(textMaker(map["middleDate"].title, dateToString(payments.middle !== null ? payments.middle.date : emptyDate), dateToColor(payments.middle !== null ? payments.middle.date : emptyDate, true), "middleDate"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
+
     });
 
     tempValue = (payments.remain !== null ? payments.remain.guide : emptyDate);
@@ -2958,7 +2955,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
             mother.querySelector(".value").textContent = date;
             mother.querySelector(".value").style.color = colorChip.black;
             instance.projects.search("proid", proid).process.design.construct.contract.payments.remain.guide = now;
-            resetWidthEvent();
+
           }).catch((err) => {
             console.log(err);
           });
@@ -3001,7 +2998,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
               mother.removeChild(dom);
             }
             thisCase[column].style.color = colorChip[dateToColor(dateValue, true)];
-            resetWidthEvent();
+
           } catch (e) {
             console.log(e);
           }
@@ -3095,7 +3092,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
 
       }
 
-      resetWidthEvent();
+
     });
 
     stringArr.push(textMaker(map["remainAmount"].title, autoComma(payments.remain !== null ? payments.remain.calculation.amount.consumer : 0) + '원', "black", "remainAmount"));
@@ -3167,18 +3164,17 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
 
       }
       cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
+
     });
 
     stringArr.push(textMaker(map["remainDate"].title, dateToString(payments.remain !== null ? payments.remain.date : emptyDate), dateToColor(payments.remain !== null ? payments.remain.date : emptyDate, true), "remainDate"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
+
     });
 
   }
-
 
   return { map, stringArr, updateArr, grayBoo, displayBoo };
 }
@@ -3471,56 +3467,6 @@ BuilderJs.prototype.constructBlockInjection = function () {
   this.contentsBlocks = [];
   this.ignoreNumbers = [ 3, 1 ];
   this.widthArrMotherConverted = null;
-  this.resetWidthEvent = async function () {
-    try {
-      const { xyConverting, sleep, setQueue } = GeneralJs;
-      const { ignoreNumbers } = instance;
-      let children;
-      let widthArrMother, widthArrMotherConverted;
-      let widthArr;
-      let tempArr;
-
-      setQueue(async () => {
-
-        if (instance.widthArrMotherConverted === null) {
-
-          widthArrMother = [];
-          for (let block of instance.contentsBlocks) {
-            children = block.children;
-            widthArr = [];
-            for (let i = 0; i < children.length; i++) {
-              if (i >= ignoreNumbers[0] && i < children.length - ignoreNumbers[1]) {
-                children[i].style.width = "auto";
-              }
-              widthArr.push(children[i].getBoundingClientRect().width);
-            }
-            widthArrMother.push(widthArr);
-          }
-    
-          widthArrMotherConverted = xyConverting(widthArrMother).map((arr) => {
-            arr.sort((a, b) => { return b - a; });
-            return arr[0];
-          });  
-
-          instance.widthArrMotherConverted = widthArrMotherConverted;
-        }
-        widthArrMotherConverted = instance.widthArrMotherConverted;
-
-  
-        for (let block of instance.contentsBlocks) {
-          children = block.children;
-          for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
-            await sleep(2);
-            children[i].style.width = String(widthArrMotherConverted[i]) + ea;
-          }
-        }
-
-      }, 100)
-
-    } catch (e) {
-      console.log(e);
-    }
-  }
 
   resultArr = [];
   firstBoo = true;
@@ -3545,10 +3491,6 @@ BuilderJs.prototype.constructBlockInjection = function () {
     });
   }
 
-  instance.resetWidthEvent();
-  setQueue(() => {
-    instance.resetWidthEvent();
-  }, 200);
 }
 
 BuilderJs.prototype.constructWhiteBlock = function (mother, project, first, index, titleMode = false) {
@@ -3579,6 +3521,38 @@ BuilderJs.prototype.constructWhiteBlock = function (mother, project, first, inde
   let menuTextTop;
   let blockArr;
   let blockMap;
+  let thisWidthArr;
+
+
+  if (this.type === "construct") {
+    thisWidthArr = [
+      79,
+      76,
+      79,
+      158,
+      126,
+      79,
+      79,
+      79,
+      720,
+    ]
+  } else {
+    thisWidthArr = [
+      64,
+      78,
+      78,
+      78,
+      78,
+      89,
+      78,
+      78,
+      89,
+      78,
+      78,
+      89,
+      78,
+    ]
+  }
 
   leftMargin = 10;
   motherMargin = 30;
@@ -3594,7 +3568,7 @@ BuilderJs.prototype.constructWhiteBlock = function (mother, project, first, inde
   left = 16;
   size = 14;
   textMargin = 6;
-  betweenText = 50;
+  betweenText = 48;
 
   whiteWidth = 16;
   factorHeight = 20;
@@ -4228,7 +4202,6 @@ BuilderJs.prototype.constructWhiteBlock = function (mother, project, first, inde
                           for (let dom of removeTargets) {
                             directParent.removeChild(dom);
                           }
-                          GeneralJs.setQueue(() => { instance.resetWidthEvent(); });
                         } catch (e) {
                           console.log(e);
                         }
@@ -4246,7 +4219,7 @@ BuilderJs.prototype.constructWhiteBlock = function (mother, project, first, inde
                   }
                 });
 
-                updateArr[index].call(this, e, option, cancelBox, parent, instance.resetWidthEvent);
+                updateArr[index].call(this, e, option, cancelBox, parent);
               }
             }
           }
@@ -4264,6 +4237,7 @@ BuilderJs.prototype.constructWhiteBlock = function (mother, project, first, inde
         overflow: ((i === stringArr.length - 1) ? "hidden" : "visible"),
         transition: "all 0s ease",
         cursor: "pointer",
+        width: String(thisWidthArr[i]) + ea,
       }
     });
     domArr.push(tempDom);
@@ -5380,7 +5354,7 @@ BuilderJs.prototype.constructView = async function () {
         return arr;
       }
     }
-    const { createNodes, colorChip, ajaxJson, returnGet, equalJson, sleep, uniqueValue } = GeneralJs;
+    const { createNodes, colorChip, ajaxJson, ajaxMultiple, returnGet, equalJson, sleep, uniqueValue } = GeneralJs;
     const todayDateValue = (new Date()).valueOf();
     let loading;
     let projects;
@@ -5394,6 +5368,7 @@ BuilderJs.prototype.constructView = async function () {
     let client;
     let requestNumber;
     let builders, builderNames;
+    let matrix;
 
     loading = await this.mother.loadingRun();
 
@@ -5420,24 +5395,35 @@ BuilderJs.prototype.constructView = async function () {
       }
     }
 
-    whereQuery = {};
-    projects = await ajaxJson({ noFlat: true, whereQuery }, "/getProjects", { equal: true });
-    projects = new SearchArray(projects.filter((obj) => {
-      return obj.desid !== '';
-    }).filter((obj) => {
-      return /^[진홀완]/gi.test(obj.process.status);
-    }).filter((obj) => {
-      return obj.process.design.construct !== null
-    }));
+    whereQuery = {
+      $and: [
+        {
+          desid: {
+            $regex: "^d"
+          }
+        },
+        {
+          "process.status": {
+            $regex: "^[진홀완]"
+          }
+        },
+        {
+          "process.design.construct": {
+            $ne: null
+          }
+        }
+      ]
+    };
+    projects = new SearchArray(await ajaxJson({ noFlat: true, whereQuery }, BACKHOST + "/getProjects", { equal: true }));
+    matrix = await ajaxMultiple([
+      [ { noFlat: true, whereQuery: { $or: projects.toNormal().map((obj) => { return { desid: obj.desid } }) } }, BACKHOST + "/getDesigners" ],
+      [ { noFlat: true, whereQuery: { $or: projects.toNormal().map((obj) => { return { cliid: obj.cliid } }) } }, BACKHOST + "/getClients" ],
+      [ { idArr: projects.toNormal().map((obj) => { return obj.proid }), method: "project", property: "construct", }, BACKHOST + "/getHistoryProperty" ],
+    ]);
 
-    designers = new SearchArray(await ajaxJson({ noFlat: true, whereQuery: { $or: projects.toNormal().map((obj) => { return { desid: obj.desid } }) } }, "/getDesigners", { equal: true }));
-    clients = new SearchArray(await ajaxJson({ noFlat: true, whereQuery: { $or: projects.toNormal().map((obj) => { return { cliid: obj.cliid } }) } }, "/getClients", { equal: true }));
-
-    projectHistory = await ajaxJson({
-      idArr: projects.toNormal().map((obj) => { return obj.proid }),
-      method: "project",
-      property: "construct",
-    }, "/getHistoryProperty", { equal: true });
+    designers = new SearchArray(matrix[0]);
+    clients = new SearchArray(matrix[1]);
+    projectHistory = matrix[2];
 
     for (let p of projects) {
       p.designer = designers.search("desid", p.desid).designer;

@@ -3335,7 +3335,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
   left = 16;
   size = 14;
   textMargin = 6;
-  betweenText = 50;
+  betweenText = 48;
 
   whiteWidth = 16;
   factorHeight = 20;

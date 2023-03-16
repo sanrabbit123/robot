@@ -8096,8 +8096,6 @@ DataRouter.prototype.rou_post_processConsole = function () {
 
         searchMode = (typeof req.body.searchMode === "string" && /^p/.test(req.body.searchMode));
 
-        console.log(req.body.searchMode)
-
         if (searchMode) {
           projects = await back.getProjectsByQuery({
             $and: [
