@@ -233,9 +233,17 @@ DevContext.prototype.launching = async function () {
     // }
 
     // await question();
-    
 
-    
+
+    const WebSocket = require("ws");
+    const PORT = 3000;
+    const url = `wss://${address.croninfo.host}:${String(PORT)}/realTimeCommunication`;
+    const ws = new WebSocket(url);
+
+    ws.on("open", (something) => {
+      console.log(something)
+    });
+
     
     
 

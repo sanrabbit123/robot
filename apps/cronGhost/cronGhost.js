@@ -10,8 +10,6 @@ const CronGhost = function () {
   this.aws = new AwsAPIs();
 }
 
-CronGhost.stacks = {};
-
 CronGhost.prototype.aliveTest = async function (MONGOC) {
   const instance = this;
   const address = this.address;
@@ -228,9 +226,34 @@ CronGhost.prototype.cronServer = async function () {
     );
     await this.source.sourceLoad();
 
+    // wss socket
+    generalSocket = new WebSocket.Server({ noServer: true });
+    generalSocket.on("connection", (ws) => {
+      ws.on("message", (message) => {
+        try {
+
+          console.log(message);
+
+          const { mode, to, data } = JSON.parse(message);
+          if (mode === "register") {
+            ws.__who__ = data;
+          } else if (mode === "message") {
+            const clients = generalSocket.clients;
+            for (let c of clients) {
+              if (c.readyState === WebSocket.OPEN && c.__who__.id === to) {
+                c.send(JSON.stringify({ from: ws.__who__.id, data }));
+              }
+            }
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    });
+
     //set router
     const CronRouter = require(`${this.dir}/router/cronRouter.js`);
-    const router = new CronRouter(MONGOC, MONGOLOCALC);
+    const router = new CronRouter(MONGOC, MONGOLOCALC, generalSocket);
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
       app.get(obj.link, obj.func);
@@ -341,34 +364,6 @@ CronGhost.prototype.cronServer = async function () {
       }
     }
     pems.allowHTTP1 = true;
-
-
-    // wss socket
-    generalSocket = new WebSocket.Server({ noServer: true });
-    generalSocket.on("connection", (ws) => {
-      ws.on("message", (message) => {
-        try {
-
-          console.log(message);
-
-          const { mode, to, data } = JSON.parse(message);
-          if (mode === "register") {
-            ws.__who__ = data;
-          } else if (mode === "message") {
-            const clients = generalSocket.clients;
-            for (let c of clients) {
-              if (c.readyState === WebSocket.OPEN && c.__who__.id === to) {
-                c.send(JSON.stringify({ from: ws.__who__.id, data }));
-              }
-            }
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      });
-    });
-    CronGhost.stacks.socket = generalSocket;
-
 
     // launching http server
     server = https.createServer(pems, app);

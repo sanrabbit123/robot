@@ -1,4 +1,4 @@
-const CronRouter = function (MONGOC, MONGOLOCALC) {
+const CronRouter = function (MONGOC, MONGOLOCALC, socket) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
 
@@ -8,6 +8,7 @@ const CronRouter = function (MONGOC, MONGOLOCALC) {
   this.host = this.address.croninfo.host;
   this.mongo = MONGOC;
   this.mongolocal = MONGOLOCALC;
+  this.socket = socket;
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -122,6 +123,33 @@ CronRouter.prototype.rou_post_receiveGitLog = function () {
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       errorLog("Cron launcher 서버 문제 생김 (rou_get_receiveGitLog): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+
+  return obj;
+}
+
+CronRouter.prototype.rou_post_wssStatus = function () {
+  const instance = this;
+  const socket = this.socket;
+  const { errorLog, equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/wssStatus" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      console.log(socket)
+      const clients = [ ...socket.clients ];
+      res.send(JSON.stringify(clients));
+    } catch (e) {
+      errorLog("Cron launcher 서버 문제 생김 (rou_post_wssStatus): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
