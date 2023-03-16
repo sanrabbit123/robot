@@ -229,6 +229,7 @@ CronGhost.prototype.cronServer = async function () {
     // wss socket
     generalSocket = new WebSocket.Server({ noServer: true });
     generalSocket.on("connection", (ws) => {
+      console.log(ws);
       ws.on("message", (message) => {
         try {
 
