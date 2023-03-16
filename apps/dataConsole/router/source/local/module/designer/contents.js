@@ -3387,7 +3387,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
           width: "calc(100vw - " + String((motherMargin * 2) + (leftMargin * 2)) + ea + ")",
           height: String(100) + '%',
           borderRadius: String(3) + "px",
-          background: titleMode ? colorChip.gradientGreen2 : colorChip[grayBoo ? "white" : "gray0"],
+          background: titleMode ? colorChip.gradientGray : colorChip[grayBoo ? "white" : "gray0"],
           top: String(0),
           left: String(0),
           transition: "all 0s ease",

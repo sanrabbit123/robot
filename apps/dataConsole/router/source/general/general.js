@@ -2035,7 +2035,7 @@ GeneralJs.prototype.greenBar = function () {
   style = {
     display: "block",
     position: "fixed",
-    background: GeneralJs.colorChip.gradientGreen,
+    background: GeneralJs.colorChip.gradientGray,
     bottom: String(0),
     left: String(0),
     width: "100%",
@@ -2257,15 +2257,15 @@ GeneralJs.prototype.greenBar = function () {
     "/project",
     "/designer",
     "/designer?mode=contents",
-    "/calculation",
+    "/process",
   ];
   naviIconsContextLinks = [
-    "/analytics",
-    "/user",
+    "/project",
+    "/process",
     "/builder?mode=construct",
     "/builder",
     "/contents",
-    "/flow",
+    "/calculation",
   ];
   naviIconsLeftException = [
     0,
@@ -2281,7 +2281,7 @@ GeneralJs.prototype.greenBar = function () {
     [ "project" ],
     [ "designer" ],
     [ "contents" ],
-    [ "bill" ]
+    [ "process", "calculation" ]
   ];
   opacityMap = {
     construct: "project",

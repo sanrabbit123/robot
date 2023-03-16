@@ -5,7 +5,7 @@ const ProcessJs = function () {
   this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
 }
 
-ProcessJs.prototype.baseMaker = function () {
+ProcessJs.prototype.baseMaker = function (searchMode = false) {
   const instance = this;
   const { totalContents, ea, belowHeight, projects, media, onofflineCircleClassName } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing, equalJson, svgMaker, removeByClass, findByAttribute } = GeneralJs;
@@ -88,6 +88,8 @@ ProcessJs.prototype.baseMaker = function () {
   let clientColumnsFunctionsTong;
   let matchingFilterMaker;
   let circleTop, circleWidth, circleMarginLeft;
+  let designerButtonWidth;
+  let designerDomEvent;
 
   clientColumnsMenu = [
     { title: "내림차순", key: "downSort" },
@@ -210,7 +212,7 @@ ProcessJs.prototype.baseMaker = function () {
   this.clientColumns = clientColumns;
 
   outerMargin = 30;
-  innerPadding = 20;
+  innerPadding = 10;
 
   blockHeight = 43;
   blockMargin = 1;
@@ -271,6 +273,8 @@ ProcessJs.prototype.baseMaker = function () {
   circleTop = 17;
   circleWidth = 6;
   circleMarginLeft = 5;
+
+  designerButtonWidth = 130;
 
   contentsLoad = () => {};
 
@@ -1021,6 +1025,162 @@ ProcessJs.prototype.baseMaker = function () {
     constructClient: matchingFilterMaker("고객"),
   }
 
+  designerDomEvent = function (e) {
+    e.preventDefault();
+    const desid = this.getAttribute("desid");
+    const zIndex = 4;
+    let cancelBack, menuPrompt;
+    let thisMenu;
+
+    thisMenu = [
+      {
+        title: "디자이너 콘솔 보내기",
+        event: async function (e) {
+          try {
+            const host = FRONTHOST.replace(/^https\:\/\//gi, '');
+            const desid = this.getAttribute("desid");
+            const designer = instance.designers.find((obj) => { return obj.desid === desid });
+            if (window.confirm(designer.designer + " 실장님께 디자이너 콘솔 접근 알림톡을 보낼까요?")) {
+              await ajaxJson({
+                method: "designerConsole",
+                name: designer.designer,
+                phone: designer.information.phone,
+                option: {
+                  designer: designer.designer,
+                  host: host,
+                  path: "dashboard",
+                  desid: designer.desid,
+                }
+              }, BACKHOST + "/alimTalk");
+              window.alert(designer.designer + " 실장님께 디자이너 콘솔 접근 알림톡을 보냈습니다!");
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      },
+      {
+        title: "상태 체크 요청",
+        event: async function (e) {
+          try {
+            const host = FRONTHOST.replace(/^https\:\/\//gi, '');
+            const desid = this.getAttribute("desid");
+            const designer = instance.designers.find((obj) => { return obj.desid === desid });
+            if (window.confirm(designer.designer + " 실장님께 프로젝트 상태 체크 요청 알림톡을 보낼까요?")) {
+              await ajaxJson({
+                method: "progressDesignerTotal",
+                name: designer.designer,
+                phone: designer.information.phone,
+                option: {
+                  designer: designer.designer,
+                  host: host,
+                  desid: designer.desid,
+                }
+              }, BACKHOST + "/alimTalk");
+              window.alert(designer.designer + " 실장님께 프로젝트 상태 체크 요청 알림톡을 보냈습니다!");
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      },
+      {
+        title: "디자이너 콘솔 확인",
+        event: async function (e) {
+          try {
+            const desid = this.getAttribute("desid");
+            blankHref(FRONTHOST + "/designer/dashboard.php?desid=" + desid);
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      },
+    ]
+
+    cancelBack = createNode({
+      mother: totalContents,
+      class: [ filterMenuClassName ],
+      event: {
+        click: function (e) {
+          removeByClass(filterMenuClassName);
+        }
+      },
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        background: "transparent",
+        width: withOut(0, ea),
+        height: withOut(0, ea),
+        zIndex: String(zIndex),
+      }
+    });
+
+    menuPrompt = createNode({
+      mother: totalContents,
+      class: [ filterMenuClassName ],
+      attribute: {
+        desid,
+      },
+      style: {
+        position: "absolute",
+        top: String(e.y) + "px",
+        left: String(e.x) + "px",
+        padding: String(buttonOuterPadding) + ea,
+        paddingBottom: String(buttonOuterPadding - buttonInnerPadding) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.white,
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        animation: "fadeuplite 0.3s ease forwards",
+        zIndex: String(zIndex),
+      },
+      children: thisMenu.map((obj, index) => {
+        return {
+          attribute: {
+            index: String(index)
+          },
+          event: {
+            click: function (e) {
+              const index = Number(this.getAttribute("index"));
+              const thisFunction = thisMenu[index].event;
+              thisFunction.call(this.parentElement, e);
+              removeByClass(filterMenuClassName);
+            },
+            contextmenu: function (e) {
+              e.preventDefault();
+              const index = Number(this.getAttribute("index"));
+              const thisFunction = thisMenu[index].event;
+              thisFunction.call(this.parentElement, e);
+              removeByClass(filterMenuClassName);
+            },
+          },
+          style: {
+            display: "flex",
+            width: String(designerButtonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gradientGray,
+            marginBottom: String(buttonInnerPadding) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          },
+          child: {
+            text: obj.title,
+            style: {
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              color: colorChip.white,
+              top: String(buttonTextTop) + ea,
+              position: "relative",
+            }
+          }
+        }
+      })
+    })
+
+  }
+
   grayBack = createNode({
     mother: totalContents,
     style: {
@@ -1029,7 +1189,7 @@ ProcessJs.prototype.baseMaker = function () {
       left: String(outerMargin) + ea,
       width: withOut(outerMargin * 2, ea),
       height: withOut((outerMargin * 2) + belowHeight, ea),
-      background: colorChip.gray1,
+      background: colorChip.gray2,
       borderRadius: String(5) + "px",
     },
     children: [
@@ -1071,7 +1231,7 @@ ProcessJs.prototype.baseMaker = function () {
 
   // column
 
-  contentsLoad = () => {
+  contentsLoad = (searchMode = false) => {
 
     cleanChildren(grayTong);
 
@@ -1172,8 +1332,10 @@ ProcessJs.prototype.baseMaker = function () {
       for (let complex of designers) {
         [ desid, designer ] = complex.split(splitToken);
         thisProjects2 = thisProjects.filter((obj) => { return obj.designer.designer === designer && obj.designer.desid === desid });
-        if (instance.projects.length !== 1) {
-          thisProjects2 = thisProjects2.filter((obj) => { return !/^[드완]/.test(obj.process.status) })
+        if (searchMode === false) {
+          if (instance.projects.length !== 1) {
+            thisProjects2 = thisProjects2.filter((obj) => { return !/^[드완]/.test(obj.process.status) })
+          }
         }
         newProjectsTong.push({ manager, designer, desid, projects: thisProjects2 });
       }
@@ -1340,6 +1502,10 @@ ProcessJs.prototype.baseMaker = function () {
         designerDom = createNode({
           mother: targetTong,
           attribute: { desid },
+          event: {
+            click: designerDomEvent,
+            contextmenu: designerDomEvent,
+          },
           style: {
             width: String(designerWidth) + ea,
             display: "inline-block",
@@ -1827,7 +1993,7 @@ ProcessJs.prototype.baseMaker = function () {
     }
   }
 
-  contentsLoad();
+  contentsLoad(searchMode);
 
   this.contentsLoad = contentsLoad;
 }
@@ -1835,7 +2001,7 @@ ProcessJs.prototype.baseMaker = function () {
 ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
   const instance = this;
   const { totalContents, ea, belowHeight, projects, onofflineWordsClassName } = this;
-  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue, serviceParsing, equalJson, sleep } = GeneralJs;
+  const { createNode, withOut, colorChip, isMac, blankHref, selfHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue, serviceParsing, equalJson, sleep } = GeneralJs;
   return async function (e) {
     try {
       const project = projects.find((obj) => { return obj.proid === proid });
@@ -1915,7 +2081,7 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
       let dateAreaHeight;
 
       while (instance.contents === null) {
-        await sleep(3000);
+        await sleep(100);
       }
 
       whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
@@ -2053,13 +2219,21 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
       });
       createNode({
         mother: titleArea,
+        attribute: { proid: project.proid },
         text: project.name,
+        event: {
+          click: function (e) {
+            const proid = this.getAttribute("proid");
+            selfHref(window.location.protocol + "//" + window.location.host + "/project?proid=" + proid);
+          }
+        },
         style: {
           display: "inline-flex",
           position: "relative",
           fontSize: String(nameSize) + ea,
           fontWeight: String(nameWeight),
           color: colorChip.black,
+          cursor: "pointer",
         }
       });
       createNode({
@@ -2533,11 +2707,11 @@ ProcessJs.prototype.insertFormStatusBox = async function (project, contentsArea)
     panBlockBetween = <%% 8, 8, 6, 5, 1 %%>; 
     panBlockBigBetween = <%% 8, 8, 6, 5, 1 %%>; 
   
-    buttonWidth = <%% 140, 140, 140, 140, 24 %%>;
-    buttonHeight = <%% 36, 28, 26, 24, 8.2 %%>;
+    buttonWidth = <%% 116, 116, 116, 116, 24 %%>;
+    buttonHeight = <%% 32, 28, 26, 24, 8.2 %%>;
   
-    buttonSize = <%% 15, 13, 12, 11, 3.5 %%>;
-    buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
+    buttonSize = <%% 14, 13, 12, 11, 3.5 %%>;
+    buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
     buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
   
     panPaddingTop = <%% 22, 16, 14, 14, 4 %%>;
@@ -3145,6 +3319,61 @@ ProcessJs.prototype.insertFormStatusBox = async function (project, contentsArea)
         event: {
           click: async function (e) {
             try {
+              // dev
+              // const host = FRONTHOST.replace(/^https\:\/\//gi, '');
+              // const path = "project";
+              // if (window.confirm(designer.designer + " 실장님께 프로젝트 상태 체크 요청 알림톡을 보낼까요?")) {
+              //   await ajaxJson({
+              //     method: "progressDesignerSpecific",
+              //     name: designer.designer,
+              //     phone: designer.information.phone,
+              //     option: {
+              //       designer: designer.designer,
+              //       client: client.name,
+              //       host: host,
+              //       proid: project.proid,
+              //       desid: designer.desid,
+              //     }
+              //   }, BACKHOST + "/alimTalk");
+              //   window.alert(designer.designer + " 실장님께 프로젝트 상태 체크 요청 알림톡을 보냈습니다!");
+              // }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
+        style: {
+          display: "inline-flex",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          width: String(buttonWidth) + ea,
+          height: String(buttonHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.gradientGray,
+          bottom: String(0),
+          right: String(buttonWidth + 5) + ea,
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          cursor: "pointer",
+        },
+        child: {
+          text: "일정표 요청",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(buttonWeight),
+            top: String(buttonTextTop) + ea,
+            color: colorChip.white,
+            cursor: "pointer",
+          }
+        }
+      });
+      createNode({
+        mother: formPanBase,
+        event: {
+          click: async function (e) {
+            try {
               const host = FRONTHOST.replace(/^https\:\/\//gi, '');
               const path = "project";
               if (window.confirm(designer.designer + " 실장님께 프로젝트 상태 체크 요청 알림톡을 보낼까요?")) {
@@ -3182,7 +3411,7 @@ ProcessJs.prototype.insertFormStatusBox = async function (project, contentsArea)
           cursor: "pointer",
         },
         child: {
-          text: "디자이너에게 요청",
+          text: "상태 체크 요청",
           style: {
             display: "inline-block",
             position: "relative",
@@ -5754,7 +5983,7 @@ ProcessJs.prototype.searchProjects = function () {
       if (value.trim() !== '' && value.trim() !== '.' && value.trim() !== "전체") {
         ajaxJson({ mode: "search", value: value.trim() }, BACKHOST + "/processConsole", { equal: true }).then((serverResponse) => {
           instance.reloadProjects(serverResponse);
-          instance.contentsLoad();
+          instance.contentsLoad(true);
     
           loading.remove();
 
@@ -5768,7 +5997,7 @@ ProcessJs.prototype.searchProjects = function () {
       } else {
         ajaxJson({ mode: "init" }, BACKHOST + "/processConsole", { equal: true }).then((serverResponse) => {
           instance.reloadProjects(serverResponse);
-          instance.contentsLoad();
+          instance.contentsLoad(false);
           loading.remove();
 
         }).catch((err) => {
@@ -6780,43 +7009,40 @@ ProcessJs.prototype.launching = async function () {
 
     loading = this.mother.grayLoading();
     
-    if (typeof window.Worker === "function") {
-      ({ projects, clients } = await ajaxJson({ mode: "pre" }, BACKHOST + "/processConsole", { equal: true }));
-      proidArr = projects.map((p) => { return p.proid });
-      cliidArr = clients.map((c) => { return c.cliid });
-  
-      if (proidArr.length === 0) {
-        throw new Error("invalid porid arr");
-      }
-  
-      matrix = await ajaxMultiple([
-        [ { noFlat: true, whereQuery: { $or: Array.from(new Set(projects.map((p) => { return p.desid }))).map((desid) => { return { desid } }) } }, BACKHOST + "/getDesigners" ],
-        [ { method: "project", idArr: proidArr }, BACKHOST + "/getHistoryTotal" ],
-        [ { method: "client", idArr: cliidArr }, BACKHOST + "/getHistoryTotal" ],
-        [ { proidArr }, SECONDHOST + "/getProcessData" ],
-      ]);
-  
-      designers = matrix[0];
-      history = Object.values(matrix[1]);
-      clientHistory = Object.values(matrix[2]);
-      secondRes = matrix[3];
-  
-      serverResponse = {
-        projects,
-        clients,
-        designers,
-        history,
-        clientHistory,
-        rawContents: secondRes.rawContents,
-        sendStatus: secondRes.sendStatus,
-        sendSchedule: secondRes.sendSchedule,
-        sendFile: secondRes.sendFile
-      }
-    } else {
-      serverResponse = await ajaxJson({ mode: "init" }, BACKHOST + "/processConsole", { equal: true });
+    ({ projects, clients } = await ajaxJson({ mode: "pre", searchMode: (typeof getObj.proid === "string" ? getObj.proid : "false") }, BACKHOST + "/processConsole", { equal: true }));
+    proidArr = projects.map((p) => { return p.proid });
+    cliidArr = clients.map((c) => { return c.cliid });
+
+    if (proidArr.length === 0) {
+      throw new Error("invalid porid arr");
+    }
+
+    matrix = await ajaxMultiple([
+      [ { noFlat: true, whereQuery: { $or: Array.from(new Set(projects.map((p) => { return p.desid }))).map((desid) => { return { desid } }) } }, BACKHOST + "/getDesigners" ],
+      [ { method: "project", idArr: proidArr }, BACKHOST + "/getHistoryTotal" ],
+      [ { method: "client", idArr: cliidArr }, BACKHOST + "/getHistoryTotal" ],
+      [ { proidArr }, SECONDHOST + "/getProcessData" ],
+    ]);
+
+    designers = matrix[0];
+    history = Object.values(matrix[1]);
+    clientHistory = Object.values(matrix[2]);
+    secondRes = matrix[3];
+
+    serverResponse = {
+      projects,
+      clients,
+      designers,
+      history,
+      clientHistory,
+      rawContents: secondRes.rawContents,
+      sendStatus: secondRes.sendStatus,
+      sendSchedule: secondRes.sendSchedule,
+      sendFile: secondRes.sendFile
     }
 
     this.reloadProjects(serverResponse);
+    this.designers = designers;
 
     this.contents = null;
     ajaxJson({}, SECONDHOST + "/getChecklist").then((contents) => {
@@ -6840,13 +7066,14 @@ ProcessJs.prototype.launching = async function () {
     this.onofflineWordsClassName = "onofflineWordsClassName";
     this.onofflineDesid = [];
 
-    this.baseMaker();
+    this.baseMaker(typeof getObj.proid === "string");
     this.searchProjects();
     this.reportEvent();
     this.addTransFormEvent();
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
+    document.getElementById("grayLeftOpenButton").remove();
 
     loading.remove();
 

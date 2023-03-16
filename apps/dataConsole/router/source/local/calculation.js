@@ -127,7 +127,7 @@ CalculationJs.prototype.baseMaker = function () {
   this.matrix = [ matrixColumns ];
 
   outerMargin = 30;
-  innerPadding = 20;
+  innerPadding = 10;
 
   blockHeight = 43;
   blockMargin = 1;
@@ -173,7 +173,7 @@ CalculationJs.prototype.baseMaker = function () {
       left: String(outerMargin) + ea,
       width: withOut(outerMargin * 2, ea),
       height: withOut((outerMargin * 2) + belowHeight, ea),
-      background: colorChip.gray1,
+      background: colorChip.gray2,
       borderRadius: String(5) + "px",
     },
     children: [
@@ -4359,6 +4359,7 @@ CalculationJs.prototype.launching = async function () {
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
+    document.getElementById("grayLeftOpenButton").remove();
 
     loading.remove();
 

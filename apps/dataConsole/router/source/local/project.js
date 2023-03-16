@@ -3512,12 +3512,12 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //proid
   betweenSpace = "&nbsp;&nbsp;<b style=\"color: " + GeneralJs.colorChip.gray3 + "\">/</b>&nbsp;&nbsp;";
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone3.insertAdjacentHTML("beforeend", (thisCase[standard[1]] + betweenSpace + thisCase.name + " (Cl)" + betweenSpace + thisCase.designer.split(' ')[0] + " (De)" + betweenSpace + "의뢰서" + betweenSpace + "시공"));
+  div_clone3.insertAdjacentHTML("beforeend", (thisCase[standard[1]] + betweenSpace + thisCase.name + " (Cl)" + betweenSpace + thisCase.name + " (Da)" + betweenSpace + thisCase.designer.split(' ')[0] + " (De)" + betweenSpace + "의뢰서" + betweenSpace + "시공"));
   div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
     color: GeneralJs.colorChip.green,
-    fontSize: String(titleFontSize * (17 / 42)) + ea,
+    fontSize: String(titleFontSize * (16 / 42)) + ea,
     bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (14 / 60))) + ea,
     left: String(leftMargin * (thisCase[standard[0]].length === 4 ? 3.6 : (thisCase[standard[0]].length === 2 ? 2.3 : 3))) + ea,
   };
@@ -3529,8 +3529,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       const slashes = this.querySelectorAll('b');
       const slashesPosition0 = slashes[0].getBoundingClientRect().x;
       const slashesPosition1 = slashes[1].getBoundingClientRect().x;
-      const slashesPosition2 = slashes[2].getBoundingClientRect().x;
-      const slashesPosition3 = slashes[3].getBoundingClientRect().x;
+      const slashesPosition4 = slashes[2].getBoundingClientRect().x;
+      const slashesPosition2 = slashes[3].getBoundingClientRect().x;
+      const slashesPosition3 = slashes[4].getBoundingClientRect().x;
       const proid = thisCase[standard[1]];
       let projects, project, tempFunction;
       if (e.x < slashesPosition0) {
@@ -3540,6 +3541,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         projects = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects");
         project = projects[0];
         GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/client?cliid=" + project.cliid);
+      } else if (e.x < slashesPosition4) {
+        GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/process?proid=" + proid);
       } else if (e.x < slashesPosition2) {
         projects = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects");
         project = projects[0];
@@ -3556,7 +3559,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         } else if (thisCase["status"] === "대기") {
           window.alert("아직 대기중인 프로젝트는 시공 콘솔을 이용할 수 없습니다!");
         } else {
-          GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/designer?mode=construct&proid=" + project.proid);
+          GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/builder?mode=construct&proid=" + project.proid);
         }
       }
     } catch (e) {

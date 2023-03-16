@@ -7218,6 +7218,7 @@ DataRouter.prototype.rou_post_processConsole = function () {
       let preDesigners;
       let clientValues, designerValues;
       let finalOr;
+      let searchMode;
 
       class NormalArray extends Array {
         constructor(arr) {
@@ -7365,16 +7366,31 @@ DataRouter.prototype.rou_post_processConsole = function () {
         }
       } else {
 
-        projects = await back.getProjectsByQuery({
-          $and: [
-            {
-              "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
-            },
-            {
-              "process.status": { $regex: "^[진대]" }
-            }
-          ]
-        }, { selfMongo: selfCoreMongo });
+        searchMode = (typeof req.body.searchMode === "string" && /^p/.test(req.body.searchMode));
+
+        if (searchMode) {
+          projects = await back.getProjectsByQuery({
+            $and: [
+              {
+                "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
+              },
+              {
+                "proid": req.body.searchMode
+              }
+            ]
+          }, { selfMongo: selfCoreMongo });
+        } else {
+          projects = await back.getProjectsByQuery({
+            $and: [
+              {
+                "process.contract.first.date": { $gte: new Date(2000, 0, 1) }
+              },
+              {
+                "process.status": { $regex: "^[진대]" }
+              }
+            ]
+          }, { selfMongo: selfCoreMongo });
+        }
         projects.sort((a, b) => { return b.process.contract.first.date.valueOf() - a.process.contract.first.date.valueOf() });
         if (projects.length > 0) {
           clients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
@@ -7712,7 +7728,6 @@ DataRouter.prototype.rou_post_designerSubmit = function () {
 
       }
 
-      console.log("done");
       res.send(JSON.stringify({ message: "success" }));
 
     } catch (e) {

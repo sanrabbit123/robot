@@ -2992,7 +2992,7 @@ DesignerBoardJs.prototype.launching = async function (loading) {
         try {
           let whiteBlock;
           instance.insertInitBox();
-          if (getObj.mode === "form") {
+          if (getObj.mode === "status") {
             await instance.insertFormsBox();
           }
           instance.insertRouterBox();

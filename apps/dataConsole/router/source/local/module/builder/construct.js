@@ -3646,7 +3646,7 @@ BuilderJs.prototype.constructWhiteBlock = function (mother, project, first, inde
           width: "calc(100vw - " + String((motherMargin * 2) + (leftMargin * 2)) + ea + ")",
           height: String(100) + '%',
           borderRadius: String(3) + "px",
-          background: titleMode ? colorChip.gradientGreen2 : colorChip[grayBoo ? "white" : "gray0"],
+          background: titleMode ? colorChip.gradientGray : colorChip[grayBoo ? "white" : "gray0"],
           top: String(0),
           left: String(0),
           transition: "all 0s ease",
@@ -5425,7 +5425,7 @@ BuilderJs.prototype.constructView = async function () {
     projects = new SearchArray(projects.filter((obj) => {
       return obj.desid !== '';
     }).filter((obj) => {
-      return /^[진홀완드]/gi.test(obj.process.status);
+      return /^[진홀완]/gi.test(obj.process.status);
     }).filter((obj) => {
       return obj.process.design.construct !== null
     }));
