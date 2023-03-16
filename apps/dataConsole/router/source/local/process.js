@@ -6719,7 +6719,7 @@ ProcessJs.prototype.addTransFormEvent = function () {
 
 ProcessJs.prototype.launching = async function () {
   const instance = this;
-  const { ajaxJson, equalJson, returnGet, ajaxMultiple } = GeneralJs;
+  const { ajaxJson, equalJson, returnGet, ajaxMultiple, setPolling } = GeneralJs;
   try {
     const getObj = returnGet();
     const emptyDate = () => { return new Date(1800, 0, 1) };
@@ -6813,6 +6813,19 @@ ProcessJs.prototype.launching = async function () {
         this.clientDoms.find((dom) => { return dom.getAttribute("proid") === getObj.proid }).click();
       }
     }
+
+    setPolling({
+      data: {},
+      url: CRONHOST + "/wssStatus",
+      interval: 10 * 1000,
+      callback: async (response) => {
+        try {
+          console.log([ ...new Set(response) ]);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    });
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e.message).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});

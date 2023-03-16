@@ -3017,33 +3017,21 @@ DesignerBoardJs.prototype.launching = async function (loading) {
       }
     }
 
-
-
-
-
-    
-
+    // web socket
     wsLaunching = () => {}
-
     wsOpenEvent = (ws) => {
       return async function () {
         try {
           ws.send(JSON.stringify({
             mode: "register",
-            to: "server",
+            to: "homeliaison",
             data: instance.designer.desid
-          }));
-          ws.send(JSON.stringify({
-            mode: "message",
-            to: instance.designer.desid,
-            data: "안녕"
           }));
         } catch (e) {
           console.log(e);
         }
       }
     }
-
     wsCloseEvent = (ws) => {
       return async function () {
         try {
@@ -3053,7 +3041,6 @@ DesignerBoardJs.prototype.launching = async function (loading) {
         }
       }
     }
-
     wsMessageEvent = (ws) => {
       return async function (message) {
         try {
@@ -3063,7 +3050,6 @@ DesignerBoardJs.prototype.launching = async function (loading) {
         }
       }
     }
-
     wsLaunching = () => {
       let ws;
       ws = new WebSocket(CRONHOST.replace(/https\:\/\//, "wss://") + "/realTimeCommunication");
@@ -3072,11 +3058,7 @@ DesignerBoardJs.prototype.launching = async function (loading) {
       ws.addEventListener("close", wsCloseEvent(ws));
       return ws;
     }
-
     socket = wsLaunching();
-
-
-
 
   } catch (err) {
     console.log(err);

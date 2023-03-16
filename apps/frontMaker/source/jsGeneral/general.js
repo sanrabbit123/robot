@@ -572,6 +572,40 @@ GeneralJs.ajaxMultiple = (matrix) => {
   })
 }
 
+GeneralJs.setPolling = (data, url, interval, callback) => {
+  if (data !== undefined && typeof url === "string" && typeof interval === "number" && typeof callback === "function") {
+    data = data;
+    url = url;
+    interval = interval;
+    callback = callback;
+  } else if (typeof data === "object" && data !== null) {
+    if (data.data !== undefined && typeof data.url === "string" && typeof data.interval === "number" && typeof data.callback === "function") {
+      url = data.url;
+      interval = data.interval;
+      callback = data.callback;
+      data = data.data;
+    } else {
+      throw new Error("invalid input 1");
+    }
+  } else {
+    throw new Error("invalid input 2");
+  }
+  let worker;
+  worker = new Worker("/worker/polling.js");
+  worker.addEventListener("message", async (e) => {
+    try {
+      const { response } = GeneralJs.equalJson(e.data);
+      await callback(response);
+    } catch (e) {
+      console.log(e);
+    }
+  });
+  worker.addEventListener("error", (e) => {
+    console.log(e);
+  })
+  worker.postMessage({ data, url, interval });
+}
+
 GeneralJs.request = function (url, callback) {
   if (url === undefined && callback === undefined) {
     throw new Error("must be arguments (url, callback)");

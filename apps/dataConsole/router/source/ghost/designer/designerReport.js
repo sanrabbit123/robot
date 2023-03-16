@@ -1233,6 +1233,11 @@ DesignerReportJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
     let proposals, contracts;
     let desid;
+    let socket;
+    let wsLaunching;
+    let wsOpenEvent;
+    let wsMessageEvent;
+    let wsCloseEvent;
 
     if (getObj.desid === undefined) {
       window.alert("잘못된 접근입니다!");
@@ -1386,6 +1391,49 @@ DesignerReportJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
+
+    // web socket
+    wsLaunching = () => {}
+    wsOpenEvent = (ws) => {
+      return async function () {
+        try {
+          ws.send(JSON.stringify({
+            mode: "register",
+            to: "homeliaison",
+            data: instance.designer.desid
+          }));
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+    wsCloseEvent = (ws) => {
+      return async function () {
+        try {
+          socket = wsLaunching();
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+    wsMessageEvent = (ws) => {
+      return async function (message) {
+        try {
+          console.log(JSON.parse(event.data));
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+    wsLaunching = () => {
+      let ws;
+      ws = new WebSocket(CRONHOST.replace(/https\:\/\//, "wss://") + "/realTimeCommunication");
+      ws.addEventListener("open", wsOpenEvent(ws));
+      ws.addEventListener("message", wsMessageEvent(ws));
+      ws.addEventListener("close", wsCloseEvent(ws));
+      return ws;
+    }
+    socket = wsLaunching();
 
   } catch (err) {
     console.log(err);
