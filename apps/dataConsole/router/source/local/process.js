@@ -7,7 +7,7 @@ const ProcessJs = function () {
 
 ProcessJs.prototype.baseMaker = function () {
   const instance = this;
-  const { totalContents, ea, belowHeight, projects, media } = this;
+  const { totalContents, ea, belowHeight, projects, media, onofflineCircleClassName } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing, equalJson, svgMaker, removeByClass, findByAttribute } = GeneralJs;
   const splitToken = "__split__";
   const checkBoxLocalStorageName = "checkBoxLocalStorageName";
@@ -87,6 +87,7 @@ ProcessJs.prototype.baseMaker = function () {
   let buttonSize, buttonWeight, buttonTextTop;
   let clientColumnsFunctionsTong;
   let matchingFilterMaker;
+  let circleTop, circleWidth, circleMarginLeft;
 
   clientColumnsMenu = [
     { title: "내림차순", key: "downSort" },
@@ -266,6 +267,10 @@ ProcessJs.prototype.baseMaker = function () {
   buttonSize = 13;
   buttonWeight = 600;
   buttonTextTop = -1;
+
+  circleTop = 17;
+  circleWidth = 6;
+  circleMarginLeft = 5;
 
   contentsLoad = () => {};
 
@@ -1304,46 +1309,78 @@ ProcessJs.prototype.baseMaker = function () {
 
         nameDom = createNode({
           mother: targetTong,
-          text: manager,
           style: {
             width: String(nameWidth) + ea,
             display: "inline-block",
             position: "relative",
             verticalAlign: "top",
-            fontSize: String(textSize) + ea,
-            fontWeight: String(700),
-            color: colorChip.black,
-            top: String(textTop) + ea,
             marginLeft: String(firstMargin) + ea,
             cursor: "pointer",
           },
-          bold: {
-            fontSize: String(textSize) + ea,
-            fontWeight: String(300),
-            color: colorChip.deactive,
+          child: {
+            text: manager,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              verticalAlign: "top",
+              fontSize: String(textSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.black,
+              top: String(textTop) + ea,
+              cursor: "pointer",
+            },
+            bold: {
+              fontSize: String(textSize) + ea,
+              fontWeight: String(300),
+              color: colorChip.deactive,
+            },
           }
         });
   
         designerDom = createNode({
           mother: targetTong,
-          text: designer,
+          attribute: { desid },
           style: {
             width: String(designerWidth) + ea,
             display: "inline-block",
             position: "relative",
             verticalAlign: "top",
-            fontSize: String(textSize) + ea,
-            fontWeight: String(700),
-            color: colorChip.black,
-            top: String(textTop) + ea,
             marginLeft: String(minimumBetween) + ea,
             cursor: "pointer",
           },
-          bold: {
-            fontSize: String(textSize) + ea,
-            fontWeight: String(300),
-            color: colorChip.deactive,
-          }
+          children: [
+            {
+              text: designer,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                verticalAlign: "top",
+                fontSize: String(textSize) + ea,
+                fontWeight: String(700),
+                color: colorChip.black,
+                top: String(textTop) + ea,
+              },
+              bold: {
+                fontSize: String(textSize) + ea,
+                fontWeight: String(300),
+                color: colorChip.deactive,
+              },
+            },
+            {
+              class: [ onofflineCircleClassName ],
+              attribute: { desid, status: "offline" },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(circleTop) + ea,
+                width: String(circleWidth) + ea,
+                height: String(circleWidth) + ea,
+                borderRadius: String(circleWidth) + ea,
+                marginLeft: String(circleMarginLeft) + ea,
+                background: colorChip.gray3,
+              }
+            }
+          ]
         });
         
         clientTable = createNode({
@@ -1797,7 +1834,7 @@ ProcessJs.prototype.baseMaker = function () {
 
 ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
   const instance = this;
-  const { totalContents, ea, belowHeight, projects } = this;
+  const { totalContents, ea, belowHeight, projects, onofflineWordsClassName } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue, serviceParsing, equalJson, sleep } = GeneralJs;
   return async function (e) {
     try {
@@ -2027,12 +2064,14 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
       });
       createNode({
         mother: titleArea,
-        text: project.proid + blank + "/" + blank + project.designer.designer + " D" + blank + "/" + blank + serviceParsing(project.service),
+        class: [ onofflineWordsClassName ],
+        attribute: { desid: project.desid, status: instance.onofflineDesid.includes(project.desid) ? "online" : "offline" },
+        text: project.proid + blank + "/" + blank + project.designer.designer + " D" + blank + "/" + blank + serviceParsing(project.service) + blank + "/" + blank + (instance.onofflineDesid.includes(project.desid) ? "online" : "offline"),
         style: {
           display: "inline-flex",
           fontSize: String(subSize) + ea,
           fontWeight: String(subWeight),
-          color: colorChip.deactive,
+          color: instance.onofflineDesid.includes(project.desid) ? colorChip.green : colorChip.deactive,
           marginLeft: String(subMarginLeft) + ea,
           position: "relative",
           top: String(subTextTop) + ea,
@@ -6719,7 +6758,7 @@ ProcessJs.prototype.addTransFormEvent = function () {
 
 ProcessJs.prototype.launching = async function () {
   const instance = this;
-  const { ajaxJson, equalJson, returnGet, ajaxMultiple, setPolling } = GeneralJs;
+  const { ajaxJson, equalJson, returnGet, ajaxMultiple, setPolling, colorChip } = GeneralJs;
   try {
     const getObj = returnGet();
     const emptyDate = () => { return new Date(1800, 0, 1) };
@@ -6797,6 +6836,9 @@ ProcessJs.prototype.launching = async function () {
     this.names = [];
     this.clientDoms = [];
     this.totalValues = [];
+    this.onofflineCircleClassName = "onofflineCircleClassName";
+    this.onofflineWordsClassName = "onofflineWordsClassName";
+    this.onofflineDesid = [];
 
     this.baseMaker();
     this.searchProjects();
@@ -6817,10 +6859,32 @@ ProcessJs.prototype.launching = async function () {
     setPolling({
       data: {},
       url: CRONHOST + "/wssStatus",
-      interval: 10 * 1000,
+      interval: 5 * 1000,
       callback: async (response) => {
         try {
-          console.log([ ...new Set(response) ]);
+          instance.onofflineDesid = [ ...new Set(response) ];
+          const circleTargets = [ ...document.querySelectorAll('.' + instance.onofflineCircleClassName) ];
+          for (let circle of circleTargets) {
+            if (instance.onofflineDesid.includes(circle.getAttribute("desid"))) {
+              circle.style.background = colorChip.softGreen;
+              circle.setAttribute("status", "online");
+            } else {
+              circle.style.background = colorChip.gray3;
+              circle.setAttribute("status", "offline");
+            }
+          }
+          const wordsTarget = document.querySelector('.' + instance.onofflineWordsClassName);
+          if (wordsTarget !== null) {
+            if (instance.onofflineDesid.includes(wordsTarget.getAttribute("desid"))) {
+              wordsTarget.style.color = colorChip.green;
+              wordsTarget.setAttribute("status", "online");
+              wordsTarget.innerHTML = wordsTarget.innerHTML.replace(/offline/gi, "online");
+            } else {
+              wordsTarget.style.color = colorChip.deactive;
+              wordsTarget.setAttribute("status", "offline");
+              wordsTarget.innerHTML = wordsTarget.innerHTML.replace(/online/gi, "offline");
+            }
+          }
         } catch (e) {
           console.log(e);
         }
