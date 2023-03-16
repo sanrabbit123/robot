@@ -3130,7 +3130,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     color: GeneralJs.colorChip.black,
     fontSize: String(titleFontSize) + ea,
     fontWeight: String(800),
-    bottom: String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (5 / 60))) + ea,
+    bottom: String(leftMargin * (GeneralJs.isMac() ? (11 / 60) : (6 / 60))) + ea,
     left: String(leftMargin - 3) + ea,
     cursor: "pointer",
   };
