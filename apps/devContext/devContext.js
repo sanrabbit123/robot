@@ -235,16 +235,11 @@ DevContext.prototype.launching = async function () {
     // await question();
 
 
-    const WebSocket = require("ws");
-    const PORT = 3000;
-    const url = `wss://${address.croninfo.host}:${String(PORT)}/realTimeCommunication`;
-    const ws = new WebSocket(url);
-
-    ws.on("open", (something) => {
-      console.log(something)
-    });
 
     
+    const res = await requestSystem("https://home-liaison.link:3000/wssStatus", { data: null }, { headers: { "Content-Type": "application/json" } });
+    console.log(res.data);
+
     
 
 

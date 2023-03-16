@@ -25,6 +25,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const FRONTHOST = "https://" + this.address.frontinfo.host;
   const BACKHOST = "https://" + this.address.backinfo.host + ":3000";
   const SECONDHOST = "https://" + this.address.secondinfo.host + ":3000";
+  const CRONHOST = "https://" + this.address.croninfo.host + ":3000";
   const classException = {
     proposal: [ "designer.js" ],
     bill: [ "designer.js" ],
@@ -131,6 +132,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     let result;
     let prototypes, dataPatchScript, prototypeBoo;
     let resultFromArr;
+    let cronString;
 
     //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
@@ -143,6 +145,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     backString = "const BACKHOST = \"" + BACKHOST + "\";";
     secondString = "const SECONDHOST = \"" + SECONDHOST + "\";";
     officeString = "const FILEHOST = \"" + FILEHOST + "\";";
+    cronString = "const CRONHOST = \"" + CRONHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
@@ -182,7 +185,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       }
 
       //merge
-      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
+      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n" + cronString + "\n\n";
       code1 = dataPatchScript;
       code2 = generalString + "\n\n" + consoleGeneralString;
       code3 = fileString + "\n\n" + execString;
@@ -238,6 +241,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const FRONTHOST = "https://" + this.address.frontinfo.host;
   const BACKHOST = "https://" + this.address.backinfo.host + ":3000";
   const SECONDHOST = "https://" + this.address.secondinfo.host + ":3000";
+  const CRONHOST = "https://" + this.address.croninfo.host + ":3000";
   try {
 
     //module transform function
@@ -316,6 +320,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let ghostClientGeneral, ghostDesignerGeneral;
     let ghostClientGeneralString, ghostDesignerGeneralString;
     let generalMediaBoo;
+    let cronString;
 
     staticDirList = [];
     for (let s of staticTargets) {
@@ -353,6 +358,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     secondString = "const SECONDHOST = \"" + SECONDHOST + "\";";
     frontWebString = "const FRONTHOST = \"" + FRONTHOST + "\";";
     officeString = "const FILEHOST = \"" + FILEHOST + "\";";
+    cronString = "const CRONHOST = \"" + CRONHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
     polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
@@ -425,7 +431,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       }
 
       //merge
-      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
+      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n" + cronString + "\n\n";
       code1 = dataPatchScript + "\n\n";
       if (kinds === "MIDDLE") {
         code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + frontClassString + "\n\n";

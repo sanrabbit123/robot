@@ -3012,6 +3012,20 @@ DesignerBoardJs.prototype.launching = async function (loading) {
       }
     }
 
+    const socket = new WebSocket(CRONHOST.replace(/https\:\/\//, "wss://") + "/realTimeCommunication");
+
+    socket.addEventListener("open", (event) => {
+      socket.send(JSON.stringify({
+        mode: "register",
+        to: "server",
+        data: designer.desid
+      }));
+    });
+
+    socket.addEventListener("message", (event) => {
+      console.log(event);
+    });
+
   } catch (err) {
     console.log(err);
     await GeneralJs.ajaxJson({ message: "DesignerBoardJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");

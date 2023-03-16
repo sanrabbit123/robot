@@ -229,13 +229,10 @@ CronGhost.prototype.cronServer = async function () {
     // wss socket
     generalSocket = new WebSocket.Server({ noServer: true });
     generalSocket.on("connection", (ws) => {
-      console.log(ws);
       ws.on("message", (message) => {
         try {
-
-          console.log(message);
-
-          const { mode, to, data } = JSON.parse(message);
+          console.log(message.toString());
+          const { mode, to, data } = JSON.parse(String(message));
           if (mode === "register") {
             ws.__who__ = data;
           } else if (mode === "message") {
