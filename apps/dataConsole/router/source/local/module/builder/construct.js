@@ -5419,11 +5419,13 @@ BuilderJs.prototype.constructView = async function () {
       [ { noFlat: true, whereQuery: { $or: projects.toNormal().map((obj) => { return { desid: obj.desid } }) } }, BACKHOST + "/getDesigners" ],
       [ { noFlat: true, whereQuery: { $or: projects.toNormal().map((obj) => { return { cliid: obj.cliid } }) } }, BACKHOST + "/getClients" ],
       [ { idArr: projects.toNormal().map((obj) => { return obj.proid }), method: "project", property: "construct", }, BACKHOST + "/getHistoryProperty" ],
+      [ { noFlat: true, whereQuery: {} }, BACKHOST + "/getBuilders" ],
     ]);
 
     designers = new SearchArray(matrix[0]);
     clients = new SearchArray(matrix[1]);
     projectHistory = matrix[2];
+    builders = matrix[3];
 
     for (let p of projects) {
       p.designer = designers.search("desid", p.desid).designer;
@@ -5442,7 +5444,6 @@ BuilderJs.prototype.constructView = async function () {
       p.history = projectHistory[p.proid];
     }
 
-    builders = await ajaxJson({ noFlat: true, whereQuery: {} }, "/getBuilders", { equal: true });
     builderNames = builders.map((obj) => {
       if (obj.information.business.company.trim() === '') {
         return obj.builder;

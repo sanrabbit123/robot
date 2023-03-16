@@ -3086,8 +3086,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
   //title ------------------------------------------
 
-  leftMargin = (60 / 786) * motherHeight;
-  titleFontSize = (42 / 786) * motherHeight;
+  leftMargin = (49 / 786) * motherHeight;
+  titleFontSize = (32 / 786) * motherHeight;
   topMargin = leftMargin * (62 / 60);
   titleHeight = (54 / 42) * titleFontSize;
   callEvent = async function (e) {
@@ -3129,7 +3129,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     position: "absolute",
     color: GeneralJs.colorChip.black,
     fontSize: String(titleFontSize) + ea,
-    fontWeight: String(600),
+    fontWeight: String(800),
     bottom: String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (5 / 60))) + ea,
     left: String(leftMargin - 3) + ea,
     cursor: "pointer",
@@ -3148,7 +3148,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   style = {
     position: "absolute",
     color: GeneralJs.colorChip.green,
-    fontSize: String(titleFontSize * (17 / 42)) + ea,
+    fontSize: String(titleFontSize * (20 / 42)) + ea,
     bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (14 / 60))) + ea,
     left: String(leftMargin * (thisCase[standard[0]].length === 4 ? 3.6 : (thisCase[standard[0]].length === 2 ? 2.3 : 3))) + ea,
     cursor: "pointer",

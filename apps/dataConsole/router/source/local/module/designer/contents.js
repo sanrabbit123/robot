@@ -2,7 +2,7 @@
 
 DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   const instance = this;
-  const { ea, photoActionList, paymentActionList, resetWidthEvent } = this;
+  const { ea, photoActionList, paymentActionList } = this;
   const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma, equalJson, ajaxJson } = GeneralJs;
   const { proid, desid, name, address, process: { calculation: { method: calculationMethod, info: calculationInfo } }, contents: { photo, payment, raw, share, sns }, history } = project;
   const { boo, date, info: { interviewer, photographer }, status } = photo;
@@ -201,7 +201,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -290,7 +289,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -433,7 +431,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -531,7 +528,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -636,7 +632,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
               mother.removeChild(dom);
             }
 
-            resetWidthEvent();
 
           } else {
 
@@ -745,7 +740,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -823,7 +817,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -865,8 +858,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
-
-      resetWidthEvent();
     });
 
   } else if (this.type === "source") {
@@ -950,7 +941,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1029,7 +1019,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1129,7 +1118,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1202,7 +1190,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1302,7 +1289,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1450,7 +1436,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1586,7 +1571,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1675,7 +1659,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1817,7 +1800,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1959,7 +1941,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -2101,7 +2082,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -2197,8 +2177,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
-
-      resetWidthEvent();
     });
 
   } else if (this.type === "share") {
@@ -2280,7 +2258,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -2422,7 +2399,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -2564,7 +2540,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -2706,7 +2681,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
             mother.removeChild(dom);
           }
 
-          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -2882,7 +2856,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
                     mother.removeChild(dom);
                   }
 
-                  resetWidthEvent();
                 }
               } catch (e) {
                 console.log(e);
@@ -3213,53 +3186,6 @@ DesignerJs.prototype.contentsBlockInjection = function () {
   this.contentsBlocks = [];
   this.ignoreNumbers = [ 3, 1 ];
   this.widthArrMotherConverted = null;
-  this.resetWidthEvent = async function () {
-    try {
-      const { xyConverting, sleep, setQueue } = GeneralJs;
-      const { ignoreNumbers } = instance;
-      let children;
-      let widthArrMother, widthArrMotherConverted;
-      let widthArr;
-      let tempArr;
-
-      setQueue(async () => {
-
-        if (instance.widthArrMotherConverted === null) {
-          widthArrMother = [];
-          for (let block of instance.contentsBlocks) {
-            children = block.children;
-            widthArr = [];
-            for (let i = 0; i < children.length; i++) {
-              if (i >= ignoreNumbers[0] && i < children.length - ignoreNumbers[1]) {
-                children[i].style.width = "auto";
-              }
-              widthArr.push(children[i].getBoundingClientRect().width);
-            }
-            widthArrMother.push(widthArr);
-          }
-    
-          widthArrMotherConverted = xyConverting(widthArrMother).map((arr) => {
-            arr.sort((a, b) => { return b - a; });
-            return arr[0];
-          });
-  
-          instance.widthArrMotherConverted = widthArrMotherConverted;
-        }
-        widthArrMotherConverted = instance.widthArrMotherConverted;
-
-        for (let block of instance.contentsBlocks) {
-          children = block.children;
-          for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
-            await sleep(2);
-            children[i].style.width = String(widthArrMotherConverted[i]) + ea;
-          }
-        }
-      }, 100);
-
-    } catch (e) {
-      console.log(e);
-    }
-  }
 
   resultArr = [];
   firstBoo = true;
@@ -3285,11 +3211,6 @@ DesignerJs.prototype.contentsBlockInjection = function () {
       removeQuery("proid");
     });
   }
-
-  instance.resetWidthEvent();
-  setQueue(() => {
-    instance.resetWidthEvent();
-  }, 200);
 }
 
 DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, index, titleMode = false) {
@@ -3320,6 +3241,50 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
   let menuTextTop;
   let blockArr;
   let blockMap;
+  let thisWidthArr;
+
+  if (this.type === "photo") {
+    thisWidthArr = [
+      25,
+      79,
+      63,
+      79,
+      52,
+      52,
+      52,
+      400,
+      420,
+    ]
+  } else if (this.type === "source") {
+    thisWidthArr = [
+      89,
+      89,
+      89,
+      89,
+      89,
+      420,
+    ]
+  } else if (this.type === "contents") {
+    thisWidthArr = [
+      79,
+      52,
+      52,
+      79,
+      79,
+      79,
+      79,
+      79,
+      420,
+    ]
+  } else if (this.type === "share") {
+    thisWidthArr = [
+      104,
+      104,
+      104,
+      116,
+      420,
+    ]
+  }
 
   leftMargin = 10;
   motherMargin = 30;
@@ -3967,7 +3932,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
                           for (let dom of removeTargets) {
                             directParent.removeChild(dom);
                           }
-                          GeneralJs.setQueue(() => { instance.resetWidthEvent(); });
                         } catch (e) {
                           console.log(e);
                         }
@@ -3985,7 +3949,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
                   }
                 });
 
-                updateArr[index].call(this, e, option, cancelBox, parent, instance.resetWidthEvent);
+                updateArr[index].call(this, e, option, cancelBox, parent);
               }
             }
           }
@@ -4003,6 +3967,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
         overflow: ((i === stringArr.length - 1) ? "hidden" : "visible"),
         transition: "all 0s ease",
         cursor: "pointer",
+        width: String(thisWidthArr[i]) + ea,
       }
     });
     domArr.push(tempDom);
@@ -4343,7 +4308,7 @@ DesignerJs.prototype.contentsView = async function () {
         return obj;
       }
     }
-    const { createNodes, colorChip, ajaxJson, returnGet, equalJson, sleep, uniqueValue } = GeneralJs;
+    const { createNodes, colorChip, ajaxJson, ajaxMultiple, returnGet, equalJson, sleep, uniqueValue } = GeneralJs;
     const todayDateValue = (new Date()).valueOf();
     let loading;
     let projects;
@@ -4358,6 +4323,7 @@ DesignerJs.prototype.contentsView = async function () {
     let whereQuery;
     let client;
     let requestNumber;
+    let matrix;
 
     loading = await this.mother.loadingRun();
 
@@ -4459,32 +4425,19 @@ DesignerJs.prototype.contentsView = async function () {
       cliidArr.push({ cliid });
     }
 
-    designers = new SearchArray(await ajaxJson({
-      noFlat: true,
-      whereQuery: {
-        $or: desidArr
-      }
-    }, "/getDesigners", { equal: true }));
+    matrix = await ajaxMultiple([
+      [ { noFlat: true, whereQuery: { $or: desidArr } }, BACKHOST + "/getDesigners" ],
+      [ { noFlat: true, whereQuery: { $or: cliidArr } }, BACKHOST + "/getClients" ],
+      [ { noFlat: true, whereQuery: { $or: proidArr_raw } }, BACKHOST + "/getContents" ],
+      [ { idArr: proidArr, method: "project", property: "photo", }, BACKHOST + "/getHistoryProperty" ],
+      [ { mode: "read", collection: "foreContents", db: "console", whereQuery: {}, }, BACKHOST + "/generalMongo" ]
+    ]);
 
-    clients = new SearchArray(await ajaxJson({
-      noFlat: true,
-      whereQuery: {
-        $or: cliidArr
-      }
-    }, "/getClients"));
-
-    contents = new SearchArray(await ajaxJson({
-      noFlat: true,
-      whereQuery: {
-        $or: proidArr_raw
-      }
-    }, "/getContents", { equal: true }));
-
-    projectHistory = await ajaxJson({
-      idArr: proidArr,
-      method: "project",
-      property: "photo",
-    }, "/getHistoryProperty");
+    designers = new SearchArray(matrix[0]);
+    clients = new SearchArray(matrix[1]);
+    contents = new SearchArray(matrix[2]);
+    projectHistory = matrix[3];
+    this.foreContents = matrix[4];
 
     for (let p of projects) {
       p.designer = designers.search("desid", p.desid).designer;
@@ -4510,12 +4463,6 @@ DesignerJs.prototype.contentsView = async function () {
       p.history = projectHistory[p.proid];
     }
 
-    this.foreContents = await ajaxJson({
-      mode: "read",
-      collection: "foreContents",
-      db: "console",
-      whereQuery: {},
-    }, BACKHOST + "/generalMongo", { equal: true });
     this.projects = projects;
     this.designers = new Designers(designers);
     this.designers.setProjects(projects);
