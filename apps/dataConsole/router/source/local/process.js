@@ -3319,24 +3319,22 @@ ProcessJs.prototype.insertFormStatusBox = async function (project, contentsArea)
         event: {
           click: async function (e) {
             try {
-              // dev
-              // const host = FRONTHOST.replace(/^https\:\/\//gi, '');
-              // const path = "project";
-              // if (window.confirm(designer.designer + " 실장님께 프로젝트 상태 체크 요청 알림톡을 보낼까요?")) {
-              //   await ajaxJson({
-              //     method: "progressDesignerSpecific",
-              //     name: designer.designer,
-              //     phone: designer.information.phone,
-              //     option: {
-              //       designer: designer.designer,
-              //       client: client.name,
-              //       host: host,
-              //       proid: project.proid,
-              //       desid: designer.desid,
-              //     }
-              //   }, BACKHOST + "/alimTalk");
-              //   window.alert(designer.designer + " 실장님께 프로젝트 상태 체크 요청 알림톡을 보냈습니다!");
-              // }
+              const host = FRONTHOST.replace(/^https\:\/\//gi, '');
+              const path = "project";
+              if (window.confirm(designer.designer + " 실장님께 프로젝트 일정표 작성 요청 알림톡을 보낼까요?")) {
+                await ajaxJson({
+                  method: "puserScheduleDesigner",
+                  name: designer.designer,
+                  phone: designer.information.phone,
+                  option: {
+                    designer: designer.designer,
+                    client: client.name,
+                    host: host,
+                    proid: project.proid,
+                  }
+                }, BACKHOST + "/alimTalk");
+                window.alert(designer.designer + " 실장님께 프로젝트 일정표 작성 요청 알림톡을 보냈습니다!");
+              }
             } catch (e) {
               console.log(e);
             }
