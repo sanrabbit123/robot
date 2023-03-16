@@ -231,7 +231,6 @@ CronGhost.prototype.cronServer = async function () {
     generalSocket.on("connection", (ws) => {
       ws.on("message", (message) => {
         try {
-          console.log(message.toString());
           const { mode, to, data } = JSON.parse(String(message));
           if (mode === "register") {
             ws.__who__ = data;
@@ -248,6 +247,10 @@ CronGhost.prototype.cronServer = async function () {
         }
       });
     });
+    generalSocket.on("close", (ws) => {
+      console.log(ws.__who__);
+    });
+
 
     //set router
     const CronRouter = require(`${this.dir}/router/cronRouter.js`);

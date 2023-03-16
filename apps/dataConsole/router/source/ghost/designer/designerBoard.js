@@ -2924,6 +2924,11 @@ DesignerBoardJs.prototype.launching = async function (loading) {
     let service;
     let response, services;
     let ghostContents;
+    let socket;
+    let wsLaunching;
+    let wsOpenEvent;
+    let wsMessageEvent;
+    let wsCloseEvent;
 
     if (getObj.desid === undefined) {
       window.alert("잘못된 접근입니다!");
@@ -3012,27 +3017,66 @@ DesignerBoardJs.prototype.launching = async function (loading) {
       }
     }
 
-    const socket = new WebSocket(CRONHOST.replace(/https\:\/\//, "wss://") + "/realTimeCommunication");
-
-    socket.addEventListener("open", (event) => {
-      socket.send(JSON.stringify({
-        mode: "register",
-        to: "server",
-        data: designer.desid
-      }));
-
-      socket.send(JSON.stringify({
-        mode: "message",
-        to: designer.desid,
-        data: "안녕"
-      }));
 
 
-    });
 
-    socket.addEventListener("message", (event) => {
-      console.log(event);
-    });
+
+    
+
+    wsLaunching = () => {}
+
+    wsOpenEvent = (ws) => {
+      return async function () {
+        try {
+          ws.send(JSON.stringify({
+            mode: "register",
+            to: "server",
+            data: instance.designer.desid
+          }));
+          ws.send(JSON.stringify({
+            mode: "message",
+            to: instance.designer.desid,
+            data: "안녕"
+          }));
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    wsCloseEvent = (ws) => {
+      return async function () {
+        try {
+          socket = wsLaunching();
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    wsMessageEvent = (ws) => {
+      return async function (message) {
+        try {
+          console.log(JSON.parse(event.data));
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    wsLaunching = () => {
+      let ws;
+      ws = new WebSocket(CRONHOST.replace(/https\:\/\//, "wss://") + "/realTimeCommunication");
+      ws.addEventListener("open", wsOpenEvent(ws));
+      ws.addEventListener("message", wsMessageEvent(ws));
+      ws.addEventListener("close", wsCloseEvent(ws));
+      return ws;
+    }
+
+    socket = wsLaunching();
+
+
+
 
   } catch (err) {
     console.log(err);
