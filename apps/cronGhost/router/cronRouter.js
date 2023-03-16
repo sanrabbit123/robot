@@ -145,7 +145,7 @@ CronRouter.prototype.rou_post_wssStatus = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const clients = [ ...socket.clients ];
+      const clients = [ ...socket.clients ].map((obj) => { return obj.__who__ });
       res.send(JSON.stringify(clients));
     } catch (e) {
       errorLog("Cron launcher 서버 문제 생김 (rou_post_wssStatus): " + e.message).catch((e) => { console.log(e); });
