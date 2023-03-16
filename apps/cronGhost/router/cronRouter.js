@@ -145,7 +145,6 @@ CronRouter.prototype.rou_post_wssStatus = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      console.log(socket)
       const clients = [ ...socket.clients ];
       res.send(JSON.stringify(clients));
     } catch (e) {

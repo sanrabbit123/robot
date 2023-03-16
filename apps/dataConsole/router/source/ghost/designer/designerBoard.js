@@ -3020,6 +3020,14 @@ DesignerBoardJs.prototype.launching = async function (loading) {
         to: "server",
         data: designer.desid
       }));
+
+      socket.send(JSON.stringify({
+        mode: "message",
+        to: designer.desid,
+        data: "안녕"
+      }));
+
+
     });
 
     socket.addEventListener("message", (event) => {

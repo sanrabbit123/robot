@@ -236,10 +236,10 @@ CronGhost.prototype.cronServer = async function () {
           if (mode === "register") {
             ws.__who__ = data;
           } else if (mode === "message") {
-            const clients = generalSocket.clients;
+            const clients = [ ...generalSocket.clients ];
             for (let c of clients) {
-              if (c.readyState === WebSocket.OPEN && c.__who__.id === to) {
-                c.send(JSON.stringify({ from: ws.__who__.id, data }));
+              if (c.__who__ === to) {
+                c.send(JSON.stringify({ from: ws.__who__, data }));
               }
             }
           }
