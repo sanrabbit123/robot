@@ -10,6 +10,8 @@ const CronGhost = function () {
   this.aws = new AwsAPIs();
 }
 
+CronGhost.stacks = {};
+
 CronGhost.prototype.aliveTest = async function (MONGOC) {
   const instance = this;
   const address = this.address;
@@ -190,7 +192,10 @@ CronGhost.prototype.cronServer = async function () {
   try {
     const https = require("https");
     const express = require("express");
+    const WebSocket = require("ws");
+    const url = require("url");
     const app = express();
+    const useragent = require("express-useragent");
     let pems;
     let pemsLink;
     let certDir;
@@ -198,7 +203,9 @@ CronGhost.prototype.cronServer = async function () {
     let caDir;
     let intervalFunc, startTime, today;
     let intervalFunc0, intervalFunc1, intervalFunc2;
+    let generalSocket, server;
 
+    app.use(useragent.express());
     app.use(express.json({ limit: "50mb" }));
     app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
@@ -221,7 +228,6 @@ CronGhost.prototype.cronServer = async function () {
     );
     await this.source.sourceLoad();
 
-
     //set router
     const CronRouter = require(`${this.dir}/router/cronRouter.js`);
     const router = new CronRouter(MONGOC, MONGOLOCALC);
@@ -235,6 +241,7 @@ CronGhost.prototype.cronServer = async function () {
     console.log(`set router`);
 
 
+    // set timer
     intervalFunc = async () => {
       try {
         const now = new Date();
@@ -271,7 +278,6 @@ CronGhost.prototype.cronServer = async function () {
         process.exit();
       }
     }
-
     intervalFunc0 = async () => {
       try {
         await instance.diskTestAndCost(MONGOLOCALC);
@@ -279,7 +285,6 @@ CronGhost.prototype.cronServer = async function () {
         console.log(e);
       }
     }
-
     intervalFunc1 = async () => {
       try {
         await instance.basicAsyncRequest(MONGOLOCALC);
@@ -287,7 +292,6 @@ CronGhost.prototype.cronServer = async function () {
         console.log(e);
       }
     }
-
     intervalFunc2 = async () => {
       try {
         await instance.aliveTest(MONGOLOCALC);
@@ -313,6 +317,8 @@ CronGhost.prototype.cronServer = async function () {
       setInterval(intervalFunc2, 1 * 10 * 60 * 1000);
     }, startTime);
 
+
+    // set pem key
     pems = {};
     pemsLink = process.cwd() + "/pems/" + address.croninfo.host;
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
@@ -336,7 +342,47 @@ CronGhost.prototype.cronServer = async function () {
     }
     pems.allowHTTP1 = true;
 
-    https.createServer(pems, app).listen(port, () => {
+
+    // wss socket
+    generalSocket = new WebSocket.Server({ noServer: true });
+    generalSocket.on("connection", (ws) => {
+      ws.on("message", (message) => {
+        try {
+
+          console.log(message);
+
+          const { mode, to, data } = JSON.parse(message);
+          if (mode === "register") {
+            ws.__who__ = data;
+          } else if (mode === "message") {
+            const clients = generalSocket.clients;
+            for (let c of clients) {
+              if (c.readyState === WebSocket.OPEN && c.__who__.id === to) {
+                c.send(JSON.stringify({ from: ws.__who__.id, data }));
+              }
+            }
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    });
+    CronGhost.stacks.socket = generalSocket;
+
+
+    // launching http server
+    server = https.createServer(pems, app);
+    server.on("upgrade", (request, socket, head) => {
+      const { pathname } = url.parse(request.url);
+      if (/realTimeCommunication/gi.test(pathname)) {
+        generalSocket.handleUpgrade(request, socket, head, (ws) => {
+          generalSocket.emit("connection", ws, request);
+        });
+      } else {
+        socket.destroy();
+      }
+    });
+    server.listen(port, () => {
       console.log(``);
       console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
       console.log(``);
