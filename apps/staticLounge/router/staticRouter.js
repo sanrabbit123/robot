@@ -6,6 +6,9 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GoogleDocs = require(process.cwd() + "/apps/googleAPIs/googleDocs.js");
   const GoogleChrome = require(process.cwd() + "/apps/googleAPIs/googleChrome.js");
+  const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
+  const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
+  const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
 
   this.mother = new Mother();
@@ -21,6 +24,9 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   this.drive = new GoogleDrive();
   this.docs = new GoogleDocs();
   this.chrome = new GoogleChrome();
+  this.sheets = new GoogleSheet();
+  this.calendar = new GoogleCalendar();
+  this.analytics = new GoogleAnalytics();
   this.audio = new PlayAudio();
 
   this.staticConst = process.env.HOME + "/samba";
@@ -1332,6 +1338,74 @@ StaticRouter.prototype.rou_post_removeCronNmon = function () {
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       errorLog("Static lounge 서버 문제 생김 (rou_post_removeCronNmon): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_analyticsDaily = function () {
+  const instance = this;
+  const { errorLog, equalJson, stringToDate, requestSystem, sleep } = this.mother;
+  const analytics = this.analytics;
+  const address = this.address;
+  let obj = {};
+  obj.link = [ "/analyticsDaily" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { date } = equalJson(req.body);
+      let thisDate;
+      let dateArr;
+
+      if (typeof date !== "string") {
+        throw new Error("invaild post");
+      }
+      if (date.length === 10) {
+
+        thisDate = stringToDate(date);
+        analytics.generalMetric(thisDate, thisDate).then((result) => {
+          return requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
+        }).then(() => {
+          return analytics.getSubmitClients(thisDate, instance.mongo);
+        }).then((result) => {
+          return requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
+        }).catch((err) => {
+          console.log(err);
+        });
+
+      } else {
+
+        dateArr = date.split(",").map((str) => { return str.trim(); });
+        if (!(dateArr.every((str) => { return str.length === 10 }))) {
+          throw new Error("invaild post");
+        }
+        (async () => {
+          let result;
+          for (let thisDate of dateArr) {
+            result = await analytics.generalMetric(thisDate, thisDate);
+            await requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
+            await sleep(1000);
+          }
+          for (let thisDate of dateArr) {
+            result = await analytics.getSubmitClients(thisDate, instance.mongo);
+            await requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
+            await sleep(1000);
+          }
+        })().catch((err) => {
+          console.log(err);
+        });
+
+      }
+
+      res.send({ message: "will do" });
+    } catch (e) {
+      await errorLog("Static lounge 서버 문제 생김 (rou_post_analyticsDaily): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }

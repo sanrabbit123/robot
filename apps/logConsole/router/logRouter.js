@@ -67,7 +67,7 @@ LogRouter.prototype.dailyAnalytics = async function () {
     date.setDate(date.getDate() + 1);
     requestString += dateToString(date);
 
-    await requestSystem("https://" + instance.address.backinfo.host + "/analyticsDaily", { date: requestString }, { headers: { "Content-Type": "application/json" } });
+    await requestSystem("https://" + instance.address.officeinfo.ghost.host + "/analyticsDaily", { date: requestString }, { headers: { "Content-Type": "application/json" } });
 
   } catch (e) {
     console.log(e);
