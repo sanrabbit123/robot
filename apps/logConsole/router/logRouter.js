@@ -871,6 +871,7 @@ LogRouter.prototype.rou_post_getClientReport = function () {
       let monthlyAnalytics;
       let thisFrom, thisTo;
       let tempRows;
+      let tempRows2;
 
       fromDate = new Date(fromYear, fromMonth - 1, 1);
       toDate = new Date(toYear, toMonth, 1);
@@ -914,24 +915,23 @@ LogRouter.prototype.rou_post_getClientReport = function () {
             { "date.to": { $lte: thisTo } },
           ]
         }, { selfMongo });
-
-        console.log(obj.year)
-        console.log(obj.month)
-
         
-        console.log(tempRows.map((obj) => { return obj.data.detail }).flat().filter((obj2) => {
+        obj.adClients = tempRows.map((obj) => { return obj.data.detail }).flat().filter((obj2) => {
           return obj2.users.some((obj3) => {
             return !/not set/gi.test(obj3.source.campaign)
           })
-        }).length)
+        }).length;
 
+        tempRows2 = await back.mongoRead("dailyCampaign", {
+          $and: [
+            { "date.from": { $gte: thisFrom }, },
+            { "date.to": { $lte: thisTo } },
+          ]
+        }, { selfMongo });
 
+        obj.charge = tempRows2.map((obj2) => { return obj2.value.charge }).reduce((acc, curr) => { return acc + curr }, 0);
 
       }
-
-
-
-
 
       res.send(JSON.stringify(monthlyAnalytics))
 
