@@ -1624,6 +1624,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       let copiedCopiedMatrix;
       let yearMonthArr;
       let logRes;
+      let logFound;
 
       if (req.body.month === undefined) {
         if (req.body.startYear === undefined) {
@@ -1789,7 +1790,20 @@ DataRouter.prototype.rou_post_getClientReport = function () {
         }
       });
 
-      console.log(logRes.data);
+      for (let obj of resultArr) {
+        logFound = logRes.data.find((obj2) => {
+          return obj2.year === obj.year && obj2.month === obj.month
+        });
+        if (logFound === undefined) {
+          obj.mau = 0;
+          obj.adClients = 0;
+          obj.charge = 0;
+        } else {
+          obj.mau = logFound.mau
+          obj.adClients = logFound.adClients
+          obj.charge = logFound.charge
+        }
+      }
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(resultArr));

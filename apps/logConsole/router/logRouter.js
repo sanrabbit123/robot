@@ -930,7 +930,6 @@ LogRouter.prototype.rou_post_getClientReport = function () {
         }, { selfMongo });
 
         obj.charge = tempRows2.map((obj2) => { return obj2.value.charge }).reduce((acc, curr) => { return acc + curr }, 0);
-
       }
 
       res.send(JSON.stringify(monthlyAnalytics))

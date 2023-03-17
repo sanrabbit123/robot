@@ -5458,7 +5458,7 @@ ClientJs.prototype.returnValueEventMaker = function () {
 ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
   const instance = this;
   const report = JSON.parse(data);
-  const { equalJson, blankHref, colorChip } = GeneralJs;
+  const { equalJson, blankHref, colorChip, autoComma } = GeneralJs;
   let div_clone, div_clone2, b_clone;
   let style;
   let ea = "px";
@@ -5481,7 +5481,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
 
   margin = 18;
   boxNumber = Math.floor((motherWidth - (margin * 3)) / (margin + 400));
-  boxHeight = 400;
+  boxHeight = 430;
   boxWidth = (motherWidth - (margin * (boxNumber + 1 + 2))) / boxNumber;
   boxTop = 88;
   propertyNum = 7;
@@ -5817,10 +5817,10 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     style = {
       position: "absolute",
       width: String(matrixWidth) + ea,
-      fontSize: String(matrixFontSize + 2) + ea,
+      fontSize: String(matrixFontSize) + ea,
       left: String(matrixBoxMargin) + ea,
       bottom: String(titleTop + (GeneralJs.isMac() ? 7 : 3)) + ea,
-      fontWeight: String(500),
+      fontWeight: String(600),
       textAlign: "right",
       lineHeight: String(1.6),
     };
@@ -5852,7 +5852,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     b_clone.addEventListener("contextmenu", toProjectEvent);
     summaryBox.appendChild(b_clone);
 
-    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;추천 `);
+    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;/&nbsp;&nbsp;추천 `);
 
     b_clone = GeneralJs.nodes.b.cloneNode(true);
     b_clone.style.color = colorChip.green;
@@ -5864,7 +5864,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     b_clone.addEventListener("contextmenu", toProjectEvent);
     summaryBox.appendChild(b_clone);
 
-    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;열람 `);
+    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;/&nbsp;&nbsp;열람 `);
 
     b_clone = GeneralJs.nodes.b.cloneNode(true);
     b_clone.style.color = colorChip.green;
@@ -5876,7 +5876,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     b_clone.addEventListener("contextmenu", toProjectEvent);
     summaryBox.appendChild(b_clone);
 
-    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;계약 `);
+    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;/&nbsp;&nbsp;계약 `);
 
     b_clone = GeneralJs.nodes.b.cloneNode(true);
     b_clone.style.color = colorChip.green;
@@ -5888,7 +5888,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     b_clone.addEventListener("contextmenu", toProjectEvent);
     summaryBox.appendChild(b_clone);
 
-    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;진행 `);
+    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;/&nbsp;&nbsp;진행 `);
 
     b_clone = GeneralJs.nodes.b.cloneNode(true);
     b_clone.style.color = colorChip.green;
@@ -5900,7 +5900,11 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     b_clone.addEventListener("contextmenu", toProjectEvent);
     summaryBox.appendChild(b_clone);
 
-    summaryBox.insertAdjacentHTML(`beforeend`, `명<br>추천율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.proposal / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;계약율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.contract / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;전환율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.contract / summaryTong.proposal) * 100))}</b>%&nbsp;&nbsp;진행율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.process / summaryTong.client) * 100))}</b>%`);
+    summaryBox.insertAdjacentHTML(`beforeend`, `명<br>추천율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.proposal / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;계약율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.contract / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;전환율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.contract / summaryTong.proposal) * 100))}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;진행율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.process / summaryTong.client) * 100))}</b>%`);
+
+    summaryBox.insertAdjacentHTML(`beforeend`, `<br>MAU <b style="color:${colorChip.green}">${String(report[i].mau)}</b>명&nbsp;&nbsp;/&nbsp;&nbsp;광고유입 <b style="color:${colorChip.green}">${String(report[i].adClients)}</b>명&nbsp;&nbsp;/&nbsp;&nbsp;광고지출 <b style="color:${colorChip.green}">${autoComma(report[i].charge)}</b>원`);
+    summaryBox.insertAdjacentHTML(`beforeend`, `<br>문의CAC <b style="color:${colorChip.green}">${autoComma(Math.round((report[i].charge / summaryTong.client)))}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;계약CAC <b style="color:${colorChip.green}">${autoComma(Math.round((report[i].charge / summaryTong.contract)))}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;전환CAC <b style="color:${colorChip.green}">${autoComma(Math.round((report[i].charge / summaryTong.process)))}</b>원`);
+
     div_clone.appendChild(summaryBox);
 
     totalSummary.client += summaryTong.client;
