@@ -1591,7 +1591,9 @@ DataRouter.prototype.rou_post_getServices = function () {
 DataRouter.prototype.rou_post_getClientReport = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, zeroAddition } = this.mother;
+  const address = this.address;
+  const port = 3000;
+  const { equalJson, zeroAddition, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/getClientReport";
   obj.func = async function (req, res) {
@@ -1621,6 +1623,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       let monthObject;
       let copiedCopiedMatrix;
       let yearMonthArr;
+      let logRes;
 
       if (req.body.month === undefined) {
         if (req.body.startYear === undefined) {
@@ -1774,9 +1777,19 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       }
 
       yearMonthArr.sort();
-      console.log(yearMonthArr[0], yearMonthArr[yearMonthArr.length - 1]);
 
+      logRes = await requestSystem("https://" + address.testinfo.host + ":" + String(port) + "/getClientReport", {
+        fromYear: Math.floor(yearMonthArr[0] / 100),
+        fromMonth: yearMonthArr[0] % 100,
+        toYear: Math.floor(yearMonthArr[yearMonthArr.length - 1] / 100),
+        toMonth: yearMonthArr[yearMonthArr.length - 1] % 100,
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
 
+      console.log(logRes.data);
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(resultArr));

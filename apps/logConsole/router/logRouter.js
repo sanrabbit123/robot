@@ -851,7 +851,7 @@ LogRouter.prototype.rou_post_updateContents = function () {
 LogRouter.prototype.rou_post_getClientReport = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, errorLog, messageLog, messageSend } = this.mother;
+  const { equalJson, errorLog, messageLog, messageSend, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/getClientReport" ];
   obj.func = async function (req, res) {
@@ -867,11 +867,25 @@ LogRouter.prototype.rou_post_getClientReport = function () {
       }
       const { fromYear, fromMonth, toYear, toMonth } = equalJson(req.body);
       const selfMongo = instance.mongo;
+      let fromDate, toDate;
+      let monthlyAnalytics;
+
+      fromDate = new Date(fromYear, fromMonth - 1, 1);
+      toDate = new Date(toYear, toMonth, 1);
+
+      monthlyAnalytics = await back.mongoRead("complexAnalytics", {
+        $and: [
+          { "date.from": { $gte: fromDate }, },
+          { "date.to": { $lte: toDate } },
+        ]
+      }, { selfMongo });
+
+      monthlyAnalytics.map((obj) => { return obj.key })
 
 
 
 
-      res.send(JSON.stringify({ fromYear, fromMonth, toYear, toMonth }))
+      res.send(JSON.stringify(monthlyAnalytics.map((obj) => { return obj.key })))
 
     } catch (e) {
       errorLog("Log console 문제 생김 (rou_post_getClientReport): " + e.message).catch((e) => { console.log(e); });
