@@ -7116,6 +7116,17 @@ ProcessJs.prototype.launching = async function () {
       }
     });
 
+    const sseSrouce = new EventSource(CRONHOST + "/sse/onlineDesigners");
+    sseSrouce.addEventListener("open", (e) => {
+      console.log(e);
+    });
+    sseSrouce.addEventListener("message", (e) => {
+      console.log(e);
+    });
+    sseSrouce.addEventListener("error", (e) => {
+      console.log(e);
+    });
+
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e.message).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
