@@ -636,7 +636,6 @@ GeneralJs.backgroundSse = (url, callback) => {
   worker.postMessage({ url });
 }
 
-
 GeneralJs.request = function (url, callback) {
   if (url === undefined && callback === undefined) {
     throw new Error("must be arguments (url, callback)");

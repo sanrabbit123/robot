@@ -7086,7 +7086,6 @@ ProcessJs.prototype.launching = async function () {
       callback: async (response) => {
         try {
           instance.onofflineDesid = equalJson(JSON.stringify(response));
-          console.log(instance.onofflineDesid);
           const circleTargets = [ ...document.querySelectorAll('.' + instance.onofflineCircleClassName) ];
           for (let circle of circleTargets) {
             if (instance.onofflineDesid.includes(circle.getAttribute("desid"))) {

@@ -1623,13 +1623,13 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
 
         await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
 
-        instance.kakao.sendTalk("remainPaymentAndChannel", client.name, client.phone, {
-          client: client.name,
-          designer: designer.designer,
-          emoji: "(방긋)",
-        }).catch((err) => {
-          console.log(err);
-        });
+        // instance.kakao.sendTalk("remainPaymentAndChannel", client.name, client.phone, {
+        //   client: client.name,
+        //   designer: designer.designer,
+        //   emoji: "(방긋)",
+        // }).catch((err) => {
+        //   console.log(err);
+        // });
 
       }
 

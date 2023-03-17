@@ -6164,7 +6164,7 @@ ClientJs.prototype.reportViewMakerDetail = function (recycle = false) {
       instance.whiteBox.contentsBox = div_clone;
       instance.totalContents.appendChild(div_clone);
 
-      GeneralJs.ajax("month=8", "/getClientReport", function (data) {
+      GeneralJs.ajax("month=8", BACKHOST + "/getClientReport", (data) => {
         svg_icon.style.opacity = "0";
         instance.reportContents(data, div_clone, svg_icon);
       });

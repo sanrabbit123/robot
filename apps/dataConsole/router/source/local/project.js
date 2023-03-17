@@ -3512,7 +3512,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //proid
   betweenSpace = "&nbsp;&nbsp;<b style=\"color: " + GeneralJs.colorChip.gray3 + "\">/</b>&nbsp;&nbsp;";
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone3.insertAdjacentHTML("beforeend", (thisCase[standard[1]] + betweenSpace + thisCase.name + " (Cl)" + betweenSpace + thisCase.name + " (Da)" + betweenSpace + thisCase.designer.split(' ')[0] + " (De)" + betweenSpace + "의뢰서" + betweenSpace + "시공"));
+  div_clone3.insertAdjacentHTML("beforeend", (thisCase[standard[1]] + betweenSpace + thisCase.name + " (Sa)" + betweenSpace + thisCase.name + " (Da)" + betweenSpace + thisCase.designer.split(' ')[0] + " (De)" + betweenSpace + "의뢰서" + betweenSpace + "시공"));
   div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",

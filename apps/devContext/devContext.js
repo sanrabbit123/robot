@@ -202,7 +202,7 @@ DevContext.prototype.launching = async function () {
 
     // const app = new GoogleAnalytics();
     // let pastMonthDate;
-    // pastMonthDate = new Date();
+    // pastMonthDate = new Date(2023, 2, 1);
     // pastMonthDate.setMonth(pastMonthDate.getMonth() - 1);
     // await app.complexMonthly(pastMonthDate.getFullYear(), pastMonthDate.getMonth() + 1);
 
