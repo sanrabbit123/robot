@@ -910,8 +910,8 @@ LogRouter.prototype.rou_post_getClientReport = function () {
         
         tempRows = await back.mongoRead("dailyClients", {
           $and: [
-            { "date.from": { $gte: fromDate }, },
-            { "date.to": { $lte: toDate } },
+            { "date.from": { $gte: thisFrom }, },
+            { "date.to": { $lte: thisTo } },
           ]
         }, { selfMongo });
 
