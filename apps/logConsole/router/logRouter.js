@@ -869,6 +869,8 @@ LogRouter.prototype.rou_post_getClientReport = function () {
       const selfMongo = instance.mongo;
       let fromDate, toDate;
       let monthlyAnalytics;
+      let thisFrom, thisTo;
+      let tempRows;
 
       fromDate = new Date(fromYear, fromMonth - 1, 1);
       toDate = new Date(toYear, toMonth, 1);
@@ -889,12 +891,36 @@ LogRouter.prototype.rou_post_getClientReport = function () {
 
         resultObj = {};
 
+        resultObj.standard = copiedDate;
         resultObj.year = copiedDate.getFullYear();
-        resultObj.month = copiedDate.getMonth();
+        resultObj.month = copiedDate.getMonth() + 1;
         resultObj.mau = obj.data.users.total;
 
         return resultObj;
       })
+
+      monthlyAnalytics.sort((a, b) => {
+        return a.standard.valueOf() - b.standard.valueOf();
+      })
+
+      for (let obj of monthlyAnalytics) {
+        thisFrom = new Date(obj.year, obj.month - 1, 1);
+        thisTo = new Date(obj.year, obj.month - 1, 1);
+        thisTo.setMonth(thisTo.getMonth() + 1);
+        
+        tempRows = await back.mongoRead("dailyClients", {
+          $and: [
+            { "date.from": { $gte: fromDate }, },
+            { "date.to": { $lte: toDate } },
+          ]
+        }, { selfMongo });
+
+        console.log(obj.year)
+        console.log(obj.month)
+        console.log(tempRows.map((obj) => { return obj.data.detail }).flat().length)
+
+      }
+
 
 
 
