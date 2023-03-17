@@ -848,6 +848,40 @@ LogRouter.prototype.rou_post_updateContents = function () {
   return obj;
 }
 
+LogRouter.prototype.rou_post_getClientReport = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, errorLog, messageLog, messageSend } = this.mother;
+  let obj = {};
+  obj.link = [ "/getClientReport" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.fromYear === undefined || req.body.fromMonth === undefined || req.body.toYear === undefined || req.body.toMonth === undefined) {
+        throw new Error("invalid post");
+      }
+      const { fromYear, fromMonth, toYear, toMonth } = equalJson(req.body);
+      const selfMongo = instance.mongo;
+
+
+
+
+      res.send(JSON.stringify({ fromYear, fromMonth, toYear, toMonth }))
+
+    } catch (e) {
+      errorLog("Log console 문제 생김 (rou_post_getClientReport): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 LogRouter.policy = function () {

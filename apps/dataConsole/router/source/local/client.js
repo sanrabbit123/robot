@@ -5535,13 +5535,13 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     columnTop = 0;
     columnLineHeight = 28;
     columnPaddingTop = 7;
-    matrixFontSize = 14;
+    matrixFontSize = 13;
     matrixInnerLine = "1px solid " + GeneralJs.colorChip.gray2;
     matrixOuterLine = "1px solid " + GeneralJs.colorChip.gray4;
     matrixTop = titleTop + 40;
     matrixBoxMargin = 23;
     matrixWidth = boxWidth - (matrixBoxMargin * 2) - 3;
-    matrixHeight = 240;
+    matrixHeight = 200;
     summaryTong = {
       client: 0,
       proposal: 0,
@@ -5597,7 +5597,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     for (let z in style) {
       titleBox.style[z] = style[z];
     }
-    titleBox.textContent = `${report[i][0].startDay.split('-')[0]}-${report[i][0].startDay.split('-')[1]}`;
+    titleBox.textContent = `${report[i].data[0].startDay.split('-')[0]}-${report[i].data[0].startDay.split('-')[1]}`;
     div_clone.appendChild(titleBox);
 
     //matrix
@@ -5699,7 +5699,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       process: []
     };
     reportNumber = 0;
-    for (let { startDay, endDay, client, recommend, proposal, contract, process, cliid: cliidObj, proid: proidObj } of report[i]) {
+    for (let { startDay, endDay, client, recommend, proposal, contract, process, cliid: cliidObj, proid: proidObj } of report[i].data) {
 
       columnTop = columnTop + columnLineHeight + columnPaddingTop;
 
@@ -5707,7 +5707,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       matrixStyle0.top = String(columnTop) + ea;
       matrixStyle0.background = "";
-      if (reportNumber === report[i].length - 1) {
+      if (reportNumber === report[i].data.length - 1) {
         matrixStyle0.borderBottom = '';
       }
       for (let z in matrixStyle0) {
@@ -5723,7 +5723,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       matrixStyle1.left = String(matrixWidth * (2 / propertyNum)) + ea;
       matrixStyle1.background = "";
       matrixStyle1.fontWeight = String(200);
-      if (reportNumber === report[i].length - 1) {
+      if (reportNumber === report[i].data.length - 1) {
         matrixStyle1.borderBottom = '';
       }
       for (let z in matrixStyle1) {
@@ -5820,7 +5820,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       fontSize: String(matrixFontSize + 2) + ea,
       left: String(matrixBoxMargin) + ea,
       bottom: String(titleTop + (GeneralJs.isMac() ? 7 : 3)) + ea,
-      fontWeight: String(400),
+      fontWeight: String(500),
       textAlign: "right",
       lineHeight: String(1.6),
     };
@@ -6164,7 +6164,7 @@ ClientJs.prototype.reportViewMakerDetail = function (recycle = false) {
       instance.whiteBox.contentsBox = div_clone;
       instance.totalContents.appendChild(div_clone);
 
-      GeneralJs.ajax("month=8", BACKHOST + "/getClientReport", (data) => {
+      GeneralJs.ajax("month=8", "/getClientReport", (data) => {
         svg_icon.style.opacity = "0";
         instance.reportContents(data, div_clone, svg_icon);
       });

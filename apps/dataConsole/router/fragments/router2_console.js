@@ -863,13 +863,8 @@ DataRouter.prototype.rou_post_getServices = function () {
 DataRouter.prototype.rou_post_getClientReport = function () {
   const instance = this;
   const back = this.back;
-  const zeroAddition = function (number) {
-    if (number < 10) {
-      return `0${String(number)}`;
-    } else {
-      return String(number);
-    }
-  }
+  const address = this.address;
+  const { equalJson, zeroAddition, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/getClientReport";
   obj.func = async function (req, res) {
@@ -895,6 +890,11 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       let motherClients, motherProjects, motherProjects_raw;
       let motherClientHistories;
       let histories;
+      let copiedMatrix;
+      let monthObject;
+      let copiedCopiedMatrix;
+      let yearMonthArr;
+      let logRes;
 
       if (req.body.month === undefined) {
         if (req.body.startYear === undefined) {
@@ -923,13 +923,59 @@ DataRouter.prototype.rou_post_getClientReport = function () {
         }
       }
 
-      motherClients = (await back.getClientsByQuery({}, { selfMongo: instance.mongo, withTools: true })).getRequestsTong().map((arr) => { let obj = arr[0].toNormal(); obj.cliid = arr.cliid; obj.analytics = arr[1].toNormal(); return obj; });
-      motherClientHistories = await back.mongoRead("clientHistory", {}, { selfMongo: instance.mongolocal });
-      motherProjects_raw = (await back.getProjectsByQuery({}, { selfMongo: instance.mongo })).toNormal();
+      copiedMatrix = equalJson(JSON.stringify(dateMatrix));
+      copiedMatrix = copiedMatrix.flat().flat();
+      copiedMatrix.sort((a, b) => {
+        return a.valueOf() - b.valueOf();
+      });
+
+      motherClients = (await back.getClientsByQuery({
+        $and: [
+          {
+            requests: {
+              $elemMatch: {
+                "request.timeline": { $gte: copiedMatrix[0] }
+              }
+            }
+          },
+          {
+            requests: {
+              $elemMatch: {
+                "request.timeline": { $lte: copiedMatrix[copiedMatrix.length - 1] }
+              }
+            }
+          }
+        ]
+      }, { selfMongo: instance.mongo, withTools: true })).getRequestsTong().map((arr) => { let obj = arr[0].toNormal(); obj.cliid = arr.cliid; obj.analytics = arr[1].toNormal(); return obj; });
+      motherClientHistories = await back.mongoRead("clientHistory", {
+        $or: motherClients.map((o) => { return { cliid: o.cliid } }),
+      }, { selfMongo: instance.mongolocal });
+      motherProjects_raw = (await back.getProjectsByQuery({
+        $or: motherClients.map((o) => { return { cliid: o.cliid } }).concat([
+          {
+            "process.contract.first.date": {
+              $gte: copiedMatrix[0]
+            }
+          }
+        ]),
+      }, { selfMongo: instance.mongo })).toNormal();
       motherProjects = motherProjects_raw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() });
 
+      yearMonthArr = [];
       resultArr = [];
       for (let matrix of dateMatrix) {
+
+        copiedCopiedMatrix = equalJson(JSON.stringify(matrix));
+        copiedCopiedMatrix = copiedCopiedMatrix.flat();
+        copiedCopiedMatrix.sort((a, b) => {
+          return b.valueOf() - a.valueOf();
+        });
+
+        monthObject = {
+          year: copiedCopiedMatrix[Math.round(copiedCopiedMatrix.length / 2)].getFullYear(),
+          month: copiedCopiedMatrix[Math.round(copiedCopiedMatrix.length / 2)].getMonth() + 1,
+        };
+        yearMonthArr.push((monthObject.year * 100) + monthObject.month);
 
         monthArr = [];
         for (let arr of matrix) {
@@ -997,8 +1043,24 @@ DataRouter.prototype.rou_post_getClientReport = function () {
 
           monthArr.push(obj);
         }
-        resultArr.push(monthArr);
+        monthObject.data = equalJson(JSON.stringify(monthArr));
+        resultArr.push(monthObject);
       }
+
+      yearMonthArr.sort();
+
+      logRes = await requestSystem("https://" + address.testinfo.host + ":" + String(port) + "/getClientReport", {
+        fromYear: Math.floor(yearMonthArr[0] / 100),
+        fromMonth: yearMonthArr[0] % 100,
+        toYear: Math.floor(yearMonthArr[yearMonthArr.length - 1] / 100),
+        toMonth: yearMonthArr[yearMonthArr.length - 1] % 100,
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      console.log(logRes.data);
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(resultArr));
