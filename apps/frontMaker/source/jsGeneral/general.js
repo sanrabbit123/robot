@@ -606,6 +606,39 @@ GeneralJs.setPolling = (data, url, interval, callback) => {
   worker.postMessage({ data, url, interval });
 }
 
+GeneralJs.backgroundSse = (url, name, callback) => {
+  if (typeof url === "string" && typeof name === "string" && typeof callback === "function") {
+    url = url;
+    name = name;
+    callback = callback;
+  } else if (typeof url === "object" && url !== null) {
+    if (typeof url.url === "string" && typeof url.name === "string" && typeof url.callback === "function") {
+      name = url.name;
+      callback = url.callback;
+      url = url.url;
+    } else {
+      throw new Error("invalid input 1");
+    }
+  } else {
+    throw new Error("invalid input 2");
+  }
+  let worker;
+  worker = new Worker("/worker/sse.js");
+  worker.addEventListener("message", async (e) => {
+    try {
+      const response = GeneralJs.equalJson(e.data);
+      await callback(response);
+    } catch (e) {
+      console.log(e);
+    }
+  });
+  worker.addEventListener("error", (e) => {
+    console.log(e);
+  })
+  worker.postMessage({ url, name });
+}
+
+
 GeneralJs.request = function (url, callback) {
   if (url === undefined && callback === undefined) {
     throw new Error("must be arguments (url, callback)");

@@ -6985,7 +6985,7 @@ ProcessJs.prototype.addTransFormEvent = function () {
 
 ProcessJs.prototype.launching = async function () {
   const instance = this;
-  const { ajaxJson, equalJson, returnGet, ajaxMultiple, setPolling, colorChip } = GeneralJs;
+  const { ajaxJson, equalJson, returnGet, ajaxMultiple, backgroundSse, colorChip } = GeneralJs;
   try {
     const getObj = returnGet();
     const emptyDate = () => { return new Date(1800, 0, 1) };
@@ -7081,13 +7081,13 @@ ProcessJs.prototype.launching = async function () {
       }
     }
 
-    setPolling({
-      data: {},
-      url: CRONHOST + "/wssStatus",
-      interval: 5 * 1000,
+    backgroundSse({
+      url: CRONHOST + "/sse/onlineDesigners",
+      name: "loginStatus",
       callback: async (response) => {
         try {
-          instance.onofflineDesid = [ ...new Set(response) ];
+          instance.onofflineDesid = equalJson(JSON.stringify(response));
+          console.log(instance.onofflineDesid);
           const circleTargets = [ ...document.querySelectorAll('.' + instance.onofflineCircleClassName) ];
           for (let circle of circleTargets) {
             if (instance.onofflineDesid.includes(circle.getAttribute("desid"))) {
@@ -7113,15 +7113,7 @@ ProcessJs.prototype.launching = async function () {
         } catch (e) {
           console.log(e);
         }
-      }
-    });
-
-    const sseSrouce = new EventSource(CRONHOST + "/sse/onlineDesigners");
-    sseSrouce.addEventListener("message", (e) => {
-      console.log(e);
-    });
-    sseSrouce.addEventListener("error", (e) => {
-      console.log(e);
+      } 
     });
 
   } catch (e) {

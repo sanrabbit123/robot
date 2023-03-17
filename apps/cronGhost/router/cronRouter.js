@@ -113,8 +113,9 @@ CronRouter.prototype.rou_get_ServerSent = function () {
         thisSet = Array.from(new Set([ ...socket.clients ].map((obj) => { return obj.__who__ })));
         thisSet.sort();
         thisSetString = JSON.stringify(thisSet);
-        sseStream.write({ event: "loginStatus", data: thisSetString });
-
+        if (thisSetString !== pastSetString) {
+          sseStream.write({ event: "loginStatus", data: thisSetString });
+        }
         pastSetString = thisSetString;
       }, 1000);
 
