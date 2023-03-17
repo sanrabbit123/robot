@@ -606,14 +606,12 @@ GeneralJs.setPolling = (data, url, interval, callback) => {
   worker.postMessage({ data, url, interval });
 }
 
-GeneralJs.backgroundSse = (url, name, callback) => {
-  if (typeof url === "string" && typeof name === "string" && typeof callback === "function") {
+GeneralJs.backgroundSse = (url, callback) => {
+  if (typeof url === "string" && typeof callback === "function") {
     url = url;
-    name = name;
     callback = callback;
   } else if (typeof url === "object" && url !== null) {
-    if (typeof url.url === "string" && typeof url.name === "string" && typeof url.callback === "function") {
-      name = url.name;
+    if (typeof url.url === "string" && typeof url.callback === "function") {
       callback = url.callback;
       url = url.url;
     } else {
@@ -635,7 +633,7 @@ GeneralJs.backgroundSse = (url, name, callback) => {
   worker.addEventListener("error", (e) => {
     console.log(e);
   })
-  worker.postMessage({ url, name });
+  worker.postMessage({ url });
 }
 
 

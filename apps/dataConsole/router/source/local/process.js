@@ -7083,7 +7083,6 @@ ProcessJs.prototype.launching = async function () {
 
     backgroundSse({
       url: CRONHOST + "/sse/onlineDesigners",
-      name: "loginStatus",
       callback: async (response) => {
         try {
           instance.onofflineDesid = equalJson(JSON.stringify(response));
