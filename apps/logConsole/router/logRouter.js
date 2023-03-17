@@ -917,7 +917,15 @@ LogRouter.prototype.rou_post_getClientReport = function () {
 
         console.log(obj.year)
         console.log(obj.month)
-        console.log(tempRows.map((obj) => { return obj.data.detail }).flat().length)
+
+        
+        console.log(tempRows.map((obj) => { return obj.data.detail }).flat().filter((obj2) => {
+          return obj2.users.some((obj3) => {
+            return !/not set/gi.test(obj3.source.campaign)
+          })
+        }).length)
+
+
 
       }
 
