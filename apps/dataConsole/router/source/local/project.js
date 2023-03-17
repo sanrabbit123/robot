@@ -692,39 +692,44 @@ ProjectJs.prototype.infoArea = function (info) {
 
         if (thisMap.type === "date" && e.type === "click") {
 
-          cancel_inputBack.style.background = GeneralJs.colorChip.white;
+          if (thisMap.constant === true) {
+            window.alert("해당 값은 수동으로 조작할 수 없습니다!");
+            cancel_inputBack.click();
+          } else {
+            cancel_inputBack.style.background = GeneralJs.colorChip.white;
 
-          this.style.overflow = "";
-          width = 260;
-          height = 280;
-          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
-          top = Number(this.style.height.replace((new RegExp(ea, "gi")), '')) * 1.5;
-
-          button_clone = GeneralJs.nodes.div.cloneNode(true);
-          button_clone.classList.add("removeTarget");
-          style = {
-            position: "absolute",
-            top: String(top) + ea,
-            left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
-            width: String(width) + ea,
-            height: String(260) + ea,
-            background: GeneralJs.colorChip.white,
-            textAlign: "center",
-            fontSize: "inherit",
-            color: GeneralJs.colorChip.green,
-            zIndex: String(3),
-            borderRadius: String(3) + ea,
-            animation: "fadeuplite 0.3s ease forwards",
-            boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.shadow,
-            transition: "all 0s ease",
-          };
-          for (let j in style) {
-            button_clone.style[j] = style[j];
+            this.style.overflow = "";
+            width = 260;
+            height = 280;
+            fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+            top = Number(this.style.height.replace((new RegExp(ea, "gi")), '')) * 1.5;
+  
+            button_clone = GeneralJs.nodes.div.cloneNode(true);
+            button_clone.classList.add("removeTarget");
+            style = {
+              position: "absolute",
+              top: String(top) + ea,
+              left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
+              width: String(width) + ea,
+              height: String(260) + ea,
+              background: GeneralJs.colorChip.white,
+              textAlign: "center",
+              fontSize: "inherit",
+              color: GeneralJs.colorChip.green,
+              zIndex: String(3),
+              borderRadius: String(3) + ea,
+              animation: "fadeuplite 0.3s ease forwards",
+              boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.shadow,
+              transition: "all 0s ease",
+            };
+            for (let j in style) {
+              button_clone.style[j] = style[j];
+            }
+            const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '' || this.textContent === '예정') ? (new Date()) : this.textContent, updateValueEvent);
+            button_clone.appendChild(calendar.calendarBase);
+            button_clone.style.height = String(calendar.calendarHeight) + ea;
+            this.appendChild(button_clone);
           }
-          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '' || this.textContent === '예정') ? (new Date()) : this.textContent, updateValueEvent);
-          button_clone.appendChild(calendar.calendarBase);
-          button_clone.style.height = String(calendar.calendarHeight) + ea;
-          this.appendChild(button_clone);
 
         } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
@@ -3923,40 +3928,45 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         if (thisMap.type === "date" && e.type === "click") {
 
-          cancel_inputBack.style.background = GeneralJs.colorChip.white;
-          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
+          if (thisMap.constant === true) {
+            window.alert("해당 값은 수동으로 조작할 수 없습니다!");
+            cancel_inputBack.click();
 
-          this.style.overflow = "";
-          width = 260;
-          height = 280;
-          fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
-          top = Number(this.style.height.replace((new RegExp(ea, "gi")), '')) * 1.5;
+          } else {
+            cancel_inputBack.style.background = GeneralJs.colorChip.white;
 
-          button_clone = GeneralJs.nodes.div.cloneNode(true);
-          button_clone.classList.add("removeTarget");
-          style = {
-            position: "absolute",
-            top: String(top) + ea,
-            left: String(0) + ea,
-            width: String(width) + ea,
-            height: String(260) + ea,
-            background: GeneralJs.colorChip.white,
-            textAlign: "center",
-            fontSize: "inherit",
-            color: GeneralJs.colorChip.green,
-            zIndex: String(3),
-            borderRadius: String(3) + ea,
-            animation: "fadeuplite 0.3s ease forwards",
-            boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.shadow,
-            transition: "all 0s ease",
-          };
-          for (let j in style) {
-            button_clone.style[j] = style[j];
+            this.style.overflow = "";
+            width = 260;
+            height = 280;
+            fontSize = Number(this.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+            top = Number(this.style.height.replace((new RegExp(ea, "gi")), '')) * 1.5;
+  
+            button_clone = GeneralJs.nodes.div.cloneNode(true);
+            button_clone.classList.add("removeTarget");
+            style = {
+              position: "absolute",
+              top: String(top) + ea,
+              left: String(0) + ea,
+              width: String(width) + ea,
+              height: String(260) + ea,
+              background: GeneralJs.colorChip.white,
+              textAlign: "center",
+              fontSize: "inherit",
+              color: GeneralJs.colorChip.green,
+              zIndex: String(3),
+              borderRadius: String(3) + ea,
+              animation: "fadeuplite 0.3s ease forwards",
+              boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.shadow,
+              transition: "all 0s ease",
+            };
+            for (let j in style) {
+              button_clone.style[j] = style[j];
+            }
+            const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '' || this.textContent === '예정') ? (new Date()) : this.textContent, updateValueEvent);
+            button_clone.appendChild(calendar.calendarBase);
+            button_clone.style.height = String(calendar.calendarHeight) + ea;
+            this.appendChild(button_clone);
           }
-          const calendar = instance.mother.makeCalendar((this.textContent === '-' || this.textContent === '' || this.textContent === '예정') ? (new Date()) : this.textContent, updateValueEvent);
-          button_clone.appendChild(calendar.calendarBase);
-          button_clone.style.height = String(calendar.calendarHeight) + ea;
-          this.appendChild(button_clone);
 
         } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 

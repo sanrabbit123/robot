@@ -5144,7 +5144,7 @@ DataPatch.prototype.projectMap = function () {
     let endEvent;
     let originalValue;
     let dropCase;
-    let completeCase;
+    let processCase;
 
     originalValue = input.value;
 
@@ -5153,42 +5153,19 @@ DataPatch.prototype.projectMap = function () {
       let finalValue;
       let items;
 
-      items = [ '대기', '진행중', '홀딩', '완료' ];
-      dropCase = [ '드랍' ];
-      completeCase = [ '완료' ];
+      items = [ "대기", "홀딩", "완료" ];
+      processCase = [ "진행중" ];
+      dropCase = [ "드랍" ];
 
       if (items.includes(rawValue)) {
         finalValue = rawValue;
       } else {
         if (dropCase.includes(rawValue)) {
-
-          
-          
-
-
-
-
-
-
-
+          window.alert("드랍 처리는 별도로 처리할 수 없습니다! 관리자에게 문의해주세요!");
           finalValue = originalValue;
-
-
-        } else if (dropCase.includes(rawValue)) {
-
-
-
-
-
-
-
-
-
-
-
+        } else if (processCase.includes(rawValue)) {
+          window.alert("진행중 처리는 수동으로 처리할 수 없습니다! 반드시 전산을 통해 업데이트가 진행되어야만 합니다.");
           finalValue = originalValue;
-
-
         } else {
           finalValue = originalValue;
         }
@@ -6401,7 +6378,7 @@ DataPatch.prototype.projectMap = function () {
     callHistory: { name: "연락 기록", position: "process.call.history", type: "object", inputFunction: callHistoryInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
     firstDate: { name: "계약금 입금", position: "process.contract.first.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     firstCancel: { name: "계약금 취소", position: "process.contract.first.cancel", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
-    firstAmount: { name: "계약금", position: "process.contract.first.calculation.amount", type: "number", searchBoo: true, moneyBoo: true },
+    firstAmount: { name: "계약금", position: "process.contract.first.calculation.amount", type: "number", searchBoo: true, moneyBoo: true, constant: true },
     firstInfo: { name: "계약금 정보", position: "process.contract.first.calculation.info", type: "object", inputFunction: methodInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: methodToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     firstRefund: { name: "계약금 환불액", position: "process.contract.first.calculation.refund", type: "number", searchBoo: true, moneyBoo: true },
     meetingDate: { name: "1차 미팅", position: "process.contract.meeting.date", type: "date", detailDate: true, searchBoo: true, yesNo: [ "Y", "N" ], calendar: function (thisCase) {
@@ -6411,7 +6388,7 @@ DataPatch.prototype.projectMap = function () {
       const title = "현장 미팅 W " + thisCase.name + "C " + designer + "D " + thisCase.proid;
       return { id: id, to: to, title: title };
     }, },
-    remainDate: { name: "잔금 입금", position: "process.contract.remain.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
+    remainDate: { name: "잔금 입금", position: "process.contract.remain.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], constant: true },
     remainCancel: { name: "잔금 취소", position: "process.contract.remain.cancel", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     remainSupply: { name: "공급가", position: "process.contract.remain.calculation.amount.supply", type: "number", searchBoo: true, moneyBoo: true },
     remainVat: { name: "VAT", position: "process.contract.remain.calculation.amount.vat", type: "number", searchBoo: true, moneyBoo: true },
