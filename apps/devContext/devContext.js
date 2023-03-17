@@ -5406,12 +5406,12 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "최소라";
-    // const amount = 2161500;
-    // await human.sendSms({
-    //   to: "01055432039",
-    //   body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
-    // });
+    const name = "하미진";
+    const amount = 1100000;
+    await human.sendSms({
+      to: "01055432039",
+      body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
+    });
 
 
     // bill passive sync
