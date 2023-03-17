@@ -880,12 +880,26 @@ LogRouter.prototype.rou_post_getClientReport = function () {
         ]
       }, { selfMongo });
 
-      monthlyAnalytics.map((obj) => { return obj.key })
+      monthlyAnalytics = monthlyAnalytics.map((obj) => {
+        let resultObj;
+        let copiedDate;
+
+        copiedDate = new Date(JSON.stringify(obj.date.from).slice(1, -1));
+        copiedDate.setDate(copiedDate.getDate() + 10);
+
+        resultObj = {};
+
+        resultObj.year = copiedDate.getFullYear();
+        resultObj.month = copiedDate.getMonth();
+        resultObj.mau = obj.data.users.total;
+
+        return resultObj;
+      })
 
 
 
 
-      res.send(JSON.stringify(monthlyAnalytics.map((obj) => { return obj.key })))
+      res.send(JSON.stringify(monthlyAnalytics))
 
     } catch (e) {
       errorLog("Log console 문제 생김 (rou_post_getClientReport): " + e.message).catch((e) => { console.log(e); });
