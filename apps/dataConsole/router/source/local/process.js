@@ -2760,6 +2760,7 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
 
       await instance.insertFormStatusBox(project, menuArea);
       instance.insertUploadBox(project, menuArea);
+      await instance.insertScheduleBox(project, menuArea);
 
     } catch (e) {
       console.log(e);
@@ -4083,6 +4084,1350 @@ ProcessJs.prototype.insertUploadBox = function (project, baseTong) {
   this.setPanBlocks(project).catch((err) => { console.log(err) });
 
   return whiteBlock;
+}
+
+ProcessJs.prototype.insertScheduleBox = async function (project, baseTong) {
+  const instance = this;
+  const mother = this.mother;
+  const { ea, media, totalContents } = this;
+  const client = project.client;
+  const proid = project.proid;
+  const designer = project.designer;
+  const desid = designer.desid;
+  const requestNumber = project.requestNumber;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const manyBig = media[0];
+  const generalSmall = !manyBig;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, uniqueValue, variableArray, colorCalendar } = GeneralJs;
+  const blank = "&nbsp;&nbsp;&nbsp;";
+  const mainTitle = "프로젝트 일정";
+  const dragElementClassName = "dragElementClassName";
+  const tempInputClassName = "tempInputClassName";
+  const duringTextToken = "~";
+  const duringToken = "<b%&nbsp;&nbsp;" + duringTextToken + "&nbsp;&nbsp;%b>";
+  const dateToHangul = (dateObject) => {
+    return `${String(dateObject.getFullYear()).slice(2)}년 ${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일`;
+  }
+  const hangulToDate = (hangul) => {
+    hangul = hangul.replace(/ /gi, '');
+    const [ year, month, date ] = hangul.split(/[가-힣]/gi);
+    return new Date(2000 + Number(year), Number(month) - 1, Number(date));
+  }
+  try {
+    let updateTextValue;
+    let paddingTop;
+    let margin;
+    let block;
+    let whiteBottomMargin;
+    let whiteBlock, whiteTong;
+    let bottomMargin;
+    let titleFontSize;
+    let numberRight;
+    let titleTop, titleTopNumber;
+    let titleBottom;
+    let mobileTitleLeft, mobileTitleTop;
+    let mobilePaddingLeft;
+    let mobileInnerPaddingBottom;
+    let contentsAreaPaddingTop;
+    let panMother;
+    let panMotherInnerPadding;
+    let panBetween;
+    let panTitleBoxWidth;
+    let panTitleBoxHeight;
+    let panMotherBetween;
+    let contents;
+    let itemBetween;
+    let smallBetween;
+    let contentsPanPaddingTop;
+    let contentsWordingSize;
+    let contentsWordingBoldWeight;
+    let contentsWordingWeight;
+    let contentsWordingContentsWeight;
+    let hamburgerItemWidth;
+    let contentsTextTop;
+    let widthRatio0, widthRatio1;
+    let updateDateValue;
+    let calendarWidth;
+    let calendarPadding;
+    let contentsBlock;
+    let updateDateMobileValue;
+    let setScheduleContents;
+    let updateOrderValue;
+    let buttonTongHeight, buttonTongPaddingTop;
+    let buttonHeight, buttonPadding, buttonBetween;
+    let buttonSize, buttonWeight, buttonTextTop;
+    let originalContents;
+    let contextMenuValue;
+    let refreshUpdate;
+    let calendarMother;
+    let calendarTongPaddingTop, calendarTongPaddingBottom;
+    let calendarDateArr;
+    let updatedContents;
+    let contentsRawInfo;
+    let panMotherMarginTop;
+
+    contentsRawInfo = await ajaxJson({ mode: "search", proid }, SECONDHOST + "/rawImageParsing", { equal: true });
+
+    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+    margin = <%% 55, 55, 47, 39, 4.7 %%>;
+    paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+  
+    whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  
+    titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+    numberRight = <%% 12, 12, 12, 12, 3 %%>;
+  
+    titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+    titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+  
+    titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
+    contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
+
+    panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
+    panBetween = <%% 8, 8, 8, 8, 1 %%>;
+    panTitleBoxWidth = <%% 124, 120, 114, 108, 21 %%>;
+    panTitleBoxHeight = <%% 52, 48, 40, 35, 8.2 %%>;
+  
+    panMotherBetween = <%% 8, 7, 6, 5, 1 %%>;
+    smallBetween = <%% 3, 3, 2, 2, 1 %%>;
+  
+    mobileTitleLeft = 1.5;
+    mobileTitleTop = -8.7;
+  
+    itemBetween = <%% 7, 7, 7, 6, 1.5 %%>;
+  
+    contentsPanPaddingTop = <%% 18, 18, 16, 12, 3 %%>;
+    contentsWordingSize = <%% 14, 14, 12, 11, 2.7 %%>;
+    contentsWordingBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
+    contentsWordingWeight = <%% 700, 700, 700, 700, 700 %%>;
+    contentsWordingContentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+    contentsTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.1 %%>;
+  
+    calendarTongPaddingTop = <%% 24, 24, 20, 16, 3 %%>;
+    calendarTongPaddingBottom = <%% 20, 20, 18, 14, 3 %%>;
+
+    hamburgerItemWidth = <%% 14, 13, 13, 12, 2 %%>;
+  
+    widthRatio0 = <%% 4, 3, 3, 2.5, 3.5 %%>;
+    widthRatio1 = <%% 12, 10, 10, 9, 1 %%>;
+  
+    calendarWidth = <%% 260, 260, 260, 260, 260 %%>;
+    calendarPadding = <%% 4, 4, 4, 4, 3 %%>;
+  
+    buttonTongHeight = <%% 42, 42, 32, 30, 14 %%>;
+    buttonTongPaddingTop = <%% 11, 11, 8, 6, 2 %%>;
+
+    buttonHeight = <%% 36, 36, 30, 28, 7 %%>;
+    buttonPadding = <%% 22, 18, 16, 14, 4 %%>;
+    buttonBetween = <%% 6, 6, 6, 6, 1 %%>;
+
+    buttonSize = <%% 14, 14, 12, 11, 2.7 %%>;
+    buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+    buttonTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.1 %%>;
+
+    panMotherMarginTop = 50;
+
+    mobileInnerPaddingBottom = 0;
+  
+    this.whiteMargin = (desktop ? margin : 0);
+  
+    setScheduleContents = () => {};
+  
+    refreshUpdate = async function (base) {
+      try {
+        let refreshTargets;
+        let num;
+        let newContents;
+        let childrenTarget;
+        let tempObj;
+        let whereQuery, updateQuery;
+
+        refreshTargets = [ ...base.children ];
+        refreshTargets.pop();
+
+        num = -1;
+        newContents = [];
+        for (let dom of refreshTargets) {
+          dom.setAttribute("index", String(num));
+          childrenTarget = [ ...dom.children ];
+          for (let child of childrenTarget) {
+            child.setAttribute("index", String(num));
+          }
+          if (num !== -1) {
+            tempObj = {};
+            tempObj.date = {};
+            for (let i = 0; i < childrenTarget.length; i++) {
+              if (i === 1) {
+                tempObj.title = childrenTarget[i].textContent;
+              } else if (i === 2) {
+                tempObj.description = childrenTarget[i].textContent;
+              } else if (i === 3) {
+                tempObj.date.start = hangulToDate(childrenTarget[i].textContent);
+              } else if (i === 4) {
+                tempObj.date.end = hangulToDate(childrenTarget[i].textContent);
+              }
+            }
+            newContents.push(tempObj);
+          }
+          num++;
+        }
+
+        whereQuery = { proid: project.proid };
+        updateQuery = {};
+        updateQuery["schedule"] = newContents;
+
+        await ajaxJson({
+          mode: "update",
+          proid: project.proid,
+          desid: desid,
+          whereQuery,
+          updateQuery
+        }, SECONDHOST + "/projectDesignerSchedule");
+
+        return { schedule: newContents };
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    updateTextValue = (order, widthRatio, weight) => {
+      return async function (e) {
+        try {
+          const index = Number(this.getAttribute("index"));
+          const mother = this.parentElement.parentElement;
+          const base = this.parentElement;
+          const zIndex = 4;
+          const thisChildOrder = order;
+          let updateEvent;
+          let cancelBack;
+          let valueInput;
+          let column;
+          let whereQuery, updateQuery;
+  
+          cancelBack = {};
+          valueInput = {};
+  
+          updateEvent = async function (e) {
+            try {
+              document.getElementById(base.id).children[thisChildOrder].firstChild.textContent = valueInput.value;
+
+              if (thisChildOrder === 1) {
+                column = "title";
+              } else if (thisChildOrder === 2) {
+                column = "description";
+              } else if (thisChildOrder === 3) {
+                column = "description";
+              }
+
+              whereQuery = { proid: project.proid };
+              updateQuery = {};
+              updateQuery["schedule." + String(index) + "." + column] = valueInput.value;
+
+              updatedContents = await ajaxJson({
+                mode: "update",
+                proid: project.proid,
+                desid: desid,
+                whereQuery,
+                updateQuery
+              }, SECONDHOST + "/projectDesignerSchedule", { equal: true });
+
+              removeByClass(tempInputClassName);
+              setScheduleContents(updatedContents);
+
+            } catch (e) {
+              console.log(e);
+            }
+          }
+
+          cancelBack = createNode({
+            mother,
+            attribute: {
+              baseid: base.id,
+            },
+            class: [ tempInputClassName ],
+            event: {
+              click: function (e) {
+                updateEvent(e).catch((err) => { console.log(err); });
+              }
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              background: "transparent",
+              zIndex: String(zIndex),
+            }
+          });
+  
+          valueInput = createNode({
+            mother,
+            class: [ tempInputClassName ],
+            attribute: {
+              baseid: base.id,
+            },
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              top: String((widthRatio !== 100 ? base.getBoundingClientRect().top : this.getBoundingClientRect().top) - mother.getBoundingClientRect().top) + "px",
+              left: String(this.getBoundingClientRect().left - mother.getBoundingClientRect().left) + "px",
+              height: String(panTitleBoxHeight) + ea,
+              width: widthRatio !== 100 ? String(panTitleBoxHeight * widthRatio) + ea : String(base.getBoundingClientRect().width) + "px",
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              zIndex: String(zIndex),
+            },
+            child: {
+              mode: "input",
+              attribute: {
+                type: "text",
+                baseid: base.id,
+              },
+              event: {
+                keypress: function (e) {
+                  if (e.key === "Enter") {
+                    updateEvent(e).catch((err) => { console.log(err); });
+                  }
+                }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(weight),
+                color: colorChip.green,
+                top: String(contentsTextTop) + ea,
+                border: String(0),
+                outline: String(0),
+                width: withOut(0, ea),
+                textAlign: "center",
+              }
+            }
+          }).firstChild;
+  
+          valueInput.value = this.firstChild.textContent;
+          valueInput.focus();
+          
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+  
+    contextMenuValue = (order) => {
+      return async function (e) {
+        try {
+
+          e.preventDefault();
+
+          const self = this;
+          const index = Number(this.getAttribute("index"));
+          const mother = this.parentElement.parentElement;
+          const base = this.parentElement;
+          const zIndex = 4;
+          const thisChildOrder = order;
+          let cancelBack;
+          let valueInput;
+          let menu;
+          let clone;
+          let whereQuery;
+          let updateQuery;
+  
+          cancelBack = {};
+          valueInput = {};
+
+          menu = [
+            {
+              title: "수정하기",
+              event: () => {
+                return function (e) {
+                  removeByClass(tempInputClassName);
+                  self.click();
+                }
+              }
+            },
+            {
+              title: "블록 지우기",
+              event: () => {
+                return async function (e) {
+                  try {
+                    removeByClass(tempInputClassName);
+                    base.remove();
+                    setScheduleContents(await refreshUpdate(mother));
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
+              title: "새 볼록 추가",
+              event: () => {
+                return async function (e) {
+                  try {
+                    removeByClass(tempInputClassName);
+                    clone = base.cloneNode(true);
+                    mother.insertBefore(clone, base.nextElementSibling);
+                    setScheduleContents(await refreshUpdate(mother));
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+          ]
+
+          cancelBack = createNode({
+            mother,
+            attribute: {
+              baseid: base.id,
+            },
+            class: [ tempInputClassName ],
+            event: {
+              click: function (e) {
+                removeByClass(tempInputClassName);
+              },
+              contextmenu: function (e) {
+                e.preventDefault();
+                removeByClass(tempInputClassName);
+              }
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              background: "transparent",
+              zIndex: String(zIndex),
+            }
+          });
+
+          valueInput = createNode({
+            mother,
+            attribute: {
+              baseid: base.id,
+            },
+            class: [ tempInputClassName ],
+            event: {
+              click: function (e) {
+
+              }
+            },
+            style: {
+              position: "fixed",
+              top: String(e.clientY - baseTong.getBoundingClientRect().top) + "px",
+              left: String(e.clientX - baseTong.getBoundingClientRect().left) + "px",
+              background: colorChip.white,
+              padding: String(6) + ea,
+              zIndex: String(zIndex),
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              animation: "fadeuplite 0.3s ease forwards",
+            },
+            children: menu.map((obj, index) => {
+              return {
+                event: {
+                  click: obj.event(),
+                },
+                style: {
+                  display: "flex",
+                  width: String(110) + ea,
+                  height: String(32) + ea,
+                  background: colorChip.gradientGreen,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  borderRadius: String(5) + "px",
+                  marginBottom: index !== menu.length - 1 ? String(4) + ea : "",
+                  cursor: "pointer",
+                },
+                child: {
+                  text: obj.title,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(-1) + ea,
+                    fontSize: String(13) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.white,
+                  }
+                }
+              };
+            })
+          });
+          
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    updateDateValue = (order) => {
+      return async function (e) {
+        try {
+          const index = Number(this.getAttribute("index"));
+          const mother = this.parentElement.parentElement;
+          const base = this.parentElement;
+          const zIndex = 4;
+          const thisChildOrder = order;
+          let cancelBack;
+          let valueInput;
+          let calendar;
+          let updateEvent;
+          let column;
+          let whereQuery, updateQuery;
+  
+          cancelBack = {};
+          valueInput = {};
+  
+          updateEvent = function (value) {
+            return async function (e) {
+              try {
+                const thisDate = stringToDate(value);
+                document.getElementById(base.id).children[thisChildOrder].firstChild.textContent = dateToHangul(thisDate);
+
+                if (thisChildOrder === 3) {
+                  column = "date.start";
+                } else if (thisChildOrder === 4) {
+                  column = "date.end";
+                }
+  
+                whereQuery = { proid: project.proid };
+                updateQuery = {};
+                updateQuery["schedule." + String(index) + "." + column] = thisDate;
+  
+                updatedContents = await ajaxJson({
+                  mode: "update",
+                  proid: project.proid,
+                  desid: desid,
+                  whereQuery,
+                  updateQuery
+                }, SECONDHOST + "/projectDesignerSchedule", { equal: true });
+
+                removeByClass(tempInputClassName);
+                setScheduleContents(updatedContents);
+
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          }
+
+          cancelBack = createNode({
+            mother,
+            attribute: {
+              baseid: base.id,
+            },
+            class: [ tempInputClassName ],
+            event: {
+              click: function (e) {
+                removeByClass(tempInputClassName);
+              }
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              background: "transparent",
+              zIndex: String(zIndex),
+            }
+          });
+  
+          valueInput = createNode({
+            mother,
+            class: [ tempInputClassName ],
+            attribute: {
+              baseid: base.id,
+            },
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              top: String(base.getBoundingClientRect().top - mother.getBoundingClientRect().top + this.getBoundingClientRect().height + calendarPadding) + "px",
+              left: String(this.getBoundingClientRect().left - mother.getBoundingClientRect().left + (this.getBoundingClientRect().width / 2) - (calendarWidth / 2)) + "px",
+              width: String(calendarWidth) + ea,
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              zIndex: String(zIndex),
+              boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
+              animation: "fadeuplite 0.3s ease forwards",
+            },
+          })
+  
+          calendar = instance.mother.makeCalendar(hangulToDate(base.children[thisChildOrder].firstChild.textContent), async function (e) {
+            try {
+              const updateFunc = updateEvent(this.getAttribute("buttonValue"));
+              await updateFunc(e);
+            } catch (e) {
+              console.log(e);
+            }
+          });
+          valueInput.appendChild(calendar.calendarBase);
+          
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+  
+    updateDateMobileValue = () => {
+      return async function (e) {
+        try {
+          const index = Number(this.getAttribute("index"));
+          const mother = this.parentElement.parentElement;
+          const base = this.parentElement;
+          const zIndex = 4;
+          const thisChildOrder = 2;
+          let cancelBack;
+          let valueInput;
+          let calendar;
+          let thisDate, oppositeDate;
+          let column;
+          let whereQuery, updateQuery;
+
+          cancelBack = {};
+          valueInput = {};
+  
+          cancelBack = createNode({
+            mother,
+            attribute: {
+              baseid: base.id,
+            },
+            class: [ tempInputClassName ],
+            event: {
+              click: function (e) {
+                removeByClass(tempInputClassName);
+              }
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              background: "transparent",
+              zIndex: String(zIndex),
+            }
+          });
+  
+          valueInput = createNode({
+            mother,
+            class: [ tempInputClassName ],
+            attribute: {
+              baseid: base.id,
+            },
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              top: String(base.getBoundingClientRect().top - mother.getBoundingClientRect().top + this.getBoundingClientRect().height + calendarPadding) + "px",
+              right: String(3) + ea,
+              width: String(calendarWidth) + "px",
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              zIndex: String(zIndex),
+              boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
+              animation: "fadeuplite 0.3s ease forwards",
+            },
+          });
+  
+
+
+          if (e.clientX > this.querySelector('b').getBoundingClientRect().left) {
+  
+            thisDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[1];
+            oppositeDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[0];
+  
+            calendar = instance.mother.makeCalendar(hangulToDate(thisDate), async function (e) {
+              try {
+                const thisDate = stringToDate(this.getAttribute("buttonValue"));
+  
+                document.getElementById(base.id).children[thisChildOrder].firstChild.lastChild.textContent = dateToHangul(thisDate);
+
+                column = "date.end";
+                whereQuery = { proid: project.proid };
+                updateQuery = {};
+                updateQuery["schedule." + String(index) + "." + column] = thisDate;
+                
+                updatedContents = await ajaxJson({
+                  mode: "update",
+                  proid: project.proid,
+                  desid: desid,
+                  whereQuery,
+                  updateQuery
+                }, SECONDHOST + "/projectDesignerSchedule", { equal: true });
+
+                removeByClass(tempInputClassName);
+                setScheduleContents(updatedContents);
+
+              } catch (e) {
+                console.log(e);
+              }
+            });
+            valueInput.appendChild(calendar.calendarBase);
+  
+          } else {
+  
+            thisDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[0];
+            oppositeDate = base.children[thisChildOrder].firstChild.textContent.split(duringTextToken).map((str) => { return str.trim() })[1];
+  
+            calendar = instance.mother.makeCalendar(hangulToDate(thisDate), async function (e) {
+              try {
+                const thisDate = stringToDate(this.getAttribute("buttonValue"));
+                document.getElementById(base.id).children[thisChildOrder].firstChild.firstChild.textContent = dateToHangul(thisDate);
+
+                column = "date.start";
+                whereQuery = { proid: project.proid };
+                updateQuery = {};
+                updateQuery["schedule." + String(index) + "." + column] = thisDate;
+                
+                updatedContents = await ajaxJson({
+                  mode: "update",
+                  proid: project.proid,
+                  desid: desid,
+                  whereQuery,
+                  updateQuery
+                }, SECONDHOST + "/projectDesignerSchedule", { equal: true });
+
+                removeByClass(tempInputClassName);
+                setScheduleContents(updatedContents);
+
+              } catch (e) {
+                console.log(e);
+              }
+            });
+            valueInput.appendChild(calendar.calendarBase);
+  
+          }
+          
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    updateOrderValue = () => {
+      return async function (e) {
+        try {
+          const base = this.parentElement;
+          let toTarget, fromTarget;
+
+          e.preventDefault();
+          toTarget = e.toElement;
+          while (!(new RegExp(dragElementClassName, "gi")).test(toTarget.className === null ? '' : toTarget.className)) {
+            toTarget = toTarget.parentElement;
+          }
+          toTarget.style.paddingBottom = String(0) + ea;
+
+          fromTarget = document.getElementById(e.dataTransfer.getData("dragData"));
+
+          if (toTarget.nextElementSibling === null) {
+            base.appendChild(fromTarget);
+          } else {
+            base.insertBefore(fromTarget, toTarget.nextElementSibling)
+          }
+
+          if (desktop) {
+            await refreshUpdate(base);
+          }
+          
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+    
+    originalContents = await ajaxJson({ mode: "original", proid: project.proid, desid: desid }, SECONDHOST + "/projectDesignerSchedule");
+  
+    panMother = createNode({
+      mother: baseTong,
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        borderRadius: String(5) + "px",
+        background: desktop ? colorChip.gray3 : colorChip.gray1,
+        width: withOut(panMotherInnerPadding * 2, ea),
+        padding: String(panMotherInnerPadding) + ea,
+        verticalAlign: "top",
+        marginTop: String(panMotherMarginTop) + ea,
+      },
+      child: {
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          borderRadius: String(5) + "px",
+          background: desktop ? colorChip.gray1 : colorChip.gray3,
+          width: withOut(contentsPanPaddingTop * 2, ea),
+          padding: String(contentsPanPaddingTop) + ea,
+          verticalAlign: "top",
+        }
+      }
+    }).firstChild;
+  
+    calendarMother = createNode({
+      mother: panMother.parentElement,
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        borderRadius: String(5) + "px",
+        background: desktop ? colorChip.gray1 : colorChip.gray3,
+        width: withOut(contentsPanPaddingTop * 2, ea),
+        paddingLeft: String(contentsPanPaddingTop) + ea,
+        paddingRight: String(contentsPanPaddingTop) + ea,
+        paddingTop: String(calendarTongPaddingTop) + ea,
+        paddingBottom: String(calendarTongPaddingBottom) + ea,
+        marginTop: String(desktop ? panMotherInnerPadding : 2) + ea,
+        verticalAlign: "top",
+      },
+    });
+
+    setScheduleContents = (contents) => {
+
+      cleanChildren(panMother);
+      cleanChildren(calendarMother);
+
+      calendarDateArr = [
+        {
+          contents: {
+            color: colorChip.red,
+            description: "",
+            title: "오늘",
+          },
+          date: {
+            start: new Date(),
+            end: new Date(),
+          }
+        },
+      ];
+
+      for (let i = -1; i < contents.schedule.length; i++) {
+        contentsBlock = createNode({
+          mother: panMother,
+          attribute: {
+            draggable: "true",
+            index: String(i),
+          },
+          class: [ dragElementClassName ],
+          id: dragElementClassName + "_" + uniqueValue("hex"),
+          event: {
+            selectstart: (e) => {
+              e.preventDefault();
+            },
+            dragstart: function (e) {
+              this.style.height = String(0);
+              this.style.opacity = String(0);
+              this.style.marginBottom = String(0);
+              e.dataTransfer.setData("dragData", this.id);
+            },
+            dragend: function (e) {
+              this.style.height = String(panTitleBoxHeight) + ea;
+              this.style.opacity = String(1);
+              this.style.marginBottom = String(itemBetween) + ea;
+              e.preventDefault();
+            },
+            dragenter: function (e) {
+              this.style.paddingBottom = String(panTitleBoxHeight) + ea;
+              e.preventDefault();
+            },
+            dragleave: function (e) {
+              this.style.paddingBottom = String(0) + ea;
+              e.preventDefault();
+            },
+            dragover: function (e) {
+              e.preventDefault();
+            },
+            drop: updateOrderValue(),
+          },
+          style: {
+            display: desktop ? "flex" : "block",
+            position: "relative",
+            width: withOut(0, ea),
+            height: desktop ? String(panTitleBoxHeight) + ea : "",
+            marginBottom: String(itemBetween) + ea,
+            paddingBottom: desktop ? String(0) + ea : String(itemBetween) + ea,
+            borderBottom: mobile ? "1px dashed " + colorChip.gray4 : "",
+            transition: "all 0.3s ease",
+          },
+          children: [
+            {
+              attribute: {
+                index: String(i),
+              },
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(panTitleBoxHeight) + ea,
+                height: String(panTitleBoxHeight) + ea,
+                background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+                borderRadius: String(5) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                marginRight: String(smallBetween) + "px",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                cursor: "pointer",
+                verticalAlign: "top",
+                borderTopRightRadius: desktop ? String(5) + "px" : String(1) + "px",
+                borderBottomRightRadius: desktop ? String(5) + "px" : String(1) + "px",
+                borderBottomLeftRadius: desktop ? String(5) + "px" : String(1) + "px",
+              },
+              children: variableArray(1).map((index) => {
+                if (desktop) {
+                  return {
+                    mode: "svg",
+                    source: svgMaker.hamburgerIcon(colorChip.deactive),
+                    style: {
+                      display: i === -1 ? "none" : "inline-block",
+                      position: "relative",
+                      width: String(hamburgerItemWidth) + ea,
+                    }
+                  }
+                } else {
+                  return {
+                    text: String(i + 1),
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      fontFamily: "graphik",
+                      fontSize: String(contentsWordingSize) + ea,
+                      fontStyle: "italic",
+                      fontWeight: String(600),
+                      color: i === -1 ? colorChip.white : colorChip.green,
+                      top: String(contentsTextTop) + ea,
+                    }
+                  }
+                }
+              }),
+            },
+            {
+              attribute: {
+                index: String(i)
+              },
+              event: {
+                click: updateTextValue(1, widthRatio0, contentsWordingWeight),
+                contextmenu: contextMenuValue(1),
+              },
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(panTitleBoxHeight * widthRatio0) + ea,
+                height: String(panTitleBoxHeight) + ea,
+                background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+                borderRadius: String(desktop ? 5 : 1) + "px",
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                marginRight: String(smallBetween) + "px",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                cursor: "pointer",
+                verticalAlign: "top",
+                marginBottom: desktop ? "" : String(smallBetween) + "px",
+              },
+              child: {
+                text: i === -1 ? "계획명" : contents.schedule[i].title,
+                event: {
+                  selectstart: (e) => {
+                    e.preventDefault();
+                  }
+                },
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(contentsWordingSize) + ea,
+                  fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingWeight),
+                  color: i === -1 ? colorChip.white : colorChip.black,
+                  top: String(contentsTextTop) + ea,
+                }
+              }
+            },
+          ]
+        });
+        if (desktop) {
+          createNode({
+            mother: contentsBlock,
+            attribute: {
+              index: String(i)
+            },
+            event: {
+              click: updateTextValue(2, widthRatio1, contentsWordingContentsWeight),
+              contextmenu: contextMenuValue(2),
+            },
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: desktop ? String(panTitleBoxHeight * widthRatio1) + ea : withOut(0, ea),
+              height: String(panTitleBoxHeight) + ea,
+              background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              marginRight: desktop ? String(smallBetween) + ea : "",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              cursor: "pointer",
+              verticalAlign: "top",
+            },
+            child: {
+              text: i === -1 ? "설명" : contents.schedule[i].description,
+              event: {
+                selectstart: (e) => {
+                  e.preventDefault();
+                }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+                color: i === -1 ? colorChip.white : colorChip.black,
+                top: String(contentsTextTop) + ea,
+              }
+            }
+          });
+          createNode({
+            mother: contentsBlock,
+            attribute: {
+              index: String(i)
+            },
+            event: {
+              click: updateDateValue(3),
+              contextmenu: contextMenuValue(3),
+            },
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), "px") + " / " + String(2) + ")",
+              height: String(panTitleBoxHeight) + ea,
+              background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              marginRight: String(smallBetween) + "px",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              cursor: "pointer",
+              verticalAlign: "top",
+            },
+            child: {
+              text: i === -1 ? "시작일" : dateToHangul(contents.schedule[i].date.start),
+              event: {
+                selectstart: (e) => {
+                  e.preventDefault();
+                }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+                color: i === -1 ? colorChip.white : colorChip.black,
+                top: String(contentsTextTop) + ea,
+              }
+            }
+          });
+          createNode({
+            mother: contentsBlock,
+            attribute: {
+              index: String(i)
+            },
+            event: {
+              click: updateDateValue(4),
+              contextmenu: contextMenuValue(4),
+            },
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0 + widthRatio1)) + (smallBetween * 4), "px") + " / " + String(2) + ")",
+              height: String(panTitleBoxHeight) + ea,
+              background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              cursor: "pointer",
+              verticalAlign: "top",
+            },
+            child: {
+              text: i === -1 ? "종료일" : dateToHangul(contents.schedule[i].date.end),
+              event: {
+                selectstart: (e) => {
+                  e.preventDefault();
+                }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+                color: i === -1 ? colorChip.white : colorChip.black,
+                top: String(contentsTextTop) + ea,
+              }
+            }
+          });
+        } else {
+          createNode({
+            mother: contentsBlock,
+            attribute: {
+              index: String(i)
+            },
+            event: {
+              click: updateDateMobileValue(),
+            },
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: "calc(" + withOut((panTitleBoxHeight * (1 + widthRatio0)), ea) + " - " + String((smallBetween * 2)) + "px" + ")",
+              height: String(panTitleBoxHeight) + ea,
+              background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+              borderRadius: String(1) + "px",
+              borderTopRightRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              cursor: "pointer",
+              verticalAlign: "top",
+            },
+            child: {
+              text: i === -1 ? "해당 일정 시작일 ~ 종료일" : dateToHangul(contents.schedule[i].date.start) + duringToken + dateToHangul(contents.schedule[i].date.end),
+              event: {
+                selectstart: (e) => {
+                  e.preventDefault();
+                }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(i === -1 ? contentsWordingBoldWeight : 700),
+                color: i === -1 ? colorChip.white : colorChip.black,
+                top: String(contentsTextTop) + ea,
+                fontStyle: "italic",
+              },
+              bold: {
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+                color: i === -1 ? colorChip.white : colorChip.deactive,
+              }
+            }
+          });
+          createNode({
+            mother: contentsBlock,
+            attribute: {
+              index: String(i)
+            },
+            event: {
+              click: updateTextValue(3, 100, contentsWordingContentsWeight),
+            },
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: desktop ? String(panTitleBoxHeight * widthRatio1) + ea : withOut(0, ea),
+              height: String(panTitleBoxHeight) + ea,
+              background: i === -1 ? colorChip.darkDarkShadow : colorChip.white,
+              borderTopLeftRadius: String(1) + "px",
+              borderTopRightRadius: String(1) + "px",
+              borderBottomLeftRadius: String(5) + "px",
+              borderBottomRightRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              marginRight: desktop ? String(smallBetween) + "px" : "",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              cursor: "pointer",
+              verticalAlign: "top",
+            },
+            child: {
+              text: i === -1 ? "해당 일정에 대한 자세한 설명" : contents.schedule[i].description,
+              event: {
+                selectstart: (e) => {
+                  e.preventDefault();
+                }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(i === -1 ? contentsWordingBoldWeight : contentsWordingContentsWeight),
+                color: i === -1 ? colorChip.white : colorChip.black,
+                top: String(contentsTextTop) + ea,
+              }
+            }
+          });
+          if (i === contents.schedule.length - 1) {
+            contentsBlock.style.marginBottom = "";
+            contentsBlock.style.paddingBottom = "";
+            contentsBlock.style.borderBottom = "";
+          }
+        }
+        if (i !== -1) {
+          calendarDateArr.push({
+            contents: {
+              color: [
+                colorChip.yellow,
+                colorChip.green,
+                colorChip.purple,
+                colorChip.red,
+              ][i % 4],
+              description: contents.schedule[i].description,
+              title: contents.schedule[i].title,
+            },
+            date: {
+              start: contents.schedule[i].date.start,
+              end: contents.schedule[i].date.end,
+            }
+          })
+        }
+      }
+
+      createNode({
+        mother: panMother,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(buttonTongHeight) + ea,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: desktop ? "end" : "center",
+          paddingTop: String(buttonTongPaddingTop) + ea,
+        },
+        children: [
+          {
+            event: {
+              click: async function (e) {
+                try {
+                  const desid = project.desid;
+                  const proid = project.proid;
+                  if (window.confirm(project.client.name + " 고객님께 일정 알림톡을 보낼까요?")) {
+                    await ajaxJson({ mode: "send", type: "schedule", proid, desid, designer: project.designer.designer, name: project.client.name, phone: project.client.phone }, SECONDHOST + "/projectDesignerStatus");
+                    window.alert(project.client.name + " 고객님에게 일정 알림톡을 전송하였습니다!");  
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
+            style: {
+              display: "inline-flex",
+              height: String(buttonHeight) + ea,
+              background: desktop ? colorChip.gradientGreen : colorChip.gradientGray,
+              borderRadius: String(5) + "px",
+              marginRight: String(buttonBetween) + ea,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              paddingLeft: String(buttonPadding) + ea,
+              paddingRight: String(buttonPadding) + ea,
+              cursor: "pointer",
+            },
+            child: {
+              text: "고객에게 일정표 알림 보내기",
+              style: {
+                display: "block",
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(buttonWeight),
+                color: colorChip.white,
+                position: "relative",
+                top: String(buttonTextTop) + ea,
+              }
+            }
+          },
+          {
+            event: {
+              click: async function (e) {
+                try {
+                  let newContents;
+                  if (window.confirm("일정을 초기화 하시겠습니까?")) {
+                    await ajaxJson({
+                      mode: "delete",
+                      proid: project.proid,
+                      desid: project.desid,
+                    }, SECONDHOST + "/projectDesignerSchedule");
+                    newContents = equalJson(JSON.stringify(originalContents));
+                    await ajaxJson({ mode: "create", proid: project.proid, desid: project.desid, schedule: newContents.schedule }, SECONDHOST + "/projectDesignerSchedule");
+                    setScheduleContents(newContents);
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
+            style: {
+              display: "inline-flex",
+              height: String(buttonHeight) + ea,
+              background: desktop ? colorChip.gradientGreen : colorChip.gradientGray,
+              borderRadius: String(5) + "px",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              paddingLeft: String(buttonPadding) + ea,
+              paddingRight: String(buttonPadding) + ea,
+              cursor: "pointer",
+            },
+            child: {
+              text: "전체 일정 초기화",
+              style: {
+                display: "block",
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(buttonWeight),
+                color: colorChip.white,
+                position: "relative",
+                top: String(buttonTextTop) + ea,
+              }
+            }
+          },
+        ]
+      });
+
+      colorCalendar(calendarMother, calendarDateArr, { standardDate: new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1)) });
+
+    }
+
+    ajaxJson({ mode: "get", proid: project.proid, desid: desid }, SECONDHOST + "/projectDesignerSchedule", { equal: true }).then((rows) => {
+      if (rows.length === 0) {
+        contents = equalJson(JSON.stringify(originalContents));
+        ajaxJson({ mode: "create", proid: project.proid, desid: desid, schedule: contents.schedule }, SECONDHOST + "/projectDesignerSchedule", { equal: true }).catch((err) => {
+          console.log(err);
+        });
+      } else {
+        contents = rows[0];
+      }
+      setScheduleContents(contents);
+    }).catch((err) => {
+      console.log(err);
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 ProcessJs.prototype.uploadFiles = function (project, thisStatusNumber, photoBoo) {
