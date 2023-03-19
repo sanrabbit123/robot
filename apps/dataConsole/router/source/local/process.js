@@ -8584,6 +8584,60 @@ ProcessJs.prototype.reportEvent = function () {
   reportIcon.addEventListener("click", this.dashBoardView());
 }
 
+ProcessJs.prototype.extractEvent = function () {
+  const instance = this;
+  const { totalContents, ea, belowHeight, projects } = this;
+  const { ajaxJson, uniqueValue, blankHref, equalJson } = GeneralJs;
+  const { belowButtons: { sub: { extractIcon } } } = this.mother;
+  const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
+  const serviceStaticIndex = 2;
+
+  extractIcon.addEventListener("click", async function (e) {
+    try {
+      const today = new Date();
+      let rawMatrix;
+      let tableColumns;
+      let targetMatrix;
+      let loading;
+      let res;
+
+      rawMatrix = equalJson(JSON.stringify(instance.totalValues));
+      rawMatrix = rawMatrix.map((arr) => {
+        const tempArr = arr[serviceStaticIndex].split("&");
+        let service;
+        arr[serviceStaticIndex] = tempArr[0];
+        service = tempArr[tempArr.length - 1];
+        service = service.split("%")[service.split("%").length - 2];
+        arr.splice(serviceStaticIndex, 0, service);
+        return arr;
+      });
+
+      tableColumns = equalJson(JSON.stringify(instance.clientColumns)).map((obj) => { return obj.title });
+      tableColumns.unshift("디자이너");
+      tableColumns.unshift("담당자");
+      tableColumns.splice(serviceStaticIndex, 0, "서비스");
+
+      targetMatrix = [ tableColumns ].concat(rawMatrix);
+
+      loading = instance.mother.grayLoading()
+
+      res = await ajaxJson({
+        values: targetMatrix,
+        newMake: true,
+        parentId: parentId,
+        sheetName: "fromDB_process_" + String(today.getFullYear()) + instance.mother.todayMaker()
+      }, BACKHOST + "/sendSheets");
+      
+      blankHref(res.link);
+      
+      loading.remove();
+
+    } catch (e) {
+      console.log(e);
+    }
+  });
+}
+
 ProcessJs.prototype.addTransFormEvent = function () {
   const instance = this;
   const { selfHref } = GeneralJs;
@@ -8678,6 +8732,7 @@ ProcessJs.prototype.launching = async function () {
     this.baseMaker(typeof getObj.proid === "string");
     this.searchProjects();
     this.reportEvent();
+    this.extractEvent();
     this.addTransFormEvent();
 
     document.getElementById("moveLeftArea").remove();

@@ -6506,7 +6506,7 @@ ClientJs.prototype.addExtractEvent = function () {
           newMake: true,
           parentId: parentId,
           sheetName: "fromDB_client_" + String(today.getFullYear()) + instance.mother.todayMaker()
-        }, "/sendSheets");
+        }, BACKHOST + "/sendSheets");
       }).then((res) => {
         const { link } = res;
         div_clone.classList.remove("justfadein");
