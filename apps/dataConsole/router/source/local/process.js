@@ -7854,6 +7854,16 @@ ProcessJs.prototype.dashBoardView = function () {
               const bValue = [ ...b.children ][index].firstChild.textContent;
               return bValue.charCodeAt(0) - aValue.charCodeAt(0);
             })
+          } else if (type === "number") {
+            targets.sort((a, b) => {
+              const aValue = [ ...a.children ][index].firstChild.textContent;
+              const bValue = [ ...b.children ][index].firstChild.textContent;
+              if (/\//gi.test(aValue)) {
+                return Number(bValue.split("/")[0].replace(/[^0-9]/gi, '')) - Number(aValue.split("/")[0].replace(/[^0-9]/gi, ''));
+              } else {
+                return Number(bValue.replace(/[^0-9]/gi, '')) - Number(aValue.replace(/[^0-9]/gi, ''));
+              }
+            })
           }
           for (let dom of targets) {
             targetTable.appendChild(dom);
@@ -7876,6 +7886,16 @@ ProcessJs.prototype.dashBoardView = function () {
               const aValue = [ ...a.children ][index].firstChild.textContent;
               const bValue = [ ...b.children ][index].firstChild.textContent;
               return aValue.charCodeAt(0) - bValue.charCodeAt(0);
+            })
+          } else if (type === "number") {
+            targets.sort((a, b) => {
+              const aValue = [ ...a.children ][index].firstChild.textContent;
+              const bValue = [ ...b.children ][index].firstChild.textContent;
+              if (/\//gi.test(aValue)) {
+                return Number(aValue.split("/")[0].replace(/[^0-9]/gi, '')) - Number(bValue.split("/")[0].replace(/[^0-9]/gi, ''));
+              } else {
+                return Number(aValue.replace(/[^0-9]/gi, '')) - Number(bValue.replace(/[^0-9]/gi, ''));
+              }
             })
           }
           for (let dom of targets) {
@@ -8155,6 +8175,7 @@ ProcessJs.prototype.dashBoardView = function () {
 
         createNode({
           mother: dashboardTable,
+          class: [ instance.numbersExtractClassName ],
           style: {
             display: "flex",
             position: "sticky",
@@ -8172,6 +8193,111 @@ ProcessJs.prototype.dashBoardView = function () {
           },
           children: variableArray(columnsLength).map((index) => {
             return {
+              attribute: {
+                length: String(columnsLength),
+                index: String(index),
+              },
+              event: {
+                click: function(e) {
+                  const length = Number(this.getAttribute("length"));
+                  const index = Number(this.getAttribute("index"));
+                  const delta = length - instance.clientColumns.length;
+                  const zIndex = 5;
+                  let thisObject;
+                  let thisMenu;
+                  let cancelBack, menuPrompt;
+                  let type;
+
+                  if (instance.clientColumns[index - delta] !== undefined) {
+                    thisObject = instance.clientColumns[index - delta];
+                    thisMenu = equalJson(JSON.stringify(instance.clientColumnsMenu));
+
+                    cancelBack = createNode({
+                      mother: totalContents,
+                      class: [ filterMenuClassName ],
+                      event: {
+                        click: function (e) {
+                          removeByClass(filterMenuClassName);
+                        }
+                      },
+                      style: {
+                        position: "fixed",
+                        top: String(0),
+                        left: String(0),
+                        background: "transparent",
+                        width: withOut(0, ea),
+                        height: withOut(0, ea),
+                        zIndex: String(zIndex),
+                      }
+                    });
+              
+                    menuPrompt = createNode({
+                      mother: totalContents,
+                      class: [ filterMenuClassName ],
+                      attribute: {
+                        index: String(index),
+                        type: "number",
+                      },
+                      style: {
+                        position: "absolute",
+                        top: String(e.y) + "px",
+                        left: String(e.x) + "px",
+                        padding: String(menuButtonOuterPadding) + ea,
+                        paddingBottom: String(menuButtonOuterPadding - menuButtonInnerPadding) + ea,
+                        borderRadius: String(5) + "px",
+                        background: colorChip.white,
+                        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                        animation: "fadeuplite 0.3s ease forwards",
+                        zIndex: String(zIndex),
+                      },
+                      children: thisMenu.map((obj, index) => {
+                        return {
+                          attribute: {
+                            key: obj.key
+                          },
+                          event: {
+                            click: function (e) {
+                              const key = this.getAttribute("key");
+                              const thisFunction = clientColumnsFunctionsTong[key];
+                              thisFunction.call(this.parentElement, e);
+                              removeByClass(filterMenuClassName);
+                            },
+                            contextmenu : function (e) {
+                              e.preventDefault();
+                              const key = this.getAttribute("key");
+                              const thisFunction = clientColumnsFunctionsTong[key];
+                              thisFunction.call(this.parentElement, e);
+                              removeByClass(filterMenuClassName);
+                            }
+                          },
+                          style: {
+                            display: "flex",
+                            width: String(menuButtonWidth) + ea,
+                            height: String(menuButtonHeight) + ea,
+                            borderRadius: String(5) + "px",
+                            background: colorChip.gradientGreen,
+                            marginBottom: String(menuButtonInnerPadding) + ea,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            cursor: "pointer",
+                          },
+                          child: {
+                            text: obj.title,
+                            style: {
+                              fontSize: String(menuButtonSize) + ea,
+                              fontWeight: String(menuButtonWeight),
+                              color: colorChip.white,
+                              top: String(menuButtonTextTop) + ea,
+                              position: "relative",
+                            }
+                          }
+                        }
+                      })
+                    })
+
+                  }
+                }
+              },
               style: {
                 display: "inline-flex",
                 position: "relative",
@@ -8179,6 +8305,7 @@ ProcessJs.prototype.dashBoardView = function () {
                 height: withOut(0, ea),
                 justifyContent: "start",
                 alignItems: "center",
+                cursor: "pointer",
               },
               child: {
                 text: tableColumns[index],
@@ -8195,7 +8322,6 @@ ProcessJs.prototype.dashBoardView = function () {
         });
 
         valuesArr = equalJson(JSON.stringify(instance.totalValues));
-
 
         managerDesignerSet = [ ...new Set(valuesArr.map((arr) => { return arr[0] + splitToken + arr[1] })) ];
         managerDesignerSet = managerDesignerSet.map((str) => { return str.split(splitToken) });
@@ -8223,9 +8349,11 @@ ProcessJs.prototype.dashBoardView = function () {
           valuesNumberArr.push(equalJson(JSON.stringify(arr)));
         }
 
+        instance.totalNumbers = [];
         for (let arr of valuesNumberArr) {
           createNode({
             mother: dashboardTable,
+            class: [ entireValueBlockClassName ],
             style: {
               display: "flex",
               position: "relative",
@@ -8273,7 +8401,9 @@ ProcessJs.prototype.dashBoardView = function () {
               }
             }),
           });
+          instance.totalNumbers.push(arr);
         }
+
       }
 
       dashboardTable = {};
@@ -8591,6 +8721,7 @@ ProcessJs.prototype.extractEvent = function () {
   const { belowButtons: { sub: { extractIcon } } } = this.mother;
   const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
   const serviceStaticIndex = 2;
+  const designerStaticIndex = 1;
 
   extractIcon.addEventListener("click", async function (e) {
     try {
@@ -8601,37 +8732,74 @@ ProcessJs.prototype.extractEvent = function () {
       let loading;
       let res;
 
-      rawMatrix = equalJson(JSON.stringify(instance.totalValues));
-      rawMatrix = rawMatrix.map((arr) => {
-        const tempArr = arr[serviceStaticIndex].split("&");
-        let service;
-        arr[serviceStaticIndex] = tempArr[0];
-        service = tempArr[tempArr.length - 1];
-        service = service.split("%")[service.split("%").length - 2];
-        arr.splice(serviceStaticIndex, 0, service);
-        return arr;
-      });
-
-      tableColumns = equalJson(JSON.stringify(instance.clientColumns)).map((obj) => { return obj.title });
-      tableColumns.unshift("디자이너");
-      tableColumns.unshift("담당자");
-      tableColumns.splice(serviceStaticIndex, 0, "서비스");
-
-      targetMatrix = [ tableColumns ].concat(rawMatrix);
-
-      loading = instance.mother.grayLoading()
-
-      res = await ajaxJson({
-        values: targetMatrix,
-        newMake: true,
-        parentId: parentId,
-        sheetName: "fromDB_process_" + String(today.getFullYear()) + instance.mother.todayMaker()
-      }, BACKHOST + "/sendSheets");
+      if (document.querySelector('.' + instance.numbersExtractClassName) === null) {
+        rawMatrix = equalJson(JSON.stringify(instance.totalValues));
+        rawMatrix = rawMatrix.map((arr) => {
+          const tempArr = arr[serviceStaticIndex].split("&");
+          const designerTempArr = arr[designerStaticIndex].split("&");
+          let service;
+          arr[designerStaticIndex] = designerTempArr[0];
+          arr[serviceStaticIndex] = tempArr[0];
+          service = tempArr[tempArr.length - 1];
+          service = service.split("%")[service.split("%").length - 2];
+          arr.splice(serviceStaticIndex, 0, service);
+          return arr;
+        });
+  
+        tableColumns = equalJson(JSON.stringify(instance.clientColumns)).map((obj) => { return obj.title });
+        tableColumns.unshift("디자이너");
+        tableColumns.unshift("담당자");
+        tableColumns.splice(serviceStaticIndex, 0, "서비스");
+  
+        targetMatrix = [ tableColumns ].concat(rawMatrix);
+  
+        loading = instance.mother.grayLoading()
+  
+        res = await ajaxJson({
+          values: targetMatrix,
+          newMake: true,
+          parentId: parentId,
+          sheetName: "fromDB_process_" + String(today.getFullYear()) + instance.mother.todayMaker()
+        }, BACKHOST + "/sendSheets");
+        
+        blankHref(res.link);
+        
+        loading.remove();
+      } else {
+        rawMatrix = equalJson(JSON.stringify(instance.totalValues));
+        rawMatrix = rawMatrix.map((arr) => {
+          const tempArr = arr[serviceStaticIndex].split("&");
+          const designerTempArr = arr[designerStaticIndex].split("&");
+          let service;
+          arr[designerStaticIndex] = designerTempArr[0];
+          arr[serviceStaticIndex] = tempArr[0];
+          service = tempArr[tempArr.length - 1];
+          service = service.split("%")[service.split("%").length - 2];
+          arr.splice(serviceStaticIndex, 0, service);
+          return arr;
+        });
+  
+        tableColumns = equalJson(JSON.stringify(instance.clientColumns)).map((obj) => { return obj.title });
+        tableColumns.unshift("디자이너");
+        tableColumns.unshift("담당자");
+        tableColumns.splice(serviceStaticIndex, 0, "서비스");
+  
+        targetMatrix = [ tableColumns ].concat(rawMatrix);
+  
+        loading = instance.mother.grayLoading()
+  
+        res = await ajaxJson({
+          values: targetMatrix,
+          newMake: true,
+          parentId: parentId,
+          sheetName: "fromDB_process_" + String(today.getFullYear()) + instance.mother.todayMaker()
+        }, BACKHOST + "/sendSheets");
+        
+        blankHref(res.link);
+        
+        loading.remove();
+      }
       
-      blankHref(res.link);
-      
-      loading.remove();
-
     } catch (e) {
       console.log(e);
     }
@@ -8725,8 +8893,10 @@ ProcessJs.prototype.launching = async function () {
     this.bigDoms = [];
     this.clientDoms = [];
     this.totalValues = [];
+    this.totalNumbers = [];
     this.onofflineCircleClassName = "onofflineCircleClassName";
     this.onofflineWordsClassName = "onofflineWordsClassName";
+    this.numbersExtractClassName = "numbersExtractClassName";
     this.onofflineDesid = [];
 
     this.baseMaker(typeof getObj.proid === "string");

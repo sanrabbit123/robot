@@ -2356,7 +2356,7 @@ LogReport.prototype.dailyReports = async function () {
           contractSum = 0;
           processSum = 0;
 
-          for (let { startDay, endDay, client, proposal, recommend, contract, process } of arr) {
+          for (let { startDay, endDay, client, proposal, recommend, contract, process } of arr.data) {
             [ thisYear, thisMonth ] = startDay.split('-').map((str) => { return Number(str); });
             weekMatrix.push([
               thisYear,
