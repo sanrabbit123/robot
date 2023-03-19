@@ -90,6 +90,10 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
   let circleTop, circleWidth, circleMarginLeft;
   let designerButtonWidth;
   let designerDomEvent;
+  let managerFilterEvent;
+  let managerButtonSize;
+  let designerFilterEvent;
+  let designerFilterButtonSize;
 
   clientColumnsMenu = [
     { title: "내림차순", key: "downSort" },
@@ -275,6 +279,9 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
   circleMarginLeft = 5;
 
   designerButtonWidth = 130;
+
+  managerButtonSize = 90;
+  designerFilterButtonSize = 90;
 
   contentsLoad = () => {};
 
@@ -1181,6 +1188,250 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
 
   }
 
+  managerFilterEvent = function (e) {
+    e.preventDefault();
+    const zIndex = 4;
+    let cancelBack, menuPrompt;
+    let thisMenu;
+    let managersDom;
+
+    managersDom = [ ...new Set(instance.bigDoms.map((dom) => {
+      return dom.children[1].textContent;
+    })) ];
+
+    thisMenu = managersDom.map((str) => {
+      return {
+        title: str,
+        event: function (e) {
+          const targetName = str;
+          for (let dom of instance.bigDoms) {
+            if (dom.children[1].textContent === targetName) {
+              dom.parentElement.parentElement.style.display = "block";
+            } else {
+              dom.parentElement.parentElement.style.display = "none";
+            }
+          }
+        }
+      };
+    })
+
+    thisMenu.push({
+      title: "전체 보기",
+      event: function (e) {
+        for (let dom of instance.bigDoms) {
+          dom.parentElement.parentElement.style.display = "block";
+        }
+      }
+    })
+
+    cancelBack = createNode({
+      mother: totalContents,
+      class: [ filterMenuClassName ],
+      event: {
+        click: function (e) {
+          removeByClass(filterMenuClassName);
+        }
+      },
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        background: "transparent",
+        width: withOut(0, ea),
+        height: withOut(0, ea),
+        zIndex: String(zIndex),
+      }
+    });
+
+    menuPrompt = createNode({
+      mother: totalContents,
+      class: [ filterMenuClassName ],
+      attribute: {
+        desid,
+      },
+      style: {
+        position: "absolute",
+        top: String(e.y) + "px",
+        left: String(e.x) + "px",
+        padding: String(buttonOuterPadding) + ea,
+        paddingBottom: String(buttonOuterPadding - buttonInnerPadding) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.white,
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        animation: "fadeuplite 0.3s ease forwards",
+        zIndex: String(zIndex),
+      },
+      children: thisMenu.map((obj, index) => {
+        return {
+          attribute: {
+            index: String(index)
+          },
+          event: {
+            click: function (e) {
+              const index = Number(this.getAttribute("index"));
+              const thisFunction = thisMenu[index].event;
+              thisFunction.call(this.parentElement, e);
+              removeByClass(filterMenuClassName);
+            },
+            contextmenu: function (e) {
+              e.preventDefault();
+              const index = Number(this.getAttribute("index"));
+              const thisFunction = thisMenu[index].event;
+              thisFunction.call(this.parentElement, e);
+              removeByClass(filterMenuClassName);
+            },
+          },
+          style: {
+            display: "flex",
+            width: String(managerButtonSize) + ea,
+            height: String(buttonHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gradientGray,
+            marginBottom: String(buttonInnerPadding) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          },
+          child: {
+            text: obj.title,
+            style: {
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              color: colorChip.white,
+              top: String(buttonTextTop) + ea,
+              position: "relative",
+            }
+          }
+        }
+      })
+    })
+
+  }
+
+  designerFilterEvent = function (e) {
+    e.preventDefault();
+    const zIndex = 4;
+    let cancelBack, menuPrompt;
+    let thisMenu;
+    let managersDom;
+
+    managersDom = [ ...new Set(instance.bigDoms.map((dom) => {
+      return dom.children[2].textContent;
+    })) ];
+
+    thisMenu = managersDom.map((str) => {
+      return {
+        title: str,
+        event: function (e) {
+          const targetName = str;
+          for (let dom of instance.bigDoms) {
+            if (dom.children[2].textContent === targetName) {
+              dom.parentElement.parentElement.style.display = "block";
+            } else {
+              dom.parentElement.parentElement.style.display = "none";
+            }
+          }
+        }
+      };
+    })
+
+    thisMenu.push({
+      title: "전체 보기",
+      event: function (e) {
+        for (let dom of instance.bigDoms) {
+          dom.parentElement.parentElement.style.display = "block";
+        }
+      }
+    })
+
+    cancelBack = createNode({
+      mother: totalContents,
+      class: [ filterMenuClassName ],
+      event: {
+        click: function (e) {
+          removeByClass(filterMenuClassName);
+        }
+      },
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        background: "transparent",
+        width: withOut(0, ea),
+        height: withOut(0, ea),
+        zIndex: String(zIndex),
+      }
+    });
+
+    menuPrompt = createNode({
+      mother: totalContents,
+      class: [ filterMenuClassName ],
+      attribute: {
+        desid,
+      },
+      style: {
+        display: "block",
+        position: "absolute",
+        top: String(e.y) + "px",
+        left: String(e.x) + "px",
+        padding: String(buttonOuterPadding) + ea,
+        paddingBottom: String(buttonOuterPadding - buttonInnerPadding) + ea,
+        paddingRight: String(buttonOuterPadding - buttonInnerPadding) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.white,
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        animation: "fadeuplite 0.3s ease forwards",
+        zIndex: String(zIndex),
+        width: String((designerFilterButtonSize * 4) + (buttonInnerPadding * 4)) + ea,
+      },
+      children: thisMenu.map((obj, index) => {
+        return {
+          attribute: {
+            index: String(index)
+          },
+          event: {
+            click: function (e) {
+              const index = Number(this.getAttribute("index"));
+              const thisFunction = thisMenu[index].event;
+              thisFunction.call(this.parentElement, e);
+              removeByClass(filterMenuClassName);
+            },
+            contextmenu: function (e) {
+              e.preventDefault();
+              const index = Number(this.getAttribute("index"));
+              const thisFunction = thisMenu[index].event;
+              thisFunction.call(this.parentElement, e);
+              removeByClass(filterMenuClassName);
+            },
+          },
+          style: {
+            display: "inline-flex",
+            width: String(designerFilterButtonSize) + ea,
+            height: String(buttonHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gradientGray,
+            marginRight: String(buttonInnerPadding) + ea,
+            marginBottom: String(buttonInnerPadding) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          },
+          child: {
+            text: obj.title,
+            style: {
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              color: colorChip.white,
+              top: String(buttonTextTop) + ea,
+              position: "relative",
+            }
+          }
+        }
+      })
+    })
+
+  }
+
   grayBack = createNode({
     mother: totalContents,
     style: {
@@ -1278,6 +1529,9 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
     createNode({
       mother: targetTong,
       text: "담당자",
+      event: {
+        click: managerFilterEvent,
+      },
       style: {
         width: String(nameWidth) + ea,
         display: "inline-block",
@@ -1287,12 +1541,16 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
         color: colorChip.white,
         top: String(textTop) + ea,
         marginLeft: String(firstMargin) + ea,
+        cursor: "pointer",
       }
     });
 
     createNode({
       mother: targetTong,
       text: "디자이너",
+      event: {
+        click: designerFilterEvent,
+      },
       style: {
         width: String(designerWidth) + ea,
         display: "inline-block",
@@ -1302,6 +1560,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
         color: colorChip.white,
         top: String(textTop) + ea,
         marginLeft: String(minimumBetween) + ea,
+        cursor: "pointer",
       }
     });
 
@@ -1341,6 +1600,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
       }
     }
 
+    instance.bigDoms = [];
     instance.clientDoms = [];
     instance.totalValues = [];
     for (let { manager, designer, desid, projects } of newProjectsTong) {
@@ -1467,7 +1727,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
               }
             },
           ]
-        })
+        });
 
         nameDom = createNode({
           mother: targetTong,
@@ -1989,6 +2249,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
           });
         }
 
+        instance.bigDoms.push(targetTong);
       }
     }
   }
@@ -7058,6 +7319,7 @@ ProcessJs.prototype.launching = async function () {
 
     this.matrix = [];
     this.names = [];
+    this.bigDoms = [];
     this.clientDoms = [];
     this.totalValues = [];
     this.onofflineCircleClassName = "onofflineCircleClassName";
