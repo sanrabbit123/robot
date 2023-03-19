@@ -248,10 +248,12 @@ CalculationJs.prototype.baseMaker = function () {
       },
       children: [
         {
+          class: [ "moveTarget" ],
           style: {
             display: "block",
             position: "relative",
             width: String(8000) + ea,
+            transform: "translateX(0px)",
             height: withOut(0, ea),
           }
         },
@@ -383,10 +385,12 @@ CalculationJs.prototype.baseMaker = function () {
             attribute: {
               proid: project.proid,
             },
+            class: [ "moveTarget" ],
             style: {
               display: "block",
               position: "relative",
               width: String(8000) + ea,
+              transform: "translateX(0px)",
               height: withOut(0, ea),
             }
           },

@@ -1515,9 +1515,11 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
       },
       children: [
         {
+          class: [ "moveTarget" ],
           style: {
             display: "block",
             position: "relative",
+            transform: "translateX(0px)",
             width: String(8000) + ea,
             height: withOut(0, ea),
           }
@@ -1635,9 +1637,11 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
           children: [
             {
               attribute: { desid },
+              class: [ "moveTarget" ],
               style: {
                 display: "block",
                 position: "relative",
+                transform: "translateX(0px)",
                 width: String(8000) + ea,
                 height: withOut(0, ea),
               }
