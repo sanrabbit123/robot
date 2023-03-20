@@ -14036,6 +14036,8 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
         const deactive = (this.getAttribute("deactive") === "true");
         const proid = this.getAttribute("proid");
         const desid = this.getAttribute("desid");
+        const type = this.getAttribute("type");
+        const zIndex = 5;
         try {
           let totalDom;
           let matrix;
@@ -14045,17 +14047,172 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
           let targetDoms;
           let thisIndex;
           let finalIndex;
+          let cancelBack, whitePrompt;
+          let clickEnd;
+          let clickRes;
+          let copiedChildren;
 
           siblings = [ ...document.querySelectorAll('.' + siblingKeywords + String(x)) ];
           thisIndex = siblings.findIndex((dom) => { return dom === self });
 
           if (!deactive) {
-            if (toggle === "off") {
-              if (red === "off") {
 
+            clickEnd = (x, y) => {
+              return new Promise((resolve, reject) => {
+                const targets = [ ...document.querySelectorAll('.' + valueBlockClassName) ]
+                const target = targets.find((dom) => { return Number(dom.getAttribute('x')) === x && Number(dom.getAttribute('y')) === y })
+
+                cancelBack = createNode({
+                  mother: formPanBase,
+                  class: [ blockContextMenuClassName ],
+                  event: {
+                    click: function (e) {
+                      removeByClass(blockContextMenuClassName);
+                      resolve(false);
+                    }
+                  },
+                  style: {
+                    display: "block",
+                    position: "fixed",
+                    top: String(0),
+                    left: String(0),
+                    width: withOut(0, ea),
+                    height: withOut(0, ea),
+                    background: "transparent",
+                    zIndex: String(zIndex),
+                  }
+                });
+    
+                whitePrompt = createNode({
+                  mother: formPanBase,
+                  class: [ blockContextMenuClassName ],
+                  style: {
+                    display: "inline-block",
+                    position: "absolute",
+                    top: String(target.getBoundingClientRect().top + (target.getBoundingClientRect().height / 2) - formPanBase.getBoundingClientRect().top) + "px",
+                    left: desktop ? String(e.clientX - formPanBase.getBoundingClientRect().left) + "px" : "",
+                    right: desktop ? "" : String(0) + "px",
+                    width: String(blackButtonWidth) + ea,
+                    background: colorChip.white,
+                    borderRadius: String(5) + "px",
+                    boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+                    animation: "fadeuplite 0.3s ease forwards",
+                    zIndex: String(zIndex),
+                    padding: String(blackButtonMargin) + ea,
+                    paddingBottom: String(blackButtonMargin - blackButtonBetween) + ea,
+                  }
+                });
+    
+                for (let z = 0; z < thisForm[x].children[y].children.length; z++) {
+                  createNode({
+                    mother: whitePrompt,
+                    attribute: {
+                      x: String(x),
+                      y: String(y),
+                      z: String(z),
+                      proid,
+                      desid,
+                      name: instance.client.name,
+                      designer: instance.designer.designer,
+                    },
+                    event: {
+                      click: function (e) {
+                        const self = this;
+                        const x = Number(this.getAttribute("x"));
+                        const y = Number(this.getAttribute("y"));
+                        const z = Number(this.getAttribute("z"));
+                        const proid = this.getAttribute("proid");
+                        const desid = this.getAttribute("desid");
+                        let tempFunction;
+                        let key, photoBoo, thisStatusNumber;
+                        let matrix;
+                        let siblings;
+  
+                        matrix = equalJson(JSON.stringify(thisForm));
+  
+                        if (thisForm[x].children[y].children[z].value === 0) {
+                          siblings = [ ...this.parentElement.children ];
+                          for (let k = 0; k < thisForm[x].children[y].children.length; k++) {
+                            thisForm[x].children[y].children[k].value = k === z ? 1 : 0;
+                            matrix[x].children[y].children[k].value = k === z ? 1 : 0;
+                            siblings[k].style.background = k === z ? colorChip.gradientGreen : colorChip.gray2;
+                            siblings[k].firstChild.style.color = k === z ? colorChip.white : colorChip.deactive;  
+                          }
+                        } else {
+                          this.style.background = colorChip.gray2;
+                          this.firstChild.style.color = colorChip.deactive;
+                          thisForm[x].children[y].children[z].value = 0;
+                          matrix[x].children[y].children[z].value = 0;
+                        }
+
+                        ajaxJson({
+                          mode: "update",
+                          proid,
+                          desid,
+                          matrix
+                        }, SECONDHOST + "/projectDesignerStatus").then(() => {
+                          setQueue(() => {
+                            self.parentElement.style.animation = "fadedownlite 0.3s ease forwards";
+                            setQueue(() => {
+                              removeByClass(blockContextMenuClassName);
+                              const targets = [ ...document.querySelectorAll('.' + valueBlockClassName) ]
+                              const target = targets.find((dom) => { return Number(dom.getAttribute('x')) === x && Number(dom.getAttribute('y')) === y })
+                              target.children[1].children[0].textContent = matrix[x].children[y].children[z].view;
+                              resolve(true);
+                            }, 301);
+                          }, 200);
+                        }).catch((err) => {
+                          reject(err);
+                        })
+
+                      },
+                    },
+                    style: {
+                      display: "flex",
+                      height: String(blackButtonHeight) + ea,
+                      width: String(blackButtonWidth) + ea,
+                      borderRadius: String(5) + "px",
+                      background: thisForm[x].children[y].children[z].type !== "selection" ? colorChip.gradientGray : (thisForm[x].children[y].children[z].value === 0 ? colorChip.gray2 : colorChip.gradientGreen),
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginBottom: String(blackButtonBetween) + ea,
+                      cursor: "pointer",
+                    },
+                    child: {
+                      text: thisForm[x].children[y].children[z].title,
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        fontSize: String(blackButtonSize) + ea,
+                        fontWeight: String(blackButtonWeight),
+                        color: thisForm[x].children[y].children[z].type !== "selection" ? colorChip.white : (thisForm[x].children[y].children[z].value === 0 ? colorChip.deactive : colorChip.white),
+                        top: String(blackButtonTextTop) + ea,
+                        cursor: "pointer",
+                      }
+                    }
+                  });
+    
+                }
+              })
+            }
+
+            if (toggle === "off") {
+              if (type === "selection") {
+                clickRes = await clickEnd(x, y);
+                if (clickRes !== true) {
+                  return;
+                }
+              }
+              if (red === "off") {
                 for (let i = 0; i < siblings.length; i++) {
                   if (i < thisIndex) {
                     if (siblings[i].getAttribute("red") !== "on") {
+                      if (siblings[i].getAttribute("type") === "selection" && siblings[i].getAttribute("toggle") !== "on") {
+                        clickRes = await clickEnd(Number(siblings[i].getAttribute("x")), Number(siblings[i].getAttribute("y")));
+                        if (clickRes !== true) {
+                          return;
+                        }
+                      }
                       siblings[i].style.background = colorChip.whiteGreen;
                       siblings[i].children[0].children[0].children[0].setAttribute("fill", colorChip.green);
                       siblings[i].children[1].children[0].style.color = colorChip.softGreen;
@@ -14095,7 +14252,11 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
 
               }
             } else {
-
+              if (type === "selection") {
+                const tempTargets = [ ...document.querySelectorAll('.' + valueBlockClassName) ]
+                const tempTarget = tempTargets.find((dom) => { return Number(dom.getAttribute('x')) === x && Number(dom.getAttribute('y')) === y });
+                tempTarget.children[1].children[0].textContent = thisForm[x].children[y].title;
+              }
               if (middle === "off") {
 
                 if (siblings[thisIndex - 1] === undefined) {
@@ -14202,12 +14363,21 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
               children: []
             };
             for (let w = 0; w < targetDoms.length; w++) {
+              copiedChildren = equalJson(JSON.stringify(thisForm[z].children[w].children));
+              if (targetDoms[w].getAttribute("type") === "selection") {
+                if (targetDoms[w].getAttribute("toggle") !== "on") {
+                  for (let obj3 of copiedChildren) {
+                    obj3.value = 0;
+                  }
+                }
+              }
               tempObj.children.push({
                 title: targetDoms[w].getAttribute("title"),
+                type: targetDoms[w].getAttribute("type"),
                 deactive: targetDoms[w].getAttribute("deactive") === "true",
                 value: targetDoms[w].getAttribute("toggle") === "on" ? 1 : 0,
                 key: thisForm[z].children[w].key,
-                children: equalJson(JSON.stringify(thisForm[z].children[w].children)),
+                children: copiedChildren,
               });
             }
             matrix.push(tempObj);
@@ -14362,6 +14532,9 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                           self.parentElement.style.animation = "fadedownlite 0.3s ease forwards";
                           setQueue(() => {
                             removeByClass(blockContextMenuClassName);
+                            const targets = [ ...document.querySelectorAll('.' + valueBlockClassName) ]
+                            const target = targets.find((dom) => { return Number(dom.getAttribute('x')) === x && Number(dom.getAttribute('y')) === y })
+                            target.children[1].children[0].textContent = matrix[x].children[y].children[z].view;
                           }, 301);
                         }, 200);
 
@@ -14682,6 +14855,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
               y: String(j),
               mother: thisForm[i].title,
               title: thisForm[i].children[j].title,
+              type: thisForm[i].children[j].type,
               deactive: thisForm[i].children[j].deactive ? "true" : "false",
               proid,
               desid,
@@ -14744,7 +14918,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                   transition: "all 0s ease",
                 },
                 child: {
-                  text: thisForm[i].children[j].title,
+                  text: thisForm[i].children[j].type !== "selection" ? thisForm[i].children[j].title : (thisForm[i].children[j].children.find((o3) => { return o3.value === 1 }) === undefined ? thisForm[i].children[j].title : thisForm[i].children[j].children.find((o3) => { return o3.value === 1 }).view),
                   style: {
                     display: "inline-block",
                     position: "relative",

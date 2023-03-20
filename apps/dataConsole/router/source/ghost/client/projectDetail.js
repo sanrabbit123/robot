@@ -5374,6 +5374,7 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
               y: String(j),
               mother: thisForm[i].title,
               title: thisForm[i].children[j].title,
+              type: thisForm[i].children[j].type,
               deactive: thisForm[i].children[j].deactive ? "true" : "false",
               proid,
               desid,
@@ -5431,7 +5432,7 @@ ProjectDetailJs.prototype.insertFormStatusBox = async function () {
                   transition: "all 0s ease",
                 },
                 child: {
-                  text: thisForm[i].children[j].title,
+                  text: thisForm[i].children[j].type !== "selection" ? thisForm[i].children[j].title : (thisForm[i].children[j].children.find((o3) => { return o3.value === 1 }) === undefined ? thisForm[i].children[j].title : thisForm[i].children[j].children.find((o3) => { return o3.value === 1 }).view),
                   style: {
                     display: "inline-block",
                     position: "relative",
@@ -5730,9 +5731,7 @@ ProjectDetailJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
 
-
           // past version
-
           instance.insertNumbersBox();
           instance.insertUploadBox();
 
