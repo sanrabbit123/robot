@@ -204,6 +204,12 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
       type: "date",
     },
     {
+      title: "디자인 제안",
+      menu: [],
+      blank: true,
+      type: "date",
+    },
+    {
       title: "디자이너 글",
       menu: [],
       blank: true,
@@ -234,7 +240,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
 
   tableBlockHeight = 34;
   tableValueBlockHeight = 28;
-  tableBlockFactorWidth = 132;
+  tableBlockFactorWidth = 122;
   tableBetween = 20;
 
   blockVisualPadding = 8;
@@ -1989,6 +1995,11 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
               check: false,
             },
             {
+              value: sendSchedule,
+              color: sendSchedule === '-' ? colorChip.red : colorChip.black,
+              check: false,
+            },
+            {
               value: rawDate,
               color: rawDate === '-' ? colorChip.red : colorChip.black,
               check: false,
@@ -2187,6 +2198,11 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
           },
           {
             value: (sendStatusNumber === 0 ? String(sendStatusNumber) : "<b%" + String(sendStatusNumber) + "%b>") + " <u%/%u> " + String(projects.length),
+            color: colorChip.black,
+            check: false,
+          },
+          {
+            value: (sendScheduleNumber === 0 ? String(sendScheduleNumber) : "<b%" + String(sendScheduleNumber) + "%b>") + " <u%/%u> " + String(projects.length),
             color: colorChip.black,
             check: false,
           },
