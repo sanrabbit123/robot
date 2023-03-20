@@ -6575,7 +6575,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
 
   buttonList = [];
   buttonList.push({
-    name: "선택 파일 열기",
+    name: "선택 파일 다운로드",
     item: true,
     deactive: false,
     reverse: false,
