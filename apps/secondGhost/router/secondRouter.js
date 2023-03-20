@@ -1020,6 +1020,7 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
       let after56;
       let after63;
       let after70;
+      let emptyDate;
 
       if (mode === "get") {
 
@@ -1058,6 +1059,8 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
       } else if (mode === "original") {
 
         project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+
+        emptyDate = new Date(1800, 0, 1);
 
         startDate = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
         after7 = new Date(JSON.stringify(project.process.contract.form.date.from).slice(1, -1));
@@ -1104,48 +1107,48 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
                 title: "컨셉 제안서",
                 description: "전체적인 디자인 방향을 정할 컨셉 제안서 입니다.",
                 date: {
-                  start: startDate,
-                  end: after7,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "1차 디자인 제안서",
                 description: "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다.",
                 date: {
-                  start: after7,
-                  end: after14,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "제안서 수정 작업",
                 description: "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다.",
                 date: {
-                  start: after14,
-                  end: after21,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "제품 리스트",
                 description: "디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다.",
                 date: {
-                  start: after14,
-                  end: after21,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "제품 구매 및 배송",
                 description: "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다.",
                 date: {
-                  start: after21,
-                  end: after28,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "제품 설치 및 세팅",
                 description: "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다.",
                 date: {
-                  start: after21,
-                  end: after35,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
             ]
@@ -1173,72 +1176,72 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
                 title: "컨셉 제안서",
                 description: "전체적인 디자인 방향을 정할 컨셉 제안서 입니다.",
                 date: {
-                  start: startDate,
-                  end: after7,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "1차 디자인 제안서",
                 description: "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다.",
                 date: {
-                  start: after7,
-                  end: after14,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "제안서 수정 작업",
                 description: "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다.",
                 date: {
-                  start: after14,
-                  end: after21,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "제품 리스트",
                 description: "디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다.",
                 date: {
-                  start: after14,
-                  end: after21,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "시공 의뢰서",
                 description: "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다.",
                 date: {
-                  start: after14,
-                  end: after21,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "시공 견적서",
                 description: "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다.",
                 date: {
-                  start: after21,
-                  end: after28,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "시공 진행",
                 description: "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다.",
                 date: {
-                  start: after28,
-                  end: after49,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "제품 구매 및 배송",
                 description: "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다.",
                 date: {
-                  start: after42,
-                  end: after56,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "제품 설치 및 세팅",
                 description: "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다.",
                 date: {
-                  start: after49,
-                  end: after56,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
             ]
@@ -1266,72 +1269,72 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
                 title: "컨셉 제안서",
                 description: "전체적인 디자인 방향을 정할 컨셉 제안서 입니다.",
                 date: {
-                  start: startDate,
-                  end: after7,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "1차 디자인 제안서",
                 description: "컨셉을 바탕으로 구체적인 디자인 시안을 1차적으로 제공드립니다.",
                 date: {
-                  start: after7,
-                  end: after14,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "제안서 수정 작업",
                 description: "디자인 제안서의 수정 사항을 반영하여 수정 작업을 진행하는 기간입니다.",
                 date: {
-                  start: after14,
-                  end: after21,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "제품 리스트",
                 description: "디자인 제안서에 나와 있는 제품의 구체적인 리스트를 제공합니다.",
                 date: {
-                  start: after14,
-                  end: after21,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "시공 의뢰서",
                 description: "구체적으로 어떤 시공을 어떻게 진행할 지에 대한 의뢰서입니다.",
                 date: {
-                  start: after14,
-                  end: after21,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "시공 견적서",
                 description: "시공 의뢰서를 바탕으로 정해진 시공 내역에 대한 견적서 입니다.",
                 date: {
-                  start: after21,
-                  end: after28,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "시공 진행",
                 description: "시공 의뢰서에 나온 시공 내역대로 실제 시공을 진행하는 기간입니다.",
                 date: {
-                  start: after28,
-                  end: after56,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "제품 구매 및 배송",
                 description: "리스트에 나온 제품들을 실제로 구매하고 배송을 기다리는 기간입니다.",
                 date: {
-                  start: after42,
-                  end: after63,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
               {
                 title: "제품 설치 및 세팅",
                 description: "배송된 가구, 가전, 패브릭 등의 설치와 세팅이 진행되는 기간입니다.",
                 date: {
-                  start: after56,
-                  end: after70,
+                  start: emptyDate,
+                  end: emptyDate,
                 },
               },
             ]

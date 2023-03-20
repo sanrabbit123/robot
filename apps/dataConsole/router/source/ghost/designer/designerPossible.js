@@ -486,35 +486,35 @@ DesignerPossibleJs.prototype.possiblePrompt = function () {
                           }
                         }
                       },
-                      blur: function (e) {
-                        let possibleValue, range, finalObj, removeTargets;
-                        if (this.value.trim() !== '') {
-                          possibleValue = Number(this.value.replace(/[^0-9]/gi, ''));
-                          if (Number.isNaN(possibleValue)) {
-                            this.value = '';
-                          } else {
-                            if (instance.selection.length >= 2) {
-                              range = [ stringToDate(instance.selection[0].value), stringToDate(instance.selection[1].value) ];
-                              range.sort((a, b) => { return a.valueOf() - b.valueOf() });
-                              for (let { value, dom } of instance.possibleBoxes) {
-                                if (range[0].valueOf() <= stringToDate(value).valueOf() && stringToDate(value).valueOf() <= range[1].valueOf()) {
-                                  dom.firstChild.setAttribute("possible", String(possibleValue));
-                                  dom.firstChild.textContent = String(possibleValue) + (desktop ? "건 가능" : "건");
-                                }
-                              }
+                      // blur: function (e) {
+                      //   let possibleValue, range, finalObj, removeTargets;
+                      //   if (this.value.trim() !== '') {
+                      //     possibleValue = Number(this.value.replace(/[^0-9]/gi, ''));
+                      //     if (Number.isNaN(possibleValue)) {
+                      //       this.value = '';
+                      //     } else {
+                      //       if (instance.selection.length >= 2) {
+                      //         range = [ stringToDate(instance.selection[0].value), stringToDate(instance.selection[1].value) ];
+                      //         range.sort((a, b) => { return a.valueOf() - b.valueOf() });
+                      //         for (let { value, dom } of instance.possibleBoxes) {
+                      //           if (range[0].valueOf() <= stringToDate(value).valueOf() && stringToDate(value).valueOf() <= range[1].valueOf()) {
+                      //             dom.firstChild.setAttribute("possible", String(possibleValue));
+                      //             dom.firstChild.textContent = String(possibleValue) + (desktop ? "건 가능" : "건");
+                      //           }
+                      //         }
 
-                              instance.boxToPossible().catch((err) => { console.log(err); });
+                      //         instance.boxToPossible().catch((err) => { console.log(err); });
 
-                              removeTargets = document.querySelectorAll('.' + possiblePromptClassName);
-                              for (let dom of removeTargets) {
-                                dom.remove();
-                              }
-                              selectionReset();
+                      //         removeTargets = document.querySelectorAll('.' + possiblePromptClassName);
+                      //         for (let dom of removeTargets) {
+                      //           dom.remove();
+                      //         }
+                      //         selectionReset();
 
-                            }
-                          }
-                        }
-                      }
+                      //       }
+                      //     }
+                      //   }
+                      // }
                     },
                     style: {
                       position: "absolute",
