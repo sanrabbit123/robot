@@ -918,7 +918,11 @@ LogRouter.prototype.rou_post_getClientReport = function () {
         
         obj.adClients = tempRows.map((obj) => { return obj.data.detail }).flat().filter((obj2) => {
           return obj2.users.some((obj3) => {
-            return !/not set/gi.test(obj3.source.campaign)
+            if (obj3 === null) {
+              return false;
+            } else {
+              return !/not set/gi.test(obj3.source.campaign)
+            }
           })
         }).length;
 
