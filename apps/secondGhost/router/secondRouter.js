@@ -1405,6 +1405,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
           children: [
             {
               title: "현장 미팅 완료",
+              type: "upload",
               deactive: false,
               value: 0,
               key: "firstPhoto",
@@ -1424,6 +1425,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "일정표 공유됨",
+              type: "upload",
               deactive: false,
               value: 0,
               key: "scheduleInfo",
@@ -1443,6 +1445,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "컨셉 제안서 공유됨",
+              type: "upload",
               deactive: false,
               value: 0,
               key: "designProposal",
@@ -1462,6 +1465,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "1차 디자인 제안서 공유됨",
+              type: "upload",
               deactive: false,
               value: 0,
               key: "designDevelop",
@@ -1481,6 +1485,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "수정 제안서 공유됨",
+              type: "upload",
               deactive: false,
               value: 0,
               key: "designFix",
@@ -1500,6 +1505,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "제품 리스트 공유됨",
+              type: "upload",
               deactive: false,
               value: 0,
               key: "productList",
@@ -1519,6 +1525,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "디자인 제안서 최종 컨펌",
+              type: "string",
               deactive: false,
               value: 0,
               key: "finalDesign",
@@ -1537,6 +1544,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
           children: [
             {
               title: "시공 의뢰서 공유됨",
+              type: "upload",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
               key: "constructInfo",
@@ -1556,6 +1564,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "시공 견적서 공유됨",
+              type: "upload",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
               key: "constructEstimate",
@@ -1575,6 +1584,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "시공사 선택 완료",
+              type: "selection",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
               key: "constructSelection",
@@ -1583,21 +1593,25 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
                   title: "홈리에종 시공사",
                   type: "selection",
                   value: 0,
+                  view: "홈리에종 시공사 선택",
                 },
                 {
                   title: "디자이너 시공사",
                   type: "selection",
                   value: 0,
+                  view: "디자이너 시공사 선택",
                 },
                 {
                   title: "고객 시공사",
                   type: "selection",
                   value: 0,
+                  view: "고객 시공사 선택",
                 },
               ]
             },
             {
               title: "공정표 공유됨",
+              type: "string",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
               key: "constructSchedule",
@@ -1611,6 +1625,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "시공 착수",
+              type: "string",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
               key: "constructStart",
@@ -1624,6 +1639,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "시공 진행중",
+              type: "string",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
               key: "constructProgress",
@@ -1637,6 +1653,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "시공 완료",
+              type: "upload",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
               key: "constructMiddleFinal",
@@ -1656,6 +1673,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "시공 AS 완료",
+              type: "string",
               deactive: /퍼니싱/gi.test(serviceParsing(project.service)),
               value: 0,
               key: "constructFinal",
@@ -1674,6 +1692,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
           children: [
             {
               title: "제품 구매 시작 전",
+              type: "upload",
               deactive: false,
               value: 0,
               key: "productReady",
@@ -1693,6 +1712,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "제품 구매 진행중",
+              type: "string",
               deactive: false,
               value: 0,
               key: "productPurchase",
@@ -1706,6 +1726,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "구매 완료, 배송중",
+              type: "string",
               deactive: false,
               value: 0,
               key: "productProgress",
@@ -1719,6 +1740,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "배송 및 세팅 완료",
+              type: "upload",
               deactive: false,
               value: 0,
               key: "productComplete",
@@ -1743,6 +1765,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
           children: [
             {
               title: "촬영 여부 확인",
+              type: "selection",
               deactive: false,
               value: 0,
               key: "photoSelection",
@@ -1751,16 +1774,19 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
                   title: "촬영 진행 희망",
                   type: "selection",
                   value: 0,
+                  view: "촬영 진행 희망",
                 },
                 {
                   title: "촬영 진행 안 함",
                   type: "selection",
                   value: 0,
+                  view: "촬영 진행 안 함",
                 }
               ]
             },
             {
               title: "촬영일 확인 완료",
+              type: "string",
               deactive: false,
               value: 0,
               key: "contentsPhoto",
@@ -1774,6 +1800,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             },
             {
               title: "세팅 및 촬영 완료",
+              type: "string",
               deactive: false,
               value: 0,
               key: "projectFinal",
