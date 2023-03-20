@@ -1004,6 +1004,50 @@ StaticRouter.prototype.rou_post_mongoToJson = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_dataReflection = function () {
+  const instance = this;
+  const { shellExec, shellLink, fileSystem, errorLog } = this.mother;
+  const address = this.address;
+  const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
+  const reflection = new MongoReflection();
+  let obj;
+  obj = {};
+  obj.link = [ "/dataReflection" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+
+
+
+
+      // dev
+
+
+
+
+
+
+
+
+
+    
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_dataReflection): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
   const instance = this;
   const { errorLog } = this.mother;

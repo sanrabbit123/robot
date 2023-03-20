@@ -648,7 +648,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   linkIconTop = <%% 0, 0, 0, 0, 0 %%>;
 
   plusIconTop = <%% 0, 0, 0, 0, 0 %%>;
-  plusIconWidth = <%% 14, 14, 13, 12, 3 %%>;
+  plusIconWidth = <%% 14, 14, 13, 12, 3.2 %%>;
 
   panMotherMinHeight = <%% 500, 480, 420, 400, 54 %%>;
 
@@ -881,6 +881,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
       },
       event: {
         click: (this.panContents[i].type === "link" ? instance.uploadLink(i) : instance.uploadFiles(i, (this.panContents[i].type === "photo"))),
+        touchstart: (this.panContents[i].type === "link" ? instance.uploadLink(i) : instance.uploadFiles(i, (this.panContents[i].type === "photo"))),
       },
       style: {
         display: "flex",
@@ -922,6 +923,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
       },
       event: {
         click: instance.plusMemo(i),
+        touchstart: instance.plusMemo(i),
       },
       style: {
         display: "flex",
@@ -939,7 +941,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
       children: [
         {
           mode: "svg",
-          source: instance.mother.returnPlus(colorChip.white),
+          source: instance.mother.returnHamburger(colorChip.white),
           style: {
             display: "inline-block",
             position: "relative",
@@ -15062,14 +15064,15 @@ ProcessDetailJs.prototype.launching = async function (loading) {
               instance.insertGreenButtons();
             }
 
-          } else if (typeof getObj.mode === "string" && getObj.mode === "schedule") {
+          // dev
+          // } else if (typeof getObj.mode === "string" && getObj.mode === "schedule") {
+          } else if (typeof getObj.mode === "string" && getObj.mode === "schedule" && (instance.designer.desid === "d1701_aa01s" || instance.designer.desid === "d1904_aa12s")) {
 
             instance.insertInitBox();
             instance.insertScheduleStartBox();
             instance.insertScheduleAboutBox();
             await instance.insertScheduleBox();
             await instance.insertFormStatusBox();
-            // instance.insertNumbersBox();
             instance.insertUploadBox();
             instance.insertControlBox();
             if (mobile) {
@@ -15103,11 +15106,19 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             if (instance.contentsArr.length > 0) {
               instance.insertContentsBox();
             } else {
-              await instance.insertFormStatusBox();
+              if (instance.designer.desid === "d1701_aa01s" || instance.designer.desid === "d1904_aa12s") {
+                // dev - new version
+                await instance.insertFormStatusBox();
+              } else {
+                // past version
+                instance.insertNumbersBox();
+              }
             }
-            // instance.insertNumbersBox();
             instance.insertUploadBox();
-            await instance.insertScheduleBox();
+            if (instance.designer.desid === "d1701_aa01s" || instance.designer.desid === "d1904_aa12s") {
+              // dev - new version
+              await instance.insertScheduleBox();
+            }
             instance.insertControlBox();
             if (mobile) {
               instance.insertBelowBox();

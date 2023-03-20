@@ -5720,27 +5720,26 @@ ProjectDetailJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
-          await instance.insertFormStatusBox();
 
-          if (getObj.mode === "schedule") {
-            await instance.insertScheduleBox();
-            instance.insertUploadBox();
-          } else {
-            instance.insertUploadBox();
-            await instance.insertScheduleBox();
-          }
+
+          // past version
+
+          instance.insertNumbersBox();
+          instance.insertUploadBox();
+
+          // dev - new version
+          // await instance.insertFormStatusBox();
+          // if (getObj.mode === "schedule") {
+          //   await instance.insertScheduleBox();
+          //   instance.insertUploadBox();
+          // } else {
+          //   instance.insertUploadBox();
+          //   await instance.insertScheduleBox();
+          // }
+          
           instance.insertInformationBox();
           instance.insertGreenButtons();
 
-          // if (typeof getObj.key === "string") {
-          //   if (instance.buttons.map((dom) => { return JSON.parse(dom.getAttribute("children")) }).flat().includes(getObj.key)) {
-          //     setQueue(() => {
-          //       instance.buttons.find((dom) => {
-          //         return JSON.parse(dom.getAttribute("children")).includes(getObj.key);
-          //       }).click();
-          //     }, 300);
-          //   }
-          // }
 
           if (getObj.mode === "schedule") {
             setQueue(() => {

@@ -936,7 +936,7 @@ LogRouter.prototype.rou_post_getClientReport = function () {
         obj.charge = tempRows2.map((obj2) => { return obj2.value.charge }).reduce((acc, curr) => { return acc + curr }, 0);
       }
 
-      res.send(JSON.stringify(monthlyAnalytics))
+      res.send(JSON.stringify(monthlyAnalytics));
 
     } catch (e) {
       errorLog("Log console 문제 생김 (rou_post_getClientReport): " + e.message).catch((e) => { console.log(e); });
