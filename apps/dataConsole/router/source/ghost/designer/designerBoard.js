@@ -396,7 +396,7 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
       },
     ]
   });
-  tong = block.lastChild;
+  tong = block.children[0];
 
   currentTong = createNode({
     mother: tong,
@@ -603,6 +603,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   const small = !big;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, selfHref, returnGet } = GeneralJs;
   const getObj = returnGet();
+  const slash = "&nbsp;&nbsp;<b%/%b>&nbsp;&nbsp;";
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -644,6 +645,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   let circleWidth, circleBetween, circleColor;
   let circleBoxTop;
   let mobileCircleBoxPaddingBottom;
+  let numbersTop;
 
   grayBetween = <%% 40, 40, 36, 36, 5 %%>;
 
@@ -654,7 +656,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   whiteBottomMargin = <%% 58, 56, 50, 44, 6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
-  printSize = <%% 14, 14, 13, 12, 2.5 %%>;
+  printSize = <%% 14, 14, 13, 12, 2.7 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, 0 %%>;
@@ -693,6 +695,8 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   circleBetween = <%% 5, 5, 4, 4, 1 %%>;
   circleBoxTop = <%% 30, 30, 28, 24, 4 %%>;
   mobileCircleBoxPaddingBottom = 1.4;
+
+  numbersTop = <%% 9, 9, 7, 5, (isIphone() ? 1.6 : 1.5) %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -741,8 +745,8 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     &&>;
 
     boxTarget = [
-      (state) => { return (state <= 1 ? colorChip.red : colorChip.deactive) },
-      (state) => { return (state <= 1 ? colorChip.yellow : colorChip.deactive) },
+      (state) => { return (state <= 1 ? (state === 0 ? colorChip.red : colorChip.shadow) : colorChip.deactive) },
+      (state) => { return (state <= 1 ? (state === 0 ? colorChip.yellow : colorChip.shadow) : colorChip.deactive) },
       null,
       null,
       null,
@@ -764,9 +768,9 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
     boxTarget = [
       null,
-      (state) => { return colorChip.red },
-      (state) => { return colorChip.yellow },
-      (state) => { return colorChip.shadow },
+      (state) => { return (state <= 1 ? (state === 0 ? colorChip.red : colorChip.shadow) : colorChip.deactive) },
+      (state) => { return (state <= 1 ? (state === 0 ? colorChip.yellow : colorChip.shadow) : colorChip.deactive) },
+      (state) => { return (state <= 1 ? (state === 0 ? colorChip.darkShadow : colorChip.shadow) : colorChip.deactive) },
     ];
 
     forceWidth = [
@@ -805,22 +809,21 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     cleanChildren(whiteTong);
 
     targets = equalJson(JSON.stringify(projects));
+    targets = targets.filter((obj) => {
+      return /대기/gi.test(obj.process.status) || /진행/gi.test(obj.process.status);
+    });
     targets.sort((a, b) => {
       const emptyValue = Math.abs((new Date(1200, 0, 1)).valueOf());
       let aConst, bConst;
 
-      if (/드[랍롭]/gi.test(a.process.status) || /홀[드딩]/gi.test(a.process.status)) {
+      if (/대기/gi.test(a.process.status)) {
         aConst = 1;
-      } else if (/완료/gi.test(a.process.status)) {
-        aConst = 10000;
       } else {
         aConst = 100000000;
       }
 
-      if (/드[랍롭]/gi.test(b.process.status) || /홀[드딩]/gi.test(b.process.status)) {
+      if (/대기/gi.test(b.process.status)) {
         bConst = 1;
-      } else if (/완료/gi.test(b.process.status)) {
-        bConst = 10000;
       } else {
         bConst = 100000000;
       }
@@ -861,7 +864,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
           },
           children: [
             {
-              text: "진행중 프로젝트" + (!total ? "&nbsp;&nbsp;<b%모두 보기%b>" : "&nbsp;&nbsp;<b%일부만 보기%b>"),
+              text: "진행중 프로젝트" + (desktop ? (!total ? "&nbsp;&nbsp;<b%모두 보기%b>" : "&nbsp;&nbsp;<b%일부만 보기%b>") : ""),
               event: {
                 click: function (e) {
                   setContents(/모두/gi.test(this.textContent));
@@ -899,9 +902,31 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
             marginBottom: String(0) + ea,
           }
         },
+        {
+          text: "총 <u%" + String(targetLength) + "%u>건" + slash + "진행중 <u%" + String(equalJson(JSON.stringify(targets)).filter((o) => { return o !== null }).filter((o) => { return /진행/gi.test(o.process.status) }).length) + "%u>건" + slash + "대기 <u%" + String(equalJson(JSON.stringify(targets)).filter((o) => { return o !== null }).filter((o) => { return /대기/gi.test(o.process.status) }).length) + "%u>건",
+          style: {
+            position: "absolute",
+            top: String(numbersTop) + ea,
+            right: String(0) + ea,
+            color: colorChip.black,
+            fontSize: String(printSize) + ea,
+            fontWeight: String(500),
+            cursor: "pointer",
+          },
+          bold: {
+            color: colorChip.deactive,
+            fontSize: String(printSize) + ea,
+            fontWeight: String(500),
+          },
+          under: {
+            color: colorChip.green,
+            fontSize: String(printSize) + ea,
+            fontWeight: String(500),
+          },
+        },
       ]
     });
-    tong = block.lastChild;
+    tong = block.children[1];
 
     grayTong = createNode({
       mother: tong,
@@ -923,6 +948,8 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
           state = 3;
         } else if (/완료/gi.test(targets[i].process.status)) {
           state = 2;
+        } else if (/대기/gi.test(targets[i].process.status)) {
+          state = 1;
         }
 
         whiteBaseTong = createNode({
@@ -950,7 +977,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
             paddingRight: String(grayPadding) + ea,
             height: desktop ? String(tongHeight) + ea : "",
             borderRadius: String(5) + "px",
-            background: state >= 2 ? (state === 3 ? colorChip.gray4 : colorChip.gray1) : colorChip.white,
+            background: state >= 2 ? (state === 3 ? colorChip.gray4 : colorChip.gray1) : (state === 0 ? colorChip.white : colorChip.gray0),
             marginBottom: String(tongMargin) + ea,
             alignItems: "center",
             flexDirection: "row",
@@ -1153,6 +1180,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
   const small = !big;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, selfHref, returnGet } = GeneralJs;
   const getObj = returnGet();
+  const slash = "&nbsp;&nbsp;<b%/%b>&nbsp;&nbsp;";
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -1194,6 +1222,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
   let circleWidth, circleBetween, circleColor;
   let circleBoxTop;
   let mobileCircleBoxPaddingBottom;
+  let numbersTop;
 
   grayBetween = <%% 40, 40, 36, 36, 5 %%>;
 
@@ -1204,7 +1233,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
   whiteBottomMargin = <%% 58, 56, 50, 44, 6 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
-  printSize = <%% 14, 14, 13, 12, 2.5 %%>;
+  printSize = <%% 14, 14, 13, 12, 2.7 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, 0 %%>;
@@ -1243,6 +1272,8 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
   circleBetween = <%% 5, 5, 4, 4, 1 %%>;
   circleBoxTop = <%% 30, 30, 28, 24, 4 %%>;
   mobileCircleBoxPaddingBottom = 1.4;
+
+  numbersTop = <%% 9, 9, 7, 5, (isIphone() ? 1.6 : 1.5) %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -1291,8 +1322,8 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
     &&>;
 
     boxTarget = [
-      (state) => { return (state <= 1 ? colorChip.red : colorChip.deactive) },
-      (state) => { return (state <= 1 ? colorChip.yellow : colorChip.deactive) },
+      (state) => { return (state <= 1 ? (state === 0 ? colorChip.red : colorChip.shadow) : colorChip.deactive) },
+      (state) => { return (state <= 1 ? (state === 0 ? colorChip.yellow : colorChip.shadow) : colorChip.deactive) },
       null,
       null,
       null,
@@ -1314,9 +1345,9 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
 
     boxTarget = [
       null,
-      (state) => { return colorChip.red },
-      (state) => { return colorChip.yellow },
-      (state) => { return colorChip.shadow },
+      (state) => { return (state <= 1 ? (state === 0 ? colorChip.red : colorChip.shadow) : colorChip.deactive) },
+      (state) => { return (state <= 1 ? (state === 0 ? colorChip.yellow : colorChip.shadow) : colorChip.deactive) },
+      (state) => { return (state <= 1 ? (state === 0 ? colorChip.darkShadow : colorChip.shadow) : colorChip.deactive) },
     ];
 
     forceWidth = [
@@ -1356,8 +1387,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
 
     targets = equalJson(JSON.stringify(projects));
     targets = targets.filter((obj) => {
-      return instance.contentsArr.toNormal().map((o) => { return o.proid }).includes(obj.proid);
-      return true
+      return instance.contentsArr.toNormal().map((o) => { return o.proid }).includes(obj.proid) || (!/대기/gi.test(obj.process.status) && !/진행/gi.test(obj.process.status));
     });
     targets.sort((a, b) => {
       const emptyValue = Math.abs((new Date(1200, 0, 1)).valueOf());
@@ -1365,18 +1395,22 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
 
       if (/드[랍롭]/gi.test(a.process.status) || /홀[드딩]/gi.test(a.process.status)) {
         aConst = 1;
-      } else if (/완료/gi.test(a.process.status)) {
+      } else if (instance.contentsArr.toNormal().map((o) => { return o.proid }).includes(a.proid)) {
         aConst = 10000;
-      } else {
+      } else if (instance.ghostContents.map((o) => { return o.proid }).includes(a.proid)) {
         aConst = 100000000;
+      } else {
+        aConst = 10;
       }
 
       if (/드[랍롭]/gi.test(b.process.status) || /홀[드딩]/gi.test(b.process.status)) {
         bConst = 1;
-      } else if (/완료/gi.test(b.process.status)) {
+      } else if (instance.contentsArr.toNormal().map((o) => { return o.proid }).includes(b.proid)) {
         bConst = 10000;
-      } else {
+      } else if (instance.ghostContents.map((o) => { return o.proid }).includes(b.proid)) {
         bConst = 100000000;
+      } else {
+        bConst = 10;
       }
 
       return ((b.process.contract.form.date.from.valueOf() + emptyValue) * bConst) - ((a.process.contract.form.date.from.valueOf() + emptyValue) * aConst);
@@ -1415,7 +1449,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
           },
           children: [
             {
-              text: "발행된 프로젝트" + (!total ? "&nbsp;&nbsp;<b%모두 보기%b>" : "&nbsp;&nbsp;<b%일부만 보기%b>"),
+              text: "완료된 프로젝트" + (desktop ? (!total ? "&nbsp;&nbsp;<b%모두 보기%b>" : "&nbsp;&nbsp;<b%일부만 보기%b>") : ""),
               event: {
                 click: function (e) {
                   setContents(/모두/gi.test(this.textContent));
@@ -1453,9 +1487,31 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
             marginBottom: String(0) + ea,
           }
         },
+        {
+          text: "총 <u%" + String(targetLength) + "%u>건" + slash + "발행 예정 <u%" + String(equalJson(JSON.stringify(targets)).filter((o) => { return o !== null }).filter((o) => { return instance.ghostContents.map((o2) => { return o2.proid }).includes(o.proid) }).length) + "%u>건" + slash + "발행됨 <u%" + String(equalJson(JSON.stringify(targets)).filter((o) => { return o !== null }).filter((o) => { return instance.contentsArr.toNormal().map((o2) => { return o2.proid }).includes(o.proid) }).length) + "%u>건",
+          style: {
+            position: "absolute",
+            top: String(numbersTop) + ea,
+            right: String(0) + ea,
+            color: colorChip.black,
+            fontSize: String(printSize) + ea,
+            fontWeight: String(500),
+            cursor: "pointer",
+          },
+          bold: {
+            color: colorChip.deactive,
+            fontSize: String(printSize) + ea,
+            fontWeight: String(500),
+          },
+          under: {
+            color: colorChip.green,
+            fontSize: String(printSize) + ea,
+            fontWeight: String(500),
+          },
+        },
       ]
     });
-    tong = block.lastChild;
+    tong = block.children[1];
 
     grayTong = createNode({
       mother: tong,
@@ -1472,9 +1528,15 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
     for (let i = 0; i < targets.length; i++) {
 
       if (targets[i] !== null) {
-        state = 0;
-        if (/드[랍롭]/gi.test(targets[i].process.status) || /홀[드딩]/gi.test(targets[i].process.status)) {
+
+        if (instance.contentsArr.toNormal().map((o) => { return o.proid }).includes(targets[i].proid)) {
+          state = 0;
+        } else if (/드[랍롭]/gi.test(targets[i].process.status) || /홀[드딩]/gi.test(targets[i].process.status)) {
           state = 3;
+        } else if (instance.ghostContents.map((o) => { return o.proid }).includes(targets[i].proid)) {
+          state = 1;
+        } else {
+          state = 2;
         }
 
         whiteBaseTong = createNode({
@@ -1502,7 +1564,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
             paddingRight: String(grayPadding) + ea,
             height: desktop ? String(tongHeight) + ea : "",
             borderRadius: String(5) + "px",
-            background: state >= 2 ? (state === 3 ? colorChip.gray4 : colorChip.gray1) : colorChip.white,
+            background: state >= 2 ? (state === 3 ? colorChip.gray4 : colorChip.gray1) : (state === 0 ? colorChip.white : colorChip.gray0),
             marginBottom: String(tongMargin) + ea,
             alignItems: "center",
             flexDirection: "row",
