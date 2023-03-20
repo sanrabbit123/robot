@@ -78,6 +78,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
   let checkBoxVisualLeft;
   let sendStatus, sendStatusNumber;
   let sendSchedule, sendScheduleNumber;
+  let sendFile, sendFileNumber;
   let checkBoxLocalStorageObj;
   let clientColumnsMenu;
   let clientColumnsBlankTitle;
@@ -1894,6 +1895,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
         rawDateNumber = 0;
         sendStatusNumber = 0;
         sendScheduleNumber = 0;
+        sendFileNumber = 0;
         for (let z = 0; z < projects.length; z++) {
           thisProject = projects[z];
           callHistory = equalJson(JSON.stringify(thisProject.clientHistory.curation.analytics.call.out.concat(thisProject.clientHistory.curation.analytics.call.in)));
@@ -1936,6 +1938,10 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
           sendSchedule = dateConvert(thisProject.sendSchedule);
           if (sendSchedule === '-') {
             sendScheduleNumber = sendScheduleNumber + 1;
+          }
+          sendFile = dateConvert(thisProject.sendFile);
+          if (sendFile === '-') {
+            sendFileNumber = sendFileNumber + 1;
           }
 
           clientValueArr = [
@@ -1995,8 +2001,8 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
               check: false,
             },
             {
-              value: sendSchedule,
-              color: sendSchedule === '-' ? colorChip.red : colorChip.black,
+              value: sendFile,
+              color: sendFile === '-' ? colorChip.red : colorChip.black,
               check: false,
             },
             {
@@ -2207,7 +2213,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
             check: false,
           },
           {
-            value: (sendScheduleNumber === 0 ? String(sendScheduleNumber) : "<b%" + String(sendScheduleNumber) + "%b>") + " <u%/%u> " + String(projects.length),
+            value: (sendFileNumber === 0 ? String(sendFileNumber) : "<b%" + String(sendFileNumber) + "%b>") + " <u%/%u> " + String(projects.length),
             color: colorChip.black,
             check: false,
           },
