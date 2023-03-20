@@ -1140,6 +1140,9 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
                     dom_clone.addEventListener(str, obj.event);
                   }
                 }
+                if (str === "click") {
+                  dom_clone.style.cursor = "pointer";
+                }
               }
             } else if (typeof obj.type === "string") {
               if (typeof obj.event === "function") {
@@ -1152,6 +1155,9 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
                   }
                 } else {
                   dom_clone.addEventListener(obj.type, obj.event);
+                }
+                if (obj.type === "click") {
+                  dom_clone.style.cursor = "pointer";
                 }
               }
             } else {
@@ -1171,10 +1177,14 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
               } else {
                 dom_clone.addEventListener(type, style.events[type]);
               }
+              if (type === "click") {
+                dom_clone.style.cursor = "pointer";
+              }
             }
           }
         } else if (typeof style.events === "function") {
           dom_clone.addEventListener("click", style.events);
+          dom_clone.style.cursor = "pointer";
         }
       }
       if (mother !== null && typeof mother.appendChild === "function") {

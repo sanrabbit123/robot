@@ -2800,14 +2800,6 @@ ProcessJs.prototype.insertFormStatusBox = async function (project, contentsArea)
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, serviceParsing, removeByClass, equalJson } = GeneralJs;
-  const dateToHangul = (dateObject) => {
-    return `${String(dateObject.getFullYear()).slice(2)}년 ${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일`;
-  }
-  const hangulToDate = (hangul) => {
-    hangul = hangul.replace(/ /gi, '');
-    const [ year, month, date ] = hangul.split(/[가-힣]/gi);
-    return new Date(2000 + Number(year), Number(month) - 1, Number(date));
-  }
   const siblingKeywords = "siblingKeywords__";
   const valueBlockClassName = "valueBlockClassName__";
   const blockContextMenuClassName = "blockContextMenuClassName__";
@@ -4113,12 +4105,29 @@ ProcessJs.prototype.insertScheduleBox = async function (project, baseTong) {
   const duringTextToken = "~";
   const duringToken = "<b%&nbsp;&nbsp;" + duringTextToken + "&nbsp;&nbsp;%b>";
   const dateToHangul = (dateObject) => {
-    return `${String(dateObject.getFullYear()).slice(2)}년 ${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일`;
+    if (dateObject.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+      return '-';
+    } else {
+      return `${String(dateObject.getFullYear()).slice(2)}년 ${String(dateObject.getMonth() + 1)}월 ${String(dateObject.getDate())}일`;
+    }
   }
-  const hangulToDate = (hangul) => {
+  const hangulToDate = (hangul, calendarMode = true) => {
     hangul = hangul.replace(/ /gi, '');
-    const [ year, month, date ] = hangul.split(/[가-힣]/gi);
-    return new Date(2000 + Number(year), Number(month) - 1, Number(date));
+    if (calendarMode) {
+      if (hangul.trim() === '-') {
+        return new Date();
+      } else {
+        const [ year, month, date ] = hangul.split(/[가-힣]/gi);
+        return new Date(2000 + Number(year), Number(month) - 1, Number(date));    
+      }
+    } else {
+      if (hangul.trim() === '-') {
+        return new Date(1800, 0, 1);
+      } else {
+        const [ year, month, date ] = hangul.split(/[가-힣]/gi);
+        return new Date(2000 + Number(year), Number(month) - 1, Number(date));    
+      }
+    }
   }
   try {
     let updateTextValue;
@@ -4269,9 +4278,9 @@ ProcessJs.prototype.insertScheduleBox = async function (project, baseTong) {
               } else if (i === 2) {
                 tempObj.description = childrenTarget[i].textContent;
               } else if (i === 3) {
-                tempObj.date.start = hangulToDate(childrenTarget[i].textContent);
+                tempObj.date.start = hangulToDate(childrenTarget[i].textContent, false);
               } else if (i === 4) {
-                tempObj.date.end = hangulToDate(childrenTarget[i].textContent);
+                tempObj.date.end = hangulToDate(childrenTarget[i].textContent, false);
               }
             }
             newContents.push(tempObj);
