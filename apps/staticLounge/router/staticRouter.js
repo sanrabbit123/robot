@@ -1025,7 +1025,7 @@ StaticRouter.prototype.rou_post_dataReflection = function () {
         throw new Error("post ban");
       }
 
-      reflection.ultimateReflection().then(() => {
+      reflection.coreReflection().then(() => {
         return reflection.mysqlReflection();
       }).catch((err) => {
         console.log(err);
