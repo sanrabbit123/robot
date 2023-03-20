@@ -8722,6 +8722,7 @@ ProcessJs.prototype.extractEvent = function () {
   const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
   const serviceStaticIndex = 2;
   const designerStaticIndex = 1;
+  const statusStaticIndex = 3;
 
   extractIcon.addEventListener("click", async function (e) {
     try {
@@ -8766,23 +8767,17 @@ ProcessJs.prototype.extractEvent = function () {
         
         loading.remove();
       } else {
-        rawMatrix = equalJson(JSON.stringify(instance.totalValues));
+        rawMatrix = equalJson(JSON.stringify(instance.totalNumbers));
         rawMatrix = rawMatrix.map((arr) => {
-          const tempArr = arr[serviceStaticIndex].split("&");
           const designerTempArr = arr[designerStaticIndex].split("&");
-          let service;
+          arr[statusStaticIndex] = arr[statusStaticIndex].replace(/\<b\%/gi, '').replace(/\%b\>/gi, '');
           arr[designerStaticIndex] = designerTempArr[0];
-          arr[serviceStaticIndex] = tempArr[0];
-          service = tempArr[tempArr.length - 1];
-          service = service.split("%")[service.split("%").length - 2];
-          arr.splice(serviceStaticIndex, 0, service);
           return arr;
         });
   
         tableColumns = equalJson(JSON.stringify(instance.clientColumns)).map((obj) => { return obj.title });
         tableColumns.unshift("디자이너");
         tableColumns.unshift("담당자");
-        tableColumns.splice(serviceStaticIndex, 0, "서비스");
   
         targetMatrix = [ tableColumns ].concat(rawMatrix);
   

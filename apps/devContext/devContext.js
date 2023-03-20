@@ -213,7 +213,7 @@ DevContext.prototype.launching = async function () {
     // await selfMongo.connect();
     // const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
     // const app = new LogReport(selfMongo);
-    // await app.dailyReports();
+    // await app.miningRealEstate();
     // await selfMongo.close();
 
 
@@ -5272,7 +5272,6 @@ DevContext.prototype.launching = async function () {
 
 
     
-
 
 
 
