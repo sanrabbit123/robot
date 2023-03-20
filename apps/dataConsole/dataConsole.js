@@ -624,6 +624,10 @@ DataConsole.prototype.renderFrontPhp = async function () {
 
     input = await consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
     if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
+
+      // worker update
+      await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
+
       await shellExec(command);
       console.log(`front update done`);
     }
@@ -719,6 +723,10 @@ DataConsole.prototype.renderDesignerPhp = async function () {
 
     input = await consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
     if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
+
+      // worker update
+      await shellExec(`scp -r ${shellLink(instance.dir)}/router/source/general/worker ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`);
+
       await shellExec(command);
       console.log(`front update done`);
     }
@@ -1000,13 +1008,7 @@ DataConsole.prototype.connect = async function () {
 
     //set static
     this.renderStatic(staticFolder, address, DataPatch).then(() => {
-      if (DataMiddle !== null) {
-        return instance.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, false);
-      } else {
-        return new Promise(function (resolve, reject) {
-          resolve(null);
-        });
-      }
+      return instance.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, false);
     }).then(() => {
       console.log(`static done`);
     }).catch((err) => {

@@ -1006,7 +1006,7 @@ StaticRouter.prototype.rou_post_mongoToJson = function () {
 
 StaticRouter.prototype.rou_post_dataReflection = function () {
   const instance = this;
-  const { shellExec, shellLink, fileSystem, errorLog } = this.mother;
+  const { errorLog } = this.mother;
   const address = this.address;
   const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
   const reflection = new MongoReflection();
@@ -1025,19 +1025,11 @@ StaticRouter.prototype.rou_post_dataReflection = function () {
         throw new Error("post ban");
       }
 
-
-
-
-      // dev
-
-
-
-
-
-
-
-
-
+      reflection.ultimateReflection().then(() => {
+        return reflection.mysqlReflection();
+      }).catch((err) => {
+        console.log(err);
+      })
     
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
