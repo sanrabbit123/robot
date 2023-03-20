@@ -911,7 +911,6 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
             color: colorChip.black,
             fontSize: String(printSize) + ea,
             fontWeight: String(500),
-            cursor: "pointer",
           },
           bold: {
             color: colorChip.deactive,
@@ -1496,7 +1495,6 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
             color: colorChip.black,
             fontSize: String(printSize) + ea,
             fontWeight: String(500),
-            cursor: "pointer",
           },
           bold: {
             color: colorChip.deactive,

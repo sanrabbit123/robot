@@ -281,13 +281,19 @@ DesignerPossibleJs.prototype.boxToPossible = async function () {
       yesterdayPossible = thisPossible;
     }
 
-    this.realtimeDesigner.possible = equalJson(JSON.stringify(newPossible));
-    this.realtimeDesigner.possible.sort((a, b) => { return a.start.valueOf() - b.start.valueOf() });
 
-    updateQuery = {};
-    updateQuery["possible"] = this.realtimeDesigner.possible;
-    await ajaxJson({ mode: "update", desid: instance.designer.desid, updateQuery }, BACKHOST + "/realtimeDesigner");
-    await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 가능 일정 스케쥴을 조정하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+    window.alert("가능 일정을 조정하고 싶으실 경우, 홈리에종에 직접 문의해주세요!");
+    window.location.reload();
+
+    // dev
+
+    // this.realtimeDesigner.possible = equalJson(JSON.stringify(newPossible));
+    // this.realtimeDesigner.possible.sort((a, b) => { return a.start.valueOf() - b.start.valueOf() });
+
+    // updateQuery = {};
+    // updateQuery["possible"] = this.realtimeDesigner.possible;
+    // await ajaxJson({ mode: "update", desid: instance.designer.desid, updateQuery }, BACKHOST + "/realtimeDesigner");
+    // await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 가능 일정 스케쥴을 조정하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
 
   } catch (e) {
     console.log(e);
