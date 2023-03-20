@@ -13,7 +13,7 @@ const worker = async function (package) {
     await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/dataReflection", { data: null }, { headers: { "Content-Type": "application/json" } });
     return true;
   } catch (e) {
-    await errorLog("record backup and delete error : " + e.message);
+    await errorLog("data reflection error : " + e.message);
     return false;
   }
 }
