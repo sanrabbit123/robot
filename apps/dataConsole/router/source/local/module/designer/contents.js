@@ -1778,19 +1778,36 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
           const value = this.getAttribute("value");
           const removeTargets = mother.querySelectorAll("aside");
           let tempArr;
+          let webUpdateBoo;
+          webUpdateBoo = !/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.test(thisCase["webPublish"].textContent);
+          if (webUpdateBoo) {
+            thisCase["webPublish"].textContent = value;
+          }
           if (value === "미정") {
             updateQuery[position] = new Date(3800, 0, 1);
             valueDom.style.color = colorChip.red;
+            if (webUpdateBoo) {
+              thisCase["webPublish"].style.color = colorChip.red;
+            }
           } else if (value === "해당 없음") {
             updateQuery[position] = new Date(1800, 0, 1);
             valueDom.style.color = colorChip.gray5;
+            if (webUpdateBoo) {
+              thisCase["webPublish"].style.color = colorChip.gray5;
+            }
           } else {
             tempArr = value.split('-');
             updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
             if (updateQuery[position].valueOf() <= (new Date()).valueOf()) {
               valueDom.style.color = colorChip.green;
+              if (webUpdateBoo) {
+                thisCase["webPublish"].style.color = colorChip.green;
+              }
             } else {
               valueDom.style.color = colorChip.black;
+              if (webUpdateBoo) {
+                thisCase["webPublish"].style.color = colorChip.black;
+              }
             }
           }
           await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
@@ -4456,7 +4473,7 @@ DesignerJs.prototype.contentsView = async function () {
         p.web = temp.contents.portfolio.date;
         p.pid = temp.contents.portfolio.pid;
       } else {
-        p.web = p.contents.sns.interview.long;
+        p.web = p.contents.sns.portfolio.long;
         p.pid = "미정";
       }
       p.history = projectHistory[p.proid];
