@@ -3189,6 +3189,15 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
   const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, variableArray } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainTitle = "출장 내역";
+  const travelBlockClassName = "travelBlockClassName";
+  const dateConvert = (dateObject) => {
+    const res = dateToString(dateObject);
+    if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(res)) {
+      return res.trim();
+    } else {
+      return '-';
+    }
+  }
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -3275,6 +3284,10 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
   let buttonTongPaddingTop;
   let buttonPadding;
   let travelAddEvent;
+  let textMargin;
+  let maximumTextWidth;
+  let rowMaker;
+  let minimumLength;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -3390,9 +3403,339 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
 
   dateFeeWidth = <%% 180, 160, 130, 110, 20 %%>;
 
+  textMargin = <%% 16, 16, 14, 12, 1 %%>;
+  maximumTextWidth = <%% 1000, 1000, 800, 600, 100 %%>;
+
   this.whiteMargin = (desktop ? margin : 0);
 
+  minimumLength = 3;
+
   basePan = {};
+
+  rowMaker = function (index, date = new Date(1800, 0, 1), fee = 0, addressFrom = '', addressTo = '') {
+    let dom;
+    let emptyBoo;
+
+    if (date.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+      emptyBoo = true;
+    } else {
+      emptyBoo = false;
+    }
+
+    dom = createNode({
+      mother: basePan,
+      class: [ travelBlockClassName ],
+      attribute: {
+        index: String(index),
+        empty: emptyBoo ? "true" : "false",
+      },
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: "start",
+        alignItems: "center",
+        flexDirection: "row",
+        width: withOut(0, ea),
+        height: String(panTitleBoxHeight) + ea,
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+        marginBottom: String(itemBetween) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            borderRight: "1px solid " + colorChip.gray3,
+            width: String(panTitleBoxHeight) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            boxSizing: "border-box",
+          },
+          child: {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(textMargin * 2, ea),
+              overflow: "scroll",
+            },
+            child: {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                text: String(index),
+                style: {
+                  display: "block",
+                  position: "relative",
+                  top: String(contentsTextTop) + ea,
+                  fontSize: String(contentsValueWordingSize) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.black,
+                }
+              }
+            }
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            borderRight: "1px solid " + colorChip.gray3,
+            width: String(dateFeeWidth) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            boxSizing: "border-box",
+          },
+          child: {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(textMargin * 2, ea),
+              overflow: "scroll",
+            },
+            child: {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                text: dateConvert(date),
+                style: {
+                  display: "block",
+                  position: "relative",
+                  top: String(contentsTextTop) + ea,
+                  fontSize: String(contentsValueWordingSize) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.black,
+                }
+              }
+            }
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            borderRight: "1px solid " + colorChip.gray3,
+            width: String(dateFeeWidth) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            boxSizing: "border-box",
+          },
+          child: {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(textMargin * 2, ea),
+              overflow: "scroll",
+            },
+            child: {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                text: fee === 0 ? '-' : (autoComma(fee) + '원'),
+                style: {
+                  display: "block",
+                  position: "relative",
+                  top: String(contentsTextTop) + ea,
+                  fontSize: String(contentsValueWordingSize) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.black,      
+                }
+              }
+            }
+          }
+        },
+      ],
+    });
+
+    if (addressFrom.trim() !== '-' && addressFrom.trim() !== '') {
+      createNode({
+        mother: dom,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          borderRight: "1px solid " + colorChip.gray3,
+          width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          boxSizing: "border-box",
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(textMargin * 2, ea),
+            overflow: "scroll",
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: String(maximumTextWidth) + ea,
+              justifyContent: "start",
+              alignItems: "center",
+            },
+            child: {
+              text: addressFrom,
+              style: {
+                display: "block",
+                position: "relative",
+                top: String(contentsTextTop) + ea,
+                fontSize: String(contentsValueWordingSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,      
+              }
+            }
+          }
+        }
+      });
+    } else {
+      createNode({
+        mother: dom,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          borderRight: "1px solid " + colorChip.gray3,
+          width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          boxSizing: "border-box",
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(textMargin * 2, ea),
+            overflow: "scroll",
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              text: '-',
+              style: {
+                display: "block",
+                position: "relative",
+                top: String(contentsTextTop) + ea,
+                fontSize: String(contentsValueWordingSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,      
+              }
+            }
+          }
+        }
+      });
+    }
+
+    if (addressTo.trim() !== '-' && addressTo.trim() !== '') {
+      createNode({
+        mother: dom,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(textMargin * 2, ea),
+            overflow: "scroll",
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: String(maximumTextWidth) + ea,
+              justifyContent: "start",
+              alignItems: "center",
+            },
+            child: {
+              text: addressTo,
+              style: {
+                display: "block",
+                position: "relative",
+                top: String(contentsTextTop) + ea,
+                fontSize: String(contentsValueWordingSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,      
+              }
+            }
+          }
+        }
+      });
+    } else {
+      createNode({
+        mother: dom,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(textMargin * 2, ea),
+            overflow: "scroll",
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              text: '-',
+              style: {
+                display: "block",
+                position: "relative",
+                top: String(contentsTextTop) + ea,
+                fontSize: String(contentsValueWordingSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,      
+              }
+            }
+          }
+        }
+      });
+    }
+    
+    return dom;
+  }
 
   travelAddEvent = async function (e) {
     try {
@@ -3406,8 +3749,10 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
       let fee;
       let thisProposal;
       let offlineCase;
-      let won;
       let dom;
+      let blocks;
+      let lastIndex;
+      let indexArr;
 
       thisProposal = instance.project.proposal.detail.find((obj) => { return obj.desid === instance.designer.desid });
       fee = 0;
@@ -3417,101 +3762,14 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
           fee = offlineCase.distance.amount;
         }
       }
-      won = autoComma(fee) + '원';
 
-      dom = createNode({
-        mother: basePan,
-        style: {
-          display: "flex",
-          position: "relative",
-          justifyContent: "start",
-          alignItems: "center",
-          flexDirection: "row",
-          width: withOut(0, ea),
-          height: String(panTitleBoxHeight) + ea,
-          background: colorChip.white,
-          borderRadius: String(5) + "px",
-          boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-          marginBottom: String(itemBetween) + ea,
-        },
-        children: [
-          {
-            text: String(1),
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              top: String(contentsTextTop) + ea,
-              fontSize: String(contentsValueWordingSize) + ea,
-              fontWeight: String(400),
-              color: colorChip.black,
-              borderRight: "1px solid " + colorChip.gray3,
-              width: String(panTitleBoxHeight) + ea,
-              justifyContent: "center",
-              textAlign: "center",
-            }
-          },
-          {
-            text: dateToString(date),
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              top: String(contentsTextTop) + ea,
-              fontSize: String(contentsValueWordingSize) + ea,
-              fontWeight: String(400),
-              color: colorChip.black,
-              borderRight: "1px solid " + colorChip.gray3,
-              width: String(dateFeeWidth) + ea,
-              justifyContent: "center",
-              textAlign: "center",
-            }
-          },
-          {
-            text: won,
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              top: String(contentsTextTop) + ea,
-              fontSize: String(contentsValueWordingSize) + ea,
-              fontWeight: String(400),
-              color: colorChip.black,
-              borderRight: "1px solid " + colorChip.gray3,
-              width: String(dateFeeWidth) + ea,
-              justifyContent: "center",
-              textAlign: "center",
-            }
-          },
-          {
-            text: address.from,
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              top: String(contentsTextTop) + ea,
-              fontSize: String(contentsValueWordingSize) + ea,
-              fontWeight: String(400),
-              color: colorChip.black,
-              borderRight: "1px solid " + colorChip.gray3,
-              width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
-              justifyContent: "center",
-              textAlign: "center",
-            }
-          },
-          {
-            text: address.to,
-            style: {
-              display: "inline-flex",
-              position: "relative",
-              top: String(contentsTextTop) + ea,
-              fontSize: String(contentsValueWordingSize) + ea,
-              fontWeight: String(400),
-              color: colorChip.black,
-              width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
-              justifyContent: "center",
-              textAlign: "center",
-            }
-          },
-        ],
-      })
+      blocks = [ ...document.querySelectorAll('.' + travelBlockClassName) ];
+      indexArr = blocks.map((dom) => { return Number(dom.getAttribute("index")); });
+      indexArr.sort((a, b) => {
+        return b - a;
+      });
 
+      dom = rowMaker(indexArr[0] + 1, date, fee, address.from, address.to);
       basePan.insertBefore(dom, basePan.children[basePan.children.length - 2]);
 
     } catch (e) {
@@ -3642,176 +3900,211 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
         },
         children: [
           {
-            text: "순번",
             style: {
               display: "inline-flex",
               position: "relative",
-              top: String(contentsTextTop) + ea,
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(800),
-              color: colorChip.darkDarkShadow,
               borderRight: "1px solid " + colorChip.gray3,
               width: String(panTitleBoxHeight) + ea,
               justifyContent: "center",
+              alignItems: "center",
               textAlign: "center",
+              boxSizing: "border-box",
+            },
+            child: {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0 * 2, ea),
+                overflow: "scroll",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: "0",
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    top: String(contentsTextTop) + ea,
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(800),
+                    color: colorChip.darkDarkShadow,
+                  }
+                }
+              }
             }
           },
           {
-            text: "출장일",
             style: {
               display: "inline-flex",
               position: "relative",
-              top: String(contentsTextTop) + ea,
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(800),
-              color: colorChip.white,
               borderRight: "1px solid " + colorChip.gray3,
               width: String(dateFeeWidth) + ea,
               justifyContent: "center",
+              alignItems: "center",
               textAlign: "center",
+              boxSizing: "border-box",
+            },
+            child: {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(textMargin * 2, ea),
+                overflow: "scroll",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: "출장일",
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    top: String(contentsTextTop) + ea,
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(800),
+                    color: colorChip.white,
+                  }
+                }
+              }
             }
           },
           {
-            text: "출장비",
             style: {
               display: "inline-flex",
               position: "relative",
-              top: String(contentsTextTop) + ea,
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(800),
-              color: colorChip.white,
               borderRight: "1px solid " + colorChip.gray3,
               width: String(dateFeeWidth) + ea,
               justifyContent: "center",
+              alignItems: "center",
               textAlign: "center",
+              boxSizing: "border-box",
+            },
+            child: {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(textMargin * 2, ea),
+                overflow: "scroll",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: "출장비",
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    top: String(contentsTextTop) + ea,
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(800),
+                    color: colorChip.white,      
+                  }
+                }
+              }
             }
           },
           {
-            text: "출발 장소",
             style: {
               display: "inline-flex",
               position: "relative",
-              top: String(contentsTextTop) + ea,
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(800),
-              color: colorChip.white,
               borderRight: "1px solid " + colorChip.gray3,
               width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
               justifyContent: "center",
+              alignItems: "center",
               textAlign: "center",
+              boxSizing: "border-box",
+            },
+            child: {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(textMargin * 2, ea),
+                overflow: "scroll",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: "출발 장소",
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    top: String(contentsTextTop) + ea,
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(800),
+                    color: colorChip.white,      
+                  }
+                }
+              }
             }
           },
           {
-            text: "도착 장소",
             style: {
               display: "inline-flex",
               position: "relative",
-              top: String(contentsTextTop) + ea,
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(800),
-              color: colorChip.white,
               width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
               justifyContent: "center",
+              alignItems: "center",
               textAlign: "center",
+            },
+            child: {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(textMargin * 2, ea),
+                overflow: "scroll",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: "도착 장소",
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    top: String(contentsTextTop) + ea,
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(800),
+                    color: colorChip.white,      
+                  }
+                }
+              }
             }
           },
         ],
       },
-      ...variableArray(3).map((index) => {
-        return {
-          style: {
-            display: "flex",
-            position: "relative",
-            justifyContent: "start",
-            alignItems: "center",
-            flexDirection: "row",
-            width: withOut(0, ea),
-            height: String(panTitleBoxHeight) + ea,
-            background: colorChip.white,
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-            marginBottom: String(itemBetween) + ea,
-          },
-          children: [
-            {
-              text: String(index + 1),
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                top: String(contentsTextTop) + ea,
-                fontSize: String(contentsValueWordingSize) + ea,
-                fontWeight: String(400),
-                color: colorChip.black,
-                borderRight: "1px solid " + colorChip.gray3,
-                width: String(panTitleBoxHeight) + ea,
-                justifyContent: "center",
-                textAlign: "center",
-              }
-            },
-            {
-              text: "-",
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                top: String(contentsTextTop) + ea,
-                fontSize: String(contentsValueWordingSize) + ea,
-                fontWeight: String(400),
-                color: colorChip.black,
-                borderRight: "1px solid " + colorChip.gray3,
-                width: String(dateFeeWidth) + ea,
-                justifyContent: "center",
-                textAlign: "center",
-              }
-            },
-            {
-              text: "-",
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                top: String(contentsTextTop) + ea,
-                fontSize: String(contentsValueWordingSize) + ea,
-                fontWeight: String(400),
-                color: colorChip.black,
-                borderRight: "1px solid " + colorChip.gray3,
-                width: String(dateFeeWidth) + ea,
-                justifyContent: "center",
-                textAlign: "center",
-              }
-            },
-            {
-              text: "-",
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                top: String(contentsTextTop) + ea,
-                fontSize: String(contentsValueWordingSize) + ea,
-                fontWeight: String(400),
-                color: colorChip.black,
-                borderRight: "1px solid " + colorChip.gray3,
-                width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
-                justifyContent: "center",
-                textAlign: "center",
-              }
-            },
-            {
-              text: "-",
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                top: String(contentsTextTop) + ea,
-                fontSize: String(contentsValueWordingSize) + ea,
-                fontWeight: String(400),
-                color: colorChip.black,
-                width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
-                justifyContent: "center",
-                textAlign: "center",
-              }
-            },
-          ],
-        }
-      })
     ] 
   });
+
+  for (let i = 0; i < minimumLength; i++) {
+    rowMaker(i + 1);
+  }
 
   createNode({
     mother: basePan,
