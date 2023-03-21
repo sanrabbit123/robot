@@ -186,7 +186,6 @@ Alien.prototype.wssLaunching = async function () {
     const useragent = require("express-useragent");
     const WebSocket = require("ws");
     const url = require("url");
-    const members = require(`${process.cwd()}/apps/memberObj.js`);
     const port = 5000;
     let generalSocket;
     let sockets, server;
