@@ -3274,6 +3274,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
   let buttonTongHeight;
   let buttonTongPaddingTop;
   let buttonPadding;
+  let travelAddEvent;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -3390,6 +3391,133 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
   dateFeeWidth = <%% 180, 160, 130, 110, 20 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
+
+  basePan = {};
+
+  travelAddEvent = async function (e) {
+    try {
+      const client = instance.client;
+      const designer = instance.designer;
+      const address = {
+        from: designer.information.address[0],
+        to: client.requests[instance.requestNumber].request.space.address
+      }
+      const date = new Date();
+      let fee;
+      let thisProposal;
+      let offlineCase;
+      let won;
+      let dom;
+
+      thisProposal = instance.project.proposal.detail.find((obj) => { return obj.desid === instance.designer.desid });
+      fee = 0;
+      if (thisProposal !== undefined) {
+        offlineCase = thisProposal.fee.find((o) => { return o.method === "offline" });
+        if (offlineCase !== undefined) {
+          fee = offlineCase.distance.amount;
+        }
+      }
+      won = autoComma(fee) + '원';
+
+      dom = createNode({
+        mother: basePan,
+        style: {
+          display: "flex",
+          position: "relative",
+          justifyContent: "start",
+          alignItems: "center",
+          flexDirection: "row",
+          width: withOut(0, ea),
+          height: String(panTitleBoxHeight) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+          marginBottom: String(itemBetween) + ea,
+        },
+        children: [
+          {
+            text: String(1),
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              top: String(contentsTextTop) + ea,
+              fontSize: String(contentsValueWordingSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              borderRight: "1px solid " + colorChip.gray3,
+              width: String(panTitleBoxHeight) + ea,
+              justifyContent: "center",
+              textAlign: "center",
+            }
+          },
+          {
+            text: dateToString(date),
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              top: String(contentsTextTop) + ea,
+              fontSize: String(contentsValueWordingSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              borderRight: "1px solid " + colorChip.gray3,
+              width: String(dateFeeWidth) + ea,
+              justifyContent: "center",
+              textAlign: "center",
+            }
+          },
+          {
+            text: won,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              top: String(contentsTextTop) + ea,
+              fontSize: String(contentsValueWordingSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              borderRight: "1px solid " + colorChip.gray3,
+              width: String(dateFeeWidth) + ea,
+              justifyContent: "center",
+              textAlign: "center",
+            }
+          },
+          {
+            text: address.from,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              top: String(contentsTextTop) + ea,
+              fontSize: String(contentsValueWordingSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              borderRight: "1px solid " + colorChip.gray3,
+              width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+              justifyContent: "center",
+              textAlign: "center",
+            }
+          },
+          {
+            text: address.to,
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              top: String(contentsTextTop) + ea,
+              fontSize: String(contentsValueWordingSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+              justifyContent: "center",
+              textAlign: "center",
+            }
+          },
+        ],
+      })
+
+      basePan.insertBefore(dom, basePan.children[basePan.children.length - 2]);
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -3685,7 +3813,6 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
     ] 
   });
 
-
   createNode({
     mother: basePan,
     style: {
@@ -3699,6 +3826,9 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
       paddingTop: String(buttonTongPaddingTop) + ea,
     },
     child: {
+      event: {
+        click: travelAddEvent,
+      },
       style: {
         display: "inline-flex",
         position: "relative",
