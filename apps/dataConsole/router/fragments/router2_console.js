@@ -4658,8 +4658,9 @@ DataRouter.prototype.rou_post_mysqlQuery = function () {
       if (typeof req.body.query !== "string") {
         throw new Error("invaild post");
       }
+      const port = 3000;
       const query = req.body.query.replace(/__equal__/gi, '=');
-      const response = await requestSystem("https://" + address.officeinfo.ghost.host + ":8080/mysqlQuery", { query }, { headers: { "Content-Type": "application/json" } });
+      const response = await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(port) + "/mysqlQuery", { query }, { headers: { "Content-Type": "application/json" } });
       if (typeof response.data !== "object") {
         throw new Error("request error");
       }
