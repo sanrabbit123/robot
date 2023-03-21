@@ -1920,6 +1920,74 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_projectDesignerDownloadLog = function () {
+  const instance = this;
+  const back = this.back;
+  const { errorLog, equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/projectDesignerDownloadLog" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.mode === undefined || req.body.desid === undefined || req.body.proid === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const collection = "projectDesignerDownload";
+      const { mode, desid, proid } = req.body;
+      let resultObj;
+      let rows;
+      let defaultObj;
+      let file;
+      let thisObj;
+
+      if (mode === "push") {
+        file = req.body.file;
+        resultObj = { message: "done" };
+        defaultObj = {
+          proid,
+          desid,
+          download: []
+        };
+        defaultObj.download.push({
+          file,
+          date: new Date(),
+        });
+  
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        if (rows.length === 0) {
+          thisObj = equalJson(JSON.stringify(defaultObj));
+          await back.mongoCreate(collection, thisObj, { selfMongo });
+        } else {
+          thisObj = equalJson(JSON.stringify(rows[0]));
+          thisObj.download.push({
+            file,
+            date: new Date(),
+          })
+          await back.mongoUpdate(collection, [ { proid }, { download: thisObj.download } ], { selfMongo });
+        }
+      }
+
+
+
+      res.send(JSON.stringify(resultObj));
+
+    } catch (e) {
+      errorLog("Second Ghost 서버 문제 생김 (rou_post_projectDesignerDownloadLog): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_voice = function () {
   const instance = this;
   const address = this.address;
@@ -2679,7 +2747,6 @@ SecondRouter.prototype.rou_post_slackForm = function () {
   }
   return obj;
 }
-
 
 //ROUTING ----------------------------------------------------------------------
 
