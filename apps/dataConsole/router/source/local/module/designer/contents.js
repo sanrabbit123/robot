@@ -1639,21 +1639,20 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
           let tempArr;
           if (value === "미정") {
             updateQuery[position] = new Date(3800, 0, 1);
-            thisCase["webPublish"].style.color = valueDom.style.color = colorChip.red;
+            valueDom.style.color = colorChip.red;
           } else if (value === "해당 없음") {
             updateQuery[position] = new Date(1800, 0, 1);
-            thisCase["webPublish"].style.color = valueDom.style.color = colorChip.gray5;
+            valueDom.style.color = colorChip.gray5;
           } else {
             tempArr = value.split('-');
             updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
             if (updateQuery[position].valueOf() <= (new Date()).valueOf()) {
-              thisCase["webPublish"].style.color = valueDom.style.color = colorChip.green;
+              valueDom.style.color = colorChip.green;
             } else {
-              thisCase["webPublish"].style.color = valueDom.style.color = colorChip.black;
+              valueDom.style.color = colorChip.black;
             }
           }
           await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
-          thisCase["webPublish"].textContent = value;
           valueDom.textContent = value;
           for (let dom of removeTargets) {
             mother.removeChild(dom);
