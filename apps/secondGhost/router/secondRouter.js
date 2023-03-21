@@ -1949,14 +1949,15 @@ SecondRouter.prototype.rou_post_projectDesignerDownloadLog = function () {
       let file;
       let thisObj;
 
+      defaultObj = {
+        proid,
+        desid,
+        download: []
+      };
+
       if (mode === "push") {
         file = req.body.file;
         resultObj = { message: "done" };
-        defaultObj = {
-          proid,
-          desid,
-          download: []
-        };
         defaultObj.download.push({
           file,
           date: new Date(),
@@ -1974,9 +1975,16 @@ SecondRouter.prototype.rou_post_projectDesignerDownloadLog = function () {
           })
           await back.mongoUpdate(collection, [ { proid }, { download: thisObj.download } ], { selfMongo });
         }
+      } else if (mode === "get") {
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        if (rows.length === 0) {
+          thisObj = equalJson(JSON.stringify(defaultObj));
+          await back.mongoCreate(collection, thisObj, { selfMongo });
+        } else {
+          thisObj = equalJson(JSON.stringify(rows[0]));
+        }
+        resultObj = thisObj;
       }
-
-
 
       res.send(JSON.stringify(resultObj));
 
