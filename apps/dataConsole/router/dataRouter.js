@@ -8601,10 +8601,8 @@ DataRouter.prototype.rou_post_salesClient = function () {
 
       }
 
-
       res.send(JSON.stringify(resultObj));
 
-      
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_salesClient): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
