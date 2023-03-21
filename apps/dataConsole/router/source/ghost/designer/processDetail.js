@@ -3176,7 +3176,556 @@ ProcessDetailJs.prototype.insertControlBox = function () {
     })
   }
 
-  
+}
+
+ProcessDetailJs.prototype.insertTravelBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { client, ea, baseTong, media, project, contentsRawInfo, totalContents, requestNumber } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const manyBig = media[0];
+  const generalSmall = !manyBig;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, variableArray } = GeneralJs;
+  const blank = "&nbsp;&nbsp;&nbsp;";
+  const mainTitle = "출장 내역";
+  let paddingTop;
+  let block;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let titleFontSize;
+  let num, num2;
+  let numberRight;
+  let titleTop, titleTopNumber;
+  let titleBottom;
+  let index;
+  let mobileTitleLeft, mobileTitleTop;
+  let secondBlockWidth, secondBlockMargin;
+  let tong;
+  let contentsWordingSize;
+  let contentsBottom;
+  let whiteBottomMargin;
+  let contentsTitleMarginTop, contentsMarginTop;
+  let contentsPaddingLeft;
+  let arrowWidth;
+  let arrowTop;
+  let arrorLeft;
+  let bigNumberSize;
+  let bigNumberBetween;
+  let bigNumberMargin;
+  let bigNumberBetweenMargin;
+  let matrix;
+  let firstWidth, secondWidth, secondMarginRight;
+  let contentsAreaPaddingTop;
+  let zeroWidth, zeroMarginRight;
+  let checkBoxWidth, checkBoxTop;
+  let arrowBoxWidth, arrowBoxTop;
+  let contentsMarginBottom0, contentsMarginBottom1;
+  let mobilePaddingLeft;
+  let mobileContentsWordingSize;
+  let wordings;
+  let lineTop, linePadding;
+  let checkBoxAreaWidth;
+  let mobileInnerPaddingBottom;
+  let panMother;
+  let panMotherInnerPadding;
+  let panBetween;
+  let basePan;
+  let contentsTextTop;
+  let panTitleBoxHeight;
+  let uploadCircleWidth;
+  let uploadCirclePadding;
+  let uploadIconWidth;
+  let uploadIconTop;
+  let panMotherMinHeight;
+  let contentsPan;
+  let contentsPanPaddingTop;
+  let contentsPanPaddingBottom;
+  let panTitleBoxWidth;
+  let itemBetween;
+  let statusPadding;
+  let statusOpacity;
+  let subButtonPaddingRight;
+  let subButtonSize, subButtonWeight;
+  let subButtonVisualTop;
+  let subButtonPaddingBottom;
+  let subButtonPaddingTop;
+  let subButtonPaddingLeft;
+  let buttonBetween;
+  let plusIconTop, plusIconWidth;
+  let subButtonsBasePan;
+  let subButtonsBetween;
+  let subButtonsVisualTop;
+  let linkIconWidth;
+  let linkIconTop;
+  let panMotherBetween;
+  let contents;
+  let buttonSize, buttonWeight, buttonTextTop;
+  let buttonHeight;
+  let paymentByCard;
+  let downloadOriginal;
+  let viewPortfolio;
+  let viewReview;
+  let designerRawContentsUpload;
+  let designerSampleDownload;
+  let designerRawContentsView;
+  let dateFeeWidth;
+  let contentsValueWordingSize;
+  let buttonTongHeight;
+  let buttonTongPaddingTop;
+  let buttonPadding;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+
+  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
+  contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
+
+  mobileInnerPaddingBottom = 0;
+
+  secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
+  secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
+
+  contentsWordingSize = <%% 15, 14, 13, 12, 2.9 %%>;
+  contentsValueWordingSize = <%% 14, 14, 12, 11, 2.7 %%>;
+  contentsTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.1 %%>;
+
+  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+
+  contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
+  contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
+  contentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
+  arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
+  arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
+  arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
+
+  bigNumberSize = <%% 37, 37, 37, 37, 5 %%>;
+  bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
+  bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
+  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
+
+  zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
+  zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
+  secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
+
+  checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
+  arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
+  checkBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
+  arrowBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
+
+  contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
+  contentsMarginBottom1 = <%% 32, 32, 30, 28, 0 %%>;
+
+  lineTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 9 : 7), 10 %%>;
+  linePadding = <%% 12, 12, 12, 10, 12 %%>;
+
+  mobilePaddingLeft = 0;
+
+  mobileContentsWordingSize = 3;
+
+  checkBoxAreaWidth = <%% 16, 16, 16, 16, 3 %%>;
+
+  panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
+  panBetween = <%% 8, 8, 8, 8, 1 %%>;
+  panTitleBoxWidth = <%% 124, 120, 114, 108, 21 %%>;
+  panTitleBoxHeight = <%% 52, 48, 40, 35, 8.2 %%>;
+
+  uploadCircleWidth = <%% 28, 28, 28, 24, 6 %%>;
+  uploadCirclePadding = <%% 16, 16, 16, 12, 4 %%>;
+  uploadIconWidth = <%% 13, 13, 13, 12, 3 %%>;
+  uploadIconTop = <%% 0, 0, 0, 0, 0 %%>;
+
+  linkIconWidth = <%% 15.5, 15.5, 15.5, 14, 3.4 %%>;
+  linkIconTop = <%% 0, 0, 0, 0, 0 %%>;
+
+  plusIconTop = <%% 0, 0, 0, 0, 0 %%>;
+  plusIconWidth = <%% 14, 14, 13, 12, 3 %%>;
+
+  panMotherMinHeight = <%% 500, 480, 420, 400, 54 %%>;
+
+  contentsPanPaddingTop = <%% 18, 18, 16, 12, 3 %%>;
+  contentsPanPaddingBottom = <%% 60, 60, 60, 54, 12 %%>;
+  itemBetween = <%% 7, 7, 7, 6, 1.5 %%>;
+
+  statusPadding = <%% 21, 21, 18, 18, 4 %%>;
+  statusOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
+
+  subButtonPaddingRight = <%% 18, 18, 16, 12, 1.6 %%>;
+  subButtonSize = <%% 12, 12, 11, 10, 2.4 %%>;
+  subButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
+  subButtonVisualTop = <%% 3, 3, 2, 1, 0.3 %%>;
+  subButtonPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 5 : 4), (isIphone() ? 1.2 : 1.4) %%>;
+  subButtonPaddingTop = <%% (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 3 : 5), (isIphone() ? 1.2 : 1.2) %%>;
+  subButtonPaddingLeft = <%% 11, 11, 10, 9, 2 %%>;
+  subButtonsVisualTop = <%% 2, 3, 3, 1, 0 %%>;
+
+  subButtonsBetween = <%% 18, 18, 16, 14, 3 %%>;
+
+  panMotherBetween = <%% 8, 7, 6, 5, 1 %%>;
+
+  buttonTongHeight = <%% 42, 42, 32, 30, 14 %%>;
+  buttonTongPaddingTop = <%% 11, 11, 8, 6, 2 %%>;
+
+  buttonHeight = <%% 36, 36, 30, 28, 7 %%>;
+  buttonPadding = <%% 22, 18, 16, 14, 4 %%>;
+  buttonBetween = <%% 4, 4, 3, 2, 0.8 %%>;
+  buttonSize = <%% 14, 14, 13, 12, 2.7 %%>;
+  buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.1 %%>;
+
+  dateFeeWidth = <%% 180, 160, 130, 110, 20 %%>;
+
+  this.whiteMargin = (desktop ? margin : 0);
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    attribute: { toggle: "on" },
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: desktop ? colorChip.white : "",
+      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+      paddingBottom: desktop ? String(margin) + ea : "",
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+        height: String(100) + '%',
+        marginLeft: String(desktop ? margin : 0) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  block = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: mobile ? "absolute" : "relative",
+          left: desktop ? "" : String(mobileTitleLeft) + ea,
+          top: desktop ? "" : String(mobileTitleTop) + ea,
+          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+          marginBottom: String(titleBottom) + ea,
+          zIndex: mobile ? String(1) : "",
+        },
+        children: [
+          {
+            text: mainTitle,
+            style: {
+              position: "relative",
+              display: "inline-block",
+              top: String(titleTopNumber) + ea,
+              fontSize: String(titleFontSize) + ea,
+              fontWeight: String(600),
+              background: desktop ? colorChip.white : colorChip.gray1,
+              paddingRight: String(numberRight) + ea,
+              color: colorChip.black,
+            }
+          },
+        ]
+      },
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
+          borderRadius: mobile ? String(1) + ea : "",
+          overflow: "hidden",
+          marginBottom: String(0) + ea,
+          marginTop: desktop ? "" : String(14) + ea,
+          paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingBottom: desktop ? "" : String(mobileInnerPaddingBottom) + ea,
+        }
+      },
+    ]
+  });
+  tong = block.lastChild;
+
+  panMother = createNode({
+    mother: tong,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      position: "relative",
+      borderRadius: String(5) + "px",
+      background: desktop ? colorChip.gray3 : colorChip.gray1,
+      width: withOut(panMotherInnerPadding * 2, ea),
+      padding: String(panMotherInnerPadding) + ea,
+      marginRight: desktop ? String(panMotherBetween) + ea : "",
+      marginBottom: desktop ? "" : String(panMotherBetween) + ea,
+      verticalAlign: "top",
+    }
+  });
+
+  basePan = createNode({
+    mother: panMother,
+    style: {
+      display: "inline-block",
+      verticalAlign: "top",
+      position: "relative",
+      width: withOut(contentsPanPaddingTop * 2, ea),
+      background: desktop ? colorChip.gray1 : colorChip.gray3,
+      borderRadius: String(5) + "px",
+      transition: "all 0.5s ease",
+      "min-height": String(panTitleBoxHeight * 5) + ea,
+      padding: String(contentsPanPaddingTop) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "flex",
+          position: "relative",
+          justifyContent: "start",
+          alignItems: "center",
+          flexDirection: "row",
+          width: withOut(0, ea),
+          height: String(panTitleBoxHeight) + ea,
+          background: colorChip.darkDarkShadow,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+          marginBottom: String(itemBetween) + ea,
+        },
+        children: [
+          {
+            text: "순번",
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              top: String(contentsTextTop) + ea,
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(800),
+              color: colorChip.darkDarkShadow,
+              borderRight: "1px solid " + colorChip.gray3,
+              width: String(panTitleBoxHeight) + ea,
+              justifyContent: "center",
+              textAlign: "center",
+            }
+          },
+          {
+            text: "출장일",
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              top: String(contentsTextTop) + ea,
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(800),
+              color: colorChip.white,
+              borderRight: "1px solid " + colorChip.gray3,
+              width: String(dateFeeWidth) + ea,
+              justifyContent: "center",
+              textAlign: "center",
+            }
+          },
+          {
+            text: "출장비",
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              top: String(contentsTextTop) + ea,
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(800),
+              color: colorChip.white,
+              borderRight: "1px solid " + colorChip.gray3,
+              width: String(dateFeeWidth) + ea,
+              justifyContent: "center",
+              textAlign: "center",
+            }
+          },
+          {
+            text: "출발 장소",
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              top: String(contentsTextTop) + ea,
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(800),
+              color: colorChip.white,
+              borderRight: "1px solid " + colorChip.gray3,
+              width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+              justifyContent: "center",
+              textAlign: "center",
+            }
+          },
+          {
+            text: "도착 장소",
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              top: String(contentsTextTop) + ea,
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(800),
+              color: colorChip.white,
+              width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+              justifyContent: "center",
+              textAlign: "center",
+            }
+          },
+        ],
+      },
+      ...variableArray(3).map((index) => {
+        return {
+          style: {
+            display: "flex",
+            position: "relative",
+            justifyContent: "start",
+            alignItems: "center",
+            flexDirection: "row",
+            width: withOut(0, ea),
+            height: String(panTitleBoxHeight) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+            marginBottom: String(itemBetween) + ea,
+          },
+          children: [
+            {
+              text: String(index + 1),
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                top: String(contentsTextTop) + ea,
+                fontSize: String(contentsValueWordingSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                borderRight: "1px solid " + colorChip.gray3,
+                width: String(panTitleBoxHeight) + ea,
+                justifyContent: "center",
+                textAlign: "center",
+              }
+            },
+            {
+              text: "-",
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                top: String(contentsTextTop) + ea,
+                fontSize: String(contentsValueWordingSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                borderRight: "1px solid " + colorChip.gray3,
+                width: String(dateFeeWidth) + ea,
+                justifyContent: "center",
+                textAlign: "center",
+              }
+            },
+            {
+              text: "-",
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                top: String(contentsTextTop) + ea,
+                fontSize: String(contentsValueWordingSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                borderRight: "1px solid " + colorChip.gray3,
+                width: String(dateFeeWidth) + ea,
+                justifyContent: "center",
+                textAlign: "center",
+              }
+            },
+            {
+              text: "-",
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                top: String(contentsTextTop) + ea,
+                fontSize: String(contentsValueWordingSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                borderRight: "1px solid " + colorChip.gray3,
+                width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+                justifyContent: "center",
+                textAlign: "center",
+              }
+            },
+            {
+              text: "-",
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                top: String(contentsTextTop) + ea,
+                fontSize: String(contentsValueWordingSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+                justifyContent: "center",
+                textAlign: "center",
+              }
+            },
+          ],
+        }
+      })
+    ] 
+  });
+
+
+  createNode({
+    mother: basePan,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(buttonTongHeight) + ea,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "end",
+      paddingTop: String(buttonTongPaddingTop) + ea,
+    },
+    child: {
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        background: colorChip.gradientGreen,
+        height: String(buttonHeight) + ea,
+        borderRadius: String(5) + "px",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingLeft: String(buttonPadding) + ea,
+        paddingRight: String(buttonPadding) + ea,
+        cursor: "pointer",
+      },
+      child: {
+        text: "출장 내역 추가",
+        style: {
+          display: "block",
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
+          color: colorChip.white,
+          position: "relative",
+          top: String(buttonTextTop) + ea,
+          cursor: "pointer",
+        }
+      }
+    }
+  })
 
 }
 
@@ -15466,6 +16015,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             instance.insertStyleBox();
             instance.insertUploadBox();
             instance.insertControlBox();
+            instance.insertTravelBox();
             instance.insertNoticeBox();
             if (getObj.green !== "deactive") {
               instance.insertGreenButtons();
@@ -15482,6 +16032,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             await instance.insertFormStatusBox();
             instance.insertUploadBox();
             instance.insertControlBox();
+            instance.insertTravelBox();
             if (mobile) {
               instance.insertBelowBox();
             } else {
@@ -15527,6 +16078,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
               await instance.insertScheduleBox();
             }
             instance.insertControlBox();
+            instance.insertTravelBox();
             if (mobile) {
               instance.insertBelowBox();
             } else {
