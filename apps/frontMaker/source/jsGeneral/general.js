@@ -717,6 +717,7 @@ GeneralJs.downloadFile = function (url, forceName = null, loadingDom = null) {
       if (xhr.status >= 200 && xhr.status < 300) {
         let fileName, fileType, blob, a, timeoutId;
         let execSearch;
+
         fileName = url.split("/")[url.split("/").length - 1];
         execSearch = /\.[^\.]+$/.exec(fileName);
         if (execSearch === null) {
@@ -732,18 +733,22 @@ GeneralJs.downloadFile = function (url, forceName = null, loadingDom = null) {
         }
         blob = new Blob([ xhr.response ], { type: fileType });
         a = document.createElement('A');
+        a.target = '_blank';
         a.download = fileName;
         a.href = URL.createObjectURL(blob);
         a.dataset.downloadurl = [ fileType, a.download, a.href ].join(':');
         a.style.display = "none";
         document.body.appendChild(a);
+        a.addEventListener("click", function (e) {
+          timeoutId = setTimeout(() => {
+            URL.revokeObjectURL(a.href);
+            document.body.removeChild(a);
+            resolve(fileName);
+            clearTimeout(timeoutId);
+          }, 500);
+        });
         a.click();
-        document.body.removeChild(a);
-        resolve(fileName);
-        timeoutId = setTimeout(function() {
-          URL.revokeObjectURL(a.href);
-          clearTimeout(timeoutId);
-        }, 1500);
+
       } else {
         reject({
           status: this.status,

@@ -2559,7 +2559,7 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
   const { ea, targetDrive, targetHref, media, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { ajaxJson, createNode, colorChip, withOut, cleanChildren, dateToString, isMac, swipePatch, blankHref, removeByClass, downloadFile, equalJson } = GeneralJs;
+  const { ajaxJson, createNode, colorChip, withOut, cleanChildren, dateToString, isMac, isIphone, swipePatch, blankHref, removeByClass, downloadFile, equalJson } = GeneralJs;
   const motherChildPhotoTongClassName = "motherChildPhotoTongClassName";
   const photoItemInitClassName = "photoItemInitClassName";
   const bigPhotoClassName = "bigPhotoClassName";
@@ -2567,6 +2567,9 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
   const preItemMotherKey = "firstPhoto";
   const preItemHex = "070a916ebdea87fae21233050e1b322eb4694980e1bced5012199be287e2e92d";
   const whiteContextmenuClassName = "whiteContextmenuClassName";
+  const fileNameClassName = "fileNameClassName";
+  const filePannelDateClassName = "filePannelDateClassName";
+  const filePannelCircleClassName = "filePannelCircleClassName";
   const linkTargetKey = [ "productLink" ];
   const emptyDate = instance.client.requests[instance.requestNumber].request.timeline;
   try {
@@ -2605,6 +2608,12 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
     let contextHeight;
     let preItemHexId;
     let fileItemList, photoItemList, linkItemList;
+    let titlePadding;
+    let titlePannelWidth, titlePannelBetween;
+    let titleMaxWidth;
+    let pannelSize, pannelTextTop;
+    let pannelCircleWidth, pannelCircleBetween, pannelCircleTop;
+    let downloadedList;
 
     itemBetween = <%% 6, 6, 5, 4, 1 %%>;
     itemTongHeight = <%% 40, 40, 36, 32, 8 %%>;
@@ -2629,6 +2638,18 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
 
     linkPhotoHeight = <%% 238, 211, 244, 195, 40 %%>;
     linkPhotoMarginBottom = <%% 0, 0, 0, 0, 0 %%>;
+
+    titlePadding = <%% 16, 16, 15, 14, 3.1 %%>;
+    titlePannelWidth = <%% 54, 54, 50, 48, 9.8 %%>;
+    titlePannelBetween = <%% 8, 8, 6, 4, 1 %%>;
+    titleMaxWidth = <%% 1000, 1000, 900, 800, 100 %%>;
+
+    pannelSize = <%% 12, 12, 11, 10, 2.5 %%>;
+    pannelTextTop = <%% (isMac() ? -1.5 : 0.5), (isMac() ? -1.5 : 0.5), (isMac() ? -1.5 : 0.5), (isMac() ? -1.5 : 0.5), -0.3 %%>;
+
+    pannelCircleWidth = <%% 6, 6, 6, 5, 1.2 %%>;
+    pannelCircleBetween = <%% 6, 6, 6, 5, 1.2 %%>;
+    pannelCircleTop = <%% (isMac() ? -1 : -0.5), (isMac() ? -1 : -0.5), (isMac() ? -1 : -0.5), (isMac() ? -1 : -0.5), (isIphone() ? -0.25 : -0.2) %%>;
 
     bigPhotoClickEvent = function (e) {
       e.preventDefault();
@@ -2795,20 +2816,18 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
       if (toggle === "off") {
 
         this.style.background = colorChip.green;
-        this.firstChild.style.color = colorChip.white;
-        if (this.firstChild.querySelector('b') !== null) {
-          this.firstChild.querySelector('b').style.color = colorChip.white;
-        }
+        this.querySelector('.' + fileNameClassName).style.color = colorChip.white;
+        this.querySelector('.' + filePannelDateClassName).style.color = colorChip.liteGreen;
+        this.querySelector('.' + filePannelCircleClassName).style.background = colorChip.liteGreen;
 
         this.setAttribute("toggle", "on");
         instance.itemList.push({ original, key, hex, exe, type });
       } else {
 
         this.style.background = desktop ? colorChip.white : colorChip.gray0;
-        this.firstChild.style.color = colorChip.black;
-        if (this.firstChild.querySelector('b') !== null) {
-          this.firstChild.querySelector('b').style.color = colorChip.deactive;
-        }
+        this.querySelector('.' + fileNameClassName).style.color = colorChip.black;
+        this.querySelector('.' + filePannelDateClassName).style.color = colorChip.deactive;
+        this.querySelector('.' + filePannelCircleClassName).style.background = instance.downloaded.map((o) => { return o.file }).includes(original.split("/")[original.split("/").length - 1]) ? colorChip.gray4 : colorChip.green;
 
         instance.itemList.splice(instance.itemList.findIndex((obj) => {
           return obj.original === original;
@@ -2832,20 +2851,18 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
       if (toggle === "off") {
 
         this.lastChild.style.background = colorChip.green;
-        this.lastChild.firstChild.style.color = colorChip.white;
-        if (this.lastChild.firstChild.querySelector('b') !== null) {
-          this.lastChild.firstChild.querySelector('b').style.color = colorChip.white;
-        }
+        this.lastChild.querySelector('.' + fileNameClassName).style.color = colorChip.white;
+        this.lastChild.querySelector('.' + filePannelDateClassName).style.color = colorChip.liteGreen;
+        this.lastChild.querySelector('.' + filePannelCircleClassName).style.background = colorChip.liteGreen;
 
         this.setAttribute("toggle", "on");
         instance.itemList.push({ original, key, hex, exe, type });
       } else {
 
         this.lastChild.style.background = desktop ? colorChip.white : colorChip.gray0;
-        this.lastChild.firstChild.style.color = colorChip.black;
-        if (this.lastChild.firstChild.querySelector('b') !== null) {
-          this.lastChild.firstChild.querySelector('b').style.color = colorChip.deactive;
-        }
+        this.lastChild.querySelector('.' + fileNameClassName).style.color = colorChip.black;
+        this.lastChild.querySelector('.' + filePannelDateClassName).style.color = colorChip.deactive;
+        this.lastChild.querySelector('.' + filePannelCircleClassName).style.background = colorChip.green;
 
         instance.itemList.splice(instance.itemList.findIndex((obj) => {
           return obj.original === original;
@@ -2960,12 +2977,22 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
             event: {
               click: async function (e) {
                 let parsedString, loading;
+                let downloadArr;
                 try {
                   if (instance.itemList.length === 0) {
                     window.alert("파일을 먼저 선택해주세요!");
                   } else {
+
+                    if (instance.itemList.length > 1 && mobile) {
+                      window.alert("모바일에서 다운로드하실 경우, 하나씩 다운로드 해주세요!");
+                      await instance.setPanBlocks();
+                      return;
+                    }
+
                     for (let { original, type, hex, exe } of instance.itemList) {
                       loading = instance.mother.whiteProgressLoading();
+                      downloadArr = original.split('/').slice(original.split('/').findIndex((str) => { return /^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(str) }) - 1)
+                      await ajaxJson({ mode: "push", desid: downloadArr[0], proid: downloadArr[1], file: downloadArr[2], who: "client" }, SECONDHOST + "/projectDesignerDownloadLog");
                       if (type === "photo") {
                         await downloadFile(original, null, loading.progress.firstChild);
                       } else {
@@ -3057,6 +3084,9 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
     linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
     linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: instance.designer.desid, proid: instance.project.proid, file } }) }, BRIDGEHOST + "/middleLinkParsing", { equal: true });
 
+    downloadedList = await ajaxJson({ mode: "get", desid: instance.designer.desid, proid: instance.project.proid }, SECONDHOST + "/projectDesignerDownloadLog", { equal: true });
+    instance.downloaded = downloadedList.download;
+
     for (let mother of mothers) {
       cleanChildren(mother);
     }
@@ -3133,9 +3163,11 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
           },
           style: {
             display: "inline-flex",
-            justifyContent: "center",
+            justifyContent: "start",
+            paddingLeft: String(titlePadding) + ea,
+            paddingRight: String(titlePadding) + ea,
             alignItems: "center",
-            width: "calc(calc(100% - " + String(itemBetween * itemDivide) + ea + ") / " + String(itemDivide) + ")",
+            width: "calc(calc(calc(100% - " + String(itemBetween * itemDivide) + ea + ") / " + String(itemDivide) + ") - " + String(titlePadding * 2) + ea + ")",
             marginRight: String(itemBetween) + ea,
             height: String(itemTongHeight) + ea,
             marginBottom: String(itemBetween) + ea,
@@ -3149,25 +3181,85 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
           },
           children: [
             {
-              id,
-              attribute: {
-                exe,
-                date: dateToString(date).split("-").slice(1).join("/"),
-              },
-              text: dateToString(date).slice(2) + "_" + name,
               style: {
                 display: "inline-block",
                 position: "relative",
-                top: String(textTop) + ea,
-                fontSize: String(textSize) + ea,
-                fontWeight: String(textWeight),
-                color: colorChip.black,
+                width: withOut(titlePannelWidth + titlePannelBetween, ea),
+                height: withOut(0, ea),
+                overflow: "hidden",
+                marginRight: String(titlePannelBetween) + ea,
               },
-              bold: {
-                fontSize: String(textSize) + ea,
-                fontWeight: String(textWeight),
-                color: colorChip.deactive,
+              child: {
+                style: {
+                  display: "inline-flex",
+                  position: "relative",
+                  width: String(titleMaxWidth) + ea,
+                  height: withOut(0, ea),
+                  justifyContent: "start",
+                  textAlign: "left",
+                  alignItems: "center",    
+                },
+                child: {
+                  id,
+                  class: [ fileNameClassName ],
+                  attribute: {
+                    exe,
+                    date: dateToString(date).split("-").slice(1).join("/"),
+                  },
+                  text: dateToString(date).slice(2) + "_" + name,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(textTop) + ea,
+                    fontSize: String(textSize) + ea,
+                    fontWeight: String(textWeight),
+                    color: colorChip.black,
+                  },
+                  bold: {
+                    fontSize: String(textSize) + ea,
+                    fontWeight: String(textWeight),
+                    color: colorChip.deactive,
+                  }
+                }
               }
+            },
+            {
+              style: {
+                display: "inline-flex",
+                position: "relative",
+                width: String(titlePannelWidth) + ea,
+                height: withOut(0, ea),
+                justifyContent: "end",
+                alignItems: "center",
+                textAlign: "right",
+              },
+              children: [
+                {
+                  class: [ filePannelDateClassName ],
+                  text: dateToString(date).split("-").slice(1).join("/"),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    top: String(pannelTextTop) + ea,
+                    fontSize: String(pannelSize) + ea,
+                    fontWeight: String(textWeight),
+                    color: colorChip.deactive,
+                  },
+                },
+                {
+                  class: [ filePannelCircleClassName ],
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    marginLeft: String(pannelCircleBetween) + ea,
+                    width: String(pannelCircleWidth) + ea,
+                    height: String(pannelCircleWidth) + ea,
+                    borderRadius: String(pannelCircleWidth) + ea,
+                    top: String(pannelCircleTop) + ea,
+                    background: instance.downloaded.map((o) => { return o.file }).includes(original.split("/")[original.split("/").length - 1]) ? colorChip.gray4 : colorChip.green,
+                  }
+                }
+              ]
             }
           ]
         });
@@ -3234,17 +3326,17 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
               }
             },
             {
-              id,
               attribute: {
-                height: String(itemTongHeight) + ea,
                 date: dateToString(date).split("-").slice(1).join("/"),
               },
               style: {
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: "start",
+                paddingLeft: String(titlePadding) + ea,
+                paddingRight: String(titlePadding) + ea,
                 alignItems: "center",
-                width: withOut(0, ea),
-                height: String(0),
+                width: withOut(titlePadding * 2, ea),
+                height: String(itemTongHeight) + ea,
                 borderBottomLeftRadius: String(5) + "px",
                 borderBottomRightRadius: String(5) + "px",
                 background: desktop ? colorChip.white : colorChip.gray0,
@@ -3253,22 +3345,88 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
                 boxShadow: "0px 1px 8px -6px " + colorChip.shadow,
                 transition: "all 0.3s ease",
               },
-              child: {
-                text: "",
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  top: String(textTop) + ea,
-                  fontSize: String(textSize) + ea,
-                  fontWeight: String(textWeight),
-                  color: colorChip.black,
+              children: [
+                {
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: withOut(titlePannelWidth + titlePannelBetween, ea),
+                    height: withOut(0, ea),
+                    overflow: "hidden",
+                    marginRight: String(titlePannelBetween) + ea,
+                  },
+                  child: {
+                    style: {
+                      display: "inline-flex",
+                      position: "relative",
+                      width: String(titleMaxWidth) + ea,
+                      height: withOut(0, ea),
+                      justifyContent: "start",
+                      textAlign: "left",
+                      alignItems: "center",    
+                    },
+                    child: {
+                      id,
+                      attribute: {
+                        date: dateToString(date).split("-").slice(1).join("/"),
+                      },
+                      class: [ fileNameClassName ],
+                      text: dateToString(date).slice(2) + "_" + name,
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        top: String(textTop) + ea,
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(textWeight),
+                        color: colorChip.black,
+                      },
+                      bold: {
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(textWeight),
+                        color: colorChip.deactive,
+                      }
+                    }
+                  }
                 },
-                bold: {
-                  fontSize: String(textSize) + ea,
-                  fontWeight: String(textWeight),
-                  color: colorChip.deactive,
+                {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    width: String(titlePannelWidth) + ea,
+                    height: withOut(0, ea),
+                    justifyContent: "end",
+                    alignItems: "center",
+                    textAlign: "right",
+                  },
+                  children: [
+                    {
+                      class: [ filePannelDateClassName ],
+                      text: dateToString(date).split("-").slice(1).join("/"),
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        top: String(pannelTextTop) + ea,
+                        fontSize: String(pannelSize) + ea,
+                        fontWeight: String(textWeight),
+                        color: colorChip.deactive,
+                      },
+                    },
+                    {
+                      class: [ filePannelCircleClassName ],
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        marginLeft: String(pannelCircleBetween) + ea,
+                        width: String(pannelCircleWidth) + ea,
+                        height: String(pannelCircleWidth) + ea,
+                        borderRadius: String(pannelCircleWidth) + ea,
+                        top: String(pannelCircleTop) + ea,
+                        background: instance.downloaded.map((o) => { return o.file }).includes(original.split("/")[original.split("/").length - 1]) ? colorChip.gray4 : colorChip.green,
+                      }
+                    }
+                  ]
                 }
-              }
+              ]
             },
             {
               style: {
@@ -3308,10 +3466,7 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
             date: dateToString(date).split("-").slice(1).join("/"),
           },
           event: {
-            click: function (e) {
-              const link = this.getAttribute("link");
-              blankHref(link);
-            },
+            click: linkItemSelectEvent,
             contextmenu: contextmenuEvent(type),
           },
           style: {
@@ -3341,9 +3496,11 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
             {
               style: {
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: "start",
+                paddingLeft: String(titlePadding) + ea,
+                paddingRight: String(titlePadding) + ea,
                 alignItems: "center",
-                width: withOut(0, ea),
+                width: withOut(titlePadding * 2, ea),
                 height: String(itemTongHeight) + ea,
                 borderBottomLeftRadius: String(5) + "px",
                 borderBottomRightRadius: String(5) + "px",
@@ -3352,22 +3509,87 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
                 overflow: "hidden",
                 boxShadow: "0px 1px 8px -6px " + colorChip.shadow,
               },
-              child: {
-                text: memo.trim() !== "" ? memo.trim() + " <b%(" + dateToString(date).split("-").slice(1).join("/") + ")%b>" : dateToString(date) + "_" + name,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  top: String(textTop) + ea,
-                  fontSize: String(textSize) + ea,
-                  fontWeight: String(textWeight),
-                  color: colorChip.black,
+              children: [
+                {
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: withOut(titlePannelWidth + titlePannelBetween, ea),
+                    height: withOut(0, ea),
+                    overflow: "hidden",
+                    marginRight: String(titlePannelBetween) + ea,
+                  },
+                  child: {
+                    style: {
+                      display: "inline-flex",
+                      position: "relative",
+                      width: String(titleMaxWidth) + ea,
+                      height: withOut(0, ea),
+                      justifyContent: "start",
+                      textAlign: "left",
+                      alignItems: "center",    
+                    },
+                    child: {
+                      attribute: {
+                        date: dateToString(date).split("-").slice(1).join("/"),
+                      },
+                      class: [ fileNameClassName ],
+                      text: memo.trim() !== "" ? memo.trim() : dateToString(date) + "_" + name,
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        top: String(textTop) + ea,
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(textWeight),
+                        color: colorChip.black,
+                      },
+                      bold: {
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(textWeight),
+                        color: colorChip.deactive,
+                      }
+                    }
+                  }
                 },
-                bold: {
-                  fontSize: String(textSize) + ea,
-                  fontWeight: String(textWeight),
-                  color: colorChip.deactive,
+                {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    width: String(titlePannelWidth) + ea,
+                    height: withOut(0, ea),
+                    justifyContent: "end",
+                    alignItems: "center",
+                    textAlign: "right",
+                  },
+                  children: [
+                    {
+                      class: [ filePannelDateClassName ],
+                      text: dateToString(date).split("-").slice(1).join("/"),
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        top: String(pannelTextTop) + ea,
+                        fontSize: String(pannelSize) + ea,
+                        fontWeight: String(textWeight),
+                        color: colorChip.deactive,
+                      },
+                    },
+                    {
+                      class: [ filePannelCircleClassName ],
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        marginLeft: String(pannelCircleBetween) + ea,
+                        width: String(pannelCircleWidth) + ea,
+                        height: String(pannelCircleWidth) + ea,
+                        borderRadius: String(pannelCircleWidth) + ea,
+                        top: String(pannelCircleTop) + ea,
+                        background: colorChip.green,
+                      }
+                    }
+                  ]
                 }
-              }
+              ],
             }
           ]
         });
@@ -3394,9 +3616,9 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
     ajaxJson({ mode: "decrypto", targets: fileItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
       for (let { string, target } of targets) {
         target = document.querySelector('#' + target);
-        if (string.trim() !== "") {
+        if (string.trim() !== "" && target !== null) {
           target.textContent = "";
-          target.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+          target.insertAdjacentHTML("beforeend", string);
         }
       }
     }).catch((err) => {
@@ -3406,12 +3628,12 @@ ProjectDetailJs.prototype.setPanBlocks = async function () {
     ajaxJson({ mode: "decrypto", targets: photoItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
       for (let { string, target } of targets) {
         target = document.querySelector('#' + target);
-        target.style.height = target.getAttribute("height");
-        target.firstChild.textContent = "";
         if (!instance.isEmptyString(string)) {
-          target.firstChild.insertAdjacentHTML("beforeend", string + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+          target.textContent = "";
+          target.insertAdjacentHTML("beforeend", string);
         } else {
-          target.firstChild.insertAdjacentHTML("beforeend", "- " + " <b style=\"color: " + colorChip.deactive + ";font-weight: " + String(textWeight) + "\">(" + target.getAttribute("date") + ")</b>");
+          target.textContent = "";
+          target.insertAdjacentHTML("beforeend", '-');
         }
       }
     }).catch((err) => {
@@ -4034,12 +4256,20 @@ ProjectDetailJs.prototype.returnButtonList = function () {
     event: function () {
       return async function (e) {
         let parsedString, loading;
+        let downloadArr;
         try {
           if (instance.itemList.length === 0) {
             window.alert("파일을 먼저 선택해주세요!");
           } else {
+            if (instance.itemList.length > 1 && mobile) {
+              window.alert("모바일에서 다운로드하실 경우, 하나씩 다운로드 해주세요!");
+              await instance.setPanBlocks();
+              return;
+            }
             for (let { original, type, hex, exe } of instance.itemList) {
               loading = instance.mother.whiteProgressLoading();
+              downloadArr = original.split('/').slice(original.split('/').findIndex((str) => { return /^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(str) }) - 1)
+              await ajaxJson({ mode: "push", desid: downloadArr[0], proid: downloadArr[1], file: downloadArr[2], who: "client" }, SECONDHOST + "/projectDesignerDownloadLog");
               if (type === "photo") {
                 await downloadFile(original, null, loading.progress.firstChild);
               } else {
@@ -5711,6 +5941,7 @@ ProjectDetailJs.prototype.launching = async function (loading) {
     this.panList = [];
     this.itemList = [];
     this.panNumbers = [];
+    this.downloaded = [];
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",

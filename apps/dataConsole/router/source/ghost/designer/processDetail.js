@@ -3611,8 +3611,8 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                     for (let { original, type, hex, exe } of instance.itemList) {
                       loading = instance.mother.whiteProgressLoading();
 
-                      downloadArr = original.split('/').slice(original.split('/').findIndex((str) => { return /^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(str) }) - 1)
-                      await ajaxJson({ mode: "push", desid: downloadArr[0], proid: downloadArr[1], file: downloadArr[2], who: "client" }, SECONDHOST + "/projectDesignerDownloadLog");
+                      // downloadArr = original.split('/').slice(original.split('/').findIndex((str) => { return /^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(str) }) - 1)
+                      // await ajaxJson({ mode: "push", desid: downloadArr[0], proid: downloadArr[1], file: downloadArr[2], who: "designer" }, SECONDHOST + "/projectDesignerDownloadLog");
 
                       if (type === "photo") {
                         await downloadFile(original, null, loading.progress.firstChild);
@@ -6812,8 +6812,8 @@ ProcessDetailJs.prototype.returnButtonList = function () {
             for (let { original, type, hex, exe } of instance.itemList) {
               loading = instance.mother.whiteProgressLoading();
 
-              downloadArr = original.split('/').slice(original.split('/').findIndex((str) => { return /^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(str) }) - 1)
-              await ajaxJson({ mode: "push", desid: downloadArr[0], proid: downloadArr[1], file: downloadArr[2], who: "client" }, SECONDHOST + "/projectDesignerDownloadLog");
+              // downloadArr = original.split('/').slice(original.split('/').findIndex((str) => { return /^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(str) }) - 1)
+              // await ajaxJson({ mode: "push", desid: downloadArr[0], proid: downloadArr[1], file: downloadArr[2], who: "designer" }, SECONDHOST + "/projectDesignerDownloadLog");
 
               if (type === "photo") {
                 await downloadFile(original, null, loading.progress.firstChild);
