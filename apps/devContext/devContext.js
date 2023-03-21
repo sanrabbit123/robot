@@ -235,8 +235,8 @@ DevContext.prototype.launching = async function () {
     // await question();
 
 
-    await findCode('SECONDHOST + "/getProjects"')
 
+    
     
     
 
