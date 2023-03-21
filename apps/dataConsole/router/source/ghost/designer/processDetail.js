@@ -15615,30 +15615,30 @@ ProcessDetailJs.prototype.launching = async function (loading) {
 
     // web socket
     socket = {};
+    wsOpenEvent = (ws) => {
+      return async function () {
+        try {
+          ws.send(JSON.stringify({
+            mode: "register",
+            to: "homeliaison",
+            data: instance.designer.desid
+          }));
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+    wsLaunching = () => {
+      let ws;
+      if (typeof socket.close === "function") {
+        socket.close();
+        socket = {};
+      }
+      ws = new WebSocket(CRONHOST.replace(/https\:\/\//, "wss://") + "/realTimeCommunication");
+      ws.addEventListener("open", wsOpenEvent(ws));
+      return ws;
+    }
     if (!document.hidden) {
-      wsOpenEvent = (ws) => {
-        return async function () {
-          try {
-            ws.send(JSON.stringify({
-              mode: "register",
-              to: "homeliaison",
-              data: instance.designer.desid
-            }));
-          } catch (e) {
-            console.log(e);
-          }
-        }
-      }
-      wsLaunching = () => {
-        let ws;
-        if (typeof socket.close === "function") {
-          socket.close();
-          socket = {};
-        }
-        ws = new WebSocket(CRONHOST.replace(/https\:\/\//, "wss://") + "/realTimeCommunication");
-        ws.addEventListener("open", wsOpenEvent(ws));
-        return ws;
-      }
       socket = wsLaunching();
     }
     document.addEventListener("visibilitychange", () => {

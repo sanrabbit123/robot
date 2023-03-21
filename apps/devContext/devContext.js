@@ -5272,9 +5272,96 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
 
+    /*
+
+    // sales update
+
+    await this.MONGOCONSOLEC.connect();
+
+    const selfMongo = this.MONGOCONSOLEC;
+
+    const sheetsId = "1EsYgzt-itSq_hWjYBkSwOgorpOWCjoe9_gmfCtBtlZ4";
+    const dateStringParsing = (str) => {
+      const [ yearRaw, monthRaw, dateRaw ] = str.split('.');
+      const thisDate = new Date(Number(yearRaw.replace(/[^0-9]/gi, '')), Number(monthRaw.replace(/[^0-9]/gi, '')) - 1, Number(dateRaw.replace(/[^0-9]/gi, '')))
+      return thisDate;
+    }
+    const idMaker = (dateObj) => {
+      return `sales_${dateToString(dateObj).replace(/\-/gi, '')}`
+    }
+    const res = await sheets.get_value_inPython(sheetsId, "default!A2:AA");
+    const collection = "dailySales";
+    let standard;
+    let cliid;
+    let possible, priority, target, lowLow;
+    let tong;
+    let tempObj;
+    let thisObj;
+
+    tong = [];
+
+    for (let arr of res) {
+      try {
+        standard = dateStringParsing(arr[0]);
+
+        if (tong.find((o) => { return o.date.valueOf() === standard.valueOf() }) === undefined) {
+          tempObj = {
+            id: idMaker(standard),
+            date: standard,
+            cliids: []
+          };
+          tong.push(tempObj)
+        }
+
+        thisObj = tong.find((o) => { return o.date.valueOf() === standard.valueOf() });
+
+        cliid = arr[4].trim();
+        if (/O/gi.test(arr[10])) {
+          possible = 1;
+        } else {
+          possible = 0;
+        }
+
+        if (/상/gi.test(arr[11])) {
+          priority = 2;
+        } else if (/중/gi.test(arr[11])) {
+          priority = 1;
+        } else {
+          priority = 0;
+        }
+
+        if (/O/gi.test(arr[12])) {
+          target = 2;
+        } else if (/애/gi.test(arr[12])) {
+          target = 1;
+        } else {
+          target = 0;
+        }
+
+        if (/O/gi.test(arr[13])) {
+          lowLow = 1;
+        } else {
+          lowLow = 0;
+        }
+      
+        thisObj.cliids.push({ cliid, possible, priority, target, lowLow });
+
+
+      } catch {}
+      
+    }
+
+    for (let json of tong) {
+      await back.mongoCreate(collection, json, { selfMongo });
+    }
+
+    console.log(tong);
     
+    await this.MONGOCONSOLEC.close();
+
+    */
+
 
 
 

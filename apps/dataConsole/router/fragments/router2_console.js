@@ -7816,4 +7816,69 @@ DataRouter.prototype.rou_post_designerSubmit = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_salesClient = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson, errorLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/salesClient" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      const collection = "dailySales";
+      const { mode } = req.body;
+      const monthAgo = 3;
+      let basicRows;
+      let pureCliids;
+      let clients, clientHistories;
+      let standard;
+      let resultObj;
+
+      standard = new Date();
+      standard.setMonth(standard.getMonth() - monthAgo);
+
+      resultObj = { message: "done" };
+
+      if (mode === "init") {
+
+        basicRows = await back.mongoRead(collection, { date: { $gte: standard } }, { selfMongo });
+        
+        pureCliids = basicRows.map((o) => {
+          return o.cliids.map((o2) => {
+            return o2.cliid;
+          })
+        }).flat();
+
+        clients = await back.getClientsByQuery({ $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
+        clientHistories = await back.mongoRead("clientHistory", { $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo });
+       
+        resultObj = {
+          clients: clients.toNormal(),
+          histories: clientHistories,
+          sales: basicRows
+        };
+
+      }
+
+
+      res.send(JSON.stringify(resultObj));
+
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_salesClient): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
 
