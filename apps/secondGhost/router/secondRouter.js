@@ -1948,6 +1948,7 @@ SecondRouter.prototype.rou_post_projectDesignerDownloadLog = function () {
       let defaultObj;
       let file;
       let thisObj;
+      let who;
 
       defaultObj = {
         proid,
@@ -1957,10 +1958,12 @@ SecondRouter.prototype.rou_post_projectDesignerDownloadLog = function () {
 
       if (mode === "push") {
         file = req.body.file;
+        who = req.body.who;
         resultObj = { message: "done" };
         defaultObj.download.push({
           file,
           date: new Date(),
+          who,
         });
   
         rows = await back.mongoRead(collection, { proid }, { selfMongo });
@@ -1972,6 +1975,7 @@ SecondRouter.prototype.rou_post_projectDesignerDownloadLog = function () {
           thisObj.download.push({
             file,
             date: new Date(),
+            who,
           })
           await back.mongoUpdate(collection, [ { proid }, { download: thisObj.download } ], { selfMongo });
         }

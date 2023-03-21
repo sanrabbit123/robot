@@ -3239,6 +3239,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     let titleMaxWidth;
     let pannelSize, pannelTextTop;
     let pannelCircleWidth, pannelCircleBetween, pannelCircleTop;
+    let downloadedList;
 
     itemBetween = <%% 6, 6, 5, 4, 1 %%>;
     itemTongHeight = <%% 40, 40, 36, 32, 8 %%>;
@@ -3452,7 +3453,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
         this.style.background = desktop ? colorChip.white : colorChip.gray0;
         this.querySelector('.' + fileNameClassName).style.color = colorChip.black;
         this.querySelector('.' + filePannelDateClassName).style.color = colorChip.deactive;
-        this.querySelector('.' + filePannelCircleClassName).style.background = colorChip.green;
+        this.querySelector('.' + filePannelCircleClassName).style.background = instance.downloaded.map((o) => { return o.file }).includes(original.split("/")[original.split("/").length - 1]) ? colorChip.gray4 : colorChip.green;
 
         instance.itemList.splice(instance.itemList.findIndex((obj) => {
           return obj.original === original;
@@ -3611,7 +3612,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                       loading = instance.mother.whiteProgressLoading();
 
                       downloadArr = original.split('/').slice(original.split('/').findIndex((str) => { return /^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(str) }) - 1)
-                      await ajaxJson({ mode: "push", desid: downloadArr[0], proid: downloadArr[1], file: downloadArr[2] }, SECONDHOST + "/projectDesignerDownloadLog");
+                      await ajaxJson({ mode: "push", desid: downloadArr[0], proid: downloadArr[1], file: downloadArr[2], who: "client" }, SECONDHOST + "/projectDesignerDownloadLog");
 
                       if (type === "photo") {
                         await downloadFile(original, null, loading.progress.firstChild);
@@ -3969,6 +3970,9 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
     linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
     linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: instance.designer.desid, proid: instance.project.proid, file } }) }, BRIDGEHOST + "/middleLinkParsing", { equal: true });
 
+    downloadedList = await ajaxJson({ mode: "get", desid: instance.designer.desid, proid: instance.project.proid }, SECONDHOST + "/projectDesignerDownloadLog", { equal: true });
+    instance.downloaded = downloadedList.download;
+
     for (let mother of mothers) {
       cleanChildren(mother);
     }
@@ -4138,7 +4142,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                     height: String(pannelCircleWidth) + ea,
                     borderRadius: String(pannelCircleWidth) + ea,
                     top: String(pannelCircleTop) + ea,
-                    background: colorChip.green,
+                    background: instance.downloaded.map((o) => { return o.file }).includes(original.split("/")[original.split("/").length - 1]) ? colorChip.gray4 : colorChip.green,
                   }
                 }
               ]
@@ -4303,7 +4307,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                         height: String(pannelCircleWidth) + ea,
                         borderRadius: String(pannelCircleWidth) + ea,
                         top: String(pannelCircleTop) + ea,
-                        background: colorChip.green,
+                        background: instance.downloaded.map((o) => { return o.file }).includes(original.split("/")[original.split("/").length - 1]) ? colorChip.gray4 : colorChip.green,
                       }
                     }
                   ]
@@ -6809,7 +6813,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
               loading = instance.mother.whiteProgressLoading();
 
               downloadArr = original.split('/').slice(original.split('/').findIndex((str) => { return /^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(str) }) - 1)
-              await ajaxJson({ mode: "push", desid: downloadArr[0], proid: downloadArr[1], file: downloadArr[2] }, SECONDHOST + "/projectDesignerDownloadLog");
+              await ajaxJson({ mode: "push", desid: downloadArr[0], proid: downloadArr[1], file: downloadArr[2], who: "client" }, SECONDHOST + "/projectDesignerDownloadLog");
 
               if (type === "photo") {
                 await downloadFile(original, null, loading.progress.firstChild);
@@ -15442,6 +15446,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     this.panList = [];
     this.itemList = [];
     this.panNumbers = [];
+    this.downloaded = [];
     this.nowUploading = false;
 
     await this.mother.ghostDesignerLaunching({
