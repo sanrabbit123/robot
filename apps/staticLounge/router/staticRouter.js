@@ -1040,6 +1040,47 @@ StaticRouter.prototype.rou_post_dataReflection = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_mysqlQuery = function () {
+  const instance = this;
+  const { errorLog, mysqlQuery } = this.mother;
+  const address = this.address;
+  let obj;
+  obj = {};
+  obj.link = [ "/mysqlQuery" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (typeof req.body.query !== "string") {
+        throw new Error("invaild post");
+      }
+      let query, response;
+      if (/;$/.test(req.body.query.trim())) {
+        query = req.body.query.trim();
+      } else {
+        query = req.body.query.trim() + ';';
+      }
+      if (!/drop/gi.test(query) && !/delete/gi.test(query)) {
+        response = await mysqlQuery(query, { local: true });
+      } else {
+        response = [];
+      }
+      res.send(JSON.stringify(response));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_mysqlQuery): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
   const instance = this;
   const { errorLog } = this.mother;
