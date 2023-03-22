@@ -47,7 +47,6 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
   let clientValueArr;
   let tableValueBlockHeight;
   let blockVisualPadding;
-  let partner;
   let wordingWidth;
   let checkBoxWidth, checkBoxMargin, checkBoxVisualTop;
   let tableMiddleWeight;

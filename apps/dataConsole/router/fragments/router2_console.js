@@ -7839,7 +7839,7 @@ DataRouter.prototype.rou_post_salesClient = function () {
       const selfCoreMongo = instance.mongo;
       const collection = "dailySales";
       const { mode } = req.body;
-      const monthAgo = 3;
+      const monthAgo = 2;
       let basicRows;
       let pureCliids;
       let clients, clientHistories;
