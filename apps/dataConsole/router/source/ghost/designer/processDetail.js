@@ -3194,10 +3194,15 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
   const feeValueClassName = "feeValueClassName";
   const fromValueClassName = "fromValueClassName";
   const toValueClassName = "toValueClassName";
+  const tempInputClassName = "tempInputClassName";
   const dateConvert = (dateObject) => {
     const res = dateToString(dateObject);
     if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(res)) {
+      if (desktop) {
       return res.trim();
+      } else {
+      return res.trim().slice(2);
+      }
     } else {
       return '-';
     }
@@ -3293,6 +3298,9 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
   let rowMaker;
   let minimumLength;
   let totalTravelUpdate;
+  let updateDateValue;
+  let calendarWidth;
+  let calendarPadding;
   
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -3378,7 +3386,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
 
   contentsPanPaddingTop = <%% 18, 18, 16, 12, 3 %%>;
   contentsPanPaddingBottom = <%% 60, 60, 60, 54, 12 %%>;
-  itemBetween = <%% 7, 7, 7, 6, 1.5 %%>;
+  itemBetween = <%% 7, 7, 7, 6, 0.5 %%>;
 
   statusPadding = <%% 21, 21, 18, 18, 4 %%>;
   statusOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
@@ -3397,7 +3405,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
   panMotherBetween = <%% 8, 7, 6, 5, 1 %%>;
 
   buttonTongHeight = <%% 42, 42, 32, 30, 14 %%>;
-  buttonTongPaddingTop = <%% 11, 11, 8, 6, 2 %%>;
+  buttonTongPaddingTop = <%% 11, 11, 8, 6, 0 %%>;
 
   buttonHeight = <%% 36, 36, 30, 28, 7 %%>;
   buttonPadding = <%% 22, 18, 16, 14, 4 %%>;
@@ -3406,16 +3414,107 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
   buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
   buttonTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.1 %%>;
 
-  dateFeeWidth = <%% 180, 160, 130, 110, 20 %%>;
+  dateFeeWidth = <%% 180, 160, 130, 110, 19 %%>;
 
-  textMargin = <%% 16, 16, 14, 12, 1 %%>;
-  maximumTextWidth = <%% 1000, 1000, 800, 600, 100 %%>;
+  textMargin = <%% 16, 16, 14, 12, 2.6 %%>;
+  maximumTextWidth = <%% 1000, 1000, 800, 600, 200 %%>;
+
+  calendarWidth = <%% 260, 260, 260, 260, 260 %%>;
+  calendarPadding = <%% 4, 4, 4, 4, 3 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
   minimumLength = 3;
 
   basePan = {};
+  totalTravelUpdate = () => {};
+
+  updateDateValue = () => {
+    return async function (e) {
+      try {
+        const mother = this.parentElement.parentElement.parentElement;
+        const base = this.parentElement;
+        const zIndex = 4;
+        const value = stringToDate(this.getAttribute("date"));
+        let cancelBack;
+        let valueInput;
+        let calendar;
+        let updateEvent;
+        let column;
+        let whereQuery, updateQuery;
+
+        cancelBack = {};
+        valueInput = {};
+
+        updateEvent = function (value) {
+          return async function (e) {
+            try {
+              const thisDate = stringToDate(value);
+              base.querySelector('.' + dateValueClassName).textContent = dateConvert(thisDate);
+              base.querySelector('.' + dateValueClassName).setAttribute("date", dateConvert(thisDate));
+              await totalTravelUpdate();
+              removeByClass(tempInputClassName);
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        }
+
+        cancelBack = createNode({
+          mother,
+          class: [ tempInputClassName ],
+          event: {
+            click: function (e) {
+              removeByClass(tempInputClassName);
+            }
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            background: "transparent",
+            zIndex: String(zIndex),
+          }
+        });
+
+        valueInput = createNode({
+          mother,
+          class: [ tempInputClassName ],
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(base.getBoundingClientRect().top - mother.getBoundingClientRect().top + this.getBoundingClientRect().height + calendarPadding) + "px",
+            left: String(this.getBoundingClientRect().left - mother.getBoundingClientRect().left + (this.getBoundingClientRect().width / 2) - (calendarWidth / 2)) + "px",
+            width: String(calendarWidth) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            zIndex: String(zIndex),
+            boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+          },
+        })
+
+        calendar = instance.mother.makeCalendar(value, async function (e) {
+          try {
+            const updateFunc = updateEvent(this.getAttribute("buttonValue"));
+            await updateFunc(e);
+          } catch (e) {
+            console.log(e);
+          }
+        });
+        valueInput.appendChild(calendar.calendarBase);
+        
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
 
   rowMaker = (index, date = new Date(1800, 0, 1), fee = 0, addressFrom = '', addressTo = '') => {
     let dom;
@@ -3479,10 +3578,13 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
                 style: {
                   display: "block",
                   position: "relative",
-                  top: String(contentsTextTop) + ea,
+                  top: String(desktop ? -1 : -0.1) + ea,
                   fontSize: String(contentsValueWordingSize) + ea,
-                  fontWeight: String(400),
-                  color: colorChip.black,
+                  fontWeight: String(600),
+                  fontFamily: "graphik",
+                  fontStyle: "italic",
+                  color: colorChip.green,
+                  cursor: "pointer",
                 }
               }
             }
@@ -3510,20 +3612,28 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
               style: {
                 display: "flex",
                 position: "relative",
-                width: withOut(0, ea),
+                width: String(maximumTextWidth) + ea,
+                left: withOut(50, maximumTextWidth / 2, ea),
                 justifyContent: "center",
                 alignItems: "center",
               },
               child: {
                 class: [ dateValueClassName ],
+                event: {
+                  click: updateDateValue(),
+                },
+                attribute: {
+                  date: dateConvert(date),
+                },
                 text: dateConvert(date),
                 style: {
                   display: "block",
                   position: "relative",
                   top: String(contentsTextTop) + ea,
                   fontSize: String(contentsValueWordingSize) + ea,
-                  fontWeight: String(400),
+                  fontWeight: String(700),
                   color: colorChip.black,
+                  cursor: "pointer",
                 }
               }
             }
@@ -3551,7 +3661,8 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
               style: {
                 display: "flex",
                 position: "relative",
-                width: withOut(0, ea),
+                width: String(maximumTextWidth) + ea,
+                left: withOut(50, maximumTextWidth / 2, ea),
                 justifyContent: "center",
                 alignItems: "center",
               },
@@ -3772,9 +3883,13 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
         toRaw = dom.querySelector('.' + toValueClassName).textContent.trim();
 
         if (dateRaw === '-' || dateRaw === '') {
-          dateValue = new Date(2000, 0, 1);
+          dateValue = new Date(1800, 0, 1);
         } else {
-          dateValue = stringToDate(dateRaw);
+          if (desktop) {
+            dateValue = stringToDate(dateRaw);
+          } else {
+            dateValue = stringToDate("20" + dateRaw);
+          }
         }
 
         if (feeRaw === '-' || feeRaw === '') {
@@ -4141,7 +4256,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
                   alignItems: "center",
                 },
                 child: {
-                  text: "출발 장소",
+                  text: desktop ? "출발 장소" : "출발",
                   style: {
                     display: "block",
                     position: "relative",
@@ -4179,7 +4294,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
                   alignItems: "center",
                 },
                 child: {
-                  text: "도착 장소",
+                  text: desktop ? "도착 장소" : "도착",
                   style: {
                     display: "block",
                     position: "relative",
@@ -4221,7 +4336,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
         height: String(buttonTongHeight) + ea,
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "end",
+        justifyContent: desktop ? "end" : "center",
         paddingTop: String(buttonTongPaddingTop) + ea,
       },
       child: {
@@ -4231,7 +4346,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
         style: {
           display: "inline-flex",
           position: "relative",
-          background: colorChip.gradientGreen,
+          background: desktop ? colorChip.gradientGreen : colorChip.gradientGray,
           height: String(buttonHeight) + ea,
           borderRadius: String(5) + "px",
           flexDirection: "row",
