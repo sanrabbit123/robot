@@ -528,10 +528,10 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
           const contents = new ContentsMaker();
           const frontSetting = await this.returnFrontObject(designerObj);
           console.log(frontSetting);
-          const aiScript = this.renderScript(frontSetting);
-          const fileName = "designerFrontSettingAiCanvasScript_" + String((new Date()).valueOf()) + ".js";
-          await fileSystem(`write`, [ `${process.cwd()}/temp/${fileName}`, aiScript ]);
-          const { resultFolder, resultList } = await contents.generalLaunching(`${process.cwd()}/temp/${fileName}`);
+          // const aiScript = this.renderScript(frontSetting);
+          // const fileName = "designerFrontSettingAiCanvasScript_" + String((new Date()).valueOf()) + ".js";
+          // await fileSystem(`write`, [ `${process.cwd()}/temp/${fileName}`, aiScript ]);
+          // const { resultFolder, resultList } = await contents.generalLaunching(`${process.cwd()}/temp/${fileName}`);
           const careerCalculation = function (designer) {
             let yS, yM, rY, rM;
             let monthResult;
@@ -557,55 +557,55 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
           let insertQuery;
           let whereQuery, updateQuery;
 
-          for (let i = 0; i < resultList.length; i++) {
-            if (/^desktop_/gi.test(resultList[i]) && /\.svg$/i.test(resultList[i])) {
-              desktop = resultFolder + "/" + resultList[i];
-            }
-            if (/^mobile_/gi.test(resultList[i]) && /\.svg$/i.test(resultList[i])) {
-              mobile = resultFolder + "/" + resultList[i];
-            }
-            if (/^name_/gi.test(resultList[i]) && /\.svg$/i.test(resultList[i])) {
-              name = resultFolder + "/" + resultList[i];
-            }
-          }
+          // for (let i = 0; i < resultList.length; i++) {
+          //   if (/^desktop_/gi.test(resultList[i]) && /\.svg$/i.test(resultList[i])) {
+          //     desktop = resultFolder + "/" + resultList[i];
+          //   }
+          //   if (/^mobile_/gi.test(resultList[i]) && /\.svg$/i.test(resultList[i])) {
+          //     mobile = resultFolder + "/" + resultList[i];
+          //   }
+          //   if (/^name_/gi.test(resultList[i]) && /\.svg$/i.test(resultList[i])) {
+          //     name = resultFolder + "/" + resultList[i];
+          //   }
+          // }
 
-          if (desktop === null || mobile === null || name === null) {
-            throw new Error("invaild rendering");
-          }
+          // if (desktop === null || mobile === null || name === null) {
+          //   throw new Error("invaild rendering");
+          // }
 
-          pastDesid = Filter.newToPast(designerObj.desid);
-          newDesktop = `${getFolder(desktop)}/word${pastDesid}.svg`;
-          newMobile = `${getFolder(mobile)}/moword${pastDesid}.svg`;
-          newName = `${getFolder(name)}/name${pastDesid}.svg`;
+          // pastDesid = Filter.newToPast(designerObj.desid);
+          // newDesktop = `${getFolder(desktop)}/word${pastDesid}.svg`;
+          // newMobile = `${getFolder(mobile)}/moword${pastDesid}.svg`;
+          // newName = `${getFolder(name)}/name${pastDesid}.svg`;
 
-          svgList = [];
-          svgList.push(desktop);
-          svgList.push(mobile);
-          svgList.push(name);
+          // svgList = [];
+          // svgList.push(desktop);
+          // svgList.push(mobile);
+          // svgList.push(name);
 
-          svgListApp = new SvgOptimizer(svgList);
-          svgListApp.setDcimal(3);
-          svgResultList = await svgListApp.launching();
+          // svgListApp = new SvgOptimizer(svgList);
+          // svgListApp.setDcimal(3);
+          // svgResultList = await svgListApp.launching();
 
-          await fileSystem(`write`, [ newDesktop, svgResultList[getName(desktop)] ]);
-          await fileSystem(`write`, [ newMobile, svgResultList[getName(mobile)] ]);
-          await fileSystem(`write`, [ newName, svgResultList[getName(name)] ]);
+          // await fileSystem(`write`, [ newDesktop, svgResultList[getName(desktop)] ]);
+          // await fileSystem(`write`, [ newMobile, svgResultList[getName(mobile)] ]);
+          // await fileSystem(`write`, [ newName, svgResultList[getName(name)] ]);
 
-          await shellExec(`rm -rf ${shellLink(desktop)}`);
-          await shellExec(`rm -rf ${shellLink(mobile)}`);
-          await shellExec(`rm -rf ${shellLink(name)}`);
+          // await shellExec(`rm -rf ${shellLink(desktop)}`);
+          // await shellExec(`rm -rf ${shellLink(mobile)}`);
+          // await shellExec(`rm -rf ${shellLink(name)}`);
 
-          scpOrder = '';
-          scpOrder += `scp ${shellLink(newDesktop)} ${ADDRESS.frontinfo.user}@${ADDRESS.frontinfo.host}:/${ADDRESS.frontinfo.user}/www/list_svg/dedetail/wording;`;
-          scpOrder += `scp ${shellLink(newMobile)} ${ADDRESS.frontinfo.user}@${ADDRESS.frontinfo.host}:/${ADDRESS.frontinfo.user}/www/list_svg/dedetail/wording;`;
-          scpOrder += `scp ${shellLink(newName)} ${ADDRESS.frontinfo.user}@${ADDRESS.frontinfo.host}:/${ADDRESS.frontinfo.user}/www/list_svg/delist/name;`;
+          // scpOrder = '';
+          // scpOrder += `scp ${shellLink(newDesktop)} ${ADDRESS.frontinfo.user}@${ADDRESS.frontinfo.host}:/${ADDRESS.frontinfo.user}/www/list_svg/dedetail/wording;`;
+          // scpOrder += `scp ${shellLink(newMobile)} ${ADDRESS.frontinfo.user}@${ADDRESS.frontinfo.host}:/${ADDRESS.frontinfo.user}/www/list_svg/dedetail/wording;`;
+          // scpOrder += `scp ${shellLink(newName)} ${ADDRESS.frontinfo.user}@${ADDRESS.frontinfo.host}:/${ADDRESS.frontinfo.user}/www/list_svg/delist/name;`;
 
-          // await shellExec(scpOrder);
-          console.log(`scp done`);
+          // // await shellExec(scpOrder);
+          // console.log(`scp done`);
 
-          await shellExec(`rm -rf ${shellLink(newDesktop)}`);
-          await shellExec(`rm -rf ${shellLink(newMobile)}`);
-          await shellExec(`rm -rf ${shellLink(newName)}`);
+          // await shellExec(`rm -rf ${shellLink(newDesktop)}`);
+          // await shellExec(`rm -rf ${shellLink(newMobile)}`);
+          // await shellExec(`rm -rf ${shellLink(newName)}`);
 
           if (query) {
             if (frontSetting.methods.length !== 2) {

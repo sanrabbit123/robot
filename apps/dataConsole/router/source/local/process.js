@@ -2787,6 +2787,7 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
       await instance.insertFormStatusBox(project, menuArea);
       instance.insertUploadBox(project, menuArea);
       await instance.insertScheduleBox(project, menuArea);
+      instance.insertTravelBox(project, menuArea);
 
     } catch (e) {
       console.log(e);
@@ -5637,6 +5638,1175 @@ ProcessJs.prototype.insertScheduleBox = async function (project, baseTong) {
   } catch (e) {
     console.log(e);
   }
+}
+
+ProcessJs.prototype.insertTravelBox = function (project, baseTong) {
+  const instance = this;
+  const mother = this.mother;
+  const { ea, media, totalContents } = this;
+  const client = project.client;
+  const requestNumber = project.requestNumber;
+  const designer = project.designer;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const manyBig = media[0];
+  const generalSmall = !manyBig;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, variableArray } = GeneralJs;
+  const blank = "&nbsp;&nbsp;&nbsp;";
+  const mainTitle = "출장 내역";
+  const travelBlockClassName = "travelBlockClassName";
+  const dateValueClassName = "dateValueClassName";
+  const feeValueClassName = "feeValueClassName";
+  const fromValueClassName = "fromValueClassName";
+  const toValueClassName = "toValueClassName";
+  const tempInputClassName = "tempInputClassName";
+  const dateConvert = (dateObject) => {
+    const res = dateToString(dateObject);
+    if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(res)) {
+      if (desktop) {
+      return res.trim();
+      } else {
+      return res.trim().slice(2);
+      }
+    } else {
+      return '-';
+    }
+  }
+  let paddingTop;
+  let block;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let titleFontSize;
+  let num, num2;
+  let numberRight;
+  let titleTop, titleTopNumber;
+  let titleBottom;
+  let index;
+  let mobileTitleLeft, mobileTitleTop;
+  let secondBlockWidth, secondBlockMargin;
+  let tong;
+  let contentsWordingSize;
+  let contentsBottom;
+  let whiteBottomMargin;
+  let contentsTitleMarginTop, contentsMarginTop;
+  let contentsPaddingLeft;
+  let arrowWidth;
+  let arrowTop;
+  let arrorLeft;
+  let bigNumberSize;
+  let bigNumberBetween;
+  let bigNumberMargin;
+  let bigNumberBetweenMargin;
+  let matrix;
+  let firstWidth, secondWidth, secondMarginRight;
+  let contentsAreaPaddingTop;
+  let zeroWidth, zeroMarginRight;
+  let checkBoxWidth, checkBoxTop;
+  let arrowBoxWidth, arrowBoxTop;
+  let contentsMarginBottom0, contentsMarginBottom1;
+  let mobilePaddingLeft;
+  let mobileContentsWordingSize;
+  let wordings;
+  let lineTop, linePadding;
+  let checkBoxAreaWidth;
+  let mobileInnerPaddingBottom;
+  let panMother;
+  let panMotherInnerPadding;
+  let panBetween;
+  let basePan;
+  let contentsTextTop;
+  let panTitleBoxHeight;
+  let uploadCircleWidth;
+  let uploadCirclePadding;
+  let uploadIconWidth;
+  let uploadIconTop;
+  let panMotherMinHeight;
+  let contentsPan;
+  let contentsPanPaddingTop;
+  let contentsPanPaddingBottom;
+  let panTitleBoxWidth;
+  let itemBetween;
+  let statusPadding;
+  let statusOpacity;
+  let subButtonPaddingRight;
+  let subButtonSize, subButtonWeight;
+  let subButtonVisualTop;
+  let subButtonPaddingBottom;
+  let subButtonPaddingTop;
+  let subButtonPaddingLeft;
+  let buttonBetween;
+  let plusIconTop, plusIconWidth;
+  let subButtonsBasePan;
+  let subButtonsBetween;
+  let subButtonsVisualTop;
+  let linkIconWidth;
+  let linkIconTop;
+  let panMotherBetween;
+  let contents;
+  let buttonSize, buttonWeight, buttonTextTop;
+  let buttonHeight;
+  let paymentByCard;
+  let downloadOriginal;
+  let viewPortfolio;
+  let viewReview;
+  let designerRawContentsUpload;
+  let designerSampleDownload;
+  let designerRawContentsView;
+  let dateFeeWidth;
+  let contentsValueWordingSize;
+  let buttonTongHeight;
+  let buttonTongPaddingTop;
+  let buttonPadding;
+  let travelAddEvent;
+  let textMargin;
+  let maximumTextWidth;
+  let rowMaker;
+  let minimumLength;
+  let totalTravelUpdate;
+  let updateDateValue;
+  let calendarWidth;
+  let calendarPadding;
+  let initialDomSetting;
+  let domToMatrix;
+  let panMotherMarginTop;
+  
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+
+  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  titleBottom = <%% (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), (isMac() ? 15 : 14), 0 %%>;
+  contentsAreaPaddingTop = <%% 36, 36, 36, 36, 7 %%>;
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
+
+  mobileInnerPaddingBottom = 0;
+
+  secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
+  secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
+
+  contentsWordingSize = <%% 15, 14, 13, 12, 2.9 %%>;
+  contentsValueWordingSize = <%% 14, 14, 12, 11, 2.7 %%>;
+  contentsTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.1 %%>;
+
+  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+
+  contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
+  contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
+  contentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
+  arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
+  arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
+  arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
+
+  bigNumberSize = <%% 37, 37, 37, 37, 5 %%>;
+  bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
+  bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
+  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
+
+  zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
+  zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
+  secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
+
+  checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
+  arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
+  checkBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
+  arrowBoxTop = <%% (isMac() ? 7 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
+
+  contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
+  contentsMarginBottom1 = <%% 32, 32, 30, 28, 0 %%>;
+
+  lineTop = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 9 : 7), 10 %%>;
+  linePadding = <%% 12, 12, 12, 10, 12 %%>;
+
+  mobilePaddingLeft = 0;
+
+  mobileContentsWordingSize = 3;
+
+  checkBoxAreaWidth = <%% 16, 16, 16, 16, 3 %%>;
+
+  panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
+  panBetween = <%% 8, 8, 8, 8, 1 %%>;
+  panTitleBoxWidth = <%% 124, 120, 114, 108, 21 %%>;
+  panTitleBoxHeight = <%% 52, 48, 40, 35, 8.2 %%>;
+
+  uploadCircleWidth = <%% 28, 28, 28, 24, 6 %%>;
+  uploadCirclePadding = <%% 16, 16, 16, 12, 4 %%>;
+  uploadIconWidth = <%% 13, 13, 13, 12, 3 %%>;
+  uploadIconTop = <%% 0, 0, 0, 0, 0 %%>;
+
+  linkIconWidth = <%% 15.5, 15.5, 15.5, 14, 3.4 %%>;
+  linkIconTop = <%% 0, 0, 0, 0, 0 %%>;
+
+  plusIconTop = <%% 0, 0, 0, 0, 0 %%>;
+  plusIconWidth = <%% 14, 14, 13, 12, 3 %%>;
+
+  panMotherMinHeight = <%% 500, 480, 420, 400, 54 %%>;
+
+  contentsPanPaddingTop = <%% 18, 18, 16, 12, 3 %%>;
+  contentsPanPaddingBottom = <%% 60, 60, 60, 54, 12 %%>;
+  itemBetween = <%% 7, 7, 7, 6, 0.5 %%>;
+
+  statusPadding = <%% 21, 21, 18, 18, 4 %%>;
+  statusOpacity = <%% 0.4, 0.4, 0.4, 0.4, 0.4 %%>;
+
+  subButtonPaddingRight = <%% 18, 18, 16, 12, 1.6 %%>;
+  subButtonSize = <%% 12, 12, 11, 10, 2.4 %%>;
+  subButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
+  subButtonVisualTop = <%% 3, 3, 2, 1, 0.3 %%>;
+  subButtonPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 5 : 4), (isIphone() ? 1.2 : 1.4) %%>;
+  subButtonPaddingTop = <%% (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 3 : 5), (isIphone() ? 1.2 : 1.2) %%>;
+  subButtonPaddingLeft = <%% 11, 11, 10, 9, 2 %%>;
+  subButtonsVisualTop = <%% 2, 3, 3, 1, 0 %%>;
+
+  subButtonsBetween = <%% 18, 18, 16, 14, 3 %%>;
+
+  panMotherBetween = <%% 8, 7, 6, 5, 1 %%>;
+
+  buttonTongHeight = <%% 42, 42, 32, 30, 14 %%>;
+  buttonTongPaddingTop = <%% 11, 11, 8, 6, 0 %%>;
+
+  buttonHeight = <%% 36, 36, 30, 28, 7 %%>;
+  buttonPadding = <%% 22, 18, 16, 14, 4 %%>;
+  buttonBetween = <%% 4, 4, 3, 2, 0.8 %%>;
+  buttonSize = <%% 14, 14, 13, 12, 2.7 %%>;
+  buttonWeight = <%% 700, 700, 700, 700, 700 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.1 %%>;
+
+  dateFeeWidth = <%% 180, 160, 130, 110, 19 %%>;
+
+  textMargin = <%% 16, 16, 14, 12, 2.6 %%>;
+  maximumTextWidth = <%% 1000, 1000, 800, 600, 200 %%>;
+
+  calendarWidth = <%% 260, 260, 260, 260, 260 %%>;
+  calendarPadding = <%% 4, 4, 4, 4, 3 %%>;
+
+  this.whiteMargin = (desktop ? margin : 0);
+
+  minimumLength = 3;
+
+  panMotherMarginTop = 50;
+
+  basePan = {};
+  totalTravelUpdate = async () => {};
+  initialDomSetting = () => {};
+  domToMatrix = () => {};
+
+  updateDateValue = () => {
+    return async function (e) {
+      try {
+        const mother = this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+        const base = this.parentElement;
+        const zIndex = 4;
+        const value = stringToDate((mobile ? "20" : "") + this.getAttribute("date"));
+        let cancelBack;
+        let valueInput;
+        let calendar;
+        let updateEvent;
+        let column;
+        let whereQuery, updateQuery;
+
+        cancelBack = {};
+        valueInput = {};
+
+        updateEvent = function (value) {
+          return async function (e) {
+            try {
+              const thisDate = stringToDate(value);
+              base.querySelector('.' + dateValueClassName).textContent = dateConvert(thisDate);
+              base.querySelector('.' + dateValueClassName).setAttribute("date", dateConvert(thisDate));
+              await totalTravelUpdate();
+              removeByClass(tempInputClassName);
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        }
+
+        cancelBack = createNode({
+          mother,
+          class: [ tempInputClassName ],
+          event: {
+            click: function (e) {
+              removeByClass(tempInputClassName);
+            }
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            background: "transparent",
+            zIndex: String(zIndex),
+          }
+        });
+
+        valueInput = createNode({
+          mother,
+          class: [ tempInputClassName ],
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(base.getBoundingClientRect().top - mother.getBoundingClientRect().top + this.getBoundingClientRect().height + calendarPadding) + "px",
+            left: desktop ? String(this.getBoundingClientRect().left - mother.getBoundingClientRect().left + (this.getBoundingClientRect().width / 2) - (calendarWidth / 2)) + "px" : String(0) + ea,
+            width: String(calendarWidth) + "px",
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            zIndex: String(zIndex),
+            boxShadow: "0px 5px 15px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+          },
+        })
+
+        calendar = instance.mother.makeCalendar(value, async function (e) {
+          try {
+            const updateFunc = updateEvent(this.getAttribute("buttonValue"));
+            await updateFunc(e);
+          } catch (e) {
+            console.log(e);
+          }
+        });
+        valueInput.appendChild(calendar.calendarBase);
+        
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  rowMaker = (index, date = new Date(1800, 0, 1), fee = 0, addressFrom = '', addressTo = '') => {
+    let dom;
+    let emptyBoo;
+
+    if (date.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+      emptyBoo = true;
+    } else {
+      emptyBoo = false;
+    }
+
+    dom = createNode({
+      mother: basePan,
+      class: [ travelBlockClassName ],
+      attribute: {
+        index: String(index),
+        empty: emptyBoo ? "true" : "false",
+      },
+      event: {
+        contextmenu: async function (e) {
+          try {
+            e.preventDefault();
+            this.remove();
+            initialDomSetting(domToMatrix());
+            await totalTravelUpdate();
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      style: {
+        display: "flex",
+        position: "relative",
+        justifyContent: "start",
+        alignItems: "center",
+        flexDirection: "row",
+        width: withOut(0, ea),
+        height: String(panTitleBoxHeight) + ea,
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+        marginBottom: String(itemBetween) + ea,
+        cursor: "pointer",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            borderRight: "1px solid " + colorChip.gray3,
+            width: String(panTitleBoxHeight) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            boxSizing: "border-box",
+          },
+          child: {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(textMargin * 2, ea),
+              overflow: "scroll",
+            },
+            child: {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0, ea),
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                text: String(index),
+                style: {
+                  display: "block",
+                  position: "relative",
+                  top: String(desktop ? -1 : -0.2) + ea,
+                  fontSize: String(contentsValueWordingSize) + ea,
+                  fontWeight: String(600),
+                  fontFamily: "graphik",
+                  fontStyle: "italic",
+                  color: colorChip.green,
+                  cursor: "pointer",
+                }
+              }
+            }
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            borderRight: "1px solid " + colorChip.gray3,
+            width: String(dateFeeWidth) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            boxSizing: "border-box",
+          },
+          child: {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(textMargin * 2, ea),
+              overflow: "scroll",
+            },
+            child: {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: String(maximumTextWidth) + ea,
+                left: withOut(50, maximumTextWidth / 2, ea),
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                class: [ dateValueClassName ],
+                event: {
+                  click: updateDateValue(),
+                },
+                attribute: {
+                  date: dateConvert(date),
+                },
+                text: dateConvert(date),
+                style: {
+                  display: "block",
+                  position: "relative",
+                  top: String(contentsTextTop) + ea,
+                  fontSize: String(contentsValueWordingSize) + ea,
+                  fontWeight: String(700),
+                  color: colorChip.black,
+                  cursor: "pointer",
+                }
+              }
+            }
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            borderRight: "1px solid " + colorChip.gray3,
+            width: String(dateFeeWidth) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            boxSizing: "border-box",
+          },
+          child: {
+            style: {
+              display: "block",
+              position: "relative",
+              width: withOut(textMargin * 2, ea),
+              overflow: "scroll",
+            },
+            child: {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: String(maximumTextWidth) + ea,
+                left: withOut(50, maximumTextWidth / 2, ea),
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              child: {
+                class: [ feeValueClassName ],
+                text: fee === 0 ? '-' : (autoComma(fee) + '원'),
+                style: {
+                  display: "block",
+                  position: "relative",
+                  top: String(contentsTextTop) + ea,
+                  fontSize: String(contentsValueWordingSize) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.black,      
+                }
+              }
+            }
+          }
+        },
+      ],
+    });
+
+    if (addressFrom.trim() !== '-' && addressFrom.trim() !== '') {
+      createNode({
+        mother: dom,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          borderRight: "1px solid " + colorChip.gray3,
+          width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          boxSizing: "border-box",
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(textMargin * 2, ea),
+            overflow: "scroll",
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: String(maximumTextWidth) + ea,
+              justifyContent: "start",
+              alignItems: "center",
+            },
+            child: {
+              class: [ fromValueClassName ],
+              text: addressFrom,
+              style: {
+                display: "block",
+                position: "relative",
+                top: String(contentsTextTop) + ea,
+                fontSize: String(contentsValueWordingSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,      
+              }
+            }
+          }
+        }
+      });
+    } else {
+      createNode({
+        mother: dom,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          borderRight: "1px solid " + colorChip.gray3,
+          width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          boxSizing: "border-box",
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(textMargin * 2, ea),
+            overflow: "scroll",
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              class: [ fromValueClassName ],
+              text: '-',
+              style: {
+                display: "block",
+                position: "relative",
+                top: String(contentsTextTop) + ea,
+                fontSize: String(contentsValueWordingSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,      
+              }
+            }
+          }
+        }
+      });
+    }
+
+    if (addressTo.trim() !== '-' && addressTo.trim() !== '') {
+      createNode({
+        mother: dom,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(textMargin * 2, ea),
+            overflow: "scroll",
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: String(maximumTextWidth) + ea,
+              justifyContent: "start",
+              alignItems: "center",
+            },
+            child: {
+              class: [ toValueClassName ],
+              text: addressTo,
+              style: {
+                display: "block",
+                position: "relative",
+                top: String(contentsTextTop) + ea,
+                fontSize: String(contentsValueWordingSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,      
+              }
+            }
+          }
+        }
+      });
+    } else {
+      createNode({
+        mother: dom,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        },
+        child: {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(textMargin * 2, ea),
+            overflow: "scroll",
+          },
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              class: [ toValueClassName ],
+              text: '-',
+              style: {
+                display: "block",
+                position: "relative",
+                top: String(contentsTextTop) + ea,
+                fontSize: String(contentsValueWordingSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,      
+              }
+            }
+          }
+        }
+      });
+    }
+    
+    return dom;
+  }
+
+  domToMatrix = () => {
+    let blocks;
+    let realBlocks;
+    let matrix;
+    let dateRaw, feeRaw, fromRaw, toRaw;
+    let dateValue, feeValue, fromValue, toValue;
+
+    blocks = [ ...document.querySelectorAll('.' + travelBlockClassName) ];
+    realBlocks = blocks.filter((dom) => { return dom.getAttribute("empty") !== "true" });
+
+    matrix = [];
+    for (let dom of realBlocks) {
+      dateRaw = dom.querySelector('.' + dateValueClassName).textContent.trim();
+      feeRaw = dom.querySelector('.' + feeValueClassName).textContent.trim();
+      fromRaw = dom.querySelector('.' + fromValueClassName).textContent.trim();
+      toRaw = dom.querySelector('.' + toValueClassName).textContent.trim();
+
+      if (dateRaw === '-' || dateRaw === '') {
+        dateValue = new Date(1800, 0, 1);
+      } else {
+        if (desktop) {
+          dateValue = stringToDate(dateRaw);
+        } else {
+          dateValue = stringToDate("20" + dateRaw);
+        }
+      }
+
+      if (feeRaw === '-' || feeRaw === '') {
+        feeValue = 0;
+      } else {
+        feeValue = Number(feeRaw.replace(/[^0-9]/gi, ''));
+      }
+
+      fromValue = fromRaw;
+      toValue = toRaw;
+
+      matrix.push({
+        date: dateValue,
+        fee: feeValue,
+        address: {
+          from: fromValue,
+          to: toValue,
+        }
+      })
+    }
+
+    return matrix;
+  }
+
+  totalTravelUpdate = async () => {
+    try {
+      let proid, desid;
+      let matrix;
+      let finalObject;
+
+      proid = project.proid;
+      desid = designer.desid;
+      
+      matrix = domToMatrix();
+
+      finalObject = {
+        proid,
+        desid,
+        travel: matrix,
+      };
+
+      await ajaxJson({
+        mode: "update",
+        proid,
+        desid,
+        updateQuery: { travel: matrix }
+      }, SECONDHOST + "/projectDesignerTravel");
+      
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  travelAddEvent = async function (e) {
+    try {
+      const address = {
+        from: designer.information.address[0],
+        to: client.requests[requestNumber].request.space.address
+      }
+      const date = new Date();
+      let fee;
+      let thisProposal;
+      let offlineCase;
+      let dom;
+      let blocks;
+      let lastIndex;
+      let indexArr;
+      let emptyRows;
+      let emptyLength;
+      let realBlocks;
+
+      thisProposal = project.proposal.detail.find((obj) => { return obj.desid === designer.desid });
+      fee = 0;
+      if (thisProposal !== undefined) {
+        offlineCase = thisProposal.fee.find((o) => { return o.method === "offline" });
+        if (offlineCase !== undefined) {
+          fee = offlineCase.distance.amount;
+        }
+      }
+
+      blocks = [ ...document.querySelectorAll('.' + travelBlockClassName) ];
+
+      emptyRows = blocks.filter((dom) => { return dom.getAttribute("empty") === "true" });
+      emptyLength = emptyRows.length;
+
+      realBlocks = blocks.filter((dom) => { return dom.getAttribute("empty") !== "true" });
+
+      if (emptyRows.length === 0) {
+        dom = rowMaker(realBlocks.length + 1, date, fee, address.from, address.to);
+        basePan.insertBefore(dom, basePan.children[basePan.children.length - 2]);
+      } else {
+        for (let row of emptyRows) {
+          row.remove();
+        }
+        dom = rowMaker(realBlocks.length + 1, date, fee, address.from, address.to);
+        basePan.insertBefore(dom, basePan.children[basePan.children.length - 2]);
+        for (let i = 0; i < emptyLength - 1; i++) {
+          dom = rowMaker(realBlocks.length + 1 + i + 1);
+          basePan.insertBefore(dom, basePan.children[basePan.children.length - 2]);
+        }
+      }
+
+      await totalTravelUpdate();
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  initialDomSetting = (matrix) => {
+    let dom;
+    let childrenTargets;
+    let childrenLength;
+
+    childrenTargets = [ ...basePan.children ];
+    childrenLength = childrenTargets.length;
+
+    for (let i = 0; i < childrenLength; i++) {
+      if (i !== 0 && i !== childrenLength - 1) {
+        basePan.removeChild(childrenTargets[i]);
+      }
+    }
+    for (let i = 0; i < matrix.length; i++) {
+      dom = rowMaker(i + 1, matrix[i].date, matrix[i].fee, matrix[i].address.from, matrix[i].address.to);
+      basePan.insertBefore(dom, basePan.children[basePan.children.length - 2]);
+    }
+    if (matrix.length < minimumLength) {
+      for (let i = 0; i < minimumLength - matrix.length; i++) {
+        dom = rowMaker(i + 1 + matrix.length);
+        basePan.insertBefore(dom, basePan.children[basePan.children.length - 2]);
+      }
+    }
+  }
+
+  panMother = createNode({
+    mother: baseTong,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      position: "relative",
+      borderRadius: String(5) + "px",
+      background: desktop ? colorChip.gray3 : colorChip.gray1,
+      width: withOut(panMotherInnerPadding * 2, ea),
+      padding: String(panMotherInnerPadding) + ea,
+      marginRight: desktop ? String(panMotherBetween) + ea : "",
+      marginBottom: desktop ? "" : String(panMotherBetween) + ea,
+      verticalAlign: "top",
+      marginTop: String(panMotherMarginTop) + ea,
+    }
+  });
+
+  basePan = createNode({
+    mother: panMother,
+    style: {
+      display: "inline-block",
+      verticalAlign: "top",
+      position: "relative",
+      width: withOut(contentsPanPaddingTop * 2, ea),
+      background: desktop ? colorChip.gray1 : colorChip.gray3,
+      borderRadius: String(5) + "px",
+      transition: "all 0.5s ease",
+      "min-height": String(panTitleBoxHeight * 5) + ea,
+      padding: String(contentsPanPaddingTop) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "flex",
+          position: "relative",
+          justifyContent: "start",
+          alignItems: "center",
+          flexDirection: "row",
+          width: withOut(0, ea),
+          height: String(panTitleBoxHeight) + ea,
+          background: colorChip.darkDarkShadow,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+          marginBottom: String(itemBetween) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              borderRight: "1px solid " + colorChip.gray3,
+              width: String(panTitleBoxHeight) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              boxSizing: "border-box",
+            },
+            child: {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0 * 2, ea),
+                overflow: "scroll",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: "0",
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    top: String(contentsTextTop) + ea,
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(800),
+                    color: colorChip.darkDarkShadow,
+                  }
+                }
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              borderRight: "1px solid " + colorChip.gray3,
+              width: String(dateFeeWidth) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              boxSizing: "border-box",
+            },
+            child: {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(textMargin * 2, ea),
+                overflow: "scroll",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: "출장일",
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    top: String(contentsTextTop) + ea,
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(800),
+                    color: colorChip.white,
+                  }
+                }
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              borderRight: "1px solid " + colorChip.gray3,
+              width: String(dateFeeWidth) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              boxSizing: "border-box",
+            },
+            child: {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(textMargin * 2, ea),
+                overflow: "scroll",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: "출장비",
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    top: String(contentsTextTop) + ea,
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(800),
+                    color: colorChip.white,      
+                  }
+                }
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              borderRight: "1px solid " + colorChip.gray3,
+              width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              boxSizing: "border-box",
+            },
+            child: {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(textMargin * 2, ea),
+                overflow: "scroll",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: desktop ? "출발 장소" : "출발",
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    top: String(contentsTextTop) + ea,
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(800),
+                    color: colorChip.white,      
+                  }
+                }
+              }
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: "calc(" + withOut((dateFeeWidth * 2) + panTitleBoxHeight, ea) + " / 2)",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+            },
+            child: {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(textMargin * 2, ea),
+                overflow: "scroll",
+              },
+              child: {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+                child: {
+                  text: desktop ? "도착 장소" : "도착",
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    top: String(contentsTextTop) + ea,
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(800),
+                    color: colorChip.white,      
+                  }
+                }
+              }
+            }
+          },
+        ],
+      },
+    ] 
+  });
+
+  // buttons
+  createNode({
+    mother: basePan,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(buttonTongHeight) + ea,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: desktop ? "end" : "center",
+      paddingTop: String(buttonTongPaddingTop) + ea,
+    },
+    child: {
+      event: {
+        click: travelAddEvent,
+      },
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        background: desktop ? colorChip.gradientGreen : colorChip.gradientGray,
+        height: String(buttonHeight) + ea,
+        borderRadius: String(5) + "px",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingLeft: String(buttonPadding) + ea,
+        paddingRight: String(buttonPadding) + ea,
+        cursor: "pointer",
+      },
+      child: {
+        text: "출장 내역 추가",
+        style: {
+          display: "block",
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
+          color: colorChip.white,
+          position: "relative",
+          top: String(buttonTextTop) + ea,
+          cursor: "pointer",
+        }
+      }
+    }
+  });
+
+  ajaxJson({
+    mode: "get",
+    proid: project.proid,
+    desid: project.desid,
+  }, SECONDHOST + "/projectDesignerTravel", { equal: true }).then(({ travel }) => {
+    initialDomSetting(travel);
+  }).catch((err) => {
+    console.log(err);
+  })
+
 }
 
 ProcessJs.prototype.uploadFiles = function (project, thisStatusNumber, photoBoo) {

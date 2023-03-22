@@ -5446,7 +5446,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2207_aa01s" ]);
+    // await work.newDesignerToFront([ "d2206_aa02s" ]);
 
 
     // new designer set proposal setting
