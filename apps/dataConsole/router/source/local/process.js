@@ -14,6 +14,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
   const filterMenuClassName = "filterMenuClassName";
   const clientTableClassName = "clientTableClassName";
   const updateMenuClassName = "updateMenuClassName";
+  const whiteCardClassName = "whiteCardClassName";
   const dateConvert = (dateObject) => {
     const res = dateToString(dateObject);
     if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(res)) {
@@ -98,6 +99,11 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
   let designerFilterButtonSize;
   let calendarWidth;
   let calendarPadding;
+  let projectStatusUpdateEvent;
+  let projectPartnerUpdateEvent;
+  let projectMeetingUpdateEvent;
+  let projectStartDateUpdateEvent;
+  let projectEndDateUpdateEvent;
 
   clientColumnsMenu = [
     { title: "내림차순", key: "downSort" },
@@ -1445,6 +1451,563 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
 
   }
 
+  projectStatusUpdateEvent = () => {
+    return async function (e) {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const zIndex = 4;
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        let cancelBack, menuPrompt;
+        let thisMenu;
+        thisMenu = [
+          {
+            title: "완료 처리",
+            event: function (e) {
+              if (window.confirm("해당 프로젝트를 완료처리 하시겠습니까?")) {
+                const proid = this.getAttribute("proid");
+                const desid = this.getAttribute("desid");
+                const loading = instance.mother.grayLoading();
+                let whiteBoo;
+                let whiteTargetDom;
+
+                ajaxJson({
+                  whereQuery: { proid },
+                  updateQuery: { "process.status": "완료" }
+                }, BACKHOST + "/rawUpdateProject").then(() => {
+                  instance.projects.find((p) => { return p.proid === proid }).process.status = "완료";
+                  whiteBoo = false;
+                  if (document.querySelector("." + whiteCardClassName) !== null) {
+                    removeByClass(whiteCardClassName);
+                    whiteBoo = true;
+                  }
+                  instance.contentsLoad(false);
+                  if (whiteBoo) {
+                    whiteTargetDom = findByAttribute([ ...instance.clientDoms ], "proid", proid)
+                    if (whiteTargetDom !== null) {
+                      whiteTargetDom.click();
+                    }
+                  }
+                  loading.remove();
+                }).catch((err) => {
+                  console.log(err);
+                });
+              }
+            }
+          }
+        ];
+        cancelBack = createNode({
+          mother: totalContents,
+          class: [ updateMenuClassName ],
+          event: {
+            click: function (e) {
+              removeByClass(updateMenuClassName);
+            }
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            background: "transparent",
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            zIndex: String(zIndex),
+          }
+        });
+        menuPrompt = createNode({
+          mother: totalContents,
+          class: [ updateMenuClassName ],
+          attribute: {
+            desid,
+            proid,
+          },
+          style: {
+            position: "absolute",
+            top: String(e.y) + "px",
+            left: String(e.x) + "px",
+            padding: String(buttonOuterPadding) + ea,
+            paddingBottom: String(buttonOuterPadding - buttonInnerPadding) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.white,
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+            zIndex: String(zIndex),
+          },
+          children: thisMenu.map((obj, index) => {
+            return {
+              attribute: {
+                index: String(index)
+              },
+              event: {
+                click: function (e) {
+                  const index = Number(this.getAttribute("index"));
+                  const thisFunction = thisMenu[index].event;
+                  thisFunction.call(this.parentElement, e);
+                  removeByClass(updateMenuClassName);
+                },
+                contextmenu: function (e) {
+                  e.preventDefault();
+                  const index = Number(this.getAttribute("index"));
+                  const thisFunction = thisMenu[index].event;
+                  thisFunction.call(this.parentElement, e);
+                  removeByClass(updateMenuClassName);
+                },
+              },
+              style: {
+                display: "flex",
+                width: String(managerButtonSize) + ea,
+                height: String(buttonHeight) + ea,
+                borderRadius: String(5) + "px",
+                background: colorChip.gradientGreen,
+                marginBottom: String(buttonInnerPadding) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+              },
+              child: {
+                text: obj.title,
+                style: {
+                  fontSize: String(buttonSize) + ea,
+                  fontWeight: String(buttonWeight),
+                  color: colorChip.white,
+                  top: String(buttonTextTop) + ea,
+                  position: "relative",
+                }
+              }
+            }
+          })
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  this.projectStatusUpdateEvent = projectStatusUpdateEvent;
+
+  projectPartnerUpdateEvent = () => {
+    return async function (e) {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const zIndex = 4;
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        let cancelBack, menuPrompt;
+        let thisMenu;
+        thisMenu = [
+          {
+            title: "홈리에종",
+            event: function (e) {
+              const proid = this.getAttribute("proid");
+              const desid = this.getAttribute("desid");
+              ajaxJson({ noFlat: true, whereQuery: { proid } }, BACKHOST + "/getProjects").then(([ thisProject ]) => {
+                if (thisProject.process.design.construct === null) {
+                  window.alert("해당 프로젝트는 시공화가 안 되어 있어 업데이트를 진행할 수 없습니다!");
+                  throw new Error("return error");
+                } else {
+                  return ajaxJson({
+                    whereQuery: { proid },
+                    updateQuery: { "process.design.construct.contract.partner": "홈리에종" }
+                  }, BACKHOST + "/rawUpdateProject");
+                }
+              }).then(() => {
+                instance.projects.find((p) => { return p.proid === proid }).process.design.construct.contract.partner = "홈리에종";
+                instance.contentsLoad(false);
+              }).catch((err) => {
+                console.log(err);
+              })
+            }
+          },
+          {
+            title: "디자이너",
+            event: function (e) {
+              const proid = this.getAttribute("proid");
+              const desid = this.getAttribute("desid");
+              ajaxJson({ noFlat: true, whereQuery: { proid } }, BACKHOST + "/getProjects").then(([ thisProject ]) => {
+                if (thisProject.process.design.construct === null) {
+                  window.alert("해당 프로젝트는 시공화가 안 되어 있어 업데이트를 진행할 수 없습니다!");
+                  throw new Error("return error");
+                } else {
+                  return ajaxJson({
+                    whereQuery: { proid },
+                    updateQuery: { "process.design.construct.contract.partner": "디자이너" }
+                  }, BACKHOST + "/rawUpdateProject");
+                }
+              }).then(() => {
+                instance.projects.find((p) => { return p.proid === proid }).process.design.construct.contract.partner = "디자이너";
+                instance.contentsLoad(false);
+              }).catch((err) => {
+                console.log(err);
+              })
+            }
+          },
+          {
+            title: "고객",
+            event: function (e) {
+              const proid = this.getAttribute("proid");
+              const desid = this.getAttribute("desid");
+              ajaxJson({ noFlat: true, whereQuery: { proid } }, BACKHOST + "/getProjects").then(([ thisProject ]) => {
+                if (thisProject.process.design.construct === null) {
+                  window.alert("해당 프로젝트는 시공화가 안 되어 있어 업데이트를 진행할 수 없습니다!");
+                  throw new Error("return error");
+                } else {
+                  return ajaxJson({
+                    whereQuery: { proid },
+                    updateQuery: { "process.design.construct.contract.partner": "고객" }
+                  }, BACKHOST + "/rawUpdateProject");
+                }
+              }).then(() => {
+                instance.projects.find((p) => { return p.proid === proid }).process.design.construct.contract.partner = "고객";
+                instance.contentsLoad(false);
+              }).catch((err) => {
+                console.log(err);
+              })
+            }
+          },
+        ];
+        cancelBack = createNode({
+          mother: totalContents,
+          class: [ updateMenuClassName ],
+          event: {
+            click: function (e) {
+              removeByClass(updateMenuClassName);
+            }
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            background: "transparent",
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            zIndex: String(zIndex),
+          }
+        });
+        menuPrompt = createNode({
+          mother: totalContents,
+          class: [ updateMenuClassName ],
+          attribute: {
+            desid,
+            proid,
+          },
+          style: {
+            position: "absolute",
+            top: String(e.y) + "px",
+            left: String(e.x) + "px",
+            padding: String(buttonOuterPadding) + ea,
+            paddingBottom: String(buttonOuterPadding - buttonInnerPadding) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.white,
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+            zIndex: String(zIndex),
+          },
+          children: thisMenu.map((obj, index) => {
+            return {
+              attribute: {
+                index: String(index)
+              },
+              event: {
+                click: function (e) {
+                  const index = Number(this.getAttribute("index"));
+                  const thisFunction = thisMenu[index].event;
+                  thisFunction.call(this.parentElement, e);
+                  removeByClass(updateMenuClassName);
+                },
+                contextmenu: function (e) {
+                  e.preventDefault();
+                  const index = Number(this.getAttribute("index"));
+                  const thisFunction = thisMenu[index].event;
+                  thisFunction.call(this.parentElement, e);
+                  removeByClass(updateMenuClassName);
+                },
+              },
+              style: {
+                display: "flex",
+                width: String(managerButtonSize) + ea,
+                height: String(buttonHeight) + ea,
+                borderRadius: String(5) + "px",
+                background: colorChip.gradientGreen,
+                marginBottom: String(buttonInnerPadding) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+              },
+              child: {
+                text: obj.title,
+                style: {
+                  fontSize: String(buttonSize) + ea,
+                  fontWeight: String(buttonWeight),
+                  color: colorChip.white,
+                  top: String(buttonTextTop) + ea,
+                  position: "relative",
+                }
+              }
+            }
+          })
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  this.projectPartnerUpdateEvent = projectPartnerUpdateEvent;
+
+  projectMeetingUpdateEvent = () => {
+    return async function (e) {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const zIndex = 4;
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        let cancelBack, menuPrompt;
+        let calendar;
+
+        cancelBack = createNode({
+          mother: totalContents,
+          class: [ updateMenuClassName ],
+          event: {
+            click: function (e) {
+              removeByClass(updateMenuClassName);
+            }
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            background: "transparent",
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            zIndex: String(zIndex),
+          }
+        });
+        menuPrompt = createNode({
+          mother: totalContents,
+          class: [ updateMenuClassName ],
+          attribute: {
+            desid,
+            proid,
+          },
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(e.y) + "px",
+            left: String(e.x) + "px",
+            width: String(calendarWidth) + ea,
+            borderRadius: String(5) + "px",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            background: colorChip.white,
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+            zIndex: String(zIndex),
+          },
+        });
+        calendar = instance.mother.makeCalendar(new Date(), async function (e) {
+          try {
+            const updateValue = stringToDate(this.getAttribute("buttonValue"));
+            await ajaxJson({
+              whereQuery: { proid },
+              updateQuery: { "process.contract.meeting.date": updateValue },
+            }, BACKHOST + "/rawUpdateProject");
+            removeByClass(updateMenuClassName);
+            instance.projects.find((p) => { return p.proid === proid }).process.contract.meeting.date = updateValue;
+            instance.contentsLoad(false);
+          } catch (e) {
+            console.log(e);
+          }
+        });
+        menuPrompt.appendChild(calendar.calendarBase);
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  this.projectMeetingUpdateEvent = projectMeetingUpdateEvent;
+
+  projectStartDateUpdateEvent = () => {
+    return async function (e) {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const zIndex = 4;
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        let cancelBack, menuPrompt;
+        let calendar;
+
+        cancelBack = createNode({
+          mother: totalContents,
+          class: [ updateMenuClassName ],
+          event: {
+            click: function (e) {
+              removeByClass(updateMenuClassName);
+            }
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            background: "transparent",
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            zIndex: String(zIndex),
+          }
+        });
+        menuPrompt = createNode({
+          mother: totalContents,
+          class: [ updateMenuClassName ],
+          attribute: {
+            desid,
+            proid,
+          },
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(e.y) + "px",
+            left: String(e.x) + "px",
+            width: String(calendarWidth) + ea,
+            borderRadius: String(5) + "px",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            background: colorChip.white,
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+            zIndex: String(zIndex),
+          },
+        });
+        calendar = instance.mother.makeCalendar(new Date(), async function (e) {
+          try {
+            const updateValue = stringToDate(this.getAttribute("buttonValue"));
+            const [ thisProject ] = await ajaxJson({ noFlat: true, whereQuery: { proid } }, BACKHOST + "/getProjects", { equal: true });
+            const during = serviceParsing(thisProject.service, true);
+            let startDate, endDate;
+            let whereQuery, updateQuery;
+
+            startDate = new Date(JSON.stringify(updateValue).slice(1, -1));
+            endDate = new Date(JSON.stringify(updateValue).slice(1, -1));
+            endDate.setDate(endDate.getDate() + during);
+
+            whereQuery = { proid };
+            updateQuery = {};
+            updateQuery["process.contract.form.date.from"] = startDate;
+            updateQuery["process.contract.form.date.to"] = endDate;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateProject");
+            removeByClass(updateMenuClassName);
+            instance.projects.find((p) => { return p.proid === proid }).process.contract.form.date.from = startDate;
+            instance.projects.find((p) => { return p.proid === proid }).process.contract.form.date.to = endDate;
+            instance.contentsLoad(false);
+          } catch (e) {
+            console.log(e);
+          }
+        });
+        menuPrompt.appendChild(calendar.calendarBase);
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  this.projectStartDateUpdateEvent = projectStartDateUpdateEvent;
+
+  projectEndDateUpdateEvent = () => {
+    return async function (e) {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const zIndex = 4;
+        const proid = this.getAttribute("proid");
+        const desid = this.getAttribute("desid");
+        let cancelBack, menuPrompt;
+        let calendar;
+
+        cancelBack = createNode({
+          mother: totalContents,
+          class: [ updateMenuClassName ],
+          event: {
+            click: function (e) {
+              removeByClass(updateMenuClassName);
+            }
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            background: "transparent",
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            zIndex: String(zIndex),
+          }
+        });
+        menuPrompt = createNode({
+          mother: totalContents,
+          class: [ updateMenuClassName ],
+          attribute: {
+            desid,
+            proid,
+          },
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(e.y) + "px",
+            left: String(e.x) + "px",
+            width: String(calendarWidth) + ea,
+            borderRadius: String(5) + "px",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            background: colorChip.white,
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+            zIndex: String(zIndex),
+          },
+        });
+        calendar = instance.mother.makeCalendar(new Date(), async function (e) {
+          try {
+            const updateValue = stringToDate(this.getAttribute("buttonValue"));
+            const [ thisProject ] = await ajaxJson({ noFlat: true, whereQuery: { proid } }, BACKHOST + "/getProjects", { equal: true });
+            const during = serviceParsing(thisProject.service, true);
+            let startDate, endDate;
+            let whereQuery, updateQuery;
+
+            startDate = new Date(JSON.stringify(updateValue).slice(1, -1));
+            endDate = new Date(JSON.stringify(updateValue).slice(1, -1));
+            startDate.setDate(startDate.getDate() - during);
+
+            whereQuery = { proid };
+            updateQuery = {};
+            updateQuery["process.contract.form.date.from"] = startDate;
+            updateQuery["process.contract.form.date.to"] = endDate;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateProject");
+            removeByClass(updateMenuClassName);
+            instance.projects.find((p) => { return p.proid === proid }).process.contract.form.date.from = startDate;
+            instance.projects.find((p) => { return p.proid === proid }).process.contract.form.date.to = endDate;
+            instance.contentsLoad(false);
+          } catch (e) {
+            console.log(e);
+          }
+        });
+        menuPrompt.appendChild(calendar.calendarBase);
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  this.projectEndDateUpdateEvent = projectEndDateUpdateEvent;
+
+
+
   grayBack = createNode({
     mother: totalContents,
     style: {
@@ -2152,505 +2715,18 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
 
             // status - index: 1
             } else if (i === 1) {
-              clientDom.addEventListener("contextmenu", async function (e) {
-                try {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const zIndex = 4;
-                  const proid = this.getAttribute("proid");
-                  const desid = this.getAttribute("desid");
-                  let cancelBack, menuPrompt;
-                  let thisMenu;
-                  thisMenu = [
-                    {
-                      title: "완료 처리",
-                      event: function (e) {
-                        if (window.confirm("해당 프로젝트를 완료처리 하시겠습니까?")) {
-                          const proid = this.getAttribute("proid");
-                          const desid = this.getAttribute("desid");
-                          const loading = instance.mother.grayLoading();
-                          ajaxJson({
-                            whereQuery: { proid },
-                            updateQuery: { "process.status": "완료" }
-                          }, BACKHOST + "/rawUpdateProject").then(() => {
-                            window.location.reload();
-                          }).catch((err) => {
-                            console.log(err);
-                          });
-                        }
-                      }
-                    }
-                  ];
-                  cancelBack = createNode({
-                    mother: totalContents,
-                    class: [ updateMenuClassName ],
-                    event: {
-                      click: function (e) {
-                        removeByClass(updateMenuClassName);
-                      }
-                    },
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      background: "transparent",
-                      width: withOut(0, ea),
-                      height: withOut(0, ea),
-                      zIndex: String(zIndex),
-                    }
-                  });
-                  menuPrompt = createNode({
-                    mother: totalContents,
-                    class: [ updateMenuClassName ],
-                    attribute: {
-                      desid,
-                      proid,
-                    },
-                    style: {
-                      position: "absolute",
-                      top: String(e.y) + "px",
-                      left: String(e.x) + "px",
-                      padding: String(buttonOuterPadding) + ea,
-                      paddingBottom: String(buttonOuterPadding - buttonInnerPadding) + ea,
-                      borderRadius: String(5) + "px",
-                      background: colorChip.white,
-                      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                      animation: "fadeuplite 0.3s ease forwards",
-                      zIndex: String(zIndex),
-                    },
-                    children: thisMenu.map((obj, index) => {
-                      return {
-                        attribute: {
-                          index: String(index)
-                        },
-                        event: {
-                          click: function (e) {
-                            const index = Number(this.getAttribute("index"));
-                            const thisFunction = thisMenu[index].event;
-                            thisFunction.call(this.parentElement, e);
-                            removeByClass(updateMenuClassName);
-                          },
-                          contextmenu: function (e) {
-                            e.preventDefault();
-                            const index = Number(this.getAttribute("index"));
-                            const thisFunction = thisMenu[index].event;
-                            thisFunction.call(this.parentElement, e);
-                            removeByClass(updateMenuClassName);
-                          },
-                        },
-                        style: {
-                          display: "flex",
-                          width: String(managerButtonSize) + ea,
-                          height: String(buttonHeight) + ea,
-                          borderRadius: String(5) + "px",
-                          background: colorChip.gradientGreen,
-                          marginBottom: String(buttonInnerPadding) + ea,
-                          justifyContent: "center",
-                          alignItems: "center",
-                          cursor: "pointer",
-                        },
-                        child: {
-                          text: obj.title,
-                          style: {
-                            fontSize: String(buttonSize) + ea,
-                            fontWeight: String(buttonWeight),
-                            color: colorChip.white,
-                            top: String(buttonTextTop) + ea,
-                            position: "relative",
-                          }
-                        }
-                      }
-                    })
-                  });
-                } catch (e) {
-                  console.log(e);
-                }
-              });
-
+              clientDom.addEventListener("contextmenu", projectStatusUpdateEvent());
             // partner - index: 2
             } else if (i === 2) {
-              clientDom.addEventListener("contextmenu", async function (e) {
-                try {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const zIndex = 4;
-                  const proid = this.getAttribute("proid");
-                  const desid = this.getAttribute("desid");
-                  let cancelBack, menuPrompt;
-                  let thisMenu;
-                  thisMenu = [
-                    {
-                      title: "홈리에종",
-                      event: function (e) {
-                        const proid = this.getAttribute("proid");
-                        const desid = this.getAttribute("desid");
-                        ajaxJson({ noFlat: true, whereQuery: { proid } }, BACKHOST + "/getProjects").then(([ thisProject ]) => {
-                          if (thisProject.process.design.construct === null) {
-                            window.alert("해당 프로젝트는 시공화가 안 되어 있어 업데이트를 진행할 수 없습니다!");
-                            throw new Error("return error");
-                          } else {
-                            return ajaxJson({
-                              whereQuery: { proid },
-                              updateQuery: { "process.design.construct.contract.partner": "홈리에종" }
-                            }, BACKHOST + "/rawUpdateProject");
-                          }
-                        }).then(() => {
-                          window.location.reload();
-                        }).catch((err) => {
-                          console.log(err);
-                        })
-                      }
-                    },
-                    {
-                      title: "디자이너",
-                      event: function (e) {
-                        const proid = this.getAttribute("proid");
-                        const desid = this.getAttribute("desid");
-                        ajaxJson({ noFlat: true, whereQuery: { proid } }, BACKHOST + "/getProjects").then(([ thisProject ]) => {
-                          if (thisProject.process.design.construct === null) {
-                            window.alert("해당 프로젝트는 시공화가 안 되어 있어 업데이트를 진행할 수 없습니다!");
-                            throw new Error("return error");
-                          } else {
-                            return ajaxJson({
-                              whereQuery: { proid },
-                              updateQuery: { "process.design.construct.contract.partner": "디자이너" }
-                            }, BACKHOST + "/rawUpdateProject");
-                          }
-                        }).then(() => {
-                          window.location.reload();
-                        }).catch((err) => {
-                          console.log(err);
-                        })
-                      }
-                    },
-                    {
-                      title: "고객",
-                      event: function (e) {
-                        const proid = this.getAttribute("proid");
-                        const desid = this.getAttribute("desid");
-                        ajaxJson({ noFlat: true, whereQuery: { proid } }, BACKHOST + "/getProjects").then(([ thisProject ]) => {
-                          if (thisProject.process.design.construct === null) {
-                            window.alert("해당 프로젝트는 시공화가 안 되어 있어 업데이트를 진행할 수 없습니다!");
-                            throw new Error("return error");
-                          } else {
-                            return ajaxJson({
-                              whereQuery: { proid },
-                              updateQuery: { "process.design.construct.contract.partner": "고객" }
-                            }, BACKHOST + "/rawUpdateProject");
-                          }
-                        }).then(() => {
-                          window.location.reload();
-                        }).catch((err) => {
-                          console.log(err);
-                        })
-                      }
-                    },
-                  ];
-                  cancelBack = createNode({
-                    mother: totalContents,
-                    class: [ updateMenuClassName ],
-                    event: {
-                      click: function (e) {
-                        removeByClass(updateMenuClassName);
-                      }
-                    },
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      background: "transparent",
-                      width: withOut(0, ea),
-                      height: withOut(0, ea),
-                      zIndex: String(zIndex),
-                    }
-                  });
-                  menuPrompt = createNode({
-                    mother: totalContents,
-                    class: [ updateMenuClassName ],
-                    attribute: {
-                      desid,
-                      proid,
-                    },
-                    style: {
-                      position: "absolute",
-                      top: String(e.y) + "px",
-                      left: String(e.x) + "px",
-                      padding: String(buttonOuterPadding) + ea,
-                      paddingBottom: String(buttonOuterPadding - buttonInnerPadding) + ea,
-                      borderRadius: String(5) + "px",
-                      background: colorChip.white,
-                      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                      animation: "fadeuplite 0.3s ease forwards",
-                      zIndex: String(zIndex),
-                    },
-                    children: thisMenu.map((obj, index) => {
-                      return {
-                        attribute: {
-                          index: String(index)
-                        },
-                        event: {
-                          click: function (e) {
-                            const index = Number(this.getAttribute("index"));
-                            const thisFunction = thisMenu[index].event;
-                            thisFunction.call(this.parentElement, e);
-                            removeByClass(updateMenuClassName);
-                          },
-                          contextmenu: function (e) {
-                            e.preventDefault();
-                            const index = Number(this.getAttribute("index"));
-                            const thisFunction = thisMenu[index].event;
-                            thisFunction.call(this.parentElement, e);
-                            removeByClass(updateMenuClassName);
-                          },
-                        },
-                        style: {
-                          display: "flex",
-                          width: String(managerButtonSize) + ea,
-                          height: String(buttonHeight) + ea,
-                          borderRadius: String(5) + "px",
-                          background: colorChip.gradientGreen,
-                          marginBottom: String(buttonInnerPadding) + ea,
-                          justifyContent: "center",
-                          alignItems: "center",
-                          cursor: "pointer",
-                        },
-                        child: {
-                          text: obj.title,
-                          style: {
-                            fontSize: String(buttonSize) + ea,
-                            fontWeight: String(buttonWeight),
-                            color: colorChip.white,
-                            top: String(buttonTextTop) + ea,
-                            position: "relative",
-                          }
-                        }
-                      }
-                    })
-                  });
-                } catch (e) {
-                  console.log(e);
-                }
-              });
-
+              clientDom.addEventListener("contextmenu", projectPartnerUpdateEvent());
             // first meeting - index: 5
             } else if (i === 5) {
-              clientDom.addEventListener("contextmenu", async function (e) {
-                try {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const zIndex = 4;
-                  const proid = this.getAttribute("proid");
-                  const desid = this.getAttribute("desid");
-                  let cancelBack, menuPrompt;
-                  let calendar;
-
-                  cancelBack = createNode({
-                    mother: totalContents,
-                    class: [ updateMenuClassName ],
-                    event: {
-                      click: function (e) {
-                        removeByClass(updateMenuClassName);
-                      }
-                    },
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      background: "transparent",
-                      width: withOut(0, ea),
-                      height: withOut(0, ea),
-                      zIndex: String(zIndex),
-                    }
-                  });
-                  menuPrompt = createNode({
-                    mother: totalContents,
-                    class: [ updateMenuClassName ],
-                    attribute: {
-                      desid,
-                      proid,
-                    },
-                    style: {
-                      display: "inline-flex",
-                      position: "absolute",
-                      top: String(e.y) + "px",
-                      left: String(e.x) + "px",
-                      width: String(calendarWidth) + ea,
-                      borderRadius: String(5) + "px",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      textAlign: "center",
-                      background: colorChip.white,
-                      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                      animation: "fadeuplite 0.3s ease forwards",
-                      zIndex: String(zIndex),
-                    },
-                  });
-                  calendar = instance.mother.makeCalendar(new Date(), async function (e) {
-                    try {
-                      const updateValue = stringToDate(this.getAttribute("buttonValue"));
-                      await ajaxJson({
-                        whereQuery: { proid },
-                        updateQuery: { "process.contract.meeting.date": updateValue },
-                      }, BACKHOST + "/rawUpdateProject");
-                      removeByClass(updateMenuClassName);
-                      window.location.reload();
-                    } catch (e) {
-                      console.log(e);
-                    }
-                  });
-                  menuPrompt.appendChild(calendar.calendarBase);
-
-                } catch (e) {
-                  console.log(e);
-                }
-              });
+              clientDom.addEventListener("contextmenu", projectMeetingUpdateEvent());
             } else if (i === 7) {
-              clientDom.addEventListener("contextmenu", async function (e) {
-                try {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const zIndex = 4;
-                  const proid = this.getAttribute("proid");
-                  const desid = this.getAttribute("desid");
-                  let cancelBack, menuPrompt;
-                  let calendar;
-
-                  cancelBack = createNode({
-                    mother: totalContents,
-                    class: [ updateMenuClassName ],
-                    event: {
-                      click: function (e) {
-                        removeByClass(updateMenuClassName);
-                      }
-                    },
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      background: "transparent",
-                      width: withOut(0, ea),
-                      height: withOut(0, ea),
-                      zIndex: String(zIndex),
-                    }
-                  });
-                  menuPrompt = createNode({
-                    mother: totalContents,
-                    class: [ updateMenuClassName ],
-                    attribute: {
-                      desid,
-                      proid,
-                    },
-                    style: {
-                      display: "inline-flex",
-                      position: "absolute",
-                      top: String(e.y) + "px",
-                      left: String(e.x) + "px",
-                      width: String(calendarWidth) + ea,
-                      borderRadius: String(5) + "px",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      textAlign: "center",
-                      background: colorChip.white,
-                      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                      animation: "fadeuplite 0.3s ease forwards",
-                      zIndex: String(zIndex),
-                    },
-                  });
-                  calendar = instance.mother.makeCalendar(new Date(), async function (e) {
-                    try {
-                      const updateValue = stringToDate(this.getAttribute("buttonValue"));
-                      await ajaxJson({
-                        whereQuery: { proid },
-                        updateQuery: { "process.contract.meeting.date": updateValue },
-                      }, BACKHOST + "/rawUpdateProject");
-                      removeByClass(updateMenuClassName);
-                      window.location.reload();
-                    } catch (e) {
-                      console.log(e);
-                    }
-                  });
-                  menuPrompt.appendChild(calendar.calendarBase);
-
-                } catch (e) {
-                  console.log(e);
-                }
-              });
+              clientDom.addEventListener("contextmenu", projectStartDateUpdateEvent());
             } else if (i === 8) {
-              clientDom.addEventListener("contextmenu", async function (e) {
-                try {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const zIndex = 4;
-                  const proid = this.getAttribute("proid");
-                  const desid = this.getAttribute("desid");
-                  let cancelBack, menuPrompt;
-                  let calendar;
-
-                  cancelBack = createNode({
-                    mother: totalContents,
-                    class: [ updateMenuClassName ],
-                    event: {
-                      click: function (e) {
-                        removeByClass(updateMenuClassName);
-                      }
-                    },
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      background: "transparent",
-                      width: withOut(0, ea),
-                      height: withOut(0, ea),
-                      zIndex: String(zIndex),
-                    }
-                  });
-                  menuPrompt = createNode({
-                    mother: totalContents,
-                    class: [ updateMenuClassName ],
-                    attribute: {
-                      desid,
-                      proid,
-                    },
-                    style: {
-                      display: "inline-flex",
-                      position: "absolute",
-                      top: String(e.y) + "px",
-                      left: String(e.x) + "px",
-                      width: String(calendarWidth) + ea,
-                      borderRadius: String(5) + "px",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      textAlign: "center",
-                      background: colorChip.white,
-                      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                      animation: "fadeuplite 0.3s ease forwards",
-                      zIndex: String(zIndex),
-                    },
-                  });
-                  calendar = instance.mother.makeCalendar(new Date(), async function (e) {
-                    try {
-                      const updateValue = stringToDate(this.getAttribute("buttonValue"));
-                      await ajaxJson({
-                        whereQuery: { proid },
-                        updateQuery: { "process.contract.meeting.date": updateValue },
-                      }, BACKHOST + "/rawUpdateProject");
-                      removeByClass(updateMenuClassName);
-                      window.location.reload();
-                    } catch (e) {
-                      console.log(e);
-                    }
-                  });
-                  menuPrompt.appendChild(calendar.calendarBase);
-
-                } catch (e) {
-                  console.log(e);
-                }
-              });
+              clientDom.addEventListener("contextmenu", projectEndDateUpdateEvent());
             } else {
-
               clientDom.addEventListener("contextmenu", async function (e) {
                 try {
                   e.preventDefault();
@@ -2660,7 +2736,6 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
                   console.log(e);
                 }
               });
-
             }
 
           }
@@ -3225,7 +3300,7 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
                   style: {
                     display: "inline-block",
                     position: "relative",
-                    width: "calc(100% / 4",
+                    width: "calc(100% / 4)",
                     height: withOut(0, ea),
                     fontSize: String(memoContentsSize) + ea,
                     fontWeight: String(memoContentsWeight),
@@ -3237,10 +3312,47 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
                 },
                 {
                   text: valueArr.slice(0, 6).map((obj) => { return obj.value }).join("\n"),
+                  attribute: {
+                    proid: project.proid,
+                    desid: project.desid,
+                  },
+                  event: {
+                    click: function (e) {
+                      const rect = this.getBoundingClientRect();
+                      const factorHeight = rect.height / 6;
+                      const startY = rect.top;
+                      let eventFunction;
+                      if (startY + (factorHeight * 0) <= e.y && startY + (factorHeight * 1) > e.y) {
+                        eventFunction = instance.projectStatusUpdateEvent();
+                        eventFunction.call(this, e).catch((err) => {
+                          console.log(err)
+                        });
+                      } else if (startY + (factorHeight * 1) <= e.y && startY + (factorHeight * 2) > e.y) {
+                        console.log(2);
+
+
+                      } else if (startY + (factorHeight * 2) <= e.y && startY + (factorHeight * 3) > e.y) {
+                        console.log(3);
+
+
+                      } else if (startY + (factorHeight * 3) <= e.y && startY + (factorHeight * 4) > e.y) {
+                        console.log(4);
+
+
+                      } else if (startY + (factorHeight * 4) <= e.y && startY + (factorHeight * 5) > e.y) {
+                        console.log(5);
+
+
+                      } else if (startY + (factorHeight * 5) <= e.y && startY + (factorHeight * 6) > e.y) {
+                        console.log(6);
+
+                      }
+                    }
+                  },
                   style: {
                     display: "inline-block",
                     position: "relative",
-                    width: "calc(100% / 4",
+                    width: "calc(100% / 4)",
                     height: withOut(0, ea),
                     fontSize: String(memoContentsSize) + ea,
                     fontWeight: String(memoContentsWeight),
@@ -3255,7 +3367,7 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
                   style: {
                     display: "inline-block",
                     position: "relative",
-                    width: "calc(100% / 4",
+                    width: "calc(100% / 4)",
                     height: withOut(0, ea),
                     fontSize: String(memoContentsSize) + ea,
                     fontWeight: String(memoContentsWeight),
@@ -3270,7 +3382,7 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
                   style: {
                     display: "inline-block",
                     position: "relative",
-                    width: "calc(100% / 4",
+                    width: "calc(100% / 4)",
                     height: withOut(0, ea),
                     fontSize: String(memoContentsSize) + ea,
                     fontWeight: String(memoContentsWeight),
