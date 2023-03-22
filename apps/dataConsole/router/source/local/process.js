@@ -1601,6 +1601,9 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
             event: function (e) {
               const proid = this.getAttribute("proid");
               const desid = this.getAttribute("desid");
+              let whiteBoo;
+              let whiteTargetDom;
+
               ajaxJson({ noFlat: true, whereQuery: { proid } }, BACKHOST + "/getProjects").then(([ thisProject ]) => {
                 if (thisProject.process.design.construct === null) {
                   window.alert("해당 프로젝트는 시공화가 안 되어 있어 업데이트를 진행할 수 없습니다!");
@@ -1613,7 +1616,19 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
                 }
               }).then(() => {
                 instance.projects.find((p) => { return p.proid === proid }).process.design.construct.contract.partner = "홈리에종";
+                whiteBoo = false;
+                if (document.querySelector("." + whiteCardClassName) !== null) {
+                  removeByClass(whiteCardClassName);
+                  whiteBoo = true;
+                }
                 instance.contentsLoad(false);
+                if (whiteBoo) {
+                  whiteTargetDom = findByAttribute([ ...instance.clientDoms ], "proid", proid)
+                  if (whiteTargetDom !== null) {
+                    whiteTargetDom.click();
+                  }
+                }
+
               }).catch((err) => {
                 console.log(err);
               })
@@ -1624,6 +1639,9 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
             event: function (e) {
               const proid = this.getAttribute("proid");
               const desid = this.getAttribute("desid");
+              let whiteBoo;
+              let whiteTargetDom;
+
               ajaxJson({ noFlat: true, whereQuery: { proid } }, BACKHOST + "/getProjects").then(([ thisProject ]) => {
                 if (thisProject.process.design.construct === null) {
                   window.alert("해당 프로젝트는 시공화가 안 되어 있어 업데이트를 진행할 수 없습니다!");
@@ -1636,7 +1654,18 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
                 }
               }).then(() => {
                 instance.projects.find((p) => { return p.proid === proid }).process.design.construct.contract.partner = "디자이너";
+                whiteBoo = false;
+                if (document.querySelector("." + whiteCardClassName) !== null) {
+                  removeByClass(whiteCardClassName);
+                  whiteBoo = true;
+                }
                 instance.contentsLoad(false);
+                if (whiteBoo) {
+                  whiteTargetDom = findByAttribute([ ...instance.clientDoms ], "proid", proid)
+                  if (whiteTargetDom !== null) {
+                    whiteTargetDom.click();
+                  }
+                }
               }).catch((err) => {
                 console.log(err);
               })
@@ -1647,6 +1676,9 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
             event: function (e) {
               const proid = this.getAttribute("proid");
               const desid = this.getAttribute("desid");
+              let whiteBoo;
+              let whiteTargetDom;
+
               ajaxJson({ noFlat: true, whereQuery: { proid } }, BACKHOST + "/getProjects").then(([ thisProject ]) => {
                 if (thisProject.process.design.construct === null) {
                   window.alert("해당 프로젝트는 시공화가 안 되어 있어 업데이트를 진행할 수 없습니다!");
@@ -1659,7 +1691,18 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
                 }
               }).then(() => {
                 instance.projects.find((p) => { return p.proid === proid }).process.design.construct.contract.partner = "고객";
+                whiteBoo = false;
+                if (document.querySelector("." + whiteCardClassName) !== null) {
+                  removeByClass(whiteCardClassName);
+                  whiteBoo = true;
+                }
                 instance.contentsLoad(false);
+                if (whiteBoo) {
+                  whiteTargetDom = findByAttribute([ ...instance.clientDoms ], "proid", proid)
+                  if (whiteTargetDom !== null) {
+                    whiteTargetDom.click();
+                  }
+                }
               }).catch((err) => {
                 console.log(err);
               })
@@ -1810,13 +1853,27 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
         calendar = instance.mother.makeCalendar(new Date(), async function (e) {
           try {
             const updateValue = stringToDate(this.getAttribute("buttonValue"));
+            let whiteBoo;
+            let whiteTargetDom;
+
             await ajaxJson({
               whereQuery: { proid },
               updateQuery: { "process.contract.meeting.date": updateValue },
             }, BACKHOST + "/rawUpdateProject");
             removeByClass(updateMenuClassName);
             instance.projects.find((p) => { return p.proid === proid }).process.contract.meeting.date = updateValue;
+            whiteBoo = false;
+            if (document.querySelector("." + whiteCardClassName) !== null) {
+              removeByClass(whiteCardClassName);
+              whiteBoo = true;
+            }
             instance.contentsLoad(false);
+            if (whiteBoo) {
+              whiteTargetDom = findByAttribute([ ...instance.clientDoms ], "proid", proid)
+              if (whiteTargetDom !== null) {
+                whiteTargetDom.click();
+              }
+            }
           } catch (e) {
             console.log(e);
           }
@@ -1890,6 +1947,8 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
             const during = serviceParsing(thisProject.service, true);
             let startDate, endDate;
             let whereQuery, updateQuery;
+            let whiteBoo;
+            let whiteTargetDom;
 
             startDate = new Date(JSON.stringify(updateValue).slice(1, -1));
             endDate = new Date(JSON.stringify(updateValue).slice(1, -1));
@@ -1904,7 +1963,18 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
             removeByClass(updateMenuClassName);
             instance.projects.find((p) => { return p.proid === proid }).process.contract.form.date.from = startDate;
             instance.projects.find((p) => { return p.proid === proid }).process.contract.form.date.to = endDate;
+            whiteBoo = false;
+            if (document.querySelector("." + whiteCardClassName) !== null) {
+              removeByClass(whiteCardClassName);
+              whiteBoo = true;
+            }
             instance.contentsLoad(false);
+            if (whiteBoo) {
+              whiteTargetDom = findByAttribute([ ...instance.clientDoms ], "proid", proid)
+              if (whiteTargetDom !== null) {
+                whiteTargetDom.click();
+              }
+            }
           } catch (e) {
             console.log(e);
           }
@@ -1978,6 +2048,8 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
             const during = serviceParsing(thisProject.service, true);
             let startDate, endDate;
             let whereQuery, updateQuery;
+            let whiteBoo;
+            let whiteTargetDom;
 
             startDate = new Date(JSON.stringify(updateValue).slice(1, -1));
             endDate = new Date(JSON.stringify(updateValue).slice(1, -1));
@@ -1992,7 +2064,18 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
             removeByClass(updateMenuClassName);
             instance.projects.find((p) => { return p.proid === proid }).process.contract.form.date.from = startDate;
             instance.projects.find((p) => { return p.proid === proid }).process.contract.form.date.to = endDate;
+            whiteBoo = false;
+            if (document.querySelector("." + whiteCardClassName) !== null) {
+              removeByClass(whiteCardClassName);
+              whiteBoo = true;
+            }
             instance.contentsLoad(false);
+            if (whiteBoo) {
+              whiteTargetDom = findByAttribute([ ...instance.clientDoms ], "proid", proid)
+              if (whiteTargetDom !== null) {
+                whiteTargetDom.click();
+              }
+            }
           } catch (e) {
             console.log(e);
           }
@@ -2005,8 +2088,6 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
     }
   }
   this.projectEndDateUpdateEvent = projectEndDateUpdateEvent;
-
-
 
   grayBack = createNode({
     mother: totalContents,
@@ -3328,24 +3409,21 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
                           console.log(err)
                         });
                       } else if (startY + (factorHeight * 1) <= e.y && startY + (factorHeight * 2) > e.y) {
-                        console.log(2);
-
-
+                        eventFunction = instance.projectPartnerUpdateEvent();
+                        eventFunction.call(this, e).catch((err) => {
+                          console.log(err)
+                        });
                       } else if (startY + (factorHeight * 2) <= e.y && startY + (factorHeight * 3) > e.y) {
-                        console.log(3);
-
-
+                        // pass
                       } else if (startY + (factorHeight * 3) <= e.y && startY + (factorHeight * 4) > e.y) {
-                        console.log(4);
-
-
+                        // pass
                       } else if (startY + (factorHeight * 4) <= e.y && startY + (factorHeight * 5) > e.y) {
-                        console.log(5);
-
-
+                        eventFunction = instance.projectMeetingUpdateEvent();
+                        eventFunction.call(this, e).catch((err) => {
+                          console.log(err)
+                        });
                       } else if (startY + (factorHeight * 5) <= e.y && startY + (factorHeight * 6) > e.y) {
-                        console.log(6);
-
+                        // pass
                       }
                     }
                   },
@@ -3379,6 +3457,37 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
                 },
                 {
                   text: valueArr.slice(6).map((obj) => { return obj.value }).join("\n"),
+                  attribute: {
+                    proid: project.proid,
+                    desid: project.desid,
+                  },
+                  event: {
+                    click: function (e) {
+                      const rect = this.getBoundingClientRect();
+                      const factorHeight = rect.height / 6;
+                      const startY = rect.top;
+                      let eventFunction;
+                      if (startY + (factorHeight * 0) <= e.y && startY + (factorHeight * 1) > e.y) {
+                        eventFunction = instance.projectStartDateUpdateEvent();
+                        eventFunction.call(this, e).catch((err) => {
+                          console.log(err)
+                        });
+                      } else if (startY + (factorHeight * 1) <= e.y && startY + (factorHeight * 2) > e.y) {
+                        eventFunction = instance.projectEndDateUpdateEvent();
+                        eventFunction.call(this, e).catch((err) => {
+                          console.log(err)
+                        });
+                      } else if (startY + (factorHeight * 2) <= e.y && startY + (factorHeight * 3) > e.y) {
+                        // pass
+                      } else if (startY + (factorHeight * 3) <= e.y && startY + (factorHeight * 4) > e.y) {
+                        // pass
+                      } else if (startY + (factorHeight * 4) <= e.y && startY + (factorHeight * 5) > e.y) {
+                        // pass
+                      } else if (startY + (factorHeight * 5) <= e.y && startY + (factorHeight * 6) > e.y) {
+                        // pass
+                      }
+                    }
+                  },
                   style: {
                     display: "inline-block",
                     position: "relative",
