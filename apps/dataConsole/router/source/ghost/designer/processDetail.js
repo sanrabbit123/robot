@@ -3190,6 +3190,10 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainTitle = "출장 내역";
   const travelBlockClassName = "travelBlockClassName";
+  const dateValueClassName = "dateValueClassName";
+  const feeValueClassName = "feeValueClassName";
+  const fromValueClassName = "fromValueClassName";
+  const toValueClassName = "toValueClassName";
   const dateConvert = (dateObject) => {
     const res = dateToString(dateObject);
     if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(res)) {
@@ -3288,7 +3292,8 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
   let maximumTextWidth;
   let rowMaker;
   let minimumLength;
-
+  let totalTravelUpdate;
+  
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
@@ -3412,7 +3417,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
 
   basePan = {};
 
-  rowMaker = function (index, date = new Date(1800, 0, 1), fee = 0, addressFrom = '', addressTo = '') {
+  rowMaker = (index, date = new Date(1800, 0, 1), fee = 0, addressFrom = '', addressTo = '') => {
     let dom;
     let emptyBoo;
 
@@ -3510,6 +3515,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
                 alignItems: "center",
               },
               child: {
+                class: [ dateValueClassName ],
                 text: dateConvert(date),
                 style: {
                   display: "block",
@@ -3550,6 +3556,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
                 alignItems: "center",
               },
               child: {
+                class: [ feeValueClassName ],
                 text: fee === 0 ? '-' : (autoComma(fee) + '원'),
                 style: {
                   display: "block",
@@ -3595,6 +3602,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
               alignItems: "center",
             },
             child: {
+              class: [ fromValueClassName ],
               text: addressFrom,
               style: {
                 display: "block",
@@ -3637,6 +3645,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
               alignItems: "center",
             },
             child: {
+              class: [ fromValueClassName ],
               text: '-',
               style: {
                 display: "block",
@@ -3679,6 +3688,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
               alignItems: "center",
             },
             child: {
+              class: [ toValueClassName ],
               text: addressTo,
               style: {
                 display: "block",
@@ -3719,6 +3729,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
               alignItems: "center",
             },
             child: {
+              class: [ toValueClassName ],
               text: '-',
               style: {
                 display: "block",
@@ -3737,6 +3748,72 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
     return dom;
   }
 
+  totalTravelUpdate = async () => {
+    try {
+      let blocks;
+      let realBlocks;
+      let proid, desid;
+      let matrix;
+      let finalObject;
+      let dateRaw, feeRaw, fromRaw, toRaw;
+      let dateValue, feeValue, fromValue, toValue;
+
+      proid = instance.project.proid;
+      desid = instance.designer.desid;
+      
+      blocks = [ ...document.querySelectorAll('.' + travelBlockClassName) ];
+      realBlocks = blocks.filter((dom) => { return dom.getAttribute("empty") !== "true" });
+
+      matrix = [];
+      for (let dom of realBlocks) {
+        dateRaw = dom.querySelector('.' + dateValueClassName).textContent.trim();
+        feeRaw = dom.querySelector('.' + feeValueClassName).textContent.trim();
+        fromRaw = dom.querySelector('.' + fromValueClassName).textContent.trim();
+        toRaw = dom.querySelector('.' + toValueClassName).textContent.trim();
+
+        if (dateRaw === '-' || dateRaw === '') {
+          dateValue = new Date(2000, 0, 1);
+        } else {
+          dateValue = stringToDate(dateRaw);
+        }
+
+        if (feeRaw === '-' || feeRaw === '') {
+          feeValue = 0;
+        } else {
+          feeValue = Number(feeRaw.replace(/[^0-9]/gi, ''));
+        }
+
+        fromValue = fromRaw;
+        toValue = toRaw;
+
+        matrix.push({
+          date: dateValue,
+          fee: feeValue,
+          address: {
+            from: fromValue,
+            to: toValue,
+          }
+        })
+      }
+
+      finalObject = {
+        proid,
+        desid,
+        travel: matrix,
+      };
+
+      await ajaxJson({
+        mode: "update",
+        proid,
+        desid,
+        updateQuery: { travel: matrix }
+      }, SECONDHOST + "/projectDesignerTravel");
+      
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   travelAddEvent = async function (e) {
     try {
       const client = instance.client;
@@ -3753,6 +3830,9 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
       let blocks;
       let lastIndex;
       let indexArr;
+      let emptyRows;
+      let emptyLength;
+      let realBlocks;
 
       thisProposal = instance.project.proposal.detail.find((obj) => { return obj.desid === instance.designer.desid });
       fee = 0;
@@ -3764,13 +3844,28 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
       }
 
       blocks = [ ...document.querySelectorAll('.' + travelBlockClassName) ];
-      indexArr = blocks.map((dom) => { return Number(dom.getAttribute("index")); });
-      indexArr.sort((a, b) => {
-        return b - a;
-      });
 
-      dom = rowMaker(indexArr[0] + 1, date, fee, address.from, address.to);
-      basePan.insertBefore(dom, basePan.children[basePan.children.length - 2]);
+      emptyRows = blocks.filter((dom) => { return dom.getAttribute("empty") === "true" });
+      emptyLength = emptyRows.length;
+
+      realBlocks = blocks.filter((dom) => { return dom.getAttribute("empty") !== "true" });
+
+      if (emptyRows.length === 0) {
+        dom = rowMaker(realBlocks.length + 1, date, fee, address.from, address.to);
+        basePan.insertBefore(dom, basePan.children[basePan.children.length - 2]);
+      } else {
+        for (let row of emptyRows) {
+          row.remove();
+        }
+        dom = rowMaker(realBlocks.length + 1, date, fee, address.from, address.to);
+        basePan.insertBefore(dom, basePan.children[basePan.children.length - 2]);
+        for (let i = 0; i < emptyLength - 1; i++) {
+          dom = rowMaker(realBlocks.length + 1 + i + 1);
+          basePan.insertBefore(dom, basePan.children[basePan.children.length - 2]);
+        }
+      }
+
+      await totalTravelUpdate();
 
     } catch (e) {
       console.log(e);
@@ -4102,52 +4197,67 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
     ] 
   });
 
-  for (let i = 0; i < minimumLength; i++) {
-    rowMaker(i + 1);
-  }
-
-  createNode({
-    mother: basePan,
-    style: {
-      display: "flex",
-      position: "relative",
-      width: withOut(0, ea),
-      height: String(buttonTongHeight) + ea,
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "end",
-      paddingTop: String(buttonTongPaddingTop) + ea,
-    },
-    child: {
-      event: {
-        click: travelAddEvent,
-      },
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        background: colorChip.gradientGreen,
-        height: String(buttonHeight) + ea,
-        borderRadius: String(5) + "px",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        paddingLeft: String(buttonPadding) + ea,
-        paddingRight: String(buttonPadding) + ea,
-        cursor: "pointer",
-      },
-      child: {
-        text: "출장 내역 추가",
-        style: {
-          display: "block",
-          fontSize: String(buttonSize) + ea,
-          fontWeight: String(buttonWeight),
-          color: colorChip.white,
-          position: "relative",
-          top: String(buttonTextTop) + ea,
-          cursor: "pointer",
-        }
+  ajaxJson({
+    mode: "get",
+    proid: project.proid,
+    desid: project.desid,
+  }, SECONDHOST + "/projectDesignerTravel", { equal: true }).then(({ travel }) => {
+    for (let i = 0; i < travel.length; i++) {
+      rowMaker(i + 1, travel[i].date, travel[i].fee, travel[i].address.from, travel[i].address.to);
+    }
+    if (travel.length < minimumLength) {
+      for (let i = 0; i < minimumLength - travel.length; i++) {
+        rowMaker(i + 1 + travel.length);
       }
     }
+
+    // buttons
+    createNode({
+      mother: basePan,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        height: String(buttonTongHeight) + ea,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "end",
+        paddingTop: String(buttonTongPaddingTop) + ea,
+      },
+      child: {
+        event: {
+          click: travelAddEvent,
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          background: colorChip.gradientGreen,
+          height: String(buttonHeight) + ea,
+          borderRadius: String(5) + "px",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          paddingLeft: String(buttonPadding) + ea,
+          paddingRight: String(buttonPadding) + ea,
+          cursor: "pointer",
+        },
+        child: {
+          text: "출장 내역 추가",
+          style: {
+            display: "block",
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(buttonWeight),
+            color: colorChip.white,
+            position: "relative",
+            top: String(buttonTextTop) + ea,
+            cursor: "pointer",
+          }
+        }
+      }
+    });
+
+  }).catch((err) => {
+    console.log(err);
   })
 
 }

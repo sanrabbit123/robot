@@ -1355,6 +1355,66 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_projectDesignerTravel = function () {
+  const instance = this;
+  const back = this.back;
+  const { errorLog, equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/projectDesignerTravel" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.mode === undefined || req.body.desid === undefined || req.body.proid === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const collection = "projectDesignerTravel";
+      const { mode, desid, proid } = req.body;
+      let resultObj;
+      let defaultObj;
+      let json;
+      let whereQuery, updateQuery;
+
+      defaultObj = {
+        proid,
+        desid,
+        travel: []
+      };
+
+      if (mode === "get") {
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        if (rows.length === 0) {
+          json = equalJson(JSON.stringify(defaultObj));
+          await back.mongoCreate(collection, json, { selfMongo });
+          resultObj = json;
+        } else {
+          resultObj = rows[0];
+        }
+      } else if (mode === "update") {
+        whereQuery = { proid };
+        ({ updateQuery } = equalJson(req.body));
+        await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+        resultObj = { message: "done" };
+      }
+
+      res.send(JSON.stringify(resultObj));
+
+    } catch (e) {
+      errorLog("Second Ghost 서버 문제 생김 (rou_post_projectDesignerTravel): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
   const instance = this;
   const back = this.back;
