@@ -3439,7 +3439,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
         const mother = this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
         const base = this.parentElement;
         const zIndex = 4;
-        const value = stringToDate(this.getAttribute("date"));
+        const value = stringToDate((mobile ? "20" : "") + this.getAttribute("date"));
         let cancelBack;
         let valueInput;
         let calendar;
@@ -3490,8 +3490,8 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
             display: "inline-flex",
             position: "absolute",
             top: String(base.getBoundingClientRect().top - mother.getBoundingClientRect().top + this.getBoundingClientRect().height + calendarPadding) + "px",
-            left: String(this.getBoundingClientRect().left - mother.getBoundingClientRect().left + (this.getBoundingClientRect().width / 2) - (calendarWidth / 2)) + "px",
-            width: String(calendarWidth) + ea,
+            left: desktop ? String(this.getBoundingClientRect().left - mother.getBoundingClientRect().left + (this.getBoundingClientRect().width / 2) - (calendarWidth / 2)) + "px" : String(0) + ea,
+            width: String(calendarWidth) + "px",
             background: colorChip.white,
             borderRadius: String(5) + "px",
             flexDirection: "row",
@@ -3595,7 +3595,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
                 style: {
                   display: "block",
                   position: "relative",
-                  top: String(desktop ? -1 : -0.1) + ea,
+                  top: String(desktop ? -1 : -0.2) + ea,
                   fontSize: String(contentsValueWordingSize) + ea,
                   fontWeight: String(600),
                   fontFamily: "graphik",
