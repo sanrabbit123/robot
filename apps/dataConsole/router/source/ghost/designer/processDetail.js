@@ -3301,6 +3301,8 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
   let updateDateValue;
   let calendarWidth;
   let calendarPadding;
+  let initialDomSetting;
+  let domToMatrix;
   
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -3427,12 +3429,14 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
   minimumLength = 3;
 
   basePan = {};
-  totalTravelUpdate = () => {};
+  totalTravelUpdate = async () => {};
+  initialDomSetting = () => {};
+  domToMatrix = () => {};
 
   updateDateValue = () => {
     return async function (e) {
       try {
-        const mother = this.parentElement.parentElement.parentElement;
+        const mother = this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
         const base = this.parentElement;
         const zIndex = 4;
         const value = stringToDate(this.getAttribute("date"));
@@ -3533,6 +3537,18 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
         index: String(index),
         empty: emptyBoo ? "true" : "false",
       },
+      event: {
+        contextmenu: async function (e) {
+          try {
+            e.preventDefault();
+            this.remove();
+            initialDomSetting(domToMatrix());
+            await totalTravelUpdate();
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
       style: {
         display: "flex",
         position: "relative",
@@ -3545,6 +3561,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
         borderRadius: String(5) + "px",
         boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
         marginBottom: String(itemBetween) + ea,
+        cursor: "pointer",
       },
       children: [
         {
@@ -3859,57 +3876,65 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
     return dom;
   }
 
+  domToMatrix = () => {
+    let blocks;
+    let realBlocks;
+    let matrix;
+    let dateRaw, feeRaw, fromRaw, toRaw;
+    let dateValue, feeValue, fromValue, toValue;
+
+    blocks = [ ...document.querySelectorAll('.' + travelBlockClassName) ];
+    realBlocks = blocks.filter((dom) => { return dom.getAttribute("empty") !== "true" });
+
+    matrix = [];
+    for (let dom of realBlocks) {
+      dateRaw = dom.querySelector('.' + dateValueClassName).textContent.trim();
+      feeRaw = dom.querySelector('.' + feeValueClassName).textContent.trim();
+      fromRaw = dom.querySelector('.' + fromValueClassName).textContent.trim();
+      toRaw = dom.querySelector('.' + toValueClassName).textContent.trim();
+
+      if (dateRaw === '-' || dateRaw === '') {
+        dateValue = new Date(1800, 0, 1);
+      } else {
+        if (desktop) {
+          dateValue = stringToDate(dateRaw);
+        } else {
+          dateValue = stringToDate("20" + dateRaw);
+        }
+      }
+
+      if (feeRaw === '-' || feeRaw === '') {
+        feeValue = 0;
+      } else {
+        feeValue = Number(feeRaw.replace(/[^0-9]/gi, ''));
+      }
+
+      fromValue = fromRaw;
+      toValue = toRaw;
+
+      matrix.push({
+        date: dateValue,
+        fee: feeValue,
+        address: {
+          from: fromValue,
+          to: toValue,
+        }
+      })
+    }
+
+    return matrix;
+  }
+
   totalTravelUpdate = async () => {
     try {
-      let blocks;
-      let realBlocks;
       let proid, desid;
       let matrix;
       let finalObject;
-      let dateRaw, feeRaw, fromRaw, toRaw;
-      let dateValue, feeValue, fromValue, toValue;
 
       proid = instance.project.proid;
       desid = instance.designer.desid;
       
-      blocks = [ ...document.querySelectorAll('.' + travelBlockClassName) ];
-      realBlocks = blocks.filter((dom) => { return dom.getAttribute("empty") !== "true" });
-
-      matrix = [];
-      for (let dom of realBlocks) {
-        dateRaw = dom.querySelector('.' + dateValueClassName).textContent.trim();
-        feeRaw = dom.querySelector('.' + feeValueClassName).textContent.trim();
-        fromRaw = dom.querySelector('.' + fromValueClassName).textContent.trim();
-        toRaw = dom.querySelector('.' + toValueClassName).textContent.trim();
-
-        if (dateRaw === '-' || dateRaw === '') {
-          dateValue = new Date(1800, 0, 1);
-        } else {
-          if (desktop) {
-            dateValue = stringToDate(dateRaw);
-          } else {
-            dateValue = stringToDate("20" + dateRaw);
-          }
-        }
-
-        if (feeRaw === '-' || feeRaw === '') {
-          feeValue = 0;
-        } else {
-          feeValue = Number(feeRaw.replace(/[^0-9]/gi, ''));
-        }
-
-        fromValue = fromRaw;
-        toValue = toRaw;
-
-        matrix.push({
-          date: dateValue,
-          fee: feeValue,
-          address: {
-            from: fromValue,
-            to: toValue,
-          }
-        })
-      }
+      matrix = domToMatrix();
 
       finalObject = {
         proid,
@@ -3984,6 +4009,31 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
 
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  initialDomSetting = (matrix) => {
+    let dom;
+    let childrenTargets;
+    let childrenLength;
+
+    childrenTargets = [ ...basePan.children ];
+    childrenLength = childrenTargets.length;
+
+    for (let i = 0; i < childrenLength; i++) {
+      if (i !== 0 && i !== childrenLength - 1) {
+        basePan.removeChild(childrenTargets[i]);
+      }
+    }
+    for (let i = 0; i < matrix.length; i++) {
+      dom = rowMaker(i + 1, matrix[i].date, matrix[i].fee, matrix[i].address.from, matrix[i].address.to);
+      basePan.insertBefore(dom, basePan.children[basePan.children.length - 2]);
+    }
+    if (matrix.length < minimumLength) {
+      for (let i = 0; i < minimumLength - matrix.length; i++) {
+        dom = rowMaker(i + 1 + matrix.length);
+        basePan.insertBefore(dom, basePan.children[basePan.children.length - 2]);
+      }
     }
   }
 
@@ -4312,65 +4362,57 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
     ] 
   });
 
+  // buttons
+  createNode({
+    mother: basePan,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      height: String(buttonTongHeight) + ea,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: desktop ? "end" : "center",
+      paddingTop: String(buttonTongPaddingTop) + ea,
+    },
+    child: {
+      event: {
+        click: travelAddEvent,
+      },
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        background: desktop ? colorChip.gradientGreen : colorChip.gradientGray,
+        height: String(buttonHeight) + ea,
+        borderRadius: String(5) + "px",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingLeft: String(buttonPadding) + ea,
+        paddingRight: String(buttonPadding) + ea,
+        cursor: "pointer",
+      },
+      child: {
+        text: "출장 내역 추가",
+        style: {
+          display: "block",
+          fontSize: String(buttonSize) + ea,
+          fontWeight: String(buttonWeight),
+          color: colorChip.white,
+          position: "relative",
+          top: String(buttonTextTop) + ea,
+          cursor: "pointer",
+        }
+      }
+    }
+  });
+
   ajaxJson({
     mode: "get",
     proid: project.proid,
     desid: project.desid,
   }, SECONDHOST + "/projectDesignerTravel", { equal: true }).then(({ travel }) => {
-    for (let i = 0; i < travel.length; i++) {
-      rowMaker(i + 1, travel[i].date, travel[i].fee, travel[i].address.from, travel[i].address.to);
-    }
-    if (travel.length < minimumLength) {
-      for (let i = 0; i < minimumLength - travel.length; i++) {
-        rowMaker(i + 1 + travel.length);
-      }
-    }
-
-    // buttons
-    createNode({
-      mother: basePan,
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        height: String(buttonTongHeight) + ea,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: desktop ? "end" : "center",
-        paddingTop: String(buttonTongPaddingTop) + ea,
-      },
-      child: {
-        event: {
-          click: travelAddEvent,
-        },
-        style: {
-          display: "inline-flex",
-          position: "relative",
-          background: desktop ? colorChip.gradientGreen : colorChip.gradientGray,
-          height: String(buttonHeight) + ea,
-          borderRadius: String(5) + "px",
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          paddingLeft: String(buttonPadding) + ea,
-          paddingRight: String(buttonPadding) + ea,
-          cursor: "pointer",
-        },
-        child: {
-          text: "출장 내역 추가",
-          style: {
-            display: "block",
-            fontSize: String(buttonSize) + ea,
-            fontWeight: String(buttonWeight),
-            color: colorChip.white,
-            position: "relative",
-            top: String(buttonTextTop) + ea,
-            cursor: "pointer",
-          }
-        }
-      }
-    });
-
+    initialDomSetting(travel);
   }).catch((err) => {
     console.log(err);
   })
