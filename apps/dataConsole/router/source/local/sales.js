@@ -55,6 +55,18 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
   let clientColumnsMenu;
   let clientColumnsBlankTitle;
   let thisClient;
+  let serviceAboutArr;
+  let proposalOpenArr;
+  let status, firstResponse, contractPossible, priority, targetClient, lowLow, dropReason, serviceAbout, proposalOpen, feedBack;
+  let statusNumber, firstResponseNumber, contractPossibleNumber, priorityNumber, targetClientNumber, lowLowNumber, dropReasonNumber, serviceAboutNumber, proposalOpenNumber, feedBackNumber;
+  let manager, managerNumber;
+  let thisHistory;
+  let proposalSend, proposalSendNumber;
+  let thisRequest, thisAnalytics;
+  let curationAnalytics;
+  let proposalSendArr;
+  let maxWidth;
+  let arr0, arr1, boo;
 
   clientColumnsMenu = [
     { title: "내림차순", key: "downSort" },
@@ -75,7 +87,7 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
       type: "string",
     },
     {
-      title: "아이디",
+      title: "담당자",
       menu: [
         {
           title: "전체 보기",
@@ -123,13 +135,13 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
       type: "date",
     },
     {
-      title: "1차 응대",
+      title: "드랍 판단",
       menu: [],
       blank: true,
-      type: "date",
+      type: "date", 
     },
     {
-      title: "추천서 발송",
+      title: "1차 응대",
       menu: [],
       blank: true,
       type: "date",
@@ -159,13 +171,13 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
       type: "date",
     },
     {
-      title: "드랍 판단",
+      title: "서비스 설명 발송",
       menu: [],
       blank: true,
-      type: "date", 
+      type: "date",
     },
     {
-      title: "서비스 설명 발송",
+      title: "추천서 발송",
       menu: [],
       blank: true,
       type: "date",
@@ -237,6 +249,8 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
   circleTop = 17;
   circleWidth = 6;
   circleMarginLeft = 5;
+
+  maxWidth = 1000;
 
   contentsLoad = () => {};
 
@@ -462,9 +476,91 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
         }
       });
 
+      managerNumber = 0;
+      statusNumber = 0;
+      firstResponseNumber = 0;
+      proposalSendNumber = 0;
+      contractPossibleNumber = 0;
+      priorityNumber = 0;
+      targetClientNumber = 0;
+      lowLowNumber = 0;
+      dropReasonNumber = 0;
+      serviceAboutNumber = 0;
+      proposalOpenNumber = 0;
+      feedBackNumber = 0;
 
       for (let z = 0; z < cliids.length; z++) {
-        thisClient = instance.clients.find((c) => { return c.cliid === cliids[z].cliid });
+        thisClient = cliids[z].client;
+        thisHistory = cliids[z].history;
+        thisRequest = cliids[z].request;
+        thisAnalytics = cliids[z].analytics;
+        curationAnalytics = thisHistory.curation.analytics;
+
+        manager = '-';
+        status = '-';
+        firstResponse = '-';
+        proposalSend = '-';
+        contractPossible = '-';
+        priority = '-';
+        targetClient = '-';
+        lowLow = '-';
+        dropReason = '-';
+        serviceAbout = '-';
+        proposalOpen = '-';
+        feedBack = '-';
+
+        if (thisHistory.manager !== '-' && thisHistory.manager !== '') {
+          manager = thisHistory.manager;
+        } else {
+          managerNumber = managerNumber + 1;
+        }
+
+        status = thisAnalytics.response.status;
+        curationAnalytics.call.out.sort((a, b) => {
+          return a.date.valueOf() - b.date.valueOf();
+        })
+        firstResponse = curationAnalytics.call.out.length > 0 ? dateToString(curationAnalytics.call.out[0].date) : "대기";
+
+        contractPossible = cliids[z].possible === 0 ? "낮음" : "높음",
+        priority = [ '하', '중', '상' ][cliids[z].priority];
+        targetClient = [ "해당 없음", "애매", "타겟" ][cliids[z].target];
+        lowLow = '-';
+        if (thisAnalytics.response.outreason.length > 0) {
+          dropReason = thisAnalytics.response.outreason.join(", ");
+        }
+
+        serviceAboutArr = curationAnalytics.send.filter((obj) => { return obj.page === "finalPush" });
+        serviceAboutArr.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        serviceAbout = serviceAboutArr.length > 0 ? dateToString(serviceAboutArr[0].date) : "대기";
+
+        proposalSendArr = curationAnalytics.send.filter((obj) => { return obj.page === "designerProposal" });
+        proposalSendArr.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        proposalSend = proposalSendArr.length > 0 ? dateToString(proposalSendArr[0].date) : "대기";
+
+        proposalOpenArr = curationAnalytics.page.filter((obj) => { return obj.page === "designerProposal" });
+        proposalOpenArr.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        proposalOpen = proposalOpenArr.length > 0 ? dateToString(proposalOpenArr[0].date) : "대기";
+        
+        arr0 = curationAnalytics.send.filter((obj) => { return obj.page === "designerProposal" })
+        arr1 = curationAnalytics.call.out;
+        boo = false;
+        for (let { date } of arr0) {
+          for (let { date: callDate } of arr1) {
+            boo = date.valueOf() <= callDate.valueOf();
+            if (boo) {
+              break;
+            }
+          }
+          if (boo) {
+            break;
+          }
+        }
+        if (boo) {
+          arr1.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+          feedBack = dateToString(arr1[0].date);
+        } else {
+          feedBack = "대기";
+        }
 
         clientValueArr = [
           {
@@ -473,71 +569,87 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
             check: true,
           },
           {
-            value: cliids[z].cliid,
+            value: manager,
             color: colorChip.black,
             check: false,
           },
           {
-            value: dateConvert(cliids[z].request.timeline),
+            value: dateConvert(thisRequest.timeline),
             color: colorChip.black,
             check: false,
           },
           {
-            value: cliids[z].analytics.response.status,
+            value: status,
             color: colorChip.black,
             check: false,
           },
           {
-            value: thisClient.cliid,
+            value: dropReason,
+            color: dropReason === '-' ? colorChip.gray3 : colorChip.black,
+            check: false,
+          },
+          {
+            value: firstResponse,
             color: colorChip.black,
             check: false,
           },
           {
-            value: thisClient.cliid,
+            value: contractPossible,
             color: colorChip.black,
             check: false,
           },
           {
-            value: thisClient.cliid,
+            value: priority,
             color: colorChip.black,
             check: false,
           },
           {
-            value: thisClient.cliid,
+            value: targetClient,
             color: colorChip.black,
             check: false,
           },
           {
-            value: thisClient.cliid,
+            value: lowLow,
             color: colorChip.black,
             check: false,
           },
           {
-            value: thisClient.cliid,
+            value: serviceAbout,
             color: colorChip.black,
             check: false,
           },
           {
-            value: thisClient.cliid,
+            value: proposalSend,
             color: colorChip.black,
             check: false,
           },
           {
-            value: thisClient.cliid,
+            value: proposalOpen,
             color: colorChip.black,
             check: false,
           },
           {
-            value: thisClient.cliid,
-            color: colorChip.black,
-            check: false,
-          },
-          {
-            value: thisClient.cliid,
+            value: feedBack,
             color: colorChip.black,
             check: false,
           },
         ];
+
+        if (manager.trim() === '-' || manager.trim() === '') {
+          for (let obj of clientValueArr) {
+            obj.color = colorChip.red;
+          }
+        }
+
+        if (/^[드]/gi.test(status)) {
+          for (let obj of clientValueArr) {
+            obj.color = colorChip.gray3;
+          }
+        } else if (/^[진]/gi.test(status)) {
+          for (let obj of clientValueArr) {
+            obj.color = colorChip.green;
+          }
+        }
 
         clientBlack = createNode({
           mother: clientTable,
@@ -572,50 +684,46 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
               borderRight: i === clientColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
               cursor: "pointer",
             },
-            children: [
-              {
-                text: clientValueArr[i].value,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  width: String(wordingWidth) + ea,
-                  textAlign: "center",
-                  fontSize: String(tableSize) + ea,
-                  fontWeight: String(tableWeight),
-                  color: clientValueArr[i].color,
-                  top: String(tableTextTop) + ea,
-                },
-                bold: {
-                  fontSize: String(tableSize) + ea,
-                  fontWeight: String(200),
-                  color: colorChip.green,
-                }
+            child: {
+              style: {
+                display: "block",
+                width: withOut(0, ea),
+                position: "relative",
+                overflow: "scroll",
+                textAlign: "center",
               },
-              {
+              child: {
                 style: {
-                  display: clientValueArr[i].check ? "inline-flex" : "none",
+                  display: "flex",
+                  flexDirection: "row",
+                  width: String(maxWidth) + ea,
+                  left: withOut(50, maxWidth / 2, ea),
                   position: "relative",
-                  width: String(checkBoxWidth) + ea,
-                  height: String(checkBoxWidth) + ea,
-                  borderRadius: String(1) + "px",
-                  background: colorChip.gray2,
-                  marginLeft: String(checkBoxMargin) + ea,
-                  top: String(checkBoxVisualTop) + ea,
-                  left: String(checkBoxVisualLeft) + ea,
-                  flexDirection: "center",
+                  justifyContent: "center",
                   alignItems: "center",
+                  textAlign: "center",
                 },
                 child: {
-                  mode: "svg",
-                  source: svgMaker.checkBox(colorChip.green),
+                  text: clientValueArr[i].value,
                   style: {
-                    display: "none",
+                    display: "inline-flex",
                     position: "relative",
-                    width: String(checkBoxWidth) + ea,
+                    textAlign: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    fontSize: String(tableSize) + ea,
+                    fontWeight: String(tableWeight),
+                    color: clientValueArr[i].color,
+                    top: String(tableTextTop) + ea,
+                  },
+                  bold: {
+                    fontSize: String(tableSize) + ea,
+                    fontWeight: String(200),
+                    color: colorChip.green,
                   }
                 }
               }
-            ]
+            }
           });
         }
 
@@ -779,18 +887,17 @@ SalesJs.prototype.reloadSalesTong = function (serverResponse) {
     for (let cliid of pureCliids) {
       thisClient = serverResponse.clients.find((c) => { return c.cliid === cliid });
       thisHistory = serverResponse.histories.find((c) => { return c.cliid === cliid });
-      for (let requestRaw of thisClient.requests) {
-        thisObj = {
-          cliid: thisClient.cliid,
-          phone: thisClient.phone,
-          name: thisClient.name,
-          request: requestRaw.request,
-          analytics: requestRaw.analytics,
-          history: thisHistory,
-          ...obj.cliids.find((o) => { return o.cliid === cliid }),
-        };
-        tempObj.cliids.push(thisObj);
-      }
+      thisObj = {
+        cliid: thisClient.cliid,
+        client: thisClient,
+        phone: thisClient.phone,
+        name: thisClient.name,
+        request: thisClient.requests[0].request,
+        analytics: thisClient.requests[0].analytics,
+        history: thisHistory,
+        ...obj.cliids.find((o) => { return o.cliid === cliid }),
+      };
+      tempObj.cliids.push(thisObj);
     }
     salesTong.push(tempObj);
   }
