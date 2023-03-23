@@ -239,6 +239,11 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+    
+
+
     /*
 
     // sales update
@@ -325,11 +330,8 @@ DevContext.prototype.launching = async function () {
     await this.MONGOCONSOLEC.close();
 
     */
-
-
-
     /*
-
+    
     // lowLow update
 
     await this.MONGOCONSOLEC.connect();
@@ -342,9 +344,12 @@ DevContext.prototype.launching = async function () {
       const thisDate = new Date(Number(yearRaw.replace(/[^0-9]/gi, '')), Number(monthRaw.replace(/[^0-9]/gi, '')) - 1, Number(dateRaw.replace(/[^0-9]/gi, '')))
       return thisDate;
     }
+    const pageName = "lowLowPush";
     let standard;
     let cliid, lowLow;
     let thisHistory;
+    let copiedArray;
+    let whereQuery, updateQuery;
 
     for (let arr of rows) {
       try {
@@ -356,10 +361,36 @@ DevContext.prototype.launching = async function () {
           lowLow = 0;
         }
         if (lowLow === 1) {
-          console.log(standard, cliid, lowLow)
 
-          await back.mongoRead();
+          [ thisHistory ] = await back.mongoRead(collection, { cliid }, { selfMongo });
+          copiedArray = equalJson(JSON.stringify(thisHistory.curation.analytics.send));
 
+          for (let obj of copiedArray) {
+            obj.mode = null
+            obj.who.name = null;
+            obj.who.email = null;
+          }
+
+          if (!copiedArray.some((o) => { return o.page.trim() === pageName })) {
+            copiedArray.push({
+              page: pageName,
+              date: standard,
+              mode: null,
+              who: {
+                name: null,
+                email: null,
+              }
+            });
+          }
+
+          copiedArray.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() })
+
+          whereQuery = { cliid };
+          updateQuery = {};
+          updateQuery["curation.analytics.send"] = copiedArray;
+
+          await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+          console.log(whereQuery, updateQuery)
 
         }
       } catch {}
@@ -368,7 +399,7 @@ DevContext.prototype.launching = async function () {
     await this.MONGOCONSOLEC.close();
 
     */
-
+    
     
 
 

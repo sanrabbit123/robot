@@ -67,6 +67,8 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
   let proposalSendArr;
   let maxWidth;
   let arr0, arr1, boo;
+  let lowLowSendArr;
+
 
   clientColumnsMenu = [
     { title: "내림차순", key: "downSort" },
@@ -524,7 +526,6 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
         contractPossible = cliids[z].possible === 0 ? "낮음" : "높음",
         priority = [ '하', '중', '상' ][cliids[z].priority];
         targetClient = [ "해당 없음", "애매", "타겟" ][cliids[z].target];
-        lowLow = '-';
         if (thisAnalytics.response.outreason.length > 0) {
           dropReason = thisAnalytics.response.outreason.join(", ");
         }
@@ -541,6 +542,10 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
         proposalOpenArr.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
         proposalOpen = proposalOpenArr.length > 0 ? dateToString(proposalOpenArr[0].date) : "대기";
         
+        lowLowSendArr = curationAnalytics.send.filter((obj) => { return obj.page === "lowLowPush" });
+        lowLowSendArr.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        lowLow = lowLowSendArr.length > 0 ? dateToString(lowLowSendArr[0].date) : "-";
+
         arr0 = curationAnalytics.send.filter((obj) => { return obj.page === "designerProposal" })
         arr1 = curationAnalytics.call.out;
         boo = false;
@@ -610,7 +615,7 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
           },
           {
             value: lowLow,
-            color: colorChip.black,
+            color: lowLow === '-' ? colorChip.gray3 : colorChip.black,
             check: false,
           },
           {
@@ -689,7 +694,7 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
                 display: "block",
                 width: withOut(0, ea),
                 position: "relative",
-                overflow: "scroll",
+                overflow: i === 4 ? "scroll" : "hidden",
                 textAlign: "center",
               },
               child: {

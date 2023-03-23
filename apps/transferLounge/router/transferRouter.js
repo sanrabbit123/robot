@@ -182,18 +182,18 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
 
           } else {
             console.log(e);
-            errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary): " + e.message).catch((e) => { console.log(e); });
+            errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary 1): " + e.message).catch((e) => { console.log(e); });
             res.send(JSON.stringify({ message: "error : " + e.message }));
           }
         } catch (e) {
           console.log(e);
-          errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary): " + e.message).catch((e) => { console.log(e); });
+          errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary 2): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
       });
     } catch (e) {
       console.log(e);
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary 3): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -342,7 +342,7 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           let filesKeys = Object.keys(files);
@@ -391,17 +391,19 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
             res.send(JSON.stringify({ message: "done" }));
 
           } else {
-            errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary)").catch((e) => { console.log(e); });
+            errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary 1)").catch((e) => { console.log(e); });
             res.send(JSON.stringify({ message: "error" }));
           }
         } catch (e) {
-          errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary): " + e.message).catch((e) => { console.log(e); });
+          console.log(e);
+          errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary 2): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
       });
 
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary 3): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -741,7 +743,7 @@ TransferRouter.prototype.rou_post_generalFileUpload = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (10000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           if (err) {
@@ -791,6 +793,7 @@ TransferRouter.prototype.rou_post_generalFileUpload = function () {
         }
       });
     } catch (e) {
+      console.log(e);
       errorLog("Transfer lounge 서버 문제 생김 (rou_post_generalFileUpload): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
@@ -819,7 +822,7 @@ TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           if (!err) {
@@ -872,16 +875,16 @@ TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
             res.send(JSON.stringify(tongContents));
 
           } else {
-            errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary): " + e.message).catch((e) => { console.log(e); });
+            errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary 1): " + e.message).catch((e) => { console.log(e); });
             res.send(JSON.stringify({ message: "error : " + e.message }));
           }
         } catch (e) {
-          errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary): " + e.message).catch((e) => { console.log(e); });
+          errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary 2): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
       });
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary 3): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -951,7 +954,7 @@ TransferRouter.prototype.rou_post_userBinary = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           if (!err) {
@@ -1013,16 +1016,16 @@ TransferRouter.prototype.rou_post_userBinary = function () {
             res.send(JSON.stringify({ message: "success" }));
 
           } else {
-            errorLog("Transfer lounge 서버 문제 생김 (rou_post_userBinary): " + e.message).catch((e) => { console.log(e); });
+            errorLog("Transfer lounge 서버 문제 생김 (rou_post_userBinary 1): " + e.message).catch((e) => { console.log(e); });
             res.send(JSON.stringify({ message: "error : " + e.message }));
           }
         } catch (e) {
-          errorLog("Transfer lounge 서버 문제 생김 (rou_post_userBinary): " + e.message).catch((e) => { console.log(e); });
+          errorLog("Transfer lounge 서버 문제 생김 (rou_post_userBinary 2): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
       });
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_userBinary): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_userBinary 3): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1048,7 +1051,7 @@ TransferRouter.prototype.rou_post_userConfirm = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           if (!err) {
@@ -1158,16 +1161,16 @@ TransferRouter.prototype.rou_post_userConfirm = function () {
             res.send(JSON.stringify({ message: "success" }));
 
           } else {
-            errorLog("Transfer lounge 서버 문제 생김 (rou_post_userConfirm): " + e.message).catch((e) => { console.log(e); });
+            errorLog("Transfer lounge 서버 문제 생김 (rou_post_userConfirm 1): " + e.message).catch((e) => { console.log(e); });
             res.send(JSON.stringify({ message: "error : " + e.message }));
           }
         } catch (e) {
-          errorLog("Transfer lounge 서버 문제 생김 (rou_post_userConfirm): " + e.message).catch((e) => { console.log(e); });
+          errorLog("Transfer lounge 서버 문제 생김 (rou_post_userConfirm 2): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
       });
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_userConfirm): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_userConfirm 3): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1272,7 +1275,7 @@ TransferRouter.prototype.rou_post_excelToMatrix = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (30000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
           if (!err) {
@@ -1286,16 +1289,16 @@ TransferRouter.prototype.rou_post_excelToMatrix = function () {
             await shellExec(`rm -rf ${shellLink(file.filepath)};`);
             res.send(JSON.stringify(matrix));
           } else {
-            errorLog("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix): " + e.message).catch((e) => { console.log(e); });
+            errorLog("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix 1): " + e.message).catch((e) => { console.log(e); });
             res.send(JSON.stringify({ message: "error : " + e.message }));
           }
         } catch (e) {
-          errorLog("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix): " + e.message).catch((e) => { console.log(e); });
+          errorLog("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix 2): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
       });
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix 3): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
