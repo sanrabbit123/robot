@@ -249,6 +249,7 @@ DevContext.prototype.launching = async function () {
     // sales update
 
     await this.MONGOCONSOLEC.connect();
+
     const selfMongo = this.MONGOCONSOLEC;
     const sheetsId = "1EsYgzt-itSq_hWjYBkSwOgorpOWCjoe9_gmfCtBtlZ4";
     const dateStringParsing = (str) => {
@@ -263,7 +264,7 @@ DevContext.prototype.launching = async function () {
     const collection = "dailySales";
     let standard;
     let cliid;
-    let possible, priority, target, lowLow;
+    let possible, priority, target;
     let tong;
     let tempObj;
     let thisObj;
@@ -307,15 +308,8 @@ DevContext.prototype.launching = async function () {
         } else {
           target = 0;
         }
-
-        if (/O/gi.test(arr[13])) {
-          lowLow = 1;
-        } else {
-          lowLow = 0;
-        }
       
-        thisObj.cliids.push({ cliid, possible, priority, target, lowLow });
-
+        thisObj.cliids.push({ cliid, possible, priority, target });
 
       } catch {}
       

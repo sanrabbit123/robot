@@ -5,13 +5,14 @@ const SalesJs = function () {
   this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
 }
 
-SalesJs.prototype.baseMaker = function (searchMode = false) {
+SalesJs.prototype.baseMaker = function () {
   const instance = this;
   const { totalContents, ea, belowHeight, media } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing, equalJson, svgMaker, removeByClass, findByAttribute } = GeneralJs;
   const splitToken = "__split__";
   const clientTableClassName = "clientTableClassName";
   const updateMenuClassName = "updateMenuClassName";
+  const valueTextClassName = "valueTextClassName";
   const dateConvert = (dateObject) => {
     const res = dateToString(dateObject);
     if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(res)) {
@@ -83,7 +84,13 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
   let dropReasonUpdateEvent;
   let contractPossibleUpdateEvent;
   let contractPossibleColumns;
-
+  let priorityUpdateEvent;
+  let targetUpdateEvent;
+  let clientColumnsFunctionsTong;
+  let buttonOuterPadding, buttonInnerPadding;
+  let number;
+  let targetSales;
+  
   clientColumnsMenu = [
     { title: "내림차순", key: "downSort" },
     { title: "오름차순", key: "upSort" },
@@ -99,116 +106,76 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
     {
       title: "고객",
       menu: [],
-      blank: false,
-      type: "string",
     },
     {
       title: "담당자",
       menu: [
-        {
-          title: "전체 보기",
-          key: "totalFilter"
-        },
-        {
-          title: "대기",
-          key: "clientReady"
-        },
-        {
-          title: "진행중",
-          key: "clientGoing"
-        },
+        { title: "전체 보기", key: "totalFilter" },
+        { title: "미지정", key: "nonManagerExistFilter" },
+        ...instance.managers.map((o) => {
+          return {
+            title: o.name,
+            key: "sameManagerFilter",
+          }
+        })
       ],
-      blank: false,
-      type: "string",
     },
     {
       title: "문의일",
       menu: [
-        {
-          title: "전체 보기",
-          key: "totalFilter"
-        },
-        {
-          title: "디자이너",
-          key: "constructDesigner"
-        },
-        {
-          title: "홈리에종",
-          key: "constructHomeliaison"
-        },
-        {
-          title: "고객",
-          key: "constructClient"
-        },
+        { title: "내림차순", key: "downSortTimeline" },
+        { title: "오름차순", key: "upSortTimeline" },
       ],
-      blank: true,
-      type: "string",
     },
     {
       title: "상태",
-      menu: [],
-      blank: true,
-      type: "date",
+      menu: [
+        { title: "전체 보기", key: "totalFilter" },
+        { title: "응대중", key: "sameStatusFilter" },
+        { title: "드랍", key: "sameStatusFilter" },
+        { title: "장기", key: "sameStatusFilter" },
+        { title: "진행", key: "sameStatusFilter" },
+      ],
     },
     {
       title: "드랍 판단",
       menu: [],
-      blank: true,
-      type: "date", 
     },
     {
       title: "1차 응대",
       menu: [],
-      blank: true,
-      type: "date",
     },
     {
       title: "계약 가능성",
       menu: [],
-      blank: true,
-      type: "date",
     },
     {
       title: "우선순위",
       menu: [],
-      blank: true,
-      type: "date",
     },
     {
       title: "타겟 고객",
       menu: [],
-      blank: true,
-      type: "date",
     },
     {
       title: "하하 전송",
       menu: [],
-      blank: true,
-      type: "date",
     },
     {
       title: "서비스 설명 발송",
       menu: [],
-      blank: true,
-      type: "date",
     },
     {
       title: "추천서 발송",
       menu: [],
-      blank: true,
-      type: "date",
     },
     {
       title: "추천서 조회",
       menu: [],
-      blank: true,
-      type: "date",
     },
     {
       title: "피드백 통화",
       menu: [],
-      blank: true,
-      type: "date",
     },
   ];
 
@@ -283,15 +250,18 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
 
   buttonList = [];
 
-  createUpdateMenu = (cliid, thisMenu, e) => {
+  createUpdateMenu = (cliid, thisMenu, e, valueDom) => {
     const zIndex = 4;
     return new Promise((resolve, reject) => {
+      valueDom.style.color = colorChip.green;
       createNode({
         mother: totalContents,
         class: [ updateMenuClassName ],
         event: {
           click: function (e) {
+            valueDom.style.color = valueDom.getAttribute("color");
             removeByClass(updateMenuClassName);
+            resolve(false);
           }
         },
         style: {
@@ -332,8 +302,9 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
                 const index = Number(this.getAttribute("index"));
                 const thisFunction = thisMenu[index].event;
                 thisFunction.call(this.parentElement, e).then(() => {
+                  valueDom.style.color = valueDom.getAttribute("color");
                   removeByClass(updateMenuClassName);
-                  resolve(null);
+                  resolve(true);
                 }).catch((err) => {
                   console.log(err);
                 });
@@ -343,8 +314,9 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
                 const index = Number(this.getAttribute("index"));
                 const thisFunction = thisMenu[index].event;
                 thisFunction.call(this.parentElement, e).then(() => {
+                  valueDom.style.color = valueDom.getAttribute("color");
                   removeByClass(updateMenuClassName);
-                  resolve(null);
+                  resolve(true);
                 }).catch((err) => {
                   console.log(err);
                 });
@@ -391,22 +363,39 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
             event: async function (e) {
               try {
                 const cliid = this.getAttribute("cliid");
+                let tempObj, tempObj2;
+
                 await ajaxJson({
                   id: cliid,
                   column: "manager",
                   value: thisManager,
                   email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
                 }, BACKHOST + "/updateClientHistory");
+
                 instance.histories.find((o) => { return o.cliid === cliid }).manager = thisManager;
                 instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).history.manager = thisManager;
+
+                tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+                if (tempObj !== undefined) {
+                  tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
+                  if (tempObj2 !== undefined) {
+                    tempObj2.history.manager = thisManager;
+                  }
+                }
+
               } catch (e) {
                 console.log(e);
               }
             }
           }
-        })
-        await createUpdateMenu(cliid, thisMenu, e);
-        instance.contentsLoad(false);
+        });
+        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName))) {
+          if (instance.filteredSales.length !== 0) {
+            instance.contentsLoad(true, instance.filteredSales);
+          } else {
+            instance.contentsLoad(false);
+          }
+        }
       } catch (e) {
         console.log(e);
       }
@@ -437,6 +426,7 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
               try {
                 const cliid = this.getAttribute("cliid");
                 let whereQuery, updateQuery;
+                let tempObj, tempObj2;
                 whereQuery = { cliid };
                 updateQuery = {};
                 updateQuery["requests.0.analytics.response.status"] = thisStatus;
@@ -444,14 +434,29 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
                 instance.clients.find((o) => { return o.cliid === cliid }).requests[0].analytics.response.status = thisStatus;
                 instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).client.requests[0].analytics.response.status = thisStatus;
                 instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).analytics.response.status = thisStatus;
+
+                tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+                if (tempObj !== undefined) {
+                  tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
+                  if (tempObj2 !== undefined) {
+                    tempObj2.client.requests[0].analytics.response.status = thisStatus;
+                    tempObj2.analytics.response.status = thisStatus;
+                  }
+                }
+
               } catch (e) {
                 console.log(e);
               }
             }
           }
         })
-        await createUpdateMenu(cliid, thisMenu, e);
-        instance.contentsLoad(false);
+        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName))) {
+          if (instance.filteredSales.length !== 0) {
+            instance.contentsLoad(true, instance.filteredSales);
+          } else {
+            instance.contentsLoad(false);
+          }
+        }
       } catch (e) {
         console.log(e);
       }
@@ -481,25 +486,349 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
                 const cliidIndex = thisSalesObject.cliids.findIndex((o) => { return o.cliid === cliid });
                 const thisValue = updateContractPossible.findIndex((s) => { return s === thisStatus });
                 let whereQuery, updateQuery;
+                let tempObj, tempObj2;
                 whereQuery = { id: thisSalesObject.id };
                 updateQuery = {};
                 updateQuery["cliids." + String(cliidIndex) + ".possible"] = thisValue;
                 await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/salesClient");
                 thisSalesObject.cliids[cliidIndex].possible = thisValue;
+
+                tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+                if (tempObj !== undefined) {
+                  tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
+                  if (tempObj2 !== undefined) {
+                    tempObj2.possible = thisValue;
+                  }
+                }
+
               } catch (e) {
                 console.log(e);
               }
             }
           }
         })
-        await createUpdateMenu(cliid, thisMenu, e);
-        instance.contentsLoad(false);
+        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName))) {
+          if (instance.filteredSales.length !== 0) {
+            instance.contentsLoad(true, instance.filteredSales);
+          } else {
+            instance.contentsLoad(false);
+          }
+        }
       } catch (e) {
         console.log(e);
       }
     }
   }
   this.contractPossibleUpdateEvent = contractPossibleUpdateEvent;
+
+  priorityUpdateEvent = () => {
+    return async function (e) {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const cliid = this.getAttribute("cliid");
+        let updatePriorityPossible;
+        let thisMenu;
+
+        updatePriorityPossible = equalJson(JSON.stringify(priorityColumns));
+        
+        thisMenu = updatePriorityPossible.map((str) => {
+          const thisStatus = str;
+          return {
+            title: thisStatus,
+            event: async function (e) {
+              try {
+                const cliid = this.getAttribute("cliid");
+                const thisSalesObject = instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+                const cliidIndex = thisSalesObject.cliids.findIndex((o) => { return o.cliid === cliid });
+                const thisValue = updatePriorityPossible.findIndex((s) => { return s === thisStatus });
+                let whereQuery, updateQuery;
+                let tempObj, tempObj2;
+                whereQuery = { id: thisSalesObject.id };
+                updateQuery = {};
+                updateQuery["cliids." + String(cliidIndex) + ".priority"] = thisValue;
+                await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/salesClient");
+                thisSalesObject.cliids[cliidIndex].priority = thisValue;
+
+                tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+                if (tempObj !== undefined) {
+                  tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
+                  if (tempObj2 !== undefined) {
+                    tempObj2.priority = thisValue;
+                  }
+                }
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          }
+        });
+
+        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName))) {
+          if (instance.filteredSales.length !== 0) {
+            instance.contentsLoad(true, instance.filteredSales);
+          } else {
+            instance.contentsLoad(false);
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  this.priorityUpdateEvent = priorityUpdateEvent;
+
+  targetUpdateEvent = () => {
+    return async function (e) {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const cliid = this.getAttribute("cliid");
+        let updateTargetPossible;
+        let thisMenu;
+
+        updateTargetPossible = equalJson(JSON.stringify(targetClientColumns));
+        
+        thisMenu = updateTargetPossible.map((str) => {
+          const thisStatus = str;
+          return {
+            title: thisStatus,
+            event: async function (e) {
+              try {
+                const cliid = this.getAttribute("cliid");
+                const thisSalesObject = instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+                const cliidIndex = thisSalesObject.cliids.findIndex((o) => { return o.cliid === cliid });
+                const thisValue = updateTargetPossible.findIndex((s) => { return s === thisStatus });
+                let whereQuery, updateQuery;
+                let tempObj, tempObj2;
+                whereQuery = { id: thisSalesObject.id };
+                updateQuery = {};
+                updateQuery["cliids." + String(cliidIndex) + ".target"] = thisValue;
+                await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/salesClient");
+                thisSalesObject.cliids[cliidIndex].target = thisValue;
+
+                tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+                if (tempObj !== undefined) {
+                  tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
+                  if (tempObj2 !== undefined) {
+                    tempObj2.target = thisValue;
+                  }
+                }
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          }
+        });
+
+        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName))) {
+          if (instance.filteredSales.length !== 0) {
+            instance.contentsLoad(true, instance.filteredSales);
+          } else {
+            instance.contentsLoad(false);
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  this.targetUpdateEvent = targetUpdateEvent;
+
+  clientColumnsFunctionsTong = {
+    totalFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        
+        instance.filteredSales = [];
+        instance.contentsLoad(false);
+        instance.filterLog = [];
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    nonManagerExistFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "manager") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return (o.history.manager.trim() === '-' || o.history.manager.trim() === '');
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("manager");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    sameManagerFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "manager") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.history.manager === title;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("manager");
+        
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    downSortTimeline: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+
+        if (instance.filteredSales.length !== 0) {
+          copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+        } else {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        }
+
+        for (let obj of copiedSales) {
+          obj.cliids.sort((a, b) => {
+            return b.request.timeline.valueOf() - a.request.timeline.valueOf();
+          })
+        }
+
+        instance.filteredSales = copiedSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    upSortTimeline: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+
+        if (instance.filteredSales.length !== 0) {
+          copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+        } else {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        }
+
+        for (let obj of copiedSales) {
+          obj.cliids.sort((a, b) => {
+            return a.request.timeline.valueOf() - b.request.timeline.valueOf();
+          })
+        }
+
+        instance.filteredSales = copiedSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    sameStatusFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "status") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.analytics.response.status === title;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("status");
+        
+      } catch (e) {
+        console.log(e);
+      }
+    },
+  }
 
   grayBack = createNode({
     mother: totalContents,
@@ -551,9 +880,15 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
 
   // column
 
-  contentsLoad = (searchMode = false) => {
+  contentsLoad = (customSalesMode = false, sales = []) => {
 
     cleanChildren(grayTong);
+
+    if (customSalesMode) {
+      targetSales = sales;
+    } else {
+      targetSales = instance.sales;
+    }
 
     motherBlock = createNode({
       mother: grayTong,
@@ -614,9 +949,107 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
       }
     });
 
-    for (let { title } of clientColumns) {
+    number = 0;
+    for (let { title, menu } of clientColumns) {
       createNode({
         mother: targetTong,
+        attribute: { menu: JSON.stringify(menu), index: String(number) },
+        event: {
+          click: function (e) {
+            const zIndex = 4;
+            const menu = equalJson(this.getAttribute("menu"));
+            const index = Number(this.getAttribute("index"));
+            createNode({
+              mother: totalContents,
+              class: [ updateMenuClassName ],
+              event: {
+                click: function (e) {
+                  removeByClass(updateMenuClassName);
+                }
+              },
+              style: {
+                position: "fixed",
+                top: String(0),
+                left: String(0),
+                background: "transparent",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                zIndex: String(zIndex),
+              }
+            });
+
+            createNode({
+              mother: totalContents,
+              attribute: { index: String(index), menu: JSON.stringify(menu) },
+              class: [ updateMenuClassName ],
+              style: {
+                position: "absolute",
+                top: String(e.y) + "px",
+                left: String(e.x) + "px",
+                padding: String(buttonOuterPadding) + ea,
+                paddingBottom: String(buttonOuterPadding - buttonInnerPadding) + ea,
+                borderRadius: String(5) + "px",
+                background: colorChip.white,
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                animation: "fadeuplite 0.3s ease forwards",
+                zIndex: String(zIndex),
+              },
+              children: menu.map((obj, index) => {
+                return {
+                  attribute: {
+                    key: obj.key,
+                    index: String(index),
+                  },
+                  event: {
+                    click: function (e) {
+                      const key = this.getAttribute("key");
+                      const index = Number(this.getAttribute("index"));
+                      const thisFunction = clientColumnsFunctionsTong[key];
+                      thisFunction.call(this.parentElement, e, index).then(() => {
+                        removeByClass(updateMenuClassName);
+                      }).catch((err) => {
+                        console.log(err);
+                      });
+                    },
+                    contextmenu: function (e) {
+                      e.preventDefault();
+                      const key = this.getAttribute("key");
+                      const index = Number(this.getAttribute("index"));
+                      const thisFunction = clientColumnsFunctionsTong[key];
+                      thisFunction.call(this.parentElement, e, index).then(() => {
+                        removeByClass(updateMenuClassName);
+                      }).catch((err) => {
+                        console.log(err);
+                      });
+                    },
+                  },
+                  style: {
+                    display: "flex",
+                    width: String(managerButtonSize) + ea,
+                    height: String(buttonHeight) + ea,
+                    borderRadius: String(5) + "px",
+                    background: colorChip.gradientGray,
+                    marginBottom: String(buttonInnerPadding) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  },
+                  child: {
+                    text: obj.title,
+                    style: {
+                      fontSize: String(buttonSize) + ea,
+                      fontWeight: String(buttonWeight),
+                      color: colorChip.white,
+                      top: String(buttonTextTop) + ea,
+                      position: "relative",
+                    }
+                  }
+                }
+              })
+            });
+
+          }
+        },
         text: title,
         style: {
           width: String(tableBlockFactorWidth) + ea,
@@ -630,9 +1063,11 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
           cursor: "pointer",
         }
       });
+      number++;
     }
 
-    for (let { date, cliids } of instance.sales) {
+    instance.valueRowDoms = [];
+    for (let { date, cliids } of targetSales) {
 
       motherBlock = createNode({
         mother: grayTong,
@@ -995,6 +1430,10 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
                   textAlign: "center",
                 },
                 child: {
+                  class: [ valueTextClassName ],
+                  attribute: {
+                    color: clientValueArr[i].color,
+                  },
                   text: clientValueArr[i].value,
                   style: {
                     display: "inline-flex",
@@ -1025,9 +1464,16 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
           } else if (i === 6) {
             clientDom.addEventListener("click", contractPossibleUpdateEvent());
             clientDom.addEventListener("contextmenu", contractPossibleUpdateEvent());
+          } else if (i === 7) {
+            clientDom.addEventListener("click", priorityUpdateEvent());
+            clientDom.addEventListener("contextmenu", priorityUpdateEvent());
+          } else if (i === 8) {
+            clientDom.addEventListener("click", targetUpdateEvent());
+            clientDom.addEventListener("contextmenu", targetUpdateEvent());
           }
         }
 
+        instance.valueRowDoms.push(clientBlack);
       }
 
       clientValueArr = [
@@ -1158,7 +1604,7 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
 
   }
 
-  contentsLoad(searchMode);
+  contentsLoad(false);
 
   this.contentsLoad = contentsLoad;
 }
@@ -1206,6 +1652,7 @@ SalesJs.prototype.reloadSalesTong = function (serverResponse) {
   }
 
   this.sales = salesTong;
+  this.filteredSales = [];
 }
 
 SalesJs.prototype.launching = async function () {
@@ -1223,6 +1670,12 @@ SalesJs.prototype.launching = async function () {
 
     loading = this.mother.grayLoading();
     
+    this.clients = [];
+    this.histories = [];
+    this.sales = [];
+    this.filteredSales = [];
+    this.filterLog = [];
+
     serverResponse = await ajaxJson({ mode: "init" }, BACKHOST + "/salesClient", { equal: true });
     this.reloadSalesTong(serverResponse);
 
@@ -1233,6 +1686,8 @@ SalesJs.prototype.launching = async function () {
     }).filter((o) => {
       return o.roles.includes("CX");
     });
+
+    this.valueRowDoms = [];
 
     this.baseMaker();
 
