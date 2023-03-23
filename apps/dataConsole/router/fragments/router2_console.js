@@ -7843,6 +7843,7 @@ DataRouter.prototype.rou_post_salesClient = function () {
       let clients, clientHistories;
       let standard;
       let resultObj;
+      let whereQuery, updateQuery;
 
       standard = new Date();
       standard.setMonth(standard.getMonth() - monthAgo);
@@ -7867,6 +7868,12 @@ DataRouter.prototype.rou_post_salesClient = function () {
           histories: clientHistories,
           sales: basicRows
         };
+
+      } else if (mode === "update") {
+
+        ({ whereQuery, updateQuery } = equalJson(req.body));
+        await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+        resultObj = { message: "done" };
 
       }
 

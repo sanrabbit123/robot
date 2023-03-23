@@ -11,6 +11,7 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing, equalJson, svgMaker, removeByClass, findByAttribute } = GeneralJs;
   const splitToken = "__split__";
   const clientTableClassName = "clientTableClassName";
+  const updateMenuClassName = "updateMenuClassName";
   const dateConvert = (dateObject) => {
     const res = dateToString(dateObject);
     if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(res)) {
@@ -71,6 +72,17 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
   let lowLowSendArr;
   let priorityColumns;
   let targetClientColumns;
+  let managerUpdateEvent;
+  let designerButtonWidth;
+  let managerButtonSize;
+  let designerFilterButtonSize;
+  let calendarWidth;
+  let calendarPadding;
+  let createUpdateMenu;
+  let statusUpdateEvent;
+  let dropReasonUpdateEvent;
+  let contractPossibleUpdateEvent;
+  let contractPossibleColumns;
 
   clientColumnsMenu = [
     { title: "내림차순", key: "downSort" },
@@ -200,6 +212,7 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
     },
   ];
 
+  contractPossibleColumns = [ "낮음", "높음" ];
   priorityColumns = [ '하', '중', '상' ];
   targetClientColumns = [ "해당 없음", "애매", "타겟" ];
 
@@ -259,9 +272,234 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
 
   maxWidth = 1000;
 
+  designerButtonWidth = 130;
+  managerButtonSize = 90;
+  designerFilterButtonSize = 90;
+
+  calendarWidth = 260;
+  calendarPadding = 4;
+
   contentsLoad = () => {};
 
   buttonList = [];
+
+  createUpdateMenu = (cliid, thisMenu, e) => {
+    const zIndex = 4;
+    return new Promise((resolve, reject) => {
+      createNode({
+        mother: totalContents,
+        class: [ updateMenuClassName ],
+        event: {
+          click: function (e) {
+            removeByClass(updateMenuClassName);
+          }
+        },
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          background: "transparent",
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          zIndex: String(zIndex),
+        }
+      });
+      createNode({
+        mother: totalContents,
+        class: [ updateMenuClassName ],
+        attribute: {
+          cliid,
+        },
+        style: {
+          position: "absolute",
+          top: String(e.y) + "px",
+          left: String(e.x) + "px",
+          padding: String(buttonOuterPadding) + ea,
+          paddingBottom: String(buttonOuterPadding - buttonInnerPadding) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.white,
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          animation: "fadeuplite 0.3s ease forwards",
+          zIndex: String(zIndex),
+        },
+        children: thisMenu.map((obj, index) => {
+          return {
+            attribute: {
+              index: String(index)
+            },
+            event: {
+              click: function (e) {
+                const index = Number(this.getAttribute("index"));
+                const thisFunction = thisMenu[index].event;
+                thisFunction.call(this.parentElement, e).then(() => {
+                  removeByClass(updateMenuClassName);
+                  resolve(null);
+                }).catch((err) => {
+                  console.log(err);
+                });
+              },
+              contextmenu: function (e) {
+                e.preventDefault();
+                const index = Number(this.getAttribute("index"));
+                const thisFunction = thisMenu[index].event;
+                thisFunction.call(this.parentElement, e).then(() => {
+                  removeByClass(updateMenuClassName);
+                  resolve(null);
+                }).catch((err) => {
+                  console.log(err);
+                });
+              },
+            },
+            style: {
+              display: "flex",
+              width: String(managerButtonSize) + ea,
+              height: String(buttonHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gradientGreen,
+              marginBottom: String(buttonInnerPadding) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            },
+            child: {
+              text: obj.title,
+              style: {
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(buttonWeight),
+                color: colorChip.white,
+                top: String(buttonTextTop) + ea,
+                position: "relative",
+              }
+            }
+          }
+        })
+      });
+    })
+  }
+
+  managerUpdateEvent = () => {
+    return async function (e) {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const cliid = this.getAttribute("cliid");
+        let thisMenu;
+        thisMenu = instance.managers.map((o) => {
+          const thisManager = o.name;
+          return {
+            title: thisManager,
+            event: async function (e) {
+              try {
+                const cliid = this.getAttribute("cliid");
+                await ajaxJson({
+                  id: cliid,
+                  column: "manager",
+                  value: thisManager,
+                  email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
+                }, BACKHOST + "/updateClientHistory");
+                instance.histories.find((o) => { return o.cliid === cliid }).manager = thisManager;
+                instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).history.manager = thisManager;
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          }
+        })
+        await createUpdateMenu(cliid, thisMenu, e);
+        instance.contentsLoad(false);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  this.managerUpdateEvent = managerUpdateEvent;
+
+  statusUpdateEvent = () => {
+    return async function (e) {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const cliid = this.getAttribute("cliid");
+        let updatePossibleStatus;
+        let thisMenu;
+
+        updatePossibleStatus = [
+          "응대중",
+          "드랍",
+          "장기",
+        ]
+        
+        thisMenu = updatePossibleStatus.map((str) => {
+          const thisStatus = str;
+          return {
+            title: thisStatus,
+            event: async function (e) {
+              try {
+                const cliid = this.getAttribute("cliid");
+                let whereQuery, updateQuery;
+                whereQuery = { cliid };
+                updateQuery = {};
+                updateQuery["requests.0.analytics.response.status"] = thisStatus;
+                await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateClient");
+                instance.clients.find((o) => { return o.cliid === cliid }).requests[0].analytics.response.status = thisStatus;
+                instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).client.requests[0].analytics.response.status = thisStatus;
+                instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).analytics.response.status = thisStatus;
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          }
+        })
+        await createUpdateMenu(cliid, thisMenu, e);
+        instance.contentsLoad(false);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  this.statusUpdateEvent = statusUpdateEvent;
+
+  contractPossibleUpdateEvent = () => {
+    return async function (e) {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const cliid = this.getAttribute("cliid");
+        let updateContractPossible;
+        let thisMenu;
+
+        updateContractPossible = equalJson(JSON.stringify(contractPossibleColumns));
+        
+        thisMenu = updateContractPossible.map((str) => {
+          const thisStatus = str;
+          return {
+            title: thisStatus,
+            event: async function (e) {
+              try {
+                const cliid = this.getAttribute("cliid");
+                const thisSalesObject = instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+                const cliidIndex = thisSalesObject.cliids.findIndex((o) => { return o.cliid === cliid });
+                const thisValue = updateContractPossible.findIndex((s) => { return s === thisStatus });
+                let whereQuery, updateQuery;
+                whereQuery = { id: thisSalesObject.id };
+                updateQuery = {};
+                updateQuery["cliids." + String(cliidIndex) + ".possible"] = thisValue;
+                await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/salesClient");
+                thisSalesObject.cliids[cliidIndex].possible = thisValue;
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          }
+        })
+        await createUpdateMenu(cliid, thisMenu, e);
+        instance.contentsLoad(false);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  this.contractPossibleUpdateEvent = contractPossibleUpdateEvent;
 
   grayBack = createNode({
     mother: totalContents,
@@ -361,7 +599,7 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
 
     createNode({
       mother: targetTong,
-      text: "담당자",
+      text: "기준 날짜",
       style: {
         width: String(nameWidth) + ea,
         display: "inline-block",
@@ -536,7 +774,7 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
           firstResponseNumber = firstResponseNumber + 1;
         }
 
-        contractPossible = cliids[z].possible === 0 ? "낮음" : "높음";
+        contractPossible = contractPossibleColumns[cliids[z].possible];
         if (contractPossible === "높음") {
           contractPossibleNumber = contractPossibleNumber + 1;
         }
@@ -689,13 +927,11 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
             obj.color = colorChip.deactive;
           }
         }
-
         if (/^[높]/gi.test(contractPossible)) {
           for (let obj of clientValueArr) {
             obj.color = colorChip.purple;
           }
         }
-
         if (/^[드]/gi.test(status)) {
           for (let obj of clientValueArr) {
             obj.color = colorChip.gray3;
@@ -780,6 +1016,16 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
               }
             }
           });
+          if (i === 1) {
+            clientDom.addEventListener("click", managerUpdateEvent());
+            clientDom.addEventListener("contextmenu", managerUpdateEvent());
+          } else if (i === 3) {
+            clientDom.addEventListener("click", statusUpdateEvent());
+            clientDom.addEventListener("contextmenu", statusUpdateEvent());
+          } else if (i === 6) {
+            clientDom.addEventListener("click", contractPossibleUpdateEvent());
+            clientDom.addEventListener("contextmenu", contractPossibleUpdateEvent());
+          }
         }
 
       }
@@ -932,7 +1178,9 @@ SalesJs.prototype.reloadSalesTong = function (serverResponse) {
 
   salesTong = [];
   for (let obj of serverResponse.sales) {
+
     tempObj = {
+      id: obj.id,
       date: obj.date,
       cliids: [],
     }
@@ -967,6 +1215,7 @@ SalesJs.prototype.launching = async function () {
     const getObj = returnGet();
     let loading;
     let serverResponse;
+    let members;
 
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
@@ -976,6 +1225,14 @@ SalesJs.prototype.launching = async function () {
     
     serverResponse = await ajaxJson({ mode: "init" }, BACKHOST + "/salesClient", { equal: true });
     this.reloadSalesTong(serverResponse);
+
+    members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
+    this.members = members;
+    this.managers = members.filter((o) => {
+      return o.alive;
+    }).filter((o) => {
+      return o.roles.includes("CX");
+    });
 
     this.baseMaker();
 
