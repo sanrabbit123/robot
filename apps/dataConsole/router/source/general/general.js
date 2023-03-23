@@ -2033,7 +2033,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   div_clone.id = "greenBar";
   style = {
-    display: "block",
+    display: GeneralJs.returnGet().dataonly === "true" ? "none" : "block",
     position: "fixed",
     background: GeneralJs.colorChip.gradientGray,
     bottom: String(0),
