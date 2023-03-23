@@ -4315,7 +4315,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           } else if (obj.key === "submit") {
             text = `${date} | <b%${pageName}%b> 페이지에서 결과를 <b%제출%b>함`;
           } else if (obj.key === "send") {
-            text = `${date} | ${obj.who.name}이 <b%${pageName}%b> 페이지를 고객에게 <b%전송%b>함`;
+            text = `${date} | <b%${pageName}%b> 페이지를 고객에게 <b%전송%b>함`;
           } else if (obj.key === "callOut") {
             if (obj.success) {
               text = `${date} | <b%홈리에종에서%b> 고객에게 전화를 걸고 <b%통화에 성공%b>함`;
@@ -7175,7 +7175,7 @@ ClientJs.prototype.communicationRender = function () {
               value: null,
               email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
               send: "pureOutOfClient",
-            }, "/updateClientHistory");
+            }, BACKHOST + "/updateClientHistory");
 
             await ajaxJson({
               method: "pureOutOfClient",
@@ -7186,7 +7186,7 @@ ClientJs.prototype.communicationRender = function () {
                 emoji0: "(미소)",
                 emoji1: "(콜)",
               }
-            }, "/alimTalk");
+            }, BACKHOST + "/alimTalk");
 
           }
         }
@@ -7235,7 +7235,7 @@ ClientJs.prototype.communicationRender = function () {
               value: null,
               email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
               send: "finalPush",
-            }, "/updateClientHistory");
+            }, BACKHOST + "/updateClientHistory");
 
             await ajaxJson({
               method: "finalPush",
@@ -7246,7 +7246,7 @@ ClientJs.prototype.communicationRender = function () {
                 host: FRONTHOST.replace(/^https\:\/\//i, ''),
                 path: "magnetic",
               }
-            }, "/alimTalk");
+            }, BACKHOST + "/alimTalk");
 
           }
         }

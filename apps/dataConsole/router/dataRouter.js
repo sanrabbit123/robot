@@ -2525,7 +2525,7 @@ DataRouter.prototype.rou_post_sendSheets = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_createAiDocument = function () {
+DataRouter.prototype.rou_post_createProposalDocument = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
@@ -2540,7 +2540,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
       const proposalLink = "https://" + address.frontinfo.host + "/proposal.php?proid=" + proid + "&mode=test";
       const thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
       const cliid = thisProject.cliid;
-      let page, cookies, dummy, historyObj;
+      let page, dummy, historyObj;
       let future, now, delta;
       let year, month, date, hour, minute, second;
 
@@ -2554,14 +2554,13 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
       }
       page = "designerProposal";
-      cookies = DataRouter.cookieParsing(req);
       dummy = {
         page,
         date: new Date(),
         mode: null,
         who: {
-          name: cookies === null ? "unknown" : cookies.homeliaisonConsoleLoginedName,
-          email: cookies === null ? "unknown" : cookies.homeliaisonConsoleLoginedEmail
+          name: null,
+          email: null,
         }
       };
       if (Array.isArray(historyObj.curation.analytics.send)) {
@@ -2603,7 +2602,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
       res.send(JSON.stringify({ link: proposalLink }));
 
     } catch (e) {
-      errorLog("Console 서버 문제 생김 (rou_post_createAiDocument): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Console 서버 문제 생김 (rou_post_createProposalDocument): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
