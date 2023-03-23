@@ -90,6 +90,7 @@ SalesJs.prototype.baseMaker = function () {
   let buttonOuterPadding, buttonInnerPadding;
   let number;
   let targetSales;
+  let columnsFilterSortEvent;
   
   clientColumnsMenu = [
     { title: "내림차순", key: "downSort" },
@@ -139,43 +140,85 @@ SalesJs.prototype.baseMaker = function () {
     },
     {
       title: "드랍 판단",
-      menu: [],
+      menu: [
+        { title: "전체 보기", key: "totalFilter" },
+        { title: "O", key: "dropReasonExistFilter" },
+        { title: "X", key: "dropReasonNonExistFilter" },
+      ],
     },
     {
       title: "1차 응대",
-      menu: [],
+      menu: [
+        { title: "전체 보기", key: "totalFilter" },
+        { title: "O", key: "firstResponseExistFilter" },
+        { title: "X", key: "firstResponseNonExistFilter" },
+      ],
     },
     {
       title: "계약 가능성",
-      menu: [],
+      menu: [
+        { title: "전체 보기", key: "totalFilter" },
+        { title: "높음", key: "contractPossibleHighFilter" },
+        { title: "낮음", key: "contractPossibleLowFilter" },
+      ],
     },
     {
       title: "우선순위",
-      menu: [],
+      menu: [
+        { title: "전체 보기", key: "totalFilter" },
+        { title: "상", key: "priorityThreeFilter" },
+        { title: "중", key: "priorityTwoFilter" },
+        { title: "하", key: "priorityOneFilter" },
+      ],
     },
     {
       title: "타겟 고객",
-      menu: [],
+      menu: [
+        { title: "전체 보기", key: "totalFilter" },
+        { title: "타겟", key: "targetClientThreeFilter" },
+        { title: "애매", key: "targetClientTwoFilter" },
+        { title: "해당 없음", key: "targetClientOneFilter" },
+      ],
     },
     {
       title: "하하 전송",
-      menu: [],
+      menu: [
+        { title: "전체 보기", key: "totalFilter" },
+        { title: "O", key: "logLowExistFilter" },
+        { title: "X", key: "logLowNonExistFilter" },
+      ],
     },
     {
       title: "서비스 설명 발송",
-      menu: [],
+      menu: [
+        { title: "전체 보기", key: "totalFilter" },
+        { title: "O", key: "aboutServiceExistFilter" },
+        { title: "X", key: "aboutServiceNonExistFilter" },
+      ],
     },
     {
       title: "추천서 발송",
-      menu: [],
+      menu: [
+        { title: "전체 보기", key: "totalFilter" },
+        { title: "O", key: "designerPorposalExistFilter" },
+        { title: "X", key: "designerPorposalNonExistFilter" },
+      ],
     },
     {
       title: "추천서 조회",
-      menu: [],
+      menu: [
+        { title: "전체 보기", key: "totalFilter" },
+        { title: "O", key: "porposalViewExistFilter" },
+        { title: "X", key: "porposalViewNonExistFilter" },
+      ],
     },
     {
       title: "피드백 통화",
-      menu: [],
+      menu: [
+        { title: "전체 보기", key: "totalFilter" },
+        { title: "O", key: "feedBackExistFilter" },
+        { title: "X", key: "feedBackNonExistFilter" },
+      ],
     },
   ];
 
@@ -828,7 +871,1035 @@ SalesJs.prototype.baseMaker = function () {
         console.log(e);
       }
     },
+    dropReasonExistFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "drop") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.analytics.response.outreason.length !== 0;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("drop");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    dropReasonNonExistFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "drop") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.analytics.response.outreason.length === 0;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("drop");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    firstResponseExistFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "firstResponse") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.history.curation.analytics.call.out.length !== 0;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("firstResponse");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    firstResponseNonExistFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "firstResponse") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.history.curation.analytics.call.out.length === 0;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("firstResponse");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    contractPossibleHighFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "contractPossible") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.possible === 1;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("contractPossible");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    contractPossibleLowFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "contractPossible") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.possible === 0;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("contractPossible");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    priorityThreeFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "priority") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.priority === 2;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("priority");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    priorityTwoFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "priority") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.priority === 1;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("priority");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    priorityOneFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "priority") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.priority === 0;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("priority");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    targetClientThreeFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "targetClient") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.target === 2;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("targetClient");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    targetClientTwoFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "targetClient") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.target === 1;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("targetClient");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    targetClientOneFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "targetClient") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.target === 0;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("targetClient");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    logLowExistFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "lowLow") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.history.curation.analytics.send.filter((o) => { return o.page === "lowLowPush" }).length > 0;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("lowLow");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    logLowNonExistFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "lowLow") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.history.curation.analytics.send.filter((o) => { return o.page === "lowLowPush" }).length === 0;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("lowLow");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    aboutServiceExistFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "aboutService") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.history.curation.analytics.send.filter((o) => { return o.page === "finalPush" }).length > 0;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("aboutService");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    aboutServiceNonExistFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "aboutService") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.history.curation.analytics.send.filter((o) => { return o.page === "finalPush" }).length === 0;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("aboutService");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    designerPorposalExistFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "designerProposal") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.history.curation.analytics.send.filter((o) => { return o.page === "designerProposal" }).length > 0;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("designerProposal");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    designerPorposalNonExistFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "designerProposal") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.history.curation.analytics.send.filter((o) => { return o.page === "designerProposal" }).length === 0;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("designerProposal");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    porposalViewExistFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "proposalView") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.history.curation.analytics.page.filter((o) => { return o.page === "designerProposal" }).length > 0;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("proposalView");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    porposalViewNonExistFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "proposalView") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.history.curation.analytics.page.filter((o) => { return o.page === "designerProposal" }).length === 0;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("proposalView");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    feedBackExistFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "feedBack") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            let arr0, arr1, boo;
+            arr0 = o.history.curation.analytics.send.filter((obj) => { return obj.page === "designerProposal" })
+            arr1 = o.history.curation.analytics.call.out;
+            boo = false;
+            for (let { date } of arr0) {
+              for (let { date: callDate } of arr1) {
+                boo = date.valueOf() <= callDate.valueOf();
+                if (boo) {
+                  break;
+                }
+              }
+              if (boo) {
+                break;
+              }
+            }
+            return boo;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("feedBack");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    feedBackNonExistFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "feedBack") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            let arr0, arr1, boo;
+            arr0 = o.history.curation.analytics.send.filter((obj) => { return obj.page === "designerProposal" })
+            arr1 = o.history.curation.analytics.call.out;
+            boo = false;
+            for (let { date } of arr0) {
+              for (let { date: callDate } of arr1) {
+                boo = date.valueOf() <= callDate.valueOf();
+                if (boo) {
+                  break;
+                }
+              }
+              if (boo) {
+                break;
+              }
+            }
+            return !boo;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("feedBack");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
   }
+
+  columnsFilterSortEvent = function (e) {
+    e.preventDefault();
+    const zIndex = 4;
+    const menu = equalJson(this.getAttribute("menu"));
+    const index = Number(this.getAttribute("index"));
+    createNode({
+      mother: totalContents,
+      class: [ updateMenuClassName ],
+      event: {
+        click: function (e) {
+          removeByClass(updateMenuClassName);
+        }
+      },
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        background: "transparent",
+        width: withOut(0, ea),
+        height: withOut(0, ea),
+        zIndex: String(zIndex),
+      }
+    });
+
+    createNode({
+      mother: totalContents,
+      attribute: { index: String(index), menu: JSON.stringify(menu) },
+      class: [ updateMenuClassName ],
+      style: {
+        position: "absolute",
+        top: String(e.y) + "px",
+        left: String(e.x) + "px",
+        padding: String(buttonOuterPadding) + ea,
+        paddingBottom: String(buttonOuterPadding - buttonInnerPadding) + ea,
+        borderRadius: String(5) + "px",
+        background: colorChip.white,
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        animation: "fadeuplite 0.3s ease forwards",
+        zIndex: String(zIndex),
+      },
+      children: menu.map((obj, index) => {
+        return {
+          attribute: {
+            key: obj.key,
+            index: String(index),
+          },
+          event: {
+            click: function (e) {
+              const key = this.getAttribute("key");
+              const index = Number(this.getAttribute("index"));
+              const thisFunction = clientColumnsFunctionsTong[key];
+              thisFunction.call(this.parentElement, e, index).then(() => {
+                removeByClass(updateMenuClassName);
+              }).catch((err) => {
+                console.log(err);
+              });
+            },
+            contextmenu: function (e) {
+              e.preventDefault();
+              const key = this.getAttribute("key");
+              const index = Number(this.getAttribute("index"));
+              const thisFunction = clientColumnsFunctionsTong[key];
+              thisFunction.call(this.parentElement, e, index).then(() => {
+                removeByClass(updateMenuClassName);
+              }).catch((err) => {
+                console.log(err);
+              });
+            },
+          },
+          style: {
+            display: "flex",
+            width: String(managerButtonSize) + ea,
+            height: String(buttonHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gradientGray,
+            marginBottom: String(buttonInnerPadding) + ea,
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          },
+          child: {
+            text: obj.title,
+            style: {
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              color: colorChip.white,
+              top: String(buttonTextTop) + ea,
+              position: "relative",
+            }
+          }
+        }
+      })
+    });
+
+  };
 
   grayBack = createNode({
     mother: totalContents,
@@ -955,100 +2026,8 @@ SalesJs.prototype.baseMaker = function () {
         mother: targetTong,
         attribute: { menu: JSON.stringify(menu), index: String(number) },
         event: {
-          click: function (e) {
-            const zIndex = 4;
-            const menu = equalJson(this.getAttribute("menu"));
-            const index = Number(this.getAttribute("index"));
-            createNode({
-              mother: totalContents,
-              class: [ updateMenuClassName ],
-              event: {
-                click: function (e) {
-                  removeByClass(updateMenuClassName);
-                }
-              },
-              style: {
-                position: "fixed",
-                top: String(0),
-                left: String(0),
-                background: "transparent",
-                width: withOut(0, ea),
-                height: withOut(0, ea),
-                zIndex: String(zIndex),
-              }
-            });
-
-            createNode({
-              mother: totalContents,
-              attribute: { index: String(index), menu: JSON.stringify(menu) },
-              class: [ updateMenuClassName ],
-              style: {
-                position: "absolute",
-                top: String(e.y) + "px",
-                left: String(e.x) + "px",
-                padding: String(buttonOuterPadding) + ea,
-                paddingBottom: String(buttonOuterPadding - buttonInnerPadding) + ea,
-                borderRadius: String(5) + "px",
-                background: colorChip.white,
-                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                animation: "fadeuplite 0.3s ease forwards",
-                zIndex: String(zIndex),
-              },
-              children: menu.map((obj, index) => {
-                return {
-                  attribute: {
-                    key: obj.key,
-                    index: String(index),
-                  },
-                  event: {
-                    click: function (e) {
-                      const key = this.getAttribute("key");
-                      const index = Number(this.getAttribute("index"));
-                      const thisFunction = clientColumnsFunctionsTong[key];
-                      thisFunction.call(this.parentElement, e, index).then(() => {
-                        removeByClass(updateMenuClassName);
-                      }).catch((err) => {
-                        console.log(err);
-                      });
-                    },
-                    contextmenu: function (e) {
-                      e.preventDefault();
-                      const key = this.getAttribute("key");
-                      const index = Number(this.getAttribute("index"));
-                      const thisFunction = clientColumnsFunctionsTong[key];
-                      thisFunction.call(this.parentElement, e, index).then(() => {
-                        removeByClass(updateMenuClassName);
-                      }).catch((err) => {
-                        console.log(err);
-                      });
-                    },
-                  },
-                  style: {
-                    display: "flex",
-                    width: String(managerButtonSize) + ea,
-                    height: String(buttonHeight) + ea,
-                    borderRadius: String(5) + "px",
-                    background: colorChip.gradientGray,
-                    marginBottom: String(buttonInnerPadding) + ea,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    cursor: "pointer",
-                  },
-                  child: {
-                    text: obj.title,
-                    style: {
-                      fontSize: String(buttonSize) + ea,
-                      fontWeight: String(buttonWeight),
-                      color: colorChip.white,
-                      top: String(buttonTextTop) + ea,
-                      position: "relative",
-                    }
-                  }
-                }
-              })
-            });
-
-          }
+          click: columnsFilterSortEvent,
+          contextmenu: columnsFilterSortEvent,
         },
         text: title,
         style: {
