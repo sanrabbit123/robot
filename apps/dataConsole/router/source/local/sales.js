@@ -19,6 +19,7 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
       return '-';
     }
   }
+  const slash = " <u%/%u> ";
   let outerMargin;
   let innerPadding;
   let grayBack;
@@ -68,7 +69,8 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
   let maxWidth;
   let arr0, arr1, boo;
   let lowLowSendArr;
-
+  let priorityColumns;
+  let targetClientColumns;
 
   clientColumnsMenu = [
     { title: "내림차순", key: "downSort" },
@@ -197,6 +199,9 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
       type: "date",
     },
   ];
+
+  priorityColumns = [ '하', '중', '상' ];
+  targetClientColumns = [ "해당 없음", "애매", "타겟" ];
 
   outerMargin = 30;
   innerPadding = 10;
@@ -518,14 +523,30 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
         }
 
         status = thisAnalytics.response.status;
+        if (/응대/gi.test(status)) {
+          statusNumber = statusNumber + 1;
+        }
+
         curationAnalytics.call.out.sort((a, b) => {
           return a.date.valueOf() - b.date.valueOf();
         })
         firstResponse = curationAnalytics.call.out.length > 0 ? dateToString(curationAnalytics.call.out[0].date) : "대기";
 
-        contractPossible = cliids[z].possible === 0 ? "낮음" : "높음",
-        priority = [ '하', '중', '상' ][cliids[z].priority];
-        targetClient = [ "해당 없음", "애매", "타겟" ][cliids[z].target];
+        if (firstResponse === "대기") {
+          firstResponseNumber = firstResponseNumber + 1;
+        }
+
+        contractPossible = cliids[z].possible === 0 ? "낮음" : "높음";
+        if (contractPossible === "높음") {
+          contractPossibleNumber = contractPossibleNumber + 1;
+        }
+
+        priority = priorityColumns[cliids[z].priority];
+        targetClient = targetClientColumns[cliids[z].target];
+        if (targetClient === "타겟") {
+          targetClientNumber = targetClientNumber + 1;
+        }
+
         if (thisAnalytics.response.outreason.length > 0) {
           dropReason = thisAnalytics.response.outreason.join(", ");
         }
@@ -542,9 +563,23 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
         proposalOpenArr.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
         proposalOpen = proposalOpenArr.length > 0 ? dateToString(proposalOpenArr[0].date) : "대기";
         
+        if (serviceAbout !== "대기") {
+          serviceAboutNumber = serviceAboutNumber + 1;
+        }
+        if (proposalSend !== "대기") {
+          proposalSendNumber = proposalSendNumber + 1;
+        }
+        if (proposalOpen !== "대기") {
+          proposalOpenNumber = proposalOpenNumber + 1;
+        }
+
         lowLowSendArr = curationAnalytics.send.filter((obj) => { return obj.page === "lowLowPush" });
         lowLowSendArr.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
         lowLow = lowLowSendArr.length > 0 ? dateToString(lowLowSendArr[0].date) : "-";
+
+        if (lowLow !== '-') {
+          lowLowNumber = lowLowNumber + 1;
+        }
 
         arr0 = curationAnalytics.send.filter((obj) => { return obj.page === "designerProposal" })
         arr1 = curationAnalytics.call.out;
@@ -565,6 +600,10 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
           feedBack = dateToString(arr1[0].date);
         } else {
           feedBack = "대기";
+        }
+
+        if (feedBack !== "대기") {
+          feedBackNumber = feedBackNumber + 1;
         }
 
         clientValueArr = [
@@ -600,7 +639,7 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
           },
           {
             value: contractPossible,
-            color: colorChip.black,
+            color: /높음/gi.test(contractPossible) ? colorChip.purple : colorChip.black,
             check: false,
           },
           {
@@ -640,9 +679,20 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
           },
         ];
 
-        if (manager.trim() === '-' || manager.trim() === '') {
+        if ((manager.trim() === '-' || manager.trim() === '') && lowLow === '-') {
           for (let obj of clientValueArr) {
             obj.color = colorChip.red;
+          }
+        }
+        if (lowLow !== '-' && (manager.trim() === '-' || manager.trim() === '')) {
+          for (let obj of clientValueArr) {
+            obj.color = colorChip.deactive;
+          }
+        }
+
+        if (/^[높]/gi.test(contractPossible)) {
+          for (let obj of clientValueArr) {
+            obj.color = colorChip.purple;
           }
         }
 
@@ -741,67 +791,67 @@ SalesJs.prototype.baseMaker = function (searchMode = false) {
           check: false,
         },
         {
-          value: String(cliids.length),
+          value: "<b%" + String(managerNumber) + "%b>" + slash + String(cliids.length),
           color: colorChip.black,
           check: false,
         },
         {
-          value: String(cliids.length),
+          value: '-',
           color: colorChip.black,
           check: false,
         },
         {
-          value: String(cliids.length),
+          value: "<b%" + String(statusNumber) + "%b>" + slash + String(cliids.length),
           color: colorChip.black,
           check: false,
         },
         {
-          value: String(cliids.length),
+          value: '-',
           color: colorChip.black,
           check: false,
         },
         {
-          value: String(cliids.length),
+          value: "<b%" + String(firstResponseNumber) + "%b>" + slash + String(cliids.length),
           color: colorChip.black,
           check: false,
         },
         {
-          value: String(cliids.length),
+          value: "<b%" + String(contractPossibleNumber) + "%b>" + slash + String(cliids.length),
           color: colorChip.black,
           check: false,
         },
         {
-          value: String(cliids.length),
+          value: '-',
           color: colorChip.black,
           check: false,
         },
         {
-          value: String(cliids.length),
+          value: "<b%" + String(targetClientNumber) + "%b>" + slash + String(cliids.length),
           color: colorChip.black,
           check: false,
         },
         {
-          value: String(cliids.length),
+          value: "<b%" + String(lowLowNumber) + "%b>" + slash + String(cliids.length),
           color: colorChip.black,
           check: false,
         },
         {
-          value: String(cliids.length),
+          value: "<b%" + String(serviceAboutNumber) + "%b>" + slash + String(cliids.length),
           color: colorChip.black,
           check: false,
         },
         {
-          value: String(cliids.length),
+          value: "<b%" + String(proposalSendNumber) + "%b>" + slash + String(cliids.length),
           color: colorChip.black,
           check: false,
         },
         {
-          value: String(cliids.length),
+          value: "<b%" + String(proposalOpenNumber) + "%b>" + slash + String(cliids.length),
           color: colorChip.black,
           check: false,
         },
         {
-          value: String(cliids.length),
+          value: "<b%" + String(feedBackNumber) + "%b>" + slash + String(cliids.length),
           color: colorChip.black,
           check: false,
         },

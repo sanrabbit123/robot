@@ -2818,7 +2818,6 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
                 }
               });
             }
-
           }
           instance.clientDoms.push(clientBlack);
           if (!media[0]) {
@@ -9886,9 +9885,9 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
 
   }
 
-  // projects = projects.filter((obj) => {
-  //   return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
-  // });
+  projects = projects.filter((obj) => {
+    return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
+  });
 
   this.clientHistory = clientHistory;
   this.history = history;
