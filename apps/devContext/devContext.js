@@ -234,11 +234,39 @@ DevContext.prototype.launching = async function () {
 
     // await question();
 
+    /*
+    curl https://api.openai.com/v1/images/generations \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+      "prompt": "A cute baby sea otter",
+      "n": 2,
+      "size": "1024x1024"
+    }'
+    */
 
 
 
+    // const url = "https://api.openai.com/v1/images/generations";
+    // const openAiToken = "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";
+    // const size = "1024x1024";
+    // let res;
 
+    // res = await requestSystem(url, {
+    //   "prompt": "Hares flying with pigeons",
+    //   "n": 1,
+    //   "size": size
+    // }, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "Authorization": "Bearer " + openAiToken,
+    //   }
+    // })
 
+    // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/image.json`, res.data ]);
+    // console.log(res.data);
+
+    
 
 
     
