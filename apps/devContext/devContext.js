@@ -234,16 +234,6 @@ DevContext.prototype.launching = async function () {
 
     // await question();
 
-    /*
-    curl https://api.openai.com/v1/images/generations \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-      "prompt": "A cute baby sea otter",
-      "n": 2,
-      "size": "1024x1024"
-    }'
-    */
 
 
 
@@ -253,7 +243,7 @@ DevContext.prototype.launching = async function () {
     // let res;
 
     // res = await requestSystem(url, {
-    //   "prompt": "Hares flying with pigeons",
+    //   "prompt": "a rabbit on pigeon",
     //   "n": 1,
     //   "size": size
     // }, {
