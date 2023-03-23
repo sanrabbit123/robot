@@ -2857,6 +2857,54 @@ SalesJs.prototype.addTransFormEvent = function () {
   down.addEventListener("click", (e) => { selfHref("/client") });
 }
 
+SalesJs.prototype.searchClients = function () {
+  const instance = this;
+  const { totalContents, ea, belowHeight } = this;
+  const { ajaxJson, uniqueValue, blankHref, setDebounce } = GeneralJs;
+  const whiteCardClassName = "whiteCardClassName";
+  let searchEvent;
+  let loading;
+  let removeTargets;
+
+  searchEvent = (value, e) => {
+    return () => {
+      loading = instance.mother.grayLoading();
+
+      removeTargets = document.querySelectorAll('.' + whiteCardClassName);
+      for (let dom of removeTargets) {
+        dom.remove();
+      }
+
+      if (value.trim() !== '' && value.trim() !== '.' && value.trim() !== "전체") {
+        ajaxJson({ mode: "search", value: value.trim() }, BACKHOST + "/salesClient", { equal: true }).then((serverResponse) => {
+          instance.reloadSalesTong(serverResponse);
+          instance.contentsLoad(false);
+    
+          loading.remove();
+
+        }).catch((err) => {
+          console.log(err);
+        });
+      } else {
+        ajaxJson({ mode: "init" }, BACKHOST + "/salesClient", { equal: true }).then((serverResponse) => {
+          instance.reloadSalesTong(serverResponse);
+          instance.contentsLoad(false);
+          loading.remove();
+
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
+    }
+  }
+
+  this.searchInput.addEventListener("keyup", function (e) {
+    if (e.key === "Enter") {
+      setDebounce(searchEvent(this.value, e), "__searchMatrix__", 200);
+    }
+  });
+}
+
 SalesJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson, equalJson, returnGet, ajaxMultiple, backgroundSse, colorChip } = GeneralJs;
@@ -2893,6 +2941,7 @@ SalesJs.prototype.launching = async function () {
 
     this.baseMaker();
     this.addTransFormEvent();
+    this.searchClients();
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();

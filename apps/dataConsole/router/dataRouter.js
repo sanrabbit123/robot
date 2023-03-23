@@ -8567,13 +8567,20 @@ DataRouter.prototype.rou_post_salesClient = function () {
       const selfCoreMongo = instance.mongo;
       const collection = "dailySales";
       const { mode } = req.body;
-      const monthAgo = 2;
+      const monthAgo = 3;
       let basicRows;
       let pureCliids;
       let clients, clientHistories;
       let standard;
       let resultObj;
       let whereQuery, updateQuery;
+      let filteredHistory;
+      let ongoingClients;
+      let ongoingClientsRequests;
+      let ongoingClientsCliids;
+      let orQuery;
+      let newBasicRows;
+      let copiedObj;
 
       standard = new Date();
       standard.setMonth(standard.getMonth() - monthAgo);
@@ -8582,7 +8589,26 @@ DataRouter.prototype.rou_post_salesClient = function () {
 
       if (mode === "init") {
 
-        basicRows = await back.mongoRead(collection, { date: { $gte: standard } }, { selfMongo });
+        ongoingClients = await back.getClientsByQuery({
+          requests: {
+            $elemMatch: {
+              "analytics.response.status": {
+                $regex: "^[응장]"
+              }
+            }
+          }
+        }, { selfMongo: selfCoreMongo, withTools: true });
+
+        ongoingClientsRequests = ongoingClients.getRequestsTong();
+        ongoingClientsRequests.sort((a, b) => {
+          return a.request.timeline.valueOf() - b.request.timeline.valueOf();
+        });
+
+        if (ongoingClientsRequests.length === 0) {
+          basicRows = await back.mongoRead(collection, { date: { $gte: standard } }, { selfMongo });
+        } else {
+          basicRows = await back.mongoRead(collection, { date: { $gte: ongoingClientsRequests[0].request.timeline } }, { selfMongo });
+        }
         
         pureCliids = basicRows.map((o) => {
           return o.cliids.map((o2) => {
@@ -8592,12 +8618,136 @@ DataRouter.prototype.rou_post_salesClient = function () {
 
         clients = await back.getClientsByQuery({ $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
         clientHistories = await back.mongoRead("clientHistory", { $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo });
-       
+        
+        filteredHistory = [];
+        for (let obj of clientHistories) {
+          filteredHistory.push({
+            cliid: obj.cliid,
+            manager: obj.manager,
+            curation: obj.curation,
+          })
+        }
+
         resultObj = {
           clients: clients.toNormal(),
-          histories: clientHistories,
+          histories: filteredHistory,
           sales: basicRows
         };
+
+      } else if (mode === "search") {
+
+        const { value } = req.body;
+        if (value.trim() === '' || value.trim() === '.') {
+
+          ongoingClients = await back.getClientsByQuery({
+            requests: {
+              $elemMatch: {
+                "analytics.response.status": {
+                  $regex: "^[응장]"
+                }
+              }
+            }
+          }, { selfMongo: selfCoreMongo, withTools: true });
+  
+          ongoingClientsRequests = ongoingClients.getRequestsTong();
+          ongoingClientsRequests.sort((a, b) => {
+            return a.request.timeline.valueOf() - b.request.timeline.valueOf();
+          });
+  
+          if (ongoingClientsRequests.length === 0) {
+            basicRows = await back.mongoRead(collection, { date: { $gte: standard } }, { selfMongo });
+          } else {
+            basicRows = await back.mongoRead(collection, { date: { $gte: ongoingClientsRequests[0].request.timeline } }, { selfMongo });
+          }
+
+          pureCliids = basicRows.map((o) => {
+            return o.cliids.map((o2) => {
+              return o2.cliid;
+            })
+          }).flat();
+
+          clients = await back.getClientsByQuery({ $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo });
+          clientHistories = await back.mongoRead("clientHistory", { $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo });
+          
+          filteredHistory = [];
+          for (let obj of clientHistories) {
+            filteredHistory.push({
+              cliid: obj.cliid,
+              manager: obj.manager,
+              curation: obj.curation,
+            })
+          }
+
+          resultObj = {
+            clients: clients.toNormal(),
+            histories: filteredHistory,
+            sales: basicRows
+          };
+
+        } else {
+
+          ongoingClients = await back.getClientsByQuery({
+            name: { $regex: value }
+          }, { selfMongo: selfCoreMongo });
+          ongoingClientsCliids = ongoingClients.toNormal().map((c) => { return c.cliid });
+
+          orQuery = [];
+          for (let cliid of ongoingClientsCliids) {
+            orQuery.push({
+              cliids: {
+                $elemMatch: { cliid }
+              }
+            })
+          }
+
+          if (orQuery.length === 0) {
+            basicRows = [];
+            resultObj = {
+              clients: [],
+              histories: [],
+              sales: basicRows
+            };
+          } else {
+            basicRows = await back.mongoRead(collection, { $or: orQuery }, { selfMongo });
+
+            newBasicRows = [];
+            for (let obj of basicRows) {
+              copiedObj = equalJson(JSON.stringify(obj));
+              copiedObj.cliids = copiedObj.cliids.filter((o) => {
+                return ongoingClientsCliids.includes(o.cliid);
+              })
+              newBasicRows.push(copiedObj);
+            }
+
+            pureCliids = newBasicRows.map((o) => {
+              return o.cliids.map((o2) => {
+                return o2.cliid;
+              })
+            }).flat();
+
+            if (pureCliids.length === 0) {
+              filteredHistory = [];
+            } else {
+              clientHistories = await back.mongoRead("clientHistory", { $or: pureCliids.map((cliid) => { return { cliid } }) }, { selfMongo });
+              filteredHistory = [];
+              for (let obj of clientHistories) {
+                filteredHistory.push({
+                  cliid: obj.cliid,
+                  manager: obj.manager,
+                  curation: obj.curation,
+                })
+              }
+            }
+
+            resultObj = {
+              clients: ongoingClients.toNormal(),
+              histories: filteredHistory,
+              sales: newBasicRows
+            };
+
+          }
+
+        }
 
       } else if (mode === "update") {
 
