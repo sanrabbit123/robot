@@ -2345,14 +2345,13 @@ DataRouter.prototype.rou_post_updateHistory = function () {
       if (typeof req.body.send === "string" && /Client/gi.test(req.url)) {
         page = req.body.send.split('_')[0];
         query = req.body.send.split('_').length > 1 ? req.body.send.split('_')[1] : null;
-        cookies = DataRouter.cookieParsing(req);
         dummy = {
           page,
           date: new Date(),
           mode: query,
           who: {
-            name: (cookies !== null && typeof cookies.homeliaisonConsoleLoginedName === "string") ? cookies.homeliaisonConsoleLoginedName : "unknown",
-            email: (cookies !== null && typeof cookies.homeliaisonConsoleLoginedEmail === "string") ? cookies.homeliaisonConsoleLoginedEmail : "unknown"
+            name: null,
+            email: null,
           }
         };
         if (Array.isArray(historyObj.curation.analytics.send)) {

@@ -4299,11 +4299,13 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           if (/curation/gi.test(obj.page)) {
             pageName = "스타일 체크";
           } else if (/proposal/gi.test(obj.page)) {
-            pageName = "추천서";
+            pageName = "디자이너 추천서";
           } else if (/estimation/gi.test(obj.page)) {
             pageName = "견적서";
           } else if (/pure/gi.test(obj.page)) {
             pageName = "순수 부재중 알림";
+          } else if (/finalPush/gi.test(obj.page)) {
+            pageName = "서비스 소개";
           } else {
             pageName = obj.page;
           }
