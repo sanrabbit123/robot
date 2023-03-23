@@ -3465,7 +3465,7 @@ StyleCurationJs.prototype.valuesConvert = async function (deepCopy = false) {
 StyleCurationJs.prototype.parsingValues = function () {
   const instance = this;
   const { ajaxJson, ajaxForm, returnGet } = GeneralJs;
-  const grayLoading = this.mother.grayLoading();
+  const grayLoading = this.mother.whiteProgressLoading();
   let center, temp;
   let coreQuery, historyQuery;
   let finalSerid;
@@ -3503,12 +3503,12 @@ StyleCurationJs.prototype.parsingValues = function () {
           formData.append("upload0", instance.fileInput.files[i]);
         }
       }
-      return ajaxForm(formData, BRIDGEHOST + "/clientBinary");
+      return ajaxForm(formData, BRIDGEHOST + "/clientBinary", grayLoading.progress.firstChild);
     } else {
       return new Promise((resolve, reject) => { resolve("success"); });
     }
   }).then(() => {
-      return ajaxJson({ cliid: instance.client.cliid, historyQuery, coreQuery, mode: "calculation", fromConsole: 0 }, BACKHOST + "/styleCuration_updateCalculation");
+    return ajaxJson({ cliid: instance.client.cliid, historyQuery, coreQuery, mode: "calculation", fromConsole: 0 }, BACKHOST + "/styleCuration_updateCalculation");
   }).then((obj) => {
     if (typeof obj !== "object" || Object.keys(obj).length === 0) {
       throw new Error("promise error 0");
@@ -4809,7 +4809,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
 
   height0 = <%% 310, 268, 315, 255, 79 %%>;
   height1 = <%% 570, 480, 550, 447, 216 %%>;
-  height2 = <%% 450, 345, 442, 358, 120 %%>;
+  height2 = <%% 518, 373, 472, 375, 108 %%>;
   height3 = <%% 430, 360, 438, 370, 163 %%>;
   height4 = <%% 310, 270, 310, 276, 109 %%>;
 
