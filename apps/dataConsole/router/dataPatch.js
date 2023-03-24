@@ -525,6 +525,10 @@ DataPatch.prototype.clientStandard = function () {
       name: "1차 응대",
       width: 100,
     },
+    recommend: {
+      name: "피드백 통화",
+      width: 100,
+    },
     callHistory: {
       name: "연락 기록",
       width: 100,
@@ -668,6 +672,7 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "상태", target: "status" },
       { name: "응대", target: "action" },
       { name: "1차 응대", target: "next" },
+      { name: "피드백 통화", target: "recommend" },
       { name: "문의일", target: "timeline" },
       { name: "연락처", target: "phone" },
       { name: "이메일", target: "email" },
@@ -1831,6 +1836,7 @@ DataPatch.prototype.clientMap = function () {
     kakao: { name: "채널 등록", position: "requests.0.analytics.response.kakao", type: "boolean", items: [ "등록", "미등록" ], searchBoo: false, },
     service: { name: "예상 서비스", position: "requests.0.analytics.response.service", type: "object", inputFunction: serviceInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: serviceToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     next: { name: "1차 응대", position: "requests.0.analytics.date.call.next", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
+    recommend: { name: "피드백 통화", position: "requests.0.analytics.date.call.recommend", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     callHistory: { name: "연락 기록", position: "requests.0.analytics.date.call.history", type: "object", inputFunction: callHistoryInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
     precheck: { name: "사전 점검일", position: "requests.0.analytics.date.space.precheck", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     empty: { name: "집 비는 날", position: "requests.0.analytics.date.space.empty", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },

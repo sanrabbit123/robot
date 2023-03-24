@@ -389,7 +389,7 @@ const withTools = function (Client) {
     let tong = [];
     let temp;
 
-    for (let { request: { timeline, budget, family, furniture, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living, expected }, partial: { boo: partialBoo, pyeong: partialPyeong, detail: partialDetail } }, etc: { comment, channel } }, analytics: { response: { status, action, outreason, kakao, service }, date: { call: { next, history: callHistory }, space: { precheck, empty, movein } }, picture: { space: spacePicture, prefer: preferPicture } } } of client.requests) {
+    for (let { request: { timeline, budget, family, furniture, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living, expected }, partial: { boo: partialBoo, pyeong: partialPyeong, detail: partialDetail } }, etc: { comment, channel } }, analytics: { response: { status, action, outreason, kakao, service, designers }, date: { call: { next, history: callHistory, recommend }, space: { precheck, empty, movein } }, picture: { space: spacePicture, prefer: preferPicture } } } of client.requests) {
 
       temp = {};
       temp.standard = {
@@ -403,6 +403,7 @@ const withTools = function (Client) {
         kakao: (kakao ? "등록" : "미등록"),
         service: serviceParsing(service),
         next: dateToString(next),
+        recommend: dateToString(recommend),
         callHistory: callHistoryToString(callHistory),
         timeline: dateToString(timeline, true),
         spacePicture: (spacePicture.boo ? "제출" : "미제출"),
@@ -428,6 +429,7 @@ const withTools = function (Client) {
         partialBoo: (partialBoo ? "부분" : "전체"),
         partialPyeong,
         partialDetail,
+        designers: designers.join(", "),
       }
       tong.push(temp);
     }
