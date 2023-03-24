@@ -186,6 +186,7 @@ SalesJs.prototype.baseMaker = function () {
         { title: "전체 보기", key: "totalFilter" },
         { title: "O", key: "logLowExistFilter" },
         { title: "X", key: "logLowNonExistFilter" },
+        { title: "알림 보내기", key: "lowLowSend" }
       ],
     },
     {
@@ -1803,6 +1804,19 @@ SalesJs.prototype.baseMaker = function () {
         console.log(e);
       }
     },
+    lowLowSend: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        await ajaxJson({ mode: "lowLow" }, BACKHOST + "/salesClient", { equal: true });
+        window.alert("오늘의 하하 고객님들께 알림톡을 전송하였습니다!");
+        window.location.reload();
+      } catch (e) {
+        console.log(e);
+      }
+    }
   }
 
   columnsFilterSortEvent = function (e) {
@@ -2597,7 +2611,7 @@ SalesJs.prototype.whiteCardView = function (cliid) {
   return async function (e) {
     try {
       const client = clients.find((obj) => { return obj.cliid === cliid });
-      const zIndex = 4;
+      const zIndex = 2;
       const blank = "&nbsp;&nbsp;&nbsp;";
       const whiteCardClassName = "whiteCardClassName";
       let cancelBack, whiteCard;
@@ -2742,6 +2756,7 @@ SalesJs.prototype.whiteCardView = function (cliid) {
       cancelBack = createNode({
         mother: totalContents,
         class: [ whiteCardClassName ],
+        attribute: { cliid: cliid },
         event: (e) => {
           removeByClass(whiteCardClassName);
         },
@@ -2756,6 +2771,7 @@ SalesJs.prototype.whiteCardView = function (cliid) {
       whiteCard = createNode({
         mother: totalContents,
         class: [ whiteCardClassName ],
+        attribute: { cliid: cliid },
         style: {
           position: "fixed",
           top: String(whiteOuterMargin) + ea,
@@ -2796,7 +2812,6 @@ SalesJs.prototype.whiteCardView = function (cliid) {
           }
         ]
       }).firstChild;
-
 
     } catch (e) {
       console.log(e);
@@ -2905,6 +2920,233 @@ SalesJs.prototype.searchClients = function () {
   });
 }
 
+SalesJs.prototype.communicationRender = function () {
+  const instance = this;
+  const { communication } = this.mother;
+  const { ajaxJson, sleep } = GeneralJs;
+  const whiteCardClassName = "whiteCardClassName";
+
+  communication.setItem([
+    () => { return "추천서 자동 생성"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let cliid, thisCase, serid;
+        let response, project;
+        if (document.querySelector('.' + whiteCardClassName) === null || document.querySelector('.' + whiteCardClassName) === undefined) {
+          do {
+            cliid = (await GeneralJs.prompt("고객 아이디를 입력하세요!")).trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        } else {
+          cliid = document.querySelector('.' + whiteCardClassName).getAttribute("cliid");
+        }
+
+        /*
+
+        if (window.confirm(thisCase.name + " 고객님의 추천서를 새롭게 자동 생성합니다. 확실합니까?")) {
+
+          response = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getProjects", { equal: true });
+          if (response.length !== 0) {
+            [ project ] = response;
+            if (project.desid !== "") {
+              window.alert("추천서가 새로 만들어질 예정입니다.");
+            }
+          }
+
+          if (/홈퍼/gi.test(thisCase.service)) {
+            serid = "s2011_aa01s";
+          } else if (/홈스/gi.test(thisCase.service)) {
+            serid = "s2011_aa02s";
+          } else if (/토탈/gi.test(thisCase.service)) {
+            serid = "s2011_aa03s";
+          } else {
+            serid = "s2011_aa04s";
+          }
+
+          await ajaxJson({
+            id: cliid,
+            column: "curation.analytics.full",
+            value: false,
+            email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
+          }, "/updateClientHistory");
+
+          await ajaxJson({ cliid, serid, silent: true }, "/proposalCreate");
+
+          await sleep(1000);
+          window.alert("추천서 제작 요청이 완료되었습니다!");
+        }
+
+        */
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "페이퍼 출력"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let history;
+        let cliid, thisCase;
+        let caseTong;
+        let curation;
+
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            cliid = (await GeneralJs.prompt("고객 아이디를 입력하세요!")).trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        } else {
+          cliid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        caseTong = [];
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+              caseTong.push(c);
+            }
+          }
+        }
+        if (thisCase !== null) {
+          history = await ajaxJson({ id: cliid, rawMode: true }, "/getClientHistory", { equal: true });
+          curation = history.curation;
+          await ajaxJson({ cliid, curation }, SECONDHOST + "/printClient");
+          window.alert("출력 요청이 완료되었습니다!");
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "순수 부재중 알림"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let cliid, thisCase, serid, thisHistory, callBoo, liteBoo, inspectionArr;
+        let requestNumber;
+        let caseTong;
+        let answer;
+        let updateQuery;
+        let name;
+
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            cliid = (await GeneralJs.prompt("고객 아이디를 입력하세요!")).trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        } else {
+          cliid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        caseTong = [];
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+              caseTong.push(c);
+            }
+          }
+        }
+        if (thisCase !== null) {
+          if (window.confirm(thisCase.name + " 고객님께 순수 부재중 알림 알림톡을 전송합니다. 확실합니까?")) {
+
+            await ajaxJson({
+              id: cliid,
+              column: null,
+              value: null,
+              email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
+              send: "pureOutOfClient",
+            }, BACKHOST + "/updateClientHistory");
+
+            await ajaxJson({
+              method: "pureOutOfClient",
+              name: thisCase.name,
+              phone: thisCase.phone,
+              option: {
+                client: thisCase.name,
+                emoji0: "(미소)",
+                emoji1: "(콜)",
+              }
+            }, BACKHOST + "/alimTalk");
+
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "드랍시 서비스 소개"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let cliid, thisCase, serid, thisHistory, callBoo, liteBoo, inspectionArr;
+        let requestNumber;
+        let caseTong;
+        let answer;
+        let updateQuery;
+        let name;
+
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            cliid = (await GeneralJs.prompt("고객 아이디를 입력하세요!")).trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        } else {
+          cliid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        caseTong = [];
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+              caseTong.push(c);
+            }
+          }
+        }
+        if (thisCase !== null) {
+          if (window.confirm(thisCase.name + " 고객님께 드랍시 서비스 소개 알림톡을 전송합니다. 확실합니까?")) {
+
+            await ajaxJson({
+              id: cliid,
+              column: null,
+              value: null,
+              email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
+              send: "finalPush",
+            }, BACKHOST + "/updateClientHistory");
+
+            await ajaxJson({
+              method: "finalPush",
+              name: thisCase.name,
+              phone: thisCase.phone,
+              option: {
+                client: thisCase.name,
+                host: FRONTHOST.replace(/^https\:\/\//i, ''),
+                path: "magnetic",
+              }
+            }, BACKHOST + "/alimTalk");
+
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+}
+
 SalesJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson, equalJson, returnGet, ajaxMultiple, backgroundSse, colorChip } = GeneralJs;
@@ -2942,6 +3184,7 @@ SalesJs.prototype.launching = async function () {
     this.baseMaker();
     this.addTransFormEvent();
     this.searchClients();
+    this.communicationRender();
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
