@@ -3569,6 +3569,10 @@ SalesJs.prototype.launching = async function () {
 
     loading.remove();
 
+    window.addEventListener("message", function (e) {
+      console.log(e.data);
+    });
+
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e.message).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
