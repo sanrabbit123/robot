@@ -9381,9 +9381,9 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         }).then(() => {
 
           if (detailUpdate.length > 0) {
-            return messageSend({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!", channel: "#404_curation", voice: true });
+            return messageSend({ text: client.name + " 고객님의 디자이너 추천서가 자동으로 제작되었습니다!", channel: "#404_curation", voice: true });
           } else {
-            return messageSend({ text: client.name + " 고객님의 제안서를 자동으로 제작하려 했으나 매칭되는 경우가 없어요!", channel: "#404_curation", voice: true });
+            return messageSend({ text: client.name + " 고객님의 디자이너 추천서를 자동으로 제작하려 했으나 매칭되는 경우가 없어요!", channel: "#404_curation", voice: true });
           }
 
         }).catch((err) => {
@@ -9394,9 +9394,6 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         if (Number(req.body.fromConsole) !== 1) {
           await instance.kakao.sendTalk("curationComplete", client.name, client.phone, {
             client: client.name,
-            // host: instance.address.backinfo.host,
-            // path: "aboutService",
-            // cliid: client.cliid,
           });
           await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈어요.", channel: "#404_curation" });
 

@@ -243,7 +243,7 @@ DevContext.prototype.launching = async function () {
     // let res;
 
     // res = await requestSystem(url, {
-    //   "prompt": "a rabbit on pigeon",
+    //   "prompt": "The Rabbit and the Pigeon",
     //   "n": 1,
     //   "size": size
     // }, {
@@ -5475,9 +5475,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김서영",
-    //     designer: "김소영",
-    //     link: "https://drive.google.com/drive/folders/1COMg2irW09wSHz5Ai_cAtiu3sRm5-nDF",
+    //     client: "정하나",
+    //     designer: "김윤진",
+    //     link: "https://drive.google.com/drive/folders/1nYgMWpVyXwCdOvqRDexsNDSG614Xp5sc",
     //     pay: true
     //   },
     // ]);

@@ -2759,7 +2759,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   historyTongTarget = [
     { column: "history", name: "진행 상황", dom: null },
     { column: "designer", name: "디자이너 관련", dom: null },
-    { column: "client", name: "고객 관련", dom: null },
+    { column: "client", name: "시공 관련", dom: null },
     { column: "photo", name: "촬영 관련", dom: null },
   ];
   visualSpecificMarginTop = fontSize * (1 / 5);

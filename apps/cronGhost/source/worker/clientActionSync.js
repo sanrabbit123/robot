@@ -14,7 +14,7 @@ const worker = async function (package) {
   const { mother, address, back, mongo, mongolocal } = package;
   const { requestSystem, messageLog, errorLog } = mother;
   try {
-    await requestSystem("https://" + address.backinfo.host + ":3000/workClientActionSync", { data: null }, { headers: { "Content-Type": "application/json" } });
+    // await requestSystem("https://" + address.backinfo.host + ":3000/workClientActionSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     return true;
   } catch (e) {
     await errorLog("client action sync error : " + e.message);
