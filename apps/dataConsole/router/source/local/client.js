@@ -673,7 +673,6 @@ ClientJs.prototype.infoArea = function (info) {
         if (thisMap.type === "date" && e.type === "click") {
 
           cancel_inputBack.style.background = GeneralJs.colorChip.white;
-          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
           width = 260;
@@ -710,7 +709,6 @@ ClientJs.prototype.infoArea = function (info) {
         } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
           cancel_inputBack.style.background = GeneralJs.colorChip.white;
-          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
           height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
@@ -831,7 +829,6 @@ ClientJs.prototype.infoArea = function (info) {
         } else if (thisMap.type !== "object" && thisMap.address !== undefined && e.type === "click") {
 
           cancel_inputBack.style.background = GeneralJs.colorChip.white;
-          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
           height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
@@ -879,15 +876,14 @@ ClientJs.prototype.infoArea = function (info) {
         } else if (thisMap.type === "object" && thisMap.inputFunction !== undefined) {
 
           cancel_inputBack.style.background = GeneralJs.colorChip.white;
-          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
-          tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
+          tempFunction = new Function("mother", "input", "callback", "instance", thisMap.inputFunction);
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
             e.key = "Enter";
             updateValueEvent.call(input_clone, e);
             updateEventMother.style.overflow = "hidden";
-          });
+          }, instance);
 
         } else {
 
@@ -1493,6 +1489,9 @@ ClientJs.prototype.spreadData = async function (search = null) {
       clients = await GeneralJs.ajaxJson({ query: search }, "/searchClients");
     }
 
+    GeneralJs.stacks.entireDesignerTong = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({}), "/getDesigners"));
+    GeneralJs.stacks.allDesignerTong = GeneralJs.stacks.entireDesignerTong.filter((designer) => { return /완료/gi.test(designer.information.contract.status) });
+
     const { standard, data } = clients;
 
     for (let i of data) {
@@ -1564,6 +1563,9 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
   let betweenSpace;
   let cliidDom;
+
+  // designers
+  thisCase.designers = thisCase.designers.split(", ").filter((str) => { return /^d[0-9][0-9][0-9][0-9]/.test(str); }).map((str) => { return GeneralJs.stacks.entireDesignerTong.find((d) => { return d.desid === str.trim() })?.designer }).join(", ");
 
   //entire box -------------------------------------
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -2187,15 +2189,14 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         } else if (thisMap.type === "object" && thisMap.inputFunction !== undefined) {
 
           cancel_inputBack.style.background = GeneralJs.colorChip.white;
-          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
-          tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
+          tempFunction = new Function("mother", "input", "callback", "instance", thisMap.inputFunction);
           tempFunction(this, input_clone, function () {
             let e = {};
             e.type = "keypress";
             e.key = "Enter";
             updateValueEvent.call(input_clone, e);
             updateEventMother.style.overflow = "hidden";
-          });
+          }, instance);
 
         } else {
 

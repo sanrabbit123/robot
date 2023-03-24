@@ -537,6 +537,10 @@ DataPatch.prototype.clientStandard = function () {
       name: "문의일",
       width: 100,
     },
+    designers: {
+      name: "예상 디자이너",
+      width: 100,
+    },
     spacePicture: {
       name: "사진",
       width: 100,
@@ -684,6 +688,7 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "입주 예정일", target: "expected" },
       { name: "거주중", target: "living" },
       { name: "예상 서비스", target: "service" },
+      { name: "예상 디자이너", target: "designers" },
       { name: "예산", target: "budget" },
       { name: "가구 구매", target: "furniture" },
       { name: "주소", target: "address" },
@@ -723,7 +728,7 @@ DataPatch.prototype.clientMap = function () {
 
     return finalValue;
   };
-  const statusInputFunction = function (mother, input, callback) {
+  const statusInputFunction = function (mother, input, callback, instance) {
     const grandMother = mother.parentElement;
     let buttonStyle, inputStyle, style;
     let ea = "px";
@@ -868,7 +873,7 @@ DataPatch.prototype.clientMap = function () {
     }
     return String(value).trim();
   };
-  const actionInputFunction = function (mother, input, callback) {
+  const actionInputFunction = function (mother, input, callback, instance) {
     const grandMother = mother.parentElement;
     const items = [
       "1차 응대 예정",
@@ -1265,7 +1270,7 @@ DataPatch.prototype.clientMap = function () {
 
     return arr;
   };
-  const callHistoryInputFunction = function (mother, input, callback) {
+  const callHistoryInputFunction = function (mother, input, callback, instance) {
     let buttonStyle, inputStyle, style;
     let ea = "px";
     let height, fontSize, top, width;
@@ -1482,7 +1487,7 @@ DataPatch.prototype.clientMap = function () {
 
     return obj;
   };
-  const serviceInputFunction = function (mother, input, callback) {
+  const serviceInputFunction = function (mother, input, callback, instance) {
     let buttonStyle, inputStyle, style;
     let buttonDetailStyles;
     let ea = "px";
@@ -1764,6 +1769,314 @@ DataPatch.prototype.clientMap = function () {
     mother.appendChild(div_clone);
   };
 
+  const designerToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let finalValueObj, finalValue;
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    console.log(value);
+
+    finalValueObj = /d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.exec(value);
+    if (finalValueObj === null) {
+      finalValue = "";
+    } else {
+      finalValue = finalValueObj[0];
+    }
+
+    return [];
+  };
+  const designerInputFunction = function (mother, input, callback, instance) {
+    let buttonStyle, inputStyle, style;
+    let buttonDetailStyles;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone, button_clone2;
+    let input_clone;
+    let iconWidth;
+    let clickEvent;
+    let tempArr;
+    let count;
+    let valuesTong;
+    let toHtml;
+    let originalValue;
+    let contextEvent;
+
+    valuesTong = [];
+    count = 4;
+    tempArr = null;
+    toHtml = function (designer, desid) {
+      return designer + ' <b style="font-weight:200;font-size:10px;color:white">' + desid + '</b>';
+    };
+    for (let { designer, desid } of GeneralJs.stacks.allDesignerTong) {
+      if (count < 4) {
+        tempArr.push(toHtml(designer, desid));
+        count++;
+      } else {
+        if (tempArr !== null) {
+          valuesTong.push(tempArr);
+        }
+        tempArr = [];
+        tempArr.push(toHtml(designer, desid));
+        count = 0;
+      }
+    }
+    if (Array.isArray(tempArr)) {
+      if (tempArr.length > 0) {
+        valuesTong.push(tempArr);
+      }
+    }
+
+    originalValue = input.value;
+
+    clickEvent = async function (e) {
+      try {
+        let thisRequestNumber;
+        let thisCliid;
+        let selectedDesigner, selectedDesid;
+        let blocks;
+        let thisClient, thisRequest;
+        let thisDesigners;
+        let whereQuery, updateQuery;
+        let thisCase;
+
+        selectedDesigner = this.getAttribute("target").split(' ')[0].trim();
+        selectedDesid = this.getAttribute("target").split(' ')[1].trim();
+
+        if (typeof mother.parentElement.getAttribute("class") === "string") {
+          thisCliid = mother.parentElement.getAttribute("class");
+          blocks = [ ...document.querySelectorAll('.' + thisCliid) ];
+          blocks.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) });
+          thisRequestNumber = blocks.findIndex((dom) => { return dom ===  mother.parentElement; });
+          thisCase = "row";
+        } else {
+          thisCliid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+          thisRequestNumber = Number(mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("request"));
+          thisCase = "card";
+        }
+
+        whereQuery = { cliid: thisCliid };
+        updateQuery = {};
+
+        [ thisClient ] = await GeneralJs.ajaxJson({ noFlat: true, whereQuery }, "/getClients", { equal: true });
+        thisRequest = thisClient.requests[thisRequestNumber];
+
+        thisDesigners = GeneralJs.equalJson(JSON.stringify(thisRequest.analytics.response.designers));
+        thisDesigners.push(selectedDesid);
+        thisDesigners = [ ...new Set(thisDesigners) ].filter((str) => { return /^d[0-9][0-9][0-9][0-9]/.test(str); });
+        updateQuery["requests." + String(thisRequestNumber) + ".analytics.response.designers"] = thisDesigners;
+
+        await GeneralJs.ajaxJson({ whereQuery, updateQuery }, "/rawUpdateClient");
+
+        if (thisCase === "card") {
+          input.value = thisDesigners.map((desid) => { return GeneralJs.stacks.entireDesignerTong.find((d) => { return d.desid === desid }).designer }).join(", ");
+          mother.firstChild.textContent = input.value;
+          blocks = [ ...document.querySelectorAll('.' + thisCliid) ];
+          blocks.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) });
+          GeneralJs.findByAttribute([ ...blocks[thisRequestNumber].children ], "column", "designers").textContent = thisDesigners.join(", ");
+          instance.cases.filter((o) => { return o !== null; }).find((obj) => { return obj.cliid === thisCliid; }).designers = thisDesigners.join(", ");
+        } else {
+          input.value = thisDesigners.join(", ");
+          mother.firstChild.textContent = input.value;
+          instance.cases.filter((o) => { return o !== null; }).find((obj) => { return obj.cliid === thisCliid; }).designers = thisDesigners.join(", ");
+        }
+
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    contextEvent = async function (e) {
+      try {
+        e.preventDefault();
+        let thisRequestNumber;
+        let thisCliid;
+        let selectedDesigner, selectedDesid;
+        let blocks;
+        let thisClient, thisRequest;
+        let thisDesigners, thisDesigners_new;
+        let whereQuery, updateQuery;
+        let thisCase;
+
+        selectedDesigner = this.getAttribute("target").split(' ')[0].trim();
+        selectedDesid = this.getAttribute("target").split(' ')[1].trim();
+
+        if (typeof mother.parentElement.getAttribute("class") === "string") {
+          thisCliid = mother.parentElement.getAttribute("class");
+          blocks = [ ...document.querySelectorAll('.' + thisCliid) ];
+          blocks.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) });
+          thisRequestNumber = blocks.findIndex((dom) => { return dom ===  mother.parentElement; });
+          thisCase = "row";
+        } else {
+          thisCliid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+          thisRequestNumber = Number(mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("request"));
+          thisCase = "card";
+        }
+
+        whereQuery = { cliid: thisCliid };
+        updateQuery = {};
+
+        [ thisClient ] = await GeneralJs.ajaxJson({ noFlat: true, whereQuery }, "/getClients", { equal: true });
+        thisRequest = thisClient.requests[thisRequestNumber];
+
+        thisDesigners = GeneralJs.equalJson(JSON.stringify(thisRequest.analytics.response.designers));
+        thisDesigners_new = [];
+        for (let desid of thisDesigners) {
+          if (desid !== selectedDesid) {
+            thisDesigners_new.push(desid);
+          }
+        }
+        thisDesigners = [ ...new Set(thisDesigners_new) ].filter((str) => { return /^d[0-9][0-9][0-9][0-9]/.test(str); });
+        updateQuery["requests." + String(thisRequestNumber) + ".analytics.response.designers"] = thisDesigners;
+
+        await GeneralJs.ajaxJson({ whereQuery, updateQuery }, "/rawUpdateClient");
+
+        if (thisCase === "card") {
+          input.value = thisDesigners.map((desid) => { return GeneralJs.stacks.entireDesignerTong.find((d) => { return d.desid === desid }).designer }).join(", ");
+          mother.firstChild.textContent = input.value;
+          blocks = [ ...document.querySelectorAll('.' + thisCliid) ];
+          blocks.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) });
+          GeneralJs.findByAttribute([ ...blocks[thisRequestNumber].children ], "column", "designers").textContent = thisDesigners.join(", ");
+          instance.cases.filter((o) => { return o !== null; }).find((obj) => { return obj.cliid === thisCliid; }).designers = thisDesigners.join(", ");
+        } else {
+          input.value = thisDesigners.join(", ");
+          mother.firstChild.textContent = input.value;
+          instance.cases.filter((o) => { return o !== null; }).find((obj) => { return obj.cliid === thisCliid; }).designers = thisDesigners.join(", ");
+        }
+
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    input.value = mother.textContent;
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = String(550);
+    top = height * 0.5;
+    iconWidth = 18;
+    height = String(17);
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: String(0) + ea,
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: String(12) + ea,
+      fontWeight: String(700),
+      zIndex: String(3),
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: String(0) + ea,
+      width: String(width) + ea,
+      paddingTop: String(height * 0.3) + ea,
+      height: String(height * 1.5) + ea,
+      fontSize: String(12) + ea,
+      fontWeight: String(700),
+      color: GeneralJs.colorChip.whiteBlack,
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      marginBottom: String(height / 4) + ea,
+    };
+
+    buttonDetailStyles = [];
+    for (let z = 0; z < 5; z++) {
+      buttonDetailStyles.push({
+        position: "absolute",
+        left: String(20 * z) + '%',
+        top: String(0) + ea,
+        width: "calc(" + String(20) + '%' + " - " + String(Math.round((height) / 4)) + ea + ")",
+        height: "100%",
+        background: GeneralJs.colorChip.black,
+        zIndex: String(3),
+        borderRadius: String(3) + ea,
+        fontSize: String(12) + ea,
+        fontWeight: String(700),
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.shadow,
+      });
+    }
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: String(12) + ea,
+      fontWeight: String(600),
+      color: GeneralJs.colorChip.whiteBlack,
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: (GeneralJs.isMac() ? "95%" : "98%"),
+      left: String(0) + ea,
+      top: GeneralJs.isMac() ? "19%" : "20%",
+      borderRadius: String(3) + ea,
+      border: String(0),
+      cursor: "pointer",
+    };
+
+    for (let i = 0; i < valuesTong.length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+
+      for (let z = 0; z < valuesTong[i].length; z++) {
+        button_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        button_clone2.classList.add("removeTarget");
+        button_clone2.classList.add("hoverDefault_lite");
+        button_clone2.classList.add("divTarget");
+        for (let j in buttonDetailStyles[z]) {
+          button_clone2.style[j] = buttonDetailStyles[z][j];
+        }
+        input_clone = GeneralJs.nodes.div.cloneNode(true);
+        input_clone.classList.add("inputTarget");
+        for (let j in inputStyle) {
+          input_clone.style[j] = inputStyle[j];
+        }
+
+        input_clone.setAttribute("switch", "off");
+        input_clone.setAttribute("target", valuesTong[i][z].replace(/\<[^\<\>]+\>/g, ''));
+        input_clone.insertAdjacentHTML("beforeend", valuesTong[i][z]);
+        input_clone.addEventListener("click", clickEvent);
+        input_clone.addEventListener("contextmenu", contextEvent);
+        button_clone2.appendChild(input_clone);
+        button_clone.appendChild(button_clone2);
+      }
+
+      div_clone.appendChild(button_clone);
+    }
+
+    mother.appendChild(div_clone);
+  };
+  const designerToString = async function (value) {
+    try {
+      const designer = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { desid: value.trim() } }, "/getDesigners"))[0];
+      return designer.designer + " " + designer.desid;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const map = {
     name: { name: "성함", position: "name", type: "string", searchBoo: true, },
     cliid: { name: "아이디", position: "cliid", type: "string", searchBoo: true, },
@@ -1846,6 +2159,7 @@ DataPatch.prototype.clientMap = function () {
     partialBoo: { name: "부분 여부", position: "requests.0.request.space.partial.boo", type: "boolean", items: [ "부분", "전체" ], searchBoo: false, },
     partialPyeong: { name: "부분 평수", position: "requests.0.request.space.partial.pyeong", type: "number", searchBoo: true, },
     partialDetail: { name: "부분 공간", position: "requests.0.request.space.partial.detail", type: "string", searchBoo: true, },
+    designers: { name: "예상 디자이너", position: "requests.0.analytics.response.designers", type: "object", inputFunction: designerInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: designerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), stringFunction: designerToString.toString().replace(/\}$/, '').replace(/async function \(value\) \{/gi, ''), stringFunctionAsync: true, searchBoo: true, },
   };
   return map;
 }
