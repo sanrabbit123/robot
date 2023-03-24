@@ -85,11 +85,13 @@ module.exports = {
               xValue: "B",
               online: false,
             },
+            designers: [],
           },
           date: {
             call: {
               next: new Date(1800, 0, 1),
               history: [],
+              recommend: new Date(1800, 0, 1),
             },
             space: {
               precheck: new Date(1800, 0, 1),

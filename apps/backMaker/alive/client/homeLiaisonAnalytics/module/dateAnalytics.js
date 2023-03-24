@@ -74,12 +74,14 @@ class DateCallHistory extends Array {
 const DateCall = function (json) {
   this.next = new DateParse(json.next);
   this.history = new DateCallHistory(json.history);
+  this.recommend = new DateParse(json.recommend);
 }
 
 DateCall.prototype.toNormal = function () {
   let obj = {};
   obj.next = this.next.toNormal();
   obj.history = this.history.toNormal();
+  obj.recommend = this.recommend.toNormal();
   return obj;
 }
 

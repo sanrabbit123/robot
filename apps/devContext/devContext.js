@@ -257,10 +257,24 @@ DevContext.prototype.launching = async function () {
     // console.log(res.data);
 
     
+    const selfMongo = this.MONGOC;
+    const clients = (await back.getClientsByQuery({}, { selfMongo })).toNormal();
+    let whereQuery, updateQuery;
+    
+    for (let obj of clients) {
+      whereQuery = { cliid: obj.cliid };
+      updateQuery = {};
+      for (let i = 0; i < obj.requests.length; i++) {
+        updateQuery["requests." + String(i) + ".analytics.date.call.next"] = new Date(1800, 0, 1);
+        updateQuery["requests." + String(i) + ".analytics.date.call.recommend"] = new Date(1800, 0, 1);
+        updateQuery["requests." + String(i) + ".analytics.response.designers"] = [];
+      }
+      await back.updateClient([ whereQuery, updateQuery ], { selfMongo });
+      console.log(whereQuery, updateQuery);
+    }
 
 
-    
-    
+
 
 
     /*

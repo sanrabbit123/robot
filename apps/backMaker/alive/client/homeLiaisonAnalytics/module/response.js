@@ -1,6 +1,22 @@
 const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
 const { Menu, Flow } = require(GENERAL_DIR + "/generator.js");
 
+class PredictDesigners extends Array {
+  constructor(json) {
+    super();
+    for (let i of json) {
+      this.push(i);
+    }
+  }
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i);
+    }
+    return arr;
+  }
+}
+
 const ProjectService = function (json) {
   this.serid = json.serid;
   this.xValue = json.xValue;
@@ -59,6 +75,7 @@ const Response = function (response) {
   ], true);
   this.kakao = response.kakao;
   this.service = new ProjectService(response.service);
+  this.designers = new PredictDesigners(response.designers);
 }
 
 Response.prototype.actionInfo = function () {
@@ -168,6 +185,7 @@ Response.prototype.toNormal = function () {
   obj.outreason = this.outreason.toNormal();
   obj.kakao = this.kakao;
   obj.service = this.service.toNormal();
+  obj.designers = this.designers.toNormal();
   return obj;
 }
 
