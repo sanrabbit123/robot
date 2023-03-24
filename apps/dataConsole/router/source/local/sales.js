@@ -94,6 +94,8 @@ SalesJs.prototype.baseMaker = function () {
   let predictDesigners, predictDesignersNumber;
   let firstResponseUpdateEvent;
   let feedBackUpdateEvent;
+  let designersUpdateEvent;
+  let designerBoxLength;
   
   clientColumnsMenu = [
     { title: "내림차순", key: "downSort" },
@@ -276,12 +278,14 @@ SalesJs.prototype.baseMaker = function () {
 
   maxWidth = 1000;
 
-  designerButtonWidth = 130;
+  designerButtonWidth = 120;
   managerButtonSize = 90;
   designerFilterButtonSize = 90;
 
   calendarWidth = 260;
   calendarPadding = 4;
+
+  designerBoxLength = 6;
 
   contentsLoad = () => {};
 
@@ -887,6 +891,185 @@ SalesJs.prototype.baseMaker = function () {
     }
   }
   this.feedBackUpdateEvent = feedBackUpdateEvent;
+
+  designersUpdateEvent = () => {
+    return async function (e) {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const cliid = this.getAttribute("cliid");
+        const requestNumber = Number(this.getAttribute("number"));
+        let updatePossibleStatus;
+        let thisMenu;
+        let designersMenu;
+
+        designersMenu = (cliid, thisMenu, e, valueDom, requestNumber) => {
+          const zIndex = 4;
+          return new Promise((resolve, reject) => {
+            valueDom.style.color = colorChip.green;
+            createNode({
+              mother: totalContents,
+              class: [ updateMenuClassName ],
+              event: {
+                click: function (e) {
+                  valueDom.style.color = valueDom.getAttribute("color");
+                  removeByClass(updateMenuClassName);
+                  resolve(false);
+                }
+              },
+              style: {
+                position: "fixed",
+                top: String(0),
+                left: String(0),
+                background: "transparent",
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                zIndex: String(zIndex),
+              }
+            });
+            createNode({
+              mother: totalContents,
+              class: [ updateMenuClassName ],
+              attribute: {
+                cliid,
+                number: String(requestNumber),
+              },
+              style: {
+                position: "absolute",
+                top: String(e.y) + "px",
+                left: String(e.x - ((designerButtonWidth * designerBoxLength) + (buttonInnerPadding * designerBoxLength))) + "px",
+                padding: String(buttonOuterPadding) + ea,
+                paddingRight: String(buttonOuterPadding - buttonInnerPadding) + ea,
+                width: String((designerButtonWidth * designerBoxLength) + (buttonInnerPadding * designerBoxLength)) + ea,
+                paddingBottom: String(buttonOuterPadding - buttonInnerPadding) + ea,
+                borderRadius: String(5) + "px",
+                background: colorChip.white,
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                animation: "fadeuplite 0.3s ease forwards",
+                zIndex: String(zIndex),
+              },
+              children: thisMenu.map((obj, index) => {
+                return {
+                  attribute: {
+                    index: String(index),
+                    cliid,
+                    number: String(requestNumber),
+                  },
+                  event: {
+                    click: function (e) {
+                      const index = Number(this.getAttribute("index"));
+                      const thisFunction = thisMenu[index].event;
+                      thisFunction.call(this.parentElement, e).then(() => {
+                        resolve(true);
+                      }).catch((err) => {
+                        console.log(err);
+                      });
+                    },
+                    contextmenu: function (e) {
+                      e.preventDefault();
+                      const index = Number(this.getAttribute("index"));
+                      const thisFunction = thisMenu[index].event;
+                      thisFunction.call(this.parentElement, e).then(() => {
+                        resolve(true);
+                      }).catch((err) => {
+                        console.log(err);
+                      });
+                    },
+                  },
+                  style: {
+                    display: "inline-flex",
+                    width: String(designerButtonWidth) + ea,
+                    height: String(buttonHeight) + ea,
+                    borderRadius: String(5) + "px",
+                    background: colorChip.black,
+                    marginBottom: String(buttonInnerPadding) + ea,
+                    marginRight: String(buttonInnerPadding) + ea,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  },
+                  child: {
+                    text: obj.title,
+                    style: {
+                      fontSize: String(buttonSize) + ea,
+                      fontWeight: String(buttonWeight),
+                      color: colorChip.white,
+                      top: String(buttonTextTop) + ea,
+                      position: "relative",
+                    },
+                    bold: {
+                      fontSize: String(buttonSize - 3) + ea,
+                      fontWeight: String(300),
+                      color: colorChip.gray4,
+                    }
+                  }
+                }
+              })
+            });
+          })
+        }
+
+        updatePossibleStatus = instance.designers.filter((d) => {
+          return /완료/gi.test(d.information.contract.status);
+        }).map((d) => {
+          return d.designer + " <b%" + d.desid + "%b>";
+        })
+        
+        thisMenu = updatePossibleStatus.map((str) => {
+          const thisDesigner = str.split(" ")[0];
+          const thisDesid = str.split(" ")[1].replace(/\<b\%/gi, '').replace(/\%b\>/gi, '');
+          return {
+            title: str,
+            event: async function (e) {
+              try {
+                const cliid = this.getAttribute("cliid");
+                const requestNumber = Number(this.getAttribute("number"));
+
+                let whereQuery, updateQuery;
+                let tempObj, tempObj2;
+
+
+                console.log(thisDesigner);
+                console.log(thisDesid);
+
+                // whereQuery = { cliid };
+                // updateQuery = {};
+                // updateQuery["requests." + String(requestNumber) + ".analytics.response.status"] = thisStatus;
+                // await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateClient");
+                // instance.clients.find((o) => { return o.cliid === cliid }).requests[requestNumber].analytics.response.status = thisStatus;
+                // instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).client.requests[requestNumber].analytics.response.status = thisStatus;
+                // instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).analytics.response.status = thisStatus;
+
+                // tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+                // if (tempObj !== undefined) {
+                //   tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
+                //   if (tempObj2 !== undefined) {
+                //     tempObj2.client.requests[requestNumber].analytics.response.status = thisStatus;
+                //     tempObj2.analytics.response.status = thisStatus;
+                //   }
+                // }
+
+
+
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          }
+        })
+        if (await designersMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName), requestNumber)) {
+          // if (instance.filteredSales.length !== 0) {
+          //   instance.contentsLoad(true, instance.filteredSales);
+          // } else {
+          //   instance.contentsLoad(false);
+          // }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  this.designersUpdateEvent = designersUpdateEvent;
 
   clientColumnsFunctionsTong = {
     totalFilter: async function (e, menuIndex) {
@@ -2633,6 +2816,9 @@ SalesJs.prototype.baseMaker = function () {
           } else if (i === 11) {
             clientDom.addEventListener("click", feedBackUpdateEvent());
             clientDom.addEventListener("contextmenu", feedBackUpdateEvent());
+          } else if (i === 12) {
+            clientDom.addEventListener("click", designersUpdateEvent());
+            clientDom.addEventListener("contextmenu", designersUpdateEvent());
           }
         }
 
