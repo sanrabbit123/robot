@@ -902,6 +902,7 @@ SalesJs.prototype.baseMaker = function () {
         let updatePossibleStatus;
         let thisMenu;
         let designersMenu;
+        let result;
 
         designersMenu = (cliid, thisMenu, e, valueDom, requestNumber) => {
           const zIndex = 4;
@@ -1028,7 +1029,6 @@ SalesJs.prototype.baseMaker = function () {
                 let tempObj, tempObj2;
                 let thisDesigners;
                 let thisDesigners_new;
-                let result;
 
                 thisDesigners = equalJson(JSON.stringify(instance.clients.find((o) => { return o.cliid === cliid }).requests[requestNumber].analytics.response.designers))
 
