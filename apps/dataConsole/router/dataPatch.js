@@ -1873,6 +1873,9 @@ DataPatch.prototype.clientMap = function () {
 
         if (thisCase === "card") {
           input.value = thisDesigners.map((desid) => { return GeneralJs.stacks.entireDesignerTong.find((d) => { return d.desid === desid }).designer }).join(", ");
+          if (/DIV/gi.test(mother.firstChild.nodeName)) {
+            mother.insertAdjacentHTML("afterbegin", " ");
+          }
           mother.firstChild.textContent = input.value;
           blocks = [ ...document.querySelectorAll('.' + thisCliid) ];
           blocks.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) });
@@ -1880,6 +1883,9 @@ DataPatch.prototype.clientMap = function () {
           instance.cases.filter((o) => { return o !== null; }).find((obj) => { return obj.cliid === thisCliid; }).designers = thisDesigners.join(", ");
         } else {
           input.value = thisDesigners.join(", ");
+          if (/DIV/gi.test(mother.firstChild.nodeName)) {
+            mother.insertAdjacentHTML("afterbegin", " ");
+          }
           mother.firstChild.textContent = input.value;
           instance.cases.filter((o) => { return o !== null; }).find((obj) => { return obj.cliid === thisCliid; }).designers = thisDesigners.join(", ");
         }
@@ -1936,6 +1942,9 @@ DataPatch.prototype.clientMap = function () {
 
         if (thisCase === "card") {
           input.value = thisDesigners.map((desid) => { return GeneralJs.stacks.entireDesignerTong.find((d) => { return d.desid === desid }).designer }).join(", ");
+          if (/DIV/gi.test(mother.firstChild.nodeName)) {
+            mother.insertAdjacentHTML("afterbegin", " ");
+          }
           mother.firstChild.textContent = input.value;
           blocks = [ ...document.querySelectorAll('.' + thisCliid) ];
           blocks.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) });
@@ -1943,6 +1952,9 @@ DataPatch.prototype.clientMap = function () {
           instance.cases.filter((o) => { return o !== null; }).find((obj) => { return obj.cliid === thisCliid; }).designers = thisDesigners.join(", ");
         } else {
           input.value = thisDesigners.join(", ");
+          if (/DIV/gi.test(mother.firstChild.nodeName)) {
+            mother.insertAdjacentHTML("afterbegin", " ");
+          }
           mother.firstChild.textContent = input.value;
           instance.cases.filter((o) => { return o !== null; }).find((obj) => { return obj.cliid === thisCliid; }).designers = thisDesigners.join(", ");
         }
