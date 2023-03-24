@@ -3523,12 +3523,13 @@ SalesJs.prototype.communicationRender = function () {
 
 SalesJs.prototype.postMessageEvent = function () {
   const instance = this;
-  const { equalJson, ajaxJson } = GeneralJs;
+  const { equalJson, ajaxJson, stringToDate } = GeneralJs;
   window.addEventListener("message", async function (e) {
     try {
       const message = JSON.parse(e.data);
       let cliid, requestNumber, value;
       let tempObj, tempObj2;
+      let finalValue;
 
       if (message.column === "designers") {
         ({ cliid, requestNumber, value } = message);
@@ -3574,19 +3575,48 @@ SalesJs.prototype.postMessageEvent = function () {
         }
       } else if (message.column === "firstResponse") {
         ({ cliid, requestNumber, value } = message);
-
+        finalValue = stringToDate(value);
         
+        instance.clients.find((o) => { return o.cliid === cliid }).requests[requestNumber].analytics.date.call.next = finalValue;
+        instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).client.requests[requestNumber].analytics.date.call.next = finalValue;
+        instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).analytics.date.call.next = finalValue;
 
+        tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+        if (tempObj !== undefined) {
+          tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
+          if (tempObj2 !== undefined) {
+            tempObj2.client.requests[requestNumber].analytics.date.call.next = finalValue;
+            tempObj2.analytics.date.call.next = finalValue;
+          }
+        }
 
-
-
+        if (instance.filteredSales.length !== 0) {
+          instance.contentsLoad(true, instance.filteredSales);
+        } else {
+          instance.contentsLoad(false);
+        }
       } else if (message.column === "feedBack") {
         ({ cliid, requestNumber, value } = message);
+        finalValue = stringToDate(value);
 
+        instance.clients.find((o) => { return o.cliid === cliid }).requests[requestNumber].analytics.date.call.recommend = finalValue;
+        instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).client.requests[requestNumber].analytics.date.call.recommend = finalValue;
+        instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).analytics.date.call.recommend = finalValue;
 
+        tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+        if (tempObj !== undefined) {
+          tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
+          if (tempObj2 !== undefined) {
+            tempObj2.client.requests[requestNumber].analytics.date.call.recommend = finalValue;
+            tempObj2.analytics.date.call.recommend = finalValue;
+          }
+        }
 
-
-
+        if (instance.filteredSales.length !== 0) {
+          instance.contentsLoad(true, instance.filteredSales);
+        } else {
+          instance.contentsLoad(false);
+        }
       }
     } catch {}
   });
