@@ -91,6 +91,9 @@ SalesJs.prototype.baseMaker = function () {
   let number;
   let targetSales;
   let columnsFilterSortEvent;
+  let predictDesigners, predictDesignersNumber;
+  let firstResponseUpdateEvent;
+  let feedBackUpdateEvent;
   
   clientColumnsMenu = [
     { title: "내림차순", key: "downSort" },
@@ -136,14 +139,6 @@ SalesJs.prototype.baseMaker = function () {
         { title: "드랍", key: "sameStatusFilter" },
         { title: "장기", key: "sameStatusFilter" },
         { title: "진행", key: "sameStatusFilter" },
-      ],
-    },
-    {
-      title: "드랍 판단",
-      menu: [
-        { title: "전체 보기", key: "totalFilter" },
-        { title: "O", key: "dropReasonExistFilter" },
-        { title: "X", key: "dropReasonNonExistFilter" },
       ],
     },
     {
@@ -206,19 +201,17 @@ SalesJs.prototype.baseMaker = function () {
       ],
     },
     {
-      title: "추천서 조회",
-      menu: [
-        { title: "전체 보기", key: "totalFilter" },
-        { title: "O", key: "porposalViewExistFilter" },
-        { title: "X", key: "porposalViewNonExistFilter" },
-      ],
-    },
-    {
       title: "피드백 통화",
       menu: [
         { title: "전체 보기", key: "totalFilter" },
         { title: "O", key: "feedBackExistFilter" },
         { title: "X", key: "feedBackNonExistFilter" },
+      ],
+    },
+    {
+      title: "예상 디자이너",
+      menu: [
+        { title: "전체 보기", key: "totalFilter" },
       ],
     },
   ];
@@ -254,7 +247,7 @@ SalesJs.prototype.baseMaker = function () {
   nameWidth = 98;
   designerWidth = 98;
   idWidth = 82;
-  requestWidth = tableBlockFactorWidth * clientColumns.length;
+  requestWidth = tableBlockFactorWidth * (clientColumns.length + 1);
 
   tableSize = 13;
   tableWeight = 400;
@@ -294,7 +287,7 @@ SalesJs.prototype.baseMaker = function () {
 
   buttonList = [];
 
-  createUpdateMenu = (cliid, thisMenu, e, valueDom) => {
+  createUpdateMenu = (cliid, thisMenu, e, valueDom, requestNumber) => {
     const zIndex = 4;
     return new Promise((resolve, reject) => {
       valueDom.style.color = colorChip.green;
@@ -323,6 +316,7 @@ SalesJs.prototype.baseMaker = function () {
         class: [ updateMenuClassName ],
         attribute: {
           cliid,
+          number: String(requestNumber),
         },
         style: {
           position: "absolute",
@@ -339,7 +333,9 @@ SalesJs.prototype.baseMaker = function () {
         children: thisMenu.map((obj, index) => {
           return {
             attribute: {
-              index: String(index)
+              index: String(index),
+              cliid,
+              number: String(requestNumber),
             },
             event: {
               click: function (e) {
@@ -399,6 +395,7 @@ SalesJs.prototype.baseMaker = function () {
         e.preventDefault();
         e.stopPropagation();
         const cliid = this.getAttribute("cliid");
+        const requestNumber = Number(this.getAttribute("number"));
         let thisMenu;
         thisMenu = instance.managers.map((o) => {
           const thisManager = o.name;
@@ -433,7 +430,7 @@ SalesJs.prototype.baseMaker = function () {
             }
           }
         });
-        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName))) {
+        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName), requestNumber)) {
           if (instance.filteredSales.length !== 0) {
             instance.contentsLoad(true, instance.filteredSales);
           } else {
@@ -453,6 +450,7 @@ SalesJs.prototype.baseMaker = function () {
         e.preventDefault();
         e.stopPropagation();
         const cliid = this.getAttribute("cliid");
+        const requestNumber = Number(this.getAttribute("number"));
         let updatePossibleStatus;
         let thisMenu;
 
@@ -469,21 +467,23 @@ SalesJs.prototype.baseMaker = function () {
             event: async function (e) {
               try {
                 const cliid = this.getAttribute("cliid");
+                const requestNumber = Number(this.getAttribute("number"));
+
                 let whereQuery, updateQuery;
                 let tempObj, tempObj2;
                 whereQuery = { cliid };
                 updateQuery = {};
-                updateQuery["requests.0.analytics.response.status"] = thisStatus;
+                updateQuery["requests." + String(requestNumber) + ".analytics.response.status"] = thisStatus;
                 await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateClient");
-                instance.clients.find((o) => { return o.cliid === cliid }).requests[0].analytics.response.status = thisStatus;
-                instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).client.requests[0].analytics.response.status = thisStatus;
+                instance.clients.find((o) => { return o.cliid === cliid }).requests[requestNumber].analytics.response.status = thisStatus;
+                instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).client.requests[requestNumber].analytics.response.status = thisStatus;
                 instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).analytics.response.status = thisStatus;
 
                 tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
                 if (tempObj !== undefined) {
                   tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
                   if (tempObj2 !== undefined) {
-                    tempObj2.client.requests[0].analytics.response.status = thisStatus;
+                    tempObj2.client.requests[requestNumber].analytics.response.status = thisStatus;
                     tempObj2.analytics.response.status = thisStatus;
                   }
                 }
@@ -494,7 +494,7 @@ SalesJs.prototype.baseMaker = function () {
             }
           }
         })
-        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName))) {
+        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName), requestNumber)) {
           if (instance.filteredSales.length !== 0) {
             instance.contentsLoad(true, instance.filteredSales);
           } else {
@@ -514,6 +514,7 @@ SalesJs.prototype.baseMaker = function () {
         e.preventDefault();
         e.stopPropagation();
         const cliid = this.getAttribute("cliid");
+        const requestNumber = Number(this.getAttribute("number"));
         let updateContractPossible;
         let thisMenu;
 
@@ -551,7 +552,7 @@ SalesJs.prototype.baseMaker = function () {
             }
           }
         })
-        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName))) {
+        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName), requestNumber)) {
           if (instance.filteredSales.length !== 0) {
             instance.contentsLoad(true, instance.filteredSales);
           } else {
@@ -571,6 +572,7 @@ SalesJs.prototype.baseMaker = function () {
         e.preventDefault();
         e.stopPropagation();
         const cliid = this.getAttribute("cliid");
+        const requestNumber = Number(this.getAttribute("number"));
         let updatePriorityPossible;
         let thisMenu;
 
@@ -608,7 +610,7 @@ SalesJs.prototype.baseMaker = function () {
           }
         });
 
-        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName))) {
+        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName), requestNumber)) {
           if (instance.filteredSales.length !== 0) {
             instance.contentsLoad(true, instance.filteredSales);
           } else {
@@ -628,6 +630,7 @@ SalesJs.prototype.baseMaker = function () {
         e.preventDefault();
         e.stopPropagation();
         const cliid = this.getAttribute("cliid");
+        const requestNumber = Number(this.getAttribute("number"));
         let updateTargetPossible;
         let thisMenu;
 
@@ -665,7 +668,7 @@ SalesJs.prototype.baseMaker = function () {
           }
         });
 
-        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName))) {
+        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName), requestNumber)) {
           if (instance.filteredSales.length !== 0) {
             instance.contentsLoad(true, instance.filteredSales);
           } else {
@@ -678,6 +681,212 @@ SalesJs.prototype.baseMaker = function () {
     }
   }
   this.targetUpdateEvent = targetUpdateEvent;
+
+  firstResponseUpdateEvent = () => {
+    return async function (e) {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const zIndex = 4;
+        const cliid = this.getAttribute("cliid");
+        const requestNumber = Number(this.getAttribute("number"));
+        const valueDom = this.querySelector('.' + valueTextClassName);
+        let cancelBack, menuPrompt;
+        let calendar;
+
+        valueDom.style.color = colorChip.green;
+
+        cancelBack = createNode({
+          mother: totalContents,
+          class: [ updateMenuClassName ],
+          event: {
+            click: function (e) {
+              valueDom.style.color = valueDom.getAttribute("color");
+              removeByClass(updateMenuClassName);
+            }
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            background: "transparent",
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            zIndex: String(zIndex),
+          }
+        });
+        menuPrompt = createNode({
+          mother: totalContents,
+          class: [ updateMenuClassName ],
+          attribute: {
+            cliid,
+          },
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(e.y) + "px",
+            left: String(e.x) + "px",
+            width: String(calendarWidth) + ea,
+            borderRadius: String(5) + "px",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            background: colorChip.white,
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+            zIndex: String(zIndex),
+          },
+        });
+        calendar = instance.mother.makeCalendar(new Date(), async function (e) {
+          try {
+            const updateValue = stringToDate(this.getAttribute("buttonValue"));
+            let updateQuery;
+            let tempObj, tempObj2;
+
+            updateQuery = {};
+            updateQuery["requests." + String(requestNumber) + ".analytics.date.call.next"] = updateValue;
+
+            await ajaxJson({
+              whereQuery: { cliid },
+              updateQuery,
+            }, BACKHOST + "/rawUpdateClient");
+            removeByClass(updateMenuClassName);
+
+            instance.clients.find((o) => { return o.cliid === cliid }).requests[requestNumber].analytics.date.call.next = updateValue;
+            instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).client.requests[requestNumber].analytics.date.call.next = updateValue;
+            instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).analytics.date.call.next = updateValue;
+
+            tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+            if (tempObj !== undefined) {
+              tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
+              if (tempObj2 !== undefined) {
+                tempObj2.client.requests[requestNumber].analytics.date.call.next = updateValue;
+                tempObj2.analytics.date.call.next = updateValue;
+              }
+            }
+
+            if (instance.filteredSales.length !== 0) {
+              instance.contentsLoad(true, instance.filteredSales);
+            } else {
+              instance.contentsLoad(false);
+            }
+
+          } catch (e) {
+            console.log(e);
+          }
+        });
+        menuPrompt.appendChild(calendar.calendarBase);
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  this.firstResponseUpdateEvent = firstResponseUpdateEvent;
+
+  feedBackUpdateEvent = () => {
+    return async function (e) {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const zIndex = 4;
+        const cliid = this.getAttribute("cliid");
+        const requestNumber = Number(this.getAttribute("number"));
+        const valueDom = this.querySelector('.' + valueTextClassName);
+        let cancelBack, menuPrompt;
+        let calendar;
+
+        valueDom.style.color = colorChip.green;
+
+        cancelBack = createNode({
+          mother: totalContents,
+          class: [ updateMenuClassName ],
+          event: {
+            click: function (e) {
+              valueDom.style.color = valueDom.getAttribute("color");
+              removeByClass(updateMenuClassName);
+            }
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            background: "transparent",
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            zIndex: String(zIndex),
+          }
+        });
+        menuPrompt = createNode({
+          mother: totalContents,
+          class: [ updateMenuClassName ],
+          attribute: {
+            cliid,
+          },
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(e.y) + "px",
+            left: String(e.x) + "px",
+            width: String(calendarWidth) + ea,
+            borderRadius: String(5) + "px",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            background: colorChip.white,
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            animation: "fadeuplite 0.3s ease forwards",
+            zIndex: String(zIndex),
+          },
+        });
+        calendar = instance.mother.makeCalendar(new Date(), async function (e) {
+          try {
+            const updateValue = stringToDate(this.getAttribute("buttonValue"));
+            let updateQuery;
+            let tempObj, tempObj2;
+
+            updateQuery = {};
+            updateQuery["requests." + String(requestNumber) + ".analytics.date.call.recommend"] = updateValue;
+
+            await ajaxJson({
+              whereQuery: { cliid },
+              updateQuery,
+            }, BACKHOST + "/rawUpdateClient");
+            removeByClass(updateMenuClassName);
+
+            instance.clients.find((o) => { return o.cliid === cliid }).requests[requestNumber].analytics.date.call.recommend = updateValue;
+            instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).client.requests[requestNumber].analytics.date.call.recommend = updateValue;
+            instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).analytics.date.call.recommend = updateValue;
+
+            tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+            if (tempObj !== undefined) {
+              tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
+              if (tempObj2 !== undefined) {
+                tempObj2.client.requests[requestNumber].analytics.date.call.recommend = updateValue;
+                tempObj2.analytics.date.call.recommend = updateValue;
+              }
+            }
+
+            if (instance.filteredSales.length !== 0) {
+              instance.contentsLoad(true, instance.filteredSales);
+            } else {
+              instance.contentsLoad(false);
+            }
+
+          } catch (e) {
+            console.log(e);
+          }
+        });
+        menuPrompt.appendChild(calendar.calendarBase);
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  this.feedBackUpdateEvent = feedBackUpdateEvent;
 
   clientColumnsFunctionsTong = {
     totalFilter: async function (e, menuIndex) {
@@ -977,7 +1186,7 @@ SalesJs.prototype.baseMaker = function () {
         newSales = [];
         for (let { id, date, cliids } of copiedSales) {
           newCliids = cliids.filter((o) => {
-            return o.history.curation.analytics.call.out.length !== 0;
+            return o.analytics.date.call.next.valueOf() > (new Date(2000, 0, 1)).valueOf();
           });
           newSales.push({
             id,
@@ -1018,7 +1227,7 @@ SalesJs.prototype.baseMaker = function () {
         newSales = [];
         for (let { id, date, cliids } of copiedSales) {
           newCliids = cliids.filter((o) => {
-            return o.history.curation.analytics.call.out.length === 0;
+            return o.analytics.date.call.next.valueOf() < (new Date(2000, 0, 1)).valueOf();
           });
           newSales.push({
             id,
@@ -1715,22 +1924,7 @@ SalesJs.prototype.baseMaker = function () {
         newSales = [];
         for (let { id, date, cliids } of copiedSales) {
           newCliids = cliids.filter((o) => {
-            let arr0, arr1, boo;
-            arr0 = o.history.curation.analytics.send.filter((obj) => { return obj.page === "designerProposal" })
-            arr1 = o.history.curation.analytics.call.out;
-            boo = false;
-            for (let { date } of arr0) {
-              for (let { date: callDate } of arr1) {
-                boo = date.valueOf() <= callDate.valueOf();
-                if (boo) {
-                  break;
-                }
-              }
-              if (boo) {
-                break;
-              }
-            }
-            return boo;
+            return o.analytics.date.call.recommend.valueOf() > (new Date(2000, 0, 1)).valueOf();
           });
           newSales.push({
             id,
@@ -1771,22 +1965,7 @@ SalesJs.prototype.baseMaker = function () {
         newSales = [];
         for (let { id, date, cliids } of copiedSales) {
           newCliids = cliids.filter((o) => {
-            let arr0, arr1, boo;
-            arr0 = o.history.curation.analytics.send.filter((obj) => { return obj.page === "designerProposal" })
-            arr1 = o.history.curation.analytics.call.out;
-            boo = false;
-            for (let { date } of arr0) {
-              for (let { date: callDate } of arr1) {
-                boo = date.valueOf() <= callDate.valueOf();
-                if (boo) {
-                  break;
-                }
-              }
-              if (boo) {
-                break;
-              }
-            }
-            return !boo;
+            return o.analytics.date.call.recommend.valueOf() < (new Date(2000, 0, 1)).valueOf();
           });
           newSales.push({
             id,
@@ -2045,7 +2224,7 @@ SalesJs.prototype.baseMaker = function () {
         },
         text: title,
         style: {
-          width: String(tableBlockFactorWidth) + ea,
+          width: number !== clientColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth * 2) + ea,
           display: "inline-block",
           position: "relative",
           textAlign: "center",
@@ -2161,6 +2340,7 @@ SalesJs.prototype.baseMaker = function () {
       serviceAboutNumber = 0;
       proposalOpenNumber = 0;
       feedBackNumber = 0;
+      predictDesignersNumber = 0;
 
       for (let z = 0; z < cliids.length; z++) {
         thisClient = cliids[z].client;
@@ -2181,6 +2361,7 @@ SalesJs.prototype.baseMaker = function () {
         serviceAbout = '-';
         proposalOpen = '-';
         feedBack = '-';
+        predictDesigners = '-';
 
         if (thisHistory.manager !== '-' && thisHistory.manager !== '') {
           manager = thisHistory.manager;
@@ -2193,12 +2374,8 @@ SalesJs.prototype.baseMaker = function () {
           statusNumber = statusNumber + 1;
         }
 
-        curationAnalytics.call.out.sort((a, b) => {
-          return a.date.valueOf() - b.date.valueOf();
-        })
-        firstResponse = curationAnalytics.call.out.length > 0 ? dateToString(curationAnalytics.call.out[0].date) : "대기";
-
-        if (firstResponse === "대기") {
+        firstResponse = dateConvert(thisAnalytics.date.call.next);
+        if (firstResponse === "-") {
           firstResponseNumber = firstResponseNumber + 1;
         }
 
@@ -2247,29 +2424,16 @@ SalesJs.prototype.baseMaker = function () {
           lowLowNumber = lowLowNumber + 1;
         }
 
-        arr0 = curationAnalytics.send.filter((obj) => { return obj.page === "designerProposal" })
-        arr1 = curationAnalytics.call.out;
-        boo = false;
-        for (let { date } of arr0) {
-          for (let { date: callDate } of arr1) {
-            boo = date.valueOf() <= callDate.valueOf();
-            if (boo) {
-              break;
-            }
-          }
-          if (boo) {
-            break;
-          }
-        }
-        if (boo) {
-          arr1.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
-          feedBack = dateToString(arr1[0].date);
-        } else {
-          feedBack = "대기";
+        feedBack = dateConvert(thisAnalytics.date.call.recommend);
+        if (feedBack === "-") {
+          feedBackNumber = feedBackNumber + 1;
         }
 
-        if (feedBack !== "대기") {
-          feedBackNumber = feedBackNumber + 1;
+        predictDesigners = thisAnalytics.response.designers.map((desid) => { return instance.designers.find((d) => { return d.desid === desid }).designer }).join(", ");
+        if (predictDesigners !== '') {
+          predictDesignersNumber = predictDesignersNumber + 1;
+        } else {
+          predictDesigners = '-';
         }
 
         clientValueArr = [
@@ -2291,11 +2455,6 @@ SalesJs.prototype.baseMaker = function () {
           {
             value: status,
             color: colorChip.black,
-            check: false,
-          },
-          {
-            value: dropReason,
-            color: dropReason === '-' ? colorChip.gray3 : colorChip.black,
             check: false,
           },
           {
@@ -2334,12 +2493,12 @@ SalesJs.prototype.baseMaker = function () {
             check: false,
           },
           {
-            value: proposalOpen,
+            value: feedBack,
             color: colorChip.black,
             check: false,
           },
           {
-            value: feedBack,
+            value: predictDesigners,
             color: colorChip.black,
             check: false,
           },
@@ -2373,7 +2532,8 @@ SalesJs.prototype.baseMaker = function () {
         clientBlack = createNode({
           mother: clientTable,
           attribute: {
-            proid: thisClient.cliid,
+            cliid: thisClient.cliid,
+            number: String(cliids[z].requestNumber),
           },
           style: {
             display: "block",
@@ -2388,6 +2548,7 @@ SalesJs.prototype.baseMaker = function () {
             mother: clientBlack,
             attribute: {
               cliid: thisClient.cliid,
+              number: String(cliids[z].requestNumber),
             },
             style: {
               display: "inline-flex",
@@ -2399,9 +2560,10 @@ SalesJs.prototype.baseMaker = function () {
               height: String(tableValueBlockHeight) + ea,
               paddingTop: String(z === 0 ? blockVisualPadding : 0) + ea,
               paddingBottom: String(z === cliids.length - 1 ? blockVisualPadding : 0) + ea,
-              width: i === clientColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
+              width: i === clientColumns.length - 1 ? String(tableBlockFactorWidth * 2) + ea : String(tableBlockFactorWidth - 1) + ea,
               borderRight: i === clientColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
               cursor: "pointer",
+              verticalAlign: "top",
             },
             child: {
               style: {
@@ -2456,15 +2618,21 @@ SalesJs.prototype.baseMaker = function () {
           } else if (i === 3) {
             clientDom.addEventListener("click", statusUpdateEvent());
             clientDom.addEventListener("contextmenu", statusUpdateEvent());
-          } else if (i === 6) {
+          } else if (i === 4) {
+            clientDom.addEventListener("click", firstResponseUpdateEvent());
+            clientDom.addEventListener("contextmenu", firstResponseUpdateEvent());
+          } else if (i === 5) {
             clientDom.addEventListener("click", contractPossibleUpdateEvent());
             clientDom.addEventListener("contextmenu", contractPossibleUpdateEvent());
-          } else if (i === 7) {
+          } else if (i === 6) {
             clientDom.addEventListener("click", priorityUpdateEvent());
             clientDom.addEventListener("contextmenu", priorityUpdateEvent());
-          } else if (i === 8) {
+          } else if (i === 7) {
             clientDom.addEventListener("click", targetUpdateEvent());
             clientDom.addEventListener("contextmenu", targetUpdateEvent());
+          } else if (i === 11) {
+            clientDom.addEventListener("click", feedBackUpdateEvent());
+            clientDom.addEventListener("contextmenu", feedBackUpdateEvent());
           }
         }
 
@@ -2489,11 +2657,6 @@ SalesJs.prototype.baseMaker = function () {
         },
         {
           value: "<b%" + String(statusNumber) + "%b>" + slash + String(cliids.length),
-          color: colorChip.black,
-          check: false,
-        },
-        {
-          value: '-',
           color: colorChip.black,
           check: false,
         },
@@ -2533,12 +2696,12 @@ SalesJs.prototype.baseMaker = function () {
           check: false,
         },
         {
-          value: "<b%" + String(proposalOpenNumber) + "%b>" + slash + String(cliids.length),
+          value: "<b%" + String(feedBackNumber) + "%b>" + slash + String(cliids.length),
           color: colorChip.black,
           check: false,
         },
         {
-          value: "<b%" + String(feedBackNumber) + "%b>" + slash + String(cliids.length),
+          value: "<b%" + String(predictDesignersNumber) + "%b>" + slash + String(cliids.length),
           color: colorChip.black,
           check: false,
         },
@@ -2564,7 +2727,7 @@ SalesJs.prototype.baseMaker = function () {
             position: "relative",
             background: colorChip.gray0,
             height: String(tableBlockHeight) + ea,
-            width: i === clientColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
+            width: i === clientColumns.length - 1 ? String(tableBlockFactorWidth * 2) + ea : String(tableBlockFactorWidth - 1) + ea,
             borderRight: i === clientColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
             },
           children: [
@@ -2828,6 +2991,7 @@ SalesJs.prototype.reloadSalesTong = function (serverResponse) {
   let thisClient;
   let thisObj;
   let thisHistory;
+  let thisRequestNumber;
 
   this.clients = serverResponse.clients;
   this.histories = serverResponse.histories;
@@ -2846,13 +3010,21 @@ SalesJs.prototype.reloadSalesTong = function (serverResponse) {
     for (let cliid of pureCliids) {
       thisClient = serverResponse.clients.find((c) => { return c.cliid === cliid });
       thisHistory = serverResponse.histories.find((c) => { return c.cliid === cliid });
+      thisRequestNumber = 0;
+      for (let i = 0; i < thisClient.requests.length; i++) {
+        if (thisClient.requests[i].request.timeline.valueOf() <= obj.date.valueOf()) {
+          thisRequestNumber = i;
+          break;
+        }
+      }
       thisObj = {
         cliid: thisClient.cliid,
         client: thisClient,
         phone: thisClient.phone,
         name: thisClient.name,
-        request: thisClient.requests[0].request,
-        analytics: thisClient.requests[0].analytics,
+        request: thisClient.requests[thisRequestNumber].request,
+        analytics: thisClient.requests[thisRequestNumber].analytics,
+        requestNumber: thisRequestNumber,
         history: thisHistory,
         ...obj.cliids.find((o) => { return o.cliid === cliid }),
       };
@@ -3155,6 +3327,7 @@ SalesJs.prototype.launching = async function () {
     let loading;
     let serverResponse;
     let members;
+    let designers;
 
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
@@ -3179,6 +3352,8 @@ SalesJs.prototype.launching = async function () {
       return o.roles.includes("CX");
     });
 
+    designers = await ajaxJson({ noFlat: true, whereQuery: {} }, BACKHOST + "/getDesigners", { equal: true });
+    this.designers = designers;
     this.valueRowDoms = [];
 
     this.baseMaker();
