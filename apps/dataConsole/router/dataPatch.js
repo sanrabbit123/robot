@@ -747,6 +747,9 @@ DataPatch.prototype.clientMap = function () {
       const rawValue = this.getAttribute("target");
       let finalValue;
       let items;
+      let blocks;
+      let thisRequestNumber;
+      let thisCliid;
 
       items = [ '드랍', '진행', '응대중', '장기' ];
       if (items.includes(rawValue)) {
@@ -762,11 +765,32 @@ DataPatch.prototype.clientMap = function () {
           window.location.href = window.location.protocol + "//" + window.location.host + "/" + "proposal" + "?cliid=" + input.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
         }
       } else {
+
+        if (typeof mother.parentElement.getAttribute("class") === "string") {
+          thisCliid = mother.parentElement.getAttribute("class");
+          blocks = [ ...document.querySelectorAll('.' + thisCliid) ];
+          blocks.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) });
+          thisRequestNumber = blocks.findIndex((dom) => { return dom ===  mother.parentElement; });
+        } else {
+          thisCliid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+          thisRequestNumber = Number(mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("request"));
+        }
+
+        if (typeof globalThis.XMLHttpRequest === "function") {
+          globalThis.window.parent.postMessage(JSON.stringify({
+            cliid: thisCliid,
+            requestNumber: thisRequestNumber,
+            column: "status",
+            value: finalValue,
+          }));
+        }
+
         if (finalValue === "드랍") {
           grandMother.setAttribute("drop", "true");
         } else {
           grandMother.setAttribute("drop", "false");
         }
+
         input.style.transition = "0s all ease";
         input.style.color = "transparent";
         input.value = finalValue;
@@ -1871,6 +1895,15 @@ DataPatch.prototype.clientMap = function () {
 
         await GeneralJs.ajaxJson({ whereQuery, updateQuery }, "/rawUpdateClient");
 
+        if (typeof globalThis.XMLHttpRequest === "function") {
+          globalThis.window.parent.postMessage(JSON.stringify({
+            cliid: thisCliid,
+            requestNumber: thisRequestNumber,
+            column: "designers",
+            value: thisDesigners,
+          }));
+        }
+
         if (thisCase === "card") {
           input.value = thisDesigners.map((desid) => { return GeneralJs.stacks.entireDesignerTong.find((d) => { return d.desid === desid }).designer }).join(", ");
           if (/DIV/gi.test(mother.firstChild.nodeName)) {
@@ -1939,6 +1972,15 @@ DataPatch.prototype.clientMap = function () {
         updateQuery["requests." + String(thisRequestNumber) + ".analytics.response.designers"] = thisDesigners;
 
         await GeneralJs.ajaxJson({ whereQuery, updateQuery }, "/rawUpdateClient");
+
+        if (typeof globalThis.XMLHttpRequest === "function") {
+          globalThis.window.parent.postMessage(JSON.stringify({
+            cliid: thisCliid,
+            requestNumber: thisRequestNumber,
+            column: "designers",
+            value: thisDesigners,
+          }));
+        }
 
         if (thisCase === "card") {
           input.value = thisDesigners.map((desid) => { return GeneralJs.stacks.entireDesignerTong.find((d) => { return d.desid === desid }).designer }).join(", ");

@@ -3521,6 +3521,77 @@ SalesJs.prototype.communicationRender = function () {
   ]);
 }
 
+SalesJs.prototype.postMessageEvent = function () {
+  const instance = this;
+  const { equalJson, ajaxJson } = GeneralJs;
+  window.addEventListener("message", async function (e) {
+    try {
+      const message = JSON.parse(e.data);
+      let cliid, requestNumber, value;
+      let tempObj, tempObj2;
+
+      if (message.column === "designers") {
+        ({ cliid, requestNumber, value } = message);
+
+        instance.clients.find((o) => { return o.cliid === cliid }).requests[requestNumber].analytics.response.designers = value;
+        instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).client.requests[requestNumber].analytics.response.designers = value;
+        instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).analytics.response.designers = value;
+
+        tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+        if (tempObj !== undefined) {
+          tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
+          if (tempObj2 !== undefined) {
+            tempObj2.client.requests[requestNumber].analytics.response.designers = value;
+            tempObj2.analytics.response.designers = value;
+          }
+        }
+
+        if (instance.filteredSales.length !== 0) {
+          instance.contentsLoad(true, instance.filteredSales);
+        } else {
+          instance.contentsLoad(false);
+        }
+      } else if (message.column === "status") {
+        ({ cliid, requestNumber, value } = message);
+
+        instance.clients.find((o) => { return o.cliid === cliid }).requests[requestNumber].analytics.response.status = value;
+        instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).client.requests[requestNumber].analytics.response.status = value;
+        instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).analytics.response.status = value;
+
+        tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+        if (tempObj !== undefined) {
+          tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
+          if (tempObj2 !== undefined) {
+            tempObj2.client.requests[requestNumber].analytics.response.status = value;
+            tempObj2.analytics.response.status = value;
+          }
+        }
+
+        if (instance.filteredSales.length !== 0) {
+          instance.contentsLoad(true, instance.filteredSales);
+        } else {
+          instance.contentsLoad(false);
+        }
+      } else if (message.column === "firstResponse") {
+        ({ cliid, requestNumber, value } = message);
+
+        
+
+
+
+
+      } else if (message.column === "feedBack") {
+        ({ cliid, requestNumber, value } = message);
+
+
+
+
+
+      }
+    } catch {}
+  });
+}
+
 SalesJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson, equalJson, returnGet, ajaxMultiple, backgroundSse, colorChip } = GeneralJs;
@@ -3562,16 +3633,13 @@ SalesJs.prototype.launching = async function () {
     this.addTransFormEvent();
     this.searchClients();
     this.communicationRender();
+    this.postMessageEvent();
 
     document.getElementById("moveLeftArea").remove();
     document.getElementById("moveRightArea").remove();
     document.getElementById("grayLeftOpenButton").remove();
 
     loading.remove();
-
-    window.addEventListener("message", function (e) {
-      console.log(e.data);
-    });
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e.message).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});

@@ -1879,6 +1879,27 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             finalValue = GeneralJs.vaildValue(column, this.value.replace(/[\&\=]/g, ''), pastRawData);
           } else if (e.type === "click") {
             finalValue = GeneralJs.vaildValue(column, this.getAttribute("buttonValue"), pastRawData);
+
+            if (column === "next") {
+
+              globalThis.window.parent.postMessage(JSON.stringify({
+                cliid: thisId,
+                requestNumber: Number(requestIndex),
+                column: "firstResponse",
+                value: finalValue,
+              }));
+
+            } else if (column === "recommend") {
+
+              globalThis.window.parent.postMessage(JSON.stringify({
+                cliid: thisId,
+                requestNumber: Number(requestIndex),
+                column: "feedBack",
+                value: finalValue,
+              }));
+              
+            }
+
           } else if (e.type === "message") {
             finalValue = GeneralJs.vaildValue(column, e.data, pastRawData);
           }
@@ -1983,7 +2004,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         if (thisMap.type === "date" && e.type === "click") {
 
           cancel_inputBack.style.background = GeneralJs.colorChip.white;
-          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
           width = 260;
