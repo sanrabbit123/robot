@@ -914,7 +914,7 @@ SalesJs.prototype.baseMaker = function () {
                 click: function (e) {
                   valueDom.style.color = valueDom.getAttribute("color");
                   removeByClass(updateMenuClassName);
-                  resolve(false);
+                  resolve(true);
                 }
               },
               style: {
@@ -959,8 +959,8 @@ SalesJs.prototype.baseMaker = function () {
                     click: function (e) {
                       const index = Number(this.getAttribute("index"));
                       const thisFunction = thisMenu[index].event;
-                      thisFunction.call(this.parentElement, e).then(() => {
-                        resolve(true);
+                      thisFunction.call(this.parentElement, e).then((str) => {
+                        valueDom.textContent = str;
                       }).catch((err) => {
                         console.log(err);
                       });
@@ -969,8 +969,8 @@ SalesJs.prototype.baseMaker = function () {
                       e.preventDefault();
                       const index = Number(this.getAttribute("index"));
                       const thisFunction = thisMenu[index].event;
-                      thisFunction.call(this.parentElement, e).then(() => {
-                        resolve(true);
+                      thisFunction.call(this.parentElement, e).then((str) => {
+                        valueDom.textContent = str;
                       }).catch((err) => {
                         console.log(err);
                       });
@@ -1024,32 +1024,46 @@ SalesJs.prototype.baseMaker = function () {
               try {
                 const cliid = this.getAttribute("cliid");
                 const requestNumber = Number(this.getAttribute("number"));
-
                 let whereQuery, updateQuery;
                 let tempObj, tempObj2;
+                let thisDesigners;
+                let thisDesigners_new;
+                let result;
 
+                thisDesigners = equalJson(JSON.stringify(instance.clients.find((o) => { return o.cliid === cliid }).requests[requestNumber].analytics.response.designers))
 
-                console.log(thisDesigner);
-                console.log(thisDesid);
+                if (/click/gi.test(e.type)) {
+                  thisDesigners.push(thisDesid);
+                } else {
+                  thisDesigners_new = [];
+                  for (let desid of thisDesigners) {
+                    if (desid !== thisDesid) {
+                      thisDesigners_new.push(desid);
+                    }
+                  }
+                  thisDesigners = thisDesigners_new;
+                }
 
-                // whereQuery = { cliid };
-                // updateQuery = {};
-                // updateQuery["requests." + String(requestNumber) + ".analytics.response.status"] = thisStatus;
-                // await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateClient");
-                // instance.clients.find((o) => { return o.cliid === cliid }).requests[requestNumber].analytics.response.status = thisStatus;
-                // instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).client.requests[requestNumber].analytics.response.status = thisStatus;
-                // instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).analytics.response.status = thisStatus;
+                thisDesigners = [ ...new Set(thisDesigners) ];
 
-                // tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
-                // if (tempObj !== undefined) {
-                //   tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
-                //   if (tempObj2 !== undefined) {
-                //     tempObj2.client.requests[requestNumber].analytics.response.status = thisStatus;
-                //     tempObj2.analytics.response.status = thisStatus;
-                //   }
-                // }
+                whereQuery = { cliid };
+                updateQuery = {};
+                updateQuery["requests." + String(requestNumber) + ".analytics.response.designers"] = thisDesigners;
+                await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateClient");
+                instance.clients.find((o) => { return o.cliid === cliid }).requests[requestNumber].analytics.response.designers = thisDesigners;
+                instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).client.requests[requestNumber].analytics.response.designers = thisDesigners;
+                instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).analytics.response.designers = thisDesigners;
 
+                tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+                if (tempObj !== undefined) {
+                  tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
+                  if (tempObj2 !== undefined) {
+                    tempObj2.client.requests[requestNumber].analytics.response.designers = thisDesigners;
+                    tempObj2.analytics.response.designers = thisDesigners;
+                  }
+                }
 
+                return thisDesigners.map((desid) => { return instance.designers.find((d) => { return d.desid === desid }).designer }).join(", ");
 
               } catch (e) {
                 console.log(e);
@@ -1057,12 +1071,14 @@ SalesJs.prototype.baseMaker = function () {
             }
           }
         })
-        if (await designersMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName), requestNumber)) {
-          // if (instance.filteredSales.length !== 0) {
-          //   instance.contentsLoad(true, instance.filteredSales);
-          // } else {
-          //   instance.contentsLoad(false);
-          // }
+
+        result = await designersMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName), requestNumber);
+        if (result) {
+          if (instance.filteredSales.length !== 0) {
+            instance.contentsLoad(true, instance.filteredSales);
+          } else {
+            instance.contentsLoad(false);
+          }
         }
       } catch (e) {
         console.log(e);
