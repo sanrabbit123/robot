@@ -2810,7 +2810,7 @@ SalesJs.prototype.baseMaker = function () {
             }
           });
           if (i === 0) {
-            clientDom.addEventListener("click", instance.whiteCardView(thisClient.cliid));
+            clientDom.addEventListener("click", instance.whiteCardView(thisClient.cliid, cliids[z].requestNumber));
           } else if (i === 1) {
             clientDom.addEventListener("click", managerUpdateEvent());
             clientDom.addEventListener("contextmenu", managerUpdateEvent());
@@ -2969,7 +2969,7 @@ SalesJs.prototype.baseMaker = function () {
   this.contentsLoad = contentsLoad;
 }
 
-SalesJs.prototype.whiteCardView = function (cliid) {
+SalesJs.prototype.whiteCardView = function (cliid, requestNumber) {
   const instance = this;
   const { totalContents, ea, belowHeight, clients } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, selfHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue, serviceParsing, equalJson, sleep } = GeneralJs;
@@ -3121,7 +3121,7 @@ SalesJs.prototype.whiteCardView = function (cliid) {
       cancelBack = createNode({
         mother: totalContents,
         class: [ whiteCardClassName ],
-        attribute: { cliid: cliid },
+        attribute: { cliid: cliid, number: String(requestNumber) },
         event: (e) => {
           removeByClass(whiteCardClassName);
         },
@@ -3136,7 +3136,7 @@ SalesJs.prototype.whiteCardView = function (cliid) {
       whiteCard = createNode({
         mother: totalContents,
         class: [ whiteCardClassName ],
-        attribute: { cliid: cliid },
+        attribute: { cliid: cliid, number: String(requestNumber) },
         style: {
           position: "fixed",
           top: String(whiteOuterMargin) + ea,
@@ -3297,7 +3297,7 @@ SalesJs.prototype.searchClients = function () {
 SalesJs.prototype.communicationRender = function () {
   const instance = this;
   const { communication } = this.mother;
-  const { ajaxJson, sleep } = GeneralJs;
+  const { ajaxJson, sleep, serviceParsing } = GeneralJs;
   const whiteCardClassName = "whiteCardClassName";
 
   communication.setItem([
@@ -3307,19 +3307,21 @@ SalesJs.prototype.communicationRender = function () {
     },
     async function (e) {
       try {
-        let cliid, thisCase, serid;
+        let serid;
+        let cliid, requestNumber, thisClient;
         let response, project;
+
         if (document.querySelector('.' + whiteCardClassName) === null || document.querySelector('.' + whiteCardClassName) === undefined) {
-          do {
-            cliid = (await GeneralJs.prompt("고객 아이디를 입력하세요!")).trim();
-          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+          window.alert("고객 카드를 먼저 열어주세요!");
+          return;
         } else {
           cliid = document.querySelector('.' + whiteCardClassName).getAttribute("cliid");
+          requestNumber = Number(document.querySelector('.' + whiteCardClassName).getAttribute("number"));
         }
 
-        /*
+        [ thisClient ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
 
-        if (window.confirm(thisCase.name + " 고객님의 추천서를 새롭게 자동 생성합니다. 확실합니까?")) {
+        if (window.confirm(thisClient.name + " 고객님의 추천서를 새롭게 자동 생성합니다. 확실합니까?")) {
 
           response = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getProjects", { equal: true });
           if (response.length !== 0) {
@@ -3329,11 +3331,11 @@ SalesJs.prototype.communicationRender = function () {
             }
           }
 
-          if (/홈퍼/gi.test(thisCase.service)) {
+          if (/홈퍼/gi.test(serviceParsing(thisClient.requests[requestNumber].analytics.response.service))) {
             serid = "s2011_aa01s";
-          } else if (/홈스/gi.test(thisCase.service)) {
+          } else if (/홈스/gi.test(serviceParsing(thisClient.requests[requestNumber].analytics.response.service))) {
             serid = "s2011_aa02s";
-          } else if (/토탈/gi.test(thisCase.service)) {
+          } else if (/토탈/gi.test(serviceParsing(thisClient.requests[requestNumber].analytics.response.service))) {
             serid = "s2011_aa03s";
           } else {
             serid = "s2011_aa04s";
@@ -3352,8 +3354,6 @@ SalesJs.prototype.communicationRender = function () {
           window.alert("추천서 제작 요청이 완료되었습니다!");
         }
 
-        */
-
       } catch (e) {
         console.log(e);
       }
@@ -3367,33 +3367,22 @@ SalesJs.prototype.communicationRender = function () {
     async function (e) {
       try {
         let history;
-        let cliid, thisCase;
-        let caseTong;
         let curation;
+        let cliid, requestNumber, thisClient;
 
-        if (instance.whiteBox === null || instance.whiteBox === undefined) {
-          do {
-            cliid = (await GeneralJs.prompt("고객 아이디를 입력하세요!")).trim();
-          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        if (document.querySelector('.' + whiteCardClassName) === null || document.querySelector('.' + whiteCardClassName) === undefined) {
+          window.alert("고객 카드를 먼저 열어주세요!");
+          return;
         } else {
-          cliid = instance.whiteBox.id;
+          cliid = document.querySelector('.' + whiteCardClassName).getAttribute("cliid");
+          requestNumber = Number(document.querySelector('.' + whiteCardClassName).getAttribute("number"));
         }
-        thisCase = null;
-        caseTong = [];
-        for (let c of instance.cases) {
-          if (c !== null) {
-            if (c.cliid === cliid) {
-              thisCase = c;
-              caseTong.push(c);
-            }
-          }
-        }
-        if (thisCase !== null) {
-          history = await ajaxJson({ id: cliid, rawMode: true }, "/getClientHistory", { equal: true });
-          curation = history.curation;
-          await ajaxJson({ cliid, curation }, SECONDHOST + "/printClient");
-          window.alert("출력 요청이 완료되었습니다!");
-        }
+
+        history = await ajaxJson({ id: cliid, rawMode: true }, "/getClientHistory", { equal: true });
+        curation = history.curation;
+        await ajaxJson({ cliid, curation }, SECONDHOST + "/printClient");
+        window.alert("출력 요청이 완료되었습니다!");
+
       } catch (e) {
         console.log(e);
       }
@@ -3406,53 +3395,38 @@ SalesJs.prototype.communicationRender = function () {
     },
     async function (e) {
       try {
-        let cliid, thisCase, serid, thisHistory, callBoo, liteBoo, inspectionArr;
+        let cliid;
         let requestNumber;
-        let caseTong;
-        let answer;
-        let updateQuery;
-        let name;
+        let thisClient;
 
-        if (instance.whiteBox === null || instance.whiteBox === undefined) {
-          do {
-            cliid = (await GeneralJs.prompt("고객 아이디를 입력하세요!")).trim();
-          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        if (document.querySelector('.' + whiteCardClassName) === null || document.querySelector('.' + whiteCardClassName) === undefined) {
+          window.alert("고객 카드를 먼저 열어주세요!");
+          return;
         } else {
-          cliid = instance.whiteBox.id;
+          cliid = document.querySelector('.' + whiteCardClassName).getAttribute("cliid");
+          requestNumber = Number(document.querySelector('.' + whiteCardClassName).getAttribute("number"));
         }
-        thisCase = null;
-        caseTong = [];
-        for (let c of instance.cases) {
-          if (c !== null) {
-            if (c.cliid === cliid) {
-              thisCase = c;
-              caseTong.push(c);
+
+        [ thisClient ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
+
+        if (window.confirm(thisClient.name + " 고객님께 순수 부재중 알림 알림톡을 전송합니다. 확실합니까?")) {
+          await ajaxJson({
+            id: cliid,
+            column: null,
+            value: null,
+            email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
+            send: "pureOutOfClient",
+          }, BACKHOST + "/updateClientHistory");
+          await ajaxJson({
+            method: "pureOutOfClient",
+            name: thisClient.name,
+            phone: thisClient.phone,
+            option: {
+              client: thisClient.name,
+              emoji0: "(미소)",
+              emoji1: "(콜)",
             }
-          }
-        }
-        if (thisCase !== null) {
-          if (window.confirm(thisCase.name + " 고객님께 순수 부재중 알림 알림톡을 전송합니다. 확실합니까?")) {
-
-            await ajaxJson({
-              id: cliid,
-              column: null,
-              value: null,
-              email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
-              send: "pureOutOfClient",
-            }, BACKHOST + "/updateClientHistory");
-
-            await ajaxJson({
-              method: "pureOutOfClient",
-              name: thisCase.name,
-              phone: thisCase.phone,
-              option: {
-                client: thisCase.name,
-                emoji0: "(미소)",
-                emoji1: "(콜)",
-              }
-            }, BACKHOST + "/alimTalk");
-
-          }
+          }, BACKHOST + "/alimTalk");
         }
       } catch (e) {
         console.log(e);
@@ -3460,59 +3434,47 @@ SalesJs.prototype.communicationRender = function () {
     }
   ]);
   communication.setItem([
-    () => { return "드랍시 서비스 소개"; },
+    () => { return "고객용 서비스 소개"; },
     function () {
       return true;
     },
     async function (e) {
       try {
-        let cliid, thisCase, serid, thisHistory, callBoo, liteBoo, inspectionArr;
+        let cliid;
         let requestNumber;
-        let caseTong;
-        let answer;
-        let updateQuery;
-        let name;
+        let thisClient;
 
-        if (instance.whiteBox === null || instance.whiteBox === undefined) {
-          do {
-            cliid = (await GeneralJs.prompt("고객 아이디를 입력하세요!")).trim();
-          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        if (document.querySelector('.' + whiteCardClassName) === null || document.querySelector('.' + whiteCardClassName) === undefined) {
+          window.alert("고객 카드를 먼저 열어주세요!");
+          return;
         } else {
-          cliid = instance.whiteBox.id;
+          cliid = document.querySelector('.' + whiteCardClassName).getAttribute("cliid");
+          requestNumber = Number(document.querySelector('.' + whiteCardClassName).getAttribute("number"));
         }
-        thisCase = null;
-        caseTong = [];
-        for (let c of instance.cases) {
-          if (c !== null) {
-            if (c.cliid === cliid) {
-              thisCase = c;
-              caseTong.push(c);
+        
+        [ thisClient ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
+
+        if (window.confirm(thisClient.name + " 고객님께 서비스 소개 알림톡을 전송합니다. 확실합니까?")) {
+
+          await ajaxJson({
+            id: cliid,
+            column: null,
+            value: null,
+            email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
+            send: "finalPush",
+          }, BACKHOST + "/updateClientHistory");
+
+          await ajaxJson({
+            method: "finalPush",
+            name: thisClient.name,
+            phone: thisClient.phone,
+            option: {
+              client: thisClient.name,
+              host: FRONTHOST.replace(/^https\:\/\//i, ''),
+              path: "magnetic",
             }
-          }
-        }
-        if (thisCase !== null) {
-          if (window.confirm(thisCase.name + " 고객님께 드랍시 서비스 소개 알림톡을 전송합니다. 확실합니까?")) {
+          }, BACKHOST + "/alimTalk");
 
-            await ajaxJson({
-              id: cliid,
-              column: null,
-              value: null,
-              email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
-              send: "finalPush",
-            }, BACKHOST + "/updateClientHistory");
-
-            await ajaxJson({
-              method: "finalPush",
-              name: thisCase.name,
-              phone: thisCase.phone,
-              option: {
-                client: thisCase.name,
-                host: FRONTHOST.replace(/^https\:\/\//i, ''),
-                path: "magnetic",
-              }
-            }, BACKHOST + "/alimTalk");
-
-          }
         }
       } catch (e) {
         console.log(e);

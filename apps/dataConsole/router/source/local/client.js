@@ -5732,7 +5732,7 @@ ClientJs.prototype.communicationRender = function () {
     }
   ]);
   communication.setItem([
-    () => { return "드랍시 서비스 소개"; },
+    () => { return "고객용 서비스 소개"; },
     function () {
       return true;
     },
@@ -5763,7 +5763,7 @@ ClientJs.prototype.communicationRender = function () {
           }
         }
         if (thisCase !== null) {
-          if (window.confirm(thisCase.name + " 고객님께 드랍시 서비스 소개 알림톡을 전송합니다. 확실합니까?")) {
+          if (window.confirm(thisCase.name + " 고객님께 서비스 소개 알림톡을 전송합니다. 확실합니까?")) {
 
             await ajaxJson({
               id: cliid,
