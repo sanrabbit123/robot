@@ -1107,18 +1107,19 @@ SalesJs.prototype.baseMaker = function () {
             event: async function (e) {
               try {
                 const cliid = this.getAttribute("cliid");
-                const updatedHistory = await ajaxJson({ mode: "lowLow", cliid }, BACKHOST + "/salesClient", { equal: true });
+                const requestNumber = Number(this.getAttribute("number"));
+                const updatedHistory = await ajaxJson({ mode: "lowLow", cliid }, "/salesClient", { equal: true });
 
-                console.log(updatedHistory);
+                instance.histories.find((o) => { return o.cliid === cliid }).curation.analytics.send = updatedHistory;
+                instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) }).cliids.find((o) => { return o.cliid === cliid }).history.curation.analytics.send = updatedHistory;
 
-                // tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
-                // if (tempObj !== undefined) {
-                //   tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
-                //   if (tempObj2 !== undefined) {
-                //     tempObj2.target = thisValue;
-                //   }
-                // }
-
+                tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+                if (tempObj !== undefined) {
+                  tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
+                  if (tempObj2 !== undefined) {
+                    tempObj2.history.curation.analytics.send = updatedHistory;
+                  }
+                }
 
               } catch (e) {
                 console.log(e);

@@ -8763,51 +8763,88 @@ DataRouter.prototype.rou_post_salesClient = function () {
 
       } else if (mode === "lowLow") {
 
-        ago = new Date();
-        ago.setDate(ago.getDate() - 1);
+        if (typeof req.body.cliid === "string") {
 
-        basicRows = await back.mongoRead(collection, { date: { $gte: ago } }, { selfMongo });
-        if (basicRows.length === 0) {
-          resultObj = { message: "fail" };
-        } else {
-          targetCliids = basicRows[0].cliids;
-          targetCliids = targetCliids.filter((obj) => {
-            return obj.priority === 0 && obj.target === 0;
-          });
-          if (targetCliids.length === 0) {
-            resultObj = { message: "done" };
-          } else {
-            targetClients = await back.getClientsByQuery({ $or: targetCliids.map((obj) => { return { cliid: obj.cliid } }) }, { selfMongo: selfCoreMongo });
-            targetHistories = await back.mongoRead("clientHistory", { $or: targetCliids.map((obj) => { return { cliid: obj.cliid } }) }, { selfMongo });
+          targetClients = await back.getClientsByQuery({ cliid: req.body.cliid }, { selfMongo: selfCoreMongo });
+          targetHistories = await back.mongoRead("clientHistory", { cliid: req.body.cliid }, { selfMongo });
 
-            for (let client of targetClients) {
-              await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name });
-              await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#cx", voice: false });
-            }
-
-            for (let history of targetHistories) {
-
-              whereQuery = { cliid: history.cliid };
-              updateQuery = {};
-
-              copiedSend = equalJson(JSON.stringify(history.curation.analytics.send));
-              copiedSend.push({
-                page: "lowLowPush",
-                date: new Date(),
-                mode: null,
-                who: {
-                  name: null,
-                  email: null,
-                }
-              })
-              copiedSend.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() })
-
-              updateQuery["curation.analytics.send"] = copiedSend;
-              await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-            }
-
-            resultObj = { message: "done" };
+          for (let client of targetClients) {
+            await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name });
+            await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#cx", voice: false });
           }
+
+          for (let history of targetHistories) {
+
+            whereQuery = { cliid: history.cliid };
+            updateQuery = {};
+
+            copiedSend = equalJson(JSON.stringify(history.curation.analytics.send));
+            copiedSend.push({
+              page: "lowLowPush",
+              date: new Date(),
+              mode: null,
+              who: {
+                name: null,
+                email: null,
+              }
+            })
+            copiedSend.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() })
+
+            updateQuery["curation.analytics.send"] = copiedSend;
+            await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+          }
+
+          resultObj = copiedSend;
+
+        } else {
+
+          ago = new Date();
+          ago.setDate(ago.getDate() - 1);
+  
+          basicRows = await back.mongoRead(collection, { date: { $gte: ago } }, { selfMongo });
+          if (basicRows.length === 0) {
+            resultObj = { message: "fail" };
+          } else {
+            targetCliids = basicRows[0].cliids;
+            targetCliids = targetCliids.filter((obj) => {
+              return obj.priority === 0 && obj.target === 0;
+            });
+            if (targetCliids.length === 0) {
+              resultObj = { message: "done" };
+            } else {
+              targetClients = await back.getClientsByQuery({ $or: targetCliids.map((obj) => { return { cliid: obj.cliid } }) }, { selfMongo: selfCoreMongo });
+              targetHistories = await back.mongoRead("clientHistory", { $or: targetCliids.map((obj) => { return { cliid: obj.cliid } }) }, { selfMongo });
+  
+              for (let client of targetClients) {
+                await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name });
+                await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#cx", voice: false });
+              }
+  
+              for (let history of targetHistories) {
+  
+                whereQuery = { cliid: history.cliid };
+                updateQuery = {};
+  
+                copiedSend = equalJson(JSON.stringify(history.curation.analytics.send));
+                copiedSend.push({
+                  page: "lowLowPush",
+                  date: new Date(),
+                  mode: null,
+                  who: {
+                    name: null,
+                    email: null,
+                  }
+                })
+                copiedSend.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() })
+  
+                updateQuery["curation.analytics.send"] = copiedSend;
+                await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+              }
+  
+              resultObj = { message: "done" };
+            }
+          }
+
         }
       }
 
