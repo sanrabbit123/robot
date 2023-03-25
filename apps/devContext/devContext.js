@@ -220,34 +220,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
-
-    // const selfMongo = this.MONGOC;
-    // const clients = await back.getClientsByQuery({}, { selfMongo })
-    // let whereQuery, updateQuery;
-    //
-    // for (let client of clients) {
-    //   whereQuery = { cliid: client.cliid };
-    //   updateQuery = {};
-    //   for (let i = 0; i < client.requests.length; i++) {
-    //     updateQuery["requests." + String(i) + ".request.furniture"] = "알 수 없음";
-    //   }
-    //   await selfMongo.db("miro81").collection("client").updateOne(whereQuery, { $set: updateQuery });
-    //   console.log(whereQuery, updateQuery);
-    // }
-
-    // await question();
-
-
-
-
-
-
-
     // const url = "https://api.openai.com/v1/images/generations";
     // const openAiToken = "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";
     // const size = "1024x1024";
@@ -269,25 +241,6 @@ DevContext.prototype.launching = async function () {
 
 
     
-
-    // recommend, designers init
-    
-    // const selfMongo = this.MONGOC;
-    // const clients = (await back.getClientsByQuery({}, { selfMongo })).toNormal();
-    // let whereQuery, updateQuery;
-    
-    // for (let obj of clients) {
-    //   whereQuery = { cliid: obj.cliid };
-    //   updateQuery = {};
-    //   for (let i = 0; i < obj.requests.length; i++) {
-    //     updateQuery["requests." + String(i) + ".analytics.date.call.next"] = new Date(1800, 0, 1);
-    //     updateQuery["requests." + String(i) + ".analytics.date.call.recommend"] = new Date(1800, 0, 1);
-    //     updateQuery["requests." + String(i) + ".analytics.response.designers"] = [];
-    //   }
-    //   await back.updateClient([ whereQuery, updateQuery ], { selfMongo });
-    //   console.log(whereQuery, updateQuery);
-    // }
-
 
 
 
