@@ -96,6 +96,7 @@ SalesJs.prototype.baseMaker = function () {
   let feedBackUpdateEvent;
   let designersUpdateEvent;
   let designerBoxLength;
+  let lowLowSendEvent;
   
   clientColumnsMenu = [
     { title: "내림차순", key: "downSort" },
@@ -1086,6 +1087,59 @@ SalesJs.prototype.baseMaker = function () {
     }
   }
   this.designersUpdateEvent = designersUpdateEvent;
+
+  lowLowSendEvent = () => {
+    return async function (e) {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const cliid = this.getAttribute("cliid");
+        const requestNumber = Number(this.getAttribute("number"));
+        let lowLowSend;
+        let thisMenu;
+
+        lowLowSend = [ "하하 전송" ];
+        
+        thisMenu = lowLowSend.map((str) => {
+          const thisStatus = str;
+          return {
+            title: thisStatus,
+            event: async function (e) {
+              try {
+                const cliid = this.getAttribute("cliid");
+                const updatedHistory = await ajaxJson({ mode: "lowLow", cliid }, BACKHOST + "/salesClient", { equal: true });
+
+                console.log(updatedHistory);
+
+                // tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
+                // if (tempObj !== undefined) {
+                //   tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
+                //   if (tempObj2 !== undefined) {
+                //     tempObj2.target = thisValue;
+                //   }
+                // }
+
+
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          }
+        });
+
+        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName), requestNumber)) {
+          if (instance.filteredSales.length !== 0) {
+            instance.contentsLoad(true, instance.filteredSales);
+          } else {
+            instance.contentsLoad(false);
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  this.lowLowSendEvent = lowLowSendEvent;
 
   clientColumnsFunctionsTong = {
     totalFilter: async function (e, menuIndex) {
@@ -2829,6 +2883,9 @@ SalesJs.prototype.baseMaker = function () {
           } else if (i === 7) {
             clientDom.addEventListener("click", targetUpdateEvent());
             clientDom.addEventListener("contextmenu", targetUpdateEvent());
+          } else if (i === 8) {
+            clientDom.addEventListener("click", lowLowSendEvent());
+            clientDom.addEventListener("contextmenu", lowLowSendEvent());
           } else if (i === 11) {
             clientDom.addEventListener("click", feedBackUpdateEvent());
             clientDom.addEventListener("contextmenu", feedBackUpdateEvent());
