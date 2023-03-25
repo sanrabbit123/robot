@@ -48,6 +48,7 @@ const ReadDocuments = require(APP_PATH + "/readDocuments/readDocuments.js");
 const AwsAPIs = require(APP_PATH + "/awsAPIs/awsAPIs.js");
 const CronGhost = require(APP_PATH + "/cronGhost/cronGhost.js");
 const TextDecorator = require(APP_PATH + "/textDecorator/textDecorator.js");
+const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -178,11 +179,30 @@ DevContext.prototype.launching = async function () {
       }
     }
 
-    // in config { httpsAgent: agent }
-    // console.log(await this.findCode("* 1.1)"));
-    // const count = (await this.findCode("count")).scripts
-    // const realtimeDesigner = (await this.findCode("realtimeDesigner")).scripts
-    // console.log(count.filter((p) => { return realtimeDesigner.includes(p); }));
+
+    // monthly must ==========================================================================================================================================
+    // =======================================================================================================================================================
+
+
+    // 1: monthly GA report
+
+    // const app = new GoogleAnalytics();
+    // let pastMonthDate;
+    // pastMonthDate = new Date(2023, 2, 1);
+    // pastMonthDate.setMonth(pastMonthDate.getMonth() - 1);
+    // await app.complexMonthly(pastMonthDate.getFullYear(), pastMonthDate.getMonth() + 1);
+
+
+    // 2: monthly unknown campaign sync
+
+    // await this.MONGOLOGC.connect();
+    // const report = new LogReport(this.MONGOLOGC);
+    // await report.unknownCampaign(2023, 2, 6415627 - 4989647);
+    // await this.MONGOLOGC.close();
+
+
+    // =======================================================================================================================================================
+
 
 
     // facebook token
@@ -198,23 +218,11 @@ DevContext.prototype.launching = async function () {
     // await shellExec(`code`, [ `${process.cwd()}/temp/kakaoJson.json` ]);
 
 
-    // monthly GA report
-
-    // const app = new GoogleAnalytics();
-    // let pastMonthDate;
-    // pastMonthDate = new Date(2023, 2, 1);
-    // pastMonthDate.setMonth(pastMonthDate.getMonth() - 1);
-    // await app.complexMonthly(pastMonthDate.getFullYear(), pastMonthDate.getMonth() + 1);
 
 
-    // monthly real estate parsing
 
-    // const selfMongo = this.MONGOLOGC;
-    // await selfMongo.connect();
-    // const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
-    // const app = new LogReport(selfMongo);
-    // await app.miningRealEstate();
-    // await selfMongo.close();
+
+
 
 
 
@@ -233,6 +241,9 @@ DevContext.prototype.launching = async function () {
     // }
 
     // await question();
+
+
+
 
 
 

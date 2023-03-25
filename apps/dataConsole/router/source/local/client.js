@@ -4016,7 +4016,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
 
   margin = 18;
   boxNumber = Math.floor((motherWidth - (margin * 3)) / (margin + 400));
-  boxHeight = 410;
+  boxHeight = 430;
   boxWidth = (motherWidth - (margin * (boxNumber + 1 + 2))) / boxNumber;
   boxTop = 88;
   propertyNum = 7;
@@ -4436,7 +4436,8 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     summaryBox.appendChild(b_clone);
 
     summaryBox.insertAdjacentHTML(`beforeend`, `명<br>추천율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.proposal / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;계약율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.contract / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;전환율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.process / summaryTong.proposal) * 100))}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;진행율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.process / summaryTong.client) * 100))}</b>%`);
-    summaryBox.insertAdjacentHTML(`beforeend`, `<br>MAU <b style="color:${colorChip.green}">${String(report[i].mau)}</b>명&nbsp;&nbsp;/&nbsp;&nbsp;광고유입 <b style="color:${colorChip.green}">${String(report[i].adClients)}</b>명`);
+    summaryBox.insertAdjacentHTML(`beforeend`, `<br>MAU <b style="color:${colorChip.green}">${String(report[i].mau)}</b>명&nbsp;&nbsp;/&nbsp;&nbsp;광고비용 <b style="color:${colorChip.green}">${autoComma(report[i].charge)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;광고유입 <b style="color:${colorChip.green}">${String(report[i].adClients)}</b>명`);
+    summaryBox.insertAdjacentHTML(`beforeend`, `<br>문의CAC <b style="color:${colorChip.green}">${autoComma(Math.round((summaryTong.client === 0 ? 0 : (report[i].charge / summaryTong.client))))}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;계약CAC <b style="color:${colorChip.green}">${autoComma(Math.round((summaryTong.contract === 0 ? 0 : (report[i].charge / summaryTong.contract))))}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;진행CAC <b style="color:${colorChip.green}">${autoComma(Math.round((summaryTong.process === 0 ? 0 : (report[i].charge / summaryTong.process))))}</b>원`);
 
     div_clone.appendChild(summaryBox);
 

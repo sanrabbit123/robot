@@ -3042,4 +3042,64 @@ LogReport.prototype.dailyReports = async function () {
   }
 }
 
+LogReport.prototype.unknownCampaign = async function (year, month, amount) {
+  const instance = this;
+  const back = this.back;
+  const { dateToString, zeroAddition } = this.mother;
+  try {
+    const campaignCollection = "dailyCampaign";
+    const selfMongo = instance.mongo;
+    let dummy;
+    let standardDate;
+    let unknownKeyword;
+    let idKeyword;
+    let standardTomorrow;
+    let tempRows;
+    let key;
+
+    standardDate = new Date(year, month - 1, 1);
+    standardTomorrow = new Date(year, month - 1, 1);
+    standardTomorrow.setDate(standardTomorrow.getDate() + 1);
+    unknownKeyword = "unknown";
+    idKeyword = "g";
+    key = dateToString(standardDate).replace(/\-/gi, '') + "_" + unknownKeyword;
+
+    dummy = {
+      camid: idKeyword + String(year).slice(2) + zeroAddition(month) + "_un" + zeroAddition(1) + "s",
+      key: key,
+      date: {
+        from: standardDate,
+        to: standardTomorrow,
+      },
+      value: {
+        charge: amount,
+        performance: {
+          impressions: 0,
+          clicks: 0,
+        }
+      },
+      information: {
+        mother: unknownKeyword,
+        type: unknownKeyword,
+        id: {
+          account: unknownKeyword,
+          campaign: unknownKeyword,
+        },
+        name: unknownKeyword
+      }
+    };
+
+    tempRows = await back.mongoRead(campaignCollection, { key }, { selfMongo });
+    if (tempRows.length !== 0) {
+      await back.mongoDelete(campaignCollection, { key }, { selfMongo });
+    }
+    await back.mongoCreate(campaignCollection, dummy, { selfMongo })
+
+    console.log(dummy);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = LogReport;
