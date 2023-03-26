@@ -7794,6 +7794,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
       let currentClients;
       let rowsFlat;
       let resultObj;
+      let todayClients;
 
       rows = await back.mongoRead(collection, {}, { selfMongo });
       rowsCopy = equalJson(JSON.stringify(rows));
@@ -7819,6 +7820,14 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
           reportObject = {};
           reportObject.standard = row.date;
   
+          // today stadard
+          todayClients = row.cliids.map(({ cliid }) => { return thisClients.find((c) => { return c.cliid === cliid }) });
+          for (let client of todayClients) {
+            client.history = thisHistories.find((h) => { return h.cliid === client.cliid });
+            client.project = thisProjects.find((p) => { return p.cliid === client.cliid });
+            client.row = rowsFlat.find((c) => { return c.cliid === client.cliid });
+          }
+
           // total standard
           targetRows = rowsCopy.filter((o) => { return o.date.valueOf() <= row.date.valueOf() });
           targetCliids = rowToCliids(targetRows);
@@ -7844,6 +7853,27 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
             client.row = rowsFlat.find((c) => { return c.cliid === client.cliid });
           }
   
+          // day clients
+          reportObject.dayClients = [];
+          for (let manager of managers) {
+            if (manager === "total") {
+              reportObject.totalClients.push({
+                manager,
+                value: row.cliids.length,
+              })
+            } else if (manager === "미지정") {
+              reportObject.totalClients.push({
+                manager,
+                value: todayClients.filter((c) => { return !managers.includes(c.history.manager) }).length,
+              })
+            } else {
+              reportObject.totalClients.push({
+                manager,
+                value: todayClients.filter((c) => { return c.history.manager === manager }).length,
+              })
+            }
+          }
+
           // total clients
           reportObject.totalClients = [];
           for (let manager of managers) {

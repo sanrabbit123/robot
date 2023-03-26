@@ -4731,476 +4731,241 @@ ClientJs.prototype.reportViewMaker = function () {
   }
 }
 
-ClientJs.prototype.secondReportScrollBox = function (data, motherWidth) {
+ClientJs.prototype.secondReportScrollBox = function (report, motherWidth) {
   const instance = this;
-  const report = JSON.parse(data);
-  const { equalJson, blankHref, colorChip, autoComma } = GeneralJs;
-  let div_clone, div_clone2, b_clone;
-  let style;
-  let ea = "px";
+  const { totalContents, ea } = this;
+  const { equalJson, blankHref, colorChip, autoComma, createNode, withOut, dateToString, isMac } = GeneralJs;
   let entireMargin;
   let margin;
-  let scrollBox, boxTop, boxWidth, boxHeight, boxNumber;
-  let titleBox, titleTop;
-  let matrixTop, matrixBox, matrixWidth, matrixBoxMargin, matrixHeight;
-  let matrixStyle0, matrixStyle1;
-  let matrixFontSize;
-  let matrixOuterLine, matrixInnerLine;
-  let columnTop, columnLineHeight, columnPaddingTop;
-  let reportNumber;
-  let grayBar;
-  let summaryBox, summaryTong;
-  let propertyNum;
-  let totalSummary;
-  let toClientEvent, toProjectEvent;
-  let totalCliid, totalProid;
+  let scrollBox, titleBoxHeight;
+  let contentsTong;
+  let basePan;
+  let dateBoxWidth;
+  let dateSize, dateWeight;
+  let baseTable;
+  let thisLength;
+  let tableColumns;
+  let columnsLength;
+  let baseColumns;
+  let columnHeight;
+  let thisValues;
+  let tableBetween;
+  let contentsTongPaddingTop;
+  let tableVisualPadding;
+  let valuesHeight;
+  let valueSize, valueWeight, valueBoldWeight;
+  let valueTextTop;
 
   margin = 18;
-  boxNumber = Math.floor((motherWidth - (margin * 3)) / (margin + 400));
-  boxHeight = 430;
-  boxWidth = (motherWidth - (margin * (boxNumber + 1 + 2))) / boxNumber;
-  boxTop = 88;
-  propertyNum = 7;
-
-  toClientEvent = function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-    const cliidTarget = equalJson(this.getAttribute("client"));
-    if (cliidTarget.length > 0) {
-      blankHref(window.location.protocol + "//" + window.location.host + "/client?specificids=" + cliidTarget.join(','));
-    }
-  }
-  toProjectEvent = function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-    const proidTarget = equalJson(this.getAttribute("project"));
-    if (proidTarget.length > 0) {
-      blankHref(window.location.protocol + "//" + window.location.host + "/project?specificids=" + proidTarget.join(','));
-    }
-  }
-
-  //entire scroll box
-  scrollBox = GeneralJs.nodes.div.cloneNode(true);
-  scrollBox.classList.add("noScrollBar");
+  titleBoxHeight = 88;
   entireMargin = margin * 2;
-  style = {
-    position: "relative",
-    top: String(boxTop) + ea,
-    paddingLeft: String(entireMargin) + ea,
-    paddingBottom: String(margin) + ea,
-    width: String(motherWidth - entireMargin) + ea,
-    height: "calc(100% - " + String(boxTop + margin) + ea + ")",
-    overflow: "scroll",
-  };
-  for (let z in style) {
-    scrollBox.style[z] = style[z];
-  }
 
-  totalSummary = {
-    client: 0,
-    proposal: 0,
-    recommend: 0,
-    contract: 0,
-    process: 0,
-  };
+  dateBoxWidth = 120;
+  dateSize = 15;
+  dateWeight = 400;
 
-  for (let i = 0; i < report.length; i++) {
+  columnHeight = 40;
+  valuesHeight = 32;
+  tableBetween = 36;
+  contentsTongPaddingTop = 20;
+  tableVisualPadding = 8;
 
-    //numbers
-    titleTop = 18;
-    columnTop = 0;
-    columnLineHeight = 28;
-    columnPaddingTop = 7;
-    matrixFontSize = 13;
-    matrixInnerLine = "1px solid " + GeneralJs.colorChip.gray2;
-    matrixOuterLine = "1px solid " + GeneralJs.colorChip.gray4;
-    matrixTop = titleTop + 40;
-    matrixBoxMargin = 23;
-    matrixWidth = boxWidth - (matrixBoxMargin * 2) - 3;
-    matrixHeight = 200;
-    summaryTong = {
-      client: 0,
-      proposal: 0,
-      recommend: 0,
-      contract: 0,
-      process: 0,
-    };
+  valueSize = 14; 
+  valueWeight = 400;
+  valueBoldWeight = 700;
+  valueTextTop = isMac() ? -1 : 1;
 
-    //gray card
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      display: "inline-block",
+  tableColumns = [
+    "담당자",
+    "당일 응대 배정",
+    "총 누적 고객 수",
+    "당월 누적 고객 수",
+    "현 응대중 고객 수",
+    "계약 가능성 고객 수",
+    "총 누적 계약 수",
+    "당월 누적 계약 수",
+  ];
+
+  columnsLength = tableColumns.length;
+
+  scrollBox = createNode({
+    mother: totalContents,
+    class: [ "noScrollBar" ],
+    style: {
       position: "relative",
-      width: String(boxWidth) + ea,
-      height: String(boxHeight) + ea,
+      top: String(titleBoxHeight) + ea,
+      paddingLeft: String(entireMargin) + ea,
+      paddingRight: String(entireMargin) + ea,
+      paddingBottom: String(margin) + ea,
+      width: String(motherWidth - (entireMargin * 2)) + ea,
+      height: withOut(titleBoxHeight + margin, ea),
       overflow: "scroll",
-      marginRight: String(margin) + ea,
-      marginBottom: String(margin) + ea,
-      fontSize: String(15) + ea,
-      background: GeneralJs.colorChip.gray0,
-      borderRadius: String(5) + ea,
-    };
-    for (let z in style) {
-      div_clone.style[z] = style[z];
     }
+  });
 
-    //title gray bar
-    grayBar = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      width: String(matrixWidth) + ea,
-      right: String(matrixBoxMargin + 1) + ea,
-      top: String(titleTop + 14) + ea,
-      height: String(0),
-      borderTop: "1px solid " + GeneralJs.colorChip.gray3,
-    };
-    for (let z in style) {
-      grayBar.style[z] = style[z];
-    }
-    div_clone.appendChild(grayBar);
-
-    //title
-    titleBox = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      paddingRight: String(12) + ea,
-      fontSize: String(matrixFontSize + 6) + ea,
-      left: String(matrixBoxMargin + 1) + ea,
-      top: String(titleTop + (GeneralJs.isMac() ? 0 : 3)) + ea,
-      fontWeight: String(200),
-      background: GeneralJs.colorChip.gray0,
-    };
-    for (let z in style) {
-      titleBox.style[z] = style[z];
-    }
-    titleBox.textContent = `${report[i].data[0].startDay.split('-')[0]}-${report[i].data[0].startDay.split('-')[1]}`;
-    div_clone.appendChild(titleBox);
-
-    //matrix
-    matrixBox = GeneralJs.nodes.div.cloneNode(true);
-    style = {
+  contentsTong = createNode({
+    mother: scrollBox,
+    style: {
+      display: "flex",
+      flexDirection: "column",
       position: "relative",
-      width: String(matrixWidth) + ea,
-      height: String(matrixHeight) + ea,
-      top: String(matrixTop) + ea,
-      left: String(matrixBoxMargin) + ea,
-      borderRadius: String(5) + ea,
-      border: matrixOuterLine,
-      overflow: "hidden",
-    };
-    for (let z in style) {
-      matrixBox.style[z] = style[z];
+      width: withOut(0, ea),
+      paddingTop: String(contentsTongPaddingTop) + ea,
     }
+  });
 
-    //case name
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    matrixStyle0 = {
-      position: "absolute",
-      fontSize: String(matrixFontSize) + ea,
-      fontWeight: String(600),
-      width: String(matrixWidth * (2 / propertyNum)) + ea,
-      textAlign: "center",
-      left: String(0) + ea,
-      paddingTop: String(columnPaddingTop + (GeneralJs.isMac() ? 0 : 2.5)) + ea,
-      top: String(columnTop) + ea,
-      height: String(columnLineHeight + (GeneralJs.isMac() ? 0 : -2.5)) + ea,
-      borderBottom: matrixInnerLine,
-      background: GeneralJs.colorChip.white,
-    };
-    for (let z in matrixStyle0) {
-      div_clone2.style[z] = matrixStyle0[z];
-    }
-    matrixBox.appendChild(div_clone2);
+  for (let obj of report) {
 
-    //client
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    matrixStyle1 = JSON.parse(JSON.stringify(matrixStyle0));
-    matrixStyle1.left = String(matrixWidth * (2 / propertyNum)) + ea;
-    matrixStyle1.width = String(matrixWidth * (1 / propertyNum)) + ea;
-    matrixStyle1.borderLeft = matrixInnerLine;
-    for (let z in matrixStyle1) {
-      div_clone2.style[z] = matrixStyle1[z];
-    }
-    div_clone2.textContent = "문의";
-    matrixBox.appendChild(div_clone2);
+    thisLength = obj.totalClients.length;
 
-    //recommend
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    matrixStyle1.left = String(matrixWidth * (3 / propertyNum)) + ea;
-    for (let z in matrixStyle1) {
-      div_clone2.style[z] = matrixStyle1[z];
-    }
-    div_clone2.textContent = "추천";
-    matrixBox.appendChild(div_clone2);
-
-    //proposal
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    matrixStyle1.left = String(matrixWidth * (4 / propertyNum)) + ea;
-    for (let z in matrixStyle1) {
-      div_clone2.style[z] = matrixStyle1[z];
-    }
-    div_clone2.textContent = "열람";
-    matrixBox.appendChild(div_clone2);
-
-    //contract
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    matrixStyle1.left = String(matrixWidth * (5 / propertyNum)) + ea;
-    for (let z in matrixStyle1) {
-      div_clone2.style[z] = matrixStyle1[z];
-    }
-    div_clone2.textContent = "계약";
-    matrixBox.appendChild(div_clone2);
-
-    //process start
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    matrixStyle1.left = String(matrixWidth * (6 / propertyNum)) + ea;
-    for (let z in matrixStyle1) {
-      div_clone2.style[z] = matrixStyle1[z];
-    }
-    div_clone2.textContent = "진행";
-    matrixBox.appendChild(div_clone2);
-
-    totalCliid = {
-      client: [],
-      recommend: [],
-      proposal: [],
-      contract: [],
-      process: []
-    };
-    totalProid = {
-      client: [],
-      recommend: [],
-      proposal: [],
-      contract: [],
-      process: []
-    };
-    reportNumber = 0;
-    for (let { startDay, endDay, client, recommend, proposal, contract, process, cliid: cliidObj, proid: proidObj } of report[i].data) {
-
-      columnTop = columnTop + columnLineHeight + columnPaddingTop;
-
-      //case name
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      matrixStyle0.top = String(columnTop) + ea;
-      matrixStyle0.background = "";
-      if (reportNumber === report[i].data.length - 1) {
-        matrixStyle0.borderBottom = '';
+    basePan = createNode({
+      mother: contentsTong,
+      style: {
+        display: "flex",
+        flexDirection: "row",
+        position: "relative",
+        width: withOut(0, ea),
+        marginBottom: String(tableBetween) + ea,
       }
-      for (let z in matrixStyle0) {
-        div_clone2.style[z] = matrixStyle0[z];
-      }
-      div_clone2.textContent = `${startDay.split('-')[2]} ~ ${endDay.split('-')[2]}`;
-      matrixBox.appendChild(div_clone2);
+    });
 
-      //client
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      div_clone2.classList.add("hoverDefault_lite");
-      matrixStyle1.top = String(columnTop) + ea;
-      matrixStyle1.left = String(matrixWidth * (2 / propertyNum)) + ea;
-      matrixStyle1.background = "";
-      matrixStyle1.fontWeight = String(200);
-      if (reportNumber === report[i].data.length - 1) {
-        matrixStyle1.borderBottom = '';
+    createNode({
+      mother: basePan,
+      style: {
+        display: "inline-flex",
+        position: "relative",
+        width: String(dateBoxWidth) + ea,
+        flexDirection: "column",
+        justifyContent: "start",
+        alignItems: "start",
+      },
+      child: {
+        text: dateToString(obj.standard),
+        style: {
+          fontSize: String(dateSize) + ea,
+          fontWeight: String(dateWeight),
+          color: colorChip.black,
+          position: "relative",
+          display: "inline-block",
+          fontFamily: "graphik",
+        }
       }
-      for (let z in matrixStyle1) {
-        div_clone2.style[z] = matrixStyle1[z];
-      }
-      div_clone2.textContent = String(client);
-      totalCliid.client = totalCliid.client.concat(cliidObj.client);
-      totalProid.client = totalProid.client.concat(proidObj.client);
-      div_clone2.setAttribute("client", JSON.stringify(cliidObj.client));
-      div_clone2.setAttribute("project", JSON.stringify(proidObj.client));
-      div_clone2.addEventListener("click", toClientEvent);
-      div_clone2.addEventListener("contextmenu", toProjectEvent);
-      matrixBox.appendChild(div_clone2);
-      summaryTong.client += client;
+    });
 
-      //proposal
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      div_clone2.classList.add("hoverDefault_lite");
-      matrixStyle1.left = String(matrixWidth * (3 / propertyNum)) + ea;
-      for (let z in matrixStyle1) {
-        div_clone2.style[z] = matrixStyle1[z];
+    baseTable = createNode({
+      mother: basePan,
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        width: withOut(dateBoxWidth, ea),
+        border: "1px solid " + colorChip.gray3,
+        borderRadius: String(5) + "px",
+        overflow: "hidden",
       }
-      div_clone2.textContent = String(proposal);
-      totalCliid.proposal = totalCliid.proposal.concat(cliidObj.proposal);
-      totalProid.proposal = totalProid.proposal.concat(proidObj.proposal);
-      div_clone2.setAttribute("client", JSON.stringify(cliidObj.proposal));
-      div_clone2.setAttribute("project", JSON.stringify(proidObj.proposal));
-      div_clone2.addEventListener("click", toClientEvent);
-      div_clone2.addEventListener("contextmenu", toProjectEvent);
-      matrixBox.appendChild(div_clone2);
-      summaryTong.proposal += proposal;
+    });
 
-      //recommend
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      div_clone2.classList.add("hoverDefault_lite");
-      matrixStyle1.left = String(matrixWidth * (4 / propertyNum)) + ea;
-      for (let z in matrixStyle1) {
-        div_clone2.style[z] = matrixStyle1[z];
+    for (let i = 0; i < thisLength + 1; i++) {
+      if (i === 0) {
+        baseColumns = createNode({
+          mother: baseTable,
+          style: {
+            display: "flex",
+            flexDirection: "row",
+            position: "relative",
+            height: String(columnHeight) + ea,
+            width: withOut(0, ea),
+          }
+        });
+        for (let j = 0; j < columnsLength; j++) {
+          createNode({
+            mother: baseColumns,
+            style: {
+              display: "inline-flex",
+              height: String(100) + '%',
+              width: "calc(100% / " + String(columnsLength) + ")",
+              position: "relative",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRight: j !== columnsLength - 1 ? "1px solid " + colorChip.gray3 : "",
+              boxSizing: "border-box",
+              background: colorChip.darkDarkShadow,
+            },
+            child: {
+              text: tableColumns[j],
+              style: {
+                display: "inline-block",
+                fontSize: String(valueSize) + ea,
+                fontWeight: String(valueBoldWeight),
+                color: colorChip.white,
+                top: String(valueTextTop) + ea,
+                position: "relative",
+              }
+            }
+          });
+        }
+      } else {
+
+        thisValues = [
+          obj.totalClients[i - 1].manager,
+          obj.dayClients[i - 1].value,
+          obj.totalClients[i - 1].value,
+          obj.monthClients[i - 1].value,
+          obj.currentClients[i - 1].value,
+          obj.contractPossible[i - 1].value,
+          obj.totalContracts[i - 1].value,
+          obj.monthContracts[i - 1].value,
+        ];
+
+        baseColumns = createNode({
+          mother: baseTable,
+          style: {
+            display: "flex",
+            flexDirection: "row",
+            position: "relative",
+            height: String(i === 0 || i === thisLength ? columnHeight : (i !== 1 && i !== thisLength - 1 ? valuesHeight : valuesHeight + tableVisualPadding)) + ea,
+            width: withOut(0, ea),
+          }
+        });
+
+        for (let j = 0; j < columnsLength; j++) {
+          createNode({
+            mother: baseColumns,
+            style: {
+              display: "inline-flex",
+              height: String(100) + '%',
+              width: "calc(100% / " + String(columnsLength) + ")",
+              position: "relative",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRight: j !== columnsLength - 1 ? "1px solid " + colorChip.gray3 : "",
+              boxSizing: "border-box",
+              background: i === thisLength ? colorChip.gray1 : colorChip.white,
+              paddingTop: i === 1 ? String(tableVisualPadding) + ea : "",
+              paddingBottom: i === thisLength - 1 ? String(tableVisualPadding) + ea : "",  
+            },
+            child: {
+              text: String(thisValues[j]),
+              style: {
+                display: "inline-block",
+                fontSize: String(valueSize) + ea,
+                fontWeight: i === thisLength ? String(valueBoldWeight) : (j === 0 ? String(valueBoldWeight) : String(valueWeight)),
+                color: colorChip.black,
+                top: String(valueTextTop) + ea,
+                position: "relative",
+              }
+            }
+          });
+        }
       }
-      div_clone2.textContent = String(recommend);
-      totalCliid.recommend = totalCliid.recommend.concat(cliidObj.recommend);
-      totalProid.recommend = totalProid.recommend.concat(proidObj.recommend);
-      div_clone2.setAttribute("client", JSON.stringify(cliidObj.recommend));
-      div_clone2.setAttribute("project", JSON.stringify(proidObj.recommend));
-      div_clone2.addEventListener("click", toClientEvent);
-      div_clone2.addEventListener("contextmenu", toProjectEvent);
-      matrixBox.appendChild(div_clone2);
-      summaryTong.recommend += recommend;
-
-      //contract
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      div_clone2.classList.add("hoverDefault_lite");
-      matrixStyle1.left = String(matrixWidth * (5 / propertyNum)) + ea;
-      for (let z in matrixStyle1) {
-        div_clone2.style[z] = matrixStyle1[z];
-      }
-      div_clone2.textContent = String(contract);
-      totalCliid.contract = totalCliid.contract.concat(cliidObj.contract);
-      totalProid.contract = totalProid.contract.concat(proidObj.contract);
-      div_clone2.setAttribute("client", JSON.stringify(cliidObj.contract));
-      div_clone2.setAttribute("project", JSON.stringify(proidObj.contract));
-      div_clone2.addEventListener("click", toClientEvent);
-      div_clone2.addEventListener("contextmenu", toProjectEvent);
-      matrixBox.appendChild(div_clone2);
-      summaryTong.contract += contract;
-
-      //process
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      div_clone2.classList.add("hoverDefault_lite");
-      matrixStyle1.left = String(matrixWidth * (6 / propertyNum)) + ea;
-      for (let z in matrixStyle1) {
-        div_clone2.style[z] = matrixStyle1[z];
-      }
-      div_clone2.textContent = String(process);
-      totalCliid.process = totalCliid.process.concat(cliidObj.process);
-      totalProid.process = totalProid.process.concat(proidObj.process);
-      div_clone2.setAttribute("client", JSON.stringify(cliidObj.process));
-      div_clone2.setAttribute("project", JSON.stringify(proidObj.process));
-      div_clone2.addEventListener("click", toClientEvent);
-      div_clone2.addEventListener("contextmenu", toProjectEvent);
-      matrixBox.appendChild(div_clone2);
-      summaryTong.process += process;
-
-      reportNumber++;
     }
-    matrixBox.style.height = String(columnTop + columnLineHeight + columnPaddingTop) + ea;
-    div_clone.appendChild(matrixBox);
 
-    //summary
-    summaryBox = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      width: String(matrixWidth) + ea,
-      fontSize: String(matrixFontSize) + ea,
-      left: String(matrixBoxMargin) + ea,
-      bottom: String(titleTop + (GeneralJs.isMac() ? 7 : 3)) + ea,
-      fontWeight: String(600),
-      textAlign: "right",
-      lineHeight: String(1.6),
-    };
-    for (let z in style) {
-      summaryBox.style[z] = style[z];
-    }
-
-    totalCliid.client = [ ...new Set(totalCliid.client) ];
-    totalCliid.recommend = [ ...new Set(totalCliid.recommend) ];
-    totalCliid.proposal = [ ...new Set(totalCliid.proposal) ];
-    totalCliid.contract = [ ...new Set(totalCliid.contract) ];
-    totalCliid.process = [ ...new Set(totalCliid.process) ];
-
-    totalProid.client = [ ...new Set(totalProid.client) ];
-    totalProid.recommend = [ ...new Set(totalProid.recommend) ];
-    totalProid.proposal = [ ...new Set(totalProid.proposal) ];
-    totalProid.contract = [ ...new Set(totalProid.contract) ];
-    totalProid.process = [ ...new Set(totalProid.process) ];
-
-    summaryBox.insertAdjacentHTML(`beforeend`, `문의 `);
-
-    b_clone = GeneralJs.nodes.b.cloneNode(true);
-    b_clone.style.color = colorChip.green;
-    b_clone.style.cursor = "pointer";
-    b_clone.textContent = String(summaryTong.client);
-    b_clone.setAttribute("client", JSON.stringify(totalCliid.client));
-    b_clone.setAttribute("project", JSON.stringify(totalProid.client));
-    b_clone.addEventListener("click", toClientEvent);
-    b_clone.addEventListener("contextmenu", toProjectEvent);
-    summaryBox.appendChild(b_clone);
-
-    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;/&nbsp;&nbsp;추천 `);
-
-    b_clone = GeneralJs.nodes.b.cloneNode(true);
-    b_clone.style.color = colorChip.green;
-    b_clone.style.cursor = "pointer";
-    b_clone.textContent = String(summaryTong.proposal);
-    b_clone.setAttribute("client", JSON.stringify(totalCliid.proposal));
-    b_clone.setAttribute("project", JSON.stringify(totalProid.proposal));
-    b_clone.addEventListener("click", toClientEvent);
-    b_clone.addEventListener("contextmenu", toProjectEvent);
-    summaryBox.appendChild(b_clone);
-
-    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;/&nbsp;&nbsp;열람 `);
-
-    b_clone = GeneralJs.nodes.b.cloneNode(true);
-    b_clone.style.color = colorChip.green;
-    b_clone.style.cursor = "pointer";
-    b_clone.textContent = String(summaryTong.recommend);
-    b_clone.setAttribute("client", JSON.stringify(totalCliid.recommend));
-    b_clone.setAttribute("project", JSON.stringify(totalProid.recommend));
-    b_clone.addEventListener("click", toClientEvent);
-    b_clone.addEventListener("contextmenu", toProjectEvent);
-    summaryBox.appendChild(b_clone);
-
-    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;/&nbsp;&nbsp;계약 `);
-
-    b_clone = GeneralJs.nodes.b.cloneNode(true);
-    b_clone.style.color = colorChip.green;
-    b_clone.style.cursor = "pointer";
-    b_clone.textContent = String(summaryTong.contract);
-    b_clone.setAttribute("client", JSON.stringify(totalCliid.contract));
-    b_clone.setAttribute("project", JSON.stringify(totalProid.contract));
-    b_clone.addEventListener("click", toClientEvent);
-    b_clone.addEventListener("contextmenu", toProjectEvent);
-    summaryBox.appendChild(b_clone);
-
-    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;/&nbsp;&nbsp;진행 `);
-
-    b_clone = GeneralJs.nodes.b.cloneNode(true);
-    b_clone.style.color = colorChip.green;
-    b_clone.style.cursor = "pointer";
-    b_clone.textContent = String(summaryTong.process);
-    b_clone.setAttribute("client", JSON.stringify(totalCliid.process));
-    b_clone.setAttribute("project", JSON.stringify(totalProid.process));
-    b_clone.addEventListener("click", toClientEvent);
-    b_clone.addEventListener("contextmenu", toProjectEvent);
-    summaryBox.appendChild(b_clone);
-
-    summaryBox.insertAdjacentHTML(`beforeend`, `명<br>추천율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.proposal / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;계약율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.contract / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;전환율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.process / summaryTong.proposal) * 100))}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;진행율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.process / summaryTong.client) * 100))}</b>%`);
-    summaryBox.insertAdjacentHTML(`beforeend`, `<br>MAU <b style="color:${colorChip.green}">${String(report[i].mau)}</b>명&nbsp;&nbsp;/&nbsp;&nbsp;광고비용 <b style="color:${colorChip.green}">${autoComma(report[i].charge)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;광고유입 <b style="color:${colorChip.green}">${String(report[i].adClients)}</b>명`);
-    summaryBox.insertAdjacentHTML(`beforeend`, `<br>문의CAC <b style="color:${colorChip.green}">${autoComma(Math.round((summaryTong.client === 0 ? 0 : (report[i].charge / summaryTong.client))))}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;계약CAC <b style="color:${colorChip.green}">${autoComma(Math.round((summaryTong.contract === 0 ? 0 : (report[i].charge / summaryTong.contract))))}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;진행CAC <b style="color:${colorChip.green}">${autoComma(Math.round((summaryTong.process === 0 ? 0 : (report[i].charge / summaryTong.process))))}</b>원`);
-
-    div_clone.appendChild(summaryBox);
-
-    totalSummary.client += summaryTong.client;
-    totalSummary.proposal += summaryTong.proposal;
-    totalSummary.recommend += summaryTong.recommend;
-    totalSummary.contract += summaryTong.contract;
-    totalSummary.process += summaryTong.process;
-
-    scrollBox.appendChild(div_clone);
   }
-
-  scrollBox.setAttribute("client_number", String(totalSummary.client));
-  scrollBox.setAttribute("proposal_number", String(totalSummary.proposal));
-  scrollBox.setAttribute("recommend_number", String(totalSummary.recommend));
-  scrollBox.setAttribute("contract_number", String(totalSummary.contract));
-  scrollBox.setAttribute("process_number", String(totalSummary.process));
 
   return scrollBox;
 }
 
-ClientJs.prototype.secondReportContents = function (data, mother, loadingIcon) {
+ClientJs.prototype.secondReportContents = function (report, mother, loadingIcon) {
   const instance = this;
   const { zeroAddition } = GeneralJs;
   const vaildValue = function (target) {
@@ -5253,7 +5018,7 @@ ClientJs.prototype.secondReportContents = function (data, mother, loadingIcon) {
   let style, inputStyle;
   let ea = "px";
   let motherWidth = Number(mother.style.width.replace((new RegExp(ea + '$')), ''));
-  const scrollBox = this.secondReportScrollBox(data, motherWidth);
+  const scrollBox = this.secondReportScrollBox(report, motherWidth);
   const today = new Date();
   let todayString;
   let top, height, margin;
@@ -5361,6 +5126,7 @@ ClientJs.prototype.secondReportContents = function (data, mother, loadingIcon) {
 
 ClientJs.prototype.secondReportViewMakerDetail = function (recycle = false) {
   const instance = this;
+  const { ajaxJson } = GeneralJs;
   try {
     return function () {
       let div_clone, svg_icon;
@@ -5437,9 +5203,11 @@ ClientJs.prototype.secondReportViewMakerDetail = function (recycle = false) {
       instance.whiteBox.contentsBox = div_clone;
       instance.totalContents.appendChild(div_clone);
 
-      GeneralJs.ajax("month=8", "/getClientReport", (data) => {
-        svg_icon.style.opacity = "0";
-        instance.secondReportContents(data, div_clone, svg_icon);
+      ajaxJson({}, BACKHOST + "/dailySalesReport", { equal: true }).then(({ reports }) => {
+        svg_icon.style.opacity = String(0);
+        instance.secondReportContents(reports, div_clone, svg_icon);
+      }).catch((err) => {
+        console.log(err);
       });
 
       GeneralJs.stacks.whiteBox = 0;
