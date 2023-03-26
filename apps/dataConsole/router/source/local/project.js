@@ -1685,6 +1685,15 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
   let betweenSpace;
   let distanceValueDom;
+  let travelPositionIndex;
+  let preIndexes;
+  let index, acc;
+  let titlaInfoArea;
+
+  travelPositionIndex = 5;
+  preIndexes = [];
+  preIndexes.push(travelPositionIndex);
+  preIndexes.sort((a, b) => { return a - b; });
 
   //entire box -------------------------------------
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -1762,7 +1771,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //proid
   betweenSpace = "&nbsp;&nbsp;<b style=\"color: " + GeneralJs.colorChip.gray3 + "\">/</b>&nbsp;&nbsp;";
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone3.insertAdjacentHTML("beforeend", (thisCase[standard[1]] + betweenSpace + thisCase.name + " (Sa)" + betweenSpace + thisCase.name + " (Da)" + betweenSpace + thisCase.designer.split(' ')[0] + " (De)" + betweenSpace + "의뢰서" + betweenSpace + "시공"));
+  titlaInfoArea = div_clone3;
+  div_clone3.insertAdjacentHTML("beforeend", (thisCase[standard[1]] + betweenSpace + thisCase.name + " (Sa)" + betweenSpace + thisCase.name + " (Da)" + betweenSpace + thisCase.designer.split(' ')[0] + " (De)" + betweenSpace + "의뢰서" + betweenSpace + "시공" + betweenSpace + "<b style=\"color:" + GeneralJs.colorChip.deactive + "\">출장비 없음</b>"));
   div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
@@ -2531,12 +2541,17 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     info = JSON.parse(window.localStorage.getItem("project_whiteOrder"));
   }
 
+  acc = 0;
   for (let i = 0; i < info.length; i++) {
+    if (preIndexes.includes(i)) {
+      acc = acc + 1;
+    }
+    index = i + acc;
     div_clone3 = GeneralJs.nodes.div.cloneNode(true);
     div_clone3.setAttribute("index", info[i].target);
     style = {
       position: "absolute",
-      top: String(fontSize * lineHeightRatio * i) + ea,
+      top: String(fontSize * lineHeightRatio * index) + ea,
       left: String(0) + ea,
       width: "100%",
       height: String(16) + ea,
@@ -2642,7 +2657,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     div_clone3.setAttribute("index", "referrerLinks");
     style = {
       position: "absolute",
-      top: String(fontSize * lineHeightRatio * (info.length)) + ea,
+      top: String(fontSize * lineHeightRatio * (travelPositionIndex)) + ea,
       left: String(0) + ea,
       width: "100%",
       height: String(16) + ea,
@@ -2690,6 +2705,11 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     distanceValueDom = div_clone4;
 
     propertyBox.appendChild(div_clone3);
+
+    if (feeObject.distance.amount !== 0) {
+      [ ...titlaInfoArea.querySelectorAll('b') ].find((dom) => { return /출장/gi.test(dom.textContent) }).style.color = GeneralJs.colorChip.red;
+      [ ...titlaInfoArea.querySelectorAll('b') ].find((dom) => { return /출장/gi.test(dom.textContent) }).textContent = "출장비 발생";
+    }
 
     return GeneralJs.ajaxJson({
       mode: "read",
