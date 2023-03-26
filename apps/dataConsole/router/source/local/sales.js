@@ -3302,6 +3302,7 @@ SalesJs.prototype.addTransFormEvent = function () {
   const { selfHref } = GeneralJs;
   const { square: { up, down, reportIcon, returnIcon } } = this.mother.belowButtons;
   down.addEventListener("click", (e) => { selfHref("/client") });
+  reportIcon.addEventListener("click", instance.reportCardView());
 }
 
 SalesJs.prototype.searchClients = function () {
@@ -3640,6 +3641,218 @@ SalesJs.prototype.postMessageEvent = function () {
       }
     } catch {}
   });
+}
+
+SalesJs.prototype.reportCardView = function () {
+  const instance = this;
+  const { totalContents, ea, belowHeight, clients } = this;
+  const { createNode, withOut, colorChip, isMac, blankHref, selfHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue, serviceParsing, equalJson, sleep } = GeneralJs;
+  return async function (e) {
+    try {
+      const zIndex = 2;
+      const blank = "&nbsp;&nbsp;&nbsp;";
+      const whiteCardClassName = "whiteCardClassName";
+      let cancelBack, whiteCard;
+      let whiteOuterMargin;
+      let whiteInnerMargin;
+      let titleArea, contentsArea, buttonArea;
+      let titleAreaHeight;
+      let titleAreaPaddingBottom;
+      let nameSize, nameWeight;
+      let subSize, subWeight, subMarginLeft, subTextTop;
+      let statusTextTop;
+      let contentsAreaBetween;
+      let contentsAreaPaddingTop;
+      let grayInnerPadding;
+      let contentsAreaLeft;
+      let contentsAreaRight;
+      let blockHeight;
+      let leftColumns;
+      let rightColumns;
+      let greenTong, whiteTong, blackTong, grayTong;
+      let thisRequest;
+      let requestName;
+      let currentState;
+      let confirmState;
+      let payDate;
+      let cancelAmount;
+      let cancelDate;
+      let valueSize, valueWeight, valueBoldWeight;
+      let valueTextTop;
+      let blockMarginBottom;
+      let requestSumConsumer;
+      let requestSumConfirm;
+      let requestSumRefund;
+      let requestSumIncome;
+      let requestValueArr, responseValueArr;
+      let thisResponse;
+      let responseName;
+      let payAmount;
+      let refundAmount;
+      let nonPayAmount;
+      let responseSumTotal;
+      let responseSumNon;
+      let responseSumPaid;
+      let responseSumRefund;
+      let refundDate;
+      let vatAmount, supplyAmount;
+      let payMethod, payProof;
+      let requestSumVat, requestSumSupply;
+      let whiteTongDom;
+      let payRealAmount;
+      let refundGo;
+      let oidArr;
+      let refundReceipt;
+      let responsePlusButton;
+      let responsePlusButtonMenus;
+      let plusCircleWidth;
+      let plusCircleMargin;
+      let plusSize, plusWeight, plusTextTop;
+      let buttonWidth, buttonHeight;
+      let buttonBetween;
+      let buttonSize, buttonWeight, buttonTextTop;
+      let memoArea, menuArea;
+      let memoAreaWidth;
+      let memoAreaMargin;
+      let memoTitleAreaHeight;
+      let memoTitleSize, memoTitleWeight;
+      let memoTitleTextTop, memoTitleVisualLeft;
+      let memoAreaInnerPadding;
+      let memoContentsSize, memoContentsWeight, memoContentsLineHeight;
+      let callHistory;
+      let latestCall;
+      let secondMemoTitleAreaHeight;
+      let dateAreaHeight;
+
+      whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
+      whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
+
+      titleAreaHeight = <%% 63, 42, 42, 42, 42 %%>;
+
+      titleAreaPaddingBottom = 6;
+
+      nameSize = <%% 32, 24, 24, 24, 24 %%>;
+      nameWeight = 800;
+
+      subSize = <%% 17, 15, 15, 15, 15 %%>;
+      subWeight = 400;
+      subMarginLeft = 13;
+      subTextTop = <%% (isMac() ? 7 : 5), 5, 5, 5, 3 %%>;
+
+      statusTextTop = <%% 27, 18, 18, 18, 18 %%>;
+
+      contentsAreaBetween = 10;
+      contentsAreaPaddingTop = <%% 30, 15, 15, 15, 15 %%>;
+
+      grayInnerPadding = 10;
+
+      blockHeight = <%% 40, 36, 36, 36, 36 %%>;
+
+      valueSize = <%% 13, 12, 12, 11, 3 %%>;
+      valueWeight = 400;
+      valueBoldWeight = 800;
+      valueTextTop = isMac() ? -1 : 1;
+
+      blockMarginBottom = 2;
+
+      plusCircleWidth = 36;
+      plusCircleMargin = 10;
+
+      plusSize = 34;
+      plusWeight = 500;
+      plusTextTop = -3;
+
+      buttonWidth = 96;
+      buttonHeight = 30;
+      buttonBetween = 4;
+      buttonSize = 13;
+      buttonWeight = 700;
+      buttonTextTop = isMac() ? -1 : 1;
+
+      memoAreaWidth = 456;
+      memoAreaMargin = 50;
+      memoTitleAreaHeight = 71;
+
+      memoTitleSize = 15;
+      memoTitleWeight = 700;
+      memoTitleTextTop = -7;
+      memoTitleVisualLeft = 1;
+
+      memoAreaInnerPadding = 20;
+
+      memoContentsSize = 13;
+      memoContentsWeight = 400;
+      memoContentsLineHeight = 1.6;
+
+      secondMemoTitleAreaHeight = 50;
+      dateAreaHeight = 166;
+
+      // base
+
+      removeByClass(whiteCardClassName);
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ whiteCardClassName ],
+        event: (e) => {
+          removeByClass(whiteCardClassName);
+        },
+        set: "fixed",
+        style: {
+          height: withOut(belowHeight, ea),
+          background: colorChip.black,
+          opacity: String(0.4),
+          zIndex: String(zIndex),
+        }
+      });
+      whiteCard = createNode({
+        mother: totalContents,
+        class: [ whiteCardClassName ],
+        style: {
+          position: "fixed",
+          top: String(whiteOuterMargin) + ea,
+          left: String(whiteOuterMargin) + ea,
+          width: withOut((whiteOuterMargin * 2) + (0 * 2), ea),
+          height: withOut((whiteOuterMargin * 2) + belowHeight + (0 * 2), ea),
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          animation: "fadeuplite 0.3s ease forwards",
+          zIndex: String(zIndex),
+        },
+        children: [
+          {
+            style: {
+              position: "relative",
+              display: "block",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              borderRadius: String(5) + "px",
+              overflow: "hidden",
+            },
+            child: {
+              mode: "iframe",
+              attribute: {
+                src: window.location.protocol + "//" + window.location.host + "/client?report=sales&entire=true&dataonly=true",
+              },
+              style: {
+                position: "absolute",
+                display: "block",
+                top: String(0),
+                left: String(0),
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                border: String(0),
+              }
+            }
+          }
+        ]
+      }).firstChild;
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 SalesJs.prototype.launching = async function () {

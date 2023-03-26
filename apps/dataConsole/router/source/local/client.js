@@ -3736,28 +3736,34 @@ ClientJs.prototype.whiteCancelMaker = function (callback = null, recycle = false
       }
     }
 
-    //animation
-    if (!recycle) {
-      instance.whiteBox.cancelBox.classList.remove("justfadein");
-      instance.whiteBox.cancelBox.classList.add("justfadeout");
-    }
-    instance.whiteBox.contentsBox.classList.remove("fadeup");
-    instance.whiteBox.contentsBox.classList.add("fadedown");
-
-    //dom delete
-    GeneralJs.timeouts.whiteBox = setTimeout(function () {
-      instance.whiteBox.contentsBox.remove();
+    if (GeneralJs.returnGet().entire !== "true") {
+      //animation
       if (!recycle) {
-        instance.whiteBox.cancelBox.remove();
-        instance.whiteBox = null;
+        instance.whiteBox.cancelBox.classList.remove("justfadein");
+        instance.whiteBox.cancelBox.classList.add("justfadeout");
       }
-      if (callback !== null) {
-        callback();
-      }
-      clearTimeout(GeneralJs.timeouts.whiteBox);
-      GeneralJs.timeouts.whiteBox = null;
-      GeneralJs.stacks.whiteBox = 0;
-    }, 401);
+      instance.whiteBox.contentsBox.classList.remove("fadeup");
+      instance.whiteBox.contentsBox.classList.add("fadedown");
+  
+      //dom delete
+      GeneralJs.timeouts.whiteBox = setTimeout(function () {
+        instance.whiteBox.contentsBox.remove();
+        if (!recycle) {
+          instance.whiteBox.cancelBox.remove();
+          instance.whiteBox = null;
+        }
+        if (callback !== null) {
+          callback();
+        }
+        clearTimeout(GeneralJs.timeouts.whiteBox);
+        GeneralJs.timeouts.whiteBox = null;
+        GeneralJs.stacks.whiteBox = 0;
+      }, 401);
+    } else {
+      instance.whiteBox.contentsBox.remove();
+      callback();
+    }
+
   }
 }
 
@@ -4634,6 +4640,7 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
 
 ClientJs.prototype.reportViewMakerDetail = function (recycle = false) {
   const instance = this;
+  const { colorChip } = GeneralJs;
   try {
     return function () {
       let div_clone, svg_icon;
@@ -4676,19 +4683,35 @@ ClientJs.prototype.reportViewMakerDetail = function (recycle = false) {
       }
 
       div_clone = GeneralJs.nodes.div.cloneNode(true);
-      div_clone.classList.add("fadeup");
+      if (GeneralJs.returnGet().entire !== "true") {
+        div_clone.classList.add("fadeup");
+      }
       div_clone.classList.add("totalWhite");
-      style = {
-        position: "fixed",
-        background: GeneralJs.colorChip.white,
-        top: String(margin) + ea,
-        left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
-        borderRadius: String(5) + ea,
-        boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
-        width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
-        height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
-        zIndex: String(2),
-      };
+      if (GeneralJs.returnGet().entire === "true") {
+        style = {
+          position: "fixed",
+          background: colorChip.white,
+          borderRadius: String(5) + ea,
+          boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+          top: String(0) + ea,
+          left: String(0) + ea,
+          width: String(window.innerWidth) + ea,
+          height: String(window.innerHeight) + ea,
+          zIndex: String(2),
+        };
+      } else {
+        style = {
+          position: "fixed",
+          background: GeneralJs.colorChip.white,
+          top: String(margin) + ea,
+          left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
+          borderRadius: String(5) + ea,
+          boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
+          width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
+          height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
+          zIndex: String(2),
+        };
+      }
       for (let i in style) {
         div_clone.style[i] = style[i];
       }
@@ -5140,7 +5163,7 @@ ClientJs.prototype.secondReportContents = function (report, mother, loadingIcon)
 
 ClientJs.prototype.secondReportViewMakerDetail = function (recycle = false) {
   const instance = this;
-  const { ajaxJson } = GeneralJs;
+  const { ajaxJson, colorChip } = GeneralJs;
   try {
     return function () {
       let div_clone, svg_icon;
@@ -5183,19 +5206,35 @@ ClientJs.prototype.secondReportViewMakerDetail = function (recycle = false) {
       }
 
       div_clone = GeneralJs.nodes.div.cloneNode(true);
-      div_clone.classList.add("fadeup");
+      if (GeneralJs.returnGet().entire !== "true") {
+        div_clone.classList.add("fadeup");
+      }
       div_clone.classList.add("totalWhite");
-      style = {
-        position: "fixed",
-        background: GeneralJs.colorChip.white,
-        top: String(margin) + ea,
-        left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
-        borderRadius: String(5) + ea,
-        boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
-        width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
-        height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
-        zIndex: String(2),
-      };
+      if (GeneralJs.returnGet().entire === "true") {
+        style = {
+          position: "fixed",
+          background: colorChip.white,
+          borderRadius: String(5) + ea,
+          boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+          top: String(0) + ea,
+          left: String(0) + ea,
+          width: String(window.innerWidth) + ea,
+          height: String(window.innerHeight) + ea,
+          zIndex: String(2),
+        };
+      } else {
+        style = {
+          position: "fixed",
+          background: GeneralJs.colorChip.white,
+          top: String(margin) + ea,
+          left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
+          borderRadius: String(5) + ea,
+          boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
+          width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
+          height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
+          zIndex: String(2),
+        };
+      }
       for (let i in style) {
         div_clone.style[i] = style[i];
       }
@@ -6524,6 +6563,12 @@ ClientJs.prototype.launching = async function () {
           if (getObj.view !== "row") {
             getTarget.click();
           }
+        }
+      } else {
+        if (getObj.report === "client") {
+          instance.reportViewMaker().call({}, { preventDefault: () => {}});
+        } else if (getObj.report === "sales") {
+          instance.secondReportViewMaker().call({}, { preventDefault: () => {}});
         }
       }
     }
