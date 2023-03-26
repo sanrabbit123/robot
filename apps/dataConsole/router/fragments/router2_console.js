@@ -7024,3 +7024,239 @@ DataRouter.prototype.rou_post_dailySales = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_dailySalesReport = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, errorLog, messageSend, dateToString, stringToDate } = this.mother;
+  let obj = {};
+  obj.link = [ "/dailySalesReport" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      const collection = "dailySales";
+      const historyCollection = "clientHistory";
+      const rowToCliids = (rows) => {
+        const targetRows = equalJson(JSON.stringify(rows));
+        return targetRows.map((o) => { return o.cliids.map(({ cliid }) => { return cliid }) }).flat();
+      }
+      let rows;
+      let rowsCopy;
+      let whereQuery;
+      let thisClients, thisHistories;
+      let thisProjects;
+      let reports;
+      let reportObject;
+      let managers;
+      let targetRows;
+      let targetCliids;
+      let targetClients;
+      let monthRows, monthCliids, monthClients;
+      let fromDate;
+      let toDate;
+      let currentClients;
+      let rowsFlat;
+      let resultObj;
+
+      rows = await back.mongoRead(collection, {}, { selfMongo });
+      rowsCopy = equalJson(JSON.stringify(rows));
+      rowsFlat = rowsCopy.map(({ cliids }) => { return cliids }).flat();
+  
+      whereQuery = rowToCliids(rows);
+      whereQuery = { $or: [ ...new Set(whereQuery) ].map((cliid) => { return { cliid } }) }
+  
+      if (whereQuery["$or"].length > 0) {
+  
+        thisClients = (await back.getClientsByQuery(whereQuery, { selfMongo: selfCoreMongo })).toNormal();
+        thisProjects = (await back.getProjectsByQuery(whereQuery, { selfMongo: selfCoreMongo })).toNormal();
+        thisHistories = await back.mongoRead(historyCollection, whereQuery, { selfMongo });
+  
+        managers = [ ...new Set(thisHistories.map((o) => { return o.manager.trim() }).filter((str) => { return str !== '' && str !== '-' })) ];
+        managers.sort();
+        managers.push("미지정");
+        managers.push("total");
+  
+        reports = [];
+        for (let row of rows) {
+  
+          reportObject = {};
+          reportObject.standard = row.date;
+  
+          // total standard
+          targetRows = rowsCopy.filter((o) => { return o.date.valueOf() <= row.date.valueOf() });
+          targetCliids = rowToCliids(targetRows);
+          targetClients = targetCliids.map((cliid) => { return thisClients.find((c) => { return c.cliid === cliid }) });
+          for (let client of targetClients) {
+            client.history = thisHistories.find((h) => { return h.cliid === client.cliid });
+            client.project = thisProjects.find((p) => { return p.cliid === client.cliid });
+            client.row = rowsFlat.find((c) => { return c.cliid === client.cliid });
+          }
+  
+          // month standard
+          fromDate = new Date(row.date.getFullYear(), row.date.getMonth(), 1, 8, 0, 0);
+          toDate = new Date(row.date.getFullYear(), row.date.getMonth() + 1, 1, 10, 0, 0);
+          toDate.setDate(toDate.getDate() - 1);
+          monthRows = rowsCopy.filter((o) => {
+            return (o.date.valueOf() > fromDate.valueOf() && o.date.valueOf() < toDate.valueOf()) && (o.date.valueOf() <= row.date.valueOf());
+          });
+          monthCliids = rowToCliids(monthRows);
+          monthClients = monthCliids.map((cliid) => { return thisClients.find((c) => { return c.cliid === cliid }) });
+          for (let client of monthClients) {
+            client.history = thisHistories.find((h) => { return h.cliid === client.cliid });
+            client.project = thisProjects.find((p) => { return p.cliid === client.cliid });
+            client.row = rowsFlat.find((c) => { return c.cliid === client.cliid });
+          }
+  
+          // total clients
+          reportObject.totalClients = [];
+          for (let manager of managers) {
+            if (manager === "total") {
+              reportObject.totalClients.push({
+                manager,
+                value: targetCliids.length,
+              })
+            } else if (manager === "미지정") {
+              reportObject.totalClients.push({
+                manager,
+                value: targetClients.filter((c) => { return !managers.includes(c.history.manager) }).length,
+              })
+            } else {
+              reportObject.totalClients.push({
+                manager,
+                value: targetClients.filter((c) => { return c.history.manager === manager }).length,
+              })
+            }
+          }
+  
+          // monthly clients
+          reportObject.monthClients = [];
+          for (let manager of managers) {
+            if (manager === "total") {
+              reportObject.monthClients.push({
+                manager,
+                value: monthCliids.length,
+              })
+            } else if (manager === "미지정") {
+              reportObject.monthClients.push({
+                manager,
+                value: monthClients.filter((c) => { return !managers.includes(c.history.manager) }).length,
+              })
+            } else {
+              reportObject.monthClients.push({
+                manager,
+                value: monthClients.filter((c) => { return c.history.manager === manager }).length,
+              })
+            }
+          }
+  
+          // current clients
+          currentClients = targetClients.filter((client) => {
+            return client.requests.some(({ analytics }) => { return /^[응장]/gi.test(analytics.response.status) })
+          })
+          reportObject.currentClients = [];
+          for (let manager of managers) {
+            if (manager === "total") {
+              reportObject.currentClients.push({
+                manager,
+                value: currentClients.length,
+              })
+            } else if (manager === "미지정") {
+              reportObject.currentClients.push({
+                manager,
+                value: currentClients.filter((c) => { return !managers.includes(c.history.manager) }).length,
+              })
+            } else {
+              reportObject.currentClients.push({
+                manager,
+                value: currentClients.filter((c) => { return c.history.manager === manager }).length,
+              })
+            }
+          }
+  
+          // contract possible clients
+          reportObject.contractPossible = [];
+          for (let manager of managers) {
+            if (manager === "total") {
+              reportObject.contractPossible.push({
+                manager,
+                value: currentClients.filter((c) => { return c.row.possible > 0 }).length,
+              })
+            } else if (manager === "미지정") {
+              reportObject.contractPossible.push({
+                manager,
+                value: currentClients.filter((c) => { return c.row.possible > 0 }).filter((c) => { return !managers.includes(c.history.manager) }).length,
+              })
+            } else {
+              reportObject.contractPossible.push({
+                manager,
+                value: currentClients.filter((c) => { return c.row.possible > 0 }).filter((c) => { return c.history.manager === manager }).length,
+              })
+            }
+          }
+  
+          // total contracts
+          reportObject.totalContracts = [];
+          for (let manager of managers) {
+            if (manager === "total") {
+              reportObject.totalContracts.push({
+                manager,
+                value: targetClients.filter((client) => { return client.project !== undefined && client.project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf() }).length,
+              })
+            } else if (manager === "미지정") {
+              reportObject.totalContracts.push({
+                manager,
+                value: targetClients.filter((client) => { return client.project !== undefined && client.project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf() }).filter((c) => { return !managers.includes(c.history.manager) }).length,
+              })
+            } else {
+              reportObject.totalContracts.push({
+                manager,
+                value: targetClients.filter((client) => { return client.project !== undefined && client.project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf() }).filter((c) => { return c.history.manager === manager }).length,
+              })
+            }
+          }
+  
+          // month contracts
+          reportObject.monthContracts = [];
+          for (let manager of managers) {
+            if (manager === "total") {
+              reportObject.monthContracts.push({
+                manager,
+                value: monthClients.filter((client) => { return client.project !== undefined && client.project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf() }).length,
+              })
+            } else if (manager === "미지정") {
+              reportObject.monthContracts.push({
+                manager,
+                value: monthClients.filter((client) => { return client.project !== undefined && client.project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf() }).filter((c) => { return !managers.includes(c.history.manager) }).length,
+              })
+            } else {
+              reportObject.monthContracts.push({
+                manager,
+                value: monthClients.filter((client) => { return client.project !== undefined && client.project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf() }).filter((c) => { return c.history.manager === manager }).length,
+              })
+            }
+          }
+  
+          reports.push(reportObject);
+        }
+  
+        resultObj = { reports };
+      } else {
+        resultObj = { reports: [] };
+      }
+
+      res.send(JSON.stringify(resultObj));
+
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_dailySalesReport): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
