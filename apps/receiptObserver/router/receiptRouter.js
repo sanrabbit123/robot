@@ -1494,6 +1494,9 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
     let bankName, bankTo;
     let calculate;
     let discount;
+    let thisProposal;
+    let thisMethod;
+    let thisFeeObject;
 
     if (/홈리에종 계약금/gi.test(data.goodName.trim()) || /홈리에종 잔금/gi.test(data.goodName.trim())) {
       projectQuery = {};
@@ -1566,6 +1569,17 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
 
         await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
         await bill.amountConverting(thisBill.bilid, { selfMongo: instance.mongolocal });
+
+        thisProposal = project.proposal.detail.find((p) => { return p.desid === desid });
+        thisMethod = (project.service.online ? "online" : "offline");
+        if (thisProposal !== undefined) {
+          thisFeeObject = thisProposal.fee.find((f) => { return f.method === thisMethod });
+          if (thisFeeObject !== undefined) {
+            if (thisFeeObject.distance.amount !== 0) {
+              await bill.travelInjection("request", proid, thisMethod, 1, { selfMongo: instance.mongolocal });
+            }
+          }
+        }
 
         requestSystem("https://" + instance.address.backinfo.host + ":3000/getHistoryProperty", { idArr: [ desid ], method: "designer", property: "manager" }, {
           headers: {
