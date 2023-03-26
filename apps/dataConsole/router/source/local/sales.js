@@ -3534,6 +3534,8 @@ SalesJs.prototype.communicationRender = function () {
             }
           }, BACKHOST + "/alimTalk");
 
+          window.location.reload();
+
         }
       } catch (e) {
         console.log(e);

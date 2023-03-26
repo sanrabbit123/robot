@@ -16705,7 +16705,6 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             instance.insertStyleBox();
             instance.insertUploadBox();
             instance.insertControlBox();
-            instance.insertTravelBox();
             instance.insertNoticeBox();
             if (getObj.green !== "deactive") {
               instance.insertGreenButtons();
@@ -16722,7 +16721,6 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             await instance.insertFormStatusBox();
             instance.insertUploadBox();
             instance.insertControlBox();
-            instance.insertTravelBox();
             if (mobile) {
               instance.insertBelowBox();
             } else {
@@ -16768,7 +16766,6 @@ ProcessDetailJs.prototype.launching = async function (loading) {
               await instance.insertScheduleBox();
             }
             instance.insertControlBox();
-            instance.insertTravelBox();
             if (mobile) {
               instance.insertBelowBox();
             } else {

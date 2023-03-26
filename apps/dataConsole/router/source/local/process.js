@@ -3523,7 +3523,6 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
       await instance.insertFormStatusBox(project, menuArea);
       instance.insertUploadBox(project, menuArea);
       await instance.insertScheduleBox(project, menuArea);
-      instance.insertTravelBox(project, menuArea);
 
     } catch (e) {
       console.log(e);
