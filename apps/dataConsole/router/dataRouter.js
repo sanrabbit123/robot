@@ -7769,6 +7769,10 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      if (req.body.startYear === undefined || req.body.startMonth === undefined || req.body.endYear === undefined || req.body.endMonth === undefined) {
+        throw new Error("invalid post");
+      }
+      const { startYear, startMonth, endYear, endMonth } = req.body;
       const selfMongo = instance.mongolocal;
       const selfCoreMongo = instance.mongo;
       const collection = "dailySales";
@@ -7795,8 +7799,23 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
       let rowsFlat;
       let resultObj;
       let todayClients;
+      let startDate, endDate;
 
-      rows = await back.mongoRead(collection, {}, { selfMongo });
+      startDate = new Date(Number(startYear), Number(startMonth) - 1, 1, 8, 0, 0);
+      endDate = new Date(Number(endYear), Number(endMonth) - 1, 1, 10, 0, 0);
+      endDate.setMonth(endDate.getMonth() + 1);
+      endDate.setDate(endDate.getDate() - 1);
+
+      rows = await back.mongoRead(collection, {
+        $and: [
+          {
+            date: { $gte: startDate }
+          },
+          {
+            date: { $lte: endDate }
+          },
+        ]
+      }, { selfMongo });
       rowsCopy = equalJson(JSON.stringify(rows));
       rowsFlat = rowsCopy.map(({ cliids }) => { return cliids }).flat();
   

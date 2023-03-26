@@ -4461,6 +4461,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
 
 ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
   const instance = this;
+  const { zeroAddition, createNode, colorChip } = GeneralJs;
   const vaildValue = function (target) {
     const today = new Date();
     let valueArr0, valueArr1, valueArr2;
@@ -4505,14 +4506,6 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
 
     return { startYear: valueArr1[0], startMonth: valueArr1[1], endYear: valueArr2[0], endMonth: valueArr2[1], };
   }
-  const zeroAddition = function (number) {
-    if (number < 10) {
-      return "0" + String(number);
-    } else {
-      return String(number);
-    }
-  }
-
   let div_clone, div_clone2, input_clone;
   let totalBox;
   let style, inputStyle;
@@ -4601,21 +4594,36 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
   div_clone.appendChild(input_clone);
 
   //total box
-  totalBox = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    fontSize: String(15) + ea,
-    fontWeight: String(500) + ea,
-    right: String(1) + ea,
-    top: String(56) + ea,
-    color: GeneralJs.colorChip.black,
-  };
-  for (let i in style) {
-    totalBox.style[i] = style[i];
-  }
-
-  totalBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;추천 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;열람 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("process_number")}</b>명`);
-  div_clone.appendChild(totalBox);
+  createNode({
+    mother: div_clone,
+    text: `문의 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;추천 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;열람 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("process_number")}</b>명` + "&nbsp;&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;&nbsp;" + "<b%리포트 전환%b>",
+    event: {
+      click: function (e) {
+        const eventFunction = instance.secondReportViewMaker();
+        eventFunction.call(this, e);
+      }
+    },
+    style: {
+      position: "absolute",
+      fontSize: String(15) + ea,
+      fontWeight: String(500) + ea,
+      right: String(1) + ea,
+      top: String(56) + ea,
+      color: colorChip.black,
+      cursor: "pointer",
+    },
+    bold: {
+      fontSize: String(15) + ea,
+      fontWeight: String(500) + ea,
+      color: colorChip.green,
+      cursor: "pointer",
+    },
+    under: {
+      fontSize: String(15) + ea,
+      fontWeight: String(500) + ea,
+      color: colorChip.deactive,
+    },
+  })
 
   //end
   mother.appendChild(div_clone);
@@ -4764,26 +4772,30 @@ ClientJs.prototype.secondReportScrollBox = function (report, motherWidth) {
   dateSize = 15;
   dateWeight = 400;
 
-  columnHeight = 40;
-  valuesHeight = 32;
+  columnHeight = 36;
+  valuesHeight = 30;
+
   tableBetween = 36;
-  contentsTongPaddingTop = 20;
+  contentsTongPaddingTop = 8;
+
   tableVisualPadding = 8;
 
-  valueSize = 14; 
+  valueSize = 13; 
   valueWeight = 400;
   valueBoldWeight = 700;
   valueTextTop = isMac() ? -1 : 1;
 
   tableColumns = [
     "담당자",
-    "당일 응대 배정",
-    "총 누적 고객 수",
-    "당월 누적 고객 수",
-    "현 응대중 고객 수",
-    "계약 가능성 고객 수",
-    "총 누적 계약 수",
-    "당월 누적 계약 수",
+    "당일 고객",
+    "총 누적 고객",
+    "월 누적 고객",
+    "현 응대중",
+    "계약 가능성",
+    "총 누적 계약",
+    "월 누적 계약",
+    "총 진행율",
+    "월 진행율",
   ];
 
   columnsLength = tableColumns.length;
@@ -4915,6 +4927,8 @@ ClientJs.prototype.secondReportScrollBox = function (report, motherWidth) {
           obj.contractPossible[i - 1].value,
           obj.totalContracts[i - 1].value,
           obj.monthContracts[i - 1].value,
+          String(Math.round((obj.totalClients[i - 1].value === 0 ? 0 : (obj.totalContracts[i - 1].value / obj.totalClients[i - 1].value)) * 10000) / 100) + '%',
+          String(Math.round((obj.monthClients[i - 1].value === 0 ? 0 : (obj.monthContracts[i - 1].value / obj.monthClients[i - 1].value)) * 10000) / 100) + '%',
         ];
 
         baseColumns = createNode({
@@ -4940,7 +4954,7 @@ ClientJs.prototype.secondReportScrollBox = function (report, motherWidth) {
               alignItems: "center",
               borderRight: j !== columnsLength - 1 ? "1px solid " + colorChip.gray3 : "",
               boxSizing: "border-box",
-              background: i === thisLength ? colorChip.gray1 : colorChip.white,
+              background: i === thisLength ? colorChip.gray0 : colorChip.white,
               paddingTop: i === 1 ? String(tableVisualPadding) + ea : "",
               paddingBottom: i === thisLength - 1 ? String(tableVisualPadding) + ea : "",  
             },
@@ -4967,7 +4981,7 @@ ClientJs.prototype.secondReportScrollBox = function (report, motherWidth) {
 
 ClientJs.prototype.secondReportContents = function (report, mother, loadingIcon) {
   const instance = this;
-  const { zeroAddition } = GeneralJs;
+  const { zeroAddition, createNode, colorChip, dateToString, ajaxJson } = GeneralJs;
   const vaildValue = function (target) {
     const today = new Date();
     let valueArr0, valueArr1, valueArr2;
@@ -5010,9 +5024,8 @@ ClientJs.prototype.secondReportContents = function (report, mother, loadingIcon)
     valueArr1 = valueArr0[0].split("-");
     valueArr2 = valueArr0[1].split("-");
 
-    return { startYear: valueArr1[0], startMonth: valueArr1[1], endYear: valueArr2[0], endMonth: valueArr2[1], };
+    return { startYear: Number(valueArr1[0]), startMonth: Number(valueArr1[1].replace(/^0/, '')), endYear: Number(valueArr2[0]), endMonth: Number(valueArr2[1].replace(/^0/, '')), };
   }
-
   let div_clone, div_clone2, input_clone;
   let totalBox;
   let style, inputStyle;
@@ -5022,18 +5035,14 @@ ClientJs.prototype.secondReportContents = function (report, mother, loadingIcon)
   const today = new Date();
   let todayString;
   let top, height, margin;
+  let startPoint;
 
   totalBox = {};
 
+  startPoint = new Date(2022, 11, 1);
+
   //today range
-  todayString = '';
-  todayString += today.getMonth() - 7 < 0 ? String(today.getFullYear() - 1) : String(today.getFullYear());
-  todayString += '-';
-  todayString += today.getMonth() - 7 < 0 ? zeroAddition(13 + today.getMonth() - 7) : zeroAddition(today.getMonth() - 7 + 1);
-  todayString += " ~ ";
-  todayString += String(today.getFullYear());
-  todayString += '-';
-  todayString += zeroAddition(today.getMonth() + 1);
+  todayString = dateToString(startPoint).slice(0, -3) + " ~ " + dateToString(new Date()).slice(0, -3);
 
   //numbers
   top = 0;
@@ -5082,40 +5091,45 @@ ClientJs.prototype.secondReportContents = function (report, mother, loadingIcon)
   input_clone.addEventListener("keyup", function (e) {
     if (e.key === "Enter") {
       const queryObj = vaildValue(this);
+
       input_clone.blur();
+
       mother.removeChild(mother.lastChild);
       loadingIcon.style.animation = "loadingrotate 1.7s linear infinite";
       loadingIcon.style.opacity = "1";
-      GeneralJs.ajax(GeneralJs.objectToRawquery(queryObj), "/getClientReport", function (data) {
+
+      ajaxJson(queryObj, BACKHOST + "/dailySalesReport", { equal: true }).then(({ reports }) => {
         loadingIcon.style.opacity = "0";
-        const scrollBox = instance.reportScrollBox(data, motherWidth);
-        mother.appendChild(scrollBox);
-        while (totalBox.firstChild) {
-          totalBox.removeChild(totalBox.lastChild);
-        }
-        totalBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;추천 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;열람 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("process_number")}</b>명`);
+        mother.appendChild(instance.secondReportScrollBox(reports, motherWidth));
+      }).catch((err) => {
+        console.log(err);
       });
+
     }
   });
 
   div_clone.appendChild(input_clone);
 
   //total box
-  totalBox = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    fontSize: String(15) + ea,
-    fontWeight: String(500) + ea,
-    right: String(1) + ea,
-    top: String(56) + ea,
-    color: GeneralJs.colorChip.black,
-  };
-  for (let i in style) {
-    totalBox.style[i] = style[i];
-  }
-
-  totalBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;추천 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;열람 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("process_number")}</b>명`);
-  div_clone.appendChild(totalBox);
+  createNode({
+    mother: div_clone,
+    text: "리포트 전환",
+    event: {
+      click: function (e) {
+        const eventFunction = instance.reportViewMaker();
+        eventFunction.call(this, e);
+      }
+    },
+    style: {
+      position: "absolute",
+      fontSize: String(15) + ea,
+      fontWeight: String(500) + ea,
+      right: String(1) + ea,
+      top: String(56) + ea,
+      color: colorChip.green,
+      cursor: "pointer",
+    }
+  })
 
   //end
   mother.appendChild(div_clone);
@@ -5203,7 +5217,12 @@ ClientJs.prototype.secondReportViewMakerDetail = function (recycle = false) {
       instance.whiteBox.contentsBox = div_clone;
       instance.totalContents.appendChild(div_clone);
 
-      ajaxJson({}, BACKHOST + "/dailySalesReport", { equal: true }).then(({ reports }) => {
+      ajaxJson({
+        startYear: 2022,
+        startMonth: 12,
+        endYear: (new Date()).getFullYear(),
+        endMonth: (new Date()).getMonth() + 1
+      }, BACKHOST + "/dailySalesReport", { equal: true }).then(({ reports }) => {
         svg_icon.style.opacity = String(0);
         instance.secondReportContents(reports, div_clone, svg_icon);
       }).catch((err) => {
