@@ -7127,17 +7127,17 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
           reportObject.dayClients = [];
           for (let manager of managers) {
             if (manager === "total") {
-              reportObject.totalClients.push({
+              reportObject.dayClients.push({
                 manager,
                 value: row.cliids.length,
               })
             } else if (manager === "미지정") {
-              reportObject.totalClients.push({
+              reportObject.dayClients.push({
                 manager,
                 value: todayClients.filter((c) => { return !managers.includes(c.history.manager) }).length,
               })
             } else {
-              reportObject.totalClients.push({
+              reportObject.dayClients.push({
                 manager,
                 value: todayClients.filter((c) => { return c.history.manager === manager }).length,
               })
