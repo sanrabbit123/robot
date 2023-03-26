@@ -6882,3 +6882,145 @@ DataRouter.prototype.rou_post_salesClient = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_dailySales = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, errorLog, messageSend } = this.mother;
+  let obj = {};
+  obj.link = [ "/dailySales" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      const aMonthAgo = new Date();
+      aMonthAgo.setDate(aMonthAgo.getDate() - 30);
+      const clients = await back.getClientsByQuery({
+        requests: {
+          $elemMatch: {
+            "request.timeline": { $gte: aMonthAgo }
+          }
+        }
+      }, { selfMongo: selfCoreMongo, withTools: true });
+      const requests = clients.getRequestsTong();
+      const collection = "dailySales";
+      const idMaker = (date) => {
+        return `sales_${dateToString(date).replace(/\-/gi, '')}`;
+      }
+      let now;
+      let standard0From, standard1From, standard2From, standard3From, standard4From;
+      let standard0To, standard1To, standard2To, standard3To, standard4To;
+      let dummy;
+      let thisRequests;
+      let matrix;
+      let rows;
+      let resultObj;
+
+      now = new Date();
+
+      standard0From = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);    
+      while (standard0From.getDay() === 0 || standard0From.getDay() === 6) {
+        standard0From.setDate(standard0From.getDate() - 1);
+      }
+      standard1From = new Date(JSON.stringify(standard0From).slice(1, -1));
+      standard1From.setDate(standard1From.getDate() - 1);
+      while (standard1From.getDay() === 0 || standard1From.getDay() === 6) {
+        standard1From.setDate(standard1From.getDate() - 1);
+      }
+      standard2From = new Date(JSON.stringify(standard1From).slice(1, -1));
+      standard2From.setDate(standard2From.getDate() - 1);
+      while (standard2From.getDay() === 0 || standard2From.getDay() === 6) {
+        standard2From.setDate(standard2From.getDate() - 1);
+      }
+      standard3From = new Date(JSON.stringify(standard2From).slice(1, -1));
+      standard3From.setDate(standard3From.getDate() - 1);
+      while (standard3From.getDay() === 0 || standard3From.getDay() === 6) {
+        standard3From.setDate(standard3From.getDate() - 1);
+      }
+      standard4From = new Date(JSON.stringify(standard3From).slice(1, -1));
+      standard4From.setDate(standard4From.getDate() - 1);
+      while (standard4From.getDay() === 0 || standard4From.getDay() === 6) {
+        standard4From.setDate(standard4From.getDate() - 1);
+      }
+
+      standard0To = new Date(JSON.stringify(standard0From).slice(1, -1));
+      standard1To = new Date(JSON.stringify(standard1From).slice(1, -1));
+      standard2To = new Date(JSON.stringify(standard2From).slice(1, -1));
+      standard3To = new Date(JSON.stringify(standard3From).slice(1, -1));
+      standard4To = new Date(JSON.stringify(standard4From).slice(1, -1));
+
+      standard0From.setDate(standard0From.getDate() - 1);
+      while (standard0From.getDay() === 0 || standard0From.getDay() === 6) {
+        standard0From.setDate(standard0From.getDate() - 1);
+      }
+      standard1From.setDate(standard1From.getDate() - 1);
+      while (standard1From.getDay() === 0 || standard1From.getDay() === 6) {
+        standard1From.setDate(standard1From.getDate() - 1);
+      }
+      standard2From.setDate(standard2From.getDate() - 1);
+      while (standard2From.getDay() === 0 || standard2From.getDay() === 6) {
+        standard2From.setDate(standard2From.getDate() - 1);
+      }
+      standard3From.setDate(standard3From.getDate() - 1);
+      while (standard3From.getDay() === 0 || standard3From.getDay() === 6) {
+        standard3From.setDate(standard3From.getDate() - 1);
+      }
+      standard4From.setDate(standard4From.getDate() - 1);
+      while (standard4From.getDay() === 0 || standard4From.getDay() === 6) {
+        standard4From.setDate(standard4From.getDate() - 1);
+      }
+
+      matrix = [
+        [ standard0From, standard0To ],
+        [ standard1From, standard1To ],
+        [ standard2From, standard2To ],
+        [ standard3From, standard3To ],
+        [ standard4From, standard4To ],
+      ];
+
+      for (let [ standardFrom, standardTo ] of matrix) {
+
+        dummy = {
+          id: idMaker(standardTo),
+          date: new Date(JSON.stringify(standardTo).slice(1, -1)),
+          range: {
+            from: new Date(JSON.stringify(standardFrom).slice(1, -1)),
+            to: new Date(JSON.stringify(standardTo).slice(1, -1)),
+          },
+          cliids: [],
+        }
+    
+        thisRequests = requests.filter((request) => { return request.request.timeline.valueOf() > standardFrom.valueOf() && request.request.timeline.valueOf() <= standardTo.valueOf() })
+    
+        for (let obj of thisRequests) {
+          dummy.cliids.push({
+            cliid: obj.cliid,
+            possible: 0,
+            priority: 0,
+            target: 0,
+          })
+        }
+    
+        rows = await back.mongoRead(collection, { id: dummy.id }, { selfMongo });
+        if (rows.length === 0) {
+          await back.mongoCreate(collection, equalJson(JSON.stringify(dummy)), { selfMongo });
+        }
+
+      }
+
+      resultObj = { message: "done" };
+
+      res.send(JSON.stringify(resultObj));
+
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_dailySales): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}

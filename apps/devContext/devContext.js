@@ -240,100 +240,15 @@ DevContext.prototype.launching = async function () {
     // console.log(res.data);
 
 
-    
-    const selfMongo = this.MONGOC;
-    const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
-    const requests = clients.getRequestsTong();
-    const idMaker = (date) => {
-      return `sales_${dateToString(date).replace(/\-/gi, '')}`;
-    }
-    let now;
-    let standard0From, standard1From, standard2From, standard3From, standard4From;
-    let standard0To, standard1To, standard2To, standard3To, standard4To;
-    let dummy;
-    let thisRequests;
 
-    now = new Date();
 
-    standard0From = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 9, 0, 0);    
-    while (standard0From.getDay() === 0 || standard0From.getDay() === 6) {
-      standard0From.setDate(standard0From.getDate() - 1);
-    }
-    standard1From = new Date(JSON.stringify(standard0From).slice(1, -1));
-    standard1From.setDate(standard1From.getDate() - 1);
-    while (standard1From.getDay() === 0 || standard1From.getDay() === 6) {
-      standard1From.setDate(standard1From.getDate() - 1);
-    }
-    standard2From = new Date(JSON.stringify(standard1From).slice(1, -1));
-    standard2From.setDate(standard2From.getDate() - 1);
-    while (standard2From.getDay() === 0 || standard2From.getDay() === 6) {
-      standard2From.setDate(standard2From.getDate() - 1);
-    }
-    standard3From = new Date(JSON.stringify(standard2From).slice(1, -1));
-    standard3From.setDate(standard3From.getDate() - 1);
-    while (standard3From.getDay() === 0 || standard3From.getDay() === 6) {
-      standard3From.setDate(standard3From.getDate() - 1);
-    }
-    standard4From = new Date(JSON.stringify(standard3From).slice(1, -1));
-    standard4From.setDate(standard4From.getDate() - 1);
-    while (standard4From.getDay() === 0 || standard4From.getDay() === 6) {
-      standard4From.setDate(standard4From.getDate() - 1);
-    }
 
-    standard0To = new Date(JSON.stringify(standard0From).slice(1, -1));
-    standard1To = new Date(JSON.stringify(standard1From).slice(1, -1));
-    standard2To = new Date(JSON.stringify(standard2From).slice(1, -1));
-    standard3To = new Date(JSON.stringify(standard3From).slice(1, -1));
-    standard4To = new Date(JSON.stringify(standard4From).slice(1, -1));
 
-    standard0From.setDate(standard0From.getDate() - 1);
-    while (standard0From.getDay() === 0 || standard0From.getDay() === 6) {
-      standard0From.setDate(standard0From.getDate() - 1);
-    }
-    standard1From.setDate(standard1From.getDate() - 1);
-    while (standard1From.getDay() === 0 || standard1From.getDay() === 6) {
-      standard1From.setDate(standard1From.getDate() - 1);
-    }
-    standard2From.setDate(standard2From.getDate() - 1);
-    while (standard2From.getDay() === 0 || standard2From.getDay() === 6) {
-      standard2From.setDate(standard2From.getDate() - 1);
-    }
-    standard3From.setDate(standard3From.getDate() - 1);
-    while (standard3From.getDay() === 0 || standard3From.getDay() === 6) {
-      standard3From.setDate(standard3From.getDate() - 1);
-    }
-    standard4From.setDate(standard4From.getDate() - 1);
-    while (standard4From.getDay() === 0 || standard4From.getDay() === 6) {
-      standard4From.setDate(standard4From.getDate() - 1);
-    }
 
-    dummy = {
-      id: idMaker(standard0To),
-      date: new Date(JSON.stringify(standard0To).slice(1, -1)),
-      range: {
-        from: new Date(JSON.stringify(standard0From).slice(1, -1)),
-        to: new Date(JSON.stringify(standard0To).slice(1, -1)),
-      },
-      cliids: [],
-    }
 
-    thisRequests = requests.filter((request) => { return request.request.timeline.valueOf() > standard0From.valueOf() && request.request.timeline.valueOf() <= standard0To.valueOf() })
 
-    for (let obj of thisRequests) {
-      dummy.cliids.push({
-        cliid: obj.cliid,
-        possible: 0,
-        priority: 0,
-        target: 0,
-      })
-    }
-
-    console.log(dummy);
 
     
-
-
-
 
 
 
