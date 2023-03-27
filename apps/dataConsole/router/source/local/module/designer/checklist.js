@@ -1,7 +1,7 @@
 DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0, tendencyIndent = 0, tendencyWidthIndent = 0, tendencyFactorHeight = 0, mobileTendencyVisualMargin = 0) {
   const instance = this;
-  const { ea, media, totalContents } = this;
-  const { createNode, colorChip, withOut } = GeneralJs;
+  const { ea, media, totalContents, belowHeight, grayBarWidth } = this;
+  const { createNode, colorChip, withOut, removeByClass } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
@@ -400,14 +400,62 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           name: "일정",
           script: function (mother, designer) {
             const zIndex = 4;
+            const possiblePopupClassName = "possiblePopupClassName";
             let cancelBack, whitePrompt;
+            let margin;
 
-            
+            margin = 30;
 
+            cancelBack = createNode({
+              mother: totalContents,
+              class: [ possiblePopupClassName ],
+              event: {
+                click: (e) => {
+                  removeByClass(possiblePopupClassName);
+                }
+              },
+              style: {
+                position: "fixed",
+                top: String(0),
+                left: String(grayBarWidth) + ea,
+                width: withOut(grayBarWidth, ea),
+                height: withOut(belowHeight, ea),
+                background: colorChip.black,
+                opacity: String(0.3),
+              }
+            });
 
+            whitePrompt = createNode({
+              mother: totalContents,
+              class: [ possiblePopupClassName ],
+              style: {
+                position: "fixed",
+                top: String(margin) + ea,
+                left: String(margin + grayBarWidth) + ea,
+                width: withOut((margin * 2) + grayBarWidth, ea),
+                height: withOut((margin * 2) + belowHeight, ea),
+                background: colorChip.white,
+                borderRadius: String(5) + "px",
+                animation: "fadeuplite 0.3s ease forwards",
+                overflow: "hidden",
+              },
+              child: {
+                mode: "iframe",
+                attribute: {
+                  src: FRONTHOST + "/designer/possible.php?desid=" + designer.desid + "&entire=true",
+                },
+                style: {
+                  position: "absolute",
+                  display: "block",
+                  top: String(0),
+                  left: String(0),
+                  width: withOut(0, ea),
+                  height: withOut(0, ea),
+                  border: String(0),
+                }
+              }
+            });
 
-            console.log("this");
-            console.log(totalContents);
           },
           value: function (designer) {
             return "일정 관리";
