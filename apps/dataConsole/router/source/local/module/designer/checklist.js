@@ -2908,24 +2908,15 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
 DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null) {
   const instance = this;
   const { ea, belowHeight, firstTop, motherHeight, middleMode } = this;
+  const { removeByClass } = GeneralJs;
   const totalMother = document.querySelector(".totalMother");
   const standardBar = this.standardDoms[0].parentElement;
   const { scrollTo, ajaxJson, colorChip } = GeneralJs;
   const memoBaseClassName = "memoBaseClassName";
+  const possiblePopupClassName = "possiblePopupClassName";
   let target, pastScrollTop;
 
-  // if (middleMode) {
-  //   if (typeof GeneralJs.stacks["designerConsoleSseEvent"] === "function") {
-  //     GeneralJs.stacks["designerConsoleSseSource"].removeEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
-  //     GeneralJs.stacks["designerConsoleSseSource"] = null;
-  //     GeneralJs.stacks["designerConsoleSseEvent"] = null;
-  //   }
-  //   GeneralJs.stacks["designerConsoleSseSource"] = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
-  //   GeneralJs.stacks["designerConsoleSseEvent"] = function (e) {
-  //     instance.checkListSseParsing(GeneralJs.equalJson(e.data));
-  //   }
-  //   GeneralJs.stacks["designerConsoleSseSource"].addEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
-  // }
+  removeByClass(possiblePopupClassName);
 
   pastScrollTop = totalMother.scrollTop;
   this.desid = desid;

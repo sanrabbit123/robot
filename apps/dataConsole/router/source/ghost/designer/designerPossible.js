@@ -230,7 +230,7 @@ DesignerPossibleJs.prototype.calendarChain = function () {
   const small = !big;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, colorCalendar } = GeneralJs;
 
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 18; i++) {
     instance.insertCalendarBox(i);
   }
 }
