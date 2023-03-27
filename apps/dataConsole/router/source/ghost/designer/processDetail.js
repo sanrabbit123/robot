@@ -5994,8 +5994,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
       "현장 미팅 주소",
       "현장 미팅 시간",
       "출장 정보",
-      "정산 예정 금액",
-      "디자인비 (소비자가)",
+      "디자인비",
       "프로젝트 기간"
     ],
     contents: [
@@ -6343,7 +6342,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
       },
       {
         class: [ travelInfoClassName ],
-        text: "해당 사항 없음",
+        text: "해당 없음",
         style: {
           display: (outMode && mobile) ? "none" : "block",
           fontSize: String(initWordingSize) + ea,
@@ -6360,54 +6359,6 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
       },
       {
         text: wordings.subTitle[2],
-        style: {
-          display: (outMode && mobile) ? "none" : "block",
-          fontSize: String(initWordingSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.black,
-          marginTop: String(bigNumberBetweenMargin) + ea,
-          paddingLeft: String(initContentsPaddingLeft) + ea,
-          lineHeight: String(1.6),
-          position: "relative",
-        },
-        bold: {
-          fontSize: String(contentsWordingSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.black
-        },
-        children: [
-          {
-            mode: "svg",
-            source: mother.returnArrow("right", colorChip.green),
-            style: {
-              display: desktop ? "block" : "none",
-              position: "absolute",
-              width: String(arrowWidth) + ea,
-              left: String(arrorLeft) + ea,
-              top: String(arrowTop) + ea,
-            }
-          },
-        ]
-      },
-      {
-        class: [ designerMoneyClassName ],
-        text: autoComma(2000000) + '원',
-        style: {
-          display: (outMode && mobile) ? "none" : "block",
-          fontSize: String(initWordingSize) + ea,
-          fontWeight: String(400),
-          color: desktop ? colorChip.black : colorChip.green,
-          marginTop: String(initContentsMarginTop) + ea,
-          lineHeight: String(1.6),
-        },
-        bold: {
-          fontSize: String(initWordingSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.black
-        }
-      },
-      {
-        text: wordings.subTitle[3],
         style: {
           display: (outMode && mobile) ? "none" : "block",
           fontSize: String(initWordingSize) + ea,
@@ -6455,7 +6406,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
         }
       },
       {
-        text: wordings.subTitle[4],
+        text: wordings.subTitle[3],
         style: {
           display: (outMode && mobile) ? "none" : "block",
           fontSize: String(initWordingSize) + ea,
@@ -6567,7 +6518,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
         ]
       },
       {
-        text: wordings.subTitle[5],
+        text: wordings.subTitle[4],
         style: {
           display: "block",
           fontSize: String(contentsWordingSize) + ea,
@@ -6605,9 +6556,21 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
         }, 0);
         return acc + itemsSum;
       }
+      const responseSum = (acc, curr) => {
+        let itemsSum;
+        itemsSum = curr.items.reduce((acc2, curr2) => {
+          return acc2 + curr2.amount.pure;
+        }, 0);
+        return acc + itemsSum;
+      }
       let firstObjects, remainObjects, travelObjects;
       let first, remain, travel;
       let consumer;
+      let firstResponseObjects, remainResponseObjects, travelResponseObjects;
+      let firstResponse, remainResponse, travelResponse;
+      let calculation;
+      let travelString;
+      let moneyString;
 
       firstObjects = bill.requests.filter((o) => { return o.name === "홈리에종 계약금" });
       remainObjects = bill.requests.filter((o) => { return o.name === "홈리에종 잔금" });
@@ -6619,9 +6582,33 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
 
       consumer = first + remain;
 
-      document.querySelector('.' + clientMoneyClassName).textContent = autoComma(consumer) + '원';
-      
 
+      firstResponseObjects = bill.responses.filter((o) => { return o.name === "홈리에종 선금 정산" });
+      remainResponseObjects = bill.responses.filter((o) => { return o.name === "홈리에종 잔금 정산" });
+      travelResponseObjects = bill.responses.filter((o) => { return /출장/gi.test(o.name) });
+
+      firstResponse = firstResponseObjects.reduce(responseSum, 0);
+      remainResponse = remainResponseObjects.reduce(responseSum, 0);
+      travelResponse = travelResponseObjects.reduce(responseSum, 0);
+
+      calculation = firstResponse + remainResponse;
+
+      moneyString = "소비자가 : " + autoComma(consumer) + '원' + ((media[0] || media[3] || media[4]) ? "&nbsp;&nbsp;/&nbsp;&nbsp;" : "<br>") + "정산액 : " + autoComma(calculation) + '원';
+
+      if (travel === 0) {
+        travelString = "해당 없음";
+      } else {
+        travelString = "출장비 : ";
+        travelString += autoComma(travel) + '원';
+        travelString += (media[0] || media[3] || media[4]) ? "&nbsp;&nbsp;/&nbsp;&nbsp;" : "<br>";
+        travelString += "정산액 : ";
+        travelString += autoComma(travelResponse) + '원';
+      }
+
+      document.querySelector('.' + clientMoneyClassName).textContent = "";
+      document.querySelector('.' + clientMoneyClassName).insertAdjacentHTML("beforeend", moneyString);
+      document.querySelector('.' + travelInfoClassName).textContent = "";
+      document.querySelector('.' + travelInfoClassName).insertAdjacentHTML("beforeend", travelString);
     }
   }).catch((err) => {
     console.log(err);
