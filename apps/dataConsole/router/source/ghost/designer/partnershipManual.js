@@ -640,7 +640,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
       {
         event: {
           click: function (e) {
-            GeneralJs.selfHref(FRONTHOST + "/designer/manual.php?desid=" + instance.designer.desid + "&mode=styling");
+            GeneralJs.selfHref(FRONTHOST + "/designer/provision.php?desid=" + instance.designer.desid + "&mode=styling");
           }
         },
         style: {
@@ -674,7 +674,7 @@ PartnershipManualJs.prototype.insertContextBox = function () {
       {
         event: {
           click: function (e) {
-            GeneralJs.selfHref(FRONTHOST + "/designer/manual.php?desid=" + instance.designer.desid + "&mode=contract");
+            GeneralJs.selfHref(FRONTHOST + "/designer/provision.php?desid=" + instance.designer.desid + "&mode=contract");
           }
         },
         style: {

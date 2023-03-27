@@ -159,8 +159,8 @@ GeneralJs.prototype.setNavigator = function (designer) {
       green: [],
     },
     {
-      title: "의뢰서 관리",
-      href: FRONTHOST + "/designer/requests.php?desid=" + designer.desid,
+      title: "콘솔 설명서",
+      href: FRONTHOST + "/designer/manual.php?desid=" + designer.desid,
       green: [],
     },
     {

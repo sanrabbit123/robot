@@ -6,14 +6,14 @@ $host = $general->host;
 $protocol = $general->protocol;
 $hostLink = $protocol.$host;
 
-$name = "designManual";
-$fullLink = $hostLink."/designer/provision.php";
+$name = "consoleManual";
+$fullLink = $hostLink."/designer/manual.php";
 
-$titleString = "홈스타일링 제공 내역";
-$descriptionString = "홈스타일링 제공 내역";
+$titleString = "디자이너 콘솔 설명서";
+$descriptionString = "디자이너 콘솔 설명서";
 $imageString = "/list_image/portpp18/t19p18.jpg";
 
-$hiddenString = "홈스타일링 제공 내역";
+$hiddenString = "디자이너 콘솔 설명서";
 
 $html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink);
 echo $html;
