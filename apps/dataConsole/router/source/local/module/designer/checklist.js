@@ -1,6 +1,7 @@
 DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0, tendencyIndent = 0, tendencyWidthIndent = 0, tendencyFactorHeight = 0, mobileTendencyVisualMargin = 0) {
   const instance = this;
-  const { ea, media } = this;
+  const { ea, media, totalContents } = this;
+  const { createNode, colorChip, withOut } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
@@ -20,6 +21,19 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           },
           value: function (designer) {
             return designer.designer;
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "아이디",
+          script: function (mother, designer) {
+            window.navigator.clipboard.writeText(designer.desid).then(() => {
+              instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
+            }).catch((err) => { console.log(err) });
+          },
+          value: function (designer) {
+            return designer.desid;
           },
           height: factorHeight,
           type: "string",
@@ -382,6 +396,25 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
     {
       name: "업무",
       children: [
+        {
+          name: "일정",
+          script: function (mother, designer) {
+            const zIndex = 4;
+            let cancelBack, whitePrompt;
+
+            
+
+
+
+            console.log("this");
+            console.log(totalContents);
+          },
+          value: function (designer) {
+            return "일정 관리";
+          },
+          height: factorHeight,
+          type: "string",
+        },
         {
           name: "경력",
           value: async function (nodeArr, designer) {

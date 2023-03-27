@@ -282,18 +282,16 @@ DesignerPossibleJs.prototype.boxToPossible = async function () {
     }
 
 
-    window.alert("가능 일정을 조정하고 싶으실 경우, 홈리에종에 직접 문의해주세요!");
-    window.location.reload();
-
-    // dev
-
-    // this.realtimeDesigner.possible = equalJson(JSON.stringify(newPossible));
-    // this.realtimeDesigner.possible.sort((a, b) => { return a.start.valueOf() - b.start.valueOf() });
-
-    // updateQuery = {};
-    // updateQuery["possible"] = this.realtimeDesigner.possible;
-    // await ajaxJson({ mode: "update", desid: instance.designer.desid, updateQuery }, BACKHOST + "/realtimeDesigner");
-    // await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 가능 일정 스케쥴을 조정하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+    if (GeneralJs.returnGet().entire === "true") {
+      this.realtimeDesigner.possible = equalJson(JSON.stringify(newPossible));
+      this.realtimeDesigner.possible.sort((a, b) => { return a.start.valueOf() - b.start.valueOf() });
+      updateQuery = {};
+      updateQuery["possible"] = this.realtimeDesigner.possible;
+      await ajaxJson({ mode: "update", desid: instance.designer.desid, updateQuery }, BACKHOST + "/realtimeDesigner");
+    } else {
+      window.alert("가능 일정을 조정하고 싶으실 경우, 홈리에종에 직접 문의해주세요!");
+      window.location.reload();
+    }
 
   } catch (e) {
     console.log(e);
@@ -565,10 +563,11 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, colorCalendar, setQueue } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, colorCalendar, setQueue, returnGet } = GeneralJs;
   const isDateValid = (date) => {
     return ((new Date(2000, 0, 1)).valueOf() <= date.valueOf() && (new Date(3000, 0, 1)).valueOf() > date.valueOf());
   }
+  const getObj = returnGet();
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -622,7 +621,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
   }
 
   whiteBlock = createNode({
-    mother: baseTong,
+    mother: getObj.entire === "true" ? instance.totalContents : baseTong,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
@@ -631,7 +630,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
       paddingTop: String(paddingTop) + ea,
       paddingBottom: String(whiteBottomMargin) + ea,
       marginBottom: String(bottomMargin) + ea,
-      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+      boxShadow: getObj.entire !== "true" ? (desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "") : "",
     },
     children: [
       {
@@ -1318,66 +1317,72 @@ DesignerPossibleJs.prototype.launching = async function (loading) {
       this.selection = [];
     });
 
-    await this.mother.ghostDesignerLaunching({
-      name: "designerPossible",
-      designer: this.designer,
-      base: {
-        instance: this,
-        binaryPath: DesignerPossibleJs.binaryPath,
-        subTitle: "",
-      },
-      local: async () => {
-        try {
-          let whiteBlock;
-          instance.insertInitBox();
-          instance.insertNoticeBox();
-          instance.calendarChain();
-        } catch (e) {
-          await GeneralJs.ajaxJson({ message: "DesignerPossibleJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+    if (getObj.entire !== "true") {
+      await this.mother.ghostDesignerLaunching({
+        name: "designerPossible",
+        designer: this.designer,
+        base: {
+          instance: this,
+          binaryPath: DesignerPossibleJs.binaryPath,
+          subTitle: "",
+        },
+        local: async () => {
+          try {
+            let whiteBlock;
+            instance.insertInitBox();
+            instance.insertNoticeBox();
+            instance.calendarChain();
+          } catch (e) {
+            await GeneralJs.ajaxJson({ message: "DesignerPossibleJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+          }
         }
-      }
-    });
+      });
+    } else {
+      instance.calendarChain();
+    }
 
     loading.parentNode.removeChild(loading);
 
-    // web socket
-    socket = {};
-    if (!document.hidden) {
-      wsOpenEvent = (ws) => {
-        return async function () {
-          try {
-            ws.send(JSON.stringify({
-              mode: "register",
-              to: "homeliaison",
-              data: instance.designer.desid
-            }));
-          } catch (e) {
-            console.log(e);
+    if (getObj.entire !== "true") {
+      // web socket
+      socket = {};
+      if (!document.hidden) {
+        wsOpenEvent = (ws) => {
+          return async function () {
+            try {
+              ws.send(JSON.stringify({
+                mode: "register",
+                to: "homeliaison",
+                data: instance.designer.desid
+              }));
+            } catch (e) {
+              console.log(e);
+            }
           }
         }
-      }
-      wsLaunching = () => {
-        let ws;
-        if (typeof socket.close === "function") {
-          socket.close();
-          socket = {};
+        wsLaunching = () => {
+          let ws;
+          if (typeof socket.close === "function") {
+            socket.close();
+            socket = {};
+          }
+          ws = new WebSocket(CRONHOST.replace(/https\:\/\//, "wss://") + "/realTimeCommunication");
+          ws.addEventListener("open", wsOpenEvent(ws));
+          return ws;
         }
-        ws = new WebSocket(CRONHOST.replace(/https\:\/\//, "wss://") + "/realTimeCommunication");
-        ws.addEventListener("open", wsOpenEvent(ws));
-        return ws;
-      }
-      socket = wsLaunching();
-    }
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        if (typeof socket.close === "function") {
-          socket.close();
-          socket = {};
-        }
-      } else {
         socket = wsLaunching();
       }
-    });
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          if (typeof socket.close === "function") {
+            socket.close();
+            socket = {};
+          }
+        } else {
+          socket = wsLaunching();
+        }
+      });
+    }
 
   } catch (err) {
     console.log(err);
