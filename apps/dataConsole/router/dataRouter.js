@@ -7820,6 +7820,11 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
           },
         ]
       }, { selfMongo });
+
+      rows.sort((a, b) => {
+        return b.date.valueOf() - a.date.valueOf();
+      });
+
       rowsCopy = equalJson(JSON.stringify(rows));
       rowsFlat = rowsCopy.map(({ cliids }) => { return cliids }).flat();
   
