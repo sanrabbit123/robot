@@ -5,7 +5,12 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
   const mobile = media[4];
   const desktop = !mobile;
   const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
-  const checkListData = [
+  let checkListData;
+  let margin;
+
+  margin = 30;
+
+  checkListData = [
     {
       name: "일반",
       children: [
@@ -402,9 +407,6 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
             const zIndex = 4;
             const possiblePopupClassName = "possiblePopupClassName";
             let cancelBack, whitePrompt;
-            let margin;
-
-            margin = 30;
 
             cancelBack = createNode({
               mother: totalContents,
