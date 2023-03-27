@@ -2260,7 +2260,7 @@ GeneralJs.prototype.greenBar = function () {
     "/process",
   ];
   naviIconsContextLinks = [
-    "/project",
+    "/sales",
     "/process",
     "/builder?mode=construct",
     "/builder",

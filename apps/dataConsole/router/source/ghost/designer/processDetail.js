@@ -5987,12 +5987,15 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, blankHref, downloadFile, returnGet } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, blankHref, downloadFile, returnGet, autoComma } = GeneralJs;
   const wordings = {
     title: [ "고객 정보" ],
     subTitle: [
       "현장 미팅 주소",
       "현장 미팅 시간",
+      "출장 정보",
+      "정산 예정 금액",
+      "디자인비 (소비자가)",
       "프로젝트 기간"
     ],
     contents: [
@@ -6002,6 +6005,9 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
     table: instance.tableStatic(instance.designer, instance.project, instance.client, instance.clientHistory, instance.projectHistory, instance.requestNumber)
   };
   const pdfSaveIconClassName = "pdfSaveIconClassName";
+  const clientMoneyClassName = "clientMoneyClassName";
+  const designerMoneyClassName = "designerMoneyClassName";
+  const travelInfoClassName = "travelInfoClassName";
   const {
     title,
     initialContents,
@@ -6336,6 +6342,150 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
         ]
       },
       {
+        class: [ travelInfoClassName ],
+        text: "해당 사항 없음",
+        style: {
+          display: (outMode && mobile) ? "none" : "block",
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(400),
+          color: desktop ? colorChip.black : colorChip.green,
+          marginTop: String(initContentsMarginTop) + ea,
+          lineHeight: String(1.6),
+        },
+        bold: {
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black
+        }
+      },
+      {
+        text: wordings.subTitle[2],
+        style: {
+          display: (outMode && mobile) ? "none" : "block",
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black,
+          marginTop: String(bigNumberBetweenMargin) + ea,
+          paddingLeft: String(initContentsPaddingLeft) + ea,
+          lineHeight: String(1.6),
+          position: "relative",
+        },
+        bold: {
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black
+        },
+        children: [
+          {
+            mode: "svg",
+            source: mother.returnArrow("right", colorChip.green),
+            style: {
+              display: desktop ? "block" : "none",
+              position: "absolute",
+              width: String(arrowWidth) + ea,
+              left: String(arrorLeft) + ea,
+              top: String(arrowTop) + ea,
+            }
+          },
+        ]
+      },
+      {
+        class: [ designerMoneyClassName ],
+        text: autoComma(2000000) + '원',
+        style: {
+          display: (outMode && mobile) ? "none" : "block",
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(400),
+          color: desktop ? colorChip.black : colorChip.green,
+          marginTop: String(initContentsMarginTop) + ea,
+          lineHeight: String(1.6),
+        },
+        bold: {
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black
+        }
+      },
+      {
+        text: wordings.subTitle[3],
+        style: {
+          display: (outMode && mobile) ? "none" : "block",
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black,
+          marginTop: String(bigNumberBetweenMargin) + ea,
+          paddingLeft: String(initContentsPaddingLeft) + ea,
+          lineHeight: String(1.6),
+          position: "relative",
+        },
+        bold: {
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black
+        },
+        children: [
+          {
+            mode: "svg",
+            source: mother.returnArrow("right", colorChip.green),
+            style: {
+              display: desktop ? "block" : "none",
+              position: "absolute",
+              width: String(arrowWidth) + ea,
+              left: String(arrorLeft) + ea,
+              top: String(arrowTop) + ea,
+            }
+          },
+        ]
+      },
+      {
+        class: [ clientMoneyClassName ],
+        text: autoComma(2000000) + '원',
+        style: {
+          display: (outMode && mobile) ? "none" : "block",
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(400),
+          color: desktop ? colorChip.black : colorChip.green,
+          marginTop: String(initContentsMarginTop) + ea,
+          lineHeight: String(1.6),
+        },
+        bold: {
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black
+        }
+      },
+      {
+        text: wordings.subTitle[4],
+        style: {
+          display: (outMode && mobile) ? "none" : "block",
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black,
+          marginTop: String(bigNumberBetweenMargin) + ea,
+          paddingLeft: String(initContentsPaddingLeft) + ea,
+          lineHeight: String(1.6),
+          position: "relative",
+        },
+        bold: {
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black
+        },
+        children: [
+          {
+            mode: "svg",
+            source: mother.returnArrow("right", colorChip.green),
+            style: {
+              display: desktop ? "block" : "none",
+              position: "absolute",
+              width: String(arrowWidth) + ea,
+              left: String(arrorLeft) + ea,
+              top: String(arrowTop) + ea,
+            }
+          },
+        ]
+      },
+      {
         style: {
           display: big ? "block" : "none",
           marginTop: String(bigNumberBetween) + ea,
@@ -6417,7 +6567,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
         ]
       },
       {
-        text: wordings.subTitle[2],
+        text: wordings.subTitle[5],
         style: {
           display: "block",
           fontSize: String(contentsWordingSize) + ea,
@@ -6445,6 +6595,37 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
     ]
   });
 
+  ajaxJson({ mode: "read", whereQuery: { $and: [ { "links.proid": project.proid }, { "links.method": (project.service.online ? "online" : "offline") } ] } }, PYTHONHOST + "/generalBill", { equal: true }).then((bills) => {
+    if (bills.length > 0) {
+      const [ bill ] = bills;
+      const requestSum = (acc, curr) => {
+        let itemsSum;
+        itemsSum = curr.items.reduce((acc2, curr2) => {
+          return acc2 + curr2.amount.consumer;
+        }, 0);
+        return acc + itemsSum;
+      }
+      let firstObjects, remainObjects, travelObjects;
+      let first, remain, travel;
+      let consumer;
+
+      firstObjects = bill.requests.filter((o) => { return o.name === "홈리에종 계약금" });
+      remainObjects = bill.requests.filter((o) => { return o.name === "홈리에종 잔금" });
+      travelObjects = bill.requests.filter((o) => { return /출장/gi.test(o.name) });
+
+      first = firstObjects.reduce(requestSum, 0);
+      remain = remainObjects.reduce(requestSum, 0);
+      travel = travelObjects.reduce(requestSum, 0);
+
+      consumer = first + remain;
+
+      document.querySelector('.' + clientMoneyClassName).textContent = autoComma(consumer) + '원';
+      
+
+    }
+  }).catch((err) => {
+    console.log(err);
+  });
 
 }
 

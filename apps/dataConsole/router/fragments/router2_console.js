@@ -6639,6 +6639,10 @@ DataRouter.prototype.rou_post_salesClient = function () {
         } else {
           basicRows = await back.mongoRead(collection, { date: { $gte: ongoingClientsRequests[0].request.timeline } }, { selfMongo });
         }
+
+        basicRows.sort((a, b) => {
+          return b.date.valueOf() - a.date.valueOf();
+        })
         
         pureCliids = basicRows.map((o) => {
           return o.cliids.map((o2) => {
