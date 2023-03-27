@@ -5,6 +5,8 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
   const mobile = media[4];
   const desktop = !mobile;
   const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
+  const zIndex = 4;
+  const possiblePopupClassName = "possiblePopupClassName";
   let checkListData;
   let margin;
 
@@ -404,8 +406,6 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
         {
           name: "일정",
           script: function (mother, designer) {
-            const zIndex = 4;
-            const possiblePopupClassName = "possiblePopupClassName";
             let cancelBack, whitePrompt;
 
             cancelBack = createNode({
@@ -424,6 +424,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                 height: withOut(belowHeight, ea),
                 background: colorChip.black,
                 opacity: String(0.3),
+                zIndex: String(zIndex),
               }
             });
 
@@ -440,6 +441,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                 borderRadius: String(5) + "px",
                 animation: "fadeuplite 0.3s ease forwards",
                 overflow: "hidden",
+                zIndex: String(zIndex),
               },
               child: {
                 mode: "iframe",
