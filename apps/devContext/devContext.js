@@ -240,29 +240,8 @@ DevContext.prototype.launching = async function () {
     // console.log(res.data);
 
 
-    await this.MONGOCONSOLEC.connect();
-    const proposalKeywords = "designerProposal";
 
-    const selfMongo = this.MONGOCONSOLEC;
-    const db = "miro81";
-    let allSendHistories;
     
-    const startDate = new Date(2023, 2, 1);
-
-
-    allSendHistories = await selfMongo.db(db).collection("clientHistory").find({
-      "curation.analytics.send": {
-        $elemMatch: {
-          date: { $gte: startDate }
-        }
-      }
-    }).project({ manager: 1, "curation.analytics.send": 1, _id: 0 }).toArray()
-
-    console.log(allSendHistories.map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= (new Date(2023, 2, 27)).valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }));
-    
-
-
-    await this.MONGOCONSOLEC.close();
 
 
     /*

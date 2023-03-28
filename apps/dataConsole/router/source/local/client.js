@@ -4859,14 +4859,17 @@ ClientJs.prototype.secondReportScrollBox = function (report, motherWidth) {
   tableColumns = [
     "담당자",
     "당일 고객",
-    "총 누적 고객",
-    "월 누적 고객",
+    "월 고객",
+    "누적 고객",
     "현 응대중",
     "계약 가능성",
-    "총 누적 계약",
-    "월 누적 계약",
-    "총 진행율",
+    "당일 추천",
+    "월 추천",
+    "누적 추천",
+    "월 계약",
+    "누적 계약",
     "월 진행율",
+    "누적 진행율",
   ];
 
   columnsLength = tableColumns.length;
@@ -4992,14 +4995,17 @@ ClientJs.prototype.secondReportScrollBox = function (report, motherWidth) {
         thisValues = [
           obj.totalClients[i - 1].manager,
           obj.dayClients[i - 1].value,
-          obj.totalClients[i - 1].value,
           obj.monthClients[i - 1].value,
+          obj.totalClients[i - 1].value,
           obj.currentClients[i - 1].value,
           obj.contractPossible[i - 1].value,
-          obj.totalContracts[i - 1].value,
+          obj.dayProposals[i - 1].value,
+          obj.monthProposals[i - 1].value,
+          obj.totalProposals[i - 1].value,
           obj.monthContracts[i - 1].value,
-          String(Math.round((obj.totalClients[i - 1].value === 0 ? 0 : (obj.totalContracts[i - 1].value / obj.totalClients[i - 1].value)) * 10000) / 100) + '%',
+          obj.totalContracts[i - 1].value,
           String(Math.round((obj.monthClients[i - 1].value === 0 ? 0 : (obj.monthContracts[i - 1].value / obj.monthClients[i - 1].value)) * 10000) / 100) + '%',
+          String(Math.round((obj.totalClients[i - 1].value === 0 ? 0 : (obj.totalContracts[i - 1].value / obj.totalClients[i - 1].value)) * 10000) / 100) + '%',
         ];
 
         baseColumns = createNode({

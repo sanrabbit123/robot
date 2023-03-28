@@ -7812,6 +7812,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
       let startDate, endDate;
       let allSendHistories;
       let monthFromDate;
+      let toDateStandard;
 
       startDate = new Date(Number(startYear), Number(startMonth) - 1, 1, 8, 0, 0);
       endDate = new Date(Number(endYear), Number(endMonth) - 1, 1, 10, 0, 0);
@@ -7897,7 +7898,12 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
             client.project = thisProjects.find((p) => { return p.cliid === client.cliid });
             client.row = rowsFlat.find((c) => { return c.cliid === client.cliid });
           }
-  
+
+          toDateStandard = new Date(JSON.stringify(toDate).slice(1, -1));
+          toDateStandard.setHours(23);
+          toDateStandard.setMinutes(59);
+          toDateStandard.setSeconds(59);
+
           // day clients
           reportObject.dayClients = [];
           for (let manager of managers) {
@@ -8075,17 +8081,17 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
             if (manager === "total") {
               reportObject.monthProposals.push({
                 manager,
-                value: allSendHistories.map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= monthFromDate.valueOf() && obj.date.valueOf() <= row.date.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
+                value: allSendHistories.map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= monthFromDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
               })
             } else if (manager === "미지정") {
               reportObject.monthProposals.push({
                 manager,
-                value: allSendHistories.filter((c) => { return !managers.includes(c.manager) }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= monthFromDate.valueOf() && obj.date.valueOf() <= row.date.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
+                value: allSendHistories.filter((c) => { return !managers.includes(c.manager) }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= monthFromDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
               })
             } else {
               reportObject.monthProposals.push({
                 manager,
-                value: allSendHistories.filter((c) => { return c.manager === manager }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= monthFromDate.valueOf() && obj.date.valueOf() <= row.date.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
+                value: allSendHistories.filter((c) => { return c.manager === manager }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= monthFromDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
               })
             }
           }
@@ -8096,17 +8102,17 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
             if (manager === "total") {
               reportObject.totalProposals.push({
                 manager,
-                value: allSendHistories.map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= row.date.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
+                value: allSendHistories.map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
               })
             } else if (manager === "미지정") {
               reportObject.totalProposals.push({
                 manager,
-                value: allSendHistories.filter((c) => { return !managers.includes(c.manager) }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= row.date.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
+                value: allSendHistories.filter((c) => { return !managers.includes(c.manager) }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
               })
             } else {
               reportObject.totalProposals.push({
                 manager,
-                value: allSendHistories.filter((c) => { return c.manager === manager }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= row.date.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
+                value: allSendHistories.filter((c) => { return c.manager === manager }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= toDateStandard.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
               })
             }
           }
