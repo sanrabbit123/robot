@@ -63,7 +63,7 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
   }
 
   style = {
-    display: desktop ? "block" : "none",
+    display: desktop ? (GeneralJs.returnGet().dataonly === "true" ? "none" : "block") : "none",
     position: "relative",
     top: String(0),
     left: String(0),
@@ -72,7 +72,7 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
   };
 
   style2 = {
-    display: desktop ? "block" : "none",
+    display: desktop ? (GeneralJs.returnGet().dataonly === "true" ? "none" : "block") : "none",
     position: "fixed",
     height: String(this.module.height + this.module.marginBottom) + ea,
     paddingTop: String(this.module.paddingTop) + ea,
@@ -369,7 +369,7 @@ DesignerJs.prototype.infoArea = function (info) {
   }
 
   style = {
-    display: "block",
+    display: GeneralJs.returnGet().dataonly === "true" ? "none" : "block",
     position: "absolute",
     top: String(0),
     left: String(grayBarWidth) + ea,
@@ -378,7 +378,7 @@ DesignerJs.prototype.infoArea = function (info) {
   };
 
   style2 = {
-    display: "block",
+    display: GeneralJs.returnGet().dataonly === "true" ? "none" : "block",
     position: "fixed",
     height: String(this.module.height + this.module.marginBottom) + ea,
     paddingTop: String(this.module.paddingTop) + ea,
@@ -4649,6 +4649,11 @@ DesignerJs.prototype.launching = async function () {
       document.getElementById("moveLeftArea").style.display = "none";
 
     } else if (getObj.mode === "checklist") {
+
+      if (getObj.entire === "true") {
+        this.grayBarWidth = 0;
+        this.belowHeight = 0;    
+      }
 
       await protoPatch(instance, [ `${modulePath}/checklist.js`, `${modulePath}/report.js` ]);
       document.getElementById("grayLeftOpenButton").remove();

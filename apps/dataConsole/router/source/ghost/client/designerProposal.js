@@ -1042,10 +1042,10 @@ DesignerProposalJs.prototype.insertDesignerBoxes = function () {
 
 DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) {
   const instance = this;
-  const { ea, media } = this;
+  const { ea, media, naviHeight, totalContents } = this;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   const { desid, designer, pictureSettings, description } = info;
-  const { createNode, colorChip, withOut } = GeneralJs;
+  const { createNode, colorChip, withOut, removeByClass } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   let bottomMarginVisual;
@@ -1134,7 +1134,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   } else {
     thisDesignerEndBoo = false;
   }
-  designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip[thisDesignerEndBoo ? "gray5" : "green"] + "\">" + this.abc[this.abcStatic] + "</b>" + (thisDesignerEndBoo ? "&nbsp;&nbsp;: 해당 디자이너는 마감되었습니다." : ""));
+  designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip[thisDesignerEndBoo ? "gray5" : "green"] + "\">" + this.abc[this.abcStatic] + (instance.updateMode ? " (" + designer + ")" : "") + "</b>" + (thisDesignerEndBoo ? "&nbsp;&nbsp;: 해당 디자이너는 마감되었습니다." : ""));
   style = {
     position: "relative",
     marginLeft: String(desktop ? leftMargin : 0) + ea,
@@ -1152,6 +1152,71 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
     designerTitle.style[i] = style[i];
   }
   this.abcStatic = this.abcStatic + 1;
+
+  // update mode only
+  if (instance.updateMode) {
+    designerTitle.style.cursor = "pointer";
+    designerTitle.setAttribute("desid", desid);
+    designerTitle.addEventListener("click", function(e) {
+      const desid = this.getAttribute("desid");
+      const designerTitlePopupClassName = "designerTitlePopupClassName";
+      const zIndex = 5;
+      let cancelBack, whitePrompt;
+      let margin;
+
+      margin = 30;
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ designerTitlePopupClassName ],
+        event: function (e) {
+          removeByClass(designerTitlePopupClassName)
+        },
+        style: {
+          position: "fixed",
+          top: String(naviHeight) + ea,
+          left: String(0),
+          width: withOut(0, ea),
+          height: withOut(naviHeight, ea),
+          background: colorChip.black,
+          opacity: String(0.6),
+          zIndex: String(zIndex),
+        }
+      })
+
+      whitePrompt = createNode({
+        mother: totalContents,
+        class: [ designerTitlePopupClassName ],
+        style: {
+          position: "fixed",
+          top: String(naviHeight + margin) + ea,
+          left: String(margin) + ea,
+          width: withOut(margin * 2, ea),
+          height: withOut(naviHeight + (margin * 2), ea),
+          background: colorChip.white,
+          zIndex: String(zIndex),
+          borderRadius: String(5) + "px",
+          animation: "fadeuplite 0.3s ease forwards",
+        },
+        child: {
+          mode: "iframe",
+          attribute: {
+            src: BACKHOST + "/designer?mode=checklist&entire=true&dataonly=true&desid=" + desid,
+          },
+          style: {
+            position: "absolute",
+            display: "block",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            border: String(0),
+          }
+        }
+      })
+
+    })
+  }
 
   //index
   if (desktop) {

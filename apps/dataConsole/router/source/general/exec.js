@@ -5,8 +5,6 @@ const local_funcs = new /<%name%>/Js();
 
 document.addEventListener("DOMContentLoaded", async function (e) {
   try {
-    //localStorage clear
-    // window.localStorage.clear();
 
     if (window.localStorage.getItem("colorChip") === null) {
       GeneralJs.colorChip = JSON.parse(JSON.stringify(GeneralJs.colorSet.light));

@@ -5122,7 +5122,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     mother: document.querySelector(".totalMother"),
     class: [ "iconTong" ],
     style: {
-      display: "block",
+      display: GeneralJs.returnGet().dataonly === "true" ? "none" : "block",
       position: "fixed",
       height: String(desktop ? motherHeight : (bottom + (radius * 2))) + ea,
       width: String(desktop ? grayBarWidth : (bottom + (radius * 2))) + ea,
@@ -6710,7 +6710,11 @@ DesignerJs.prototype.checkListView = async function () {
   try {
     const loading = await this.mother.loadingRun();
     const middleMode = /middle/gi.test(window.location.pathname);
-    this.backGrayBar();
+
+    if (GeneralJs.returnGet().entire !== "true") {
+      this.backGrayBar();
+    }
+
     await this.spreadData(null, true, middleMode ? "middle" : null);
     const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;
     const { totalMother, ea, grayBarWidth, belowHeight, media } = this;
