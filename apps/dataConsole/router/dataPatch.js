@@ -906,6 +906,188 @@ DataPatch.prototype.clientMap = function () {
     mother.appendChild(div_clone);
   };
 
+  const managerToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    let finalValue;
+    let targetArr;
+
+    if (vaildMode) {
+      return { boo: !boo, value: null };
+    }
+
+    targetArr = GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX"); }).map((obj) => { return obj.name });
+
+    if (targetArr.includes(value)) {
+      finalValue = value;
+    } else {
+      finalValue = pastValue;
+    }
+
+    return finalValue;
+  };
+  const managerInputFunction = function (mother, input, callback, instance) {
+    const grandMother = mother.parentElement;
+    let buttonStyle, inputStyle, style;
+    let ea = "px";
+    let height, fontSize, top, width;
+    let div_clone, svg_clone;
+    let button_clone;
+    let input_clone;
+    let iconWidth;
+    let inputArr, length;
+    let endEvent;
+    let originalValue;
+
+    originalValue = input.value;
+
+    endEvent = function (e) {
+      const rawValue = this.getAttribute("target");
+      let finalValue;
+      let items;
+      let blocks;
+      let thisRequestNumber;
+      let thisCliid;
+
+      items = [ '드랍', '진행', '응대중', '장기' ];
+      if (items.includes(rawValue)) {
+        finalValue = rawValue;
+      } else {
+        finalValue = originalValue;
+      }
+
+      if (finalValue === "진행") {
+        if (/^c[0-9][0-9][0-9][0-9]/.test(input.parentElement.parentElement.className)) {
+          window.location.href = window.location.protocol + "//" + window.location.host + "/" + "proposal" + "?cliid=" + input.parentElement.parentElement.className;
+        } else {
+          window.location.href = window.location.protocol + "//" + window.location.host + "/" + "proposal" + "?cliid=" + input.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+        }
+      } else {
+
+        if (typeof mother.parentElement.getAttribute("class") === "string") {
+          thisCliid = mother.parentElement.getAttribute("class");
+          blocks = [ ...document.querySelectorAll('.' + thisCliid) ];
+          blocks.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) });
+          thisRequestNumber = blocks.findIndex((dom) => { return dom ===  mother.parentElement; });
+        } else {
+          thisCliid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+          thisRequestNumber = Number(mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("request"));
+        }
+
+        if (typeof globalThis.XMLHttpRequest === "function") {
+          globalThis.window.parent.postMessage(JSON.stringify({
+            cliid: thisCliid,
+            requestNumber: thisRequestNumber,
+            column: "status",
+            value: finalValue,
+          }));
+        }
+
+        if (finalValue === "드랍") {
+          grandMother.setAttribute("drop", "true");
+        } else {
+          grandMother.setAttribute("drop", "false");
+        }
+
+        input.style.transition = "0s all ease";
+        input.style.color = "transparent";
+        input.value = finalValue;
+        input.parentElement.style.transition = "";
+        input.parentElement.style.color = "inherit";
+        mother.removeChild(document.querySelector(".divTong"));
+        callback();
+      }
+    };
+
+    inputArr = GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX"); }).map((obj) => { return obj.name });
+    length = inputArr.length;
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 15;
+    if (width === '' || Number.isNaN(width)) {
+      width = "120";
+    }
+    top = height * 0.5;
+    iconWidth = 18;
+
+    div_clone = GeneralJs.nodes.div.cloneNode(true);
+    div_clone.classList.add("removeTarget");
+    div_clone.classList.add("divTong");
+    style = {
+      position: "absolute",
+      top: String((height * 2) - top) + ea,
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      textAlign: "center",
+      fontSize: "inherit",
+      zIndex: String(3),
+      paddingBottom: String(iconWidth + 3) + ea,
+    };
+    for (let i in style) {
+      div_clone.style[i] = style[i];
+    }
+
+    buttonStyle = {
+      position: "relative",
+      left: (width !== "120" ? "calc(50% - " + String((width / 2) + 0.1) + ea + ")" : String(0) + ea),
+      width: String(width) + ea,
+      paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
+      height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
+      background: GeneralJs.colorChip.green,
+      fontSize: "inherit",
+      color: GeneralJs.colorChip.whiteBlack,
+      zIndex: String(3),
+      borderRadius: String(3) + ea,
+      animation: "fadeuplite 0.3s ease forwards",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
+      marginBottom: String(height / 4) + ea,
+    };
+
+    inputStyle = {
+      position: "absolute",
+      fontSize: "inherit",
+      fontWeight: String(400),
+      color: GeneralJs.colorChip.whiteBlack,
+      zIndex: String(3),
+      textAlign: "center",
+      background: "transparent",
+      width: "100%",
+      height: "calc(100% - " + String(5) + ea + ")",
+      left: String(0) + ea,
+      top: String(GeneralJs.isMac() ? (height / 2.9) : (height / 2.8)) + ea,
+      borderRadius: String(3) + ea,
+      border: String(0),
+      cursor: "pointer",
+    };
+
+    for (let i = 0; i < length; i++) {
+      button_clone = GeneralJs.nodes.div.cloneNode(true);
+      button_clone.classList.add("removeTarget");
+      for (let j in buttonStyle) {
+        button_clone.style[j] = buttonStyle[j];
+      }
+      input_clone = GeneralJs.nodes.div.cloneNode(true);
+      input_clone.classList.add("inputTarget");
+      input_clone.classList.add("hoverDefault");
+      for (let j in inputStyle) {
+        input_clone.style[j] = inputStyle[j];
+      }
+      input_clone.textContent = inputArr[i];
+      input_clone.setAttribute("target", inputArr[i]);
+      input_clone.addEventListener("click", endEvent);
+      button_clone.appendChild(input_clone);
+      div_clone.appendChild(button_clone);
+    }
+
+    mother.appendChild(div_clone);
+  };
+
   const actionToObject = function (value, pastValue, vaildMode) {
     if (vaildMode) {
       return { boo: true, value: null };
@@ -2229,7 +2411,7 @@ DataPatch.prototype.clientMap = function () {
     partialPyeong: { name: "부분 평수", position: "requests.0.request.space.partial.pyeong", type: "number", searchBoo: true, },
     partialDetail: { name: "부분 공간", position: "requests.0.request.space.partial.detail", type: "string", searchBoo: true, },
     designers: { name: "예상 디자이너", position: "requests.0.analytics.response.designers", type: "object", inputFunction: designerInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: designerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), stringFunction: designerToString.toString().replace(/\}$/, '').replace(/async function \(value\) \{/gi, ''), stringFunctionAsync: true, searchBoo: true, },
-    manager: { name: "담당자", position: null, type: "object", items: GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX"); }).map((obj) => { return obj.name }), searchBoo: false },
+    manager: { name: "담당자", position: null, type: "object", items: GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX"); }).map((obj) => { return obj.name }), inputFunction: managerInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: managerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false },
     proposalSend: { name: "추천서 발송", position: null, type: "constant", searchBoo: false },
     aboutSend: { name: "서비스 소개 발송", position: null, type: "constant", searchBoo: false },
     pureSend: { name: "부재중 발송", position: null, type: "constant", searchBoo: false },
