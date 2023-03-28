@@ -5329,7 +5329,7 @@ GeneralJs.prototype.greenTalk = function (input) {
 
   whitePopupWidthVisual = desktop ? 2 : 2;
 
-  backgroundWidth = desktop ? 1000 : 80;
+  backgroundWidth = desktop ? 800 : 80;
 
   opacity = 0.95;
 
@@ -5383,16 +5383,6 @@ GeneralJs.prototype.greenTalk = function (input) {
   chattingArray = [
     {
       text: "얼마나 걸릴지는 모르겠네요.",
-      who: 0,
-      date: new Date(),
-    },
-    {
-      text: "볼품이 없었나",
-      who: 0,
-      date: new Date(),
-    },
-    {
-      text: "빙빙 돌아 얽혀버린 실타래를",
       who: 0,
       date: new Date(),
     },
@@ -5899,6 +5889,10 @@ GeneralJs.prototype.greenTalk = function (input) {
 
       }, "greenTalkSystemDebounce");
     });
+  } else {
+
+    whitePopupBase.style.display = "none";
+
   }
 
   this.talkIcon = { dom: greenBase };

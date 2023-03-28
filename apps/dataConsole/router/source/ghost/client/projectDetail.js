@@ -5937,14 +5937,14 @@ ProjectDetailJs.prototype.launching = async function (loading) {
     this.panContents = this.contents.map((obj) => { return obj.children }).flat();
 
     form = await ajaxJson({ mode: "boo", proid: project.proid, desid: designer.desid }, SECONDHOST + "/projectDesignerStatus", { equal: true });
-    if (form.result === null || form.result === undefined || form.result === false || || form.result === 0) {
+    if (form.result === null || form.result === undefined || form.result === false || form.result === 0) {
       this.formBoo = false;
     } else {
       this.formBoo = true;
     }
 
     schedule = await ajaxJson({ mode: "boo", proid: project.proid, desid: designer.desid }, SECONDHOST + "/projectDesignerSchedule", { equal: true });
-    if (schedule.result === null || schedule.result === undefined || schedule.result === false || || schedule.result === 0) {
+    if (schedule.result === null || schedule.result === undefined || schedule.result === false || schedule.result === 0) {
       this.scheduleBoo = false;
     } else {
       this.scheduleBoo = true;
