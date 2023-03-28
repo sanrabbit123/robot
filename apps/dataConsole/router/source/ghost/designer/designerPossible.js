@@ -342,7 +342,9 @@ DesignerPossibleJs.prototype.possiblePrompt = function () {
 
   selectionReset = () => {
     for (let { dom } of instance.possibleBoxes) {
-      dom.style.background = colorChip.white;
+      dom.style.background = Number(dom.firstChild.getAttribute("possible")) === 0 ? colorChip.gray0 : colorChip.white;
+      dom.firstChild.setAttribute("background", Number(dom.firstChild.getAttribute("possible")) === 0 ? colorChip.gray0 : colorChip.white);
+      dom.firstChild.setAttribute("color", Number(dom.firstChild.getAttribute("possible")) === 0 ? colorChip.deactive : colorChip.green);
       dom.parentNode.firstChild.style.color = dom.parentNode.firstChild.getAttribute("color");
       dom.firstChild.style.color =  Number(dom.firstChild.getAttribute("possible")) === 0 ? colorChip.deactive : colorChip.green;
       dom.setAttribute("toggle", "off");
@@ -484,35 +486,6 @@ DesignerPossibleJs.prototype.possiblePrompt = function () {
                           }
                         }
                       },
-                      // blur: function (e) {
-                      //   let possibleValue, range, finalObj, removeTargets;
-                      //   if (this.value.trim() !== '') {
-                      //     possibleValue = Number(this.value.replace(/[^0-9]/gi, ''));
-                      //     if (Number.isNaN(possibleValue)) {
-                      //       this.value = '';
-                      //     } else {
-                      //       if (instance.selection.length >= 2) {
-                      //         range = [ stringToDate(instance.selection[0].value), stringToDate(instance.selection[1].value) ];
-                      //         range.sort((a, b) => { return a.valueOf() - b.valueOf() });
-                      //         for (let { value, dom } of instance.possibleBoxes) {
-                      //           if (range[0].valueOf() <= stringToDate(value).valueOf() && stringToDate(value).valueOf() <= range[1].valueOf()) {
-                      //             dom.firstChild.setAttribute("possible", String(possibleValue));
-                      //             dom.firstChild.textContent = String(possibleValue) + (desktop ? "건 가능" : "건");
-                      //           }
-                      //         }
-
-                      //         instance.boxToPossible().catch((err) => { console.log(err); });
-
-                      //         removeTargets = document.querySelectorAll('.' + possiblePromptClassName);
-                      //         for (let dom of removeTargets) {
-                      //           dom.remove();
-                      //         }
-                      //         selectionReset();
-
-                      //       }
-                      //     }
-                      //   }
-                      // }
                     },
                     style: {
                       position: "absolute",
@@ -592,6 +565,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
   let valueRange;
   let thisDate;
   let thisPossible;
+  let blankBoxes;
 
   grayBetween = <%% 40, 40, 36, 36, 3 %%>;
 
@@ -609,8 +583,8 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
 
   titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 3 %%>;
 
-  possibleSize = <%% 19, 18, 16, 14, 3 %%>;
-  possibleWeight = <%% 200, 200, 200, 200, 200 %%>;
+  possibleSize = <%% 18, 17, 16, 14, 3 %%>;
+  possibleWeight = <%% 400, 400, 400, 400, 400 %%>;
   possibleTextTop = <%% 0, 0, 0, 0, 0 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
@@ -685,8 +659,16 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
   thisCalendar.querySelector("svg").remove();
   thisCalendar.querySelector("svg").remove();
 
+  blankBoxes = [ ...thisCalendar.children[1].children ].slice(7).filter((dom) => {
+    return dom.firstChild.textContent.trim() === '';
+  })
+
+  for (let dom of blankBoxes) {
+    dom.style.background = colorChip.gray2;
+  }
+
   dateBoxes = [ ...thisCalendar.children[1].children ].slice(7).filter((dom) => {
-    return dom.firstChild.textContent.trim() !== ''
+    return dom.firstChild.textContent.trim() !== '';
   }).map((dom) => {
     cleanChildren(dom.children[1]);
     cleanChildren(dom.children[2]);
@@ -706,6 +688,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
         thisPossible = matrix.reduce((acc, curr) => { return curr >= acc ? curr : acc }, 0);
       }
     }
+
 
     possibleBox = createNode({
       mother,
@@ -743,7 +726,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
         mouseleave: function (e) {
           const toggle = this.getAttribute("toggle");
           if (toggle === "off") {
-            this.style.background = colorChip.white;
+            this.style.background = this.firstChild.getAttribute("background");
             this.parentNode.firstChild.style.color = this.parentNode.firstChild.getAttribute("color");
           }
         },
@@ -873,7 +856,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
-        background: colorChip.white,
+        background: thisPossible === 0 ? colorChip.gray0 : colorChip.white,
         transition: "all 0.3s ease",
       },
       children: [
@@ -882,6 +865,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
             selectstart: (e) => { e.preventDefault(); },
           },
           attribute: {
+            background: thisPossible === 0 ? colorChip.gray0 : colorChip.white,
             color: thisPossible === 0 ? colorChip.deactive : colorChip.green,
             possible: String(thisPossible),
           },

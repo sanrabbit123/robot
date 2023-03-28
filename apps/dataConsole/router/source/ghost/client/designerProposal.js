@@ -3992,7 +3992,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
 
 DesignerProposalJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, sleep, equalJson } = GeneralJs;
+  const { returnGet, ajaxJson, sleep, equalJson, requestPromise } = GeneralJs;
   try {
 
     this.mother.setGeneralProperties(this);
@@ -4009,6 +4009,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     let whereQuery;
     let belowTarget, removeTargets;
     let proposalHistory;
+    let isOffice;
 
     if (getObj.cliid !== undefined) {
       cliid = getObj.cliid;
@@ -4103,12 +4104,22 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     this.proposalHistoryNumber = 0;
 
     // TEST Center ==================================================================================================
-    if (proid === "p1801_aa01s") {
-      for (let d of designers) {
-        d.end = false;
-      }
-    }
+    // if (proid === "p1801_aa01s") {
+    //   for (let d of designers) {
+    //     d.end = false;
+    //   }
+    // }
     // TEST Center ==================================================================================================
+
+    if (getObj.mode === "test" && getObj.update === "true") {
+      isOffice = false;
+      try {
+        isOffice = (JSON.pare(await requestPromise(PYTHONHOST + "/isOffice")).result === 1);
+      } catch {
+        isOffice = false;
+      }
+      this.updateMode = isOffice;
+    }
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",
