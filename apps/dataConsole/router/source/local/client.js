@@ -907,6 +907,10 @@ ClientJs.prototype.infoArea = function (info) {
             updateEventMother.style.overflow = "hidden";
           }, instance);
 
+        } else if (thisMap.type === "constant") {
+
+          cancel_inputBack.click();
+
         } else {
 
           GeneralJs.timeouts.updateInputTimeout = setTimeout(function () {
@@ -1497,18 +1501,22 @@ ClientJs.prototype.infoArea = function (info) {
 
 ClientJs.prototype.spreadData = async function (search = null) {
   const instance = this;
+  const { ajaxJson, dateToString } = GeneralJs;
   try {
     let clients, totalMother;
     let standardDataTong = [], infoDataTong = [];
     let standardDomsFirst, caseDomsFirst, casesFirst;
     let standardDomsTargets, caseDomsTargets;
+    let loading;
+
+    loading = instance.mother.grayLoading();
 
     if (search === null || search === '' || search === '-') {
       const ago = new Date();
       ago.setDate(ago.getDate() - 30);
-      clients = await GeneralJs.ajaxJson({ whereQuery: { $or: [ { requests: { $elemMatch: { "request.timeline": { $gte: ago } } } }, { requests: { $elemMatch: { "analytics.response.status": { $regex: "^[응장]" } } } } ] } }, "/getClients");
+      clients = await ajaxJson({ whereQuery: { $or: [ { requests: { $elemMatch: { "request.timeline": { $gte: ago } } } }, { requests: { $elemMatch: { "analytics.response.status": { $regex: "^[응장]" } } } } ] } }, "/getClients");
     } else {
-      clients = await GeneralJs.ajaxJson({ query: search }, "/searchClients");
+      clients = await ajaxJson({ query: search }, "/searchClients");
     }
 
     GeneralJs.stacks.entireDesignerTong = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({}), "/getDesigners"));
@@ -1551,6 +1559,8 @@ ClientJs.prototype.spreadData = async function (search = null) {
 
     this.standardBar({ standard: standard.standard, data: standardDataTong, search: search });
     this.infoArea({ standard: standard.info, data: infoDataTong, search: search });
+
+    loading.remove();
 
   } catch (e) {
     GeneralJs.ajax({ message: "Client front 문제 생김 (spreadData) : " + JSON.stringify(e.message), channel: "#error_log" }, "/sendSlack", () => {
@@ -2265,6 +2275,10 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             updateValueEvent.call(input_clone, e);
             updateEventMother.style.overflow = "hidden";
           }, instance);
+
+        } else if (thisMap.type === "constant") {
+
+          cancel_inputBack.click();
 
         } else {
 
@@ -6567,7 +6581,7 @@ ClientJs.prototype.sseCardParsing = function (raw) {
 ClientJs.prototype.launching = async function () {
   const instance = this;
   try {
-    const { dateToString, returnGet, setQueue, cssInjection, requestPromise } = GeneralJs;
+    const { dateToString, returnGet, setQueue, cssInjection, requestPromise, ajaxJson } = GeneralJs;
     const getObj = returnGet();
     let getTarget;
     let tempFunction;
@@ -6575,6 +6589,9 @@ ClientJs.prototype.launching = async function () {
     this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
+
+    this.members = await ajaxJson({ type: "get" }, "/getMembers", { equal: true });
+    GeneralJs.stacks.members = this.members;
 
     if (getObj.dataonly === "true") {
       await this.spreadData();

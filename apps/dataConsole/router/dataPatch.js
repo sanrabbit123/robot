@@ -505,41 +505,53 @@ DataPatch.prototype.clientStandard = function () {
       width: 50,
       left: 30,
     },
+    manager: {
+      name: "담당자",
+      width: 50,
+    },
     action: {
       name: "응대",
-      width: 115,
+      width: 100,
     },
     outreason: {
       name: "유출 이유",
       width: 100,
     },
-    kakao: {
-      name: "채널 등록",
-      width: 100,
+    phone: {
+      name: "연락처",
+      width: 120,
     },
     service: {
       name: "예상 서비스",
-      width: 200,
+      width: 160,
+    },
+    timeline: {
+      name: "문의일",
+      width: 100,
     },
     next: {
       name: "1차 응대",
+      width: 100,
+    },
+    proposalSend: {
+      name: "추천서 발송",
       width: 100,
     },
     recommend: {
       name: "피드백 통화",
       width: 100,
     },
-    timeline: {
-      name: "문의일",
-      width: 100,
+    kakao: {
+      name: "채널 등록",
+      width: 60,
     },
     spacePicture: {
       name: "사진",
-      width: 100,
+      width: 60,
     },
-    phone: {
-      name: "연락처",
-      width: 120,
+    proposalDesigners: {
+      name: "추천 디자이너",
+      width: 280,
     },
     email: {
       name: "이메일",
@@ -675,10 +687,12 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
     info: [
       { name: "상태", target: "status" },
       { name: "응대", target: "action" },
-      { name: "1차 응대", target: "next" },
-      { name: "피드백 통화", target: "recommend" },
-      { name: "유출 이유", target: "outreason" },
       { name: "문의일", target: "timeline" },
+      { name: "1차 응대", target: "next" },
+      { name: "추천서 발송", target: "proposalSend" },
+      { name: "피드백 통화", target: "recommend" },
+      { name: "추천 디자이너", target: "proposalDesigners" },
+      { name: "유출 이유", target: "outreason" },
       { name: "연락처", target: "phone" },
       { name: "이메일", target: "email" },
       { name: "채널 등록", target: "kakao" },
@@ -2215,6 +2229,11 @@ DataPatch.prototype.clientMap = function () {
     partialPyeong: { name: "부분 평수", position: "requests.0.request.space.partial.pyeong", type: "number", searchBoo: true, },
     partialDetail: { name: "부분 공간", position: "requests.0.request.space.partial.detail", type: "string", searchBoo: true, },
     designers: { name: "예상 디자이너", position: "requests.0.analytics.response.designers", type: "object", inputFunction: designerInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: designerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), stringFunction: designerToString.toString().replace(/\}$/, '').replace(/async function \(value\) \{/gi, ''), stringFunctionAsync: true, searchBoo: true, },
+    manager: { name: "담당자", position: null, type: "object", items: GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX"); }).map((obj) => { return obj.name }), searchBoo: false },
+    proposalSend: { name: "추천서 발송", position: null, type: "constant", searchBoo: false },
+    aboutSend: { name: "서비스 소개 발송", position: null, type: "constant", searchBoo: false },
+    pureSend: { name: "부재중 발송", position: null, type: "constant", searchBoo: false },
+    proposalDesigners: { name: "추천한 디자이너", position: null, type: "constant", searchBoo: false },
   };
   return map;
 }

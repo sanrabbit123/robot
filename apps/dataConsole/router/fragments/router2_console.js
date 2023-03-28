@@ -3,13 +3,31 @@
 DataRouter.prototype.rou_post_getDocuments = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson } = this.mother;
+  const { equalJson, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getBuilders" ];
   obj.func = async function (req, res) {
-    res.set({ "Content-Type": "application/json" });
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      const db = "miro81";
       let standard, raw_data, data, optionQuery, whereQuery;
+      let historyWhereQuery;
+      let thisCliids;
+      let thisHistories;
+      let resultArr;
+      let thisHistory;
+      let proposalSend;
+      let thisProjects;
+      let allProjects;
+      let allDesigners;
+      let desidArr, designersArr;
       if (req.body.where === undefined && req.body.whereQuery !== undefined) {
         req.body.where = req.body.whereQuery;
       }
@@ -108,6 +126,50 @@ DataRouter.prototype.rou_post_getDocuments = function () {
 
       if (req.body.noFlat === undefined) {
         data = raw_data.flatDeath();
+        if (req.url === "/getClients") {
+
+          thisCliids = data.map((obj) => { return obj.standard.cliid });
+          historyWhereQuery = {};
+          historyWhereQuery["$or"] = thisCliids.map((cliid) => { return { cliid } });
+          thisHistories = await selfMongo.db(db).collection("clientHistory").find(historyWhereQuery).project({ cliid: 1, manager: 1, "curation.analytics.send": 1, _id: 0 }).toArray();
+          allProjects = await selfCoreMongo.db(db).collection("project").find(historyWhereQuery).project({ cliid: 1, proid: 1, proposal: 1, _id: 0 }).toArray();
+          allDesigners =await selfCoreMongo.db(db).collection("designer").find({}).project({ desid: 1, designer: 1, _id: 0 }).toArray();
+          resultArr = [];
+          for (let { manager, cliid, curation: { analytics: { send } } } of thisHistories) {
+            resultArr.push({
+              cliid,
+              manager,
+              proposal: send.filter((obj) => { return obj.page === "designerProposal" }),
+              about: send.filter((obj) => { return obj.page === "finalPush" }),
+              pure: send.filter((obj) => { return obj.page === "pureOutOfClient" }),
+            })
+          }
+
+          for (let obj of data) {
+            thisHistory = resultArr.find((o) => { return o.cliid === obj.standard.cliid });
+            thisHistory.proposal.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+
+            if (thisHistory.proposal.length > 0) {
+              proposalSend = dateToString(thisHistory.proposal[0].date);
+              thisProjects = allProjects.filter((project) => { return project.cliid === obj.standard.cliid });
+              thisProjects.sort((a, b) => { return b.proposal.date.valueOf() - a.proposal.date.valueOf() });
+              desidArr = thisProjects[0].proposal.detail.map((o) => { return o.desid });
+              designersArr = desidArr.map((desid) => { return allDesigners.find((d) => { return d.desid === desid }).designer; });
+            } else {
+              proposalSend = '-';
+              desidArr = [];
+              designersArr = [];
+            }
+
+            obj.info.manager = thisHistory.manager;
+            obj.info.proposalSend = proposalSend;
+            obj.info.pureSend = thisHistory.pure.length > 0 ? dateToString(thisHistory.pure[0].date) : '-';
+            obj.info.aboutSend = thisHistory.about.length > 0 ? dateToString(thisHistory.about[0].date) : '-';
+            obj.info.desids = desidArr.length > 0 ? desidArr.join(", ") : "-";
+            obj.info.proposalDesigners = designersArr.length > 0 ? designersArr.join(", ") : "-";
+          }
+
+        }
         res.send(JSON.stringify({ standard, data }));
       } else {
         res.send(JSON.stringify(raw_data.toNormal()));
@@ -1997,7 +2059,12 @@ DataRouter.prototype.rou_post_getMembers = function () {
   let obj = {};
   obj.link = "/getMembers";
   obj.func = async function (req, res) {
-    res.set("Content-Type", "application/json");
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (typeof req.body.type !== "string") {
         throw new Error("must be type");
