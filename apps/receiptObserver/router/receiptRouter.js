@@ -135,6 +135,9 @@ ReceiptRouter.prototype.rou_get_isOffice = function () {
     });
     try {
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+      console.log(String(ip).replace(/[^0-9\.]/gi, '').trim());
+
       res.send(JSON.stringify({ result: (String(ip).replace(/[^0-9\.]/gi, '').trim() === address.officeinfo.ip.outer ? 1 : 0) }));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_get_isOffice): " + e.message).catch((e) => { console.log(e); });
