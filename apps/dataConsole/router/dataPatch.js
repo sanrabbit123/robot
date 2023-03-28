@@ -529,16 +529,8 @@ DataPatch.prototype.clientStandard = function () {
       name: "피드백 통화",
       width: 100,
     },
-    callHistory: {
-      name: "연락 기록",
-      width: 100,
-    },
     timeline: {
       name: "문의일",
-      width: 100,
-    },
-    designers: {
-      name: "예상 디자이너",
       width: 100,
     },
     spacePicture: {
@@ -629,6 +621,14 @@ DataPatch.prototype.clientStandard = function () {
       name: "부분 공간",
       width: 100,
     },
+    designers: {
+      name: "예상 디자이너",
+      width: 100,
+    },
+    callHistory: {
+      name: "연락 기록",
+      width: 100,
+    },
   };
 
   targetArr = Object.keys(model.info);
@@ -677,6 +677,7 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "응대", target: "action" },
       { name: "1차 응대", target: "next" },
       { name: "피드백 통화", target: "recommend" },
+      { name: "유출 이유", target: "outreason" },
       { name: "문의일", target: "timeline" },
       { name: "연락처", target: "phone" },
       { name: "이메일", target: "email" },

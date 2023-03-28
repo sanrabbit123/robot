@@ -2495,7 +2495,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
             border: String(0),
           }
         }
-      })
+      });
 
     } catch (e) {
       console.log(e);

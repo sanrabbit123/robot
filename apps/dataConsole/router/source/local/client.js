@@ -721,22 +721,43 @@ ClientJs.prototype.infoArea = function (info) {
             button_clone = GeneralJs.nodes.div.cloneNode(true);
             button_clone.classList.add("removeTarget");
             button_clone.setAttribute("buttonValue", thisMap.items[i]);
-            style = {
-              position: "absolute",
-              top: String(((height * 2) * (i + 1)) - top) + ea,
-              left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
-              width: String(width) + ea,
-              paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
-              height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
-              background: thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray2,
-              textAlign: "center",
-              fontSize: "inherit",
-              color: GeneralJs.colorChip.whiteBlack,
-              zIndex: String(3),
-              borderRadius: String(3) + ea,
-              animation: "fadeuplite 0.3s ease forwards",
-              boxShadow: "0px 2px 11px -6px " + (thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1),
-            };
+
+
+            if (thisMap.multiple !== undefined && thisMap.items.length > 6) {
+              style = {
+                position: "absolute",
+                top: String(((height * 2) * (Math.floor(i / 4) + 1)) - top) + ea,
+                left: String((width + 4) * (i % 4)) + ea,
+                width: String(width) + ea,
+                paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
+                height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
+                background: thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray2,
+                textAlign: "center",
+                fontSize: "inherit",
+                color: GeneralJs.colorChip.whiteBlack,
+                zIndex: String(3),
+                borderRadius: String(3) + ea,
+                animation: "fadeuplite 0.3s ease forwards",
+                boxShadow: "0px 2px 11px -6px " + (thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1),
+              };
+            } else {
+              style = {
+                position: "absolute",
+                top: String(((height * 2) * (i + 1)) - top) + ea,
+                left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
+                width: String(width) + ea,
+                paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
+                height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
+                background: thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray2,
+                textAlign: "center",
+                fontSize: "inherit",
+                color: GeneralJs.colorChip.whiteBlack,
+                zIndex: String(3),
+                borderRadius: String(3) + ea,
+                animation: "fadeuplite 0.3s ease forwards",
+                boxShadow: "0px 2px 11px -6px " + (thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1),
+              };
+            }
             for (let j in style) {
               button_clone.style[j] = style[j];
             }
@@ -813,10 +834,11 @@ ClientJs.prototype.infoArea = function (info) {
             svg_clone.setAttribute("buttonValue", input_clone.value);
             style = {
               position: "absolute",
-              top: String(((height * 2) * (thisMap.items.length + 1)) - 5) + ea,
+              top: thisMap.items.length > 6 ? String(((height * 2) * (Math.floor(thisMap.items.length / 4) + 1)) - 5) + ea : String(((height * 2) * (thisMap.items.length + 1)) - 5) + ea,
               width: String(18) + ea,
-              left: "calc(50% - " + String(18 / 2) + ea + ")",
+              left: String(((width + 4) * 2) - (18 / 2) - 2) + ea,
               zIndex: String(3),
+              cursor: "pointer",
             };
             for (let j in style) {
               svg_clone.style[j] = style[j];
@@ -2053,23 +2075,49 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             button_clone = GeneralJs.nodes.div.cloneNode(true);
             button_clone.classList.add("removeTarget");
             button_clone.setAttribute("buttonValue", thisMap.items[i]);
-            style = {
-              position: "absolute",
-              top: String(((height * 2) * (i + 1)) - top) + ea,
-              left: String(0) + ea,
-              width: String(width) + ea,
-              paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
-              height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
-              background: thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray2,
-              textAlign: "center",
-              fontSize: "inherit",
-              color: GeneralJs.colorChip.whiteBlack,
-              zIndex: String(3),
-              borderRadius: String(3) + ea,
-              animation: "fadeuplite 0.3s ease forwards",
-              boxShadow: "0px 2px 11px -6px " + (thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1),
-              cursor: "pointer",
-            };
+
+            if (thisMap.multiple !== undefined && thisMap.items.length > 6) {
+
+              style = {
+                position: "absolute",
+                top: String(((height * 2) * (Math.floor(i / 4) + 1)) - top) + ea,
+                left: String((width + 4) * (i % 4)) + ea,
+                width: String(width) + ea,
+                paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
+                height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
+                background: thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray2,
+                textAlign: "center",
+                fontSize: "inherit",
+                color: GeneralJs.colorChip.whiteBlack,
+                zIndex: String(3),
+                borderRadius: String(3) + ea,
+                animation: "fadeuplite 0.3s ease forwards",
+                boxShadow: "0px 2px 11px -6px " + (thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1),
+                cursor: "pointer",
+              };
+
+            } else {
+
+              style = {
+                position: "absolute",
+                top: String(((height * 2) * (i + 1)) - top) + ea,
+                left: String(0) + ea,
+                width: String(width) + ea,
+                paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
+                height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
+                background: thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray2,
+                textAlign: "center",
+                fontSize: "inherit",
+                color: GeneralJs.colorChip.whiteBlack,
+                zIndex: String(3),
+                borderRadius: String(3) + ea,
+                animation: "fadeuplite 0.3s ease forwards",
+                boxShadow: "0px 2px 11px -6px " + (thisMap.multiple === undefined ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray1),
+                cursor: "pointer",
+              };
+
+            }
+
             for (let j in style) {
               button_clone.style[j] = style[j];
             }
@@ -2146,10 +2194,11 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             svg_clone.setAttribute("buttonValue", input_clone.value);
             style = {
               position: "absolute",
-              top: String(((height * 2) * (thisMap.items.length + 1)) - 5) + ea,
+              top: thisMap.items.length > 6 ? String(((height * 2) * (Math.floor(thisMap.items.length / 4) + 1)) - 5) + ea : String(((height * 2) * (thisMap.items.length + 1)) - 5) + ea,
               width: String(18) + ea,
-              left: "calc(50% - " + String(18 / 2) + ea + ")",
+              left: String(((width + 4) * 2) - (18 / 2) - 2) + ea,
               zIndex: String(3),
+              cursor: "pointer",
             };
             for (let j in style) {
               svg_clone.style[j] = style[j];
@@ -2161,7 +2210,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         } else if (thisMap.type !== "object" && thisMap.address !== undefined && e.type === "click") {
 
           cancel_inputBack.style.background = GeneralJs.colorChip.white;
-          // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
           height = Number(this.style.height.replace((new RegExp(ea, "gi")), ''));
