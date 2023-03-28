@@ -1021,6 +1021,7 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
       let after63;
       let after70;
       let emptyDate;
+      let boo;
 
       if (mode === "get") {
 
@@ -1342,6 +1343,23 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
         }
 
         resultObj = originalContents;
+
+      } else if (mode === "boo") {
+
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        resultObj = { result: 0 };
+        if (rows.length > 0) {
+          boo = rows[0].schedule.every((obj) => {
+            return obj.date.start.valueOf() > (new Date(2000, 0, 1)).valueOf() && obj.date.end.valueOf() > (new Date(2000, 0, 1)).valueOf();
+          });
+          if (boo) {
+            resultObj = { result: 1 };
+          } else {
+            resultObj = { result: 0 };
+          }
+        } else {
+          resultObj = { result: 0 };
+        }
 
       }
 
@@ -1967,6 +1985,15 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
             name,
           }
         }, { selfMongo });
+
+      } else if (mode === "boo") {
+
+        rows = await back.mongoRead(collection, { proid }, { selfMongo });
+        if (rows.length === 0) {
+          resultObj = { result: 0 };
+        } else {
+          resultObj = { result: 1 };
+        }
 
       }
 

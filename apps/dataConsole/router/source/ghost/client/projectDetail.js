@@ -5882,6 +5882,8 @@ ProjectDetailJs.prototype.launching = async function (loading) {
     let requestNumber;
     let service;
     let key;
+    let form;
+    let schedule;
 
     if (getObj.proid === undefined) {
       window.alert("잘못된 접근입니다!");
@@ -5934,6 +5936,20 @@ ProjectDetailJs.prototype.launching = async function (loading) {
     this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
     this.panContents = this.contents.map((obj) => { return obj.children }).flat();
 
+    form = await ajaxJson({ mode: "boo", proid: project.proid, desid: designer.desid }, SECONDHOST + "/projectDesignerStatus", { equal: true });
+    if (form.result === null || form.result === undefined || form.result === false || || form.result === 0) {
+      this.formBoo = false;
+    } else {
+      this.formBoo = true;
+    }
+
+    schedule = await ajaxJson({ mode: "boo", proid: project.proid, desid: designer.desid }, SECONDHOST + "/projectDesignerSchedule", { equal: true });
+    if (schedule.result === null || schedule.result === undefined || schedule.result === false || || schedule.result === 0) {
+      this.scheduleBoo = false;
+    } else {
+      this.scheduleBoo = true;
+    }
+
     this.hashConst = "homeliaisonHash";
     this.targetKeywords = "/photo/designer";
     this.targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + this.targetKeywords + "/" + this.designer.desid + "/" + this.project.proid;
@@ -5962,29 +5978,32 @@ ProjectDetailJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
 
-          // past version
-          instance.insertNumbersBox();
-          instance.insertUploadBox();
-
-          // dev - new version
-          // await instance.insertFormStatusBox();
-          // if (getObj.mode === "schedule") {
-          //   await instance.insertScheduleBox();
-          //   instance.insertUploadBox();
-          // } else {
-          //   instance.insertUploadBox();
-          //   await instance.insertScheduleBox();
-          // }
-          
-          instance.insertInformationBox();
-          instance.insertGreenButtons();
-
-
-          if (getObj.mode === "schedule") {
+          if (getObj.mode === "schedule" && instance.scheduleBoo) {
+            instance.insertNumbersBox();
+            await instance.insertScheduleBox();
+            instance.insertUploadBox();
             setQueue(() => {
               GeneralJs.scrollTo(window, instance.baseTong.children[2], (!instance.media[4] ? 72 : 60));
             }, 500);
+
+          } else if (getObj.mode === "form" && instance.formBoo) {
+            await instance.insertFormStatusBox();
+            instance.insertUploadBox();
+            if (instance.scheduleBoo) {
+              await instance.insertScheduleBox();
+            }
+
+          } else {
+            instance.insertNumbersBox();
+            instance.insertUploadBox();
+            if (instance.scheduleBoo) {
+              await instance.insertScheduleBox();
+            }
+
           }
+          
+          instance.insertInformationBox();
+          instance.insertGreenButtons();
 
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ProjectDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");

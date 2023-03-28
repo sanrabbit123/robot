@@ -1225,19 +1225,19 @@ ConsoleManualJs.prototype.insertMovieStartBox = function () {
   contents = [
     {
       title: "프로젝트 관리",
-      link: "https://www.youtube.com/embed/myPj1dXddCY",
+      link: "https://www.youtube.com/embed/aNuT55SV7As",
     },
     {
       title: "프로젝트 상세",
-      link: "https://www.youtube.com/embed/NHgaX1qvbe0",
+      link: "https://www.youtube.com/embed/OtfQZox1ISk",
     },
     {
       title: "파일 업로드",
-      link: "https://www.youtube.com/embed/OOPXEm3HBIc",
+      link: "https://www.youtube.com/embed/qNsY8iE4yyA",
     },
     {
       title: "일정표 관리",
-      link: "https://www.youtube.com/embed/-GUMH_cYcYU",
+      link: "https://www.youtube.com/embed/YNfubLunQyc",
     },
   ];
 
