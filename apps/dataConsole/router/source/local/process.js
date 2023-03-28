@@ -10283,6 +10283,8 @@ ProcessJs.prototype.dashBoardView = function () {
         constructClient: matchingFilterMaker("고객"),
       }
 
+
+
       dashboardTableLoad = (dashboardTable) => {
         cleanChildren(dashboardTable);
 
@@ -10321,6 +10323,7 @@ ProcessJs.prototype.dashBoardView = function () {
                   let type;
 
                   if (instance.clientColumns[index - delta] !== undefined) {
+
                     thisObject = instance.clientColumns[index - delta];
                     type = thisObject.type;
                     if (type === "string") {
@@ -10412,6 +10415,95 @@ ProcessJs.prototype.dashBoardView = function () {
                       })
                     })
 
+                  } else {
+                    // manager
+                    if (index === 0) {
+
+                      thisMenu = [ ...new Set(instance.totalValues.map((arr) => { return arr[0] })) ];
+                      thisMenu.sort();
+
+                      cancelBack = createNode({
+                        mother: totalContents,
+                        class: [ filterMenuClassName ],
+                        event: {
+                          click: function (e) {
+                            removeByClass(filterMenuClassName);
+                          }
+                        },
+                        style: {
+                          position: "fixed",
+                          top: String(0),
+                          left: String(0),
+                          background: "transparent",
+                          width: withOut(0, ea),
+                          height: withOut(0, ea),
+                          zIndex: String(zIndex),
+                        }
+                      });
+                
+                      menuPrompt = createNode({
+                        mother: totalContents,
+                        class: [ filterMenuClassName ],
+                        attribute: {
+                          index: String(index),
+                          type,
+                        },
+                        style: {
+                          position: "absolute",
+                          top: String(e.y) + "px",
+                          left: String(e.x) + "px",
+                          padding: String(menuButtonOuterPadding) + ea,
+                          paddingBottom: String(menuButtonOuterPadding - menuButtonInnerPadding) + ea,
+                          borderRadius: String(5) + "px",
+                          background: colorChip.white,
+                          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                          animation: "fadeuplite 0.3s ease forwards",
+                          zIndex: String(zIndex),
+                        },
+                        children: thisMenu.map((str, index) => {
+                          return {
+                            attribute: {
+                              manager: str
+                            },
+                            event: {
+                              click: function (e) {
+                                const manager = this.getAttribute("manager");
+                                matchingFilterMaker(manager).call(this, e);
+                                removeByClass(filterMenuClassName);
+                              },
+                              contextmenu : function (e) {
+                                e.preventDefault();
+                                const manager = this.getAttribute("manager");
+                                matchingFilterMaker(manager).call(this, e);
+                                removeByClass(filterMenuClassName);
+                              }
+                            },
+                            style: {
+                              display: "flex",
+                              width: String(menuButtonWidth) + ea,
+                              height: String(menuButtonHeight) + ea,
+                              borderRadius: String(5) + "px",
+                              background: colorChip.gradientGray,
+                              marginBottom: String(menuButtonInnerPadding) + ea,
+                              justifyContent: "center",
+                              alignItems: "center",
+                              cursor: "pointer",
+                            },
+                            child: {
+                              text: str,
+                              style: {
+                                fontSize: String(menuButtonSize) + ea,
+                                fontWeight: String(menuButtonWeight),
+                                color: colorChip.white,
+                                top: String(menuButtonTextTop) + ea,
+                                position: "relative",
+                              }
+                            }
+                          }
+                        })
+                      })
+
+                    }
                   }
                 }
               },

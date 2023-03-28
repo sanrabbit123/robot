@@ -18,10 +18,10 @@ $name = "designerDetail";
 $fullLink = $hostLink."/desdetail.php?desid=".$desid;
 
 $titleString = $designerList[0][1]." 디자이너 | 홈리에종";
-$descriptionString = "홈리에종 협업 디자이너, ".$designerList[0][1]." 디자이너의 상세 내용 페이지 입니다! | 홈리에종";
+$descriptionString = "홈리에종 디자이너, ".$designerList[0][1]." 디자이너의 상세 내용 페이지 입니다! | 홈리에종";
 $imageString = "/list_image/portp".$designerList[0][3]."/".$designerList[0][4].$designerList[0][3].".jpg";
 
-$hiddenString = "<h1>홈리에종 협업 디자이너, ".$designerList[0][1]." 디자이너의 상세 내용 페이지 입니다!</h1>";
+$hiddenString = "<h1>홈리에종 디자이너, ".$designerList[0][1]." 디자이너의 상세 내용 페이지 입니다!</h1>";
 $hiddenString .= "\n<p>".$designerList[0][2]."</p>";
 
 for ($i = 0; $i < count($contentsList); $i++) {
