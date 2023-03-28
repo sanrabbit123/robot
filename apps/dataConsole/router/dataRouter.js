@@ -7785,6 +7785,8 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
       const selfCoreMongo = instance.mongo;
       const collection = "dailySales";
       const historyCollection = "clientHistory";
+      const proposalKeywords = "designerProposal";
+      const db = "miro81";
       const rowToCliids = (rows) => {
         const targetRows = equalJson(JSON.stringify(rows));
         return targetRows.map((o) => { return o.cliids.map(({ cliid }) => { return cliid }) }).flat();
@@ -7808,6 +7810,8 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
       let resultObj;
       let todayClients;
       let startDate, endDate;
+      let allSendHistories;
+      let monthFromDate;
 
       startDate = new Date(Number(startYear), Number(startMonth) - 1, 1, 8, 0, 0);
       endDate = new Date(Number(endYear), Number(endMonth) - 1, 1, 10, 0, 0);
@@ -7834,7 +7838,15 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
   
       whereQuery = rowToCliids(rows);
       whereQuery = { $or: [ ...new Set(whereQuery) ].map((cliid) => { return { cliid } }) }
-  
+
+      allSendHistories = await selfMongo.db(db).collection(historyCollection).find({
+        "curation.analytics.send": {
+          $elemMatch: {
+            date: { $gte: startDate }
+          }
+        }
+      }).project({ manager: 1, "curation.analytics.send": 1, _id: 0 }).toArray();
+
       if (whereQuery["$or"].length > 0) {
   
         thisClients = (await back.getClientsByQuery(whereQuery, { selfMongo: selfCoreMongo })).toNormal();
@@ -7872,6 +7884,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
   
           // month standard
           fromDate = new Date(row.date.getFullYear(), row.date.getMonth(), 1, 8, 0, 0);
+          monthFromDate = new Date(JSON.stringify(fromDate).slice(1, -1));
           toDate = new Date(row.date.getFullYear(), row.date.getMonth() + 1, 1, 10, 0, 0);
           toDate.setDate(toDate.getDate() - 1);
           monthRows = rowsCopy.filter((o) => {
@@ -8035,6 +8048,69 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
             }
           }
   
+          // day proposal
+          reportObject.dayProposals = [];
+          for (let manager of managers) {
+            if (manager === "total") {
+              reportObject.dayProposals.push({
+                manager,
+                value: allSendHistories.map(({ curation }) => { return curation.analytics.send.filter((obj) => { return dateToString(obj.date) === dateToString(row.date) }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
+              })
+            } else if (manager === "미지정") {
+              reportObject.dayProposals.push({
+                manager,
+                value: allSendHistories.filter((c) => { return !managers.includes(c.manager) }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return dateToString(obj.date) === dateToString(row.date) }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
+              })
+            } else {
+              reportObject.dayProposals.push({
+                manager,
+                value: allSendHistories.filter((c) => { return c.manager === manager }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return dateToString(obj.date) === dateToString(row.date) }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
+              })
+            }
+          }
+
+          // month proposal
+          reportObject.monthProposals = [];
+          for (let manager of managers) {
+            if (manager === "total") {
+              reportObject.monthProposals.push({
+                manager,
+                value: allSendHistories.map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= monthFromDate.valueOf() && obj.date.valueOf() <= row.date.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
+              })
+            } else if (manager === "미지정") {
+              reportObject.monthProposals.push({
+                manager,
+                value: allSendHistories.filter((c) => { return !managers.includes(c.manager) }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= monthFromDate.valueOf() && obj.date.valueOf() <= row.date.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
+              })
+            } else {
+              reportObject.monthProposals.push({
+                manager,
+                value: allSendHistories.filter((c) => { return c.manager === manager }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= monthFromDate.valueOf() && obj.date.valueOf() <= row.date.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
+              })
+            }
+          }
+
+          // total proposal
+          reportObject.totalProposals = [];
+          for (let manager of managers) {
+            if (manager === "total") {
+              reportObject.totalProposals.push({
+                manager,
+                value: allSendHistories.map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= row.date.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
+              })
+            } else if (manager === "미지정") {
+              reportObject.totalProposals.push({
+                manager,
+                value: allSendHistories.filter((c) => { return !managers.includes(c.manager) }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= row.date.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
+              })
+            } else {
+              reportObject.totalProposals.push({
+                manager,
+                value: allSendHistories.filter((c) => { return c.manager === manager }).map(({ curation }) => { return curation.analytics.send.filter((obj) => { return obj.date.valueOf() >= startDate.valueOf() && obj.date.valueOf() <= row.date.valueOf() }) }).flat().filter((obj) => { return obj.page === proposalKeywords }).length,
+              })
+            }
+          }
+
           reports.push(reportObject);
         }
   
