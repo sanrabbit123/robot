@@ -4218,6 +4218,10 @@ DataRouter.prototype.rou_post_designerFee = function () {
       let project, thisProposal;
       let designerRealtime;
 
+      if (req.body.frontMode === 1 || req.body.frontMode === '1') {
+        option.frontMode = 1;
+      }
+
       if (!Array.isArray(matrix)) {
         throw new Error("invaild post");
       }
@@ -4253,7 +4257,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
           }
 
           if (!designerRealtime.result) {
-            temp.comment = "Unable schedule";
+            temp.comment = (req.body.frontMode === 1 || req.body.frontMode === '1') ? "일정 불가능" : "Unable schedule";
             // temp.detail.online = 0;
             // temp.detail.offline = 0;
             temp.detail.travel.number = 0;

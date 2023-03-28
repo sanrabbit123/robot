@@ -1,6 +1,7 @@
 const ProposalJs = function () {
   this.mother = new GeneralJs();
   this.grandmother = document.getElementById("totalcontents");
+  this.totalContents = document.getElementById("totalcontents");
   this.createPannel = {};
   this.domBox = new Map();
   this.thirdChildren = {};
@@ -18,6 +19,7 @@ const ProposalJs = function () {
   this.cliid = null;
   this.serid = null;
   this.xValue = null;
+  this.ea = "px";
 
   //auto-make proposal function property
   this.firstDo_secondToggle = true;
@@ -1271,6 +1273,8 @@ ProposalJs.prototype.thirdProcess = async function () {
 ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = false) {
   const instance = this;
   const domBox = this.domBox;
+  const { totalContents, ea } = this;
+  const { createNode, colorChip, withOut, removeByClass, serviceParsing, dateToString, ajaxJson, isMac } = GeneralJs;
   let fourthChildren;
   let thirdChildren;
   let fourth;
@@ -1279,6 +1283,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
   let designers;
   let clickTargets;
   let greenPopup;
+  let checklistEvent;
 
   fourthChildren = new Map();
   thirdChildren = this.thirdChildren;
@@ -2057,7 +2062,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         serid = instance.serid;
         xValue = instance.xValue;
         if (!ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) || (ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) !== null && ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline === 0)) {
-          GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue, document.getElementById("blewpp_button3").getAttribute("cus_id") ] ] }, "/designerFee").then((raw_fee) => {
+          GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue, document.getElementById("blewpp_button3").getAttribute("cus_id") ] ], frontMode: 1 }, "/designerFee").then((raw_fee) => {
             if (!Array.isArray(raw_fee)) {
               window.alert("오류 발생, 관리자에게 문의하세요!");
               window.location.reload();
@@ -2146,7 +2151,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       if (ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) && ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline !== 0) {
         raw_fee = [ ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) ];
       } else {
-        raw_fee = await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue, document.getElementById("blewpp_button3").getAttribute("cus_id") ] ] }, "/designerFee");
+        raw_fee = await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue, document.getElementById("blewpp_button3").getAttribute("cus_id") ] ], frontMode: 1 }, "/designerFee");
       }
 
       if (!Array.isArray(raw_fee)) {
@@ -2236,7 +2241,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
           if (ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) && ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline !== 0) {
             result = ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue));
           } else {
-            result = (await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue, document.getElementById("blewpp_button3").getAttribute("cus_id") ] ] }, "/designerFee"))[0];
+            result = (await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue, document.getElementById("blewpp_button3").getAttribute("cus_id") ] ], frontMode: 1 }, "/designerFee"))[0];
             ProposalJs.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
           }
           document.querySelector("#" + "pp_designer_selected_box_contents_money" + String(n)).appendChild(money_set(this.getAttribute("cus_value"), 0, result));
@@ -2362,6 +2367,141 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     objToDom(info_to, dom_from, orderId_to, orderId_from);
   }
 
+  checklistEvent = async function (e) {
+    e.preventDefault();
+    try {
+      const desid = this.getAttribute("cus_desid");
+      const cliid = instance.cliid;
+      const designerTitlePopupClassName = "designerTitlePopupClassName";
+      const requestNumber = 0;
+      const zIndex = 5;
+      const [ client ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, BACKHOST + "/getClients", { equal: true });
+      const expectedToString = function (str0, startDateNumber = 0) {
+        let expected;
+        expected = new Date(str0);
+        expected.setDate(expected.getDate() - startDateNumber);
+        if (expected.valueOf() < (new Date(2000, 0, 1)).valueOf() || expected.valueOf() > (new Date(3000, 0, 1)).valueOf()) {
+          return `해당 없음`;
+        } else {
+          return `${String(expected.getFullYear()).slice(2)}년 ${String(expected.getMonth() + 1)}월 ${String(expected.getDate())}일`;
+        }
+      }
+      const belowHeight = instance.mother.belowHeight;
+      let cancelBack, whitePrompt;
+      let clientWhite;
+      let margin;
+      let clientWhiteHeight;
+      let between;
+      let clientInfoSize, clientInfoWeight;
+      let blank;
+      let textTop;
+      let thisService;
+
+      margin = 30;
+      clientWhiteHeight = 64;
+      between = 8;
+      clientInfoSize = 16;
+      clientInfoWeight = 600;
+      textTop = isMac() ? -1 : 1;
+
+      thisService = serviceParsing(document.getElementById("pp_title2_sub_b").textContent);
+
+      blank = "&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;";
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ designerTitlePopupClassName ],
+        event: function (e) {
+          removeByClass(designerTitlePopupClassName);
+        },
+        style: {
+          position: "fixed",
+          top: String(0) + ea,
+          left: String(0),
+          width: withOut(0, ea),
+          height: withOut(belowHeight, ea),
+          background: colorChip.black,
+          opacity: String(0.6),
+          zIndex: String(zIndex),
+        }
+      });
+
+      clientWhite = createNode({
+        mother: totalContents,
+        class: [ designerTitlePopupClassName ],
+        style: {
+          display: "flex",
+          position: "fixed",
+          top: String(0 + margin) + ea,
+          left: String(margin) + ea,
+          width: withOut(margin * 2, ea),
+          height: String(clientWhiteHeight) + ea,
+          background: colorChip.white,
+          zIndex: String(zIndex),
+          borderRadius: String(5) + "px",
+          animation: "fadeuplite 0.3s ease forwards",
+          overflow: "hidden",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        children: [
+          {
+            text: client.name + blank + client.cliid + blank + serviceParsing(thisService) + blank + "일정 : " + expectedToString(client.requests[requestNumber].analytics.date.space.movein, serviceParsing(thisService, true)) + "&nbsp;&nbsp;~&nbsp;&nbsp;" + expectedToString(client.requests[requestNumber].analytics.date.space.movein),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(textTop) + ea,
+              fontSize: String(clientInfoSize) + ea,
+              fontWeight: String(clientInfoWeight),
+              color: colorChip.black,
+            },
+            under: {
+              fontSize: String(clientInfoSize) + ea,
+              fontWeight: String(300),
+              color: colorChip.deactive,
+            }
+          }
+        ]
+      })
+
+      whitePrompt = createNode({
+        mother: totalContents,
+        class: [ designerTitlePopupClassName ],
+        style: {
+          position: "fixed",
+          top: String(0 + margin + clientWhiteHeight + between) + ea,
+          left: String(margin) + ea,
+          width: withOut(margin * 2, ea),
+          height: withOut(0 + (margin * 2) + clientWhiteHeight + between + belowHeight, ea),
+          background: colorChip.white,
+          zIndex: String(zIndex),
+          borderRadius: String(5) + "px",
+          animation: "fadeuplite 0.3s ease forwards",
+          overflow: "hidden",
+        },
+        child: {
+          mode: "iframe",
+          attribute: {
+            src: BACKHOST + "/designer?mode=checklist&entire=true&dataonly=true&desid=" + desid,
+          },
+          style: {
+            position: "absolute",
+            display: "block",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            border: String(0),
+          }
+        }
+      })
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   designers = instance.designers;
   fourth.callbacks.set("디자이너 이름", function (dom, n) {
     let input, div_clone, div_clone2, div_clone3, input_clone, label_clone;
@@ -2388,6 +2528,16 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       div_clone2.classList.add("pp_designer_selected_box_contents_designers");
       div_clone2.classList.add("pp_designer_selected_box_contents_designers_s" + String(n));
       div_clone2.textContent = designer.designer;
+
+      div_clone2.setAttribute("cus_desid", designer.desid);
+      div_clone2.setAttribute("cus_value", designer.designer);
+      div_clone2.setAttribute("cus_num", String(n));
+      div_clone2.addEventListener("contextmenu", checklistEvent);
+
+      if (!designer.analytics.project.matrix[Number(instance.serid.replace(/[^0-9]/gi, '')) - 1].some((n) => { return n === 1 })) {
+        div_clone2.style.background = GeneralJs.colorChip.gray3;
+        div_clone2.style.color = GeneralJs.colorChip.deactive;
+      }
 
       label_clone = GeneralJs.nodes.label.cloneNode(true);
       label_clone.setAttribute("for", "pp_designer_selected_box_contents_designers_input" + String(n) + String(i));
@@ -2457,7 +2607,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
             await GeneralJs.sleep(600);
           } else {
             desid = dom.querySelector("div").getAttribute("cus_desid");
-            raw_obj = await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue, document.getElementById("blewpp_button3").getAttribute("cus_id") ] ] }, "/designerFee");
+            raw_obj = await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue, document.getElementById("blewpp_button3").getAttribute("cus_id") ] ], frontMode: 1 }, "/designerFee");
             if (raw_obj.length !== 0) {
               result = raw_obj[0];
               ProposalJs.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
@@ -4875,7 +5025,7 @@ ProposalJs.save_init = async function (update = false) {
         if (designerFeeCalculBoo) {
           designerFeeCalculObj = ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(result_obj["proposal.detail"][i].desid, result_obj["cliid"], result_obj["service.serid"], result_obj["service.xValue"]));
         } else {
-          designerFeeCalculObj = await GeneralJs.ajaxJson({ matrix: [ [ result_obj["proposal.detail"][i].desid, result_obj["cliid"], result_obj["service.serid"], result_obj["service.xValue"], thisProid ] ] }, "/designerFee");
+          designerFeeCalculObj = await GeneralJs.ajaxJson({ matrix: [ [ result_obj["proposal.detail"][i].desid, result_obj["cliid"], result_obj["service.serid"], result_obj["service.xValue"], thisProid ] ], frontMode: 1 }, "/designerFee");
           designerFeeCalculObj = designerFeeCalculObj[0];
           ProposalJs.designerFee.set(ProposalJs.feeKeyMaker(result_obj["proposal.detail"][i].desid, result_obj["cliid"], result_obj["service.serid"], result_obj["service.xValue"]), designerFeeCalculObj);
         }

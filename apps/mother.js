@@ -2895,11 +2895,13 @@ Mother.prototype.s3FileDelete = function (key) {
   });
 }
 
-Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false) {
+Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false, initialMode = false) {
   const onoffString = [ "온라인", "오프라인" ];
   const serviceString = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];
+  const serviceInitial = [ "F", "S", "T", "XT" ];
   const startDateNumbers = [ 30, 45, 60, 60 ];
   const xValueString = [ "mini", "basic", "premium" ];
+  const seridKeywords = "s2011_aa0";
 
   if (typeof serviceObj === "object") {
     if (serviceObj.online === undefined || serviceObj.serid === undefined || serviceObj.xValue === undefined) {
@@ -2908,6 +2910,7 @@ Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false) {
     let { online, serid, xValue } = serviceObj;
     let finalWords;
     let startDateNumber;
+    let initial;
 
     if (online) {
       finalWords = onoffString[0] + " ";
@@ -2920,15 +2923,19 @@ Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false) {
       if (/aa01s/gi.test(serid)) {
         finalWords += serviceString[0] + " ";
         startDateNumber = startDateNumbers[0];
+        initial = serviceInitial[0];
       } else if (/aa02s/gi.test(serid)) {
         finalWords += serviceString[1] + " ";
         startDateNumber = startDateNumbers[1];
+        initial = serviceInitial[1];
       } else if (/aa03s/gi.test(serid)) {
         finalWords += serviceString[2] + " ";
         startDateNumber = startDateNumbers[2];
+        initial = serviceInitial[2];
       } else if (/aa04s/gi.test(serid)) {
         finalWords += serviceString[3] + " ";
         startDateNumber = startDateNumbers[3];
+        initial = serviceInitial[3];
       } else {
         throw new Error("invaild service object");
       }
@@ -2936,15 +2943,19 @@ Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false) {
       if (/1/gi.test(serid)) {
         finalWords += serviceString[0] + " ";
         startDateNumber = startDateNumbers[0];
+        initial = serviceInitial[0];
       } else if (/2/gi.test(serid)) {
         finalWords += serviceString[1] + " ";
         startDateNumber = startDateNumbers[1];
+        initial = serviceInitial[1];
       } else if (/3/gi.test(serid)) {
         finalWords += serviceString[2] + " ";
         startDateNumber = startDateNumbers[2];
+        initial = serviceInitial[2];
       } else if (/4/gi.test(serid)) {
         finalWords += serviceString[3] + " ";
         startDateNumber = startDateNumbers[3];
+        initial = serviceInitial[3];
       } else {
         throw new Error("invaild service object");
       }
@@ -2961,17 +2972,31 @@ Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false) {
     }
 
     if (!startDateMode) {
-      return finalWords;
+      if (!initialMode) {
+        return finalWords;
+      } else {
+        return initial;
+      }
     } else {
       return startDateNumber;
     }
 
   } else if (typeof serviceObj === "string") {
-    let tempArr, serviceNumber;
+    let tempArr, serviceNumber, tempString, thisSerid, thisXValue, thisOnline;
     tempArr = serviceObj.split('_');
-    serviceNumber = Number(tempArr[1].replace(/[a-z]/gi, '').replace(/^0/g, '').replace(/^0/g, '')) - 1;
-    return serviceString[serviceNumber];
-
+    if (tempArr.length > 1) {
+      serviceNumber = Number(tempArr[1].replace(/[a-z]/gi, '').replace(/^0/g, '').replace(/^0/g, '')) - 1;
+      return serviceString[serviceNumber];
+    } else {
+      tempArr = serviceObj.split(' ');
+      tempString = tempArr.pop();
+      thisSerid = seridKeywords + String(serviceString.findIndex((str) => { return (new RegExp(str, "gi")).test(tempArr.join(" ")) }) + 1) + 's';
+      return {
+        serid: thisSerid,
+        xValue: xValueString[xValueString.findIndex((str) => { return str.trim() === tempString.trim() })].slice(0, 1).toUpperCase(),
+        online: /online/gi.test(serviceObj) || /온라인/gi.test(serviceObj),
+      };
+    }
   } else {
     return {
       onoff: onoffString,

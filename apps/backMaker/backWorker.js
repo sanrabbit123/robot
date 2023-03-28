@@ -1140,6 +1140,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
   } else {
     throw new Error("invaild proid");
   }
+  const frontMode = (typeof option === "object" && option !== null) ? (option.frontMode === 1 || option.frontMode === '1') : false;
   const newcomers = [ "곽수빈" ];
   const instance = this;
   const { mongo, mongoinfo, mongoconsoleinfo } = this.mother;
@@ -1492,49 +1493,59 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       }
 
       if (distanceLimitBoo) {
-        comment = "Out of bounds";
-        if (y < 2) {
-          if (designer.analytics.project.online) {
-            offlineFeeCase = 0;
-            fee = onlineFeeCase;
+        comment = frontMode ? "거리 초과 불가능" : "Out of bounds";
+        if (!frontMode) {
+          if (y < 2) {
+            if (designer.analytics.project.online) {
+              offlineFeeCase = 0;
+              fee = onlineFeeCase;
+            } else {
+              fee = 0;
+              offlineFeeCase = 0;
+              onlineFeeCase = 0;
+            }
           } else {
             fee = 0;
             offlineFeeCase = 0;
             onlineFeeCase = 0;
           }
-        } else {
+        }
+      }
+
+      if (!serviceMatchBoo) {
+        comment = frontMode ? "해당 서비스에서는 불가능" : "Unable service";
+        if (!frontMode) {
           fee = 0;
           offlineFeeCase = 0;
           onlineFeeCase = 0;
         }
       }
 
-      if (!serviceMatchBoo) {
-        comment = "Unable service";
-        fee = 0;
-        offlineFeeCase = 0;
-        onlineFeeCase = 0;
-      }
-
       if (!livingMatchBoo) {
-        comment = "Unable in living";
-        fee = 0;
-        offlineFeeCase = 0;
-        onlineFeeCase = 0;
+        comment = frontMode ? "거주중 진행 불가능" : "Unable in living";
+        if (!frontMode) {
+          fee = 0;
+          offlineFeeCase = 0;
+          onlineFeeCase = 0;
+        }
       }
 
       if (!partialMatchBoo) {
-        comment = "Unable in partial space";
-        fee = 0;
-        offlineFeeCase = 0;
-        onlineFeeCase = 0;
+        comment = frontMode ? "부분 공간 진행 불가능" : "Unable in partial space";
+        if (!frontMode) {
+          fee = 0;
+          offlineFeeCase = 0;
+          onlineFeeCase = 0;
+        }
       }
 
       if (y >= 2 && distanceBoo) {
-        comment = "Distance over, unable in totalStyling";
-        fee = 0;
-        offlineFeeCase = 0;
-        onlineFeeCase = 0;
+        comment = frontMode ? "토탈 스타일링시 거리 초과 불가능" : "Distance over, unable in totalStyling";
+        if (!frontMode) {
+          fee = 0;
+          offlineFeeCase = 0;
+          onlineFeeCase = 0;
+        }
       }
 
       if (comment === "" && fee === 0) {

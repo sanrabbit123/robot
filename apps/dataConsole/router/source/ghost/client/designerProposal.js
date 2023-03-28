@@ -764,23 +764,19 @@ DesignerProposalJs.prototype.insertInitBox = function () {
 DesignerProposalJs.prototype.insertInfoBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
-  const { client, ea, media, osException, testMode } = this;
+  const { client, ea, media, osException } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { requests } = this.client;
-  const { request, analytics } = requests[0];
+  const { request, analytics } = requests[instance.requestNumber];
   const expectedToString = function (str0, startDateNumber = 0) {
     let expected;
     expected = new Date(str0);
     expected.setDate(expected.getDate() - startDateNumber);
-    if (testMode) {
-      return `00년 0월 0일`;
+    if (expected.valueOf() < (new Date(2000, 0, 1)).valueOf() || expected.valueOf() > (new Date(3000, 0, 1)).valueOf()) {
+      return `해당 없음`;
     } else {
-      if (expected.valueOf() < (new Date(2000, 0, 1)).valueOf() || expected.valueOf() > (new Date(3000, 0, 1)).valueOf()) {
-        return `해당 없음`;
-      } else {
-        return `${String(expected.getFullYear()).slice(2)}년 ${String(expected.getMonth() + 1)}월 ${String(expected.getDate())}일`;
-      }
+      return `${String(expected.getFullYear()).slice(2)}년 ${String(expected.getMonth() + 1)}월 ${String(expected.getDate())}일`;
     }
   }
   const blank = "&nbsp;&nbsp;&nbsp;";
@@ -811,6 +807,8 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
   let infoBoxMarginTop, infoBoxMarginBottom;
   let mobileRatio;
   let mobileSecondMarginTop;
+
+  this.expectedToString = expectedToString;
 
   bottomMargin = <%% 16, 16, 16, 12, 2 %%>;
   margin = <%% 60, 60, 44, 32, 7 %%>;
@@ -1045,7 +1043,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   const { ea, media, naviHeight, totalContents } = this;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   const { desid, designer, pictureSettings, description } = info;
-  const { createNode, colorChip, withOut, removeByClass } = GeneralJs;
+  const { createNode, colorChip, withOut, removeByClass, serviceParsing, dateToString, isMac } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   let bottomMarginVisual;
@@ -1154,7 +1152,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   this.abcStatic = this.abcStatic + 1;
 
   // update mode only
-  if (instance.updateMode) {
+  if (instance.updateMode && desktop) {
     designerTitle.style.cursor = "pointer";
     designerTitle.setAttribute("desid", desid);
     designerTitle.addEventListener("click", function(e) {
@@ -1162,15 +1160,29 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
       const designerTitlePopupClassName = "designerTitlePopupClassName";
       const zIndex = 5;
       let cancelBack, whitePrompt;
+      let clientWhite;
       let margin;
+      let clientWhiteHeight;
+      let between;
+      let clientInfoSize, clientInfoWeight;
+      let blank;
+      let textTop;
 
       margin = 30;
+      clientWhiteHeight = 64;
+      between = 8;
+      clientInfoSize = 16;
+      clientInfoWeight = 600;
+      textTop = isMac() ? -1 : 1;
+
+      blank = "&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;";
 
       cancelBack = createNode({
         mother: totalContents,
         class: [ designerTitlePopupClassName ],
         event: function (e) {
-          removeByClass(designerTitlePopupClassName)
+          removeByClass(designerTitlePopupClassName);
+          window.location.reload();
         },
         style: {
           position: "fixed",
@@ -1182,6 +1194,45 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
           opacity: String(0.6),
           zIndex: String(zIndex),
         }
+      });
+
+      clientWhite = createNode({
+        mother: totalContents,
+        class: [ designerTitlePopupClassName ],
+        style: {
+          display: "flex",
+          position: "fixed",
+          top: String(naviHeight + margin) + ea,
+          left: String(margin) + ea,
+          width: withOut(margin * 2, ea),
+          height: String(clientWhiteHeight) + ea,
+          background: colorChip.white,
+          zIndex: String(zIndex),
+          borderRadius: String(5) + "px",
+          animation: "fadeuplite 0.3s ease forwards",
+          overflow: "hidden",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        children: [
+          {
+            text: instance.client.name + blank + instance.client.cliid + blank + serviceParsing(instance.project.service) + blank + "일정 : " + instance.expectedToString(instance.client.requests[instance.requestNumber].analytics.date.space.movein, serviceParsing(instance.project.service, true)) + "&nbsp;&nbsp;~&nbsp;&nbsp;" + instance.expectedToString(instance.client.requests[instance.requestNumber].analytics.date.space.movein),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(textTop) + ea,
+              fontSize: String(clientInfoSize) + ea,
+              fontWeight: String(clientInfoWeight),
+              color: colorChip.black,
+            },
+            under: {
+              fontSize: String(clientInfoSize) + ea,
+              fontWeight: String(300),
+              color: colorChip.deactive,
+            }
+          }
+        ]
       })
 
       whitePrompt = createNode({
@@ -1189,14 +1240,15 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
         class: [ designerTitlePopupClassName ],
         style: {
           position: "fixed",
-          top: String(naviHeight + margin) + ea,
+          top: String(naviHeight + margin + clientWhiteHeight + between) + ea,
           left: String(margin) + ea,
           width: withOut(margin * 2, ea),
-          height: withOut(naviHeight + (margin * 2), ea),
+          height: withOut(naviHeight + (margin * 2) + clientWhiteHeight + between, ea),
           background: colorChip.white,
           zIndex: String(zIndex),
           borderRadius: String(5) + "px",
           animation: "fadeuplite 0.3s ease forwards",
+          overflow: "hidden",
         },
         child: {
           mode: "iframe",
@@ -2859,7 +2911,7 @@ DesignerProposalJs.prototype.insertWordBox = function () {
 
 DesignerProposalJs.prototype.insertServiceBox = function () {
   const instance = this;
-  const { ea, media, testMode } = this;
+  const { ea, media } = this;
   const baseTong = this.baseTong;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   const mobile = media[4];
@@ -3233,222 +3285,219 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
   }
 
   //methods
+  tempBlock = createNode({
+    mother: wordsTable,
+    style: {
+      position: "relative",
+      marginBottom: String(marginBottom) + ea,
+    }
+  });
 
-  if (!testMode) {
-    tempBlock = createNode({
-      mother: wordsTable,
+  tempTitle = createNode({
+    mother: tempBlock,
+    text: serviceObj.methods.name,
+    style: {
+      display: desktop ? "inline-block" : "block",
+      fontSize: String(desktop ? wordSize : mobileTitleSize) + ea,
+      wordSpacing: String(wordSpacing) + "px",
+      position: "relative",
+      top: String(0) + ea,
+      verticalAlign: "top",
+      lineHeight: String(1.6),
+      left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
+      width: desktop ? String(box0Size) + ea : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
+      marginRight: desktop ? String(box0Margin) + ea : "",
+      marginBottom: desktop ? "" : String(marginBottom / 2) + ea,
+      fontWeight: String(600),
+      textAlign: "left",
+      color: colorChip.black,
+      cursor: "pointer",
+    }
+  });
+
+  if (mobile) {
+    createNode({
+      mother: tempTitle,
+      text: "전체 보기",
       style: {
-        position: "relative",
-        marginBottom: String(marginBottom) + ea,
+        fontSize: String(wordSize - methodsTextVisual - amountTextVisual) + ea,
+        position: "absolute",
+        bottom: String(mobileAllViewBottom) + ea,
+        right: String(mobileAllViewRight) + ea,
+        fontWeight: String(600),
+        color: colorChip.green,
       }
     });
+    tempTitle.addEventListener("click", function (e) {
+      const target = document.querySelector('.' + mobileAllViewClassNameService);
+      const toggle = target.getAttribute("toggle");
+      const height = target.getAttribute("height");
+      if (toggle === "off") {
+        target.style.overflow = "";
+        target.style.height = "auto";
+        target.setAttribute("toggle", "on");
+      } else {
+        target.style.overflow = "hidden";
+        target.style.height = height;
+        target.setAttribute("toggle", "off");
+      }
+    });
+  }
 
-    tempTitle = createNode({
+  if (desktop) {
+    createNode({
       mother: tempBlock,
-      text: serviceObj.methods.name,
+      text: '0',
       style: {
-        display: desktop ? "inline-block" : "block",
-        fontSize: String(desktop ? wordSize : mobileTitleSize) + ea,
+        display: "inline-block",
+        fontSize: String(wordSize) + ea,
         wordSpacing: String(wordSpacing) + "px",
         position: "relative",
         top: String(0) + ea,
         verticalAlign: "top",
         lineHeight: String(1.6),
-        left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
-        width: desktop ? String(box0Size) + ea : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
-        marginRight: desktop ? String(box0Margin) + ea : "",
-        marginBottom: desktop ? "" : String(marginBottom / 2) + ea,
+        width: String(box1Size) + ea,
+        marginRight: String(box1Margin) + ea,
         fontWeight: String(600),
-        textAlign: "left",
-        color: colorChip.black,
-        cursor: "pointer",
+        color: colorChip.white,
+        textAlign: "right",
       }
     });
+  }
 
-    if (mobile) {
+  [ grayTong, grayTextTong ] = createNodes([
+    {
+      mother: tempBlock,
+      attribute: [
+        { toggle: "off" },
+        { height: String(mobileAllViewInitialHeight) + ea }
+      ],
+      class: [ mobileAllViewClassNameService ],
+      style: {
+        display: desktop ? "inline-block" : "block",
+        position: "relative",
+        left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
+        width: desktop ? withOut(box0Size + box1Size + box0Margin + box1Margin, ea) : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
+        marginTop: String(grayTop) + ea,
+        marginBottom: String(desktop ? 6 : 2.5) + ea,
+        paddingTop: String(methodsTongTop) + ea,
+        paddingBottom: String(methodsTongBottom) + ea,
+        borderRadius: String(3) + "px",
+        border: "1px solid " + colorChip.gray3,
+        boxSizing: "border-box",
+      }
+    },
+    {
+      mother: -1,
+      style: {
+        position: "relative",
+        marginLeft: String(methodsTongLeft) + ea,
+        width: withOut(methodsTongLeft * 2, ea),
+      }
+    },
+  ]);
+
+  if (mobile) {
+    grayTong.style.overflow = "hidden";
+    grayTong.style.height = String(mobileAllViewInitialHeight) + ea;
+  }
+
+  for (let i = 0; i < serviceObj.methods.contents.length; i++) {
+    tempChild = createNode({
+      mother: grayTextTong,
+      style: {
+        position: "relative",
+        display: "block",
+        marginBottom: String(i === serviceObj.methods.contents.length - 1 ? 0 : methodsBlockBottom) + ea,
+        paddingBottom: String(methodsBlockPaddingBottom) + ea,
+        borderBottom: (i === serviceObj.methods.contents.length - 1) ? "" : "1px solid " + colorChip.gray3,
+      },
+      children: [
+        {
+          style: {
+            display: desktop ? "inline-block" : "block",
+            position: "relative",
+            width: desktop ? String(methodsTitleWidth) + ea : "",
+            verticalAlign: "top",
+            marginBottom: desktop ? "" : String(1) + ea,
+          },
+          children: [
+            {
+              text: serviceObj.methods.contents[i].name,
+              style: {
+                position: "relative",
+                left: String(desktop ? 1 : 0) + ea,
+                fontSize: String(wordSize - methodsTextVisual) + ea,
+                fontWeight: String(600),
+                lineHeight: String(1.5),
+                color: colorChip.black,
+              }
+            },
+            {
+              text: "약 " + String(serviceObj.methods.contents[i].amount) + "일 소요",
+              style: {
+                position: "absolute",
+                left: desktop ? String(1) + ea : "",
+                fontSize: String(wordSize - methodsTextVisual - amountTextVisual) + ea,
+                fontWeight: String(400),
+                lineHeight: String(1.5),
+                top: String(amountTextTop) + ea,
+                right: mobile ? String(0) + ea : "",
+                color: colorChip.green,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            display: desktop ? "inline-block" : "block",
+            position: "relative",
+            width: desktop ? String(methodsSecondBlockWidth) + ea : "",
+            verticalAlign: "top",
+            marginRight: desktop ? String(methodsSecondBlockRight) + ea : "",
+            marginBottom: desktop ? "" : String(2.5) + ea,
+          },
+          children: [
+            {
+              text: serviceObj.methods.contents[i].contents,
+              style: {
+                fontSize: String(wordSize - methodsTextVisual) + ea,
+                fontWeight: String(300),
+                lineHeight: String(1.5),
+                color: colorChip.black,
+              }
+            }
+          ]
+        },
+        {
+          class: [ methodsTongClassName ],
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: desktop ? withOut(methodsTitleWidth + methodsSecondBlockWidth + methodsSecondBlockRight, ea) : "",
+            marginBottom: desktop ? "" : String(serviceObj.methods.contents[i].children.length !== 0 ? 2.5 : 0) + ea,
+          },
+        }
+      ]
+    });
+    tempDom = tempChild.querySelector('.' + methodsTongClassName);
+    for (let j = 0; j < serviceObj.methods.contents[i].children.length; j++) {
       createNode({
-        mother: tempTitle,
-        text: "전체 보기",
+        mother: tempDom,
+        text: "<b%-%b> " + serviceObj.methods.contents[i].children[j],
         style: {
-          fontSize: String(wordSize - methodsTextVisual - amountTextVisual) + ea,
-          position: "absolute",
-          bottom: String(mobileAllViewBottom) + ea,
-          right: String(mobileAllViewRight) + ea,
-          fontWeight: String(600),
+          display: "block",
+          position: "relative",
+          fontSize: String(wordSize - methodsTextVisual) + ea,
+          fontWeight: String(300),
+          color: colorChip.black,
+          marginBottom: String(j === serviceObj.methods.contents[i].children.length - 1 ? 0 : methodsThirdBlockBottom) + ea,
+          lineHeight: String(1.5),
+        },
+        bold: {
           color: colorChip.green,
         }
       });
-      tempTitle.addEventListener("click", function (e) {
-        const target = document.querySelector('.' + mobileAllViewClassNameService);
-        const toggle = target.getAttribute("toggle");
-        const height = target.getAttribute("height");
-        if (toggle === "off") {
-          target.style.overflow = "";
-          target.style.height = "auto";
-          target.setAttribute("toggle", "on");
-        } else {
-          target.style.overflow = "hidden";
-          target.style.height = height;
-          target.setAttribute("toggle", "off");
-        }
-      });
-    }
-
-    if (desktop) {
-      createNode({
-        mother: tempBlock,
-        text: '0',
-        style: {
-          display: "inline-block",
-          fontSize: String(wordSize) + ea,
-          wordSpacing: String(wordSpacing) + "px",
-          position: "relative",
-          top: String(0) + ea,
-          verticalAlign: "top",
-          lineHeight: String(1.6),
-          width: String(box1Size) + ea,
-          marginRight: String(box1Margin) + ea,
-          fontWeight: String(600),
-          color: colorChip.white,
-          textAlign: "right",
-        }
-      });
-    }
-
-    [ grayTong, grayTextTong ] = createNodes([
-      {
-        mother: tempBlock,
-        attribute: [
-          { toggle: "off" },
-          { height: String(mobileAllViewInitialHeight) + ea }
-        ],
-        class: [ mobileAllViewClassNameService ],
-        style: {
-          display: desktop ? "inline-block" : "block",
-          position: "relative",
-          left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
-          width: desktop ? withOut(box0Size + box1Size + box0Margin + box1Margin, ea) : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
-          marginTop: String(grayTop) + ea,
-          marginBottom: String(desktop ? 6 : 2.5) + ea,
-          paddingTop: String(methodsTongTop) + ea,
-          paddingBottom: String(methodsTongBottom) + ea,
-          borderRadius: String(3) + "px",
-          border: "1px solid " + colorChip.gray3,
-          boxSizing: "border-box",
-        }
-      },
-      {
-        mother: -1,
-        style: {
-          position: "relative",
-          marginLeft: String(methodsTongLeft) + ea,
-          width: withOut(methodsTongLeft * 2, ea),
-        }
-      },
-    ]);
-
-    if (mobile) {
-      grayTong.style.overflow = "hidden";
-      grayTong.style.height = String(mobileAllViewInitialHeight) + ea;
-    }
-
-    for (let i = 0; i < serviceObj.methods.contents.length; i++) {
-      tempChild = createNode({
-        mother: grayTextTong,
-        style: {
-          position: "relative",
-          display: "block",
-          marginBottom: String(i === serviceObj.methods.contents.length - 1 ? 0 : methodsBlockBottom) + ea,
-          paddingBottom: String(methodsBlockPaddingBottom) + ea,
-          borderBottom: (i === serviceObj.methods.contents.length - 1) ? "" : "1px solid " + colorChip.gray3,
-        },
-        children: [
-          {
-            style: {
-              display: desktop ? "inline-block" : "block",
-              position: "relative",
-              width: desktop ? String(methodsTitleWidth) + ea : "",
-              verticalAlign: "top",
-              marginBottom: desktop ? "" : String(1) + ea,
-            },
-            children: [
-              {
-                text: serviceObj.methods.contents[i].name,
-                style: {
-                  position: "relative",
-                  left: String(desktop ? 1 : 0) + ea,
-                  fontSize: String(wordSize - methodsTextVisual) + ea,
-                  fontWeight: String(600),
-                  lineHeight: String(1.5),
-                  color: colorChip.black,
-                }
-              },
-              {
-                text: "약 " + String(serviceObj.methods.contents[i].amount) + "일 소요",
-                style: {
-                  position: "absolute",
-                  left: desktop ? String(1) + ea : "",
-                  fontSize: String(wordSize - methodsTextVisual - amountTextVisual) + ea,
-                  fontWeight: String(400),
-                  lineHeight: String(1.5),
-                  top: String(amountTextTop) + ea,
-                  right: mobile ? String(0) + ea : "",
-                  color: colorChip.green,
-                }
-              }
-            ]
-          },
-          {
-            style: {
-              display: desktop ? "inline-block" : "block",
-              position: "relative",
-              width: desktop ? String(methodsSecondBlockWidth) + ea : "",
-              verticalAlign: "top",
-              marginRight: desktop ? String(methodsSecondBlockRight) + ea : "",
-              marginBottom: desktop ? "" : String(2.5) + ea,
-            },
-            children: [
-              {
-                text: serviceObj.methods.contents[i].contents,
-                style: {
-                  fontSize: String(wordSize - methodsTextVisual) + ea,
-                  fontWeight: String(300),
-                  lineHeight: String(1.5),
-                  color: colorChip.black,
-                }
-              }
-            ]
-          },
-          {
-            class: [ methodsTongClassName ],
-            style: {
-              display: "inline-block",
-              position: "relative",
-              width: desktop ? withOut(methodsTitleWidth + methodsSecondBlockWidth + methodsSecondBlockRight, ea) : "",
-              marginBottom: desktop ? "" : String(serviceObj.methods.contents[i].children.length !== 0 ? 2.5 : 0) + ea,
-            },
-          }
-        ]
-      });
-      tempDom = tempChild.querySelector('.' + methodsTongClassName);
-      for (let j = 0; j < serviceObj.methods.contents[i].children.length; j++) {
-        createNode({
-          mother: tempDom,
-          text: "<b%-%b> " + serviceObj.methods.contents[i].children[j],
-          style: {
-            display: "block",
-            position: "relative",
-            fontSize: String(wordSize - methodsTextVisual) + ea,
-            fontWeight: String(300),
-            color: colorChip.black,
-            marginBottom: String(j === serviceObj.methods.contents[i].children.length - 1 ? 0 : methodsThirdBlockBottom) + ea,
-            lineHeight: String(1.5),
-          },
-          bold: {
-            color: colorChip.green,
-          }
-        });
-      }
     }
   }
 
@@ -4161,8 +4210,17 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       }
     }
 
+    requestNumber = 0;
+    for (let i = 0; i < client.requests.length; i++) {
+      if (client.requests[i].request.timeline.valueOf() <= project.proposal.date.valueOf()) {
+        requestNumber = i;
+        break;
+      }
+    }
+
     this.project = project;
     this.client = client;
+    this.requestNumber = requestNumber;
     this.designers = new Designers(designers);
     this.proposal = project.proposal;
     this.proposalHistory = proposalHistory;

@@ -3820,8 +3820,9 @@ GeneralJs.serviceParsing = function (serviceObj, startDateMode = false, initialM
   const onoffString = [ "온라인", "오프라인" ];
   const serviceString = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];
   const serviceInitial = [ "F", "S", "T", "XT" ];
-  const startDateNumbers = [ 30, 45, 60, 75 ];
+  const startDateNumbers = [ 30, 45, 60, 60 ];
   const xValueString = [ "mini", "basic", "premium" ];
+  const seridKeywords = "s2011_aa0";
 
   if (typeof serviceObj === "object") {
     if (serviceObj.online === undefined || serviceObj.serid === undefined || serviceObj.xValue === undefined) {
@@ -3902,10 +3903,21 @@ GeneralJs.serviceParsing = function (serviceObj, startDateMode = false, initialM
     }
 
   } else if (typeof serviceObj === "string") {
-    let tempArr, serviceNumber;
+    let tempArr, serviceNumber, tempString, thisSerid, thisXValue, thisOnline;
     tempArr = serviceObj.split('_');
-    serviceNumber = Number(tempArr[1].replace(/[a-z]/gi, '').replace(/^0/g, '').replace(/^0/g, '')) - 1;
-    return serviceString[serviceNumber];
+    if (tempArr.length > 1) {
+      serviceNumber = Number(tempArr[1].replace(/[a-z]/gi, '').replace(/^0/g, '').replace(/^0/g, '')) - 1;
+      return serviceString[serviceNumber];
+    } else {
+      tempArr = serviceObj.split(' ');
+      tempString = tempArr.pop();
+      thisSerid = seridKeywords + String(serviceString.findIndex((str) => { return (new RegExp(str, "gi")).test(tempArr.join(" ")) }) + 1) + 's';
+      return {
+        serid: thisSerid,
+        xValue: xValueString[xValueString.findIndex((str) => { return str.trim() === tempString.trim() })].slice(0, 1).toUpperCase(),
+        online: /online/gi.test(serviceObj) || /온라인/gi.test(serviceObj),
+      };
+    }
   } else {
     return {
       onoff: onoffString,
