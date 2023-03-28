@@ -7169,7 +7169,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
             client.row = rowsFlat.find((c) => { return c.cliid === client.cliid });
           }
 
-          toDateStandard = new Date(JSON.stringify(toDate).slice(1, -1));
+          toDateStandard = new Date(JSON.stringify(row.date).slice(1, -1));
           toDateStandard.setHours(23);
           toDateStandard.setMinutes(59);
           toDateStandard.setSeconds(59);
