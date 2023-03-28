@@ -4119,11 +4119,9 @@ DesignerProposalJs.prototype.launching = async function (loading) {
         isOffice = false;
       }
       this.updateMode = isOffice;
+    } else {
+      this.updateMode = false;
     }
-    this.updateMode = false;
-
-    console.log(this.updateMode);
-
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",
