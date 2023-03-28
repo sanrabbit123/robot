@@ -4114,12 +4114,16 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     if (getObj.mode === "test" && getObj.update === "true") {
       isOffice = false;
       try {
-        isOffice = (JSON.pare(await requestPromise(PYTHONHOST + "/isOffice")).result === 1);
+        isOffice = (JSON.parse(await requestPromise(PYTHONHOST + "/isOffice")).result === 1);
       } catch {
         isOffice = false;
       }
       this.updateMode = isOffice;
     }
+    this.updateMode = false;
+
+    console.log(this.updateMode);
+
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",
