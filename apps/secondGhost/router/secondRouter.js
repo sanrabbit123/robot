@@ -572,7 +572,7 @@ SecondRouter.prototype.rou_post_getDocuments = function () {
       res.send(JSON.stringify(rows.toNormal()));
 
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_getDocuments): " + req.url + " " + JSON.stringify(req.body) + " " + e.message).catch((e) => { console.log(e); });
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_getDocuments): " + req.url + " " + req.headers["origin"] + " " + JSON.stringify(req.body) + " " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }

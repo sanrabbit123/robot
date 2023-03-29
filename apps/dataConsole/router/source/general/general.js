@@ -155,6 +155,8 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
       break;
     case "null":
       finalValue = pastValue;
+    case "constant":
+      finalValue = pastValue;
     case "link":
       if (/[\=\&]/g.test(value)) {
         finalValue = window.encodeURIComponent(value);

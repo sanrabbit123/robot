@@ -583,17 +583,19 @@ ClientJs.prototype.infoArea = function (info) {
           }
 
           instance.cases[Number(idDom.getAttribute("index"))][column] = finalValue;
-          await GeneralJs.updateValue({
-            thisId: thisId,
-            requestIndex: String(requestIndex),
-            column: column,
-            pastValue: pastRawData,
-            value: finalValue,
-            index: Number(idDom.getAttribute("index")),
-            thisCase: instance.cases[Number(idDom.getAttribute("index"))]
-          });
 
-          await instance.globalChaining(instance.cases[Number(idDom.getAttribute("index"))], column, finalValue, pastRawData);
+          if ((DataPatch.clientMap())[column].position !== "null") {
+            await GeneralJs.updateValue({
+              thisId: thisId,
+              requestIndex: String(requestIndex),
+              column: column,
+              pastValue: pastRawData,
+              value: finalValue,
+              index: Number(idDom.getAttribute("index")),
+              thisCase: instance.cases[Number(idDom.getAttribute("index"))]
+            });
+            await instance.globalChaining(instance.cases[Number(idDom.getAttribute("index"))], column, finalValue, pastRawData);  
+          }
 
           originalDiv.textContent = finalValue;
           idDom.setAttribute("active", "false");
@@ -1937,17 +1939,19 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           }
 
           instance.cases[thisCase["index"]][column] = finalValue;
-          await GeneralJs.updateValue({
-            thisId: thisId,
-            requestIndex: requestIndex,
-            column: column,
-            pastValue: pastRawData,
-            value: finalValue,
-            index: thisCase["index"],
-            thisCase: instance.cases[thisCase["index"]],
-          });
 
-          await instance.globalChaining(instance.cases[thisCase["index"]], column, finalValue, pastRawData);
+          if ((DataPatch.clientMap())[column].position !== "null") {
+            await GeneralJs.updateValue({
+              thisId: thisId,
+              requestIndex: requestIndex,
+              column: column,
+              pastValue: pastRawData,
+              value: finalValue,
+              index: thisCase["index"],
+              thisCase: instance.cases[thisCase["index"]],
+            });
+            await instance.globalChaining(instance.cases[thisCase["index"]], column, finalValue, pastRawData);  
+          }
 
           if (instance.totalFather !== null) {
             for (let father of instance.totalFatherChildren) {

@@ -915,7 +915,11 @@ DataPatch.prototype.clientMap = function () {
       return { boo: !boo, value: null };
     }
 
-    targetArr = GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX"); }).map((obj) => { return obj.name });
+    if (typeof globalThis.XMLHttpRequest === "function") {
+      targetArr = GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX"); }).map((obj) => { return obj.name });
+    } else {
+      targetArr = [];
+    }
 
     if (targetArr.includes(value)) {
       finalValue = value;
@@ -948,57 +952,53 @@ DataPatch.prototype.clientMap = function () {
       let thisRequestNumber;
       let thisCliid;
 
-      items = [ '드랍', '진행', '응대중', '장기' ];
+      if (typeof globalThis.XMLHttpRequest === "function") {
+        items = GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX"); }).map((obj) => { return obj.name });
+      } else {
+        items = [];
+      }
+
       if (items.includes(rawValue)) {
         finalValue = rawValue;
       } else {
         finalValue = originalValue;
       }
 
-      if (finalValue === "진행") {
-        if (/^c[0-9][0-9][0-9][0-9]/.test(input.parentElement.parentElement.className)) {
-          window.location.href = window.location.protocol + "//" + window.location.host + "/" + "proposal" + "?cliid=" + input.parentElement.parentElement.className;
-        } else {
-          window.location.href = window.location.protocol + "//" + window.location.host + "/" + "proposal" + "?cliid=" + input.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
-        }
+      if (typeof mother.parentElement.getAttribute("class") === "string") {
+        thisCliid = mother.parentElement.getAttribute("class");
+        blocks = [ ...document.querySelectorAll('.' + thisCliid) ];
+        blocks.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) });
+        thisRequestNumber = blocks.findIndex((dom) => { return dom ===  mother.parentElement; });
       } else {
-
-        if (typeof mother.parentElement.getAttribute("class") === "string") {
-          thisCliid = mother.parentElement.getAttribute("class");
-          blocks = [ ...document.querySelectorAll('.' + thisCliid) ];
-          blocks.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) });
-          thisRequestNumber = blocks.findIndex((dom) => { return dom ===  mother.parentElement; });
-        } else {
-          thisCliid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
-          thisRequestNumber = Number(mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("request"));
-        }
-
-        if (typeof globalThis.XMLHttpRequest === "function") {
-          globalThis.window.parent.postMessage(JSON.stringify({
-            cliid: thisCliid,
-            requestNumber: thisRequestNumber,
-            column: "status",
-            value: finalValue,
-          }));
-        }
-
-        if (finalValue === "드랍") {
-          grandMother.setAttribute("drop", "true");
-        } else {
-          grandMother.setAttribute("drop", "false");
-        }
-
-        input.style.transition = "0s all ease";
-        input.style.color = "transparent";
-        input.value = finalValue;
-        input.parentElement.style.transition = "";
-        input.parentElement.style.color = "inherit";
-        mother.removeChild(document.querySelector(".divTong"));
-        callback();
+        thisCliid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+        thisRequestNumber = Number(mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("request"));
       }
+
+      try {
+        GeneralJs.ajaxJson({
+          id: thisCliid,
+          column: "manager",
+          value: finalValue,
+          email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
+        }, "/updateClientHistory").catch((err) => {
+          console.log(err);
+        });
+      } catch {}
+
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = finalValue;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
     };
 
-    inputArr = GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX"); }).map((obj) => { return obj.name });
+    if (typeof globalThis.XMLHttpRequest === "function") {
+      inputArr = GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX"); }).map((obj) => { return obj.name });
+    } else {
+      inputArr = [];
+    }
     length = inputArr.length;
     input.value = "입력중";
     if (input.parentElement.childNodes[0].nodeType === 3) {
@@ -2411,11 +2411,11 @@ DataPatch.prototype.clientMap = function () {
     partialPyeong: { name: "부분 평수", position: "requests.0.request.space.partial.pyeong", type: "number", searchBoo: true, },
     partialDetail: { name: "부분 공간", position: "requests.0.request.space.partial.detail", type: "string", searchBoo: true, },
     designers: { name: "예상 디자이너", position: "requests.0.analytics.response.designers", type: "object", inputFunction: designerInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: designerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), stringFunction: designerToString.toString().replace(/\}$/, '').replace(/async function \(value\) \{/gi, ''), stringFunctionAsync: true, searchBoo: true, },
-    manager: { name: "담당자", position: null, type: "object", items: GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX"); }).map((obj) => { return obj.name }), inputFunction: managerInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: managerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false },
-    proposalSend: { name: "추천서 발송", position: null, type: "constant", searchBoo: false },
-    aboutSend: { name: "서비스 소개 발송", position: null, type: "constant", searchBoo: false },
-    pureSend: { name: "부재중 발송", position: null, type: "constant", searchBoo: false },
-    proposalDesigners: { name: "추천한 디자이너", position: null, type: "constant", searchBoo: false },
+    manager: { name: "담당자", position: "null", type: "object", items: GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX"); }).map((obj) => { return obj.name }), inputFunction: managerInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: managerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false },
+    proposalSend: { name: "추천서 발송", position: "null", type: "constant", searchBoo: false },
+    aboutSend: { name: "서비스 소개 발송", position: "null", type: "constant", searchBoo: false },
+    pureSend: { name: "부재중 발송", position: "null", type: "constant", searchBoo: false },
+    proposalDesigners: { name: "추천한 디자이너", position: "null", type: "constant", searchBoo: false },
   };
   return map;
 }
