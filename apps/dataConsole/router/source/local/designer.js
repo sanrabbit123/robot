@@ -4565,12 +4565,13 @@ DesignerJs.prototype.launching = async function () {
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
 
-    if (getObj.dataonly === "true") {
-      this.belowHeight = this.mother.belowHeight = 0;
-    }
-
     this.grayBarWidth = <%% 210, 200, 200, 200, 0 %%>;
     this.mother.grayBarWidth = <%% 210, 200, 200, 210, 0 %%>;
+
+    if (getObj.dataonly === "true") {
+      this.belowHeight = this.mother.belowHeight = 0;
+      this.grayBarWidth = this.mother.grayBarWidth = 0;
+    }
 
     if (getObj.desid !== undefined && getObj.mode === undefined) {
       getObj.mode = "checklist";

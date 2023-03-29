@@ -484,6 +484,10 @@ DesignerJs.prototype.requestList = function (desid) {
   let mobileOuterMargin;
   let borderRadius;
   let secondFont;
+  let entireMode;
+  let maxBoxNumber;
+
+  entireMode = getObj.dataonly === "true" && getObj.entire === "true";
 
   designer = this.designers.pick(desid);
   projects = designer.projects;
@@ -492,7 +496,7 @@ DesignerJs.prototype.requestList = function (desid) {
   maxBoxNumber = projects.length;
 
   margin = 8;
-  if (getObj.dataonly === "true" && getObj.entire === "true") {
+  if (entireMode) {
     margin = 0;
   }
   level1Width = <%% 210, 172, 172, 172, 34 %%>;
@@ -557,7 +561,7 @@ DesignerJs.prototype.requestList = function (desid) {
       left: String(0) + ea,
       width: String(100) + '%',
       borderRadius: String(5) + "px",
-      border: desktop ? (getObj.dataonly === "true" && getObj.entire === "true" ? "" : "1px solid " + colorChip.gray4) : "",
+      border: desktop ? (entireMode ? "" : "1px solid " + colorChip.gray4) : "",
       boxShadow: desktop ? "" : "0px 3px 15px -9px " + colorChip.shadow,
       background: desktop ? colorChip.gray0 : colorChip.gray1,
       height: "auto",
@@ -603,9 +607,9 @@ DesignerJs.prototype.requestList = function (desid) {
         { proid: projects[i].proid },
       ],
       style: {
-        position: "relative",
+        position: entireMode ? "absolute" : "relative",
         display: "inline-block",
-        width: "calc(calc(100% - " + String((boxNumber + 2) * boxMargin) + ea + ") / " + String(boxNumber) + ")",
+        width: entireMode ? String(100) + '%' : "calc(calc(100% - " + String((boxNumber + 2) * boxMargin) + ea + ") / " + String(boxNumber) + ")",
         borderRadius: String(borderRadius) + "px",
         marginTop: String(Math.floor(i / boxNumber) === 0 ? boxMargin * 1.5 : boxMargin) + ea,
         marginRight: String(boxMargin) + ea,
@@ -632,6 +636,7 @@ DesignerJs.prototype.requestList = function (desid) {
             background: colorChip.gray3,
             borderTopRightRadius: String(borderRadius / 2) + "px",
             borderTopLeftRadius: String(borderRadius / 2) + "px",
+            transition: "all 0s ease",
           }
         },
         {
@@ -639,6 +644,7 @@ DesignerJs.prototype.requestList = function (desid) {
             position: "relative",
             marginBottom: String(requestWordMargin) + ea,
             textAlign: "center",
+            transition: "all 0s ease",
           },
           children: [
             {
@@ -3549,8 +3555,13 @@ DesignerJs.prototype.requestView = async function () {
   try {
     const loading = await this.mother.loadingRun();
     const middleMode = /middle/gi.test(window.location.pathname);
-    this.backGrayBar();
+    const entireMode = GeneralJs.returnGet().dataonly === "true" && GeneralJs.returnGet().entire === "true";
+
+    if (!entireMode) {
+      this.backGrayBar();
+    }
     await this.spreadData(null, true, middleMode ? "middle" : null);
+
     const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;
     const { totalMother, ea, grayBarWidth, belowHeight } = this;
     const standardBar = totalMother.firstChild;
@@ -3570,7 +3581,7 @@ DesignerJs.prototype.requestView = async function () {
     let motherHeight;
     let searchResult;
 
-    if (getObj.dataonly === "true" && getObj.entire === "true") {
+    if (entireMode) {
       this.grayBarWidth = 0;
       this.belowHeight = 0;
       this.mother.belowHeight = 0;
