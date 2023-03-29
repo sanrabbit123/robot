@@ -1519,13 +1519,15 @@ DesignerJs.prototype.requestStaticHtml = function (designer, project, client, cl
 DesignerJs.prototype.requestContents = async function (board, designer, project, client, clientHistory, projectHistory, requestNumber) {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma, blankHref } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma, blankHref, returnGet } = GeneralJs;
   const { totalMother, ea, grayBarWidth, middleMode } = this;
+  const getObj = returnGet();
   const mobile = this.media[4];
   const desktop = !mobile;
   const desid = designer.desid;
   const proid = project.proid;
   const cliid = project.cliid;
+  const entireMode = (getObj.dataonly === "true" && getObj.entire === "true");
   this.proid = proid;
   this.client = client;
   this.project = project;
@@ -1592,9 +1594,15 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     leftMargin = <%% 50, 46, 38, 32, 5.8 %%>;
 
     titleSize = <%% 30, 32, 30, 26, 5 %%>;
+    if (entireMode) {
+      titleSize = 26;
+    }
     titlePaddingLeft = <%% 1, 1, 1, 1, 0 %%>;
     titleBottom = <%% 35, 29, 28, 20, 5 %%>;
     titlePaddingBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 3.2 %%>;
+    if (entireMode) {
+      titlePaddingBottom = isMac() ? 13 : 12;
+    }
     titleDateVisualBottom = <%% (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), 0.5 %%>;
 
     fontSize = <%% 15, 14, 13, 12, 3 %%>;

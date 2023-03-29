@@ -1507,7 +1507,7 @@ ClientJs.prototype.spreadData = async function (search = null) {
     let standardDomsTargets, caseDomsTargets;
     let loading;
 
-    loading = instance.mother.grayLoading(null, true);
+    loading = instance.mother.grayLoading(null, search === null || search === '' || search === '-');
 
     if (search === null || search === '' || search === '-') {
       const ago = new Date();
