@@ -4244,7 +4244,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     textTop = option.style.textTop;
   }
 
-  titleBackground = "greenBlack";
+  titleBackground = "darkDarkShadow";
   if (typeof option.style.titleBackground === "string") {
     titleBackground = option.style.titleBackground;
   }
@@ -4299,7 +4299,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
         overflow: "hidden",
         border: String(borderWeight) + "px solid " + colorChip[borderColor],
         boxSizing: "border-box",
-        borderRadius: String(3) + "px",
+        borderRadius: String(5) + "px",
       }
     });
   } else {

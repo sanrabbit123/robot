@@ -442,11 +442,12 @@ DesignerJs.prototype.requestList = function (desid) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, returnGet } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
   const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   const mobile = this.media[4];
   const desktop = !mobile;
+  const getObj = returnGet();
   let designer;
   let margin;
   let baseTong0, baseTong;
@@ -491,6 +492,9 @@ DesignerJs.prototype.requestList = function (desid) {
   maxBoxNumber = projects.length;
 
   margin = 8;
+  if (getObj.dataonly === "true" && getObj.entire === "true") {
+    margin = 0;
+  }
   level1Width = <%% 210, 172, 172, 172, 34 %%>;
   level1Left = <%% 160, 136, 136, 136, 0 %%>;
   topMargin = <%% (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), 6 %%>;
@@ -553,7 +557,7 @@ DesignerJs.prototype.requestList = function (desid) {
       left: String(0) + ea,
       width: String(100) + '%',
       borderRadius: String(5) + "px",
-      border: desktop ? ("1px solid " + colorChip.gray4) : "",
+      border: desktop ? (getObj.dataonly === "true" && getObj.entire === "true" ? "" : "1px solid " + colorChip.gray4) : "",
       boxShadow: desktop ? "" : "0px 3px 15px -9px " + colorChip.shadow,
       background: desktop ? colorChip.gray0 : colorChip.gray1,
       height: "auto",
@@ -704,7 +708,7 @@ DesignerJs.prototype.requestList = function (desid) {
 
 DesignerJs.prototype.requestDocument = function (mother, index, designer, project) {
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, serviceParsing, setQueue, swipePatch } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, serviceParsing, setQueue, swipePatch, returnGet } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -712,19 +716,12 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
   const proid = project.proid;
   const cliid = project.cliid;
   const blocks = mother.children;
+  const getObj = returnGet();
   this.proid = null;
   this.project = null;
   this.client = null;
   return async function (e) {
     try {
-      if (instance.middleMode) {
-        const designerHistory = await ajaxJson({ method: "designer", idArr: [ desid ], rawMode: true }, "/getHistoryTotal", { equal: true });
-        if (!designerHistory[desid].request.analytics.send.some((obj) => { return obj.cliid === cliid })) {
-          window.alert("의뢰서가 발송된 기록이 없습니다! 홈리에종에 문의해주세요!");
-          return;
-        }
-      }
-
       const [ client ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
       let clientHistory, projectHistory;
       let thisBlock, motherTop;
@@ -821,8 +818,13 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
 
       if (desktop) {
 
-        mother.style.height = String(mother.getBoundingClientRect().height) + ea;
-        motherTop = mother.getBoundingClientRect().top;
+        if (getObj.dataonly === "true") {
+          mother.style.height = String(mother.getBoundingClientRect().height) + ea;
+          motherTop = 0;
+        } else {
+          mother.style.height = String(mother.getBoundingClientRect().height) + ea;
+          motherTop = mother.getBoundingClientRect().top;
+        }
 
         visualSpecific = <%% 1, 1, 1, 0, 0 %%>;
 
@@ -859,74 +861,113 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
         }
       }
 
-      setQueue(() => {
-        if (desktop) {
-          thisBlock.style.boxShadow = "";
-          thisBlock.style.background = desktop ? colorChip.gray0 : colorChip.gray2;
-          thisBlock.style.transition = "all 0.4s ease";
-          thisBlock.style.position = "absolute";
-          thisBlock.style.left = String(0);
-          thisBlock.style.top = String(0);
-          thisBlock.style.width = String(100) + '%';
-          thisBlock.style.height = String(100) + '%';
-        } else {
-          for (let block of blocks) {
-            block.style.position = "absolute";
+      if (getObj.dataonly !== "true") {
+        setQueue(() => {
+          if (desktop) {
+            thisBlock.style.boxShadow = "";
+            thisBlock.style.background = desktop ? colorChip.gray0 : colorChip.gray2;
+            thisBlock.style.transition = "all 0.4s ease";
+            thisBlock.style.position = "absolute";
+            thisBlock.style.left = String(0);
+            thisBlock.style.top = String(0);
+            thisBlock.style.width = String(100) + '%';
+            thisBlock.style.height = String(100) + '%';
+          } else {
+            for (let block of blocks) {
+              block.style.position = "absolute";
+            }
           }
-        }
+  
+          mother.parentElement.style.height = withOut(motherTop, ea);
+          if (mobile) {
+            mother.parentElement.style.left = String(0);
+            mother.parentElement.style.width = String(100) + '%';
+            mother.parentElement.style.paddingTop = "";
+          }
+          mother.style.boxShadow = "";
+          mother.style.paddingBottom = "";
+          mother.style.paddingTop = String(motherTop) + ea;
+          mother.style.height = withOut(motherTop, ea);
+          mother.style.overflow = "scroll";
+  
+          setQueue(async () => {
+            try {
+              mother.style.background = desktop ? colorChip.gray0 : colorChip.gray2;
+              const board = createNode({
+                mother,
+                style: {
+                  position: "relative",
+                  left: String(motherTop) + ea,
+                  width: withOut(motherTop * 2, ea),
+                  height: String(8000) + ea,
+                  borderRadius: String(5) + "px",
+                  background: colorChip.white,
+                  animation: "fadeupdelay 0.4s ease forwards",
+                  boxShadow: "0px 3px 15px -10px " + colorChip.shadow,
+                  zIndex: String(1),
+                  marginBottom: String(motherTop) + ea,
+                }
+              });
+              await instance.requestContents(board, designer, project, client, clientHistory, projectHistory, requestNumber);
+              if (mobile) {
+                mother.style.marginBottom = "";
+              }
+  
+              if (mobile) {
+                swipePatch({
+                  right: (e) => {
+                    instance.requestDetailLaunching(desid);
+                  },
+                });
+              }
+  
+              instance.pageHistory.unshift({ path: "request", status: "card", desid, cliid });
+              window.history.pushState({ path: "request", status: "list", desid }, '');
+  
+            } catch (e) {
+              console.log(e);
+            }
+          }, 500);
+  
+        }, 400);
+      } else {
+
+        thisBlock.style.boxShadow = "";
+        thisBlock.style.background = desktop ? colorChip.gray0 : colorChip.gray2;
+        thisBlock.style.transition = "all 0s ease";
+        thisBlock.style.position = "absolute";
+        thisBlock.style.left = String(0);
+        thisBlock.style.top = String(0);
+        thisBlock.style.width = String(100) + '%';
+        thisBlock.style.height = String(100) + '%';
 
         mother.parentElement.style.height = withOut(motherTop, ea);
-        if (mobile) {
-          mother.parentElement.style.left = String(0);
-          mother.parentElement.style.width = String(100) + '%';
-          mother.parentElement.style.paddingTop = "";
-        }
         mother.style.boxShadow = "";
         mother.style.paddingBottom = "";
         mother.style.paddingTop = String(motherTop) + ea;
         mother.style.height = withOut(motherTop, ea);
         mother.style.overflow = "scroll";
 
-        setQueue(async () => {
-          try {
-            mother.style.background = desktop ? colorChip.gray0 : colorChip.gray2;
-            const board = createNode({
-              mother,
-              style: {
-                position: "relative",
-                left: String(motherTop) + ea,
-                width: withOut(motherTop * 2, ea),
-                height: String(8000) + ea,
-                borderRadius: String(5) + "px",
-                background: colorChip.white,
-                animation: "fadeupdelay 0.4s ease forwards",
-                boxShadow: "0px 3px 15px -10px " + colorChip.shadow,
-                zIndex: String(1),
-                marginBottom: String(motherTop) + ea,
-              }
-            });
-            await instance.requestContents(board, designer, project, client, clientHistory, projectHistory, requestNumber);
-            if (mobile) {
-              mother.style.marginBottom = "";
-            }
-
-            if (mobile) {
-              swipePatch({
-                right: (e) => {
-                  instance.requestDetailLaunching(desid);
-                },
-              });
-            }
-
-            instance.pageHistory.unshift({ path: "request", status: "card", desid, cliid });
-            window.history.pushState({ path: "request", status: "list", desid }, '');
-
-          } catch (e) {
-            console.log(e);
+        mother.style.background = desktop ? colorChip.gray0 : colorChip.gray2;
+        const board = createNode({
+          mother,
+          style: {
+            position: "relative",
+            left: String(motherTop) + ea,
+            width: withOut(motherTop * 2, ea),
+            height: String(8000) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.white,
+            animation: "fadeupdelay 0.4s ease forwards",
+            boxShadow: "0px 3px 15px -10px " + colorChip.shadow,
+            zIndex: String(1),
+            marginBottom: String(motherTop) + ea,
           }
-        }, 500);
+        });
+        await instance.requestContents(board, designer, project, client, clientHistory, projectHistory, requestNumber);
+      }
 
-      }, 400);
+
 
     } catch (e) {
       console.log(e);
@@ -1562,10 +1603,10 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     topMargin = <%% 42, 38, 32, 30, 5.8 %%>;
     leftMargin = <%% 50, 46, 38, 32, 5.8 %%>;
 
-    titleSize = <%% 35, 33, 30, 26, 5 %%>;
+    titleSize = <%% 30, 32, 30, 26, 5 %%>;
     titlePaddingLeft = <%% 1, 1, 1, 1, 0 %%>;
     titleBottom = <%% 35, 29, 28, 20, 5 %%>;
-    titlePaddingBottom = <%% (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), 3.2 %%>;
+    titlePaddingBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 3.2 %%>;
     titleDateVisualBottom = <%% (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), 0.5 %%>;
 
     fontSize = <%% 15, 14, 13, 12, 3 %%>;
@@ -1641,7 +1682,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
           style: {
             position: "relative",
             fontSize: String(titleSize) + ea,
-            fontWeight: String(500),
+            fontWeight: String(700),
             color: colorChip.black,
           }
         },
@@ -3528,6 +3569,12 @@ DesignerJs.prototype.requestView = async function () {
     let childrenLength, children;
     let motherHeight;
     let searchResult;
+
+    if (getObj.dataonly === "true" && getObj.entire === "true") {
+      this.grayBarWidth = 0;
+      this.belowHeight = 0;
+      this.mother.belowHeight = 0;
+    }
 
     this.designers = new Designers(designers);
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[this.standardDoms.length - 1].getAttribute("desid");
