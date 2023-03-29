@@ -1659,6 +1659,8 @@ ProjectJs.prototype.spreadData = async function (search = null) {
 ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
   const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
+  const { createNode, colorChip, withOut } = GeneralJs;
+  const slash = "&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;";
   const map = DataPatch.projectMap();
   const { chainingTargets, chainingMethods } = DataPatch.projectChainingTarget();
   const thisProjectBill = "thisProjectBill";
@@ -1689,6 +1691,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let preIndexes;
   let index, acc;
   let titlaInfoArea;
+  let subButtonsTong;
 
   travelPositionIndex = 5;
   preIndexes = [];
@@ -1828,92 +1831,33 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   });
   div_clone2.appendChild(div_clone3);
 
-  //right arrow
-  rightArrow = SvgTong.stringParsing(this.mother.returnArrow("right", GeneralJs.colorChip.green));
-  style = {
-    position: "absolute",
-    width: String(leftMargin * (12 / 60)) + ea,
-    bottom: String(leftMargin * (17 / 60)) + ea,
-    right: String(leftMargin) + ea,
-    cursor: "pointer",
-  };
-  for (let i in style) {
-    rightArrow.style[i] = style[i];
-  }
-  div_clone2.appendChild(rightArrow);
-
-  rightArrowBox = GeneralJs.nodes.div.cloneNode(true);
-  for (let i in style) {
-    rightArrowBox.style[i] = style[i];
-  }
-  rightArrowBox.style.width = String(leftMargin * (18 / 60)) + ea;
-  rightArrowBox.style.height = String(leftMargin * (20 / 60)) + ea;
-  rightArrowBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
-  rightArrowBox.style.right = String(leftMargin - 3) + ea;
-  rightArrowBox.addEventListener("click", this.whiteViewMaker(Number(thisCase.index) + 1));
-  div_clone2.appendChild(rightArrowBox);
-
-  //left arrow
-  leftArrow = SvgTong.stringParsing(this.mother.returnArrow("left", GeneralJs.colorChip.green));
-  for (let i in style) {
-    leftArrow.style[i] = style[i];
-  }
-  leftArrow.style.right = String(leftMargin + (leftMargin * (19 / 60))) + ea;
-  div_clone2.appendChild(leftArrow);
-
-  leftArrowBox = GeneralJs.nodes.div.cloneNode(true);
-  for (let i in style) {
-    leftArrowBox.style[i] = style[i];
-  }
-  leftArrowBox.style.right = String(leftMargin + (leftMargin * (15 / 60))) + ea;
-  leftArrowBox.style.height = String(leftMargin * (20 / 60)) + ea;
-  leftArrowBox.style.width = String(leftMargin * (18 / 60)) + ea;
-  leftArrowBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
-  leftArrowBox.addEventListener("click", this.whiteViewMaker(Number(thisCase.index) - 1));
-  div_clone2.appendChild(leftArrowBox);
-
-  //h initial icon
-  hInitial = SvgTong.stringParsing(this.mother.returnHinitial(GeneralJs.colorChip.green));
-  for (let i in style) {
-    hInitial.style[i] = style[i];
-  }
-  hInitial.style.right = String(leftMargin + (leftMargin * (35.5 / 60))) + ea;
-  hInitial.style.width = String(leftMargin * (GeneralJs.isMac() ? (10 / 60) : (11 / 60))) + ea;
-  div_clone2.appendChild(hInitial);
-
-  //h initial button
-  hInitialBox = GeneralJs.nodes.div.cloneNode(true);
-  for (let i in style) {
-    hInitialBox.style[i] = style[i];
-  }
-  hInitialBox.style.right = String(leftMargin + (leftMargin * (31 / 60))) + ea;
-  hInitialBox.style.height = String(leftMargin * (20 / 60)) + ea;
-  hInitialBox.style.width = String(leftMargin * (18 / 60)) + ea;
-  hInitialBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
-  div_clone2.appendChild(hInitialBox);
-
-  //r initial icon
-  rInitial = SvgTong.stringParsing(this.mother.returnRinitial(GeneralJs.colorChip.green));
-  for (let i in style) {
-    rInitial.style[i] = style[i];
-  }
-  rInitial.style.right = String(leftMargin + (1.4 * leftMargin * (GeneralJs.isMac() ? (35.5 / 60) : (36 / 60)))) + ea;
-  rInitial.style.width = String(leftMargin * (GeneralJs.isMac() ? (9.7 / 60) : (10.7 / 60))) + ea;
-  div_clone2.appendChild(rInitial);
-
-  //r initial button
-  rInitialBox = GeneralJs.nodes.div.cloneNode(true);
-  rInitialBox.classList.add("hoverdefault_reverse");
-  for (let i in style) {
-    rInitialBox.style[i] = style[i];
-  }
-  rInitialBox.style.opacity = '';
-  rInitialBox.style.right = String(leftMargin + (1.5 * leftMargin * (31 / 60))) + ea;
-  rInitialBox.style.height = String(leftMargin * (20 / 60)) + ea;
-  rInitialBox.style.width = String(leftMargin * (18 / 60)) + ea;
-  rInitialBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
-  rInitialBox.style.background = GeneralJs.colorChip.white;
-  div_clone2.appendChild(rInitialBox);
+  subButtonsTong = createNode({
+    mother: div_clone2,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      position: "absolute",
+      right: String(leftMargin) + ea,
+      bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (14 / 60))) + ea,
+      cursor: "pointer",
+    }
+  });
+  rInitialBox = createNode({
+    mother: subButtonsTong,
+    class: [ "hoverDefault_lite" ],
+    event: {
+      selectstart: (e) => { return e.preventDefault() }
+    },
+    text: "Calc",
+    style: {
+      display: "inline-block",
+      position: "relative",
+      color: colorChip.black,
+      fontSize: String(titleFontSize * (20 / 42)) + ea,
+      fontWeight: String(400),
+      cursor: "pointer",
+    }
+  });
 
   //bar
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
@@ -3144,28 +3088,42 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                     event: function (e) {
                       const toggle = this.getAttribute("toggle");
                       const textDom = this.previousElementSibling;
+                      const textDom2 = this.children[0];
                       if (toggle === "off") {
                         cleanChildren(scrollTong);
                         responseLoad();
                         textDom.textContent = "프로젝트 정산 목록";
+                        textDom2.textContent = "고객 결제 내역";
                         this.setAttribute("toggle", "on");
                       } else {
                         cleanChildren(scrollTong);
                         requestLoad();
                         textDom.textContent = "고객님의 견적서";
+                        textDom2.textContent = "디자이너 정산";
                         this.setAttribute("toggle", "off");
                       }
                     }
                   }
                 ],
                 style: {
+                  display: "flex",
+                  flexDirection: "row",
                   position: "absolute",
-                  bottom: String(circleBottom) + ea,
+                  bottom: String(titleBottom) + ea,
                   right: String(circleRight) + ea,
-                  width: String(circleRadius) + ea,
-                  height: String(circleRadius) + ea,
-                  background: colorChip.red,
-                  borderRadius: String(circleRadius) + ea,
+                },
+                child: {
+                  text: "디자이너 정산",
+                  event: {
+                    selectstart: (e) => { return e.preventDefault }
+                  },
+                  style: {
+                    fontSize: String(fontSize * 0.8) + ea,
+                    fontWeight: String(600),
+                    display: "inline-block",
+                    position: "relative",
+                    color: colorChip.red,
+                  }
                 }
               }
             ]
@@ -5183,516 +5141,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
       historyBox.style.animation = "fadeout 0.3s ease forwards";
       matrixBox.style.animation = "fadein 0.3s ease forwards";
-    }
-  });
-
-  //h inital event
-  hInitialBox.addEventListener("click", async function (e) {
-    try {
-      const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, autoComma, isMac, findByAttribute, uniqueValue, blankHref, downloadFile } = GeneralJs;
-      const panClassName = "panClassName";
-      const preItemMotherKey = "firstPhoto";
-      const linkTargetKey = [ "productLink" ];
-      const targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + "/photo/designer" + "/" + thisCase.designer.split(" ")[1] + "/" + thisCase.proid;
-      const emptyDate = new Date(1800, 0, 1);
-      let matrixBox;
-      let loadingWidth;
-      let tong;
-      let checklist;
-      let itemList;
-      let titleTong;
-      let innerMargin;
-      let titleHeight;
-      let titleBottom;
-      let scrollTong;
-      let type, key, title, action;
-      let scrollTongPaddingTop;
-      let panBetween;
-      let panPaddingTop, panPaddingLeft;
-      let panTitleSize;
-      let panTitleWeight;
-      let panTitleBottom;
-      let panContentsPaddingTop;
-      let panContentsMinHeight;
-      let divideNumber, photoDivideNumber;
-      let indexTong;
-      let typeObj;
-      let panContents;
-      let blockBetween;
-      let thisProject;
-      let preItemList;
-      let preIndex;
-      let tempArr;
-      let blockHeight;
-      let blockSize;
-      let blockWeight;
-      let linkTargets;
-      let linkContents;
-      let file, link, memo;
-      let image;
-      let id;
-      let linkImageHeight;
-      let subButtonTop;
-      let subButtonHeight;
-      let subButtonTextPadding;
-      let subButtonSize;
-      let subButtonWeight;
-
-      loadingWidth = fontSize * (40 / 15);
-      innerMargin = fontSize * (20 / 15);
-      titleHeight = fontSize * (50 / 15);
-      titleBottom = fontSize * (9 / 15);
-      scrollTongPaddingTop = fontSize * (16 / 15);
-      panBetween = fontSize * (6 / 15);
-      panPaddingTop = fontSize * (15 / 15);
-      panPaddingLeft = fontSize * (18 / 15);
-      panTitleSize = fontSize * (13 / 15);
-      panTitleWeight = 700;
-      panTitleBottom = fontSize * (5 / 15);
-      panContentsPaddingTop = fontSize * (12 / 15);
-      panContentsMinHeight = fontSize * (80 / 15);
-      divideNumber = 5;
-      photoDivideNumber = 4;
-      blockBetween = fontSize * (5 / 15);
-      blockHeight = fontSize * (40 / 15);
-      blockSize = fontSize * (12 / 15);
-      blockWeight = 400;
-      linkImageHeight = fontSize * (147 / 15);
-
-      subButtonTop = fontSize * (2 / 15);
-      subButtonHeight = fontSize * (21 / 15);
-      subButtonTextPadding = fontSize * (8 / 15);
-
-      subButtonSize = fontSize * (10 / 15);
-      subButtonWeight = 800;
-
-      if (/fadeout/gi.test(historyBox.style.animation)) {
-
-        historyBox.style.animation = "fadein 0.3s ease forwards";
-        historyBox.parentNode.removeChild(historyBox.parentNode.lastChild);
-
-      } else {
-        matrixBox = historyBox.cloneNode(false);
-        matrixBox.style.border = String("1px solid " + colorChip.gray3);
-        matrixBox.style.borderRadius = String(5) + ea;
-        matrixBox.style.opacity = String(0);
-        historyBox.parentNode.appendChild(matrixBox);
-
-        tong = createNode({
-          mother: matrixBox,
-          style: {
-            position: "relative",
-            width: String(100) + '%',
-            height: String(100) + '%',
-            overflow: "hidden"
-          },
-          child: {
-            mode: "svg",
-            source: instance.mother.returnLoading(),
-            class: [ "loading" ],
-            style: {
-              position: "absolute",
-              width: String(loadingWidth) + ea,
-              top: withOut(50, loadingWidth / 2, ea),
-              left: withOut(50, loadingWidth / 2, ea),
-            }
-          }
-        });
-
-        historyBox.style.animation = "fadeout 0.3s ease forwards";
-        matrixBox.style.animation = "fadein 0.3s ease forwards";
-
-        checklist = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
-        itemList = await ajaxJson({ target: thisCase.designer.split(" ")[1] + "/" + thisCase.proid }, BRIDGEHOST + "/middlePhotoRead", { equal: true });
-        [ thisProject ] = await ajaxJson({ whereQuery: { proid: thisCase.proid } }, SECONDHOST + "/getProjects", { equal: true });
-        [ thisDesigner ] = await ajaxJson({ whereQuery: { desid: thisCase.designer.split(" ")[1] } }, SECONDHOST + "/getDesigners", { equal: true });
-        preItemList = await ajaxJson({ cliid: thisProject.cliid }, BRIDGEHOST + "/clientPhoto", { equal: true });
-        linkTargets = itemList.filter((str) => { return linkTargetKey.includes(str.split("_")[0]) });
-        linkContents = await ajaxJson({ links: linkTargets.map((file) => { return { desid: thisCase.designer.split(" ")[1], proid: thisCase.proid, file } }) }, BRIDGEHOST + "/middleLinkParsing", { equal: true });
-
-        tempArr = [];
-        preIndex = 1;
-        for (let original of preItemList.sitePhoto) {
-          tempArr.push({
-            fileName: [
-              preItemMotherKey,
-              String(emptyDate.valueOf()),
-              String(preIndex),
-              uniqueValue("hex") + "." + original.split(".")[original.split(".").length - 1],
-            ].join("_"),
-            original,
-          });
-          preIndex++;
-        }
-        itemList = tempArr.concat(itemList);
-
-        cleanChildren(tong);
-
-        titleTong = createNode({
-          mother: tong,
-          style: {
-            position: "relative",
-            marginLeft: String(innerMargin) + ea,
-            width: withOut(innerMargin * 2, ea),
-            height: String(titleHeight) + ea,
-            borderBottom: "1px solid " + colorChip.gray3
-          },
-          children: [
-            {
-              text: "프로젝트 파일",
-              style: {
-                fontSize: String(fontSize) + ea,
-                fontWeight: String(600),
-                position: "absolute",
-                bottom: String(titleBottom) + ea,
-              }
-            },
-          ]
-        });
-
-        scrollTong = createNode({
-          mother: tong,
-          style: {
-            position: "relative",
-            width: String(100) + '%',
-            height: withOut(titleHeight, ea),
-            overflow: "scroll"
-          },
-          child: {
-            style: {
-              display: "block",
-              position: "relative",
-              height: String(scrollTongPaddingTop) + ea,
-            }
-          }
-        });
-
-        typeObj = {};
-        for (let i = 0; i < checklist.length; i++) {
-          for (let j = 0; j < checklist[i].children.length; j++) {
-
-            type = checklist[i].children[j].type;
-            key = checklist[i].children[j].key;
-            title = checklist[i].children[j].title;
-            action = checklist[i].children[j].action;
-            typeObj[key] = type;
-
-            panContents = createNode({
-              mother: scrollTong,
-              style: {
-                display: "block",
-                position: "relative",
-                marginLeft: String(innerMargin) + ea,
-                width: withOut((innerMargin * 2) + (panPaddingLeft * 2), ea),
-                marginBottom: String(panBetween) + ea,
-                borderRadius: String(5) + "px",
-                background: colorChip.gray1,
-                paddingTop: String(panPaddingTop) + ea,
-                paddingLeft: String(panPaddingLeft) + ea,
-                paddingRight: String(panPaddingLeft) + ea,
-                paddingBottom: String(panPaddingTop) + ea,
-              },
-              child: {
-                set: "flex",
-                style: {
-                  width: withOut(0, ea),
-                  flexDirection: "row",
-                },
-                child: {
-                  text: title,
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    fontSize: String(panTitleSize) + ea,
-                    fontWeight: String(panTitleWeight),
-                    color: colorChip.black,
-                    paddingBottom: String(panTitleBottom) + ea,
-                    borderBottom: "1px solid " + colorChip.deactive,
-                  },
-                  next: {
-                    attribute: {
-                      key,
-                      title,
-                      desid: thisDesigner.desid,
-                      designer: thisDesigner.designer,
-                      proid: thisProject.proid,
-                      name: thisCase.name,
-                      phone: thisDesigner.information.phone,
-                    },
-                    event: {
-                      click: async function (e) {
-                        try {
-                          const key = this.getAttribute("key");
-                          const title = this.getAttribute("title");
-                          const desid = this.getAttribute("desid");
-                          const designer = this.getAttribute("designer");
-                          const proid = this.getAttribute("proid");
-                          const name = this.getAttribute("name");
-                          const phone = this.getAttribute("phone");
-                          const host = FRONTHOST.replace(/^https\:\/\//gi, '');
-                          const path = "process";
-
-                          await ajaxJson({
-                            method: "pushDesignerFile",
-                            name: designer,
-                            phone: phone,
-                            option: {
-                              designer: designer,
-                              client: name,
-                              file: title,
-                              host: host,
-                              path: path,
-                              proid: proid,
-                            }
-                          }, BACKHOST + "/alimTalk");
-                          window.alert(designer + " 실장님에게 알림톡을 전송하였습니다!");
-
-                        } catch (e) {
-                          console.log(e);
-                        }
-                      }
-                    },
-                    style: {
-                      display: "inline-flex",
-                      position: "absolute",
-                      right: String(0),
-                      top: String(subButtonTop) + ea,
-                      height: String(subButtonHeight) + ea,
-                      background: colorChip.black,
-                      borderRadius: String(5) + "px",
-                      cursor: "pointer",
-                      textAlign: "center",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    },
-                    child: {
-                      text: "디자이너에게 " + title + " 업로드 알림톡",
-                      style: {
-                        display: "inline-block",
-                        position: "relative",
-                        top: String(isMac() ? -1 : 1) + ea,
-                        fontSize: String(subButtonSize) + ea,
-                        fontWeight: String(subButtonWeight),
-                        color: colorChip.white,
-                        paddingLeft: String(subButtonTextPadding) + ea,
-                        paddingRight: String(subButtonTextPadding) + ea,
-                      }
-                    }
-                  }
-                },
-                next: {
-                  attribute: {
-                    key,
-                  },
-                  class: [ panClassName ],
-                  style: {
-                    display: "block",
-                    paddingTop: String(panContentsPaddingTop) + ea,
-                    position: "relative",
-                    width: withOut(0, ea),
-                    minHeight: String(panContentsMinHeight) + ea,
-                  }
-                }
-              }
-            });
-
-            if (type === "photo") {
-              for (let k = 0; k < photoDivideNumber; k++) {
-                createNode({
-                  mother: panContents.querySelector('.' + panClassName),
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    verticalAlign: "top",
-                    width: "calc(calc(100% - " + String(blockBetween * (photoDivideNumber - 1)) + ea + ") / " + String(photoDivideNumber) + ")",
-                    marginRight: String((k === (photoDivideNumber - 1)) ? 0 : blockBetween) + ea,
-                  }
-                });
-              }
-            }
-
-          }
-        }
-
-        createNode({
-          mother: scrollTong,
-          style: {
-            display: "block",
-            position: "relative",
-            height: String(panContentsMinHeight) + ea,
-          }
-        });
-
-        indexTong = {};
-        itemList.forEach((raw) => {
-          let originalRoot;
-          if (typeof raw !== "string") {
-            originalRoot = raw.original;
-            raw = raw.fileName;
-          } else {
-            originalRoot = targetHref + "/" + raw;
-          }
-          const [ key, timeString, orderString, hex ] = raw.split("_");
-          const [ hexString, exe ] = hex.split(".");
-          const mother = findByAttribute(document.querySelectorAll('.' + panClassName), "key", key);
-          const date = dateToString(new Date(Number(timeString)));
-
-          if (indexTong[key] === undefined) {
-            indexTong[key] = 0;
-          } else {
-            indexTong[key] = indexTong[key] + 1;
-          }
-
-          if (typeObj[key] === "file") {
-
-            createNode({
-              mother,
-              attribute: {
-                src: originalRoot,
-                link: originalRoot
-              },
-              event: {
-                click: function (e) {
-                  const link = this.getAttribute("link");
-                  downloadFile(link);
-                }
-              },
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                width: "calc(calc(100% - " + String(blockBetween * (divideNumber - 1)) + ea + ") / " + String(divideNumber) + ")",
-                height: String(blockHeight) + ea,
-                marginRight: String((indexTong[key] % divideNumber === (divideNumber - 1)) ? 0 : blockBetween) + ea,
-                marginBottom: String(blockBetween) + ea,
-                background: colorChip.white,
-                borderRadius: String(5) + "px",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                cursor: "pointer",
-              },
-              child: {
-                text: (date + "_" + orderString + "." + exe),
-                style: {
-                  fontSize: String(blockSize) + ea,
-                  fontWeight: String(blockWeight),
-                  color: colorChip.black,
-                  position: "relative",
-                  top: String(isMac() ? -1 : 1) + ea,
-                }
-              }
-            });
-
-          } else if (typeObj[key] === "photo") {
-
-            createNode({
-              mother: [ ...mother.children ][indexTong[key] % photoDivideNumber],
-              mode: "img",
-              attribute: {
-                src: originalRoot,
-                link: originalRoot
-              },
-              event: {
-                click: function (e) {
-                  const link = this.getAttribute("link");
-                  downloadFile(link);
-                }
-              },
-              style: {
-                display: "block",
-                position: "relative",
-                width: withOut(0, ea),
-                marginBottom: String(blockBetween) + ea,
-                background: colorChip.white,
-                borderRadius: String(5) + "px",
-                cursor: "pointer",
-              }
-            });
-
-          } else if (typeObj[key] === "link") {
-
-            ({ link, memo } = linkContents.find(({ file }) => { return file === raw }))
-            id = raw.replace(/[\_\-\.]/gi, '');
-
-            createNode({
-              mother,
-              attribute: {
-                link,
-              },
-              event: {
-                click: function (e) {
-                  const link = this.getAttribute("link");
-                  blankHref(link);
-                }
-              },
-              style: {
-                display: "inline-flex",
-                position: "relative",
-                width: "calc(calc(100% - " + String(blockBetween * (divideNumber - 1)) + ea + ") / " + String(divideNumber) + ")",
-                marginRight: String((indexTong[key] % divideNumber === (divideNumber - 1)) ? 0 : blockBetween) + ea,
-                marginBottom: String(blockBetween) + ea,
-                flexDirection: "column",
-                textAlign: "center",
-                cursor: "pointer",
-              },
-              children: [
-                {
-                  id,
-                  style: {
-                    display: "block",
-                    position: "relative",
-                    width: withOut(0, ea),
-                    height: String(linkImageHeight) + ea,
-                    background: colorChip.white,
-                    borderTopLeftRadius: String(5) + "px",
-                    borderTopRightRadius: String(5) + "px",
-                    backgroundPosition: "50% 50%",
-                    backgroundSize: "100% auto",
-                    backgroundRepeat: "no-repeat",
-                  }
-                },
-                {
-                  style: {
-                    display: "flex",
-                    position: "relative",
-                    width: withOut(0, ea),
-                    height: String(blockHeight) + ea,
-                    background: colorChip.white,
-                    borderBottomLeftRadius: String(5) + "px",
-                    borderBottomRightRadius: String(5) + "px",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    textAlign: "center",
-                  },
-                  child: {
-                    text: memo + " (" + date.split("-").slice(1).join("/") + ")",
-                    style: {
-                      fontSize: String(blockSize) + ea,
-                      fontWeight: String(blockWeight),
-                      color: colorChip.black,
-                      position: "relative",
-                      top: String(isMac() ? -1 : 1) + ea,
-                    }
-                  }
-                }
-              ]
-            });
-
-            ajaxJson({ mode: "image", url: window.encodeURIComponent(link), target: id }, "/getOpenGraph").then(({ image, target }) => {
-              target = document.getElementById(target);
-              target.style.backgroundImage = "url('" + image + "')";
-            }).catch((err) => {
-              console.log(err);
-            });
-
-          }
-        });
-
-      }
-    } catch (e) {
-      console.log(e);
     }
   });
 
