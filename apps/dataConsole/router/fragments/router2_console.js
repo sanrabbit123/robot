@@ -2396,6 +2396,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       const { map } = equalJson(req.body);
       const budgetArr = [ '500만원 이하', '1,000만원', '1,500만원', '2,000만원', '2,500만원', '3,000만원', '3,500만원', '4,000만원', '4,500만원', '5,000만원 이상', '6,000만원 이상', '7,000만원 이상', '8,000만원 이상', '9,000만원 이상', '1억원 이상', '1억 5,000만원 이상', '2억원 이상', '3억원 이상', '5억원 이상', '10억원 이상', ];
       const ignorePhone = [ "010-2747-3403" ];
+      const overlapStandardHours = 12;
       const defaultPyeong = 34;
       const moveinConst0 = 60;
       const moveinConst1 = 10;
@@ -2419,6 +2420,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       let message;
       let thisClient;
       let googleId;
+      let overlapTimeline;
 
       name = map.find((obj) => { return obj.property === "name" });
       phone = map.find((obj) => { return obj.property === "phone" });
@@ -2510,14 +2512,19 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
 
         cliid = ifOverlap[0].cliid;
 
-        requestArr = [];
         pastRequests = (ifOverlap[0].toNormal()).requests;
-        for (let z = 0; z < pastRequests.length; z++) {
-          requestArr.push(pastRequests[z]);
-        }
-        requestArr.unshift(back.returnClientRequest());
+        overlapTimeline = new Date(JSON.stringify(pastRequests[0].request.timeline).slice(1, -1));
+        overlapTimeline.setHours(overlapTimeline.getHours + overlapStandardHours);
 
-        await back.updateClient([ { cliid }, { "requests": requestArr } ], { selfMongo });
+        if (overlapTimeline.valueOf() < (new Date()).valueOf()) {
+          requestArr = [];
+          for (let z = 0; z < pastRequests.length; z++) {
+            requestArr.push(pastRequests[z]);
+          }
+          requestArr.unshift(back.returnClientRequest());
+          await back.updateClient([ { cliid }, { "requests": requestArr } ], { selfMongo });
+        }
+
         await back.updateClient([ { cliid }, requestObject ], { selfMongo });
 
         message += "재문의가 왔습니다!\n";
