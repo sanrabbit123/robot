@@ -3,7 +3,9 @@ DesignerJs.prototype.requestDetailLaunching = function (desid, callback = null) 
   const { ea, belowHeight, firstTop, motherHeight, middleMode } = this;
   const totalMother = document.querySelector(".totalMother");
   const standardBar = this.standardDoms[0].parentElement;
-  const { scrollTo, ajaxJson, colorChip } = GeneralJs;
+  const { scrollTo, ajaxJson, colorChip, returnGet } = GeneralJs;
+  const getObj = returnGet();
+  const entireMode = (getObj.dataonly === "true" && getObj.entire === "true");
   let target, pastScrollTop;
   let loading;
 
@@ -56,20 +58,10 @@ DesignerJs.prototype.requestDetailLaunching = function (desid, callback = null) 
     }
   }
 
-  if (middleMode) {
-    ajaxJson({
-      page: "request",
-      mode: "page",
-      who: instance.designer.information.phone,
-      desid,
-    }, "/ghostDesigner_updateAnalytics").then((message) => {
-      console.log(message);
-    }).catch((err) => {
-      console.log(err);
-    });
-  }
 
-  this.requestIconSet(desid);
+  if (!entireMode) {
+    this.requestIconSet(desid);
+  }
   this.mother.loadingRun().then((dom) => {
     loading = dom;
     return ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getProjects", { equal: true });
@@ -610,13 +602,16 @@ DesignerJs.prototype.requestList = function (desid) {
         position: entireMode ? "absolute" : "relative",
         display: "inline-block",
         width: entireMode ? String(100) + '%' : "calc(calc(100% - " + String((boxNumber + 2) * boxMargin) + ea + ") / " + String(boxNumber) + ")",
+        height: entireMode ? String(100) + '%' : "",
+        left: entireMode ? String(0) : "",
+        top: entireMode ? String(0) : "",
         borderRadius: String(borderRadius) + "px",
         marginTop: String(Math.floor(i / boxNumber) === 0 ? boxMargin * 1.5 : boxMargin) + ea,
         marginRight: String(boxMargin) + ea,
         marginLeft: String(i % boxNumber === 0 ? boxMargin * 1.5 : 0) + ea,
         marginBottom: String(Math.floor(i / boxNumber) === Math.floor((maxBoxNumber - 1) / boxNumber) ? (boxMargin * 1.5) : 0) + ea,
         background: colorChip.white,
-        boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+        boxShadow: entireMode ? "" : "0px 3px 14px -9px " + colorChip.shadow,
         textAlign: "center",
         verticalAlign: "top",
         paddingTop: String(requestWordPaddingTop) + ea,
@@ -636,7 +631,6 @@ DesignerJs.prototype.requestList = function (desid) {
             background: colorChip.gray3,
             borderTopRightRadius: String(borderRadius / 2) + "px",
             borderTopLeftRadius: String(borderRadius / 2) + "px",
-            transition: "all 0s ease",
           }
         },
         {
@@ -644,7 +638,6 @@ DesignerJs.prototype.requestList = function (desid) {
             position: "relative",
             marginBottom: String(requestWordMargin) + ea,
             textAlign: "center",
-            transition: "all 0s ease",
           },
           children: [
             {
@@ -830,30 +823,31 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
         } else {
           mother.style.height = String(mother.getBoundingClientRect().height) + ea;
           motherTop = mother.getBoundingClientRect().top;
-        }
 
-        visualSpecific = <%% 1, 1, 1, 0, 0 %%>;
+          visualSpecific = <%% 1, 1, 1, 0, 0 %%>;
 
-        for (let i = 0; i < blocks.length; i++) {
-          blocks[i].style.transition = "all 0s ease";
-          blocks[i].setAttribute("top", String(Math.floor(blocks[i].getBoundingClientRect().top - mother.getBoundingClientRect().top)) + ea);
-          blocks[i].setAttribute("left", String(Math.floor(blocks[i].getBoundingClientRect().left - Math.ceil(mother.getBoundingClientRect().left))) + ea);
-          if (i !== index) {
-            blocks[i].style.animation = "fadedownlite 0.2s ease forwards";
-          } else {
-            thisBlock = blocks[i];
-            thisBlock.style.transform = "";
-            for (let dom of blocks[i].children) {
-              dom.style.opacity = String(0);
+          for (let i = 0; i < blocks.length; i++) {
+            blocks[i].style.transition = "all 0s ease";
+            blocks[i].setAttribute("top", String(Math.floor(blocks[i].getBoundingClientRect().top - mother.getBoundingClientRect().top)) + ea);
+            blocks[i].setAttribute("left", String(Math.floor(blocks[i].getBoundingClientRect().left - Math.ceil(mother.getBoundingClientRect().left))) + ea);
+            if (i !== index) {
+              blocks[i].style.animation = "fadedownlite 0.2s ease forwards";
+            } else {
+              thisBlock = blocks[i];
+              thisBlock.style.transform = "";
+              for (let dom of blocks[i].children) {
+                dom.style.opacity = String(0);
+              }
             }
           }
-        }
+  
+          for (let block of blocks) {
+            block.style.position = "absolute";
+            block.style.margin = String(0);
+            block.style.left = block.getAttribute("left");
+            block.style.top = block.getAttribute("top");
+          }
 
-        for (let block of blocks) {
-          block.style.position = "absolute";
-          block.style.margin = String(0);
-          block.style.left = block.getAttribute("left");
-          block.style.top = block.getAttribute("top");
         }
 
       } else {
@@ -938,15 +932,6 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
         }, 400);
       } else {
 
-        thisBlock.style.boxShadow = "";
-        thisBlock.style.background = desktop ? colorChip.gray0 : colorChip.gray2;
-        thisBlock.style.transition = "all 0s ease";
-        thisBlock.style.position = "absolute";
-        thisBlock.style.left = String(0);
-        thisBlock.style.top = String(0);
-        thisBlock.style.width = String(100) + '%';
-        thisBlock.style.height = String(100) + '%';
-
         mother.parentElement.style.height = withOut(motherTop, ea);
         mother.style.boxShadow = "";
         mother.style.paddingBottom = "";
@@ -964,16 +949,13 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
             height: String(8000) + ea,
             borderRadius: String(5) + "px",
             background: colorChip.white,
-            animation: "fadeupdelay 0.4s ease forwards",
-            boxShadow: "0px 3px 15px -10px " + colorChip.shadow,
             zIndex: String(1),
             marginBottom: String(motherTop) + ea,
+            transition: "all 0s ease",
           }
         });
         await instance.requestContents(board, designer, project, client, clientHistory, projectHistory, requestNumber);
       }
-
-
 
     } catch (e) {
       console.log(e);
@@ -1693,13 +1675,54 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
           }
         },
         {
-          text: "의뢰서 미리보기",
-          class: [ "hoverDefault_lite" ],
-          attribute: { proid },
+          text: "의뢰서 미리보기" + "&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;디자이너에게 전송하기",
+          attribute: { proid, cliid, desid },
           event: {
-            click: function (e) {
-              const proid = this.getAttribute("proid");
-              blankHref(FRONTHOST + "/designer/process.php?proid=" + proid + "&mode=request");
+            click: async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const cliid = this.getAttribute("cliid");
+                const desid = this.getAttribute("desid");
+                const standard = this.querySelector("b");
+                if (e.x <= standard.getBoundingClientRect().x) {
+                  blankHref(FRONTHOST + "/designer/process.php?proid=" + proid + "&mode=request");  
+                } else {
+                  const [ designer ] = await ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true });
+                  const [ client ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
+
+                  if (window.confirm(designer.designer + " 디자이너님에게 " + client.name + " 고객님 홈스타일링 의뢰서 알림톡을 전송합니다. 확실합니까?")) {
+                    ajaxJson({
+                      method: "designerConsoleRequest",
+                      name: designer.designer,
+                      phone: designer.information.phone,
+                      option: {
+                        desid: designer.desid,
+                        designer: designer.designer,
+                        client: client.name,
+                        host: FRONTHOST.replace(/https\:\/\//gi, "").trim(),
+                        path: "process",
+                        proid: proid,
+                      }
+                    }, "/alimTalk").then(() => {
+                      return ajaxJson({
+                        page: "request",
+                        mode: "send",
+                        who: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
+                        desid: designer.desid,
+                        cliid: client.cliid,
+                      }, "/ghostDesigner_updateAnalytics");
+                    }).then(() => {
+                      instance.mother.greenAlert("알림톡이 전송되었습니다!");
+                    }).catch((err) => {
+                      console.log(err);
+                    });
+                  } else {
+                    instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
+                  }
+                }
+              } catch (e) {
+                console.log(e);
+              }
             }
           },
           style: {
@@ -1710,6 +1733,12 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
             right: String(titlePaddingLeft) + ea,
             textAlign: "right",
             bottom: String(titlePaddingBottom - titleDateVisualBottom) + ea,
+            cursor: "pointer",
+          },
+          under: {
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.gray3,
           }
         }
       ]
