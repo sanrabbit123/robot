@@ -267,17 +267,11 @@ ClientJs.prototype.standardBar = function (standard) {
             boo = false;
           }
         }
-        if (histories[cliid].analytics.full) {
-          dom.setAttribute("important", "false");
-          tempFunction = instance.makeImportantEvent(cliid, !boo, "green");
+        dom.setAttribute("important", "false");
+        dom.addEventListener("contextmenu", instance.makeImportantEvent(cliid, true));
+        if (boo) {
+          tempFunction = instance.makeImportantEvent(cliid, !boo);
           tempFunction.call(dom, { type: "click" });
-        } else {
-          dom.setAttribute("important", "false");
-          dom.addEventListener("contextmenu", instance.makeImportantEvent(cliid, true));
-          if (boo) {
-            tempFunction = instance.makeImportantEvent(cliid, !boo);
-            tempFunction.call(dom, { type: "click" });
-          }
         }
       }
     }
@@ -1511,7 +1505,7 @@ ClientJs.prototype.spreadData = async function (search = null) {
     let standardDomsTargets, caseDomsTargets;
     let loading;
 
-    loading = instance.mother.grayLoading();
+    loading = instance.mother.grayLoading(null, true);
 
     if (search === null || search === '' || search === '-') {
       const ago = new Date();
@@ -1574,6 +1568,8 @@ ClientJs.prototype.spreadData = async function (search = null) {
 ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
   const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
+  const { createNode, colorChip, withOut } = GeneralJs;
+  const slash = "&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;";
   let { standard, info } = DataPatch.clientWhiteViewStandard();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
   let propertyBox, historyBox;
@@ -1597,6 +1593,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
   let betweenSpace;
   let cliidDom;
+  let subButtonsTong;
+  let proposalBox;
 
   // designers
   thisCase.designers = thisCase.designers.split(", ").filter((str) => { return /^d[0-9][0-9][0-9][0-9]/.test(str); }).map((str) => { return GeneralJs.stacks.entireDesignerTong.find((d) => { return d.desid === str.trim() })?.designer }).join(", ");
@@ -1681,6 +1679,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     position: "absolute",
     color: GeneralJs.colorChip.green,
     fontSize: String(titleFontSize * (20 / 42)) + ea,
+    fontWeight: String(400),
     bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (14 / 60))) + ea,
     left: String(leftMargin * (thisCase[standard[0]].length === 4 ? 3.6 : (thisCase[standard[0]].length === 2 ? 2.3 : 3))) + ea,
     cursor: "pointer",
@@ -1728,95 +1727,61 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     console.log(err);
   });
 
-  //right arrow
-  rightArrow = SvgTong.stringParsing(this.mother.returnArrow("right", GeneralJs.colorChip.green));
-  style = {
-    position: "absolute",
-    width: String(leftMargin * (12 / 60)) + ea,
-    bottom: String(leftMargin * (17 / 60)) + ea,
-    right: String(leftMargin) + ea,
-    cursor: "pointer",
-  };
-  for (let i in style) {
-    rightArrow.style[i] = style[i];
-  }
-  div_clone2.appendChild(rightArrow);
-
-  rightArrowBox = GeneralJs.nodes.div.cloneNode(true);
-  for (let i in style) {
-    rightArrowBox.style[i] = style[i];
-  }
-  rightArrowBox.style.width = String(leftMargin * (18 / 60)) + ea;
-  rightArrowBox.style.height = String(leftMargin * (20 / 60)) + ea;
-  rightArrowBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
-  rightArrowBox.style.right = String(leftMargin - 3) + ea;
-  rightArrowBox.addEventListener("click", this.whiteViewMaker(Number(thisCase.index) + 1));
-  div_clone2.appendChild(rightArrowBox);
-
-  //left arrow
-  leftArrow = SvgTong.stringParsing(this.mother.returnArrow("left", GeneralJs.colorChip.green));
-  for (let i in style) {
-    leftArrow.style[i] = style[i];
-  }
-  leftArrow.style.right = String(leftMargin + (leftMargin * (19 / 60))) + ea;
-  div_clone2.appendChild(leftArrow);
-
-  leftArrowBox = GeneralJs.nodes.div.cloneNode(true);
-  for (let i in style) {
-    leftArrowBox.style[i] = style[i];
-  }
-  leftArrowBox.style.right = String(leftMargin + (leftMargin * (15 / 60))) + ea;
-  leftArrowBox.style.height = String(leftMargin * (20 / 60)) + ea;
-  leftArrowBox.style.width = String(leftMargin * (18 / 60)) + ea;
-  leftArrowBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
-  leftArrowBox.addEventListener("click", this.whiteViewMaker(Number(thisCase.index) - 1));
-  div_clone2.appendChild(leftArrowBox);
-
-  //h initial icon
-  hInitial = SvgTong.stringParsing(this.mother.returnHinitial(GeneralJs.colorChip.green));
-  for (let i in style) {
-    hInitial.style[i] = style[i];
-  }
-  hInitial.style.right = String(leftMargin + (leftMargin * (35.5 / 60))) + ea;
-  hInitial.style.width = String(leftMargin * (GeneralJs.isMac() ? (10 / 60) : (11 / 60))) + ea;
-  div_clone2.appendChild(hInitial);
-
-  //h initial button
-  hInitialBox = GeneralJs.nodes.div.cloneNode(true);
-  hInitialBox.classList.add("hoverdefault_reverse");
-  for (let i in style) {
-    hInitialBox.style[i] = style[i];
-  }
-  hInitialBox.style.opacity = '';
-  hInitialBox.style.right = String(leftMargin + (leftMargin * (31 / 60))) + ea;
-  hInitialBox.style.height = String(leftMargin * (20 / 60)) + ea;
-  hInitialBox.style.width = String(leftMargin * (18 / 60)) + ea;
-  hInitialBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
-  hInitialBox.style.background = GeneralJs.colorChip.white;
-  div_clone2.appendChild(hInitialBox);
-
-  //r initial icon
-  rInitial = SvgTong.stringParsing(this.mother.returnRinitial(GeneralJs.colorChip.green));
-  for (let i in style) {
-    rInitial.style[i] = style[i];
-  }
-  rInitial.style.right = String(leftMargin + (1.4 * leftMargin * (GeneralJs.isMac() ? (35.5 / 60) : (36 / 60)))) + ea;
-  rInitial.style.width = String(leftMargin * (GeneralJs.isMac() ? (9.7 / 60) : (10.7 / 60))) + ea;
-  div_clone2.appendChild(rInitial);
-
-  //r initial button
-  rInitialBox = GeneralJs.nodes.div.cloneNode(true);
-  rInitialBox.classList.add("hoverdefault_reverse");
-  for (let i in style) {
-    rInitialBox.style[i] = style[i];
-  }
-  rInitialBox.style.opacity = '';
-  rInitialBox.style.right = String(leftMargin + (1.5 * leftMargin * (31 / 60))) + ea;
-  rInitialBox.style.height = String(leftMargin * (20 / 60)) + ea;
-  rInitialBox.style.width = String(leftMargin * (18 / 60)) + ea;
-  rInitialBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
-  rInitialBox.style.background = GeneralJs.colorChip.white;
-  div_clone2.appendChild(rInitialBox);
+  subButtonsTong = createNode({
+    mother: div_clone2,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      position: "absolute",
+      right: String(leftMargin) + ea,
+      bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (14 / 60))) + ea,
+      cursor: "pointer",
+    }
+  });
+  rInitialBox = createNode({
+    mother: subButtonsTong,
+    class: [ "hoverDefault_lite" ],
+    event: {
+      selectstart: (e) => { return e.preventDefault() }
+    },
+    text: "Log",
+    style: {
+      display: "inline-block",
+      position: "relative",
+      color: colorChip.black,
+      fontSize: String(titleFontSize * (20 / 42)) + ea,
+      fontWeight: String(400),
+      cursor: "pointer",
+    }
+  });
+  createNode({
+    mother: subButtonsTong,
+    text: slash,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      color: colorChip.gray3,
+      fontSize: String(titleFontSize * (20 / 42)) + ea,
+      fontWeight: String(400),
+    }
+  });
+  proposalBox = createNode({
+    mother: subButtonsTong,
+    class: [ "hoverDefault_lite" ],
+    event: {
+      selectstart: (e) => { return e.preventDefault() },
+      click: instance.proposalViewMaker(thisCase[standard[1]]),
+    },
+    text: "추천서",
+    style: {
+      display: "inline-block",
+      position: "relative",
+      color: colorChip.black,
+      fontSize: String(titleFontSize * (20 / 42)) + ea,
+      fontWeight: String(400),
+      cursor: "pointer",
+    }
+  });
 
   //bar
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
@@ -2686,20 +2651,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(historyBox);
   this.whiteBox.historyBox = historyBox;
 
-  //h initial event
-  GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
-  hInitialBox.addEventListener("click", function (e) {
-    if (GeneralJs.stacks["hInitialBoxButtonToggle"] === 0) {
-      propertyBox.style.opacity = String(0);
-      historyBox.style.width = "calc(100% - " + String(leftMargin * 2) + ea + ")";
-      GeneralJs.stacks["hInitialBoxButtonToggle"] = 1;
-    } else {
-      propertyBox.style.opacity = String(1);
-      historyBox.style.width = "calc(55% - " + String(leftMargin) + ea + ")";
-      GeneralJs.stacks["hInitialBoxButtonToggle"] = 0;
-    }
-  });
-
   //r initial event
   GeneralJs.stacks["rInitialBoxButtonToggle"] = 0;
   GeneralJs.stacks["rInitialBoxButtonDom"] = null;
@@ -2936,6 +2887,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 fontWeight: String(600),
                 position: "absolute",
                 bottom: String(titleBottom) + ea,
+                color: colorChip.black,
               }
             },
             {
@@ -2949,28 +2901,42 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                   event: function (e) {
                     const toggle = this.getAttribute("toggle");
                     const textDom = this.previousElementSibling;
+                    const textDom2 = this.children[0];
                     if (toggle === "off") {
                       cleanChildren(scrollTong);
                       imageLoad();
                       textDom.textContent = "고객님이 선택하고 보내신 사진";
+                      textDom2.textContent = "행적 보기";
                       this.setAttribute("toggle", "on");
                     } else {
                       cleanChildren(scrollTong);
                       historyLoad();
                       textDom.textContent = "고객님의 페이지 행적";
+                      textDom2.textContent = "사진 보기";
                       this.setAttribute("toggle", "off");
                     }
                   }
                 }
               ],
               style: {
+                display: "flex",
+                flexDirection: "row",
                 position: "absolute",
-                bottom: String(circleBottom) + ea,
+                bottom: String(titleBottom) + ea,
                 right: String(circleRight) + ea,
-                width: String(circleRadius) + ea,
-                height: String(circleRadius) + ea,
-                background: colorChip.red,
-                borderRadius: String(circleRadius) + ea,
+              },
+              child: {
+                text: "사진 보기",
+                event: {
+                  selectstart: (e) => { return e.preventDefault }
+                },
+                style: {
+                  fontSize: String(fontSize * 0.8) + ea,
+                  fontWeight: String(600),
+                  display: "inline-block",
+                  position: "relative",
+                  color: colorChip.red,
+                }
               }
             }
           ]
@@ -5351,7 +5317,7 @@ ClientJs.prototype.secondReportViewMakerDetail = function (recycle = false) {
 ClientJs.prototype.secondReportViewMaker = function () {
   const instance = this;
   return function (e) {
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
     e.preventDefault();
 
     let tempFunc;
@@ -5361,6 +5327,133 @@ ClientJs.prototype.secondReportViewMaker = function () {
         tempFunc();
       } else {
         tempFunc = instance.secondReportViewMakerDetail(false);
+        tempFunc();
+      }
+    }
+  }
+}
+
+ClientJs.prototype.proposalViewMakerDetail = function (recycle = false, cliid) {
+  const instance = this;
+  const { ajaxJson, colorChip } = GeneralJs;
+  try {
+    return function () {
+      let div_clone, svg_icon;
+      let style;
+      let ea = "px";
+      let margin;
+      let domTargets;
+      let motherBoo;
+      let width;
+
+      console.log(cliid);
+
+
+      motherBoo = (instance.onView === "mother") ? true : false;
+
+      margin = 30;
+
+      if (!recycle) {
+
+        instance.whiteBox = {};
+
+        //cancel box
+        div_clone = GeneralJs.nodes.div.cloneNode(true);
+        div_clone.classList.add("justfadein");
+        style = {
+          position: "fixed",
+          background: GeneralJs.colorChip.cancelBlack,
+          top: String(0) + ea,
+          left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
+          width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
+          height: "calc(100% - " + String(instance.belowHeight) + ea + ")",
+          zIndex: String(2),
+        };
+        for (let i in style) {
+          div_clone.style[i] = style[i];
+        }
+
+        div_clone.addEventListener("click", instance.whiteCancelMaker());
+
+        instance.whiteBox.cancelBox = div_clone;
+        instance.totalContents.appendChild(div_clone);
+
+      }
+
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      if (GeneralJs.returnGet().entire !== "true") {
+        div_clone.classList.add("fadeup");
+      }
+      div_clone.classList.add("totalWhite");
+      if (GeneralJs.returnGet().entire === "true") {
+        style = {
+          position: "fixed",
+          background: colorChip.white,
+          borderRadius: String(5) + ea,
+          boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+          top: String(0) + ea,
+          left: String(0) + ea,
+          width: String(window.innerWidth) + ea,
+          height: String(window.innerHeight) + ea,
+          zIndex: String(2),
+        };
+      } else {
+        style = {
+          position: "fixed",
+          background: GeneralJs.colorChip.white,
+          top: String(margin) + ea,
+          left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
+          borderRadius: String(5) + ea,
+          boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
+          width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
+          height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
+          zIndex: String(2),
+        };
+      }
+      for (let i in style) {
+        div_clone.style[i] = style[i];
+      }
+
+      width = 50;
+
+      svg_icon = instance.mother.returnLoadingIcon();
+      style = {
+        width: String(width) + ea,
+        height: String(width) + ea,
+        top: 'calc(50% - ' + String(width / 2) + ea + ')',
+        left: 'calc(50% - ' + String(width / 2) + ea + ')',
+      }
+      for (let i in style) {
+        svg_icon.style[i] = style[i];
+      }
+      div_clone.appendChild(svg_icon);
+
+      instance.whiteBox.contentsBox = div_clone;
+      instance.totalContents.appendChild(div_clone);
+
+
+
+      GeneralJs.stacks.whiteBox = 0;
+    }
+  } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+    console.log(e);
+  }
+}
+
+ClientJs.prototype.proposalViewMaker = function (cliid) {
+  const instance = this;
+  return function (e) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+    e.preventDefault();
+
+    let tempFunc;
+    if (GeneralJs.stacks.whiteBox !== 1) {
+      if (instance.whiteBox !== null) {
+        tempFunc = instance.whiteCancelMaker(instance.proposalViewMakerDetail(true, cliid), true);
+        tempFunc();
+      } else {
+        tempFunc = instance.proposalViewMakerDetail(false, cliid);
         tempFunc();
       }
     }

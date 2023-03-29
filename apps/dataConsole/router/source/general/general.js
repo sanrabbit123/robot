@@ -5189,7 +5189,7 @@ GeneralJs.prototype.communicationBox = function () {
 
 }
 
-GeneralJs.prototype.grayLoading = function (mother = null) {
+GeneralJs.prototype.grayLoading = function (mother = null, whiteMode = false) {
   if (typeof mother !== "object" || mother !== null) {
     throw new Error("input must be dom");
   }
@@ -5223,7 +5223,7 @@ GeneralJs.prototype.grayLoading = function (mother = null) {
       left: String(0),
       width: String(100) + '%',
       height: String(100) + '%',
-      background: colorChip.black,
+      background: !whiteMode ? colorChip.black : "transparent",
       zIndex: String(300),
       opacity: String(0.3),
     }

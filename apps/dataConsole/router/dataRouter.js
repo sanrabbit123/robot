@@ -2732,11 +2732,10 @@ DataRouter.prototype.rou_post_proposalReset = function () {
       }
 
       if (req.url === "/proposalReset") {
-        work.proposalReset(id, { selfMongo: instance.mongo, selfLocalBoo: instance.mongolocal }).then(() => {
-          return back.updateHistory("client", [ { cliid: id }, { "curation.analytics.full": false } ], { selfMongo: instance.mongolocal });
-        }).catch((err) => {
+        work.proposalReset(id, { selfMongo: instance.mongo, selfLocalBoo: instance.mongolocal }).catch((err) => {
           console.log(err);
         });
+        
       } else if (req.url === "/proposalCreate") {
         if (/^c/.test(id)) {
           if (typeof req.body.serid === "string") {
@@ -8314,13 +8313,6 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
         history.curation.analytics.page.push({ page, date: new Date(), referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj });
         updateQuery = {};
         updateQuery["curation.analytics.page"] = history.curation.analytics.page;
-        if (page === "styleCuration") {
-          if (req.body.liteMode === "false") {
-            updateQuery["curation.analytics.full"] = true;
-          } else {
-            updateQuery["curation.analytics.full"] = false;
-          }
-        }
         await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
 
       } else if (mode === "update") {

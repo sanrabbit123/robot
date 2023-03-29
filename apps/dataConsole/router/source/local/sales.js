@@ -3316,7 +3316,7 @@ SalesJs.prototype.searchClients = function () {
 
   searchEvent = (value, e) => {
     return () => {
-      loading = instance.mother.grayLoading();
+      loading = instance.mother.grayLoading(null, true);
 
       removeTargets = document.querySelectorAll('.' + whiteCardClassName);
       for (let dom of removeTargets) {
@@ -3871,7 +3871,7 @@ SalesJs.prototype.launching = async function () {
     this.searchInput = this.mother.searchInput;
     this.grayBarWidth = this.mother.grayBarWidth;
 
-    loading = this.mother.grayLoading();
+    loading = this.mother.grayLoading(null, true);
     
     this.clients = [];
     this.histories = [];
