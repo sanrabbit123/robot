@@ -3886,7 +3886,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
                                                 if (ratio) {
                                                   if (window.confirm("카드 " + String(percentage) + "% 환불을 진행합니다. 확실합니까?")) {
+                                                    const loading = await instance.mother.grayLoading();
                                                     res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                    loading.remove();
                                                     GeneralJs.stacks[thisProjectBill] = res.bill;
                                                     cleanChildren(scrollTong);
                                                     requestArrMake();
@@ -3895,7 +3897,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                   }
                                                 } else {
                                                   if (window.confirm("카드 " + autoComma(refundPrice) + "원 환불을 진행합니다. 확실합니까?")) {
+                                                    const loading = await instance.mother.grayLoading();
                                                     res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, refundPrice }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                    loading.remove();
                                                     GeneralJs.stacks[thisProjectBill] = res.bill;
                                                     cleanChildren(scrollTong);
                                                     requestArrMake();
@@ -3935,7 +3939,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
                                                 if (ratio) {
                                                   if (window.confirm("무통장 " + String(percentage) + "% 환불을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
+                                                    const loading = await instance.mother.grayLoading();
                                                     res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                    loading.remove();
                                                     GeneralJs.stacks[thisProjectBill] = res.bill;
                                                     cleanChildren(scrollTong);
                                                     requestArrMake();
@@ -3944,7 +3950,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                   }
                                                 } else {
                                                   if (window.confirm("무통장 " + String(refundPrice) + "원 환불을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
+                                                    const loading = await instance.mother.grayLoading();
                                                     res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName, refundPrice }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                    loading.remove();
                                                     GeneralJs.stacks[thisProjectBill] = res.bill;
                                                     cleanChildren(scrollTong);
                                                     requestArrMake();
@@ -3984,7 +3992,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
                                                 if (ratio) {
                                                   if (window.confirm("계좌 이체 " + String(percentage) + "% 환불 요청을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
+                                                    const loading = await instance.mother.grayLoading();
                                                     res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                    loading.remove();
                                                     GeneralJs.stacks[thisProjectBill] = res.bill;
                                                     cleanChildren(scrollTong);
                                                     requestArrMake();
@@ -3993,7 +4003,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                   }
                                                 } else {
                                                   if (window.confirm("계좌 이체 " + String(refundPrice) + "원 환불 요청을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
+                                                    const loading = await instance.mother.grayLoading();
                                                     res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName, refundPrice }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                    loading.remove();
                                                     GeneralJs.stacks[thisProjectBill] = res.bill;
                                                     cleanChildren(scrollTong);
                                                     requestArrMake();

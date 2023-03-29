@@ -20,9 +20,6 @@ const ProposalJs = function () {
   this.serid = null;
   this.xValue = null;
   this.ea = "px";
-
-  //auto-make proposal function property
-  this.firstDo_secondToggle = true;
   this.clickTargets = [];
 }
 
@@ -50,11 +47,15 @@ ProposalJs.feeKeyMaker = function (desid, cliid, serid, xValue) {
 
 ProposalJs.prototype.totalInitial = function () {
   const instance = this;
-  let div_clone;
+  const { ea, totalContents } = this;
+  const { belowHeight } = this.mother;
+  const { createNode, withOut, colorChip, returnGet, ajaxJson, equalJson, isMac, blankHref } = GeneralJs;
+  const getObj = returnGet();
+  const vh = "vh";
   let style;
-  let ea;
+  let outerMargin;
 
-  ea = "px";
+  outerMargin = 40;
 
   //total contents
   style = {
@@ -62,42 +63,196 @@ ProposalJs.prototype.totalInitial = function () {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    height: "calc(100vh - " + String(123) + ea + ")",
+    height: "calc(100vh - " + String(getObj.dataonly === "true" ? 0 : belowHeight) + ea + ")",
     overflow: "hidden",
   };
   for (let i in style) {
-    this.grandmother.style[i] = style[i];
+    totalContents.style[i] = style[i];
   }
 
   //total create pannel
-  div_clone = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    display: "block",
-    width: "calc(100% - " + String(96) + ea + ")",
-    height: "calc(100% - " + String(112) + ea + ")",
-  };
-  for (let i in style) {
-    div_clone.style[i] = style[i];
-  }
-  this.createPannel = div_clone;
-  this.grandmother.appendChild(div_clone);
+  this.createPannel = createNode({
+    mother: totalContents,
+    style: {
+      position: "relative",
+      display: "block",
+      width: withOut(outerMargin * 2, ea),
+      height: withOut(outerMargin * 2, ea),
+    }
+  });
 
   //total list pannel
-  div_clone = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    zIndex: String(-1),
-    width: "100%",
-    height: "100%",
-    top: String(0) + ea,
-    left: String(0) + ea,
-  };
-  for (let i in style) {
-    div_clone.style[i] = style[i];
+  this.listPannel = createNode({
+    mother: totalContents,
+    style: {
+      display: (getObj.dataonly === "true" && getObj.entire === "true") ? "none" : "block",
+      position: "absolute",
+      zIndex: String(-1),
+      width: "100%",
+      height: "100%",
+      top: String(0) + ea,
+      left: String(0) + ea,
+    }
+  });
+
+  //entire mode
+  if (getObj.dataonly === "true" && getObj.entire === "true") {
+
+    createNode({
+      mother: totalContents,
+      style: {
+        position: "absolute",
+        top: String(outerMargin) + ea,
+        right: String(outerMargin) + ea,
+        display: "flex",
+        flexDirection: "row",
+      },
+      children: [
+        {
+          class: [ "hoverDefault_lite" ],
+          event: {
+            click: async function (e) {
+              try {
+                if (instance.client !== null) {
+                  const { cliid } = instance.client;
+                  const projects = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getProjects", { equal: true });
+                  let thisProject;
+                  projects.sort((a, b) => {
+                    return b.proposal.date.valueOf() - a.proposal.date.valueOf();
+                  })
+                  if (projects.length > 0) {
+                    [ thisProject ] = projects;
+                    blankHref(FRONTHOST + "/proposal.php?proid=" + thisProject.proid + "&mode=test&update=true");
+                  } else {
+                    window.alert("제안서를 우선 만들어 주세요!");
+                  }
+                } else {
+                  window.alert("로딩을 기다렸다가 잠시 후에 시도해주세요!");
+                }
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          },
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            height: String(3.2) + vh,
+            paddingLeft: String(1.3) + vh,
+            paddingRight: String(1.3) + vh,
+            borderRadius: String(5) + "px",
+            background: colorChip.gradientGray,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            marginRight: String(0.4) + vh,
+          },
+          child: {
+            text: "미리보기",
+            style: {
+              fontSize: String(1.26) + vh,
+              fontWeight: String(700),
+              color: colorChip.white,
+              position: "relative",
+              top: String(isMac() ? -1 : 1) + ea,
+            }
+          }
+        },
+        {
+          class: [ "hoverDefault_lite" ],
+          event: {
+            click: async function (e) {
+              try {
+                if (instance.client !== null) {
+                  const { cliid } = instance.client;
+                  const projects = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getProjects", { equal: true });
+                  let thisProject;
+                  projects.sort((a, b) => {
+                    return b.proposal.date.valueOf() - a.proposal.date.valueOf();
+                  })
+                  if (projects.length > 0) {
+                    [ thisProject ] = projects;
+                    if (window.confirm("추천서를 발송할까요?")) {
+                      await ajaxJson({
+                        instant: true,
+                        proid: thisProject.proid,
+                      }, "/createProposalDocument");
+                      window.alert(`추천서가 발송되었습니다!`);
+                    }
+                  } else {
+                    window.alert("제안서를 우선 만들어 주세요!");
+                  }
+                } else {
+                  window.alert("로딩을 기다렸다가 잠시 후에 시도해주세요!");
+                }
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          },
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            height: String(3.2) + vh,
+            paddingLeft: String(1.3) + vh,
+            paddingRight: String(1.3) + vh,
+            borderRadius: String(5) + "px",
+            background: colorChip.gradientGray,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            marginRight: String(0.4) + vh,
+          },
+          child: {
+            text: "추천서 전송",
+            style: {
+              fontSize: String(1.26) + vh,
+              fontWeight: String(700),
+              color: colorChip.white,
+              position: "relative",
+              top: String(isMac() ? -1 : 1) + ea,
+            }
+          }
+        },
+        {
+          class: [ "hoverDefault_lite" ],
+          event: {
+            click: function (e) {
+              if (instance.nothing === 0) {
+                ProposalJs.below_events.update.call(this, e);
+              } else {
+                ProposalJs.below_events.save.call(this, e);
+              }
+            },
+          },
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            height: String(3.2) + vh,
+            paddingLeft: String(1.3) + vh,
+            paddingRight: String(1.3) + vh,
+            borderRadius: String(5) + "px",
+            background: colorChip.gradientGray,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            text: "업데이트",
+            style: {
+              fontSize: String(1.26) + vh,
+              fontWeight: String(700),
+              color: colorChip.white,
+              position: "relative",
+              top: String(isMac() ? -1 : 1) + ea,
+            }
+          }
+        },
+      ]
+    })
+
   }
-  this.grandmother.appendChild(div_clone);
-  this.listPannel = div_clone;
+
 }
 
 ProposalJs.prototype.toggleSetting = {
@@ -112,16 +267,26 @@ ProposalJs.prototype.toggleSetting = {
 ProposalJs.below_events = {
   save: async function (e) {
     const result = await ProposalJs.save_init(false);
-    const removetargets = document.querySelectorAll(".saveLoading");
-    for (let dom of removetargets) {
-      document.body.removeChild(dom);
+    if (/success/gi.test(result)) {
+      const removetargets = document.querySelectorAll(".saveLoading");
+      for (let dom of removetargets) {
+        document.body.removeChild(dom);
+      }
+      if (GeneralJs.returnGet().dataonly === "true") {
+        window.location.href = window.location.protocol + "//" + window.location.host + "/proposal?dataonly=" + GeneralJs.returnGet().dataonly + "&entire=" + GeneralJs.returnGet().entire + "&cliid=" + GeneralJs.returnGet().cliid;
+      }
     }
   },
   update: async function (e) {
     const result = await ProposalJs.save_init(true);
-    const removetargets = document.querySelectorAll(".saveLoading");
-    for (let dom of removetargets) {
-      document.body.removeChild(dom);
+    if (/success/gi.test(result)) {
+      const removetargets = document.querySelectorAll(".saveLoading");
+      for (let dom of removetargets) {
+        document.body.removeChild(dom);
+      }
+      if (GeneralJs.returnGet().dataonly === "true") {
+        window.location.href = window.location.protocol + "//" + window.location.host + "/proposal?dataonly=" + GeneralJs.returnGet().dataonly + "&entire=" + GeneralJs.returnGet().entire + "&cliid=" + GeneralJs.returnGet().cliid;
+      }
     }
   },
   search: {
@@ -434,6 +599,8 @@ ProposalJs.below_events = {
 ProposalJs.prototype.below_initial = function () {
   const instance = this;
   const { arrow: { left, right }, square: { up, down, reportIcon, returnIcon }, sub: { extractIcon } } = this.mother.belowButtons;
+  const { returnGet } = GeneralJs;
+  const getObj = returnGet();
   let div_clone, div_clone2, div_clone3, temp_dom, input_clone;
   let style;
   let ea = 'px';
@@ -489,11 +656,17 @@ ProposalJs.prototype.below_initial = function () {
     if (instance.toggleSetting.listCreate === 0) {
       const mother = instance.createPannel;
       const father = instance.listPannel;
-      father.classList.remove("listpp_fadeout");
-      father.classList.add("listpp_fadein");
-      instance.list_launching();
-      mother.classList.add("listpp_fadeout");
-      mother.classList.remove("listpp_fadein");
+      if (getObj.dataonly !== "true") {
+        father.classList.remove("listpp_fadeout");
+        father.classList.add("listpp_fadein");
+      }
+      instance.list_launching().catch((err) => {
+        console.log(err);
+      });
+      if (getObj.dataonly !== "true") {
+        mother.classList.add("listpp_fadeout");
+        mother.classList.remove("listpp_fadein");
+      }
       father.style.zIndex = "0";
       instance.toggleSetting.listCreate = 1;
       instance.pastMaps = [];
@@ -504,10 +677,12 @@ ProposalJs.prototype.below_initial = function () {
     if (instance.toggleSetting.listCreate === 1) {
       const mother = instance.createPannel;
       const father = instance.listPannel;
-      father.classList.add("listpp_fadeout");
-      father.classList.remove("listpp_fadein");
-      mother.classList.remove("listpp_fadeout");
-      mother.classList.add("listpp_fadein");
+      if (getObj.dataonly !== "true") {
+        father.classList.add("listpp_fadeout");
+        father.classList.remove("listpp_fadein");
+        mother.classList.remove("listpp_fadeout");
+        mother.classList.add("listpp_fadein");
+      }
       father.style.zIndex = "-1";
       instance.toggleSetting.listCreate = 0;
       if (instance.toggleSetting.load === 1) {
@@ -847,6 +1022,8 @@ ProposalJs.prototype.firstToggle = function (button, domBox) {
 
 ProposalJs.prototype.firstProcess = async function () {
   const instance = this;
+  const { returnGet } = GeneralJs;
+  const getObj = returnGet();
   let h;
   let div_clone, div_clone2, div_clone3, div_clone4, input_clone, label_clone;
   let titles;
@@ -873,13 +1050,18 @@ ProposalJs.prototype.firstProcess = async function () {
       marginBottom: "21px",
       overflow: "hidden",
     };
+    if (i === 0) {
+      if (getObj.dataonly === "true" && getObj.entire === "true") {
+        style.width = "calc(100% - 24vh)";
+      }
+    }
     for (let i in style) {
       div_clone.style[i] = style[i];
     }
 
     div_clone2 = GeneralJs.nodes.div.cloneNode(true);
     style = {
-      fontSize: "1.8vh",
+      fontSize: "1.7vh",
       fontWeight: "700",
       display: "block",
       height: "10%",
@@ -1029,8 +1211,8 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
           domBox.get("서비스 선택").children[1].style.height = "calc(90% - 10px)";
           domBox.get("서비스 선택").children[1].style.marginTop = "10px";
           domBox.get("디자이너 선택").style.height = "calc(100% - 6.4vh - 63px)";
-          domBox.get("디자이너 선택").children[1].style.height = "calc(90% + 2.7vh)";
-          domBox.get("디자이너 선택").children[1].style.marginTop = "-2.7vh";
+          domBox.get("디자이너 선택").children[1].style.height = "calc(90% + " + String(GeneralJs.returnGet().dataonly === "true" ? 4.4 : 2.7) + "vh)";
+          domBox.get("디자이너 선택").children[1].style.marginTop = "-" + String(GeneralJs.returnGet().dataonly === "true" ? 4.4 : 2.7) + "vh";
 
           instance.thirdChildren.get("box1_designerInput").focus();
           instance.thirdChildren.get("box1_designerInput").style.color = GeneralJs.colorChip.green;
@@ -1044,20 +1226,6 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
           document.querySelector(".pp_designer_question").classList.add("pp_designer_question_add");
           document.querySelector(".pp_designer_question_press").classList.remove("pp_designer_question_press_remove");
           document.querySelector(".pp_designer_question_press").classList.add("pp_designer_question_press_add");
-
-          if (instance.firstDo_secondToggle) {
-            GeneralJs.ajaxJson({ id: instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id"), serid }, "/parsingProposal", { equal: true }).then((obj) => {
-              const { result } = obj;
-              if (result !== null) {
-                result.client = instance.domBox.get("고객 선택").querySelector('b').textContent.replace(/[\: ]/g, '').trim();
-                result.cliid = instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id");
-                result.service = instance.domBox.get("서비스 선택").querySelector('b').textContent.replace(/[\: ]/g, '').trim();
-                instance.thirdChildren.get("box1_designerInput").setAttribute("value", String(result.proposal.length) + "명");
-                instance.firstDo_secondToggle = false;
-                (instance.load_processLoad_third())(result, true);
-              }
-            });
-          }
 
         }, 300);
 
@@ -1274,7 +1442,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
   const instance = this;
   const domBox = this.domBox;
   const { totalContents, ea } = this;
-  const { createNode, colorChip, withOut, removeByClass, serviceParsing, dateToString, ajaxJson, isMac } = GeneralJs;
+  const { createNode, colorChip, withOut, removeByClass, serviceParsing, dateToString, ajaxJson, isMac, returnGet } = GeneralJs;
   let fourthChildren;
   let thirdChildren;
   let fourth;
@@ -2386,7 +2554,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
           return `${String(expected.getFullYear()).slice(2)}년 ${String(expected.getMonth() + 1)}월 ${String(expected.getDate())}일`;
         }
       }
-      const belowHeight = instance.mother.belowHeight;
+      const belowHeight = returnGet().dataonly === "true" ? 0 : instance.mother.belowHeight;
       let cancelBack, whitePrompt;
       let clientWhite;
       let margin;
@@ -3326,6 +3494,8 @@ ProposalJs.prototype.fifthScrollX = function (method, options) {
 ProposalJs.prototype.fifthProcess = async function (desid, id) {
   const instance = this;
   const total = this.createPannel.parentNode;
+  const { ea } = this;
+  const { returnGet, withOut } = GeneralJs;
   let popupDom;
   let ghost;
   let designer;
@@ -3348,6 +3518,10 @@ ProposalJs.prototype.fifthProcess = async function (desid, id) {
     popupDom.set("cancelBack", div_clone);
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.classList.add("pp_fifth_whitebox");
+    if (returnGet().dataonly === "true" && returnGet().entire === "true") {
+      div_clone.style.width = withOut(0, ea);
+      div_clone.style.height = withOut(0, ea);
+    }
     div_clone.setAttribute("cus_designer", designer.designer);
     div_clone.setAttribute("cus_desid", designer.desid);
     div_clone.setAttribute("cus_boxid", String(id));
@@ -3885,56 +4059,6 @@ ProposalJs.prototype.list_mainAreaContents = function (parent, proposal_list_raw
     parent.appendChild(div_clone);
   }
 
-  GeneralJs.ajaxJson({
-    idArr: cliidArr,
-    method: "client",
-    property: "curation"
-  }, "/getHistoryProperty").then((cliidObj) => {
-    let targetDoms, right, top;
-
-    right = -7.5;
-    top = GeneralJs.isMac() ? 6 : 4;
-
-    targetDoms = [];
-    for (let obj of proposal_list_raw) {
-      obj.full = (cliidObj[obj.cliid] === undefined ? false : cliidObj[obj.cliid].analytics.full);
-      for (let dom of rowDoms) {
-        if (dom.getAttribute("cus_id") === obj.proid) {
-          if (obj.full) {
-            targetDoms.push(dom);
-          }
-        }
-      }
-    }
-
-    for (let dom of targetDoms) {
-      dom.children[0].style.width = "auto";
-      dom.children[1].style.width = "auto";
-
-      motherDom = dom.getBoundingClientRect();
-      proidDom = dom.children[0].getBoundingClientRect();
-      nameDom = dom.children[1].getBoundingClientRect();
-
-      GeneralJs.createNodes([
-        {
-          mother: dom,
-          mode: "svg",
-          source: instance.mother.returnCircle("", GeneralJs.colorChip.green),
-          style: {
-            position: "absolute",
-            transform: "scale(0.4)",
-            transformOrigin: "100% 0%",
-            left: String((nameDom.x - motherDom.x) + nameDom.width + right) + ea,
-            top: String(top) + ea,
-          }
-        }
-      ]);
-    }
-
-  }).catch((err) => {
-    console.log(err);
-  })
-
   this.list_leftBar({ projects: proposal_list_raw, designers: designer_names_obj });
 }
 
@@ -3949,7 +4073,7 @@ ProposalJs.prototype.list_menu = function () {
     let list = [
       { key: "pending", name: "작성중", },
       { key: "complete", name: "완료", },
-      { key: "send", name: "발송 예약", },
+      { key: "send", name: "즉시 발송", },
       { key: "confirm", name: "미리보기", },
     ];
     // style
@@ -4008,499 +4132,23 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
       break;
     case "send":
       return_func = async function (e) {
-        const recommendDate = function () {
-          let dateObj = new Date();
-          let hours, minutes;
-          let dayBoo, day;
-          hours = dateObj.getHours();
-          minutes = dateObj.getMinutes();
-          dayBoo = false;
-          if (hours >= 19 || (hours === 18 && minutes >= 28)) {
-            dayBoo = true;
-          }
-          if (dayBoo) {
-            day = dateObj.getDay();
-            if (day === 5) {
-              dateObj.setDate(dateObj.getDate() + 3);
-            } else if (day === 6) {
-              dateObj.setDate(dateObj.getDate() + 2);
-            } else {
-              dateObj.setDate(dateObj.getDate() + 1);
-            }
-          }
-          dateObj.setHours(18);
-          dateObj.setMinutes(30);
-          return dateObj;
-        }
         const that = this;
-        const today = recommendDate();
-        const ea = "px";
-        const { createNodes, colorChip } = GeneralJs;
-        const totalContents = document.getElementById("totalcontents");
-        let nodeArr;
-        let cancelBack, whiteBox;
-        let title0, title1;
-        let arrowBar, arrowHead, arrowWidth;
-        let dateDom0, dateDom1, dateDom2;
-        let width, height;
-        let calendar;
-        let paddingTop, paddingLeft, paddingBottom;
-        let size0, size1, size2;
-        let lineHeight;
-        let top, left;
-        let calendarBox;
-        let calendarWidth, calendarHeight;
-        let valueTop, valueLineHeight, valueRight;
-        let lineWidth;
-        let removeTargets;
-
         if (/드/gi.test(this.parentElement.parentElement.getAttribute("cus_status"))) {
           window.alert("해당 고객은 드랍 처리되어 발송할 수 없습니다!");
           reset_event(that);
         } else {
-          width = 558;
-          height = 300;
-          paddingTop = 10;
-          paddingLeft = 17;
-          paddingBottom = 5;
-
-          calendarWidth = 260;
-          calendarHeight = 295.058;
-
-          top = GeneralJs.isMac() ? 28 : 29;
-          left = 290;
-          size0 = 20;
-          size1 = 30;
-          size2 = 14;
-          lineHeight = 10;
-
-          valueTop = GeneralJs.isMac() ? 102 : 105;
-          valueLineHeight = 40;
-          valueRight = 34;
-          lineWidth = 121;
-          arrowWidth = 10;
-
-          removeTargets = [];
-
-          [ cancelBack, whiteBox, calendarBox, title0, title1 ] = createNodes([
-            {
-              mother: totalContents,
-              events: [
-                {
-                  type: "click",
-                  event: function (e) {
-                    reset_event(that);
-                    totalContents.removeChild(removeTargets[0]);
-                    totalContents.removeChild(removeTargets[1]);
-                  }
-                }
-              ],
-              style: {
-                position: "fixed",
-                top: String(0) + ea,
-                left: String(0) + ea,
-                zIndex: String(4),
-                width: String(100) + '%',
-                height: String(100) + '%',
-              }
-            },
-            {
-              mother: totalContents,
-              style: {
-                position: "fixed",
-                width: String(width - paddingLeft) + ea,
-                height: String(height) + ea,
-                left: "calc(50% - " + String(width / 2) + ea + ")",
-                top: "calc(calc(calc(100% - " + String(instance.mother.belowHeight) + ea + ") / 2) - " + String(height / 2) + ea + ")",
-                background: colorChip.white,
-                borderRadius: String(5) + "px",
-                zIndex: String(4),
-                animation: "fadeup 0.3s ease forwards",
-                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                transition: "all 0s ease",
-                paddingTop: String(paddingTop) + ea,
-                paddingLeft: String(paddingLeft) + ea,
-              },
-            },
-            {
-              mother: -1,
-              style: {
-                position: "absolute",
-                top: String(paddingTop) + ea,
-                left: String(paddingLeft) + ea,
-                width: String(calendarWidth) + ea,
-                height: String(calendarHeight) + ea,
-              },
-            },
-            {
-              mother: -2,
-              text: "제안서가 발송될",
-              style: {
-                position: "absolute",
-                top: String(top) + ea,
-                left: String(left) + ea,
-                fontSize: String(size0) + ea,
-                fontWeight: String(500),
-                color: colorChip.black
-              }
-            },
-            {
-              mother: -3,
-              text: "시간을 설정해주세요!",
-              style: {
-                position: "absolute",
-                top: String(top + size0 + lineHeight) + ea,
-                left: String(left) + ea,
-                fontSize: String(size0) + ea,
-                fontWeight: String(500),
-                color: colorChip.black
-              }
-            }
-          ]);
-
-          removeTargets.push(whiteBox);
-          removeTargets.push(cancelBack);
-
-          [ arrowBar, arrowHead ] = createNodes([
-            {
-              mother: whiteBox,
-              style: {
-                position: "absolute",
-                borderBottom: "1px solid " + colorChip.gray4,
-                width: String(lineWidth) + ea,
-                top: String(valueTop + (size1 / 2) + 5 + (GeneralJs.isMac() ? 0.5 : -3)) + ea,
-                right: String(145) + ea,
-              }
-            },
-            {
-              mother: whiteBox,
-              style: {
-                position: "absolute",
-                borderRight: "1px solid " + colorChip.gray4,
-                borderBottom: "1px solid " + colorChip.gray4,
-                width: String(arrowWidth) + ea,
-                height: String(arrowWidth) + ea,
-                top: String(valueTop + (size1 / 2) + (GeneralJs.isMac() ? 0.5 : -3)) + ea,
-                right: String(146) + ea,
-                transform: "rotate(-45deg)",
-              }
-            },
-          ]);
-
-          [ dateDom0, dateDom1, dateDom2 ] = createNodes([
-            {
-              mother: whiteBox,
-              mode: "input",
-              attribute: [
-                { type: "text" },
-                { value: String(today.getFullYear()) + "년" },
-                { year: String(today.getFullYear()) }
-              ],
-              events: [
-                {
-                  type: "blur",
-                  event: function (e) {
-                    let matchObj, year;
-                    if (!/^[0-9]+년$/.test(this.value.trim())) {
-                      this.value = String(today.getFullYear()) + "년";
-                    }
-                    matchObj = this.value.trim().match(/^([0-9]+)년$/);
-                    year = !Number.isNaN(Number(matchObj[1].replace(/[^0-9]/g, ''))) ? Number(matchObj[1].replace(/[^0-9]/g, '')) : today.getFullYear();
-                    this.setAttribute("year", String(year));
-                    this.setAttribute("value", String(year) + "년");
-                  }
-                }
-              ],
-              style: {
-                position: "absolute",
-                fontSize: String(size1) + ea,
-                fontWeight: String(100),
-                color: colorChip.green,
-                background: colorChip.white,
-                top: String(valueTop) + ea,
-                right: String(valueRight) + ea,
-                width: String(110) + ea,
-                textAlign: "right",
-                border: String(0),
-                outline: String(0),
-              }
-            },
-            {
-              mother: whiteBox,
-              mode: "input",
-              attribute: [
-                { type: "text" },
-                { value: String(today.getMonth() + 1) + "월" + " " + String(today.getDate()) + "일" },
-                { month: String(today.getMonth() + 1) },
-                { date: String(today.getDate()) },
-              ],
-              events: [
-                {
-                  type: "blur",
-                  event: function (e) {
-                    let matchObj, month, date, booMonth, booDate;
-                    if (!/^[0-9]+월 [0-9]+일$/.test(this.value.trim())) {
-                      this.value = String(today.getMonth() + 1) + "월" + " " + String(today.getDate()) + "일";
-                    }
-                    booMonth = false;
-                    booDate = false;
-                    matchObj = this.value.trim().match(/^([0-9]+)월 ([0-9]+)일$/);
-                    month = !Number.isNaN(Number(matchObj[1].replace(/[^0-9]/g, ''))) ? Number(matchObj[1].replace(/[^0-9]/g, '')) : today.getMonth() + 1;
-                    date = !Number.isNaN(Number(matchObj[2].replace(/[^0-9]/g, ''))) ? Number(matchObj[2].replace(/[^0-9]/g, '')) : today.getDate();
-                    if (month < 1 || 12 < month) {
-                      month = today.getMonth() + 1;
-                      booMonth = true;
-                    }
-                    if (date < 1 || 31 < date) {
-                      date = today.getDate();
-                      booDate = true;
-                    }
-                    if (booMonth && !booDate) {
-                      this.value = String(today.getMonth() + 1) + "월" + " " + String(date) + "일";
-                    } else if (!booMonth && booDate) {
-                      this.value = String(month) + "월" + " " + String(today.getDate()) + "일";
-                    } else if (booMonth && booDate) {
-                      this.value = String(today.getMonth() + 1) + "월" + " " + String(today.getDate()) + "일";
-                    }
-                    this.setAttribute("month", String(month));
-                    this.setAttribute("date", String(date));
-                    this.setAttribute("value", String(month) + "월" + " " + String(date) + "일");
-                  }
-                }
-              ],
-              style: {
-                position: "absolute",
-                fontSize: String(size1) + ea,
-                fontWeight: String(100),
-                color: colorChip.green,
-                background: colorChip.white,
-                top: String(valueTop + valueLineHeight) + ea,
-                right: String(valueRight) + ea,
-                width: String(200) + ea,
-                textAlign: "right",
-                border: String(0),
-                outline: String(0),
-              }
-            },
-            {
-              mother: whiteBox,
-              mode: "input",
-              attribute: [
-                { type: "text" },
-                { value: String(today.getHours()) + "시" + " " + String(today.getMinutes()) + "분" },
-                { hour: String(today.getHours()) },
-                { minute: String(today.getMinutes()) },
-              ],
-              events: [
-                {
-                  type: "blur",
-                  event: function (e) {
-                    let matchObj, hour, minute, booHour, booMinute;
-                    if (!/^[0-9]+시 [0-9]+분$/.test(this.value.trim())) {
-                      this.value = String(today.getHours()) + "시" + " " + String(today.getMinutes()) + "분";
-                    }
-                    booHour = false;
-                    booMinute = false;
-                    matchObj = this.value.trim().match(/^([0-9]+)시 ([0-9]+)분$/);
-                    hour = !Number.isNaN(Number(matchObj[1].replace(/[^0-9]/g, ''))) ? Number(matchObj[1].replace(/[^0-9]/g, '')) : today.getHours();
-                    minute = !Number.isNaN(Number(matchObj[2].replace(/[^0-9]/g, ''))) ? Number(matchObj[2].replace(/[^0-9]/g, '')) : today.getMinutes();
-                    if (hour < 8 || 23 < hour) {
-                      hour = today.getHours();
-                      booHour = true;
-                    }
-                    if (minute < 1 || 60 < minute) {
-                      minute = today.getMinutes();
-                      booMinute = true;
-                    }
-                    if (booHour && !booMinute) {
-                      this.value = String(today.getHours()) + "시" + " " + String(minute) + "분";
-                    } else if (!booHour && booMinute) {
-                      this.value = String(hour) + "시" + " " + String(today.getMinutes()) + "분";
-                    } else if (booHour && booMinute) {
-                      this.value = String(today.getHours()) + "시" + " " + String(today.getMinutes()) + "분";
-                    }
-                    this.setAttribute("hour", String(hour));
-                    this.setAttribute("minute", String(minute));
-                    this.setAttribute("value", String(hour) + "시" + " " + String(minute) + "분");
-                  }
-                }
-              ],
-              style: {
-                position: "absolute",
-                fontSize: String(size1) + ea,
-                fontWeight: String(100),
-                color: colorChip.green,
-                background: colorChip.white,
-                top: String(valueTop + valueLineHeight + valueLineHeight) + ea,
-                right: String(valueRight) + ea,
-                width: String(200) + ea,
-                textAlign: "right",
-                border: String(0),
-                outline: String(0),
-              }
-            },
-          ]);
-
-          createNodes([
-            {
-              mother: whiteBox,
-              events: [
-                {
-                  type: "click",
-                  event: async function (e) {
-                    try {
-                      let timeObj;
-                      timeObj = {
-                        instant: true,
-                        proid,
-                      };
-                      await GeneralJs.ajaxJson(timeObj, "/createProposalDocument");
-                      window.alert(`알림톡 발송이 요청되었습니다!`);
-                      await mother_name(obj);
-                      reset_event(that);
-                      totalContents.removeChild(removeTargets[0]);
-                      totalContents.removeChild(removeTargets[1]);
-                    } catch (e) {
-                      console.log(e);
-                    }
-                  }
-                }
-              ],
-              style: {
-                position: "absolute",
-                width: String(89) + ea,
-                height: String(27) + ea,
-                borderRadius: String(3) + ea,
-                background: colorChip.green,
-                bottom: String(34) + ea,
-                right: String(147) + ea,
-                cursor: "pointer",
-              }
-            },
-            {
-              mother: -1,
-              text: "즉시 보내기",
-              style: {
-                position: "absolute",
-                fontSize: String(size2) + ea,
-                fontWeight: String(500),
-                color: colorChip.whiteBlack,
-                width: String(100) + '%',
-                textAlign: "center",
-                top: String(GeneralJs.isMac() ? 3 : 5) + ea,
-                cursor: "pointer",
-              }
-            },
-            {
-              mother: whiteBox,
-              events: [
-                {
-                  type: "click",
-                  event: async function (e) {
-                    try {
-                      let timeObj;
-                      timeObj = {
-                        year: Number(dateDom0.getAttribute("year")),
-                        month: Number(dateDom1.getAttribute("month")),
-                        date: Number(dateDom1.getAttribute("date")),
-                        hour: Number(dateDom2.getAttribute("hour")),
-                        minute: Number(dateDom2.getAttribute("minute")),
-                        second: (new Date()).getSeconds(),
-                        proid,
-                      };
-                      await GeneralJs.ajaxJson(timeObj, "/createProposalDocument");
-                      window.alert(`${String(timeObj.month)}월 ${String(timeObj.date)}일 ${String(timeObj.hour)}시 ${String(timeObj.minute)}분에 링크 알림톡 발송이 예약되었습니다!`);
-                      await mother_name(obj);
-                      reset_event(that);
-                      totalContents.removeChild(removeTargets[0]);
-                      totalContents.removeChild(removeTargets[1]);
-                    } catch (e) {
-                      console.log(e);
-                    }
-                  }
-                }
-              ],
-              style: {
-                position: "absolute",
-                width: String(50) + ea,
-                height: String(27) + ea,
-                borderRadius: String(3) + ea,
-                background: colorChip.green,
-                bottom: String(34) + ea,
-                right: String(92) + ea,
-                cursor: "pointer",
-              }
-            },
-            {
-              mother: -1,
-              text: "확인",
-              style: {
-                position: "absolute",
-                fontSize: String(size2) + ea,
-                fontWeight: String(500),
-                color: colorChip.whiteBlack,
-                width: String(100) + '%',
-                textAlign: "center",
-                top: String(GeneralJs.isMac() ? 3 : 5) + ea,
-                cursor: "pointer",
-              }
-            },
-            {
-              mother: whiteBox,
-              events: [
-                {
-                  type: "click",
-                  event: function (e) {
-                    reset_event(that);
-                    totalContents.removeChild(removeTargets[0]);
-                    totalContents.removeChild(removeTargets[1]);
-                  }
-                }
-              ],
-              style: {
-                position: "absolute",
-                width: String(50) + ea,
-                height: String(27) + ea,
-                borderRadius: String(3) + ea,
-                background: colorChip.green,
-                bottom: String(34) + ea,
-                right: String(37) + ea,
-                cursor: "pointer",
-              }
-            },
-            {
-              mother: -1,
-              text: "취소",
-              style: {
-                position: "absolute",
-                fontSize: String(size2) + ea,
-                fontWeight: String(500),
-                color: colorChip.whiteBlack,
-                width: String(100) + '%',
-                textAlign: "center",
-                top: String(GeneralJs.isMac() ? 3 : 5) + ea,
-                cursor: "pointer",
-              }
-            }
-          ]);
-
-          calendar = instance.mother.makeCalendar(today, function (e) {
-            let [ year, month, date ] = this.getAttribute("buttonValue").split('-');
-            year = Number(year);
-            month = Number(month.replace(/^0/, ''));
-            date = Number(date.replace(/^0/, ''));
-            dateDom0.value = String(year) + "년";
-            dateDom0.setAttribute("year", String(year));
-            dateDom0.setAttribute("value", String(year) + "년");
-            dateDom1.value = String(month) + "월 " + String(date) + "일";
-            dateDom1.setAttribute("month", String(month));
-            dateDom1.setAttribute("date", String(date));
-            dateDom1.setAttribute("value", String(month) + "월 " + String(date) + "일");
-          });
-          calendarBox.appendChild(calendar.calendarBase);
-
+          if (window.confirm("추천서를 발송할까요?")) {
+            await GeneralJs.ajaxJson({
+              instant: true,
+              proid: proid,
+            }, "/createProposalDocument");
+            window.alert(`추천서가 발송되었습니다!`);
+            await mother_name(obj);
+            reset_event(that);
+          } else {
+            reset_event(that);
+          }
         }
-
       }
       break;
     case "complete":
@@ -4528,6 +4176,8 @@ ProposalJs.prototype.list_launching = async function () {
 
 ProposalJs.prototype.load_initevent = function (noBlink = false) {
   const instance = this;
+  const { returnGet } = GeneralJs;
+  const getObj = returnGet();
   return function (e) {
     if (instance.toggleSetting.listCreate === 1) {
       let obj = JSON.parse(this.parentElement.querySelector("section").textContent);
@@ -4536,10 +4186,12 @@ ProposalJs.prototype.load_initevent = function (noBlink = false) {
       let mother = instance.createPannel;
       let father = instance.listPannel;
       if (!noBlink) {
-        father.classList.add("listpp_fadeout");
-        father.classList.remove("listpp_fadein");
-        mother.classList.remove("listpp_fadeout");
-        mother.classList.add("listpp_fadein");
+        if (getObj.dataonly !== "true") {
+          father.classList.add("listpp_fadeout");
+          father.classList.remove("listpp_fadein");
+          mother.classList.remove("listpp_fadeout");
+          mother.classList.add("listpp_fadein");
+        }
       }
       father.style.zIndex = "-1";
       instance.toggleSetting.listCreate = 0;
@@ -4753,9 +4405,6 @@ ProposalJs.prototype.load_processLoad_first = function (obj) {
 ProposalJs.prototype.load_processLoad_second = function (obj, third) {
   const instance = this;
 
-  //prevent auto-make proposal function
-  this.firstDo_secondToggle = false;
-
   let e = {};
   let labels = document.querySelectorAll(".pp_clients_label");
   for (let lbj of labels) {
@@ -4801,8 +4450,8 @@ ProposalJs.prototype.load_processLoad_second = function (obj, third) {
     instance.domBox.get("서비스 선택").children[1].style.height = "calc(90% - 10px)";
     instance.domBox.get("서비스 선택").children[1].style.marginTop = "10px";
     instance.domBox.get("디자이너 선택").style.height = "calc(100% - 6.4vh - 63px)";
-    instance.domBox.get("디자이너 선택").children[1].style.height = "calc(90% + 2.7vh)";
-    instance.domBox.get("디자이너 선택").children[1].style.marginTop = "-2.7vh";
+    instance.domBox.get("디자이너 선택").children[1].style.height = "calc(90% + " + String(GeneralJs.returnGet().dataonly === "true" ? 4.4 : 2.7) + "vh)";
+    instance.domBox.get("디자이너 선택").children[1].style.marginTop = "-" + String(GeneralJs.returnGet().dataonly === "true" ? 4.4 : 2.7) + "vh";
     if (instance.thirdChildren instanceof Map) {
       instance.thirdChildren.get("box1_designerInput").focus();
       instance.thirdChildren.get("box1_designerInput").style.color = GeneralJs.colorChip.green;
@@ -5070,7 +4719,19 @@ ProposalJs.save_init = async function (update = false) {
         temp_arr = [];
 
         if (temp[i].querySelector(".pp_designer_selected_box_value").textContent === "") {
-          alert("사진을 선택해주세요!");
+          window.alert("사진을 선택해주세요!");
+
+          if (document.querySelector(".pp_fifth_cancelback") !== null) {
+            document.querySelector(".pp_fifth_cancelback").remove();
+          }
+      
+          if (document.querySelector(".pp_fifth_whitebox") !== null) {
+            document.querySelector(".pp_fifth_whitebox").remove();
+          }
+      
+          loadingCancelBox.remove();
+          loadingLoadingIcon.remove();
+
           return "fail";
         }
         if (document.querySelector('.pp_fifth_whitebox') !== null) {
@@ -5129,11 +4790,13 @@ ProposalJs.save_init = async function (update = false) {
 }
 
 ProposalJs.prototype.cssInjection = function () {
+  const { returnGet } = GeneralJs;
+  const getObj = returnGet();
   const css = `
   :root{
     --left-padding:190px;
     --main-marginbase:6px;
-    --left-width:69.6vh;
+    --left-width:${String(getObj.dataonly === "true" ? 88 : 72)}vh;
   }
 
   input[type=text],input[type=password],textarea{background-color:transparent}
@@ -5293,7 +4956,7 @@ ProposalJs.prototype.cssInjection = function () {
   }
 
   .pp_clients{
-    font-size:1.3vh;
+    font-size: 1.2vh;
     font-weight:600;
     display:inline-block;
     padding:15px;
@@ -5549,7 +5212,7 @@ ProposalJs.prototype.cssInjection = function () {
     font-weight: 300;
     color: ${GeneralJs.colorChip.gray5};
     width: 100%;
-    height: ${GeneralJs.isMac() ? String(87) : String(97)}%;
+    height: ${GeneralJs.isMac() ? String(96) : String(97)}%;
     justify-content: center;
     align-items: center;
     cursor:pointer;
@@ -5572,8 +5235,8 @@ ProposalJs.prototype.cssInjection = function () {
   .pp_fifth_whitebox{
     display: block;
     position: absolute;
-    width: calc(100% - 96px);
-    height: calc(100% - 120px);
+    width: calc(100% - 60px);
+    height: calc(100% - 60px);
     background: ${GeneralJs.colorChip.white};
     border-radius: 9px;
     box-shadow: 0px 3px 8px -5px ${GeneralJs.colorChip.shadow};
@@ -6290,66 +5953,28 @@ ProposalJs.prototype.launching = async function () {
     if (query.cliid !== undefined) {
 
       cliid = query["cliid"];
-      GeneralJs.timeouts["belowLaunchingTimeOut"] = setTimeout(function () {
 
-        left.click();
+      await instance.list_launching();
+      instance.toggleSetting.listCreate = 1;
+      instance.pastMaps = [];
+      await instance.list_mainArea({ target: "client", value: cliid });
 
-        GeneralJs.timeouts["belowLaunchingTimeOut2"] = setTimeout(async function () {
-          try {
-            const buttons = document.querySelectorAll(".listpp_mainArea_tong_progress");
-            let target = null;
-            let client;
-            for (let dom of buttons) {
-              if (dom.getAttribute("cliid") === cliid) {
-                target = dom;
-                break;
-              }
-            }
-            if (target !== null) {
-              target.click();
-              GeneralJs.timeouts["belowLaunchingTimeOut3"] = setTimeout(function () {
-                document.querySelector(".listpp_menuEvent_selected").click();
-                clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut3"]);
-                GeneralJs.timeouts["belowLaunchingTimeOut3"] = null;
-              }, 601);
-            } else {
-              client = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid }), "/getClients"))[0];
-              instance.mother.searchInput.nextElementSibling.value = client.name;
-              (GeneralJs.events["proposalListSearch"]).call(instance.mother.searchInput.nextElementSibling, { key: "Enter" });
-              if (GeneralJs.stacks["proposalListSearchResult"] !== null) {
-                GeneralJs.timeouts["belowLaunchingTimeOut4"] = setTimeout(function () {
-                  const buttons = document.querySelectorAll(".listpp_mainArea_tong_progress");
-                  let target = null;
-                  for (let dom of buttons) {
-                    if (dom.getAttribute("cliid") === cliid) {
-                      target = dom;
-                    }
-                  }
-                  if (target !== null) {
-                    target.click();
-                    GeneralJs.timeouts["belowLaunchingTimeOut5"] = setTimeout(function () {
-                      document.querySelector(".listpp_menuEvent_selected").click();
-                      clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut5"]);
-                      GeneralJs.timeouts["belowLaunchingTimeOut5"] = null;
-                    }, 601);
-                  } else {
-                    alert("제안서를 만들어 주세요.");
-                  }
-                  clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut4"]);
-                  GeneralJs.timeouts["belowLaunchingTimeOut4"] = null;
-                }, 601);
-              }
-            }
-            clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut2"]);
-            GeneralJs.timeouts["belowLaunchingTimeOut2"] = null;
-          } catch (e) {
-            GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
-            console.log(e);
-          }
-        }, 601);
-        clearTimeout(GeneralJs.timeouts["belowLaunchingTimeOut"]);
-        GeneralJs.timeouts["belowLaunchingTimeOut"] = null;
-      }, 0);
+      const buttons = document.querySelectorAll(".listpp_mainArea_tong_progress");
+      let target = null;
+      for (let dom of buttons) {
+        if (dom.getAttribute("cliid") === cliid) {
+          target = dom;
+          break;
+        }
+      }
+      if (target === null) {
+        instance.createViewEvent.call(instance.mother.belowButtons.square.up, {});
+        window.alert("제안서를 만들어 주세요.");
+        instance.nothing = 1;
+      } else {
+        instance.load_initevent(true).call(target.previousElementSibling, {});
+        instance.nothing = 0;
+      }
 
     }
 

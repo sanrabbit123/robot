@@ -9904,7 +9904,7 @@ ProcessJs.prototype.searchProjects = function () {
 
   searchEvent = (value, e) => {
     return () => {
-      loading = instance.mother.grayLoading();
+      loading = instance.mother.grayLoading(null, true);
 
       removeTargets = document.querySelectorAll('.' + whiteCardClassName);
       for (let dom of removeTargets) {
@@ -11247,7 +11247,7 @@ ProcessJs.prototype.launching = async function () {
     this.searchInput = this.mother.searchInput;
     this.grayBarWidth = this.mother.grayBarWidth;
 
-    loading = this.mother.grayLoading();
+    loading = this.mother.grayLoading(null, true);
     
     ({ projects, clients } = await ajaxJson({ mode: "pre", searchMode: (typeof getObj.proid === "string" ? getObj.proid : "false") }, BACKHOST + "/processConsole", { equal: true }));
     proidArr = projects.map((p) => { return p.proid });

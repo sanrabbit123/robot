@@ -5335,7 +5335,8 @@ ClientJs.prototype.secondReportViewMaker = function () {
 
 ClientJs.prototype.proposalViewMakerDetail = function (recycle = false, cliid) {
   const instance = this;
-  const { ajaxJson, colorChip } = GeneralJs;
+  const { ea } = this;
+  const { ajaxJson, colorChip, createNode, withOut } = GeneralJs;
   try {
     return function () {
       let div_clone, svg_icon;
@@ -5345,9 +5346,6 @@ ClientJs.prototype.proposalViewMakerDetail = function (recycle = false, cliid) {
       let domTargets;
       let motherBoo;
       let width;
-
-      console.log(cliid);
-
 
       motherBoo = (instance.onView === "mother") ? true : false;
 
@@ -5414,24 +5412,35 @@ ClientJs.prototype.proposalViewMakerDetail = function (recycle = false, cliid) {
         div_clone.style[i] = style[i];
       }
 
-      width = 50;
-
-      svg_icon = instance.mother.returnLoadingIcon();
-      style = {
-        width: String(width) + ea,
-        height: String(width) + ea,
-        top: 'calc(50% - ' + String(width / 2) + ea + ')',
-        left: 'calc(50% - ' + String(width / 2) + ea + ')',
-      }
-      for (let i in style) {
-        svg_icon.style[i] = style[i];
-      }
-      div_clone.appendChild(svg_icon);
-
       instance.whiteBox.contentsBox = div_clone;
       instance.totalContents.appendChild(div_clone);
 
-
+      createNode({
+        mother: div_clone,
+        style: {
+          position: "relative",
+          display: "block",
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          borderRadius: String(5) + "px",
+          overflow: "hidden",
+        },
+        child: {
+          mode: "iframe",
+          attribute: {
+            src: window.location.protocol + "//" + window.location.host + "/proposal?cliid=" + cliid + "&entire=true&dataonly=true",
+          },
+          style: {
+            position: "absolute",
+            display: "block",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            border: String(0),
+          }
+        }
+      });
 
       GeneralJs.stacks.whiteBox = 0;
     }
