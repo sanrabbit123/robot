@@ -505,10 +505,6 @@ DataPatch.prototype.clientStandard = function () {
       width: 50,
       left: 30,
     },
-    manager: {
-      name: "담당자",
-      width: 50,
-    },
     action: {
       name: "응대",
       width: 100,
