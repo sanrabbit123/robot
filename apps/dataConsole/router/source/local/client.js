@@ -4055,6 +4055,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
   let totalSummary;
   let toClientEvent, toProjectEvent;
   let totalCliid, totalProid;
+  let reportNumbersObj;
 
   margin = 18;
   boxNumber = Math.floor((motherWidth - (margin * 3)) / (margin + 400));
@@ -4062,6 +4063,8 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
   boxWidth = (motherWidth - (margin * (boxNumber + 1 + 2))) / boxNumber;
   boxTop = 88;
   propertyNum = 7;
+
+  instance.reportNumbers = [];
 
   toClientEvent = function (e) {
     e.stopPropagation();
@@ -4126,6 +4129,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       contract: 0,
       process: 0,
     };
+    reportNumbersObj = {};
 
     //gray card
     div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -4174,7 +4178,8 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     for (let z in style) {
       titleBox.style[z] = style[z];
     }
-    titleBox.textContent = `${report[i].data[0].startDay.split('-')[0]}-${report[i].data[0].startDay.split('-')[1]}`;
+    reportNumbersObj.date = `${report[i].data[0].startDay.split('-')[0]}-${report[i].data[0].startDay.split('-')[1]}`;
+    titleBox.textContent = reportNumbersObj.date;
     div_clone.appendChild(titleBox);
 
     //matrix
@@ -4477,9 +4482,29 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     b_clone.addEventListener("contextmenu", toProjectEvent);
     summaryBox.appendChild(b_clone);
 
-    summaryBox.insertAdjacentHTML(`beforeend`, `명<br>추천율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.proposal / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;계약율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.contract / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;전환율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.process / summaryTong.proposal) * 100))}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;진행율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.process / summaryTong.client) * 100))}</b>%`);
+
+    reportNumbersObj.client = summaryTong.client;
+    reportNumbersObj.proposal = summaryTong.proposal;
+    reportNumbersObj.recommend = summaryTong.recommend;
+    reportNumbersObj.contract = summaryTong.contract;
+    reportNumbersObj.process = summaryTong.process;
+
+    reportNumbersObj.recommendRate = summaryTong.client === 0 ? 0 : Math.round((summaryTong.proposal / summaryTong.client) * 1000) / 10;
+    reportNumbersObj.contractRate = summaryTong.client === 0 ? 0 : Math.round((summaryTong.contract / summaryTong.client) * 1000) / 10;
+    reportNumbersObj.convertRate = summaryTong.proposal === 0 ? 0 : Math.round((summaryTong.process / summaryTong.proposal) * 1000) / 10;
+    reportNumbersObj.processRate = summaryTong.client === 0 ? 0 : Math.round((summaryTong.contract / summaryTong.client) * 1000) / 10;
+
+    reportNumbersObj.mau = report[i].mau;
+    reportNumbersObj.charge = report[i].charge;
+    reportNumbersObj.adClients = report[i].adClients;
+
+    reportNumbersObj.clientCac = Math.round((summaryTong.client === 0 ? 0 : (report[i].charge / summaryTong.client)));
+    reportNumbersObj.contractCac = Math.round((summaryTong.contract === 0 ? 0 : (report[i].charge / summaryTong.contract)));
+    reportNumbersObj.processCac = Math.round((summaryTong.process === 0 ? 0 : (report[i].charge / summaryTong.process)));
+
+    summaryBox.insertAdjacentHTML(`beforeend`, `명<br>추천율 <b style="color:${colorChip.green}">${String(reportNumbersObj.recommendRate)}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;계약율 <b style="color:${colorChip.green}">${String(reportNumbersObj.contractRate)}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;전환율 <b style="color:${colorChip.green}">${String(reportNumbersObj.convertRate)}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;진행율 <b style="color:${colorChip.green}">${String(reportNumbersObj.processRate)}</b>%`);
     summaryBox.insertAdjacentHTML(`beforeend`, `<br>MAU <b style="color:${colorChip.green}">${String(report[i].mau)}</b>명&nbsp;&nbsp;/&nbsp;&nbsp;광고비용 <b style="color:${colorChip.green}">${autoComma(report[i].charge)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;광고유입 <b style="color:${colorChip.green}">${String(report[i].adClients)}</b>명`);
-    summaryBox.insertAdjacentHTML(`beforeend`, `<br>문의CAC <b style="color:${colorChip.green}">${autoComma(Math.round((summaryTong.client === 0 ? 0 : (report[i].charge / summaryTong.client))))}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;계약CAC <b style="color:${colorChip.green}">${autoComma(Math.round((summaryTong.contract === 0 ? 0 : (report[i].charge / summaryTong.contract))))}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;진행CAC <b style="color:${colorChip.green}">${autoComma(Math.round((summaryTong.process === 0 ? 0 : (report[i].charge / summaryTong.process))))}</b>원`);
+    summaryBox.insertAdjacentHTML(`beforeend`, `<br>문의CAC <b style="color:${colorChip.green}">${autoComma(reportNumbersObj.clientCac)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;계약CAC <b style="color:${colorChip.green}">${autoComma(reportNumbersObj.contractCac)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;진행CAC <b style="color:${colorChip.green}">${autoComma(reportNumbersObj.processCac)}</b>원`);
 
     div_clone.appendChild(summaryBox);
 
@@ -4490,6 +4515,8 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     totalSummary.process += summaryTong.process;
 
     scrollBox.appendChild(div_clone);
+
+    instance.reportNumbers.push(reportNumbersObj);
   }
 
   scrollBox.setAttribute("client_number", String(totalSummary.client));
@@ -4677,11 +4704,11 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
 ClientJs.prototype.reportViewMakerDetail = function (recycle = false) {
   const instance = this;
   const { colorChip } = GeneralJs;
+  const { ea } = this;
   try {
     return function () {
       let div_clone, svg_icon;
       let style;
-      let ea = "px";
       let margin;
       let domTargets;
       let motherBoo;
@@ -4723,6 +4750,8 @@ ClientJs.prototype.reportViewMakerDetail = function (recycle = false) {
         div_clone.classList.add("fadeup");
       }
       div_clone.classList.add("totalWhite");
+      div_clone.setAttribute("type", "report");
+      div_clone.setAttribute("order", "first");
       if (GeneralJs.returnGet().entire === "true") {
         style = {
           position: "fixed",
@@ -4738,7 +4767,7 @@ ClientJs.prototype.reportViewMakerDetail = function (recycle = false) {
       } else {
         style = {
           position: "fixed",
-          background: GeneralJs.colorChip.white,
+          background: colorChip.white,
           top: String(margin) + ea,
           left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
           borderRadius: String(5) + ea,
@@ -5205,12 +5234,12 @@ ClientJs.prototype.secondReportContents = function (report, mother, loadingIcon)
 
 ClientJs.prototype.secondReportViewMakerDetail = function (recycle = false) {
   const instance = this;
+  const { ea } = this;
   const { ajaxJson, colorChip } = GeneralJs;
   try {
     return function () {
       let div_clone, svg_icon;
       let style;
-      let ea = "px";
       let margin;
       let domTargets;
       let motherBoo;
@@ -5252,6 +5281,8 @@ ClientJs.prototype.secondReportViewMakerDetail = function (recycle = false) {
         div_clone.classList.add("fadeup");
       }
       div_clone.classList.add("totalWhite");
+      div_clone.setAttribute("type", "report");
+      div_clone.setAttribute("order", "second");
       if (GeneralJs.returnGet().entire === "true") {
         style = {
           position: "fixed",
@@ -5267,7 +5298,7 @@ ClientJs.prototype.secondReportViewMakerDetail = function (recycle = false) {
       } else {
         style = {
           position: "fixed",
-          background: GeneralJs.colorChip.white,
+          background: colorChip.white,
           top: String(margin) + ea,
           left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
           borderRadius: String(5) + ea,
@@ -6018,6 +6049,8 @@ ClientJs.prototype.extractViewMaker = function (link) {
 
 ClientJs.prototype.addExtractEvent = function () {
   const instance = this;
+  const { ea } = this;
+  const { ajax, ajaxJson } = GeneralJs;
   const { sub: { extractIcon } } = this.mother.belowButtons;
   let sendEvent;
 
@@ -6028,100 +6061,126 @@ ClientJs.prototype.addExtractEvent = function () {
       caseCopied.shift();
       const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
       const map = DataPatch.clientMap();
-
       let data;
       let valuesArr;
       let temp, temp2;
       let div_clone, svg_clone;
       let style;
-      let ea = "px";
       let width;
       let cliidArr;
+      let type;
+      let loading;
 
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      div_clone.classList.add("justfadein");
-      style = {
-        position: "fixed",
-        zIndex: String(3),
-        background: GeneralJs.colorChip.black,
-        opacity: String(0.2),
-        width: "100%",
-        height: "100%",
-        top: String(0),
-        left: String(0),
-      };
-      for (let i in style) {
-        div_clone.style[i] = style[i];
-      }
-      instance.totalMother.appendChild(div_clone);
-
-      width = 50;
-      svg_clone = instance.mother.returnLoadingIcon();
-      style = {
-        position: "fixed",
-        zIndex: String(3),
-        width: String(width) + ea,
-        height: String(width) + ea,
-        top: "calc(50% - " + String((width / 2) + 60) + ea + ")",
-        left: "calc(50% - " + String((width / 2)) + ea + ")",
-      };
-      for (let i in style) {
-        svg_clone.style[i] = style[i];
-      }
-      instance.totalMother.appendChild(svg_clone);
-
-      valuesArr = [];
-
-      temp2 = Object.keys(caseCopied[0]);
-      temp = [];
-      for (let i of temp2) {
-        if (map[i] === undefined || typeof map[i] !== "object") {
-          temp.push("알 수 없음");
-        } else {
-          temp.push(map[i].name);
+      type = "general";
+      if (instance.whiteBox !== null) {
+        if (instance.whiteBox.contentsBox.getAttribute("type") === "report") {
+          if (instance.whiteBox.contentsBox.getAttribute("order") === "first") {
+            type = "firstReport";
+          } else {
+            type = "secondReport";
+          }
         }
       }
-      valuesArr.push(temp);
 
-      cliidArr = [];
-      for (let i = 0; i < caseCopied.length; i++) {
-        temp2 = Object.values(caseCopied[i]);
-        valuesArr.push(temp2);
-        cliidArr.push(temp2.find((c) => { return /^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(c); }));
-      }
+      if (type === "general") {
 
-      GeneralJs.ajaxJson({ idArr: cliidArr, method: "client", property: "manager" }, "/getHistoryProperty").then((obj) => {
-        valuesArr[0].push("담당자");
-        for (let i = 1; i < valuesArr.length; i++) {
-          valuesArr[i].push(obj[valuesArr[i].find((c) => { return /^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(c); })]);
+        // loading
+        div_clone = GeneralJs.nodes.div.cloneNode(true);
+        div_clone.classList.add("justfadein");
+        style = {
+          position: "fixed",
+          zIndex: String(3),
+          background: GeneralJs.colorChip.black,
+          opacity: String(0.2),
+          width: "100%",
+          height: "100%",
+          top: String(0),
+          left: String(0),
+        };
+        for (let i in style) {
+          div_clone.style[i] = style[i];
         }
+        instance.totalMother.appendChild(div_clone);
 
-        return GeneralJs.ajaxJson({
-          values: valuesArr,
-          newMake: true,
-          parentId: parentId,
-          sheetName: "fromDB_client_" + String(today.getFullYear()) + instance.mother.todayMaker()
-        }, BACKHOST + "/sendSheets");
-      }).then((res) => {
-        const { link } = res;
-        div_clone.classList.remove("justfadein");
-        div_clone.classList.add("justfadeout");
-        svg_clone.style.opacity = "0";
-        GeneralJs.timeouts["extractPendingBack"] = setTimeout(function () {
-          let viewFunction;
-          instance.totalMother.removeChild(instance.totalMother.lastChild);
-          instance.totalMother.removeChild(instance.totalMother.lastChild);
-          viewFunction = instance.extractViewMaker(link);
-          viewFunction();
-          clearTimeout(GeneralJs.timeouts["extractPendingBack"]);
-          GeneralJs.timeouts["extractPendingBack"] = null;
-        }, 401);
-      }).catch((err) => {
-        console.log(err);
-      });
+        width = 50;
+        svg_clone = instance.mother.returnLoadingIcon();
+        style = {
+          position: "fixed",
+          zIndex: String(3),
+          width: String(width) + ea,
+          height: String(width) + ea,
+          top: "calc(50% - " + String((width / 2) + 60) + ea + ")",
+          left: "calc(50% - " + String((width / 2)) + ea + ")",
+        };
+        for (let i in style) {
+          svg_clone.style[i] = style[i];
+        }
+        instance.totalMother.appendChild(svg_clone);
+
+        valuesArr = [];
+        temp2 = Object.keys(caseCopied[0]);
+        temp = [];
+        for (let i of temp2) {
+          if (map[i] === undefined || typeof map[i] !== "object") {
+            temp.push("알 수 없음");
+          } else {
+            temp.push(map[i].name);
+          }
+        }
+        valuesArr.push(temp);
+  
+        cliidArr = [];
+        for (let i = 0; i < caseCopied.length; i++) {
+          temp2 = Object.values(caseCopied[i]);
+          valuesArr.push(temp2);
+          cliidArr.push(temp2.find((c) => { return /^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(c); }));
+        }
+  
+        ajaxJson({ idArr: cliidArr, method: "client", property: "manager" }, "/getHistoryProperty").then((obj) => {
+          valuesArr[0].push("담당자");
+          for (let i = 1; i < valuesArr.length; i++) {
+            valuesArr[i].push(obj[valuesArr[i].find((c) => { return /^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(c); })]);
+          }
+  
+          return ajaxJson({
+            values: valuesArr,
+            newMake: true,
+            parentId: parentId,
+            sheetName: "fromDB_client_" + String(today.getFullYear()) + instance.mother.todayMaker()
+          }, BACKHOST + "/sendSheets");
+        }).then((res) => {
+          const { link } = res;
+          div_clone.classList.remove("justfadein");
+          div_clone.classList.add("justfadeout");
+          svg_clone.style.opacity = "0";
+          GeneralJs.timeouts["extractPendingBack"] = setTimeout(function () {
+            let viewFunction;
+            instance.totalMother.removeChild(instance.totalMother.lastChild);
+            instance.totalMother.removeChild(instance.totalMother.lastChild);
+            viewFunction = instance.extractViewMaker(link);
+            viewFunction();
+            clearTimeout(GeneralJs.timeouts["extractPendingBack"]);
+            GeneralJs.timeouts["extractPendingBack"] = null;
+          }, 401);
+        }).catch((err) => {
+          console.log(err);
+        });
+
+      } else if (type === "firstReport") {
+
+        loading = instance.mother.grayLoading();
+
+
+
+
+
+        
+      } else {
+
+      }
 
     } catch (e) {
-      GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+      ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
       console.log(e);
     }
   }
