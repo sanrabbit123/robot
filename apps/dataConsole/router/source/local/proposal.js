@@ -115,6 +115,49 @@ ProposalJs.prototype.totalInitial = function () {
               try {
                 if (instance.client !== null) {
                   const { cliid } = instance.client;
+                  globalThis.window.parent.postMessage(JSON.stringify({
+                    cliid: cliid,
+                    mode: "reset",
+                  }));
+                } else {
+                  window.alert("로딩을 기다렸다가 잠시 후에 시도해주세요!");
+                }
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          },
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            height: String(3.2) + vh,
+            paddingLeft: String(1.3) + vh,
+            paddingRight: String(1.3) + vh,
+            borderRadius: String(5) + "px",
+            background: colorChip.gradientGray,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            marginRight: String(0.4) + vh,
+          },
+          child: {
+            text: "되돌아가기",
+            style: {
+              fontSize: String(1.26) + vh,
+              fontWeight: String(700),
+              color: colorChip.white,
+              position: "relative",
+              top: String(isMac() ? -1 : 1) + ea,
+            }
+          }
+        },
+        {
+          class: [ "hoverDefault_lite" ],
+          event: {
+            click: async function (e) {
+              try {
+                if (instance.client !== null) {
+                  const { cliid } = instance.client;
                   const projects = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getProjects", { equal: true });
                   let thisProject;
                   projects.sort((a, b) => {
@@ -172,12 +215,14 @@ ProposalJs.prototype.totalInitial = function () {
                   })
                   if (projects.length > 0) {
                     [ thisProject ] = projects;
-                    if (window.confirm("추천서를 발송할까요?")) {
-                      await ajaxJson({
-                        instant: true,
-                        proid: thisProject.proid,
-                      }, "/createProposalDocument");
-                      window.alert(`추천서가 발송되었습니다!`);
+                    if (window.confirm("업데이트는 하셨나요? 업데이트를 반드시 먼저 하셔야 합니다!")) {
+                      if (window.confirm("추천서를 발송할까요?")) {
+                        await ajaxJson({
+                          instant: true,
+                          proid: thisProject.proid,
+                        }, "/createProposalDocument");
+                        window.alert(`추천서가 발송되었습니다!`);
+                      }
                     }
                   } else {
                     window.alert("제안서를 우선 만들어 주세요!");
@@ -1052,7 +1097,7 @@ ProposalJs.prototype.firstProcess = async function () {
     };
     if (i === 0) {
       if (getObj.dataonly === "true" && getObj.entire === "true") {
-        style.width = "calc(100% - 24vh)";
+        style.width = "calc(100% - 33vh)";
       }
     }
     for (let i in style) {

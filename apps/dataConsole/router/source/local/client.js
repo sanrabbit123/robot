@@ -883,7 +883,9 @@ ClientJs.prototype.infoArea = function (info) {
           button_clone.appendChild(iframe_clone);
 
           GeneralJs.stacks["addressEvent"] = async function (e) {
-            updateValueEvent.call(button_clone, e);
+            if (!/^[\{\[]/.test(e.data)) {
+              updateValueEvent.call(button_clone, e);
+            }
             window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
             GeneralJs.stacks["addressEvent"] = null;
           }
@@ -2225,7 +2227,9 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           button_clone.appendChild(iframe_clone);
 
           GeneralJs.stacks["addressEvent"] = async function (e) {
-            updateValueEvent.call(button_clone, e);
+            if (!/^[\{\[]/.test(e.data)) {
+              updateValueEvent.call(button_clone, e);
+            }
             window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
             GeneralJs.stacks["addressEvent"] = null;
           }
@@ -6711,11 +6715,6 @@ ClientJs.prototype.launching = async function () {
       this.communicationRender();
     }
 
-    // const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/clientCard");
-    // es.addEventListener("updateTong", (e) => {
-    //   instance.sseCardParsing(e.data);
-    // });
-
     getTarget = null;
     if (typeof getObj.specificids === "string") {
       tempFunction = this.makeSearchEvent("id:" + getObj.specificids);
@@ -6749,6 +6748,34 @@ ClientJs.prototype.launching = async function () {
         }
       }
     }
+
+    // proposal view return event
+    window.addEventListener('message', function (e) {
+      if (/^[\{\[]/.test(e.data)) {
+        try {
+          const data = JSON.parse(e.data);
+          if (typeof data.cliid === "string" && typeof data.mode === "string") {
+            if (data.mode === "reset") {
+              const { cliid } = data;
+              let target;
+              instance.whiteCancelMaker().call({}, {});
+              target = null;
+              for (let dom of instance.standardDoms) {
+                if ((new RegExp(cliid, 'gi')).test(dom.textContent)) {
+                  target = dom;
+                  break;
+                }
+              }
+              if (target !== null) {
+                setQueue(() => {
+                  target.click();
+                }, 601);
+              }
+            }
+          }
+        } catch {}
+      }
+    });
 
   } catch (e) {
     GeneralJs.ajax({ message: "ClientJs 프론트 스크립트 문제 생김 " + e.message, channel: "#error_log" }, "/sendSlack", function () {});
