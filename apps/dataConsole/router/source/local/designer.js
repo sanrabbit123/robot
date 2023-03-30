@@ -1848,6 +1848,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   style = {
+    display: GeneralJs.returnGet().entire !== "true" ? "block" : "none",
     position: "relative",
     top: String(topMargin) + ea,
     left: String(0) + ea,
@@ -1873,7 +1874,6 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
-  // div_clone3.addEventListener("click", clipboardEvent);
   div_clone3.addEventListener("contextmenu", async function (e) {
     try {
       e.preventDefault();
@@ -2038,7 +2038,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //contents ---------------------------------------------------------------------------------
 
   //property
-  contentsBoxHeight = motherHeight - titleHeight - (topMargin * 2.5);
+  contentsBoxHeight = GeneralJs.returnGet().entire !== "true" ? motherHeight - titleHeight - (topMargin * 2.5) : motherHeight - (topMargin * 2);
   contentsBoxBottom = topMargin;
   fontSize = <%% 15, 13, 12, 11, 3 %%>;
   lineHeightRatio = <%% 1.97, 1.93, 1.9, 1.9, 1.9 %%>;
@@ -2558,6 +2558,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     height: "100%",
     overflow: "scroll",
     borderBottom: "1px dashed " + GeneralJs.colorChip.gray3,
+    opacity: GeneralJs.returnGet().entire !== "true" ? "" : String(0),
   };
   for (let i in style) {
     propertyBox.style[i] = style[i];
@@ -2641,7 +2642,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     height: "100%",
     bottom: String(0) + ea,
     right: String(leftMargin) + ea,
-    width: "calc(55% - " + String(leftMargin) + ea + ")",
+    width: GeneralJs.returnGet().entire !== "true" ? "calc(55% - " + String(leftMargin) + ea + ")" : "calc(100% - " + String(leftMargin * 2) + ea + ")",
     overflow: "scroll",
     borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
   };
@@ -3269,7 +3270,9 @@ DesignerJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
 
     //contents box
     div_clone = GeneralJs.nodes.div.cloneNode(true);
-    div_clone.classList.add("fadeup");
+    if (GeneralJs.returnGet().entire !== "true") {
+      div_clone.classList.add("fadeup");
+    }
     div_clone.classList.add("totalWhite");
 
     indexArr = [];
@@ -3286,17 +3289,31 @@ DesignerJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
     div_clone.setAttribute("index", thisCase["desid"]);
     div_clone.setAttribute("request", String(requestIndex));
 
-    style = {
-      position: "fixed",
-      background: colorChip.white,
-      top: String(margin) + ea,
-      left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
-      borderRadius: String(5) + ea,
-      boxShadow: "0 2px 10px -6px " + colorChip.shadow,
-      width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
-      height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
-      zIndex: String(2),
-    };
+    if (GeneralJs.returnGet().entire === "true") {
+      style = {
+        position: "fixed",
+        background: colorChip.white,
+        borderRadius: String(5) + ea,
+        boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+        top: String(0) + ea,
+        left: String(0) + ea,
+        width: String(window.innerWidth) + ea,
+        height: String(window.innerHeight) + ea,
+        zIndex: String(2),
+      };
+    } else {
+      style = {
+        position: "fixed",
+        background: colorChip.white,
+        top: String(margin) + ea,
+        left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
+        borderRadius: String(5) + ea,
+        boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+        width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
+        height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
+        zIndex: String(2),
+      };
+    }
     for (let i in style) {
       div_clone.style[i] = style[i];
     }
@@ -4580,12 +4597,16 @@ DesignerJs.prototype.launching = async function () {
     getTarget = null;
     if (getObj.mode === "general") {
 
-      this.backGrayBar();
-      await this.spreadData();
-      this.addTransFormEvent();
-      this.addSearchEvent();
-      this.addExtractEvent();
-      this.whiteResize();
+      if (getObj.dataonly === "true") {
+        await this.spreadData();
+      } else {
+        this.backGrayBar();
+        await this.spreadData();
+        this.addTransFormEvent();
+        this.addSearchEvent();
+        this.addExtractEvent();
+        this.whiteResize();
+      }
 
       if (getObj.desid !== undefined) {
         for (let dom of this.standardDoms) {

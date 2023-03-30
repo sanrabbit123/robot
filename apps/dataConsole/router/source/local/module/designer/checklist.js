@@ -854,7 +854,59 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
             return "포트폴리오 보기";
           },
           script: function (mother, designer) {
-            GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general&desid=" + designer.desid);
+            let cancelBack, whitePrompt;
+
+            cancelBack = createNode({
+              mother: totalContents,
+              class: [ possiblePopupClassName ],
+              event: {
+                click: (e) => {
+                  removeByClass(possiblePopupClassName);
+                }
+              },
+              style: {
+                position: "fixed",
+                top: String(0),
+                left: String(grayBarWidth) + ea,
+                width: withOut(grayBarWidth, ea),
+                height: withOut(belowHeight, ea),
+                background: colorChip.black,
+                opacity: String(0.3),
+                zIndex: String(zIndex),
+              }
+            });
+
+            whitePrompt = createNode({
+              mother: totalContents,
+              class: [ possiblePopupClassName ],
+              style: {
+                position: "fixed",
+                top: String(margin) + ea,
+                left: String(margin + grayBarWidth) + ea,
+                width: withOut((margin * 2) + grayBarWidth, ea),
+                height: withOut((margin * 2) + belowHeight, ea),
+                background: colorChip.white,
+                borderRadius: String(5) + "px",
+                animation: "fadeuplite 0.3s ease forwards",
+                overflow: "hidden",
+                zIndex: String(zIndex),
+              },
+              child: {
+                mode: "iframe",
+                attribute: {
+                  src: window.location.protocol + "//" + window.location.host + "/designer?mode=general&desid=" + designer.desid + "&dataonly=true&entire=true",
+                },
+                style: {
+                  position: "absolute",
+                  display: "block",
+                  top: String(0),
+                  left: String(0),
+                  width: withOut(0, ea),
+                  height: withOut(0, ea),
+                  border: String(0),
+                }
+              }
+            });
           },
           height: factorHeight,
           type: "string",
