@@ -6789,19 +6789,9 @@ DesignerJs.prototype.checkListView = async function () {
     let searchResult;
     let projects, clients;
 
-    if (!middleMode) {
-      designers = await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": { $not: { $regex: "해지" } } } }, "/getDesigners", { equal: true });
-      length = designers.length;
-      this.designers = new Designers(designers);
-    } else {
-      designers = await ajaxJson({ noFlat: true, whereQuery: { desid: getObj.desid } }, "/getDesigners", { equal: true });
-      if (designers.length === 0) {
-        throw new Error("invaild desid");
-      }
-      length = designers.length;
-      this.designers = new Designers(designers);
-      this.designer = this.designers.pick(getObj.desid);
-    }
+    designers = await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": { $not: { $regex: "해지" } } } }, "/getDesigners", { equal: true });
+    length = designers.length;
+    this.designers = new Designers(designers);
 
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[this.standardDoms.length - 1].getAttribute("desid");
     this.middleMode = middleMode;
@@ -6816,75 +6806,65 @@ DesignerJs.prototype.checkListView = async function () {
 
     motherHeight = <%% 154, 148, 148, 148, 148 %%>;
 
-    if (!middleMode) {
-      //search event
-      if (this.searchInput !== undefined && this.searchInput !== null) {
-        searchInput = this.searchInput;
-        searchInput.addEventListener("keypress", function (e) {
-          if (e.key === "Enter") {
-            if (instance.totalFather !== null) {
-              document.getElementById("totalcontents").removeChild(document.querySelector(".totalFather"));
-              instance.totalFather = null;
-              instance.totalMother.classList.remove("justfadeoutoriginal");
-              instance.totalMother.classList.add("justfadeinoriginal");
-            }
-            const value = this.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\~\@\#\$\%\^\&\*\(\)\-\=\+\[\]\{\}\<\>\/\\ \n\t]/gi, '');
-            let target;
-            if (value === "") {
-              instance.checkListDetailLaunching(instance.standardDoms[1].getAttribute("desid"));
-            } else {
-              searchResult = instance.designers.search(value);
-              if (searchResult.length > 0) {
-                instance.checkListDetailLaunching(searchResult[0].desid);
-              }
+    //search event
+    if (this.searchInput !== undefined && this.searchInput !== null) {
+      searchInput = this.searchInput;
+      searchInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          if (instance.totalFather !== null) {
+            document.getElementById("totalcontents").removeChild(document.querySelector(".totalFather"));
+            instance.totalFather = null;
+            instance.totalMother.classList.remove("justfadeoutoriginal");
+            instance.totalMother.classList.add("justfadeinoriginal");
+          }
+          const value = this.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\~\@\#\$\%\^\&\*\(\)\-\=\+\[\]\{\}\<\>\/\\ \n\t]/gi, '');
+          let target;
+          if (value === "") {
+            instance.checkListDetailLaunching(instance.standardDoms[1].getAttribute("desid"));
+          } else {
+            searchResult = instance.designers.search(value);
+            if (searchResult.length > 0) {
+              instance.checkListDetailLaunching(searchResult[0].desid);
             }
           }
-        });
-        searchInput.addEventListener("contextmenu", this.checkListDetailSearchBox());
-      }
-
-      //standard doms event
-      standardBar_mother = standardBar.cloneNode(false);
-      style = {
-        position: "fixed",
-        height: withOut(100, belowHeight + motherHeight, ea),
-        overflow: "scroll",
-      };
-      for (let i in style) {
-        standardBar_mother.style[i] = style[i];
-      }
-      totalMother.insertBefore(standardBar_mother, standardBar);
-      standardBar_mother.appendChild(standardBar);
-      for (let i = 1; i < this.standardDoms.length; i++) {
-        if (this.designers.pick(this.standardDoms[i].getAttribute("desid")) !== null) {
-          this.standardDoms[i].style.color = colorChip[(/완료/g.test(this.designers.pick(this.standardDoms[i].getAttribute("desid")).information.contract.status)) ? "black" : "deactive"];
-          this.standardDoms[i].setAttribute("color", this.standardDoms[i].style.color);
-          this.standardDoms[i].style.transition = "all 0s ease";
-          this.standardDoms[i].addEventListener("click", (e) => {
-            instance.checkListDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
-          });
-          children = this.standardDoms[i].children;
-          childrenLength = children.length;
-          for (let j = 0; j < childrenLength; j++) {
-            children[j].style.color = "inherit";
-            children[j].style.transition = "all 0s ease";
-          }
-        } else {
-          this.standardDoms[i].style.display = "none";
         }
+      });
+      searchInput.addEventListener("contextmenu", this.checkListDetailSearchBox());
+    }
+
+    //standard doms event
+    standardBar_mother = standardBar.cloneNode(false);
+    style = {
+      position: "fixed",
+      height: withOut(100, belowHeight + motherHeight, ea),
+      overflow: "scroll",
+    };
+    for (let i in style) {
+      standardBar_mother.style[i] = style[i];
+    }
+    totalMother.insertBefore(standardBar_mother, standardBar);
+    standardBar_mother.appendChild(standardBar);
+    for (let i = 1; i < this.standardDoms.length; i++) {
+      if (this.designers.pick(this.standardDoms[i].getAttribute("desid")) !== null) {
+        this.standardDoms[i].style.color = colorChip[(/완료/g.test(this.designers.pick(this.standardDoms[i].getAttribute("desid")).information.contract.status)) ? "black" : "deactive"];
+        this.standardDoms[i].setAttribute("color", this.standardDoms[i].style.color);
+        this.standardDoms[i].style.transition = "all 0s ease";
+        this.standardDoms[i].addEventListener("click", (e) => {
+          instance.checkListDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
+        });
+        children = this.standardDoms[i].children;
+        childrenLength = children.length;
+        for (let j = 0; j < childrenLength; j++) {
+          children[j].style.color = "inherit";
+          children[j].style.transition = "all 0s ease";
+        }
+      } else {
+        this.standardDoms[i].style.display = "none";
       }
     }
 
     this.firstTop = this.standardDoms[1].getBoundingClientRect().top;
     this.motherHeight = motherHeight;
-
-    //sse
-    // if (!this.middleMode) {
-    //   const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
-    //   es.addEventListener("updateTong", (e) => {
-    //     instance.checkListSseParsing(equalJson(e.data));
-    //   });
-    // }
 
     loading.parentNode.removeChild(loading);
 
