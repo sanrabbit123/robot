@@ -237,11 +237,45 @@ ReadDocuments.prototype.readXlsx = async function (fileName, sheetsName = null) 
   }
 }
 
+ReadDocuments.prototype.readTxt = async function (fileName) {
+  const instance = this;
+  const { moduleDir, stat } = this;
+  const { fileSystem } = this.mother;
+  try {
+    const raw = await stat(fileName);
+    const body = await fileSystem(`readString`, [ fileName ]);
+    let result;
+
+    result = {
+      name: fileName.split("/")[fileName.split("/").length - 1],
+      type: "txt",
+      exe: fileName.split("/")[fileName.split("/").length - 1].split(".")[1],
+      size: {
+        bytes: raw.size,
+        kb: raw.size / 1024,
+        mb: (raw.size / 1024) / 1024,
+      },
+      date: {
+        birth: raw.birthtime,
+        last: {
+          access: raw.atime,
+          modification: raw.mtime,
+        }
+      },
+      body: body
+    };
+
+    return result;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 ReadDocuments.prototype.readFile = async function (filePath) {
   if (typeof filePath !== "string") {
     throw new Error("invalid input");
   }
-
   const instance = this;
   try {
     let fileName, exe;
@@ -261,6 +295,8 @@ ReadDocuments.prototype.readFile = async function (filePath) {
       return this.readHwp(filePath);
     } else if (exe === "xlsx") {
       return this.readXlsx(filePath);
+    } else if (exe === "txt") {
+      return this.readTxt(filePath);
     } else {
       return null;
     }
