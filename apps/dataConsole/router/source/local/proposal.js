@@ -2976,6 +2976,181 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
           div_clone3.classList.add("pp_designer_selected_box_title");
           div_clone3.classList.add("hoverDefault");
           div_clone3.textContent = fourth.titles[j];
+
+          if (j === 0) {
+            div_clone3.addEventListener("click", function (e) {
+              const searchDesignerInputsClassName = "searchDesignerInputsClassName";
+              const desidTargets = [ ...this.nextElementSibling.querySelectorAll("label") ];
+              let cancelBack, whiteTong;
+              let whiteTongBase;
+              let whiteWidth;
+              let whiteHeight;
+              let paddingTop;
+              let paddingLeft;
+              let paddingBottom;
+              let size0;
+              let size1;
+              let marginLeft;
+              let bottomVisual;
+              let inputBoxHeight;
+              let inputIndent;
+              let inputBottomVisual;
+              let lineHeight;
+              let wordingVisual;
+              let input;
+              let inputSize;
+
+              whiteWidth = 230;
+              whiteHeight = 150;
+              paddingTop = 17;
+              paddingLeft = 23;
+              paddingBottom = 62;
+              size0 = 14;
+              size1 = 15;
+              marginLeft = 0;
+              bottomVisual = 7;
+              inputBoxHeight = 30;
+              inputIndent = 9;
+              inputBottomVisual = 0;
+              lineHeight = 1.5;
+              wordingVisual = GeneralJs.isMac() ? 0 : 2;
+              inputSize = 13;
+            
+              cancelBack = createNode({
+                mother: totalContents,
+                class: [ searchDesignerInputsClassName ],
+                event: {
+                  click: (e) => { removeByClass(searchDesignerInputsClassName) },
+                },
+                style: {
+                  position: "fixed",
+                  top: String(0),
+                  left: String(0),
+                  width: withOut(0, ea),
+                  height: withOut(0, ea),
+                  background: colorChip.black,
+                  opacity: String(0.3),
+                }
+              });
+
+              whiteTongBase = createNode({
+                mode: "aside",
+                mother: totalContents,
+                class: [ searchDesignerInputsClassName ],
+                event: {
+                  contextmenu: (e) => { e.stopPropagation(); },
+                  dblclick: (e) => { e.stopPropagation(); },
+                  drop: (e) => { e.stopPropagation(); },
+                  keyup: (e) => { e.stopPropagation(); },
+                  keydown: (e) => { e.stopPropagation(); },
+                  keypress: (e) => { e.stopPropagation(); },
+                  click: (e) => { removeByClass(searchDesignerInputsClassName) },
+                },
+                style: {
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  position: "fixed",
+                  top: String(0) + "vh",
+                  left: String(1) + "vw",
+                  width: String(98) + "vw",
+                  height: "calc(100vh - " + String(0) + ea + ")",
+                  background: "transparent",
+                  zIndex: String(900)
+                }
+              });
+              
+              whiteTong = createNode({
+                mother: whiteTongBase,
+                event: {
+                  click: (e) => { e.stopPropagation(); },
+                },
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: String(whiteWidth - (paddingLeft * 2)) + ea,
+                  paddingTop: String(paddingTop) + ea,
+                  paddingBottom: String(paddingBottom) + ea,
+                  paddingLeft: String(paddingLeft) + ea,
+                  paddingRight: String(paddingLeft) + ea,
+                  borderRadius: String(5) + "px",
+                  boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                  background: colorChip.white,
+                  animation: "fadeuplite 0.4s ease forwards",
+                }
+              });
+
+              createNode({
+                mother: whiteTong,
+                text: "디자이너 이름을 검색해주세요!",
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  fontSize: String(size1) + ea,
+                  fontWeight: String(600),
+                  color: colorChip.black,
+                  lineHeight: String(lineHeight),
+                  top: String(wordingVisual) + ea,
+                  textAlign: "center",
+                }
+              });
+
+              createNode({
+                mother: whiteTong,
+                style: {
+                  position: "absolute",
+                  bottom: String(paddingTop + bottomVisual) + ea,
+                  left: String(paddingLeft + marginLeft) + ea,
+                  width: withOut((paddingLeft * 2) + marginLeft, ea),
+                  height: String(inputBoxHeight) + ea,
+                  borderRadius: String(5) + "px",
+                  background: colorChip.gray1,
+                }
+              });
+
+              input = createNode({
+                mother: whiteTong,
+                mode: "input",
+                attribute: {
+                  type: "text",
+                },
+                event: {
+                  keypress: function (e) {
+                    if (e.key === "Enter") {
+                      const finalValue = this.value.trim();
+                      let labelTarget;
+                      labelTarget = desidTargets.find((label) => {
+                        return (new RegExp(finalValue, "gi")).test(label.children[0].getAttribute("cus_value"));
+                      });
+                      if (labelTarget !== undefined) {
+                        labelTarget.children[0].click();
+                      }
+                      removeByClass(searchDesignerInputsClassName);
+                    }
+                  }
+                },
+                style: {
+                  position: "absolute",
+                  bottom: String(paddingTop + bottomVisual + inputBottomVisual) + ea,
+                  left: String(paddingLeft + marginLeft + inputIndent) + ea,
+                  width: withOut((paddingLeft * 2) + marginLeft + (inputIndent * 2), ea),
+                  height: String(inputBoxHeight) + ea,
+                  background: "transparent",
+                  fontSize: String(inputSize) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.black,
+                  border: String(0),
+                  outline: String(0),
+                  textAlign: "center",
+                }
+              });
+
+              input.focus();
+
+            });
+          }
+
           div_clone2.appendChild(div_clone3);
           div_clone3 = GeneralJs.nodes.div.cloneNode(true);
           div_clone3.classList.add("pp_designer_selected_box_contents");
@@ -5152,12 +5327,12 @@ ProposalJs.prototype.cssInjection = function () {
   .pp_designer_selected_box_contents_designers_total::-webkit-scrollbar{display:none;}
 
   .pp_designer_selected_box_contents_designers,.pp_designer_selected_box_contents_service{
-    font-size: 1.2vh;
+    font-size: 1.1vh;
     font-weight: 600;
     display: inline-flex;
     padding: 13px;
-    padding-top: ${GeneralJs.isMac() ? String(4) : String(4.5)}px;
-    padding-bottom: ${GeneralJs.isMac() ? String(4) : String(4.5)}px;
+    padding-top: ${GeneralJs.isMac() ? String(4) : String(5)}px;
+    padding-bottom: ${GeneralJs.isMac() ? String(6) : String(5)}px;
     height: 16px;
     background: ${GeneralJs.colorChip.white};
     margin: 2px;

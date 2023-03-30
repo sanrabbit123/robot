@@ -4330,14 +4330,16 @@ GeneralJs.prompt = function (message, preValue = '') {
   let lineHeight;
   let wordingVisual;
   let finalEvent;
+  let inputSize;
 
   whiteWidth = 320;
   whiteHeight = 150;
-  paddingTop = 16;
+  paddingTop = 17;
   paddingLeft = 23;
   paddingBottom = 62;
   size0 = 14;
   size1 = 15;
+  inputSize = 13;
   marginLeft = 18;
   bottomVisual = 7;
   inputBoxHeight = 30;
@@ -4452,7 +4454,7 @@ GeneralJs.prompt = function (message, preValue = '') {
       width: withOut((paddingLeft * 2) + marginLeft + (inputIndent * 2), ea),
       height: String(inputBoxHeight) + ea,
       background: "transparent",
-      fontSize: String(13) + ea,
+      fontSize: String(inputSize) + ea,
       fontWeight: String(400),
       color: colorChip.black,
       border: String(0),

@@ -702,7 +702,6 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "화장실", target: "bathroom" },
       { name: "발코니", target: "valcony" },
       { name: "가족 구성원", target: "family" },
-      { name: "유입 채널", target: "channel" },
       { name: "부분 여부", target: "partialBoo" },
       { name: "부분 평수", target: "partialPyeong" },
       { name: "부분 공간", target: "partialDetail" },
