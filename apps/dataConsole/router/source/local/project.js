@@ -7190,6 +7190,30 @@ ProjectJs.prototype.rawCommentView = function (proid) {
             child: {
               mode: "textarea",
               text: thisRawContents.contents.body,
+              attribute: {
+                proid: project.proid,
+                desid: project.desid,
+                cliid: project.cliid,
+              },
+              event: {
+                blur: async function (e) {
+                  try {
+                    const proid = this.getAttribute("proid");
+                    const desid = this.getAttribute("desid");
+                    const cliid = this.getAttribute("cliid");
+                    let body;
+                    let type;
+                    let mode;
+                    let response;
+                    mode = "update";
+                    type = "web";
+                    body = this.value.replace(/[\=\&]/gi, '').trim();
+                    response = await ajaxJson({ mode, proid, desid, cliid, body, type }, SECONDHOST + "/projectDesignerRaw");
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              },
               style: {
                 width: withOut(0),
                 height: withOut(0),
