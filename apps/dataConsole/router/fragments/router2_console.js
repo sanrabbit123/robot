@@ -2503,8 +2503,6 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
 
       requestObject["requests.0.analytics.googleAnalytics.userType"] = googleId;
 
-      console.log(requestObject);
-
       message = '';
       ifOverlap = await back.getClientsByQuery({ phone }, { selfMongo });
       if (ifOverlap.length > 0) {
@@ -2514,6 +2512,8 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
         pastRequests = (ifOverlap[0].toNormal()).requests;
         overlapTimeline = new Date(JSON.stringify(pastRequests[0].request.timeline).slice(1, -1));
         overlapTimeline.setHours(overlapTimeline.getHours + overlapStandardHours);
+
+        console.log(overlapTimeline);
 
         if (overlapTimeline.valueOf() < (new Date()).valueOf()) {
           requestArr = [];
