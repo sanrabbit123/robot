@@ -2513,8 +2513,6 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
         overlapTimeline = new Date(JSON.stringify(pastRequests[0].request.timeline).slice(1, -1));
         overlapTimeline.setHours(overlapTimeline.getHours() + overlapStandardHours);
 
-        console.log(overlapTimeline);
-
         if (overlapTimeline.valueOf() < (new Date()).valueOf()) {
           requestArr = [];
           for (let z = 0; z < pastRequests.length; z++) {
