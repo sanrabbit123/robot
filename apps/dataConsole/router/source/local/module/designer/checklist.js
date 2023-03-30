@@ -2959,11 +2959,10 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
 
 DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null) {
   const instance = this;
-  const { ea, belowHeight, firstTop, motherHeight, middleMode } = this;
-  const { removeByClass } = GeneralJs;
+  const { ea, belowHeight, firstTop, motherHeight } = this;
   const totalMother = document.querySelector(".totalMother");
   const standardBar = this.standardDoms[0].parentElement;
-  const { scrollTo, ajaxJson, colorChip } = GeneralJs;
+  const { scrollTo, ajaxJson, colorChip, removeByClass } = GeneralJs;
   const memoBaseClassName = "memoBaseClassName";
   const possiblePopupClassName = "possiblePopupClassName";
   let target, pastScrollTop;
@@ -2974,9 +2973,7 @@ DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null
   this.desid = desid;
   this.fixTargets = [];
 
-  if (!middleMode) {
-    this.pageHistory.unshift({ path: "checklist", status: "list", desid });
-  }
+  this.pageHistory.unshift({ path: "checklist", status: "list", desid });
   window.history.pushState({ path: "checklist", status: "list", desid }, '');
 
   if (this.mainBaseTong !== undefined && this.mainBaseTong !== null) {
@@ -2994,42 +2991,27 @@ DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null
     }
   }
 
-  if (!middleMode) {
-    target = null;
-    for (let i = 0; i < this.standardDoms.length; i++) {
-      if (this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g) !== null) {
-        if (desid === this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g)[0]) {
-          target = i;
-        }
-      }
-    }
-    for (let i = 1; i < this.standardDoms.length; i++) {
-      if (i !== target) {
-        this.standardDoms[i].style.color = this.standardDoms[i].getAttribute("color");
-      } else {
-        this.standardDoms[i].style.color = colorChip.green;
-        if (i !== 1) {
-          if (this.standardDoms[i].getBoundingClientRect().top > window.innerHeight - belowHeight - motherHeight - this.standardDoms[i].getBoundingClientRect().height + 10 || this.standardDoms[i].getBoundingClientRect().top < firstTop) {
-            standardBar.parentElement.scrollTo({ top: ((i - 1) * (this.standardDoms[i].getBoundingClientRect().height)) });
-          }
-        } else {
-          standardBar.parentElement.scrollTo({ top: 0 });
-        }
+  target = null;
+  for (let i = 0; i < this.standardDoms.length; i++) {
+    if (this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g) !== null) {
+      if (desid === this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g)[0]) {
+        target = i;
       }
     }
   }
-
-  if (middleMode) {
-    ajaxJson({
-      page: "checklist",
-      mode: "page",
-      who: instance.designer.information.phone,
-      desid,
-    }, "/ghostDesigner_updateAnalytics").then((message) => {
-      console.log(message);
-    }).catch((err) => {
-      console.log(err);
-    });
+  for (let i = 1; i < this.standardDoms.length; i++) {
+    if (i !== target) {
+      this.standardDoms[i].style.color = this.standardDoms[i].getAttribute("color");
+    } else {
+      this.standardDoms[i].style.color = colorChip.green;
+      if (i !== 1) {
+        if (this.standardDoms[i].getBoundingClientRect().top > window.innerHeight - belowHeight - motherHeight - this.standardDoms[i].getBoundingClientRect().height + 10 || this.standardDoms[i].getBoundingClientRect().top < firstTop) {
+          standardBar.parentElement.scrollTo({ top: ((i - 1) * (this.standardDoms[i].getBoundingClientRect().height)) });
+        }
+      } else {
+        standardBar.parentElement.scrollTo({ top: 0 });
+      }
+    }
   }
 
   this.checkListDetail(desid);
@@ -3119,17 +3101,6 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   mobileOuterMargin = 4;
 
   checkListData = this.checkListData(factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight, mobileTendencyVisualMargin);
-  if (this.middleMode) {
-    allHideIndex = null;
-    safeNum = 0;
-    while (allHideIndex !== -1 && safeNum <= 10) {
-      if (allHideIndex !== null) {
-        checkListData.splice(allHideIndex, 1);
-      }
-      allHideIndex = checkListData.findIndex((obj) => { return obj.children.every((c) => { return c.middle === false }); });
-      safeNum++;
-    }
-  }
 
   if (mobile) {
     totalMother.style.background = colorChip.gray2;
@@ -3248,9 +3219,6 @@ DesignerJs.prototype.checkListDetail = function (desid) {
       });
     }
 
-    if (this.middleMode) {
-      middleAdjustTong = [];
-    }
     for (let j = 0; j < checkListData[i].children.length; j++) {
       tempArr = [];
       tempObj = {
@@ -3343,7 +3311,6 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                                   const designer = instance.designers.pick(desid);
                                   const whereQuery = { desid };
                                   const { updateQuery, text } = checkListData[x].children[y].update(this.value, designer);
-                                  // const confirm = instance.middleMode ? false : window.confirm("수정이 확실합니까?");
                                   const confirm = instance.middleMode ? true : window.confirm("수정이 확실합니까?");
                                   if (updateQuery === "error" || !confirm) {
                                     this.value = this.getAttribute("past");
@@ -3466,7 +3433,6 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                     let anothers, resultArr;
                     let whereQuery, updateQuery;
 
-                    // if (instance.middleMode ? false : window.confirm("수정이 확실합니까?")) {
                     if (instance.middleMode ? true : window.confirm("수정이 확실합니까?")) {
                       anothers = [];
                       for (let dom of thisButtons) {
@@ -3804,7 +3770,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
         tempArr.push(tempObj);
       }
 
-      if (!this.middleMode || checkListData[i].children[j].middle !== false) {
+      if (checkListData[i].children[j].middle !== false) {
         subNodeArr = createNodes(tempArr);
         if (checkListData[i].children[j].type === "async") {
           if (typeof checkListData[i].children[j].value === "function") {
@@ -3813,15 +3779,6 @@ DesignerJs.prototype.checkListDetail = function (desid) {
             });
           }
         }
-        if (this.middleMode) {
-          middleAdjustTong.push(subNodeArr[0]);
-        }
-      }
-    }
-
-    if (this.middleMode) {
-      for (let j = 0; j < middleAdjustTong.length; j++) {
-        middleAdjustTong[j].textContent = String.fromCharCode(65 + i) + String(j + 1);
       }
     }
 
@@ -6767,7 +6724,7 @@ DesignerJs.prototype.checkListView = async function () {
       this.backGrayBar();
     }
 
-    await this.spreadData(null, true, middleMode ? "middle" : null);
+    await this.spreadData(null, true, null);
     const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;
     const { totalMother, ea, grayBarWidth, belowHeight, media } = this;
     const mobile = media[4];
