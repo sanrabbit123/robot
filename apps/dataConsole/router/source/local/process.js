@@ -2960,7 +2960,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
 ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
   const instance = this;
   const { totalContents, ea, belowHeight, projects, onofflineWordsClassName, entireMode } = this;
-  const { createNode, withOut, colorChip, isMac, blankHref, selfHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue, serviceParsing, equalJson, sleep } = GeneralJs;
+  const { createNode, withOut, colorChip, isMac, blankHref, selfHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue, serviceParsing, equalJson, sleep, setCookie } = GeneralJs;
   return async function (e) {
     try {
       const project = projects.find((obj) => { return obj.proid === proid });
@@ -3185,12 +3185,31 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
       });
       createNode({
         mother: titleArea,
-        attribute: { proid: project.proid },
+        attribute: { proid: project.proid, name: project.name },
         text: project.name,
         event: {
-          click: function (e) {
-            const proid = this.getAttribute("proid");
-            selfHref(window.location.protocol + "//" + window.location.host + "/project?proid=" + proid);
+          click: async function (e) {
+            try {
+              const proid = this.getAttribute("proid");
+              const name = this.getAttribute("name");
+              if (window.confirm(name + " 고객님께 전화를 걸까요?")) {
+                const response = await ajaxJson({
+                  who: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
+                  proid: proid
+                }, BACKHOST + "/callTo");
+                if (response.message === "error") {
+                  window.localStorage.clear();
+                  let obj = {};
+                  obj["homeliaisonConsoleLoginedName"] = '';
+                  obj["homeliaisonConsoleLoginedEmail"] = '';
+                  obj["homeliaisonConsoleLoginedBoolean"] = '';
+                  setCookie(obj, true);
+                  window.location.reload();
+                }
+              }
+            } catch (e) {
+              console.log(e);
+            }
           }
         },
         style: {
@@ -3205,8 +3224,31 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
       createNode({
         mother: titleArea,
         class: [ onofflineWordsClassName ],
-        attribute: { desid: project.desid, status: instance.onofflineDesid.includes(project.desid) ? "online" : "offline" },
-        text: project.proid + blank + "/" + blank + project.designer.designer + " D" + blank + "/" + blank + serviceParsing(project.service) + blank + "/" + blank + (instance.onofflineDesid.includes(project.desid) ? "online" : "offline"),
+        attribute: { proid: project.proid, desid: project.desid, status: instance.onofflineDesid.includes(project.desid) ? "online" : "offline" },
+        text: project.proid + blank + "<u%/%u>" + blank + project.designer.designer + " D" + blank + "<u%/%u>" + blank + serviceParsing(project.service) + blank + "<u%/%u>" + blank + (instance.onofflineDesid.includes(project.desid) ? "online" : "offline"),
+        event: {
+          click: async function (e) {
+            try {
+              e.preventDefault();
+              const proid = this.getAttribute("proid");
+              const desid = this.getAttribute("desid");
+              const slashes = [ ...this.querySelectorAll("b") ];
+              const [ s0, s1, s2 ] = slashes;
+              if (e.x <= s0.getBoundingClientRect().x) {
+                await window.navigator.clipboard.writeText(proid);
+                instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
+              } else if (e.x <= s1.getBoundingClientRect().x) {
+                blankHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+              } else if (e.x <= s2.getBoundingClientRect().x) {
+                // pass
+              } else {
+                // pass
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
         style: {
           display: "inline-flex",
           fontSize: String(subSize) + ea,
@@ -3215,6 +3257,11 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
           marginLeft: String(subMarginLeft) + ea,
           position: "relative",
           top: String(subTextTop) + ea,
+        },
+        under: {
+          fontSize: String(subSize) + ea,
+          fontWeight: String(300),
+          color: colorChip.gray3,
         }
       });
 
