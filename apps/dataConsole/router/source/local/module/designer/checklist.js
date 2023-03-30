@@ -554,15 +554,14 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                             updateQuery["information.business.career.relatedM"] = relatedM;
                                             text = `유관 경력 : ${String(relatedY)}년 ${String(relatedM)}개월`;
 
-                                            // if (instance.middleMode ? false : window.confirm("수정이 확실합니까?")) {
-                                            if (instance.middleMode ? true : window.confirm("수정이 확실합니까?")) {
+                                            if (window.confirm("수정이 확실합니까?")) {
                                               await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
                                               await ajaxJson({
                                                 mode: "sse",
                                                 db: "console",
                                                 collection: "sse_checklistDesigner",
                                                 log: true,
-                                                who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
+                                                who: (cookies.homeliaisonConsoleLoginedEmail),
                                                 updateQuery: {
                                                   desid,
                                                   type: "async__function__{ mother.querySelectorAll('div')[0].textContent __equal__ value; }",
@@ -574,7 +573,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                               await ajaxJson({
                                                 page: "checklist",
                                                 mode: "update",
-                                                who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
+                                                who: (JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
                                                 update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                                                 desid,
                                               }, "/ghostDesigner_updateAnalytics");
@@ -712,15 +711,14 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                             updateQuery["information.business.career.startY"] = startY;
                                             updateQuery["information.business.career.startM"] = startM;
                                             text = `스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`;
-                                            // if (instance.middleMode ? false : window.confirm("수정이 확실합니까?")) {
-                                            if (instance.middleMode ? true : window.confirm("수정이 확실합니까?")) {
+                                            if (window.confirm("수정이 확실합니까?")) {
                                               await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
                                               await ajaxJson({
                                                 mode: "sse",
                                                 db: "console",
                                                 collection: "sse_checklistDesigner",
                                                 log: true,
-                                                who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
+                                                who: (cookies.homeliaisonConsoleLoginedEmail),
                                                 updateQuery: {
                                                   desid,
                                                   type: "async__function__{ mother.querySelectorAll('div')[2].textContent __equal__ value; }",
@@ -732,7 +730,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                               await ajaxJson({
                                                 page: "checklist",
                                                 mode: "update",
-                                                who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
+                                                who: (JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
                                                 update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                                                 desid,
                                               }, "/ghostDesigner_updateAnalytics");
@@ -910,7 +908,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           },
           height: factorHeight,
           type: "string",
-          middle: false,
+          middle: true,
         },
         {
           name: "계좌번호",
@@ -1108,7 +1106,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           },
           height: factorHeight * 1.1,
           type: "string",
-          middle: false,
+          middle: true,
         },
       ]
     },
@@ -1382,7 +1380,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           factorHeight: factorHeight,
           type: "matrix",
           multiple: true,
-          middle: false,
+          middle: true,
         },
         {
           name: "부분 공간",
@@ -1424,7 +1422,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           factorHeight: factorHeight,
           type: "matrix",
           multiple: true,
-          middle: false,
+          middle: true,
         },
         {
           name: "온라인",
@@ -1452,7 +1450,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
-          middle: false,
+          middle: true,
         },
         {
           name: "거주중",
@@ -1480,7 +1478,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
-          middle: false,
+          middle: true,
         },
         {
           name: "고객 예산 범위",
@@ -1555,7 +1553,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           factorHeight: factorHeight,
           type: "matrix",
           multiple: true,
-          middle: false,
+          middle: true,
         },
         {
           name: "1차 제안 시간",
@@ -1679,7 +1677,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 3,
           factorHeight: factorHeight,
           type: "matrix",
-          middle: false,
+          middle: true,
           half: true,
         },
         {
@@ -2144,7 +2142,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 3,
           factorHeight: factorHeight,
           type: "matrix",
-          middle: false,
+          middle: true,
           half: true,
         },
         {
@@ -2723,7 +2721,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
-          middle: false,
+          middle: true,
         },
         {
           name: "응대 적극성",
@@ -2751,7 +2749,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
-          middle: false,
+          middle: true,
         },
         {
           name: "마감 기한",
@@ -2779,7 +2777,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
-          middle: false,
+          middle: true,
         },
         {
           name: "진행 스타일",
@@ -2807,7 +2805,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
-          middle: false,
+          middle: true,
         },
         {
           name: "문제 해결력",
@@ -2835,7 +2833,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
-          middle: false,
+          middle: true,
         },
         {
           name: "홈리에종 관계",
@@ -2877,7 +2875,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
-          middle: false,
+          middle: true,
         },
       ]
     },
@@ -3105,7 +3103,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
     class: [ "mainBaseTong" ],
     style: {
       position: "absolute",
-      top: desktop ? String(margin * 3) + ea : (this.middleMode ? String(60) + "px" : String(0)),
+      top: desktop ? String(margin * 3) + ea : (String(0)),
       left: String(grayBarWidth + (desktop ? margin * 3 : mobileOuterMargin)) + ea,
       width: withOut(grayBarWidth + (desktop ? margin * 6 : mobileOuterMargin * 2), ea),
       height: "auto",
@@ -3291,7 +3289,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                                   const designer = instance.designers.pick(desid);
                                   const whereQuery = { desid };
                                   const { updateQuery, text } = checkListData[x].children[y].update(this.value, designer);
-                                  const confirm = instance.middleMode ? true : window.confirm("수정이 확실합니까?");
+                                  const confirm = window.confirm("수정이 확실합니까?");
                                   if (updateQuery === "error" || !confirm) {
                                     this.value = this.getAttribute("past");
                                   } else {
@@ -3305,13 +3303,13 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                                       db: "console",
                                       collection: "sse_checklistDesigner",
                                       log: true,
-                                      who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
+                                      who: (cookies.homeliaisonConsoleLoginedEmail),
                                       updateQuery: { desid, type: checkListData[x].children[y].type, value: text, position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
                                       update: { whereQuery, updateQuery } } }, "/generalMongo");
                                     await ajaxJson({
                                       page: "checklist",
                                       mode: "update",
-                                      who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
+                                      who: (JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
                                       update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                                       desid,
                                     }, "/ghostDesigner_updateAnalytics");
@@ -3413,7 +3411,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                     let anothers, resultArr;
                     let whereQuery, updateQuery;
 
-                    if (instance.middleMode ? true : window.confirm("수정이 확실합니까?")) {
+                    if (window.confirm("수정이 확실합니까?")) {
                       anothers = [];
                       for (let dom of thisButtons) {
                         if (this !== dom) {
@@ -3447,13 +3445,13 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                         db: "console",
                         collection: "sse_checklistDesigner",
                         log: true,
-                        who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
+                        who: (cookies.homeliaisonConsoleLoginedEmail),
                         updateQuery: { desid, type: checkListData[x].children[y].type, value: resultArr, position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
                         update: { whereQuery, updateQuery } } }, "/generalMongo");
                       await ajaxJson({
                         page: "checklist",
                         mode: "update",
-                        who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
+                        who: (JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
                         update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                         desid,
                       }, "/ghostDesigner_updateAnalytics");
@@ -3547,7 +3545,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                       const designer = instance.designers.pick(desid);
                       let whereQuery, updateQuery;
 
-                      if (instance.middleMode ? true : window.confirm("수정이 확실합니까?")) {
+                      if (window.confirm("수정이 확실합니까?")) {
                         for (let i = 0; i < thisButtons.length; i++) {
                           if (i <= t) {
                             thisButtons[i].setAttribute("toggle", String(1));
@@ -3580,13 +3578,13 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                           db: "console",
                           collection: "sse_checklistDesigner",
                           log: true,
-                          who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
+                          who: (cookies.homeliaisonConsoleLoginedEmail),
                           updateQuery: { desid, type: checkListData[x].children[y].type, value: [ z, t, (checkListData[x].children[y].opposite === true), matrixButtonConst ], position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
                           update: { whereQuery, updateQuery } } }, "/generalMongo");
                         await ajaxJson({
                           page: "checklist",
                           mode: "update",
-                          who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
+                          who: (JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
                           update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                           desid,
                         }, "/ghostDesigner_updateAnalytics");
@@ -3679,7 +3677,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                       const designer = instance.designers.pick(desid);
                       const updateQuery = checkListData[x].children[y].update(this.value.trim(), designer);
                       const whereQuery = { desid };
-                      const confirm = instance.middleMode ? true : window.confirm("수정이 확실합니까?");
+                      const confirm = window.confirm("수정이 확실합니까?");
                       if (updateQuery === "error" || !confirm) {
                         this.value = this.getAttribute("past");
                       } else {
@@ -3689,13 +3687,13 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                           db: "console",
                           collection: "sse_checklistDesigner",
                           log: true,
-                          who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
+                          who: (cookies.homeliaisonConsoleLoginedEmail),
                           updateQuery: { desid, type: checkListData[x].children[y].type, value: this.value.trim(), position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
                           update: { whereQuery, updateQuery } } }, "/generalMongo");
                         await ajaxJson({
                           page: "checklist",
                           mode: "update",
-                          who: (instance.middleMode ? instance.designer.information.phone : JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
+                          who: (JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail),
                           update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                           desid,
                         }, "/ghostDesigner_updateAnalytics");
@@ -5149,7 +5147,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother,
       style: {
-        display: (instance.middleMode ? "none" : "block"),
+        display: "block",
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -5174,7 +5172,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother,
       style: {
-        display: (instance.middleMode ? "none" : "block"),
+        display: "block",
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -5199,7 +5197,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother,
       style: {
-        display: (instance.middleMode ? "none" : "block"),
+        display: "block",
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -5224,7 +5222,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother,
       style: {
-        display: (instance.middleMode ? "none" : "block"),
+        display: "block",
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -5249,7 +5247,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother,
       style: {
-        display: (instance.middleMode ? "none" : "block"),
+        display: "block",
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -6614,12 +6612,9 @@ DesignerJs.prototype.checkListView = async function () {
   const instance = this;
   try {
     const loading = await this.mother.loadingRun();
-    const middleMode = /middle/gi.test(window.location.pathname);
-
     if (GeneralJs.returnGet().entire !== "true") {
       this.backGrayBar();
     }
-
     await this.spreadData(null, true, null);
     const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;
     const { totalMother, ea, grayBarWidth, belowHeight, media } = this;
@@ -6647,7 +6642,6 @@ DesignerJs.prototype.checkListView = async function () {
     this.designers = new Designers(designers);
 
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[this.standardDoms.length - 1].getAttribute("desid");
-    this.middleMode = middleMode;
     this.modes = [ "checklist", "report", "request", "possible", "project", "schedule" ];
     this.mode = this.modes[0];
     this.result = null;
