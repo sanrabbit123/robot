@@ -5327,7 +5327,7 @@ ProposalJs.prototype.cssInjection = function () {
   .pp_designer_selected_box_contents_designers_total::-webkit-scrollbar{display:none;}
 
   .pp_designer_selected_box_contents_designers,.pp_designer_selected_box_contents_service{
-    font-size: 1.1vh;
+    font-size: 1.2vh;
     font-weight: 600;
     display: inline-flex;
     padding: 13px;
