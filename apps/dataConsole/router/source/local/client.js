@@ -20,6 +20,7 @@ const ClientJs = function () {
   this.totalFatherChildren = [];
   this.onView = "mother";
   this.ea = "px";
+  this.reportNumbers = [];
 }
 
 ClientJs.prototype.standardBar = function (standard) {
@@ -4889,6 +4890,10 @@ ClientJs.prototype.secondReportScrollBox = function (report, motherWidth) {
     "누적 진행율",
   ];
 
+  instance.reportNumbers = [];
+  instance.reportNumbers.push(equalJson(JSON.stringify(tableColumns)));
+  instance.reportNumbers[0].unshift("날짜");
+
   columnsLength = tableColumns.length;
 
   scrollBox = createNode({
@@ -5024,7 +5029,9 @@ ClientJs.prototype.secondReportScrollBox = function (report, motherWidth) {
           String(Math.round((obj.monthClients[i - 1].value === 0 ? 0 : (obj.monthContracts[i - 1].value / obj.monthClients[i - 1].value)) * 10000) / 100) + '%',
           String(Math.round((obj.totalClients[i - 1].value === 0 ? 0 : (obj.totalContracts[i - 1].value / obj.totalClients[i - 1].value)) * 10000) / 100) + '%',
         ];
-
+        instance.reportNumbers.push(equalJson(JSON.stringify(thisValues)));
+        instance.reportNumbers[instance.reportNumbers.length - 1].unshift(dateToString(obj.standard));
+      
         baseColumns = createNode({
           mother: baseTable,
           style: {
@@ -6050,7 +6057,7 @@ ClientJs.prototype.extractViewMaker = function (link) {
 ClientJs.prototype.addExtractEvent = function () {
   const instance = this;
   const { ea } = this;
-  const { ajax, ajaxJson } = GeneralJs;
+  const { ajax, ajaxJson, blankHref, equalJson } = GeneralJs;
   const { sub: { extractIcon } } = this.mother.belowButtons;
   let sendEvent;
 
@@ -6070,6 +6077,8 @@ ClientJs.prototype.addExtractEvent = function () {
       let cliidArr;
       let type;
       let loading;
+      let matrix;
+      let link;
 
       type = "general";
       if (instance.whiteBox !== null) {
@@ -6170,12 +6179,72 @@ ClientJs.prototype.addExtractEvent = function () {
 
         loading = instance.mother.grayLoading();
 
+        matrix = [];
+        matrix.push([
+          "날짜",
+          "MAU",
+          "문의",
+          "광고 문의",
+          "추천",
+          "열람",
+          "계약",
+          "진행",
+          "추천율",
+          "전환율",
+          "계약율",
+          "진행율",
+          "지출 비용",
+          "문의 CAC",
+          "계약 CAC",
+          "진행 CAC",
+        ])
 
+        for (let obj of instance.reportNumbers) {
+          matrix.push([
+            obj.date,
+            obj.mau,
+            obj.client,
+            obj.adClients,
+            obj.proposal,
+            obj.recommend,
+            obj.contract,
+            obj.process,
+            obj.recommendRate,
+            obj.convertRate,
+            obj.contractRate,
+            obj.processRate,
+            obj.charge,
+            obj.clientCac,
+            obj.contractCac,
+            obj.processCac,
+          ]);
+        }
 
+        ({ link } = await ajaxJson({
+          values: matrix,
+          newMake: true,
+          parentId: parentId,
+          sheetName: "fromDB_clientMpr_" + String(today.getFullYear()) + instance.mother.todayMaker()
+        }, BACKHOST + "/sendSheets"));
 
-
+        blankHref(link);
+        loading.remove();
         
       } else {
+
+        loading = instance.mother.grayLoading();
+
+        matrix = equalJson(JSON.stringify(instance.reportNumbers));
+
+        ({ link } = await ajaxJson({
+          values: matrix,
+          newMake: true,
+          parentId: parentId,
+          sheetName: "fromDB_clientSales_" + String(today.getFullYear()) + instance.mother.todayMaker()
+        }, BACKHOST + "/sendSheets"));
+
+        blankHref(link);
+        loading.remove();
 
       }
 
