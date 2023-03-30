@@ -1683,7 +1683,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
           }
         },
         {
-          text: "의뢰서 미리보기" + "&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;디자이너에게 전송하기",
+          text: "의뢰서 미리보기" + "&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;디자이너에게 전송하기&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;되돌아가기",
           attribute: { proid, cliid, desid },
           event: {
             click: async function (e) {
@@ -1691,10 +1691,10 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
                 const proid = this.getAttribute("proid");
                 const cliid = this.getAttribute("cliid");
                 const desid = this.getAttribute("desid");
-                const standard = this.querySelector("b");
+                const [ standard, standard1 ] = [ ...this.querySelectorAll("b") ];
                 if (e.x <= standard.getBoundingClientRect().x) {
                   blankHref(FRONTHOST + "/designer/process.php?proid=" + proid + "&mode=request");  
-                } else {
+                } else if (e.x <= standard1.getBoundingClientRect().x) {
                   const [ designer ] = await ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true });
                   const [ client ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
 
@@ -1727,6 +1727,11 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
                   } else {
                     instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
                   }
+                } else {
+                  globalThis.window.parent.postMessage(JSON.stringify({
+                    proid: proid,
+                    mode: "reset",
+                  }));
                 }
               } catch (e) {
                 console.log(e);

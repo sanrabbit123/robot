@@ -7,7 +7,7 @@ const ProcessJs = function () {
 
 ProcessJs.prototype.baseMaker = function (searchMode = false) {
   const instance = this;
-  const { totalContents, ea, belowHeight, projects, media, onofflineCircleClassName } = this;
+  const { totalContents, ea, belowHeight, projects, media, onofflineCircleClassName, entireMode } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing, equalJson, svgMaker, removeByClass, findByAttribute } = GeneralJs;
   const splitToken = "__split__";
   const checkBoxLocalStorageName = "checkBoxLocalStorageName";
@@ -2092,6 +2092,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
   grayBack = createNode({
     mother: totalContents,
     style: {
+      display: entireMode ? "none" : "block",
       position: "fixed",
       top: String(outerMargin) + ea,
       left: String(outerMargin) + ea,
@@ -2958,7 +2959,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
 
 ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
   const instance = this;
-  const { totalContents, ea, belowHeight, projects, onofflineWordsClassName } = this;
+  const { totalContents, ea, belowHeight, projects, onofflineWordsClassName, entireMode } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, selfHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, removeByClass, setQueue, serviceParsing, equalJson, sleep } = GeneralJs;
   return async function (e) {
     try {
@@ -3037,13 +3038,19 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
       let latestCall;
       let secondMemoTitleAreaHeight;
       let dateAreaHeight;
+      let whiteInnerMarginTop;
+      let latestCallBlock;
 
       while (instance.contents === null) {
         await sleep(100);
       }
 
       whiteOuterMargin = <%% 40, 20, 20, 20, 10 %%>;
-      whiteInnerMargin = <%% 50, 30, 30, 30, 20 %%>;
+      whiteInnerMargin = 50;
+      whiteInnerMarginTop = 35;
+      if (entireMode) {
+        whiteOuterMargin = 0;
+      }
 
       titleAreaHeight = <%% 63, 42, 42, 42, 42 %%>;
 
@@ -3139,12 +3146,13 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
           top: String(whiteOuterMargin) + ea,
           left: String(whiteOuterMargin) + ea,
           width: withOut((whiteOuterMargin * 2) + (whiteInnerMargin * 2), ea),
-          height: withOut((whiteOuterMargin * 2) + belowHeight + (whiteInnerMargin * 2), ea),
+          height: withOut((whiteOuterMargin * 2) + belowHeight + (whiteInnerMargin + whiteInnerMarginTop), ea),
           padding: String(whiteInnerMargin) + ea,
+          paddingTop: String(whiteInnerMarginTop) + ea,
           background: colorChip.white,
           borderRadius: String(5) + "px",
           boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          animation: "fadeuplite 0.3s ease forwards",
+          animation: !entireMode ? "fadeuplite 0.3s ease forwards" : "",
           zIndex: String(zIndex),
         },
         children: [
@@ -3209,7 +3217,8 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
           top: String(subTextTop) + ea,
         }
       });
-      createNode({
+
+      latestCallBlock = createNode({
         mother: titleArea,
         text: "마지막 통화 : " + latestCall.slice(2),
         style: {
@@ -3223,6 +3232,33 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
         }
       });
 
+      if (entireMode) {
+        latestCallBlock.style.right = String(90) + ea;
+        createNode({
+          mother: titleArea,
+          text: "되돌아가기",
+          attribute: { proid },
+          event: {
+            click: function (e) {
+              const proid = this.getAttribute("proid");
+              globalThis.window.parent.postMessage(JSON.stringify({
+                proid: proid,
+                mode: "reset",
+              }));
+            }
+          },
+          style: {
+            display: "inline-flex",
+            fontSize: String(subSize) + ea,
+            fontWeight: String(subWeight),
+            color: colorChip.black,
+            position: "absolute",
+            right: String(0),
+            top: String(statusTextTop) + ea,
+            cursor: "pointer",
+          }
+        });
+      }
 
       // contents area
 
@@ -4995,7 +5031,7 @@ ProcessJs.prototype.insertUploadBox = function (project, baseTong) {
       children: [
         {
           mode: "svg",
-          source: instance.mother.returnPlus(colorChip.white),
+          source: instance.mother.returnHamburger(colorChip.white),
           style: {
             display: "inline-block",
             position: "relative",
@@ -9884,9 +9920,11 @@ ProcessJs.prototype.reloadProjects = function (serverResponse) {
 
   }
 
-  projects = projects.filter((obj) => {
-    return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
-  });
+  if (projects.length !== 1) {
+    projects = projects.filter((obj) => {
+      return obj.proid !== "p1801_aa01s" && obj.proid !== "p1801_aa02s";
+    });
+  }
 
   this.clientHistory = clientHistory;
   this.history = history;
@@ -11232,6 +11270,7 @@ ProcessJs.prototype.launching = async function () {
     const getObj = returnGet();
     const emptyDate = () => { return new Date(1800, 0, 1) };
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+    const entireMode = (getObj.dataonly === "true" && getObj.entire === "true");
     let loading;
     let serverResponse;
     let projects;
@@ -11247,6 +11286,12 @@ ProcessJs.prototype.launching = async function () {
     this.searchInput = this.mother.searchInput;
     this.grayBarWidth = this.mother.grayBarWidth;
 
+    if (entireMode) {
+      this.belowHeight = this.mother.belowHeight = 0;
+      this.grayBarWidth = this.mother.grayBarWidth = 0;  
+    }
+    this.entireMode = entireMode;
+
     loading = this.mother.grayLoading(null, true);
     
     ({ projects, clients } = await ajaxJson({ mode: "pre", searchMode: (typeof getObj.proid === "string" ? getObj.proid : "false") }, BACKHOST + "/processConsole", { equal: true }));
@@ -11254,7 +11299,8 @@ ProcessJs.prototype.launching = async function () {
     cliidArr = clients.map((c) => { return c.cliid });
 
     if (proidArr.length === 0) {
-      throw new Error("invalid porid arr");
+      window.alert("결과가 없습니다!");
+      window.location.href = window.location.protocol + "//" + window.location.host + "/process";
     }
 
     matrix = await ajaxMultiple([

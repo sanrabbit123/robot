@@ -1781,7 +1781,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   betweenSpace = "&nbsp;&nbsp;<b style=\"color: " + GeneralJs.colorChip.gray3 + "\">/</b>&nbsp;&nbsp;";
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
   titlaInfoArea = div_clone3;
-  div_clone3.insertAdjacentHTML("beforeend", (thisCase[standard[1]] + betweenSpace + thisCase.name + " (Sa)" + betweenSpace + thisCase.name + " (Da)" + betweenSpace + thisCase.designer.split(' ')[0] + " (De)" + betweenSpace + "의뢰서" + betweenSpace + "시공" + betweenSpace + "<b style=\"color:" + GeneralJs.colorChip.deactive + "\">출장비 없음</b>"));
+  div_clone3.insertAdjacentHTML("beforeend", (thisCase[standard[1]] + betweenSpace + thisCase.name + " (Sa)" + betweenSpace + thisCase.designer.split(' ')[0] + " (De)" + betweenSpace + "시공" + betweenSpace + "<b style=\"color:" + GeneralJs.colorChip.deactive + "\">출장비 없음</b>"));
   div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
@@ -1798,9 +1798,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       const slashes = this.querySelectorAll('b');
       const slashesPosition0 = slashes[0].getBoundingClientRect().x;
       const slashesPosition1 = slashes[1].getBoundingClientRect().x;
-      const slashesPosition4 = slashes[2].getBoundingClientRect().x;
-      const slashesPosition2 = slashes[3].getBoundingClientRect().x;
-      const slashesPosition3 = slashes[4].getBoundingClientRect().x;
+      const slashesPosition2 = slashes[2].getBoundingClientRect().x;
       const proid = thisCase[standard[1]];
       let projects, project, tempFunction;
       if (e.x < slashesPosition0) {
@@ -1810,16 +1808,10 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         projects = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects");
         project = projects[0];
         GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/client?cliid=" + project.cliid);
-      } else if (e.x < slashesPosition4) {
-        GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/process?proid=" + proid);
       } else if (e.x < slashesPosition2) {
         projects = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects");
         project = projects[0];
         GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/designer?desid=" + project.desid);
-      } else if (e.x < slashesPosition3) {
-        projects = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects");
-        project = projects[0];
-        GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/designer?mode=request&desid=" + project.desid + "&cliid=" + project.cliid);
       } else {
         projects = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true });
         project = projects[0];
@@ -1883,6 +1875,34 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       click: instance.requestViewMaker(thisCase[standard[1]]),
     },
     text: "의뢰서",
+    style: {
+      display: "inline-block",
+      position: "relative",
+      color: colorChip.black,
+      fontSize: String(titleFontSize * (20 / 42)) + ea,
+      fontWeight: String(400),
+      cursor: "pointer",
+    }
+  });
+  createNode({
+    mother: subButtonsTong,
+    text: slash,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      color: colorChip.gray3,
+      fontSize: String(titleFontSize * (20 / 42)) + ea,
+      fontWeight: String(400),
+    }
+  });
+  requestBox = createNode({
+    mother: subButtonsTong,
+    class: [ "hoverDefault_lite" ],
+    event: {
+      selectstart: (e) => { return e.preventDefault() },
+      click: instance.processViewMaker(thisCase[standard[1]]),
+    },
+    text: "프로젝트 케어",
     style: {
       display: "inline-block",
       position: "relative",
@@ -6158,6 +6178,148 @@ ProjectJs.prototype.requestViewMaker = function (proid) {
   }
 }
 
+ProjectJs.prototype.processViewMakerDetail = async function (recycle = false, proid) {
+  const instance = this;
+  const { ea } = this;
+  const { ajaxJson, colorChip, createNode, withOut } = GeneralJs;
+  try {
+    const [ thisProject ] = await ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true });
+    const [ thisDesigner ] = await ajaxJson({ noFlat: true, whereQuery: { desid: thisProject.desid } }, "/getDesigners", { equal: true });
+    const [ thisClient ] = await ajaxJson({ noFlat: true, whereQuery: { cliid: thisProject.cliid } }, "/getClients", { equal: true });
+    return function () {
+      let div_clone, svg_icon;
+      let style;
+      let ea = "px";
+      let margin;
+      let domTargets;
+      let motherBoo;
+      let width;
+
+      motherBoo = (instance.onView === "mother") ? true : false;
+
+      margin = 30;
+
+      if (!recycle) {
+
+        instance.whiteBox = {};
+
+        //cancel box
+        div_clone = GeneralJs.nodes.div.cloneNode(true);
+        div_clone.classList.add("justfadein");
+        style = {
+          position: "fixed",
+          background: GeneralJs.colorChip.cancelBlack,
+          top: String(0) + ea,
+          left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
+          width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
+          height: "calc(100% - " + String(instance.belowHeight) + ea + ")",
+          zIndex: String(2),
+        };
+        for (let i in style) {
+          div_clone.style[i] = style[i];
+        }
+
+        div_clone.addEventListener("click", instance.whiteCancelMaker());
+
+        instance.whiteBox.cancelBox = div_clone;
+        instance.totalContents.appendChild(div_clone);
+
+      }
+
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      if (GeneralJs.returnGet().entire !== "true") {
+        div_clone.classList.add("fadeup");
+      }
+      div_clone.classList.add("totalWhite");
+      if (GeneralJs.returnGet().entire === "true") {
+        style = {
+          position: "fixed",
+          background: colorChip.white,
+          borderRadius: String(5) + ea,
+          boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+          top: String(0) + ea,
+          left: String(0) + ea,
+          width: String(window.innerWidth) + ea,
+          height: String(window.innerHeight) + ea,
+          zIndex: String(2),
+        };
+      } else {
+        style = {
+          position: "fixed",
+          background: GeneralJs.colorChip.white,
+          top: String(margin) + ea,
+          left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
+          borderRadius: String(5) + ea,
+          boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
+          width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
+          height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
+          zIndex: String(2),
+        };
+      }
+      for (let i in style) {
+        div_clone.style[i] = style[i];
+      }
+
+      instance.whiteBox.contentsBox = div_clone;
+      instance.totalContents.appendChild(div_clone);
+
+      createNode({
+        mother: div_clone,
+        style: {
+          position: "relative",
+          display: "block",
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          borderRadius: String(5) + "px",
+          overflow: "hidden",
+        },
+        child: {
+          mode: "iframe",
+          attribute: {
+            src: window.location.protocol + "//" + window.location.host + "/process?proid=" + thisProject.proid + "&entire=true&dataonly=true",
+          },
+          style: {
+            position: "absolute",
+            display: "block",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            border: String(0),
+          }
+        }
+      });
+
+      GeneralJs.stacks.whiteBox = 0;
+    }
+  } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+    console.log(e);
+  }
+}
+
+ProjectJs.prototype.processViewMaker = function (proid) {
+  const instance = this;
+  return async function (e) {                                                                                                                                                                                                                                                                                                                                                                                                                                             
+    e.preventDefault();
+    try {
+      let tempFunc;
+      if (GeneralJs.stacks.whiteBox !== 1) {
+        if (instance.whiteBox !== null) {
+          tempFunc = instance.whiteCancelMaker((await instance.processViewMakerDetail(true, proid)), true);
+          tempFunc();
+        } else {
+          tempFunc = await instance.processViewMakerDetail(false, proid);
+          tempFunc();
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+
 ProjectJs.prototype.addTransFormEvent = function () {
   const instance = this;
   const { selfHref } = GeneralJs;
@@ -7864,11 +8026,6 @@ ProjectJs.prototype.launching = async function () {
     this.whiteResize();
     this.communicationRender();
 
-    // const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/projectCard");
-    // es.addEventListener("updateTong", (e) => {
-    //   instance.sseCardParsing(e.data);
-    // });
-
     getTarget = null;
     if (typeof getObj.specificids === "string") {
       tempFunction = this.makeSearchEvent("id:" + getObj.specificids);
@@ -7914,6 +8071,34 @@ ProjectJs.prototype.launching = async function () {
         }
       }
     }
+
+    // proposal view return event
+    window.addEventListener('message', function (e) {
+      if (/^[\{\[]/.test(e.data)) {
+        try {
+          const data = JSON.parse(e.data);
+          if (typeof data.proid === "string" && typeof data.mode === "string") {
+            if (data.mode === "reset") {
+              const { proid } = data;
+              let target;
+              instance.whiteCancelMaker().call({}, {});
+              target = null;
+              for (let dom of instance.standardDoms) {
+                if ((new RegExp(proid, 'gi')).test(dom.textContent)) {
+                  target = dom;
+                  break;
+                }
+              }
+              if (target !== null) {
+                setQueue(() => {
+                  target.click();
+                }, 601);
+              }
+            }
+          }
+        } catch {}
+      }
+    });
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
