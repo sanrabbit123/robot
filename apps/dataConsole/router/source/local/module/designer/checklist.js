@@ -2951,9 +2951,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
       ]
     }
   ];
-  if (mobile) {
-    checkListData.pop();
-  }
+
   return checkListData;
 }
 
@@ -3102,10 +3100,6 @@ DesignerJs.prototype.checkListDetail = function (desid) {
 
   checkListData = this.checkListData(factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight, mobileTendencyVisualMargin);
 
-  if (mobile) {
-    totalMother.style.background = colorChip.gray2;
-  }
-
   baseTong0 = createNode({
     mother: totalMother,
     class: [ "mainBaseTong" ],
@@ -3204,20 +3198,6 @@ DesignerJs.prototype.checkListDetail = function (desid) {
     eachTotalTong = nodeArr[0];
     eachNameTong = nodeArr[2];
     eachValueTong = nodeArr[3];
-
-    if (mobile) {
-      createNode({
-        mother: eachTotalTong,
-        style: {
-          position: "absolute",
-          top: String(topMargin + 3.5) + ea,
-          left: String(leftMargin) + ea,
-          width: withOut(leftMargin * 2, ea),
-          borderBottom: "1px dashed " + colorChip.green,
-          opacity: String(0.8),
-        }
-      });
-    }
 
     for (let j = 0; j < checkListData[i].children.length; j++) {
       tempArr = [];
@@ -3770,14 +3750,12 @@ DesignerJs.prototype.checkListDetail = function (desid) {
         tempArr.push(tempObj);
       }
 
-      if (checkListData[i].children[j].middle !== false) {
-        subNodeArr = createNodes(tempArr);
-        if (checkListData[i].children[j].type === "async") {
-          if (typeof checkListData[i].children[j].value === "function") {
-            checkListData[i].children[j].value(subNodeArr, designer).catch((err) => {
-              console.log(err);
-            });
-          }
+      subNodeArr = createNodes(tempArr);
+      if (checkListData[i].children[j].type === "async") {
+        if (typeof checkListData[i].children[j].value === "function") {
+          checkListData[i].children[j].value(subNodeArr, designer).catch((err) => {
+            console.log(err);
+          });
         }
       }
     }
@@ -5310,129 +5288,47 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   this.nextIcon = nextIcon;
   this.rInitialIcon = rInitialIcon;
 
-  if (!this.middleMode) {
+  listIcon.addEventListener("click", function (e) {
+    blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general");
+  });
 
-    listIcon.addEventListener("click", function (e) {
-      blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general");
-    });
-
-    previousIcon.addEventListener("click", function (e) {
-      let previousDesid, boo, thisStandard;
-      previousDesid = desid;
-      do {
-        previousDesid = instance.designers.previous(previousDesid).desid;
-        for (let dom of instance.standardDoms) {
-          if (dom.getAttribute("desid") === previousDesid) {
-            thisStandard = dom;
-            boo = (dom.style.display === "none");
-          }
+  previousIcon.addEventListener("click", function (e) {
+    let previousDesid, boo, thisStandard;
+    previousDesid = desid;
+    do {
+      previousDesid = instance.designers.previous(previousDesid).desid;
+      for (let dom of instance.standardDoms) {
+        if (dom.getAttribute("desid") === previousDesid) {
+          thisStandard = dom;
+          boo = (dom.style.display === "none");
         }
-      } while (boo);
-      if (instance.modes.indexOf(instance.mode) === 0) {
-        instance.checkListDetailLaunching(previousDesid);
-      } else {
-        instance.reportDetailLaunching(previousDesid);
       }
-    });
-
-    nextIcon.addEventListener("click", function (e) {
-      let nextDesid, boo, thisStandard;
-      nextDesid = desid;
-      do {
-        nextDesid = instance.designers.next(nextDesid).desid;
-        for (let dom of instance.standardDoms) {
-          if (dom.getAttribute("desid") === nextDesid) {
-            thisStandard = dom;
-            boo = (dom.style.display === "none");
-          }
-        }
-      } while (boo);
-      if (instance.modes.indexOf(instance.mode) === 0) {
-        instance.checkListDetailLaunching(nextDesid);
-      } else {
-        instance.reportDetailLaunching(nextDesid);
-      }
-    });
-
-  } else {
-
-    if (desktop) {
-
-      listIcon.addEventListener("click", function (e) {
-        const totalContents = document.getElementById("totalcontents");
-        const totalMother = document.querySelector(".totalMother");
-        const grayBack = totalContents.children[0];
-        const listPannel = totalMother.children[0].children[0];
-        const iconSetPannel = instance.iconTong;
-        const mainBaseTong = instance.mainBaseTong;
-        const outerMargin = Number(mainBaseTong.style.top.replace(/[^0-9\.\-]/gi, ''));
-
-        if (grayBack.getAttribute("toggle") !== "off") {
-          grayBack.style.width = String(0) + ea;
-          listPannel.style.transform = "translateX(" + String((instance.grayBarWidth + instance.tabletWidth) * -1) + ea + ")";
-          iconSetPannel.style.background = "transparent";
-          mainBaseTong.style.left = String(outerMargin) + ea;
-          mainBaseTong.style.width = withOut(outerMargin * 2, ea);
-          instance.listIcon.style.left = String(left2) + ea;
-          grayBack.setAttribute("toggle", "off");
-        } else {
-          grayBack.style.width = String(instance.grayBarWidth) + ea;
-          listPannel.style.transform = "translateX(" + String(0) + ea + ")";
-          iconSetPannel.style.background = colorChip.gray0;
-          mainBaseTong.style.left = String(instance.grayBarWidth + outerMargin) + ea;
-          mainBaseTong.style.width = withOut(instance.grayBarWidth + (outerMargin * 2), ea);
-          instance.listIcon.style.left = String(left) + ea;
-          grayBack.setAttribute("toggle", "on");
-        }
-
-      });
-
+    } while (boo);
+    if (instance.modes.indexOf(instance.mode) === 0) {
+      instance.checkListDetailLaunching(previousDesid);
     } else {
-
-      listIcon.addEventListener("click", function (e) {
-        instance.mode = "request";
-        instance.requestDetailLaunching(designer.desid);
-      });
-
+      instance.reportDetailLaunching(previousDesid);
     }
+  });
 
-    previousIcon.addEventListener("click", function (e) {
-      const targets = document.querySelectorAll(".leftMenus");
-      if (targets.length > 0) {
-        let index, target;
-        index = null;
-        for (let i = 0; i < targets.length; i++) {
-          if (targets[i].getAttribute("toggle") === "on") {
-            index = i;
-          }
+  nextIcon.addEventListener("click", function (e) {
+    let nextDesid, boo, thisStandard;
+    nextDesid = desid;
+    do {
+      nextDesid = instance.designers.next(nextDesid).desid;
+      for (let dom of instance.standardDoms) {
+        if (dom.getAttribute("desid") === nextDesid) {
+          thisStandard = dom;
+          boo = (dom.style.display === "none");
         }
-        if (index === null) {
-          throw new Error("invaild index");
-        }
-        target = targets[index - 1] === undefined ? targets[targets.length - 1] : targets[index - 1];
-        target.click();
       }
-    });
-
-    nextIcon.addEventListener("click", function (e) {
-      const targets = document.querySelectorAll(".leftMenus");
-      if (targets.length > 0) {
-        let index, target;
-        index = null;
-        for (let i = 0; i < targets.length; i++) {
-          if (targets[i].getAttribute("toggle") === "on") {
-            index = i;
-          }
-        }
-        if (index === null) {
-          throw new Error("invaild index");
-        }
-        target = targets[index + 1] === undefined ? targets[0] : targets[index + 1];
-        target.click();
-      }
-    });
-
-  }
+    } while (boo);
+    if (instance.modes.indexOf(instance.mode) === 0) {
+      instance.checkListDetailLaunching(nextDesid);
+    } else {
+      instance.reportDetailLaunching(nextDesid);
+    }
+  });
 
   rInitialIcon.addEventListener("click", function (e) {
     instance.reportDetailLaunching(desid);
@@ -6835,48 +6731,10 @@ DesignerJs.prototype.checkListView = async function () {
       let targets, targetIndex;
       e.preventDefault();
       if (instance.pageHistory.length > 1) {
-        if (!middleMode) {
-          if (getObj.mode === instance.pageHistory[1].path) {
-            instance.checkListDetailLaunching(instance.pageHistory[1].desid);
-            instance.pageHistory.shift();
-            instance.pageHistory.shift();
-          }
-        } else {
-
-          targets = document.querySelectorAll(".leftMenus");
-          if (instance.pageHistory[1].status === "page") {
-            if (targets[instance.pageHistory[1].index] !== undefined) {
-              targets[instance.pageHistory[1].index].click();
-            } else if (instance.menuMap[instance.pageHistory[1].index] !== undefined) {
-              instance.menuMap[instance.pageHistory[1].index].event.call(({
-                getAttribute: (index) => {
-                  return instance.pageHistory[1].index;
-                }
-              }));
-            }
-            instance.pageHistory.shift();
-            instance.pageHistory.shift();
-          } else if (instance.pageHistory[1].status === "card") {
-            targetIndex = 5;
-            if (targets[targetIndex] !== undefined) {
-              targets[targetIndex].click();
-            } else if (instance.menuMap[targetIndex] !== undefined) {
-              instance.menuMap[targetIndex].event.call(({
-                getAttribute: (index) => {
-                  return targetIndex;
-                }
-              }));
-            }
-            instance.pageHistory.shift();
-            for (let box of instance.requestBoxes) {
-              if (box.getAttribute("cliid") === instance.pageHistory[1].cliid) {
-                box.click();
-              }
-            }
-            instance.pageHistory.shift();
-            instance.pageHistory.shift();
-          }
-
+        if (getObj.mode === instance.pageHistory[1].path) {
+          instance.checkListDetailLaunching(instance.pageHistory[1].desid);
+          instance.pageHistory.shift();
+          instance.pageHistory.shift();
         }
       }
     });
