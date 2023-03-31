@@ -2818,15 +2818,20 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       const thisIndex = i;
       let target;
       for (let { dom } of historyTongTarget) {
-        // dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
         if (Number(dom.getAttribute("index")) === thisIndex) {
           target = dom.querySelector("textarea");
         }
       }
+
+      const originalValue = target.value;
+      const originalValueArr = originalValue.split("\n");
+
       this.style.color = GeneralJs.colorChip.liteBlack;
-      // if (window.confirm("저장하시겠습니까?")) {
-        GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateProjectHistory", function (res) {});
-      // }
+
+      target.value = target.value.replace(/\&/g, ",");
+
+      GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateProjectHistory", function (res) {});
+
     }
 
     //margin box
@@ -5199,9 +5204,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   });
 
   //get textAreaTong
-  GeneralJs.ajax("id=" + thisCase[standard[1]], BACKHOST + "/getProjectHistory", function (res) {
+  GeneralJs.ajax("id=" + thisCase[standard[1]], "/getProjectHistory", function (res) {
     const dataArr = JSON.parse(res);
-    console.log(dataArr);
     for (let i = 0; i < textAreas.length; i++) {
       textAreas[i].value = dataArr[i];
     }

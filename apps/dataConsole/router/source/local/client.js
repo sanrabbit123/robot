@@ -2533,7 +2533,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       const thisIndex = i;
       let target;
       for (let { dom } of historyTongTarget) {
-        // dom.style.height = "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")";
         if (Number(dom.getAttribute("index")) === thisIndex) {
           target = dom.querySelector("textarea");
         }
@@ -2544,9 +2543,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       const originalValueArr = originalValue.split("\n");
 
       target.value = target.value.replace(/\&/g, ",");
-      // if (window.confirm("저장하시겠습니까?")) {
-        GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateClientHistory", function (res) {});
-      // }
+      GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateClientHistory", function (res) {});
+
     }
 
     //margin box

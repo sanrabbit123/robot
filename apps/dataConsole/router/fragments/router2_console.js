@@ -1490,10 +1490,10 @@ DataRouter.prototype.rou_post_getHistory = function () {
           historyObj = await back.getHistoryById("project", req.body.id, { selfMongo: instance.mongolocal });
         }
 
-        responseArr.push((historyObj.history === undefined ? '' : stringFilter(historyObj.history)));
-        responseArr.push((historyObj.designer === undefined ? '' : stringFilter(historyObj.designer)));
-        responseArr.push((historyObj.client === undefined ? '' : stringFilter(historyObj.client)));
-        responseArr.push((historyObj.photo === undefined ? '' : stringFilter(historyObj.photo)));
+        responseArr.push((historyObj.history === undefined ? '' : historyObj.history.replace(/\=/g, '').replace(/\&/g, ",")));
+        responseArr.push((historyObj.designer === undefined ? '' : historyObj.designer.replace(/\=/g, '').replace(/\&/g, ",")));
+        responseArr.push((historyObj.client === undefined ? '' : historyObj.client.replace(/\=/g, '').replace(/\&/g, ",")));
+        responseArr.push((historyObj.photo === undefined ? '' : historyObj.photo.replace(/\=/g, '').replace(/\&/g, ",")));
 
         if (req.body.rawMode !== undefined) {
           responseArr = historyObj;
@@ -1631,6 +1631,8 @@ DataRouter.prototype.rou_post_updateHistory = function () {
             }
           }
         }
+
+        console.log(updateQuery);
         if (Object.keys(updateQuery).length > 0) {
           await back.updateHistory(method, [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
         }
