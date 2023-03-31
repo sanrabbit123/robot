@@ -646,6 +646,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   let circleBoxTop;
   let mobileCircleBoxPaddingBottom;
   let numbersTop;
+  let middleState;
 
   grayBetween = <%% 40, 40, 36, 36, 5 %%>;
 
@@ -745,8 +746,8 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     &&>;
 
     boxTarget = [
-      (state) => { return (state <= 1 ? (state === 0 ? colorChip.red : colorChip.shadow) : colorChip.deactive) },
-      (state) => { return (state <= 1 ? (state === 0 ? colorChip.yellow : colorChip.shadow) : colorChip.deactive) },
+      (state, middle) => { return (state <= 1 ? (state === 0 ? colorChip.red : (middle === 0 ? colorChip.shadow : colorChip.purple)) : colorChip.deactive) },
+      (state, middle) => { return (state <= 1 ? (state === 0 ? colorChip.yellow : colorChip.shadow) : colorChip.deactive) },
       null,
       null,
       null,
@@ -768,9 +769,9 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
     boxTarget = [
       null,
-      (state) => { return (state <= 1 ? (state === 0 ? colorChip.red : colorChip.shadow) : colorChip.deactive) },
-      (state) => { return (state <= 1 ? (state === 0 ? colorChip.yellow : colorChip.shadow) : colorChip.deactive) },
-      (state) => { return (state <= 1 ? (state === 0 ? colorChip.darkShadow : colorChip.shadow) : colorChip.deactive) },
+      (state, middle) => { return (state <= 1 ? (state === 0 ? colorChip.red : (middle === 0 ? colorChip.shadow : colorChip.purple)) : colorChip.deactive) },
+      (state, middle) => { return (state <= 1 ? (state === 0 ? colorChip.yellow : colorChip.shadow) : colorChip.deactive) },
+      (state, middle) => { return (state <= 1 ? (state === 0 ? colorChip.darkShadow : colorChip.shadow) : colorChip.deactive) },
     ];
 
     forceWidth = [
@@ -828,7 +829,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
         bConst = 100000000;
       }
 
-      return ((b.process.contract.form.date.from.valueOf() + emptyValue) * bConst) - ((a.process.contract.form.date.from.valueOf() + emptyValue) * aConst);
+      return ((a.process.contract.form.date.from.valueOf() + emptyValue) * bConst) - ((b.process.contract.form.date.from.valueOf() + emptyValue) * aConst);
     });
 
     targetLength = targets.length;
@@ -943,23 +944,40 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
       if (targets[i] !== null) {
         state = 0;
+        middleState = 0;
         if (/드[랍롭]/gi.test(targets[i].process.status) || /홀[드딩]/gi.test(targets[i].process.status)) {
           state = 3;
+          middleState = 0;
         } else if (/완료/gi.test(targets[i].process.status)) {
           state = 2;
+          middleState = 0;
         } else if (/대기/gi.test(targets[i].process.status)) {
           state = 1;
+          middleState = 0;
+        }
+
+        if (state === 0) {
+          if (targets[i].process.contract.form.date.from.valueOf() > (new Date()).valueOf()) {
+            state = 1;
+            middleState = 1;
+          }
         }
 
         whiteBaseTong = createNode({
           mother: grayTong,
           attribute: {
             proid: targets[i].proid
+            state: String(state),
           },
           event: {
             click: function (e) {
               const proid = this.getAttribute("proid");
-              selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+              const state = Number(this.getAttribute("state"));
+              if (state === 0) {
+                selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+              } else {
+                selfHref(FRONTHOST + "/designer/process.php?proid=" + proid + "&mode=request");
+              }
             },
             contextmenu: function (e) {
               e.preventDefault();
@@ -1032,7 +1050,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
                     position: "relative",
                     alignItems: "center",
                     height: String(colorBoxHeight) + ea,
-                    background: boxTarget[j](state),
+                    background: boxTarget[j](state, middleState),
                     borderRadius: String(5) + "px",
                     paddingLeft: String(colorBoxPadding) + ea,
                     paddingRight: String(colorBoxPadding) + ea,
