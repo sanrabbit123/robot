@@ -1542,6 +1542,10 @@ ConsoleManualJs.prototype.insertBasicIntroductionBox = function () {
   let veryBigWeight;
   let textTextTop;
   let firstWidth;
+  let contentsArea;
+  let videoWidth;
+  let videoHeight;
+  let subTitleSize;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -1557,6 +1561,7 @@ ConsoleManualJs.prototype.insertBasicIntroductionBox = function () {
   arrowWidth = <%% 214, 160, 138, 109, 27 %%>;
   arrowHeight = <%% 100, 90, 80, 60, 11 %%>;
 
+  subTitleSize = <%% 16, 16, 15, 14, 4 %%>;
   textSize = <%% 14, 13, 12, 11, 3.2 %%>;
   textWeight = <%% 400, 400, 400, 400, 400 %%>;
 
@@ -1565,6 +1570,9 @@ ConsoleManualJs.prototype.insertBasicIntroductionBox = function () {
   textTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), -0.3 %%>;
 
   firstWidth = <%% 348, 300, 260, 174, 34 %%>;
+
+  videoWidth = <%% 942, 940, 806, 642, 74 %%>;
+  videoHeight = <%% 521, 520, 446, 355, 41 %%>;
 
   mobileVisualPaddingValue = 0.2;
 
@@ -1635,7 +1643,7 @@ ConsoleManualJs.prototype.insertBasicIntroductionBox = function () {
     ]
   })
 
-  createNode({
+  contentsArea = createNode({
     mother: grayTong,
     style: {
       display: desktop ? "inline-flex" : "flex",
@@ -1643,38 +1651,80 @@ ConsoleManualJs.prototype.insertBasicIntroductionBox = function () {
       width: desktop ? withOut(firstWidth, ea) : withOut(0, ea),
       flexDirection: "column",
       verticalAlign: "top",
+    }
+  });
+
+  createNode({
+    mother: contentsArea,
+    text: [
+      "1. 진행중 프로젝트 파악하기"
+    ].join("\n\n"),
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(subTitleSize) + ea,
+      fontWeight: String(800),
+      color: colorChip.black,
+      lineHeight: String(1.7),
+      textAlign: "left",
+      marginBottom: desktop ? "" : String(3) + ea,
+      top: String(textTextTop) + ea,
     },
-    children: [
-      {
-        text: [
-          "홈리에종은 디자이너님들의 편의 제공과 고객님께 더 신뢰 있는 서비스 제공을 위해 <b%'디자이너 콘솔'%b>을 구상하여 제작하였습니다. 디자이너 콘솔은 홈리에종과 협업 관계에 있으신 디자이너님들이 홈리에종을 통해 받으신 모든 홈스타일링 프로젝트를 더 편리하고, 직관적으로 관리할 수 있고, 공유할 수 있게 만들어진 관리자 콘솔입니다.",
-          "디자이너 콘솔을 이용하시면 프로젝트를 쉽게 관리할 수 있는 것뿐만 아니라, 고객님께 <u%더 편리한 방식으로 프로젝트 진행 상황과 파일을 공유%u>하실 수 있으며," + (media[0] ? "\n" : "") + "홈리에종에 별도로 연락하실 필요 없이 실시간으로 프로젝트에 대한 상황 공유가 가능해집니다. <u%실장님과 고객님 사이의 의사 소통을 더욱 더 원활%u>하게 할 목적으로 만들어진 것이니 적극적 이용 부탁드립니다.",
-        ].join("\n\n"),
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(textSize) + ea,
-          fontWeight: String(textWeight),
-          color: colorChip.black,
-          lineHeight: String(1.7),
-          textAlign: "left",
-          marginBottom: desktop ? "" : String(3) + ea,
-          top: String(textTextTop) + ea,
-        },
-        bold: {
-          fontSize: String(textSize) + ea,
-          fontWeight: String(800),
-          color: colorChip.green,
-          lineHeight: String(1.7),
-        },
-        under: {
-          fontSize: String(textSize) + ea,
-          fontWeight: String(800),
-          color: colorChip.black,
-          lineHeight: String(1.7),
-        }
-      },
-    ]
+    bold: {
+      fontSize: String(textSize) + ea,
+      fontWeight: String(800),
+      color: colorChip.green,
+      lineHeight: String(1.7),
+    },
+    under: {
+      fontSize: String(textSize) + ea,
+      fontWeight: String(800),
+      color: colorChip.black,
+      lineHeight: String(1.7),
+    }
+  });
+
+  createNode({
+    mother: contentsArea,
+    text: `<iframe src="https://www.youtube.com/embed/aNuT55SV7As" style="border-radius:5px;width:${String(videoWidth) + ea};height:${String(videoHeight) + ea}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      marginTop: String(16) + ea,
+      marginBottom: String(32) + ea,
+    },
+  });
+
+  createNode({
+    mother: contentsArea,
+    text: [
+      `전체 프로젝트를 파악하는 방법은 먼저 디자이너 콘솔에서 '프로젝트 관리' 페이지를 클릭합니다. 이 페이지에서는 진행 중인 프로젝트와 완료된 프로젝트의 리스트를 확인할 수 있습니다. '프로젝트 관리' 페이지는 진행 중인 프로젝트, 완료된 프로젝트 및 발행된 컨텐츠로 구성되어 있으며, 현재 대기 중인 건과 진행 중인 건은 각각 '진행 중인 프로젝트'에 포함됩니다. 잔금 정산이 완료된 프로젝트는 '완료된 프로젝트'에, 발행까지 완료된 프로젝트는 '발행된 컨텐츠'에 포함됩니다.`,
+      `'진행 중인 프로젝트'에는 활성화 된 것과 비활성화 된 것이 있습니다. 아직 잔금을 받지 않아 시작 대기 중인 건들은 비활성화 상태이며, 잔금까지 모두 받고 시작이 된 건들은 활성화 상태입니다. 현재 관리해야 할 프로젝트를 파악하려면 활성화 된 항목을 중심으로 살펴보면 됩니다.`,
+    ].join("\n\n"),
+    style: {
+      display: "block",
+      position: "relative",
+      fontSize: String(textSize) + ea,
+      fontWeight: String(textWeight),
+      color: colorChip.black,
+      lineHeight: String(1.7),
+      textAlign: "left",
+      marginBottom: desktop ? "" : String(3) + ea,
+      top: String(textTextTop) + ea,
+    },
+    bold: {
+      fontSize: String(textSize) + ea,
+      fontWeight: String(800),
+      color: colorChip.green,
+      lineHeight: String(1.7),
+    },
+    under: {
+      fontSize: String(textSize) + ea,
+      fontWeight: String(800),
+      color: colorChip.black,
+      lineHeight: String(1.7),
+    }
   });
 
 }
