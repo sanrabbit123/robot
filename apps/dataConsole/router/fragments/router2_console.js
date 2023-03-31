@@ -6896,9 +6896,8 @@ DataRouter.prototype.rou_post_salesClient = function () {
             copiedSend.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() })
 
             updateQuery["curation.analytics.send"] = copiedSend;
-            console.log(whereQuery, updateQuery)
 
-            await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+            await back.mongoUpdate("clientHistory", [ whereQuery, updateQuery ], { selfMongo });
           }
 
           resultObj = copiedSend;
@@ -6945,7 +6944,7 @@ DataRouter.prototype.rou_post_salesClient = function () {
                 copiedSend.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() })
   
                 updateQuery["curation.analytics.send"] = copiedSend;
-                await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+                await back.mongoUpdate("clientHistory", [ whereQuery, updateQuery ], { selfMongo });
               }
   
               resultObj = { message: "done" };
