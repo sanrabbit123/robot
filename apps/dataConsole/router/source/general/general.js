@@ -2102,12 +2102,22 @@ GeneralJs.prototype.greenBar = function () {
   }
 
   moveEventLeft = function (e) {
-    const targets = document.querySelectorAll(".moveTarget");
     const ea = "px";
     const translateFunc = function (past) {
       const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) - move;
       return ("translateX(" + String(newValue) + ea + ")");
     }
+    let targets;
+    if (document.querySelector("iframe") !== null) {
+      if (document.querySelector("iframe").contentWindow.document.querySelector(".moveTarget") !== null) {
+        targets = document.querySelector("iframe").contentWindow.document.querySelectorAll(".moveTarget");
+      } else {
+        targets = document.querySelectorAll(".moveTarget");
+      }
+    } else {
+      targets = document.querySelectorAll(".moveTarget");
+    }
+
     for (let target of targets) {
       if (target.style.transform === '') {
         target.style.transform = "translateX(" + String(-1 * move) + ea + ")";
@@ -2138,12 +2148,22 @@ GeneralJs.prototype.greenBar = function () {
   div_clone2.style.transform = "rotate(180deg)";
 
   moveEventRight = function (e) {
-    const targets = document.querySelectorAll(".moveTarget");
     const ea = "px";
     const translateFunc = function (past) {
       const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) + move;
       return ("translateX(" + String(newValue) + ea + ")");
     }
+    let targets;
+    if (document.querySelector("iframe") !== null) {
+      if (document.querySelector("iframe").contentWindow.document.querySelector(".moveTarget") !== null) {
+        targets = document.querySelector("iframe").contentWindow.document.querySelectorAll(".moveTarget");
+      } else {
+        targets = document.querySelectorAll(".moveTarget");
+      }
+    } else {
+      targets = document.querySelectorAll(".moveTarget");
+    }
+
     for (let target of targets) {
       if (target.style.transform === '') {
         target.style.transform = "translateX(" + String(move) + ea + ")";

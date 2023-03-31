@@ -8,13 +8,14 @@ const ProcessJs = function () {
 ProcessJs.prototype.baseMaker = function (searchMode = false) {
   const instance = this;
   const { totalContents, ea, belowHeight, projects, media, onofflineCircleClassName, entireMode } = this;
-  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing, equalJson, svgMaker, removeByClass, findByAttribute } = GeneralJs;
+  const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing, equalJson, svgMaker, removeByClass, findByAttribute, returnGet } = GeneralJs;
   const splitToken = "__split__";
   const checkBoxLocalStorageName = "checkBoxLocalStorageName";
   const filterMenuClassName = "filterMenuClassName";
   const clientTableClassName = "clientTableClassName";
   const updateMenuClassName = "updateMenuClassName";
   const whiteCardClassName = "whiteCardClassName";
+  const getObj = returnGet();
   const dateConvert = (dateObject) => {
     const res = dateToString(dateObject);
     if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(res)) {
@@ -233,6 +234,10 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
 
   outerMargin = 30;
   innerPadding = 10;
+
+  if (entireMode && (getObj.proid === undefined)) {
+    outerMargin = 0;
+  }
 
   blockHeight = 43;
   blockMargin = 1;
@@ -2092,7 +2097,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
   grayBack = createNode({
     mother: totalContents,
     style: {
-      display: entireMode ? "none" : "block",
+      display: (entireMode && typeof getObj.proid === "string") ? "none" : "block",
       position: "fixed",
       top: String(outerMargin) + ea,
       left: String(outerMargin) + ea,

@@ -5509,11 +5509,147 @@ ClientJs.prototype.proposalViewMaker = function (cliid) {
   }
 }
 
+ClientJs.prototype.salesViewMakerDetail = function (recycle = false) {
+  const instance = this;
+  const { ea } = this;
+  const { ajaxJson, colorChip, createNode, withOut } = GeneralJs;
+  try {
+    return function () {
+      let div_clone, svg_icon;
+      let style;
+      let ea = "px";
+      let margin;
+      let domTargets;
+      let motherBoo;
+      let width;
+
+      motherBoo = (instance.onView === "mother") ? true : false;
+
+      margin = 30;
+
+      if (!recycle) {
+
+        instance.whiteBox = {};
+
+        //cancel box
+        div_clone = GeneralJs.nodes.div.cloneNode(true);
+        div_clone.classList.add("justfadein");
+        style = {
+          position: "fixed",
+          background: GeneralJs.colorChip.cancelBlack,
+          top: String(0) + ea,
+          left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
+          width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
+          height: "calc(100% - " + String(instance.belowHeight) + ea + ")",
+          zIndex: String(2),
+        };
+        for (let i in style) {
+          div_clone.style[i] = style[i];
+        }
+
+        div_clone.addEventListener("click", instance.whiteCancelMaker());
+
+        instance.whiteBox.cancelBox = div_clone;
+        instance.totalContents.appendChild(div_clone);
+
+      }
+
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      if (GeneralJs.returnGet().entire !== "true") {
+        div_clone.classList.add("fadeup");
+      }
+      div_clone.classList.add("totalWhite");
+      if (GeneralJs.returnGet().entire === "true") {
+        style = {
+          position: "fixed",
+          background: colorChip.white,
+          borderRadius: String(5) + ea,
+          boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+          top: String(0) + ea,
+          left: String(0) + ea,
+          width: String(window.innerWidth) + ea,
+          height: String(window.innerHeight) + ea,
+          zIndex: String(2),
+        };
+      } else {
+        style = {
+          position: "fixed",
+          background: GeneralJs.colorChip.white,
+          top: String(margin) + ea,
+          left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
+          borderRadius: String(5) + ea,
+          boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
+          width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
+          height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
+          zIndex: String(2),
+        };
+      }
+      for (let i in style) {
+        div_clone.style[i] = style[i];
+      }
+
+      instance.whiteBox.contentsBox = div_clone;
+      instance.totalContents.appendChild(div_clone);
+
+      createNode({
+        mother: div_clone,
+        style: {
+          position: "relative",
+          display: "block",
+          width: withOut(0, ea),
+          height: withOut(0, ea),
+          borderRadius: String(5) + "px",
+          overflow: "hidden",
+        },
+        child: {
+          mode: "iframe",
+          attribute: {
+            src: window.location.protocol + "//" + window.location.host + "/sales?entire=true&dataonly=true",
+          },
+          style: {
+            position: "absolute",
+            display: "block",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            border: String(0),
+          }
+        }
+      });
+
+      GeneralJs.stacks.whiteBox = 0;
+    }
+  } catch (e) {
+    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+    console.log(e);
+  }
+}
+
+ClientJs.prototype.salesViewMaker = function () {
+  const instance = this;
+  return function (e) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+    e.preventDefault();
+
+    let tempFunc;
+    if (GeneralJs.stacks.whiteBox !== 1) {
+      if (instance.whiteBox !== null) {
+        tempFunc = instance.whiteCancelMaker(instance.salesViewMakerDetail(true), true);
+        tempFunc();
+      } else {
+        tempFunc = instance.salesViewMakerDetail(false);
+        tempFunc();
+      }
+    }
+  }
+}
+
 ClientJs.prototype.addTransFormEvent = function () {
   const instance = this;
   const { selfHref } = GeneralJs;
   const { square: { up, down, reportIcon, returnIcon } } = this.mother.belowButtons;
-  up.addEventListener("click", (e) => { selfHref("/sales") });
+  up.addEventListener("click", this.salesViewMaker());
   down.addEventListener("click", this.rowViewMaker());
   reportIcon.addEventListener("click", this.reportViewMaker());
   reportIcon.addEventListener("contextmenu", this.secondReportViewMaker());

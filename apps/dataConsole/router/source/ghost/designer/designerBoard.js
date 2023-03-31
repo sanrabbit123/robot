@@ -1339,7 +1339,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
     &&>;
 
     boxTarget = [
-      (state) => { return (state <= 1 ? (state === 0 ? colorChip.red : colorChip.shadow) : colorChip.deactive) },
+      (state) => { return (state <= 1 ? (state === 0 ? colorChip.green : colorChip.shadow) : colorChip.deactive) },
       (state) => { return (state <= 1 ? (state === 0 ? colorChip.yellow : colorChip.shadow) : colorChip.deactive) },
       null,
       null,
@@ -1362,7 +1362,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
 
     boxTarget = [
       null,
-      (state) => { return (state <= 1 ? (state === 0 ? colorChip.red : colorChip.shadow) : colorChip.deactive) },
+      (state) => { return (state <= 1 ? (state === 0 ? colorChip.green : colorChip.shadow) : colorChip.deactive) },
       (state) => { return (state <= 1 ? (state === 0 ? colorChip.yellow : colorChip.shadow) : colorChip.deactive) },
       (state) => { return (state <= 1 ? (state === 0 ? colorChip.darkShadow : colorChip.shadow) : colorChip.deactive) },
     ];

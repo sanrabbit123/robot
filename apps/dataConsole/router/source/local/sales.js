@@ -7,7 +7,7 @@ const SalesJs = function () {
 
 SalesJs.prototype.baseMaker = function () {
   const instance = this;
-  const { totalContents, ea, belowHeight, media } = this;
+  const { totalContents, ea, belowHeight, media, entireMode } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing, equalJson, svgMaker, removeByClass, findByAttribute } = GeneralJs;
   const splitToken = "__split__";
   const clientTableClassName = "clientTableClassName";
@@ -225,6 +225,10 @@ SalesJs.prototype.baseMaker = function () {
 
   outerMargin = 30;
   innerPadding = 10;
+
+  if (entireMode) {
+    outerMargin = 0;
+  }
 
   blockHeight = 43;
   blockMargin = 1;
@@ -3862,6 +3866,7 @@ SalesJs.prototype.launching = async function () {
   const { ajaxJson, equalJson, returnGet, ajaxMultiple, backgroundSse, colorChip } = GeneralJs;
   try {
     const getObj = returnGet();
+    const entireMode = (getObj.dataonly === "true" && getObj.entire === "true");
     let loading;
     let serverResponse;
     let members;
@@ -3870,6 +3875,12 @@ SalesJs.prototype.launching = async function () {
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
     this.grayBarWidth = this.mother.grayBarWidth;
+
+    if (entireMode) {
+      this.belowHeight = this.mother.belowHeight = 0;
+      this.grayBarWidth = this.mother.grayBarWidth = 0;  
+    }
+    this.entireMode = entireMode;
 
     loading = this.mother.grayLoading(null, true);
     
