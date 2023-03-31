@@ -966,8 +966,8 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
         whiteBaseTong = createNode({
           mother: grayTong,
           attribute: {
-            proid: targets[i].proid
-            state: String(state),
+            proid: targets[i].proid,
+            state: String(state)
           },
           event: {
             click: function (e) {
