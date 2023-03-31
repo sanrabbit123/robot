@@ -1389,7 +1389,7 @@ ConsoleManualJs.prototype.insertDescriptionBox = function () {
   arrowWidth = <%% 214, 160, 138, 109, 27 %%>;
   arrowHeight = <%% 100, 90, 80, 60, 11 %%>;
 
-  textSize = <%% 14, 13, 12, 11, 3.2 %%>;
+  textSize = <%% 15, 14, 13, 12, 3.2 %%>;
   textWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   veryBigSize = <%% 24, 22, 20, 18, 4.4 %%>;
@@ -1482,7 +1482,7 @@ ConsoleManualJs.prototype.insertDescriptionBox = function () {
     children: [
       {
         text: [
-          "홈리에종은 디자이너님들의 편의 제공과 고객님께 더 신뢰 있는 서비스 제공을 위해 <b%'디자이너 콘솔'%b>을 구상하여 제작하였습니다. 디자이너 콘솔은 홈리에종과 협업 관계에 있으신 디자이너님들이 홈리에종을 통해 받으신 모든 홈스타일링 프로젝트를 더 편리하고, 직관적으로 관리할 수 있고, 공유할 수 있게 만들어진 관리자 콘솔입니다.",
+          "홈리에종은 디자이너님들의 편의 제공과 고객님께 더 신뢰 있는 서비스 제공을 위해 <b%'디자이너 콘솔'%b>을 구상하여 제작하였습니다. 디자이너 콘솔은 홈리에종과 협업 관계에 있으신 디자이너님들이 홈리에종을 통해 받으신 모든 홈스타일링 프로젝트를 더 편리하고, 직관적으로 관리 및 공유할 수 있게 만들어진 관리자 콘솔입니다.",
           "디자이너 콘솔을 이용하시면 프로젝트를 쉽게 관리할 수 있는 것뿐만 아니라, 고객님께 <u%더 편리한 방식으로 프로젝트 진행 상황과 파일을 공유%u>하실 수 있으며," + (media[0] ? "\n" : "") + "홈리에종에 별도로 연락하실 필요 없이 실시간으로 프로젝트에 대한 상황 공유가 가능해집니다. <u%실장님과 고객님 사이의 의사 소통을 더욱 더 원활%u>하게 할 목적으로 만들어진 것이니 적극적 이용 부탁드립니다.",
         ].join("\n\n"),
         style: {
@@ -1546,6 +1546,10 @@ ConsoleManualJs.prototype.insertBasicIntroductionBox = function () {
   let videoWidth;
   let videoHeight;
   let subTitleSize;
+  let imageMarginTop, imageMarginBottom;
+  let blankHeight;
+  let createBlockVideo;
+  let createBlockImage;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 6 %%>;
@@ -1561,8 +1565,8 @@ ConsoleManualJs.prototype.insertBasicIntroductionBox = function () {
   arrowWidth = <%% 214, 160, 138, 109, 27 %%>;
   arrowHeight = <%% 100, 90, 80, 60, 11 %%>;
 
-  subTitleSize = <%% 16, 16, 15, 14, 4 %%>;
-  textSize = <%% 14, 13, 12, 11, 3.2 %%>;
+  subTitleSize = <%% 16, 15, 14, 13, 3.6 %%>;
+  textSize = <%% 15, 14, 13, 12, 3.2 %%>;
   textWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   veryBigSize = <%% 24, 22, 20, 18, 4.4 %%>;
@@ -1571,10 +1575,177 @@ ConsoleManualJs.prototype.insertBasicIntroductionBox = function () {
 
   firstWidth = <%% 348, 300, 260, 174, 34 %%>;
 
-  videoWidth = <%% 942, 940, 806, 642, 74 %%>;
-  videoHeight = <%% 521, 520, 446, 355, 41 %%>;
+  videoWidth = <%% 942, 640, 546, 468, 74 %%>;
+  videoHeight = <%% 521, 354, 302, 258, 41 %%>;
+
+  imageMarginTop = <%% 20, 16, 14, 12, 0.5 %%>;
+  imageMarginBottom = <%% 36, 32, 28, 24, 5 %%>;
+
+  blankHeight = <%% 80, 70, 60, 50, 9 %%>;
 
   mobileVisualPaddingValue = 0.2;
+
+  contentsArea = {};
+
+  createBlockVideo = (title, link, description) => {
+    createNode({
+      mother: contentsArea,
+      text: title,
+      style: {
+        display: "block",
+        position: "relative",
+        fontSize: String(subTitleSize) + ea,
+        fontWeight: String(800),
+        color: colorChip.black,
+        lineHeight: String(1.7),
+        textAlign: "left",
+        marginBottom: desktop ? "" : String(3) + ea,
+        top: String(textTextTop) + ea,
+      },
+      bold: {
+        fontSize: String(textSize) + ea,
+        fontWeight: String(800),
+        color: colorChip.green,
+        lineHeight: String(1.7),
+      },
+      under: {
+        fontSize: String(textSize) + ea,
+        fontWeight: String(800),
+        color: colorChip.black,
+        lineHeight: String(1.7),
+      }
+    });
+    createNode({
+      mother: contentsArea,
+      text: `<iframe src="${link}" style="border-radius:5px;width:${String(videoWidth) + ea};height:${String(videoHeight) + ea}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        marginTop: String(imageMarginTop) + ea,
+        marginBottom: String(imageMarginBottom) + ea,
+      },
+    });
+    createNode({
+      mother: contentsArea,
+      text: description.join("\n\n"),
+      style: {
+        display: "block",
+        position: "relative",
+        fontSize: String(textSize) + ea,
+        fontWeight: String(textWeight),
+        color: colorChip.black,
+        lineHeight: String(1.7),
+        textAlign: "left",
+        marginBottom: desktop ? "" : String(3) + ea,
+        top: String(textTextTop) + ea,
+      },
+      bold: {
+        fontSize: String(textSize) + ea,
+        fontWeight: String(800),
+        color: colorChip.green,
+        lineHeight: String(1.7),
+      },
+      under: {
+        fontSize: String(textSize) + ea,
+        fontWeight: String(800),
+        color: colorChip.black,
+        lineHeight: String(1.7),
+      }
+    });
+    createNode({
+      mother: contentsArea,
+      style: {
+        display: "block",
+        width: withOut(0, ea),
+        height: String(blankHeight) + ea,
+        marginBottom: String(blankHeight + (mobile ? 4 : 0)) + ea,
+        borderBottom: "1px solid " + colorChip.gray3,
+      }
+    });
+  }
+
+  createBlockImage = (title, src, description, last = false) => {
+    createNode({
+      mother: contentsArea,
+      text: title,
+      style: {
+        display: "block",
+        position: "relative",
+        fontSize: String(subTitleSize) + ea,
+        fontWeight: String(800),
+        color: colorChip.black,
+        lineHeight: String(1.7),
+        textAlign: "left",
+        marginBottom: desktop ? "" : String(3) + ea,
+        top: String(textTextTop) + ea,
+      },
+      bold: {
+        fontSize: String(textSize) + ea,
+        fontWeight: String(800),
+        color: colorChip.green,
+        lineHeight: String(1.7),
+      },
+      under: {
+        fontSize: String(textSize) + ea,
+        fontWeight: String(800),
+        color: colorChip.black,
+        lineHeight: String(1.7),
+      }
+    });
+    createNode({
+      mode: "img",
+      attribute: {
+        src
+      },
+      mother: contentsArea,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        marginTop: String(imageMarginTop) + ea,
+        marginBottom: String(imageMarginBottom) + ea,
+        borderRadius: String(5) + "px",
+      },
+    });
+    createNode({
+      mother: contentsArea,
+      text: description.join("\n\n"),
+      style: {
+        display: "block",
+        position: "relative",
+        fontSize: String(textSize) + ea,
+        fontWeight: String(textWeight),
+        color: colorChip.black,
+        lineHeight: String(1.7),
+        textAlign: "left",
+        marginBottom: desktop ? "" : String(3) + ea,
+        top: String(textTextTop) + ea,
+      },
+      bold: {
+        fontSize: String(textSize) + ea,
+        fontWeight: String(800),
+        color: colorChip.green,
+        lineHeight: String(1.7),
+      },
+      under: {
+        fontSize: String(textSize) + ea,
+        fontWeight: String(800),
+        color: colorChip.black,
+        lineHeight: String(1.7),
+      }
+    });
+    createNode({
+      mother: contentsArea,
+      style: {
+        display: "block",
+        width: withOut(0, ea),
+        height: String((last && mobile) ? 2 : blankHeight) + ea,
+        marginBottom: String(!last ? blankHeight + (mobile ? 4 : 0) : 0) + ea,
+        borderBottom: !last ? "1px solid " + colorChip.gray3 : "",
+      }
+    });
+  }
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -1654,77 +1825,282 @@ ConsoleManualJs.prototype.insertBasicIntroductionBox = function () {
     }
   });
 
-  createNode({
-    mother: contentsArea,
-    text: [
-      "1. 진행중 프로젝트 파악하기"
-    ].join("\n\n"),
-    style: {
-      display: "block",
-      position: "relative",
-      fontSize: String(subTitleSize) + ea,
-      fontWeight: String(800),
-      color: colorChip.black,
-      lineHeight: String(1.7),
-      textAlign: "left",
-      marginBottom: desktop ? "" : String(3) + ea,
-      top: String(textTextTop) + ea,
-    },
-    bold: {
-      fontSize: String(textSize) + ea,
-      fontWeight: String(800),
-      color: colorChip.green,
-      lineHeight: String(1.7),
-    },
-    under: {
-      fontSize: String(textSize) + ea,
-      fontWeight: String(800),
-      color: colorChip.black,
-      lineHeight: String(1.7),
-    }
-  });
 
-  createNode({
-    mother: contentsArea,
-    text: `<iframe src="https://www.youtube.com/embed/aNuT55SV7As" style="border-radius:5px;width:${String(videoWidth) + ea};height:${String(videoHeight) + ea}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`,
-    style: {
-      display: "flex",
-      position: "relative",
-      width: withOut(0, ea),
-      marginTop: String(16) + ea,
-      marginBottom: String(32) + ea,
-    },
-  });
-
-  createNode({
-    mother: contentsArea,
-    text: [
+  // 1
+  createBlockVideo(
+    "1. 진행중 프로젝트 파악하기",
+    "https://www.youtube.com/embed/aNuT55SV7As",
+    [
       `전체 프로젝트를 파악하는 방법은 먼저 디자이너 콘솔에서 '프로젝트 관리' 페이지를 클릭합니다. 이 페이지에서는 진행 중인 프로젝트와 완료된 프로젝트의 리스트를 확인할 수 있습니다. '프로젝트 관리' 페이지는 진행 중인 프로젝트, 완료된 프로젝트 및 발행된 컨텐츠로 구성되어 있으며, 현재 대기 중인 건과 진행 중인 건은 각각 '진행 중인 프로젝트'에 포함됩니다. 잔금 정산이 완료된 프로젝트는 '완료된 프로젝트'에, 발행까지 완료된 프로젝트는 '발행된 컨텐츠'에 포함됩니다.`,
       `'진행 중인 프로젝트'에는 활성화 된 것과 비활성화 된 것이 있습니다. 아직 잔금을 받지 않아 시작 대기 중인 건들은 비활성화 상태이며, 잔금까지 모두 받고 시작이 된 건들은 활성화 상태입니다. 현재 관리해야 할 프로젝트를 파악하려면 활성화 된 항목을 중심으로 살펴보면 됩니다.`,
-    ].join("\n\n"),
+    ]
+  );
+
+  createBlockImage(
+    "2. 완료된 프로젝트 다시 보기",
+    ConsoleManualJs.binaryPath + "/mc2.jpg",
+    [
+      `프로젝트 관리 페이지에서 진행 중인 프로젝트 아래에 있는 칸은 완료된 프로젝트의 리스트입니다. 이 리스트에서는 잔금 정산까지 완료된 모든 프로젝트를 확인할 수 있으며, 아래에 있는 세 개의 원 모양 아이콘을 클릭하면 전체 리스트를 펼칠 수 있습니다. 이 리스트에서도 진행 중인 프로젝트와 마찬가지로 활성화된 것과 비활성화된 것이 있습니다. 활성화된 것은 홈리에종 웹에 발행된 컨텐츠가 있는 프로젝트이고, 비활성화된 것은 아직 발행되지 않은 프로젝트입니다. 중간 활성화가 된 것은 사진 촬영은 완료되었지만 컨텐츠 발행이 아직 예정되어 있는 프로젝트입니다. 완료된 프로젝트 리스트에서 활성화된 항목을 클릭하면 발행된 컨텐츠와 관련된 여러 가지 설정을 실장님께서 직접 수행할 수 있습니다.`
+    ]
+  );
+
+  createBlockVideo(
+    "3. 프로젝트 상태 체크하기",
+    "https://www.youtube.com/embed/OtfQZox1ISk",
+    [
+      `프로젝트 관리에서 진행 중인 프로젝트 중 하나를 클릭하면 해당 프로젝트의 상세 페이지로 이동합니다. 프로젝트 상세 페이지의 가장 상단에는 '프로젝트 상태 체크하기'라는 기능이 있습니다. 이 기능은 디자인, 시공, 구매, 세팅 등의 기준으로 해당 프로젝트가 현재 어느 단계에 있는지 체크할 수 있는 기능입니다. 해당 체크 사항은 즉시 홈리에종에서 확인할 수 있으며, 동시에 고객님께도 공유할 수 있습니다. `,
+      `특히 홈리에종에 전화를 걸어 해당 고객님이 어떤 상태라고 일일히 말씀하실 필요 없이 체크만 해두시면 자동적으로 홈리에종에 공유가 되므로 적극적인 활용 및 관리를 부탁드립니다. 각각의 칸에는 화살표 아이콘이 있습니다. 이 아이콘을 클릭하면 해당 세부 사항에 대한 기능 리스트를 볼 수 있습니다. 예를 들어, 메모 추가나 체크한 상태와 관련한 파일 업로드 등의 기능이 있습니다.`,
+    ]
+  );
+
+  createBlockImage(
+    "4. 프로젝트 상태 고객에게 공유하기",
+    ConsoleManualJs.binaryPath + "/mc4.jpg",
+    [
+      `프로젝트 상세 페이지에서 '프로젝트 상태 체크하기' 칸에서 해당 프로젝트의 상태를 확인하신 후, 좌측 하단에 위치한 검은색 '공유하기' 버튼을 클릭하시면 고객님께 프로젝트 상태 업데이트가 알림톡으로 전달됩니다. 별도로 고객님께 연락하지 않아도 버튼 하나로 쉽게 공유할 수 있으며, 알림톡 안에는 상세한 안내 멘트가 포함되어 있어 실장님께서는 별도의 연락이나 멘트 구성 없이, 상태를 확인하신 후 버튼을 클릭하여 고객님께 즉시 공유하실 수 있습니다.`
+    ]
+  );
+
+  createBlockVideo(
+    "5. 파일 업로드하고 수정하기",
+    "https://www.youtube.com/embed/qNsY8iE4yyA",
+    [
+      `프로젝트 상세 페이지에서 "프로젝트 상태 체크하기" 칸 아래에 위치한 것은 "프로젝트 파일" 칸입니다. 이 곳에서는 각 영역별로 필요한 파일을 업로드하고 메모를 남기며, 해당 파일을 고객님과 공유할 수 있습니다. 찍으신 사진이나 작업하신 파일을 각 영역별로 업로드하면 자동으로 아카이빙되며 안전한 클라우드 서버에 저장되므로 구글 드라이브와 같이 파일들을 업로드하고 관리하실 수 있습니다. 파일을 수정하고 삭제하며 고객님과 공유하는 방법은, 우선 데스크탑에서 파일을 클릭하신 뒤 오른쪽 클릭하여 관련된 기능들이 리스트업됩니다. 모바일에서는 필요한 파일들을 터치하시면 우측 하단에 그 파일과 관련된 기능들이 나열됩니다. 이 기능을 활용하여 파일을 업로드하는 것 뿐만 아니라 메모를 추가, 수정, 삭제하고 고객님과 공유하는 등 다양하게 활용하실 수 있습니다.`,
+      `해당 기능을 활용하시면 홈리에종에 별도로 작업 파일을 보내거나 사진을 전송하지 않아도 자동으로 공유가 되며, 사진도 마찬가지로 카카오톡으로 전송하지 않아도 필요한 사진을 업로드하시면 즉각적으로 홈리에종에서 어떤 고객님의 어떤 현장의 사진인지 확인하실 수 있습니다. 이러한 기능을 적극적으로 활용하시면 프로젝트 관리에 편리함을 더할 뿐 아니라 홈리에종의 프로젝트 케어를 원활히 이어나갈 수 있습니다.`,
+    ]
+  );
+
+  createBlockImage(
+    "6. 업로드한 파일 고객님께 공유하기",
+    ConsoleManualJs.binaryPath + "/mc6.jpg",
+    [
+      `업로드한 파일을 클릭하면 마우스 우클릭을 해서 '고객님께 공유하기' 기능을 사용할 수 있습니다. 모바일에서는 해당 파일을 터치하면 화면 우측 하단에 '고객님께 공유하기' 버튼이 표시됩니다. 해당 버튼을 누르면 고객님께 알림톡이 전송되며, 전송되는 알림톡에는 해당 파일의 안내와 함께 파일을 다운로드할 수 있는 페이지 링크가 포함됩니다. 이 기능을 사용하면 고객님에게 파일을 쉽게 공유할 수 있으며, 동시에 홈리에종에도 자동으로 공유됩니다. 이를 통해 파일 저장 및 아카이빙도 자동으로 처리되므로, 실장님께서는 해당 기능을 적극적으로 활용해 주시기 바랍니다.`
+    ]
+  );
+
+  createBlockImage(
+    "7. 프로젝트 파일 메모 활용하기",
+    ConsoleManualJs.binaryPath + "/mc7.jpg",
+    [
+      `프로젝트 파일 칸에서 각 영역별 우측 하단에 위치한 것은 파일을 업로드하는 아이콘 옆에 있는 메모 남기기 버튼입니다. 예를 들어, 현장 사진 칸의 파일 업로드 아이콘 옆에 위치한 메모 버튼을 클릭하시면 현장 사진에 대한 메모를 남기실 수 있습니다. 이를 통해 현장에 대한 카테고리별 메모를 작성하고, 홈리에종이나 고객님께 상세한 사항을 공유할 수 있습니다.`
+    ]
+  );
+
+  createBlockVideo(
+    "8. 프로젝트 일정표 작성하기",
+    "https://www.youtube.com/embed/YNfubLunQyc",
+    [
+      `프로젝트 상세 페이지에서 "프로젝트 일정표" 칸은 "프로젝트 파일" 칸 밑에 위치합니다. 계약서에 명시된 시작일을 기준으로 프로젝트의 일정표가 미리 설정되어 있으며, 해당 일정표의 각 항목을 수정하고 날짜를 입력하여 실제 일정을 반영할 수 있습니다. 일정표를 수정하는 방법은 수정이 필요한 영역을 클릭하면 해당 항목을 수정할 수 있는 모드로 변경됩니다. 날짜와 같은 정보는 해당 칸을 클릭하면 캘린더가 팝업으로 나와 입력할 수 있습니다. 일정표를 하단에 위치한 "고객에게 일정표 알람 보내기" 버튼으로 고객님께 공유할 수 있으며, 해당 기능을 활용하면 고객님께 별도의 일정표 파일을 만들어 보내지 않아도 편리하게 프로젝트에 대한 일정표를 공유할 수 있습니다.`
+    ]
+  );
+
+  createBlockImage(
+    "9. 프로젝트 일정표 고객님께 공유하기",
+    ConsoleManualJs.binaryPath + "/mc9.jpg",
+    [
+      `일정표를 모두 작성한 후, 오른쪽 하단에 위치한 "고객에게 일정표 알림 보내기" 버튼을 클릭하면 해당 일정표를 고객과 공유할 수 있습니다. 일정표는 디자이너 콘솔에서 보는 것과 거의 동일한 형태로, 일정표와 일정을 캘린더 형태로 보여주는 하단의 탭으로 구성되어 있습니다. 이 형식은 모바일에서도 동일하게 적용됩니다. 일정표는 실시간으로 고객과 실장님이 공유하여 수정사항이 즉시 반영됩니다. 따라서 일정표 기능을 적극 활용하면 변동되는 일정표 공유도 유연하게 처리할 수 있으며, 일정표 파일을 따로 만들 필요가 없어 효율적입니다.`
+    ]
+  );
+
+  createBlockImage(
+    "10. 디자이너 글 업로드하기",
+    ConsoleManualJs.binaryPath + "/mc10.jpg",
+    [
+      `프로젝트 상세 페이지 하단에는 프로젝트에 대한 기타 설정을 할 수 있는 영역이 있습니다. 해당 영역에서는 디자이너 글 업로드와 촬영비 결제 등을 할 수 있습니다. 디자이너 글 업로드가 필요한 경우, 디자이너 글 업로드 버튼이 활성화됩니다. 해당 버튼을 누르면 디자이너 글 샘플을 다운로드하고 업로드 버튼이 표시됩니다. 이 버튼을 클릭하여 디자이너 글을 업로드할 수 있습니다. 디자이너 글은 워드나 한글, txt 파일로 작성할 수 있습니다. 디자이너 콘솔을 사용하여 디자이너 글을 업로드하면 홈리에종에 별도로 연락하지 않아도 되며, 업로드된 글을 다시 확인하고 수정하는 기능도 제공됩니다. 실장님은 이 기능을 활용하여 디자이너 글을 업로드해주시기 바랍니다.`
+    ]
+  );
+
+  createBlockImage(
+    "11. 촬영비 결제하기",
+    ConsoleManualJs.binaryPath + "/mc11.jpg",
+    [
+      `기타 설정에서는 해당 현장에 대한 촬영비를 결제할 수 있습니다. 촬영비는 카드 결제와 계좌 이체를 지원하며, 계좌 이체로 결제하실 경우 홈리에종의 계좌 번호를 알고 있더라도, 해당 프로젝트의 촬영비 결제를 위해 정상적인 안내 절차를 받으시고 계좌 이체를 부탁드립니다. 해당 기능을 이용하여 촬영비를 결제하면 홈리에종에 별도로 연락하지 않아도 즉시 어떤 현장의 촬영비가 결제되었는지 알 수 있기 때문에, 적극적으로 활용해주시기 바랍니다.`
+    ]
+  );
+
+  createBlockImage(
+    "12. 컨텐츠 관련한 설정하기",
+    ConsoleManualJs.binaryPath + "/mc12.jpg",
+    [
+      `프로젝트 관리로 돌아가서, 완료된 프로젝트 리스트에서 활성화된 프로젝트를 클릭하면 새로운 컨텐츠 설정 탭이 나타납니다. 해당 탭에서는 홈리에종 웹에 발행된 컨텐츠와 관련된 여러 설정을 할 수 있으며, 특히 홈리에종 웹에 게시된 컨텐츠의 대표 사진을 실장님이 직접 선택할 수 있습니다. 이 기능을 활용하여 실장님 현장의 대표 사진을 선택하고, 하단의 여러 설정값을 해당 프로젝트에 맞게 조정하면, 적절한 대표 사진 등록과 컨텐츠 설정이 완료됩니다.`
+    ]
+  );
+
+  createBlockImage(
+    "13. 자신의 기본 정보 업데이트 하기",
+    ConsoleManualJs.binaryPath + "/mc13.jpg",
+    [
+      `상단 네비게이터에서 "기본 관리"를 클릭하면, 실장님과 관련된 여러 기본 설정을 할 수 있는 페이지로 이동합니다. 해당 페이지에서는 기본 정보를 수정할 수 있으며, 이 정보는 고객님에게 추천할 때 매우 중요한 정보로 활용됩니다. 따라서 해당 정보를 정확하게 관리하시길 부탁드립니다. 일부 정보는 실장님이 직접 수정할 수 없도록 설정되어 있습니다. 이 경우에는 홈리에종과 협의한 후 수정이 가능합니다. 해당 정보를 수정하고자 하는 경우, 홈리에종에 직접 연락을 주시어 협의 후 수정 부탁드립니다.`
+    ],
+    true
+  );
+
+}
+
+ConsoleManualJs.prototype.insertOperationBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { ea, baseTong, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, selfHref, scrollTo } = GeneralJs;
+  let margin;
+  let paddingTop;
+  let whiteBottomMargin;
+  let titleFontSize;
+  let bottomMargin;
+  let whiteBlock;
+  let grayTong;
+  let arrowBetween;
+  let contents;
+  let innerMargin;
+  let arrowWidth, arrowHeight;
+  let textSize, textWeight;
+  let mobileVisualPaddingValue;
+  let button, buttons;
+  let whiteTong;
+  let veryBigSize;
+  let veryBigWeight;
+  let textTextTop;
+  let firstWidth;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 6 %%>;
+  paddingTop = <%% 52, 52, 44, 36, 6 %%>;
+
+  whiteBottomMargin = <%% 55, 55, 47, 39, 6 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+
+  innerMargin = <%% 0, 0, 0, 0, 1 %%>;
+
+  arrowBetween = <%% 5, 5, 5, 3, 1 %%>;
+  arrowWidth = <%% 214, 160, 138, 109, 27 %%>;
+  arrowHeight = <%% 100, 90, 80, 60, 11 %%>;
+
+  textSize = <%% 15, 14, 13, 12, 3.2 %%>;
+  textWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  veryBigSize = <%% 24, 22, 20, 18, 4.4 %%>;
+  veryBigWeight = <%% 700, 700, 700, 700, 700 %%>;
+  textTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), -0.3 %%>;
+
+  firstWidth = <%% 348, 300, 260, 174, 34 %%>;
+
+  mobileVisualPaddingValue = 0.2;
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: colorChip.white,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(whiteBottomMargin) + ea,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(margin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(margin) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  grayTong = createNode({
+    mother: whiteTong,
     style: {
       display: "block",
       position: "relative",
-      fontSize: String(textSize) + ea,
-      fontWeight: String(textWeight),
-      color: colorChip.black,
-      lineHeight: String(1.7),
-      textAlign: "left",
-      marginBottom: desktop ? "" : String(3) + ea,
-      top: String(textTextTop) + ea,
-    },
-    bold: {
-      fontSize: String(textSize) + ea,
-      fontWeight: String(800),
-      color: colorChip.green,
-      lineHeight: String(1.7),
-    },
-    under: {
-      fontSize: String(textSize) + ea,
-      fontWeight: String(800),
-      color: colorChip.black,
-      lineHeight: String(1.7),
+      paddingTop: String(innerMargin) + ea,
+      paddingBottom: String(desktop ? innerMargin : innerMargin - arrowBetween) + ea,
+      paddingLeft: String(desktop ? innerMargin : (innerMargin - mobileVisualPaddingValue)) + ea,
+      paddingRight: String(desktop ? innerMargin : (innerMargin + mobileVisualPaddingValue)) + ea,
+      width: withOut(innerMargin * 2, ea),
+      background: colorChip.white,
+      borderRadius: String(8) + "px",
     }
+  });
+
+  createNode({
+    mother: grayTong,
+    style: {
+      display: desktop ? "inline-flex" : "flex",
+      position: "relative",
+      width: desktop ? String(firstWidth) + ea : withOut(0, ea),
+      flexDirection: "column",
+      verticalAlign: "top",
+    },
+    children: [
+      {
+        text: [
+          "디자이너 콘솔",
+          "운영 안내",
+        ].join(desktop ? "\n" : " "),
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(veryBigSize) + ea,
+          fontWeight: String(veryBigWeight),
+          color: colorChip.black,
+          lineHeight: String(1.4),
+          textAlign: desktop ? "left" : "center",
+          marginTop: desktop ? "" : String(2.8) + ea,
+          marginBottom: desktop ? "" : String(5) + ea,
+          top: String(textTextTop) + ea,
+        },
+      },
+    ]
+  })
+
+  createNode({
+    mother: grayTong,
+    style: {
+      display: desktop ? "inline-flex" : "flex",
+      position: "relative",
+      width: desktop ? withOut(firstWidth, ea) : withOut(0, ea),
+      flexDirection: "column",
+      verticalAlign: "top",
+    },
+    children: [
+      {
+        text: [
+          `홈리에종은 2023년 4월 17일 이후부터 디자이너 콘솔을 통해 프로젝트의 상태를 확인하고 알려주기 위한 알림을 보낼 예정입니다. 알림을 받으신 후에는 디자이너 콘솔에 접속하여 현재 진행 중인 모든 프로젝트의 상태를 체크하시고 해당 상태를 고객님께 알리면 됩니다. 이를 통해 직관적이고 시각적으로 고객님께 현재 진행 상태를 보여줄 수 있습니다.`,
+          `앞으로도 계속해서 디자이너 콘솔을 업데이트할 예정입니다. 이를 통해 고객님이 받는 서비스의 질적 향상과 실장님들의 편의를 제공할 수 있도록 노력하겠습니다. 업데이트가 이루어질 때마다 해당 변경 사항과 관련된 안내 및 교육 자료를 실장님들께 전송하여 자세한 안내를 드릴 것입니다. 이를 통해 보다 상세하고 효율적인 사용법을 습득하실 수 있을 것입니다.`,
+        ].join("\n\n"),
+        style: {
+          display: "block",
+          position: "relative",
+          fontSize: String(textSize) + ea,
+          fontWeight: String(textWeight),
+          color: colorChip.black,
+          lineHeight: String(1.7),
+          textAlign: "left",
+          marginBottom: desktop ? "" : String(3) + ea,
+          top: String(textTextTop) + ea,
+        },
+        bold: {
+          fontSize: String(textSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.green,
+          lineHeight: String(1.7),
+        },
+        under: {
+          fontSize: String(textSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
+          lineHeight: String(1.7),
+        }
+      },
+    ]
   });
 
 }
@@ -1773,11 +2149,9 @@ ConsoleManualJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertDescriptionBox();
-
           instance.insertBasicIntroductionBox();
-
-
           instance.insertManualStartBox();
+          instance.insertOperationBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ConsoleManualJs.launching.ghostDesignerLaunching : " + e.message }, BACKHOST + "/errorLog");
         }

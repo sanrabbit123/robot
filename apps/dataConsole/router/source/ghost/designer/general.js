@@ -159,7 +159,7 @@ GeneralJs.prototype.setNavigator = function (designer) {
       green: [],
     },
     {
-      title: "콘솔 설명서",
+      title: "사용설명서",
       href: FRONTHOST + "/designer/manual.php?desid=" + designer.desid,
       green: [],
     },
