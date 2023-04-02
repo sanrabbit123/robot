@@ -217,328 +217,330 @@ DashboardJs.prototype.returnTreeContents = function () {
   return baseContents;
 }
 
-DashboardJs.prototype.returnManualContents = function () {
+DashboardJs.prototype.returnManualContents = function (key) {
   const instance = this;
   let baseContents;
 
-  baseContents = [
-    {
-      title: "고객님의 상담 신청 과정",
-      children: [
-        {
-          title: "상담 신청 페이지",
-          body: [
-            {
-              type: "image",
-              source: DashboardJs.binaryPath + "firstResponse1.jpg",
-            },
-            {
-              type: "description",
-              text: [
-                `먼저 고객님께서는 상담 신청 페이지에 접속하여 성함, 연락처, 이메일, 주소, 입주일을 기입하신 후, 요청 사항을 상세히 적어 주시게 됩니다. 그리고 '상담 신청하기' 버튼을 클릭하시면 핸드폰 인증이 진행됩니다. 핸드폰 인증이 정상적으로 완료되면, 고객님께서는 스타일 찾기 페이지로 이동하시게 됩니다.`,
-              ]
-            }
-          ]
-        },
-        {
-          title: "스타일 체크 페이지",
-          body: [
-            {
-              type: "image",
-              source: DashboardJs.binaryPath + "firstResponse2.jpg",
-            },
-            {
-              type: "image",
-              source: DashboardJs.binaryPath + "firstResponse3.jpg",
-            },
-            {
-              type: "description",
-              text: [
-                `스타일 찾기 페이지에 접속하시면, 고객님께서는 사전 점검과 집 비는 날짜를 입력하신 후, 가구 구매 예정 금액과 인테리어 예산 등에 대한 정보를 입력해주시게 됩니다. 이후 시공에 대한 니즈를 체크하시고, 스타일 체크를 진행하시게 됩니다. 스타일 체크 과정에서는 제시되는 여러 장의 사진을 찍으시면서 고객님께서 선호하시는 스타일에 대한 정보를 컴퓨터가 파악합니다.`,
-                `그리고 현장의 사진이나 도면 등을 업로드하도록 안내드리는데, 해당 페이지에서 업로드를 완료하신 후 '신청 완료' 버튼을 클릭하시면, 고객님께서는 신청이 완료되었다는 알림톡을 받으시게 됩니다. 동시에, 홈리에종에서는 해당 고객님의 새로운 상담 문의가 도착했다는 알림을 받게 됩니다.`,
-              ]
-            }
-          ]
-        },
-      ]
-    },
-    {
-      title: "신규 고객 세일즈를 위한 Sa 콘솔",
-      children: [
-        {
-          title: "Sa 콘솔의 기본 구성과 기능",
-          body: [
-            {
-              type: "image",
-              source: DashboardJs.binaryPath + "firstResponse4.jpg",
-            },
-            {
-              type: "description",
-              text: [
-                `고객님께서 문의를 남기시면 기본적으로 Sa 콘솔은 문의일을 기준으로 역순으로 정렬됩니다. 각 고객의 아이디 또는 성함을 클릭하면 고객 정보가 팝업 형태로 표시되며, 왼쪽에는 기본 정보, 오른쪽에는 응대 기록을 작성할 수 있는 공간이 있습니다. 응대를 진행하면서 왼쪽의 기본 정보를 확인하고 수정할 수 있으며, 오른쪽에는 응대 내용을 자세히 작성하면 됩니다.`,
-              ]
-            },
-            {
-              type: "image",
-              source: DashboardJs.binaryPath + "firstResponse5.jpg",
-            },
-            {
-              type: "description",
-              text: [
-                `좌측 기본 정보에 대해서는 고객과 응대를 하면서 정보를 하나씩 확인하고, 잘못된 정보가 있는 경우 수정해야 합니다. 이 정보는 추천서를 생성하거나 고객 관련 통계를 생성할 때 매우 중요하기 때문에 응대하면서 수정할 수 있는 부분은 최대한 수정해야 합니다.`
-              ]
-            },
-            {
-              type: "image",
-              source: DashboardJs.binaryPath + "firstResponse6.jpg",
-            },
-            {
-              type: "description",
-              text: [
-                `다시 표로 돌아와서, 우측 중간에 원형 아이콘이 세 개 있습니다. 이를 클릭하면 각 고객에 대한 담당자를 지정할 수 있는 사이드 영역이 열립니다. 이곳에서 담당자를 지정하고, 컬럼명을 오른쪽 클릭하여 정렬 기능을 이용하여 담당자별로 응대해야 할 고객과 현재 응대 중인 고객을 확인할 수 있습니다. 담당자 지정, 정렬, 그리고 고객님 이름을 눌러 팝업을 띄운 상태에서 응대를 하는 방식으로 1차 응대를 운영하시면 됩니다.`,
-              ]
-            },
-          ]
-        },
-        {
-          title: "예상 서비스와 예상 종료일의 중요성",
-          body: [
-            {
-              type: "description",
-              text: [
-                `고객 팝업에서 특히 좌측에 있는 예상 서비스와 예상 종료일이라는 항목은 매우 중요합니다. 이 두 항목은 자동으로 디자이너 추천서와 스타일링 계약서를 작성할 때 아주 핵심적인 정보가 되며, 정확하게 기입해야 합니다.`,
-                `입주 예정일을 기준으로 고객님이 언제부터 시작하고 언제 종료될 예정인지 대략적인 감을 파악하여 예상 종료일을 기입해야 합니다. 예상 기간은 서비스에 따라 달라지며, 홈퍼니싱은 30일, 홈스타일링은 45일, 토탈 스타일링은 60일을 기준으로 잡아 예상 종료일을 체크해주시면 됩니다.`,
-                `예상 종료일에 따라 컴퓨터가 서비스를 분석하고 예상 시작일을 계산합니다. 시작일과 종료일을 기준으로 디자이너들의 일정을 조정하고, 자동으로 추천서와 계약서를 작성합니다. 이러한 과정은 전산상으로 여러 프로세스에서 진행되기 때문에, 예상 종료일을 상당히 정확한 수준으로 체크해주셔야 합니다.`,
-              ]
-            }
-          ]
-        },
-        {
-          title: "잘못된 주소를 고치는 방법",
-          body: [
-            {
-              type: "image",
-              source: DashboardJs.binaryPath + "firstResponse7.jpg",
-            },
-            {
-              type: "description",
-              text: [
-                `고객님의 주소를 정확하게 적는 것이 매우 중요합니다. 경기도 의정부시와 같이 표준 주소 체계에 맞지 않는 주소를 적으실 때가 있습니다. 이 경우에는 필히 표준 주소 체계 형식으로 주소를 수정해주셔야 합니다. 디자이너 주소와 고객님 주소를 근거로 해당 현장이 출장비가 발생하는 거리인지, 출장비가 얼마 발생할지 등을 자동으로 계산하기 때문입니다. 만약 주소를 잘못 적으면 추천서도 만들어지지 않고 디자인비도 계산할 수 없습니다.`,
-              ]
-            },
-            {
-              type: "image",
-              source: DashboardJs.binaryPath + "firstResponse8.jpg",
-            },
-            {
-              type: "description",
-              text: [
-                `또한, 새아파트의 경우 주소가 안 나온 경우가 있습니다. 이때는 네이버에서 새 아파트를 검색하신 다음에 옆에 있는 건물이나 학교, 식당과 같은 곳의 주소로 적고, 새아파트명을 그 주소 뒤에 붙여주셔야 합니다. 이렇게 함으로써 대략적인 거리를 구할 수 있으며, 자동 연산에 필요한 주소를 제공하여 디자인비를 구하고 추천서를 작성할 수 있습니다.`,
-              ]
-            },
-          ]
-        },
-        {
-          title: "부재중 알림과 서비스 소개 보내기",
-          body: [
-            {
-              type: "image",
-              source: DashboardJs.binaryPath + "firstResponse9.jpg",
-            },
-            {
-              type: "description",
-              text: [
-                `고객님의 이름을 클릭하면 팝업이 열리는데, 이 팝업에서 하단의 검색바 좌측에 카카오톡 아이콘과 같은 아이콘이 있습니다. 이 아이콘을 클릭하면 추천서 자동 생성, 페이퍼 출력, 부재 중인 고객에게 순수 부재 중 알림 보내기, 고객용 서비스 소개 등의 기능이 제공됩니다. 부재 중인 고객에게는 "순수 부재 중" 버튼을 눌러 부재 중 알림을 보낼 수 있으며, 응대 중에 서비스 소개 페이지를 전송해야 하는 경우 "고객용 서비스 소개" 버튼을 누르면 됩니다.`,
-              ]
-            },
-          ]
-        },
-      ]
-    },
-    {
-      title: "스타일 체크와 Sa 콘솔",
-      children: [
-        {
-          title: "고객님이 선택하신 사진과 보내신 사진 보기",
-          body: [
-            {
-              type: "image",
-              source: DashboardJs.binaryPath + "firstResponse10.jpg",
-            },
-            {
-              type: "image",
-              source: DashboardJs.binaryPath + "firstResponse11.jpg",
-            },
-            {
-              type: "description",
-              text: [
-                `고객님의 이름을 클릭하면 나타나는 팝업에서, 오른쪽 상단에 "log"라는 글씨가 있습니다. 해당 글씨를 클릭하면, 응대 기록을 남길 수 있는 히스토리캔이 사라지고 새로운 영역이 나타납니다. 이 영역에는 고객님의 활동 내역이 기록되어 있습니다. 우측 상단을 다시 확인하면, "사진 보기"라는 빨간 글씨가 있습니다. 이를 클릭하면, 고객님이 스타일체크 과정에서 선택한 사진과 현장에서 찍은 사진, 선호하는 사진 등을 한꺼번에 확인할 수 있습니다. 이를 통해 고객님의 현장 상황과 선호하는 스타일을 파악할 수 있습니다.`,
-              ]
-            }
-          ]
-        },
-        {
-          title: "스타일 체크와 디자이너 추천서 자동 생성",
-          body: [
-            {
-              type: "description",
-              text: [
-                `홈리에종의 모든 사진에는 태그와 경향성 값이 포함되어 있습니다. 고객이 스타일 체크 단계에서 사진들을 확인하면, 선호하는 성향의 값들이 자동으로 추출되어 해당 스타일 값을 잘 파악하는 디자이너에게 우선 순위가 부여되어 추천서 작성에 반영됩니다. 그러나 고객이 스타일 체크를 수행하지 않은 경우에는 추천서를 자동으로 생성할 수 없기 때문에, 디자이너 추천서를 수동으로 작성해야 합니다. 추천서 수동 생성 방법은 디자이너 추천서 설명 메뉴얼에서 자세히 설명하고 있습니다.`,
-              ]
-            }
-          ]
-        },
-        {
-          title: "추천서 자동 생성이 안 될 경우 체크 사항",
-          body: [
-            {
-              type: "description",
-              text: [
-                `고객이 스타일 체크를 정상적으로 완료했음에도 추천서가 자동으로 생성되지 않는 경우가 종종 발생합니다. 이는 대개 고객이 주소를 표준 주소 체계에 맞게 기입하지 않아 발생하는 문제이거나, 예상 종료일이 적절하지 않은 경우에도 발생할 수 있습니다. 따라서 이러한 경우에는 고객이 기재한 주소를 확인한 후, 주소에 문제가 없다면 예상 종료일을 조정하여 추천서 자동 생성을 다시 시도해 보시기 바랍니다.`,
-              ]
-            }
-          ]
-        },
-      ]
-    },
-    {
-      title: "기본적인 1차 응대 과정",
-      children: [
-        {
-          title: "1차 응대 사전 준비 사항",
-          body: [
-            {
-              type: "image",
-              source: DashboardJs.binaryPath + "firstResponse12.jpg",
-            },
-            {
-              type: "description",
-              text: [
-                `1차 응대를 진행하기 전에 고객님의 정보와 요청 사항을 한 번 읽어보고 문제가 없는지를 검토해야 합니다. 주로 네이버 부동산이나 네이버 맵을 통해 주소에 문제가 없는지, 해당 아파트의 평형은 어떤지, 평수는 제대로 적은 것인지(평의 개념을 몰라 미터 제곱을 평수에 적으신 분들도 많습니다) 등을 사전에 확인해야 합니다. 네이버 부동산에서 반드시 고객님 현장과 평수, 그리고 고객님의 요청사항을 미리 파악한 후 1차 응대를 진행해주세요.`,
-              ]
-            }
-          ]
-        },
-        {
-          title: "1차 응대 시작과 전체적인 플로우",
-          body: [
-            {
-              type: "description",
-              text: [
-                `1차 응대 준비가 끝났다면 해당 Sa 콘솔에서 해당 고객님 팝업창을 열어놓고, 좌측 상단에 있는 고객님 이름을 클릭합니다. 그러면 자동으로 전화가 걸리며 수화기를 들면 고객님과 연결됩니다. 그리고 사전에 준비해놓았던 모든 내용을 함께 모니터에 띄어 고객님 응대를 진행해주시면 됩니다. 응대 플로우는 다음과 같습니다.`,
-              ]
-            },
-            {
-              type: "block",
-              text: [
-                `1. 인사`,
-                `2. 정보 확인`,
-                `    1. 주소 및 평수 확인`,
-                `    2. 시공을 하신다면 어느정도 하시는지`,
-                `    3. 제품은 어느정도로 변경하시는 지`,
-                `    4. 어떤 것이 필요해서 홈리에종에 문의하시게 되었는지`,
-                `3. 가족 구성원 확인`,
-                `4. 일정 확인 (입주 예정일, 희망 종료일 등)`,
-                `5. 계약 상태 확인 (자가/전월세)`,
-                `6. 홈리에종 서비스 설명`,
-                `7. 서비스별 기간 설명`,
-                `8. 인테리어 예산 개념에 대한 설명`,
-                `9. 풀 프로세스에 대한 설명`,
-                `10. 고객님께 궁금한 점 들어보기`,
-              ]
-            },
-          ]
-        },
-        {
-          title: "홈리에종 서비스와 서비스 종류, 기간",
-          body: [
-            {
-              type: "description",
-              text: [
-                `홈리에종 서비스는 고객과 디자이너를 매칭한 뒤 인테리어 프로젝트를 종합적으로 관리해주는 서비스입니다. 다른 매칭 플랫폼과 달리, 인테리어 프로젝트가 완료될 때까지 케어를 제공하며, 시공만 하는 것이 아니라 가구, 소품, 패브릭 등 스타일링 단계까지 모두 책임지고 관리합니다.`,
-              ]
-            },
-            {
-              type: "description",
-              text: [
-                `일반적으로 인테리어를 고려할 때, 많은 사람들이 시공만을 고려하는 경우가 많습니다. 하지만 인테리어는 디자인 단계부터 시작되며, 디자이너의 디자인을 통해 시공 범위가 결정되고 시공이 완료된 후에도 스타일링 단계까지 완전한 완성을 이루어야 합니다. 상업 인테리어에서는 이러한 과정이 일반적으로 수행되지만, 주거 인테리어에서는 집수리와 같은 개념으로만 생각하는 경우가 많습니다. 이러한 현실을 극복하기 위해 홈리에종은 주거 인테리어에 대한 온전한 경험을 제공하기 위해 디자인 단계부터 스타일링까지 모든 과정을 함께 진행하는 서비스를 제공합니다. 홈리에종 서비스의 종류는 다음과 같습니다.`,
-              ]
-            },
-            {
-              type: "block",
-              text: [
-                `1. 홈퍼니싱 : 시공없이 스타일링만 진행하여 인테리어를 끝내는 서비스, 30일 소요`,
-                `2. 홈스타일링 : 부분 시공과 스타일링으로 진행하는 효과적인 인테리어, 45일 소요`,
-                `3. 토탈 스타일링 : 집 전체 시공과 스타일링까지 진행하는 전체 인테리어, 60일 소요`,
-                `4. 엑스트라 스타일링 : 토탈 스타일링의 프리미엄 버전, 60일 소요`,
-              ]
-            },
-          ]
-        },
-        {
-          title: "인테리어 예산 개념과 비용의 구성",
-          body: [
-            {
-              type: "description",
-              text: [
-                `홈리에종의 인테리어 예산은 세 가지로 나누어집니다. 시공 예산, 가구 구매 예산, 디자인비로 구성됩니다. 시공 예산은 시공에 쓰이는 비용을 의미하며, 가구 구매 예산은 가구, 소품, 패브릭 등 구매에 필요한 비용을 의미합니다. 디자인비는 디자이너에게 지불하는 비용으로, 인테리어 프로젝트가 시작하기 전에 홈리에종에 미리 지불하게 됩니다.`,
-              ]
-            },
-          ]
-        },
-        {
-          title: "홈리에종 풀 프로세스",
-          body: [
-            {
-              type: "description",
-              text: [
-                `1차 응대가 이루어지면 홈리에종은 고객님께 디자이너 추천서를 보내며, 고객님이 추천서에서 디자이너를 선택하신 후, 계약금(33만원)을 결제하시면 디자인 계약이 체결됩니다. 그리고 홈리에종은 디자이너에게 연락하여 고객님과의 현장 미팅 일자를 조율합니다. 현장 미팅 이후에는 고객님께 다시 전화하여 진행 여부를 확인하며, 고객님이 계속 진행하겠다고 하시면 홈스타일링 계약서를 작성하고 잔금을 안내합니다. 고객님께서 잔금을 지불하시고 계약서에 서명을 완료하면 홈스타일링 프로젝트가 본격적으로 시작되며 디자이너가 디자인 작업을 시작합니다. 인테리어 과정이 끝나면 홈리에종은 현장 확인과 함께 현장 촬영을 진행하고, 촬영이 끝나면 컨텐츠 발행과 최종 마무리를 합니다.`,
-              ]
-            },
-          ]
-        },
-      ]
-    },
-    {
-      title: "Sa-c 콘솔과 고객 리포트",
-      children: [
-        {
-          title: "Sa-c 콘솔",
-          body: [
-            {
-              type: "image",
-              source: DashboardJs.binaryPath + "firstResponse13.jpg",
-            },
-            {
-              type: "description",
-              text: [
-                `Sa-c 콘솔은 CX팀에서 사용하는 Sa의 보조 콘솔입니다. 이 콘솔은 고객 리스트를 정리하고 해당 고객이 타겟 고객인지, 우선순위가 어떻게 되는지, 계약 가능성이 있는지 등을 판단하고 기입할 수 있습니다. Sa-c 콘솔에 접근하는 방법은 Sa 아이콘을 오른쪽 클릭하거나, Sa 콘솔 우측 하단에 있는 ‘C’ 버튼을 누르면 됩니다. CX팀 회의 때 이 콘솔을 열어놓고, 각각의 고객 요청 사항을 보면서 우선순위와 타겟 여부를 결정하고 담당자를 분배하는 시간을 가질 수 있습니다.`,
-              ]
-            }
-          ]
-        },
-        {
-          title: "고객 리포트",
-          body: [
-            {
-              type: "image",
-              source: DashboardJs.binaryPath + "firstResponse14.jpg",
-            },
-            {
-              type: "image",
-              source: DashboardJs.binaryPath + "firstResponse15.jpg",
-            },
-            {
-              type: "description",
-              text: [
-                `Sa 콘솔은 기본적으로 자동으로 통계를 내는 리포트를 제공합니다. Sa 콘솔의 우측 하단에 있는 문서 아이콘을 누르면 팝업 형태로 리포트가 제공됩니다. 우측 상단에 있는 날짜 범위를 형식에 맞게 적어주시면 해당 날짜에 맞는 리포트가 자동으로 제공되며, 각각의 숫자를 클릭하면 그 숫자에 해당되는 고객 리스트가 Sa 콘솔에 자동으로 표시됩니다. 리포트는 다른 버전으로도 제공됩니다. 리포트 팝업에서 우측 상단에 있는 ‘리포트 전환’을 클릭하면 월별 리포트에서 일별 리포트로 전환되며, 두 개의 리포트를 통해 CX팀의 상황과 성과를 한눈에 볼 수 있습니다.`,
-              ]
-            }
-          ]
-        },
-      ]
-    },
-  ];
+  if (key === "firstResponse") {
+    baseContents = [
+      {
+        title: "고객님의 상담 신청 과정",
+        children: [
+          {
+            title: "상담 신청 페이지",
+            body: [
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "firstResponse1.jpg",
+              },
+              {
+                type: "description",
+                text: [
+                  `먼저 고객님께서는 상담 신청 페이지에 접속하여 성함, 연락처, 이메일, 주소, 입주일을 기입하신 후, 요청 사항을 상세히 적어 주시게 됩니다. 그리고 '상담 신청하기' 버튼을 클릭하시면 핸드폰 인증이 진행됩니다. 핸드폰 인증이 정상적으로 완료되면, 고객님께서는 스타일 찾기 페이지로 이동하시게 됩니다.`,
+                ]
+              }
+            ]
+          },
+          {
+            title: "스타일 체크 페이지",
+            body: [
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "firstResponse2.jpg",
+              },
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "firstResponse3.jpg",
+              },
+              {
+                type: "description",
+                text: [
+                  `스타일 찾기 페이지에 접속하시면, 고객님께서는 사전 점검과 집 비는 날짜를 입력하신 후, 가구 구매 예정 금액과 인테리어 예산 등에 대한 정보를 입력해주시게 됩니다. 이후 시공에 대한 니즈를 체크하시고, 스타일 체크를 진행하시게 됩니다. 스타일 체크 과정에서는 제시되는 여러 장의 사진을 찍으시면서 고객님께서 선호하시는 스타일에 대한 정보를 컴퓨터가 파악합니다.`,
+                  `그리고 현장의 사진이나 도면 등을 업로드하도록 안내드리는데, 해당 페이지에서 업로드를 완료하신 후 '신청 완료' 버튼을 클릭하시면, 고객님께서는 신청이 완료되었다는 알림톡을 받으시게 됩니다. 동시에, 홈리에종에서는 해당 고객님의 새로운 상담 문의가 도착했다는 알림을 받게 됩니다.`,
+                ]
+              }
+            ]
+          },
+        ]
+      },
+      {
+        title: "신규 고객 세일즈를 위한 Sa 콘솔",
+        children: [
+          {
+            title: "Sa 콘솔의 기본 구성과 기능",
+            body: [
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "firstResponse4.jpg",
+              },
+              {
+                type: "description",
+                text: [
+                  `고객님께서 문의를 남기시면 기본적으로 Sa 콘솔은 문의일을 기준으로 역순으로 정렬됩니다. 각 고객의 아이디 또는 성함을 클릭하면 고객 정보가 팝업 형태로 표시되며, 왼쪽에는 기본 정보, 오른쪽에는 응대 기록을 작성할 수 있는 공간이 있습니다. 응대를 진행하면서 왼쪽의 기본 정보를 확인하고 수정할 수 있으며, 오른쪽에는 응대 내용을 자세히 작성하면 됩니다.`,
+                ]
+              },
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "firstResponse5.jpg",
+              },
+              {
+                type: "description",
+                text: [
+                  `좌측 기본 정보에 대해서는 고객과 응대를 하면서 정보를 하나씩 확인하고, 잘못된 정보가 있는 경우 수정해야 합니다. 이 정보는 추천서를 생성하거나 고객 관련 통계를 생성할 때 매우 중요하기 때문에 응대하면서 수정할 수 있는 부분은 최대한 수정해야 합니다.`
+                ]
+              },
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "firstResponse6.jpg",
+              },
+              {
+                type: "description",
+                text: [
+                  `다시 표로 돌아와서, 우측 중간에 원형 아이콘이 세 개 있습니다. 이를 클릭하면 각 고객에 대한 담당자를 지정할 수 있는 사이드 영역이 열립니다. 이곳에서 담당자를 지정하고, 컬럼명을 오른쪽 클릭하여 정렬 기능을 이용하여 담당자별로 응대해야 할 고객과 현재 응대 중인 고객을 확인할 수 있습니다. 담당자 지정, 정렬, 그리고 고객님 이름을 눌러 팝업을 띄운 상태에서 응대를 하는 방식으로 1차 응대를 운영하시면 됩니다.`,
+                ]
+              },
+            ]
+          },
+          {
+            title: "예상 서비스와 예상 종료일의 중요성",
+            body: [
+              {
+                type: "description",
+                text: [
+                  `고객 팝업에서 특히 좌측에 있는 예상 서비스와 예상 종료일이라는 항목은 매우 중요합니다. 이 두 항목은 자동으로 디자이너 추천서와 스타일링 계약서를 작성할 때 아주 핵심적인 정보가 되며, 정확하게 기입해야 합니다.`,
+                  `입주 예정일을 기준으로 고객님이 언제부터 시작하고 언제 종료될 예정인지 대략적인 감을 파악하여 예상 종료일을 기입해야 합니다. 예상 기간은 서비스에 따라 달라지며, 홈퍼니싱은 30일, 홈스타일링은 45일, 토탈 스타일링은 60일을 기준으로 잡아 예상 종료일을 체크해주시면 됩니다.`,
+                  `예상 종료일에 따라 컴퓨터가 서비스를 분석하고 예상 시작일을 계산합니다. 시작일과 종료일을 기준으로 디자이너들의 일정을 조정하고, 자동으로 추천서와 계약서를 작성합니다. 이러한 과정은 전산상으로 여러 프로세스에서 진행되기 때문에, 예상 종료일을 상당히 정확한 수준으로 체크해주셔야 합니다.`,
+                ]
+              }
+            ]
+          },
+          {
+            title: "잘못된 주소를 고치는 방법",
+            body: [
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "firstResponse7.jpg",
+              },
+              {
+                type: "description",
+                text: [
+                  `고객님의 주소를 정확하게 적는 것이 매우 중요합니다. 경기도 의정부시와 같이 표준 주소 체계에 맞지 않는 주소를 적으실 때가 있습니다. 이 경우에는 필히 표준 주소 체계 형식으로 주소를 수정해주셔야 합니다. 디자이너 주소와 고객님 주소를 근거로 해당 현장이 출장비가 발생하는 거리인지, 출장비가 얼마 발생할지 등을 자동으로 계산하기 때문입니다. 만약 주소를 잘못 적으면 추천서도 만들어지지 않고 디자인비도 계산할 수 없습니다.`,
+                ]
+              },
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "firstResponse8.jpg",
+              },
+              {
+                type: "description",
+                text: [
+                  `또한, 새아파트의 경우 주소가 안 나온 경우가 있습니다. 이때는 네이버에서 새 아파트를 검색하신 다음에 옆에 있는 건물이나 학교, 식당과 같은 곳의 주소로 적고, 새아파트명을 그 주소 뒤에 붙여주셔야 합니다. 이렇게 함으로써 대략적인 거리를 구할 수 있으며, 자동 연산에 필요한 주소를 제공하여 디자인비를 구하고 추천서를 작성할 수 있습니다.`,
+                ]
+              },
+            ]
+          },
+          {
+            title: "부재중 알림과 서비스 소개 보내기",
+            body: [
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "firstResponse9.jpg",
+              },
+              {
+                type: "description",
+                text: [
+                  `고객님의 이름을 클릭하면 팝업이 열리는데, 이 팝업에서 하단의 검색바 좌측에 카카오톡 아이콘과 같은 아이콘이 있습니다. 이 아이콘을 클릭하면 추천서 자동 생성, 페이퍼 출력, 부재 중인 고객에게 순수 부재 중 알림 보내기, 고객용 서비스 소개 등의 기능이 제공됩니다. 부재 중인 고객에게는 "순수 부재 중" 버튼을 눌러 부재 중 알림을 보낼 수 있으며, 응대 중에 서비스 소개 페이지를 전송해야 하는 경우 "고객용 서비스 소개" 버튼을 누르면 됩니다.`,
+                ]
+              },
+            ]
+          },
+        ]
+      },
+      {
+        title: "스타일 체크와 Sa 콘솔",
+        children: [
+          {
+            title: "고객님이 선택하신 사진과 보내신 사진 보기",
+            body: [
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "firstResponse10.jpg",
+              },
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "firstResponse11.jpg",
+              },
+              {
+                type: "description",
+                text: [
+                  `고객님의 이름을 클릭하면 나타나는 팝업에서, 오른쪽 상단에 "log"라는 글씨가 있습니다. 해당 글씨를 클릭하면, 응대 기록을 남길 수 있는 히스토리캔이 사라지고 새로운 영역이 나타납니다. 이 영역에는 고객님의 활동 내역이 기록되어 있습니다. 우측 상단을 다시 확인하면, "사진 보기"라는 빨간 글씨가 있습니다. 이를 클릭하면, 고객님이 스타일체크 과정에서 선택한 사진과 현장에서 찍은 사진, 선호하는 사진 등을 한꺼번에 확인할 수 있습니다. 이를 통해 고객님의 현장 상황과 선호하는 스타일을 파악할 수 있습니다.`,
+                ]
+              }
+            ]
+          },
+          {
+            title: "스타일 체크와 디자이너 추천서 자동 생성",
+            body: [
+              {
+                type: "description",
+                text: [
+                  `홈리에종의 모든 사진에는 태그와 경향성 값이 포함되어 있습니다. 고객이 스타일 체크 단계에서 사진들을 확인하면, 선호하는 성향의 값들이 자동으로 추출되어 해당 스타일 값을 잘 파악하는 디자이너에게 우선 순위가 부여되어 추천서 작성에 반영됩니다. 그러나 고객이 스타일 체크를 수행하지 않은 경우에는 추천서를 자동으로 생성할 수 없기 때문에, 디자이너 추천서를 수동으로 작성해야 합니다. 추천서 수동 생성 방법은 디자이너 추천서 설명 메뉴얼에서 자세히 설명하고 있습니다.`,
+                ]
+              }
+            ]
+          },
+          {
+            title: "추천서 자동 생성이 안 될 경우 체크 사항",
+            body: [
+              {
+                type: "description",
+                text: [
+                  `고객이 스타일 체크를 정상적으로 완료했음에도 추천서가 자동으로 생성되지 않는 경우가 종종 발생합니다. 이는 대개 고객이 주소를 표준 주소 체계에 맞게 기입하지 않아 발생하는 문제이거나, 예상 종료일이 적절하지 않은 경우에도 발생할 수 있습니다. 따라서 이러한 경우에는 고객이 기재한 주소를 확인한 후, 주소에 문제가 없다면 예상 종료일을 조정하여 추천서 자동 생성을 다시 시도해 보시기 바랍니다.`,
+                ]
+              }
+            ]
+          },
+        ]
+      },
+      {
+        title: "기본적인 1차 응대 과정",
+        children: [
+          {
+            title: "1차 응대 사전 준비 사항",
+            body: [
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "firstResponse12.jpg",
+              },
+              {
+                type: "description",
+                text: [
+                  `1차 응대를 진행하기 전에 고객님의 정보와 요청 사항을 한 번 읽어보고 문제가 없는지를 검토해야 합니다. 주로 네이버 부동산이나 네이버 맵을 통해 주소에 문제가 없는지, 해당 아파트의 평형은 어떤지, 평수는 제대로 적은 것인지(평의 개념을 몰라 미터 제곱을 평수에 적으신 분들도 많습니다) 등을 사전에 확인해야 합니다. 네이버 부동산에서 반드시 고객님 현장과 평수, 그리고 고객님의 요청사항을 미리 파악한 후 1차 응대를 진행해주세요.`,
+                ]
+              }
+            ]
+          },
+          {
+            title: "1차 응대 시작과 전체적인 플로우",
+            body: [
+              {
+                type: "description",
+                text: [
+                  `1차 응대 준비가 끝났다면 해당 Sa 콘솔에서 해당 고객님 팝업창을 열어놓고, 좌측 상단에 있는 고객님 이름을 클릭합니다. 그러면 자동으로 전화가 걸리며 수화기를 들면 고객님과 연결됩니다. 그리고 사전에 준비해놓았던 모든 내용을 함께 모니터에 띄어 고객님 응대를 진행해주시면 됩니다. 응대 플로우는 다음과 같습니다.`,
+                ]
+              },
+              {
+                type: "block",
+                text: [
+                  `1. 인사`,
+                  `2. 정보 확인`,
+                  `    1. 주소 및 평수 확인`,
+                  `    2. 시공을 하신다면 어느정도 하시는지`,
+                  `    3. 제품은 어느정도로 변경하시는 지`,
+                  `    4. 어떤 것이 필요해서 홈리에종에 문의하시게 되었는지`,
+                  `3. 가족 구성원 확인`,
+                  `4. 일정 확인 (입주 예정일, 희망 종료일 등)`,
+                  `5. 계약 상태 확인 (자가/전월세)`,
+                  `6. 홈리에종 서비스 설명`,
+                  `7. 서비스별 기간 설명`,
+                  `8. 인테리어 예산 개념에 대한 설명`,
+                  `9. 풀 프로세스에 대한 설명`,
+                  `10. 고객님께 궁금한 점 들어보기`,
+                ]
+              },
+            ]
+          },
+          {
+            title: "홈리에종 서비스와 서비스 종류, 기간",
+            body: [
+              {
+                type: "description",
+                text: [
+                  `홈리에종 서비스는 고객과 디자이너를 매칭한 뒤 인테리어 프로젝트를 종합적으로 관리해주는 서비스입니다. 다른 매칭 플랫폼과 달리, 인테리어 프로젝트가 완료될 때까지 케어를 제공하며, 시공만 하는 것이 아니라 가구, 소품, 패브릭 등 스타일링 단계까지 모두 책임지고 관리합니다.`,
+                ]
+              },
+              {
+                type: "description",
+                text: [
+                  `일반적으로 인테리어를 고려할 때, 많은 사람들이 시공만을 고려하는 경우가 많습니다. 하지만 인테리어는 디자인 단계부터 시작되며, 디자이너의 디자인을 통해 시공 범위가 결정되고 시공이 완료된 후에도 스타일링 단계까지 완전한 완성을 이루어야 합니다. 상업 인테리어에서는 이러한 과정이 일반적으로 수행되지만, 주거 인테리어에서는 집수리와 같은 개념으로만 생각하는 경우가 많습니다. 이러한 현실을 극복하기 위해 홈리에종은 주거 인테리어에 대한 온전한 경험을 제공하기 위해 디자인 단계부터 스타일링까지 모든 과정을 함께 진행하는 서비스를 제공합니다. 홈리에종 서비스의 종류는 다음과 같습니다.`,
+                ]
+              },
+              {
+                type: "block",
+                text: [
+                  `1. 홈퍼니싱 : 시공없이 스타일링만 진행하여 인테리어를 끝내는 서비스, 30일 소요`,
+                  `2. 홈스타일링 : 부분 시공과 스타일링으로 진행하는 효과적인 인테리어, 45일 소요`,
+                  `3. 토탈 스타일링 : 집 전체 시공과 스타일링까지 진행하는 전체 인테리어, 60일 소요`,
+                  `4. 엑스트라 스타일링 : 토탈 스타일링의 프리미엄 버전, 60일 소요`,
+                ]
+              },
+            ]
+          },
+          {
+            title: "인테리어 예산 개념과 비용의 구성",
+            body: [
+              {
+                type: "description",
+                text: [
+                  `홈리에종의 인테리어 예산은 세 가지로 나누어집니다. 시공 예산, 가구 구매 예산, 디자인비로 구성됩니다. 시공 예산은 시공에 쓰이는 비용을 의미하며, 가구 구매 예산은 가구, 소품, 패브릭 등 구매에 필요한 비용을 의미합니다. 디자인비는 디자이너에게 지불하는 비용으로, 인테리어 프로젝트가 시작하기 전에 홈리에종에 미리 지불하게 됩니다.`,
+                ]
+              },
+            ]
+          },
+          {
+            title: "홈리에종 풀 프로세스",
+            body: [
+              {
+                type: "description",
+                text: [
+                  `1차 응대가 이루어지면 홈리에종은 고객님께 디자이너 추천서를 보내며, 고객님이 추천서에서 디자이너를 선택하신 후, 계약금(33만원)을 결제하시면 디자인 계약이 체결됩니다. 그리고 홈리에종은 디자이너에게 연락하여 고객님과의 현장 미팅 일자를 조율합니다. 현장 미팅 이후에는 고객님께 다시 전화하여 진행 여부를 확인하며, 고객님이 계속 진행하겠다고 하시면 홈스타일링 계약서를 작성하고 잔금을 안내합니다. 고객님께서 잔금을 지불하시고 계약서에 서명을 완료하면 홈스타일링 프로젝트가 본격적으로 시작되며 디자이너가 디자인 작업을 시작합니다. 인테리어 과정이 끝나면 홈리에종은 현장 확인과 함께 현장 촬영을 진행하고, 촬영이 끝나면 컨텐츠 발행과 최종 마무리를 합니다.`,
+                ]
+              },
+            ]
+          },
+        ]
+      },
+      {
+        title: "Sa-c 콘솔과 고객 리포트",
+        children: [
+          {
+            title: "Sa-c 콘솔",
+            body: [
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "firstResponse13.jpg",
+              },
+              {
+                type: "description",
+                text: [
+                  `Sa-c 콘솔은 CX팀에서 사용하는 Sa의 보조 콘솔입니다. 이 콘솔은 고객 리스트를 정리하고 해당 고객이 타겟 고객인지, 우선순위가 어떻게 되는지, 계약 가능성이 있는지 등을 판단하고 기입할 수 있습니다. Sa-c 콘솔에 접근하는 방법은 Sa 아이콘을 오른쪽 클릭하거나, Sa 콘솔 우측 하단에 있는 ‘C’ 버튼을 누르면 됩니다. CX팀 회의 때 이 콘솔을 열어놓고, 각각의 고객 요청 사항을 보면서 우선순위와 타겟 여부를 결정하고 담당자를 분배하는 시간을 가질 수 있습니다.`,
+                ]
+              }
+            ]
+          },
+          {
+            title: "고객 리포트",
+            body: [
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "firstResponse14.jpg",
+              },
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "firstResponse15.jpg",
+              },
+              {
+                type: "description",
+                text: [
+                  `Sa 콘솔은 기본적으로 자동으로 통계를 내는 리포트를 제공합니다. Sa 콘솔의 우측 하단에 있는 문서 아이콘을 누르면 팝업 형태로 리포트가 제공됩니다. 우측 상단에 있는 날짜 범위를 형식에 맞게 적어주시면 해당 날짜에 맞는 리포트가 자동으로 제공되며, 각각의 숫자를 클릭하면 그 숫자에 해당되는 고객 리스트가 Sa 콘솔에 자동으로 표시됩니다. 리포트는 다른 버전으로도 제공됩니다. 리포트 팝업에서 우측 상단에 있는 ‘리포트 전환’을 클릭하면 월별 리포트에서 일별 리포트로 전환되며, 두 개의 리포트를 통해 CX팀의 상황과 성과를 한눈에 볼 수 있습니다.`,
+                ]
+              }
+            ]
+          },
+        ]
+      },
+    ];
+  }
 
   return baseContents;
 }
@@ -546,7 +548,7 @@ DashboardJs.prototype.returnManualContents = function () {
 DashboardJs.prototype.baseMaker = function () {
   const instance = this;
   const { ea, vh, totalContents, belowHeight, grayBarWidth } = this;
-  const { createNode, colorChip, withOut, equalJson } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, cleanChildren } = GeneralJs;
   let totalMother;
   let outerMargin;
   let innerPadding;
@@ -572,6 +574,7 @@ DashboardJs.prototype.baseMaker = function () {
   let numberTitleTop;
   let numberTitleSize;
   let grayBase;
+  let baseLoad;
 
   outerMargin = 30;
   innerPadding = 40;
@@ -794,73 +797,79 @@ DashboardJs.prototype.baseMaker = function () {
   });
   this.contentsBase = contentsBase;
 
-  for (let i = 0; i < xLength; i++) {
-    [ titleArea, contentsArea ] = createNode({
-      mother: contentsBase,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        flexDirection: "column",
-        width: "calc(100% / " + String(xLength) + ")",
-        height: withOut(0, ea),
-        boxSizing: "border-box",
-        padding: String(innerPadding) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "flex",
-            position: "relative",
-            width: withOut(0, ea),
-            height: String(titleAreaHeight) + vh,
-            justifyContent: "start",
-            alignItems: "start",
-            flexDirection: "row",
-          },
-          children: [
-            {
-              text: baseContents[i].title,
-              event: {
-                selectstart: (e) => { e.preventDefault() },
-              },
-              style: {
-                display: "inline-block",
-                position: "relative",
-                fontSize: String(titleSize) + vh,
-                fontWeight: String(900),
-                color: colorChip.black,
-              }
-            },
-            {
-              text: String(baseContents[i].number),
-              event: {
-                selectstart: (e) => { e.preventDefault() },
-              },
-              style: {
-                display: "inline-block",
-                position: "relative",
-                fontSize: String(numberTitleSize) + vh,
-                fontWeight: String(200),
-                color: colorChip.green,
-                marginLeft: String(numberTitleMargin) + vh,
-                top: String(numberTitleTop) + vh,
-              }
-            },
-          ],
+  baseLoad = (contentsBase) => {
+    cleanChildren(contentsBase);
+    for (let i = 0; i < xLength; i++) {
+      [ titleArea, contentsArea ] = createNode({
+        mother: contentsBase,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          flexDirection: "column",
+          width: "calc(100% / " + String(xLength) + ")",
+          height: withOut(0, ea),
+          boxSizing: "border-box",
+          padding: String(innerPadding) + ea,
         },
-        {
-          style: {
-            display: "flex",
-            flexDirection: "column",
-            position: "relative",
-            width: withOut(0, ea),
-            height: withOut(titleAreaHeight, vh),
+        children: [
+          {
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              height: String(titleAreaHeight) + vh,
+              justifyContent: "start",
+              alignItems: "start",
+              flexDirection: "row",
+            },
+            children: [
+              {
+                text: baseContents[i].title,
+                event: {
+                  selectstart: (e) => { e.preventDefault() },
+                },
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(titleSize) + vh,
+                  fontWeight: String(900),
+                  color: colorChip.black,
+                }
+              },
+              {
+                text: String(baseContents[i].number),
+                event: {
+                  selectstart: (e) => { e.preventDefault() },
+                },
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(numberTitleSize) + vh,
+                  fontWeight: String(200),
+                  color: colorChip.green,
+                  marginLeft: String(numberTitleMargin) + vh,
+                  top: String(numberTitleTop) + vh,
+                }
+              },
+            ],
+          },
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+              width: withOut(0, ea),
+              height: withOut(titleAreaHeight, vh),
+            }
           }
-        }
-      ]
-    }).children;
-    makeChildren(i, equalJson(baseContents[i].children), 0);
+        ]
+      }).children;
+      makeChildren(i, equalJson(baseContents[i].children), 0);
+    }
   }
+  this.baseLoad = baseLoad;
+
+  baseLoad(contentsBase);
 
 }
 
@@ -1009,6 +1018,64 @@ DashboardJs.prototype.grayMaker = function () {
 
 }
 
+DashboardJs.prototype.manualMaker = function (key) {
+  const instance = this;
+  const { ea, vh, totalContents, belowHeight, grayBarWidth, contentsBase } = this;
+  const { createNode, colorChip, withOut, equalJson, cleanChildren } = GeneralJs;
+  let thisContents;
+  let grayBase;
+  let innerPadding;
+  let whiteMargin;
+  let contentsTong;
+
+  innerPadding = 10;
+  whiteMargin = 30;
+
+  cleanChildren(contentsBase);
+
+  thisContents = this.returnManualContents(key);
+
+  grayBase = createNode({
+    mother: contentsBase,
+    style: {
+      display: "flex",
+      position: "relative",
+      borderRadius: String(5) + "px",
+      background: colorChip.gray1,
+      width: withOut(0, ea),
+      height: withOut(0, ea),
+      justifyContent: "center",
+      alignItems: "center",
+    }
+  })
+
+  contentsTong = createNode({
+    mother: grayBase,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingTop: String(whiteMargin) + ea,
+      paddingLeft: String(whiteMargin) + ea,
+      paddingRight: String(whiteMargin) + ea,
+      width: withOut((innerPadding * 2) + (whiteMargin * 2), ea),
+      height: withOut((innerPadding * 2) + whiteMargin, ea),
+      background: colorChip.white,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      overflow: "scroll",
+    },
+    child: {
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+      }
+    }
+  }).firstChild;
+
+
+}
+
 DashboardJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson } = GeneralJs;
@@ -1022,6 +1089,7 @@ DashboardJs.prototype.launching = async function () {
     this.totalMother = null;
     this.grayBase = null;
     this.contentsBase = null;
+    this.baseLoad = () => {}
 
     document.getElementById("grayLeftOpenButton").remove();
     document.getElementById("moveRightArea").style.display = "none";
@@ -1029,6 +1097,9 @@ DashboardJs.prototype.launching = async function () {
 
     this.baseMaker();
     this.grayMaker();
+
+    // dev
+    this.manualMaker("firstResponse");
 
   } catch (e) {
     ajaxJson({
