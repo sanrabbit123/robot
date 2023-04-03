@@ -450,6 +450,10 @@ StyleCurationJs.randomPick = function (photos, contentsArr, pictureNumber, rooms
     num2++;
   } while (randomPick.length !== pictureNumber);
 
+
+  console.log(randomPick.length);
+  console.log(pictureNumber);
+
   if (randomPick.length !== pictureNumber || GeneralJs.stacks[stackName] > limit) {
     return { complete: true, photos };
   } else {
@@ -1179,7 +1183,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   const { client, ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, cleanChildren, isMac, sleep, ajaxJson } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, cleanChildren, isMac, sleep, ajaxJson, equalJson } = GeneralJs;
   const { photos, contentsArr, designers } = this;
   const pictureBoxClassName = "pictureBoxClassName";
   const pictureWordingTargetClassName = "pictureWordingTargetClassName";
@@ -1557,8 +1561,14 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
                   cursor: "pointer",
                 },
               });
+
               instance.selectPhotos.push(instance.randomPick[index]);
               image.push(instance.randomPick[index].file);
+
+              ajaxJson({ cliid: client.cliid, name: client.name, phone: client.phone, photos: equalJson(JSON.stringify(instance.selectPhotos)) }, BACKHOST + "/styleCuration_styleChecking").catch((err) => {
+                console.log(err);
+              });
+
               if (instance.selectPhotos.length >= 3) {
                 instance.photos = StyleCurationJs.photoFilter(instance.photos, instance.selectPhotos);
                 instance.selectPhotos = [];

@@ -8952,6 +8952,41 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_styleCuration_styleChecking = function () {
+  const instance = this;
+  const { equalJson, messageSend, errorLog } = this.mother;
+  let obj = {};
+  obj.link = "/styleCuration_styleChecking";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.cliid === undefined || req.body.name === undefined || req.body.phone === undefined || req.body.photos === undefined) {
+        throw new Error("invaild post");
+      }
+      const { cliid, name, phone, photos } = equalJson(req.body);
+      let text, channel;
+
+      text = name + " 고객님이 스타일 찾기 사진 체크를 함 => " + JSON.stringify(photos);
+      channel = "#error_log";
+
+      messageSend({ text, channel, voice: false }).catch((e) => {
+        console.log(e);
+      });
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleChecking) : " + e.message);
+      res.send(JSON.stringify({ message: "error" }));
+    }
+  }
+  return obj;
+}
+
 
 //ROUTING ----------------------------------------------------------------------
 
