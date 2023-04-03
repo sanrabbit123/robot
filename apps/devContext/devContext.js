@@ -5458,9 +5458,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "권오록",
-    //     designer: "우다미",
-    //     link: "https://drive.google.com/drive/folders/1HVWukc9MKR03PvX0ePRruIKBJl98W3tV",
+    //     client: null,
+    //     designer: "강유정",
+    //     link: "https://drive.google.com/drive/folders/1QpNeo-E720QopmB1rlH78iybSTuLO7yG",
     //     pay: true
     //   },
     // ]);
@@ -5521,21 +5521,21 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2206_aa02s" ]);
+    // await work.newDesignerToFront([ "d2302_aa01s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2301_aa01s", [
-    //   { porlid: "ghost", index: 6 },
-    //   { porlid: "ghost", index: 3 },
-    //   { porlid: "ghost", index: 1 },
-    //   { porlid: "ghost", index: 8 },
-    //   { porlid: "ghost", index: 2 },
-    //   { porlid: "ghost", index: 4 },
+    // await this.setProposalSettingForDesigner("d2302_aa01s", [
+    //   { porlid: "a101", index: 3 },
+    //   { porlid: "a100", index: 6 },
+    //   { porlid: "a101", index: 9 },
+    //   { porlid: "a101", index: 12 },
+    //   { porlid: "a100", index: 7 },
+    //   { porlid: "a101", index: 1 },
     // ], [
-    //   "감성적인 리터치와 레이아웃으로 공간의 분위기를 바꿔 드립니다.",
-    //   "고객님의 상황에 맞춰 스타일링을 진행하며 고객님만의 아이템을 적극 활용합니다.",
-    //   "식물을 활용한 플랜테리어에 능하여 생기 있는 공간을 만들어 냅니다."
+    //   "고객님의 취향을 정확히 파악하여 해당 스타일대로 집을 만들어 드립니다.",
+    //   "단정한 톤으로 여러가지 스타일을 할 수 있어 어떤 취향이든 깔끔히 결과를 낼 수 있습니다.",
+    //   "하얗기만 한 스타일이 아닌 컬러 포인트가 적절히 들어간 공간을 만들어 냅니다."
     // ]);
 
 
