@@ -1509,7 +1509,6 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
                   top: String(greenTop) + ea,
                   left: String(greenLeft) + ea,
                   borderRadius: String(3) + "px",
-                  animation: "justfadeinnine 0.2s ease forwards",
                   cursor: "pointer",
                   overflow: "hidden",
                   background: colorChip.green,
@@ -1555,7 +1554,6 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
                   width: String(radius * 2) + ea,
                   top: String(greenTop + (photoHeight / 2) - (radius + circleVisual)) + ea,
                   left: String(greenLeft + (photoWidth / 2) - radius) + ea,
-                  animation: "justfadeinnine 0.2s ease forwards",
                   cursor: "pointer",
                 },
               });
