@@ -3296,7 +3296,7 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
               globalThis.window.parent.postMessage(JSON.stringify({
                 proid: proid,
                 mode: "reset",
-              }));
+              }), "*");
             }
           },
           style: {

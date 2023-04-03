@@ -118,7 +118,7 @@ ProposalJs.prototype.totalInitial = function () {
                   globalThis.window.parent.postMessage(JSON.stringify({
                     cliid: cliid,
                     mode: "reset",
-                  }));
+                  }), "*");
                 } else {
                   window.alert("로딩을 기다렸다가 잠시 후에 시도해주세요!");
                 }

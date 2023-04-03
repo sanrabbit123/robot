@@ -1889,7 +1889,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 requestNumber: Number(requestIndex),
                 column: "firstResponse",
                 value: finalValue,
-              }));
+              }), "*");
 
             } else if (column === "recommend") {
 
@@ -1898,7 +1898,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 requestNumber: Number(requestIndex),
                 column: "feedBack",
                 value: finalValue,
-              }));
+              }), "*");
               
             }
 

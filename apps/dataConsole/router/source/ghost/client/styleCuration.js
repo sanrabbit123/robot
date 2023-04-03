@@ -1231,7 +1231,6 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
 
   firstPhoto = <&& [ "t22p18.jpg", "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t1a79.jpg", "t5p122.jpg", "t6p94.jpg", "t14p47.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p102.jpg", "t3p41.jpg", "t6p18.jpg" ] | [ "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t1a79.jpg", "t5p122.jpg", "t6p94.jpg", "t14p47.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p18.jpg" ] | [ "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t1a79.jpg", "t5p122.jpg", "t6p94.jpg", "t14p47.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p18.jpg" ] | [ "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t1a79.jpg", "t5p122.jpg", "t6p94.jpg", "t14p47.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p18.jpg" ] | [ "t11p58.jpg", "t13a82.jpg", "t3a81.jpg", "t1p103.jpg", "t3p146.jpg", "t7p35.jpg", "t4p123.jpg", "t6p18.jpg" ] &&>;
 
-  // randomPick = StyleCurationJs.randomPick(photos, contentsArr, pictureNumber);
   if (Math.random() < 0.5) {
     randomPick = photos.filter((obj) => { return firstPhoto.includes(obj.file) }).reverse();
   } else {
@@ -1482,7 +1481,6 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
                   {
                     type: "click",
                     event: function (e) {
-                      e.preventDefault();
                       e.stopPropagation();
                       const file = this.getAttribute("file");
                       const thisIndex = this.getAttribute("index");
@@ -1529,7 +1527,6 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
                   {
                     type: "click",
                     event: function (e) {
-                      e.preventDefault();
                       e.stopPropagation();
                       const file = this.getAttribute("file");
                       const thisIndex = this.getAttribute("index");
@@ -1568,10 +1565,8 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
                 instance.photos = StyleCurationJs.photoFilter(instance.photos, instance.selectPhotos);
                 instance.selectPhotos = [];
                 GeneralJs.stacks[loadingName] = true;
-                GeneralJs.setTimeout(() => {
-                  GeneralJs.stacks[stackName] = GeneralJs.stacks[stackName] + 1;
-                  resetEvent(false);
-                }, 201);
+                GeneralJs.stacks[stackName] = GeneralJs.stacks[stackName] + 1;
+                resetEvent(false);
               }
 
             }
@@ -1700,9 +1695,9 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   }
 
   if (Array.isArray(instance.values.style[0].value) && instance.values.style[0].value.length > 0 && instance.alreadyStyleCheck === true) {
-    GeneralJs.setTimeout(() => {
-      resetEvent(true);
-    }, 0);
+    // GeneralJs.setTimeout(() => {
+    //   resetEvent(true);
+    // }, 0);
   }
 
 }

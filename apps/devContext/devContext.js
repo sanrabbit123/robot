@@ -188,7 +188,7 @@ DevContext.prototype.launching = async function () {
 
     // const app = new GoogleAnalytics();
     // let pastMonthDate;
-    // pastMonthDate = new Date(2023, 2, 1);
+    // pastMonthDate = new Date();
     // pastMonthDate.setMonth(pastMonthDate.getMonth() - 1);
     // await app.complexMonthly(pastMonthDate.getFullYear(), pastMonthDate.getMonth() + 1);
 
@@ -197,7 +197,7 @@ DevContext.prototype.launching = async function () {
 
     // await this.MONGOLOGC.connect();
     // const report = new LogReport(this.MONGOLOGC);
-    // await report.unknownCampaign(2023, 2, 6415627 - 4989647);
+    // await report.unknownCampaign(2023, 3, 6203415 -  4825855);
     // await this.MONGOLOGC.close();
 
 
@@ -243,8 +243,7 @@ DevContext.prototype.launching = async function () {
 
     
     
-
-
+    
 
 
     /*

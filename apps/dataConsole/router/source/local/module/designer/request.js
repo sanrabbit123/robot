@@ -1731,7 +1731,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
                   globalThis.window.parent.postMessage(JSON.stringify({
                     proid: proid,
                     mode: "reset",
-                  }));
+                  }), "*");
                 }
               } catch (e) {
                 console.log(e);

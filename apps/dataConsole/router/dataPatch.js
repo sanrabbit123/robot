@@ -791,7 +791,7 @@ DataPatch.prototype.clientMap = function () {
             requestNumber: thisRequestNumber,
             column: "status",
             value: finalValue,
-          }));
+          }), "*");
         }
 
         if (finalValue === "드랍") {
@@ -2092,7 +2092,7 @@ DataPatch.prototype.clientMap = function () {
             requestNumber: thisRequestNumber,
             column: "designers",
             value: thisDesigners,
-          }));
+          }), "*");
         }
 
         if (thisCase === "card") {
@@ -2170,7 +2170,7 @@ DataPatch.prototype.clientMap = function () {
             requestNumber: thisRequestNumber,
             column: "designers",
             value: thisDesigners,
-          }));
+          }), "*");
         }
 
         if (thisCase === "card") {

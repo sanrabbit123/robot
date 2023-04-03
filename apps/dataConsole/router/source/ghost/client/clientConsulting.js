@@ -427,7 +427,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   secondPointLeft = <%% 315, 270, 240, 260, 25 %%>;
 
   grayTop = <%% 0, 0, 0, 0, 0 %%>;
-  grayInputTop = <%% (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), -0.2 %%>;
+  grayInputTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.2 %%>;
   grayHeight = <%% 32, 32, 31, 31, 7 %%>;
   grayBigHeight = <%% 114, 114, 122, 124, 36 %%>;
   grayTextAreaTop = <%% 3, 3, 3, 3, 1.3 %%>;
