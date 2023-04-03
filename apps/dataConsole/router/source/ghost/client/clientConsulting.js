@@ -501,7 +501,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   spaceTriangleTop = <%% (isMac() ? -5 : -6), (isMac() ? -5 : -6), (isMac() ? -5 : -6), -5, -5 %%>;
   spaceTriangleWidth = <%% 6, 6, 6, 6, 6 %%>;
 
-  addressPromptWidth = <%% 900, 900, 900, 900, 80 %%>;
+  addressPromptWidth = <%% 800, 720, 640, 600, 80 %%>;
   addressPromptHeight = <%% 450, 450, 450, 450, 90 %%>;
 
   mobileTongPaddingTop = <%% 0.7, 0.7, 0.7, 0.7, 0.7 %%>;
@@ -761,6 +761,9 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       whitePrompt = createNode({
         mother: totalContents,
         class: [ removeTargets ],
+        event: {
+          click: (e) => { e.stopPropagation() }
+        },
         style: {
           position: "fixed",
           left: "calc(50% - " + String(addressPromptWidth / 2) + ea + ")",

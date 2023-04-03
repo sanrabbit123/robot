@@ -5506,7 +5506,7 @@ GeneralJs.prototype.consultingPopup = function () {
     circleBetween = <%% 6, 6, 5, 5, 1.3 %%>;
 
     grayTop = <%% 0, 0, 0, 0, 0 %%>;
-    grayInputTop = <%% (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), (isMac() ? -1.5 : 0), -0.2 %%>;
+    grayInputTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.2 %%>;
     grayHeight = <%% 32, 32, 31, 31, 7 %%>;
     grayBigHeight = <%% 92, 92, 92, 92, 31 %%>;
     grayTextAreaTop = <%% 0, 0, 0, 0, 0 %%>;
@@ -5561,7 +5561,7 @@ GeneralJs.prototype.consultingPopup = function () {
     paymentButtonPaddingBottom = <%% (isMac() ? 10 : 9), (isMac() ? 10 : 9), (isMac() ? 10 : 9), (isMac() ? 10 : 9), 2.5 %%>;
     paymentButtonPaddingLeft = <%% 18, 18, 18, 18, 3.5 %%>;
 
-    addressPromptWidth = <%% 600, 600, 600, 600, 80 %%>;
+    addressPromptWidth = <%% 600, 520, 480, 400, 80 %%>;
     addressPromptHeight = <%% 450, 450, 450, 450, 90 %%>;
 
     checkboxWidth = <%% 9, 9, 9, 8, 2 %%>;
@@ -5672,6 +5672,9 @@ GeneralJs.prototype.consultingPopup = function () {
         whitePrompt = createNode({
           mother: totalContents,
           class: [ removeTargets ],
+          event: {
+            click: (e) => { e.stopPropagation() }
+          },
           style: {
             position: "fixed",
             left: "calc(50% - " + String(addressPromptWidth / 2) + ea + ")",

@@ -220,8 +220,10 @@ DashboardJs.prototype.returnTreeContents = function () {
 DashboardJs.prototype.returnManualContents = function (key) {
   const instance = this;
   let baseContents;
+  let thisTitle;
 
   if (key === "firstResponse") {
+    thisTitle = "1차 응대 매뉴얼";
     baseContents = [
       {
         title: "고객님의 상담 신청 과정",
@@ -231,7 +233,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
             body: [
               {
                 type: "image",
-                source: DashboardJs.binaryPath + "firstResponse1.jpg",
+                source: DashboardJs.binaryPath + "/firstResponse1.jpg",
               },
               {
                 type: "description",
@@ -246,11 +248,11 @@ DashboardJs.prototype.returnManualContents = function (key) {
             body: [
               {
                 type: "image",
-                source: DashboardJs.binaryPath + "firstResponse2.jpg",
+                source: DashboardJs.binaryPath + "/firstResponse2.jpg",
               },
               {
                 type: "image",
-                source: DashboardJs.binaryPath + "firstResponse3.jpg",
+                source: DashboardJs.binaryPath + "/firstResponse3.jpg",
               },
               {
                 type: "description",
@@ -271,7 +273,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
             body: [
               {
                 type: "image",
-                source: DashboardJs.binaryPath + "firstResponse4.jpg",
+                source: DashboardJs.binaryPath + "/firstResponse4.jpg",
               },
               {
                 type: "description",
@@ -281,7 +283,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
               },
               {
                 type: "image",
-                source: DashboardJs.binaryPath + "firstResponse5.jpg",
+                source: DashboardJs.binaryPath + "/firstResponse5.jpg",
               },
               {
                 type: "description",
@@ -291,7 +293,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
               },
               {
                 type: "image",
-                source: DashboardJs.binaryPath + "firstResponse6.jpg",
+                source: DashboardJs.binaryPath + "/firstResponse6.jpg",
               },
               {
                 type: "description",
@@ -319,7 +321,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
             body: [
               {
                 type: "image",
-                source: DashboardJs.binaryPath + "firstResponse7.jpg",
+                source: DashboardJs.binaryPath + "/firstResponse7.jpg",
               },
               {
                 type: "description",
@@ -329,7 +331,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
               },
               {
                 type: "image",
-                source: DashboardJs.binaryPath + "firstResponse8.jpg",
+                source: DashboardJs.binaryPath + "/firstResponse8.jpg",
               },
               {
                 type: "description",
@@ -344,7 +346,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
             body: [
               {
                 type: "image",
-                source: DashboardJs.binaryPath + "firstResponse9.jpg",
+                source: DashboardJs.binaryPath + "/firstResponse9.jpg",
               },
               {
                 type: "description",
@@ -364,11 +366,11 @@ DashboardJs.prototype.returnManualContents = function (key) {
             body: [
               {
                 type: "image",
-                source: DashboardJs.binaryPath + "firstResponse10.jpg",
+                source: DashboardJs.binaryPath + "/firstResponse10.jpg",
               },
               {
                 type: "image",
-                source: DashboardJs.binaryPath + "firstResponse11.jpg",
+                source: DashboardJs.binaryPath + "/firstResponse11.jpg",
               },
               {
                 type: "description",
@@ -410,7 +412,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
             body: [
               {
                 type: "image",
-                source: DashboardJs.binaryPath + "firstResponse12.jpg",
+                source: DashboardJs.binaryPath + "/firstResponse12.jpg",
               },
               {
                 type: "description",
@@ -508,7 +510,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
             body: [
               {
                 type: "image",
-                source: DashboardJs.binaryPath + "firstResponse13.jpg",
+                source: DashboardJs.binaryPath + "/firstResponse13.jpg",
               },
               {
                 type: "description",
@@ -523,11 +525,11 @@ DashboardJs.prototype.returnManualContents = function (key) {
             body: [
               {
                 type: "image",
-                source: DashboardJs.binaryPath + "firstResponse14.jpg",
+                source: DashboardJs.binaryPath + "/firstResponse14.jpg",
               },
               {
                 type: "image",
-                source: DashboardJs.binaryPath + "firstResponse15.jpg",
+                source: DashboardJs.binaryPath + "/firstResponse15.jpg",
               },
               {
                 type: "description",
@@ -542,7 +544,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
     ];
   }
 
-  return baseContents;
+  return { title: thisTitle, contents: baseContents };
 }
 
 DashboardJs.prototype.baseMaker = function () {
@@ -1027,13 +1029,31 @@ DashboardJs.prototype.manualMaker = function (key) {
   let innerPadding;
   let whiteMargin;
   let contentsTong;
+  let title, contents;
+  let startPaddingTop;
+  let contextWidth;
+  let num, num2;
+  let properWidth;
+  let motherPadding;
+  let basicMargin;
+  let wideMargin;
+  let bigWideMargin;
+  let boxBetween;
 
-  innerPadding = 10;
-  whiteMargin = 30;
+  motherPadding = 30;
+  innerPadding = 0;
+  boxBetween = 10;
+  properWidth = 800;
+  contextWidth = 400;
+  whiteMargin = (window.innerWidth - ((motherPadding * 2) + (innerPadding * 2) + boxBetween + contextWidth + grayBarWidth) - properWidth) / 2;
+  startPaddingTop = 80;
+  basicMargin = 28;
+  wideMargin = 60;
+  bigWideMargin = 120;
 
   cleanChildren(contentsBase);
 
-  thisContents = this.returnManualContents(key);
+  ({ title, contents } = this.returnManualContents(key));
 
   grayBase = createNode({
     mother: contentsBase,
@@ -1041,38 +1061,184 @@ DashboardJs.prototype.manualMaker = function (key) {
       display: "flex",
       position: "relative",
       borderRadius: String(5) + "px",
-      background: colorChip.gray1,
+      background: colorChip.white,
       width: withOut(0, ea),
       height: withOut(0, ea),
       justifyContent: "center",
       alignItems: "center",
+      flexDirection: "row",
+    }
+  })
+
+  createNode({
+    mother: grayBase,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      flexDirection: "column",
+      justifyContent: "start",
+      alignItems: "start",
+      width: String(contextWidth) + ea,
+      marginRight: String(boxBetween) + ea,
     }
   })
 
   contentsTong = createNode({
     mother: grayBase,
     style: {
-      display: "block",
+      display: "inline-block",
       position: "relative",
-      paddingTop: String(whiteMargin) + ea,
+      paddingTop: String(startPaddingTop) + ea,
       paddingLeft: String(whiteMargin) + ea,
       paddingRight: String(whiteMargin) + ea,
-      width: withOut((innerPadding * 2) + (whiteMargin * 2), ea),
-      height: withOut((innerPadding * 2) + whiteMargin, ea),
+      width: withOut((innerPadding * 2) + boxBetween + (whiteMargin * 2) + contextWidth, ea),
+      height: withOut((innerPadding * 2) + startPaddingTop, ea),
       background: colorChip.white,
       borderRadius: String(5) + "px",
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      border: "1px solid " + colorChip.gray3,
       overflow: "scroll",
     },
     child: {
       style: {
         display: "flex",
         position: "relative",
+        flexDirection: "column",
+        justifyContent: "start",
+        alignItems: "start",
         width: withOut(0, ea),
+        paddingBottom: String(800) + ea,
       }
     }
   }).firstChild;
 
+  createNode({
+    mother: contentsTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      justifyContent: "start",
+      alignItems: "start",
+    },
+    child: {
+      text: title,
+      style: {
+        fontSize: String(30) + ea,
+        fontWeight: String(800),
+        color: colorChip.black,
+      }
+    }
+  });
+
+  createNode({
+    mother: contentsTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: withOut(0, ea),
+      justifyContent: "start",
+      alignItems: "start",
+      height: String(16) + ea,
+      borderBottom: "1px solid " + colorChip.gray3,
+    },
+  });
+
+  num = 0;
+  for (let obj of contents) {
+    createNode({
+      mother: contentsTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        justifyContent: "start",
+        alignItems: "start",
+        marginTop: String(bigWideMargin) + ea,
+      },
+      child: {
+        text: String(num + 1) + ". " + obj.title,
+        style: {
+          fontSize: String(20) + ea,
+          fontWeight: String(700),
+          color: colorChip.black,
+        }
+      }
+    });
+
+    num2 = 0;
+    for (let obj2 of obj.children) {
+      createNode({
+        mother: contentsTong,
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          marginBottom: String(basicMargin) + ea,
+          marginTop: String(wideMargin) + ea,
+        },
+        child: {
+          text: String(num + 1) + "-" + String(num2 + 1) + " " + obj2.title,
+          style: {
+            fontSize: String(15) + ea,
+            fontWeight: String(700),
+            color: colorChip.black,
+            lineHeight: String(1.7),
+          }
+        }
+      });
+
+      for (let obj3 of obj2.body) {
+        if (obj3.type === "description") {
+          createNode({
+            mother: contentsTong,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              justifyContent: "start",
+              alignItems: "start",
+              marginBottom: String(basicMargin) + ea,
+            },
+            child: {
+              text: obj3.text.join("\n\n"),
+              style: {
+                fontSize: String(15) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                lineHeight: String(1.7),
+              }
+            }
+          });
+        } else if (obj3.type === "image") {
+          createNode({
+            mother: contentsTong,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: withOut(0, ea),
+              justifyContent: "start",
+              alignItems: "start",
+              marginBottom: String(basicMargin) + ea,
+            },
+            child: {
+              mode: "img",
+              attribute: { src: obj3.source },
+              style: {
+                position: "relative",
+                width: withOut(0, ea),
+                borderRadius: String(5) + "px",
+              }
+            }
+          });
+        }
+        
+      }
+      num2++;
+    }
+    num++;
+  }
 
 }
 
