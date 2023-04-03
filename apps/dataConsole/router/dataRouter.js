@@ -4832,6 +4832,57 @@ DataRouter.prototype.rou_post_ghostDesigner_updateAnalytics = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_ghostDesigner_getAnalytics = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/ghostDesigner_getAnalytics" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.desid === undefined || req.body.mode === undefined || req.body.type === undefined) {
+        throw new Error("invalid post");
+      }
+      const { desid, mode, type } = req.body;
+      const selfMongo = instance.mongolocal;
+      const db = "miro81";
+      const collection = "designerHistory";
+      let projectQuery;
+      let rows, row;
+      let targetAnalytics;
+
+      projectQuery = {};
+      projectQuery[mode] = 1;
+
+      rows = await selfMongo.db(db).collection(collection).find({ desid }).project(projectQuery).toArray();
+      if (rows.length === 0) {
+        throw new Error("invalid desid");
+      }
+
+      [ row ] = rows;
+      targetAnalytics = row[mode].analytics[type];
+
+      if (req.body.cliid === undefined) {
+        res.send(JSON.stringify(targetAnalytics));
+      } else {
+        res.send(JSON.stringify(targetAnalytics.filter((obj) => { return obj.cliid === req.body.cliid })));
+      }
+      
+    } catch (e) {
+      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_ghostDesigner_getAnalytics): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_errorLog = function () {
   const instance = this;
   const { errorLog } = this.mother;

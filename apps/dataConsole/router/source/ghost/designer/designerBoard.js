@@ -970,14 +970,29 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
             state: String(state)
           },
           event: {
-            click: function (e) {
-              const proid = this.getAttribute("proid");
-              const state = Number(this.getAttribute("state"));
-              if (state === 0) {
-                selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
-              } else {
-                selfHref(FRONTHOST + "/designer/process.php?proid=" + proid + "&mode=request");
-              }
+            click: async function (e) {
+              try {
+                const proid = this.getAttribute("proid");
+                const state = Number(this.getAttribute("state"));
+                let thisProject;
+                let analytics;
+
+                if (state === 0) {
+                  selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+                } else {
+  
+                  [ thisProject ] = await ajaxJson({ noFlat: true, whereQuery: { proid } }, BACKHOST + "/getProjects", { equal: true });
+                  analytics = await ajaxJson({ desid: instance.desid, mode: "request", type: "send", cliid: thisProject.cliid }, BACKHOST + "/ghostDesigner_getAnalytics", { equal: true });
+                  
+                  if (analytics.length > 0) {
+                    selfHref(FRONTHOST + "/designer/process.php?proid=" + proid + "&mode=request");
+                  } else {
+                    selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+                  }
+                }
+              } catch (e) {
+                console.log(e);
+              } 
             },
             contextmenu: function (e) {
               e.preventDefault();
