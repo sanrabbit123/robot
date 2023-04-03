@@ -909,23 +909,199 @@ DashboardJs.prototype.baseMaker = function () {
 DashboardJs.prototype.grayMaker = function () {
   const instance = this;
   const { grayBase, ea, vh, members } = this;
-  const { createNode, withOut, colorChip, equalJson } = GeneralJs;
+  const { createNode, withOut, colorChip, equalJson, blankHref } = GeneralJs;
   let innerPadding;
   let fontSize;
   let numberBoxWidth;
   let blockBetween;
+  let contentsTong;
 
   innerPadding = 38;
   fontSize = 14;
-  numberBoxWidth = 34;
-  blockBetween = 12;
+  numberBoxWidth = 80;
+  blockBetween = 10;
 
 
-  
-  console.log(members);
+  contentsTong = createNode({
+    mother: grayBase,
+    style: {
+      display: "flex",
+      position: "relative",
+      top: String(innerPadding) + ea,
+      left: String(innerPadding) + ea,
+      width: withOut(innerPadding * 2, ea),
+      height: withOut(innerPadding * 2, ea),
+      overflow: "scroll",
+    },
+    child: {
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+      }
+    }
+  }).firstChild;
 
-  
+  for (let member of members) {
+    
+    createNode({
+      mother: contentsTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "start",
+        marginBottom: String(blockBetween) + ea,
+        cursor: "pointer",
+      },
+      children: [
+        {
+          text: member.name,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: withOut(numberBoxWidth, ea),
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            transition: "all 0.3s ease",
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            overflow: "hidden",
+            position: "relative",
+            width: String(numberBoxWidth) + ea,
+            height: withOut(0, ea),
+            textAlign: "right",
+          },
+          child: {
+            text: member.roles[0],
+            style: {
+              position: "relative",
+              display: "inline-block",
+              fontSize: String(fontSize) + ea,
+              fontWeight: String(200),
+              color: colorChip.deactive,
+              transition: "all 0.3s ease",
+              textAlign: "right",
+            }
+          }
+        }
+      ]
+    });
 
+  }
+
+
+  createNode({
+    mother: contentsTong,
+    style: {
+      display: "flex",
+      position: "absolute",
+      width: withOut(0, ea),
+      bottom: String(0) + ea,
+      left: String(0) + ea,
+      flexDirection: "column",
+      justifyContent: "start",
+      alignItems: "start",
+      cursor: "pointer",
+    },
+    children: [
+      {
+        class: [ "hoverDefault_lite" ],
+        event: {
+          click: (e) => {
+            blankHref("https://instagram.com/homeliaison");
+          }
+        },
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "start",
+          cursor: "pointer",
+          marginBottom: String(blockBetween) + ea,
+        },
+        child: {
+          text: "홈리에종 인스타그램",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: withOut(0, ea),
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            transition: "all 0.3s ease",
+          }
+        }
+      },
+      {
+        class: [ "hoverDefault_lite" ],
+        event: {
+          click: (e) => {
+            blankHref("https://blog.naver.com/homeliaison");
+          }
+        },
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "start",
+          cursor: "pointer",
+          marginBottom: String(blockBetween) + ea,
+        },
+        child: {
+          text: "홈리에종 네이버 블로그",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: withOut(0, ea),
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            transition: "all 0.3s ease",
+          }
+        }
+      },
+      {
+        class: [ "hoverDefault_lite" ],
+        event: {
+          click: (e) => {
+            blankHref(FRONTHOST);
+          }
+        },
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "start",
+          cursor: "pointer",
+        },
+        child: {
+          text: "홈리에종 프론트 웹",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: withOut(0, ea),
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            transition: "all 0.3s ease",
+          }
+        }
+      },
+    ]
+  });
 
 
 }
