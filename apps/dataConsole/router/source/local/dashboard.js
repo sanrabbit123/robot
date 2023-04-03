@@ -10,6 +10,7 @@ DashboardJs.binaryPath = FRONTHOST + "/middle/inner/manual";
 
 DashboardJs.prototype.returnTreeContents = function () {
   const instance = this;
+  const { selfHref } = GeneralJs;
   let baseContents;
 
   baseContents = [
@@ -19,18 +20,38 @@ DashboardJs.prototype.returnTreeContents = function () {
       children: [
         {
           title: "고객 현황과 정보",
+          event: () => {
+            return function (e) {
+              selfHref("/client");
+            }
+          }
         },
         {
           title: "오늘의 고객 응대",
+          event: () => {
+            return function (e) {
+              selfHref("/sales");
+            }
+          }
         },
         {
           title: "고객 리포트",
+          event: () => {
+            return function (e) {
+              instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/client?report=client&entire=true&dataonly=true");
+            }
+          }
         },
         {
           title: "고객 응대 매뉴얼",
           children: [
             {
               title: "1차 응대 매뉴얼",
+              event: () => {
+                return function (e) {
+                  instance.manualMaker("firstResponse");
+                }
+              }
             },
             {
               title: "추천서 작성 매뉴얼",
@@ -625,12 +646,14 @@ DashboardJs.prototype.baseMaker = function () {
     let last;
     let middleFirst;
     let thisNumber;
+    let thisDeactive;
 
     last = (level !== 0 && !still);
     num = 0;
-    for (let { title, children } of targetChildren) {
+    for (let obj of targetChildren) {
       thisNumber = level === 0 ? baseContents[x].number + (10 * (num + 1)) : originalNumber + (10 * (x + 1)) + (num + 1);
       middleFirst = (level !== 0 && num == 0);
+      thisDeactive = (typeof obj.event !== "function" && !Array.isArray(obj.children));
       createNode({
         mother: contentsArea,
         style: {
@@ -728,22 +751,30 @@ DashboardJs.prototype.baseMaker = function () {
                   }
                 },
                 {
-                  text: title,
+                  text: obj.title,
+                  attribute: {
+                    deactive: thisDeactive ? "true" : "false",
+                  },
                   event: {
                     mouseenter: function (e) {
-                      this.style.color = colorChip.green;
+                      const deactive = this.getAttribute("deactive") === "true";
+                      if (!deactive) {
+                        this.style.color = colorChip.green;
+                      }
                     },
                     mouseleave: function (e) {
-                      this.style.color = colorChip.black;
+                      const deactive = this.getAttribute("deactive") === "true";
+                      this.style.color = deactive ? colorChip.gray3 : colorChip.black;
                     },
                     selectstart: (e) => { e.preventDefault() },
+                    click: (typeof obj.event === "function" ? obj.event() : (e) => {}),
                   },
                   style: {
                     display: "inline-block",
                     position: "relative",
                     fontSize: String(contentsSize) + vh,
                     fontWeight: String(700 - (300 * level)),
-                    color: colorChip.black,
+                    color: thisDeactive ? colorChip.gray3 : colorChip.black,
                     cursor: "pointer",
                     transition: "all 0.3s ease",
                   }
@@ -753,8 +784,8 @@ DashboardJs.prototype.baseMaker = function () {
           },
         ]
       });
-      if (Array.isArray(children)) {
-        makeChildren(num, children, level + 1, num !== targetChildren.length - 1, baseContents[x].number);
+      if (Array.isArray(obj.children)) {
+        makeChildren(num, obj.children, level + 1, num !== targetChildren.length - 1, baseContents[x].number);
       }
       num++;
     }
@@ -799,7 +830,7 @@ DashboardJs.prototype.baseMaker = function () {
   });
   this.contentsBase = contentsBase;
 
-  baseLoad = (contentsBase) => {
+  baseLoad = () => {
     cleanChildren(contentsBase);
     for (let i = 0; i < xLength; i++) {
       [ titleArea, contentsArea ] = createNode({
@@ -866,12 +897,12 @@ DashboardJs.prototype.baseMaker = function () {
           }
         ]
       }).children;
-      makeChildren(i, equalJson(baseContents[i].children), 0);
+      makeChildren(i, baseContents[i].children, 0);
     }
   }
   this.baseLoad = baseLoad;
 
-  baseLoad(contentsBase);
+  baseLoad();
 
 }
 
@@ -1023,7 +1054,9 @@ DashboardJs.prototype.grayMaker = function () {
 DashboardJs.prototype.manualMaker = function (key) {
   const instance = this;
   const { ea, vh, totalContents, belowHeight, grayBarWidth, contentsBase } = this;
-  const { createNode, colorChip, withOut, equalJson, cleanChildren } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, cleanChildren, findByAttribute, scrollTo } = GeneralJs;
+  const tap = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+  const titleClassName = "titleContentsInnerClassName";
   let thisContents;
   let grayBase;
   let innerPadding;
@@ -1039,21 +1072,93 @@ DashboardJs.prototype.manualMaker = function (key) {
   let wideMargin;
   let bigWideMargin;
   let boxBetween;
+  let contextContents;
+  let contextSize;
+  let paraMarginBottom;
+  let paraStart, paraEnd;
+  let contextEvent;
+  let x, y;
+  let basicSize;
+  let middleTitleSize;
+  let bigTitleSize;
+  let blockSize;
+  let blockLeftPadding, blockTopPadding;
+  let titleBarMarginTop;
+  let circleRadius;
+  let returnIconWidth;
 
   motherPadding = 30;
   innerPadding = 0;
   boxBetween = 10;
   properWidth = 800;
-  contextWidth = 400;
+  contextWidth = 320;
   whiteMargin = (window.innerWidth - ((motherPadding * 2) + (innerPadding * 2) + boxBetween + contextWidth + grayBarWidth) - properWidth) / 2;
   startPaddingTop = 80;
   basicMargin = 28;
   wideMargin = 60;
   bigWideMargin = 120;
+  contextSize = 14;
+  paraMarginBottom = 6;
+  basicSize = 15;
+  middleTitleSize = 20;
+  bigTitleSize = 30;
+  blockSize = 14;
+  blockLeftPadding = 25;
+  blockTopPadding = 20;
+  titleBarMarginTop = 16;
+  circleRadius = 36;
+  returnIconWidth = 23;
 
   cleanChildren(contentsBase);
 
   ({ title, contents } = this.returnManualContents(key));
+
+  contentsTong = {};
+
+  paraStart = (x, y) => ("<p x=\"" + String(x) + "\" y=\"" + String(y) + "\" style=\"font-size:inherit;font-weight:inherit;color:inherit;margin-bottom:" + String(paraMarginBottom) + ea + "\">");
+  paraEnd = () => "</p>";
+
+  contextContents = title;
+  contextContents += "\n\n";
+  x = 0;
+  for (let obj of contents) {
+    contextContents += paraStart(x, -1) + obj.title + paraEnd();
+    y = 0;
+    for (let obj2 of obj.children) {
+      contextContents += paraStart(x, y) + tap + "<b%" + obj2.title + "%b>" + paraEnd();
+      y++;
+    }
+    contextContents += "\n";
+    x++;
+  }
+
+  contextEvent = (e) => {
+    let thisTarget;
+    let x, y;
+    let titleDoms;
+    let targetDom;
+    if (/^b/gi.test(e.target.nodeName)) {
+      thisTarget = e.target.parentNode;
+    } else if (/^p/gi.test(e.target.nodeName)) {
+      thisTarget = e.target;
+    } else {
+      thisTarget = null;
+    }
+    if (thisTarget !== null) {
+      x = Number(thisTarget.getAttribute('x'));
+      y = Number(thisTarget.getAttribute('y'));
+
+      targetDom = null;
+      titleDoms = document.querySelectorAll('.' + titleClassName);
+      for (let dom of titleDoms) {
+        if (Number(dom.getAttribute('x')) === x && Number(dom.getAttribute('y')) === y) {
+          targetDom = dom;
+          break;
+        }
+      }
+      scrollTo(contentsTong.parentNode, targetDom, 60);
+    }
+  }
 
   grayBase = createNode({
     mother: contentsBase,
@@ -1064,11 +1169,11 @@ DashboardJs.prototype.manualMaker = function (key) {
       background: colorChip.white,
       width: withOut(0, ea),
       height: withOut(0, ea),
-      justifyContent: "center",
-      alignItems: "center",
+      justifyContent: "start",
+      alignItems: "start",
       flexDirection: "row",
     }
-  })
+  });
 
   createNode({
     mother: grayBase,
@@ -1079,9 +1184,77 @@ DashboardJs.prototype.manualMaker = function (key) {
       justifyContent: "start",
       alignItems: "start",
       width: String(contextWidth) + ea,
+      height: withOut(0, ea),
       marginRight: String(boxBetween) + ea,
-    }
-  })
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(motherPadding * 2, ea),
+          height: withOut(motherPadding * 2, ea),
+          borderRadius: String(5) + "px",
+          border: "1px solid " + colorChip.gray3,
+          padding: String(motherPadding) + ea,
+          overflow: "scroll",
+        },
+        child: {
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+          },
+          child: {
+            event: {
+              click: contextEvent,
+            },
+            text: contextContents,
+            style: {
+              position: "relative",
+              fontSize: String(contextSize) + ea,
+              fontWeight: String(700),
+              color: colorChip.black,
+              cursor: "pointer",
+            },
+            bold: {
+              fontSize: String(contextSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+            }
+          }
+        }
+      },
+      {
+        event: (e) => {
+          instance.baseLoad();
+        },
+        style: {
+          display: "inline-flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          bottom: String(motherPadding) + ea,
+          left: String(motherPadding) + ea,
+          width: String(circleRadius) + ea,
+          height: String(circleRadius) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: colorChip.gradientGray,
+          cursor: "pointer",
+        },
+        child: {
+          mode: "svg",
+          source: instance.mother.returnReturn(colorChip.white),
+          style: {
+            position: "relative",
+            top: String(1) + ea,
+            width: String(returnIconWidth) + ea,
+          }
+        }
+      }
+    ]
+  });
 
   contentsTong = createNode({
     mother: grayBase,
@@ -1123,7 +1296,7 @@ DashboardJs.prototype.manualMaker = function (key) {
     child: {
       text: title,
       style: {
-        fontSize: String(30) + ea,
+        fontSize: String(bigTitleSize) + ea,
         fontWeight: String(800),
         color: colorChip.black,
       }
@@ -1138,7 +1311,7 @@ DashboardJs.prototype.manualMaker = function (key) {
       width: withOut(0, ea),
       justifyContent: "start",
       alignItems: "start",
-      height: String(16) + ea,
+      height: String(titleBarMarginTop) + ea,
       borderBottom: "1px solid " + colorChip.gray3,
     },
   });
@@ -1147,6 +1320,11 @@ DashboardJs.prototype.manualMaker = function (key) {
   for (let obj of contents) {
     createNode({
       mother: contentsTong,
+      class: [ titleClassName ],
+      attribute: {
+        x: String(num),
+        y: String(-1),
+      },
       style: {
         display: "flex",
         position: "relative",
@@ -1158,7 +1336,7 @@ DashboardJs.prototype.manualMaker = function (key) {
       child: {
         text: String(num + 1) + ". " + obj.title,
         style: {
-          fontSize: String(20) + ea,
+          fontSize: String(middleTitleSize) + ea,
           fontWeight: String(700),
           color: colorChip.black,
         }
@@ -1169,6 +1347,11 @@ DashboardJs.prototype.manualMaker = function (key) {
     for (let obj2 of obj.children) {
       createNode({
         mother: contentsTong,
+        class: [ titleClassName ],
+        attribute: {
+          x: String(num),
+          y: String(num2),
+        },
         style: {
           display: "flex",
           position: "relative",
@@ -1181,7 +1364,7 @@ DashboardJs.prototype.manualMaker = function (key) {
         child: {
           text: String(num + 1) + "-" + String(num2 + 1) + " " + obj2.title,
           style: {
-            fontSize: String(15) + ea,
+            fontSize: String(basicSize) + ea,
             fontWeight: String(700),
             color: colorChip.black,
             lineHeight: String(1.7),
@@ -1204,7 +1387,7 @@ DashboardJs.prototype.manualMaker = function (key) {
             child: {
               text: obj3.text.join("\n\n"),
               style: {
-                fontSize: String(15) + ea,
+                fontSize: String(basicSize) + ea,
                 fontWeight: String(400),
                 color: colorChip.black,
                 lineHeight: String(1.7),
@@ -1232,6 +1415,34 @@ DashboardJs.prototype.manualMaker = function (key) {
               }
             }
           });
+        } else if (obj3.type === "block") {
+
+
+          createNode({
+            mother: contentsTong,
+            style: {
+              display: "flex",
+              position: "relative",
+              padding: String(blockTopPadding) + ea,
+              paddingLeft: String(blockLeftPadding) + ea,
+              paddingRight: String(blockLeftPadding) + ea,
+              width: withOut(blockLeftPadding * 2, ea),
+              justifyContent: "start",
+              alignItems: "start",
+              marginBottom: String(basicMargin) + ea,
+              background: colorChip.gray0,
+              borderRadius: String(5) + "px",
+            },
+            child: {
+              text: obj3.text.map((str) => { return str.replace(/ /gi, "&nbsp;") }).join("\n"),
+              style: {
+                fontSize: String(blockSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                lineHeight: String(1.8),
+              }
+            }
+          });
         }
         
       }
@@ -1239,6 +1450,73 @@ DashboardJs.prototype.manualMaker = function (key) {
     }
     num++;
   }
+
+}
+
+DashboardJs.prototype.whiteMaker = function (source) {
+  const instance = this;
+  const { ea, vh, totalContents, belowHeight, grayBarWidth, contentsBase } = this;
+  const { createNode, colorChip, withOut, equalJson, cleanChildren, findByAttribute, scrollTo, removeByClass } = GeneralJs;
+  const whitePopupClassName = "whitePopupClassName";
+  let margin;
+  let cancelBack, whitePrompt;
+
+  margin = 30;
+
+  cancelBack = createNode({
+    mother: totalContents,
+    class: [ whitePopupClassName ],
+    event: {
+      click: (e) => {
+        removeByClass(whitePopupClassName);
+      },
+    },
+    style: {
+      display: "block",
+      position: "fixed",
+      top: String(0),
+      left: String(grayBarWidth) + ea,
+      width: withOut(grayBarWidth, ea),
+      height: withOut(belowHeight, ea),
+      background: colorChip.black,
+      opacity: String(0.3),
+    }
+  });
+
+  whitePrompt = createNode({
+    mother: totalContents,
+    class: [ whitePopupClassName ],
+    style: {
+      display: "block",
+      position: "fixed",
+      top: String(margin) + ea,
+      left: String(grayBarWidth + margin) + ea,
+      width: withOut(grayBarWidth + (margin * 2), ea),
+      height: withOut(belowHeight + (margin * 2), ea),
+      borderRadius: String(5) + "px",
+      background: colorChip.white,
+      boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+      animation: "fadeuplite 0.3s ease forwards",
+      overflow: "hidden",
+    },
+    child: {
+      mode: "iframe",
+      attribute: {
+        src: source,
+        width: String(100) + '%',
+        height: String(100) + '%',
+      },
+      style: {
+        display: "block",
+        position: "relative",
+        top: String(0),
+        left: String(0),
+        width: withOut(0, ea),
+        height: withOut(0, ea),
+        border: String(0),
+      }
+    }
+  })
 
 }
 
@@ -1263,9 +1541,6 @@ DashboardJs.prototype.launching = async function () {
 
     this.baseMaker();
     this.grayMaker();
-
-    // dev
-    this.manualMaker("firstResponse");
 
   } catch (e) {
     ajaxJson({
