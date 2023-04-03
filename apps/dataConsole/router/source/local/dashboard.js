@@ -908,16 +908,10 @@ DashboardJs.prototype.baseMaker = function () {
 
 DashboardJs.prototype.grayMaker = function () {
   const instance = this;
-  const { grayBase, ea, vh } = this;
+  const { grayBase, ea, vh, members } = this;
   const { createNode, withOut, colorChip, equalJson } = GeneralJs;
-  const numberClassName = "numberClassName";
-  const titleClassName = "titleClassName";
-  let baseContents;
-  let targetContents;
-  let x, y, z;
   let innerPadding;
   let fontSize;
-  let contentsTong;
   let numberBoxWidth;
   let blockBetween;
 
@@ -926,128 +920,13 @@ DashboardJs.prototype.grayMaker = function () {
   numberBoxWidth = 34;
   blockBetween = 12;
 
-  baseContents = this.returnTreeContents();
 
-  targetContents = [];
+  
+  console.log(members);
 
-  for (let obj of baseContents) {
-    x = obj.number;
-    y = 0;
-    for (let obj2 of obj.children) {
-      if (Array.isArray(obj2.children)) {
-        z = 0;
-        for (let obj3 of obj2.children) {
-          targetContents.push({
-            title: obj3.title,
-            number: x + ((y + 1) * 10) + (z + 1),
-          });
-          z++;
-        }
-      } else {
-        targetContents.push({
-          title: obj2.title,
-          number: x + ((y + 1) * 10),
-        });
-      }
-      y++;
-    }
-  }
+  
 
-  contentsTong = createNode({
-    mother: grayBase,
-    style: {
-      display: "flex",
-      position: "relative",
-      top: String(innerPadding) + ea,
-      left: String(innerPadding) + ea,
-      width: withOut(innerPadding * 2, ea),
-      height: withOut(innerPadding * 2, ea),
-      overflow: "scroll",
-    },
-    child: {
-      style: {
-        display: "block",
-        position: "relative",
-        width: withOut(0, ea),
-      }
-    }
-  }).firstChild;
 
-  targetContents.unshift({
-    title: "전체 보기",
-    number: 0,
-  })
-
-  for (let { number, title } of targetContents) {
-    createNode({
-      mother: contentsTong,
-      event: {
-        selectstart: (e) => { e.preventDefault() },
-        mouseenter: function (e) {
-          this.querySelector('.' + numberClassName).style.color = colorChip.green;
-          this.querySelector('.' + titleClassName).style.color = colorChip.green;
-        },
-        mouseleave: function (e) {
-          this.querySelector('.' + numberClassName).style.color = colorChip.deactive;
-          this.querySelector('.' + titleClassName).style.color = colorChip.black;
-        }
-      },
-      style: {
-        display: "flex",
-        position: "relative",
-        width: withOut(0, ea),
-        flexDirection: "row",
-        justifyContent: "start",
-        alignItems: "start",
-        marginBottom: String(blockBetween) + ea,
-        cursor: "pointer",
-      },
-      children: [
-        {
-          class: [ numberClassName ],
-          text: number === 0 ? "000" : String(number),
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(numberBoxWidth) + ea,
-            fontSize: String(fontSize) + ea,
-            fontWeight: String(200),
-            color: colorChip.deactive,
-            transition: "all 0.3s ease",
-          }
-        },
-        {
-          style: {
-            display: "inline-block",
-            overflow: "hidden",
-            position: "relative",
-            width: withOut(numberBoxWidth, ea),
-            height: withOut(0, ea),
-          },
-          child: {
-            style: {
-              display: "flex",
-              width: String(1000) + ea,
-              position: "relative",
-            },
-            child: {
-              class: [ titleClassName ],
-              text: title.replace(/ /gi, '').length > 7 ? title.slice(0, 8) + " ..." : title,
-              style: {
-                position: "relative",
-                display: "inline-block",
-                fontSize: String(fontSize) + ea,
-                fontWeight: String(500),
-                color: colorChip.black,
-                transition: "all 0.3s ease",
-              }
-            }
-          }
-        }
-      ]
-    })
-
-  }
 
 }
 
@@ -1528,7 +1407,7 @@ DashboardJs.prototype.launching = async function () {
     this.searchInput = this.mother.searchInput;
     this.grayBarWidth = this.mother.grayBarWidth;
 
-    this.members = (await ajaxJson({ type: "get" }, "/getMembers", { equal: true })).filter((obj) => { return obj.alive });
+    this.members = (await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true })).filter((obj) => { return obj.alive }).filter((obj) => { return !obj.roles.includes("Bot") });
 
     this.totalMother = null;
     this.grayBase = null;

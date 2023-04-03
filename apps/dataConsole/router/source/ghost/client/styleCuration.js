@@ -341,7 +341,7 @@ StyleCurationJs.randomPick = function (photos, contentsArr, pictureNumber, rooms
   const conidArr = Array.from(new Set(photos.map((obj) => { return obj.conid })));
   const standard = 50;
   const stackName = "styleCheckNum";
-  const limit = 2;
+  const limit = 1;
   let randoms;
   let randomPick, randomPick_raw, contentsPick;
   let randomPickFiles, randomPickFiles_new;
