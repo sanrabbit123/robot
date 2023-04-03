@@ -8971,7 +8971,7 @@ DataRouter.prototype.rou_post_styleCuration_styleChecking = function () {
       const { cliid, name, phone, photos } = equalJson(req.body);
       let text, channel;
 
-      text = name + " 고객님이 스타일 찾기 사진 체크를 함 => " + JSON.stringify(photos);
+      text = name + " 고객님이 스타일 찾기 사진 체크를 함 => "  + String(photos.length);
       channel = "#error_log";
 
       messageSend({ text, channel, voice: false }).catch((e) => {

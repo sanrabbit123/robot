@@ -341,7 +341,7 @@ StyleCurationJs.randomPick = function (photos, contentsArr, pictureNumber, rooms
   const conidArr = Array.from(new Set(photos.map((obj) => { return obj.conid })));
   const standard = 50;
   const stackName = "styleCheckNum";
-  const limit = 3;
+  const limit = 2;
   let randoms;
   let randomPick, randomPick_raw, contentsPick;
   let randomPickFiles, randomPickFiles_new;
@@ -449,10 +449,6 @@ StyleCurationJs.randomPick = function (photos, contentsArr, pictureNumber, rooms
 
     num2++;
   } while (randomPick.length !== pictureNumber);
-
-
-  console.log(randomPick.length);
-  console.log(pictureNumber);
 
   if (randomPick.length !== pictureNumber || GeneralJs.stacks[stackName] > limit) {
     return { complete: true, photos };
@@ -1703,9 +1699,9 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   }
 
   if (Array.isArray(instance.values.style[0].value) && instance.values.style[0].value.length > 0 && instance.alreadyStyleCheck === true) {
-    GeneralJs.setTimeout(() => {
-      resetEvent(true);
-    }, 0);
+    // GeneralJs.setTimeout(() => {
+    //   resetEvent(true);
+    // }, 0);
   }
 
 }
