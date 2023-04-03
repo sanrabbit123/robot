@@ -1699,9 +1699,9 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   }
 
   if (Array.isArray(instance.values.style[0].value) && instance.values.style[0].value.length > 0 && instance.alreadyStyleCheck === true) {
-    // GeneralJs.setTimeout(() => {
-    //   resetEvent(true);
-    // }, 0);
+    GeneralJs.setTimeout(() => {
+      resetEvent(true);
+    }, 0);
   }
 
 }
