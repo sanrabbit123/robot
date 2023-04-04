@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return ('콘솔 메뉴얼 | 홈리에종');"
+      "return ('콘솔 매뉴얼 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return ('콘솔 메뉴얼 | 홈리에종');"
+      "return ('콘솔 매뉴얼 | 홈리에종');"
     ],
     "image": [
       "thisPerson",
@@ -31,7 +31,7 @@
     "module": false
   },
   "name": "consoleManual",
-  "hangul": "콘솔 메뉴얼",
+  "hangul": "콘솔 매뉴얼",
   "route": [
     "consoleManual"
   ]
@@ -129,7 +129,7 @@ ConsoleManualJs.prototype.insertInitBox = function () {
   tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "콘솔 메뉴얼";
+  titleWording = "콘솔 매뉴얼";
   subTitleContents = "디자이너 콘솔에 대한 설명";
 
   mobileBlockTop = 4.5;
