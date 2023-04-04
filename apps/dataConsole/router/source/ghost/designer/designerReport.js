@@ -249,28 +249,28 @@ DesignerReportJs.prototype.contentsCenter = function () {
       "고객",
       "평수",
       "서비스",
-      "제안 날짜",
-      "제안 금액",
+      "추천 날짜",
+      "추천 금액",
       "평단가",
     ]
   ] : [
     [
       "고객",
       "평수",
-      "제안 날짜",
-      "제안 금액",
+      "추천 날짜",
+      "추천 금액",
       "평단가",
     ]
   ]);
 
   proposalAverage = (desktop ? [
-    [ "총 제안 횟수", 0 ],
-    [ "평균 평수", 0 ],
+    [ "총 추천 횟수", 0 ],
+    [ "월 평균 추천", 0 ],
     [ "평균 평단가", 0 ],
-    [ "최고 제안가", 0 ]
+    [ "최고 추천가", 0 ]
   ] : [
     [ "총 횟수", 0 ],
-    [ "최고 제안가", 0 ],
+    [ "최고 추천가", 0 ],
   ]);
 
   proposals.sort((a, b) => {
@@ -310,7 +310,7 @@ DesignerReportJs.prototype.contentsCenter = function () {
 
   if (desktop) {
     proposalAverage[0][1] = String(z) + '회';
-    proposalAverage[1][1] = String(z !== 0 ? Math.round(a / z) : 0) + '평';
+    proposalAverage[1][1] = String(Math.round(Number(String(z !== 0 ? (Math.round((((((proposals[0].date.valueOf() - proposals[proposals.length - 1].date.valueOf()) / 1000) / 60) / 60) / 24) / 30) === 0 ? z : (z / Math.round((((((proposals[0].date.valueOf() - proposals[proposals.length - 1].date.valueOf()) / 1000) / 60) / 60) / 24) / 30))) : 0)))) + '회';
     proposalAverage[2][1] = autoComma(d !== 0 ? Math.round(b / d) : 0) + '원';
     proposalAverage[3][1] = autoComma(c) + '원';
   } else {
@@ -341,12 +341,11 @@ DesignerReportJs.prototype.contentsCenter = function () {
 
   contractAverage = (desktop ? [
     [ "총 계약 횟수", 0 ],
-    [ "평균 평수", 0 ],
-    [ "평균 소비자가", 0 ],
-    [ "최고 소비자가", 0 ]
+    [ "누적 계약 금액", 0 ],
+    [ "총 정산 금액", 0 ]
   ] : [
     [ "총 횟수", 0 ],
-    [ "최고 소비자가", 0 ],
+    [ "총 정산 금액", 0 ],
   ]);
 
   contracts.sort((a, b) => {
@@ -389,12 +388,11 @@ DesignerReportJs.prototype.contentsCenter = function () {
 
   if (desktop) {
     contractAverage[0][1] = String(z) + '회';
-    contractAverage[1][1] = String(z !== 0 ? Math.round(a / z) : 0) + '평';
-    contractAverage[2][1] = autoComma(z !== 0 ? Math.round(b / z) : 0) + '원';
-    contractAverage[3][1] = autoComma(c) + '원';
+    contractAverage[1][1] = autoComma(contracts.filter((obj) => { return !/^드/gi.test(obj.process.status) }).reduce((acc, curr) => { return acc + curr.process.contract.remain.calculation.amount.supply; }, 0)) + '원';
+    contractAverage[2][1] = autoComma(contracts.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0)) + '원';
   } else {
     contractAverage[0][1] = String(z) + '회';
-    contractAverage[1][1] = autoComma(c) + '원';
+    contractAverage[1][1] = autoComma(contracts.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0)) + '원';
   }
 
   if ((z !== 0 ? Math.round(a / z) : 0) === 0) {
