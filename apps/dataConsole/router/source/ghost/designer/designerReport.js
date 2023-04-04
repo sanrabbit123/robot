@@ -472,20 +472,6 @@ DesignerReportJs.prototype.contentsCenter = function () {
 
   contents = [
     {
-      title: "추천 리포트",
-      contents: {
-        width: <&&
-          [ 40, 140, 100, 220, 160, 160, 160, ] |
-          [ 30, 120, 100, 220, 150, 150, 150, ] |
-          [ 24, 100, 70, 205, 125, 125, 125, ] |
-          [ 16, 90, 55, 155, 105, 105, 105, ] |
-          [ 10, 10, 19, 19, 16 ]
-        &&>,
-        matrix: proposalMatrix,
-        average: proposalAverage,
-      }
-    },
-    {
       title: "계약 리포트",
       contents: {
         width: <&&
@@ -497,6 +483,20 @@ DesignerReportJs.prototype.contentsCenter = function () {
         &&>,
         matrix: contractMatrix,
         average: contractAverage,
+      }
+    },
+    {
+      title: "추천 리포트",
+      contents: {
+        width: <&&
+          [ 40, 140, 100, 220, 160, 160, 160, ] |
+          [ 30, 120, 100, 220, 150, 150, 150, ] |
+          [ 24, 100, 70, 205, 125, 125, 125, ] |
+          [ 16, 90, 55, 155, 105, 105, 105, ] |
+          [ 10, 10, 19, 19, 16 ]
+        &&>,
+        matrix: proposalMatrix,
+        average: proposalAverage,
       }
     },
     {
@@ -1297,6 +1297,7 @@ DesignerReportJs.prototype.insertDashboard = async function () {
     let generalChildren;
     let leftColumns1;
     let rightValues1;
+    let yearWidth;
 
     leftPadding = <%% 55, 55, 47, 39, 7 %%>;
 
@@ -1330,7 +1331,7 @@ DesignerReportJs.prototype.insertDashboard = async function () {
     smallTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), -0.1 %%>;
 
     smallBlockHeight = <%% 20, 20, 18, 16, 3.5 %%>;
-    smallBlockPaddingTop = <%% 12, 12, 12, 12, 0.5 %%>;
+    smallBlockPaddingTop = <%% 12, 12, 12, 9, 0.5 %%>;
 
     smallSize = <%% 13, 13, 12, 12, 2.5 %%>;
     smallBlockBetween = <%% 20, 20, 20, 16, 3 %%>;
@@ -1339,6 +1340,8 @@ DesignerReportJs.prototype.insertDashboard = async function () {
     mobileBorderPaddingTop = 2.5;
     mobileFinalBottom = <%% 28, 28, 26, 18, 3 %%>;
     dateBoxHeight = <%% 24, 24, 20, 20, 5 %%>;
+
+    yearWidth = <%% 80, 70, 64, 58, 10 %%>;
 
     today = new Date();
     ago = new Date();
@@ -1363,7 +1366,7 @@ DesignerReportJs.prototype.insertDashboard = async function () {
 
     for (let chain of dateChain) {
       chain.proposal = this.proposals.filter((obj) => { return obj.date.valueOf() >= chain.from.valueOf() && obj.date.valueOf() < chain.to.valueOf() });
-      chain.contract = this.contracts.filter((obj) => { return obj.process.contract.form.date.from.valueOf() >= chain.from.valueOf() && obj.process.contract.form.date.from.valueOf() < chain.to.valueOf() });
+      chain.contract = this.contracts.filter((obj) => { return obj.process.contract.first.date.valueOf() >= chain.from.valueOf() && obj.process.contract.first.date.valueOf() < chain.to.valueOf() });
     }    
 
     proposalFeeArray = equalJson(JSON.stringify(this.contracts));
@@ -1896,7 +1899,6 @@ DesignerReportJs.prototype.insertDashboard = async function () {
       }
     }
 
-
     if (desktop) {
 
       yearColumns0 = [
@@ -1924,13 +1926,15 @@ DesignerReportJs.prototype.insertDashboard = async function () {
       for (let chain of dateChain) {
         chainChildren.push({
           style: {
-            display: "flex",
+            display: "inline-flex",
+            verticalAlign: "top",
             position: "relative",
             justifyContent: "start",
             alignItems: "start",
             width: withOut((whitePaddingLeft * 2), ea),
             height: String(dateBoxHeight) + ea,
             marginLeft: String(whitePaddingLeft) + ea,
+            width: String(yearWidth) + ea,
           },
           child: {
             text: String(chain.from.getFullYear()) + '년',
@@ -1951,17 +1955,22 @@ DesignerReportJs.prototype.insertDashboard = async function () {
         });
         chainChildren.push({
           style: {
-            display: "flex",
+            display: "inline-flex",
+            verticalAlign: "top",
             flexDirection: "column",
             position: "relative",
             justifyContent: "start",
             alignItems: "start",
-            width: withOut((whitePaddingLeft * 2), ea),
+            width: withOut((whitePaddingLeft * 2) + yearWidth, ea),
             border: "1px solid " + colorChip.gray3,
+            borderBottom: chainNumber === dateChain.length - 1 ? "1px solid " + colorChip.gray3 : String(0),
             boxSizing: "border-box",
-            borderRadius: String(5) + "px",
-            marginLeft: String(whitePaddingLeft) + ea,
-            marginBottom: String(chainNumber === dateChain.length - 1 ? whitePaddingLeft : smallBlockBetween) + ea,
+            borderTopLeftRadius: chainNumber === 0 ? String(5) + "px" : String(0),
+            borderTopRightRadius: chainNumber === 0 ? String(5) + "px" : String(0),
+            borderBottomLeftRadius: chainNumber === dateChain.length - 1 ? String(5) + "px" : String(0),
+            borderBottomRightRadius: chainNumber === dateChain.length - 1 ? String(5) + "px" : String(0),
+            marginRight: String(whitePaddingLeft) + ea,
+            marginBottom: String(chainNumber === dateChain.length - 1 ? whitePaddingLeft : 0) + ea,
             paddingTop: String(mobileBorderPaddingTop) + ea,
             paddingBottom: String(mobileBorderPaddingTop) + ea,
           },
@@ -2254,7 +2263,6 @@ DesignerReportJs.prototype.insertDashboard = async function () {
       }
 
     }
-
 
     whiteBlock = createNode({
       mother: baseTong,
