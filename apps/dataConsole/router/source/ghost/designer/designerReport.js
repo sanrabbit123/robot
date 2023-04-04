@@ -1267,15 +1267,20 @@ DesignerReportJs.prototype.insertDashboard = async function () {
     let smallSize;
     let smallBlockBetween;
     let totalWhiteHeight;
+    let yearColumns0, yearColumns1;
+    let todayValues0, todayValues1;
+    let agoValues0, agoValues1;
+    let mobileSmallPaddingLeft;
+    let mobileBorderPaddingTop;
 
-    leftPadding = <%% 55, 55, 47, 39, 4.7 %%>;
+    leftPadding = <%% 55, 55, 47, 39, 7 %%>;
 
-    topPadding0 = <%% 52, 52, 44, 36, 4.7 %%>;
+    topPadding0 = <%% 52, 52, 44, 36, 7 %%>;
     topPadding1 = <%% 40, 40, 38, 32, 4.7 %%>;
 
     marginBottom = <%% 16, 16, 16, 12, 3 %%>;
 
-    totalWhiteHeight = <%% 486, 486, 438, 331, 500 %%>;
+    totalWhiteHeight = <%% 486, 486, 438, 331, 130 %%>;
 
     titleWidth = <%% 300, 0, 0, 0, 0 %%>;
     titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
@@ -1286,80 +1291,162 @@ DesignerReportJs.prototype.insertDashboard = async function () {
     whiteTongPadding = <%% 12, 12, 10, 8, 1.5 %%>;
     whiteTongMarginBottom = <%% 24, 20, 16, 10, 3 %%>;
   
-    whiteSize = <%% 16, 16, 15, 12, 3.2 %%>;
+    whiteSize = <%% 16, 16, 15, 12, 2.9 %%>;
     whiteWeight = <%% 300, 300, 300, 300, 300 %%>;
     whiteBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
     whiteTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
 
-    valueBlockHeight = <%% 36, 36, 32, 24, 3 %%>;
+    valueBlockHeight = <%% 36, 36, 32, 24, 6 %%>;
 
-    whitePaddingTop = <%% 33, 33, 30, 21, 2 %%>;
-    whitePaddingLeft = <%% 40, 40, 35, 24, 4 %%>;
+    whitePaddingTop = <%% 33, 33, 30, 21, 4 %%>;
+    whitePaddingLeft = <%% 40, 40, 35, 24, 5 %%>;
 
-    columnsWidth = <%% 200, 200, 180, 130, 25 %%>;
-    smallTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? 0 : 1), -0.3 %%>;
+    columnsWidth = <%% 200, 200, 180, 130, 21 %%>;
+    smallTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? 0 : 1), -0.2 %%>;
 
-    smallBlockHeight = <%% 16, 16, 15, 13, 2 %%>;
-    smallBlockPaddingTop = <%% 11, 11, 10, 8, 5 %%>;
+    smallBlockHeight = <%% 16, 16, 15, 13, 3.5 %%>;
+    smallBlockPaddingTop = <%% 11, 11, 10, 8, 0.5 %%>;
 
-    smallSize = <%% 12, 12, 11, 10, 3 %%>;
+    smallSize = <%% 12, 12, 11, 10, 2.5 %%>;
     smallBlockBetween = <%% 14, 14, 12, 5, 3 %%>;
+
+    mobileSmallPaddingLeft = 2;
+    mobileBorderPaddingTop = 2.5;
 
     today = new Date();
     ago = new Date();
     ago.setMonth(ago.getMonth() - 12);
 
-    leftColumns = [
-      "파트너십 계약 날짜",
-      "계약 유지기간",
-      "최고" + slash + "최저 디자인비",
-      "누적 추천" + slash + "누적 진행",
-      "전환율",
-      "제공 서비스",
-      "가능 여부",
-      "제공 거리",
-      String(today.getFullYear()) + '년',
-      "",
-      String(ago.getFullYear()) + '년',
-    ];
+    if (desktop) {
+      leftColumns = [
+        "파트너십 계약 날짜",
+        "계약 유지기간",
+        "최고" + slash + "최저 디자인비",
+        "누적 추천" + slash + "누적 진행",
+        "전환율",
+        "제공 서비스",
+        "가능 여부",
+        "제공 거리",
+        String(today.getFullYear()) + '년',
+        "",
+        String(ago.getFullYear()) + '년',
+      ];
+    } else {
+      leftColumns = [
+        "계약 날짜",
+        "계약 유지기간",
+        "최고 디자인비",
+        "최저 디자인비",
+        "누적 추천 수",
+        "누적 진행 수",
+        "전환율",
+        "제공 서비스",
+        "",
+        "가능 여부",
+        "제공 거리",
+      ];
+    }
 
-    rightValues = [
-      "2018-02-03",
-      "3년 6개월",
-      autoComma(2000000) + '원' + slash + autoComma(1000000) + '원',
-      String(20) + '회' + slash + String(3) + '회',
-      "20.43" + '%',
-      [ "<b%홈퍼니싱%b>", "<b%홈스타일링%b>", "<b%토탈 스타일링%b>", "<u%엑스트라 스타일링%u>" ].join(slash),
-      [ "<b%부분 공간%b>", "<b%온라인%b>", "<u%거주중%u>" ].join(slash),
-      String(50) + "km" + slash + String(70) + "km",
-    ];
+    if (desktop) {
+      rightValues = [
+        "2018-02-03",
+        "3년 6개월",
+        autoComma(2000000) + '원' + slash + autoComma(1000000) + '원',
+        String(20) + '회' + slash + String(3) + '회',
+        "20.43" + '%',
+        [ "<b%홈퍼니싱%b>", "<b%홈스타일링%b>", "<b%토탈 스타일링%b>", "<u%엑스트라 스타일링%u>" ].join(slash),
+        [ "<b%부분 공간%b>", "<b%온라인%b>", "<u%거주중%u>" ].join(slash),
+        String(50) + "km" + slash + String(70) + "km",
+      ];
+    } else {
+      rightValues = [
+        "2018-02-03",
+        "3년 6개월",
+        autoComma(2000000) + '원',
+        autoComma(1000000) + '원',
+        String(20) + '회',
+        String(3) + '회',
+        "20.43" + '%',
+        [ "<b%홈퍼니싱%b>", "<b%홈스타일링%b>" ].join(slash),
+        [ "<b%토탈 스타일링%b>", "<u%엑스트라 스타일링%u>" ].join(slash),
+        [ "<b%부분 공간%b>", "<b%온라인%b>", "<u%거주중%u>" ].join(slash),
+        String(50) + "km" + slash + String(70) + "km",
+      ];
+    }
 
-    yearColumns = [
-      "추천 / 진행 수",
-      "전환율",
-      "계약액",
-      "정산액",
-      "정산 예정액",
-      "총 정산액",
-    ];
+    if (desktop) {
+      yearColumns = [
+        "추천 / 진행 수",
+        "전환율",
+        "계약액",
+        "정산액",
+        "정산 예정액",
+        "총 정산액",
+      ];
+      todayValues = [
+        String(32) + '회' + " / " + String(4) + "건",
+        "20.43" + '%',
+        autoComma(4000000) + '원',
+        autoComma(14000000) + '원',
+        autoComma(24000000) + '원',
+        autoComma(38000000) + '원',
+      ];
+      agoValues = [
+        String(32) + '회' + " / " + String(4) + "건",
+        "20.43" + '%',
+        autoComma(4000000) + '원',
+        autoComma(14000000) + '원',
+        autoComma(24000000) + '원',
+        autoComma(38000000) + '원',
+      ];
+      yearColumns0 = [];
+      yearColumns1 = [];
+      todayValues0 = [];
+      todayValues1 = [];
+      agoValues0 = [];
+      agoValues1 = [];
 
-    todayValues = [
-      String(32) + '회' + " / " + String(4) + "건",
-      "20.43" + '%',
-      autoComma(4000000) + '원',
-      autoComma(14000000) + '원',
-      autoComma(24000000) + '원',
-      autoComma(38000000) + '원',
-    ];
+    } else {
 
-    agoValues = [
-      String(32) + '회' + " / " + String(4) + "건",
-      "20.43" + '%',
-      autoComma(4000000) + '원',
-      autoComma(14000000) + '원',
-      autoComma(24000000) + '원',
-      autoComma(38000000) + '원',
-    ];
+      yearColumns = [];
+      todayValues = [];
+      agoValues = [];
+
+      yearColumns0 = [
+        "추천 / 진행 수",
+        "전환율",
+        "계약액",
+      ];
+      yearColumns1 = [
+        "정산액",
+        "정산 예정액",
+        "총 정산액",
+      ];
+
+      todayValues0 = [
+        String(32) + '회' + " / " + String(4) + "건",
+        "20.43" + '%',
+        autoComma(4000000) + '원',
+      ];
+      todayValues1 = [
+        autoComma(14000000) + '원',
+        autoComma(24000000) + '원',
+        autoComma(38000000) + '원',
+      ];
+
+      agoValues0 = [
+        String(32) + '회' + " / " + String(4) + "건",
+        "20.43" + '%',
+        autoComma(4000000) + '원',
+      ];
+      agoValues1 = [
+        autoComma(14000000) + '원',
+        autoComma(24000000) + '원',
+        autoComma(38000000) + '원',
+      ];
+
+    }
+
 
     whiteBlock = createNode({
       mother: baseTong,
@@ -1369,8 +1456,8 @@ DesignerReportJs.prototype.insertDashboard = async function () {
         borderRadius: String(8) + "px",
         width: String(100) + '%',
         background: colorChip.white,
-        paddingTop: desktop ? String(topPadding0) + ea : "",
-        paddingBottom: desktop ? String(leftPadding) + ea : "",
+        paddingTop: String(topPadding0) + ea,
+        paddingBottom: String(leftPadding) + ea,
         boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
         marginBottom: String(marginBottom) + ea,
       },
@@ -1378,8 +1465,8 @@ DesignerReportJs.prototype.insertDashboard = async function () {
         {
           display: "flex",
           position: "relative",
-          width: desktop ? withOut(leftPadding * 2, ea) : String(100) + '%',
-          marginLeft: String(desktop ? leftPadding : 0) + ea,
+          width: withOut(leftPadding * 2, ea),
+          marginLeft: String(leftPadding) + ea,
           flexDirection: media[0] ? "row" : "column",
           justifyContent: "start",
           alignItems: "start",
@@ -1429,16 +1516,17 @@ DesignerReportJs.prototype.insertDashboard = async function () {
       },
       child: {
         style: {
-          display: "flex",
+          display: desktop ? "flex" : "block",
           position: "relative",
           background: colorChip.white,
           boxShadow: "0px 3px 12px -9px " + colorChip.shadow,
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          flexDirection: "row",
+          justifyContent: desktop ? "center" : "",
+          alignItems: desktop ? "center" : "",
+          textAlign: desktop ? "center" : "",
+          flexDirection: desktop ? "row" : "",
           width: withOut(0, ea),
-          height: String(totalWhiteHeight) + ea,
+          height: desktop ? String(totalWhiteHeight) + ea : "",
+          paddingTop: desktop ? "" : String(whitePaddingTop) + ea,
         },
         children: [
           {
@@ -1448,6 +1536,7 @@ DesignerReportJs.prototype.insertDashboard = async function () {
               height: withOut(whitePaddingTop * 2, ea),
               display: "inline-flex",
               flexDirection: "column",
+              marginLeft: desktop ? "" : String(whitePaddingLeft) + ea,
             },
             children: leftColumns.map((str) => {
               return {
@@ -1485,6 +1574,7 @@ DesignerReportJs.prototype.insertDashboard = async function () {
               height: withOut(whitePaddingTop * 2, ea),
               display: "inline-flex",
               flexDirection: "column",
+              marginRight: desktop ? "" : String(whitePaddingLeft) + ea,
             },
             children: rightValues.map((str) => {
               return {
@@ -1521,7 +1611,7 @@ DesignerReportJs.prototype.insertDashboard = async function () {
             }).concat([
               {
                 style: {
-                  display: "flex",
+                  display: desktop ? "flex" : "none",
                   flexDirection: "column",
                   position: "relative",
                   justifyContent: "start",
@@ -1600,7 +1690,7 @@ DesignerReportJs.prototype.insertDashboard = async function () {
               },
               {
                 style: {
-                  display: "flex",
+                  display: desktop ? "flex" : "none",
                   flexDirection: "column",
                   position: "relative",
                   justifyContent: "start",
@@ -1679,8 +1769,373 @@ DesignerReportJs.prototype.insertDashboard = async function () {
                 ]
               },
             ]),
-          }
-        ]
+          },
+          // mobile only
+          {
+            style: {
+              display: mobile ? "flex" : "none",
+              position: "relative",
+              justifyContent: "start",
+              alignItems: "start",
+              width: withOut((whitePaddingLeft * 2), ea),
+              height: String(valueBlockHeight) + ea,
+              marginLeft: String(whitePaddingLeft) + ea,
+            },
+            child: {
+              text: String(today.getFullYear()) + '년',
+              style: {
+                fontSize: String(whiteSize) + ea,
+                fontWeight: String(whiteBoldWeight),
+                color: colorChip.black,
+                position: "relative",
+                top: String(whiteTextTop) + ea,
+                display: "inline-block",
+              },
+              under: {
+                fontSize: String(whiteSize) + ea,
+                fontWeight: String(whiteWeight),
+                color: colorChip.deactive,
+              }
+            }
+          },
+          {
+            style: {
+              display: mobile ? "block" : "none",
+              flexDirection: "column",
+              position: "relative",
+              justifyContent: "start",
+              alignItems: "start",
+              width: withOut((whitePaddingLeft * 2), ea),
+              border: "1px solid " + colorChip.gray3,
+              boxSizing: "border-box",
+              borderRadius: String(5) + "px",
+              marginLeft: String(whitePaddingLeft) + ea,
+              marginBottom: String(smallBlockBetween) + ea,
+              paddingTop: String(mobileBorderPaddingTop) + ea,
+              paddingBottom: String(mobileBorderPaddingTop) + ea,
+            },
+            children: [
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(mobileSmallPaddingLeft * 2, ea),
+                  flexDirection: "row",
+                  paddingTop: String(smallBlockPaddingTop) + ea,
+                  paddingLeft: String(mobileSmallPaddingLeft) + ea,
+                  paddingright: String(mobileSmallPaddingLeft) + ea,
+                  height: String(smallBlockHeight) + ea,
+                },
+                children: yearColumns0.map((str, index) => {
+                  return {
+                    style: {
+                      display: "inline-flex",
+                      width: "calc(100% / " + String(yearColumns0.length) + ")",
+                      height: String(smallBlockHeight) + ea,
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    child: {
+                      text: str,
+                      style: {
+                        position: "relative",
+                        top: String(smallTextTop) + ea,
+                        fontSize: String(smallSize) + ea,
+                        fontWeight: String(700),
+                        color: colorChip.black,
+                      }
+                    }
+                  }
+                })
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(mobileSmallPaddingLeft * 2, ea),
+                  flexDirection: "row",
+                  paddingBottom: String(smallBlockPaddingTop) + ea,
+                  paddingLeft: String(mobileSmallPaddingLeft) + ea,
+                  paddingright: String(mobileSmallPaddingLeft) + ea,
+                  height: String(smallBlockHeight) + ea,
+                },
+                children: todayValues0.map((str, index) => {
+                  return {
+                    style: {
+                      display: "inline-flex",
+                      width: "calc(100% / " + String(yearColumns0.length) + ")",
+                      height: String(smallBlockHeight) + ea,
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    child: {
+                      text: str,
+                      style: {
+                        position: "relative",
+                        top: String(smallTextTop) + ea,
+                        fontSize: String(smallSize) + ea,
+                        fontWeight: String(400),
+                        color: colorChip.black,
+                      }
+                    }
+                  }
+                })
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(mobileSmallPaddingLeft * 2, ea),
+                  flexDirection: "row",
+                  paddingTop: String(smallBlockPaddingTop) + ea,
+                  paddingLeft: String(mobileSmallPaddingLeft) + ea,
+                  paddingright: String(mobileSmallPaddingLeft) + ea,
+                  height: String(smallBlockHeight) + ea,
+                },
+                children: yearColumns1.map((str, index) => {
+                  return {
+                    style: {
+                      display: "inline-flex",
+                      width: "calc(100% / " + String(yearColumns1.length) + ")",
+                      height: String(smallBlockHeight) + ea,
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    child: {
+                      text: str,
+                      style: {
+                        position: "relative",
+                        top: String(smallTextTop) + ea,
+                        fontSize: String(smallSize) + ea,
+                        fontWeight: String(700),
+                        color: colorChip.black,
+                      }
+                    }
+                  }
+                })
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(mobileSmallPaddingLeft * 2, ea),
+                  flexDirection: "row",
+                  paddingBottom: String(smallBlockPaddingTop) + ea,
+                  paddingLeft: String(mobileSmallPaddingLeft) + ea,
+                  paddingright: String(mobileSmallPaddingLeft) + ea,
+                  height: String(smallBlockHeight) + ea,
+                },
+                children: todayValues1.map((str, index) => {
+                  return {
+                    style: {
+                      display: "inline-flex",
+                      width: "calc(100% / " + String(yearColumns1.length) + ")",
+                      height: String(smallBlockHeight) + ea,
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    child: {
+                      text: str,
+                      style: {
+                        position: "relative",
+                        top: String(smallTextTop) + ea,
+                        fontSize: String(smallSize) + ea,
+                        fontWeight: String(400),
+                        color: colorChip.black,
+                      }
+                    }
+                  }
+                })
+              },
+            ]
+          },
+          {
+            style: {
+              display: mobile ? "flex" : "none",
+              position: "relative",
+              justifyContent: "start",
+              alignItems: "start",
+              width: withOut((whitePaddingLeft * 2), ea),
+              height: String(valueBlockHeight) + ea,
+              marginLeft: String(whitePaddingLeft) + ea,
+            },
+            child: {
+              text: String(ago.getFullYear()) + '년',
+              style: {
+                fontSize: String(whiteSize) + ea,
+                fontWeight: String(whiteBoldWeight),
+                color: colorChip.black,
+                position: "relative",
+                top: String(whiteTextTop) + ea,
+                display: "inline-block",
+              },
+              under: {
+                fontSize: String(whiteSize) + ea,
+                fontWeight: String(whiteWeight),
+                color: colorChip.deactive,
+              }
+            }
+          },
+          {
+            style: {
+              display: mobile ? "block" : "none",
+              flexDirection: "column",
+              position: "relative",
+              justifyContent: "start",
+              alignItems: "start",
+              width: withOut((whitePaddingLeft * 2), ea),
+              border: "1px solid " + colorChip.gray3,
+              boxSizing: "border-box",
+              borderRadius: String(5) + "px",
+              marginLeft: String(whitePaddingLeft) + ea,
+              marginBottom: String(whitePaddingLeft) + ea,
+              paddingTop: String(mobileBorderPaddingTop) + ea,
+              paddingBottom: String(mobileBorderPaddingTop) + ea,
+            },
+            children: [
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(mobileSmallPaddingLeft * 2, ea),
+                  flexDirection: "row",
+                  paddingTop: String(smallBlockPaddingTop) + ea,
+                  paddingLeft: String(mobileSmallPaddingLeft) + ea,
+                  paddingright: String(mobileSmallPaddingLeft) + ea,
+                  height: String(smallBlockHeight) + ea,
+                },
+                children: yearColumns0.map((str, index) => {
+                  return {
+                    style: {
+                      display: "inline-flex",
+                      width: "calc(100% / " + String(yearColumns0.length) + ")",
+                      height: String(smallBlockHeight) + ea,
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    child: {
+                      text: str,
+                      style: {
+                        position: "relative",
+                        top: String(smallTextTop) + ea,
+                        fontSize: String(smallSize) + ea,
+                        fontWeight: String(700),
+                        color: colorChip.black,
+                      }
+                    }
+                  }
+                })
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(mobileSmallPaddingLeft * 2, ea),
+                  flexDirection: "row",
+                  paddingBottom: String(smallBlockPaddingTop) + ea,
+                  paddingLeft: String(mobileSmallPaddingLeft) + ea,
+                  paddingright: String(mobileSmallPaddingLeft) + ea,
+                  height: String(smallBlockHeight) + ea,
+                },
+                children: agoValues0.map((str, index) => {
+                  return {
+                    style: {
+                      display: "inline-flex",
+                      width: "calc(100% / " + String(yearColumns0.length) + ")",
+                      height: String(smallBlockHeight) + ea,
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    child: {
+                      text: str,
+                      style: {
+                        position: "relative",
+                        top: String(smallTextTop) + ea,
+                        fontSize: String(smallSize) + ea,
+                        fontWeight: String(400),
+                        color: colorChip.black,
+                      }
+                    }
+                  }
+                })
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(mobileSmallPaddingLeft * 2, ea),
+                  flexDirection: "row",
+                  paddingTop: String(smallBlockPaddingTop) + ea,
+                  paddingLeft: String(mobileSmallPaddingLeft) + ea,
+                  paddingright: String(mobileSmallPaddingLeft) + ea,
+                  height: String(smallBlockHeight) + ea,
+                },
+                children: yearColumns1.map((str, index) => {
+                  return {
+                    style: {
+                      display: "inline-flex",
+                      width: "calc(100% / " + String(yearColumns1.length) + ")",
+                      height: String(smallBlockHeight) + ea,
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    child: {
+                      text: str,
+                      style: {
+                        position: "relative",
+                        top: String(smallTextTop) + ea,
+                        fontSize: String(smallSize) + ea,
+                        fontWeight: String(700),
+                        color: colorChip.black,
+                      }
+                    }
+                  }
+                })
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(mobileSmallPaddingLeft * 2, ea),
+                  flexDirection: "row",
+                  paddingBottom: String(smallBlockPaddingTop) + ea,
+                  paddingLeft: String(mobileSmallPaddingLeft) + ea,
+                  paddingright: String(mobileSmallPaddingLeft) + ea,
+                  height: String(smallBlockHeight) + ea,
+                },
+                children: agoValues1.map((str, index) => {
+                  return {
+                    style: {
+                      display: "inline-flex",
+                      width: "calc(100% / " + String(yearColumns1.length) + ")",
+                      height: String(smallBlockHeight) + ea,
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    child: {
+                      text: str,
+                      style: {
+                        position: "relative",
+                        top: String(smallTextTop) + ea,
+                        fontSize: String(smallSize) + ea,
+                        fontWeight: String(400),
+                        color: colorChip.black,
+                      }
+                    }
+                  }
+                })
+              },
+            ]
+          },
+        ],
       }
     });
 
