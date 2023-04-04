@@ -1275,9 +1275,9 @@ DesignerReportJs.prototype.insertDashboard = async function () {
 
     marginBottom = <%% 16, 16, 16, 12, 3 %%>;
 
-    totalWhiteHeight = <%% 492, 492, 492, 492, 500 %%>;
+    totalWhiteHeight = <%% 486, 486, 438, 331, 500 %%>;
 
-    titleWidth = <%% 300, 160, 140, 120, 30 %%>;
+    titleWidth = <%% 300, 0, 0, 0, 0 %%>;
     titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
     titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
     titleMarginBottom = <%% 24, 24, 20, 16, 2.8 %%>;
@@ -1286,24 +1286,24 @@ DesignerReportJs.prototype.insertDashboard = async function () {
     whiteTongPadding = <%% 12, 12, 10, 8, 1.5 %%>;
     whiteTongMarginBottom = <%% 24, 20, 16, 10, 3 %%>;
   
-    whiteSize = <%% 16, 15, 15, 14, 3.2 %%>;
+    whiteSize = <%% 16, 16, 15, 12, 3.2 %%>;
     whiteWeight = <%% 300, 300, 300, 300, 300 %%>;
     whiteBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
     whiteTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
 
-    valueBlockHeight = <%% 36, 36, 32, 32, 3 %%>;
+    valueBlockHeight = <%% 36, 36, 32, 24, 3 %%>;
 
-    whitePaddingTop = <%% 36, 36, 36, 24, 2 %%>;
-    whitePaddingLeft = <%% 40, 40, 40, 32, 4 %%>;
+    whitePaddingTop = <%% 33, 33, 30, 21, 2 %%>;
+    whitePaddingLeft = <%% 40, 40, 35, 24, 4 %%>;
 
-    columnsWidth = <%% 200, 200, 200, 200, 25 %%>;
-    smallTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+    columnsWidth = <%% 200, 200, 180, 130, 25 %%>;
+    smallTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? 0 : 1), -0.3 %%>;
 
-    smallBlockHeight = <%% 16, 16, 15, 14, 2 %%>;
-    smallBlockPaddingTop = <%% 11, 11, 10, 6, 5 %%>;
+    smallBlockHeight = <%% 16, 16, 15, 13, 2 %%>;
+    smallBlockPaddingTop = <%% 11, 11, 10, 8, 5 %%>;
 
     smallSize = <%% 12, 12, 11, 10, 3 %%>;
-    smallBlockBetween = <%% 14, 14, 14, 14, 3 %%>;
+    smallBlockBetween = <%% 14, 14, 12, 5, 3 %%>;
 
     today = new Date();
     ago = new Date();
@@ -1380,7 +1380,7 @@ DesignerReportJs.prototype.insertDashboard = async function () {
           position: "relative",
           width: desktop ? withOut(leftPadding * 2, ea) : String(100) + '%',
           marginLeft: String(desktop ? leftPadding : 0) + ea,
-          flexDirection: "row",
+          flexDirection: media[0] ? "row" : "column",
           justifyContent: "start",
           alignItems: "start",
         }
@@ -1393,10 +1393,11 @@ DesignerReportJs.prototype.insertDashboard = async function () {
       style: {
         display: "inline-flex",
         position: "relative",
-        width: String(titleWidth) + ea,
+        width: media[0] ? String(titleWidth) + ea : withOut(0, ea),
         justifyContent: "start",
         alignItems: "start",
         flexDirection: "column",
+        marginBottom: media[0] ? "" : String(titleMarginBottom) + ea,
       },
       child: {
         text: "디자이너님 개요",
