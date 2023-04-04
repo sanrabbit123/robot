@@ -1227,11 +1227,18 @@ DesignerReportJs.prototype.insertNoticeBox = function () {
 DesignerReportJs.prototype.insertDashboard = async function () {
   const instance = this;
   const { ea, totalContents, media, designer, baseTong } = this;
-  const { createNode, colorChip, withOut, ajaxJson, isMac, autoComma } = GeneralJs;
+  const { createNode, colorChip, withOut, ajaxJson, isMac, autoComma, dateToString, equalJson } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   const desid = designer.desid;
   const slash = "&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;";
+  const dateSubtract = (date) => {
+    const now = new Date();
+    const seconds = now.valueOf() - date.valueOf()
+    const yearNumber = ((((seconds / 1000) / 60) / 60) / 24) / 365
+    const monthDay = (yearNumber * 365) % 365;
+    return `${String(Math.floor(yearNumber))}년 ${String(Math.round(monthDay / (365 / 12)))}개월`;
+  }
   try {
     let leftPadding;
     let topPadding0;
@@ -1272,6 +1279,14 @@ DesignerReportJs.prototype.insertDashboard = async function () {
     let agoValues0, agoValues1;
     let mobileSmallPaddingLeft;
     let mobileBorderPaddingTop;
+    let proposalFeeArray;
+    let s0, s1, s2, s3;
+    let p0, p1, p2;
+    let visualPaddingLeft;
+    let thisYearProposal, thisYearContract;
+    let pastYearProposal, pastYearContract;
+    let thisYearFrom, thisYearTo;
+    let pastYearFrom, pastYearTo;
 
     leftPadding = <%% 55, 55, 47, 39, 7 %%>;
 
@@ -1310,12 +1325,24 @@ DesignerReportJs.prototype.insertDashboard = async function () {
     smallSize = <%% 12, 12, 11, 10, 2.5 %%>;
     smallBlockBetween = <%% 14, 14, 12, 5, 3 %%>;
 
+    visualPaddingLeft = <%% 5, 5, 5, 5, 0 %%>;
+
     mobileSmallPaddingLeft = 2;
     mobileBorderPaddingTop = 2.5;
 
     today = new Date();
     ago = new Date();
     ago.setMonth(ago.getMonth() - 12);
+
+    thisYearFrom = new Date(today.getFullYear(), 0, 1);
+    thisYearTo = new Date(today.getFullYear() + 1, 0, 1);
+    pastYearFrom = new Date(ago.getFullYear(), 0, 1);
+    pastYearTo = new Date(ago.getFullYear() + 1, 0, 1);
+
+    thisYearProposal = this.proposals.filter((obj) => { return obj.date.valueOf() >= thisYearFrom.valueOf() && obj.date.valueOf() < thisYearTo.valueOf() });
+    pastYearProposal = this.proposals.filter((obj) => { return obj.date.valueOf() >= pastYearFrom.valueOf() && obj.date.valueOf() < pastYearTo.valueOf() });
+    thisYearContract = this.contracts.filter((obj) => { return obj.process.contract.form.date.from.valueOf() >= thisYearFrom.valueOf() && obj.process.contract.form.date.from.valueOf() < thisYearTo.valueOf() });
+    pastYearContract = this.contracts.filter((obj) => { return obj.process.contract.form.date.from.valueOf() >= pastYearFrom.valueOf() && obj.process.contract.form.date.from.valueOf() < pastYearTo.valueOf() });
 
     if (desktop) {
       leftColumns = [
@@ -1347,30 +1374,46 @@ DesignerReportJs.prototype.insertDashboard = async function () {
       ];
     }
 
+    proposalFeeArray = equalJson(JSON.stringify(this.contracts));
+    proposalFeeArray = proposalFeeArray.map((obj) => { return obj.process.contract.remain.calculation.amount.consumer });
+    proposalFeeArray.sort((a, b) => { return a - b });
+    if (proposalFeeArray.length === 0) {
+      proposalFeeArray = [ 0 ];
+    }
+
+    s0 = designer.analytics.project.matrix[0].some((n) => { return n === 1 }) ? "<b%홈퍼니싱%b>" : "<u%홈퍼니싱%u>"
+    s1 = designer.analytics.project.matrix[1].some((n) => { return n === 1 }) ? "<b%홈스타일링%b>" : "<u%홈스타일링%u>"
+    s2 = designer.analytics.project.matrix[2].some((n) => { return n === 1 }) ? "<b%토탈 스타일링%b>" : "<u%토탈 스타일링%u>"
+    s3 = designer.analytics.project.matrix[3].some((n) => { return n === 1 }) ? "<b%엑스트라 스타일링%b>" : "<u%엑스트라 스타일링%u>"
+
+    p0 = (designer.analytics.project.matrix[0][0] === 1 || designer.analytics.project.matrix[1][0] === 1 || designer.analytics.project.matrix[2][0] === 1 || designer.analytics.project.matrix[3][0] === 1) ? "<b%부분 공간%b>" : "<u%부분 공간%u>"
+    p1 = designer.analytics.project.online ? "<b%온라인%b>" : "<u%온라인%u>";
+    p2 = designer.analytics.project.living ? "<b%거주중%b>" : "<u%거주중%u>";
+
     if (desktop) {
       rightValues = [
-        "2018-02-03",
-        "3년 6개월",
-        autoComma(2000000) + '원' + slash + autoComma(1000000) + '원',
-        String(20) + '회' + slash + String(3) + '회',
-        "20.43" + '%',
-        [ "<b%홈퍼니싱%b>", "<b%홈스타일링%b>", "<b%토탈 스타일링%b>", "<u%엑스트라 스타일링%u>" ].join(slash),
-        [ "<b%부분 공간%b>", "<b%온라인%b>", "<u%거주중%u>" ].join(slash),
-        String(50) + "km" + slash + String(70) + "km",
+        dateToString(designer.information.contract.date),
+        dateSubtract(designer.information.contract.date),
+        autoComma(proposalFeeArray[proposalFeeArray.length - 1]) + '원' + slash + autoComma(proposalFeeArray[0]) + '원',
+        String(this.proposals.length) + '회' + slash + String(this.contracts.length) + '회',
+        (this.proposals.length === 0 ? String(0) : String(Math.floor((this.contracts.length / this.proposals.length) * 10000) / 100)) + '%',
+        [ s0, s1, s2, s3 ].join(slash),
+        [ p0, p1, p2 ].join(slash),
+        String(designer.analytics.region.range) + "km" + slash + String(designer.analytics.region.expenses) + "km",
       ];
     } else {
       rightValues = [
-        "2018-02-03",
-        "3년 6개월",
-        autoComma(2000000) + '원',
-        autoComma(1000000) + '원',
-        String(20) + '회',
-        String(3) + '회',
-        "20.43" + '%',
-        [ "<b%홈퍼니싱%b>", "<b%홈스타일링%b>" ].join(slash),
-        [ "<b%토탈 스타일링%b>", "<u%엑스트라 스타일링%u>" ].join(slash),
-        [ "<b%부분 공간%b>", "<b%온라인%b>", "<u%거주중%u>" ].join(slash),
-        String(50) + "km" + slash + String(70) + "km",
+        dateToString(designer.information.contract.date),
+        dateSubtract(designer.information.contract.date),
+        autoComma(proposalFeeArray[proposalFeeArray.length - 1]) + '원',
+        autoComma(proposalFeeArray[0]) + '원',
+        String(this.proposals.length) + '회',
+        String(this.contracts.length) + '회',
+        (this.proposals.length === 0 ? String(0) : String(Math.floor((this.contracts.length / this.proposals.length) * 10000) / 100)) + '%',
+        [ s0, s1 ].join(slash),
+        [ s2, s3 ].join(slash),
+        [ p0, p1, p2 ].join(slash),
+        String(designer.analytics.region.range) + "km" + slash + String(designer.analytics.region.expenses) + "km",
       ];
     }
 
@@ -1384,20 +1427,20 @@ DesignerReportJs.prototype.insertDashboard = async function () {
         "총 정산액",
       ];
       todayValues = [
-        String(32) + '회' + " / " + String(4) + "건",
-        "20.43" + '%',
-        autoComma(4000000) + '원',
-        autoComma(14000000) + '원',
-        autoComma(24000000) + '원',
-        autoComma(38000000) + '원',
+        String(thisYearProposal.length) + '회' + " / " + String(thisYearContract.length) + "건",
+        (thisYearProposal.length === 0 ? String(0) : String(Math.floor((thisYearContract.length / thisYearProposal.length) * 10000) / 100)) + '%',
+        autoComma(thisYearContract.filter((obj) => { return !/^드/gi.test(obj.process.status) }).reduce((acc, curr) => { return acc + curr.process.contract.remain.calculation.amount.supply; }, 0)) + '원',
+        autoComma(thisYearContract.reduce((acc, curr) => { return acc + (curr.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.first.amount : 0) + (curr.process.calculation.payments.remain.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.remain.amount : 0); }, 0)) + '원',
+        autoComma(thisYearContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0) - thisYearContract.reduce((acc, curr) => { return acc + (curr.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.first.amount : 0) + (curr.process.calculation.payments.remain.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.remain.amount : 0); }, 0)) + '원',
+        autoComma(thisYearContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0)) + '원',
       ];
       agoValues = [
-        String(32) + '회' + " / " + String(4) + "건",
-        "20.43" + '%',
-        autoComma(4000000) + '원',
-        autoComma(14000000) + '원',
-        autoComma(24000000) + '원',
-        autoComma(38000000) + '원',
+        String(pastYearProposal.length) + '회' + " / " + String(pastYearContract.length) + "건",
+        (pastYearProposal.length === 0 ? String(0) : String(Math.floor((pastYearContract.length / pastYearProposal.length) * 10000) / 100)) + '%',
+        autoComma(pastYearContract.filter((obj) => { return !/^드/gi.test(obj.process.status) }).reduce((acc, curr) => { return acc + curr.process.contract.remain.calculation.amount.supply; }, 0)) + '원',
+        autoComma(pastYearContract.reduce((acc, curr) => { return acc + (curr.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.first.amount : 0) + (curr.process.calculation.payments.remain.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.remain.amount : 0); }, 0)) + '원',
+        autoComma(pastYearContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0) - pastYearContract.reduce((acc, curr) => { return acc + (curr.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.first.amount : 0) + (curr.process.calculation.payments.remain.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.remain.amount : 0); }, 0)) + '원',
+        autoComma(pastYearContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0)) + '원',
       ];
       yearColumns0 = [];
       yearColumns1 = [];
@@ -1424,25 +1467,25 @@ DesignerReportJs.prototype.insertDashboard = async function () {
       ];
 
       todayValues0 = [
-        String(32) + '회' + " / " + String(4) + "건",
-        "20.43" + '%',
-        autoComma(4000000) + '원',
+        String(thisYearProposal.length) + '회' + " / " + String(thisYearContract.length) + "건",
+        (thisYearProposal.length === 0 ? String(0) : String(Math.floor((thisYearContract.length / thisYearProposal.length) * 10000) / 100)) + '%',
+        autoComma(thisYearContract.filter((obj) => { return !/^드/gi.test(obj.process.status) }).reduce((acc, curr) => { return acc + curr.process.contract.remain.calculation.amount.supply; }, 0)) + '원',
       ];
       todayValues1 = [
-        autoComma(14000000) + '원',
-        autoComma(24000000) + '원',
-        autoComma(38000000) + '원',
+        autoComma(thisYearContract.reduce((acc, curr) => { return acc + (curr.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.first.amount : 0) + (curr.process.calculation.payments.remain.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.remain.amount : 0); }, 0)) + '원',
+        autoComma(thisYearContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0) - thisYearContract.reduce((acc, curr) => { return acc + (curr.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.first.amount : 0) + (curr.process.calculation.payments.remain.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.remain.amount : 0); }, 0)) + '원',
+        autoComma(thisYearContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0)) + '원',
       ];
 
       agoValues0 = [
-        String(32) + '회' + " / " + String(4) + "건",
-        "20.43" + '%',
-        autoComma(4000000) + '원',
+        String(pastYearProposal.length) + '회' + " / " + String(pastYearContract.length) + "건",
+        (pastYearProposal.length === 0 ? String(0) : String(Math.floor((pastYearContract.length / pastYearProposal.length) * 10000) / 100)) + '%',
+        autoComma(pastYearContract.filter((obj) => { return !/^드/gi.test(obj.process.status) }).reduce((acc, curr) => { return acc + curr.process.contract.remain.calculation.amount.supply; }, 0)) + '원',
       ];
       agoValues1 = [
-        autoComma(14000000) + '원',
-        autoComma(24000000) + '원',
-        autoComma(38000000) + '원',
+        autoComma(pastYearContract.reduce((acc, curr) => { return acc + (curr.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.first.amount : 0) + (curr.process.calculation.payments.remain.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.remain.amount : 0); }, 0)) + '원',
+        autoComma(pastYearContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0) - pastYearContract.reduce((acc, curr) => { return acc + (curr.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.first.amount : 0) + (curr.process.calculation.payments.remain.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? curr.process.calculation.payments.remain.amount : 0); }, 0)) + '원',
+        autoComma(pastYearContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0)) + '원',
       ];
 
     }
@@ -1487,7 +1530,7 @@ DesignerReportJs.prototype.insertDashboard = async function () {
         marginBottom: media[0] ? "" : String(titleMarginBottom) + ea,
       },
       child: {
-        text: "디자이너님 개요",
+        text: designer.designer + "님 개요",
         style: {
           position: "relative",
           display: "inline-block",
@@ -1620,6 +1663,8 @@ DesignerReportJs.prototype.insertDashboard = async function () {
                   border: "1px solid " + colorChip.gray3,
                   boxSizing: "border-box",
                   borderRadius: String(5) + "px",
+                  paddingLeft: String(visualPaddingLeft) + ea,
+                  paddingRight: String(visualPaddingLeft) + ea,
                 },
                 children: [
                   {
@@ -1700,6 +1745,8 @@ DesignerReportJs.prototype.insertDashboard = async function () {
                   boxSizing: "border-box",
                   borderRadius: String(5) + "px",
                   marginTop: String(smallBlockBetween) + ea,
+                  paddingLeft: String(visualPaddingLeft) + ea,
+                  paddingRight: String(visualPaddingLeft) + ea,
                 },
                 children: [
                   {
