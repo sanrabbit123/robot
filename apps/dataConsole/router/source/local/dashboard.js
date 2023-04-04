@@ -54,10 +54,10 @@ DashboardJs.prototype.returnTreeContents = function () {
               }
             },
             {
-              title: "추천서 작성 매뉴얼",
+              title: "선호 사진과 고객 파일 관리",
             },
             {
-              title: "추천서 피드백 매뉴얼",
+              title: "디자이너 추천서 매뉴얼",
             }
           ]
         },

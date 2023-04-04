@@ -2847,6 +2847,90 @@ SecondRouter.prototype.rou_post_slackForm = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_photoParsing = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const back = this.back;
+  let obj;
+  obj = {};
+  obj.link = [ "/photoParsing" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.images === undefined) {
+        throw new Error("invaild post, must be 'images' array");
+      }
+      const selfMongo = instance.mongo;
+      const { images } = equalJson(req.body);
+      let pidArr, raw, contents, contentsArr, desidArr;
+      let designers;
+      let totalObj;
+
+      pidArr = images.map((i) => {
+        return i.replace(/\.[a-z]+$/gi, '').replace(/^[it][0-9]+/gi, '');
+      });
+
+      contentsArr = [];
+      for (let pid of pidArr) {
+        raw = await back.getContentsArrByQuery({ "contents.portfolio.pid": pid }, { selfMongo });
+        if (raw.length !== 1) {
+          throw new Error("invaild pid : " + JSON.stringify(pidArr));
+        }
+        [ contents ] = raw;
+        contentsArr.push(contents);
+      }
+
+      desidArr = Array.from(new Set(contentsArr.map((c) => {
+        return c.desid;
+      })));
+
+      if (desidArr.length > 0) {
+
+        designers = (await back.getDesignersByQuery({ $or: desidArr.map((desid) => { return { desid }; }) }, { selfMongo })).map((d) => {
+          return d.analytics.styling.tendency.toNormal();
+        });
+
+        if (designers.length > 0) {
+          totalObj = equalJson(JSON.stringify(designers[0]));
+          for (let i in totalObj) {
+            for (let j in totalObj[i]) {
+              totalObj[i][j] = 0;
+            }
+          }
+          for (let style of designers) {
+            for (let i in style) {
+              for (let j in style[i]) {
+                totalObj[i][j] += style[i][j];
+              }
+            }
+          }
+          for (let i in totalObj) {
+            for (let j in totalObj[i]) {
+              totalObj[i][j] = Math.round((totalObj[i][j] / designers.length) * 100) / 100;
+            }
+          }
+
+          res.send(JSON.stringify(totalObj));
+        } else {
+          throw new Error("There is no designer : " + JSON.stringify(desidArr));
+        }
+      } else {
+        res.send(JSON.stringify([]));
+      }
+    } catch (e) {
+      console.log(e);
+      errorLog("Second ghost 서버 문제 생김 (rou_post_photoParsing): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 SecondRouter.prototype.getAll = function () {

@@ -2728,13 +2728,14 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       ajaxJson({
         cliid: thisCase[standard[1]]
       }, BRIDGEHOST + "/clientPhoto").then((obj) => {
+
         images = images.concat(obj.sitePhoto);
         images = images.concat(obj.preferredPhoto);
         return ajaxJson({
           idArr: [ thisCase[standard[1]] ],
           method: "client",
           property: "curation",
-        }, "/getHistoryProperty");
+        }, BACKHOST + "/getHistoryProperty");
 
       }).then((raw) => {
 
@@ -2744,7 +2745,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         obj = raw;
         return ajaxJson({
           images: obj[thisCase[standard[1]]].image
-        }, S3HOST + ":3000" + "/photoParsing");
+        }, SECONDHOST + "/photoParsing");
 
       }).then((raw) => {
         let imageNothing;
@@ -3104,6 +3105,9 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 return aFileWording < bFileWording ? 1 : -1;
               }
             });
+
+            console.log(images);
+
             for (let image of images) {
               tempImage = createNode({
                 mother: scrollTong,
@@ -3442,6 +3446,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 height: String(imageMargin * 3) + ea,
               }
             });
+
+            console.log(styleAnalytics);
 
             for (let i in styleAnalytics) {
               children = [
