@@ -61,16 +61,6 @@ DesignerLoginJs.prototype.launching = async function (loading) {
       }
     }
 
-    if (typeof window.localStorage.getItem("HL_proid") === "string") {
-      const rows = await ajaxJson({ whereQuery: { proid: window.localStorage.getItem("HL_proid") } }, SECONDHOST + "/getProjects", { equal: true });
-      if (rows.length >= 1) {
-        window.localStorage.setItem("HL_proid", rows[0].proid);
-        selfHref(FRONTHOST + "/project.php?proid=" + window.localStorage.getItem("HL_proid"));
-      } else {
-        window.localStorage.clear();
-      }
-    }
-
     const { totalContents, ea } = this;
     const getObj = returnGet();
     let input;
@@ -215,7 +205,7 @@ DesignerLoginJs.prototype.launching = async function (loading) {
                   } else {
 
                     ajaxJson({ whereQuery: { "phone": this.value.trim() } }, SECONDHOST + "/getClients", { obj: true }).then((clients) => {
-                      if (clients.length >= 1) {
+                      if (clients.length > 0) {
 
                         ajaxJson({ whereQuery: { "cliid": clients[0].cliid } }, SECONDHOST + "/getProjects", { obj: true }).then((projects) => {
                           projects = projects.filter((p) => { return p.desid !== "" });
