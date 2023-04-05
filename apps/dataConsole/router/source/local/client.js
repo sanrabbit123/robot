@@ -5397,7 +5397,7 @@ ClientJs.prototype.secondReportContents = function (report, mother, loadingIcon)
       loadingIcon.style.animation = "loadingrotate 1.7s linear infinite";
       loadingIcon.style.opacity = "1";
 
-      ajaxJson(queryObj, BACKHOST + "/dailySalesReport", { equal: true }).then(({ reports }) => {
+      ajaxJson(queryObj, "/dailySalesReport", { equal: true }).then(({ reports }) => {
         loadingIcon.style.opacity = "0";
         mother.appendChild(instance.secondReportScrollBox(reports, motherWidth));
       }).catch((err) => {
@@ -5539,7 +5539,7 @@ ClientJs.prototype.secondReportViewMakerDetail = function (recycle = false) {
         startMonth: 12,
         endYear: (new Date()).getFullYear(),
         endMonth: (new Date()).getMonth() + 1
-      }, BACKHOST + "/dailySalesReport", { equal: true }).then(({ reports }) => {
+      }, "/dailySalesReport", { equal: true }).then(({ reports }) => {
         svg_icon.style.opacity = String(0);
         instance.secondReportContents(reports, div_clone, svg_icon);
       }).catch((err) => {

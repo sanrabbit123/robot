@@ -7208,11 +7208,28 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
       let allSendHistories;
       let monthFromDate;
       let toDateStandard;
+      let contractProjects;
+      let contractProjectsCliids;
+      let contractProjectsCopied;
+      let monthProjects;
+      let thisDateCopied;
 
       startDate = new Date(Number(startYear), Number(startMonth) - 1, 1, 8, 0, 0);
       endDate = new Date(Number(endYear), Number(endMonth) - 1, 1, 10, 0, 0);
       endDate.setMonth(endDate.getMonth() + 1);
       endDate.setDate(endDate.getDate() - 1);
+
+      contractProjects = await back.getProjectsByQuery({
+        $and: [
+          {
+            "process.contract.first.date": { $gte: startDate }
+          },
+          {
+            "process.contract.first.date": { $lte: endDate }
+          },
+        ]
+      }, { selfMongo: selfCoreMongo });
+      contractProjectsCliids = contractProjects.toNormal().map((p) => { return p.cliid });
 
       rows = await back.mongoRead(collection, {
         $and: [
@@ -7232,7 +7249,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
       rowsCopy = equalJson(JSON.stringify(rows));
       rowsFlat = rowsCopy.map(({ cliids }) => { return cliids }).flat();
   
-      whereQuery = rowToCliids(rows);
+      whereQuery = rowToCliids(rows).concat(contractProjectsCliids);
       whereQuery = { $or: [ ...new Set(whereQuery) ].map((cliid) => { return { cliid } }) }
 
       allSendHistories = await selfMongo.db(db).collection(historyCollection).find({
@@ -7247,8 +7264,9 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
   
         thisClients = (await back.getClientsByQuery(whereQuery, { selfMongo: selfCoreMongo })).toNormal();
         thisProjects = (await back.getProjectsByQuery(whereQuery, { selfMongo: selfCoreMongo })).toNormal();
-        thisHistories = await back.mongoRead(historyCollection, whereQuery, { selfMongo });
-  
+        thisHistories = await selfMongo.db(db).collection(historyCollection).find(whereQuery).project({ cliid: 1, manager: 1, _id: 0 }).toArray();
+        contractProjectsCopied = contractProjects.toNormal();
+
         managers = [ ...new Set(thisHistories.map((o) => { return o.manager.trim() }).filter((str) => { return str !== '' && str !== '-' })) ];
         managers.sort();
         managers.push("미지정");
@@ -7281,8 +7299,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
           // month standard
           fromDate = new Date(row.date.getFullYear(), row.date.getMonth(), 1, 8, 0, 0);
           monthFromDate = new Date(JSON.stringify(fromDate).slice(1, -1));
-          toDate = new Date(row.date.getFullYear(), row.date.getMonth() + 1, 1, 10, 0, 0);
-          toDate.setDate(toDate.getDate() - 1);
+          toDate = new Date(row.date.getFullYear(), row.date.getMonth() + 1, 1);
           monthRows = rowsCopy.filter((o) => {
             return (o.date.valueOf() > fromDate.valueOf() && o.date.valueOf() < toDate.valueOf()) && (o.date.valueOf() <= row.date.valueOf());
           });
@@ -7293,11 +7310,16 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
             client.project = thisProjects.find((p) => { return p.cliid === client.cliid });
             client.row = rowsFlat.find((c) => { return c.cliid === client.cliid });
           }
-
           toDateStandard = new Date(JSON.stringify(row.date).slice(1, -1));
           toDateStandard.setHours(23);
           toDateStandard.setMinutes(59);
           toDateStandard.setSeconds(59);
+          monthProjects = contractProjectsCopied.filter((obj) => {
+            return (obj.process.contract.first.date.valueOf() > fromDate.valueOf() && obj.process.contract.first.date.valueOf() < toDate.valueOf()) && (obj.process.contract.first.date.valueOf() <= toDateStandard.valueOf());
+          });
+          for (let project of monthProjects) {
+            project.history = thisHistories.find((h) => { return h.cliid === project.cliid });
+          }
 
           // day clients
           reportObject.dayClients = [];
@@ -7434,17 +7456,17 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
             if (manager === "total") {
               reportObject.monthContracts.push({
                 manager,
-                value: monthClients.filter((client) => { return client.project !== undefined && client.project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf() }).length,
+                value: monthProjects.length,
               })
             } else if (manager === "미지정") {
               reportObject.monthContracts.push({
                 manager,
-                value: monthClients.filter((client) => { return client.project !== undefined && client.project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf() }).filter((c) => { return !managers.includes(c.history.manager) }).length,
+                value: monthProjects.filter((p) => { return !managers.includes(p.history.manager) }).length,
               })
             } else {
               reportObject.monthContracts.push({
                 manager,
-                value: monthClients.filter((client) => { return client.project !== undefined && client.project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf() }).filter((c) => { return c.history.manager === manager }).length,
+                value: monthProjects.filter((p) => { return p.history.manager === manager }).length,
               })
             }
           }
@@ -7524,6 +7546,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
 
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_dailySalesReport): " + e.message);
+      console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
