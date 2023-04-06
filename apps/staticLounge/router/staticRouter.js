@@ -1537,7 +1537,10 @@ StaticRouter.prototype.rou_post_deleteFile = function () {
         if (type === "file") {
 
           console.log(absolute);
+          console.log(allowedPath);
           console.log(allowedPath.some((reg) => { (new RegExp(reg)).test(absolute) }));
+          console.log(allowedPath.some((reg) => { (new RegExp(reg, "gi")).test(absolute) }));
+
           if (allowedPath.some((reg) => { (new RegExp(reg)).test(absolute) })) {
             await shellExec(`rm`, [ `-f`, absolute ]);
           }
