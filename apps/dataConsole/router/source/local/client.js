@@ -2658,7 +2658,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   GeneralJs.stacks["rInitialBoxButtonToggle"] = 0;
   GeneralJs.stacks["rInitialBoxButtonDom"] = null;
   rInitialBox.addEventListener("click", function (e) {
-    const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, serviceParsing, uniqueValue, ajaxForm } = GeneralJs;
+    const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, serviceParsing, uniqueValue, ajaxForm, promptButtons } = GeneralJs;
     let matrixBox;
     let loadingWidth;
     let tong;
@@ -2965,76 +2965,83 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               e.stopPropagation();
 
               if (e.dataTransfer.files.length > 0) {
-                const { name, phone, cliid } = thisCase;
-                const cilentFolderName = ("self" + uniqueValue("string")) + '_' + name + '_' + cliid;
-                const path = "/photo/client/" + cilentFolderName + (window.confirm("해당 사진들이 현장 사진이 맞나요? 맞으면 '확인', 선호사진일 경우 '취소'") ? "/sitePhoto" : "/preferredPhoto");
-                let formData, files, fileNames, toArr, obj, imageNothing;
-
-                formData = new FormData();
-                formData.enctype = "multipart/form-data";
+                let files;
 
                 files = [ ...e.dataTransfer.files ];
                 files.sort((a, b) => {
                   return Number(a.name.replace(/[^0-9]/gi, '')) - Number(b.name.replace(/[^0-9]/gi, ''));
                 });
-                fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}]/gi, ''); });
-                for (let i = 0; i < files.length; i++) {
-                  formData.append("upload" + String(i), files[i]);
-                }
 
-                toArr = [];
-                for (let i = 0; i < fileNames.length; i++) {
-                  toArr.push(path + "/" + fileNames[i]);
-                }
-                formData.append("toArr", JSON.stringify(toArr));
-
-                images = [];
-                ajaxForm(formData, BRIDGEHOST + "/generalFileUpload").then(() => {
-                  return ajaxJson({ cliid }, BRIDGEHOST + "/clientPhoto");
-                }).then((obj) => {
-                  images = images.concat(obj.sitePhoto);
-                  images = images.concat(obj.preferredPhoto);
-                  return ajaxJson({
-                    idArr: [ cliid ],
-                    method: "client",
-                    property: "curation",
-                  }, "/getHistoryProperty");
-                }).then((raw) => {
-                  if (typeof raw !== "object" || Array.isArray(raw)) {
-                    throw new Error("결과 없음");
+                promptButtons("해당 사진들의 종류를 선택해주세요!", [ "현장 사진", "선호 사진" ]).then((thisPhotoType) => {
+                  const { name, phone, cliid } = thisCase;
+                  const cilentFolderName = ("self" + uniqueValue("string")) + '_' + name + '_' + cliid;
+                  const path = "/photo/client/" + cilentFolderName + (/현장/gi.test(thisPhotoType) ? "/sitePhoto" : "/preferredPhoto");
+                  let formData, fileNames, toArr, obj, imageNothing;
+  
+                  formData = new FormData();
+                  formData.enctype = "multipart/form-data";
+  
+                  fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}]/gi, ''); });
+                  for (let i = 0; i < files.length; i++) {
+                    formData.append("upload" + String(i), files[i]);
                   }
-                  obj = raw;
-                  return ajaxJson({
-                    images: obj[cliid].image
-                  }, SECONDHOST + "/photoParsing");
-                }).then((raw) => {
-
-                  imageNothing = false;
-                  if (raw === null) {
-                    imageNothing = true;
+  
+                  toArr = [];
+                  for (let i = 0; i < fileNames.length; i++) {
+                    toArr.push(path + "/" + fileNames[i]);
                   }
-                  if (typeof raw !== "object") {
-                    imageNothing = true;
-                  }
-                  if (Object.keys(raw).length === 1 && typeof raw.message === "string") {
-                    imageNothing = true;
-                  }
-
-                  styleAnalytics = raw;
-                  curation = obj[cliid];
-                  analytics = curation.analytics;
-                  images = curation.image.map((image) => {
-                    const imageLink = "/corePortfolio/listImage";
-                    let pid;
-                    pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
-                    return S3HOST + imageLink + "/" + pid + "/" + image;
-                  }).concat(images);
-                }).then(() => {
-                  cleanChildren(scrollTong);
-                  imageLoad();
-                }).catch((e) => {
-                  console.log(e);
-                });
+                  formData.append("toArr", JSON.stringify(toArr));
+  
+                  images = [];
+                  ajaxForm(formData, BRIDGEHOST + "/generalFileUpload").then(() => {
+                    return ajaxJson({ cliid }, BRIDGEHOST + "/clientPhoto");
+                  }).then((obj) => {
+                    images = images.concat(obj.sitePhoto);
+                    images = images.concat(obj.preferredPhoto);
+                    return ajaxJson({
+                      idArr: [ cliid ],
+                      method: "client",
+                      property: "curation",
+                    }, "/getHistoryProperty");
+                  }).then((raw) => {
+                    if (typeof raw !== "object" || Array.isArray(raw)) {
+                      throw new Error("결과 없음");
+                    }
+                    obj = raw;
+                    return ajaxJson({
+                      images: obj[cliid].image
+                    }, SECONDHOST + "/photoParsing");
+                  }).then((raw) => {
+  
+                    imageNothing = false;
+                    if (raw === null) {
+                      imageNothing = true;
+                    }
+                    if (typeof raw !== "object") {
+                      imageNothing = true;
+                    }
+                    if (Object.keys(raw).length === 1 && typeof raw.message === "string") {
+                      imageNothing = true;
+                    }
+  
+                    styleAnalytics = raw;
+                    curation = obj[cliid];
+                    analytics = curation.analytics;
+                    images = curation.image.map((image) => {
+                      const imageLink = "/corePortfolio/listImage";
+                      let pid;
+                      pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
+                      return S3HOST + imageLink + "/" + pid + "/" + image;
+                    }).concat(images);
+                  }).then(() => {
+                    cleanChildren(scrollTong);
+                    imageLoad();
+                  }).catch((e) => {
+                    console.log(e);
+                  });
+                }).catch((err) => {
+                  console.log(err);
+                })
 
               }
 
