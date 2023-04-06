@@ -43,6 +43,14 @@ DashboardJs.prototype.returnTreeContents = function () {
           }
         },
         {
+          title: "고객 관련 파일",
+          event: () => {
+            return function (e) {
+              instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/file?mode=client&entire=true&dataonly=true");
+            }
+          }
+        },
+        {
           title: "고객 응대 매뉴얼",
           children: [
             {
@@ -54,11 +62,8 @@ DashboardJs.prototype.returnTreeContents = function () {
               }
             },
             {
-              title: "선호 사진과 고객 파일 관리",
-            },
-            {
               title: "디자이너 추천서 매뉴얼",
-            }
+            },
           ]
         },
         {
@@ -106,13 +111,18 @@ DashboardJs.prototype.returnTreeContents = function () {
           title: "디자이너 신청자 관리"
         },
         {
-          title: "디자이너 관련 파일",
-        },
-        {
           title: "디자이너 평가 시스템"
         },
         {
           title: "디자이너 리포트"
+        },
+        {
+          title: "디자이너 관련 파일",
+          event: () => {
+            return function (e) {
+              instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/file?mode=designer&entire=true&dataonly=true");
+            }
+          }
         },
         {
           title: "디자이너 가격과 정산",
@@ -1611,6 +1621,7 @@ DashboardJs.prototype.whiteMaker = function (source) {
     class: [ whitePopupClassName ],
     event: {
       click: (e) => {
+        window.history.pushState({ path: "init", status: "" }, '');
         removeByClass(whitePopupClassName);
       },
     },
