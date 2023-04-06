@@ -1485,12 +1485,18 @@ StaticRouter.prototype.rou_post_renameFile = function () {
       const { path, name } = equalJson(req.body);
       let targetFile;
       let targetPlace;
+      let thisExe;
+      let thisFinal;
 
       targetFile = path.replace(/__samba__/gi, address.officeinfo.ghost.file.static).replace(/\/$/, '');
       targetPlace = targetFile.split("/").slice(0, -1).join("/");
-
-      await shellExec(`mv`, [ targetFile, targetPlace.replace(/\/$/, '') + "/" + name.replace(/^\//, '').replace(/\/$/, '') ]);
-
+      thisExe = targetFile.split("/").slice(-1)[0].split(".")[1];
+      if (thisExe === undefined) {
+        thisFinal = "";
+      } else {
+        thisFinal = "." + thisExe;
+      }
+      await shellExec(`mv`, [ targetFile, targetPlace.replace(/\/$/, '') + "/" + name.replace(/^\//, '').replace(/\/$/, '') + thisFinal ]);
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       errorLog("Static lounge 서버 문제 생김 (rou_post_renameFile): " + e.message).catch((e) => { console.log(e); });

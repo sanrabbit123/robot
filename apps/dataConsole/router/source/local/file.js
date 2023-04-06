@@ -605,7 +605,7 @@ FileJs.prototype.baseMaker = function () {
             [ thisDom ] = selected;
             newName = await GeneralJs.prompt("새로운 이름을 알려주세요!");
             if (typeof newName === "string") {
-              newName = newName.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\-\<\>\.]/gi, '');
+              newName = newName.replace(/ /gi, "_").replace(/\.[a-zA-Z0-9]+$/i, '').replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\-\<\>\.]/gi, '');
               absolute = thisDom.getAttribute("absolute")
               await ajaxJson({ path: absolute, name: newName }, S3HOST + ":3000/renameFile");
             }
