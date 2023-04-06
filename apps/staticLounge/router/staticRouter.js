@@ -1446,6 +1446,15 @@ StaticRouter.prototype.rou_post_filesToZip = function () {
       await shellExec(`mv`, [ tempFileFolder, `${home}/${uniqueValueFileName}` ]);
       await shellExec(`zip`, [ `-r`, `${home}/${uniqueValueFileName}.zip`, `${home}/${uniqueValueFileName}` ]);
       await shellExec(`mv`, [ `${home}/${uniqueValueFileName}.zip`, `${address.officeinfo.ghost.file.static}/${uniqueValueFileName}.zip` ]);
+      await shellExec(`rm`, [ `-rf`, `${home}/${uniqueValueFileName}` ]);
+
+      setTimeout(async () => {
+        try {
+          await shellExec(`rm`, [ `-rf`, `${address.officeinfo.ghost.file.static}/${uniqueValueFileName}.zip` ]);
+        } catch (e) {
+          console.log(e);
+        }
+      }, 1000 * 60 * 60 * 5);
 
       res.send(JSON.stringify({ link: "__samba__/" + uniqueValueFileName + ".zip" }));
     } catch (e) {

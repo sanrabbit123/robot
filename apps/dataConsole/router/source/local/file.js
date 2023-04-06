@@ -88,13 +88,8 @@ FileJs.prototype.baseMaker = function () {
                 }
               }
             } else {
-
               response = await ajaxJson({ files }, S3HOST + ":3000/filesToZip");
-              console.log(response);
-
-              console.log(files);
-
-
+              await downloadFile(instance.absoluteParsing(response.link), null, loading.progress.firstChild);
             }
 
             loading.remove();
