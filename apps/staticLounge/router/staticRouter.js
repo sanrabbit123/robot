@@ -1535,17 +1535,12 @@ StaticRouter.prototype.rou_post_deleteFile = function () {
 
       for (let { absolute, type } of targetFiles) {
         if (type === "file") {
-
-          console.log(absolute);
-          console.log(allowedPath);
-          console.log(allowedPath.some((reg) => { (new RegExp(reg)).test(absolute) }));
-
-          if (allowedPath.some((reg) => { (new RegExp(reg)).test(absolute) })) {
+          if (allowedPath.some((reg) => { return (new RegExp("^" + reg)).test(absolute) })) {
             await shellExec(`rm`, [ `-f`, absolute ]);
           }
         } else {
           if (absolute !== address.officeinfo.ghost.file.static) {
-            if (allowedPath.some((reg) => { (new RegExp(reg)).test(absolute) })) {
+            if (allowedPath.some((reg) => { return (new RegExp("^" + reg)).test(absolute) })) {
               await shellExec(`rm`, [ `-rf`, absolute ]);
             }
           }
