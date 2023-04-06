@@ -4867,14 +4867,11 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
 
     } else if (remainBoo && !firstBoo) {
 
-      newRequestAmount = supply - (remain.items[remainIndexItem].amount.supply + contractAmountSupply);
       updateQuery = {};
-      if (newRequestAmount <= 0) {
-        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".unit.price"] = supply - contractAmountSupply;
-        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.supply"] = supply - contractAmountSupply;
-        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.vat"] = (supply - contractAmountSupply) * vatRatio;
-        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.consumer"] = (supply - contractAmountSupply) * (1 + vatRatio);
-      }
+      updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".unit.price"] = supply - contractAmountSupply;
+      updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.supply"] = supply - contractAmountSupply;
+      updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.vat"] = (supply - contractAmountSupply) * vatRatio;
+      updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.consumer"] = (supply - contractAmountSupply) * (1 + vatRatio);
 
       updateQuery["responses." + String(firstIndex) + ".items." + String(firstIndexItem) + ".unit.price"] = firstAmount;
       updateQuery["responses." + String(firstIndex) + ".items." + String(firstIndexItem) + ".amount.pure"] = firstAmount;
@@ -4885,14 +4882,11 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
 
     } else if (remainBoo && firstBoo) {
 
-      newRequestAmount = supply - (remain.items[remainIndexItem].amount.supply + contractAmountSupply);
       updateQuery = {};
-      if (newRequestAmount <= 0) {
-        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".unit.price"] = supply - contractAmountSupply;
-        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.supply"] = supply - contractAmountSupply;
-        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.vat"] = (supply - contractAmountSupply) * vatRatio;
-        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.consumer"] = (supply - contractAmountSupply) * (1 + vatRatio);
-      }
+      updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".unit.price"] = supply - contractAmountSupply;
+      updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.supply"] = supply - contractAmountSupply;
+      updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.vat"] = (supply - contractAmountSupply) * vatRatio;
+      updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.consumer"] = (supply - contractAmountSupply) * (1 + vatRatio);
 
       updateQuery["responses." + String(firstIndex) + ".items." + String(firstIndexItem) + ".amount.commission"] = (supply * (percentage / 100)) * (first.items[firstIndexItem].amount.pure / totalAmount);
       updateQuery["responses." + String(secondIndex) + ".items." + String(secondIndexItem) + ".unit.price"] = totalAmount - first.items[firstIndexItem].amount.pure;
