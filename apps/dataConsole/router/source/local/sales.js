@@ -3360,7 +3360,7 @@ SalesJs.prototype.searchClients = function () {
 SalesJs.prototype.communicationRender = function () {
   const instance = this;
   const { communication } = this.mother;
-  const { ajaxJson, sleep, serviceParsing } = GeneralJs;
+  const { ajaxJson, sleep, serviceParsing, findByAttribute, dateToString } = GeneralJs;
   const whiteCardClassName = "whiteCardClassName";
 
   communication.setItem([
@@ -3506,6 +3506,8 @@ SalesJs.prototype.communicationRender = function () {
         let cliid;
         let requestNumber;
         let thisClient;
+        let allRows;
+        let thisRow;
 
         if (document.querySelector('.' + whiteCardClassName) === null || document.querySelector('.' + whiteCardClassName) === undefined) {
           window.alert("고객 카드를 먼저 열어주세요!");
@@ -3538,7 +3540,12 @@ SalesJs.prototype.communicationRender = function () {
             }
           }, BACKHOST + "/alimTalk");
 
-          window.location.reload();
+          allRows = Array.from(document.querySelectorAll(".clientTableClassName")).map((dom) => { return Array.from(dom.children) }).flat()
+          thisRow = findByAttribute(allRows, "cliid", cliid);
+          if (thisRow !== null) {
+            thisRow.children[9].querySelector(".valueTextClassName").textContent = dateToString(new Date());
+            thisRow.children[0].click();
+          }
 
         }
       } catch (e) {
