@@ -1444,7 +1444,7 @@ StaticRouter.prototype.rou_post_filesToZip = function () {
       }
 
       await shellExec(`mv`, [ tempFileFolder, `${home}/${uniqueValueFileName}` ]);
-      await shellExec(`zip`, [ `-r`, `${home}/${uniqueValueFileName}.zip`, `${home}/${uniqueValueFileName}` ]);
+      await shellExec(`cd ${home};zip -r ${uniqueValueFileName}.zip ./${uniqueValueFileName}`);
       await shellExec(`mv`, [ `${home}/${uniqueValueFileName}.zip`, `${address.officeinfo.ghost.file.static}/${uniqueValueFileName}.zip` ]);
       await shellExec(`rm`, [ `-rf`, `${home}/${uniqueValueFileName}` ]);
 
