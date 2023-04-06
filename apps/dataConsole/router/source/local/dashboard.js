@@ -402,6 +402,40 @@ DashboardJs.prototype.returnManualContents = function (key) {
             ]
           },
           {
+            title: "고객님의 현장, 선호 사진 올려주기",
+            body: [
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "/firstResponse16.jpg",
+              },
+              {
+                type: "description",
+                text: [
+                  `고객님이 처음 상담을 신청할 때, 현장 사진 파일을 제출해주시는 것이 가장 이상적입니다. 하지만 고객님으로부터 카카오 채널을 통해 직접 제공되는 경우도 있습니다. 이 경우에는 홈리에종에서 해당 고객의 데이터베이스에 직접 현장 사진을 업로드해야 합니다. 업로드하는 방법은 위에서 설명한 "사진 보기" 영역을 클릭하여 고객님이 보내신 사진 탭을 연 후, 고객님의 사진을 드래그 앤 드롭하면, 이 사진이 현장 사진인지 선호 사진인지 물어보게 됩니다. 해당하는 종류를 선택하시면 고객님의 데이터베이스에 사진이 등록됩니다.`,
+                ]
+              }
+            ]
+          },
+          {
+            title: "고객님이 선택하신 사진과 보내신 사진 보기",
+            body: [
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "/firstResponse17.jpg",
+              },
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "/firstResponse18.jpg",
+              },
+              {
+                type: "description",
+                text: [
+                  `현장 사진이나 선호 사진의 경우, 고객님의 팝업창에 들어가서 드래그 앤 드롭으로 사진을 업로드하시면 됩니다. 그러나 분류하기 어려운 파일이나 사진이 제공되는 경우도 있습니다. 이 경우, 고객님의 파일이나 사진을 홈리에종 공용 서버에 저장해야 합니다. 홈리에종 공용 서버에 접근하는 방법은 하단 검색바 좌측에 폴더 모양의 아이콘을 클릭하면 팝업창이 나타나며 고객 서버에 접근할 수 있습니다. 해당하는 년도의 고객 폴더로 들어간 후, 고객명과 날짜를 기록하여 폴더를 생성하시고 그 폴더 안에 기타 파일을 저장하시면 됩니다.`,
+                ]
+              }
+            ]
+          },
+          {
             title: "스타일 체크와 디자이너 추천서 자동 생성",
             body: [
               {
@@ -539,6 +573,55 @@ DashboardJs.prototype.returnManualContents = function (key) {
                   `Sa-c 콘솔은 CX팀에서 사용하는 Sa의 보조 콘솔입니다. 이 콘솔은 고객 리스트를 정리하고 해당 고객이 타겟 고객인지, 우선순위가 어떻게 되는지, 계약 가능성이 있는지 등을 판단하고 기입할 수 있습니다. Sa-c 콘솔에 접근하는 방법은 Sa 아이콘을 오른쪽 클릭하거나, Sa 콘솔 우측 하단에 있는 ‘C’ 버튼을 누르면 됩니다. CX팀 회의 때 이 콘솔을 열어놓고, 각각의 고객 요청 사항을 보면서 우선순위와 타겟 여부를 결정하고 담당자를 분배하는 시간을 가질 수 있습니다.`,
                 ]
               }
+            ]
+          },
+          {
+            title: "우선순위와 타겟 고객",
+            body: [
+              {
+                type: "description",
+                text: [
+                  `담당자를 배정하기 전에 관리자는 고객님의 요청 사항을 기반으로하여 홈리에종의 타겟 고객 여부를 판단하고, 우선순위를 정합니다. 타겟 고객 여부는 고객님이 시공만을 원하는지, 지방 고객인데 전체 시공을 원하는지, 한 공간만을 원하는지, 거주중인데 시공을 원하는지, 또는 일단 견적서를 빨리 받아보고 싶은지 등을 종합적으로 고려하여 결정됩니다. 이러한 과정은 계속해서 발전되어야 하며, 꾸준한 업데이트가 필요합니다.`,
+                ]
+              }
+            ]
+          },
+          {
+            title: "계약 가능성의 의미",
+            body: [
+              {
+                type: "description",
+                text: [
+                  `계약 가능성은 처음부터 알 수 없고, 실제로 1차 응대를 거치면서 해당 고객님의 호의도가 높고 상황이 좋으며 여러 조건상에서 계약을 할 것 같은 고객일 경우에 표시해놓는 칸입니다. 해당 칸은 해당 고객이 결국 드랍이 된다 하더라도 업데이트를 실시간으로 해야 합니다. 이 수치를 통해 앞으로 계약자가 얼마나 더 나올지를 예상하기 때문입니다. 관리자는 응대 실무자들이 1차 응대와 피드백 통화 후 해당 계약 가능성을 체크하도록 하여야 합니다.`,
+                ]
+              }
+            ]
+          },
+          {
+            title: "하하 전송의 의미와 전송법",
+            body: [
+              {
+                type: "description",
+                text: [
+                  `하하 전송은 고객이 타겟 고객이 아니고, 우선순위가 낮으며 계약 가능성도 낮아 보이는 고객들에게 1차 응대를 하지 않고, 이래도 진행할 것인지를 묻는 알림톡을 보내는 기능입니다. 해당 고객의 하하 전송 칸을 클릭하면 '하하 전송' 팝업이 뜨며, 그 팝업에 있는 버튼을 누르면 해당 고객에게 알림톡이 전송됩니다. 하하 전송의 알림톡 내용은 다음과 같습니다.`,
+                ]
+              },
+              {
+                type: "block",
+                text: [
+                  `안녕하세요, 고객님!`,
+                  `원활한 상담을 위해 아래 3가지 문항 체크해 보시고, 해당 사항이 없으시면 상담 진행을 도와드리겠습니다.`,
+                  ``,
+                  `1. 시공 서비스'만' 필요하신가요? 홈리에종은 시공 업체가 아니기 때문에 시공 서비스'만'을 제공하지 않습니다.`,
+                  ``,
+                  `2. 거주 중에 시공을 진행하시나요? 홈리에종은 거주중인 현장의 시공을 진행하지 않습니다. 거주중일때는 시공 없이 스타일링만으로 집을 확 바꿔보세요!`,
+                  ``,
+                  `3. 일단 견적서만 받아보기를 원하시나요? 홈리에종은 디자이너 매칭 후, 디자이너와의 상담을 거쳐 시공 범위를 정하는 서비스로 견적서만 먼저 제공해드리기는 어렵습니다.`,
+                  ``,
+                  `홈리에종은 디자이너와의 매칭 후 시공을 포함하여 스타일링 서비스까지, 전체 인테리어 과정을 함께 진행합니다.`,
+                  `위 3가지 유의 사항 체크해 보시고, 유선 상담을 원하시면 홈리에종 카카오 채널을 통해 성함을 남겨주세요!`,
+                ]
+              },
             ]
           },
           {
@@ -831,6 +914,7 @@ DashboardJs.prototype.baseMaker = function () {
   this.contentsBase = contentsBase;
 
   baseLoad = () => {
+    window.history.pushState({ path: "init", status: "" }, '');
     cleanChildren(contentsBase);
     for (let i = 0; i < xLength; i++) {
       [ titleArea, contentsArea ] = createNode({
@@ -1142,6 +1226,8 @@ DashboardJs.prototype.manualMaker = function (key) {
   let circleRadius;
   let returnIconWidth;
 
+  window.history.pushState({ path: "manual", status: key }, '');
+
   motherPadding = 30;
   innerPadding = 0;
   boxBetween = 10;
@@ -1291,7 +1377,7 @@ DashboardJs.prototype.manualMaker = function (key) {
           alignItems: "center",
           position: "absolute",
           bottom: String(motherPadding) + ea,
-          left: String(motherPadding) + ea,
+          right: String(motherPadding) + ea,
           width: String(circleRadius) + ea,
           height: String(circleRadius) + ea,
           borderRadius: String(circleRadius) + ea,
@@ -1518,6 +1604,8 @@ DashboardJs.prototype.whiteMaker = function (source) {
 
   margin = 30;
 
+  window.history.pushState({ path: "popup", status: source }, '');
+
   cancelBack = createNode({
     mother: totalContents,
     class: [ whitePopupClassName ],
@@ -1577,7 +1665,7 @@ DashboardJs.prototype.whiteMaker = function (source) {
 
 DashboardJs.prototype.launching = async function () {
   const instance = this;
-  const { ajaxJson } = GeneralJs;
+  const { ajaxJson, removeByClass } = GeneralJs;
   try {
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
@@ -1596,6 +1684,25 @@ DashboardJs.prototype.launching = async function () {
 
     this.baseMaker();
     this.grayMaker();
+
+    window.addEventListener("popstate", (e) => {
+      e.preventDefault();
+      if (e.state !== null) {
+        if (e.state.path === "init") {
+          removeByClass("whitePopupClassName");
+          instance.baseLoad();
+        } else if (e.state.path === "manual") {
+          instance.manualMaker(e.state.status);
+        } else if (e.state.path === "popup") {
+          if (document.querySelector(".whitePopupClassName") === null) {
+            instance.whiteMaker(e.state.status);
+          } else {
+            removeByClass("whitePopupClassName");
+            instance.baseLoad();  
+          }
+        }
+      }
+    });
 
   } catch (e) {
     ajaxJson({
