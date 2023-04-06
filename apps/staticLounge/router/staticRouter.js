@@ -1465,6 +1465,41 @@ StaticRouter.prototype.rou_post_filesToZip = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_renameFile = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
+  const address = this.address;
+  let obj = {};
+  obj.link = [ "/renameFile" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.path === undefined || req.body.name === undefined) {
+        throw new Error("invalid post");
+      }
+      const { path, name } = equalJson(req.body);
+      let targetFile;
+      let targetPlace;
+
+      targetFile = path.replace(/__samba__/gi, address.officeinfo.ghost.file.static).replace(/\/$/, '');
+      targetPlace = targetFile.split("/").slice(0, -1).join("/");
+
+      await shellExec(`mv`, [ targetFile, targetPlace.replace(/\/$/, '') + "/" + name.replace(/^\//, '').replace(/\/$/, '') ]);
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_renameFile): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.getAll = function () {

@@ -36,14 +36,104 @@ FileJs.prototype.absoluteParsing = function (str) {
 FileJs.prototype.baseMaker = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile } = GeneralJs;
+  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass } = GeneralJs;
   const fileBaseClassName = "fileBase";
   const contextmenuClassName = "contextmenuFactor";
+  const tempInputClassName = "tempInputClassName";
   const contextmenuItems = [
     {
       text: "폴더 만들기",
       event: async function (e) {
         try {
+          const targets = document.querySelectorAll('.' + contextmenuClassName);
+          const folderName = await GeneralJs.prompt("폴더명을 적어주세요!");
+          for (let dom of targets) {
+            dom.parentNode.removeChild(dom);
+          }
+          await ajaxJson({ path: instance.path + "/" + folderName.replace(/\/\?\!\@\#\$\%\^\&\*\(\)\[\]\{\}\<\>\;\'\"\,\~\\\|\=\+\-\./gi, '').replace(/ /g, "_").replace(/\n/g, "_").replace(/\t/g, "_") }, S3HOST + ":3000/makeFolder");
+          instance.fileLoad(instance.path);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          return instance.selected.length === 0;
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+    },
+    {
+      text: "파일 업로드",
+      event: async function (e) {
+        try {
+          const targets = document.querySelectorAll('.' + contextmenuClassName);
+          let input;
+
+          for (let dom of targets) {
+            dom.parentNode.removeChild(dom);
+          }
+
+          input = createNode({
+            mother: totalContents,
+            class: [ tempInputClassName ],
+            mode: "input",
+            event: {
+              change: async function (e) {
+                try {
+                  let files, formData, res;
+                  let fileNames;
+                  let toArr;
+                  let loading;
+  
+                  files = [ ...this.files ];
+                  files.sort((a, b) => {
+                    return Number(a.name.replace(/[^0-9]/gi, '')) - Number(b.name.replace(/[^0-9]/gi, ''));
+                  });
+  
+                  if (files.length >= 1) {
+                    formData = new FormData();
+                    formData.enctype = "multipart/form-data";
+
+                    fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\-\<\>\.]/gi, ''); });
+                    for (let i = 0; i < files.length; i++) {
+                      formData.append("upload" + String(i), files[i]);
+                    }
+
+                    toArr = [];
+                    for (let i = 0; i < fileNames.length; i++) {
+                      toArr.push(instance.path.replace(/__samba__/gi, "").replace(/\/$/, '') + "/" + fileNames[i]);
+                    }
+                    formData.append("toArr", JSON.stringify(toArr));
+
+                    loading = instance.mother.whiteProgressLoading();
+                    res = await ajaxForm(formData, S3HOST + ":3000" + "/generalFileUpload", loading.progress.firstChild);
+                    loading.remove();
+  
+                  }
+  
+                  removeByClass(tempInputClassName);
+                  instance.fileLoad(instance.path);
+
+                } catch (e) {
+                  console.log(e);
+                  window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                }
+              }
+            },
+            attribute: {
+              type: "file",
+              multiple: "true",
+              accept: "*",
+            },
+            style: {
+              display: "none",
+            }
+          });
+  
+          input.click();
 
         } catch (e) {
           console.log(e);
@@ -499,6 +589,43 @@ FileJs.prototype.baseMaker = function () {
         }
       },
     },
+    {
+      text: "이름 바꾸기",
+      event: async function (e) {
+        try {
+          const selected = instance.selected;
+          const targets = document.querySelectorAll('.' + contextmenuClassName);
+          let newName;
+          let thisDom;
+          let absolute;
+          if (selected.length === 1) {
+            for (let dom of targets) {
+              dom.parentNode.removeChild(dom);
+            }
+            [ thisDom ] = selected;
+            newName = await GeneralJs.prompt("새로운 이름을 알려주세요!");
+            if (typeof newName === "string") {
+              newName = newName.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\-\<\>\.]/gi, '');
+              absolute = thisDom.getAttribute("absolute")
+              await ajaxJson({ path: absolute, name: newName }, S3HOST + ":3000/renameFile");
+            }
+          }
+
+          instance.fileLoad(instance.path);
+
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          return instance.selected.length === 1;
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      },
+    }
   ];
   let mother, files;
   let innerMargin;
@@ -951,6 +1078,7 @@ FileJs.prototype.baseMaker = function () {
                   e.preventDefault();
                   if (e.dataTransfer.files.length > 0) {
                     let formData, files, fileNames, toArr;
+                    let loading;
 
                     formData = new FormData();
                     formData.enctype = "multipart/form-data";
@@ -959,7 +1087,7 @@ FileJs.prototype.baseMaker = function () {
                     files.sort((a, b) => {
                       return Number(a.name.replace(/[^0-9]/gi, '')) - Number(b.name.replace(/[^0-9]/gi, ''));
                     });
-                    fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}]/gi, ''); });
+                    fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\-\<\>\.]/gi, ''); });
                     for (let i = 0; i < files.length; i++) {
                       formData.append("upload" + String(i), files[i]);
                     }
@@ -970,7 +1098,11 @@ FileJs.prototype.baseMaker = function () {
                     }
                     formData.append("toArr", JSON.stringify(toArr));
 
-                    ajaxForm(formData, S3HOST + ":3000" + "/generalFileUpload").then(() => {
+                    loading = instance.mother.whiteProgressLoading();
+
+                    ajaxForm(formData, S3HOST + ":3000" + "/generalFileUpload", loading.progress.firstChild).then(() => {
+                      loading.remove();
+                      removeByClass(tempInputClassName);
                       instance.fileLoad(instance.path);
                     }).catch((e) => {
                       console.log(e);
