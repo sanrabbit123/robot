@@ -1404,6 +1404,58 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_filesToZip = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
+  const address = this.address;
+  let obj = {};
+  obj.link = [ "/filesToZip" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.files === undefined) {
+        throw new Error("invalid post");
+      }
+      const home = process.env.HOME;
+      const uniqueValueFileName = "homeliaisonCloud_" + uniqueValue("string");
+      const tempFileFolderName = "temp";
+      const tempFileFolder = `${home}/${tempFileFolderName}`;
+      const { files } = equalJson(req.body);
+      let targetFiles;
+
+      if (await fileSystem(`exist`, [ tempFileFolder ])) {
+        await shellExec(`rm`, [ `-rf`, tempFileFolder ]);
+      }
+      await shellExec(`mkdir`, [ tempFileFolder ]);
+
+      targetFiles = files.map((obj) => { return { absolute: obj.absolute.replace(/__samba__/gi, address.officeinfo.ghost.file.static), type: obj.type } });
+
+      for (let { absolute, type } of targetFiles) {
+        if (type === "file") {
+          await shellExec(`cp`, [ absolute, tempFileFolder ]);
+        } else {
+          await shellExec(`cp`, [ `-r`, absolute, tempFileFolder ]);
+        }
+      }
+
+      await shellExec(`mv`, [ tempFileFolder, `${home}/${uniqueValueFileName}` ]);
+      await shellExec(`zip`, [ `-r`, `${home}/${uniqueValueFileName}.zip`, `${home}/${uniqueValueFileName}` ]);
+      await shellExec(`mv`, [ `${home}/${uniqueValueFileName}.zip`, `${address.officeinfo.ghost.file.static}/${uniqueValueFileName}.zip` ]);
+
+      res.send(JSON.stringify({ link: "__samba__/" + uniqueValueFileName + ".zip" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_filesToZip): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.getAll = function () {

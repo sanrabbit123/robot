@@ -41,6 +41,24 @@ FileJs.prototype.baseMaker = function () {
   const contextmenuClassName = "contextmenuFactor";
   const contextmenuItems = [
     {
+      text: "폴더 만들기",
+      event: async function (e) {
+        try {
+
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          return instance.selected.length === 0;
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+    },
+    {
       text: "다운로드",
       event: async function (e) {
         try {
@@ -50,22 +68,39 @@ FileJs.prototype.baseMaker = function () {
           let files;
           let absolute;
           let directory;
-          files = [];
+          let loading;
+          let response;
           if (selected.length > 0) {
+
+            loading = instance.mother.whiteProgressLoading();
+
+            files = [];
             for (let dom of selected) {
               absolute = dom.getAttribute("absolute");
               directory = (dom.getAttribute("directory") === "true");
               files.push({ absolute, type: (directory ? "folder" : "file") });
             }
 
-            for (let { absolute, type } of files) {
-              if (type === "file") {
-                await downloadFile(instance.absoluteParsing(absolute))
+            if (files.length === 1 && files[0].type !== "folder") {
+              for (let { absolute, type } of files) {
+                if (type === "file") {
+                  await downloadFile(instance.absoluteParsing(absolute), null, loading.progress.firstChild);
+                }
               }
+            } else {
+
+              response = await ajaxJson({ files }, S3HOST + ":3000/filesToZip");
+              console.log(response);
+
+              console.log(files);
+
+
             }
 
-            if (files.some(({ type }) => { return type === "folder" })) {
-              window.alert("폴더는 통으로 다운로드 받을 수 없습니다!");
+            loading.remove();
+
+            for (let dom of targets) {
+              dom.parentNode.removeChild(dom);
             }
 
           } else {
@@ -77,7 +112,15 @@ FileJs.prototype.baseMaker = function () {
         } catch (e) {
           console.log(e);
         }
-      }
+      },
+      visible: async function (e) {
+        try {
+          return instance.selected.length > 0;
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      },
     },
     {
       text: "미리보기",
@@ -434,8 +477,33 @@ FileJs.prototype.baseMaker = function () {
         } catch (e) {
           console.log(e);
         }
-      }
-    }
+      },
+      visible: async function (e) {
+        try {
+          let imageBoo
+          imageBoo = false;          
+          if (instance.selected.length > 0) {
+            for (let dom of instance.selected) {
+              if (dom.getAttribute("kind") === "png" || dom.getAttribute("kind") === "jpg" || dom.getAttribute("kind") === "jpeg") {
+                imageBoo = true;
+                break;
+              }
+            }
+          } else {
+            for (let dom of instance.blocks) {
+              if (dom.getAttribute("kind") === "png" || dom.getAttribute("kind") === "jpg" || dom.getAttribute("kind") === "jpeg") {
+                imageBoo = true;
+                break;
+              }
+            }
+          }
+          return imageBoo;
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      },
+    },
   ];
   let mother, files;
   let innerMargin;
@@ -518,15 +586,17 @@ FileJs.prototype.baseMaker = function () {
         }
       }
 
-      for (let b of blocks) {
-        if (instance.selected.includes(b)) {
-          b.firstChild.style.opacity = String(1);
-          b.setAttribute("toggle", "on");
-        } else {
-          b.firstChild.style.opacity = String(0);
-          b.setAttribute("toggle", "off");
+      setQueue(() => {
+        for (let b of blocks) {
+          if (instance.selected.includes(b)) {
+            b.firstChild.style.opacity = String(1);
+            b.setAttribute("toggle", "on");
+          } else {
+            b.firstChild.style.opacity = String(0);
+            b.setAttribute("toggle", "off");
+          }
         }
-      }
+      });
 
       this.removeChild(instance.dragArea);
       instance.dragArea = null;
@@ -534,97 +604,102 @@ FileJs.prototype.baseMaker = function () {
     }
   }
 
-  contextmenuEvent = function (e) {
+  contextmenuEvent = async function (e) {
     const base = document.querySelector('.' + fileBaseClassName);
     const { top, left } = base.getBoundingClientRect();
     const { clientX, clientY } = e;
     const x = clientX - left;
     const y = clientY - top;
-    let tong;
+    try {
+      let tong;
 
-    createNode({
-      mother: base,
-      class: [ contextmenuClassName ],
-      events: [
-        {
-          type: [ "mouseup", "mousedown", "mousemove" ],
-          event: (e) => { e.stopPropagation(); }
-        },
-        {
-          type: [ "contextmenu" ],
-          event: (e) => { e.stopPropagation(); e.preventDefault(); }
-        },
-        {
-          type: "click",
-          event: function (e) {
-            e.stopPropagation();
-            const targets = document.querySelectorAll('.' + contextmenuClassName);
-            for (let dom of targets) {
-              dom.parentNode.removeChild(dom);
+      createNode({
+        mother: base,
+        class: [ contextmenuClassName ],
+        events: [
+          {
+            type: [ "mouseup", "mousedown", "mousemove" ],
+            event: (e) => { e.stopPropagation(); }
+          },
+          {
+            type: [ "contextmenu" ],
+            event: (e) => { e.stopPropagation(); e.preventDefault(); }
+          },
+          {
+            type: "click",
+            event: function (e) {
+              e.stopPropagation();
+              const targets = document.querySelectorAll('.' + contextmenuClassName);
+              for (let dom of targets) {
+                dom.parentNode.removeChild(dom);
+              }
             }
           }
-        }
-      ],
-      style: {
-        position: "fixed",
-        top: String(0) + ea,
-        left: String(0) + ea,
-        width: String(100) + '%',
-        height: String(100) + '%',
-        cursor: "pointer",
-        zIndex: String(1),
-      }
-    });
-
-    tong = createNode({
-      mother: base,
-      class: [ contextmenuClassName ],
-      events: [
-        {
-          type: [ "mouseup", "mousedown", "mousemove" ],
-          event: (e) => { e.stopPropagation(); }
-        },
-        {
-          type: [ "contextmenu", "click" ],
-          event: (e) => { e.stopPropagation(); e.preventDefault(); }
-        },
-      ],
-      style: {
-        position: "absolute",
-        top: String(y) + ea,
-        left: String(x) + ea,
-        width: String(contextmenuWidth) + ea,
-        height: "auto",
-        zIndex: String(1),
-      }
-    });
-    for (let { text, event } of contextmenuItems) {
-      createNode({
-        mother: tong,
-        text,
-        events: [
-          { type: "click", event }
         ],
         style: {
-          position: "relative",
-          display: "block",
+          position: "fixed",
+          top: String(0) + ea,
+          left: String(0) + ea,
           width: String(100) + '%',
-          fontSize: String(contextmenuFontSize) + ea,
-          fontWeight: String(600),
-          paddingTop: String(contextmenuPaddingTop) + ea,
-          paddingBottom: String(contextmenuPaddingBottom) + ea,
-          background: colorChip.green,
-          color: colorChip.whiteBlack,
-          textAlign: "center",
-          marginBottom: String(contextmenuBetween) + ea,
-          boxShadow: "0px 2px 13px -9px " + colorChip.shadow,
-          borderRadius: String(3) + ea,
-          animation: "fadeuplite 0.2s ease forwards",
+          height: String(100) + '%',
           cursor: "pointer",
+          zIndex: String(1),
         }
-      })
+      });
+  
+      tong = createNode({
+        mother: base,
+        class: [ contextmenuClassName ],
+        events: [
+          {
+            type: [ "mouseup", "mousedown", "mousemove" ],
+            event: (e) => { e.stopPropagation(); }
+          },
+          {
+            type: [ "contextmenu", "click" ],
+            event: (e) => { e.stopPropagation(); e.preventDefault(); }
+          },
+        ],
+        style: {
+          position: "fixed",
+          top: String(y + top) + ea,
+          left: String(x + left) + ea,
+          width: String(contextmenuWidth) + ea,
+          height: "auto",
+          zIndex: String(1),
+        }
+      });
+      for (let { text, event, visible } of contextmenuItems) {
+        if (await visible()) {
+          createNode({
+            mother: tong,
+            text,
+            events: [
+              { type: "click", event }
+            ],
+            style: {
+              position: "relative",
+              display: "block",
+              width: String(100) + '%',
+              fontSize: String(contextmenuFontSize) + ea,
+              fontWeight: String(600),
+              paddingTop: String(contextmenuPaddingTop) + ea,
+              paddingBottom: String(contextmenuPaddingBottom) + ea,
+              background: colorChip.green,
+              color: colorChip.whiteBlack,
+              textAlign: "center",
+              marginBottom: String(contextmenuBetween) + ea,
+              boxShadow: "0px 2px 13px -9px " + colorChip.shadow,
+              borderRadius: String(3) + ea,
+              animation: "fadeuplite 0.2s ease forwards",
+              cursor: "pointer",
+            }
+          })
+        }
+      }
+    } catch (e) {
+      console.log(e);
     }
-
   }
 
   mother = createNode({
@@ -772,9 +847,9 @@ FileJs.prototype.baseMaker = function () {
                       { height: String(0) }
                     ],
                     style: {
-                      position: "absolute",
-                      top: String(clientY) + ea,
-                      left: String(clientX) + ea,
+                      position: "fixed",
+                      top: String(clientY + box.top) + ea,
+                      left: String(clientX + box.left) + ea,
                       background: colorChip.green,
                       width: String(0) + ea,
                       height: String(0) + ea,
@@ -836,12 +911,12 @@ FileJs.prototype.baseMaker = function () {
                       instance.dragArea.style.width = String(Math.abs(width)) + ea;
                       instance.dragArea.style.height = String(Math.abs(height)) + ea;
                       instance.dragArea.setAttribute("width", String(width));
-                      instance.dragArea.setAttribute("height", String(height));
+                      instance.dragArea.setAttribute("height", String(height));           
                       if (width >= 0) {
-                        instance.dragArea.style.left = String(clientX) + ea;
+                        instance.dragArea.style.left = String(clientX + box.left) + ea;
                       }
                       if (height >= 0) {
-                        instance.dragArea.style.top = String(clientY) + ea;
+                        instance.dragArea.style.top = String(clientY + box.top) + ea;
                       }
 
                       instance.pastX = clientX;
@@ -1051,6 +1126,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
     num = 0;
     this.current = [];
     this.blocks = [];
+    this.selected = [];
     for (let { directory, fileName, hidden, kind, absolute } of thisFolderFiles) {
       this.current.push({ directory, fileName, hidden, kind, absolute });
       block = createNode({
@@ -1269,6 +1345,8 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
 FileJs.prototype.launching = async function () {
   const instance = this;
   try {
+    const startPoint = "__samba__/drive/HomeLiaisonServer";
+
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
     this.grayBarWidth = this.mother.grayBarWidth;
@@ -1281,7 +1359,7 @@ FileJs.prototype.launching = async function () {
     this.pageHistory = [];
     this.current = [];
     this.selected = [];
-    this.path = "/";
+    this.path = startPoint;
     this.dragArea = null;
     this.pastX = null;
     this.pastY = null;
@@ -1290,9 +1368,6 @@ FileJs.prototype.launching = async function () {
     this.baseMaker();
     this.fileLoad(this.path);
 
-    window.addEventListener("resize", (e) => {
-      window.location.reload();
-    });
     window.addEventListener("popstate", (e) => {
       e.preventDefault();
       if (instance.pageHistory.length > 1) {
@@ -1306,7 +1381,7 @@ FileJs.prototype.launching = async function () {
         e.preventDefault();
         const value = this.value.trim();
         if (value === '') {
-          instance.fileLoad('/');
+          instance.fileLoad(startPoint);
         } else {
           instance.fileLoad(this.value.trim(), true);
         }
