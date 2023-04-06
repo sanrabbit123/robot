@@ -1433,7 +1433,7 @@ StaticRouter.prototype.rou_post_filesToZip = function () {
       }
       await shellExec(`mkdir`, [ tempFileFolder ]);
 
-      targetFiles = files.map((obj) => { return { absolute: obj.absolute.replace(/__samba__/gi, address.officeinfo.ghost.file.static), type: obj.type } });
+      targetFiles = files.map((obj) => { return { absolute: obj.absolute.replace(/__samba__/gi, address.officeinfo.ghost.file.static).replace(/\/$/, ''), type: obj.type } });
 
       for (let { absolute, type } of targetFiles) {
         if (type === "file") {
@@ -1500,6 +1500,56 @@ StaticRouter.prototype.rou_post_renameFile = function () {
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       errorLog("Static lounge 서버 문제 생김 (rou_post_renameFile): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_deleteFile = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
+  const address = this.address;
+  let obj = {};
+  obj.link = [ "/deleteFile" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.files === undefined) {
+        throw new Error("invalid post");
+      }
+      const { files } = equalJson(req.body);
+      const allowedPath = [
+        "^" + address.officeinfo.ghost.file.static + address.officeinfo.ghost.file.office + "/고객/",
+        "^" + address.officeinfo.ghost.file.static + address.officeinfo.ghost.file.office + "/디자이너/",
+        "^" + address.officeinfo.ghost.file.static + address.officeinfo.ghost.file.office + "/일시적",
+      ];
+      let targetFiles;
+
+      targetFiles = files.map((obj) => { return { absolute: obj.absolute.replace(/__samba__/gi, address.officeinfo.ghost.file.static).replace(/\/$/, ''), type: obj.type } });
+
+      for (let { absolute, type } of targetFiles) {
+        if (type === "file") {
+          if (allowedPath.every((reg) => { (new RegExp(reg)).test(absolute) })) {
+            await shellExec(`rm`, [ `-f`, absolute ]);
+          }
+        } else {
+          if (absolute !== address.officeinfo.ghost.file.static) {
+            if (allowedPath.every((reg) => { (new RegExp(reg)).test(absolute) })) {
+              await shellExec(`rm`, [ `-rf`, absolute ]);
+            }
+          }
+        }
+      }
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_deleteFile): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
