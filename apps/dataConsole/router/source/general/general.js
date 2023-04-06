@@ -2403,9 +2403,6 @@ GeneralJs.prototype.greenBar = function () {
   for (let i in additionalStyle) {
     svg_icon.style[i] = additionalStyle[i];
   }
-  svg_icon.addEventListener("click", function (e) {
-    window.location.href = window.location.protocol + "//" + window.location.host + "/file";
-  });
   this.belowButtons.sub.folder = svg_icon;
   div_clone.appendChild(svg_icon);
 

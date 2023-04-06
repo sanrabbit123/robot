@@ -97,7 +97,7 @@ FileJs.prototype.baseMaker = function () {
                     formData = new FormData();
                     formData.enctype = "multipart/form-data";
 
-                    fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\-\<\>\.]/gi, ''); });
+                    fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\<\>]/gi, ''); });
                     for (let i = 0; i < files.length; i++) {
                       formData.append("upload" + String(i), files[i]);
                     }
@@ -1122,7 +1122,7 @@ FileJs.prototype.baseMaker = function () {
                     files.sort((a, b) => {
                       return Number(a.name.replace(/[^0-9]/gi, '')) - Number(b.name.replace(/[^0-9]/gi, ''));
                     });
-                    fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\-\<\>\.]/gi, ''); });
+                    fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\<\>]/gi, ''); });
                     for (let i = 0; i < files.length; i++) {
                       formData.append("upload" + String(i), files[i]);
                     }
@@ -1162,7 +1162,7 @@ FileJs.prototype.baseMaker = function () {
               display: "block",
               position: "relative",
               width: String(100) + '%',
-              height: withOut(titleHeight, ea),
+              height: withOut(titleHeight + titlePaddingBottom, ea),
               overflow: "scroll",
               borderRadius: String(5) + "px",
               border: "1px solid " + colorChip.gray4,
@@ -1506,12 +1506,33 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
 
 FileJs.prototype.launching = async function () {
   const instance = this;
+  const { returnGet } = GeneralJs;
   try {
-    const startPoint = "__samba__/drive/HomeLiaisonServer";
+    const getObj = returnGet();
+    const entireMode = (getObj.dataonly === "true" && getObj.entire === "true");
+    let startPoint;
 
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
     this.grayBarWidth = this.mother.grayBarWidth;
+
+    if (entireMode) {
+      this.belowHeight = this.mother.belowHeight = 0;
+      this.grayBarWidth = this.mother.grayBarWidth = 0;
+    }
+
+    startPoint = "__samba__/drive/HomeLiaisonServer";
+    if (getObj.mode === "client") {
+      startPoint = "__samba__/drive/HomeLiaisonServer/고객/401_고객응대";
+    } else if (getObj.mode === "designer") {
+      startPoint = "__samba__/drive/HomeLiaisonServer/디자이너/partnership";
+    } else if (getObj.mode === "photo") {
+      startPoint = "__samba__/drive/HomeLiaisonServer/사진_등록_포트폴리오";
+    } else if (getObj.mode === "project") {
+      startPoint = "__samba__/drive/HomeLiaisonServer/디자이너/partnership";
+    } else if (getObj.mode === "aspirant") {
+      startPoint = "__samba__/drive/HomeLiaisonServer/디자이너/new";
+    }
 
     this.blocks = [];
     this.motherTong = {
