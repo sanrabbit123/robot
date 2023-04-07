@@ -5800,7 +5800,7 @@ GeneralJs.prototype.consultingPopup = function () {
         },
         children: [
           {
-            text: "(예시)\n=> 시공: 도배, 조명만 부분적으로 원해요.\n=> 스타일링: 가구, 패브릭, 소품 전체 구매\n=> 예산: 시공 8천만원, 제품 구매 2천만원",
+            text: "(예시)\n=> 시공: 도배, 조명만 부분적으로 원해요.\n=> 스타일링: 가구, 패브릭, 소품 전체 구매\n=> 예산: 최대 00만원 이내로 하고 싶어요.",
             style: {
               position: "absolute",
               width: String(greenNoticeWidth3) + ea,
@@ -7062,7 +7062,7 @@ GeneralJs.prototype.consultingPopup = function () {
           mode: "textarea",
           class: [ inputClassName ],
           attribute: {
-            placeholder: desktop ? "(예) => 시공: 도배, 조명만 부분적으로 원해요.\n=> 스타일링: 가구, 패브릭, 소품은 전체 구매를 해야 해요.\n=> 예산: 시공 8천만원, 제품 구매 2천만원" : "(예시)\n시공: 도배, 조명만 부분적으로 원해요.\n스타일링: 가구, 패브릭, 소품은 전체 구매를 해야 해요.\n예산: 시공 8천만원, 제품 구매 2천만원",
+            placeholder: desktop ? "(예) => 시공: 도배, 조명만 부분적으로 원해요.\n=> 스타일링: 가구, 패브릭, 소품은 전체 구매를 해야 해요.\n=> 예산: 최대 00만원 이내로 하고 싶어요." : "(예시)\n시공: 도배, 조명만 부분적으로 원해요.\n스타일링: 가구, 패브릭, 소품은 전체 구매를 해야 해요.\n예산: 최대 00만원 이내로 하고 싶어요.",
             property: "etc",
           },
           event: {
