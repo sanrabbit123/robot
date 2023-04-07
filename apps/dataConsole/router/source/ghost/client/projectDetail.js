@@ -5985,21 +5985,18 @@ ProjectDetailJs.prototype.launching = async function (loading) {
             setQueue(() => {
               GeneralJs.scrollTo(window, instance.baseTong.children[2], (!instance.media[4] ? 72 : 60));
             }, 500);
-
           } else if (getObj.mode === "form" && instance.formBoo) {
             await instance.insertFormStatusBox();
             instance.insertUploadBox();
             if (instance.scheduleBoo) {
               await instance.insertScheduleBox();
             }
-
           } else {
             instance.insertNumbersBox();
             instance.insertUploadBox();
             if (instance.scheduleBoo) {
               await instance.insertScheduleBox();
             }
-
           }
           
           instance.insertInformationBox();

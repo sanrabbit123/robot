@@ -16885,9 +16885,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
               instance.insertGreenButtons();
             }
 
-          // dev
-          // } else if (typeof getObj.mode === "string" && getObj.mode === "schedule") {
-          } else if (typeof getObj.mode === "string" && getObj.mode === "schedule" && (instance.designer.desid === "d1701_aa01s" || instance.designer.desid === "d1904_aa12s")) {
+          } else if (typeof getObj.mode === "string" && getObj.mode === "schedule") {
 
             instance.insertInitBox();
             instance.insertScheduleStartBox();
@@ -16927,19 +16925,10 @@ ProcessDetailJs.prototype.launching = async function (loading) {
             if (instance.contentsArr.length > 0) {
               instance.insertContentsBox();
             } else {
-              if (instance.designer.desid === "d1701_aa01s" || instance.designer.desid === "d1904_aa12s") {
-                // dev - new version
-                await instance.insertFormStatusBox();
-              } else {
-                // past version
-                instance.insertNumbersBox();
-              }
+              await instance.insertFormStatusBox();
             }
             instance.insertUploadBox();
-            if (instance.designer.desid === "d1701_aa01s" || instance.designer.desid === "d1904_aa12s") {
-              // dev - new version
-              await instance.insertScheduleBox();
-            }
+            await instance.insertScheduleBox();
             instance.insertControlBox();
             if (mobile) {
               instance.insertBelowBox();
