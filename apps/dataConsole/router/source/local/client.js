@@ -4869,7 +4869,7 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
   div_clone.appendChild(input_clone);
 
   //total box
-  createNode({
+  totalBox = createNode({
     mother: div_clone,
     text: `문의 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;추천 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;열람 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("process_number")}</b>명` + "&nbsp;&nbsp;&nbsp;&nbsp;<u%/%u>&nbsp;&nbsp;&nbsp;&nbsp;" + "<b%리포트 전환%b>",
     event: {
