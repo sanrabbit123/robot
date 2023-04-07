@@ -1838,7 +1838,7 @@ DashboardJs.prototype.manualMaker = function (key) {
         }
       }
     });
-
+    
     num2 = 0;
     for (let obj2 of obj.children) {
       createNode({
