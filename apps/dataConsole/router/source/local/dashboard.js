@@ -263,6 +263,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
     baseContents = [
       {
         title: "고객님의 상담 신청 과정",
+        video: "1duih82Jbak868K20Hp-9k7tTnGiN-LyA",
         children: [
           {
             title: "상담 신청 페이지",
@@ -303,6 +304,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
       },
       {
         title: "신규 고객 세일즈를 위한 Sa 콘솔",
+        video: "1YGEEnhir0NqnSkJgiPo4f8NkGrbGU4my",
         children: [
           {
             title: "Sa 콘솔의 기본 구성과 기능",
@@ -476,6 +478,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
       },
       {
         title: "기본적인 1차 응대 과정",
+        video: "1AymPLlvvcviW5PWAqKCBaZvoU2hppRWP",
         children: [
           {
             title: "1차 응대 사전 준비 사항",
@@ -574,6 +577,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
       },
       {
         title: "Sa-c 콘솔과 고객 리포트",
+        video: "19LAM0JwtwNiWN4pvtzqwxX_j6etXD0XV",
         children: [
           {
             title: "Sa-c 콘솔",
@@ -1580,6 +1584,7 @@ DashboardJs.prototype.manualMaker = function (key) {
   let titleBarMarginTop;
   let circleRadius;
   let returnIconWidth;
+  let videoHeight;
 
   window.history.pushState({ path: "manual", status: key }, '');
 
@@ -1604,6 +1609,7 @@ DashboardJs.prototype.manualMaker = function (key) {
   titleBarMarginTop = 16;
   circleRadius = 36;
   returnIconWidth = 23;
+  videoHeight = 441;
 
   cleanChildren(contentsBase);
 
@@ -1812,6 +1818,7 @@ DashboardJs.prototype.manualMaker = function (key) {
     },
   });
 
+
   num = 0;
   for (let obj of contents) {
     createNode({
@@ -1838,6 +1845,35 @@ DashboardJs.prototype.manualMaker = function (key) {
         }
       }
     });
+
+
+    if (typeof obj.video === "string") {
+      createNode({
+        mother: contentsTong,
+        attribute: {
+          x: String(num),
+          y: String(-1),
+        },
+        style: {
+          display: "flex",
+          position: "relative",
+          width: withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          marginTop: String(basicMargin) + ea,
+        },
+        child: {
+          text: `<iframe src="https://drive.google.com/file/d/${obj.video}/preview" width="100%" height="${String(videoHeight) + ea}" style="border:0px;" allow="autoplay"></iframe>`,
+          style: {
+            display: "flex",
+            position: "relative",
+            width: withOut(0, ea),
+            overflow: "hidden",
+            borderRadius: String(5) + "px",
+          }
+        }
+      });
+    }
     
     num2 = 0;
     for (let obj2 of obj.children) {
