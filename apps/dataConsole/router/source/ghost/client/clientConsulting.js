@@ -523,7 +523,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
 
   greenNoticeSize = <%% 12, 12, 11, 11, 2.8 %%>;
   greenNoticeWeight = <%% 600, 600, 600, 600, 600 %%>;
-  greenNoticePaddingTop = <%% (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 7 : 9), (isMac() ? 7 : 9), 1.9 %%>;
+  greenNoticePaddingTop = <%% (isMac() ? 8 : 9), (isMac() ? 8 : 9), (isMac() ? 7 : 9), (isMac() ? 7 : 9), 1.9 %%>;
   greenNoticePaddingBottom = <%% (isMac() ? 9 : 7), (isMac() ? 9 : 7), (isMac() ? 8 : 7), (isMac() ? 8 : 7), 2.3 %%>;
   greenNoticePaddingLeft = <%% 11, 11, 10, 10, 2.4 %%>;
   greenNoticeBottom = <%% 40, 40, 40, 40, 9 %%>;
@@ -886,7 +886,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       },
       children: [
         {
-          text: "(예) 이사를 가서 가구 구입이 필요해요.\n가져갈 가구도 있어 도움 주셨으면 좋겠고,\n시공은 효과가 큰 시공 위주로 하고 싶어요.",
+          text: "(예시)\n=> 시공: 도배, 조명만 부분적으로 원해요.\n=> 스타일링: 가구, 패브릭, 소품 전체 구매\n=> 예산: 시공 8천만원, 제품 구매 2천만원",
           style: {
             position: "absolute",
             width: String(greenNoticeWidth3) + ea,
@@ -2046,7 +2046,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         mode: "textarea",
         class: [ inputClassName ],
         attribute: {
-          placeholder: desktop ? "(예) 이사를 가게 돼서 새로 가구 구입이 필요해요.\n가져갈 가구도 있어서 배치에 도움 주셨으면 좋겠고,\n시공은 효과가 큰 시공 위주로 하고 싶어요." : "(예) 이사를 가서 가구 구입이 필요해요.\n가져갈 기존 가구도 많아서 배치에 도움 주셨으면 좋겠고, 시공은 효과가 큰 시공 위주로 하고 싶어요.",
+          placeholder: desktop ? "(예시)\n=> 시공: 도배, 조명만 부분적으로 원해요.\n=> 스타일링: 가구, 패브릭, 소품은 전체 구매를 해야 해요.\n=> 예산: 시공 8천만원, 제품 구매 2천만원" : "(예시)\n시공: 도배, 조명만 부분적으로 원해요.\n스타일링: 가구, 패브릭, 소품은 전체 구매를 해야 해요.\n예산: 시공 8천만원, 제품 구매 2천만원",
           property: "etc",
         },
         event: {

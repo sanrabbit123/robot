@@ -3247,7 +3247,11 @@ KakaoTalk.prototype.setTalk = async function (method, name, phone, option = {}) 
       contents = contents.replace(/#\{[^\{\}]+\}/g, client.name);
     }
 
-    console.log(contents);
+    if (typeof raw.templtTitle === "string") {
+      if (raw.templtTitle.trim() !== "") {
+        tong.emtitle_1 = raw.templtTitle;
+      }
+    }
 
     tong.message_1 = contents;
     tong.fmessage_1 = contents;

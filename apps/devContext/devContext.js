@@ -244,15 +244,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const releaseDate = "2023년 4월 17일";
-
-    const kakao = new KakaoTalk();
-    await kakao.sendTalk("designerConsolePreGuide", "배창규", "010-2747-3403", {
-      designer: "박혜연",
-      date: releaseDate,
-      host: address.frontinfo.host,
-      desid: "d1701_aa01s",
-    });
 
 
 
