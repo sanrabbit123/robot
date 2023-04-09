@@ -3720,6 +3720,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const { isIphone } = GeneralJs;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   let whiteBlock;
   let style;
@@ -3744,7 +3745,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
   buttonWidth = <%% 92, 92, 92, 74, 17 %%>;
   buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
 
-  buttonTextTop = <%% 9, 9, 9, 9, 1.2 %%>;
+  buttonTextTop = <%% 9, 9, 9, 9, (isIphone() ? 1.3 : 1.4) %%>;
   buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
 
   if (desktop) {
