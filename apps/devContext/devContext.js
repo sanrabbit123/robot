@@ -5470,9 +5470,15 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "강유정",
-    //     link: "https://drive.google.com/drive/folders/1QpNeo-E720QopmB1rlH78iybSTuLO7yG",
+    //     client: "박은실",
+    //     designer: "권미정",
+    //     link: "https://drive.google.com/drive/folders/17HRrtjjfu_pngZ4Te-OgcBSiPx2tQt5b",
+    //     pay: true
+    //   },
+    //   {
+    //     client: "이새롬",
+    //     designer: "정다연",
+    //     link: "https://drive.google.com/drive/folders/1J1kyMVm5KTRXYwdsFiL8Mk9E6lI-ZI9A",
     //     pay: true
     //   },
     // ]);
@@ -5487,14 +5493,15 @@ DevContext.prototype.launching = async function () {
     // let shareGoogleIdClient;
     // let shareGoogleIdDesigner;
     // let clientName, designerName;
-    //
-    //
-    // clientName = "이지현";
-    // designerName = "박정훈";
-    //
-    // shareGoogleIdClient = "1VcZdeuT_FRgVg7lCCqZ8MqfCZgjEvZng";
-    // shareGoogleIdDesigner = "1LBW_ZcN4axZg5LSTDNmSxEtx7IFstokP";
-    //
+    // let project;
+    
+    
+    // clientName = "이승연";
+    // designerName = "김우현";
+    
+    // shareGoogleIdClient = "1avN1pDpFtlNnXJ4nlTHqtBKXD2SbLeno";
+    // shareGoogleIdDesigner = "1-TgTQzeA8lD5xdw4SS00mBz1a8BbbNKM";
+    
     // projects = await back.getProjectsByNames([ clientName, designerName ]);
     // if (projects.length > 0) {
     //   project = projects[0];
@@ -5508,7 +5515,7 @@ DevContext.prototype.launching = async function () {
     //   ]);
     //   clientObj = await back.getClientById(project.cliid);
     //   designerObj = await back.getDesignerById(project.desid);
-    //
+    
     //   if (clientObj !== null && designerObj !== null) {
     //     consoleQInput = await consoleQ(`Is it OK? (press "OK")\nclient : https://drive.google.com/file/d/${shareGoogleIdClient}/view?usp=sharing\ndesigner : https://drive.google.com/file/d/${shareGoogleIdDesigner}/view?usp=sharing\n`);
     //     if (/OK/gi.test(consoleQInput.trim())) {
