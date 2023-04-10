@@ -1269,6 +1269,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
       },
       {
         title: "홈리에종 구조",
+        video: "1nVEVDDal7wsXUp0E8cRSkYP6GgA4ftDF",
         children: []
       },
     ]
