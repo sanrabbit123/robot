@@ -247,8 +247,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await findCode("flowBlock");
-
 
     
     
@@ -5469,12 +5467,6 @@ DevContext.prototype.launching = async function () {
     // raw photo to raw portfolio
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
-    //   {
-    //     client: "박은실",
-    //     designer: "권미정",
-    //     link: "https://drive.google.com/drive/folders/17HRrtjjfu_pngZ4Te-OgcBSiPx2tQt5b",
-    //     pay: true
-    //   },
     //   {
     //     client: "이새롬",
     //     designer: "정다연",
