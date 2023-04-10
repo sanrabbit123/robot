@@ -260,6 +260,8 @@ DataRouter.prototype.rou_get_First = function () {
             target = "calculation";
           } else if (/^sa/i.test(req.params.id)) {
             target = "sales";
+          } else if (/^flo/i.test(req.params.id)) {
+            target = "flow";
           } else {
             target = "client";
           }

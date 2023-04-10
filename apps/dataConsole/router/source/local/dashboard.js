@@ -84,9 +84,19 @@ DashboardJs.prototype.returnTreeContents = function () {
           children: [
             {
               title: "기본적인 서비스 설명",
+              event: () => {
+                return function (e) {
+                  instance.manualMaker("aboutService");
+                }
+              }
             },
             {
               title: "서비스의 전체 구조",
+              event: () => {
+                return function (e) {
+                  instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/flow?entire=true&dataonly=true");
+                }
+              }
             },
           ]
         }
@@ -1003,43 +1013,12 @@ DashboardJs.prototype.returnManualContents = function (key) {
         title: "홈리에종 서비스",
         children: [
           {
-            title: "서비스 종류와 용어 정의",
-            body: [
-              {
-                type: "description",
-                text: [
-                  `홈리에종의 서비스 종류는 다음 4가지로 구분됩니다.`,
-                ]
-              },
-              {
-                type: "block",
-                text: [
-                  `홈퍼니싱, 홈스타일링, 토탈 스타일링, 엑스트라 스타일링`,
-                ]
-              },
-              {
-                type: "description",
-                text: [
-                  `홈리에종 서비스 설명에 앞서 인테리어 시공과 디자인에 대한 이해가 필요합니다. 인테리어 시공은 시공 작업자가 직접 현장에 와서 집을 수리하는 등의 실제 작업을 말합니다. 이는 철거부터 시작해서 도배, 장판, 마루, 타일 시공, 중문 설치, 조명 설치, 샤시 교체 등 모든 작업을 포함합니다. 핵심적인 기준은 '전문 시공 작업자'가 현장에 오는지 여부입니다.`,
-                ]
-              },
-              {
-                type: "description",
-                text: [
-                  `홈리에종의 서비스는 시공 범위에 따라 구분됩니다. 홈퍼니싱은 시공이 전혀 필요 없는 서비스이며, 홈스타일링과 토탈 스타일링은 다음 표와 같이 구분됩니다. 엑스트라 스타일링은 토탈 스타일링의 프리미엄 버전으로, '설계 변경'이라고도 불리며, 시공 디자인이 필요한지 여부에 따라 토탈과 구분됩니다. 아래는 서비스 종류와 그에 따른 시공 범위를 보여주는 표입니다.`,
-                ]
-              },
-              {
-                type: "description",
-                text: [
-                  `가구, 소품, 패브릭 등의 스타일링을 위한 디자인 작업은 모든 서비스에서 필수적으로 이루어집니다. 홈퍼니싱 서비스는 시공 없이 스타일링만 진행하는 서비스이지만, 그 반대인 스타일링 없이 시공만 진행하는 서비스는 제공하지 않습니다. 따라서 시공만 원하는 고객분들에게는 최대한 스타일링을 함께 하는 것이 좋다는 점을 어필하여 홈리에종 서비스를 받게 하는 것이 필요합니다.`,
-                ]
-              },
-            ],
-          },
-          {
             title: "인테리어 시장 상황과 홈스타일링",
             body: [
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "/aboutService1.jpg",
+              },
               {
                 type: "description",
                 text: [
@@ -1070,6 +1049,10 @@ DashboardJs.prototype.returnManualContents = function (key) {
             title: "홈스타일링의 장점",
             body: [
               {
+                type: "image",
+                source: DashboardJs.binaryPath + "/aboutService2.jpg",
+              },
+              {
                 type: "description",
                 text: [
                   `홈스타일링은 다양한 장점을 가지고 있지만, 그 중에서도 대표적으로 3가지의 장점이 있습니다. 첫째로는 '인테리어의 제대로 된 완성'입니다. 인테리어는 바탕 시공만으로는 끝나지 않습니다. 바탕 시공을 어떻게 하는지는 시작에 불과하며, 이후에는 가구와 소품의 조합을 어떻게 할 지 컨셉을 정하고 구체적인 제품을 선택해야 합니다. 이러한 작업들을 통해 인테리어 디자인을 완성시키는 것이 원래의 인테리어 디자인의 작업입니다. 홈스타일링은 이러한 과정을 필수적으로 거치며, 디자인 컨셉과 제품 선택 등을 통해 주거 인테리어의 완성도를 높입니다. 이러한 점에서 리모델링과는 다른 장점을 가지고 있습니다.`,
@@ -1092,6 +1075,10 @@ DashboardJs.prototype.returnManualContents = function (key) {
           {
             title: "디자이너와 함께 해야 하는 이유",
             body: [
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "/aboutService3.jpg",
+              },
               {
                 type: "description",
                 text: [
@@ -1121,6 +1108,10 @@ DashboardJs.prototype.returnManualContents = function (key) {
           {
             title: "홈리에종에서 해야 하는 이유",
             body: [
+              {
+                type: "image",
+                source: DashboardJs.binaryPath + "/aboutService4.jpg",
+              },
               {
                 type: "description",
                 text: [
@@ -1160,6 +1151,61 @@ DashboardJs.prototype.returnManualContents = function (key) {
                 type: "description",
                 text: [
                   `1차 응대가 이루어지면 홈리에종은 고객님께 디자이너 추천서를 보내며, 고객님이 추천서에서 디자이너를 선택하신 후, 계약금(33만원)을 결제하시면 디자인 계약이 체결됩니다. 그리고 홈리에종은 디자이너에게 연락하여 고객님과의 현장 미팅 일자를 조율합니다. 현장 미팅 이후에는 고객님께 다시 전화하여 진행 여부를 확인하며, 고객님이 계속 진행하겠다고 하시면 홈스타일링 계약서를 작성하고 잔금을 안내합니다. 고객님께서 잔금을 지불하시고 계약서에 서명을 완료하면 홈스타일링 프로젝트가 본격적으로 시작되며 디자이너가 디자인 작업을 시작합니다. 인테리어 과정이 끝나면 홈리에종은 현장 확인과 함께 현장 촬영을 진행하고, 촬영이 끝나면 컨텐츠 발행과 최종 마무리를 합니다.`,
+                ]
+              },
+            ],
+          },
+          {
+            title: "서비스 종류와 용어 정의",
+            body: [
+              {
+                type: "description",
+                text: [
+                  `홈리에종의 서비스 종류는 다음 4가지로 구분됩니다.`,
+                ]
+              },
+              {
+                type: "block",
+                text: [
+                  `홈퍼니싱, 홈스타일링, 토탈 스타일링, 엑스트라 스타일링`,
+                ]
+              },
+              {
+                type: "description",
+                text: [
+                  `홈리에종 서비스 설명에 앞서 인테리어 시공과 디자인에 대한 이해가 필요합니다. 인테리어 시공은 시공 작업자가 직접 현장에 와서 집을 수리하는 등의 실제 작업을 말합니다. 이는 철거부터 시작해서 도배, 장판, 마루, 타일 시공, 중문 설치, 조명 설치, 샤시 교체 등 모든 작업을 포함합니다. 핵심적인 기준은 '전문 시공 작업자'가 현장에 오는지 여부입니다.`,
+                ]
+              },
+              {
+                type: "description",
+                text: [
+                  `홈리에종의 서비스는 시공 범위에 따라 구분됩니다. 홈퍼니싱은 시공이 전혀 필요 없는 서비스이며, 홈스타일링과 토탈 스타일링은 다음 표와 같이 구분됩니다. 엑스트라 스타일링은 토탈 스타일링의 프리미엄 버전으로, '설계 변경'이라고도 불리며, 시공 디자인이 필요한지 여부에 따라 토탈과 구분됩니다. 아래는 서비스 종류와 그에 따른 시공 범위를 보여주는 표입니다.`,
+                ]
+              },
+              {
+                type: "table",
+                matrix: [
+                  [ `구분` , `홈퍼니싱`, `홈스타일링`, `토탈 스타일링`, `엑스트라 스타일링` ],
+                  [ `철거`, `제공 없음`, `부분 철거`, `전체 철거`, `전체 철거` ],
+                  [ `보양`, `제공 없음`, `해당 면적`, `해당 면적`, `해당 면적` ],
+                  [ `목공`, `제공 없음`, `걸레받이 / 몰딩 / 문짝`, `모든 종류의 목공`, `모든 종류의 목공` ],
+                  [ `전기`, `제공 없음`, `일부 배선 및 조명 교체`, `전체 배선 및 조명 교체`, `전체 배선 및 조명 교체` ],
+                  [ `타일`, `제공 없음`, `덧방 위주`, `전체 철거 및 교체`, `전체 철거 및 교체` ],
+                  [ `바닥`, `제공 없음`, `마루 / 장판`, `마루 / 장판 / 타일`, `마루 / 장판 / 타일` ],
+                  [ `욕실`, `제공 없음`, `악세사리 교체`, `기본 철거 및 전체 공사`, `기본 철거 및 전체 공사` ],
+                  [ `주방`, `제공 없음`, `악세사리 교체`, `전체 철거 및 전체 공사`, `전체 철거 및 전체 공사` ],
+                  [ `필름`, `제공 없음`, `전체 제공`, `전체 제공`, `전체 제공` ],
+                  [ `도배`, `제공 없음`, `전체 제공`, `전체 제공`, `전체 제공` ],
+                  [ `중문`, `제공 없음`, `중문 교체`, `중문 교체`, `중문 교체` ],
+                  [ `가구`, `제공 없음`, `붙박이장 / 냉장고장`, `모든 종류의 제작 가구`, `모든 종류의 제작 가구` ],
+                  [ `발코니`, `제공 없음`, `제공 없음`, `발코니 확장`, `발코니 확장` ],
+                  [ `기타`, `제공 없음`, `제공 없음`, `금속, 샤시 등`, `금속, 샤시 등` ],
+                ]
+              },
+              {
+                type: "description",
+                text: [
+                  `가구, 소품, 패브릭 등의 스타일링을 위한 디자인 작업은 모든 서비스에서 필수적으로 이루어집니다. 홈퍼니싱 서비스는 시공 없이 스타일링만 진행하는 서비스이지만, 그 반대인 스타일링 없이 시공만 진행하는 서비스는 제공하지 않습니다. 따라서 시공만 원하는 고객분들에게는 최대한 스타일링을 함께 하는 것이 좋다는 점을 어필하여 홈리에종 서비스를 받게 하는 것이 필요합니다.`,
                 ]
               },
             ],
@@ -1207,8 +1253,24 @@ DashboardJs.prototype.returnManualContents = function (key) {
               },
             ],
           },
+
+          {
+            title: "시공사 선택권",
+            body: [
+              {
+                type: "description",
+                text: [
+                  `일반 리모델링 회사와는 달리 홈리에종은 플랫폼으로서, 디자이너를 중심으로 한 홈스타일링 운영 체제입니다. 이러한 특성 때문에 시공 과정에서 고객이 선택권을 가질 수 있습니다. 디자이너가 진행한 디자인을 그대로 시공해줄 회사를 외부에서 찾아 시공을 진행할 수 있는 것입니다. 고객의 시공사 선택권은 홈리에종 시공사, 디자이너 시공사, 외부 시공사로 구분됩니다. 홈리에종 시공사는 홈리에종과 파트너십 계약을 맺은 시공사가 시공을 진행하는 것을 의미하며, 디자이너 시공사는 디자이너와 긴밀한 관계를 갖고 있거나 소속되어 있는 시공사와 시공을 진행하는 것을 말합니다. 외부 시공사는 홈리에종 파트너십이나 디자이너와의 관계가 없는 외부 턴키 업체를 의미합니다. 홈리에종은 공정별로 시공을 진행하길 원하는 고객의 선택을 허용하지 않습니다. 따라서 고객은 홈리에종, 디자이너, 외부 턴키 업체 중에서 하나를 선택하여 시공을 진행할 수 있습니다.`,
+                ]
+              },
+            ],
+          },
         ]
-      }
+      },
+      {
+        title: "홈리에종 구조",
+        children: []
+      },
     ]
   }
 
@@ -1790,6 +1852,8 @@ DashboardJs.prototype.manualMaker = function (key) {
   let circleRadius;
   let returnIconWidth;
   let videoHeight;
+  let tempTable;
+  let tableVisualMargin;
 
   window.history.pushState({ path: "manual", status: key }, '');
 
@@ -1815,6 +1879,7 @@ DashboardJs.prototype.manualMaker = function (key) {
   circleRadius = 36;
   returnIconWidth = 23;
   videoHeight = 441;
+  tableVisualMargin = 8;
 
   cleanChildren(contentsBase);
 
@@ -2153,8 +2218,6 @@ DashboardJs.prototype.manualMaker = function (key) {
             }
           });
         } else if (obj3.type === "block") {
-
-
           createNode({
             mother: contentsTong,
             style: {
@@ -2180,6 +2243,25 @@ DashboardJs.prototype.manualMaker = function (key) {
               }
             }
           });
+        } else if (obj3.type === "table") {
+
+          contentsTong.appendChild(instance.mother.makeTable(obj3.matrix, {
+            style: {
+              titleSize: 13,
+              fontSize: 13,
+              blockHeight: 42,
+            }
+          }));
+          tempTable = contentsTong.lastChild;
+          tempTable.style.width = String(100) + '%';
+          tempTable.style.marginTop = String(tableVisualMargin) + ea;
+          tempTable.style.marginBottom = String(basicMargin + tableVisualMargin) + ea;
+
+          Array.from(tempTable.children).map((line) => { return line.firstChild }).slice(1).forEach((dom) => {
+            dom.style.background = colorChip.gray0;
+            dom.firstChild.firstChild.style.fontWeight = String(700);
+          });
+
         }
         
       }

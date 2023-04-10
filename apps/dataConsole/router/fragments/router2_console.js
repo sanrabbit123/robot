@@ -5046,52 +5046,6 @@ DataRouter.prototype.rou_post_designerFeeTable = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_flowBlock = function () {
-  const instance = this;
-  const { errorLog, equalJson } = this.mother;
-  const back = this.back;
-  let obj = {};
-  obj.link = [ "/flowBlock" ];
-  obj.func = async function (req, res) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (req.body.mode === undefined) {
-        throw new Error("invaild post");
-      }
-      const collection = "flowBlock";
-      const selfMongo = instance.mongolocal;
-      const { mode } = req.body;
-      let resultObj;
-
-      if (mode === "get") {
-        if (req.body.whereQuery === undefined) {
-          throw new Error("invaild post");
-        }
-        const { whereQuery } = equalJson(req.body);
-        resultObj = await back.mongoRead(collection, whereQuery, { selfMongo });
-      } else if (mode === "update") {
-        if (req.body.whereQuery === undefined || req.body.updateQuery === undefined) {
-          throw new Error("invaild post");
-        }
-        const { whereQuery, updateQuery } = equalJson(req.body);
-        await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-        resultObj = { message: "success" };
-      }
-
-      res.send(resultObj);
-    } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_flowBlock): " + e.message);
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
 DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
   const instance = this;
   const { errorLog, equalJson, cryptoString, decryptoHash } = this.mother;

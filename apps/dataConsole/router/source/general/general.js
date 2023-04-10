@@ -4292,7 +4292,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     titleBackground = option.style.borderColor;
   }
 
-  boldWeight = 600;
+  boldWeight = 700;
   if (typeof option.style.boldWeight === "number") {
     boldWeight = option.style.boldWeight;
   }
