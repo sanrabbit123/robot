@@ -43,6 +43,14 @@ DashboardJs.prototype.returnTreeContents = function () {
           }
         },
         {
+          title: "추천서 관리",
+          event: () => {
+            return function (e) {
+              instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/proposal");
+            }
+          }
+        },
+        {
           title: "고객 관련 파일",
           event: () => {
             return function (e) {
@@ -72,34 +80,77 @@ DashboardJs.prototype.returnTreeContents = function () {
           ]
         },
         {
-          title: "서비스 설명",
+          title: "홈리에종 서비스",
           children: [
             {
-              title: "서비스 용어 정의",
+              title: "기본적인 서비스 설명",
             },
             {
-              title: "기본적인 인테리어 시장 상황"
+              title: "서비스의 전체 구조",
+            },
+          ]
+        }
+      ]
+    },
+    {
+      title: "프로젝트",
+      number: 800,
+      children: [
+        {
+          title: "프로젝트 현황과 정보"
+        },
+        {
+          title: "시공 프로젝트 현황과 정보"
+        },
+        {
+          title: "프로젝트 촬영 관리",
+        },
+        {
+          title: "컨텐츠 발행 관리",
+        },
+        {
+          title: "컨텐츠 상세 설정",
+        },
+        {
+          title: "프로젝트 정산 관리",
+        },
+        {
+          title: "프로젝트 리포트",
+          children: [
+            {
+              title: "디자인 프로젝트 리포트"
             },
             {
-              title: "홈스타일링의 장점",
+              title: "시공 프로젝트 리포트"
+            },
+          ]
+        },
+        {
+          title: "프로젝트 매뉴얼",
+          children: [
+            {
+              title: "현장 미팅 매뉴얼",
             },
             {
-              title: "디자이너와 함께 해야 하는 이유",
+              title: "프로젝트 계약 매뉴얼"
             },
             {
-              title: "홈리에종에서 해야 하는 이유",
+              title: "프로젝트 케어 매뉴얼"
             },
             {
-              title: "상황별 홈리에종 서비스의 장점"
+              title: "프로젝트 환불 매뉴얼"
             },
             {
-              title: "홈리에종의 프로세스 설명"
+              title: "프로젝트 정산 매뉴얼"
             },
             {
-              title: "예산과 기간에 대한 설명"
+              title: "시공 관리 매뉴얼",
             },
             {
-              title: "디자이너와 홈리에종의 제공물"
+              title: "촬영 컨택 매뉴얼",
+            },
+            {
+              title: "인터뷰 작성 매뉴얼",
             }
           ]
         }
@@ -153,51 +204,16 @@ DashboardJs.prototype.returnTreeContents = function () {
               title: "디자이너별 특징 정리"
             }
           ]
-        }
-      ]
-    },
-    {
-      title: "프로젝트",
-      number: 800,
-      children: [
-        {
-          title: "프로젝트 현황과 정보"
         },
         {
-          title: "시공 프로젝트 현황과 정보"
-        },
-        {
-          title: "프로젝트 리포트",
+          title: "디자이너 콘솔",
           children: [
             {
-              title: "디자인 프로젝트 리포트"
+              title: "디자이너 콘솔 테스트 계정"
             },
             {
-              title: "시공 프로젝트 리포트"
+              title: "디자이너 콘솔 매뉴얼",
             },
-          ]
-        },
-        {
-          title: "프로젝트 매뉴얼",
-          children: [
-            {
-              title: "현장 미팅 매뉴얼",
-            },
-            {
-              title: "프로젝트 계약 매뉴얼"
-            },
-            {
-              title: "프로젝트 케어 매뉴얼"
-            },
-            {
-              title: "시공 관리 매뉴얼",
-            },
-            {
-              title: "촬영 컨택 매뉴얼",
-            },
-            {
-              title: "인터뷰 작성 매뉴얼",
-            }
           ]
         }
       ]
@@ -207,45 +223,17 @@ DashboardJs.prototype.returnTreeContents = function () {
       number: 200,
       children: [
         {
-          title: "서비스 시스템의 구조",
-          children: [
-            {
-              title: "시스템의 전체 구성",
-            },
-            {
-              title: "프론트 웹의 구성",
-            },
-            {
-              title: "고객 콘솔 구성",
-            },
-            {
-              title: "홈리에종 콘솔 구성",
-            },
-            {
-              title: "디자이너 콘솔 구성",
-            },
-            {
-              title: "디자이너 콘솔 매뉴얼"
-            },
-          ]
+          title: "서버 현황"
         },
         {
-          title: "운영 시스템 정보",
-          children: [
-            {
-              title: "서버 현황"
-            },
-            {
-              title: "내부 컴퓨터 현황"
-            },
-            {
-              title: "이용중인 서비스 현황"
-            },
-            {
-              title: "알림톡 현황",
-            }
-          ]
+          title: "내부 컴퓨터 현황"
         },
+        {
+          title: "이용중인 서비스 현황"
+        },
+        {
+          title: "알림톡 현황",
+        }
       ]
     },
   ];
@@ -670,6 +658,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
     baseContents = [
       {
         title: "추천서 작성 전 사전 준비",
+        video: "1-eNJEE874VzwLnHeteyPSmwXrRwzsCKN",
         children: [
           {
             title: "추천서를 작성하기 전 알아야 할 고객 정보",
@@ -732,6 +721,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
       },
       {
         title: "추천서와 Pr 콘솔",
+        video: "1Om-3RePBU6CrJfk6ufVCMOJGcBlyiQV6",
         children: [
           {
             title: "추천서 접근 방법과 Pr 콘솔",
@@ -864,6 +854,7 @@ DashboardJs.prototype.returnManualContents = function (key) {
       },
       {
         title: "디자이너 추천서 발송",
+        video: "1Slc3IOyneRIpz90tlwK6o68yLMKJNcvv",
         children: [
           {
             title: "추천서 미리 보기",
