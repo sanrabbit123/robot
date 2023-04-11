@@ -1,13 +1,11 @@
 DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
   const instance = this;
-  const { ea, totalContents, designers } = this;
+  const { ea, totalContents, designers, valueTargetClassName, asyncProcessText } = this;
   const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute } = GeneralJs;
   try {
     const calcMonthDelta = (from, to) => {
       return ((to.getFullYear() * 12) + to.getMonth() + 1) - ((from.getFullYear() * 12) + from.getMonth() + 1) + 1;
     }
-    const asyncProcessText = "로드중..";
-    const valueTargetClassName = "valueTargetClassName";
     const now = new Date();
     const past = new Date(2019, 0, 1);
     const yearsAgo = new Date();
@@ -28,19 +26,38 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
     let filteredFilteredProjectsProposal;
     let filteredFilteredProjectsContract;
     let thisDate;
+    let standards;
 
     yearsAgo.setMonth(yearsAgo.getMonth() - agoDelta);
     yearDelta = now.getFullYear() - past.getFullYear() + 1
     monthDelta = calcMonthDelta(yearsAgo, now);
 
+    standards = {
+      columns: [
+        {
+          title: "아이디",
+          width: 96,
+          name: "desid",
+        },
+        {
+          title: "성함",
+          width: 60,
+          name: "designer",
+        },
+      ],
+      values: {},
+    }
+
     columns = [
       {
         title: "담당자",
         width: 80,
+        name: "manger",
       },
       {
         title: "계약 상태",
         width: 100,
+        name: "status",
         colorStandard: true,
         colorMap: [
           {
@@ -68,94 +85,123 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
       {
         title: "계약일",
         width: 100,
+        name: "contractDate",
       },
       {
         title: "계약 유지",
         width: 100,
+        name: "contractDuring",
       },
       {
         title: "적용 경력",
         width: 100,
+        name: "career",
       },
       {
         title: "주소",
         width: 400,
+        name: "address",
       },
       {
         title: "유효 범위",
         width: 100,
+        name: "range",
       },
       {
         title: "한계 범위",
         width: 100,
+        name: "expenses",
       },
       {
         title: "홈퍼니싱",
         width: 100,
+        name: "homefurnishing",
       },
       {
         title: "홈스타일링",
         width: 100,
+        name: "homestyling",
       },
       {
         title: "토탈 스타일링",
         width: 100,
+        name: "totalstyling",
       },
       {
         title: "설계 변경",
         width: 100,
+        name: "extrastyling",
       },
       {
         title: "프리미엄",
         width: 100,
+        name: "premium",
       },
       {
         title: "부분 공간",
         width: 100,
+        name: "partial",
       },
       {
         title: "온라인",
         width: 100,
+        name: "online",
       },
       {
         title: "거주중",
         width: 100,
+        name: "living",
       },
       {
         title: "총 추천수",
         width: 100,
+        name: "proposalNumber",
       },
       {
         title: "총 진행수",
         width: 100,
+        name: "contractNumber",
       },
       {
         title: "진행율",
         width: 100,
+        name: "contractPercentage",
       },
       {
         title: "총 정산액",
         width: 120,
+        name: "totalAmount",
       },
     ];
 
     for (let i = 0; i < yearDelta; i++) {
-      columns.push({ title: String(now.getFullYear() - i) + " " + "추천수", width: 120 });
-      columns.push({ title: String(now.getFullYear() - i) + " " + "진행수", width: 120 });
-      columns.push({ title: String(now.getFullYear() - i) + " " + "진행율", width: 120 });
-      columns.push({ title: String(now.getFullYear() - i) + " " + "총 정산액", width: 120 });
+      columns.push({ title: String(now.getFullYear() - i) + " " + "추천수", width: 120, name: "proposalNumberY" + String(i) });
+      columns.push({ title: String(now.getFullYear() - i) + " " + "진행수", width: 120, name: "contractNumberY" + String(i) });
+      columns.push({ title: String(now.getFullYear() - i) + " " + "진행율", width: 120, name: "contractPercentageY" + String(i) });
+      columns.push({ title: String(now.getFullYear() - i) + " " + "총 정산액", width: 120, name: "totalAmountY" + String(i) });
     }
 
     for (let i = 0; i < monthDelta; i++) {
       tempDate = new Date();
       tempDate.setMonth(tempDate.getMonth() - i);
       tempString = String(tempDate.getFullYear()).slice(2) + ". " + String(tempDate.getMonth() + 1) + "월";
-      columns.push({ title: tempString + " " + "추천수", width: 120 });
+      columns.push({ title: tempString + " " + "추천수", width: 120, name: "monthDelta" + String(tempDate.getFullYear()).slice(2) + String(tempDate.getMonth() + 1) });
     }
 
     values = {};
 
     for (let designer of designers) {
+
+      standards.values[designer.desid] = [
+        {
+          value: designer.desid,
+          name: "desid",
+        },
+        {
+          value: designer.designer,
+          name: "designer",
+        },
+      ];
 
       values[designer.desid] = [
         {
@@ -355,7 +401,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
     }
 
-    return { columns, values };
+    return { standards, columns, values };
 
   } catch (e) {
     console.log(e);
@@ -364,20 +410,35 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
 DesignerJs.prototype.normalColorSync = async function () {
   const instance = this;
-  const { ea, totalContents, designers } = this;
+  const { ea, totalContents, designers, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText } = this;
   const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute } = GeneralJs;
   try {
     let columns;
     let colorStandard;
+    let standardDoms, valueDoms;
+    let thisValue;
+    let thisColor;
+    let thisTargets;
 
-    // ({ columns } = await this.normalDataRender(false));
+    ({ columns } = await this.normalDataRender(false));
 
-    // colorStandard = columns.find((obj) => { return obj.colorStandard === true }).colorMap;
+    colorStandard = columns.find((obj) => { return obj.colorStandard === true });
 
+    standardDoms = [ ...document.querySelectorAll('.' + standardCaseClassName) ];
+    valueDoms = [ ...document.querySelectorAll('.' + valueCaseClassName) ];
 
-    // console.log(colorStandard);
-
-
+    for (let i = 0; i < standardDoms.length; i++) {
+      thisValue = findByAttribute([ ...valueDoms[i].querySelectorAll('.' + valueTargetClassName) ], "name", colorStandard.name).textContent.trim();
+      if (colorStandard.colorMap.find((o) => { return o.value === thisValue }) === undefined) {
+        throw new Error("invalid value color match");
+      }
+      thisColor = colorStandard.colorMap.find((o) => { return o.value === thisValue }).color;
+      thisTargets = [ ...standardDoms[i].querySelectorAll('.' + valueTargetClassName) ].concat([ ...valueDoms[i].querySelectorAll('.' + valueTargetClassName) ]);
+      for (let dom of thisTargets) {
+        dom.style.color = (new RegExp(asyncProcessText, "gi")).test(dom.textContent) ? colorChip.gray3 : thisColor;
+        dom.setAttribute("color", (new RegExp(asyncProcessText, "gi")).test(dom.textContent) ? colorChip.gray3 : thisColor);
+      }
+    }
 
   } catch (e) {
     console.log(e);
@@ -386,10 +447,9 @@ DesignerJs.prototype.normalColorSync = async function () {
 
 DesignerJs.prototype.normalBase = async function () {
   const instance = this;
-  const { ea, totalContents, designers } = this;
-  const { createNode, colorChip, withOut } = GeneralJs;
+  const { ea, totalContents, designers, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText } = this;
+  const { createNode, colorChip, withOut, findByAttribute } = GeneralJs;
   const moveTargetClassName = "moveTarget";
-  const valueTargetClassName = "valueTargetClassName";
   try {
     let totalMother;
     let grayArea, whiteArea;
@@ -410,7 +470,9 @@ DesignerJs.prototype.normalBase = async function () {
     let columns;
     let values;
     let valueMaxWidth;
-
+    let thisTargets;
+    let hoverEvent, hoverOutEvent;
+    let standards;
   
     totalPaddingTop = 38;
     columnAreaHeight = 32;
@@ -431,8 +493,29 @@ DesignerJs.prototype.normalBase = async function () {
   
     valueColumnsAreaPaddingLeft = 20;
   
-  
-    ({ columns, values } = await this.normalDataRender());
+    hoverEvent = () => {
+      return function (e) {
+        const desid = this.getAttribute("desid");
+        const opposite = findByAttribute(document.querySelectorAll('.' + standardCaseClassName), "desid", desid);
+        thisTargets = [ ...this.querySelectorAll('.' + valueTargetClassName) ].concat([ ...opposite.querySelectorAll('.' + valueTargetClassName) ]);
+        for (let dom of thisTargets) {
+          dom.style.color = colorChip.green;
+        }
+      }
+    }
+
+    hoverOutEvent = () => {
+      return function (e) {
+        const desid = this.getAttribute("desid");
+        const opposite = findByAttribute(document.querySelectorAll('.' + standardCaseClassName), "desid", desid);
+        thisTargets = [ ...this.querySelectorAll('.' + valueTargetClassName) ].concat([ ...opposite.querySelectorAll('.' + valueTargetClassName) ]);
+        for (let dom of thisTargets) {
+          dom.style.color = dom.getAttribute("color") !== null ? dom.getAttribute("color") : colorChip.black;
+        }
+      }
+    }
+
+    ({ standards, columns, values } = await this.normalDataRender());
 
     totalMother = createNode({
       mother: totalContents,
@@ -475,44 +558,26 @@ DesignerJs.prototype.normalBase = async function () {
             verticalAlign: "top",
             width: String(this.grayBarWidth) + ea,
           },
-          children: [
-            {
+          children: standards.columns.map(({ title, width }) => {
+            return {
               style: {
                 display: "inline-flex",
                 flexDirection: "row",
                 position: "relative",
                 justifyContent: "center",
                 alignItems: "start",
-                width: String(idWidth) + ea,
+                width: String(width) + ea,
               },
               child: {
-                text: "아이디",
+                text: title,
                 style: {
                   fontSize: String(fontSize) + ea,
                   fontWeight: String(fontWeight),
                   color: colorChip.green,
                 }
               }
-            },
-            {
-              style: {
-                display: "inline-flex",
-                flexDirection: "row",
-                position: "relative",
-                justifyContent: "center",
-                alignItems: "start",
-                width: String(nameWidth) + ea,
-              },
-              child: {
-                text: "성함",
-                style: {
-                  fontSize: String(fontSize) + ea,
-                  fontWeight: String(fontWeight),
-                  color: colorChip.green,
-                }
-              }
-            },
-          ]
+            }
+          })
         },
         {
           style: {
@@ -585,7 +650,7 @@ DesignerJs.prototype.normalBase = async function () {
   
     }
   
-  
+
     [ idNameArea, valueArea ] = createNode({
       mother: totalMother,
       style: {
@@ -623,6 +688,8 @@ DesignerJs.prototype.normalBase = async function () {
   
       createNode({
         mother: idNameArea,
+        attribute: { desid: designer.desid },
+        class: [ standardCaseClassName ],
         style: {
           display: "flex",
           flexDirection: "row",
@@ -630,19 +697,22 @@ DesignerJs.prototype.normalBase = async function () {
           height: String(idNameHeight) + ea,
           justifyContent: "center",
           alignItems: "start",
+          cursor: "pointer",
         },
-        children: [
-          {
+        children: standards.values[designer.desid].map(({ value, name }, index) => {
+          return {
             style: {
               display: "inline-flex",
               flexDirection: "row",
               position: "relative",
               justifyContent: "center",
               alignItems: "start",
-              width: String(idWidth) + ea,
+              width: String(standards.columns[index].width) + ea,
             },
             child: {
-              text: designer.desid,
+              class: [ valueTargetClassName ],
+              attribute: { name },
+              text: value,
               style: {
                 position: "relative",
                 transition: "all 0.3s ease",
@@ -651,34 +721,18 @@ DesignerJs.prototype.normalBase = async function () {
                 color: colorChip.black,
               }
             }
-          },
-          {
-            style: {
-              display: "inline-flex",
-              flexDirection: "row",
-              position: "relative",
-              justifyContent: "center",
-              alignItems: "start",
-              width: String(nameWidth) + ea,
-            },
-            child: {
-              text: designer.designer,
-              style: {
-                position: "relative",
-                transition: "all 0.3s ease",
-                fontSize: String(fontSize) + ea,
-                fontWeight: String(fontWeight),
-                color: colorChip.black,
-              }
-            }
-          },
-        ]
+          }
+        })
       });
   
       thisTong = createNode({
         mother: valueArea,
         attribute: { desid: designer.desid },
-        class: [ moveTargetClassName, designer.desid ],
+        class: [ moveTargetClassName, valueCaseClassName, designer.desid ],
+        event: {
+          mouseenter: hoverEvent(),
+          mouseleave: hoverOutEvent(),
+        },
         style: {
           display: "flex",
           position: "relative",
@@ -688,6 +742,7 @@ DesignerJs.prototype.normalBase = async function () {
           alignItems: "start",
           justifyContent: "start",
           paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
+          cursor: "pointer",
         }
       })
 
@@ -729,10 +784,10 @@ DesignerJs.prototype.normalBase = async function () {
                 text: String(values[designer.desid][i].value),
                 style: {
                   position: "relative",
-                  transition: "all 0.3s ease",
+                  transition: "all 0.1s ease",
                   fontSize: String(fontSize) + ea,
                   fontWeight: String(valueWeight),
-                  color: /로드중/gi.test(values[designer.desid][i].value) ? colorChip.gray3 : colorChip.black,
+                  color: (new RegExp(asyncProcessText, "gi")).test(values[designer.desid][i].value) ? colorChip.gray3 : colorChip.black,
                 }
               }
             }
@@ -772,6 +827,10 @@ DesignerJs.prototype.normalView = async function () {
 
     this.designers = designers;
     this.projects = null;
+    this.valueTargetClassName = "valueTargetClassName";
+    this.valueCaseClassName = "valueCaseClassName";
+    this.standardCaseClassName = "standardCaseClassName";
+    this.asyncProcessText = "로드중..";
 
     await this.normalBase();
 
