@@ -4399,6 +4399,12 @@ DesignerJs.prototype.launching = async function () {
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";
 
+    } else if (getObj.mode === "normal") {
+
+      await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
+      document.getElementById("grayLeftOpenButton").remove();
+      await this.normalView();
+
     } else if (getObj.mode === "report") {
 
       await protoPatch(instance, [ `${modulePath}/checklist.js`, `${modulePath}/report.js` ]);
