@@ -391,6 +391,7 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
 
           } else {
             errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary 1)").catch((e) => { console.log(e); });
+            console.log(err);
             res.send(JSON.stringify({ message: "error" }));
           }
         } catch (e) {

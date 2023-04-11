@@ -316,7 +316,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
       ajaxJson({ noFlat: true, whereQuery: {} }, BACKHOST + "/getProjects", { equal: true }).then((projects) => {
 
         instance.projects = projects;
-  
+
         for (let designer of designers) {
           thisValueDoms = [ ...document.querySelector('.' + designer.desid).querySelectorAll('.' + valueTargetClassName) ];
   
