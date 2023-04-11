@@ -1756,7 +1756,7 @@ DevContext.prototype.launching = async function () {
 
     // long
 
-    from = new Date(2022, 8, 1);
+    from = new Date(2023, 0, 1);
     to = new Date();
     longTimes = longTimes.filter(({ request }) => {
       return request.timeline.valueOf() >= from.valueOf() && request.timeline.valueOf() < to.valueOf()
@@ -1784,7 +1784,7 @@ DevContext.prototype.launching = async function () {
       matrix.push(tempArr);
     }
 
-    sheetsId = await sheets.create_newSheets_inPython("장기 고객 CRM", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    sheetsId = await sheets.create_newSheets_inPython("장기 고객 CRM", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     await sheets.setting_cleanView_inPython(sheetsId);
     await sheets.update_value_inPython(sheetsId, "", matrix);
     console.log(matrix);
@@ -1792,7 +1792,7 @@ DevContext.prototype.launching = async function () {
 
     // drop
 
-    from = new Date(2022, 8, 1);
+    from = new Date(2023, 0, 1);
     to = new Date();
     dropRequests = dropRequests.filter(({ request }) => {
       return request.timeline.valueOf() >= from.valueOf() && request.timeline.valueOf() < to.valueOf()
@@ -1822,7 +1822,7 @@ DevContext.prototype.launching = async function () {
       matrix.push(tempArr);
     }
 
-    sheetsId = await sheets.create_newSheets_inPython("드랍 고객 CRM", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    sheetsId = await sheets.create_newSheets_inPython("드랍 고객 CRM", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     await sheets.setting_cleanView_inPython(sheetsId);
     await sheets.update_value_inPython(sheetsId, "", matrix);
     console.log(matrix);
@@ -5577,8 +5577,8 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "허태영";
-    // const amount = 5238000;
+    // const name = "정다움";
+    // const amount = 10180000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
