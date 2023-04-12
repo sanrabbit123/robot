@@ -10,7 +10,7 @@ DashboardJs.binaryPath = FRONTHOST + "/middle/inner/manual";
 
 DashboardJs.prototype.returnTreeContents = function () {
   const instance = this;
-  const { selfHref } = GeneralJs;
+  const { selfHref, blankHref } = GeneralJs;
   let baseContents;
 
   baseContents = [
@@ -46,7 +46,7 @@ DashboardJs.prototype.returnTreeContents = function () {
           title: "추천서 관리",
           event: () => {
             return function (e) {
-              instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/proposal");
+              selfHref("/proposal");
             }
           }
         },
@@ -107,42 +107,58 @@ DashboardJs.prototype.returnTreeContents = function () {
       number: 800,
       children: [
         {
-          title: "프로젝트 현황과 정보"
+          title: "프로젝트 현황과 정보",
+          event: () => {
+            return function (e) {
+              selfHref("/project");
+            }
+          }
         },
         {
-          title: "시공 프로젝트 현황과 정보"
+          title: "시공 프로젝트 현황과 정보",
+          event: () => {
+            return function (e) {
+              selfHref("/builder?mode=construct");
+            }
+          }
         },
         {
           title: "프로젝트 촬영 관리",
+          event: () => {
+            return function (e) {
+              selfHref("/designer?mode=contents");
+            }
+          }
         },
         {
           title: "컨텐츠 발행 관리",
+          event: () => {
+            return function (e) {
+              selfHref("/designer?mode=contents");
+            }
+          }
         },
         {
           title: "컨텐츠 상세 설정",
+          event: () => {
+            return function (e) {
+              selfHref("/contents");
+            }
+          }
         },
         {
           title: "프로젝트 정산 관리",
-        },
-        {
-          title: "프로젝트 리포트",
-          children: [
-            {
-              title: "디자인 프로젝트 리포트"
-            },
-            {
-              title: "시공 프로젝트 리포트"
-            },
-          ]
+          event: () => {
+            return function (e) {
+              selfHref("/calculation");
+            }
+          }
         },
         {
           title: "프로젝트 매뉴얼",
           children: [
             {
-              title: "현장 미팅 매뉴얼",
-            },
-            {
-              title: "프로젝트 계약 매뉴얼"
+              title: "현장 미팅과 계약 매뉴얼",
             },
             {
               title: "프로젝트 케어 매뉴얼"
@@ -171,13 +187,20 @@ DashboardJs.prototype.returnTreeContents = function () {
       number: 400,
       children: [
         {
-          title: "디자이너 현황과 정보"
+          title: "디자이너 현황과 정보",
+          event: () => {
+            return function (e) {
+              selfHref("/designer?mode=normal");
+            }
+          }
         },
         {
-          title: "디자이너 신청자 관리"
-        },
-        {
-          title: "디자이너 평가 시스템"
+          title: "디자이너 신청자 관리",
+          event: () => {
+            return function (e) {
+              selfHref("/designer?mode=aspirant");
+            }
+          }
         },
         {
           title: "디자이너 리포트"
@@ -191,15 +214,12 @@ DashboardJs.prototype.returnTreeContents = function () {
           }
         },
         {
-          title: "디자이너 가격과 정산",
-          children: [
-            {
-              title: "가격 정책"
-            },
-            {
-              title: "정산 조건"
+          title: "디자이너 가격",
+          event: () => {
+            return function (e) {
+              selfHref("/designer?mode=price");
             }
-          ]
+          }
         },
         {
           title: "디자이너 관리 매뉴얼",
@@ -219,10 +239,20 @@ DashboardJs.prototype.returnTreeContents = function () {
           title: "디자이너 콘솔",
           children: [
             {
-              title: "디자이너 콘솔 테스트 계정"
+              title: "디자이너 콘솔 테스트 계정",
+              event: () => {
+                return function (e) {
+                  blankHref(FRONTHOST + "/designer/dashboard.php?desid=d1701_aa01s");
+                }
+              }
             },
             {
               title: "디자이너 콘솔 매뉴얼",
+              event: () => {
+                return function (e) {
+                  blankHref(FRONTHOST + "/designer/manual.php?desid=d1701_aa01s");
+                }
+              }
             },
           ]
         }
@@ -1317,7 +1347,7 @@ DashboardJs.prototype.baseMaker = function () {
   indentMargin = 12;
 
   titleSize = 2.6;
-  contentsSize = 1.5;
+  contentsSize = 1.6;
   lineTop = 1;
 
   visualMarginLeft = 4;

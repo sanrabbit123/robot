@@ -893,12 +893,37 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                       cursor: "pointer",
                     }
                   },
+                  {
+                    text: blank,
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.gray3,
+                    }
+                  },
+                  {
+                    text: "디자이너 콘솔",
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.black,
+                      cursor: "pointer",
+                    }
+                  },
                 ]
               }
             ]
           }
         });
       }
+
+      instance.whiteMaker = whiteMaker;
 
       if (document.querySelector('.' + whiteCardClassName) === null) {
         whiteMaker(false);
