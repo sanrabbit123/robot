@@ -38,11 +38,13 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           title: "아이디",
           width: 96,
           name: "desid",
+          type: "string",
         },
         {
           title: "성함",
           width: 60,
           name: "designer",
+          type: "string",
         },
       ],
       values: {},
@@ -53,6 +55,25 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         title: "담당자",
         width: 80,
         name: "manger",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          }
+        ].concat(this.members.filter((o) => { return o.roles.includes("CX") }).map((member) => {
+          return member.name;
+        }).map((name) => {
+          return {
+            value: name,
+            functionName: "filterEvent_" + name,
+          }
+        }).concat([
+          {
+            value: "-",
+            functionName: "filterEvent_-",
+          }
+        ]))
       },
       {
         title: "계약 상태",
@@ -80,112 +101,285 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
             value: "컨택중",
             color: colorChip.deactive,
           },
-        ]
+        ],
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          }
+        ].concat([
+          "협약 완료",
+          "협약 휴직",
+          "협약 해지",
+          "신청 대기",
+          "컨택중",
+        ].map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        }))
       },
       {
         title: "계약일",
         width: 100,
         name: "contractDate",
+        type: "date",
       },
       {
         title: "계약 유지",
         width: 100,
         name: "contractDuring",
+        type: "during",
       },
       {
         title: "적용 경력",
         width: 100,
         name: "career",
+        type: "during",
       },
       {
         title: "주소",
         width: 400,
         name: "address",
+        type: "string",
       },
       {
         title: "유효 범위",
         width: 100,
         name: "range",
+        type: "number",
       },
       {
         title: "한계 범위",
         width: 100,
         name: "expenses",
+        type: "number",
       },
       {
         title: "홈퍼니싱",
         width: 100,
         name: "homefurnishing",
+        type: "boolean",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "가능",
+            functionName: "filterEvent_가능",
+          },
+          {
+            value: "불가능",
+            functionName: "filterEvent_불가능",
+          },
+        ],
       },
       {
         title: "홈스타일링",
         width: 100,
         name: "homestyling",
+        type: "boolean",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "가능",
+            functionName: "filterEvent_가능",
+          },
+          {
+            value: "불가능",
+            functionName: "filterEvent_불가능",
+          },
+        ],
       },
       {
         title: "토탈 스타일링",
         width: 100,
         name: "totalstyling",
+        type: "boolean",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "가능",
+            functionName: "filterEvent_가능",
+          },
+          {
+            value: "불가능",
+            functionName: "filterEvent_불가능",
+          },
+        ],
       },
       {
         title: "설계 변경",
         width: 100,
         name: "extrastyling",
+        type: "boolean",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "가능",
+            functionName: "filterEvent_가능",
+          },
+          {
+            value: "불가능",
+            functionName: "filterEvent_불가능",
+          },
+        ],
       },
       {
         title: "프리미엄",
         width: 100,
         name: "premium",
+        type: "boolean",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "가능",
+            functionName: "filterEvent_가능",
+          },
+          {
+            value: "불가능",
+            functionName: "filterEvent_불가능",
+          },
+        ],
       },
       {
         title: "부분 공간",
         width: 100,
         name: "partial",
+        type: "boolean",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "가능",
+            functionName: "filterEvent_가능",
+          },
+          {
+            value: "불가능",
+            functionName: "filterEvent_불가능",
+          },
+        ],
       },
       {
         title: "온라인",
         width: 100,
         name: "online",
+        type: "boolean",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "가능",
+            functionName: "filterEvent_가능",
+          },
+          {
+            value: "불가능",
+            functionName: "filterEvent_불가능",
+          },
+        ],
       },
       {
         title: "거주중",
         width: 100,
         name: "living",
+        type: "boolean",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "가능",
+            functionName: "filterEvent_가능",
+          },
+          {
+            value: "불가능",
+            functionName: "filterEvent_불가능",
+          },
+        ],
       },
       {
         title: "총 추천수",
         width: 100,
         name: "proposalNumber",
+        type: "number",
       },
       {
         title: "총 진행수",
         width: 100,
         name: "contractNumber",
+        type: "number",
       },
       {
         title: "진행율",
         width: 100,
         name: "contractPercentage",
+        type: "percentage",
       },
       {
         title: "총 정산액",
         width: 120,
         name: "totalAmount",
+        type: "number",
       },
     ];
 
     for (let i = 0; i < yearDelta; i++) {
-      columns.push({ title: String(now.getFullYear() - i) + " " + "추천수", width: 120, name: "proposalNumberY" + String(i) });
-      columns.push({ title: String(now.getFullYear() - i) + " " + "진행수", width: 120, name: "contractNumberY" + String(i) });
-      columns.push({ title: String(now.getFullYear() - i) + " " + "진행율", width: 120, name: "contractPercentageY" + String(i) });
-      columns.push({ title: String(now.getFullYear() - i) + " " + "총 정산액", width: 120, name: "totalAmountY" + String(i) });
+      columns.push({
+        title: String(now.getFullYear() - i) + " " + "추천수",
+        width: 120,
+        name: "proposalNumberY" + String(i),
+        type: "number",
+      });
+      columns.push({
+        title: String(now.getFullYear() - i) + " " + "진행수",
+        width: 120,
+        name: "contractNumberY" + String(i),
+        type: "number",
+      });
+      columns.push({
+        title: String(now.getFullYear() - i) + " " + "진행율",
+        width: 120,
+        name: "contractPercentageY" + String(i),
+        type: "percentage",
+      });
+      columns.push({
+        title: String(now.getFullYear() - i) + " " + "총 정산액",
+        width: 120,
+        name: "totalAmountY" + String(i),
+        type: "number",
+      });
     }
 
     for (let i = 0; i < monthDelta; i++) {
       tempDate = new Date();
       tempDate.setMonth(tempDate.getMonth() - i);
       tempString = String(tempDate.getFullYear()).slice(2) + ". " + String(tempDate.getMonth() + 1) + "월";
-      columns.push({ title: tempString + " " + "추천수", width: 120, name: "monthDelta" + String(tempDate.getFullYear()).slice(2) + String(tempDate.getMonth() + 1) });
+      columns.push({
+        title: tempString + " " + "추천수",
+        width: 120,
+        name: "monthDelta" + String(tempDate.getFullYear()).slice(2) + String(tempDate.getMonth() + 1),
+        type: "number",
+      });
     }
 
     values = {};
@@ -447,9 +641,10 @@ DesignerJs.prototype.normalColorSync = async function () {
 
 DesignerJs.prototype.normalBase = async function () {
   const instance = this;
-  const { ea, totalContents, designers, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText } = this;
-  const { createNode, colorChip, withOut, findByAttribute } = GeneralJs;
+  const { ea, totalContents, designers, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate } = GeneralJs;
   const moveTargetClassName = "moveTarget";
+  const menuPromptClassName = "menuPromptClassName";
   try {
     let totalMother;
     let grayArea, whiteArea;
@@ -462,7 +657,6 @@ DesignerJs.prototype.normalBase = async function () {
     let idNameHeight;
     let idNamePaddingBottom;
     let maxWidth;
-    let valueColumnsArea;
     let valueColumnsAreaPaddingLeft;
     let valueArea;
     let valueWeight;
@@ -473,6 +667,12 @@ DesignerJs.prototype.normalBase = async function () {
     let thisTargets;
     let hoverEvent, hoverOutEvent;
     let standards;
+    let menuPromptWidth, menuPromptHeight;
+    let menuVisual;
+    let menuBetween;
+    let menuTextTop, menuSize, menuWeight;
+    let columnsMenuEvent;
+    let menuEventTong;
   
     totalPaddingTop = 38;
     columnAreaHeight = 32;
@@ -492,6 +692,17 @@ DesignerJs.prototype.normalBase = async function () {
     valueMaxWidth = 1000;
   
     valueColumnsAreaPaddingLeft = 20;
+
+    menuPromptWidth = 90;
+    menuPromptHeight = 32;
+    menuVisual = 4;
+    menuBetween = 3;
+
+    menuTextTop = isMac() ? -1 : 1,
+    menuSize = 13;
+    menuWeight = 600;
+
+    ({ standards, columns, values } = await this.normalDataRender(true));
   
     hoverEvent = () => {
       return function (e) {
@@ -515,7 +726,270 @@ DesignerJs.prototype.normalBase = async function () {
       }
     }
 
-    ({ standards, columns, values } = await this.normalDataRender());
+    menuEventTong = {
+      sortEvent: (thisType, name, index) => {
+        return async function (e) {
+          try {
+            const idNameArea = document.querySelector('.' + idNameAreaClassName);
+            const valueArea = document.querySelector('.' + valueAreaClassName);
+            const idNameDoms = Array.from(document.querySelectorAll('.' + standardCaseClassName));
+            const valueDoms = Array.from(document.querySelectorAll('.' + valueCaseClassName));
+            const type = columns[index].type;
+            let domMatrix;
+            let thisDesid;
+            let thisValueDom;
+  
+            domMatrix = [];
+            for (let i = 0; i < idNameDoms.length; i++) {
+              thisDesid = idNameDoms[i].getAttribute("desid");
+              thisValueDom = findByAttribute(valueDoms, "desid", thisDesid);
+              domMatrix.push([
+                idNameDoms[i],
+                thisValueDom
+              ]);
+            }
+  
+            domMatrix.sort((a, b) => {
+              let aValue, bValue;
+              let aSortValue, bSortValue;
+              let tempArr;
+  
+              aValue = findByAttribute([ ...a[1].querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent;
+              bValue = findByAttribute([ ...b[1].querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent;
+              
+              if (type === "string") {
+                aSortValue = aValue !== '' ? aValue.charCodeAt(0) : 0;
+                bSortValue = bValue !== '' ? bValue.charCodeAt(0) : 0;
+              } else if (type === "number") {
+                aValue = aValue.replace(/[^0-9]/gi, '')
+                bValue = bValue.replace(/[^0-9]/gi, '')
+                aSortValue = aValue !== '' ? Number(aValue) : 0;
+                bSortValue = bValue !== '' ? Number(bValue) : 0;
+              } else if (type === "percentage") {
+                aValue = aValue.replace(/[^0-9\.]/gi, '')
+                bValue = bValue.replace(/[^0-9\.]/gi, '')
+                aSortValue = aValue !== '' ? Number(aValue) : 0;
+                bSortValue = bValue !== '' ? Number(bValue) : 0;
+              } else if (type === "date") {
+                aSortValue = aValue !== '' ? stringToDate(aValue) : stringToDate("1800-01-01");
+                bSortValue = bValue !== '' ? stringToDate(bValue) : stringToDate("1800-01-01");
+                aSortValue = aSortValue.valueOf();
+                bSortValue = bSortValue.valueOf();
+              } else if (type === "during") {
+  
+                if (/년/gi.test(aValue)) {
+                  tempArr = aValue.split('년');
+                  if (tempArr.length > 1) {
+                    aSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12) + Number(tempArr[1].replace(/[^0-9]/gi, ''));
+                  } else {
+                    aSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12);
+                  }
+                } else {
+                  aSortValue = Number(aValue.replace(/[^0-9]/gi, ''));
+                }
+  
+                if (/년/gi.test(bValue)) {
+                  tempArr = bValue.split('년');
+                  if (tempArr.length > 1) {
+                    bSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12) + Number(tempArr[1].replace(/[^0-9]/gi, ''));
+                  } else {
+                    bSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12);
+                  }
+                } else {
+                  bSortValue = Number(bValue.replace(/[^0-9]/gi, ''));
+                }
+  
+              } else {
+                aSortValue = aValue !== '' ? aValue.charCodeAt(0) : 0;
+                bSortValue = bValue !== '' ? bValue.charCodeAt(0) : 0;
+              }
+              
+              if (thisType === "down") {
+                return bSortValue - aSortValue;
+              } else {
+                return aSortValue - bSortValue;
+              }
+            });
+  
+            for (let [ standard, value ] of domMatrix) {
+              idNameArea.appendChild(standard);
+              valueArea.appendChild(value);
+            }
+  
+            removeByClass(menuPromptClassName);
+  
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      filterEvent: (thisValue, name, index) => {
+        return async function (e) {
+          try {
+            const idNameArea = document.querySelector('.' + idNameAreaClassName);
+            const valueArea = document.querySelector('.' + valueAreaClassName);
+            const idNameDoms = Array.from(document.querySelectorAll('.' + standardCaseClassName));
+            const valueDoms = Array.from(document.querySelectorAll('.' + valueCaseClassName));
+            const last = "lastfilter";
+            const type = columns[index].type;
+            let domMatrix;
+            let thisDesid;
+            let thisValueDom;
+  
+            domMatrix = [];
+            for (let i = 0; i < idNameDoms.length; i++) {
+              thisDesid = idNameDoms[i].getAttribute("desid");
+              thisValueDom = findByAttribute(valueDoms, "desid", thisDesid);
+              domMatrix.push([
+                idNameDoms[i],
+                thisValueDom
+              ]);
+            }
+
+            if (thisValue === "$all") {
+              for (let [ standard, value ] of domMatrix) {
+                standard.style.display = "flex";
+                value.style.display = "flex";
+                standard.setAttribute(last, "none");
+                value.setAttribute(last, "none");
+              }
+            } else {
+              for (let [ standard, value ] of domMatrix) {
+                if (standard.getAttribute(last) === name) {
+                  if (findByAttribute([ ...value.querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent.trim() === thisValue) {
+                    standard.style.display = "flex";
+                    value.style.display = "flex";
+                  } else {
+                    standard.style.display = "none";
+                    value.style.display = "none";
+                  }
+                } else {
+                  if (findByAttribute([ ...value.querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent.trim() === thisValue) {
+                    if (standard.style.display !== "none") {
+                      standard.style.display = "flex";
+                      value.style.display = "flex";
+                    }
+                  } else {
+                    standard.style.display = "none";
+                    value.style.display = "none";
+                  }
+                }
+                standard.setAttribute(last, name);
+                value.setAttribute(last, name);
+              }
+            }
+
+            removeByClass(menuPromptClassName);
+  
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+    }
+
+    columnsMenuEvent = (index) => {
+      return async function (e) {
+        try {
+          e.preventDefault();
+          const name = this.getAttribute("name");
+          const index = Number(this.getAttribute("index"));
+          const thisObject = columns[index];
+          const zIndex = 4;
+          let cancelBack, blackPrompt;
+          let thisMenu;
+
+          thisMenu = [
+            {
+              value: "내림차순",
+              functionName: "sortEvent_down",
+            },
+            {
+              value: "오름차순",
+              functionName: "sortEvent_up",
+            },
+          ];
+
+          if (Array.isArray(thisObject.menu)) {
+            thisMenu = thisMenu.concat(thisObject.menu);
+          }
+
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ menuPromptClassName ],
+            event: (e) => { removeByClass(menuPromptClassName) },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              background: "transparent",
+              zIndex: String(zIndex),
+            }
+          });
+
+          blackPrompt = createNode({
+            mother: totalContents,
+            class: [ menuPromptClassName ],
+            style: {
+              position: "fixed",
+              top: String(e.y + menuVisual) + "px",
+              left: String(e.x + menuVisual) + "px",
+              width: String(menuPromptWidth) + ea,
+              background: colorChip.white,
+              animation: "fadeuplite 0.3s ease forwards",
+              zIndex: String(zIndex),
+            },
+            children: thisMenu.map(({ value, functionName }) => {
+              const functionOrderArr = functionName.split("_");
+              const [ thisFunctionName ] = functionOrderArr;
+              let thisArguments;
+              if (functionOrderArr.length > 1) {
+                thisArguments = functionOrderArr.slice(1).concat([ name, index ]);
+              } else {
+                thisArguments = [ name, index ];
+              }
+              return {
+                event: {
+                  selectstart: (e) => { e.preventDefault() },
+                  click: menuEventTong[thisFunctionName](...thisArguments),
+                },
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: String(menuPromptWidth) + ea,
+                  height: String(menuPromptHeight) + ea,
+                  borderRadius: String(5) + "px",
+                  background: colorChip.gradientGray,
+                  marginBottom: String(menuBetween) + ea,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  cursor: "pointer",
+                },
+                child: {
+                  text: value,
+                  event: {
+                    selectstart: (e) => { e.preventDefault() },
+                  },
+                  style: {
+                    position: "relative",
+                    top: String(menuTextTop) + ea,
+                    fontSize: String(menuSize) + ea,
+                    fontWeight: String(menuWeight),
+                    color: colorChip.white,
+                  }
+                }
+              }
+            })
+          })
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
 
     totalMother = createNode({
       mother: totalContents,
@@ -537,7 +1011,7 @@ DesignerJs.prototype.normalBase = async function () {
       }
     });
   
-    valueColumnsArea = createNode({
+    createNode({
       mother: totalMother,
       style: {
         display: "block",
@@ -567,6 +1041,7 @@ DesignerJs.prototype.normalBase = async function () {
                 justifyContent: "center",
                 alignItems: "start",
                 width: String(width) + ea,
+                cursor: "pointer",
               },
               child: {
                 text: title,
@@ -599,58 +1074,62 @@ DesignerJs.prototype.normalBase = async function () {
               alignItems: "start",
               justifyContent: "start",
               paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
-            }
+            },
+            children: columns.map(({ title, width, name }, index) => {
+              return {
+                attribute: {
+                  name: name,
+                  index: String(index),
+                },
+                event: {
+                  selectstart: (e) => { e.preventDefault() },
+                  click: columnsMenuEvent(index),
+                  contextmenu: columnsMenuEvent(index),
+                },
+                style: {
+                  display: "inline-flex",
+                  flexDirection: "row",
+                  position: "relative",
+                  justifyContent: "center",
+                  alignItems: "start",
+                  width: String(width) + ea,
+                  cursor: "pointer",
+                },
+                child: {
+                  style: {
+                    display: "inline-block",
+                    width: String(90) + '%',
+                    position: "relative",
+                    overflow: "hidden",
+                    textAlign: "center",
+                  },
+                  child: {
+                    style: {
+                      display: "flex",
+                      width: String(valueMaxWidth) + ea,
+                      position: "relative",
+                      left: withOut(50, valueMaxWidth / 2, ea),
+                      textAlign: "center",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    child: {
+                      text: title,
+                      style: {
+                        fontSize: String(fontSize) + ea,
+                        fontWeight: String(fontWeight),
+                        color: colorChip.green,
+                      }
+                    }
+                  }
+                }
+              }
+            })
           }
         }
       ]
-    }).children[1].children[0];
+    });
   
-  
-    for (let i = 0; i < columns.length; i++) {
-
-      createNode({
-        mother: valueColumnsArea,
-        style: {
-          display: "inline-flex",
-          flexDirection: "row",
-          position: "relative",
-          justifyContent: "center",
-          alignItems: "start",
-          width: String(columns[i].width) + ea,
-        },
-        child: {
-          style: {
-            display: "inline-block",
-            width: String(90) + '%',
-            position: "relative",
-            overflow: "hidden",
-            textAlign: "center",
-          },
-          child: {
-            style: {
-              display: "flex",
-              width: String(valueMaxWidth) + ea,
-              position: "relative",
-              left: withOut(50, valueMaxWidth / 2, ea),
-              textAlign: "center",
-              justifyContent: "center",
-              alignItems: "center",
-            },
-            child: {
-              text: columns[i].title,
-              style: {
-                fontSize: String(fontSize) + ea,
-                fontWeight: String(fontWeight),
-                color: colorChip.green,
-              }
-            }
-          }
-        }
-      });
-  
-    }
-  
-
     [ idNameArea, valueArea ] = createNode({
       mother: totalMother,
       style: {
@@ -663,6 +1142,7 @@ DesignerJs.prototype.normalBase = async function () {
       },
       children: [
         {
+          class: [ idNameAreaClassName ],
           style: {
             display: "inline-flex",
             verticalAlign: "top",
@@ -673,6 +1153,7 @@ DesignerJs.prototype.normalBase = async function () {
           }
         },
         {
+          class: [ valueAreaClassName ],
           style: {
             display: "inline-block",
             position: "relative",
@@ -688,7 +1169,7 @@ DesignerJs.prototype.normalBase = async function () {
   
       createNode({
         mother: idNameArea,
-        attribute: { desid: designer.desid },
+        attribute: { desid: designer.desid, lastfilter: "none" },
         class: [ standardCaseClassName ],
         style: {
           display: "flex",
@@ -727,7 +1208,7 @@ DesignerJs.prototype.normalBase = async function () {
   
       thisTong = createNode({
         mother: valueArea,
-        attribute: { desid: designer.desid },
+        attribute: { desid: designer.desid, lastfilter: "none" },
         class: [ moveTargetClassName, valueCaseClassName, designer.desid ],
         event: {
           mouseenter: hoverEvent(),
@@ -811,6 +1292,7 @@ DesignerJs.prototype.normalView = async function () {
     let loading;
     let designers;
     let histories;
+    let members;
 
     loading = await this.mother.loadingRun();
 
@@ -823,13 +1305,18 @@ DesignerJs.prototype.normalView = async function () {
 
     for (let designer of designers) {
       designer.manager = histories[designer.desid];
-    } 
+    }
 
+    members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
+
+    this.members = members;
     this.designers = designers;
     this.projects = null;
     this.valueTargetClassName = "valueTargetClassName";
     this.valueCaseClassName = "valueCaseClassName";
     this.standardCaseClassName = "standardCaseClassName";
+    this.idNameAreaClassName = "idNameAreaClassName";
+    this.valueAreaClassName = "valueAreaClassName";
     this.asyncProcessText = "로드중..";
 
     await this.normalBase();

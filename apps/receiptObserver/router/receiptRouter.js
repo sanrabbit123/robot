@@ -3784,7 +3784,7 @@ ReceiptRouter.prototype.rou_post_calculationConsole = function () {
         }, { selfMongo: selfCoreMongo });
       } else if (mode === "search") {
         const { value } = req.body;
-        preClients = await back.getClientsByQuery({ name: { $regex: value } }, { selfMongo: selfCoreMongo });
+        preClients = await back.getClientsByQuery({ name: { $regex: value.replace(/[\\]/g, '') } }, { selfMongo: selfCoreMongo });
         if (preClients.length === 0) {
           projects = [];
         } else {
