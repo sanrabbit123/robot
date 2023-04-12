@@ -1,6 +1,6 @@
 DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
   const instance = this;
-  const { ea, totalContents, designers, valueTargetClassName, asyncProcessText } = this;
+  const { ea, totalContents, valueTargetClassName, asyncProcessText } = this;
   const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute } = GeneralJs;
   try {
     const calcMonthDelta = (from, to) => {
@@ -384,7 +384,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
     values = {};
 
-    for (let designer of designers) {
+    for (let designer of instance.designers) {
 
       standards.values[designer.desid] = [
         {
@@ -511,7 +511,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
         instance.projects = projects;
 
-        for (let designer of designers) {
+        for (let designer of instance.designers) {
           thisValueDoms = [ ...document.querySelector('.' + designer.desid).querySelectorAll('.' + valueTargetClassName) ];
   
           filteredProjectsProposal = projects.filter((p) => {
@@ -604,7 +604,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
 DesignerJs.prototype.normalColorSync = async function () {
   const instance = this;
-  const { ea, totalContents, designers, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText } = this;
+  const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText } = this;
   const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute } = GeneralJs;
   try {
     let columns;
@@ -641,8 +641,8 @@ DesignerJs.prototype.normalColorSync = async function () {
 
 DesignerJs.prototype.normalBase = async function () {
   const instance = this;
-  const { ea, totalContents, designers, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate } = GeneralJs;
+  const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren } = GeneralJs;
   const moveTargetClassName = "moveTarget";
   const menuPromptClassName = "menuPromptClassName";
   try {
@@ -673,6 +673,7 @@ DesignerJs.prototype.normalBase = async function () {
     let menuTextTop, menuSize, menuWeight;
     let columnsMenuEvent;
     let menuEventTong;
+    let normalContentsLoad;
   
     totalPaddingTop = 38;
     columnAreaHeight = 32;
@@ -998,288 +999,338 @@ DesignerJs.prototype.normalBase = async function () {
         position: "relative",
         width: withOut(0, ea),
         height: withOut(this.belowHeight, ea),
-      },
-      child: {
-        style: {
-          position: "absolute",
-          top: String(0),
-          left: String(0),
-          width: String(this.grayBarWidth) + ea,
-          height: withOut(0, ea),
-          background: colorChip.gray0,
-        }
       }
     });
-  
-    createNode({
-      mother: totalMother,
-      style: {
-        display: "block",
-        position: "relative",
-        paddingTop: String(totalPaddingTop) + ea,
-        height: String(columnAreaHeight) + ea,
-        borderBottom: "1px dashed " + colorChip.gray3,
-      },
-      children: [
-        {
+
+    normalContentsLoad = async (reload = false) => {
+      try {
+
+        if (reload) {
+          ({ standards, columns, values } = await instance.normalDataRender(true));
+        }
+
+        cleanChildren(totalMother);
+
+        createNode({
+          mother: totalMother,
           style: {
-            display: "inline-flex",
-            flexDirection: "row",
-            position: "relative",
-            height: withOut(0, ea),
-            justifyContent: "center",
-            alignItems: "start",
-            verticalAlign: "top",
+            position: "absolute",
+            top: String(0),
+            left: String(0),
             width: String(this.grayBarWidth) + ea,
+            height: withOut(0, ea),
+            background: colorChip.gray0,
+          }
+        });
+        createNode({
+          mother: totalMother,
+          style: {
+            display: "block",
+            position: "relative",
+            paddingTop: String(totalPaddingTop) + ea,
+            height: String(columnAreaHeight) + ea,
+            borderBottom: "1px dashed " + colorChip.gray3,
           },
-          children: standards.columns.map(({ title, width }) => {
-            return {
+          children: [
+            {
               style: {
                 display: "inline-flex",
                 flexDirection: "row",
                 position: "relative",
+                height: withOut(0, ea),
                 justifyContent: "center",
                 alignItems: "start",
-                width: String(width) + ea,
-                cursor: "pointer",
+                verticalAlign: "top",
+                width: String(this.grayBarWidth) + ea,
+              },
+              children: standards.columns.map(({ title, width }) => {
+                return {
+                  style: {
+                    display: "inline-flex",
+                    flexDirection: "row",
+                    position: "relative",
+                    justifyContent: "center",
+                    alignItems: "start",
+                    width: String(width) + ea,
+                    cursor: "pointer",
+                  },
+                  child: {
+                    text: title,
+                    style: {
+                      fontSize: String(fontSize) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.green,
+                    }
+                  }
+                }
+              })
+            },
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                height: withOut(0, ea),
+                verticalAlign: "top",
+                width: withOut(this.grayBarWidth, ea),
+                overflow: "hidden",
               },
               child: {
-                text: title,
+                class: [ moveTargetClassName ],
                 style: {
-                  fontSize: String(fontSize) + ea,
-                  fontWeight: String(fontWeight),
-                  color: colorChip.green,
-                }
+                  display: "flex",
+                  position: "relative",
+                  width: String(maxWidth) + ea,
+                  height: withOut(0, ea),
+                  flexDirection: "row",
+                  alignItems: "start",
+                  justifyContent: "start",
+                  paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
+                },
+                children: columns.map(({ title, width, name }, index) => {
+                  return {
+                    attribute: {
+                      name: name,
+                      index: String(index),
+                    },
+                    event: {
+                      selectstart: (e) => { e.preventDefault() },
+                      click: columnsMenuEvent(index),
+                      contextmenu: columnsMenuEvent(index),
+                    },
+                    style: {
+                      display: "inline-flex",
+                      flexDirection: "row",
+                      position: "relative",
+                      justifyContent: "center",
+                      alignItems: "start",
+                      width: String(width) + ea,
+                      cursor: "pointer",
+                    },
+                    child: {
+                      style: {
+                        display: "inline-block",
+                        width: String(90) + '%',
+                        position: "relative",
+                        overflow: "hidden",
+                        textAlign: "center",
+                      },
+                      child: {
+                        style: {
+                          display: "flex",
+                          width: String(valueMaxWidth) + ea,
+                          position: "relative",
+                          left: withOut(50, valueMaxWidth / 2, ea),
+                          textAlign: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        },
+                        child: {
+                          text: title,
+                          style: {
+                            fontSize: String(fontSize) + ea,
+                            fontWeight: String(fontWeight),
+                            color: colorChip.green,
+                          }
+                        }
+                      }
+                    }
+                  }
+                })
               }
             }
-          })
-        },
-        {
+          ]
+        });
+      
+        [ idNameArea, valueArea ] = createNode({
+          mother: totalMother,
           style: {
-            display: "inline-block",
+            display: "block",
             position: "relative",
-            height: withOut(0, ea),
-            verticalAlign: "top",
-            width: withOut(this.grayBarWidth, ea),
-            overflow: "hidden",
+            paddingTop: String(idNameAreaPaddingTop) + ea,
+            height: withOut(totalPaddingTop + columnAreaHeight + idNameAreaPaddingTop, ea),
+            width: withOut(0, ea),
+            overflow: "scroll",
           },
-          child: {
-            class: [ moveTargetClassName ],
+          children: [
+            {
+              class: [ idNameAreaClassName ],
+              style: {
+                display: "inline-flex",
+                verticalAlign: "top",
+                flexDirection: "column",
+                position: "relative",
+                width: String(this.grayBarWidth) + ea,
+                paddingBottom: String(idNamePaddingBottom) + ea,
+              }
+            },
+            {
+              class: [ valueAreaClassName ],
+              style: {
+                display: "inline-block",
+                position: "relative",
+                verticalAlign: "top",
+                width: withOut(this.grayBarWidth, ea),
+                overflow: "hidden",
+              },
+            }
+          ]
+        }).children;
+      
+        for (let designer of instance.designers) {
+      
+          createNode({
+            mother: idNameArea,
+            attribute: { desid: designer.desid, lastfilter: "none" },
+            class: [ standardCaseClassName ],
             style: {
               display: "flex",
-              position: "relative",
-              width: String(maxWidth) + ea,
-              height: withOut(0, ea),
               flexDirection: "row",
+              position: "relative",
+              height: String(idNameHeight) + ea,
+              justifyContent: "center",
               alignItems: "start",
-              justifyContent: "start",
-              paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
+              cursor: "pointer",
             },
-            children: columns.map(({ title, width, name }, index) => {
+            children: standards.values[designer.desid].map(({ value, name }, index) => {
               return {
-                attribute: {
-                  name: name,
-                  index: String(index),
-                },
-                event: {
-                  selectstart: (e) => { e.preventDefault() },
-                  click: columnsMenuEvent(index),
-                  contextmenu: columnsMenuEvent(index),
-                },
                 style: {
                   display: "inline-flex",
                   flexDirection: "row",
                   position: "relative",
                   justifyContent: "center",
                   alignItems: "start",
-                  width: String(width) + ea,
-                  cursor: "pointer",
+                  width: String(standards.columns[index].width) + ea,
                 },
                 child: {
+                  class: [ valueTargetClassName ],
+                  attribute: { name },
+                  text: value,
                   style: {
-                    display: "inline-block",
-                    width: String(90) + '%',
                     position: "relative",
-                    overflow: "hidden",
-                    textAlign: "center",
-                  },
-                  child: {
-                    style: {
-                      display: "flex",
-                      width: String(valueMaxWidth) + ea,
-                      position: "relative",
-                      left: withOut(50, valueMaxWidth / 2, ea),
-                      textAlign: "center",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    },
-                    child: {
-                      text: title,
-                      style: {
-                        fontSize: String(fontSize) + ea,
-                        fontWeight: String(fontWeight),
-                        color: colorChip.green,
-                      }
-                    }
+                    transition: "all 0.3s ease",
+                    fontSize: String(fontSize) + ea,
+                    fontWeight: String(fontWeight),
+                    color: colorChip.black,
                   }
                 }
               }
             })
-          }
-        }
-      ]
-    });
-  
-    [ idNameArea, valueArea ] = createNode({
-      mother: totalMother,
-      style: {
-        display: "block",
-        position: "relative",
-        paddingTop: String(idNameAreaPaddingTop) + ea,
-        height: withOut(totalPaddingTop + columnAreaHeight + idNameAreaPaddingTop, ea),
-        width: withOut(0, ea),
-        overflow: "scroll",
-      },
-      children: [
-        {
-          class: [ idNameAreaClassName ],
-          style: {
-            display: "inline-flex",
-            verticalAlign: "top",
-            flexDirection: "column",
-            position: "relative",
-            width: String(this.grayBarWidth) + ea,
-            paddingBottom: String(idNamePaddingBottom) + ea,
-          }
-        },
-        {
-          class: [ valueAreaClassName ],
-          style: {
-            display: "inline-block",
-            position: "relative",
-            verticalAlign: "top",
-            width: withOut(this.grayBarWidth, ea),
-            overflow: "hidden",
-          },
-        }
-      ]
-    }).children;
-  
-    for (let designer of designers) {
-  
-      createNode({
-        mother: idNameArea,
-        attribute: { desid: designer.desid, lastfilter: "none" },
-        class: [ standardCaseClassName ],
-        style: {
-          display: "flex",
-          flexDirection: "row",
-          position: "relative",
-          height: String(idNameHeight) + ea,
-          justifyContent: "center",
-          alignItems: "start",
-          cursor: "pointer",
-        },
-        children: standards.values[designer.desid].map(({ value, name }, index) => {
-          return {
+          });
+      
+          thisTong = createNode({
+            mother: valueArea,
+            attribute: { desid: designer.desid, lastfilter: "none" },
+            class: [ moveTargetClassName, valueCaseClassName, designer.desid ],
+            event: {
+              mouseenter: hoverEvent(),
+              mouseleave: hoverOutEvent(),
+            },
             style: {
-              display: "inline-flex",
+              display: "flex",
+              position: "relative",
+              width: String(maxWidth) + ea,
+              height: String(idNameHeight) + ea,
               flexDirection: "row",
-              position: "relative",
-              justifyContent: "center",
               alignItems: "start",
-              width: String(standards.columns[index].width) + ea,
-            },
-            child: {
-              class: [ valueTargetClassName ],
-              attribute: { name },
-              text: value,
-              style: {
-                position: "relative",
-                transition: "all 0.3s ease",
-                fontSize: String(fontSize) + ea,
-                fontWeight: String(fontWeight),
-                color: colorChip.black,
-              }
+              justifyContent: "start",
+              paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
+              cursor: "pointer",
             }
-          }
-        })
-      });
-  
-      thisTong = createNode({
-        mother: valueArea,
-        attribute: { desid: designer.desid, lastfilter: "none" },
-        class: [ moveTargetClassName, valueCaseClassName, designer.desid ],
-        event: {
-          mouseenter: hoverEvent(),
-          mouseleave: hoverOutEvent(),
-        },
-        style: {
-          display: "flex",
-          position: "relative",
-          width: String(maxWidth) + ea,
-          height: String(idNameHeight) + ea,
-          flexDirection: "row",
-          alignItems: "start",
-          justifyContent: "start",
-          paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
-          cursor: "pointer",
-        }
-      })
-
-      for (let i = 0; i < columns.length; i++) {
-        createNode({
-          mother: thisTong,
-          style: {
-            display: "inline-flex",
-            flexDirection: "row",
-            position: "relative",
-            justifyContent: "center",
-            alignItems: "start",
-            width: String(columns[i].width) + ea,
-          },
-          child: {
-            style: {
-              display: "inline-block",
-              width: String(90) + '%',
-              position: "relative",
-              overflow: "hidden",
-              textAlign: "center",
-            },
-            child: {
+          })
+    
+          for (let i = 0; i < columns.length; i++) {
+            createNode({
+              mother: thisTong,
               style: {
-                display: "flex",
-                width: String(valueMaxWidth) + ea,
+                display: "inline-flex",
+                flexDirection: "row",
                 position: "relative",
-                left: withOut(50, valueMaxWidth / 2, ea),
-                textAlign: "center",
                 justifyContent: "center",
-                alignItems: "center",
+                alignItems: "start",
+                width: String(columns[i].width) + ea,
               },
               child: {
-                attribute: {
-                  desid: designer.desid,
-                  name: values[designer.desid][i].name,
-                },
-                class: [ valueTargetClassName ],
-                text: String(values[designer.desid][i].value),
                 style: {
+                  display: "inline-block",
+                  width: String(90) + '%',
                   position: "relative",
-                  transition: "all 0.1s ease",
-                  fontSize: String(fontSize) + ea,
-                  fontWeight: String(valueWeight),
-                  color: (new RegExp(asyncProcessText, "gi")).test(values[designer.desid][i].value) ? colorChip.gray3 : colorChip.black,
+                  overflow: "hidden",
+                  textAlign: "center",
+                },
+                child: {
+                  style: {
+                    display: "flex",
+                    width: String(valueMaxWidth) + ea,
+                    position: "relative",
+                    left: withOut(50, valueMaxWidth / 2, ea),
+                    textAlign: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                  child: {
+                    attribute: {
+                      desid: designer.desid,
+                      name: values[designer.desid][i].name,
+                    },
+                    class: [ valueTargetClassName ],
+                    text: String(values[designer.desid][i].value),
+                    style: {
+                      position: "relative",
+                      transition: "all 0.1s ease",
+                      fontSize: String(fontSize) + ea,
+                      fontWeight: String(valueWeight),
+                      color: (new RegExp(asyncProcessText, "gi")).test(values[designer.desid][i].value) ? colorChip.gray3 : colorChip.black,
+                    }
+                  }
                 }
               }
-            }
+            });
           }
-        });
+      
+        }
+    
+        await this.normalColorSync();
+
+      } catch (e) {
+        console.log(e);
       }
-  
     }
 
-    await this.normalColorSync();
-  
+    await normalContentsLoad(false);
+    this.normalContentsLoad = normalContentsLoad;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DesignerJs.prototype.normalSearchEvent = async function () {
+  const instance = this;
+  const { ajaxJson } = GeneralJs;
+  try {
+    this.searchInput.addEventListener("keypress", async function (e) {
+      try {
+        if (e.key === "Enter") {
+          const value = this.value.trim().replace(/\&\=\+\\\//gi, '');
+          const designers = await ajaxJson({ noFlat: true, query: value }, BACKHOST + "/searchDesigners", { equal: true });
+          const histories = await ajaxJson({
+            method: "designer",
+            property: "manager",
+            idArr: designers.map((d) => { return d.desid }),
+          }, BACKHOST + "/getHistoryProperty", { equal: true });
+
+          for (let designer of designers) {
+            designer.manager = histories[designer.desid];
+          }
+
+          instance.designers = designers;
+          await instance.normalContentsLoad(true);
+          
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
   } catch (e) {
     console.log(e);
   }
@@ -1320,6 +1371,7 @@ DesignerJs.prototype.normalView = async function () {
     this.asyncProcessText = "로드중..";
 
     await this.normalBase();
+    await this.normalSearchEvent();
 
     loading.parentNode.removeChild(loading);
 
