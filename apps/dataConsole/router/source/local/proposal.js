@@ -2692,6 +2692,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
           zIndex: String(zIndex),
           borderRadius: String(5) + "px",
           animation: "fadeuplite 0.3s ease forwards",
+          boxShadow: "0 2px 10px -6px " + colorChip.shadow,
           overflow: "hidden",
         },
         child: {
