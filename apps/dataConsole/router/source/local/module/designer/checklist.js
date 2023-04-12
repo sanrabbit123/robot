@@ -6639,7 +6639,11 @@ DesignerJs.prototype.checkListView = async function () {
     let searchResult;
     let projects, clients;
 
-    designers = await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": { $not: { $regex: "해지" } } } }, "/getDesigners", { equal: true });
+    if (typeof getObj.desid === "string" && getObj.normal === "true") {
+      designers = await ajaxJson({ noFlat: true, whereQuery: { desid: getObj.desid } }, "/getDesigners", { equal: true });
+    } else {
+      designers = await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": { $not: { $regex: "해지" } } } }, "/getDesigners", { equal: true });
+    }
     length = designers.length;
     this.designers = new Designers(designers);
 

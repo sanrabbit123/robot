@@ -642,7 +642,7 @@ DesignerJs.prototype.normalColorSync = async function () {
 DesignerJs.prototype.normalWhiteCard = function (desid) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue } = GeneralJs;
   const whiteCardClassName = "whiteCardClassName";
   return async function (e) {
     try {
@@ -658,6 +658,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
       let titleTextTop, titleSize;
       let titleWeight;
       let fontTextTop, fontSize, fontBetween, fontWeight;
+      let whiteMaker;
 
       margin = 30;
       titleHeight = 50;
@@ -673,226 +674,255 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
       fontBetween = 8;
       fontWeight = 400;
 
-      cancelBack = createNode({
-        mother: totalContents,
-        class: [ "justfadein", whiteCardClassName ],
-        event: (e) => { removeByClass(whiteCardClassName) },
-        style: {
-          position: "fixed",
-          top: String(0),
-          left: String(grayBarWidth) + ea,
-          width: withOut(grayBarWidth, ea),
-          height: withOut(belowHeight, ea),
-          background: colorChip.black,
-        }
-      });
+      whiteMaker = (reload = false) => {
 
-      whitePrompt = createNode({
-        mother: totalContents,
-        class: [ whiteCardClassName ],
-        style: {
-          position: "fixed",
-          top: String(0 + margin + titleHeight) + ea,
-          left: String(grayBarWidth + margin) + ea,
-          width: withOut((margin * 2) + grayBarWidth, ea),
-          height: withOut(0 + (margin * 2) + titleHeight + belowHeight, ea),
-          background: colorChip.white,
-          zIndex: String(zIndex),
-          borderBottomLeftRadius: String(5) + "px",
-          borderBottomRightRadius: String(5) + "px",
-          animation: "fadeuplite 0.3s ease forwards",
-          boxShadow: "0 2px 10px -6px " + colorChip.shadow,
-          overflow: "hidden",
-        },
-        child: {
-          mode: "iframe",
-          attribute: {
-            src: "/designer?mode=checklist&entire=true&dataonly=true&normal=true&desid=" + desid,
-          },
+        if (!reload) {
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ "justfadein", whiteCardClassName ],
+            event: (e) => { removeByClass(whiteCardClassName) },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(grayBarWidth) + ea,
+              width: withOut(grayBarWidth, ea),
+              height: withOut(belowHeight, ea),
+              background: colorChip.black,
+            }
+          });
+        } 
+  
+        whitePrompt = createNode({
+          mother: totalContents,
+          class: [ whiteCardClassName ],
           style: {
-            position: "absolute",
-            display: "block",
-            top: String(0),
-            left: String(0),
-            width: withOut(0, ea),
-            height: withOut(0, ea),
-            border: String(0),
+            position: "fixed",
+            top: String(0 + margin + titleHeight) + ea,
+            left: String(grayBarWidth + margin) + ea,
+            width: withOut((margin * 2) + grayBarWidth, ea),
+            height: withOut(0 + (margin * 2) + titleHeight + belowHeight, ea),
+            background: colorChip.white,
+            zIndex: String(zIndex),
+            borderBottomLeftRadius: String(5) + "px",
+            borderBottomRightRadius: String(5) + "px",
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+            overflow: "hidden",
+          },
+          child: {
+            mode: "iframe",
+            attribute: {
+              src: BACKHOST + "/designer?mode=checklist&entire=true&dataonly=true&normal=true&desid=" + desid,
+            },
+            style: {
+              position: "absolute",
+              display: "block",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              border: String(0),
+            }
           }
-        }
-      });
-
-      titleWhite = createNode({
-        mother: totalContents,
-        class: [ whiteCardClassName ],
-        style: {
-          display: "flex",
-          flexDirection: "column",
-          position: "fixed",
-          top: String(0 + margin) + ea,
-          left: String(grayBarWidth + margin) + ea,
-          width: withOut((margin * 2) + grayBarWidth, ea),
-          height: String(titleHeight) + ea,
-          background: colorChip.white,
-          zIndex: String(zIndex),
-          borderTopLeftRadius: String(5) + "px",
-          borderTopRightRadius: String(5) + "px",
-          animation: "fadeuplite 0.3s ease forwards",
-          overflow: "hidden",
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "end",
-        },
-        child: {
+        });
+  
+        titleWhite = createNode({
+          mother: totalContents,
+          class: [ whiteCardClassName ],
           style: {
             display: "flex",
-            position: "relative",
+            flexDirection: "column",
+            position: "fixed",
+            top: String(0 + margin) + ea,
+            left: String(grayBarWidth + margin) + ea,
+            width: withOut((margin * 2) + grayBarWidth, ea),
+            height: String(titleHeight) + ea,
+            background: colorChip.white,
+            zIndex: String(zIndex),
+            borderTopLeftRadius: String(5) + "px",
+            borderTopRightRadius: String(5) + "px",
+            animation: "fadeuplite 0.3s ease forwards",
+            overflow: "hidden",
             flexDirection: "row",
+            justifyContent: "center",
             alignItems: "end",
-            justifyContent: "start",
-            width: withOut(innerMargin * 2, ea),
           },
-          children: [
-            {
-              text: designer.designer,
-              style: {
-                position: "relative",
-                top: String(titleTextTop) + ea,
-                fontSize: String(titleSize) + ea,
-                fontWeight: String(titleWeight),
-                color: colorChip.black,
-              }
+          child: {
+            style: {
+              display: "flex",
+              position: "relative",
+              flexDirection: "row",
+              alignItems: "end",
+              justifyContent: "start",
+              width: withOut(innerMargin * 2, ea),
             },
-            {
-              text: designer.desid,
-              style: {
-                position: "relative",
-                top: String(fontTextTop) + ea,
-                fontSize: String(fontSize) + ea,
-                marginLeft: String(fontBetween) + ea,
-                fontWeight: String(fontWeight),
-                color: colorChip.green,
-              }
-            },
-            {
-              style: {
-                display: "flex",
-                position: "absolute",
-                bottom: String(0),
-                right: String(0),
-                flexDirection: "row",
-                alignItems: "end",
-                justifyContent: "end",
+            children: [
+              {
+                text: designer.designer,
+                style: {
+                  position: "relative",
+                  top: String(titleTextTop) + ea,
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(titleWeight),
+                  color: colorChip.black,
+                }
               },
-              children: [
-                {
-                  text: "체크리스트",
-                  style: {
-                    position: "relative",
-                    top: String(fontTextTop) + ea,
-                    fontSize: String(fontSize) + ea,
-                    marginLeft: String(fontBetween) + ea,
-                    fontWeight: String(fontWeight),
-                    color: colorChip.green,
-                    cursor: "pointer",
-                  }
+              {
+                text: designer.desid,
+                style: {
+                  position: "relative",
+                  top: String(fontTextTop) + ea,
+                  fontSize: String(fontSize) + ea,
+                  marginLeft: String(fontBetween) + ea,
+                  fontWeight: String(fontWeight),
+                  color: colorChip.green,
+                }
+              },
+              {
+                style: {
+                  display: "flex",
+                  position: "absolute",
+                  bottom: String(0),
+                  right: String(0),
+                  flexDirection: "row",
+                  alignItems: "end",
+                  justifyContent: "end",
                 },
-                {
-                  text: blank,
-                  style: {
-                    position: "relative",
-                    top: String(fontTextTop) + ea,
-                    fontSize: String(fontSize) + ea,
-                    marginLeft: String(fontBetween) + ea,
-                    fontWeight: String(fontWeight),
-                    color: colorChip.gray3,
-                  }
-                },
-                {
-                  text: "일정 관리",
-                  style: {
-                    position: "relative",
-                    top: String(fontTextTop) + ea,
-                    fontSize: String(fontSize) + ea,
-                    marginLeft: String(fontBetween) + ea,
-                    fontWeight: String(fontWeight),
-                    color: colorChip.black,
-                    cursor: "pointer",
-                  }
-                },
-                {
-                  text: blank,
-                  style: {
-                    position: "relative",
-                    top: String(fontTextTop) + ea,
-                    fontSize: String(fontSize) + ea,
-                    marginLeft: String(fontBetween) + ea,
-                    fontWeight: String(fontWeight),
-                    color: colorChip.gray3,
-                  }
-                },
-                {
-                  text: "포트폴리오",
-                  style: {
-                    position: "relative",
-                    top: String(fontTextTop) + ea,
-                    fontSize: String(fontSize) + ea,
-                    marginLeft: String(fontBetween) + ea,
-                    fontWeight: String(fontWeight),
-                    color: colorChip.black,
-                    cursor: "pointer",
-                  }
-                },
-                {
-                  text: blank,
-                  style: {
-                    position: "relative",
-                    top: String(fontTextTop) + ea,
-                    fontSize: String(fontSize) + ea,
-                    marginLeft: String(fontBetween) + ea,
-                    fontWeight: String(fontWeight),
-                    color: colorChip.gray3,
-                  }
-                },
-                {
-                  text: "리포트",
-                  style: {
-                    position: "relative",
-                    top: String(fontTextTop) + ea,
-                    fontSize: String(fontSize) + ea,
-                    marginLeft: String(fontBetween) + ea,
-                    fontWeight: String(fontWeight),
-                    color: colorChip.black,
-                    cursor: "pointer",
-                  }
-                },
-                {
-                  text: blank,
-                  style: {
-                    position: "relative",
-                    top: String(fontTextTop) + ea,
-                    fontSize: String(fontSize) + ea,
-                    marginLeft: String(fontBetween) + ea,
-                    fontWeight: String(fontWeight),
-                    color: colorChip.gray3,
-                  }
-                },
-                {
-                  text: "메모",
-                  style: {
-                    position: "relative",
-                    top: String(fontTextTop) + ea,
-                    fontSize: String(fontSize) + ea,
-                    marginLeft: String(fontBetween) + ea,
-                    fontWeight: String(fontWeight),
-                    color: colorChip.black,
-                    cursor: "pointer",
-                  }
-                },
-              ]
-            }
-          ]
+                children: [
+                  {
+                    text: "체크리스트",
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.green,
+                      cursor: "pointer",
+                    }
+                  },
+                  {
+                    text: blank,
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.gray3,
+                    }
+                  },
+                  {
+                    text: "일정 관리",
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.black,
+                      cursor: "pointer",
+                    }
+                  },
+                  {
+                    text: blank,
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.gray3,
+                    }
+                  },
+                  {
+                    text: "포트폴리오",
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.black,
+                      cursor: "pointer",
+                    }
+                  },
+                  {
+                    text: blank,
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.gray3,
+                    }
+                  },
+                  {
+                    text: "리포트",
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.black,
+                      cursor: "pointer",
+                    }
+                  },
+                  {
+                    text: blank,
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.gray3,
+                    }
+                  },
+                  {
+                    text: "메모",
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.black,
+                      cursor: "pointer",
+                    }
+                  },
+                ]
+              }
+            ]
+          }
+        });
+      }
+
+      if (document.querySelector('.' + whiteCardClassName) === null) {
+        whiteMaker(false);
+      } else {
+        const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+        if (w0 !== undefined) {
+          w0.style.animation = "fadedownlite 0.3s ease forwards";
         }
-      });
+        if (w1 !== undefined) {
+          w1.style.animation = "fadedownlite 0.3s ease forwards";
+        }
+        setQueue(() => {
+          if (w0 !== undefined) {
+            w0.remove();
+          }
+          if (w1 !== undefined) {
+            w1.remove();
+          }
+          setQueue(() => {
+            whiteMaker(true);
+          })
+        }, 350);
+      }
+
 
     } catch (e) {
       console.log(e);
