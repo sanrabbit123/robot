@@ -662,6 +662,14 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
       let fontTextTop, fontSize, fontBetween, fontWeight;
       let whiteMaker;
       let iframeMaker;
+      let linkDictionary;
+
+      linkDictionary = {
+        checklist: BACKHOST + "/designer?mode=checklist&entire=true&dataonly=true&normal=true&desid=" + designer.desid,
+        possible: FRONTHOST + "/designer/possible.php?desid=" + designer.desid + "&entire=true&normal=true",
+        portfolio: BACKHOST + "/designer?mode=general&desid=" + designer.desid + "&dataonly=true&entire=true&normal=true",
+        report: FRONTHOST + "/designer/report.php?desid=" + designer.desid + "&entire=true&normal=true",
+      }
 
       margin = 30;
       titleHeight = 50;
@@ -677,7 +685,8 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
       fontBetween = 8;
       fontWeight = 400;
 
-      iframeMaker = (src) => {
+      iframeMaker = (mode) => {
+        const src = linkDictionary[mode];
         return function (e) {
           const whiteTong = document.querySelector('.' + whiteBaseClassName);
           const toggle = this.getAttribute("off");
@@ -706,6 +715,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
               dom.style.color = colorChip.black;    
             }
           }
+          instance.whiteCardMode = mode;
         }
       }
 
@@ -747,7 +757,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
           child: {
             mode: "iframe",
             attribute: {
-              src: BACKHOST + "/designer?mode=checklist&entire=true&dataonly=true&normal=true&desid=" + desid,
+              src: linkDictionary[instance.whiteCardMode],
             },
             style: {
               position: "absolute",
@@ -854,9 +864,9 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                 children: [
                   {
                     class: [ titleButtonsClassName ],
-                    attribute: { toggle: "off", desid },
+                    attribute: { toggle: (instance.whiteCardMode === "checklist" ? "on" : "off"), desid },
                     event: {
-                      click: iframeMaker(BACKHOST + "/designer?mode=checklist&entire=true&dataonly=true&normal=true&desid=" + desid),
+                      click: iframeMaker("checklist"),
                     },
                     text: "체크리스트",
                     style: {
@@ -865,7 +875,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                       fontSize: String(fontSize) + ea,
                       marginLeft: String(fontBetween) + ea,
                       fontWeight: String(fontWeight),
-                      color: colorChip.green,
+                      color: instance.whiteCardMode === "checklist" ? colorChip.green : colorChip.black,
                       cursor: "pointer",
                     }
                   },
@@ -882,9 +892,9 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                   },
                   {
                     class: [ titleButtonsClassName ],
-                    attribute: { toggle: "off", desid },
+                    attribute: { toggle: (instance.whiteCardMode === "checklist" ? "on" : "off"), desid },
                     event: {
-                      click: iframeMaker(FRONTHOST + "/designer/possible.php?desid=" + desid + "&entire=true&normal=true"),
+                      click: iframeMaker("possible"),
                     },
                     text: "일정 관리",
                     style: {
@@ -893,7 +903,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                       fontSize: String(fontSize) + ea,
                       marginLeft: String(fontBetween) + ea,
                       fontWeight: String(fontWeight),
-                      color: colorChip.black,
+                      color: instance.whiteCardMode === "checklist" ? colorChip.green : colorChip.black,
                       cursor: "pointer",
                     }
                   },
@@ -910,9 +920,9 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                   },
                   {
                     class: [ titleButtonsClassName ],
-                    attribute: { toggle: "off", desid },
+                    attribute: { toggle: (instance.whiteCardMode === "checklist" ? "on" : "off"), desid },
                     event: {
-                      click: iframeMaker("/designer?mode=general&desid=" + desid + "&dataonly=true&entire=true&normal=true"),
+                      click: iframeMaker("portfolio"),
                     },
                     text: "포트폴리오",
                     style: {
@@ -921,7 +931,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                       fontSize: String(fontSize) + ea,
                       marginLeft: String(fontBetween) + ea,
                       fontWeight: String(fontWeight),
-                      color: colorChip.black,
+                      color: instance.whiteCardMode === "checklist" ? colorChip.green : colorChip.black,
                       cursor: "pointer",
                     }
                   },
@@ -938,9 +948,9 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                   },
                   {
                     class: [ titleButtonsClassName ],
-                    attribute: { toggle: "off", desid },
+                    attribute: { toggle: (instance.whiteCardMode === "checklist" ? "on" : "off"), desid },
                     event: {
-                      click: iframeMaker(FRONTHOST + "/designer/report.php?desid=" + desid + "&entire=true&normal=true"),
+                      click: iframeMaker("report"),
                     },
                     text: "리포트",
                     style: {
@@ -949,7 +959,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                       fontSize: String(fontSize) + ea,
                       marginLeft: String(fontBetween) + ea,
                       fontWeight: String(fontWeight),
-                      color: colorChip.black,
+                      color: instance.whiteCardMode === "checklist" ? colorChip.green : colorChip.black,
                       cursor: "pointer",
                     }
                   },
@@ -1755,6 +1765,7 @@ DesignerJs.prototype.normalView = async function () {
     this.standardCaseClassName = "standardCaseClassName";
     this.idNameAreaClassName = "idNameAreaClassName";
     this.valueAreaClassName = "valueAreaClassName";
+    this.whiteCardMode = "checklist";
     this.asyncProcessText = "로드중..";
 
     await this.normalBase();
