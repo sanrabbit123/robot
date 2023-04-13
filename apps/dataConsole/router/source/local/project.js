@@ -8377,7 +8377,7 @@ ProjectJs.prototype.launching = async function () {
     }
 
     // proposal view return event
-    window.addEventListener('message', function (e) {
+    window.addEventListener("message", function (e) {
       if (/^[\{\[]/.test(e.data)) {
         try {
           const data = JSON.parse(e.data);
