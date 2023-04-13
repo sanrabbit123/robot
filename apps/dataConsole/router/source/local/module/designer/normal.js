@@ -642,8 +642,10 @@ DesignerJs.prototype.normalColorSync = async function () {
 DesignerJs.prototype.normalWhiteCard = function (desid) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson } = GeneralJs;
   const whiteCardClassName = "whiteCardClassName";
+  const whiteBaseClassName = "whiteBaseClassName";
+  const titleButtonsClassName = "titleButtonsClassName";
   return async function (e) {
     try {
       const zIndex = 4;
@@ -659,6 +661,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
       let titleWeight;
       let fontTextTop, fontSize, fontBetween, fontWeight;
       let whiteMaker;
+      let iframeMaker;
 
       margin = 30;
       titleHeight = 50;
@@ -673,6 +676,38 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
       fontSize = 14;
       fontBetween = 8;
       fontWeight = 400;
+
+      iframeMaker = (src) => {
+        return function (e) {
+          const whiteTong = document.querySelector('.' + whiteBaseClassName);
+          const toggle = this.getAttribute("off");
+          const desid = this.getAttribute("desid");
+          const siblings = Array.from(document.querySelectorAll('.' + titleButtonsClassName));
+          whiteTong.removeChild(whiteTong.firstChild);
+          createNode({
+            mother: whiteTong,
+            mode: "iframe",
+            attribute: { src },
+            style: {
+              position: "absolute",
+              display: "block",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              border: String(0),
+            }
+          });
+          this.setAttribute("toggle", "on");
+          this.style.color = colorChip.green;
+          for (let dom of siblings) {
+            if (dom !== this) {
+              dom.setAttribute("toggle", "off");
+              dom.style.color = colorChip.black;    
+            }
+          }
+        }
+      }
 
       whiteMaker = (reload = false) => {
 
@@ -694,7 +729,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
   
         whitePrompt = createNode({
           mother: totalContents,
-          class: [ whiteCardClassName ],
+          class: [ whiteCardClassName, whiteBaseClassName ],
           style: {
             position: "fixed",
             top: String(0 + margin + titleHeight) + ea,
@@ -758,6 +793,20 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
             },
             children: [
               {
+                attribute: { designer: designer.designer, phone: designer.information.phone.replace(/[^0-9]/gi, '') },
+                event: {
+                  click: function (e) {
+                    const designer = this.getAttribute("designer");
+                    const phone = this.getAttribute("phone");
+                    const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
+                    if (window.confirm(designer + " 실장님께 전화를 걸까요?")) {
+                      ajaxJson({
+                        who: cookies.homeliaisonConsoleLoginedEmail,
+                        phone: phone
+                      }, BACKHOST + "/callTo").catch((err) => { console.log(err); });
+                    }
+                  }
+                },
                 text: designer.designer,
                 style: {
                   position: "relative",
@@ -765,9 +814,22 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                   fontSize: String(titleSize) + ea,
                   fontWeight: String(titleWeight),
                   color: colorChip.black,
+                  cursor: "pointer",
                 }
               },
               {
+                attribute: { desid: desid },
+                event: {
+                  click: async function (e) {
+                    try {
+                      const desid = this.getAttribute("desid");
+                      await window.navigator.clipboard.writeText(desid);
+                      instance.mother.greenAlert("클립보드에 저장되었습니다!");
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  },
+                },
                 text: designer.desid,
                 style: {
                   position: "relative",
@@ -776,6 +838,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                   marginLeft: String(fontBetween) + ea,
                   fontWeight: String(fontWeight),
                   color: colorChip.green,
+                  cursor: "pointer",
                 }
               },
               {
@@ -790,6 +853,11 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                 },
                 children: [
                   {
+                    class: [ titleButtonsClassName ],
+                    attribute: { toggle: "off", desid },
+                    event: {
+                      click: iframeMaker(BACKHOST + "/designer?mode=checklist&entire=true&dataonly=true&normal=true&desid=" + desid),
+                    },
                     text: "체크리스트",
                     style: {
                       position: "relative",
@@ -813,6 +881,11 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                     }
                   },
                   {
+                    class: [ titleButtonsClassName ],
+                    attribute: { toggle: "off", desid },
+                    event: {
+                      click: iframeMaker(FRONTHOST + "/designer/possible.php?desid=" + desid + "&entire=true&normal=true"),
+                    },
                     text: "일정 관리",
                     style: {
                       position: "relative",
@@ -836,6 +909,11 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                     }
                   },
                   {
+                    class: [ titleButtonsClassName ],
+                    attribute: { toggle: "off", desid },
+                    event: {
+                      click: iframeMaker("/designer?mode=general&desid=" + desid + "&dataonly=true&entire=true&normal=true"),
+                    },
                     text: "포트폴리오",
                     style: {
                       position: "relative",
@@ -859,6 +937,11 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                     }
                   },
                   {
+                    class: [ titleButtonsClassName ],
+                    attribute: { toggle: "off", desid },
+                    event: {
+                      click: iframeMaker(FRONTHOST + "/designer/report.php?desid=" + desid + "&entire=true&normal=true"),
+                    },
                     text: "리포트",
                     style: {
                       position: "relative",
@@ -882,29 +965,14 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                     }
                   },
                   {
-                    text: "메모",
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: colorChip.black,
-                      cursor: "pointer",
-                    }
-                  },
-                  {
-                    text: blank,
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: colorChip.gray3,
-                    }
-                  },
-                  {
+                    class: [ titleButtonsClassName ],
+                    attribute: { toggle: "off", desid },
+                    event: {
+                      click: function (e) {
+                        const desid = this.getAttribute("desid");
+                        blankHref(FRONTHOST + "/designer/dashboard.php?desid=" + desid);
+                      }
+                    },
                     text: "디자이너 콘솔",
                     style: {
                       position: "relative",

@@ -224,11 +224,26 @@ DesignerPossibleJs.prototype.insertInitBox = function () {
 DesignerPossibleJs.prototype.calendarChain = function () {
   const instance = this;
   const { clients, projects, requestNumber, ea, baseTong, media } = this;
+  const { normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, colorCalendar } = GeneralJs;
+
+  if (normalMode) {
+    this.normalBaseTong = createNode({
+      mother: instance.totalContents,
+      style: {
+        display: "block",
+        position: "relative",
+        top: String(8) + ea,
+        height: withOut(8, ea),
+        width: withOut(0, ea),
+        overflow: "scroll",
+      }
+    })
+  }
 
   for (let i = 0; i < 18; i++) {
     instance.insertCalendarBox(i);
@@ -238,6 +253,7 @@ DesignerPossibleJs.prototype.calendarChain = function () {
 DesignerPossibleJs.prototype.boxToPossible = async function () {
   const instance = this;
   const { ajaxJson, stringToDate, equalJson } = GeneralJs;
+  const { entireMode } = this;
   try {
     let newPossible;
     let start, end, matrix;
@@ -282,7 +298,7 @@ DesignerPossibleJs.prototype.boxToPossible = async function () {
     }
 
 
-    if (GeneralJs.returnGet().entire === "true") {
+    if (entireMode) {
       this.realtimeDesigner.possible = equalJson(JSON.stringify(newPossible));
       this.realtimeDesigner.possible.sort((a, b) => { return a.start.valueOf() - b.start.valueOf() });
       updateQuery = {};
@@ -532,6 +548,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
   const instance = this;
   const mother = this.mother;
   const { clients, projects, requestNumber, ea, baseTong, media } = this;
+  const { entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -570,10 +587,15 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
   grayBetween = <%% 40, 40, 36, 36, 3 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 0 %%>;
-  margin = <%% 55, 55, 47, 39, 0 %%>;
-  paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
-
-  whiteBottomMargin = <%% 20, 20, 16, 8, 0 %%>;
+  if (normalMode) {
+    margin = 24;
+    paddingTop = 0;
+    whiteBottomMargin = 12;
+  } else {
+    margin = <%% 55, 55, 47, 39, 0 %%>;
+    paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
+    whiteBottomMargin = <%% 20, 20, 16, 8, 0 %%>;
+  }
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 2 %%>;
@@ -595,7 +617,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
   }
 
   whiteBlock = createNode({
-    mother: getObj.entire === "true" ? instance.totalContents : baseTong,
+    mother: entireMode ? (normalMode ? instance.normalBaseTong : instance.totalContents) : baseTong,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
@@ -604,7 +626,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
       paddingTop: String(paddingTop) + ea,
       paddingBottom: String(whiteBottomMargin) + ea,
       marginBottom: String(bottomMargin) + ea,
-      boxShadow: getObj.entire !== "true" ? (desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "") : "",
+      boxShadow: !entireMode ? (desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "") : "",
     },
     children: [
       {
@@ -659,6 +681,11 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
   thisCalendar.querySelector("svg").remove();
   thisCalendar.querySelector("svg").remove();
 
+  if (normalMode) {
+    thisCalendar.firstChild.style.marginBottom = String(16) + ea;
+    thisCalendar.firstChild.firstChild.style.fontSize = String(28) + ea;
+  }
+
   blankBoxes = [ ...thisCalendar.children[1].children ].slice(7).filter((dom) => {
     return dom.firstChild.textContent.trim() === '';
   })
@@ -688,7 +715,6 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
         thisPossible = matrix.reduce((acc, curr) => { return curr >= acc ? curr : acc }, 0);
       }
     }
-
 
     possibleBox = createNode({
       mother,
@@ -1235,6 +1261,8 @@ DesignerPossibleJs.prototype.launching = async function (loading) {
     }
 
     const getObj = returnGet();
+    const entireMode = (getObj.entire === "true");
+    const normalMode = (entireMode && getObj.normal === "true");
     let cliid, clients, client;
     let proid, projects, project;
     let whereQuery;
@@ -1289,6 +1317,9 @@ DesignerPossibleJs.prototype.launching = async function (loading) {
     this.isMouseDown = false;
     this.downSelection = null;
 
+    this.entireMode = entireMode;
+    this.normalMode = normalMode;
+
     document.body.addEventListener("mouseup", (e) => {
       instance.isMouseDown = false;
       instance.downSelection = null;
@@ -1301,7 +1332,7 @@ DesignerPossibleJs.prototype.launching = async function (loading) {
       this.selection = [];
     });
 
-    if (getObj.entire !== "true") {
+    if (!entireMode) {
       await this.mother.ghostDesignerLaunching({
         name: "designerPossible",
         designer: this.designer,
@@ -1327,7 +1358,7 @@ DesignerPossibleJs.prototype.launching = async function (loading) {
 
     loading.parentNode.removeChild(loading);
 
-    if (getObj.entire !== "true") {
+    if (!entireMode) {
       // web socket
       socket = {};
       if (!document.hidden) {

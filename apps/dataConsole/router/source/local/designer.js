@@ -1800,6 +1800,9 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
 
 DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
+  const { returnGet } = GeneralJs;
+  const getObj = returnGet();
+  const normalMode = (getObj.dataonly === "true" && getObj.entire === "true" && getObj.normal === "true");
   let { standard, info } = DataPatch.designerWhiteViewStandard();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
   let propertyBox, portfolioBox;
@@ -1841,12 +1844,21 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
   //title ------------------------------------------
 
-  leftMargin = (49 / 786) * motherHeight;
-  titleFontSize = (32 / 786) * motherHeight;
-  topMargin = leftMargin * (62 / 60);
-  titleHeight = (54 / 42) * titleFontSize;
-  clipboardEvent = instance.makeClipBoardEvent(thisCase[standard[1]]);
-  iconHeight = leftMargin * (GeneralJs.isMac() ? (12 / 60) : (13 / 60));
+  if (!normalMode) {
+    leftMargin = (49 / 786) * motherHeight;
+    titleFontSize = (32 / 786) * motherHeight;
+    topMargin = leftMargin * (62 / 60);
+    titleHeight = (54 / 42) * titleFontSize;
+    clipboardEvent = instance.makeClipBoardEvent(thisCase[standard[1]]);
+    iconHeight = leftMargin * (GeneralJs.isMac() ? (12 / 60) : (13 / 60));
+  } else {
+    leftMargin = 24;
+    titleFontSize = (32 / 786) * motherHeight;
+    topMargin = leftMargin * (62 / 60);
+    titleHeight = (54 / 42) * titleFontSize;
+    clipboardEvent = instance.makeClipBoardEvent(thisCase[standard[1]]);
+    iconHeight = leftMargin * (GeneralJs.isMac() ? (12 / 60) : (13 / 60));
+  }
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -1954,8 +1966,13 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //contents ---------------------------------------------------------------------------------
 
   //property
-  contentsBoxHeight = GeneralJs.returnGet().entire !== "true" ? motherHeight - titleHeight - (topMargin * 2.5) : motherHeight - (topMargin * 2);
-  contentsBoxBottom = topMargin;
+  if (normalMode) {
+    contentsBoxHeight = 38;
+    contentsBoxBottom = 24;
+  } else {
+    contentsBoxHeight = GeneralJs.returnGet().entire !== "true" ? motherHeight - titleHeight - (topMargin * 2.5) : motherHeight - (topMargin * 2);
+    contentsBoxBottom = topMargin;
+  }
   fontSize = <%% 15, 13, 12, 11, 3 %%>;
   lineHeightRatio = <%% 1.97, 1.93, 1.9, 1.9, 1.9 %%>;
 
@@ -2458,7 +2475,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   style = {
     position: "absolute",
     width: "100%",
-    height: String(contentsBoxHeight) + ea,
+    height: !normalMode ? String(contentsBoxHeight) + ea : GeneralJs.withOut(contentsBoxHeight, ea),
     bottom: String(contentsBoxBottom) + ea,
   };
   for (let i in style) {
@@ -2474,7 +2491,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     height: "100%",
     overflow: "scroll",
     borderBottom: "1px dashed " + GeneralJs.colorChip.gray3,
-    opacity: GeneralJs.returnGet().entire !== "true" ? "" : String(0),
+    display: GeneralJs.returnGet().entire !== "true" ? "block" : "none",
   };
   for (let i in style) {
     propertyBox.style[i] = style[i];
@@ -2612,8 +2629,8 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       }
 
       height = 200;
-      margin = 20;
-      fontSize = 15;
+      margin = 16;
+      fontSize = normalMode ? 13 : 15;
       titleHeight = fontSize + 5;
 
       ghost = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: thisCase[standard[1]] }), "/getDesigners"))[0].setting.ghost;
@@ -2707,6 +2724,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         } else {
           div_clone2.textContent = "기타 미등록 포트폴리오";
         }
+        div_clone2.setAttribute("pid", i < contents.length ? contents[i].contents.portfolio.pid : "");
         style = {
           position: "absolute",
           top: String(GeneralJs.isMac() ? 0 : -2) + ea,
@@ -2723,8 +2741,9 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         }
         if (i < contents.length) {
           div_clone2.addEventListener("click", function (e) {
-            if (contents[i].cliid !== '') {
-              window.open(window.location.protocol + "//" + window.location.host + "/client?cliid=" + contents[i].cliid, "_blank");
+            const pid = this.getAttribute("pid");
+            if (pid !== '' && pid !== null) {
+              GeneralJs.blankHref(FRONTHOST + "/portdetail.php?pid=" + pid);
             }
           });
         }
@@ -2997,7 +3016,6 @@ DesignerJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
       style = {
         position: "fixed",
         background: colorChip.white,
-        borderRadius: String(5) + ea,
         boxShadow: "0 2px 10px -6px " + colorChip.shadow,
         top: String(0) + ea,
         left: String(0) + ea,
@@ -4236,6 +4254,9 @@ DesignerJs.prototype.makeClipBoardEvent = function (id) {
 
 DesignerJs.prototype.whiteResize = function () {
   const instance = this;
+  const { returnGet } = GeneralJs;
+  const getObj = returnGet();
+  const normalMode = (getObj.dataonly === "true" && getObj.entire === "true" && getObj.normal === "true");
   this.resizeStack = 0;
   this.resizeFrom = 0;
   this.resizePopup = 0;
@@ -4244,7 +4265,12 @@ DesignerJs.prototype.whiteResize = function () {
     const reEvent = function () {
       if (instance.whiteBox !== undefined && instance.whiteBox !== null) {
         if (instance.whiteBox.id !== undefined) {
-          window.location.search = "desid=" + instance.whiteBox.id;
+          console.log(getObj)
+          if (normalMode) {
+            window.location.search = "desid=" + instance.whiteBox.id + "&mode=general&dataonly=true&entire=true&normal=true";
+          } else {
+            window.location.search = "desid=" + instance.whiteBox.id + "&mode=general";
+          }
         } else {
           window.location.reload();
         };
@@ -4303,6 +4329,7 @@ DesignerJs.prototype.launching = async function () {
 
       if (getObj.dataonly === "true") {
         await this.spreadData();
+        this.whiteResize();
       } else {
         this.backGrayBar();
         await this.spreadData();

@@ -225,6 +225,7 @@ DesignerReportJs.prototype.contentsCenter = function () {
   const instance = this;
   const mother = this.mother;
   const { ea, baseTong, media } = this;
+  const { entireMode, normalMode } = this;
   const { designer, proposals, contracts, service } = this;
   const { desid } = designer;
   const mobile = media[4];
@@ -514,6 +515,38 @@ DesignerReportJs.prototype.contentsCenter = function () {
       }
     },
   ];
+
+  if (normalMode) {
+
+    contents = [
+      {
+        title: "계약 리포트",
+        contents: {
+          width: [ 16, 90, 122, 81, 81, 81, 81, 81, ],
+          matrix: contractMatrix,
+          average: contractAverage,
+        }
+      },
+      {
+        title: "추천 리포트",
+        contents: {
+          width: [ 16, 90, 55, 155, 105, 105, 105, ],
+          matrix: proposalMatrix,
+          average: proposalAverage,
+        }
+      },
+      {
+        title: "평별 가격",
+        contents: {
+          width: [ 16, 90, 88, 88, 88, 88, 88, 88, ],
+          matrix: serviceMatrix,
+          average: serviceAverage,
+        }
+      },
+    ];
+
+  }
+
   this.contents = contents;
   for (let i = 0; i < contents.length; i++) {
     this.renderWhite(contents[i].title, contents[i].contents, i + 1);
@@ -525,6 +558,7 @@ DesignerReportJs.prototype.renderWhite = function (title, contents, index) {
   const instance = this;
   const mother = this.mother;
   const { ea, baseTong, media } = this;
+  const { entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
@@ -536,23 +570,29 @@ DesignerReportJs.prototype.renderWhite = function (title, contents, index) {
   let marginBottom;
 
   leftPadding = <%% 55, 55, 47, 39, 4.7 %%>;
-
   topPadding0 = <%% 52, 52, 44, 36, 4.7 %%>;
   topPadding1 = <%% 40, 40, 38, 32, 4.7 %%>;
+
+  if (normalMode) {
+    leftPadding = 12;
+    topPadding0 = 0;
+    topPadding1 = 0;
+  }
 
   marginBottom = <%% 16, 16, 16, 12, 3 %%>;
 
   whiteBlock = createNode({
-    mother: baseTong,
+    mother: entireMode ? (normalMode ? instance.normalBaseTong : instance.totalContents) : baseTong,
     style: {
-      display: "block",
+      display: normalMode ? "inline-block" : "block",
+      verticalAlign: normalMode ? "top" : "",
       position: "relative",
       borderRadius: String(8) + "px",
-      width: String(100) + '%',
+      width: normalMode ? String(50) + '%' : String(100) + '%',
       background: colorChip.white,
       paddingTop: desktop ? String(topPadding0) + ea : "",
       paddingBottom: desktop ? String(leftPadding) + ea : "",
-      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+      boxShadow: entireMode ? "" : (desktop ? "0px 5px 12px -10px " + colorChip.gray5 : ""),
       marginBottom: String(marginBottom) + ea,
     },
     children: [
@@ -574,6 +614,7 @@ DesignerReportJs.prototype.renderWhite = function (title, contents, index) {
 DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
   const instance = this;
   const { ea, baseTong, media } = this;
+  const { entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -612,6 +653,12 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
   mobileBasicMargin = 7;
 
   maxHeight = <%% 576, 556, 490, 400, 87 %%>;
+
+  if (normalMode) {
+    titleWidth = 86;
+    titleFontSize = 14;
+    numberSize = 13;
+  }
 
   totalViewEvent = function (e) {
     const index = this.getAttribute("index");
@@ -722,6 +769,7 @@ DesignerReportJs.prototype.renderTong = function (title, whiteTong, index) {
 DesignerReportJs.prototype.renderBlock = function (contents, tong, x) {
   const instance = this;
   const { ea, baseTong, media, designer } = this;
+  const { entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -789,6 +837,18 @@ DesignerReportJs.prototype.renderBlock = function (contents, tong, x) {
   whiteWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   whiteTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+
+  if (normalMode) {
+    blockHeight = 28;
+    blockMarginBottom = 12;
+    contentsSize = 12;
+    titlePaddingBottom = (isMac() ? 3 : 2);
+    titleMarginBottom = (isMac() ? 9 : 10);
+    whiteSize = 14;
+    whiteTongPadding = 8;
+    whiteTongMarginBottom = 16;
+    whiteTongHeight = 54;
+  }
 
   whiteWordingArr = [];
   for (let [ property, value ] of contents.average) {
@@ -859,7 +919,8 @@ DesignerReportJs.prototype.renderBlock = function (contents, tong, x) {
     blockBase = createNode({
       mother: tong,
       style: {
-        display: "block",
+        display: normalMode ? "flex" : "block",
+        flexDirection: normalMode ? "row" : "",
         position: "relative",
         borderBottom: z === 0 ? "1px solid " + colorChip.black : "",
         paddingBottom: z === 0 ? String(titlePaddingBottom) + ea : "",
@@ -874,7 +935,7 @@ DesignerReportJs.prototype.renderBlock = function (contents, tong, x) {
         style: {
           display: "inline-flex",
           position: "relative",
-          width: String(contents.width[y]) + ea,
+          width: normalMode ? (String(Math.ceil((contents.width[y] / contents.width.reduce((acc, curr) => { return acc + curr }, 0)) * 100)) + '%') : (String(contents.width[y]) + ea),
           height: String(blockHeight) + ea,
           justifyContent: "center",
           alignItems: "center",
@@ -1225,6 +1286,7 @@ DesignerReportJs.prototype.insertNoticeBox = function () {
 DesignerReportJs.prototype.insertDashboard = async function () {
   const instance = this;
   const { ea, totalContents, media, designer, baseTong } = this;
+  const { entireMode, normalMode } = this;
   const { createNode, colorChip, withOut, ajaxJson, isMac, autoComma, dateToString, equalJson } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
@@ -1298,6 +1360,7 @@ DesignerReportJs.prototype.insertDashboard = async function () {
     let leftColumns1;
     let rightValues1;
     let yearWidth;
+    let normalBaseTong;
 
     leftPadding = <%% 55, 55, 47, 39, 7 %%>;
 
@@ -1309,6 +1372,9 @@ DesignerReportJs.prototype.insertDashboard = async function () {
     totalWhiteHeight = <%% 486, 486, 438, 331, 130 %%>;
 
     titleWidth = <%% 300, 0, 0, 0, 0 %%>;
+    if (entireMode) {
+      titleWidth = 0;
+    }
     titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
     titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
     titleMarginBottom = <%% 24, 24, 20, 16, 2.8 %%>;
@@ -1342,6 +1408,28 @@ DesignerReportJs.prototype.insertDashboard = async function () {
     dateBoxHeight = <%% 24, 24, 20, 20, 5 %%>;
 
     yearWidth = <%% 80, 70, 64, 58, 10 %%>;
+
+    if (normalMode) {
+      leftPadding = 12;
+      topPadding0 = 0;
+      topPadding1 = 0;
+      whiteTongPadding = 8;
+      whiteTongMarginBottom = 10;
+      whiteSize = 12;
+      valueBlockHeight = 21;
+      whitePaddingTop = 21;
+      whitePaddingLeft = 24;
+      columnsWidth = 120;
+      smallBlockHeight = 16;
+      smallBlockPaddingTop = 9;
+      smallSize = 12;
+      smallBlockBetween = 16;
+      mobileSmallPaddingLeft = 10;
+      mobileBorderPaddingTop = 2.5;
+      mobileFinalBottom = 18;
+      dateBoxHeight = 20;
+      yearWidth = 58;
+    }
 
     today = new Date();
     ago = new Date();
@@ -2264,17 +2352,33 @@ DesignerReportJs.prototype.insertDashboard = async function () {
 
     }
 
+    if (normalMode) {
+      this.normalBaseTong = createNode({
+        mother: instance.totalContents,
+        style: {
+          display: "block",
+          position: "relative",
+          top: String(12) + ea,
+          left: String(12) + ea,
+          height: withOut(12, ea),
+          width: withOut(12 * 2, ea),
+          overflow: "scroll",
+        }
+      })
+    }
+
     whiteBlock = createNode({
-      mother: baseTong,
+      mother: entireMode ? (normalMode ? instance.normalBaseTong : instance.totalContents) : baseTong,
       style: {
-        display: "block",
+        display: normalMode ? "inline-block" : "block",
+        verticalAlign: normalMode ? "top" : "",
         position: "relative",
         borderRadius: String(8) + "px",
-        width: String(100) + '%',
+        width: normalMode ? String(50) + '%' : String(100) + '%',
         background: colorChip.white,
         paddingTop: String(topPadding0) + ea,
         paddingBottom: String(leftPadding) + ea,
-        boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+        boxShadow: entireMode ? "" : (desktop ? "0px 5px 12px -10px " + colorChip.gray5 : ""),
         marginBottom: String(marginBottom) + ea,
       },
       children: [
@@ -2291,31 +2395,33 @@ DesignerReportJs.prototype.insertDashboard = async function () {
     });
     whiteTong = whiteBlock.children[0];
 
-    createNode({
-      mother: whiteTong,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        width: media[0] ? String(titleWidth) + ea : withOut(0, ea),
-        justifyContent: "start",
-        alignItems: "start",
-        flexDirection: "column",
-        marginBottom: media[0] ? "" : String(titleMarginBottom) + ea,
-      },
-      child: {
-        text: designer.designer + "님 개요",
+    if (!entireMode) {
+      createNode({
+        mother: whiteTong,
         style: {
+          display: "inline-flex",
           position: "relative",
-          display: "inline-block",
-          top: String(titleTopNumber) + ea,
-          fontSize: String(titleFontSize) + ea,
-          fontWeight: String(700),
-          background: colorChip.white,
-          paddingRight: String(titlePaddingRight) + ea,
-          color: colorChip.black,
+          width: media[0] ? String(titleWidth) + ea : withOut(0, ea),
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "column",
+          marginBottom: media[0] ? "" : String(titleMarginBottom) + ea,
+        },
+        child: {
+          text: designer.designer + "님 개요",
+          style: {
+            position: "relative",
+            display: "inline-block",
+            top: String(titleTopNumber) + ea,
+            fontSize: String(titleFontSize) + ea,
+            fontWeight: String(700),
+            background: colorChip.white,
+            paddingRight: String(titlePaddingRight) + ea,
+            color: colorChip.black,
+          }
         }
-      }
-    })
+      })
+    }
 
     createNode({
       mother: whiteTong,
@@ -2358,6 +2464,8 @@ DesignerReportJs.prototype.launching = async function (loading) {
 
     const { returnGet, ajaxJson, equalJson, serviceParsing } = GeneralJs;
     const getObj = returnGet();
+    const entireMode = (getObj.entire === "true");
+    const normalMode = (entireMode && getObj.normal === "true");
     let proposals, contracts;
     let desid;
     let socket;
@@ -2490,66 +2598,76 @@ DesignerReportJs.prototype.launching = async function (loading) {
     this.contracts = contracts;
     this.service = servicePrice;
 
-    await this.mother.ghostDesignerLaunching({
-      name: "designerReport",
-      designer: this.designer,
-      base: {
-        instance: this,
-        binaryPath: DesignerReportJs.binaryPath,
-        subTitle: "",
-      },
-      local: async () => {
-        try {
-          instance.insertInitBox();
-          await instance.insertDashboard();
-          instance.contentsCenter();
-          instance.insertNoticeBox();
-        } catch (e) {
-          await GeneralJs.ajaxJson({ message: "DesignerReportJs.launching.ghostDesignerLaunching : " + instance.designer.desid + " : " + e.message }, BACKHOST + "/errorLog");
+    this.entireMode = entireMode;
+    this.normalMode = normalMode;
+
+    if (!entireMode) {
+      await this.mother.ghostDesignerLaunching({
+        name: "designerReport",
+        designer: this.designer,
+        base: {
+          instance: this,
+          binaryPath: DesignerReportJs.binaryPath,
+          subTitle: "",
+        },
+        local: async () => {
+          try {
+            instance.insertInitBox();
+            await instance.insertDashboard();
+            instance.contentsCenter();
+            instance.insertNoticeBox();
+          } catch (e) {
+            await GeneralJs.ajaxJson({ message: "DesignerReportJs.launching.ghostDesignerLaunching : " + instance.designer.desid + " : " + e.message }, BACKHOST + "/errorLog");
+          }
         }
-      }
-    });
+      });
+    } else {
+      await instance.insertDashboard();
+      instance.contentsCenter();
+    }
 
     loading.parentNode.removeChild(loading);
 
-    // web socket
-    socket = {};
-    if (!document.hidden) {
-      wsOpenEvent = (ws) => {
-        return async function () {
-          try {
-            ws.send(JSON.stringify({
-              mode: "register",
-              to: "homeliaison",
-              data: instance.designer.desid
-            }));
-          } catch (e) {
-            console.log(e);
+    if (!entireMode) {
+      // web socket
+      socket = {};
+      if (!document.hidden) {
+        wsOpenEvent = (ws) => {
+          return async function () {
+            try {
+              ws.send(JSON.stringify({
+                mode: "register",
+                to: "homeliaison",
+                data: instance.designer.desid
+              }));
+            } catch (e) {
+              console.log(e);
+            }
           }
         }
-      }
-      wsLaunching = () => {
-        let ws;
-        if (typeof socket.close === "function") {
-          socket.close();
-          socket = {};
+        wsLaunching = () => {
+          let ws;
+          if (typeof socket.close === "function") {
+            socket.close();
+            socket = {};
+          }
+          ws = new WebSocket(CRONHOST.replace(/https\:\/\//, "wss://") + "/realTimeCommunication");
+          ws.addEventListener("open", wsOpenEvent(ws));
+          return ws;
         }
-        ws = new WebSocket(CRONHOST.replace(/https\:\/\//, "wss://") + "/realTimeCommunication");
-        ws.addEventListener("open", wsOpenEvent(ws));
-        return ws;
-      }
-      socket = wsLaunching();
-    }
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        if (typeof socket.close === "function") {
-          socket.close();
-          socket = {};
-        }
-      } else {
         socket = wsLaunching();
       }
-    });
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          if (typeof socket.close === "function") {
+            socket.close();
+            socket = {};
+          }
+        } else {
+          socket = wsLaunching();
+        }
+      });
+    }
 
   } catch (err) {
     console.log(err);
