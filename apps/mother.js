@@ -1924,6 +1924,12 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
       str = "mp4";
     } else if (/\.(zip|egg|7z|tar|rar|apk|alz|tgz|zoo|cab|img|pak|war)$/gi.test(fileName)) {
       str = "zip";
+    } else if (/\.(gddoc)$/gi.test(fileName)) {
+      str = "gddoc";
+    } else if (/\.(gdsheet)$/gi.test(fileName)) {
+      str = "gdsheet";
+    } else if (/\.(gdslides)$/gi.test(fileName)) {
+      str = "gdslides";
     } else {
       str = "general";
     }
