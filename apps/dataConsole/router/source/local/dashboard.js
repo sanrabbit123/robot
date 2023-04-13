@@ -263,16 +263,52 @@ DashboardJs.prototype.returnTreeContents = function () {
       number: 200,
       children: [
         {
-          title: "서버 현황"
+          title: "홈리에종 문서",
+          event: () => {
+            return function (e) {
+              instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/file?mode=document&entire=true&dataonly=true");
+            }
+          }
         },
         {
-          title: "내부 컴퓨터 현황"
+          title: "홈리에종 파일",
+          event: () => {
+            return function (e) {
+              instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/file?mode=file&entire=true&dataonly=true");
+            }
+          }
         },
         {
-          title: "이용중인 서비스 현황"
+          title: "홈리에종 알림톡"
         },
         {
-          title: "알림톡 현황",
+          title: "홈리에종 채널",
+          children: [
+            {
+              title: "홈리에종 웹",
+              event: () => {
+                return function (e) {
+                  blankHref(FRONTHOST);
+                }
+              }
+            },
+            {
+              title: "홈리에종 블로그",
+              event: () => {
+                return function (e) {
+                  blankHref("https://blog.naver.com/homeliaison");
+                }
+              }
+            },
+            {
+              title: "홈리에종 인스타그램",
+              event: () => {
+                return function (e) {
+                  blankHref("https://instagram.com/homeliaison");
+                }
+              }
+            },
+          ]
         }
       ]
     },

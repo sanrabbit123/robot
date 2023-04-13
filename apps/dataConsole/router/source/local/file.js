@@ -990,37 +990,39 @@ FileJs.prototype.baseMaker = function () {
               {
                 type: "dragstart",
                 event: function (e) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const box = this.getBoundingClientRect();
-                  let clientX, clientY;
-
-                  clientX = e.clientX - box.left;
-                  clientY = e.clientY - box.top;
-
-                  instance.dragArea = createNode({
-                    mother: this,
-                    attribute: [
-                      { x: String(clientX) },
-                      { y: String(clientY) },
-                      { width: String(0) },
-                      { height: String(0) }
-                    ],
-                    style: {
-                      position: "fixed",
-                      top: String(clientY + box.top) + ea,
-                      left: String(clientX + box.left) + ea,
-                      background: colorChip.green,
-                      width: String(0) + ea,
-                      height: String(0) + ea,
-                      borderRadius: String(2) + "px",
-                      transition: "all 0s ease",
-                      opacity: String(0.2),
-                      zIndex: String(1),
-                    }
-                  });
-                  instance.pastX = clientX;
-                  instance.pastY = clientY;
+                  if (e.target === this) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const box = this.getBoundingClientRect();
+                    let clientX, clientY;
+  
+                    clientX = e.clientX - box.left;
+                    clientY = e.clientY - box.top;
+  
+                    instance.dragArea = createNode({
+                      mother: this,
+                      attribute: [
+                        { x: String(clientX) },
+                        { y: String(clientY) },
+                        { width: String(0) },
+                        { height: String(0) }
+                      ],
+                      style: {
+                        position: "fixed",
+                        top: String(clientY + box.top) + ea,
+                        left: String(clientX + box.left) + ea,
+                        background: colorChip.green,
+                        width: String(0) + ea,
+                        height: String(0) + ea,
+                        borderRadius: String(2) + "px",
+                        transition: "all 0s ease",
+                        opacity: String(0.2),
+                        zIndex: String(1),
+                      }
+                    });
+                    instance.pastX = clientX;
+                    instance.pastY = clientY;
+                  }
                 }
               },
               {
@@ -1230,7 +1232,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
   }
   const instance = this;
   const { ea, motherTong: { mother, files } } = this;
-  const { createNode, colorChip, withOut, ajaxJson, cleanChildren, isMac } = GeneralJs;
+  const { createNode, colorChip, withOut, ajaxJson, cleanChildren, isMac, blankHref } = GeneralJs;
   try {
     let thisFolderFiles;
     let width;
@@ -1303,7 +1305,8 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
           { kind },
           { directory: directory ? "true" : "false" },
           { toggle: "off" },
-          { index: String(num) }
+          { index: String(num) },
+          { draggable: "true" },
         ],
         events: [
           {
@@ -1403,6 +1406,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
                 const absolute = this.getAttribute("absolute");
                 const blocks = instance.blocks;
                 const directory = (this.getAttribute("directory") === "true");
+                let fileContents;
                 if (directory) {
                   for (let b of blocks) {
                     b.style.animation = "fadedownlite 0.2s ease forwards";
@@ -1412,11 +1416,8 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
                   }, 201);
                 } else {
                   if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute)) {
-
-                    
-                    await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
-
-
+                    fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
+                    blankHref(JSON.parse(fileContents.contents).url);
                   }
                 }
               } catch (e) {
@@ -1445,7 +1446,36 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
               }
               instance.selected.push(this);
             }
-          }
+          },
+          {
+            type: "dragend",
+            event: function (e) {
+              const blocks = instance.blocks;
+              instance.selected = [];
+              for (let b of blocks) {
+                b.firstChild.style.opacity = String(0);
+                b.setAttribute("toggle", "off");
+              }
+            }
+          },
+          {
+            type: "dragenter",
+            event: function (e) {
+              this.firstChild.style.opacity = String(1);
+            }
+          },
+          {
+            type: "dragover",
+            event: function (e) {
+              this.firstChild.style.opacity = String(1);
+            }
+          },
+          {
+            type: "dragleave",
+            event: function (e) {
+              this.firstChild.style.opacity = String(0);
+            }
+          },
         ],
         style: {
           display: "inline-block",
@@ -1543,6 +1573,10 @@ FileJs.prototype.launching = async function () {
       startPoint = "__samba__/drive/HomeLiaisonServer/디자이너/partnership";
     } else if (getObj.mode === "aspirant") {
       startPoint = "__samba__/drive/HomeLiaisonServer/디자이너/new";
+    } else if (getObj.mode === "document") {
+      startPoint = "__samba__/drive/# 홈리에종";
+    } else if (getObj.mode === "file") {
+      startPoint = "__samba__/drive/HomeLiaisonServer";
     }
 
     this.blocks = [];
