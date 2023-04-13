@@ -510,8 +510,11 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
       ajaxJson({ noFlat: true, whereQuery: {} }, BACKHOST + "/getProjects", { equal: true }).then((projects) => {
 
         instance.projects = projects;
-
+        instance.normalMatrix = {};
         for (let designer of instance.designers) {
+
+          instance.normalMatrix[designer.desid] = [];
+
           thisValueDoms = [ ...document.querySelector('.' + designer.desid).querySelectorAll('.' + valueTargetClassName) ];
   
           filteredProjectsProposal = projects.filter((p) => {
@@ -527,20 +530,35 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           thisTarget = findByAttribute(thisValueDoms, "name", "proposalNumber");
           thisTarget.textContent = String(filteredProjectsProposal.length);
           thisTarget.style.color = colorChip.black;
+          instance.normalMatrix[designer.desid].push({
+            name: "proposalNumber",
+            value: filteredProjectsProposal.length,
+          });
   
           thisTarget = findByAttribute(thisValueDoms, "name", "contractNumber");
           thisTarget.textContent = String(filteredProjectsContract.length);
           thisTarget.style.color = colorChip.black;
+          instance.normalMatrix[designer.desid].push({
+            name: "contractNumber",
+            value: filteredProjectsContract.length,
+          });
   
           thisTarget = findByAttribute(thisValueDoms, "name", "contractPercentage");
           thisTarget.textContent = String(Math.round((filteredProjectsProposal.length === 0 ? 0 : (filteredProjectsContract.length / filteredProjectsProposal.length)) * 10000) / 100) + '%';
           thisTarget.style.color = colorChip.black;
+          instance.normalMatrix[designer.desid].push({
+            name: "contractPercentage",
+            value: filteredProjectsProposal.length === 0 ? 0 : (filteredProjectsContract.length / filteredProjectsProposal.length),
+          });
   
           thisTarget = findByAttribute(thisValueDoms, "name", "totalAmount");
           thisTarget.textContent = autoComma(Math.floor(filteredProjectsContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0))) + '원';
           thisTarget.style.color = colorChip.black;
+          instance.normalMatrix[designer.desid].push({
+            name: "totalAmount",
+            value: Math.floor(filteredProjectsContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0)),
+          });
   
-          
           for (let i = 0; i < yearDelta; i++) {
   
             thisYear = (new Date()).getFullYear() - i;
@@ -558,18 +576,34 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
             thisTarget = findByAttribute(thisValueDoms, "name", "proposalNumberY" + String(i));
             thisTarget.textContent = String(filteredFilteredProjectsProposal.length);
             thisTarget.style.color = colorChip.black;
+            instance.normalMatrix[designer.desid].push({
+              name: "proposalNumberY" + String(i),
+              value: filteredFilteredProjectsProposal.length,
+            });
     
             thisTarget = findByAttribute(thisValueDoms, "name", "contractNumberY" + String(i));
             thisTarget.textContent = String(filteredFilteredProjectsContract.length);
             thisTarget.style.color = colorChip.black;
+            instance.normalMatrix[designer.desid].push({
+              name: "contractNumberY" + String(i),
+              value: filteredFilteredProjectsContract.length,
+            });
     
             thisTarget = findByAttribute(thisValueDoms, "name", "contractPercentageY" + String(i));
             thisTarget.textContent = String(Math.round((filteredFilteredProjectsProposal.length === 0 ? 0 : (filteredFilteredProjectsContract.length / filteredFilteredProjectsProposal.length)) * 10000) / 100) + '%';
             thisTarget.style.color = colorChip.black;
+            instance.normalMatrix[designer.desid].push({
+              name: "contractPercentageY" + String(i),
+              value: filteredFilteredProjectsProposal.length === 0 ? 0 : (filteredFilteredProjectsContract.length / filteredFilteredProjectsProposal.length),
+            });
     
             thisTarget = findByAttribute(thisValueDoms, "name", "totalAmountY" + String(i));
             thisTarget.textContent = autoComma(Math.floor(filteredFilteredProjectsContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0))) + '원';
             thisTarget.style.color = colorChip.black;
+            instance.normalMatrix[designer.desid].push({
+              name: "totalAmountY" + String(i),
+              value: Math.floor(filteredFilteredProjectsContract.reduce((acc, curr) => { return acc + curr.process.calculation.payments.totalAmount; }, 0)),
+            });
     
           }
     
@@ -585,6 +619,10 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
             thisTarget = findByAttribute(thisValueDoms, "name", "monthDelta" + String(thisDate.getFullYear()).slice(2) + String(thisDate.getMonth() + 1));
             thisTarget.textContent = String(filteredFilteredProjectsProposal.length);
             thisTarget.style.color = colorChip.black;
+            instance.normalMatrix[designer.desid].push({
+              name: "monthDelta" + String(thisDate.getFullYear()).slice(2) + String(thisDate.getMonth() + 1),
+              value: filteredFilteredProjectsProposal.length,
+            });
           }
   
         }
@@ -1024,7 +1062,6 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
         }, 350);
       }
 
-
     } catch (e) {
       console.log(e);
     }
@@ -1386,6 +1423,7 @@ DesignerJs.prototype.normalBase = async function () {
 
     totalMother = createNode({
       mother: totalContents,
+      class: [ "totalMother" ],
       style: {
         display: "block",
         position: "relative",
@@ -1393,6 +1431,7 @@ DesignerJs.prototype.normalBase = async function () {
         height: withOut(this.belowHeight, ea),
       }
     });
+    this.totalMother = totalMother;
 
     normalContentsLoad = async (reload = false) => {
       try {
@@ -1701,11 +1740,36 @@ DesignerJs.prototype.normalBase = async function () {
 
 DesignerJs.prototype.normalSearchEvent = async function () {
   const instance = this;
-  const { ajaxJson } = GeneralJs;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
+  const { ajaxJson, setQueue } = GeneralJs;
   try {
     this.searchInput.addEventListener("keypress", async function (e) {
       try {
         if (e.key === "Enter") {
+          if (instance.totalFather !== null) {
+            instance.totalFather.classList.remove("fadein");
+            instance.totalFather.classList.add("fadeout");
+            instance.totalMother.classList.remove("justfadeoutoriginal");
+            instance.totalMother.classList.add("justfadeinoriginal");
+            setQueue(() => {
+              instance.totalFather.remove();
+              instance.totalFather = null;
+            }, 501);
+          }
+          if (document.querySelector('.' + whiteBaseClassName) !== null) {
+            const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
+            cancelBack.style.animation = "justfadeout 0.3s ease forwards";
+            if (w0 !== undefined) {
+              w0.style.animation = "fadedownlite 0.3s ease forwards";
+            }
+            if (w1 !== undefined) {
+              w1.style.animation = "fadedownlite 0.3s ease forwards";
+            }
+            setQueue(() => {
+              cancelBack.click();
+            }, 350);
+          }
+
           const value = this.value.trim().replace(/\&\=\+\\\//gi, '');
           const designers = await ajaxJson({ noFlat: true, query: value }, BACKHOST + "/searchDesigners", { equal: true });
           const histories = await ajaxJson({
@@ -1721,6 +1785,17 @@ DesignerJs.prototype.normalSearchEvent = async function () {
           instance.designers = designers;
           await instance.normalContentsLoad(true);
           
+          setQueue(async () => {
+            try {
+              if (instance.designers.length === 1) {
+                const tempFunc = instance.normalWhiteCard(instance.designers[0].desid);
+                await tempFunc({});
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }, 350);
+
         }
       } catch (e) {
         console.log(e);
@@ -1778,13 +1853,87 @@ DesignerJs.prototype.normalMessageEvent = async function () {
 
 DesignerJs.prototype.normalExtractEvent = async function () {
   const instance = this;
-  const { ajaxJson } = GeneralJs;
+  const { ajaxJson, blankHref } = GeneralJs;
   try {
+    const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
     this.mother.belowButtons.sub.extractIcon.addEventListener("click", async function (e) {
       try {
+        if (instance.normalMatrix === null) {
+          window.alert("잠시 기다렸다가 다시 시도해주세요!");
+        } else {
+          const today = new Date();
+          const data = await instance.normalDataRender(false);
+          let thisName;
+          let thisObject;
+          let matrix;
+          let tempArr;
+          let thisDesigner;
 
-        console.log(instance.designers);
+          for (let desid in data.values) {
+            for (let obj of data.values[desid]) {
+              thisName = obj.name;
+              thisObject = instance.normalMatrix[desid].find((obj) => { return obj.name === thisName });
+              if (thisObject !== undefined) {
+                obj.value = thisObject.value;
+              }
+            }
+          }
 
+          matrix = [];
+          tempArr = [
+            "아이디",
+            "이름",
+            // -------------------------------
+            // add
+            "연락처",
+            "이메일",
+            "계좌번호",
+            "사업자 분류",
+            "사업자 등록번호",
+            // -------------------------------
+          ];
+          for (let obj of data.columns) {
+            tempArr.push(obj.title);
+          }
+          matrix.push(tempArr);
+
+          for (let desid in data.values) {
+
+            thisDesigner = instance.designers.find((d) => { return d.desid === desid });
+
+            tempArr = [];
+            tempArr.push(desid);
+            tempArr.push(thisDesigner.designer);
+
+            // -------------------------------
+            // add
+            tempArr.push(thisDesigner.information.phone);
+            tempArr.push(thisDesigner.information.email);
+            tempArr.push(thisDesigner.information.business.account.length > 0 ? thisDesigner.information.business.account[0].bankName + " " + thisDesigner.information.business.account[0].accountNumber : "");
+            tempArr.push(thisDesigner.information.business.businessInfo.classification);
+            tempArr.push(thisDesigner.information.business.businessInfo.businessNumber);
+            // -------------------------------
+
+            for (let obj of data.columns) {
+              thisObject = data.values[desid].find((o) => { return o.name === obj.name });
+              tempArr.push(thisObject.value);
+            }
+            matrix.push(tempArr);
+          }
+
+          instance.mother.greenAlert("시트 추출이 완료되면 자동으로 열립니다!");
+          ajaxJson({
+            values: matrix,
+            newMake: true,
+            parentId: parentId,
+            sheetName: "fromDB_designer_" + String(today.getFullYear()) + instance.mother.todayMaker()
+          }, BACKHOST + "/sendSheets", { equal: true }).then((result) => {
+            blankHref(result.link);
+          }).catch((err) => {
+            console.log(err);
+          })
+
+        }
       } catch (e) {
         console.log(e);
       }
@@ -1839,6 +1988,7 @@ DesignerJs.prototype.normalView = async function () {
     this.members = members;
     this.designers = designers;
     this.projects = null;
+    this.normalMatrix = null;
     this.valueTargetClassName = "valueTargetClassName";
     this.valueCaseClassName = "valueCaseClassName";
     this.standardCaseClassName = "standardCaseClassName";

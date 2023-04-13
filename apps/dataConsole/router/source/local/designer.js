@@ -1654,7 +1654,7 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
       const modeHref = (mode) => { window.location.href = `${window.location.protocol}//${window.location.host}${window.location.pathname}?mode=${mode}`; }
       const cards = [
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>신청자 조회", event: (e) => { modeHref("aspirant"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>기본 정보", event: (e) => { modeHref("general"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>기본 정보", event: (e) => { modeHref("normal"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>경력 정보", event: (e) => { modeHref("calculation"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>가격 정보", event: (e) => { modeHref("price"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>일정 관리", event: (e) => { modeHref("possible"); }, contextmenu: (e) => { modeHref("possible"); } },
@@ -1682,6 +1682,11 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
             background: colorChip.gray3,
             overflow: "hidden",
             transition: "all 0s ease",
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(instance.belowHeight, ea)
           }
         },
         {
@@ -4481,12 +4486,18 @@ DesignerJs.prototype.launching = async function () {
 
       tempFunction = this.cardViewMaker(true);
       await tempFunction();
-      await protoPatch(instance, [ `${modulePath}/checklist.js`, `${modulePath}/report.js` ]);
+
+      // await protoPatch(instance, [ `${modulePath}/checklist.js`, `${modulePath}/report.js` ]);
+      // document.getElementById("grayLeftOpenButton").remove();
+      // await this.checkListView();
+      // this.addTransFormEvent();
+      // document.getElementById("moveRightArea").style.display = "none";
+      // document.getElementById("moveLeftArea").style.display = "none";
+
+      await protoPatch(instance, `${modulePath}/normal.js`);
       document.getElementById("grayLeftOpenButton").remove();
-      await this.checkListView();
-      this.addTransFormEvent();
-      document.getElementById("moveRightArea").style.display = "none";
-      document.getElementById("moveLeftArea").style.display = "none";
+      await this.normalView();
+
       this.totalMother.classList.add("justfadeoutoriginal");
 
     }
