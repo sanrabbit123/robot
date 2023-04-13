@@ -1082,9 +1082,10 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
 DesignerJs.prototype.normalBase = async function () {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
   const moveTargetClassName = "moveTarget";
   const menuPromptClassName = "menuPromptClassName";
+  const importantCircleClassName = "importantCircleClassName";
   try {
     let totalMother;
     let grayArea, whiteArea;
@@ -1114,6 +1115,8 @@ DesignerJs.prototype.normalBase = async function () {
     let columnsMenuEvent;
     let menuEventTong;
     let normalContentsLoad;
+    let circleRight, circleTop;
+    let importantMarkingEvent;
   
     totalPaddingTop = 38;
     columnAreaHeight = 32;
@@ -1142,6 +1145,9 @@ DesignerJs.prototype.normalBase = async function () {
     menuTextTop = isMac() ? -1 : 1,
     menuSize = 13;
     menuWeight = 600;
+
+    circleRight = 2.5;
+    circleTop = isMac() ? 3 : 1;
 
     ({ standards, columns, values } = await this.normalDataRender(true));
   
@@ -1432,6 +1438,47 @@ DesignerJs.prototype.normalBase = async function () {
       }
     }
 
+    importantMarkingEvent = (desid) => {
+      return async function (e) {
+        e.preventDefault();
+        try {
+          const circles = this.querySelectorAll('.' + importantCircleClassName);
+          const desid = this.getAttribute("desid");
+          let onoff;
+          let whereQuery, updateQuery;
+
+          for (let circle of circles) {
+            if (circle.getAttribute("toggle") === "on") {
+              circle.style.display = "none";
+              circle.setAttribute("toggle", "off");
+              onoff = "off";
+            } else {
+              circle.style.display = "inline-block";
+              circle.setAttribute("toggle", "on");
+              onoff = "on";
+            }
+          }
+
+          whereQuery = { desid };
+          if (onoff === "on") {
+            updateQuery = { important: true };
+          } else {
+            updateQuery = { important: false };
+          }
+
+          await ajaxJson({
+            id: desid,
+            column: "important",
+            value: updateQuery.important ? 1 : 0,
+            email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail
+          }, BACKHOST + "/updateDesignerHistory");
+          
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
     totalMother = createNode({
       mother: totalContents,
       class: [ "totalMother" ],
@@ -1622,9 +1669,10 @@ DesignerJs.prototype.normalBase = async function () {
       
           createNode({
             mother: idNameArea,
-            attribute: { desid: designer.desid, lastfilter: "none" },
+            attribute: { desid: designer.desid, lastfilter: "none", important: designer.important ? "true" : "false" },
             event: {
               click: instance.normalWhiteCard(designer.desid),
+              contextmenu: importantMarkingEvent(designer.desid),
             },
             class: [ standardCaseClassName ],
             style: {
@@ -1656,6 +1704,21 @@ DesignerJs.prototype.normalBase = async function () {
                     fontSize: String(fontSize) + ea,
                     fontWeight: String(fontWeight),
                     color: colorChip.black,
+                  },
+                  next: {
+                    class: [ importantCircleClassName ],
+                    attribute: { toggle: designer.important ? "on" : "off" },
+                    mode: "svg",
+                    source: instance.mother.returnCircle("", colorChip.red),
+                    style: {
+                      display: designer.important ? "inline-block" : "none",
+                      position: "absolute",
+                      transform: "scale(0.4)",
+                      transformOrigin: "100% 0%",
+                      right: String(index === 0 ? 0 : circleRight) + ea,
+                      top: String(circleTop) + ea,
+                      zIndex: String(0),
+                    }
                   }
                 }
               }
@@ -1785,12 +1848,13 @@ DesignerJs.prototype.normalSearchEvent = async function () {
           const designers = await ajaxJson({ noFlat: true, query: value }, BACKHOST + "/searchDesigners", { equal: true });
           const histories = await ajaxJson({
             method: "designer",
-            property: "manager",
+            property: [ "manager", "important" ],
             idArr: designers.map((d) => { return d.desid }),
           }, BACKHOST + "/getHistoryProperty", { equal: true });
 
           for (let designer of designers) {
-            designer.manager = histories[designer.desid];
+            designer.manager = histories[designer.desid].manager;
+            designer.important = histories[designer.desid].important;
           }
 
           instance.designers = designers;
@@ -1840,13 +1904,14 @@ DesignerJs.prototype.normalMessageEvent = async function () {
               designers = de;
               return ajaxJson({
                 method: "designer",
-                property: "manager",
+                property: [ "manager", "important" ],
                 idArr: designers.map((d) => { return d.desid }),
               }, BACKHOST + "/getHistoryProperty", { equal: true });
             }).then((h) => {
               histories = h;
               for (let designer of designers) {
-                designer.manager = histories[designer.desid];
+                designer.manager = histories[designer.desid].manager;
+                designer.important = histories[designer.desid].important;
               }
               instance.designers = designers;
               return instance.normalContentsLoad(true);
@@ -1978,18 +2043,20 @@ DesignerJs.prototype.normalView = async function () {
     let designers;
     let histories;
     let members;
+    let importants;
 
     loading = await this.mother.loadingRun();
 
     designers = await ajaxJson({ noFlat: true, whereQuery: {} }, BACKHOST + "/getDesigners", { equal: true });
     histories = await ajaxJson({
       method: "designer",
-      property: "manager",
+      property: [ "manager", "important" ],
       idArr: designers.map((d) => { return d.desid }),
     }, BACKHOST + "/getHistoryProperty", { equal: true });
 
     for (let designer of designers) {
-      designer.manager = histories[designer.desid];
+      designer.manager = histories[designer.desid].manager;
+      designer.important = histories[designer.desid].important;
     }
 
     members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });

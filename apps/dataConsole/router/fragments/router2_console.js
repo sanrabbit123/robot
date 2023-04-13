@@ -1632,7 +1632,6 @@ DataRouter.prototype.rou_post_updateHistory = function () {
           }
         }
 
-        console.log(updateQuery);
         if (Object.keys(updateQuery).length > 0) {
           await back.updateHistory(method, [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
         }
