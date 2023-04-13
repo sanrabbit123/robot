@@ -3294,11 +3294,15 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
             click: function (e) {
               const getObj = GeneralJs.returnGet();
               const proid = this.getAttribute("proid");
-              globalThis.window.parent.postMessage(JSON.stringify({
-                proid: proid,
-                mode: "reset",
-                to: getObj.proid === proid ? "general" : "list",
-              }), "*");
+              if (getObj.proid === proid) {
+                globalThis.window.parent.postMessage(JSON.stringify({
+                  proid: proid,
+                  mode: "reset",
+                  to: getObj.proid === proid ? "general" : "list",
+                }), "*");
+              } else {
+                removeByClass(whiteCardClassName);
+              }
             }
           },
           style: {

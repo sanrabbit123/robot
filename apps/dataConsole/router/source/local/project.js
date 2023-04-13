@@ -6444,9 +6444,7 @@ ProjectJs.prototype.processListViewMakerDetail = function (recycle = false) {
 ProjectJs.prototype.processListViewMaker = function () {
   const instance = this;
   return function (e) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
     e.preventDefault();
-
     let tempFunc;
     if (GeneralJs.stacks.whiteBox !== 1) {
       if (instance.whiteBox !== null) {
@@ -8383,21 +8381,30 @@ ProjectJs.prototype.launching = async function () {
           const data = JSON.parse(e.data);
           if (typeof data.proid === "string" && typeof data.mode === "string") {
             if (data.mode === "reset") {
+
               const { proid } = data;
               let target;
               instance.whiteCancelMaker().call({}, {});
-              target = null;
-              for (let dom of instance.standardDoms) {
-                if ((new RegExp(proid, 'gi')).test(dom.textContent)) {
-                  target = dom;
-                  break;
+
+              if (data.to === "general") {
+                target = null;
+                for (let dom of instance.standardDoms) {
+                  if ((new RegExp(proid, 'gi')).test(dom.textContent)) {
+                    target = dom;
+                    break;
+                  }
                 }
-              }
-              if (target !== null) {
+                if (target !== null) {
+                  setQueue(() => {
+                    target.click();
+                  }, 601);
+                }
+              } else if (data.to === "list") {
                 setQueue(() => {
-                  target.click();
+                  instance.processListViewMaker().call({}, { preventDefault: () => {} });
                 }, 601);
               }
+
             }
           }
         } catch {}
