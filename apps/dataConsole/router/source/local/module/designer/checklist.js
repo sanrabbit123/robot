@@ -584,6 +584,13 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                                 desid,
                                               }, "/ghostDesigner_updateAnalytics");
                                               instance.designers.update([ whereQuery, updateQuery ]);
+                                              if (typeof window.parent.postMessage === "function") {
+                                                window.parent.postMessage(JSON.stringify({
+                                                  type: "checklistUpdate",
+                                                  desid: desid,
+                                                  updateQuery,
+                                                }));
+                                              }
                                             } else {
                                               text = this.getAttribute("past");
                                               this.value = text;
@@ -741,6 +748,13 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                                 desid,
                                               }, "/ghostDesigner_updateAnalytics");
                                               instance.designers.update([ whereQuery, updateQuery ]);
+                                              if (typeof window.parent.postMessage === "function") {
+                                                window.parent.postMessage(JSON.stringify({
+                                                  type: "checklistUpdate",
+                                                  desid: desid,
+                                                  updateQuery,
+                                                }));
+                                              }
                                             } else {
                                               text = this.getAttribute("past");
                                               this.value = text;
@@ -3333,6 +3347,13 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                                   if (this.parentElement !== null) {
                                     this.parentElement.removeChild(this.parentElement.querySelector("input"));
                                   }
+                                  if (typeof window.parent.postMessage === "function") {
+                                    window.parent.postMessage(JSON.stringify({
+                                      type: "checklistUpdate",
+                                      desid: desid,
+                                      updateQuery,
+                                    }));
+                                  }
                                 }
                               } catch (err) {
                                 console.log(err);
@@ -3468,6 +3489,13 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                         desid,
                       }, "/ghostDesigner_updateAnalytics");
                       instance.designers.update([ whereQuery, updateQuery ]);
+                      if (typeof window.parent.postMessage === "function") {
+                        window.parent.postMessage(JSON.stringify({
+                          type: "checklistUpdate",
+                          desid: desid,
+                          updateQuery,
+                        }));
+                      }
                     }
 
                   } catch (err) {
@@ -3601,6 +3629,13 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                           desid,
                         }, "/ghostDesigner_updateAnalytics");
                         instance.designers.update([ whereQuery, updateQuery ]);
+                        if (typeof window.parent.postMessage === "function") {
+                          window.parent.postMessage(JSON.stringify({
+                            type: "checklistUpdate",
+                            desid: desid,
+                            updateQuery,
+                          }));
+                        }
                       }
 
                     } catch (err) {
@@ -3710,6 +3745,13 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                           desid,
                         }, "/ghostDesigner_updateAnalytics");
                         instance.designers.update([ whereQuery, updateQuery ]);
+                        if (typeof window.parent.postMessage === "function") {
+                          window.parent.postMessage(JSON.stringify({
+                            type: "checklistUpdate",
+                            desid: desid,
+                            updateQuery,
+                          }));
+                        }
                       }
                     }
                   }

@@ -1734,7 +1734,7 @@ DesignerJs.prototype.normalSearchEvent = async function () {
 DesignerJs.prototype.normalMessageEvent = async function () {
   const instance = this;
   const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
-  const { findByAttribute } = GeneralJs;
+  const { findByAttribute, ajaxJson } = GeneralJs;
   try {
     window.addEventListener("message", function (e) {
       try {
@@ -1746,6 +1746,27 @@ DesignerJs.prototype.normalMessageEvent = async function () {
                 findByAttribute([ ...document.querySelectorAll('.' + titleButtonsClassName) ], "mode", data.mode).click();
               }
             }
+          } else if (data.type === "checklistUpdate") {
+            let designers;
+            let histories;
+
+            ajaxJson({ noFlat: true, whereQuery: {} }, BACKHOST + "/getDesigners", { equal: true }).then((de) => {
+              designers = de;
+              return ajaxJson({
+                method: "designer",
+                property: "manager",
+                idArr: designers.map((d) => { return d.desid }),
+              }, BACKHOST + "/getHistoryProperty", { equal: true });
+            }).then((h) => {
+              histories = h;
+              for (let designer of designers) {
+                designer.manager = histories[designer.desid];
+              }
+              instance.designers = designers;
+              return instance.normalContentsLoad(false);
+            }).catch((err) => {
+              console.log(err);
+            });
           }
         }
       } catch {}
