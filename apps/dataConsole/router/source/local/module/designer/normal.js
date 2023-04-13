@@ -892,7 +892,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                   },
                   {
                     class: [ titleButtonsClassName ],
-                    attribute: { toggle: (instance.whiteCardMode === "checklist" ? "on" : "off"), desid },
+                    attribute: { toggle: (instance.whiteCardMode === "possible" ? "on" : "off"), desid },
                     event: {
                       click: iframeMaker("possible"),
                     },
@@ -903,7 +903,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                       fontSize: String(fontSize) + ea,
                       marginLeft: String(fontBetween) + ea,
                       fontWeight: String(fontWeight),
-                      color: instance.whiteCardMode === "checklist" ? colorChip.green : colorChip.black,
+                      color: instance.whiteCardMode === "possible" ? colorChip.green : colorChip.black,
                       cursor: "pointer",
                     }
                   },
@@ -920,7 +920,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                   },
                   {
                     class: [ titleButtonsClassName ],
-                    attribute: { toggle: (instance.whiteCardMode === "checklist" ? "on" : "off"), desid },
+                    attribute: { toggle: (instance.whiteCardMode === "portfolio" ? "on" : "off"), desid },
                     event: {
                       click: iframeMaker("portfolio"),
                     },
@@ -931,7 +931,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                       fontSize: String(fontSize) + ea,
                       marginLeft: String(fontBetween) + ea,
                       fontWeight: String(fontWeight),
-                      color: instance.whiteCardMode === "checklist" ? colorChip.green : colorChip.black,
+                      color: instance.whiteCardMode === "portfolio" ? colorChip.green : colorChip.black,
                       cursor: "pointer",
                     }
                   },
@@ -948,7 +948,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                   },
                   {
                     class: [ titleButtonsClassName ],
-                    attribute: { toggle: (instance.whiteCardMode === "checklist" ? "on" : "off"), desid },
+                    attribute: { toggle: (instance.whiteCardMode === "report" ? "on" : "off"), desid },
                     event: {
                       click: iframeMaker("report"),
                     },
@@ -959,7 +959,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                       fontSize: String(fontSize) + ea,
                       marginLeft: String(fontBetween) + ea,
                       fontWeight: String(fontWeight),
-                      color: instance.whiteCardMode === "checklist" ? colorChip.green : colorChip.black,
+                      color: instance.whiteCardMode === "report" ? colorChip.green : colorChip.black,
                       cursor: "pointer",
                     }
                   },

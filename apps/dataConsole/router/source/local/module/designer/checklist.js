@@ -3033,10 +3033,11 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   const instance = this;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
+  const { entireMode, normalMode } = this;
   const matrixButtonConst = "matrixButtons_" + desid;
   const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
   const mobile = this.media[4];
-  const desktop = !mobile;
+  const desktop = normalMode ? true : !mobile;
   let designer;
   let information, analytics;
   let margin;
@@ -6624,6 +6625,8 @@ DesignerJs.prototype.checkListView = async function () {
     const desktop = !mobile;
     const standardBar = totalMother.firstChild;
     const getObj = returnGet();
+    const entireMode = (getObj.entire === "true");
+    const normalMode = (entireMode && getObj.normal === "true");
     let designers, length;
     let boxTong;
     let nodeArr;
@@ -6656,6 +6659,8 @@ DesignerJs.prototype.checkListView = async function () {
       conditions: [],
       blocks: [],
     };
+    this.entireMode = entireMode;
+    this.normalMode = normalMode;
 
     motherHeight = <%% 154, 148, 148, 148, 148 %%>;
 
