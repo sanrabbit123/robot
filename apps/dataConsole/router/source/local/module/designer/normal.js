@@ -140,6 +140,12 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         type: "during",
       },
       {
+        title: "연락처",
+        width: 130,
+        name: "phone",
+        type: "string",
+      },
+      {
         title: "주소",
         width: 400,
         name: "address",
@@ -422,6 +428,11 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
       values[designer.desid].push({
         value: `${String(year)}년 ${String(month)}개월`,
         name: "career",
+      });
+
+      values[designer.desid].push({
+        value: designer.information.phone,
+        name: "phone",
       });
 
       values[designer.desid].push({
@@ -1885,7 +1896,6 @@ DesignerJs.prototype.normalExtractEvent = async function () {
             "이름",
             // -------------------------------
             // add
-            "연락처",
             "이메일",
             "계좌번호",
             "사업자 분류",
@@ -1907,7 +1917,6 @@ DesignerJs.prototype.normalExtractEvent = async function () {
 
             // -------------------------------
             // add
-            tempArr.push(thisDesigner.information.phone);
             tempArr.push(thisDesigner.information.email);
             tempArr.push(thisDesigner.information.business.account.length > 0 ? thisDesigner.information.business.account[0].bankName + " " + thisDesigner.information.business.account[0].accountNumber : "");
             tempArr.push(thisDesigner.information.business.businessInfo.classification);
