@@ -642,10 +642,8 @@ DesignerJs.prototype.normalColorSync = async function () {
 DesignerJs.prototype.normalWhiteCard = function (desid) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
   const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson } = GeneralJs;
-  const whiteCardClassName = "whiteCardClassName";
-  const whiteBaseClassName = "whiteBaseClassName";
-  const titleButtonsClassName = "titleButtonsClassName";
   return async function (e) {
     try {
       const zIndex = 4;
@@ -864,7 +862,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                 children: [
                   {
                     class: [ titleButtonsClassName ],
-                    attribute: { toggle: (instance.whiteCardMode === "checklist" ? "on" : "off"), desid },
+                    attribute: { toggle: (instance.whiteCardMode === "checklist" ? "on" : "off"), desid, mode: "checklist" },
                     event: {
                       click: iframeMaker("checklist"),
                     },
@@ -892,7 +890,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                   },
                   {
                     class: [ titleButtonsClassName ],
-                    attribute: { toggle: (instance.whiteCardMode === "possible" ? "on" : "off"), desid },
+                    attribute: { toggle: (instance.whiteCardMode === "possible" ? "on" : "off"), desid, mode: "possible" },
                     event: {
                       click: iframeMaker("possible"),
                     },
@@ -920,7 +918,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                   },
                   {
                     class: [ titleButtonsClassName ],
-                    attribute: { toggle: (instance.whiteCardMode === "portfolio" ? "on" : "off"), desid },
+                    attribute: { toggle: (instance.whiteCardMode === "portfolio" ? "on" : "off"), desid, mode: "portfolio" },
                     event: {
                       click: iframeMaker("portfolio"),
                     },
@@ -948,7 +946,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                   },
                   {
                     class: [ titleButtonsClassName ],
-                    attribute: { toggle: (instance.whiteCardMode === "report" ? "on" : "off"), desid },
+                    attribute: { toggle: (instance.whiteCardMode === "report" ? "on" : "off"), desid, mode: "report" },
                     event: {
                       click: iframeMaker("report"),
                     },
@@ -1733,6 +1731,30 @@ DesignerJs.prototype.normalSearchEvent = async function () {
   }
 }
 
+DesignerJs.prototype.normalMessageEvent = async function () {
+  const instance = this;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
+  const { findByAttribute } = GeneralJs;
+  try {
+    window.addEventListener("message", function (e) {
+      try {
+        const data = JSON.parse(e.data);
+        if (typeof data === "object" && data !== null) {
+          if (data.type === "whiteConverting") {
+            if (document.querySelector('.' + whiteBaseClassName) !== null) {
+              if (findByAttribute([ ...document.querySelectorAll('.' + titleButtonsClassName) ], "mode", data.mode) !== null) {
+                findByAttribute([ ...document.querySelectorAll('.' + titleButtonsClassName) ], "mode", data.mode).click();
+              }
+            }
+          }
+        }
+      } catch {}
+    })
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.normalView = async function () {
   const instance = this;
   try {
@@ -1765,11 +1787,15 @@ DesignerJs.prototype.normalView = async function () {
     this.standardCaseClassName = "standardCaseClassName";
     this.idNameAreaClassName = "idNameAreaClassName";
     this.valueAreaClassName = "valueAreaClassName";
+    this.titleButtonsClassName = "titleButtonsClassName";
+    this.whiteCardClassName = "whiteCardClassName";
+    this.whiteBaseClassName = "whiteBaseClassName";
     this.whiteCardMode = "checklist";
-    this.asyncProcessText = "로드중..";
+    this.asyncProcessText = "로드중..";  
 
     await this.normalBase();
     await this.normalSearchEvent();
+    await this.normalMessageEvent();
 
     loading.parentNode.removeChild(loading);
 

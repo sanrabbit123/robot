@@ -2,6 +2,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
   const instance = this;
   const { ea, media, totalContents, belowHeight, grayBarWidth } = this;
   const { createNode, colorChip, withOut, removeByClass } = GeneralJs;
+  const { entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const cookies = JSON.parse(window.localStorage.getItem("GoogleClientProfile"));
@@ -408,58 +409,62 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           script: function (mother, designer) {
             let cancelBack, whitePrompt;
 
-            cancelBack = createNode({
-              mother: totalContents,
-              class: [ possiblePopupClassName ],
-              event: {
-                click: (e) => {
-                  removeByClass(possiblePopupClassName);
-                }
-              },
-              style: {
-                position: "fixed",
-                top: String(0),
-                left: String(grayBarWidth) + ea,
-                width: withOut(grayBarWidth, ea),
-                height: withOut(belowHeight, ea),
-                background: colorChip.black,
-                opacity: String(0.3),
-                zIndex: String(zIndex),
-              }
-            });
-
-            whitePrompt = createNode({
-              mother: totalContents,
-              class: [ possiblePopupClassName ],
-              style: {
-                position: "fixed",
-                top: String(margin) + ea,
-                left: String(margin + grayBarWidth) + ea,
-                width: withOut((margin * 2) + grayBarWidth, ea),
-                height: withOut((margin * 2) + belowHeight, ea),
-                background: colorChip.white,
-                borderRadius: String(5) + "px",
-                animation: "fadeuplite 0.3s ease forwards",
-                boxShadow: "0 2px 10px -6px " + colorChip.shadow,
-                overflow: "hidden",
-                zIndex: String(zIndex),
-              },
-              child: {
-                mode: "iframe",
-                attribute: {
-                  src: FRONTHOST + "/designer/possible.php?desid=" + designer.desid + "&entire=true",
+            if (!normalMode) {
+              cancelBack = createNode({
+                mother: totalContents,
+                class: [ possiblePopupClassName ],
+                event: {
+                  click: (e) => {
+                    removeByClass(possiblePopupClassName);
+                  }
                 },
                 style: {
-                  position: "absolute",
-                  display: "block",
+                  position: "fixed",
                   top: String(0),
-                  left: String(0),
-                  width: withOut(0, ea),
-                  height: withOut(0, ea),
-                  border: String(0),
+                  left: String(grayBarWidth) + ea,
+                  width: withOut(grayBarWidth, ea),
+                  height: withOut(belowHeight, ea),
+                  background: colorChip.black,
+                  opacity: String(0.3),
+                  zIndex: String(zIndex),
                 }
-              }
-            });
+              });
+  
+              whitePrompt = createNode({
+                mother: totalContents,
+                class: [ possiblePopupClassName ],
+                style: {
+                  position: "fixed",
+                  top: String(margin) + ea,
+                  left: String(margin + grayBarWidth) + ea,
+                  width: withOut((margin * 2) + grayBarWidth, ea),
+                  height: withOut((margin * 2) + belowHeight, ea),
+                  background: colorChip.white,
+                  borderRadius: String(5) + "px",
+                  animation: "fadeuplite 0.3s ease forwards",
+                  boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+                  overflow: "hidden",
+                  zIndex: String(zIndex),
+                },
+                child: {
+                  mode: "iframe",
+                  attribute: {
+                    src: FRONTHOST + "/designer/possible.php?desid=" + designer.desid + "&entire=true",
+                  },
+                  style: {
+                    position: "absolute",
+                    display: "block",
+                    top: String(0),
+                    left: String(0),
+                    width: withOut(0, ea),
+                    height: withOut(0, ea),
+                    border: String(0),
+                  }
+                }
+              });
+            } else {
+              window.parent.postMessage(JSON.stringify({ type: "whiteConverting", desid: designer.desid, mode: "possible" }));
+            }
 
           },
           value: function (designer) {
@@ -855,58 +860,62 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           script: function (mother, designer) {
             let cancelBack, whitePrompt;
 
-            cancelBack = createNode({
-              mother: totalContents,
-              class: [ possiblePopupClassName ],
-              event: {
-                click: (e) => {
-                  removeByClass(possiblePopupClassName);
-                }
-              },
-              style: {
-                position: "fixed",
-                top: String(0),
-                left: String(grayBarWidth) + ea,
-                width: withOut(grayBarWidth, ea),
-                height: withOut(belowHeight, ea),
-                background: colorChip.black,
-                opacity: String(0.3),
-                zIndex: String(zIndex),
-              }
-            });
-
-            whitePrompt = createNode({
-              mother: totalContents,
-              class: [ possiblePopupClassName ],
-              style: {
-                position: "fixed",
-                top: String(margin) + ea,
-                left: String(margin + grayBarWidth) + ea,
-                width: withOut((margin * 2) + grayBarWidth, ea),
-                height: withOut((margin * 2) + belowHeight, ea),
-                background: colorChip.white,
-                borderRadius: String(5) + "px",
-                animation: "fadeuplite 0.3s ease forwards",
-                boxShadow: "0 2px 10px -6px " + colorChip.shadow,
-                overflow: "hidden",
-                zIndex: String(zIndex),
-              },
-              child: {
-                mode: "iframe",
-                attribute: {
-                  src: window.location.protocol + "//" + window.location.host + "/designer?mode=general&desid=" + designer.desid + "&dataonly=true&entire=true",
+            if (!normalMode) {
+              cancelBack = createNode({
+                mother: totalContents,
+                class: [ possiblePopupClassName ],
+                event: {
+                  click: (e) => {
+                    removeByClass(possiblePopupClassName);
+                  }
                 },
                 style: {
-                  position: "absolute",
-                  display: "block",
+                  position: "fixed",
                   top: String(0),
-                  left: String(0),
-                  width: withOut(0, ea),
-                  height: withOut(0, ea),
-                  border: String(0),
+                  left: String(grayBarWidth) + ea,
+                  width: withOut(grayBarWidth, ea),
+                  height: withOut(belowHeight, ea),
+                  background: colorChip.black,
+                  opacity: String(0.3),
+                  zIndex: String(zIndex),
                 }
-              }
-            });
+              });
+  
+              whitePrompt = createNode({
+                mother: totalContents,
+                class: [ possiblePopupClassName ],
+                style: {
+                  position: "fixed",
+                  top: String(margin) + ea,
+                  left: String(margin + grayBarWidth) + ea,
+                  width: withOut((margin * 2) + grayBarWidth, ea),
+                  height: withOut((margin * 2) + belowHeight, ea),
+                  background: colorChip.white,
+                  borderRadius: String(5) + "px",
+                  animation: "fadeuplite 0.3s ease forwards",
+                  boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+                  overflow: "hidden",
+                  zIndex: String(zIndex),
+                },
+                child: {
+                  mode: "iframe",
+                  attribute: {
+                    src: window.location.protocol + "//" + window.location.host + "/designer?mode=general&desid=" + designer.desid + "&dataonly=true&entire=true",
+                  },
+                  style: {
+                    position: "absolute",
+                    display: "block",
+                    top: String(0),
+                    left: String(0),
+                    width: withOut(0, ea),
+                    height: withOut(0, ea),
+                    border: String(0),
+                  }
+                }
+              });
+            } else {
+              window.parent.postMessage(JSON.stringify({ type: "whiteConverting", desid: designer.desid, mode: "portfolio" }));
+            }
           },
           height: factorHeight,
           type: "string",
