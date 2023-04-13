@@ -664,9 +664,9 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
 
       linkDictionary = {
         checklist: BACKHOST + "/designer?mode=checklist&entire=true&dataonly=true&normal=true&desid=" + designer.desid,
-        possible: FRONTHOST + "/designer/possible.php?desid=" + designer.desid + "&entire=true&normal=true",
+        possible: BACKHOST + "/middle/designerPossible?desid=" + designer.desid + "&entire=true&normal=true",
         portfolio: BACKHOST + "/designer?mode=general&desid=" + designer.desid + "&dataonly=true&entire=true&normal=true",
-        report: FRONTHOST + "/designer/report.php?desid=" + designer.desid + "&entire=true&normal=true",
+        report: BACKHOST + "/middle/designerReport?desid=" + designer.desid + "&entire=true&normal=true",
       }
 
       margin = 30;
