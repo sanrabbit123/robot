@@ -264,6 +264,50 @@ StaticRouter.prototype.rou_post_readDir = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_readFile = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink, leafParsing } = this.mother;
+  const { staticConst, sambaToken } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/readFile" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.path === undefined) {
+        throw new Error("invaild post");
+      }
+      let target;
+      let contents;
+
+      target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
+      if (target.trim() === '') {
+        target = sambaToken;
+      }
+      if (!/^__/.test(target)) {
+        target = sambaToken + "/" + target;
+      }
+
+      target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
+      contents = await fileSystem(`readString`, [ target ]);
+      
+      res.send(JSON.stringify({ contents }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_readFile): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_renameTargets = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;

@@ -1794,6 +1794,24 @@ DesignerJs.prototype.normalExtractEvent = async function () {
   }
 }
 
+DesignerJs.prototype.normalReportEvent = async function () {
+  const instance = this;
+  const { ajaxJson } = GeneralJs;
+  try {
+    this.mother.belowButtons.sub.reportIcon.addEventListener("click", async function (e) {
+      try {
+
+        console.log(instance.designers);
+
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.normalView = async function () {
   const instance = this;
   try {
