@@ -463,7 +463,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                 }
               });
             } else {
-              window.parent.postMessage(JSON.stringify({ type: "whiteConverting", desid: designer.desid, mode: "possible" }));
+              window.parent.postMessage(JSON.stringify({ type: "whiteConverting", desid: designer.desid, mode: "possible" }), "*");
             }
 
           },
@@ -589,7 +589,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                                   type: "checklistUpdate",
                                                   desid: desid,
                                                   updateQuery,
-                                                }));
+                                                }), "*");
                                               }
                                             } else {
                                               text = this.getAttribute("past");
@@ -753,7 +753,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                                   type: "checklistUpdate",
                                                   desid: desid,
                                                   updateQuery,
-                                                }));
+                                                }), "*");
                                               }
                                             } else {
                                               text = this.getAttribute("past");
@@ -928,7 +928,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                 }
               });
             } else {
-              window.parent.postMessage(JSON.stringify({ type: "whiteConverting", desid: designer.desid, mode: "portfolio" }));
+              window.parent.postMessage(JSON.stringify({ type: "whiteConverting", desid: designer.desid, mode: "portfolio" }), "*");
             }
           },
           height: factorHeight,
@@ -3352,7 +3352,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                                       type: "checklistUpdate",
                                       desid: desid,
                                       updateQuery,
-                                    }));
+                                    }), "*");
                                   }
                                 }
                               } catch (err) {
@@ -3494,7 +3494,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                           type: "checklistUpdate",
                           desid: desid,
                           updateQuery,
-                        }));
+                        }), "*");
                       }
                     }
 
@@ -3634,7 +3634,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                             type: "checklistUpdate",
                             desid: desid,
                             updateQuery,
-                          }));
+                          }), "*");
                         }
                       }
 
@@ -3750,7 +3750,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                             type: "checklistUpdate",
                             desid: desid,
                             updateQuery,
-                          }));
+                          }), "*");
                         }
                       }
                     }

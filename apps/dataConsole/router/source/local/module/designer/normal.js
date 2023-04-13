@@ -1763,7 +1763,7 @@ DesignerJs.prototype.normalMessageEvent = async function () {
                 designer.manager = histories[designer.desid];
               }
               instance.designers = designers;
-              return instance.normalContentsLoad(false);
+              return instance.normalContentsLoad(true);
             }).catch((err) => {
               console.log(err);
             });
@@ -1812,7 +1812,7 @@ DesignerJs.prototype.normalView = async function () {
     this.whiteCardClassName = "whiteCardClassName";
     this.whiteBaseClassName = "whiteBaseClassName";
     this.whiteCardMode = "checklist";
-    this.asyncProcessText = "로드중..";  
+    this.asyncProcessText = "로드중..";
 
     await this.normalBase();
     await this.normalSearchEvent();
