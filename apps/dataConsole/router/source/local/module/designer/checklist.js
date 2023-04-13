@@ -6661,6 +6661,9 @@ DesignerJs.prototype.checkListView = async function () {
     };
     this.entireMode = entireMode;
     this.normalMode = normalMode;
+    if (normalMode) {
+      this.ea = "px";
+    }
 
     motherHeight = <%% 154, 148, 148, 148, 148 %%>;
 
