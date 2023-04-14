@@ -277,7 +277,7 @@ Contents.prototype.getGoogleDocsDetail = function (server) {
 
   tempArr = portfolio.split('\n').map((i) => { return (i === '' ? "\n" : i.trim()); }).map((i) => {
     let arr0, arr1;
-    if (/^[0-9]/.test(i) && /\-/gi.test(i)) {
+    if (/^[0-9]/.test(i) && /[0-9]$/.test(i) && /\-/gi.test(i)) {
       arr0 = i.split('-').map((j) => { return Number(j.trim()); });
       if (arr0.length !== 2) {
         throw new Error("invaild text");

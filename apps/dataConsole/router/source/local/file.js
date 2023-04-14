@@ -669,47 +669,7 @@ FileJs.prototype.baseMaker = function () {
       },
     },
     {
-      text: "드라이브 열기",
-      event: async function (e) {
-        try {
-          const loading = instance.mother.grayLoading();
-          let id;
-          if (instance.selected.length === 0) {
-            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
-          } else {
-            ({ id } = await ajaxJson({ path: instance.selected[0].getAttribute("absolute") }, S3HOST + ":3000/findFolderId", { equal: true }));
-          }
-          loading.remove();
-          if (id === undefined) {
-            window.alert("해당 폴더는 드라이브에서 열 수 없습니다!");
-          } else {
-            blankHref("https://drive.google.com/drive/folders/" + id + "?usp=sharing");
-            await sleep(500);
-          }
-          removeByClass(contextmenuClassName);
-          instance.fileLoad(instance.path);
-        } catch (e) {
-          console.log(e);
-        }
-      },
-      visible: async function (e) {
-        try {
-          if (instance.selected.length === 0) {
-            return true;
-          } else {
-            if (instance.selected.length > 1) {
-              return false;
-            }
-            return (instance.selected[0].getAttribute("kind") === "folder");
-          }
-        } catch (e) {
-          console.log(e);
-          return false;
-        }
-      }
-    },
-    {
-      text: "새 시트",
+      text: "시트 만들기",
       event: async function (e) {
         try {
           const newSheetsName = await GeneralJs.prompt("새로운 시트명을 적어주세요!");
@@ -763,7 +723,7 @@ FileJs.prototype.baseMaker = function () {
       }
     },
     {
-      text: "새 문서",
+      text: "문서 만들기",
       event: async function (e) {
         try {
           const newDocsName = await GeneralJs.prompt("새로운 문서명을 적어주세요!");
@@ -816,6 +776,46 @@ FileJs.prototype.baseMaker = function () {
         }
       }
     },
+    {
+      text: "드라이브 열기",
+      event: async function (e) {
+        try {
+          const loading = instance.mother.grayLoading();
+          let id;
+          if (instance.selected.length === 0) {
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+          } else {
+            ({ id } = await ajaxJson({ path: instance.selected[0].getAttribute("absolute") }, S3HOST + ":3000/findFolderId", { equal: true }));
+          }
+          loading.remove();
+          if (id === undefined) {
+            window.alert("해당 폴더는 드라이브에서 열 수 없습니다!");
+          } else {
+            blankHref("https://drive.google.com/drive/folders/" + id + "?usp=sharing");
+            await sleep(500);
+          }
+          removeByClass(contextmenuClassName);
+          instance.fileLoad(instance.path);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          if (instance.selected.length === 0) {
+            return true;
+          } else {
+            if (instance.selected.length > 1) {
+              return false;
+            }
+            return (instance.selected[0].getAttribute("kind") === "folder");
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+    },
   ];
   let mother, files;
   let innerMargin;
@@ -836,10 +836,10 @@ FileJs.prototype.baseMaker = function () {
   titleHeight = 30;
   fontSize = 18;
   titlePaddingBottom = 10;
-  contextmenuWidth = 95;
-  contextmenuFontSize = 14;
-  contextmenuPaddingTop = isMac() ? 6 : 7;
-  contextmenuPaddingBottom = isMac() ? 8 : 7;
+  contextmenuWidth = 100;
+  contextmenuFontSize = 13;
+  contextmenuPaddingTop = isMac() ? 5 : 6;
+  contextmenuPaddingBottom = isMac() ? 7 : 6;
   contextmenuBetween = 2;
 
   calculationEvent = function (e) {
@@ -1383,7 +1383,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { ea, motherTong: { mother, files } } = this;
+  const { ea, motherTong: { mother, files }, latestPathLocalSaveHomeLiaisonKeyName } = this;
   const { createNode, colorChip, withOut, ajaxJson, cleanChildren, isMac, blankHref } = GeneralJs;
   try {
     let thisFolderFiles;
@@ -1407,6 +1407,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
       window.history.pushState({ path: this.path }, '');
     }
 
+    window.localStorage.setItem(latestPathLocalSaveHomeLiaisonKeyName, path);
     this.pathReload(searchMode);
 
     width = 110;
@@ -1763,21 +1764,30 @@ FileJs.prototype.launching = async function () {
       this.grayBarWidth = this.mother.grayBarWidth = 0;
     }
 
-    startPoint = "__samba__/drive/HomeLiaisonServer";
-    if (getObj.mode === "client") {
-      startPoint = "__samba__/drive/HomeLiaisonServer/고객/401_고객응대";
-    } else if (getObj.mode === "designer") {
-      startPoint = "__samba__/drive/HomeLiaisonServer/디자이너/partnership";
-    } else if (getObj.mode === "photo") {
-      startPoint = "__samba__/drive/HomeLiaisonServer/사진_등록_포트폴리오";
-    } else if (getObj.mode === "project") {
-      startPoint = "__samba__/drive/HomeLiaisonServer/디자이너/partnership";
-    } else if (getObj.mode === "aspirant") {
-      startPoint = "__samba__/drive/HomeLiaisonServer/디자이너/new";
-    } else if (getObj.mode === "document") {
-      startPoint = "__samba__/drive/# 홈리에종";
-    } else if (getObj.mode === "file") {
+    this.latestPathLocalSaveHomeLiaisonKeyName = "latestPathLocalSaveHomeLiaisonKeyName";
+    this.path = "";
+    if (window.localStorage.getItem(this.latestPathLocalSaveHomeLiaisonKeyName) !== null && typeof window.localStorage.getItem(this.latestPathLocalSaveHomeLiaisonKeyName) === "string") {
+      this.path = window.localStorage.getItem(this.latestPathLocalSaveHomeLiaisonKeyName);
+    }
+
+    if (typeof this.path !== "string" || this.path.trim() === "" || typeof getObj.mode === "string") {
       startPoint = "__samba__/drive/HomeLiaisonServer";
+      if (getObj.mode === "client") {
+        startPoint = "__samba__/drive/HomeLiaisonServer/고객/401_고객응대";
+      } else if (getObj.mode === "designer") {
+        startPoint = "__samba__/drive/HomeLiaisonServer/디자이너/partnership";
+      } else if (getObj.mode === "photo") {
+        startPoint = "__samba__/drive/HomeLiaisonServer/사진_등록_포트폴리오";
+      } else if (getObj.mode === "project") {
+        startPoint = "__samba__/drive/HomeLiaisonServer/디자이너/partnership";
+      } else if (getObj.mode === "aspirant") {
+        startPoint = "__samba__/drive/HomeLiaisonServer/디자이너/new";
+      } else if (getObj.mode === "document" || getObj.mode === "home") {
+        startPoint = "__samba__/drive/# 홈리에종";
+      } else if (getObj.mode === "file") {
+        startPoint = "__samba__/drive/HomeLiaisonServer";
+      }
+      this.path = startPoint;
     }
 
     this.blocks = [];
@@ -1788,7 +1798,6 @@ FileJs.prototype.launching = async function () {
     this.pageHistory = [];
     this.current = [];
     this.selected = [];
-    this.path = startPoint;
     this.dragArea = null;
     this.pastX = null;
     this.pastY = null;
@@ -1823,6 +1832,7 @@ FileJs.prototype.launching = async function () {
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+    window.localStorage.clear();
     console.log(e);
   }
 }

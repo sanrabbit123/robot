@@ -2461,6 +2461,10 @@ DashboardJs.prototype.launching = async function () {
       }
     }
 
+    this.mother.belowButtons.sub.folder.addEventListener("click", function (e) {
+      instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/file?mode=home&entire=true&dataonly=true");
+    });
+
   } catch (e) {
     ajaxJson({
       message: "DashboardJs.prototype.launching error : " + e.message,
