@@ -3604,11 +3604,6 @@ DesignerJs.prototype.reportScrollBox = function (data, motherWidth) {
     matrix.push(tempArr);
   }
 
-
-
-
-
-
   return scrollBox;
 }
 
