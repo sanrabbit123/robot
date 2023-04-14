@@ -117,6 +117,17 @@ GoogleDrive.prototype.searchId_inPython = async function (name) {
   }
 }
 
+GoogleDrive.prototype.searchFolderId_inPython = async function (name, parentId) {
+  const instance = this;
+  const mother = this.mother;
+  try {
+    let result = await mother.pythonExecute(this.pythonApp, [ "drive", "searchFolderId" ], { name, parentId });
+    return result.id;
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
 GoogleDrive.prototype.upload_inPython = async function (folder_id, file) {
   const instance = this;
   const mother = this.mother;

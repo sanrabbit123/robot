@@ -664,6 +664,26 @@ FileJs.prototype.baseMaker = function () {
         }
       },
     },
+    {
+      text: "드라이브 열기",
+      event: async function (e) {
+        try {
+          const { id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true });
+          console.log(id);
+          instance.fileLoad(instance.path);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          return instance.selected.length === 0;
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+    },
   ];
   let mother, files;
   let innerMargin;

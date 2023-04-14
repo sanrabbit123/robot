@@ -308,6 +308,92 @@ StaticRouter.prototype.rou_post_readFile = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_findFolderId = function () {
+  const instance = this;
+  const drive = this.drive;
+  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { staticConst } = this;
+  const sambaKeyword = "drive";
+  const rootFolders = [
+    {
+      name: "HomeLiaisonServer",
+      id: "1KOGtX31o16N6cfkdfyeAFrD9-2EFTO0d",
+    },
+    {
+      name: "# 홈리에종",
+      id: "0B7youNEnMPEfQjBNZldFZXVlVTg",
+    },
+  ]
+  let obj;
+  obj = {};
+  obj.link = [ "/findFolderId" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.path === undefined) {
+        throw new Error("invaild post");
+      }
+      const { path } = req.body;
+      const thisFolderArr = path.replace(/\/$/i, '').replace(/\/$/i, '').split("/");
+      let sambaIndex;
+      let thisRootId;
+      let thisRootIndex;
+      let chainTarget;
+      let parentId;
+      let thisId;
+      let finalId;
+  
+      sambaIndex = thisFolderArr.findIndex((str) => { return str === sambaKeyword });
+  
+      if (thisFolderArr[sambaIndex + 1] === undefined || !rootFolders.map(({ name }) => { return name; }).includes(thisFolderArr[sambaIndex + 1])) {
+        throw new Error("invalid path 1");
+      }
+  
+      thisRootIndex = sambaIndex + 1;
+      thisRootId = rootFolders.find(({ name }) => { return name === thisFolderArr[thisRootIndex] }).id;
+  
+      chainTarget = thisFolderArr.slice(thisRootIndex + 1);
+  
+      finalId = null;
+      if (chainTarget.length > 0) {
+  
+        parentId = thisRootId;
+        for (let folderName of chainTarget) {
+          thisId = await drive.searchFolderId_inPython(folderName, parentId);
+          if (thisId === null) {
+            throw new Error("invalid path 2");
+          }
+          parentId = thisId;
+        }
+  
+        finalId = thisId;
+  
+      } else {
+        finalId = thisRootId;
+      }
+      
+      if (finalId === null) {
+        throw new Error("invalid path 3");
+      }
+      
+      res.send(JSON.stringify({ id: finalId }));
+
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_findFolderId): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_renameTargets = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
