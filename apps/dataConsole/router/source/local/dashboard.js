@@ -203,9 +203,6 @@ DashboardJs.prototype.returnTreeContents = function () {
           }
         },
         {
-          title: "디자이너 리포트"
-        },
-        {
           title: "디자이너 관련 파일",
           event: () => {
             return function (e) {
@@ -279,7 +276,12 @@ DashboardJs.prototype.returnTreeContents = function () {
           }
         },
         {
-          title: "홈리에종 알림톡"
+          title: "홈리에종 알림톡",
+          event: () => {
+            return function (e) {
+              blankHref("https://smartsms.aligo.in/shop/kakaotemplate.html");
+            }
+          }
         },
         {
           title: "홈리에종 채널",
@@ -1686,18 +1688,47 @@ DashboardJs.prototype.baseMaker = function () {
 DashboardJs.prototype.grayMaker = function () {
   const instance = this;
   const { grayBase, ea, vh, members } = this;
-  const { createNode, withOut, colorChip, equalJson, blankHref } = GeneralJs;
+  const { createNode, withOut, colorChip, equalJson, blankHref, svgMaker } = GeneralJs;
   let innerPadding;
   let fontSize;
   let numberBoxWidth;
   let blockBetween;
   let contentsTong;
+  let thisMenu;
+  let arrowHeight;
 
   innerPadding = 38;
   fontSize = 14;
-  numberBoxWidth = 80;
+  numberBoxWidth = 20;
   blockBetween = 10;
+  arrowHeight = 7;
 
+  thisMenu = [
+    {
+      title: "홈리에종 문서",
+      event: () => {
+        return function (e) {
+          instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/file?mode=document&entire=true&dataonly=true");
+        }
+      }
+    },
+    {
+      title: "홈리에종 파일",
+      event: () => {
+        return function (e) {
+          instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/file?mode=file&entire=true&dataonly=true");
+        }
+      }
+    },
+    {
+      title: "홈리에종 웹",
+      event: () => {
+        return function (e) {
+          blankHref(FRONTHOST);
+        }
+      }
+    },
+  ]
 
   contentsTong = createNode({
     mother: grayBase,
@@ -1719,25 +1750,27 @@ DashboardJs.prototype.grayMaker = function () {
     }
   }).firstChild;
 
-  for (let member of members) {
+  for (let obj of thisMenu) {
     
     createNode({
       mother: contentsTong,
+      event: obj.event(),
       style: {
         display: "flex",
         position: "relative",
         width: withOut(0, ea),
         flexDirection: "row",
         justifyContent: "start",
-        alignItems: "start",
+        alignItems: "center",
         marginBottom: String(blockBetween) + ea,
         cursor: "pointer",
       },
       children: [
         {
-          text: member.name,
+          text: obj.title,
           style: {
             display: "inline-block",
+            verticalAlign: "top",
             position: "relative",
             width: withOut(numberBoxWidth, ea),
             fontSize: String(fontSize) + ea,
@@ -1748,23 +1781,23 @@ DashboardJs.prototype.grayMaker = function () {
         },
         {
           style: {
-            display: "inline-block",
+            display: "inline-flex",
+            verticalAlign: "top",
             overflow: "hidden",
             position: "relative",
             width: String(numberBoxWidth) + ea,
             height: withOut(0, ea),
             textAlign: "right",
+            justifyContent: "end",
+            alignItems: "center",
           },
           child: {
-            text: member.roles[0],
+            mode: "svg",
+            source: svgMaker.horizontalArrow(numberBoxWidth, arrowHeight, colorChip.deactive),
             style: {
               position: "relative",
               display: "inline-block",
-              fontSize: String(fontSize) + ea,
-              fontWeight: String(200),
-              color: colorChip.deactive,
-              transition: "all 0.3s ease",
-              textAlign: "right",
+              width: String(numberBoxWidth) + ea,
             }
           }
         }
@@ -1852,7 +1885,7 @@ DashboardJs.prototype.grayMaker = function () {
         class: [ "hoverDefault_lite" ],
         event: {
           click: (e) => {
-            blankHref(FRONTHOST);
+            blankHref("https://drive.google.com/drive/folders/0B7youNEnMPEfQjBNZldFZXVlVTg?usp=sharing");
           }
         },
         style: {
@@ -1865,7 +1898,7 @@ DashboardJs.prototype.grayMaker = function () {
           cursor: "pointer",
         },
         child: {
-          text: "홈리에종 프론트 웹",
+          text: "홈리에종 구글 드라이브",
           style: {
             display: "inline-block",
             position: "relative",
@@ -2350,6 +2383,7 @@ DashboardJs.prototype.whiteMaker = function (source) {
   margin = 30;
 
   window.history.pushState({ path: "popup", status: source }, '');
+  removeByClass(whitePopupClassName);
 
   cancelBack = createNode({
     mother: totalContents,
