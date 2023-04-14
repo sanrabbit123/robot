@@ -112,6 +112,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   let subTextContents;
   let standardWidth;
   let titleBottom;
+  let photoSubLength;
 
   standardWidth = <%% this.standardWidth, 1200, 1050, 900, this.standardWidth %%>;
 
@@ -129,6 +130,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   lineHeight = <%% 1.3, 1.3, 1.3, 1.3, 1.3 %%>;
   titleContents = "집을 디자인하는\n새로운 방법, 홈리에종";
   photoLength = 5;
+  photoSubLength = 4;
   subTextContents = desktop ? "디자이너의 <b%전문적인 홈스타일링, 홈리에종%b>과 함께 해보세요!" : "<b%전문적인 홈스타일링, 홈리에종%b>과 함께 해보세요!";
 
   grayHeight = <%% 177, 152, 140, 120, 18 %%>;
@@ -196,7 +198,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
   for (let i = 0; i < randomIndex.length; i++) {
     if (desktop) {
 
-      src = FrontIndexJs.binaryPath + "/slide" + String(randomIndex.length - 1 - i) + ".jpg";
+      src = FrontIndexJs.binaryPath + "/slide" + String(randomIndex.length - 1 - i) + "_" + String(Math.floor(Math.random() * photoSubLength)) + ".jpg";
 
       createNode({
         mother: photoTong,
@@ -216,7 +218,7 @@ FrontIndexJs.prototype.insertSlideBox = function () {
 
     } else {
 
-      src = FrontIndexJs.binaryPath + "/moslide" + String(randomIndex.length - 1 - i) + ".jpg";
+      src = FrontIndexJs.binaryPath + "/moslide" + String(randomIndex.length - 1 - i) + "_" + String(Math.floor(Math.random() * photoSubLength)) + ".jpg";
 
       createNode({
         mother: photoTong,
