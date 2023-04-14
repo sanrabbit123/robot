@@ -39,7 +39,7 @@ FileJs.prototype.absoluteParsing = function (str) {
 FileJs.prototype.baseMaker = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass } = GeneralJs;
+  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref } = GeneralJs;
   const fileBaseClassName = "fileBase";
   const contextmenuClassName = "contextmenuFactor";
   const tempInputClassName = "tempInputClassName";
@@ -53,7 +53,10 @@ FileJs.prototype.baseMaker = function () {
           for (let dom of targets) {
             dom.parentNode.removeChild(dom);
           }
-          await ajaxJson({ path: instance.path + "/" + folderName.replace(/\/\?\!\@\#\$\%\^\&\*\(\)\[\]\{\}\<\>\;\'\"\,\~\\\|\=\+\-\./gi, '').replace(/ /g, "_").replace(/\n/g, "_").replace(/\t/g, "_") }, S3HOST + ":3000/makeFolder");
+          if (folderName !== null) {
+            await ajaxJson({ path: instance.path + "/" + folderName.replace(/\/\?\!\@\#\$\%\^\&\*\(\)\[\]\{\}\<\>\;\'\"\,\~\\\|\=\+\-\./gi, '').replace(/ /g, "_").replace(/\n/g, "_").replace(/\t/g, "_") }, S3HOST + ":3000/makeFolder");
+          }
+          removeByClass(contextmenuClassName);
           instance.fileLoad(instance.path);
         } catch (e) {
           console.log(e);
@@ -614,6 +617,7 @@ FileJs.prototype.baseMaker = function () {
             }
           }
 
+          removeByClass(contextmenuClassName);
           instance.fileLoad(instance.path);
 
         } catch (e) {
@@ -668,8 +672,21 @@ FileJs.prototype.baseMaker = function () {
       text: "드라이브 열기",
       event: async function (e) {
         try {
-          const { id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true });
-          console.log(id);
+          const loading = instance.mother.grayLoading();
+          let id;
+          if (instance.selected.length === 0) {
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+          } else {
+            ({ id } = await ajaxJson({ path: instance.selected[0].getAttribute("absolute") }, S3HOST + ":3000/findFolderId", { equal: true }));
+          }
+          loading.remove();
+          if (id === undefined) {
+            window.alert("해당 폴더는 드라이브에서 열 수 없습니다!");
+          } else {
+            blankHref("https://drive.google.com/drive/folders/" + id + "?usp=sharing");
+            await sleep(500);
+          }
+          removeByClass(contextmenuClassName);
           instance.fileLoad(instance.path);
         } catch (e) {
           console.log(e);
@@ -677,7 +694,14 @@ FileJs.prototype.baseMaker = function () {
       },
       visible: async function (e) {
         try {
-          return instance.selected.length === 0;
+          if (instance.selected.length === 0) {
+            return true;
+          } else {
+            if (instance.selected.length > 1) {
+              return false;
+            }
+            return (instance.selected[0].getAttribute("kind") === "folder");
+          }
         } catch (e) {
           console.log(e);
           return false;
@@ -1468,6 +1492,12 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
             }
           },
           {
+            type: "dragstart",
+            event: function (e) {
+              instance.dragFrom = this;
+            }
+          },
+          {
             type: "dragend",
             event: function (e) {
               const blocks = instance.blocks;
@@ -1493,7 +1523,48 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
           {
             type: "dragleave",
             event: function (e) {
-              this.firstChild.style.opacity = String(0);
+              if (!instance.selected.includes(this)) {
+                this.firstChild.style.opacity = String(0);
+              }
+            }
+          },
+          {
+            type: "drop",
+            event: async function (e) {
+              try {
+                let fromItems, toFolder;
+                let moveSuccess;
+  
+                fromItems = null;
+                toFolder = "";
+                moveSuccess = false;
+  
+                if (this.getAttribute("kind") === "folder") {
+                  if (instance.selected.length > 0) {
+                    fromItems = instance.selected.map((dom) => {
+                      return dom.getAttribute("absolute");
+                    });
+                    toFolder = this.getAttribute("absolute");
+                    if (fromItems.length > 0) {
+                      moveSuccess = true;
+                    }
+                  } else {
+                    if (instance.dragFrom !== null) {
+                      fromItems = [ instance.dragFrom.getAttribute("absolute") ];
+                      toFolder = this.getAttribute("absolute");
+                      if (fromItems.length > 0) {
+                        moveSuccess = true;
+                      }                    
+                    }
+                  }
+                }
+                if (moveSuccess && Array.isArray(fromItems) && toFolder !== "") {  
+                  await ajaxJson({ fromItems, toFolder }, S3HOST + ":3000/moveFiles");
+                  instance.fileLoad(instance.path);
+                }
+              } catch (e) {
+                console.log(e);
+              }
             }
           },
         ],
@@ -1612,6 +1683,7 @@ FileJs.prototype.launching = async function () {
     this.pastX = null;
     this.pastY = null;
     this.pastDown = null;
+    this.dragFrom = null;
 
     this.baseMaker();
     this.fileLoad(this.path);

@@ -394,6 +394,68 @@ StaticRouter.prototype.rou_post_findFolderId = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_moveFiles = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { staticConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/moveFiles" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.fromItems === undefined || req.body.toFolder) {
+        throw new Error("invalid post");
+      }
+      const { fromItems, toFolder } = equalJson(req.body);
+      if (!Array.isArray(fromItems) || typeof toFolder !== "string") {
+        throw new Error("invalid post 2");
+      }
+      if (!fromItems.every((str) => { return typeof str === "string" })) {
+        throw new Error("invalid post 3");
+      }
+      let target;
+      let toTarget;
+
+      toTarget = toFolder.replace(/^\//i, '').replace(/\/$/i, '');
+      if (toTarget.trim() === '') {
+        toTarget = "__samba__";
+      }
+      if (!/^__/.test(toTarget)) {
+        toTarget = "__samba__" + "/" + toTarget;
+      }
+      toTarget = toTarget.replace(/__samba__/gi, staticConst);
+
+      for (let str of fromItems) {
+        target = str.replace(/^\//i, '').replace(/\/$/i, '');
+        if (target.trim() === '') {
+          target = "__samba__";
+        }
+        if (!/^__/.test(target)) {
+          target = "__samba__" + "/" + target;
+        }
+        target = target.replace(/__samba__/gi, staticConst);
+        await shellExec("mv", [ target, toTarget + "/" ]);
+      }
+
+      res.send(JSON.stringify({ message: "success" }));
+      
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_moveFiles): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_renameTargets = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
