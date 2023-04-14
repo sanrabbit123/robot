@@ -723,7 +723,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
       innerMargin = 24;
       overlap = 12;
 
-      titleTextTop = isMac() ? 2 : 0;
+      titleTextTop = isMac() ? 2 : 2;
       titleSize = 21;
       titleWeight = 800;
 
@@ -2128,12 +2128,12 @@ DesignerJs.prototype.normalReportWhite = function () {
       lineBetween = 4;
       linePaddingLeft = 16;
       wordingSize = 14;
-      linePaddingTop = isMac() ? 10 : 11;
+      linePaddingTop = isMac() ? 10 : 12;
       linePaddingBottom = isMac() ? 11 : 11;
       designerSize = 16;
       desidSize = 11;
       subTitleLeft = 1;
-      subTitleBottom = 6;
+      subTitleBottom = isMac() ? 6 : 4;
       startPaddingTop = 10;
 
       loadingWidth = 48;
