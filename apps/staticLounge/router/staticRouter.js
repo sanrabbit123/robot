@@ -490,6 +490,40 @@ StaticRouter.prototype.rou_post_createNewSheets = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_createNewDocs = function () {
+  const instance = this;
+  const docs = this.docs;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { staticConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/createNewDocs" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.name === undefined || req.body.parent === undefined) {
+        throw new Error("invalid post");
+      }
+      const { name, parent } = equalJson(req.body);
+      let docsId;
+      docsId = await docs.create_newDocs_inPython(name, parent);
+      res.send(JSON.stringify({ message: "success", docsId }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewDocs): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_renameTargets = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;

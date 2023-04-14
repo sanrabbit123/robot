@@ -719,29 +719,78 @@ FileJs.prototype.baseMaker = function () {
           let newList;
           let boo;
           if (typeof newSheetsName === "string" && newSheetsName !== "") {
-
             loading = instance.mother.grayLoading();
-
             ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
             if (id === undefined) {
               window.alert("해당 폴더에는 시트를 만들 수 없습니다!");
             } else {
-  
               name = newSheetsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
               response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewSheets");
               if (response.message === "success" && typeof response.sheetsId === "string") {
-                console.log(response.sheetsId);
-                blankHref("https://naver.com");
-                do {
-                  await sleep(500);
-                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
-                  boo = newList.includes(name);
-                } while (!boo)
                 await sleep(500);
+                blankHref("https://docs.google.com/spreadsheets/d/" + response.sheetsId + "/edit?usp=sharing");
+                do {
+                  await sleep(1000);
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
+                  boo = newList.map((obj) => { return obj.fileName }).includes(name + ".gdsheet");
+                } while (!boo)
               } else {
                 window.alert("생성에 실패하였습니다! 다시 시도해주세요!");
               }
-  
+            }
+            loading.remove();
+
+            removeByClass(contextmenuClassName);
+            instance.fileLoad(instance.path);
+          } else {
+            removeByClass(contextmenuClassName);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          if (instance.selected.length === 0) {
+            return true;
+          } else {
+            return false;
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+    },
+    {
+      text: "새 문서",
+      event: async function (e) {
+        try {
+          const newDocsName = await GeneralJs.prompt("새로운 문서명을 적어주세요!");
+          let loading, id;
+          let name;
+          let response;
+          let newList;
+          let boo;
+          if (typeof newDocsName === "string" && newDocsName !== "") {
+            loading = instance.mother.grayLoading();
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+            if (id === undefined) {
+              window.alert("해당 폴더에는 문서를 만들 수 없습니다!");
+            } else {
+              name = newDocsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewDocs");
+              if (response.message === "success" && typeof response.docsId === "string") {
+                await sleep(500);
+                blankHref("https://docs.google.com/document/d/" + response.docsId + "/edit?usp=sharing");
+                do {
+                  await sleep(1000);
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
+                  boo = newList.map((obj) => { return obj.fileName }).includes(name + ".gddoc");
+                } while (!boo)
+              } else {
+                window.alert("생성에 실패하였습니다! 다시 시도해주세요!");
+              }
             }
             loading.remove();
 
