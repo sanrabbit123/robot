@@ -412,7 +412,7 @@ StaticRouter.prototype.rou_post_moveFiles = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      if (req.body.fromItems === undefined || req.body.toFolder) {
+      if (req.body.fromItems === undefined || req.body.toFolder === undefined) {
         throw new Error("invalid post");
       }
       const { fromItems, toFolder } = equalJson(req.body);
