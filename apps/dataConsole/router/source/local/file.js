@@ -708,6 +708,65 @@ FileJs.prototype.baseMaker = function () {
         }
       }
     },
+    {
+      text: "새 시트",
+      event: async function (e) {
+        try {
+          const newSheetsName = await GeneralJs.prompt("새로운 시트명을 적어주세요!");
+          let loading, id;
+          let name;
+          let response;
+          let newList;
+          let boo;
+          if (typeof newSheetsName === "string" && newSheetsName !== "") {
+
+            loading = instance.mother.grayLoading();
+
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+            if (id === undefined) {
+              window.alert("해당 폴더에는 시트를 만들 수 없습니다!");
+            } else {
+  
+              name = newSheetsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewSheets");
+              if (response.message === "success" && typeof response.sheetsId === "string") {
+                console.log(response.sheetsId);
+                blankHref("https://naver.com");
+                do {
+                  await sleep(500);
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
+                  boo = newList.includes(name);
+                } while (!boo)
+                await sleep(500);
+              } else {
+                window.alert("생성에 실패하였습니다! 다시 시도해주세요!");
+              }
+  
+            }
+            loading.remove();
+
+            removeByClass(contextmenuClassName);
+            instance.fileLoad(instance.path);
+          } else {
+            removeByClass(contextmenuClassName);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          if (instance.selected.length === 0) {
+            return true;
+          } else {
+            return false;
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+    },
   ];
   let mother, files;
   let innerMargin;
@@ -1559,8 +1618,10 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
                   }
                 }
                 if (moveSuccess && Array.isArray(fromItems) && toFolder !== "") {  
-                  await ajaxJson({ fromItems, toFolder }, S3HOST + ":3000/moveFiles");
-                  instance.fileLoad(instance.path);
+                  if (!fromItems.includes(toFolder)) {
+                    await ajaxJson({ fromItems, toFolder }, S3HOST + ":3000/moveFiles");
+                    instance.fileLoad(instance.path);
+                  }
                 }
               } catch (e) {
                 console.log(e);
