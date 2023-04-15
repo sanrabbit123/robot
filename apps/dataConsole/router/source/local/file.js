@@ -43,6 +43,7 @@ FileJs.prototype.baseMaker = function () {
   const fileBaseClassName = "fileBase";
   const contextmenuClassName = "contextmenuFactor";
   const tempInputClassName = "tempInputClassName";
+  const searchInputClassName = "searchInputClassName";
   const contextmenuItems = [
     {
       text: "폴더 만들기",
@@ -836,6 +837,8 @@ FileJs.prototype.baseMaker = function () {
   let buttonSize, buttonTextTop;
   let inputIndent;
   let pathIndent, pathBoxMaxWidth;
+  let searchKeypressEvent;
+  let buttonClickEvent;
 
   innerMargin = 30;
   filesBoxPaddingTop = 35;
@@ -1031,6 +1034,42 @@ FileJs.prototype.baseMaker = function () {
     }
   }
 
+  searchKeypressEvent = function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const buttons = [ ...document.querySelectorAll('.' + searchModeButtonsClassName) ];
+      const mode = buttons.find((dom) => { return dom.getAttribute("toggle") === "on" }).getAttribute("value");
+      const value = this.value.trim();
+      if (value === '') {
+        instance.fileLoad(instance.path);
+      } else {
+        instance.fileLoad(this.value.trim(), mode);
+      }
+    }
+  }
+
+  buttonClickEvent = () => {
+    return function (e) {
+      const buttons = [ ...document.querySelectorAll('.' + searchModeButtonsClassName) ];
+      const toggle = this.getAttribute("toggle");
+      if (toggle === "on") {
+        searchKeypressEvent.call(document.querySelector('.' + searchInputClassName), { preventDefault: () => {}, key: "Enter" });
+      } else {
+        for (let dom of buttons) {
+          if (dom !== this) {
+            dom.style.background = colorChip.gray3;
+            dom.firstChild.style.color = colorChip.black;
+            dom.setAttribute("toggle", "off");
+          } else {
+            dom.style.background = colorChip.green;
+            dom.firstChild.style.color = colorChip.white;
+            dom.setAttribute("toggle", "on");
+          }
+        }
+      }
+    }
+  }
+
   mother = createNode({
     mother: totalContents,
     style: {
@@ -1183,20 +1222,9 @@ FileJs.prototype.baseMaker = function () {
                     child: {
                       mode: "input",
                       attribute: { type: "text" },
+                      class: [ searchInputClassName ],
                       event: {
-                        keypress: function (e) {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            const buttons = [ ...document.querySelectorAll('.' + searchModeButtonsClassName) ];
-                            const mode = buttons.find((dom) => { return dom.getAttribute("toggle") === "on" }).getAttribute("value");
-                            const value = this.value.trim();
-                            if (value === '') {
-                              instance.fileLoad(instance.startPoint);
-                            } else {
-                              instance.fileLoad(this.value.trim(), mode);
-                            }
-                          }
-                        }
+                        keypress: searchKeypressEvent,
                       },
                       style: {
                         display: "block",
@@ -1221,35 +1249,7 @@ FileJs.prototype.baseMaker = function () {
                     },
                     class: [ searchModeButtonsClassName ],
                     event: {
-                      click: function (e) {
-                        const buttons = [ ...document.querySelectorAll('.' + searchModeButtonsClassName) ];
-                        const toggle = this.getAttribute("toggle");
-                        if (toggle === "on") {
-                          for (let dom of buttons) {
-                            if (dom === this) {
-                              dom.style.background = colorChip.gray3;
-                              dom.firstChild.style.color = colorChip.black;
-                              dom.setAttribute("toggle", "off");
-                            } else {
-                              dom.style.background = colorChip.green;
-                              dom.firstChild.style.color = colorChip.white;
-                              dom.setAttribute("toggle", "on");
-                            }
-                          }
-                        } else {
-                          for (let dom of buttons) {
-                            if (dom !== this) {
-                              dom.style.background = colorChip.gray3;
-                              dom.firstChild.style.color = colorChip.black;
-                              dom.setAttribute("toggle", "off");
-                            } else {
-                              dom.style.background = colorChip.green;
-                              dom.firstChild.style.color = colorChip.white;
-                              dom.setAttribute("toggle", "on");
-                            }
-                          }
-                        }
-                      },
+                      click: buttonClickEvent(),
                     },
                     style: {
                       display: "inline-flex",
@@ -1284,35 +1284,7 @@ FileJs.prototype.baseMaker = function () {
                     },
                     class: [ searchModeButtonsClassName ],
                     event: {
-                      click: function (e) {
-                        const buttons = [ ...document.querySelectorAll('.' + searchModeButtonsClassName) ];
-                        const toggle = this.getAttribute("toggle");
-                        if (toggle === "on") {
-                          for (let dom of buttons) {
-                            if (dom === this) {
-                              dom.style.background = colorChip.gray3;
-                              dom.firstChild.style.color = colorChip.black;
-                              dom.setAttribute("toggle", "off");
-                            } else {
-                              dom.style.background = colorChip.green;
-                              dom.firstChild.style.color = colorChip.white;
-                              dom.setAttribute("toggle", "on");
-                            }
-                          }
-                        } else {
-                          for (let dom of buttons) {
-                            if (dom !== this) {
-                              dom.style.background = colorChip.gray3;
-                              dom.firstChild.style.color = colorChip.black;
-                              dom.setAttribute("toggle", "off");
-                            } else {
-                              dom.style.background = colorChip.green;
-                              dom.firstChild.style.color = colorChip.white;
-                              dom.setAttribute("toggle", "on");
-                            }
-                          }
-                        }
-                      },
+                      click: buttonClickEvent(),
                     },
                     style: {
                       display: "inline-flex",
@@ -1631,7 +1603,13 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
       window.history.pushState({ path: this.path }, '');
     }
 
-    this.pathReload(searchMode !== "none");
+    if (searchMode === "none") {
+      this.pathReload(false);
+    } else if (searchMode === "entire") {
+      this.pathReload(true);
+    } else {
+      this.pathReload(false);
+    }
 
     width = 110;
     innerMargin = 17;
