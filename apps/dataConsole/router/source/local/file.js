@@ -38,7 +38,7 @@ FileJs.prototype.absoluteParsing = function (str) {
 
 FileJs.prototype.baseMaker = function () {
   const instance = this;
-  const { ea, totalContents, grayBarWidth, belowHeight } = this;
+  const { ea, totalContents, grayBarWidth, belowHeight, searchModeButtonsClassName } = this;
   const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref } = GeneralJs;
   const fileBaseClassName = "fileBase";
   const contextmenuClassName = "contextmenuFactor";
@@ -829,18 +829,35 @@ FileJs.prototype.baseMaker = function () {
   let contextmenuWidth, contextmenuFontSize;
   let contextmenuPaddingTop, contextmenuPaddingBottom;
   let contextmenuBetween;
+  let searchBarWidth;
+  let searchInputHeight;
+  let textBoxTop;
+  let buttonWidth, buttonBetween;
+  let buttonSize, buttonTextTop;
+  let inputIndent;
+  let pathIndent, pathBoxMaxWidth;
 
   innerMargin = 30;
   filesBoxPaddingTop = 35;
   filesBoxPaddingLeft = 28;
-  titleHeight = 30;
-  fontSize = 18;
-  titlePaddingBottom = 10;
+  titleHeight = 28;
+  searchInputHeight = 24;
+  fontSize = 16;
+  titlePaddingBottom = 9;
   contextmenuWidth = 100;
   contextmenuFontSize = 13;
   contextmenuPaddingTop = isMac() ? 5 : 6;
   contextmenuPaddingBottom = isMac() ? 7 : 6;
   contextmenuBetween = 2;
+  searchBarWidth = 280;
+  textBoxTop = isMac() ? -2 : 0;
+  buttonWidth = 45;
+  buttonBetween = 4;
+  buttonSize = 11;
+  buttonTextTop = isMac() ? -1 : 1;
+  inputIndent = 8;
+  pathIndent = 20;
+  pathBoxMaxWidth = 8000;
 
   calculationEvent = function (e) {
     e.stopPropagation();
@@ -1060,65 +1077,265 @@ FileJs.prototype.baseMaker = function () {
         },
         children: [
           {
-            class: [ "path" ],
-            events: [
+            style: {
+              display: "flex",
+              flexDirection: "row",
+              position: "relative",
+              height: String(titleHeight) + ea,
+              paddingBottom: String(titlePaddingBottom) + ea,
+              width: withOut(0, ea),
+              alignItems: "center",
+            },
+            children: [
               {
-                type: "click",
-                event: function (e) {
-                  const betweens = this.querySelectorAll("b");
-                  let index, targetIndex;
-                  let pathArr, token;
-                  if (betweens.length > 0) {
-                    index = 0;
-                    targetIndex = null;
-                    for (let b of betweens) {
-                      if (e.x > b.getBoundingClientRect().left) {
-                        targetIndex = index;
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  width: withOut(searchBarWidth, ea),
+                },
+                child: {
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    width: withOut(pathIndent, ea),
+                    overflow: "hidden",
+                  },
+                  child: {
+                    class: [ "path" ],
+                    events: [
+                      {
+                        type: "click",
+                        event: function (e) {
+                          const betweens = this.querySelectorAll("b");
+                          let index, targetIndex;
+                          let pathArr, token;
+                          if (betweens.length > 0) {
+                            index = 0;
+                            targetIndex = null;
+                            for (let b of betweens) {
+                              if (e.x > b.getBoundingClientRect().left) {
+                                targetIndex = index;
+                              }
+                              index++;
+                            }
+                            pathArr = instance.path.split("/");
+                            token = pathArr.shift();
+                            if (!/__photo__/g.test(token) && !/__designer__/g.test(token)) {
+                              if (targetIndex === null) {
+                                instance.fileLoad(token + "/");
+                              } else {
+                                instance.fileLoad(token + "/" + pathArr.slice(0, targetIndex + 1).join("/"));
+                              }
+                            } else {
+                              if (targetIndex === null) {
+                                instance.fileLoad("/");
+                              } else {
+                                instance.fileLoad(token + "/" + pathArr.slice(0, targetIndex).join("/"));
+                              }
+                            }
+                          } else {
+                            instance.fileLoad("/");
+                          }
+                        }
+                      },
+                      {
+                        type: "mousemove",
+                        event: function (e) {
+                          if (instance.dragArea !== null) {
+                            instance.dragArea.parentNode.removeChild(instance.dragArea);
+                            instance.dragArea = null;
+                          }
+                        }
                       }
-                      index++;
+                    ],
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      width: String(pathBoxMaxWidth) + ea,
+                      fontSize: String(fontSize) + ea,
+                      fontWeight: String(600),
+                      textAlign: "left",
+                      cursor: "pointer",
+                      color: colorChip.black,
+                      top: String(textBoxTop) + ea,
                     }
-                    pathArr = instance.path.split("/");
-                    token = pathArr.shift();
-                    if (!/__photo__/g.test(token) && !/__designer__/g.test(token)) {
-                      if (targetIndex === null) {
-                        instance.fileLoad(token + "/");
-                      } else {
-                        instance.fileLoad(token + "/" + pathArr.slice(0, targetIndex + 1).join("/"));
-                      }
-                    } else {
-                      if (targetIndex === null) {
-                        instance.fileLoad("/");
-                      } else {
-                        instance.fileLoad(token + "/" + pathArr.slice(0, targetIndex).join("/"));
-                      }
-                    }
-                  } else {
-                    instance.fileLoad("/");
                   }
                 }
               },
               {
-                type: "mousemove",
-                event: function (e) {
-                  if (instance.dragArea !== null) {
-                    instance.dragArea.parentNode.removeChild(instance.dragArea);
-                    instance.dragArea = null;
-                  }
-                }
+                style: {
+                  display: "inline-flex",
+                  flexDirection: "row",
+                  position: "relative",
+                  width: String(searchBarWidth) + ea,
+                  height: withOut(0, ea),
+                },
+                children: [
+                  {
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      background: colorChip.gray1,
+                      width: withOut((buttonWidth + buttonBetween) * 2, ea),
+                      height: String(searchInputHeight) + ea,
+                      borderRadius: String(5) + "px",
+                    },
+                    child: {
+                      mode: "input",
+                      attribute: { type: "text" },
+                      event: {
+                        keypress: function (e) {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            const value = this.value.trim();
+                            if (value === '') {
+                              instance.fileLoad(instance.startPoint);
+                            } else {
+                              instance.fileLoad(this.value.trim(), true);
+                            }
+                          }
+                        }
+                      },
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        background: "transparent",
+                        border: String(0),
+                        outline: String(0),
+                        width: withOut(inputIndent * 2, ea),
+                        marginLeft: String(inputIndent) + ea,
+                        height: withOut(0, ea),
+                        fontSize: String(buttonSize) + ea,
+                        top: String(buttonTextTop) + ea,
+                        fontWeight: String(400),
+                        color: colorChip.black,
+                      }
+                    }
+                  },
+                  {
+                    attribute: {
+                      toggle: "on",
+                      value: "entire",
+                    },
+                    class: [ searchModeButtonsClassName ],
+                    event: {
+                      click: function (e) {
+                        const buttons = [ ...document.querySelectorAll('.' + searchModeButtonsClassName) ];
+                        const toggle = this.getAttribute("toggle");
+                        if (toggle === "on") {
+                          for (let dom of buttons) {
+                            if (dom === this) {
+                              dom.style.background = colorChip.gray3;
+                              dom.firstChild.style.color = colorChip.black;
+                            } else {
+                              dom.style.background = colorChip.green;
+                              dom.firstChild.style.color = colorChip.white;
+                            }
+                          }
+                          this.setAttribute("toggle", "off");
+                        } else {
+                          for (let dom of buttons) {
+                            if (dom !== this) {
+                              dom.style.background = colorChip.gray3;
+                              dom.firstChild.style.color = colorChip.black;
+                            } else {
+                              dom.style.background = colorChip.green;
+                              dom.firstChild.style.color = colorChip.white;
+                            }
+                          }
+                          this.setAttribute("toggle", "o");
+                        }
+                      },
+                    },
+                    style: {
+                      display: "inline-flex",
+                      marginLeft: String(buttonBetween) + ea,
+                      position: "relative",
+                      background: colorChip.green,
+                      width: String(buttonWidth) + ea,
+                      height: String(searchInputHeight) + ea,
+                      borderRadius: String(5) + "px",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
+                    },
+                    child: {
+                      text: "전체",
+                      style: {
+                        position: "relative",
+                        top: String(buttonTextTop) + ea,
+                        fontSize: String(buttonSize) + ea,
+                        fontWeight: String(700),
+                        color: colorChip.white,
+                        transition: "all 0.3s ease",
+                      }
+                    }
+                  },
+                  {
+                    attribute: {
+                      toggle: "off",
+                      value: "current",
+                    },
+                    class: [ searchModeButtonsClassName ],
+                    event: {
+                      click: function (e) {
+                        const buttons = [ ...document.querySelectorAll('.' + searchModeButtonsClassName) ];
+                        const toggle = this.getAttribute("toggle");
+                        if (toggle === "on") {
+                          for (let dom of buttons) {
+                            if (dom === this) {
+                              dom.style.background = colorChip.gray3;
+                              dom.firstChild.style.color = colorChip.black;
+                            } else {
+                              dom.style.background = colorChip.green;
+                              dom.firstChild.style.color = colorChip.white;
+                            }
+                          }
+                          this.setAttribute("toggle", "off");
+                        } else {
+                          for (let dom of buttons) {
+                            if (dom !== this) {
+                              dom.style.background = colorChip.gray3;
+                              dom.firstChild.style.color = colorChip.black;
+                            } else {
+                              dom.style.background = colorChip.green;
+                              dom.firstChild.style.color = colorChip.white;
+                            }
+                          }
+                          this.setAttribute("toggle", "o");
+                        }
+                      },
+                    },
+                    style: {
+                      display: "inline-flex",
+                      marginLeft: String(buttonBetween) + ea,
+                      position: "relative",
+                      background: colorChip.gray3,
+                      width: String(buttonWidth) + ea,
+                      height: String(searchInputHeight) + ea,
+                      borderRadius: String(5) + "px",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
+                    },
+                    child: {
+                      text: "현재",
+                      style: {
+                        position: "relative",
+                        top: String(buttonTextTop) + ea,
+                        fontSize: String(buttonSize) + ea,
+                        fontWeight: String(700),
+                        color: colorChip.black,
+                        transition: "all 0.3s ease",
+                      }
+                    }
+                  },
+                ]
               }
-            ],
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-              height: String(titleHeight) + ea,
-              fontSize: String(fontSize) + ea,
-              fontWeight: String(600),
-              textAlign: "left",
-              paddingBottom: String(titlePaddingBottom) + ea,
-              cursor: "pointer",
-              color: colorChip.black
-            }
+            ]
           },
           {
             attribute: [
@@ -1770,8 +1987,8 @@ FileJs.prototype.launching = async function () {
       this.path = window.localStorage.getItem(this.latestPathLocalSaveHomeLiaisonKeyName);
     }
 
+    startPoint = "__samba__/drive/# 홈리에종";
     if (typeof this.path !== "string" || this.path.trim() === "" || typeof getObj.mode === "string") {
-      startPoint = "__samba__/drive/HomeLiaisonServer";
       if (getObj.mode === "client") {
         startPoint = "__samba__/drive/HomeLiaisonServer/고객/401_고객응대";
       } else if (getObj.mode === "designer") {
@@ -1786,9 +2003,12 @@ FileJs.prototype.launching = async function () {
         startPoint = "__samba__/drive/# 홈리에종";
       } else if (getObj.mode === "file") {
         startPoint = "__samba__/drive/HomeLiaisonServer";
+      } else {
+        startPoint = "__samba__/drive/# 홈리에종";
       }
       this.path = startPoint;
     }
+    this.startPoint = startPoint;
 
     this.blocks = [];
     this.motherTong = {
@@ -1803,6 +2023,7 @@ FileJs.prototype.launching = async function () {
     this.pastY = null;
     this.pastDown = null;
     this.dragFrom = null;
+    this.searchModeButtonsClassName = "searchModeButtonsClassName";
 
     this.baseMaker();
     this.fileLoad(this.path);
