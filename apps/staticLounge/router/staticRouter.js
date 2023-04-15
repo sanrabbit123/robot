@@ -212,10 +212,11 @@ StaticRouter.prototype.rou_post_searchFiles = function () {
         if (!Array.isArray(list)) {
           throw new Error(list.error);
         }
-
-        console.log(list);
-
-
+        list = list.filter((obj) => {
+          return (new RegExp(target)).test(obj.absolute);
+        }).filter((obj) => {
+          return obj.absolute.split("/").length === target.split("/").length + 1
+        });
       }
 
       list = list.map((i) => {

@@ -1245,7 +1245,7 @@ FileJs.prototype.baseMaker = function () {
                             } else {
                               dom.style.background = colorChip.green;
                               dom.firstChild.style.color = colorChip.white;
-                              dom.setAttribute("toggle", "off");
+                              dom.setAttribute("toggle", "on");
                             }
                           }
                         }
@@ -1308,7 +1308,7 @@ FileJs.prototype.baseMaker = function () {
                             } else {
                               dom.style.background = colorChip.green;
                               dom.firstChild.style.color = colorChip.white;
-                              dom.setAttribute("toggle", "off");
+                              dom.setAttribute("toggle", "on");
                             }
                           }
                         }
