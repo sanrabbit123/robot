@@ -146,6 +146,9 @@ StaticRouter.prototype.rou_post_listFiles = function () {
 
       target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
       list = await leafParsing(target);
+      if (!Array.isArray(list)) {
+        throw new Error(list.error);
+      }
 
       list = list.map((i) => {
         i.absolute = i.absolute.replace(new RegExp("^" + staticConst, "i"), "__samba__");
@@ -200,6 +203,9 @@ StaticRouter.prototype.rou_post_searchFiles = function () {
 
       target = target.replace(/__samba__/gi, staticConst);
       list = await leafParsing(target, true, req.body.keyword);
+      if (!Array.isArray(list)) {
+        throw new Error(list.error);
+      }
 
       list = list.map((i) => {
         i.absolute = i.absolute.replace(new RegExp("^" + staticConst, "i"), "__samba__");
@@ -266,7 +272,7 @@ StaticRouter.prototype.rou_post_readDir = function () {
 
 StaticRouter.prototype.rou_post_readFile = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, leafParsing } = this.mother;
+  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
   const { staticConst, sambaToken } = this;
   let obj;
   obj = {};

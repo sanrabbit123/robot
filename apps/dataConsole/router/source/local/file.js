@@ -840,18 +840,18 @@ FileJs.prototype.baseMaker = function () {
   innerMargin = 30;
   filesBoxPaddingTop = 35;
   filesBoxPaddingLeft = 28;
-  titleHeight = 28;
-  searchInputHeight = 24;
+  titleHeight = 26;
+  searchInputHeight = 22;
   fontSize = 16;
-  titlePaddingBottom = 9;
+  titlePaddingBottom = 8;
   contextmenuWidth = 100;
   contextmenuFontSize = 13;
   contextmenuPaddingTop = isMac() ? 5 : 6;
   contextmenuPaddingBottom = isMac() ? 7 : 6;
   contextmenuBetween = 2;
-  searchBarWidth = 280;
+  searchBarWidth = 210;
   textBoxTop = isMac() ? -2 : 0;
-  buttonWidth = 45;
+  buttonWidth = 40;
   buttonBetween = 4;
   buttonSize = 11;
   buttonTextTop = isMac() ? -1 : 1;
@@ -1187,10 +1187,15 @@ FileJs.prototype.baseMaker = function () {
                         keypress: function (e) {
                           if (e.key === "Enter") {
                             e.preventDefault();
+                            const buttons = [ ...document.querySelectorAll('.' + searchModeButtonsClassName) ];
+                            const mode = buttons.find((dom) => { return dom.getAttribute("toggle") === "on" }).getAttribute("value");
                             const value = this.value.trim();
                             if (value === '') {
                               instance.fileLoad(instance.startPoint);
                             } else {
+
+                              console.log(mode);
+
                               instance.fileLoad(this.value.trim(), true);
                             }
                           }
@@ -1227,23 +1232,25 @@ FileJs.prototype.baseMaker = function () {
                             if (dom === this) {
                               dom.style.background = colorChip.gray3;
                               dom.firstChild.style.color = colorChip.black;
+                              dom.setAttribute("toggle", "off");
                             } else {
                               dom.style.background = colorChip.green;
                               dom.firstChild.style.color = colorChip.white;
+                              dom.setAttribute("toggle", "on");
                             }
                           }
-                          this.setAttribute("toggle", "off");
                         } else {
                           for (let dom of buttons) {
                             if (dom !== this) {
                               dom.style.background = colorChip.gray3;
                               dom.firstChild.style.color = colorChip.black;
+                              dom.setAttribute("toggle", "off");
                             } else {
                               dom.style.background = colorChip.green;
                               dom.firstChild.style.color = colorChip.white;
+                              dom.setAttribute("toggle", "off");
                             }
                           }
-                          this.setAttribute("toggle", "o");
                         }
                       },
                     },
@@ -1288,23 +1295,25 @@ FileJs.prototype.baseMaker = function () {
                             if (dom === this) {
                               dom.style.background = colorChip.gray3;
                               dom.firstChild.style.color = colorChip.black;
+                              dom.setAttribute("toggle", "off");
                             } else {
                               dom.style.background = colorChip.green;
                               dom.firstChild.style.color = colorChip.white;
+                              dom.setAttribute("toggle", "on");
                             }
                           }
-                          this.setAttribute("toggle", "off");
                         } else {
                           for (let dom of buttons) {
                             if (dom !== this) {
                               dom.style.background = colorChip.gray3;
                               dom.firstChild.style.color = colorChip.black;
+                              dom.setAttribute("toggle", "off");
                             } else {
                               dom.style.background = colorChip.green;
                               dom.firstChild.style.color = colorChip.white;
+                              dom.setAttribute("toggle", "off");
                             }
                           }
-                          this.setAttribute("toggle", "o");
                         }
                       },
                     },
@@ -1584,11 +1593,11 @@ FileJs.prototype.pathReload = function (searchResult = false) {
   if (!searchResult) {
     target.textContent = "";
     if (!/^__photo__/.test(this.path) && !/^__designer__/.test(this.path)) {
-      target.insertAdjacentHTML("beforeend", "바탕 화면" + (this.path.split("/").filter((i) => { return i.trim() !== '' && !(/^__/.test(i) && /__$/.test(i)); }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== '' && !(/^__/.test(i) && /__$/.test(i)); }).join(between)) : ""));
+      target.insertAdjacentHTML("beforeend", "root" + (this.path.split("/").filter((i) => { return i.trim() !== '' && !(/^__/.test(i) && /__$/.test(i)); }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== '' && !(/^__/.test(i) && /__$/.test(i)); }).join(between)) : ""));
     } else if (/^__photo__/.test(this.path)) {
-      target.insertAdjacentHTML("beforeend", "바탕 화면" + (this.path.split("/").filter((i) => { return i.trim() !== ''; }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== '' }).map((i) => { return i.replace(/__photo__/, "고객 전송 사진"); }).join(between)) : ""));
+      target.insertAdjacentHTML("beforeend", "root" + (this.path.split("/").filter((i) => { return i.trim() !== ''; }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== '' }).map((i) => { return i.replace(/__photo__/, "고객 전송 사진"); }).join(between)) : ""));
     } else if (/^__designer__/.test(this.path)) {
-      target.insertAdjacentHTML("beforeend", "바탕 화면" + (this.path.split("/").filter((i) => { return i.trim() !== ''; }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== '' }).map((i) => { return i.replace(/__designer__/, "디자이너 포트폴리오"); }).join(between)) : ""));
+      target.insertAdjacentHTML("beforeend", "root" + (this.path.split("/").filter((i) => { return i.trim() !== ''; }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== '' }).map((i) => { return i.replace(/__designer__/, "디자이너 포트폴리오"); }).join(between)) : ""));
     }
   } else {
     target.textContent = "검색 결과";

@@ -2050,10 +2050,17 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
       console.log(e);
     }
   }
-  if (!searchMode) {
-    return makeFileArr(target);
-  } else {
-    return findTarget(target, keyword);
+  try {
+    let finalResult;
+    if (!searchMode) {
+      finalResult = await makeFileArr(target);
+    } else {
+      finalResult = await findTarget(target, keyword);
+    }
+    return finalResult;
+  } catch (e) {
+    console.log(e);
+    return { error: e.message };
   }
 }
 
