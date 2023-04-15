@@ -263,7 +263,7 @@ DashboardJs.prototype.returnTreeContents = function () {
           title: "홈리에종 문서",
           event: () => {
             return function (e) {
-              instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/file?mode=document&entire=true&dataonly=true");
+              instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=document&entire=true&dataonly=true");
             }
           }
         },
@@ -271,7 +271,7 @@ DashboardJs.prototype.returnTreeContents = function () {
           title: "홈리에종 파일",
           event: () => {
             return function (e) {
-              instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/file?mode=file&entire=true&dataonly=true");
+              instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=file&entire=true&dataonly=true");
             }
           }
         },
@@ -1708,7 +1708,7 @@ DashboardJs.prototype.grayMaker = function () {
       title: "홈리에종 문서",
       event: () => {
         return function (e) {
-          instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/file?mode=document&entire=true&dataonly=true");
+          instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=document&entire=true&dataonly=true");
         }
       }
     },
@@ -1716,7 +1716,7 @@ DashboardJs.prototype.grayMaker = function () {
       title: "홈리에종 파일",
       event: () => {
         return function (e) {
-          instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/file?mode=file&entire=true&dataonly=true");
+          instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=file&entire=true&dataonly=true");
         }
       }
     },
@@ -2443,6 +2443,77 @@ DashboardJs.prototype.whiteMaker = function (source) {
 
 }
 
+DashboardJs.prototype.whiteEntireMaker = function (source) {
+  const instance = this;
+  const { ea, vh, totalContents, belowHeight, grayBarWidth, contentsBase } = this;
+  const { createNode, colorChip, withOut, equalJson, cleanChildren, findByAttribute, scrollTo, removeByClass } = GeneralJs;
+  const whitePopupClassName = "whitePopupClassName";
+  let margin;
+  let cancelBack, whitePrompt;
+
+  margin = 30;
+
+  window.history.pushState({ path: "popup", status: source }, '');
+  removeByClass(whitePopupClassName);
+
+  cancelBack = createNode({
+    mother: totalContents,
+    class: [ whitePopupClassName ],
+    event: {
+      click: (e) => {
+        window.history.pushState({ path: "init", status: "" }, '');
+        removeByClass(whitePopupClassName);
+      },
+    },
+    style: {
+      display: "block",
+      position: "fixed",
+      top: String(0),
+      left: String(0) + ea,
+      width: withOut(0, ea),
+      height: withOut(belowHeight, ea),
+      background: colorChip.black,
+      opacity: String(0.3),
+    }
+  });
+
+  whitePrompt = createNode({
+    mother: totalContents,
+    class: [ whitePopupClassName ],
+    style: {
+      display: "block",
+      position: "fixed",
+      top: String(margin) + ea,
+      left: String(0 + margin) + ea,
+      width: withOut(0 + (margin * 2), ea),
+      height: withOut(belowHeight + (margin * 2), ea),
+      borderRadius: String(5) + "px",
+      background: colorChip.white,
+      boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+      animation: "fadeuplite 0.3s ease forwards",
+      overflow: "hidden",
+    },
+    child: {
+      mode: "iframe",
+      attribute: {
+        src: source,
+        width: String(100) + '%',
+        height: String(100) + '%',
+      },
+      style: {
+        display: "block",
+        position: "relative",
+        top: String(0),
+        left: String(0),
+        width: withOut(0, ea),
+        height: withOut(0, ea),
+        border: String(0),
+      }
+    }
+  })
+
+}
+
 DashboardJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson, removeByClass, returnGet } = GeneralJs;
@@ -2496,7 +2567,7 @@ DashboardJs.prototype.launching = async function () {
     }
 
     this.mother.belowButtons.sub.folder.addEventListener("click", function (e) {
-      instance.whiteMaker(window.location.protocol + "//" + window.location.host + "/file?mode=home&entire=true&dataonly=true");
+      instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=home&entire=true&dataonly=true");
     });
 
   } catch (e) {

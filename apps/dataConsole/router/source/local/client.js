@@ -5882,8 +5882,8 @@ ClientJs.prototype.filesViewMakerDetail = function (recycle = false) {
           position: "fixed",
           background: GeneralJs.colorChip.cancelBlack,
           top: String(0) + ea,
-          left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
-          width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
+          left: String(motherBoo ? 0 : 0) + ea,
+          width: "calc(100% - " + String(motherBoo ? 0 : 0) + ea + ")",
           height: "calc(100% - " + String(instance.belowHeight) + ea + ")",
           zIndex: String(2),
         };
@@ -5920,10 +5920,10 @@ ClientJs.prototype.filesViewMakerDetail = function (recycle = false) {
           position: "fixed",
           background: GeneralJs.colorChip.white,
           top: String(margin) + ea,
-          left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
+          left: String((motherBoo ? 0 : 0) + margin) + ea,
           borderRadius: String(5) + ea,
           boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
-          width: "calc(100% - " + String((motherBoo ? instance.grayBarWidth : 0) + (margin * 2)) + ea + ")",
+          width: "calc(100% - " + String((motherBoo ? 0 : 0) + (margin * 2)) + ea + ")",
           height: "calc(100% - " + String(instance.belowHeight + (margin * 2) + 10) + ea + ")",
           zIndex: String(2),
         };
@@ -5949,7 +5949,7 @@ ClientJs.prototype.filesViewMakerDetail = function (recycle = false) {
         child: {
           mode: "iframe",
           attribute: {
-            src: window.location.protocol + "//" + window.location.host + "/file?entire=true&dataonly=true&mode=client",
+            src: window.location.protocol + "//" + window.location.host + "/file?entire=true&dataonly=true&mode=home",
           },
           style: {
             position: "absolute",
@@ -5973,6 +5973,7 @@ ClientJs.prototype.filesViewMakerDetail = function (recycle = false) {
 
 ClientJs.prototype.filesViewMaker = function () {
   const instance = this;
+  const { setQueue } = GeneralJs;
   return function (e) {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
     e.preventDefault();
@@ -5980,8 +5981,11 @@ ClientJs.prototype.filesViewMaker = function () {
     let tempFunc;
     if (GeneralJs.stacks.whiteBox !== 1) {
       if (instance.whiteBox !== null) {
-        tempFunc = instance.whiteCancelMaker(instance.filesViewMakerDetail(true), true);
-        tempFunc();
+        instance.whiteBox.cancelBox.click();
+        setQueue(() => {
+          tempFunc = instance.filesViewMakerDetail(false);
+          tempFunc();
+        }, 600);
       } else {
         tempFunc = instance.filesViewMakerDetail(false);
         tempFunc();
