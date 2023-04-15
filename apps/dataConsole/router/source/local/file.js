@@ -1193,10 +1193,7 @@ FileJs.prototype.baseMaker = function () {
                             if (value === '') {
                               instance.fileLoad(instance.startPoint);
                             } else {
-
-                              console.log(mode);
-
-                              instance.fileLoad(this.value.trim(), true);
+                              instance.fileLoad(this.value.trim(), mode);
                             }
                           }
                         }
@@ -1604,7 +1601,7 @@ FileJs.prototype.pathReload = function (searchResult = false) {
   }
 }
 
-FileJs.prototype.fileLoad = async function (path, searchMode = false) {
+FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
   if (typeof path !== "string") {
     throw new Error("invaild input");
   }
@@ -1624,17 +1621,17 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
     let loading;
     let loadingWidth, loadingHeight;
 
-    if (!searchMode) {
+    if (searchMode === "none") {
       this.path = path;
       this.pageHistory.unshift({ path });
       window.history.pushState({ path }, '');
+      window.localStorage.setItem(latestPathLocalSaveHomeLiaisonKeyName, path);
     } else {
       this.pageHistory.unshift({ path: this.path });
       window.history.pushState({ path: this.path }, '');
     }
 
-    window.localStorage.setItem(latestPathLocalSaveHomeLiaisonKeyName, path);
-    this.pathReload(searchMode);
+    this.pathReload(searchMode !== "none");
 
     width = 110;
     innerMargin = 17;
@@ -1658,10 +1655,14 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
     loading.style.top = withOut(50, loadingHeight / 2, ea);
     files.parentNode.appendChild(loading);
 
-    if (!searchMode) {
+    if (searchMode === "none") {
       thisFolderFiles = await ajaxJson({ path }, S3HOST + ":3000" + "/listFiles");
     } else {
-      thisFolderFiles = await ajaxJson({ path: this.path, keyword: path }, S3HOST + ":3000" + "/searchFiles");
+      if (searchMode === "entire") {
+        thisFolderFiles = await ajaxJson({ path: this.rootToken, keyword: path, mode: searchMode }, S3HOST + ":3000" + "/searchFiles");
+      } else {
+        thisFolderFiles = await ajaxJson({ path: this.path, keyword: path, mode: searchMode }, S3HOST + ":3000" + "/searchFiles");
+      }
     }
     thisFolderFiles.sort((a, b) => {
       return a.fileName >= b.fileName ? 1 : -1;
@@ -1980,6 +1981,7 @@ FileJs.prototype.launching = async function () {
     const getObj = returnGet();
     const entireMode = (getObj.dataonly === "true" && getObj.entire === "true");
     let startPoint;
+    let rootToken;
 
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
@@ -1996,28 +1998,30 @@ FileJs.prototype.launching = async function () {
       this.path = window.localStorage.getItem(this.latestPathLocalSaveHomeLiaisonKeyName);
     }
 
-    startPoint = "__samba__/drive/# 홈리에종";
+    rootToken = "__samba__";
+    startPoint = rootToken + "/drive/# 홈리에종";
     if (typeof this.path !== "string" || this.path.trim() === "" || typeof getObj.mode === "string") {
       if (getObj.mode === "client") {
-        startPoint = "__samba__/drive/HomeLiaisonServer/고객/401_고객응대";
+        startPoint = rootToken + "/drive/HomeLiaisonServer/고객/401_고객응대";
       } else if (getObj.mode === "designer") {
-        startPoint = "__samba__/drive/HomeLiaisonServer/디자이너/partnership";
+        startPoint = rootToken + "/drive/HomeLiaisonServer/디자이너/partnership";
       } else if (getObj.mode === "photo") {
-        startPoint = "__samba__/drive/HomeLiaisonServer/사진_등록_포트폴리오";
+        startPoint = rootToken + "/drive/HomeLiaisonServer/사진_등록_포트폴리오";
       } else if (getObj.mode === "project") {
-        startPoint = "__samba__/drive/HomeLiaisonServer/디자이너/partnership";
+        startPoint = rootToken + "/drive/HomeLiaisonServer/디자이너/partnership";
       } else if (getObj.mode === "aspirant") {
-        startPoint = "__samba__/drive/HomeLiaisonServer/디자이너/new";
+        startPoint = rootToken + "/drive/HomeLiaisonServer/디자이너/new";
       } else if (getObj.mode === "document" || getObj.mode === "home") {
-        startPoint = "__samba__/drive/# 홈리에종";
+        startPoint = rootToken + "/drive/# 홈리에종";
       } else if (getObj.mode === "file") {
-        startPoint = "__samba__/drive/HomeLiaisonServer";
+        startPoint = rootToken + "/drive/HomeLiaisonServer";
       } else {
-        startPoint = "__samba__/drive/# 홈리에종";
+        startPoint = rootToken + "/drive/# 홈리에종";
       }
       this.path = startPoint;
     }
     this.startPoint = startPoint;
+    this.rootToken = rootToken;
 
     this.blocks = [];
     this.motherTong = {
@@ -2043,17 +2047,6 @@ FileJs.prototype.launching = async function () {
         instance.fileLoad(instance.pageHistory[1].path);
         instance.pageHistory.shift();
         instance.pageHistory.shift();
-      }
-    });
-    this.searchInput.addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        const value = this.value.trim();
-        if (value === '') {
-          instance.fileLoad(startPoint);
-        } else {
-          instance.fileLoad(this.value.trim(), true);
-        }
       }
     });
 

@@ -186,7 +186,7 @@ StaticRouter.prototype.rou_post_searchFiles = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      if (req.body.path === undefined || req.body.keyword === undefined) {
+      if (req.body.path === undefined || req.body.keyword === undefined || req.body.mode === undefined) {
         throw new Error("invaild post");
       }
       let target;
@@ -202,9 +202,20 @@ StaticRouter.prototype.rou_post_searchFiles = function () {
       }
 
       target = target.replace(/__samba__/gi, staticConst);
-      list = await leafParsing(target, true, req.body.keyword);
-      if (!Array.isArray(list)) {
-        throw new Error(list.error);
+      if (req.body.mode === "entire") {
+        list = await leafParsing(target, true, req.body.keyword);
+        if (!Array.isArray(list)) {
+          throw new Error(list.error);
+        }
+      } else {
+        list = await leafParsing(target, true, req.body.keyword);
+        if (!Array.isArray(list)) {
+          throw new Error(list.error);
+        }
+
+        console.log(list);
+
+
       }
 
       list = list.map((i) => {
