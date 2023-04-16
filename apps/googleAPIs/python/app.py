@@ -62,6 +62,8 @@ from google.googleDocs import GoogleDocs
 from google.googleYoutube import GoogleYoutube
 from google.googleAds import GoogleAds
 from google.googleCalendar import GoogleCalendar
+from google.googleSlides import GoogleSlides
+from google.googleForms import GoogleForms
 
 try:
 
@@ -291,6 +293,17 @@ try:
         calendarApp = GoogleCalendar()
         result = calendarApp.deleteSchedule(data["targetId"], data["eventId"])
         print(result)
+
+    elif argv[1] == 'slides' and argv[2] == 'createSlides':
+        slidsApp = GoogleSlides()
+        id = slidsApp.createSlides(data["title"])
+        print(dumps({ "id": id }))
+
+    elif argv[1] == 'forms' and argv[2] == 'createForms':
+        formsApp = GoogleForms()
+        id = formsApp.createForms(data["title"])
+        print(dumps({ "id": id }))
+
 
 except Exception as e:
     print(e)

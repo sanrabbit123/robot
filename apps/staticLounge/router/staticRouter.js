@@ -7,6 +7,8 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   const GoogleDocs = require(process.cwd() + "/apps/googleAPIs/googleDocs.js");
   const GoogleChrome = require(process.cwd() + "/apps/googleAPIs/googleChrome.js");
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
+  const GoogleSlides = require(process.cwd() + "/apps/googleAPIs/googleSlides.js");
+  const GoogleForms = require(process.cwd() + "/apps/googleAPIs/googleForms.js");
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
   const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
@@ -28,6 +30,8 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   this.calendar = new GoogleCalendar();
   this.analytics = new GoogleAnalytics();
   this.audio = new PlayAudio();
+  this.slides = new GoogleSlides();
+  this.forms = new GoogleForms();
 
   this.staticConst = process.env.HOME + "/samba";
   this.sambaToken = "__samba__";
@@ -577,6 +581,74 @@ StaticRouter.prototype.rou_post_createNewDocs = function () {
       res.send(JSON.stringify({ message: "success", docsId }));
     } catch (e) {
       errorLog("Static lounge 서버 문제 생김 (rou_post_createNewDocs): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_createNewSlides = function () {
+  const instance = this;
+  const slides = this.slides;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { staticConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/createNewSlides" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.name === undefined || req.body.parent === undefined) {
+        throw new Error("invalid post");
+      }
+      const { name, parent } = equalJson(req.body);
+      let slidesId;
+      slidesId = await slides.create_newSlides_inPython(name, parent);
+      res.send(JSON.stringify({ message: "success", slidesId }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewSlides): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_createNewForms = function () {
+  const instance = this;
+  const forms = this.forms;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { staticConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/createNewForms" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.name === undefined || req.body.parent === undefined) {
+        throw new Error("invalid post");
+      }
+      const { name, parent } = equalJson(req.body);
+      let formsId;
+      formsId = await forms.create_newForms_inPython(name, parent);
+      res.send(JSON.stringify({ message: "success", formsId }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewForms): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

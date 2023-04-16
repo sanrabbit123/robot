@@ -156,6 +156,88 @@ FileJs.prototype.baseMaker = function () {
       }
     },
     {
+      text: "파일 열기",
+      event: async function (e) {
+        try {
+          const selected = instance.selected;
+          const targets = document.querySelectorAll('.' + contextmenuClassName);
+          let thisDom;
+          let absolute;
+          let fileContents;
+          if (selected.length === 1) {
+            [ thisDom ] = selected;
+            absolute = thisDom.getAttribute("absolute")
+            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute)) {
+              fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
+              blankHref(JSON.parse(fileContents.contents).url);
+            }
+          }
+          removeByClass(contextmenuClassName);
+          instance.fileLoad(instance.path);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          if (instance.selected.length === 1) {
+            const absolute = instance.selected[0].getAttribute("absolute");
+            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute)) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return false;
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      },
+    },
+    {
+      text: "공유 링크 복사",
+      event: async function (e) {
+        try {
+          const selected = instance.selected;
+          const targets = document.querySelectorAll('.' + contextmenuClassName);
+          let thisDom;
+          let absolute;
+          let fileContents;
+          if (selected.length === 1) {
+            [ thisDom ] = selected;
+            absolute = thisDom.getAttribute("absolute")
+            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute)) {
+              fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
+              await window.navigator.clipboard.writeText(JSON.parse(fileContents.contents).url.replace(/drivesdk$/i, "sharing"));
+              instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
+            }
+          }
+          removeByClass(contextmenuClassName);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          if (instance.selected.length === 1) {
+            const absolute = instance.selected[0].getAttribute("absolute");
+            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute)) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return false;
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      },
+    },
+    {
       text: "다운로드",
       event: async function (e) {
         try {
@@ -725,6 +807,114 @@ FileJs.prototype.baseMaker = function () {
     },
     {
       text: "문서 만들기",
+      event: async function (e) {
+        try {
+          const newDocsName = await GeneralJs.prompt("새로운 문서명을 적어주세요!");
+          let loading, id;
+          let name;
+          let response;
+          let newList;
+          let boo;
+          if (typeof newDocsName === "string" && newDocsName !== "") {
+            loading = instance.mother.grayLoading();
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+            if (id === undefined) {
+              window.alert("해당 폴더에는 문서를 만들 수 없습니다!");
+            } else {
+              name = newDocsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewDocs");
+              if (response.message === "success" && typeof response.docsId === "string") {
+                await sleep(500);
+                blankHref("https://docs.google.com/document/d/" + response.docsId + "/edit?usp=sharing");
+                do {
+                  await sleep(1000);
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
+                  boo = newList.map((obj) => { return obj.fileName }).includes(name + ".gddoc");
+                } while (!boo)
+              } else {
+                window.alert("생성에 실패하였습니다! 다시 시도해주세요!");
+              }
+            }
+            loading.remove();
+
+            removeByClass(contextmenuClassName);
+            instance.fileLoad(instance.path);
+          } else {
+            removeByClass(contextmenuClassName);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          if (instance.selected.length === 0) {
+            return true;
+          } else {
+            return false;
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+    },
+    {
+      text: "슬라이드 만들기",
+      event: async function (e) {
+        try {
+          const newDocsName = await GeneralJs.prompt("새로운 문서명을 적어주세요!");
+          let loading, id;
+          let name;
+          let response;
+          let newList;
+          let boo;
+          if (typeof newDocsName === "string" && newDocsName !== "") {
+            loading = instance.mother.grayLoading();
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+            if (id === undefined) {
+              window.alert("해당 폴더에는 문서를 만들 수 없습니다!");
+            } else {
+              name = newDocsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewDocs");
+              if (response.message === "success" && typeof response.docsId === "string") {
+                await sleep(500);
+                blankHref("https://docs.google.com/document/d/" + response.docsId + "/edit?usp=sharing");
+                do {
+                  await sleep(1000);
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
+                  boo = newList.map((obj) => { return obj.fileName }).includes(name + ".gddoc");
+                } while (!boo)
+              } else {
+                window.alert("생성에 실패하였습니다! 다시 시도해주세요!");
+              }
+            }
+            loading.remove();
+
+            removeByClass(contextmenuClassName);
+            instance.fileLoad(instance.path);
+          } else {
+            removeByClass(contextmenuClassName);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          if (instance.selected.length === 0) {
+            return true;
+          } else {
+            return false;
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+    },
+    {
+      text: "설문지 만들기",
       event: async function (e) {
         try {
           const newDocsName = await GeneralJs.prompt("새로운 문서명을 적어주세요!");
