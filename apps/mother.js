@@ -1932,6 +1932,10 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
       str = "gdslides";
     } else if (/\.(gdform)$/gi.test(fileName)) {
       str = "gdform";
+    } else if (/\.(ntpage)$/gi.test(fileName)) {
+      str = "ntpage";
+    } else if (/\.(ntkanban)$/gi.test(fileName)) {
+      str = "ntkanban";
     } else {
       str = "general";
     }
