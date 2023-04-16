@@ -971,6 +971,114 @@ FileJs.prototype.baseMaker = function () {
       }
     },
     {
+      text: "페이지 만들기",
+      event: async function (e) {
+        try {
+          const newPageName = await GeneralJs.prompt("새로운 노션 페이지명을 적어주세요!");
+          let loading, id;
+          let name;
+          let response;
+          let newList;
+          let boo;
+          if (typeof newPageName === "string" && newPageName !== "") {
+            loading = instance.mother.grayLoading();
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+            if (id === undefined) {
+              window.alert("해당 폴더에는 노션 페이지를 만들 수 없습니다!");
+            } else {
+              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3000/createNewNotionPage");
+              if (response.message === "success" && typeof response.editId === "string" && typeof response.workspace === "string") {
+                await sleep(500);
+                blankHref("https://www.notion.so/" + response.workspace + "/" + response.editId);
+                do {
+                  await sleep(1000);
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
+                  boo = newList.map((obj) => { return obj.fileName }).includes(name + ".ntpage");
+                } while (!boo)
+              } else {
+                window.alert("생성에 실패하였습니다! 다시 시도해주세요!");
+              }
+            }
+            loading.remove();
+
+            removeByClass(contextmenuClassName);
+            instance.fileLoad(instance.path);
+          } else {
+            removeByClass(contextmenuClassName);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          if (instance.selected.length === 0) {
+            return true;
+          } else {
+            return false;
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+    },
+    {
+      text: "칸반보드 만들기",
+      event: async function (e) {
+        try {
+          const newPageName = await GeneralJs.prompt("새로운 칸반보드명을 적어주세요!");
+          let loading, id;
+          let name;
+          let response;
+          let newList;
+          let boo;
+          if (typeof newPageName === "string" && newPageName !== "") {
+            loading = instance.mother.grayLoading();
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+            if (id === undefined) {
+              window.alert("해당 폴더에는 칸반보드를 만들 수 없습니다!");
+            } else {
+              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3000/createNewNotionKanban");
+              if (response.message === "success" && typeof response.editId === "string" && typeof response.workspace === "string") {
+                await sleep(500);
+                blankHref("https://www.notion.so/" + response.workspace + "/" + response.editId);
+                do {
+                  await sleep(1000);
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
+                  boo = newList.map((obj) => { return obj.fileName }).includes(name + ".ntkanban");
+                } while (!boo)
+              } else {
+                window.alert("생성에 실패하였습니다! 다시 시도해주세요!");
+              }
+            }
+            loading.remove();
+
+            removeByClass(contextmenuClassName);
+            instance.fileLoad(instance.path);
+          } else {
+            removeByClass(contextmenuClassName);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          if (instance.selected.length === 0) {
+            return true;
+          } else {
+            return false;
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+    },
+    {
       text: "폴더 링크 복사",
       event: async function (e) {
         try {

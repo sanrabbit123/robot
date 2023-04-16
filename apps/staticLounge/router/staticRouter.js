@@ -704,6 +704,52 @@ StaticRouter.prototype.rou_post_createNewNotionPage = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_createNewNotionKanban = function () {
+  const instance = this;
+  const notion = this.notion;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { staticConst, sambaToken } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/createNewNotionKanban" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.name === undefined || req.body.parent === undefined) {
+        throw new Error("invalid post");
+      }
+      const { name, parent } = equalJson(req.body);
+      let notionResult;
+      let target;
+
+      target = parent.replace(/^\//i, '').replace(/\/$/i, '');
+      if (target.trim() === '') {
+        target = sambaToken;
+      }
+      if (!/^__/.test(target)) {
+        target = sambaToken + "/" + target;
+      }
+      target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
+
+      notionResult = await notion.createKanban(name);
+      await fileSystem(`writeJson`, [ target + "/" + name + ".ntkanban", notionResult ]);
+
+      res.send(JSON.stringify({ message: "success", editId: notionResult.editId, workspace: notionResult.workspace }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewNotionKanban): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
 
 StaticRouter.prototype.rou_post_renameTargets = function () {
   const instance = this;

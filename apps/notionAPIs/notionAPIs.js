@@ -10,6 +10,8 @@ const NotionAPIs = function () {
     base64EncodedText: Buffer.from("6496bf10-6b0a-4f80-96df-280fee596755" + ':' + "secret_fHUCJYxtVwGliCels41n0tkjH1A8mCJik2f4AVhp9Yl", "utf8").toString("base64"),
   }
   this.token = "secret_uSRyGbPynVdrmEeYfvQAp7LDIv0reyNbW58DZP4L6S3";
+  this.botId = "f5daaf36-fe03-41c6-9ed0-24ccd21aacb5";
+  this.workspaceId = "9a07d92b-8254-476f-a779-57004720cd59";
   this.workspaceName = "homeliaisonworkspace";
   this.url = "https://api.notion.com/v1";
   this.editUrl = "https://www.notion.so/" + this.workspaceName + "/";
@@ -18,6 +20,7 @@ const NotionAPIs = function () {
     "Content-Type": "application/json",
     "Notion-Version": "2022-06-28",
   };
+  this.motherPageId = "b39cc09fa58d4f5bb22b3849bee01f79";
   this.motherDatabaseId = "91447faedaa74c4f84f4dbd89d8df304";
   this.pythonApp = this.dir + "/python/app.py";
 }
@@ -164,7 +167,7 @@ NotionAPIs.prototype.generateAccessToken = async function () {
     url = this.url + "/oauth/token"
     data = {
       "grant_type": "authorization_code",
-      "code": "", // something uuid
+      "code": "038cc604-aef7-4847-b354-926c1d884e55", // something uuid
       "redirect_uri": "https://google.com",
     };
 
@@ -203,6 +206,53 @@ NotionAPIs.prototype.createPage = async function (pageTitle = "Test title") {
           ]
         },
       },
+    }
+
+    res = await requestSystem(url, data, { headers });
+
+    result = {
+      id: res.data.id,
+      editId: res.data.id.replace(/\-/gi, ''),
+      workspace: workspaceName,
+      url: editUrl + res.data.id.replace(/\-/gi, ''),
+    };
+
+    return result;
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+NotionAPIs.prototype.createKanban = async function (pageTitle = "Test title") {
+  const instance = this;
+  const { headers, motherPageId, editUrl, workspaceName } = this;
+  const { requestSystem } = this.mother;
+  try {
+    let url, res, data;
+    let result;
+    
+    url = this.url + "/databases";
+
+    data = {
+      "parent": {
+          "type": "page_id",
+          "page_id": motherPageId
+      },
+      "title": [
+          {
+              "type": "text",
+              "text": {
+                  "content": pageTitle,
+                  "link": null
+              }
+          }
+      ],
+      "properties": {
+          "Name": {
+              "title": {}
+          },
+      }
     }
 
     res = await requestSystem(url, data, { headers });
