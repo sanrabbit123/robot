@@ -1217,6 +1217,59 @@ FileJs.prototype.baseMaker = function () {
                         }
                       },
                       {
+                        type: "contextmenu",
+                        event: function (e) {
+                          e.preventDefault();
+
+                          const betweens = this.querySelectorAll("b");
+                          let index, targetIndex;
+                          let pathArr, token;
+                          let thisPath;
+                          let loading, id;
+                          if (betweens.length > 0) {
+                            index = 0;
+                            targetIndex = null;
+                            for (let b of betweens) {
+                              if (e.x > b.getBoundingClientRect().left) {
+                                targetIndex = index;
+                              }
+                              index++;
+                            }
+                            pathArr = instance.path.split("/");
+                            token = pathArr.shift();
+                            thisPath = null;
+                            if (!/__photo__/g.test(token) && !/__designer__/g.test(token)) {
+                              if (targetIndex !== null) {
+                                thisPath = token + "/" + pathArr.slice(0, targetIndex + 1).join("/");
+                              }
+                            } else {
+                              if (targetIndex !== null) {
+                                thisPath = token + "/" + pathArr.slice(0, targetIndex).join("/");
+                              }
+                            }
+                            if (thisPath !== null) {
+
+                              loading = instance.mother.grayLoading();
+                              ajaxJson({ path: thisPath }, S3HOST + ":3000/findFolderId", { equal: true }).then((result) => {
+                                id = result.id;
+                                loading.remove();
+                                if (id === undefined) {
+                                  window.alert("해당 폴더는 공유 링크를 만들 수 없습니다!");
+                                  return (new Promise((resolve, reject) => { resolve(null) }));
+                                } else {
+                                  return window.navigator.clipboard.writeText(window.location.protocol + "//" + window.location.host + "/dashboard?mode=file&path=" + id);
+                                }
+                              }).then(() => {
+                                instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
+                              }).catch((err) => {
+                                console.log(err);
+                              })
+                            }
+                            
+                          }
+                        }
+                      },
+                      {
                         type: "mousemove",
                         event: function (e) {
                           if (instance.dragArea !== null) {
