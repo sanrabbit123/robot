@@ -12,6 +12,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
   const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
+  const NotionAPIs = require(process.cwd() + "/apps/notionAPIs/notionAPIs.js");
 
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -32,6 +33,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   this.audio = new PlayAudio();
   this.slides = new GoogleSlides();
   this.forms = new GoogleForms();
+  this.notion = new NotionAPIs();
 
   this.staticConst = process.env.HOME + "/samba";
   this.sambaToken = "__samba__";
@@ -654,6 +656,54 @@ StaticRouter.prototype.rou_post_createNewForms = function () {
   }
   return obj;
 }
+
+StaticRouter.prototype.rou_post_createNewNotionPage = function () {
+  const instance = this;
+  const notion = this.notion;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { staticConst, sambaToken } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/createNewNotionPage" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.name === undefined || req.body.parent === undefined) {
+        throw new Error("invalid post");
+      }
+      const { name, parent } = equalJson(req.body);
+      let notionResult;
+      let target;
+
+      target = parent.replace(/^\//i, '').replace(/\/$/i, '');
+      if (target.trim() === '') {
+        target = sambaToken;
+      }
+      if (!/^__/.test(target)) {
+        target = sambaToken + "/" + target;
+      }
+      target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
+
+      notionResult = await notion.createPage(name);
+      await fileSystem(`writeJson`, [ target + "/" + name + ".ntpage", notionResult ]);
+
+      res.send(JSON.stringify({ message: "success", editId: notionResult.editId, workspace: notionResult.workspace }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewNotionPage): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 
 StaticRouter.prototype.rou_post_renameTargets = function () {
   const instance = this;
@@ -1916,6 +1966,7 @@ StaticRouter.prototype.rou_post_deleteFile = function () {
       }
       const { files } = equalJson(req.body);
       const allowedPath = [
+        address.officeinfo.ghost.file.static + "/drive/# 홈리에종",
         address.officeinfo.ghost.file.static + address.officeinfo.ghost.file.office + "/고객/",
         address.officeinfo.ghost.file.static + address.officeinfo.ghost.file.office + "/디자이너/",
         address.officeinfo.ghost.file.static + address.officeinfo.ghost.file.office + "/일시적",

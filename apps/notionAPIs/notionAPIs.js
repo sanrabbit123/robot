@@ -4,13 +4,21 @@ const NotionAPIs = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
   this.dir = process.cwd() + "/apps/notionAPIs";
-  this.token = "secret_nRqIZDBqTijLgE01MdXowOUUpb16Idaqi44tlbJLECd";
+  this.oauth = {
+    id: "6496bf10-6b0a-4f80-96df-280fee596755",
+    secret: "secret_fHUCJYxtVwGliCels41n0tkjH1A8mCJik2f4AVhp9Yl",
+    base64EncodedText: Buffer.from("6496bf10-6b0a-4f80-96df-280fee596755" + ':' + "secret_fHUCJYxtVwGliCels41n0tkjH1A8mCJik2f4AVhp9Yl", "utf8").toString("base64"),
+  }
+  this.token = "secret_uSRyGbPynVdrmEeYfvQAp7LDIv0reyNbW58DZP4L6S3";
+  this.workspaceName = "homeliaisonworkspace";
   this.url = "https://api.notion.com/v1";
+  this.editUrl = "https://www.notion.so/" + this.workspaceName + "/";
   this.headers = {
     "Authorization": "Bearer " + this.token,
     "Content-Type": "application/json",
-    "Notion-Version": "2021-08-16"
+    "Notion-Version": "2022-06-28",
   };
+  this.motherDatabaseId = "91447faedaa74c4f84f4dbd89d8df304";
   this.pythonApp = this.dir + "/python/app.py";
 }
 
@@ -145,32 +153,69 @@ NotionAPIs.prototype.readPageByName = async function (page) {
   }
 }
 
-NotionAPIs.prototype.readPageById = async function (id) {
-  if (typeof id !== "string") {
-    throw new Error("invaild input");
-  }
-  id = this.hexToId(id);
+NotionAPIs.prototype.generateAccessToken = async function () {
   const instance = this;
-  const { headers } = this;
   const { requestSystem } = this.mother;
   try {
-    let url, res, result;
+    let url, data, res;
 
-    result = {};
+    // visit => https://api.notion.com/v1/oauth/authorize?client_id=6496bf10-6b0a-4f80-96df-280fee596755&response_type=code&owner=user&redirect_uri=https%3A%2F%2Fgoogle.com => and get code
 
-    url = this.url + "/blocks/" + id;
-    res = await requestSystem(url, {}, { headers });
+    url = this.url + "/oauth/token"
+    data = {
+      "grant_type": "authorization_code",
+      "code": "", // something uuid
+      "redirect_uri": "https://google.com",
+    };
 
-    result.id = res.data.id;
-    result.created = new Date(res.data.created_time);
-    result.lastEdited = new Date(res.data.last_edited_time);
-    result.title = res.data.child_page.title;
+    res = await requestSystem(url, data, { headers: {
+      "Authorization": "Basic " + '"' + this.oauth.base64EncodedText + '"',
+      "Content-Type": "application/json",
+      "Notion-Version": this.headers["Notion-Version"],
+    } });
 
-    url = this.url + "/blocks/" + id + "/children?page_size=100";
-    res = await requestSystem(url, {}, { headers });
-    result.contents = res.data.results;
+    console.log(res);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+NotionAPIs.prototype.createPage = async function (pageTitle = "Test title") {
+  const instance = this;
+  const { headers, motherDatabaseId, editUrl, workspaceName } = this;
+  const { requestSystem } = this.mother;
+  try {
+    let url, res, data;
+    let result;
+    
+    url = this.url + "/pages";
+    data = {
+      "parent": { "database_id": motherDatabaseId },
+      "properties": {
+        "Name": {
+          "title": [
+            {
+              "text": {
+                "content": pageTitle
+              }
+            }
+          ]
+        },
+      },
+    }
+
+    res = await requestSystem(url, data, { headers });
+
+    result = {
+      id: res.data.id,
+      editId: res.data.id.replace(/\-/gi, ''),
+      workspace: workspaceName,
+      url: editUrl + res.data.id.replace(/\-/gi, ''),
+    };
 
     return result;
+
   } catch (error) {
     console.log(error)
   }

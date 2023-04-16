@@ -179,11 +179,6 @@ DevContext.prototype.launching = async function () {
       }
     }
 
-
-    const drive = new GoogleDrive();
-    await drive.get_targetInfo_inPython("0B7youNEnMPEfQTJDc2hNcU9GcG8");
-
-    
     
     // monthly must ==========================================================================================================================================
     // =======================================================================================================================================================
@@ -250,8 +245,6 @@ DevContext.prototype.launching = async function () {
 
 
     
-      
-
 
 
 

@@ -170,7 +170,7 @@ FileJs.prototype.baseMaker = function () {
           if (selected.length === 1) {
             [ thisDom ] = selected;
             absolute = thisDom.getAttribute("absolute")
-            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute)) {
+            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute)) {
               fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
               blankHref(JSON.parse(fileContents.contents).url);
             }
@@ -185,7 +185,7 @@ FileJs.prototype.baseMaker = function () {
         try {
           if (instance.selected.length === 1) {
             const absolute = instance.selected[0].getAttribute("absolute");
-            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute)) {
+            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute)) {
               return true;
             } else {
               return false;
@@ -2058,7 +2058,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
                     await instance.fileLoad(absolute);
                   }, 201);
                 } else {
-                  if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute)) {
+                  if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute)) {
                     fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
                     blankHref(JSON.parse(fileContents.contents).url);
                   }
