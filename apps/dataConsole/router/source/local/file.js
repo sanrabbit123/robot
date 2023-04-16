@@ -778,6 +778,45 @@ FileJs.prototype.baseMaker = function () {
       }
     },
     {
+      text: "폴더 링크 복사",
+      event: async function (e) {
+        try {
+          const loading = instance.mother.grayLoading();
+          let id;
+          if (instance.selected.length === 0) {
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+          } else {
+            ({ id } = await ajaxJson({ path: instance.selected[0].getAttribute("absolute") }, S3HOST + ":3000/findFolderId", { equal: true }));
+          }
+          loading.remove();
+          if (id === undefined) {
+            window.alert("해당 폴더는 공유 링크를 만들 수 없습니다!");
+          } else {
+            await window.navigator.clipboard.writeText(window.location.protocol + "//" + window.location.host + "/dashboard?mode=file&path=" + id);
+            instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
+          }
+          removeByClass(contextmenuClassName);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          if (instance.selected.length === 0) {
+            return true;
+          } else {
+            if (instance.selected.length > 1) {
+              return false;
+            }
+            return (instance.selected[0].getAttribute("kind") === "folder");
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+    },
+    {
       text: "드라이브 열기",
       event: async function (e) {
         try {
@@ -1954,12 +1993,19 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
 
 FileJs.prototype.launching = async function () {
   const instance = this;
-  const { returnGet } = GeneralJs;
+  const { ea } = this;
+  const { returnGet, ajaxJson, withOut } = GeneralJs;
   try {
     const getObj = returnGet();
     const entireMode = (getObj.dataonly === "true" && getObj.entire === "true");
     let startPoint;
     let rootToken;
+    let pathResponse;
+    let loadingIconVisualTop;
+    let loadingIconWidth;
+
+    loadingIconWidth = 50;
+    loadingIconVisualTop = -34;
 
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
@@ -1993,15 +2039,26 @@ FileJs.prototype.launching = async function () {
         startPoint = rootToken + "/drive/# 홈리에종";
       } else if (getObj.mode === "file") {
         startPoint = rootToken + "/drive/HomeLiaisonServer";
+      } else if (getObj.mode === "general") {
+        if (window.localStorage.getItem(this.latestPathLocalSaveHomeLiaisonKeyName) !== null && typeof window.localStorage.getItem(this.latestPathLocalSaveHomeLiaisonKeyName) === "string") {
+          startPoint = window.localStorage.getItem(this.latestPathLocalSaveHomeLiaisonKeyName);
+        } else {
+          startPoint = rootToken + "/drive/# 홈리에종";
+        }
       } else {
         startPoint = rootToken + "/drive/# 홈리에종";
       }
       this.path = startPoint;
 
       if (typeof getObj.id === "string") {
-        console.log(getObj.id);
+        const loading = await this.mother.loadingRun();
+        loading.style.top = "calc(calc(" + withOut(loadingIconVisualTop, ea) + " / 2) - " + String(loadingIconWidth / 2) + ea + ")";
+        pathResponse = await ajaxJson({ id: getObj.id }, S3HOST + ":3000/getPathFromId");
+        if (typeof pathResponse === "object" && pathResponse !== null && typeof pathResponse.path === "string") {
+          this.path = pathResponse.path;
+        }
+        loading.parentElement.removeChild(loading);
       }
-
     }
     this.startPoint = startPoint;
     this.rootToken = rootToken;

@@ -2566,9 +2566,9 @@ DashboardJs.prototype.launching = async function () {
       }
     } else if (getObj.mode === "file") {
       if (typeof getObj.path !== "string") {
-        instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=home&entire=true&dataonly=true");
+        instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=general&entire=true&dataonly=true");
       } else {
-        instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=home&entire=true&dataonly=true&id=" + getObj.path);
+        instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=general&entire=true&dataonly=true&id=" + getObj.path);
       }
     }
 
