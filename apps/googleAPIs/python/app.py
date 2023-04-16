@@ -224,7 +224,12 @@ try:
 
     elif argv[1] == 'drive' and argv[2] == 'getTargetInfo':
         driveApp = GoogleDrive()
-        result = driveApp.getTargetInfo(data["targetId"])
+        result = driveApp.getTargetInfo(data["targetId"], False)
+        print(result)
+
+    elif argv[1] == 'drive' and argv[2] == 'getTargetAbsolute':
+        driveApp = GoogleDrive()
+        result = driveApp.getTargetInfo(data["targetId"], True)
         print(result)
 
     elif argv[1] == 'drive' and argv[2] == 'downloadFile':

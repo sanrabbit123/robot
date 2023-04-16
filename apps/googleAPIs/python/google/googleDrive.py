@@ -115,8 +115,24 @@ class GoogleDrive:
             break
         return dumps({ "id": id })
 
-    def getTargetInfo(self, target_id):
-        response = self.app.files().get(fileId=target_id).execute()
+    def getTargetInfo(self, target_id, absolute_mode = False):
+        parent = None
+        response = self.app.files().get(fileId=target_id, fields='kind,id,name,mimeType,resourceKey,parents').execute()
+
+        parentString = ''
+        if absolute_mode:
+            while "parents" in response and response["parents"].__len__() > 0:
+                parent = response["parents"]
+                response = self.app.files().get(fileId=parent[0], fields='kind,id,name,mimeType,resourceKey,parents').execute()
+                parentString = response["name"] + "/" + parentString
+
+        response = self.app.files().get(fileId=target_id, fields='kind,id,name,mimeType,resourceKey,parents').execute()
+
+        if absolute_mode:
+            if "parents" in response and parentString != "":
+                response["parents"] = response["parents"][0]
+                response["absolute"] = parentString[6:] + response["name"]
+
         return dumps(response)
 
     def readFolderFiles(self, folder_id):

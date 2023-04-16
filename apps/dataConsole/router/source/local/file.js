@@ -1997,6 +1997,11 @@ FileJs.prototype.launching = async function () {
         startPoint = rootToken + "/drive/# 홈리에종";
       }
       this.path = startPoint;
+
+      if (typeof getObj.id === "string") {
+        console.log(getObj.id);
+      }
+
     }
     this.startPoint = startPoint;
     this.rootToken = rootToken;

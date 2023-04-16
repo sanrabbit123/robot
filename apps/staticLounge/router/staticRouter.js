@@ -412,6 +412,47 @@ StaticRouter.prototype.rou_post_findFolderId = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_getPathFromId = function () {
+  const instance = this;
+  const drive = this.drive;
+  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { staticConst, sambaToken } = this;
+  const sambaKeyword = "drive";
+  let obj;
+  obj = {};
+  obj.link = [ "/getPathFromId" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.id === undefined) {
+        throw new Error("invaild post");
+      }
+      const { id } = req.body;
+      let resultObj;
+
+      resultObj = await drive.get_targetInfo_inPython(id);
+      if (resultObj === null) {
+        throw new Error("invalid id");
+      }
+      
+      res.send(JSON.stringify({ path: sambaToken + "/" + sambaKeyword + resultObj.absolute }));
+
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_getPathFromId): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_moveFiles = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;

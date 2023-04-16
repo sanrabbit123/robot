@@ -16,6 +16,22 @@ GoogleDrive.prototype.get_file_inPython = async function (file_id, target_folder
   }
 }
 
+GoogleDrive.prototype.get_targetInfo_inPython = async function (id) {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, sleep, pythonExecute } = this.mother;
+  try {
+    const target_info = await pythonExecute(this.pythonApp, [ "drive", "getTargetAbsolute" ], { targetId: id });
+    if (typeof target_info !== "object" || target_info === null) {
+      throw new Error("invalid id");
+    }
+    target_info.isFolder = /google\-apps\.folder/gi.test(target_info.mimeType);
+    return target_info;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 GoogleDrive.prototype.get_folder_inPython = async function (folder_id, folder_name = null, is_photo = false) {
   const instance = this;
   const { fileSystem, shellExec, shellLink, sleep, pythonExecute } = this.mother;
