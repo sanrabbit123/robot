@@ -1930,6 +1930,8 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
       str = "gdsheet";
     } else if (/\.(gdslides)$/gi.test(fileName)) {
       str = "gdslides";
+    } else if (/\.(gdform)$/gi.test(fileName)) {
+      str = "gdform";
     } else {
       str = "general";
     }

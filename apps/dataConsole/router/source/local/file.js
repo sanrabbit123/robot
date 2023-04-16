@@ -23,6 +23,7 @@ FileJs.staticSvg = {
   gddoc: `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16.933 16.933" style="enable-background:new 0 0 16.933 16.933;" xml:space="preserve"><path style="fill:#4285F4;" d="M9.7891,0.975H4.1669c-0.5285,0-0.9918,0.4627-0.9918,0.9923v12.5663 c0,0.5291,0.4627,0.9923,0.9923,0.9923h8.5981c0.5291,0,0.9923-0.4627,0.9923-0.9923V4.9432l-2.3147-1.6535L9.7891,0.975z"/><path style="fill:#FFFFFF;" d="M5.732,11.0349h5.4678v-0.6733H5.7326L5.732,11.0349L5.732,11.0349z M5.732,12.382h4.1007v-0.6733 H5.732V12.382z M5.732,7.6675v0.6733h5.4678V7.6675H5.732z M5.732,9.6878h5.4678V9.0146H5.7326L5.732,9.6878L5.732,9.6878z"/><path style="fill:#A1C2FA;" d="M9.7891,0.975v2.9764c0,0.5291,0.4627,0.9918,0.9918,0.9918h2.9764L9.7891,0.975z"/></svg>`,
   gdsheet: `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16.933 16.933" style="enable-background:new 0 0 16.933 16.933;" xml:space="preserve"><path style="fill:#23A566;" d="M9.7891,0.975H4.1669c-0.5285,0-0.9917,0.4627-0.9917,0.9923v12.5662 c0,0.529,0.4627,0.9923,0.9923,0.9923h8.5981c0.529,0,0.9923-0.4627,0.9923-0.9923V4.9432l-2.3147-1.6535L9.7891,0.975z"/><path style="fill:#8ED1B1;" d="M9.7891,0.975v2.9764c0,0.529,0.4627,0.9917,0.9917,0.9917h2.9764L9.7891,0.975z"/><path style="fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;" d="M11.188,12.382H5.7506V7.6674h5.4373V12.382z M8.8074,8.3475 v0.8253h1.7123v-0.824L8.8074,8.3475z M8.8074,9.6925v0.7885h1.7123V9.6886L8.8074,9.6925z M8.8074,10.9837v0.73h1.7123v-0.734 L8.8074,10.9837z M8.1352,11.7098v-0.73H6.4235v0.73H8.1352z M8.1352,10.4725V9.6886H6.4235v0.7878L8.1352,10.4725z M8.1352,9.1813 V8.3475H6.4235v0.8253L8.1352,9.1813z"/></svg>`,
   gdslides: `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16.933 16.933" style="enable-background:new 0 0 16.933 16.933;" xml:space="preserve"><path style="fill:#FBBC04;" d="M9.7885,0.975H4.1663c-0.5285,0-0.9917,0.4627-0.9917,0.9923v12.5662 c0,0.529,0.4627,0.9923,0.9923,0.9923h8.5981c0.529,0,0.9923-0.4627,0.9923-0.9923V4.9432l-2.3147-1.6535L9.7885,0.975z"/><path style="fill:#F29900;" d="M9.7885,0.975v2.9764c0,0.529,0.4627,0.9917,0.9917,0.9917h2.9764L9.7885,0.975z"/><path style="fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;" d="M5.75,7.6674v4.3971h5.4373V7.6674H5.75z M10.5191,8.3029 v0.7685v0.4811v0.7391v0.4651v0.6845H8.8068H6.4229v-0.0037v-0.6809v-0.4694V9.5525V9.0714V8.3017h1.7117h2.3845V8.3029z"/></svg>`,
+  gdform: `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 16.933 16.933" xml:space="preserve"><path style="fill:#6244AA;" d="M9.7891,0.975H4.1669c-0.5285,0-0.9918,0.4627-0.9918,0.9923v12.5663 c0,0.5291,0.4627,0.9923,0.9923,0.9923h8.5981c0.5291,0,0.9923-0.4627,0.9923-0.9923V4.9432l-2.3147-1.6535L9.7891,0.975z"/><path style="fill:#48347A;" d="M9.7891,0.975v2.9764c0,0.5291,0.4627,0.9918,0.9918,0.9918h2.9764L9.7891,0.975z"/><path style="fill:#FFFFFF;" d="M7.2779,12.0479h3.9219v-0.7962H7.2783L7.2779,12.0479L7.2779,12.0479z M7.2779,7.7117V8.508h3.9219 V7.7117H7.2779z M7.2779,10.2779h3.9219V9.4818H7.2783L7.2779,10.2779L7.2779,10.2779z M6.6167,8.1098 c0,0.2443-0.198,0.4424-0.4423,0.4424S5.732,8.3542,5.732,8.1098c0-0.2443,0.198-0.4423,0.4423-0.4423S6.6167,7.8655,6.6167,8.1098z  M6.6167,9.8798c0,0.2443-0.198,0.4423-0.4423,0.4423S5.732,10.1241,5.732,9.8798c0-0.2443,0.198-0.4424,0.4423-0.4424 S6.6167,9.6355,6.6167,9.8798z M6.6167,11.6498c0,0.2443-0.198,0.4424-0.4423,0.4424s-0.4423-0.198-0.4423-0.4424 s0.198-0.4424,0.4423-0.4424S6.6167,11.4055,6.6167,11.6498z"/></svg>`,
 };
 
 FileJs.prototype.staticSvg = FileJs.staticSvg;
@@ -167,7 +168,7 @@ FileJs.prototype.baseMaker = function () {
           if (selected.length === 1) {
             [ thisDom ] = selected;
             absolute = thisDom.getAttribute("absolute")
-            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute)) {
+            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute)) {
               fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
               blankHref(JSON.parse(fileContents.contents).url);
             }
@@ -182,7 +183,7 @@ FileJs.prototype.baseMaker = function () {
         try {
           if (instance.selected.length === 1) {
             const absolute = instance.selected[0].getAttribute("absolute");
-            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute)) {
+            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute)) {
               return true;
             } else {
               return false;
@@ -208,7 +209,7 @@ FileJs.prototype.baseMaker = function () {
           if (selected.length === 1) {
             [ thisDom ] = selected;
             absolute = thisDom.getAttribute("absolute")
-            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute)) {
+            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute)) {
               fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
               await window.navigator.clipboard.writeText(JSON.parse(fileContents.contents).url.replace(/drivesdk$/i, "sharing"));
               instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
@@ -223,7 +224,7 @@ FileJs.prototype.baseMaker = function () {
         try {
           if (instance.selected.length === 1) {
             const absolute = instance.selected[0].getAttribute("absolute");
-            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute)) {
+            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute)) {
               return true;
             } else {
               return false;
@@ -863,27 +864,27 @@ FileJs.prototype.baseMaker = function () {
       text: "슬라이드 만들기",
       event: async function (e) {
         try {
-          const newDocsName = await GeneralJs.prompt("새로운 문서명을 적어주세요!");
+          const newSlidesName = await GeneralJs.prompt("새로운 슬라이드명을 적어주세요!");
           let loading, id;
           let name;
           let response;
           let newList;
           let boo;
-          if (typeof newDocsName === "string" && newDocsName !== "") {
+          if (typeof newSlidesName === "string" && newSlidesName !== "") {
             loading = instance.mother.grayLoading();
             ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
             if (id === undefined) {
-              window.alert("해당 폴더에는 문서를 만들 수 없습니다!");
+              window.alert("해당 폴더에는 슬라이드를 만들 수 없습니다!");
             } else {
-              name = newDocsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
-              response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewDocs");
-              if (response.message === "success" && typeof response.docsId === "string") {
+              name = newSlidesName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewSlides");
+              if (response.message === "success" && typeof response.slidesId === "string") {
                 await sleep(500);
-                blankHref("https://docs.google.com/document/d/" + response.docsId + "/edit?usp=sharing");
+                blankHref("https://docs.google.com/presentation/d/" + response.slidesId + "/edit?usp=sharing");
                 do {
                   await sleep(1000);
                   newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
-                  boo = newList.map((obj) => { return obj.fileName }).includes(name + ".gddoc");
+                  boo = newList.map((obj) => { return obj.fileName }).includes(name + ".gdslides");
                 } while (!boo)
               } else {
                 window.alert("생성에 실패하였습니다! 다시 시도해주세요!");
@@ -917,27 +918,27 @@ FileJs.prototype.baseMaker = function () {
       text: "설문지 만들기",
       event: async function (e) {
         try {
-          const newDocsName = await GeneralJs.prompt("새로운 문서명을 적어주세요!");
+          const newFormsName = await GeneralJs.prompt("새로운 설문지명을 적어주세요!");
           let loading, id;
           let name;
           let response;
           let newList;
           let boo;
-          if (typeof newDocsName === "string" && newDocsName !== "") {
+          if (typeof newFormsName === "string" && newFormsName !== "") {
             loading = instance.mother.grayLoading();
             ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
             if (id === undefined) {
-              window.alert("해당 폴더에는 문서를 만들 수 없습니다!");
+              window.alert("해당 폴더에는 설문지를 만들 수 없습니다!");
             } else {
-              name = newDocsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
-              response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewDocs");
-              if (response.message === "success" && typeof response.docsId === "string") {
+              name = newFormsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewForms");
+              if (response.message === "success" && typeof response.formsId === "string") {
                 await sleep(500);
-                blankHref("https://docs.google.com/document/d/" + response.docsId + "/edit?usp=sharing");
+                blankHref("https://docs.google.com/forms/d/" + response.formsId + "/edit?usp=sharing");
                 do {
                   await sleep(1000);
                   newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
-                  boo = newList.map((obj) => { return obj.fileName }).includes(name + ".gddoc");
+                  boo = newList.map((obj) => { return obj.fileName }).includes(name + ".gdform");
                 } while (!boo)
               } else {
                 window.alert("생성에 실패하였습니다! 다시 시도해주세요!");
@@ -1076,7 +1077,7 @@ FileJs.prototype.baseMaker = function () {
   searchInputHeight = 22;
   fontSize = 16;
   titlePaddingBottom = 8;
-  contextmenuWidth = 100;
+  contextmenuWidth = 110;
   contextmenuFontSize = 13;
   contextmenuPaddingTop = isMac() ? 5 : 6;
   contextmenuPaddingBottom = isMac() ? 7 : 6;
@@ -2055,7 +2056,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
                     await instance.fileLoad(absolute);
                   }, 201);
                 } else {
-                  if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute)) {
+                  if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute)) {
                     fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
                     blankHref(JSON.parse(fileContents.contents).url);
                   }
