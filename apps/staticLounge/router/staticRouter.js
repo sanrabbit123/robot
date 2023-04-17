@@ -464,7 +464,7 @@ StaticRouter.prototype.rou_post_parsingDrawio = function () {
   const drawioUserId = "111085281738578060467";
   const drawioVersion = "21.1.8";
   const drawioType = "google";
-  const drawioExe = "drawioExe";
+  const drawioExe = "drawio";
   const xmlMaker = (date, userAgent) => {
     return `<mxfile host="${drawioHost}" modified=${JSON.stringify(date)} agent="${userAgent}" version="${drawioVersion}" type="${drawioType}"><diagram name="Page-1" id="${uniqueValue("hex").slice(0, 20)}"><mxGraphModel><root><mxCell id="0" /><mxCell id="1" parent="0" /></root></mxGraphModel></diagram></mxfile>`;
   }

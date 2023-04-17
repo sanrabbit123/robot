@@ -1077,6 +1077,54 @@ FileJs.prototype.baseMaker = function () {
       }
     },
     {
+      text: "다이어그램 만들기",
+      event: async function (e) {
+        try {
+          const newPageName = await GeneralJs.prompt("새로운 다이어그램명을 적어주세요!");
+          let loading, id;
+          let name;
+          let response;
+          let newList;
+          let boo;
+          if (typeof newPageName === "string" && newPageName !== "") {
+            loading = instance.mother.grayLoading();
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+            if (id === undefined) {
+              window.alert("해당 폴더에는 다이어그램을 만들 수 없습니다!");
+            } else {
+              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              response = await ajaxJson({ mode: "create", name, parent: id }, S3HOST + ":3000/parsingDrawio");
+              if (typeof response.url === "string") {
+                await sleep(500);
+                blankHref(response.url);
+              } else {
+                window.alert("생성에 실패하였습니다! 다시 시도해주세요!");
+              }
+            }
+            loading.remove();
+            removeByClass(contextmenuClassName);
+            instance.fileLoad(instance.path);
+          } else {
+            removeByClass(contextmenuClassName);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          if (instance.selected.length === 0) {
+            return true;
+          } else {
+            return false;
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+    },
+    {
       text: "폴더 링크 복사",
       event: async function (e) {
         try {
