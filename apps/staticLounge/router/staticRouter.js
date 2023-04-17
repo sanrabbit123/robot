@@ -54,7 +54,6 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
     "localhost:3000",
     "192.168.0.14:3000",
   ];
-
 }
 
 StaticRouter.prototype.fireWall = function (req) {
@@ -458,10 +457,17 @@ StaticRouter.prototype.rou_post_findFileId = function () {
 StaticRouter.prototype.rou_post_parsingDrawio = function () {
   const instance = this;
   const drive = this.drive;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { errorLog, fileSystem, shellExec, shellLink, uniqueValue } = this.mother;
   const { staticConst } = this;
-  const drawioUrlMother = "https://app.diagrams.net";
+  const drawioHost = "app.diagrams.net";
+  const drawioUrlMother = "https://" + drawioHost;
   const drawioUserId = "111085281738578060467";
+  const drawioVersion = "21.1.8";
+  const drawioType = "google";
+  const drawioExe = "drawioExe";
+  const xmlMaker = (date, userAgent) => {
+    return `<mxfile host="${drawioHost}" modified=${JSON.stringify(date)} agent="${userAgent}" version="${drawioVersion}" type="${drawioType}"><diagram name="Page-1" id="${uniqueValue("hex").slice(0, 20)}"><mxGraphModel><root><mxCell id="0" /><mxCell id="1" parent="0" /></root></mxGraphModel></diagram></mxfile>`;
+  }
   let obj;
   obj = {};
   obj.link = [ "/parsingDrawio" ];
@@ -476,25 +482,62 @@ StaticRouter.prototype.rou_post_parsingDrawio = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      if (req.body.parent === undefined || req.body.name === undefined) {
+      if (req.body.mode === undefined || req.body.parent === undefined || req.body.name === undefined) {
         throw new Error("invaild post");
       }
-      const { name, parent } = req.body;
-      const finalId = await drive.searchFileId_inPython(name, parent);
-      if (finalId === null) {
-        throw new Error("cannot found");
-      }
+      const { mode, name, parent } = req.body;
+      let finalId;
       let url, json;
+      let rawUserAgent;
+      let userAgent;
+      let contents;
+      let thisFileName;
+      let thisFile;
 
-      json = {
-        ids: [ finalId ],
-        action: "open",
-        userId: drawioUserId,
-        resourceKeys: {}
-      };
-      url = `${drawioUrlMother}?state=${globalThis.encodeURIComponent(JSON.stringify(json))}`;
+      if (mode === "get") {
 
-      res.send(JSON.stringify({ url }));
+        finalId = await drive.searchFileId_inPython(name, parent);
+        if (finalId === null) {
+          throw new Error("cannot found");
+        }
+        json = {
+          ids: [ finalId ],
+          action: "open",
+          userId: drawioUserId,
+          resourceKeys: {}
+        };
+        url = `${drawioUrlMother}?state=${globalThis.encodeURIComponent(JSON.stringify(json))}`;
+
+        res.send(JSON.stringify({ url }));
+
+      } else if (mode === "create") {
+
+        rawUserAgent = req.useragent;
+        ({ source: userAgent } = rawUserAgent);
+
+        contents = xmlMaker(new Date(), userAgent);
+        thisFileName = `${name}.${drawioExe}`;
+        thisFile = `${process.cwd()}/temp/${thisFileName}`;
+        await fileSystem(`write`, [ thisFile, contents ]);
+
+        finalId = await drive.upload_inPython(parent, thisFile);
+        if (finalId === null) {
+          throw new Error("fail create drawio");
+        }
+
+        await shellExec(`rm`, [ `-rf`, thisFile ]);
+
+        json = {
+          ids: [ finalId ],
+          action: "open",
+          userId: drawioUserId,
+          resourceKeys: {}
+        };
+        url = `${drawioUrlMother}?state=${globalThis.encodeURIComponent(JSON.stringify(json))}`;
+
+        res.send(JSON.stringify({ url }));
+
+      }
 
     } catch (e) {
       errorLog("Static lounge 서버 문제 생김 (rou_post_parsingDrawio): " + e.message).catch((e) => { console.log(e); });

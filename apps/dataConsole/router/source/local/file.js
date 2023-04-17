@@ -369,7 +369,7 @@ FileJs.prototype.baseMaker = function () {
             } else if (/drawio$/.test(absolute)) {
               loading = instance.mother.grayLoading();
               ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
-              ({ url } = await ajaxJson({ name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/parsingDrawio", { equal: true }));
+              ({ url } = await ajaxJson({ mode: "get", name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/parsingDrawio", { equal: true }));
               if (typeof url === "string") {
                 blankHref(url);
               }
@@ -2297,7 +2297,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
                   } else if (/drawio$/.test(absolute)) {
                     loading = instance.mother.grayLoading();
                     ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
-                    ({ url } = await ajaxJson({ name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/parsingDrawio", { equal: true }));
+                    ({ url } = await ajaxJson({ mode: "get", name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/parsingDrawio", { equal: true }));
                     if (typeof url === "string") {
                       blankHref(url);
                     }
