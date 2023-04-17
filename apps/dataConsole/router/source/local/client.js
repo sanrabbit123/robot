@@ -6785,7 +6785,7 @@ ClientJs.prototype.globalChaining = async function (thisCase, column, value, pas
 ClientJs.prototype.communicationRender = function () {
   const instance = this;
   const { communication } = this.mother;
-  const { ajaxJson, sleep } = GeneralJs;
+  const { ajaxJson, sleep, blankHref } = GeneralJs;
   communication.setItem([
     () => { return "추천서 자동 생성"; },
     function () {
@@ -7003,6 +7003,38 @@ ClientJs.prototype.communicationRender = function () {
             }, BACKHOST + "/alimTalk");
 
           }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "스타일 찾기 페이지"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let cliid, thisCase, serid;
+        let response, project;
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            cliid = (await GeneralJs.prompt("고객 아이디를 입력하세요!")).trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        } else {
+          cliid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+            }
+          }
+        }
+        if (thisCase !== null) {
+          blankHref(FRONTHOST + "/curation.php?cliid=" + cliid);
         }
       } catch (e) {
         console.log(e);
