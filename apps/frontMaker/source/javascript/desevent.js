@@ -178,7 +178,7 @@ DeseventJs.prototype.certificationBox = function (name, phone, mother, boo, call
 
   randomValueAjaxData = "name=" + name + "&phone=" + phone + "&certification=" + randomValue;
   // GeneralJs.ajax(randomValueAjaxData, "/engine/Smssend.php", function (data) {});
-  GeneralJs.ajax(randomValueAjaxData, "https://home-liaison.serveftp.com:3000/certification", function (data) {});
+  GeneralJs.ajax(randomValueAjaxData, "https://home-liaison.co.kr:3000/certification", function (data) {});
 
   let div_back, div_clone, div_clone2, svg_clone;
   let input_back, input_clone;
@@ -697,7 +697,7 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
 
       instance.certificationBox(finalObj.designer, finalObj.phone, instance.box[flatform][instance.box[flatform].length - 1], flatform, async function (whiteBox, wording, loader) {
         try {
-          GeneralJs.ajax(GeneralJs.objectToRawquery(finalObj), "https://home-liaison.serveftp.com:3000/designerSubmit", function (data) {
+          GeneralJs.ajax(GeneralJs.objectToRawquery(finalObj), "https://home-liaison.co.kr:3000/designerSubmit", function (data) {
             let style;
             let ea;
             let svg_clone, svg_dom;
@@ -719,7 +719,7 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
                 formData.append("upload" + String(j), instance.fileBox[flatform].files[j]);
               }
 
-              GeneralJs.ajaxForm(formData, "https://home-liaison.serveftp.com:3000/designerBinary").catch(function (err) {
+              GeneralJs.ajaxForm(formData, "https://home-liaison.co.kr:3000/designerBinary").catch(function (err) {
                 alert("사진 전송에 문제가 생겼습니다! 200MB 이하의 파일로 다시 시도해주세요!");
                 window.location.reload();
               });

@@ -2445,7 +2445,7 @@ DashboardJs.prototype.whiteMaker = function (source) {
 
 DashboardJs.prototype.whiteEntireMaker = function (source) {
   const instance = this;
-  const { ea, vh, totalContents, belowHeight, grayBarWidth, contentsBase } = this;
+  const { ea, vh, totalContents, belowHeight, grayBarWidth, contentsBase, whiteEntireFileViewToken } = this;
   const { createNode, colorChip, withOut, equalJson, cleanChildren, findByAttribute, scrollTo, removeByClass } = GeneralJs;
   const whitePopupClassName = "whitePopupClassName";
   let margin;
@@ -2453,6 +2453,7 @@ DashboardJs.prototype.whiteEntireMaker = function (source) {
 
   margin = 30;
 
+  window.localStorage.setItem("whiteEntireFileViewToken", whiteEntireFileViewToken);
   window.history.pushState({ path: "popup", status: source }, '');
   removeByClass(whitePopupClassName);
 
@@ -2461,6 +2462,7 @@ DashboardJs.prototype.whiteEntireMaker = function (source) {
     class: [ whitePopupClassName ],
     event: {
       click: (e) => {
+        window.localStorage.setItem("whiteEntireFileViewToken", "");
         window.history.pushState({ path: "init", status: "" }, '');
         removeByClass(whitePopupClassName);
       },
@@ -2519,6 +2521,9 @@ DashboardJs.prototype.launching = async function () {
   const { ajaxJson, removeByClass, returnGet } = GeneralJs;
   try {
     const getObj = returnGet();
+    let generalState;
+
+    generalState = true;
 
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
@@ -2530,6 +2535,8 @@ DashboardJs.prototype.launching = async function () {
     this.grayBase = null;
     this.contentsBase = null;
     this.baseLoad = () => {}
+
+    this.whiteEntireFileViewToken = "__whiteEntireFileViewToken__";
 
     document.getElementById("grayLeftOpenButton").remove();
     document.getElementById("moveRightArea").style.display = "none";
@@ -2567,8 +2574,16 @@ DashboardJs.prototype.launching = async function () {
     } else if (getObj.mode === "file") {
       if (typeof getObj.path !== "string") {
         instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=general&entire=true&dataonly=true");
+        generalState = false;
       } else {
         instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=general&entire=true&dataonly=true&id=" + getObj.path);
+        generalState = false;
+      }
+    }
+
+    if (generalState) {
+      if (window.localStorage.getItem("whiteEntireFileViewToken") === this.whiteEntireFileViewToken) {
+        instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=general&entire=true&dataonly=true");
       }
     }
 

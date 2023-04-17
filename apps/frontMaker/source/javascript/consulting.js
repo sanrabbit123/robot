@@ -167,7 +167,7 @@ ConsultingJs.prototype.certificationBox = function (name, phone, mother, boo, ca
   }
 
   randomValueAjaxData = "name=" + name + "&phone=" + phone + "&certification=" + randomValue;
-  GeneralJs.ajax(randomValueAjaxData, "https://home-liaison.serveftp.com:3000/certification", function (data) {});
+  GeneralJs.ajax(randomValueAjaxData, "https://home-liaison.co.kr:3000/certification", function (data) {});
 
   let div_back, div_clone, div_clone2, svg_clone;
   let input_back, input_clone;
@@ -549,7 +549,7 @@ ConsultingJs.prototype.submitEvent = function (boo) {
             }
           }
         }
-        GeneralJs.ajaxPromise(ajaxdata, "https://home-liaison.serveftp.com:3000/submit").then(instance.thankyouPage(boo, submitNamePhone)).catch((err) => {
+        GeneralJs.ajaxPromise(ajaxdata, "https://home-liaison.co.kr:3000/submit").then(instance.thankyouPage(boo, submitNamePhone)).catch((err) => {
           window.alert("오류가 발생하였습니다! 다시 시도해주세요 :)");
           window.location.reload();
         });
@@ -1379,7 +1379,7 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
           }
         }
 
-        GeneralJs.ajaxForm(formData, "https://home-liaison.serveftp.com:3000/binary").then(function (data) {
+        GeneralJs.ajaxForm(formData, "https://home-liaison.co.kr:3000/binary").then(function (data) {
           if (data === "success") {
             instance.pendingBox(document.getElementById(toggle ? "consultingbox" : "moconsultingbox"), (toggle ? "desktop" : "mobile"), true, true);
             instance.completeBox(document.getElementById(toggle ? "consultingbox" : "moconsultingbox"), (toggle ? "desktop" : "mobile"));

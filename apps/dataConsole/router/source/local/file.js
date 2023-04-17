@@ -14,7 +14,7 @@ FileJs.staticSvg = {
   jpg: "<svg xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:cc=\"http://creativecommons.org/ns#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:svg=\"http://www.w3.org/2000/svg\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" version=\"1.1\" viewBox=\"0 0 16.933 16.933\" id=\"svg99jpg8794625153945\" sodipodi:docname=\"accessories-camera.svg\" inkscape:version=\"1.0.1 (3bc2e813f5, 2020-09-07)\"><sodipodi:namedview pagecolor=\"#ffffff\" bordercolor=\"#666666\" borderopacity=\"1\" objecttolerance=\"10\" gridtolerance=\"10\" guidetolerance=\"10\" inkscape:pageopacity=\"0\" inkscape:pageshadow=\"2\" inkscape:window-width=\"1920\" inkscape:window-height=\"1004\" id=\"namedview101jpg87946251908033\" showgrid=\"falsejpg87946252922900\" inkscape:zoom=\"4.590\" inkscape:cx=\"19.329\" inkscape:cy=\"34.006\" inkscape:window-x=\"0\" inkscape:window-y=\"0\" inkscape:window-maximized=\"1\" inkscape:current-layer=\"svg99jpg8794625153945\" /><defs id=\"defs57jpg87946252702022\"><filter id=\"filter2761jpg87946252933730\" x=\"-.024\" y=\"-.024\" width=\"1.048\" height=\"1.048\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.145\" id=\"feGaussianBlur2jpg87946252908759\" /></filter><linearGradient id=\"a-9jpg87946252696231\" x1=\"23.487\" x2=\"23.487\" y1=\"15.18\" y2=\"32.913\" gradientTransform=\"matrix(.126 0 0 .126 -27.515 6.792)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#141414\" offset=\"0\" id=\"stop5jpg87946252816346\" /><stop stop-color=\"#30277f\" offset=\"1\" id=\"stop7jpg87946252449833\" /></linearGradient><radialGradient id=\"c-7jpg87946252291257\" cx=\"24.047\" cy=\"23.949\" r=\"2.986\" gradientTransform=\"matrix(.205 -3.753e-8 2.843e-8 .155 -39.607 5.456)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#2839e6\" offset=\"0\" id=\"stop10jpg87946252790129\" /><stop stop-opacity=\"0\" offset=\"1\" id=\"stop12jpg8794625288577\" /></radialGradient><linearGradient id=\"d-6jpg87946252613108\" x1=\"361.36\" x2=\"361.36\" y1=\"616.07\" y2=\"722.79\" gradientTransform=\"matrix(.004 0 0 .004 -25.925 7.125)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#fff\" offset=\"0\" id=\"stop15jpg87946252951103\" /><stop stop-color=\"#fff\" stop-opacity=\"0\" offset=\"1\" id=\"stop17jpg87946252223615\" /></linearGradient><radialGradient id=\"radialGradient123131jpg87946252813855\" cx=\"-24.473\" cy=\"9.834\" r=\"1.140\" gradientTransform=\"matrix(1.420 0 0 1.051 .054 -1.147)\" gradientUnits=\"userSpaceOnUse\" xlink:href=\"#a-9jpg87946252696231\" /><linearGradient id=\"linearGradient123141jpg87946252102307\" x1=\"-24.485\" x2=\"-24.485\" y1=\"8.696\" y2=\"9.750\" gradientTransform=\"translate(-10.196 -.643)\" gradientUnits=\"userSpaceOnUse\" xlink:href=\"#d-6jpg87946252613108\" /><linearGradient id=\"linearGradient123149jpg87946252371692\" x1=\"-24.478\" x2=\"-24.478\" y1=\"11.104\" y2=\"8.491\" gradientTransform=\"translate(-10.229 -.643)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#2d1edc\" offset=\"0\" id=\"stop22jpg87946253642641\" /><stop stop-color=\"#141414\" offset=\"1\" id=\"stop24jpg87946253645013\" /></linearGradient><radialGradient id=\"radialGradient123155jpg87946253513609\" cx=\"-24.473\" cy=\"9.834\" r=\"1.140\" gradientTransform=\"matrix(1.140 0 0 .844 -6.795 .890)\" gradientUnits=\"userSpaceOnUse\" xlink:href=\"#a-9jpg87946252696231\" /><linearGradient id=\"linearGradient123157jpg87946253451772\" x1=\"-24.478\" x2=\"-24.478\" y1=\"11.104\" y2=\"8.491\" gradientTransform=\"matrix(.802 0 0 .802 -15.053 1.295)\" gradientUnits=\"userSpaceOnUse\" xlink:href=\"#a-9jpg87946252696231\" /><radialGradient id=\"radialGradient123159jpg87946253882663\" cx=\"-24.473\" cy=\"9.834\" r=\"1.521\" gradientTransform=\"matrix(.930 0 0 .930 -11.889 .037)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#291dc0\" offset=\"0\" id=\"stop29jpg87946253891914\" /><stop stop-color=\"#1b1b23\" offset=\"1\" id=\"stop31jpg87946253623272\" /></radialGradient><linearGradient id=\"linearGradient123161jpg8794625314232\" x1=\"361.36\" x2=\"361.36\" y1=\"616.07\" y2=\"722.79\" gradientTransform=\"matrix(.004 0 0 .004 -36.122 6.482)\" gradientUnits=\"userSpaceOnUse\" xlink:href=\"#d-6jpg87946252613108\" /><linearGradient id=\"linearGradient123197jpg87946253161742\" x1=\"-36.117\" x2=\"-33.22\" y1=\"10.638\" y2=\"7.740\" gradientUnits=\"userSpaceOnUse\"><stop offset=\"0\" id=\"stop35jpg87946254105673\" /><stop stop-opacity=\"0\" offset=\"1\" id=\"stop37jpg87946254559632\" /></linearGradient><linearGradient id=\"linearGradient952jpg8794625488786\" x1=\"-20.384\" x2=\"-23.272\" y1=\"6.133\" y2=\"15.312\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#232323\" offset=\"0\" id=\"stop40jpg87946254667294\" /><stop stop-color=\"#323296\" offset=\".950\" id=\"stop42jpg8794625441176\" /><stop stop-color=\"#232323\" offset=\"1\" id=\"stop44jpg87946254545545\" /></linearGradient><linearGradient id=\"linearGradient1000jpg87946254536561\" x1=\"-25.122\" x2=\"-15.582\" y1=\"9.342\" y2=\"9.342\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#407fff\" offset=\"0\" id=\"stop47jpg87946254488175\" /><stop stop-color=\"#ff407a\" offset=\"1\" id=\"stop49jpg87946254230164\" /></linearGradient><linearGradient id=\"linearGradient1024jpg87946254712030\" x1=\"1.331\" x2=\"15.65\" y1=\"15.576\" y2=\"1.17\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#dddfe1\" offset=\"0\" id=\"stop52jpg87946254767360\" /><stop stop-color=\"#f3f4f6\" stop-opacity=\".996\" offset=\"1\" id=\"stop54jpg87946255243887\" /></linearGradient><filter color-interpolation-filters=\"sRGB\" height=\"1.048\" width=\"1.048\" y=\"-.024\" x=\"-.024\" id=\"filter2761-3jpg87946255891496\"><feGaussianBlur id=\"feGaussianBlur2-3jpg87946255276205\" stdDeviation=\"0.145\" /></filter><linearGradient gradientUnits=\"userSpaceOnUse\" gradientTransform=\"matrix(3.779 0 0 3.779 -.002 .530)\" y2=\"1.17\" y1=\"15.576\" x2=\"15.65\" x1=\"1.331\" id=\"linearGradient1024-6jpg87946255378083\"><stop id=\"stop5-7jpg8794625522594\" offset=\"0\" stop-color=\"#dddfe1\" /><stop id=\"stop7-5jpg87946255993625\" offset=\"1\" stop-opacity=\".996\" stop-color=\"#f3f4f6\" /></linearGradient><filter inkscape:collect=\"always\" style=\"color-interpolation-filters:sRGB\" id=\"filter1057jpg87946255850172\" x=\"-0.027\" width=\"1.054\" y=\"-0.027\" height=\"1.054\"><feGaussianBlur inkscape:collect=\"always\" stdDeviation=\"0.618\" id=\"feGaussianBlur1059jpg87946255610989\" /></filter><linearGradient inkscape:collect=\"always\" xlink:href=\"#linearGradient1051jpg87946255142870\" id=\"linearGradient1053jpg87946255953875\" x1=\"-127\" y1=\"60\" x2=\"-72\" y2=\"5\" gradientUnits=\"userSpaceOnUse\" gradientTransform=\"matrix(0.264,0,0,0.264,34.792,-0.134)\" /><linearGradient inkscape:collect=\"always\" id=\"linearGradient1051jpg87946255142870\"><stop style=\"stop-color:#dee0e2;stop-opacity:1\" offset=\"0\" id=\"stop1047jpg87946255760567\" /><stop style=\"stop-color:#f1f3f5;stop-opacity:0.996\" offset=\"1\" id=\"stop1049jpg87946255980443\" /></linearGradient></defs><metadata id=\"metadata59jpg87946255381182\"><rdf:RDF><cc:Work rdf:about=\"\"><dc:format>image/svg+xml</dc:format><dc:type rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><rect ry=\"15\" y=\"4.499\" x=\"4.499\" height=\"55\" width=\"55\" id=\"rect1055jpg87946255334738\" style=\"opacity:0.3;fill:#141414;fill-opacity:1;stroke-width:2.744;stroke-linecap:round;filter:url(#filter1057jpg87946255850172)\" transform=\"scale(0.264)\" /><rect style=\"fill:url(#linearGradient1053jpg87946255953875);fill-opacity:1;stroke-width:0.726;stroke-linecap:round\" id=\"rect1045jpg87946255453423\" width=\"14.551\" height=\"14.551\" x=\"1.190\" y=\"1.190\" ry=\"3.968\" /><g transform=\"matrix(1.117 0 0 1.117 31.184 -2.167)\" id=\"g97jpg87946255499086\"><circle cx=\"-20.326\" cy=\"9.389\" r=\"4.561\" fill=\"none\" stroke=\"url(#linearGradient1000jpg87946254536561)\" stroke-dashoffset=\".420\" stroke-width=\".418\" id=\"circle65jpg87946256832075\" /><g transform=\"translate(1.442 .178)\" id=\"g95jpg87946256233349\"><circle cx=\"-21.768\" cy=\"9.210\" r=\"3.720\" fill=\"url(#linearGradient952jpg8794625488786)\" stroke=\"#131313\" stroke-dashoffset=\".420\" stroke-linecap=\"round\" stroke-width=\".105\" id=\"circle67jpg8794625644370\" /><g fill=\"none\" stroke=\"#131313\" stroke-linecap=\"round\" stroke-width=\".105\" id=\"g75jpg87946256835613\"><path d=\"m-21.571 11.054s-1.985 0.908-3.768-0.845\" id=\"path69jpg87946256227924\" /><path d=\"m-19.926 8.472s1.391 1.682 0.158 3.858\" id=\"path71jpg87946256441634\" /><path d=\"m-22.976 7.613s1.265-1.779 3.686-1.151\" id=\"path73jpg87946256353765\" /></g><g transform=\"matrix(1.404 0 0 1.404 26.913 -3.782)\" id=\"g93jpg87946256425848\"><g id=\"g83jpg87946256793115\"><circle cx=\"-34.669\" cy=\"9.191\" r=\"1.415\" fill=\"url(#radialGradient123159jpg87946253882663)\" stroke=\"url(#linearGradient123197jpg87946253161742)\" stroke-width=\".084\" id=\"circle77jpg87946256488132\" /><circle cx=\"-34.702\" cy=\"9.191\" r=\"1.140\" fill=\"url(#radialGradient123131jpg87946252813855)\" stroke=\"url(#linearGradient123149jpg87946252371692)\" stroke-width=\".079\" id=\"circle79jpg87946256383179\" /><circle cx=\"-34.702\" cy=\"9.191\" r=\".916\" fill=\"url(#radialGradient123155jpg87946253513609)\" stroke=\"url(#linearGradient123157jpg87946253451772)\" stroke-width=\".063\" id=\"circle81jpg8794625770244\" /></g><circle cx=\"-34.663\" cy=\"9.185\" r=\".456\" fill-opacity=\".588\" stroke-width=\"1.625\" id=\"circle85jpg87946257304929\" /><circle cx=\"-34.663\" cy=\"9.185\" r=\".378\" fill=\"url(#c-7jpg87946252291257)\" stroke-width=\"2.020\" id=\"circle87jpg87946257613647\" /><ellipse cx=\"-34.682\" cy=\"8.623\" rx=\".717\" ry=\".531\" fill=\"#fafafa\" opacity=\".3\" stroke=\"url(#linearGradient123141jpg87946252102307)\" stroke-width=\".079\" id=\"ellipse89jpg87946257842087\" /><circle cx=\"-34.663\" cy=\"9.185\" r=\".215\" fill=\"url(#linearGradient123161jpg8794625314232)\" opacity=\".15\" stroke-width=\"1.373\" id=\"circle91jpg87946257300219\" /></g></g></g></svg>",
   mp3: "<svg xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:cc=\"http://creativecommons.org/ns#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:svg=\"http://www.w3.org/2000/svg\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" viewBox=\"0 0 64 64\" version=\"1.1\" id=\"svg22mp387946261780274\" sodipodi:docname=\"media-player-banshee.svg\" inkscape:version=\"1.0.2 (e86c870879, 2021-01-15)\"><metadata id=\"metadata28mp387946261506106\"><rdf:RDF><cc:Work rdf:about=\"\"><dc:format>image/svg+xml</dc:format><dc:type rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs id=\"defs26mp387946261734370\"><filter id=\"filter2174mp387946261368411\" x=\"-.159\" y=\"-.094\" width=\"1.319\" height=\"1.189\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.256\" id=\"feGaussianBlur4mp387946261316324\" /></filter><filter id=\"filter2761-36mp387946261178301\" x=\"-.024\" y=\"-.024\" width=\"1.048\" height=\"1.048\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.145\" id=\"feGaussianBlur7mp387946262265545\" /></filter><linearGradient id=\"linearGradient4673-7mp387946262186645\" x1=\"1.257\" x2=\"15.644\" y1=\"15.429\" y2=\"1.108\" gradientTransform=\"matrix(3.779,0,0,3.779,-0.556,-5.879)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#32dcff\" offset=\"0\" id=\"stop10mp387946262306420\" /><stop stop-color=\"#3296ff\" offset=\"1\" id=\"stop12mp387946262209014\" /></linearGradient><filter id=\"filter1057mp387946262183718\" x=\"-.027\" y=\"-.027\" width=\"1.054\" height=\"1.054\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.618\" id=\"feGaussianBlur860mp387946262170178\" /></filter><linearGradient id=\"linearGradient1053mp387946262127967\" x1=\"-127\" x2=\"-72\" y1=\"60\" y2=\"5\" gradientTransform=\"translate(131.5,-0.51)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#2fa678\" offset=\"0\" id=\"stop863mp387946262139988\" /><stop stop-color=\"#14b478\" offset=\"1\" id=\"stop865mp387946262181598\" /></linearGradient></defs><sodipodi:namedview pagecolor=\"#ffffff\" bordercolor=\"#666666\" borderopacity=\"1\" objecttolerance=\"10\" gridtolerance=\"10\" guidetolerance=\"10\" inkscape:pageopacity=\"0\" inkscape:pageshadow=\"2\" inkscape:window-width=\"1920\" inkscape:window-height=\"940\" id=\"namedview24mp387946262939756\" showgrid=\"falsemp387946262230815\" inkscape:zoom=\"5.708\" inkscape:cx=\"-5.655\" inkscape:cy=\"39.070\" inkscape:window-x=\"0\" inkscape:window-y=\"38\" inkscape:window-maximized=\"1\" inkscape:current-layer=\"svg22mp387946261780274\" /><linearGradient id=\"amp387946263341961\"><stop offset=\"0\" stop-color=\"#e3e3e3\" id=\"stop2mp387946263227049\" /><stop offset=\"1\" stop-color=\"#fcf9f9\" id=\"stop4mp387946263410708\" /></linearGradient><linearGradient id=\"bmp387946263831438\" gradientTransform=\"matrix(0.268,0.037,-0.037,0.268,-45.074,-2.483)\" gradientUnits=\"userSpaceOnUse\" x1=\"29.444\" x2=\"29.444\" xlink:href=\"#amp387946263341961\" y1=\"201.732\" y2=\"18.617\" /><linearGradient id=\"cmp387946263209965\" gradientUnits=\"userSpaceOnUse\" x1=\"23.836\" x2=\"23.722\" xlink:href=\"#amp387946263341961\" y1=\"45.779\" y2=\"1.979\" gradientTransform=\"matrix(1.304,0,0,1.304,-71.985,-0.304)\" /><linearGradient id=\"dmp387946263172606\" gradientUnits=\"userSpaceOnUse\" x1=\"23.722\" x2=\"23.609\" y1=\"45.854\" y2=\"1.904\" gradientTransform=\"matrix(1.304,0,0,1.304,-71.985,-0.304)\"><stop offset=\"0\" stop-color=\"#ff9300\" id=\"stop9mp38794626358482\" /><stop offset=\"1\" stop-color=\"#ffd702\" id=\"stop11mp387946263664302\" /></linearGradient><g id=\"g919mp387946263624066\"><rect x=\"4.499\" y=\"4.499\" width=\"55\" height=\"55\" ry=\"15\" fill=\"#141414\" filter=\"url(#filter1057mp387946262183718)\" opacity=\"0.3\" stroke-linecap=\"round\" stroke-width=\"2.744\" id=\"rect896mp387946263596831\" /><rect x=\"4.5\" y=\"4.5\" width=\"55\" height=\"55\" ry=\"15\" fill=\"url(#linearGradient1053mp387946262127967)\" stroke-linecap=\"round\" stroke-width=\"2.744\" id=\"rect898mp387946263369358\" style=\"fill:url(#linearGradient1053mp387946262127967)\" /><g transform=\"matrix(3.779,0,0,3.779,-2.213,2.850)\" id=\"g27mp38794626353700\"><circle cx=\"8.083\" cy=\"9.594\" r=\"2.007\" fill=\"none\" stroke=\"#ffffff\" stroke-dashoffset=\"0.420\" stroke-width=\"1.428\" id=\"circle21mp387946263413001\" /><path transform=\"matrix(0.925,0,0,0.920,0.666,0.219)\" d=\"m 9.377,3.182 v 6.477 h 1.426 V 5.532 c 0,0 0.456,0.222 0.549,0.245 0.093,0.023 1.917,0.724 0.993,2.759 l 0.040,0.023 c 0,0 1.470,-1.818 0.503,-3.208 -0.967,-1.389 -1.712,-1.167 -3.514,-2.171 z\" fill=\"#148c64\" filter=\"url(#filter2174mp387946261368411)\" id=\"path23mp387946263372955\" /><path d=\"m 9.377,3.182 v 6.477 h 1.426 V 5.532 c 0,0 0.456,0.222 0.549,0.245 0.093,0.023 1.917,0.724 0.993,2.759 l 0.040,0.023 c 0,0 1.470,-1.818 0.503,-3.208 -0.967,-1.389 -1.712,-1.167 -3.514,-2.171 z\" fill=\"#ffffff\" id=\"path25mp387946264216124\" /></g><circle cx=\"-1041.019\" cy=\"-1279.3\" r=\"0\" fill=\"#5e4aa6\" id=\"circle884mp387946264503338\" /><circle cx=\"-922.565\" cy=\"-1318.599\" r=\"0\" id=\"circle886mp387946264241481\" style=\"fill:#5e4aa6;stroke-width:1.000\" /><circle cx=\"176.972\" cy=\"-53.108\" r=\"0\" fill-rule=\"evenodd\" id=\"circle888mp387946264447661\" style=\"fill:#5e4aa6;stroke-width:1.000\" /><circle cx=\"-844.063\" cy=\"-1390.109\" r=\"0\" id=\"circle890mp38794626492610\" style=\"fill:#5e4aa6;stroke-width:1.000\" /><circle cx=\"255.471\" cy=\"-124.581\" r=\"0\" fill-rule=\"evenodd\" id=\"circle892mp387946264337706\" style=\"fill:#5e4aa6;stroke-width:1.000\" /></g></svg>",
   mp4: "<svg xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:cc=\"http://creativecommons.org/ns#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:svg=\"http://www.w3.org/2000/svg\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" version=\"1.1\" viewBox=\"0 0 16.933 16.933\" id=\"svg69mp487946274409034\" sodipodi:docname=\"lollypop.svg\" inkscape:version=\"1.0.2 (e86c870879, 2021-01-15)\"><metadata id=\"metadata73mp487946274997202\"><rdf:RDF><cc:Work rdf:about=\"\"><dc:format>image/svg+xml</dc:format><dc:type rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><sodipodi:namedview pagecolor=\"#ffffff\" bordercolor=\"#666666\" borderopacity=\"1\" objecttolerance=\"10\" gridtolerance=\"10\" guidetolerance=\"10\" inkscape:pageopacity=\"0\" inkscape:pageshadow=\"2\" inkscape:window-width=\"1920\" inkscape:window-height=\"935\" id=\"namedview71mp48794627486980\" showgrid=\"falsemp4879462748321\" inkscape:zoom=\"4.281\" inkscape:cx=\"30.202\" inkscape:cy=\"32.703\" inkscape:window-x=\"0\" inkscape:window-y=\"38\" inkscape:window-maximized=\"1\" inkscape:current-layer=\"svg69mp487946274409034\" /><defs id=\"defs45mp487946274613423\"><linearGradient id=\"amp487946274970307\" x2=\"0\" y1=\"47\" y2=\"1\" gradientTransform=\"matrix(.264 0 0 .264 0 284.3)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#fb5164\" offset=\"0\" id=\"stop2mp487946274598884\" /><stop stop-color=\"#ee4e8a\" offset=\"1\" id=\"stop4mp487946274138229\" /></linearGradient><linearGradient id=\"cmp487946274349242\" x1=\"519.68\" x2=\"519.68\" y1=\"2.825\" y2=\"1026.1\" gradientTransform=\"matrix(.016 0 0 .016 -.144 -.144)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#fcc\" offset=\"0\" id=\"stop7mp487946274151040\" /><stop stop-color=\"#faf8f6\" offset=\".5\" id=\"stop9mp487946274375335\" /><stop stop-color=\"#ffe5ef\" offset=\"1\" id=\"stop11mp487946274551256\" /></linearGradient><filter id=\"emp487946274439737\" x=\"-.035\" y=\"-.036\" width=\"1.071\" height=\"1.072\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.754\" id=\"feGaussianBlur14mp487946275317115\" /></filter><linearGradient id=\"gmp487946275897970\" x1=\"8.466\" x2=\"8.466\" y1=\"4.92\" y2=\"12.028\" gradientTransform=\"matrix(1.000 0 0 1.000 -.029 -.818)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#ffcfcf\" offset=\"0\" id=\"stop17mp487946275546754\" /><stop stop-color=\"#faf8f6\" offset=\".5\" id=\"stop19mp487946275623475\" /><stop stop-color=\"#ffecec\" offset=\"1\" id=\"stop21mp487946275354170\" /></linearGradient><linearGradient id=\"fmp487946275429182\" x1=\"8.915\" x2=\"8.915\" y1=\"6.373\" y2=\"10.561\" gradientUnits=\"userSpaceOnUse\" xlink:href=\"#amp487946274970307\" /><filter id=\"imp487946275413979\" x=\"-.068\" y=\"-.053\" width=\"1.136\" height=\"1.107\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.093\" id=\"feGaussianBlur25mp487946275330623\" /></filter><filter id=\"hmp487946275354145\" x=\"-.036\" y=\"-.035\" width=\"1.072\" height=\"1.072\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.106\" id=\"feGaussianBlur28mp487946275170822\" /></filter><linearGradient x1=\"23.683\" x2=\"25.655\" y1=\"-25.544\" y2=\"75.049\" gradientUnits=\"userSpaceOnUse\" id=\"linearGradient37mp487946275292794\"><stop stop-color=\"#111\" offset=\"0\" id=\"stop31mp487946275906151\" /><stop stop-color=\"#4c4c4c\" offset=\".549\" id=\"stop33mp487946275953506\" /><stop stop-color=\"#888\" offset=\"1\" id=\"stop35mp487946276711202\" /></linearGradient><linearGradient id=\"linearGradient862-3mp487946276676982\" x1=\"7.937\" x2=\"7.937\" y1=\"15.081\" y2=\"1.852\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#f1efeb\" offset=\"0\" id=\"stop39mp487946276469177\" /><stop stop-color=\"#fdfcfc\" offset=\"1\" id=\"stop41mp487946276475296\" /></linearGradient><linearGradient id=\"linearGradient917mp487946276493229\" x2=\"0\" y1=\"47\" y2=\"1\" gradientTransform=\"matrix(.264 0 0 .264 0 284.3)\" gradientUnits=\"userSpaceOnUse\" xlink:href=\"#amp487946274970307\" /><linearGradient id=\"linearGradient3764mp48794627681706\" x1=\"1\" x2=\"47\" gradientUnits=\"userSpaceOnUse\" gradientTransform=\"rotate(-90,23.999,24)\"><stop style=\"stop-color:#c73838;stop-opacity:1\" id=\"stop921mp487946276363677\" /><stop offset=\"1\" style=\"stop-color:#cc4848;stop-opacity:1\" id=\"stop923mp487946276159734\" /></linearGradient><linearGradient id=\"linearGradient862-3-3mp487946276260994\" x1=\"7.937\" x2=\"7.937\" y1=\"15.081\" y2=\"1.852\" gradientTransform=\"matrix(3.779,0,0,3.779,-78.812,-0.968)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#f1efeb\" offset=\"0\" id=\"stop972mp487946276379683\" /><stop stop-color=\"#fdfcfc\" offset=\"1\" id=\"stop974mp487946277677526\" /></linearGradient><linearGradient id=\"linearGradient898mp487946277501143\" x1=\"29.969\" x2=\"29.969\" y1=\"18.796\" y2=\"45.449\" gradientTransform=\"matrix(2.142,0,0,2.142,-826.35,-1108.500)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#cf30ac\" offset=\"0\" id=\"stop977mp487946277859938\" /><stop stop-color=\"#ab31f8\" offset=\"1\" id=\"stop979mp487946277344621\" /></linearGradient><filter id=\"filter1022mp487946277256204\" x=\"-.108\" y=\"-.108\" width=\"1.216\" height=\"1.216\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"1.44\" id=\"feGaussianBlur982mp487946277896261\" /></filter><filter id=\"filter2761mp487946277510945\" x=\"-.024\" y=\"-.024\" width=\"1.048\" height=\"1.048\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.145\" id=\"feGaussianBlur2mp487946277795774\" /></filter><linearGradient id=\"linearGradient4673mp487946277860184\" x1=\"1.437\" x2=\"15.644\" y1=\"15.601\" y2=\"1.108\" gradientUnits=\"userSpaceOnUse\" gradientTransform=\"translate(-0.520,-11.199)\"><stop stop-color=\"#ff4637\" offset=\"0\" id=\"stop5mp487946277795003\" /><stop stop-color=\"#fa4b5a\" offset=\".477\" id=\"stop7-3mp487946277988447\" /><stop stop-color=\"#ff3c5f\" offset=\"1\" id=\"stop9-6mp487946277592324\" /></linearGradient><clipPath id=\"clipPath14103mp487946278930085\"><path d=\"m-1 1335h1029v-1334h-1029z\" id=\"path12mp487946278742300\" /></clipPath><filter color-interpolation-filters=\"sRGB\" height=\"1.048\" width=\"1.048\" y=\"-.024\" x=\"-.024\" id=\"filter2761-6753mp487946278482650\"><feGaussianBlur id=\"feGaussianBlur4mp487946278132397\" stdDeviation=\"0.145\" /></filter><linearGradient gradientUnits=\"userSpaceOnUse\" gradientTransform=\"translate(23.198,0.140)\" y2=\"1.108\" y1=\"15.601\" x2=\"15.644\" x1=\"1.437\" id=\"linearGradient4673-56mp487946278353221\"><stop id=\"stop7-2mp487946278929947\" offset=\"0\" stop-color=\"#dc2828\" /><stop id=\"stop9-9mp487946278313547\" offset=\"1\" stop-color=\"#fa4141\" /></linearGradient><filter color-interpolation-filters=\"sRGB\" height=\"1.168\" width=\"1.168\" y=\"-.084\" x=\"-.084\" id=\"filter909mp487946278196024\"><feGaussianBlur id=\"feGaussianBlur12mp487946278468076\" stdDeviation=\"0.277\" /></filter><filter color-interpolation-filters=\"sRGB\" height=\"1.048\" width=\"1.048\" y=\"-.024\" x=\"-.024\" id=\"filter2761-675mp487946278204900\"><feGaussianBlur id=\"feGaussianBlur4-3mp487946279918408\" stdDeviation=\"0.145\" /></filter><linearGradient gradientUnits=\"userSpaceOnUse\" gradientTransform=\"translate(31.146,0.140)\" y2=\"1.108\" y1=\"14.536\" x2=\"15.644\" x1=\"2.249\" id=\"linearGradient4673-562mp48794627985525\"><stop id=\"stop7-9mp487946279532122\" offset=\"0\" stop-color=\"#ff5050\" /><stop id=\"stop9-1mp487946279367076\" offset=\".477\" stop-color=\"#fa4b5a\" /><stop id=\"stop11-6mp487946279595176\" offset=\"1\" stop-color=\"#ff7864\" /></linearGradient><linearGradient gradientUnits=\"userSpaceOnUse\" gradientTransform=\"matrix(0.326,0,0,0.326,0.630,0.953)\" y2=\"4\" y1=\"44\" x2=\"0\" id=\"linearGradient890mp487946279964861\"><stop id=\"stop4-7mp487946279536902\" offset=\"0\" stop-color=\"#FFB900\" /><stop id=\"stop6mp487946279824297\" offset=\"1\" stop-color=\"#ff0\" /></linearGradient><filter color-interpolation-filters=\"sRGB\" height=\"1.048\" width=\"1.048\" y=\"-.024\" x=\"-.024\" id=\"filter2761-67mp487946279498020\"><feGaussianBlur id=\"feGaussianBlur9mp487946279612289\" stdDeviation=\"0.145\" /></filter><linearGradient gradientUnits=\"userSpaceOnUse\" gradientTransform=\"matrix(3.779,0,0,3.779,66.443,0.530)\" y2=\"1.108\" y1=\"15.601\" x2=\"15.644\" x1=\"1.437\" id=\"linearGradient4673-5mp487946279932906\"><stop id=\"stop12-5mp487946279479756\" offset=\"0\" stop-color=\"#dc2828\" /><stop id=\"stop14-3mp487946279834006\" offset=\"1\" stop-color=\"#fa4141\" /></linearGradient><linearGradient gradientTransform=\"scale(0.264)\" gradientUnits=\"userSpaceOnUse\" y2=\"9.67\" y1=\"54.592\" x2=\"34.134\" x1=\"34.134\" id=\"linearGradient915mp487946280112895\"><stop id=\"stop17-5mp487946280100325\" offset=\"0\" stop-color=\"#ffb900\" /><stop id=\"stop19-6mp487946280338658\" offset=\"1\" stop-color=\"#ff0\" /></linearGradient><filter inkscape:collect=\"always\" style=\"color-interpolation-filters:sRGB\" id=\"filter1057mp487946280389727\" x=\"-0.027\" width=\"1.054\" y=\"-0.027\" height=\"1.054\"><feGaussianBlur inkscape:collect=\"always\" stdDeviation=\"0.618\" id=\"feGaussianBlur1059mp487946280859649\" /></filter><linearGradient inkscape:collect=\"always\" xlink:href=\"#linearGradient1051mp48794628099405\" id=\"linearGradient1053mp487946280921284\" x1=\"-127\" y1=\"60\" x2=\"-72\" y2=\"5\" gradientUnits=\"userSpaceOnUse\" gradientTransform=\"translate(131.5,-0.509)\" /><linearGradient inkscape:collect=\"always\" id=\"linearGradient1051mp48794628099405\"><stop style=\"stop-color:#2fa678;stop-opacity:1\" offset=\"0\" id=\"stop1047mp487946280843977\" /><stop style=\"stop-color:#14b478;stop-opacity:1\" offset=\"1\" id=\"stop1049mp487946280143672\" /></linearGradient><linearGradient id=\"linearGradient890-3mp487946280966252\" x2=\"0\" y1=\"44\" y2=\"4\" gradientTransform=\"matrix(1.234,0,0,1.234,3.141,3.604)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#FFB900\" offset=\"0\" id=\"stop861mp487946280604019\" /><stop stop-color=\"#ff0\" offset=\"1\" id=\"stop863mp487946280943405\" /></linearGradient><filter id=\"filter2761-6mp487946280341646\" x=\"-.024\" y=\"-.024\" width=\"1.048\" height=\"1.048\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.145\" id=\"feGaussianBlur866mp487946280119039\" /></filter><filter id=\"filter2761-3mp48794628098067\" x=\"-.024\" y=\"-.024\" width=\"1.048\" height=\"1.048\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.145\" id=\"feGaussianBlur935mp48794628064482\" /></filter><filter id=\"filter909-2mp487946280317646\" x=\"-.084\" y=\"-.084\" width=\"1.168\" height=\"1.168\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.277\" id=\"feGaussianBlur943mp487946280546286\" /></filter></defs><g id=\"g1066mp487946280683649\" transform=\"scale(0.264)\"><rect style=\"opacity:0.3;fill:#141414;fill-opacity:1;stroke-width:2.744;stroke-linecap:round;filter:url(#filter1057mp487946280389727)\" id=\"rect1055mp487946281212974\" width=\"55\" height=\"55\" x=\"4.5\" y=\"4.5\" ry=\"15\" /><rect ry=\"14.999\" y=\"4.500\" x=\"4.500\" height=\"54.999\" width=\"54.999\" id=\"rect1045mp487946281919479\" style=\"fill:url(#linearGradient1053mp487946280921284);fill-opacity:1;stroke-width:2.744;stroke-linecap:round\" /><circle cx=\"-1157.276\" cy=\"-1268.207\" r=\"0\" fill=\"#5e4aa6\" stroke-width=\"1.000\" id=\"circle23mp487946281301687\" /><circle cx=\"-57.752\" cy=\"-2.713\" r=\"0\" fill=\"#5e4aa6\" fill-rule=\"evenodd\" stroke-width=\"1.000\" id=\"circle25mp487946281137045\" /><circle id=\"circle21mp487946281118706\" stroke-width=\"1.000\" fill=\"#5e4aa6\" r=\"0\" cy=\"-1298.893\" cx=\"-1246.518\" /><circle id=\"circle23-1mp487946281541213\" stroke-width=\"1.000\" fill-rule=\"evenodd\" fill=\"#5e4aa6\" r=\"0\" cy=\"-33.397\" cx=\"-146.998\" /><g id=\"g30mp487946281701517\" fill=\"#5e4aa6\" transform=\"translate(-89.242,-31.215)\"><circle id=\"circle24mp487946281562608\" r=\"0\" cy=\"-1241.6\" cx=\"-1248.7\" /><circle id=\"circle26mp487946281926609\" r=\"0\" cy=\"-1301.8\" cx=\"-1140.3\" /><circle id=\"circle28mp487946281487996\" r=\"0\" cy=\"-1246\" cx=\"-1158.1\" /></g><circle id=\"circle36mp487946281296567\" fill=\"#5e4aa6\" r=\"0\" cy=\"-1298.915\" cx=\"-1246.542\" style=\"stroke-width:1\" /><circle id=\"circle38mp487946281163529\" fill-rule=\"evenodd\" fill=\"#5e4aa6\" r=\"0\" cy=\"-33.398\" cx=\"-146.998\" style=\"stroke-width:1\" /><path id=\"rect1316mp487946282966494\" style=\"fill:#ffffff;fill-opacity:1;stroke-width:2\" d=\"M 32,15 A 16,16 0 0 0 16,31 16,16 0 0 0 32,47 16,16 0 0 0 48,31 16,16 0 0 0 32,15 Z m -4.259,6.660 c 0.348,0.018 0.673,0.133 0.976,0.343 l 11.212,7.726 c 0.353,0.248 0.597,0.577 0.734,0.982 0.136,0.405 0.136,0.815 0,1.224 -0.136,0.405 -0.381,0.733 -0.738,0.978 l -11.208,7.726 c -0.405,0.276 -0.846,0.388 -1.332,0.328 -0.485,-0.060 -0.887,-0.273 -1.212,-0.638 -0.325,-0.365 -0.490,-0.793 -0.490,-1.283 V 23.597 c 0,-0.489 0.165,-0.919 0.490,-1.285 0.325,-0.365 0.727,-0.578 1.212,-0.638 0.121,-0.015 0.239,-0.019 0.355,-0.013 z\" /></g></svg>",
-  pdf: "<svg xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:cc=\"http://creativecommons.org/ns#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:svg=\"http://www.w3.org/2000/svg\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" inkscape:version=\"1.0 (4035a4fb49, 2020-05-01)\" sodipodi:docname=\"accessories-document-viewer.svg\" id=\"svg29pdf87946286805348\" viewBox=\"0 0 16.933 16.933\" version=\"1.1\"><sodipodi:namedview inkscape:current-layer=\"svg29pdf87946286805348\" inkscape:window-maximized=\"1\" inkscape:window-y=\"36\" inkscape:window-x=\"0\" inkscape:cy=\"17.081\" inkscape:cx=\"46.354\" inkscape:zoom=\"4.215\" showgrid=\"falsepdf87946286441546\" id=\"namedview31pdf87946286855696\" inkscape:window-height=\"932\" inkscape:window-width=\"1920\" inkscape:pageshadow=\"2\" inkscape:pageopacity=\"0\" guidetolerance=\"10\" gridtolerance=\"10\" objecttolerance=\"10\" borderopacity=\"1\" bordercolor=\"#666666\" pagecolor=\"#ffffff\" /><metadata id=\"metadata2pdf8794628682616\"><rdf:RDF><cc:Work rdf:about=\"\"><dc:format>image/svg+xml</dc:format><dc:type rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs id=\"defs15pdf87946286613754\"><filter color-interpolation-filters=\"sRGB\" height=\"1.048\" width=\"1.048\" y=\"-.024\" x=\"-.024\" id=\"filter2761pdf87946287151391\"><feGaussianBlur id=\"feGaussianBlur4pdf87946287461423\" stdDeviation=\"0.145\" /></filter><linearGradient gradientUnits=\"userSpaceOnUse\" gradientTransform=\"translate(23.198,0.140)\" y2=\"1.108\" y1=\"15.601\" x2=\"15.644\" x1=\"1.437\" id=\"linearGradient4673pdf87946287340224\"><stop id=\"stop7pdf87946287207564\" offset=\"0\" stop-color=\"#dc2828\" /><stop id=\"stop9pdf87946287131537\" offset=\"1\" stop-color=\"#fa4141\" /></linearGradient><filter color-interpolation-filters=\"sRGB\" height=\"1.168\" width=\"1.168\" y=\"-.084\" x=\"-.084\" id=\"filter909pdf87946287783778\"><feGaussianBlur id=\"feGaussianBlur12pdf87946287201444\" stdDeviation=\"0.277\" /></filter><filter color-interpolation-filters=\"sRGB\" height=\"1.048\" width=\"1.048\" y=\"-.024\" x=\"-.024\" id=\"filter2761-675pdf87946287808877\"><feGaussianBlur id=\"feGaussianBlur4-3pdf87946287432082\" stdDeviation=\"0.145\" /></filter><linearGradient gradientUnits=\"userSpaceOnUse\" gradientTransform=\"translate(31.146,0.140)\" y2=\"1.108\" y1=\"14.536\" x2=\"15.644\" x1=\"2.249\" id=\"linearGradient4673-562pdf87946287992326\"><stop id=\"stop7-9pdf87946287947115\" offset=\"0\" stop-color=\"#ff5050\" /><stop id=\"stop9-1pdf87946287892217\" offset=\".477\" stop-color=\"#fa4b5a\" /><stop id=\"stop11pdf87946287750010\" offset=\"1\" stop-color=\"#ff7864\" /></linearGradient><linearGradient gradientUnits=\"userSpaceOnUse\" gradientTransform=\"matrix(0.326,0,0,0.326,0.630,0.953)\" y2=\"4\" y1=\"44\" x2=\"0\" id=\"linearGradient890pdf87946287612286\"><stop id=\"stop4pdf87946287788894\" offset=\"0\" stop-color=\"#FFB900\" /><stop id=\"stop6pdf87946287920574\" offset=\"1\" stop-color=\"#ff0\" /></linearGradient><filter color-interpolation-filters=\"sRGB\" height=\"1.048\" width=\"1.048\" y=\"-.024\" x=\"-.024\" id=\"filter2761-67pdf87946287723386\"><feGaussianBlur id=\"feGaussianBlur9pdf87946287408533\" stdDeviation=\"0.145\" /></filter><linearGradient gradientUnits=\"userSpaceOnUse\" gradientTransform=\"matrix(3.779,0,0,3.779,66.443,0.530)\" y2=\"1.108\" y1=\"15.601\" x2=\"15.644\" x1=\"1.437\" id=\"linearGradient4673-5pdf87946287345459\"><stop id=\"stop12pdf87946287312546\" offset=\"0\" stop-color=\"#dc2828\" /><stop id=\"stop14pdf8794628783231\" offset=\"1\" stop-color=\"#fa4141\" /></linearGradient><linearGradient gradientTransform=\"scale(0.264)\" gradientUnits=\"userSpaceOnUse\" y2=\"9.67\" y1=\"54.592\" x2=\"34.134\" x1=\"34.134\" id=\"linearGradient915pdf87946287805144\"><stop id=\"stop17pdf87946287557556\" offset=\"0\" stop-color=\"#ffb900\" /><stop id=\"stop19pdf87946287241273\" offset=\"1\" stop-color=\"#ff0\" /></linearGradient><filter inkscape:collect=\"always\" style=\"color-interpolation-filters:sRGB\" id=\"filter1057pdf8794628760502\" x=\"-0.027\" width=\"1.054\" y=\"-0.027\" height=\"1.054\"><feGaussianBlur inkscape:collect=\"always\" stdDeviation=\"0.618\" id=\"feGaussianBlur1059pdf87946287808236\" /></filter><linearGradient inkscape:collect=\"always\" xlink:href=\"#linearGradient1051pdf87946287187317\" id=\"linearGradient1053pdf879462873000\" x1=\"-127\" y1=\"60\" x2=\"-72\" y2=\"5\" gradientUnits=\"userSpaceOnUse\" gradientTransform=\"matrix(0.264,0,0,0.264,34.792,-0.134)\" /><linearGradient inkscape:collect=\"always\" id=\"linearGradient1051pdf87946287187317\"><stop style=\"stop-color:#df2a2a;stop-opacity:1\" offset=\"0\" id=\"stop1047pdf87946287646911\" /><stop style=\"stop-color:#f83f3f;stop-opacity:1\" offset=\"1\" id=\"stop1049pdf87946287253725\" /></linearGradient><linearGradient id=\"linearGradient890-3pdf87946287324376\" x2=\"0\" y1=\"44\" y2=\"4\" gradientTransform=\"matrix(1.234,0,0,1.234,3.141,3.604)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#FFB900\" offset=\"0\" id=\"stop861pdf87946287148878\" /><stop stop-color=\"#ff0\" offset=\"1\" id=\"stop863pdf87946287700318\" /></linearGradient><filter id=\"filter2761-6pdf87946287475240\" x=\"-.024\" y=\"-.024\" width=\"1.048\" height=\"1.048\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.145\" id=\"feGaussianBlur866pdf87946287768470\" /></filter><filter id=\"filter2761-3pdf87946287836908\" x=\"-.024\" y=\"-.024\" width=\"1.048\" height=\"1.048\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.145\" id=\"feGaussianBlur935pdf87946287211985\" /></filter><filter id=\"filter909-2pdf87946287505743\" x=\"-.084\" y=\"-.084\" width=\"1.168\" height=\"1.168\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.277\" id=\"feGaussianBlur943pdf87946287110840\" /></filter></defs><circle id=\"circle21pdf87946287589686\" stroke-width=\".264\" fill=\"#5e4aa6\" r=\"0\" cy=\"-335.4\" cx=\"-306.19\" /><circle id=\"circle23pdf87946287550640\" stroke-width=\".264\" fill-rule=\"evenodd\" fill=\"#5e4aa6\" r=\"0\" cy=\"-.577\" cx=\"-15.281\" /><g id=\"g30pdf87946287275526\" fill=\"#5e4aa6\" transform=\"scale(0.264)\"><circle id=\"circle24pdf87946287452757\" r=\"0\" cy=\"-1241.6\" cx=\"-1248.7\" /><circle id=\"circle26pdf8794628759676\" r=\"0\" cy=\"-1301.8\" cx=\"-1140.3\" /><circle id=\"circle28pdf87946287415377\" r=\"0\" cy=\"-1246\" cx=\"-1158.1\" /></g><circle id=\"circle36pdf87946287738313\" fill=\"#5e4aa6\" r=\"0\" cy=\"-335.405\" cx=\"-306.196\" style=\"stroke-width:0.264\" /><circle id=\"circle38pdf87946287593943\" fill-rule=\"evenodd\" fill=\"#5e4aa6\" r=\"0\" cy=\"-0.577\" cx=\"-15.280\" style=\"stroke-width:0.264\" /><rect style=\"opacity:0.3;fill:#141414;fill-opacity:1;stroke-width:2.744;stroke-linecap:round;filter:url(#filter1057pdf8794628760502)\" id=\"rect1055pdf87946287609595\" width=\"55\" height=\"55\" x=\"4.5\" y=\"4.5\" ry=\"15\" transform=\"scale(0.264)\" /><rect ry=\"3.968\" y=\"1.190\" x=\"1.190\" height=\"14.551\" width=\"14.551\" id=\"rect1045pdf87946287264697\" style=\"fill:url(#linearGradient1053pdf879462873000);fill-opacity:1;stroke-width:0.726;stroke-linecap:round\" /><path d=\"m 7.830,4.131 c -0.087,-0.013 -0.172,0.043 -0.264,0.199 -0.146,0.248 -0.213,0.943 -0.093,1.611 0.040,0.228 0.127,0.560 0.245,0.923 -0.093,0.339 -0.197,0.699 -0.311,1.057 -0.449,1.412 -1.415,2.891 -1.924,3.687 -0.321,0.501 -1.096,1.090 -1.161,0.975 -0.064,-0.114 0.153,-0.371 0.425,-0.784 0.270,-0.409 0.963,-0.834 0.963,-0.834 0,0 -0.295,-0.011 -1.053,0.655 -0.757,0.670 -0.528,1.002 -0.347,1.104 0.179,0.104 0.682,0.501 2.391,-2.466 0.624,-1.084 0.986,-2.070 1.197,-2.888 0.215,0.559 0.494,1.124 0.804,1.480 0.180,0.208 0.417,0.407 0.680,0.591 -0.207,0.037 -0.445,0.083 -0.767,0.142 -1.181,0.214 -1.768,0.678 -1.781,0.689 0.009,-0.003 1.382,-0.437 2.842,-0.639 0.573,0.349 1.233,0.617 1.778,0.726 0.850,0.172 1.082,-0.139 1.109,-0.181 -0.033,0.027 -0.143,0.078 -0.494,0.049 -0.282,-0.023 -1.053,-0.241 -1.835,-0.660 1.619,-0.149 2.178,0.014 2.322,0.130 0.144,0.115 0.144,0.243 0.144,0.243 0,0 0.185,-0.179 0.063,-0.360 -0.103,-0.188 -0.261,-0.345 -1.559,-0.305 -0.643,0.019 -0.990,0.041 -1.322,0.085 -0.393,-0.244 -0.772,-0.536 -1.070,-0.890 -0.400,-0.473 -0.645,-1.019 -0.804,-1.556 0.239,-1.151 0.164,-1.864 0.163,-1.872 0,0 -0.121,0.551 -0.308,1.279 -0.107,-0.550 -0.144,-1.057 -0.174,-1.417 -0.065,-0.826 0.304,-0.597 0.356,-0.491 0.084,0.067 0.125,0.294 0.125,0.294 0,0 -0.029,-0.337 -0.176,-0.482 -0.054,-0.054 -0.107,-0.087 -0.159,-0.096 z m -0.998,6.146 c -3.3e-5,1.1e-5 -0.003,0.001 -0.003,0.001 l -0.001,0.002 c 0,0 0.004,-0.003 0.004,-0.003 z\" fill=\"#ffffff\" stroke-width=\"1.092\" id=\"path965pdf87946287254623\" /></svg>",
+  pdf: `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 16.9 16.9" xml:space="preserve"><path style="fill:#DF2A2A;" d="M9.8,1H4.2c-0.5,0-1,0.5-1,1v12.6c0,0.5,0.5,1,1,1h8.6c0.5,0,1-0.5,1-1V5l-2.3-1.8L9.8,1z"/><path style="fill:#F96464;" d="M9.8,1v3c0,0.5,0.5,1,1,1h3L9.8,1z"/><path style="fill:#FFFFFF;" d="M12.0267,10.1839c-0.0878-0.1599-0.2337-0.2798-1.247-0.2488 c-0.5084,0.0151-0.7823,0.0326-1.0427,0.0667C9.3824,9.7812,9.1079,9.5526,8.8978,9.3029C8.6185,8.9728,8.4116,8.5727,8.2653,8.08 c0.1897-0.9151,0.1292-1.4769,0.1286-1.4825C8.393,6.5904,8.3867,6.5863,8.3796,6.5849c-0.0067,0-0.0126,0.0046-0.014,0.0112 c-0.001,0.0042-0.0904,0.4108-0.2277,0.9495C8.0685,7.1678,8.0394,6.816,8.0179,6.5553L8.0123,6.4888 C7.9835,6.1224,8.0644,6.0443,8.1151,6.0304c0.0615-0.0176,0.134,0.0412,0.1518,0.0772c0.001,0.002,0.0022,0.0036,0.0039,0.0049 c0.0616,0.0491,0.0935,0.2222,0.0938,0.2239C8.366,6.344,8.3721,6.3494,8.3807,6.348c0.0075-0.001,0.013-0.0077,0.0123-0.0154 c-0.001-0.011-0.0247-0.2733-0.1436-0.3903c-0.0463-0.0464-0.09-0.0725-0.1336-0.08c-0.0027-0.0006-0.005-0.0001-0.0074,0.0007 L8.108,5.8633C8.0307,5.8543,7.9603,5.9063,7.8884,6.0282c-0.1128,0.1916-0.1737,0.7375-0.0755,1.285 c0.0326,0.1852,0.1029,0.4505,0.193,0.7284c-0.0841,0.307-0.1642,0.5791-0.2449,0.832c-0.3409,1.0727-1.0496,2.1786-1.473,2.8394 l-0.0482,0.0752c-0.2397,0.3743-0.766,0.7769-0.8816,0.7769c-0.0112,0.0014-0.0122-0.0034-0.0129-0.0042 c-0.0349-0.0623,0.0637-0.2063,0.2003-0.4051c0.0418-0.0609,0.0876-0.1278,0.1356-0.2007c0.2095-0.3173,0.7523-0.6522,0.7579-0.6556 c0.0053-0.0034,0.0078-0.0098,0.0063-0.0159c-0.0015-0.0062-0.007-0.0103-0.0133-0.0106c-0.0003,0-0.0008,0-0.0015,0 c-0.0231,0-0.2626,0.0131-0.8419,0.5219c-0.2983,0.2639-0.4396,0.4915-0.42,0.6765c0.014,0.1317,0.1079,0.1979,0.1476,0.2203 l0.0105,0.0062c0.0376,0.0226,0.0943,0.0562,0.1785,0.0562c0.0274,0,0.0579-0.0034,0.0914-0.0123 c0.3715-0.097,0.9204-0.7724,1.6316-2.0069C7.6514,10,7.9667,9.2444,8.166,8.4882c0.1398,0.357,0.3569,0.8289,0.623,1.1344 c0.1278,0.1477,0.3002,0.2991,0.5128,0.4504c-0.0774,0.014-0.1606,0.0296-0.2538,0.0471c-0.0948,0.0178-0.1999,0.0373-0.3195,0.0593 c-0.9456,0.1714-1.412,0.5446-1.4165,0.5485c-0.0017,0.0014-0.0031,0.0031-0.0039,0.005c-0.0015,0.0017-0.0031,0.0036-0.0039,0.005 c-0.0035,0.0059-0.0022,0.0134,0.0029,0.0182c0.005,0.0042,0.013,0.005,0.0182,0.0003l0.0032-0.0025 c0.0013-0.0008,0.0022-0.002,0.0031-0.0034c0.0959-0.0299,1.1342-0.3494,2.236-0.5026c0.4495,0.2731,0.9754,0.4875,1.4077,0.5736 c0.6697,0.1353,0.861-0.1009,0.8926-0.1493c0.0038-0.0059,0.0028-0.0137-0.0025-0.0185c-0.0052-0.005-0.0131-0.0045-0.0186-0.0006 c-0.0226,0.0184-0.105,0.059-0.3809,0.0355c-0.2206-0.0179-0.8132-0.1884-1.4041-0.4982c1.3786-0.1227,1.7102,0.0485,1.7795,0.1043 c0.1067,0.085,0.1086,0.1803,0.1086,0.1812c0,0.0059,0.0035,0.0109,0.0087,0.0131c0.0053,0.0022,0.0116,0.0008,0.0155-0.0028 C11.9757,10.4846,12.128,10.3345,12.0267,10.1839z"/></svg>`,
   png: "<svg version=\"1.1\" viewBox=\"0 0 16.933 16.933\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:cc=\"http://creativecommons.org/ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><defs><filter id=\"filter1057-5png87946292800313\" x=\"-.027\" y=\"-.027\" width=\"1.054\" height=\"1.054\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.618\"/></filter><linearGradient id=\"linearGradient1053-6png8794629275840\" x1=\"-127\" x2=\"-72\" y1=\"60\" y2=\"5\" gradientTransform=\"matrix(.264 0 0 .264 39.366 -.238)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#dee0e2\" offset=\"0\"/><stop stop-color=\"#f1f3f5\" stop-opacity=\".996\" offset=\"1\"/></linearGradient><linearGradient id=\"linearGradient1250-3png87946292355863\" x1=\"4.762\" x2=\"4.762\" y1=\"12.435\" y2=\"3.704\" gradientTransform=\"matrix(0 .868 -.868 0 20.424 6.974)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#db2f2f\" offset=\"0\"/><stop stop-color=\"#e54243\" offset=\"1\"/></linearGradient><linearGradient id=\"linearGradient1242-5png87946292545712\" x1=\"4.762\" x2=\"4.762\" y1=\"12.435\" y2=\"3.704\" gradientTransform=\"matrix(.434 .752 -.752 .434 17.086 2.446)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#f36d01\" offset=\"0\"/><stop stop-color=\"#f69901\" offset=\"1\"/></linearGradient><linearGradient id=\"linearGradient1234-6png87946292250976\" x1=\"4.762\" x2=\"4.762\" y1=\"12.171\" y2=\"3.704\" gradientTransform=\"matrix(.752 .434 -.434 .752 11.745 .299)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#fcaa00\" offset=\"0\"/><stop stop-color=\"#fdc500\" offset=\"1\"/></linearGradient><linearGradient id=\"linearGradient1226-1png87946292948609\" x1=\"4.762\" x2=\"4.762\" y1=\"12.725\" y2=\"3.968\" gradientTransform=\"matrix(.868 0 0 .868 6.116 .996)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#2fa678\" offset=\"0\"/><stop stop-color=\"#14b478\" offset=\"1\"/></linearGradient></defs><metadata><rdf:RDF><cc:Work rdf:about=\"\"><dc:format>image/svg+xml</dc:format><dc:type rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\"/><dc:title/></cc:Work></rdf:RDF></metadata><g transform=\"translate(-4.573 .103)\" stroke-linecap=\"round\"><rect transform=\"matrix(.264 0 0 .264 4.573 -.103)\" x=\"4.5\" y=\"4.5\" width=\"55\" height=\"55\" ry=\"15\" fill=\"#141414\" filter=\"url(#filter1057-5png87946292800313)\" opacity=\".3\" stroke-width=\"2.744\"/><rect x=\"5.764\" y=\"1.086\" width=\"14.552\" height=\"14.552\" ry=\"3.968\" fill=\"url(#linearGradient1053-6png8794629275840)\" stroke-width=\".726\"/><g stroke=\"#7f7f7f\" stroke-linejoin=\"round\" stroke-opacity=\".2\" stroke-width=\".045\"><path d=\"m17.665 11.112c0 1.019-0.820 1.839-1.839 1.839h-5.517c-1.019 0-1.839-0.820-1.839-1.839 0-1.018 0.820-1.839 1.839-1.839h5.517c1.019 0 1.839 0.820 1.839 1.839z\" fill=\"url(#linearGradient1250-3png87946292355863)\"/><path d=\"m16.766 7.409c0.509 0.882 0.209 2.003-0.673 2.512l-4.778 2.758c-0.882 0.509-2.003 0.209-2.512-0.673-0.509-0.882-0.209-2.003 0.673-2.512l4.778-2.758c0.882-0.509 2.003-0.209 2.512 0.673z\" fill=\"url(#linearGradient1242-5png87946292545712)\"/><path d=\"m13.95 4.757c0.882 0.509 1.182 1.63 0.673 2.512l-2.758 4.778c-0.509 0.882-1.63 1.182-2.512 0.673-0.882-0.509-1.182-1.630-0.673-2.512l2.758-4.778c0.509-0.882 1.63-1.182 2.512-0.673z\" fill=\"url(#linearGradient1234-6png87946292250976)\"/><path d=\"m10.255 3.755c1.019 0 1.839 0.820 1.839 1.839v5.517c0 1.019-0.820 1.839-1.839 1.839-1.018 0-1.839-0.820-1.839-1.839v-5.517c0-1.019 0.820-1.839 1.839-1.839z\" fill=\"url(#linearGradient1226-1png87946292948609)\"/></g><circle cx=\"10.255\" cy=\"11.059\" r=\"1.322\" fill=\"#148c64\" stroke-width=\"1.202\"/><circle cx=\"10.255\" cy=\"11.059\" r=\".661\" fill=\"#fff\" stroke-width=\".601\"/></g></svg>",
   powerpoint: "<svg version=\"1.1\" viewBox=\"0 0 64 64\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:cc=\"http://creativecommons.org/ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><metadata><rdf:RDF><cc:Work rdf:about=\"\"><dc:format>image/svg+xml</dc:format><dc:type rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\"/><dc:title/></cc:Work></rdf:RDF></metadata><defs><linearGradient id=\"linearGradient1030powerpoint87946297916862\" x1=\"78.5\" x2=\"106.56\" y1=\"55.812\" y2=\"27.75\" gradientTransform=\"matrix(1.048,0,0,1.048,-50.005,2.253)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#ff5a3c\" offset=\"0\"/><stop stop-color=\"#be3c23\" offset=\"1\"/></linearGradient><linearGradient id=\"linearGradient1017powerpoint87946297877188\" x1=\"8.933\" x2=\"8.933\" y1=\"1.116\" y2=\"15.677\" gradientTransform=\"matrix(4.134 0 0 4.134 -3.010 -2.246)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#e16e46\" offset=\"0\"/><stop stop-color=\"#e6653c\" offset=\".515\"/><stop stop-color=\"#c84b28\" offset=\".515\"/><stop stop-color=\"#d23c23\" offset=\"1\"/></linearGradient><filter id=\"filter1057powerpoint8794629727853\" x=\"-.027\" y=\"-.027\" width=\"1.054\" height=\"1.054\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"0.618\"/></filter><linearGradient id=\"linearGradient1053powerpoint87946297719455\" x1=\"-97.573\" x2=\"-97.573\" y1=\"60.022\" y2=\"5.083\" gradientTransform=\"translate(131.5 -.51)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#d23c23\" offset=\"0\"/><stop stop-color=\"#c84b28\" offset=\".476\"/><stop stop-color=\"#ff9b69\" offset=\".476\"/><stop stop-color=\"#f5a078\" offset=\"1\"/></linearGradient><linearGradient id=\"linearGradient1055powerpoint87946297734134\" x1=\"35.572\" x2=\"35.572\" y1=\"9.679\" y2=\"-45.321\" gradientTransform=\"matrix(1.107 0 0 1.107 -3.231 51.91)\" gradientUnits=\"userSpaceOnUse\"><stop offset=\"0\"/><stop stop-opacity=\"0\" offset=\"1\"/></linearGradient></defs><rect x=\"4.5\" y=\"4.5\" width=\"55\" height=\"55\" ry=\"15\" fill=\"#141414\" filter=\"url(#filter1057powerpoint8794629727853)\" opacity=\".3\" stroke-linecap=\"round\" stroke-width=\"2.744\"/><rect x=\"4.5\" y=\"4.5\" width=\"55\" height=\"55\" ry=\"15\" fill=\"url(#linearGradient1053powerpoint87946297719455)\" stroke-linecap=\"round\" stroke-width=\"2.744\"/><path d=\"m19.5 4.5c-8.31 0-15 6.69-15 15v25c0 8.31 6.69 15 15 15h25c8.31 0 15-6.69 15-15v-25c0-8.31-6.69-15-15-15h-25z\" fill=\"url(#linearGradient1055powerpoint87946297734134)\" fill-rule=\"evenodd\" opacity=\".15\"/><path d=\"m19.5 4.5c-8.31 0-15 6.69-15 15v25c0 8.31 6.69 15 15 15h12.504v-55h-12.504z\" fill=\"url(#linearGradient1017powerpoint87946297877188)\"/><g transform=\"translate(-64.618)\" fill=\"#5e4aa6\"><g transform=\"translate(-80.134,-57.985)\" image-rendering=\"optimizeSpeed\"><circle cx=\"-1248.7\" cy=\"-1241.6\" r=\"0\"/><circle cx=\"-149.15\" cy=\"23.855\" r=\"0\" fill-rule=\"evenodd\"/><circle cx=\"-1248.7\" cy=\"-1241.6\" r=\"0\"/><circle cx=\"-149.15\" cy=\"23.855\" r=\"0\" fill-rule=\"evenodd\"/></g><circle cx=\"-1248.7\" cy=\"-1241.6\" r=\"0\"/><circle cx=\"-149.15\" cy=\"23.855\" r=\"0\" fill-rule=\"evenodd\"/><g transform=\"matrix(3.779,0,0,3.779,5.841e-4,-1.717e-4)\" stroke-width=\".264\"><g transform=\"translate(-.027 .006)\"><circle cx=\"-330.35\" cy=\"-328.38\" r=\"0\"/><circle cx=\"-312.11\" cy=\"-326.25\" r=\"0\"/><circle cx=\"-306.02\" cy=\"-333.07\" r=\"0\"/><circle cx=\"-308.84\" cy=\"-326.01\" r=\"0\"/><circle cx=\"-330.35\" cy=\"-328.38\" r=\"0\"/><circle cx=\"-312.11\" cy=\"-326.25\" r=\"0\"/><circle cx=\"-306.02\" cy=\"-333.07\" r=\"0\"/><circle cx=\"-308.84\" cy=\"-326.01\" r=\"0\"/></g><g transform=\"translate(-.027 .006)\"><circle cx=\"-330.35\" cy=\"-328.38\" r=\"0\"/><circle cx=\"-312.11\" cy=\"-326.25\" r=\"0\"/><circle cx=\"-306.02\" cy=\"-333.07\" r=\"0\"/><circle cx=\"-308.84\" cy=\"-326.01\" r=\"0\"/></g></g><g transform=\"translate(-79.199,-30.995)\"><circle cx=\"-1248.7\" cy=\"-1241.6\" r=\"0\"/><circle cx=\"-1140.3\" cy=\"-1301.8\" r=\"0\"/><circle cx=\"-1158.1\" cy=\"-1246\" r=\"0\"/></g><circle cx=\"-1236.5\" cy=\"-1298.7\" r=\"0\"/><circle cx=\"-136.95\" cy=\"-33.178\" r=\"0\" fill-rule=\"evenodd\"/></g><circle cx=\"47.219\" cy=\"45.719\" r=\"15.406\" fill=\"url(#linearGradient1030powerpoint87946297916862)\" fill-rule=\"evenodd\" style=\"paint-order:stroke fill markers\"/><path d=\"m40.326 35.207-0.106 21.025h5.545v-6.487c7.595 0.015 11.455-0.974 11.455-7.215 0-6.907-3.777-7.347-11.455-7.322zm7.455 4.439c1.842 0.043 4.299 0.554 4.299 2.963 0 3.853-6.290 2.846-6.290 2.846v-5.695s0.885-0.139 1.990-0.113z\" fill=\"#fff\" stroke-width=\"1.051\"/></svg>",
   txt: "<svg xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:cc=\"http://creativecommons.org/ns#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:svg=\"http://www.w3.org/2000/svg\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" viewBox=\"0 0 16.933 16.933\" version=\"1.1\" id=\"svg8txt87946301732069\" inkscape:version=\"1.0.2 (e86c870879, 2021-01-15)\" sodipodi:docname=\"accessories-text-editor.svg\"><defs id=\"defs2txt87946301122193\"><filter id=\"filter2076txt87946301574579\" x=\"-0.048\" y=\"-0.048\" width=\"1.096\" height=\"1.096\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"1.1\" id=\"feGaussianBlur161txt87946301702523\" /></filter><linearGradient id=\"linearGradient2070txt87946302753112\" x1=\"145\" x2=\"200\" y1=\"59\" y2=\"4\" gradientTransform=\"matrix(0.264,0,0,0.264,-33.450,3.335)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#ffc841\" offset=\"0\" id=\"stop154txt87946302377278\" /><stop stop-color=\"#ffbe37\" offset=\".492\" id=\"stop156txt87946302738014\" /><stop stop-color=\"#ffc841\" offset=\"1\" id=\"stop158txt87946302550622\" /></linearGradient><filter id=\"filter1139txt87946302483617\" x=\"-0.249\" y=\"-0.186\" width=\"1.498\" height=\"1.372\" color-interpolation-filters=\"sRGB\"><feGaussianBlur id=\"feGaussianBlur1141txt87946302438056\" stdDeviation=\"0.776\" /></filter><filter id=\"filter1143txt87946302748203\" x=\"-0.239\" y=\"-0.186\" width=\"1.479\" height=\"1.372\" color-interpolation-filters=\"sRGB\"><feGaussianBlur id=\"feGaussianBlur1145txt87946302903046\" stdDeviation=\"0.776\" /></filter><filter id=\"filter1147txt87946302998038\" x=\"-0.223\" y=\"-0.186\" width=\"1.446\" height=\"1.372\" color-interpolation-filters=\"sRGB\"><feGaussianBlur id=\"feGaussianBlur1149txt87946302727147\" stdDeviation=\"0.776\" /></filter><filter id=\"filter2076-3txt87946303466560\" x=\"-0.048\" y=\"-0.048\" width=\"1.096\" height=\"1.096\" color-interpolation-filters=\"sRGB\"><feGaussianBlur stdDeviation=\"1.1\" id=\"feGaussianBlur1041txt87946303100134\" /></filter><linearGradient id=\"linearGradient2070-6txt87946303455883\" x1=\"145\" x2=\"200\" y1=\"59\" y2=\"4\" gradientTransform=\"matrix(0.264,0,0,0.264,-35.104,0.973)\" gradientUnits=\"userSpaceOnUse\"><stop stop-color=\"#59af89\" offset=\"0\" id=\"stop1034txt87946303840555\" /><stop stop-color=\"#2fa678\" offset=\".492\" id=\"stop1036txt87946303322244\" /><stop stop-color=\"#14b478\" offset=\"1\" id=\"stop1038txt87946303237713\" /></linearGradient><filter color-interpolation-filters=\"sRGB\" height=\"1.168\" width=\"1.168\" y=\"-0.084\" x=\"-0.084\" id=\"filter1091txt87946303271989\"><feGaussianBlur id=\"feGaussianBlur22txt87946303288423\" stdDeviation=\"0.302\" /></filter><filter color-interpolation-filters=\"sRGB\" height=\"1.168\" width=\"1.168\" y=\"-0.084\" x=\"-0.084\" id=\"filter1192txt87946303784272\"><feGaussianBlur id=\"feGaussianBlur1190txt87946303168979\" stdDeviation=\"0.302\" /></filter><linearGradient gradientUnits=\"userSpaceOnUse\" y2=\"-13.703\" y1=\"-5.594\" x2=\"16.465\" x1=\"8.585\" id=\"linearGradient1063txt87946304698927\" gradientTransform=\"matrix(1.000,0,0,1.000,-2.400,18.304)\"><stop id=\"stop12txt87946304991540\" offset=\"0\" stop-color=\"#f5f5f5\" /><stop id=\"stop14txt87946304396\" offset=\"1\" stop-color=\"#fff\" /></linearGradient><linearGradient gradientUnits=\"userSpaceOnUse\" y2=\"-11.992\" y1=\"-5.355\" x2=\"15.926\" x1=\"8.922\" id=\"linearGradient1071txt87946304574684\" gradientTransform=\"matrix(1.000,0,0,1.000,-2.400,18.304)\"><stop id=\"stop17txt8794630435896\" offset=\"0\" stop-color=\"#fff\" /><stop id=\"stop19txt87946304739143\" offset=\"1\" stop-color=\"#fff\" /></linearGradient></defs><sodipodi:namedview id=\"basetxt87946304428212\" pagecolor=\"#ffffff\" bordercolor=\"#666666\" borderopacity=\"1.0\" inkscape:pageopacity=\"0.0\" inkscape:pageshadow=\"2\" inkscape:zoom=\"5.6\" inkscape:cx=\"25.200\" inkscape:cy=\"19.236\" inkscape:document-units=\"mm\" inkscape:current-layer=\"layer1txt87946304645721\" inkscape:document-rotation=\"0\" showgrid=\"falsetxt87946304128299\" units=\"px\" inkscape:window-width=\"1920\" inkscape:window-height=\"992\" inkscape:window-x=\"0\" inkscape:window-y=\"0\" inkscape:window-maximized=\"1\" /><metadata id=\"metadata5txt87946304864260\"><rdf:RDF><cc:Work rdf:about=\"\"><dc:format>image/svg+xml</dc:format><dc:type rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><g inkscape:label=\" 1\" inkscape:groupmode=\"layer\" id=\"layer1txt87946304645721\"><g id=\"g7475txt87946305776472\" transform=\"translate(-2.069,-0.840)\"><rect transform=\"matrix(0.264,0,0,0.264,2.069,0.840)\" id=\"rect1050txt87946305308978\" opacity=\"0.3\" filter=\"url(#filter2076txt87946301574579)\" ry=\"13.002\" rx=\"13.002\" height=\"55\" width=\"55\" y=\"4.5\" x=\"4.5\" style=\"filter:url(#filter2076-3txt87946303466560)\" /><rect id=\"rect1052txt87946305528170\" fill=\"url(#linearGradient2070txt87946302753112)\" ry=\"3.440\" rx=\"3.440\" height=\"14.552\" width=\"14.552\" y=\"2.031\" x=\"3.260\" style=\"fill:url(#linearGradient2070-6txt87946303455883);stroke-width:0.264\" /><path id=\"path33txt87946305200803\" style=\"fill:#148c64;paint-order:normal\" stroke-width=\"0.798\" opacity=\"0.6\" d=\"m 4.708,7.710 c -0.007,0.039 -0.012,0.081 -0.019,0.121 H 16.385 c -0.006,-0.040 -0.011,-0.082 -0.020,-0.121 z\" /><path id=\"path35txt87946305646606\" style=\"fill:#148c64;paint-order:normal\" stroke-width=\"0.784\" opacity=\"0.6\" d=\"m 4.900,5.068 c 0.006,0.040 0.013,0.081 0.020,0.121 H 16.154 c 0.007,-0.043 0.013,-0.078 0.019,-0.121 z\" /><path id=\"path37txt8794630546865\" style=\"fill:#148c64;paint-order:normal\" stroke-width=\"0.798\" opacity=\"0.6\" d=\"m 4.708,10.353 c -0.007,0.039 -0.012,0.081 -0.019,0.121 H 16.385 c -0.006,-0.040 -0.011,-0.082 -0.020,-0.121 z\" /><path id=\"path39txt87946305381504\" style=\"fill:#148c64;paint-order:normal\" stroke-width=\"0.798\" opacity=\"0.6\" d=\"m 4.708,12.995 c -0.007,0.039 -0.012,0.081 -0.019,0.121 H 16.385 c -0.006,-0.040 -0.011,-0.082 -0.020,-0.121 z\" /><path id=\"path43txt87946305204701\" d=\"m 8.814,-5.537 c 0,0 -0.192,-0.130 -0.192,-0.197 0,-0.067 0.528,-1.910 0.585,-2.012 0.057,-0.101 6.102,-6.102 6.102,-6.102 0,0 0.276,-0.217 0.446,-0.082 0.170,0.134 0.744,0.744 0.744,0.744 z\" style=\"opacity:0.5;fill:#148c64;filter:url(#filter1091txt87946303271989)\" transform=\"matrix(0.988,0,0,0.951,-2.180,18.065)\" /><path id=\"path45txt87946305490808\" d=\"m 8.814,-5.537 c 0,0 0.130,0.192 0.197,0.192 0.067,0 1.910,-0.528 2.012,-0.585 0.101,-0.057 6.102,-6.102 6.102,-6.102 0,0 0.217,-0.276 0.082,-0.446 -0.134,-0.170 -0.744,-0.744 -0.744,-0.744 z\" style=\"opacity:0.5;fill:#148c64;filter:url(#filter1091txt87946303271989)\" transform=\"matrix(0.988,0,0,0.951,-2.180,18.065)\" /><path id=\"path49txt87946305406911\" fill=\"url(#linearGradient1063txt87946304698927)\" d=\"m 6.413,12.767 c 0,0 -0.192,-0.130 -0.192,-0.197 0,-0.067 0.528,-1.910 0.585,-2.012 0.057,-0.101 6.102,-6.102 6.102,-6.102 0,0 0.276,-0.217 0.446,-0.082 0.170,0.134 0.744,0.744 0.744,0.744 z\" style=\"fill:url(#linearGradient1063txt87946304698927);stroke-width:1.000\" /><path id=\"path51txt87946305123538\" fill=\"url(#linearGradient1071txt87946304574684)\" d=\"m 6.413,12.767 c 0,0 0.130,0.192 0.197,0.192 0.067,0 1.910,-0.528 2.012,-0.585 0.101,-0.057 6.102,-6.102 6.102,-6.102 0,0 0.217,-0.276 0.082,-0.446 C 14.674,5.654 14.064,5.081 14.064,5.081 Z\" style=\"fill:url(#linearGradient1071txt87946304574684);stroke-width:1.000\" /></g></g></svg>",
@@ -36,8 +36,200 @@ FileJs.prototype.absoluteParsing = function (str) {
     throw new Error("invaild input");
   }
   const instance = this;
-  str = str.replace(/__samba__/gi, S3HOST);
+  str = str.split("/").map((s) => { return window.encodeURIComponent(s) }).join("/").replace(new RegExp("^" + instance.rootToken), S3HOST);
   return str;
+}
+
+FileJs.prototype.imageViewing = function (images, convertMode = true) {
+  const instance = this;
+  const { ea, totalContents } = this;
+  const { createNode, withOut, colorChip, equalJson, downloadFile, removeByClass, sleep } = GeneralJs;
+  const className = "photoSelectedTarget";
+  const zIndex = 3;
+  return async function (e) {
+    e.stopPropagation();
+    try {
+      let img, height, imgBox;
+      let title, titleSize, bottom;
+      let titleBox;
+      let leftArrow, rightArrow;
+      let leftArrowBox, rightArrowBox;
+      let arrowHeight;
+      let arrowMargin;
+      let index, src;
+      let convertEvent;
+      let length;
+      let totalImages;
+  
+      totalImages = equalJson(JSON.stringify(images));
+  
+      if (convertMode) {
+        src = this.getAttribute("src");
+        length = Number(this.getAttribute("length"));
+        index = Number(this.getAttribute("index"));
+      } else {
+        src = totalImages[0].image;
+      }
+  
+      convertEvent = () => {};
+  
+      height = 90;
+      titleSize = 2;
+      bottom = 6.6;
+      arrowHeight = 1.7;
+      arrowMargin = 78;
+  
+      createNode({
+        mother: totalContents,
+        class: [ className ],
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              removeByClass(className);
+            }
+          }
+        ],
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: colorChip.darkDarkShadow,
+          zIndex: String(zIndex),
+          animation: "justfadeineight 0.2s ease forwards",
+        }
+      });
+  
+      img = createNode({
+        mother: totalContents,
+        class: [ className ],
+        mode: "img",
+        attribute: [
+          { src },
+          { direction: "right" }
+        ],
+        style: {
+          opacity: String(0),
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          height: String(height) + '%',
+          width: "auto",
+          zIndex: String(zIndex),
+          borderRadius: String(3) + "px",
+          transition: "all 0s ease",
+        }
+      });
+      imgBox = img.getBoundingClientRect();
+      while (imgBox.width === 0) {
+        await sleep(100);
+        imgBox = img.getBoundingClientRect();
+      }
+      img.style.top = withOut(50, imgBox.height / 2, ea);
+      img.style.left = withOut(50, imgBox.width / 2, ea);
+      img.style.opacity = String(1);
+  
+      if (convertMode) {
+        leftArrow = createNode({
+          mother: totalContents,
+          events: [
+            {
+              type: [ "dblclick", "selectstart" ],
+              event: (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+              }
+            }
+          ],
+          attribute: [
+            { direction: "left" }
+          ],
+          class: [ className ],
+          mode: "svg",
+          source: instance.mother.returnArrow("left", colorChip.whiteBlack),
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            height: String(arrowHeight) + "vh",
+            zIndex: String(zIndex),
+            transition: "all 0s ease",
+            animation: "fadeuplite 0.2s ease forwards",
+            cursor: "pointer"
+          }
+        });
+        leftArrowBox = leftArrow.getBoundingClientRect();
+        leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
+        leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+    
+        rightArrow = createNode({
+          mother: totalContents,
+          events: [
+            {
+              type: [ "dblclick", "selectstart" ],
+              event: (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+              }
+            }
+          ],
+          attribute: [
+            { direction: "right" }
+          ],
+          class: [ className ],
+          mode: "svg",
+          source: instance.mother.returnArrow("right", colorChip.whiteBlack),
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            height: String(arrowHeight) + "vh",
+            zIndex: String(zIndex),
+            transition: "all 0s ease",
+            animation: "fadeuplite 0.2s ease forwards",
+            cursor: "pointer"
+          }
+        });
+        rightArrowBox = rightArrow.getBoundingClientRect();
+        rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
+        rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+    
+        convertEvent = function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          const direction = this.getAttribute("direction");
+          let targetIndex, targetImage;
+          if (direction === "left") {
+            targetIndex = index - 1;
+            if (totalImages[targetIndex] === undefined) {
+              targetIndex = length - 1;
+            }
+          } else {
+            targetIndex = index + 1;
+            if (totalImages[targetIndex] === undefined) {
+              targetIndex = 0;
+            }
+          }
+          targetImage = totalImages[targetIndex];
+          img.setAttribute("src", targetImage.image);
+          imgBox = img.getBoundingClientRect();
+          img.style.left = withOut(50, imgBox.width / 2, ea);
+          leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+          rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+    
+          index = targetIndex;
+          src = targetImage.image;
+        }
+        leftArrow.addEventListener("click", convertEvent);
+        rightArrow.addEventListener("click", convertEvent);
+        img.addEventListener("click", convertEvent);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 FileJs.prototype.baseMaker = function () {
@@ -167,17 +359,26 @@ FileJs.prototype.baseMaker = function () {
           const targets = document.querySelectorAll('.' + contextmenuClassName);
           let thisDom;
           let absolute;
-          let fileContents;
+          let id, fileContents, loading;
           if (selected.length === 1) {
             [ thisDom ] = selected;
             absolute = thisDom.getAttribute("absolute")
             if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute)) {
               fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
               blankHref(JSON.parse(fileContents.contents).url);
+            } else if (/drawio$/.test(absolute)) {
+              loading = instance.mother.grayLoading();
+              ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+              fileContents = await ajaxJson({ name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/findFileId", { equal: true });
+              if (typeof fileContents.id === "string") {
+                blankHref("https://drive.google.com/file/d/" + fileContents.id + "/view?usp=sharing");
+              }
+              loading.remove();
+            } else if (/pdf$/.test(absolute)) {
+              blankHref(absolute.split("/").map((str) => { return window.encodeURIComponent(str) }).join("/").replace(new RegExp("^" + instance.rootToken), S3HOST));
             }
           }
           removeByClass(contextmenuClassName);
-          instance.fileLoad(instance.path);
         } catch (e) {
           console.log(e);
         }
@@ -186,7 +387,7 @@ FileJs.prototype.baseMaker = function () {
         try {
           if (instance.selected.length === 1) {
             const absolute = instance.selected[0].getAttribute("absolute");
-            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute)) {
+            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /drawio$/.test(absolute) || /pdf$/.test(absolute)) {
               return true;
             } else {
               return false;
@@ -441,211 +642,7 @@ FileJs.prototype.baseMaker = function () {
               events: [
                 {
                   type: "click",
-                  event: function (e) {
-                    e.stopPropagation();
-                    const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
-                    const totalImages = equalJson(JSON.stringify(images));
-                    const mother = document.getElementById("totalcontents");
-                    const className = "photoSelectedTarget";
-                    const length = Number(this.getAttribute("length"));
-                    const zIndex = 3;
-                    let img, height, imgBox;
-                    let title, titleSize, bottom;
-                    let titleBox;
-                    let leftArrow, rightArrow;
-                    let leftArrowBox, rightArrowBox;
-                    let arrowHeight;
-                    let arrowMargin;
-                    let index, src;
-                    let convertEvent;
-
-                    index = Number(this.getAttribute("index"));
-                    src = this.getAttribute("src");
-
-                    convertEvent = () => {};
-
-                    height = 78;
-                    titleSize = 2;
-                    bottom = 6.6;
-                    arrowHeight = 1.7;
-                    arrowMargin = 78;
-
-                    createNode({
-                      mother,
-                      class: [ className ],
-                      events: [
-                        {
-                          type: "click",
-                          event: function (e) {
-                            const removeTargets = document.querySelectorAll('.' + className);
-                            for (let dom of removeTargets) {
-                              mother.removeChild(dom);
-                            }
-                          }
-                        }
-                      ],
-                      style: {
-                        position: "fixed",
-                        top: String(0),
-                        left: String(0),
-                        width: String(100) + '%',
-                        height: String(100) + '%',
-                        background: colorChip.darkDarkShadow,
-                        zIndex: String(zIndex),
-                        animation: "justfadeineight 0.2s ease forwards",
-                      }
-                    });
-
-                    img = createNode({
-                      mother,
-                      class: [ className ],
-                      mode: "img",
-                      attribute: [
-                        { src },
-                        { direction: "right" }
-                      ],
-                      style: {
-                        position: "fixed",
-                        top: String(0),
-                        left: String(0),
-                        height: String(height) + '%',
-                        width: "auto",
-                        zIndex: String(zIndex),
-                        transition: "all 0s ease",
-                        animation: "fadeuplite 0.2s ease forwards",
-                        borderRadius: String(3) + "px",
-                      }
-                    });
-                    imgBox = img.getBoundingClientRect();
-                    img.style.top = withOut(50, imgBox.height / 2, ea);
-                    img.style.left = withOut(50, imgBox.width / 2, ea);
-
-                    title = createNode({
-                      mother,
-                      events: [
-                        {
-                          type: [ "click", "dblclick", "selectstart" ],
-                          event: (e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                          }
-                        }
-                      ],
-                      class: [ className ],
-                      text: name,
-                      style: {
-                        position: "fixed",
-                        bottom: String(bottom) + '%',
-                        fontSize: String(titleSize) + "vh",
-                        fontWeight: String(600),
-                        color: colorChip.whiteBlack,
-                        left: String(50) + '%',
-                        zIndex: String(zIndex),
-                        transition: "all 0s ease",
-                        animation: "fadeuplite 0.2s ease forwards",
-                      }
-                    });
-                    titleBox = title.getBoundingClientRect();
-                    title.style.left = withOut(50, titleBox.width / 2, ea);
-
-                    leftArrow = createNode({
-                      mother,
-                      events: [
-                        {
-                          type: [ "dblclick", "selectstart" ],
-                          event: (e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                          }
-                        }
-                      ],
-                      attribute: [
-                        { direction: "left" }
-                      ],
-                      class: [ className ],
-                      mode: "svg",
-                      source: instance.mother.returnArrow("left", colorChip.whiteBlack),
-                      style: {
-                        position: "fixed",
-                        top: String(0),
-                        left: String(0),
-                        height: String(arrowHeight) + "vh",
-                        zIndex: String(zIndex),
-                        transition: "all 0s ease",
-                        animation: "fadeuplite 0.2s ease forwards",
-                        cursor: "pointer"
-                      }
-                    });
-                    leftArrowBox = leftArrow.getBoundingClientRect();
-                    leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
-                    leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-
-                    rightArrow = createNode({
-                      mother,
-                      events: [
-                        {
-                          type: [ "dblclick", "selectstart" ],
-                          event: (e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                          }
-                        }
-                      ],
-                      attribute: [
-                        { direction: "right" }
-                      ],
-                      class: [ className ],
-                      mode: "svg",
-                      source: instance.mother.returnArrow("right", colorChip.whiteBlack),
-                      style: {
-                        position: "fixed",
-                        top: String(0),
-                        left: String(0),
-                        height: String(arrowHeight) + "vh",
-                        zIndex: String(zIndex),
-                        transition: "all 0s ease",
-                        animation: "fadeuplite 0.2s ease forwards",
-                        cursor: "pointer"
-                      }
-                    });
-                    rightArrowBox = rightArrow.getBoundingClientRect();
-                    rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
-                    rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-                    convertEvent = function (e) {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      const direction = this.getAttribute("direction");
-                      let targetIndex, targetImage;
-                      if (direction === "left") {
-                        targetIndex = index - 1;
-                        if (totalImages[targetIndex] === undefined) {
-                          targetIndex = length - 1;
-                        }
-                      } else {
-                        targetIndex = index + 1;
-                        if (totalImages[targetIndex] === undefined) {
-                          targetIndex = 0;
-                        }
-                      }
-                      targetImage = totalImages[targetIndex];
-                      img.setAttribute("src", targetImage.image);
-                      imgBox = img.getBoundingClientRect();
-                      img.style.left = withOut(50, imgBox.width / 2, ea);
-                      leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-                      rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-                      index = targetIndex;
-                      src = targetImage.image;
-
-                      title.textContent = name;
-                      titleBox = title.getBoundingClientRect();
-                      title.style.left = withOut(50, titleBox.width / 2, ea);
-                    }
-                    leftArrow.addEventListener("click", convertEvent);
-                    rightArrow.addEventListener("click", convertEvent);
-                    img.addEventListener("click", convertEvent);
-                  }
+                  event: instance.imageViewing(images, true),
                 }
               ]
             });
@@ -2283,7 +2280,8 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
                 const absolute = this.getAttribute("absolute");
                 const blocks = instance.blocks;
                 const directory = (this.getAttribute("directory") === "true");
-                let id, fileContents;
+                let id, fileContents, loading;
+                let tempFunction;
                 if (directory) {
                   for (let b of blocks) {
                     b.style.animation = "fadedownlite 0.2s ease forwards";
@@ -2296,13 +2294,28 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
                     fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
                     blankHref(JSON.parse(fileContents.contents).url);
                   } else if (/drawio$/.test(absolute)) {
+                    loading = instance.mother.grayLoading();
                     ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
                     fileContents = await ajaxJson({ name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/findFileId", { equal: true });
                     if (typeof fileContents.id === "string") {
                       blankHref("https://drive.google.com/file/d/" + fileContents.id + "/view?usp=sharing");
                     }
+                    loading.remove();
+                  } else if (/pdf$/.test(absolute)) {
+                    blankHref(absolute.split("/").map((str) => { return window.encodeURIComponent(str) }).join("/").replace(new RegExp("^" + instance.rootToken), S3HOST));
+                  } else if (/\.(png|psd|iff|pcx|raw|tga|psb)$/gi.test(absolute) || /\.(jpg|jpeg|gif|jpf|jps|bmp|heic|jfif)$/gi.test(absolute)) {
+                    tempFunction = instance.imageViewing([
+                      {
+                        image: instance.absoluteParsing(absolute),
+                        name: absolute.split("/")[absolute.split("/").length - 1],
+                      }
+                    ], false);
+                    tempFunction.call({}, {
+                      stopPropagation: () => {}
+                    }).catch((err) => {
+                      console.log(err);
+                    });
                   }
-
                 }
               } catch (e) {
                 console.log(e);

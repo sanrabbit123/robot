@@ -1519,7 +1519,7 @@ PaymentJs.prototype.eventMaker = function (type, flatform) {
 
           } else {
 
-            GeneralJs.ajax(query, "https://home-liaison.serveftp.com:3000/card", function (data) {
+            GeneralJs.ajax(query, "https://home-liaison.co.kr:3000/card", function (data) {
               if (data === "error") {
                 alert("성함과 연락처를 정확히 적어주세요!");
                 document.querySelector("." + list.mo + "paymentwhiteinput > input").focus();

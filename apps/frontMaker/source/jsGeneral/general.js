@@ -1782,49 +1782,6 @@ GeneralJs.escapeString = function (str, option = { number: false, hangul: false,
   return str;
 }
 
-GeneralJs.isClient = function (name, phone) {
-  let n, p;
-
-  if (typeof name === 'object') {
-    if (Array.isArray(name)) {
-      n = GeneralJs.escapeString(name[0], { hangul: true, noSpace: true });
-      p = GeneralJs.escapeString(name[1], { isPhone: true });
-    } else {
-      throw new Error("invaild arguments");
-    }
-  } else if (typeof name === 'string') {
-    n = GeneralJs.escapeString(name, { hangul: true, noSpace: true });
-    p = GeneralJs.escapeString(phone, { isPhone: true });
-  } else {
-    throw new Error("invaild arguments");
-  }
-
-  return new Promise(function(resolve, reject) {
-    GeneralJs.ajax("name=" + n + "&phone=" + p, "https://home-liaison.serveftp.com:3000/namephone", function (data) {
-      if (data === "success") {
-        resolve({ boo: true, name: n, phone: p });
-      } else {
-        resolve({ boo: false, name: n, phone: p });
-      }
-    });
-  });
-
-}
-
-GeneralJs.toPhotoUpload = async function (name, phone) {
-  try {
-    const { boo, name: n, phone: p } = await GeneralJs.isClient(name, phone);
-    if (boo) {
-      window.location.href = window.location.protocol + "//" + window.location.host + "/consulting.php?name=" + GeneralJs.escapeString(n, { queryString: true }) + "&phone=" + GeneralJs.escapeString(p, { queryString: true });
-    } else {
-      alert("성함과 연락처를 정확히 입력해주세요!");
-      window.location.href = window.location.protocol + "//" + window.location.host + "/consulting.php?login=true";
-    }
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 GeneralJs.addScrollXEvent = function (node, name = "") {
   const today = new Date();
   const todayConst = String(today.getFullYear()) + String(today.getMonth() + 1) + String(today.getDate());
