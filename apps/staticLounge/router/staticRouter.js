@@ -457,7 +457,7 @@ StaticRouter.prototype.rou_post_findFileId = function () {
 StaticRouter.prototype.rou_post_parsingDrawio = function () {
   const instance = this;
   const drive = this.drive;
-  const { errorLog, fileSystem, shellExec, shellLink, uniqueValue } = this.mother;
+  const { errorLog, fileSystem, shellExec, shellLink, uniqueValue, sleep } = this.mother;
   const { staticConst } = this;
   const drawioHost = "app.diagrams.net";
   const drawioUrlMother = "https://" + drawioHost;
@@ -466,7 +466,12 @@ StaticRouter.prototype.rou_post_parsingDrawio = function () {
   const drawioType = "google";
   const drawioExe = "drawio";
   const xmlMaker = (date, userAgent) => {
-    return `<mxfile host="${drawioHost}" modified=${JSON.stringify(date)} agent="${userAgent}" version="${drawioVersion}" type="${drawioType}"><diagram name="Page-1" id="${uniqueValue("hex").slice(0, 20)}"><mxGraphModel><root><mxCell id="0" /><mxCell id="1" parent="0" /></root></mxGraphModel></diagram></mxfile>`;
+    return `<mxfile host="${drawioHost}" modified=${JSON.stringify(date)} agent="${userAgent}" version="${drawioVersion}" type="${drawioType}">
+    <diagram name="Page-1" id="0"><mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <root><mxCell id="0" /><mxCell id="1" parent="0" />
+    <mxCell id="bEIicPl5XDsucloe5b44-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+    <mxGeometry x="365" y="410" width="120" height="60" as="geometry" />
+    </mxCell></root></mxGraphModel></diagram></mxfile>`;
   }
   let obj;
   obj = {};
@@ -525,6 +530,7 @@ StaticRouter.prototype.rou_post_parsingDrawio = function () {
           throw new Error("fail create drawio");
         }
 
+        await sleep(1000);
         await shellExec(`rm`, [ `-rf`, thisFile ]);
 
         json = {
