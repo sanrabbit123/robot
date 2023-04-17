@@ -130,6 +130,7 @@ GoogleDrive.prototype.searchId_inPython = async function (name) {
     return result.id;
   } catch (e) {
     console.log(e.message);
+    return null;
   }
 }
 
@@ -141,6 +142,19 @@ GoogleDrive.prototype.searchFolderId_inPython = async function (name, parentId) 
     return result.id;
   } catch (e) {
     console.log(e.message);
+    return null;
+  }
+}
+
+GoogleDrive.prototype.searchFileId_inPython = async function (name, parentId) {
+  const instance = this;
+  const mother = this.mother;
+  try {
+    let result = await mother.pythonExecute(this.pythonApp, [ "drive", "searchFileId" ], { name, parentId });
+    return result.id;
+  } catch (e) {
+    console.log(e.message);
+    return null;
   }
 }
 

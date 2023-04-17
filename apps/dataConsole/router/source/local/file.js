@@ -2283,7 +2283,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
                 const absolute = this.getAttribute("absolute");
                 const blocks = instance.blocks;
                 const directory = (this.getAttribute("directory") === "true");
-                let fileContents;
+                let id, fileContents;
                 if (directory) {
                   for (let b of blocks) {
                     b.style.animation = "fadedownlite 0.2s ease forwards";
@@ -2295,7 +2295,14 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
                   if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute)) {
                     fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
                     blankHref(JSON.parse(fileContents.contents).url);
+                  } else if (/drawio$/.test(absolute)) {
+                    ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+                    fileContents = await ajaxJson({ name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/findFileId", { equal: true });
+                    if (typeof fileContents.id === "string") {
+                      blankHref("https://drive.google.com/file/d/" + fileContents.id + "/view?usp=sharing");
+                    }
                   }
+
                 }
               } catch (e) {
                 console.log(e);

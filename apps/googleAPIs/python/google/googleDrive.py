@@ -115,6 +115,14 @@ class GoogleDrive:
             break
         return dumps({ "id": id })
 
+    def searchFileId(self, name, parentId):
+        response = self.app.files().list(q=f"name = '{name}' and '{parentId}' in parents", spaces='drive', fields="files(id, name)").execute()
+        id = None
+        for file in response.get('files', []):
+            id = file.get('id')
+            break
+        return dumps({ "id": id })
+
     def getTargetInfo(self, target_id, absolute_mode = False):
         parent = None
         response = self.app.files().get(fileId=target_id, fields='kind,id,name,mimeType,resourceKey,parents').execute()

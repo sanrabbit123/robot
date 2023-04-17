@@ -214,6 +214,11 @@ try:
         result = driveApp.searchFolderId(data["name"], data["parentId"])
         print(result)
 
+    elif argv[1] == 'drive' and argv[2] == 'searchFileId':
+        driveApp = GoogleDrive()
+        result = driveApp.searchFileId(data["name"], data["parentId"])
+        print(result)
+
     elif argv[1] == 'drive' and argv[2] == 'delete':
         driveApp = GoogleDrive()
         result = driveApp.deleteFile(data["targetId"])
