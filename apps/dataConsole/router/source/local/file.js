@@ -369,9 +369,9 @@ FileJs.prototype.baseMaker = function () {
             } else if (/drawio$/.test(absolute)) {
               loading = instance.mother.grayLoading();
               ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
-              fileContents = await ajaxJson({ name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/findFileId", { equal: true });
-              if (typeof fileContents.id === "string") {
-                blankHref("https://drive.google.com/file/d/" + fileContents.id + "/view?usp=sharing");
+              ({ url } = await ajaxJson({ name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/parsingDrawio", { equal: true }));
+              if (typeof url === "string") {
+                blankHref(url);
               }
               loading.remove();
             } else if (/pdf$/.test(absolute)) {
@@ -2282,6 +2282,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
                 const directory = (this.getAttribute("directory") === "true");
                 let id, fileContents, loading;
                 let tempFunction;
+                let url;
                 if (directory) {
                   for (let b of blocks) {
                     b.style.animation = "fadedownlite 0.2s ease forwards";
@@ -2296,9 +2297,9 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
                   } else if (/drawio$/.test(absolute)) {
                     loading = instance.mother.grayLoading();
                     ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
-                    fileContents = await ajaxJson({ name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/findFileId", { equal: true });
-                    if (typeof fileContents.id === "string") {
-                      blankHref("https://drive.google.com/file/d/" + fileContents.id + "/view?usp=sharing");
+                    ({ url } = await ajaxJson({ name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/parsingDrawio", { equal: true }));
+                    if (typeof url === "string") {
+                      blankHref(url);
                     }
                     loading.remove();
                   } else if (/pdf$/.test(absolute)) {

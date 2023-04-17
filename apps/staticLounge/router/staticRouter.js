@@ -455,6 +455,55 @@ StaticRouter.prototype.rou_post_findFileId = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_parsingDrawio = function () {
+  const instance = this;
+  const drive = this.drive;
+  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { staticConst } = this;
+  const drawioUrlMother = "https://app.diagrams.net";
+  const drawioUserId = "111085281738578060467";
+  let obj;
+  obj = {};
+  obj.link = [ "/parsingDrawio" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.parent === undefined || req.body.name === undefined) {
+        throw new Error("invaild post");
+      }
+      const { name, parent } = req.body;
+      const finalId = await drive.searchFileId_inPython(name, parent);
+      if (finalId === null) {
+        throw new Error("cannot found");
+      }
+      let url, json;
+
+      json = {
+        ids: [ finalId ],
+        action: "open",
+        userId: drawioUserId,
+        resourceKeys: {}
+      };
+      url = `${drawioUrlMother}?state=${globalThis.encodeURIComponent(JSON.stringify(json))}`;
+
+      res.send(JSON.stringify({ url }));
+
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_parsingDrawio): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_getPathFromId = function () {
   const instance = this;
   const drive = this.drive;
