@@ -1095,13 +1095,13 @@ FileJs.prototype.baseMaker = function () {
               name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
               response = await ajaxJson({ mode: "create", name, parent: id }, S3HOST + ":3000/parsingDrawio");
               if (typeof response.url === "string") {
+                await sleep(500);
+                blankHref(response.url);
                 do {
                   await sleep(1000);
                   newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
                   boo = newList.map((obj) => { return obj.fileName }).includes(name + ".drawio");
                 } while (!boo)
-                await sleep(2000);
-                blankHref(response.url);
               } else {
                 window.alert("생성에 실패하였습니다! 다시 시도해주세요!");
               }
