@@ -2374,9 +2374,8 @@ DashboardJs.prototype.manualMaker = function (key) {
 
 DashboardJs.prototype.whiteMaker = function (source) {
   const instance = this;
-  const { ea, vh, totalContents, belowHeight, grayBarWidth, contentsBase } = this;
+  const { ea, vh, totalContents, belowHeight, grayBarWidth, contentsBase, whitePopupClassName } = this;
   const { createNode, colorChip, withOut, equalJson, cleanChildren, findByAttribute, scrollTo, removeByClass } = GeneralJs;
-  const whitePopupClassName = "whitePopupClassName";
   let margin;
   let cancelBack, whitePrompt;
 
@@ -2445,15 +2444,14 @@ DashboardJs.prototype.whiteMaker = function (source) {
 
 DashboardJs.prototype.whiteEntireMaker = function (source) {
   const instance = this;
-  const { ea, vh, totalContents, belowHeight, grayBarWidth, contentsBase, whiteEntireFileViewToken } = this;
+  const { ea, vh, totalContents, belowHeight, grayBarWidth, contentsBase, whiteEntireFileViewToken, whiteEntireFileViewTokenKeyName, whitePopupClassName } = this;
   const { createNode, colorChip, withOut, equalJson, cleanChildren, findByAttribute, scrollTo, removeByClass } = GeneralJs;
-  const whitePopupClassName = "whitePopupClassName";
   let margin;
   let cancelBack, whitePrompt;
 
   margin = 30;
 
-  window.localStorage.setItem("whiteEntireFileViewToken", whiteEntireFileViewToken);
+  window.localStorage.setItem(whiteEntireFileViewTokenKeyName, whiteEntireFileViewToken);
   window.history.pushState({ path: "popup", status: source }, '');
   removeByClass(whitePopupClassName);
 
@@ -2462,7 +2460,7 @@ DashboardJs.prototype.whiteEntireMaker = function (source) {
     class: [ whitePopupClassName ],
     event: {
       click: (e) => {
-        window.localStorage.setItem("whiteEntireFileViewToken", "");
+        window.localStorage.setItem(whiteEntireFileViewTokenKeyName, "");
         window.history.pushState({ path: "init", status: "" }, '');
         removeByClass(whitePopupClassName);
       },
@@ -2516,6 +2514,29 @@ DashboardJs.prototype.whiteEntireMaker = function (source) {
 
 }
 
+DashboardJs.prototype.fileSearchEvent = function () {
+  const instance = this;
+  const { ea, totalContents, whiteEntireFileViewToken, whiteEntireFileViewTokenKeyName, whitePopupClassName } = this;
+  const { searchInput } = this;
+  searchInput.addEventListener("keypress", async function (e) {
+    try {
+      if (e.key === "Enter") {
+        if (window.localStorage.getItem(whiteEntireFileViewTokenKeyName) === whiteEntireFileViewToken) {
+          const value = this.value.trim().replace(/[\=\?\\\/\+\&]/gi, '');
+          const targets = Array.from(document.querySelectorAll('.' + whitePopupClassName));
+          const target = targets.find((dom) => { return dom.querySelector("iframe") !== null });
+          if (target !== undefined) {
+            const iframeTarget = target.querySelector("iframe");
+            iframeTarget.contentWindow.postMessage(JSON.stringify({ mode: "search", value }), "*");
+          }
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  })
+}
+
 DashboardJs.prototype.launching = async function () {
   const instance = this;
   const { ajaxJson, removeByClass, returnGet } = GeneralJs;
@@ -2537,6 +2558,8 @@ DashboardJs.prototype.launching = async function () {
     this.baseLoad = () => {}
 
     this.whiteEntireFileViewToken = "__whiteEntireFileViewToken__";
+    this.whiteEntireFileViewTokenKeyName = "whiteEntireFileViewToken";
+    this.whitePopupClassName = "whitePopupClassName";
 
     document.getElementById("grayLeftOpenButton").remove();
     document.getElementById("moveRightArea").style.display = "none";
@@ -2544,20 +2567,21 @@ DashboardJs.prototype.launching = async function () {
 
     this.baseMaker();
     this.grayMaker();
+    this.fileSearchEvent();
 
     window.addEventListener("popstate", (e) => {
       e.preventDefault();
       if (e.state !== null) {
         if (e.state.path === "init") {
-          removeByClass("whitePopupClassName");
+          removeByClass(instance.whitePopupClassName);
           instance.baseLoad();
         } else if (e.state.path === "manual") {
           instance.manualMaker(e.state.status);
         } else if (e.state.path === "popup") {
-          if (document.querySelector(".whitePopupClassName") === null) {
+          if (document.querySelector("." + instance.whitePopupClassName) === null) {
             instance.whiteMaker(e.state.status);
           } else {
-            removeByClass("whitePopupClassName");
+            removeByClass(instance.whitePopupClassName);
             instance.baseLoad();  
           }
         }
@@ -2582,7 +2606,7 @@ DashboardJs.prototype.launching = async function () {
     }
 
     if (generalState) {
-      if (window.localStorage.getItem("whiteEntireFileViewToken") === this.whiteEntireFileViewToken) {
+      if (window.localStorage.getItem(this.whiteEntireFileViewTokenKeyName) === this.whiteEntireFileViewToken) {
         instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=general&entire=true&dataonly=true");
       }
     }

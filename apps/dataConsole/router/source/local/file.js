@@ -2494,6 +2494,26 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
   }
 }
 
+FileJs.prototype.fromParentSearch = function () {
+  const instance = this;
+  const { ea } = this;
+  window.addEventListener("message", async (e) => {
+    try {
+      const data = JSON.parse(e.data);
+      if (typeof data.mode === "string") {
+        if (data.mode === "search" && typeof data.value === "string") {
+          const value = data.value;
+          if (value === '') {
+            instance.fileLoad(instance.path, "none");
+          } else {
+            instance.fileLoad(value, "entire");
+          }
+        }
+      }
+    } catch {}
+  });
+}
+
 FileJs.prototype.launching = async function () {
   const instance = this;
   const { ea } = this;
@@ -2584,6 +2604,7 @@ FileJs.prototype.launching = async function () {
 
     this.baseMaker();
     this.fileLoad(this.path);
+    this.fromParentSearch();
 
     window.addEventListener("popstate", (e) => {
       e.preventDefault();
