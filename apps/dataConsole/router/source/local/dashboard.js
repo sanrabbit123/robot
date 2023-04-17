@@ -2606,8 +2606,10 @@ DashboardJs.prototype.launching = async function () {
     }
 
     if (generalState) {
-      if (window.localStorage.getItem(this.whiteEntireFileViewTokenKeyName) === this.whiteEntireFileViewToken) {
-        instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=general&entire=true&dataonly=true");
+      if (getObj.mode !== "board") {
+        if (window.localStorage.getItem(this.whiteEntireFileViewTokenKeyName) === this.whiteEntireFileViewToken) {
+          instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=general&entire=true&dataonly=true");
+        }
       }
     }
 

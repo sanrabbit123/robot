@@ -2404,9 +2404,14 @@ GeneralJs.prototype.greenBar = function () {
     svg_icon.style[i] = additionalStyle[i];
   }
   this.belowButtons.sub.folder = svg_icon;
+  if (!/\/dashboard/gi.test(window.location.pathname)) {
+    this.belowButtons.sub.folder.addEventListener("click", function (e) {
+      GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/dashboard?mode=file");
+    });
+  }
   div_clone.appendChild(svg_icon);
 
-  //profile icon
+  //setting icon
   svg_icon = SvgTong.stringParsing(this.returnSetting(GeneralJs.colorChip.whiteIcon));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
@@ -2423,7 +2428,7 @@ GeneralJs.prototype.greenBar = function () {
     svg_icon.style[i] = additionalStyle[i];
   }
   svg_icon.addEventListener("click", function (e) {
-    window.location.href = window.location.protocol + "//" + window.location.host + "/dashboard";
+    GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/dashboard?mode=board");
   });
   this.belowButtons.sub.profile = svg_icon;
   div_clone.appendChild(svg_icon);
