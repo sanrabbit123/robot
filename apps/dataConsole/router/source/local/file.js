@@ -1179,6 +1179,8 @@ FileJs.prototype.baseMaker = function () {
   let pathIndent, pathBoxMaxWidth;
   let searchKeypressEvent;
   let buttonClickEvent;
+  let pathClickEvent;
+  let pathContextMenuEvent;
 
   innerMargin = 30;
   filesBoxPaddingTop = 35;
@@ -1410,6 +1412,94 @@ FileJs.prototype.baseMaker = function () {
     }
   }
 
+  pathClickEvent = () => {
+    return function (e) {
+      const betweens = this.querySelectorAll("b");
+      let index, targetIndex;
+      let pathArr, token;
+      if (betweens.length > 0) {
+        index = 0;
+        targetIndex = null;
+        for (let b of betweens) {
+          if (e.x > b.getBoundingClientRect().left) {
+            targetIndex = index;
+          }
+          index++;
+        }
+        pathArr = instance.path.split("/");
+        token = pathArr.shift();
+        if (!/__photo__/g.test(token) && !/__designer__/g.test(token)) {
+          if (targetIndex === null) {
+            instance.fileLoad(token + "/");
+          } else {
+            instance.fileLoad(token + "/" + pathArr.slice(0, targetIndex + 1).join("/"));
+          }
+        } else {
+          if (targetIndex === null) {
+            instance.fileLoad("/");
+          } else {
+            instance.fileLoad(token + "/" + pathArr.slice(0, targetIndex).join("/"));
+          }
+        }
+      } else {
+        instance.fileLoad("/");
+      }
+    }
+  }
+
+  pathContextMenuEvent = () => {
+    return function (e) {
+      e.preventDefault();
+
+      const betweens = this.querySelectorAll("b");
+      let index, targetIndex;
+      let pathArr, token;
+      let thisPath;
+      let loading, id;
+      if (betweens.length > 0) {
+        index = 0;
+        targetIndex = null;
+        for (let b of betweens) {
+          if (e.x > b.getBoundingClientRect().left) {
+            targetIndex = index;
+          }
+          index++;
+        }
+        pathArr = instance.path.split("/");
+        token = pathArr.shift();
+        thisPath = null;
+        if (!/__photo__/g.test(token) && !/__designer__/g.test(token)) {
+          if (targetIndex !== null) {
+            thisPath = token + "/" + pathArr.slice(0, targetIndex + 1).join("/");
+          }
+        } else {
+          if (targetIndex !== null) {
+            thisPath = token + "/" + pathArr.slice(0, targetIndex).join("/");
+          }
+        }
+        if (thisPath !== null) {
+
+          loading = instance.mother.grayLoading();
+          ajaxJson({ path: thisPath }, S3HOST + ":3000/findFolderId", { equal: true }).then((result) => {
+            id = result.id;
+            loading.remove();
+            if (id === undefined) {
+              window.alert("해당 폴더는 공유 링크를 만들 수 없습니다!");
+              return (new Promise((resolve, reject) => { resolve(null) }));
+            } else {
+              return window.navigator.clipboard.writeText(window.location.protocol + "//" + window.location.host + "/dashboard?mode=file&path=" + id);
+            }
+          }).then(() => {
+            instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
+          }).catch((err) => {
+            console.log(err);
+          })
+        }
+        
+      }
+    }
+  }
+
   mother = createNode({
     mother: totalContents,
     style: {
@@ -1484,90 +1574,16 @@ FileJs.prototype.baseMaker = function () {
                     events: [
                       {
                         type: "click",
-                        event: function (e) {
-                          const betweens = this.querySelectorAll("b");
-                          let index, targetIndex;
-                          let pathArr, token;
-                          if (betweens.length > 0) {
-                            index = 0;
-                            targetIndex = null;
-                            for (let b of betweens) {
-                              if (e.x > b.getBoundingClientRect().left) {
-                                targetIndex = index;
-                              }
-                              index++;
-                            }
-                            pathArr = instance.path.split("/");
-                            token = pathArr.shift();
-                            if (!/__photo__/g.test(token) && !/__designer__/g.test(token)) {
-                              if (targetIndex === null) {
-                                instance.fileLoad(token + "/");
-                              } else {
-                                instance.fileLoad(token + "/" + pathArr.slice(0, targetIndex + 1).join("/"));
-                              }
-                            } else {
-                              if (targetIndex === null) {
-                                instance.fileLoad("/");
-                              } else {
-                                instance.fileLoad(token + "/" + pathArr.slice(0, targetIndex).join("/"));
-                              }
-                            }
-                          } else {
-                            instance.fileLoad("/");
-                          }
-                        }
+                        event: pathClickEvent(),
                       },
                       {
                         type: "contextmenu",
+                        event: pathContextMenuEvent(),
+                      },
+                      {
+                        type: "dragover",
                         event: function (e) {
                           e.preventDefault();
-
-                          const betweens = this.querySelectorAll("b");
-                          let index, targetIndex;
-                          let pathArr, token;
-                          let thisPath;
-                          let loading, id;
-                          if (betweens.length > 0) {
-                            index = 0;
-                            targetIndex = null;
-                            for (let b of betweens) {
-                              if (e.x > b.getBoundingClientRect().left) {
-                                targetIndex = index;
-                              }
-                              index++;
-                            }
-                            pathArr = instance.path.split("/");
-                            token = pathArr.shift();
-                            thisPath = null;
-                            if (!/__photo__/g.test(token) && !/__designer__/g.test(token)) {
-                              if (targetIndex !== null) {
-                                thisPath = token + "/" + pathArr.slice(0, targetIndex + 1).join("/");
-                              }
-                            } else {
-                              if (targetIndex !== null) {
-                                thisPath = token + "/" + pathArr.slice(0, targetIndex).join("/");
-                              }
-                            }
-                            if (thisPath !== null) {
-
-                              loading = instance.mother.grayLoading();
-                              ajaxJson({ path: thisPath }, S3HOST + ":3000/findFolderId", { equal: true }).then((result) => {
-                                id = result.id;
-                                loading.remove();
-                                if (id === undefined) {
-                                  window.alert("해당 폴더는 공유 링크를 만들 수 없습니다!");
-                                  return (new Promise((resolve, reject) => { resolve(null) }));
-                                } else {
-                                  return window.navigator.clipboard.writeText(window.location.protocol + "//" + window.location.host + "/dashboard?mode=file&path=" + id);
-                                }
-                              }).then(() => {
-                                instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
-                              }).catch((err) => {
-                                console.log(err);
-                              })
-                            }
-                            
-                          }
                         }
                       },
                       {
@@ -1581,7 +1597,8 @@ FileJs.prototype.baseMaker = function () {
                       }
                     ],
                     style: {
-                      display: "inline-block",
+                      display: "inline-flex",
+                      flexDirection: "row",
                       position: "relative",
                       width: String(pathBoxMaxWidth) + ea,
                       fontSize: String(fontSize) + ea,
@@ -1949,20 +1966,128 @@ FileJs.prototype.baseMaker = function () {
 
 FileJs.prototype.pathReload = function (searchResult = false) {
   const instance = this;
-  const { colorChip } = GeneralJs;
+  const { rootWording, rootToken } = this;
+  const { colorChip, cleanChildren, ajaxJson } = GeneralJs;
   const target = document.querySelector(".path");
   const between = `&nbsp;&nbsp;<b style="font-weight:300;color:${colorChip.gray5}">></b>&nbsp;&nbsp;`;
+  let thisPathHtml;
+  let pathArr;
+  let filteredPathArr;
+  let wrapPtag;
+  let hoverClass;
+  let pTagStyle;
+  let thisPtags;
+
+  cleanChildren(target);
+  target.textContent = "";
+
+  hoverClass = "hoverDefault_lite";
+  thisPathHtml = `<p class="${hoverClass}">${rootWording}</p>`;
+  pTagStyle = "display:inline-block;position:relative;font-size:inherit;font-weight:inherit;color:inherit;";
+  wrapPtag = (str) => { return `<p style="${pTagStyle}" class="${hoverClass}">${str}</p>`; };
+
   if (!searchResult) {
-    target.textContent = "";
+
+    pathArr = this.path.split("/");
+
     if (!/^__photo__/.test(this.path) && !/^__designer__/.test(this.path)) {
-      target.insertAdjacentHTML("beforeend", "root" + (this.path.split("/").filter((i) => { return i.trim() !== '' && !(/^__/.test(i) && /__$/.test(i)); }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== '' && !(/^__/.test(i) && /__$/.test(i)); }).join(between)) : ""));
+
+      filteredPathArr = pathArr.filter((i) => { return i.trim() !== '' && !(/^__/.test(i) && /__$/.test(i)); });
+
+      if (filteredPathArr.length > 0) {
+        thisPathHtml += between + filteredPathArr.map(wrapPtag).join(between);
+      } else {
+        thisPathHtml += "";
+      }
+
     } else if (/^__photo__/.test(this.path)) {
-      target.insertAdjacentHTML("beforeend", "root" + (this.path.split("/").filter((i) => { return i.trim() !== ''; }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== '' }).map((i) => { return i.replace(/__photo__/, "고객 전송 사진"); }).join(between)) : ""));
+
+      filteredPathArr = pathArr.filter((i) => { return i.trim() !== ''; });
+      if (filteredPathArr.length > 0) {
+        thisPathHtml += between + filteredPathArr.map((i) => { return i.replace(/__photo__/, "고객 전송 사진"); }).map(wrapPtag).join(between);
+      } else {
+        thisPathHtml += "";
+      }
+
     } else if (/^__designer__/.test(this.path)) {
-      target.insertAdjacentHTML("beforeend", "root" + (this.path.split("/").filter((i) => { return i.trim() !== ''; }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== '' }).map((i) => { return i.replace(/__designer__/, "디자이너 포트폴리오"); }).join(between)) : ""));
+
+      filteredPathArr = pathArr.filter((i) => { return i.trim() !== ''; });
+      if (filteredPathArr.length > 0) {
+        thisPathHtml += between + filteredPathArr.map((i) => { return i.replace(/__designer__/, "디자이너 포트폴리오"); }).map(wrapPtag).join(between);
+      } else {
+        thisPathHtml += "";
+      }
+
     }
+
+    target.insertAdjacentHTML("beforeend", thisPathHtml);
+
+    thisPtags = Array.from(target.querySelectorAll("p"));
+    for (let ptag of thisPtags) {
+      ptag.setAttribute("draggable", "true");
+      ptag.addEventListener("dragenter", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.style.color = colorChip.green;
+      });
+      ptag.addEventListener("dragleave", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.style.color = "inherit";
+      });
+      ptag.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+      ptag.addEventListener("drop", async function (e) {
+        e.preventDefault();
+        try {
+          const siblings = Array.from(this.parentElement.querySelectorAll("p"));
+          let thisIndex;
+          let rawPathWording;
+          let thisPath;
+          let fromItems;
+          let moveSuccess;
+
+          thisIndex = siblings.findIndex((dom) => { return dom === this });
+          rawPathWording = siblings.slice(0, thisIndex + 1).map((dom) => { return dom.textContent }).join("/");
+          thisPath = rawPathWording.replace(new RegExp("^" + rootWording), rootToken);
+          if (thisPath !== instance.path) {
+
+            fromItems = null;
+            moveSuccess = false;
+
+            if (instance.selected.length > 0) {
+              fromItems = instance.selected.map((dom) => {
+                return dom.getAttribute("absolute");
+              });
+              if (fromItems.length > 0) {
+                moveSuccess = true;
+              }
+            } else {
+              if (instance.dragFrom !== null) {
+                fromItems = [ instance.dragFrom.getAttribute("absolute") ];
+                if (fromItems.length > 0) {
+                  moveSuccess = true;
+                }                    
+              }
+            }
+
+            if (moveSuccess && Array.isArray(fromItems)) {  
+              await ajaxJson({ fromItems, toFolder: thisPath }, S3HOST + ":3000/moveFiles");
+              instance.fileLoad(instance.path);
+            }
+
+          }
+          this.style.color = "inherit";
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    }
+
   } else {
-    target.textContent = "검색 결과";
+    target.insertAdjacentHTML("beforeend", wrapPtag("검색 결과"));
   }
 }
 
@@ -2218,18 +2343,21 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
           {
             type: "dragenter",
             event: function (e) {
+              e.preventDefault();
               this.firstChild.style.opacity = String(1);
             }
           },
           {
             type: "dragover",
             event: function (e) {
+              e.preventDefault();
               this.firstChild.style.opacity = String(1);
             }
           },
           {
             type: "dragleave",
             event: function (e) {
+              e.preventDefault();
               if (!instance.selected.includes(this)) {
                 this.firstChild.style.opacity = String(0);
               }
@@ -2431,6 +2559,7 @@ FileJs.prototype.launching = async function () {
     this.pastDown = null;
     this.dragFrom = null;
     this.searchModeButtonsClassName = "searchModeButtonsClassName";
+    this.rootWording = "root";
 
     this.baseMaker();
     this.fileLoad(this.path);

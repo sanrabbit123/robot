@@ -2638,7 +2638,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    
     // const selfMongo = this.MONGOC;
     //
     // const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
@@ -4680,8 +4680,8 @@ DevContext.prototype.launching = async function () {
     // let query;
     // let id;
     // let status;
-    //
-    //
+    
+    
     // targets = [];
     // for (let phone of phoneNumbers) {
     //   query = { id: phone, pass };
@@ -5463,9 +5463,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이현진",
-    //     designer: "정민재",
-    //     link: "https://drive.google.com/drive/folders/1fpdEE7qejWyx2Qg5U7pOVUC98IraJJ9K",
+    //     client: "전은해",
+    //     designer: "김우현",
+    //     link: "https://drive.google.com/drive/folders/1hcDkTflt1W-I08l5gfKpapIv2_DVJwix",
     //     pay: true
     //   },
     // ]);
