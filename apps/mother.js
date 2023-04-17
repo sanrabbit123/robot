@@ -1936,6 +1936,8 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
       str = "ntpage";
     } else if (/\.(ntkanban)$/gi.test(fileName)) {
       str = "ntkanban";
+    } else if (/\.(drawio)$/gi.test(fileName)) {
+      str = "drawio";
     } else {
       str = "general";
     }
