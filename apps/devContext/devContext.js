@@ -145,7 +145,7 @@ DevContext.prototype.chatGPT = async function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
-  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition } = this.mother;
+  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition, linkToString, stringToLink } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -240,15 +240,13 @@ DevContext.prototype.launching = async function () {
     // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/image.json`, res.data ]);
     // console.log(res.data);
 
-
+  
+    
 
 
     
-
     
     
-    
-
 
 
     /*

@@ -874,6 +874,55 @@ StaticRouter.prototype.rou_post_createNewNotionKanban = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_createNewLinkFile = function () {
+  const instance = this;
+  const { errorLog, fileSystem, shellExec, shellLink, equalJson, stringToLink } = this.mother;
+  const { staticConst, sambaToken } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/createNewLinkFile" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.name === undefined || req.body.parent === undefined || req.body.link === undefined) {
+        throw new Error("invalid post");
+      }
+      const { name, parent, link } = equalJson(req.body);
+      let json;
+      let target;
+
+      target = parent.replace(/^\//i, '').replace(/\/$/i, '');
+      if (target.trim() === '') {
+        target = sambaToken;
+      }
+      if (!/^__/.test(target)) {
+        target = sambaToken + "/" + target;
+      }
+      target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
+
+      json = {
+        url: stringToLink(link),
+        hex: Buffer.from(link, "utf8").toString("hex"),
+      };
+      await fileSystem(`writeJson`, [ target + "/" + name + ".link", json ]);
+
+      res.send(JSON.stringify({ message: "success" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewLinkFile): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_renameTargets = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;

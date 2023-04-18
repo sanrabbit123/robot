@@ -3773,6 +3773,120 @@ GeneralJs.stringToDate = function (str) {
   }
 }
 
+GeneralJs.linkToString = function (link) {
+  if (typeof link !== "string") {
+    throw new Error("invalid input");
+  }
+  if (!/^http/.test(link)) {
+    throw new Error("it is not link");
+  }
+  const nameToToken = (name) => { return `_____${name}_____` } 
+  const tokens = {
+    equal: nameToToken("equal"),
+    amp: nameToToken("amp"),
+    question: nameToToken("question"),
+    hypen: nameToToken("hypen"),
+    slash: nameToToken("slash"),
+    colon: nameToToken("colon"),
+    back: nameToToken("back"),
+    sharp: nameToToken("sharp"),
+    plus: nameToToken("plus"),
+    percent: nameToToken("percent"),
+    dot: nameToToken("dot"),
+    wave: nameToToken("wave"),
+    hat: nameToToken("hat"),
+  }
+  let linkArr;
+  let protocol;
+  let host;
+  let pathName;
+  let search;
+  let getObj;
+  let filteredLink;
+
+  linkArr = link.split("/");
+  if (linkArr.length < 3) {
+    throw new Error("invalid link");
+  }
+  protocol = linkArr[0].replace(/[\:]/gi, '');
+  host = linkArr[2];
+  pathName = "/" + linkArr.slice(3).join("/");
+
+  if (/[\?]/gi.test(pathName)) {
+    search = pathName.split("?")[1];
+    pathName = pathName.split("?")[0];
+  } else {
+    search = "";
+  }
+
+  if (search !== "") {
+    getObj = search.split("&").map((str) => { return { key: str.split("=")[0], value: str.split("=")[1] } });
+  } else {
+    getObj = [];
+  }
+
+  pathName = pathName.split("/").map((str) => { return globalThis.encodeURIComponent(str) }).join("/");
+
+  filteredLink = protocol + "://" + host + pathName + "?" + getObj.map((obj) => { return `${obj.key}=${obj.value}` }).join("&")
+
+  filteredLink = filteredLink.replace(/[\=]/gi, tokens.equal);
+  filteredLink = filteredLink.replace(/[\&]/gi, tokens.amp);
+  filteredLink = filteredLink.replace(/[\?]/gi, tokens.question);
+  filteredLink = filteredLink.replace(/[\-]/gi, tokens.hypen);
+  filteredLink = filteredLink.replace(/[\/]/gi, tokens.slash);
+  filteredLink = filteredLink.replace(/[\:]/gi, tokens.colon);
+  filteredLink = filteredLink.replace(/[\\]/gi, tokens.back);
+  filteredLink = filteredLink.replace(/[\#]/gi, tokens.sharp);
+  filteredLink = filteredLink.replace(/[\+]/gi, tokens.plus);
+  filteredLink = filteredLink.replace(/[\%]/gi, tokens.percent);
+  filteredLink = filteredLink.replace(/[\.]/gi, tokens.dot);
+  filteredLink = filteredLink.replace(/[\~]/gi, tokens.wave);
+  filteredLink = filteredLink.replace(/[\^]/gi, tokens.hat);
+
+  return filteredLink;
+}
+
+GeneralJs.stringToLink = function (string) {
+  if (typeof string !== "string") {
+    throw new Error("invalid input");
+  }
+  const nameToToken = (name) => { return `_____${name}_____` } 
+  const tokens = {
+    equal: nameToToken("equal"),
+    amp: nameToToken("amp"),
+    question: nameToToken("question"),
+    hypen: nameToToken("hypen"),
+    slash: nameToToken("slash"),
+    colon: nameToToken("colon"),
+    back: nameToToken("back"),
+    sharp: nameToToken("sharp"),
+    plus: nameToToken("plus"),
+    percent: nameToToken("percent"),
+    dot: nameToToken("dot"),
+    wave: nameToToken("wave"),
+    hat: nameToToken("hat"),
+  }
+  let filteredLink;
+
+  filteredLink = string;
+
+  filteredLink = filteredLink.replace(new RegExp(tokens.equal, "gi"), "=");
+  filteredLink = filteredLink.replace(new RegExp(tokens.amp, "gi"), "&");
+  filteredLink = filteredLink.replace(new RegExp(tokens.question, "gi"), "?");
+  filteredLink = filteredLink.replace(new RegExp(tokens.hypen, "gi"), "-");
+  filteredLink = filteredLink.replace(new RegExp(tokens.slash, "gi"), "/");
+  filteredLink = filteredLink.replace(new RegExp(tokens.colon, "gi"), ":");
+  filteredLink = filteredLink.replace(new RegExp(tokens.back, "gi"), "\\");
+  filteredLink = filteredLink.replace(new RegExp(tokens.sharp, "gi"), "#");
+  filteredLink = filteredLink.replace(new RegExp(tokens.plus, "gi"), "+");
+  filteredLink = filteredLink.replace(new RegExp(tokens.percent, "gi"), "%");
+  filteredLink = filteredLink.replace(new RegExp(tokens.dot, "gi"), ".");
+  filteredLink = filteredLink.replace(new RegExp(tokens.wave, "gi"), "~");
+  filteredLink = filteredLink.replace(new RegExp(tokens.hat, "gi"), "^");
+
+  return filteredLink;
+}
+
 GeneralJs.serviceParsing = function (serviceObj, startDateMode = false, initialMode = false) {
   const onoffString = [ "온라인", "오프라인" ];
   const serviceString = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];
