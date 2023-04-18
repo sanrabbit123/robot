@@ -3827,7 +3827,11 @@ GeneralJs.linkToString = function (link) {
 
   pathName = pathName.split("/").map((str) => { return globalThis.encodeURIComponent(str) }).join("/");
 
-  filteredLink = protocol + "://" + host + pathName + "?" + getObj.map((obj) => { return `${obj.key}=${obj.value}` }).join("&")
+  if (getObj.map((obj) => { return `${obj.key}=${obj.value}` }).join("&") === '') {
+    filteredLink = protocol + "://" + host + pathName;
+  } else {
+    filteredLink = protocol + "://" + host + pathName + "?" + getObj.map((obj) => { return `${obj.key}=${obj.value}` }).join("&");
+  }
 
   filteredLink = filteredLink.replace(/[\=]/gi, tokens.equal);
   filteredLink = filteredLink.replace(/[\&]/gi, tokens.amp);

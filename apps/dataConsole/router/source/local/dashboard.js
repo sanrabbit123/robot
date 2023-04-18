@@ -2594,6 +2594,8 @@ DashboardJs.prototype.launching = async function () {
         instance.manualMaker("firstResponse");
       } else if (getObj.key === "proposal") {
         instance.manualMaker("designerProposal");
+      } else if (getObj.key === "about") {
+        instance.manualMaker("aboutService");
       }
     } else if (getObj.mode === "file") {
       if (typeof getObj.path !== "string") {
