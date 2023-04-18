@@ -226,7 +226,7 @@ AboutServiceJs.prototype.insertInitBox = function () {
 AboutServiceJs.prototype.insertPeopleBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing } = GeneralJs;
-  const { client, ea, media, osException, testMode } = this;
+  const { ea, media, osException, testMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let whiteBlock;
@@ -279,8 +279,8 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
   titleFontWeight = <%% 800, 800, 800, 800, 800 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
-  titleTop = <%% 110, 54, 40, 30, 8.5 %%>;
-  descriptionSize = <%% 14, 14, 13, 12, 3 %%>;
+  titleTop = <%% 108, 54, 40, 30, 8.5 %%>;
+  descriptionSize = <%% 15, 14, 13, 12, 3 %%>;
   descriptionBottom = <%% 0, -8, -7, -2, 0 %%>;
 
   barWidth = <%% 70, 80, 80, 80, 80 %%>;
@@ -607,11 +607,9 @@ AboutServiceJs.prototype.insertServiceBox = function () {
   middleTitleLineTop = <%% 14, 14, 13, 11, (isIphone() ? 2.9 : 2.6) %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
-
   middleTongPaddinngTop = <%% 108, 84, 72, 52, 10 %%>;
   middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
   middleTitleMarginBottom = <%% 50, 42, 40, 34, 7.5 %%>;
-
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
 
   height0 = <%% 545, 415, 506, 389, 141 %%>;
@@ -1922,6 +1920,621 @@ AboutServiceJs.prototype.insertServiceBox = function () {
 
 }
 
+AboutServiceJs.prototype.insertMainContentsBox = function () {
+  const instance = this;
+  const { ea, media, baseTong } = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, svgMaker, serviceParsing, variableArray } = GeneralJs;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1]);
+  const small = !big;
+  const generalBig = (media[0] || media[1] || media[2]);
+  let whiteBlock0;
+  let middleTongPaddinngTop;
+  let middleTongPaddingBottom;
+  let middleTitleMarginBottom;
+  let middleAreaPaddingTop;
+  let middleTitleSize;
+  let middleTitleWeight;
+  let middleTitlePadding;
+  let middleTitleLineTop;
+  let middleTitleTextTop;
+  let contentsSize, contentsWeight, contentsLineHeight;
+  let contents;
+  let contentsMotherBox;
+  let contentsMotherBoxMarginTop, contentsMotherBoxPaddingTop;
+  let indentBoxWidth;
+  let doubleLineHeight;
+  let contentsMotherEntirePaddingTop, contentsMotherEntirePaddingBottom;
+  let contentsSmallSize;
+  let smallDescriptionPaddingTop;
+  let baseTong2;
+  let baseTong2Back;
+  let whiteBlock1;
+  let imageHeight;
+  let basicContentsMaker;
+  let whiteBlock2;
+  let margin;
+  let leftBoxWidth;
+  let rightBoxPaddingTop;
+  let lineHeight;
+  let titleFont;
+  let titleLeft;
+  let titleFontWeight;
+  let titleMarginBottom;
+  let titleVisualTop;
+  let baseTong3;
+  let baseTong3Back;
+  let whiteBlock3;
+  let baseTong4;
+  let baseTong4Back;
+  let whiteBlock4;
+  let whiteBlock5;
+  let photoMargin;
+  let columns;
+  let photoMarginBottom;
+  let downTitleSize;
+
+  margin = <%% 52, 52, 44, 32, 6 %%>;
+
+  middleTitleSize = <%% 23, 23, 20, 18, 4.2 %%>;
+  middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
+  middleTitleLineTop = <%% 14, 14, 13, 11, (isIphone() ? 2.9 : 2.6) %%>;
+  middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+  middleTongPaddinngTop = <%% 108, 84, 72, 52, 10 %%>;
+  middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
+  middleTitleMarginBottom = <%% 30, 30, 30, 30, 7.5 %%>;
+  middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
+
+  downTitleSize = <%% 20, 18, 14, 13, 3.8 %%>;
+  contentsSize = <%% 16, 15, 14, 13, 3.8 %%>;
+  contentsSmallSize = <%% 15, 14, 13, 12, 3.5 %%>;
+  contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
+  contentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+
+  contentsMotherBoxMarginTop = <%% 60, 60, 50, 40, 6 %%>;
+  contentsMotherBoxPaddingTop = <%% 32, 32, 30, 24, 3 %%>;
+  indentBoxWidth = <%% 240, 160, 140, 120, 24 %%>;
+
+  doubleLineHeight = <%% 6, 6, 6, 6, 6 %%>;
+
+  contentsMotherEntirePaddingTop = <%% 12, 12, 12, 8, 1 %%>;
+  contentsMotherEntirePaddingBottom = <%% 50, 50, 50, 34, 5 %%>;
+
+  smallDescriptionPaddingTop = <%% 16, 16, 14, 12, 1 %%>;
+  imageHeight = <%% 320, 270, 230, 180, 36 %%>;
+
+  leftBoxWidth = <%% 300, 230, 300, 300, 300 %%>;
+
+  rightBoxPaddingTop = <%% 7, 5, 7, 7, 6.5 %%>;
+  lineHeight = <%% 1.42, 1.42, 1.42, 1.42, 1.42 %%>;
+
+  titleFont = <%% 22, 22, 18, 16, 4.2 %%>;
+  titleLeft = <%% 6, 6, 6, 6, 0 %%>;
+  titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleMarginBottom = <%% 0, 0, 18, 12, 0.5 %%>;
+  titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), 2 %%>;
+
+  photoMargin = <%% 20, 18, 18, 16, 3 %%>;
+  columns = <%% 4, 4, 3, 3, 2 %%>;
+  photoMarginBottom = <%% (isMac() ? 18 : 20), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 2.5 %%>;
+
+  contents = {
+    designer: {
+      up: {
+        title: "이젠, 디자이너와 함께 진행하세요!",
+        description: [
+          "인테리어는 막힘과 실패의 가능성이 높은 작업이에요. 혼서 하기보다 전문가의 도움을 받는 것이 좋습니다. 디자이너와 함께하는 홈스타일링은 과정과 결과 모두가 만족스러울 뿐",
+          "아니라 진행하는 동안 내내 편안한 경험을 하실 수 있답니다. 디자인, 예산 계획, 공간 기획 모두 한 번에 전문가에게 맡기면, 우리 집을 고급스럽고 예쁘게 변화시킬 수 있어요.",
+        ]
+      },
+      down: {
+        title: "디자이너와 함께\n해야 하는 이유",
+        children: [
+          {
+            description: [
+              `첫 번째로, <b%인테리어의 광범위한 범위입니다.%b> 인테리어를 한 번이라도 경험해 보면 그 광범위함을 깨닫게 됩니다. 상상조차 못한 문제와 극도로 세세한 디테일이 많으며, 진행하는 동안 내내 고려해야 할 사항이 많아 끊임없이 처리해야 할 일이 발생합니다. 이렇게 생각해야 할 것이 많기 때문에 전문가를 고용하는 것은 전혀 지나친 일이 아닙니다. 전문가와 함께하면 광범위한 업무량을 쉽게 처리할 수 있으며, 시간을 절약할 수 있기 때문에 디자이너와 함께하는 것입니다.`
+            ],
+          },
+          {
+            description: [
+              `두 번째로, <b%인테리어는 한번 실패하면 복구하기 힘든 점이 있습니다.%b> 인테리어는 돈도 많이 들고 시간도 많이 드는 작업에다가 복구가 쉽지 않다는 특성까지 지니고 있습니다. 돈과 시간이 무한정하지 않은 이상, 이것저것 다 해보고 마음에 드는 것으로 바꿀 수 없으며, 실패하면 실패한대로 감수해야 합니다. 실제로 혼자서 고급스럽고 예쁜 집을 시도해보다가 생각하지도 못했던 문제에 가로막혀 실패하는 경우가 매우 많으며, 이러한 실패는 큰 돈과 시간을 소모했음에도 다시 되돌릴 수 없습니다. 그렇기 때문에 경험이 많은 전문가를 고용하여 실패의 확률을 크게 낮추는 것은 필수적인 과정입니다. 이러한 선택은 오히려 돈과 시간을 절약하는 전략적인 선택일 수 있습니다.`
+            ],
+          },
+          {
+            description: [
+              `세 번째로, <b%전문가와 함께하는 이유는 결과물에 대한 보증입니다.%b> 디자이너는 단순히 감각이 좋은 사람이 아니라, 인테리어 디자인 분야에서 경력을 쌓은 전문가들입니다. 이들은 실제 현장을 다녀보고 구현해본 경험이 많으며, 주거 인테리어 시공 분야에 대한 경험이 풍부합니다. 또한, 가구와 소품 브랜드에 대한 깊은 지식을 갖고 있습니다. 주거 인테리어에 대한 경험치 자체가 다르기 때문에 어떤 컨셉으로 디자인을 진행하면 어떻게 구현될지 미리 예측할 수 있으며, 가상적으로 구현해 볼 수도 있습니다. 또한, 전문가는 도면과 3D에 대한 능력도 있어 현장 작업자들과 원활한 소통이 가능합니다. 따라서 전문가에게 맡기면 전문적인 지식과 경험, 감각 등이 더해져 월등히 좋은 결과물이 나오게 됩니다.`
+            ],
+          },
+        ]
+      }
+    },
+    homeliaison: {
+      up: {
+        title: "전문가의 홈스타일링, 홈리에종에서!",
+        description: [
+          "홈스타일링 디자이너와 함께하는 이유는 다양합니다. 홈리에종을 거치지 않고 디자이너와 직접적으로 연결하면 더 많은 비용을 절약할 수 있지 않을까 생각할 수 있겠지만,",
+          "그래도 홈리에종을 통해 디자이너를 만나야 하는 이유는 분명히 있습니다. 다음과 같이 4가지 대표적인 이유가 있습니다."
+        ]
+      },
+      down: {
+        title: "홈리에종과 함께\n해야 하는 이유",
+        children: [
+          {
+            description: [
+              `첫 번째로 <b%안전한 프로젝트 운영입니다.%b> 디자이너와 직접적으로 연결하여 작업을 진행하는 경우, 문제가 발생할 때 중재해줄 제3자가 없어 리스크가 큽니다. 문제가 발생하여 해결이 되지 않으면 연락이 끊길 수 있고, 책임을 회피하느라 프로젝트가 올바르게 마무리되지 않을 수 있습니다. 특히 인테리어 분야는 예측할 수 없는 문제가 매우 빈번하게 발생하며, 피해 금액도 크기 때문에 리스크 관리가 매우 중요합니다. 디자이너 또는 작업자와 직접 연락을 취하여 중재할 제3자를 끼지 않는 것은 상당히 위험합니다. 인테리어 분야에서는 꼭 회사나 플랫폼을 끼고 프로젝트를 진행하는 것이 안전하고 올바른 선택입니다.`,
+            ],
+          },
+          {
+            description: [
+              `두 번째로 홈리에종에는 <b%검증된 디자이너들만 모였다는 점 때문입니다.%b> 프리랜서 디자이너는 수많이 존재하지만, 그들의 실력과 작업 방식을 정확히 평가하기는 어렵습니다. 또한 인테리어 업계에서는 표준화가 잘 이루어지지 않아, 작업 방식이 다양하고 품질이 일정하지 않을 수 있습니다. 그러나 홈리에종의 디자이너들은 검증 과정을 거쳐 선발된 전문가들로 구성되어 있으며, 홈리에종의 표준에 맞춰 작업을 수행합니다. 또한 결과물에 대한 보증 및 포트폴리오 검증도 철저히 이루어지므로, 홈리에종의 디자이너라면 믿고 인테리어를 맡길 수 있는 것입니다.`,
+            ],
+          },
+          {
+            description: [
+              `세 번째로 <b%홈리에종의 큐레이션이 있기 때문입니다.%b> 인테리어를 디자이너와 진행하려면, 수많은 디자이너들 중에서 내 취향과 조건에 부합하는 디자이너를 찾아야 합니다. 하지만 내가 원하는 디자이너가 있더라도 예산, 일정, 거리 등 다양한 요인들을 고려해야 하기 때문에 선택 과정은 복잡하고 어렵습니다. 홈리에종의 큐레이션 서비스는 이러한 문제를 해결해줍니다. 고객 상담을 통해 고객님의 기본 정보와 여러 조건들을 체계적으로 분석하여, 최적의 인테리어 디자이너 3~4명을 추천해줍니다. 이를 통해 고객님은 어떤 디자이너가 가장 적합한지를 쉽게 확인할 수 있으며, 예산, 일정, 거리 등 다양한 요인들도 모두 고려된 맞춤형 추천을 받을 수 있습니다. 홈리에종과 함께하면 디자이너를 찾기 위해 복잡하고 긴 시간을 들일 필요 없이, 쉽고 빠르게 디자이너를 추천받고 선택할 수 있습니다.`,
+            ],
+          },
+          {
+            description: [
+              `네 번째로 <b%홈리에종의 프로젝트 케어가 있기 때문입니다.%b> 인테리어 프로젝트를 진행하는 동안 디자이너와 고객만 소통하는 것이 아니라, 홈리에종은 중재 역할을 하며 문제가 발생하면 적극적으로 해결해줍니다. 만약 디자이너와 맞지 않는 경우, 다른 디자이너로 교체하는 것도 가능합니다. 프로젝트의 각 중요 단계에서 홈리에종은 고객과 디자이너에게 전화를 걸어 문제 없이 진행되고 있는지 확인하며, 현장을 사진으로 확인하여 프로젝트가 원활하게 마무리될 수 있도록 합니다. 또한, 세팅과 촬영까지 진행하게 하여 최종 결과물을 확실하게 만들어드립니다. 고객님은 프로젝트가 중간에 흐지부지 끝나거나 제대로 마무리되지 않을까 하는 걱정 없이, 프로젝트가 완성도 높게 끝나길 기다리기만 하시면 됩니다.`,
+            ],
+          },
+        ]
+      },
+      image: AboutServiceJs.binaryPath + "/about_homeliaison_00.jpg",
+    },
+    process: {
+      up: {
+        title: "홈리에종 프로세스, 궁금해요!",
+        description: [
+          "문의를 주시면 1차 응대가 이루어지고, 응대가 끝나면 홈리에종은 고객님께 디자이너 추천서를 보내며, 고객님이 디자이너를 선택하신 후, 계약금을 결제하시면 계약이 체결됩니다.",
+          "계약이 체결되면 현장 미팅이 이루어지고 미팅 후 디자이너와 매칭이 되면, 디자인이 본격적으로 시작되고 그 디자인에 맞춰 시공과 구매가 진행되는 형식입니다."
+        ]
+      },
+      process: {
+        title: "프로세스 안내",
+        image: AboutServiceJs.binaryPath + "/" + "contents40.png",
+      }
+    },
+    service: {
+      up: {
+        title: "홈리에종의 서비스 종류",
+        description: [
+          "서비스는 시공 범위에 따라 구분됩니다. 홈퍼니싱은 시공이 없는 서비스이며, 홈스타일링과 토탈 스타일링은 부분 시공만 진행하는 지, 전체 시공을 진행하는 지에 따라 구분됩니다.",
+          "엑스트라 스타일링은 토탈 스타일링의 프리미엄 버전으로, '설계 변경'이라고도 불리며, 시공 디자인이 필요한지 여부에 따라 토탈과 구분됩니다.",
+        ]
+      },
+    },
+    etc: {
+      up: {
+        title: "기타 안내 사항과 솔직한 고객 후기",
+        description: [
+          "예산과 기간은 어떻게 설정되는지, 디자이너 제공물에는 무엇이 있는지, 시공사는 외부 시공사를 선택해서 진행할 수 있는지 등에 대한 안내를 드립니다.",
+          "더 상세한 안내는 홈리에종 카카오 채널 또는 유선 전화를 통해 별도 문의해주시면 받으실 수 있습니다."
+        ]
+      },
+      down: {
+        title: "기타 안내 사항",
+        children: [
+          {
+            title: "예산과 기간",
+            description: [
+              `홈리에종이 설명하는 인테리어 예산은 세 가지로 나누어집니다. 시공 예산, 가구 구매 예산, 디자인비로 구성됩니다. 시공 예산은 시공에 쓰이는 비용을 의미하며, 가구 구매 예산은 가구, 소품, 패브릭 등 구매에 필요한 비용을 의미합니다. 디자인비는 디자이너에게 지불하는 비용으로, 인테리어 프로젝트가 시작하기 전에 홈리에종에 미리 지불하게 됩니다. 프로젝트에 소요되는 시간은 서비스 종류에 따라 다릅니다. 또한, 배송 상황에 따라 유동적으로 변할 수 있기 때문에 정확한 기간을 정의하기는 어렵습니다. 그러나 대략적인 평균 소요기간은 예측할 수 있습니다. 다음은 서비스별 예상 소요기간입니다. 1. 홈퍼니싱 : 30일 소요 2. 홈스타일링 : 45일 소요 3. 토탈 스타일링 : 60일 소요 4. 엑스트라 스타일링 : 60일 소요`,
+            ],
+          },
+          {
+            title: "디자이너의 제공물",
+            description: [
+              `디자이너의 기본 작업물은 일정표, 시공 의뢰서, 컨셉 제안서, 디자인 제안서, 배치도(도면), 콜라쥬, 3D 모델, 제품 리스트입니다. 이 중 시공 의뢰서와 디자인 제안서, 배치도, 그리고 제품 리스트는 필수적으로 제공되며, 나머지는 디자이너마다 제공될 수도 있고 안 될 수도 있습니다. 특히 3D 모델링과 같은 경우는 노가다 작업이 크기 때문에 일부 디자이너는 별도의 요금을 받거나 제공하지 않을 수도 있습니다. 디자이너가 제공하는 작업물은 고객과의 소통을 원활하게 하기 위한 것이며, ‘디자인’ 자체가 아닙니다. 디자이너가 작업물만 너무 몰두되어 있다보면 현장의 문제를 해결하지 못하는 경우가 있을 수 있습니다. 결국 가장 중요한 것은 최종 결과물인 '현장'이기 때문에, 디자이너가 디자인 작업물에만 집중하면서 현장에 대한 고민을 줄이는 것보다는 좋은 현장이 만드는 데에 더 많은 시간을 쏟아야 합니다. 작업물만 화려하고, 최종 결과물이 실제로 잘 나오지 않는 경우를 피하는 것이 중요합니다.`,
+            ],
+          },
+          {
+            title: "시공사 선택권",
+            description: [
+              `일반 리모델링 회사와는 달리 홈리에종은 플랫폼으로서, 디자이너를 중심으로 한 홈스타일링 운영 체제입니다. 이러한 특성 때문에 시공 과정에서 고객이 선택권을 가질 수 있습니다. 디자이너가 진행한 디자인을 그대로 시공해줄 회사를 외부에서 찾아 시공을 진행할 수 있는 것입니다. 고객의 시공사 선택권은 홈리에종 시공사, 디자이너 시공사, 외부 시공사로 구분됩니다. 홈리에종 시공사는 홈리에종과 파트너십 계약을 맺은 시공사가 시공을 진행하는 것을 의미하며, 디자이너 시공사는 디자이너와 긴밀한 관계를 갖고 있거나 소속되어 있는 시공사와 시공을 진행하는 것을 말합니다. 외부 시공사는 홈리에종 파트너십이나 디자이너와의 관계가 없는 외부 턴키 업체를 의미합니다. 홈리에종은 공정별로 시공을 진행하길 원하는 고객의 선택을 허용하지 않습니다. 따라서 고객은 홈리에종, 디자이너, 외부 턴키 업체 중에서 하나를 선택하여 시공을 진행할 수 있습니다.`,
+            ],
+          },
+        ]
+      }
+    },
+  }
+
+  basicContentsMaker = (mother, keyword, backgroundColor) => {
+    createNode({
+      mother: mother,
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        position: "relative",
+        width: String(100) + '%',
+        textAlign: "center",
+      },
+      children: [
+        {
+          text: contents[keyword].up.title,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(middleTitleSize) + ea,
+            fontWeight: String(middleTitleWeight),
+            color: colorChip.black,
+            textAlign: "center",
+            paddingLeft: String(middleTitlePadding) + ea,
+            paddingRight: String(middleTitlePadding) + ea,
+            top: String(middleTitleTextTop) + ea,
+            background: backgroundColor,
+          }
+        },
+        {
+          text: contents[keyword].up.description.join(generalBig ? "\n" : " "),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(contentsSmallSize) + ea,
+            fontWeight: String(contentsWeight),
+            lineHeight: String(contentsLineHeight),
+            color: colorChip.black,
+            textAlign: "center",
+            paddingTop: String(smallDescriptionPaddingTop) + ea,
+            top: String(0) + ea,
+            width: generalBig ? withOut(0, ea) : String(80) + '%',
+          }
+        }
+      ]
+    });
+    createNode({
+      mother: mother,
+      style: {
+        display: contents[keyword].image !== undefined ? "flex" : "none",
+        marginTop: String(contentsMotherBoxMarginTop) + ea,
+        position: "relative",
+        flexDirection: "column",
+        alignItems: "start",
+        justifyContent: "start",
+      },
+      child: {
+        style: {
+          display: "block",
+          borderRadius: String(5) + "px",
+          width: withOut(0, ea),
+          height: String(imageHeight) + ea,
+          background: colorChip.black,
+          backgroundImage: contents[keyword].image !== undefined ? "url('" + contents[keyword].image + "')" : "",
+          backgroundSize: "100% auto",
+          backgroundPosition: "50% 50%",
+        }
+      }
+    });
+    if (contents[keyword].down !== undefined) {
+      createNode({
+        mother: mother,
+        style: {
+          display: "flex",
+          marginTop: String(contentsMotherBoxMarginTop) + ea,
+          position: "relative",
+          flexDirection: "column",
+          alignItems: "start",
+          justifyContent: "start",
+          paddingTop: String(contentsMotherEntirePaddingTop) + ea,
+          paddingBottom: String(contentsMotherEntirePaddingBottom) + ea,
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: String(0),
+              borderTop: "2px solid " + (backgroundColor === colorChip.white ? colorChip.gray2 : colorChip.gray3),
+            }
+          },
+          {
+            style: {
+              position: "absolute",
+              bottom: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: String(0),
+              borderBottom: "2px solid " + (backgroundColor === colorChip.white ? colorChip.gray2 : colorChip.gray3),
+            }
+          },
+          ...variableArray(contents[keyword].down.children.length).map((index) => {
+            return {
+              style: {
+                display: "flex",
+                position: "relative",
+                flexDirection: "row",
+                alignItems: "start",
+                justifyContent: "start",
+                width: withOut(0, ea),
+              },
+              children: [
+                {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    verticalAlign: "top",
+                    width: String(indentBoxWidth) + ea,
+                    height: withOut(0, ea),
+                    flexDirection: "column",
+                    alignItems: "start",
+                    justifyContent: "start",
+                    paddingTop: String(contentsMotherBoxPaddingTop) + ea,
+                  },
+                  children: [
+                    {
+                      text: index === 0 ? contents[keyword].down.title : "",
+                      style: {
+                        position: "relative",
+                        fontSize: String(downTitleSize) + ea,
+                        fontWeight: String(middleTitleWeight),
+                      }
+                    }
+                  ]
+                },
+                {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    verticalAlign: "top",
+                    width: String(indentBoxWidth) + ea,
+                    height: withOut(0, ea),
+                    flexDirection: "column",
+                    alignItems: "start",
+                    justifyContent: "start",
+                    paddingTop: String(contentsMotherBoxPaddingTop) + ea,
+                  },
+                  children: [
+                    {
+                      text: contents[keyword].down.children[index].title === undefined ? String(index + 1) : contents[keyword].down.children[index].title,
+                      style: {
+                        position: "relative",
+                        fontSize: String(contentsSize) + ea,
+                        fontWeight: String(middleTitleWeight),
+                        lineHeight: String(1.7),
+                      }
+                    }
+                  ]
+                },
+                {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    verticalAlign: "top",
+                    width: withOut(indentBoxWidth * 2, ea),
+                    height: withOut(0, ea),
+                    flexDirection: "column",
+                    alignItems: "start",
+                    justifyContent: "start",
+                    paddingTop: String(contentsMotherBoxPaddingTop) + ea,
+                  },
+                  children: [
+                    {
+                      text: contents[keyword].down.children[index].description.join(" "),
+                      style: {
+                        position: "relative",
+                        fontSize: String(contentsSize) + ea,
+                        fontWeight: String(contentsWeight),
+                        lineHeight: String(1.7),
+                        color: colorChip.black,
+                      },
+                      bold: {
+                        fontSize: String(contentsSize) + ea,
+                        fontWeight: String(middleTitleWeight),
+                        lineHeight: String(1.7),
+                        color: colorChip.black,
+                      },
+                      under: {
+                        fontSize: String(contentsSize) + ea,
+                        fontWeight: String(middleTitleWeight),
+                        lineHeight: String(1.7),
+                        color: colorChip.black,
+                      },
+                    }
+                  ]
+                },
+              ]
+            }
+          }),
+        ]
+      });
+    }
+    if (contents[keyword].process !== undefined) {
+      createNode({
+        mother: mother,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(margin * 2, ea),
+          paddingTop: String(margin) + ea,
+          paddingBottom: String(margin) + ea,
+          paddingLeft: String(margin) + ea,
+          paddingRight: String(margin) + ea,
+          background: colorChip.white,
+          borderRadius: String(8) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          marginTop: String(contentsMotherBoxMarginTop) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: big ? "inline-block" : "block",
+              position: "relative",
+              width: big ? String(leftBoxWidth) + ea : String(100) + '%',
+              height: big ? String(100) + '%' : "",
+              verticalAlign: "top",
+            },
+            child: {
+              text: contents[keyword].process.title,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(titleFont) + ea,
+                fontWeight: String(titleFontWeight),
+                top: String(titleVisualTop) + ea,
+                marginLeft: big ? String(titleLeft) + ea : "",
+                marginBottom: big ? "" : String(titleMarginBottom) + ea,
+                color: colorChip.black,
+                width: big ? "" : String(100) + '%',
+                textAlign: desktop ? "" : "center",
+                lineHeight: String(lineHeight),
+              }
+            }
+          },
+          {
+            style: {
+              display: big ? "inline-block" : "block",
+              position: "relative",
+              width: big ? withOut(leftBoxWidth, ea) : String(100) + '%',
+              height: String(100) + '%',
+              verticalAlign: "top",
+              paddingTop: String(rightBoxPaddingTop) + ea,
+            } ,
+            child: {
+              mode: "img",
+              attribute: { src:contents[keyword].process.image },
+              style: {
+                display: "block",
+                width: withOut(0 * 2, ea),
+              }
+            }
+          }
+        ]
+      });
+    }
+  }
+
+
+  // box0
+
+  whiteBlock0 = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      width: withOut(0 * 2, ea),
+      paddingTop: String(middleTongPaddinngTop) + ea,
+      paddingBottom: String(middleTitleMarginBottom) + ea,
+    }
+  });
+  basicContentsMaker(whiteBlock0, "designer", colorChip.gray1);
+
+  // white area ---------------------------------------------------------------------------------------------------
+
+  baseTong2 = baseTong.cloneNode(false);
+  baseTong2Back = baseTong.cloneNode(false);
+  baseTong.parentNode.appendChild(baseTong2Back);
+  baseTong2Back.appendChild(baseTong2);
+  baseTong2.style.paddingTop = String(0) + ea;
+  baseTong2Back.style.paddingTop = String(middleAreaPaddingTop) + ea;
+  baseTong2Back.style.width = String(100) + '%';
+  baseTong2Back.style.left = String(0);
+  baseTong2Back.style.background = colorChip.white;
+  baseTong.style.marginBottom = String(middleTongPaddingBottom) + ea;
+  baseTong2.style.paddingBottom = String(middleTongPaddingBottom) + ea;
+
+  // box1
+
+  whiteBlock1 = createNode({
+    mother: baseTong2,
+    style: {
+      position: "relative",
+      width: withOut(0 * 2, ea),
+      paddingTop: String(middleTongPaddinngTop) + ea,
+      paddingBottom: String(middleTitleMarginBottom) + ea,
+    }
+  });
+  basicContentsMaker(whiteBlock1, "homeliaison", colorChip.white);
+
+  // box2
+
+  whiteBlock2 = createNode({
+    mother: baseTong2,
+    style: {
+      position: "relative",
+      width: withOut(0 * 2, ea),
+      paddingTop: String(middleTongPaddinngTop) + ea,
+      paddingBottom: String(middleTitleMarginBottom) + ea,
+    }
+  });
+  basicContentsMaker(whiteBlock2, "process", colorChip.white);
+
+
+  // gray area ---------------------------------------------------------------------------------------------------
+
+  baseTong3 = baseTong.cloneNode(false);
+  baseTong3Back = baseTong.cloneNode(false);
+  baseTong.parentNode.appendChild(baseTong3Back);
+  baseTong3Back.appendChild(baseTong3);
+  baseTong3.style.paddingTop = String(0) + ea;
+  baseTong3Back.style.paddingTop = String(middleAreaPaddingTop) + ea;
+  baseTong3Back.style.width = String(100) + '%';
+  baseTong3Back.style.left = String(0);
+  baseTong3Back.style.background = colorChip.gray0;
+  baseTong.style.marginBottom = String(middleTongPaddingBottom) + ea;
+  baseTong3.style.marginBottom = String(0) + ea;
+  baseTong3Back.style.marginBottom = String(0) + ea;
+  baseTong3.style.paddingBottom = String(middleTongPaddingBottom) + ea;
+
+
+  whiteBlock3 = createNode({
+    mother: baseTong3,
+    style: {
+      position: "relative",
+      width: withOut(0 * 2, ea),
+      paddingTop: String(middleTongPaddinngTop) + ea,
+      paddingBottom: String(middleTitleMarginBottom) + ea,
+    }
+  });
+  basicContentsMaker(whiteBlock3, "service", colorChip.gray0);
+
+  instance.insertThreeBox(whiteBlock3);
+
+
+  // white area ---------------------------------------------------------------------------------------------------
+
+  baseTong4 = baseTong.cloneNode(false);
+  baseTong4Back = baseTong.cloneNode(false);
+  baseTong.parentNode.appendChild(baseTong4Back);
+  baseTong4Back.appendChild(baseTong4);
+  baseTong4.style.paddingTop = String(0) + ea;
+  baseTong4Back.style.paddingTop = String(middleAreaPaddingTop) + ea;
+  baseTong4Back.style.width = String(100) + '%';
+  baseTong4Back.style.left = String(0);
+  baseTong4Back.style.background = colorChip.white;
+  baseTong.style.marginBottom = String(middleTongPaddingBottom) + ea;
+  baseTong4.style.marginBottom = String(0) + ea;
+  baseTong4Back.style.marginBottom = String(0) + ea;
+  baseTong4.style.paddingBottom = String(middleTongPaddingBottom) + ea;
+
+  whiteBlock4 = createNode({
+    mother: baseTong4,
+    style: {
+      position: "relative",
+      width: withOut(0 * 2, ea),
+      paddingTop: String(middleTongPaddinngTop) + ea,
+      paddingBottom: String(middleTitleMarginBottom) + ea,
+    }
+  });
+  basicContentsMaker(whiteBlock4, "etc", colorChip.white);
+
+  whiteBlock5 = createNode({
+    mother: baseTong4,
+    style: {
+      position: "relative",
+      width: "calc(100% + " + String(photoMargin) + ea + ")",
+      paddingTop: String(middleTongPaddinngTop) + ea,
+      paddingBottom: String(middleTitleMarginBottom) + ea,
+    }
+  });
+  this.portfolioBlock(whiteBlock5);
+
+}
+
 AboutServiceJs.prototype.generateGsArray = function (number) {
   if (typeof number !== "number") {
     throw new Error("invaild input");
@@ -2185,6 +2798,387 @@ AboutServiceJs.prototype.portfolioBlock = function (baseBlock) {
 
 }
 
+AboutServiceJs.prototype.insertThreeBox = function (middleTong) {
+  const instance = this;
+  const { ea, media, standardWidth, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac, isIphone, svgMaker, selfHref } = GeneralJs;
+  let contents;
+  let middleTongPaddinngTop;
+  let middleTongPaddingBottom;
+  let middleTitleSize;
+  let middleTitleWeight;
+  let middleTitlePadding;
+  let middleTitleLineTop;
+  let middleTitleTextTop;
+  let middleAreaPaddingTop;
+  let middleInfoSize;
+  let middleTitleMarginBottom;
+  let threeBetween;
+  let threeHeight;
+  let threeBlock;
+  let threeBlockMarginTop;
+  let threeVisualPaddingBottom;
+  let threeWidth0, threeWidth1;
+  let threeSize, threeWeight, threeSmallSize;
+  let blackCircleWidth;
+  let numberTop, numberLeft, numberSize, numberWeight;
+  let mainBetween, subBetween, subTop;
+  let mainTong, blockTong;
+  let threeBlockWidth, threeBlockHeight;
+  let threeTitleSize, threeTitleWeight;
+  let threePhotoHeight;
+  let threeTitlePaddingLeft;
+  let threeTitleAreaHeight;
+  let threeDescriptionBoxPaddingTop, threeDescriptionBoxBetween;
+  let checkBoxWidth, checkBoxMarginRight, checkBoxTop;
+  let arrowBottom, arrowWidth, arrowHeight;
+  let boxNumber;
+  let mobileBlockPadding;
+  let mobilePhotoMarginBottom;
+  let mobileTitleMarginBottom;
+  let mobileContentsMarginBottom;
+  let titleTextTop, descriptionTextTop;
+
+  middleTongPaddinngTop = <%% 160, 140, 110, 95, 0 %%>;
+  middleTongPaddingBottom = <%% 180, 150, 120, 105, 0 %%>;
+  middleTitleMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
+
+  middleTitleLineTop = <%% 68, 65, 56, 49, 12 %%>;
+
+  middleTitleSize = <%% 22, 21, 20, 18, 3.9 %%>;
+  middleTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
+  middleTitlePadding = <%% 16, 16, 12, 10, 1.8 %%>;
+  middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
+
+  middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
+  middleInfoSize = <%% 13, 13, 12, 12, 2.7 %%>;
+
+  threeBetween = <%% 10, 10, 6, 4, 1 %%>;
+  threeHeight = <%% 170, 120, 110, 84, 21 %%>;
+  threeVisualPaddingBottom = <%% 2, 2, 2, 2, 0.5 %%>;
+  threeBlockMarginTop = <%% 60, 60, 50, 40, 6 %%>;
+
+  threeWidth0 = <%% 525, 525, 525, 525, 525 %%>;
+  threeWidth1 = <%% 330, 330, 330, 330, 330 %%>;
+
+  threeTitleSize = <%% 18, 17, 16, 14, 4 %%>;
+  threeTitleWeight = <%% 800, 800, 800, 800, 700 %%>;
+
+  threeSize = <%% 13, 13, 12, 11, 2.6 %%>;
+  threeWeight = <%% 400, 400, 400, 400, 400 %%>;
+  threeSmallSize = <%% 13, 12, 10, 10, 2.5 %%>;
+
+  blackCircleWidth = <%% 40, 36, 32, 28, 3 %%>;
+
+  numberTop = <%% 14, 14, 12, 10, 2.5 %%>;
+  numberLeft = <%% 22, 22, 20, 16, 3.5 %%>;
+  numberSize = <%% 13, 13, 12, 10, 2.5 %%>;
+  numberWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  mainBetween = <%% 4, 4, 2, 2, 0.5 %%>;
+  subBetween = <%% 6, 6, 6, 6, 0.5 %%>;
+  subTop = <%% 3, 3, 3, 3, 0.5 %%>;
+
+  threeBlockWidth = <%% 390, 340, 290, 234, 31 %%>;
+  threeBlockHeight = <%% 457, 408, 385, 338, 26.4 %%>;
+
+  threePhotoHeight = <%% 310, 270, 260, 230, 230 %%>;
+  threeTitlePaddingLeft = <%% 26, 26, 24, 21, 4.8 %%>;
+  threeTitleAreaHeight = <%% 60, 50, 48, 40, 5 %%>;
+
+  threeDescriptionBoxPaddingTop = <%% 23, 23, 19, 16, 5.2 %%>;
+  threeDescriptionBoxBetween = <%% 5, 5, 5, 4, (isIphone() ? 0.8 : 1) %%>;
+
+  checkBoxWidth = <%% 10, 10, 9, 8, 2 %%>;
+  checkBoxMarginRight = <%% 6, 6, 6, 5, 1 %%>;
+  checkBoxTop = <%% 5, 5, 4, 4, 1 %%>;
+
+  arrowBottom = <%% 27, 27, 24, 22, (isIphone() ? 6.3 : 6) %%>;
+  arrowWidth = <%% 36, 36, 20, 12, 3 %%>;
+  arrowHeight = <%% 10, 10, 8, 4, 1.5 %%>;
+
+  mobileBlockPadding = 14;
+  mobilePhotoMarginBottom = 6;
+  mobileTitleMarginBottom = 2.5;
+  mobileContentsMarginBottom = 4;
+
+  titleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 1), 0 %%>;
+  descriptionTextTop = <%% (isMac() ? 0 : 2.5), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 1.5), 0 %%>;
+
+  contents = {
+    title: "나에게 맞는 서비스, 나에게 맞는 디자이너",
+    description: [
+      "홈리에종은 내게 맞는 서비스와 디자이너를 선택하는 과정부터 시작합니다.",
+      "내 상황에 딱 맞는 서비스를 고르고 디자이너를 추천받아 보세요!",
+    ],
+    three: [
+      {
+        title: "홈퍼니싱",
+        sub: "home-furnishing",
+        description: [
+          "인테리어 시공 없이 가구, 패브릭, 소품만",
+          "집 무드를 변화시켜주는 스타일링",
+        ],
+        color: "#bfb8b0",
+        background: AboutServiceJs.binaryPath + "/" + "startillf0.png",
+        href: FRONTHOST + "/service.php?mode=furnishing",
+      },
+      {
+        title: "홈스타일링",
+        sub: "home-styling",
+        description: [
+          "집 컨디션에 맞는 범위의 시공을 진행",
+          "컨셉에 맞게 변화시켜주는 스타일링",
+        ],
+        color: "#b1ae9d",
+        background: AboutServiceJs.binaryPath + "/" + "startills0.png",
+        href: FRONTHOST + "/service.php?mode=styling",
+      },
+      {
+        title: "토탈 스타일링",
+        sub: "total-styling",
+        description: [
+          "원하는 스타일과 라이프 패턴에 맞게 기획",
+          "전체적인 구조를 변경하는 스타일링",
+        ],
+        color: "#546d81",
+        background: AboutServiceJs.binaryPath + "/" + "startillt0.png",
+        href: FRONTHOST + "/service.php?mode=total",
+      },
+    ]
+  }
+
+  boxNumber = contents.three.length;
+
+  // three base
+  threeBlock = createNode({
+    mother: middleTong,
+    style: {
+      display: "flex",
+      flexDirection: desktop ? "row" : "column",
+      position: "relative",
+      width: String(100) + '%',
+      marginTop: String(threeBlockMarginTop) + ea,
+    },
+  });
+
+
+  // three detail
+
+  for (let i = 0; i < boxNumber; i++) {
+    createNode({
+      mother: threeBlock,
+      attribute: {
+        index: String(i),
+      },
+      event: {
+        click: function (e) {
+          const index = Number(this.getAttribute("index"));
+          selfHref(contents.three[index].href);
+        }
+      },
+      style: {
+        display: desktop ? "inline-block" : "block",
+        width: desktop ? String(threeBlockWidth) + ea : withOut(0),
+        height: String(threeBlockHeight) + ea,
+        background: colorChip.white,
+        borderRadius: String(8) + "px",
+        boxShadow: "0px 5px 20px -12px " + colorChip.shadow,
+        overflow: desktop ? "" : "hidden",
+        marginBottom: desktop ? "" : String(2) + ea,
+        cursor: "pointer",
+      },
+      children: [
+        {
+          style: {
+            display: desktop ? "flex" : "none",
+            height: String(threeTitleAreaHeight) + ea,
+            width: withOut(threeTitlePaddingLeft, ea),
+            position: "relative",
+            alignItems: "center",
+            justifyContent: "start",
+            paddingLeft: String(threeTitlePaddingLeft) + ea,
+          },
+          child: {
+            text: contents.three[i].title,
+            style: {
+              position: "relative",
+              fontSize: String(threeTitleSize) + ea,
+              fontWeight: String(threeTitleWeight),
+              color: colorChip.black,
+              top: desktop ? String(titleTextTop) + ea : "",
+            }
+          }
+        },
+        {
+          style: {
+            display: desktop ? "block" : "inline-block",
+            position: "relative",
+            width: desktop ? withOut(0, ea) : String(threeBlockWidth) + ea,
+            height: desktop ? String(threePhotoHeight) + ea : String(102) + '%',
+            backgroundImage: "url('" + contents.three[i].background + "')",
+            backgroundSize: desktop ? "100% auto" : "100% auto",
+            backgroundPosition: "50% 50%",
+            verticalAlign: desktop ? "" : "top",
+          }
+        },
+        {
+          style: {
+            display: desktop ? "flex" : "inline-block",
+            position: "relative",
+            flexDirection: "column",
+            width: desktop ? withOut(threeTitlePaddingLeft * 2, ea) : withOut((threeTitlePaddingLeft * 2) + threeBlockWidth, ea),
+            paddingLeft: String(threeTitlePaddingLeft) + ea,
+            paddingRight: String(threeTitlePaddingLeft) + ea,
+            paddingTop: String(desktop ? threeDescriptionBoxPaddingTop : 13.4) + ea,
+            paddingBottom: String(threeDescriptionBoxPaddingTop) + ea,
+            verticalAlign: desktop ? "" : "top",
+            top: desktop ? "" : String(0),
+          },
+          children: [
+            {
+              style: {
+                display: desktop ? "none" : "inline-block",
+                position: "absolute",
+                top: String(isIphone() ? 4.6 : 4.8) + ea,
+                left: String(threeTitlePaddingLeft) + ea,
+              },
+              children: [
+                {
+                  text: contents.three[i].title,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(threeTitleSize) + ea,
+                    fontWeight: String(threeTitleWeight),
+                    color: colorChip.black,
+                  }
+                },
+                {
+                  text: contents.three[i].sub,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(2.7) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.gray3,
+                    fontFamily: "graphik",
+                    fontStyle: "italic",
+                    marginLeft: String(1.2) + ea,
+                  }
+                }
+              ]
+            },
+            {
+              style: {
+                display: "flex",
+                flexDirection: "row",
+                position: "relative",
+                marginBottom: String(threeDescriptionBoxBetween) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(contents.three[i].color),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(checkBoxWidth) + ea,
+                    marginRight: String(checkBoxMarginRight) + ea,
+                    top: String(checkBoxTop) + ea,
+                  }
+                },
+                {
+                  text: contents.three[i].description[0],
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(threeSize) + ea,
+                    fontWeight: String(threeWeight),
+                    color: colorChip.black,
+                    top: desktop ? String(descriptionTextTop) + ea : "",
+                  }
+                }
+              ]
+            },
+            {
+              style: {
+                display: "flex",
+                flexDirection: "row",
+                position: "relative",
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(contents.three[i].color),
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(checkBoxWidth) + ea,
+                    marginRight: String(checkBoxMarginRight) + ea,
+                    top: String(checkBoxTop) + ea,
+                  }
+                },
+                {
+                  text: contents.three[i].description[1],
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(threeSize) + ea,
+                    fontWeight: String(threeWeight),
+                    color: colorChip.black,
+                    top: desktop ? String(descriptionTextTop) + ea : "",
+                  }
+                }
+              ]
+            },
+            {
+              mode: "svg",
+              source: svgMaker.horizontalArrow(arrowWidth, arrowHeight, contents.three[i].color),
+              style: {
+                display: !media[3] ? "inline-block" : "none",
+                position: "absolute",
+                bottom: String(arrowBottom) + ea,
+                right: String(threeTitlePaddingLeft) + ea,
+                width: String(arrowWidth) + ea,
+              }
+            }
+          ]
+        }
+      ]
+    });
+  
+    if (i !== boxNumber - 1) {
+      createNode({
+        mother: threeBlock,
+        style: {
+          display: desktop ? "inline-block" : "none",
+          position: "relative",
+          width: "calc(calc(100% - " + String(threeBlockWidth * boxNumber) + ea + ") / " + String(boxNumber - 1) + ")",
+          height: String(threeBlockHeight) + ea,
+        },
+        child: {
+          style: {
+            display: media[0] ? "inline-block" : "none",
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: String(50) + '%',
+            height: withOut(0, ea),
+            borderRight: "1px dashed " + colorChip.gray3,
+            boxSizing: "border-box",
+          },
+        }
+      });
+    }
+  }
+
+}
+
 AboutServiceJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -2242,7 +3236,7 @@ AboutServiceJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertPeopleBox();
-          instance.insertServiceBox();
+          instance.insertMainContentsBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "AboutServiceJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
