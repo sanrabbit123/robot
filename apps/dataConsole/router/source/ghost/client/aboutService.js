@@ -436,11 +436,13 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
   const instance = this;
   const { ea, media, baseTong } = this;
   const { withOut, returnGet, createNode, colorChip, isIphone, isMac, svgMaker, serviceParsing, variableArray } = GeneralJs;
+  const mobileTitleToken = "<u%>%u>&nbsp;&nbsp;";
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1]);
   const small = !big;
   const generalBig = (media[0] || media[1] || media[2]);
+  const tablet = media[3];
   let whiteBlock0;
   let middleTongPaddinngTop;
   let middleTongPaddingBottom;
@@ -491,32 +493,32 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
 
   middleTitleSize = <%% 23, 23, 20, 18, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
-  middleTitlePadding = <%% 16, 16, 12, 10, 2 %%>;
+  middleTitlePadding = <%% 16, 16, 12, 10, 0 %%>;
   middleTitleLineTop = <%% 14, 14, 13, 11, (isIphone() ? 2.9 : 2.6) %%>;
   middleTitleTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), 0 %%>;
 
   middleTongPaddinngTop = <%% 108, 84, 72, 52, 10 %%>;
-  middleTongPaddingBottom = <%% 150, 130, 100, 70, 17 %%>;
+  middleTongPaddingBottom = <%% 150, 130, 100, 70, 12 %%>;
   middleTitleMarginBottom = <%% 30, 30, 30, 30, 7.5 %%>;
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
 
   downTitleSize = <%% 20, 18, 14, 13, 3.8 %%>;
-  contentsSize = <%% 16, 15, 14, 13, 3.8 %%>;
+  contentsSize = <%% 16, 15, 14, 13, 3.5 %%>;
   contentsSmallSize = <%% 15, 14, 13, 12, 3.5 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
 
-  contentsMotherBoxMarginTop = <%% 60, 60, 50, 40, 6 %%>;
-  contentsMotherBoxPaddingTop = <%% 32, 32, 30, 24, 3 %%>;
-  indentBoxWidth = <%% 240, 160, 140, 120, 24 %%>;
+  contentsMotherBoxMarginTop = <%% 60, 60, 50, 40, 21 %%>;
+  contentsMotherBoxPaddingTop = <%% 32, 32, 30, 24, 5 %%>;
+  indentBoxWidth = <%% 240, 160, 140, 120, 12 %%>;
 
   doubleLineHeight = <%% 6, 6, 6, 6, 6 %%>;
 
-  contentsMotherEntirePaddingTop = <%% 12, 12, 12, 8, 1 %%>;
-  contentsMotherEntirePaddingBottom = <%% 50, 50, 50, 34, 5 %%>;
+  contentsMotherEntirePaddingTop = <%% (isMac() ? 12 : 14), (isMac() ? 12 : 14), (isMac() ? 12 : 14), (isMac() ? 8 : 10), 1 %%>;
+  contentsMotherEntirePaddingBottom = <%% 46, 46, 45, 34, 6 %%>;
 
-  smallDescriptionPaddingTop = <%% 16, 16, 14, 12, 1 %%>;
-  imageHeight = <%% 320, 270, 230, 180, 36 %%>;
+  smallDescriptionPaddingTop = <%% 16, 16, 14, 12, 2 %%>;
+  imageHeight = <%% 320, 270, 230, 180, 28 %%>;
 
   leftBoxWidth = <%% 300, 230, 300, 300, 300 %%>;
 
@@ -527,7 +529,7 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
   titleMarginBottom = <%% 0, 0, 18, 12, 0.5 %%>;
-  titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), 2 %%>;
+  titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), 1 %%>;
 
   photoMargin = <%% 20, 18, 18, 16, 3 %%>;
   columns = <%% 4, 4, 3, 3, 2 %%>;
@@ -608,7 +610,7 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
       },
       process: {
         title: "프로세스 안내",
-        image: AboutServiceJs.binaryPath + "/" + "contents40.png",
+        image: AboutServiceJs.binaryPath + "/" + "contents4" + String(media.findIndex(m => m)) + ".png",
       }
     },
     service: {
@@ -660,25 +662,30 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
       style: {
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
+        alignItems: desktop ? "center" : "start",
         position: "relative",
         width: String(100) + '%',
-        textAlign: "center",
+        textAlign: desktop ? "center" : "left",
       },
       children: [
         {
-          text: contents[keyword].up.title,
+          text: (mobile ? mobileTitleToken : "") + contents[keyword].up.title,
           style: {
             display: "inline-block",
             position: "relative",
             fontSize: String(middleTitleSize) + ea,
             fontWeight: String(middleTitleWeight),
             color: colorChip.black,
-            textAlign: "center",
+            textAlign: desktop ? "center" : "left",
             paddingLeft: String(middleTitlePadding) + ea,
             paddingRight: String(middleTitlePadding) + ea,
             top: String(middleTitleTextTop) + ea,
             background: backgroundColor,
+          },
+          under: {
+            fontSize: String(middleTitleSize) + ea,
+            fontWeight: String(200),
+            color: colorChip.green,
           }
         },
         {
@@ -690,10 +697,10 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
             fontWeight: String(contentsWeight),
             lineHeight: String(contentsLineHeight),
             color: colorChip.black,
-            textAlign: "center",
+            textAlign: desktop ? "center" : "left",
             paddingTop: String(smallDescriptionPaddingTop) + ea,
             top: String(0) + ea,
-            width: generalBig ? withOut(0, ea) : String(80) + '%',
+            width: !tablet ? withOut(0, ea) : String(80) + '%',
           }
         }
       ]
@@ -702,7 +709,8 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
       mother: mother,
       style: {
         display: contents[keyword].image !== undefined ? "flex" : "none",
-        marginTop: String(contentsMotherBoxMarginTop) + ea,
+        marginTop: String(desktop ? contentsMotherBoxMarginTop : 6) + ea,
+        paddingBottom: desktop ? "" : String(5) + ea,
         position: "relative",
         flexDirection: "column",
         alignItems: "start",
@@ -716,7 +724,7 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
           height: String(imageHeight) + ea,
           background: colorChip.black,
           backgroundImage: contents[keyword].image !== undefined ? "url('" + contents[keyword].image + "')" : "",
-          backgroundSize: "100% auto",
+          backgroundSize: desktop ? "100% auto" : "auto 100%",
           backgroundPosition: "50% 50%",
         }
       }
@@ -755,6 +763,29 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
               borderBottom: "2px solid " + (backgroundColor === colorChip.white ? colorChip.gray2 : colorChip.gray3),
             }
           },
+          {
+            style: {
+              display: desktop ? "none" : "block",
+              position: "absolute",
+              top: String(-8.5) + ea,
+              left: String(0),
+              width: withOut(0, ea),
+            },
+            child: {
+              text: (mobile ? mobileTitleToken : "") + contents[keyword].down.title.replace(/\n/gi, " "),
+              style: {
+                fontSize: String(middleTitleSize) + ea,
+                fontWeight: String(middleTitleWeight),
+                color: colorChip.black,
+                textAlign: desktop ? "center" : "left",
+              },
+              under: {
+                fontSize: String(middleTitleSize) + ea,
+                fontWeight: String(200),
+                color: colorChip.deactive,
+              }
+            }
+          },
           ...variableArray(contents[keyword].down.children.length).map((index) => {
             return {
               style: {
@@ -768,7 +799,7 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
               children: [
                 {
                   style: {
-                    display: "inline-flex",
+                    display: desktop ? "inline-flex" : "none",
                     position: "relative",
                     verticalAlign: "top",
                     width: String(indentBoxWidth) + ea,
@@ -803,7 +834,7 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
                   },
                   children: [
                     {
-                      text: contents[keyword].down.children[index].title === undefined ? String(index + 1) : contents[keyword].down.children[index].title,
+                      text: (contents[keyword].down.children[index].title === undefined || mobile) ? String(index + 1) : contents[keyword].down.children[index].title,
                       style: {
                         position: "relative",
                         fontSize: String(contentsSize) + ea,
@@ -818,7 +849,7 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
                     display: "inline-flex",
                     position: "relative",
                     verticalAlign: "top",
-                    width: withOut(indentBoxWidth * 2, ea),
+                    width: withOut(indentBoxWidth * (desktop ? 2 : 1), ea),
                     height: withOut(0, ea),
                     flexDirection: "column",
                     alignItems: "start",
@@ -870,7 +901,7 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
           background: colorChip.white,
           borderRadius: String(8) + "px",
           boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          marginTop: String(contentsMotherBoxMarginTop) + ea,
+          marginTop: String(desktop ? contentsMotherBoxMarginTop : 5) + ea,
         },
         children: [
           {
