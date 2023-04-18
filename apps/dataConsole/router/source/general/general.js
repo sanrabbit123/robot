@@ -2409,6 +2409,10 @@ GeneralJs.prototype.greenBar = function () {
       GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/dashboard?mode=file");
     });
   }
+  this.belowButtons.sub.folder.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+    GeneralJs.selfHref(window.location.protocol + "//" + window.location.host + "/file");
+  });
   div_clone.appendChild(svg_icon);
 
   //setting icon

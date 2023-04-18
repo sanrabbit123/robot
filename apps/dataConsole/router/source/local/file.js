@@ -2268,7 +2268,17 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
       }
     }
     thisFolderFiles.sort((a, b) => {
-      return a.fileName >= b.fileName ? 1 : -1;
+      const fileConst = 1000000000000;
+      let aCode, bCode;
+      aCode = a.fileName.charCodeAt(0);
+      bCode = b.fileName.charCodeAt(0);
+      if (!a.directory) {
+        aCode = aCode + fileConst;
+      }
+      if (!b.directory) {
+        bCode = bCode + fileConst;
+      }
+      return aCode - bCode;
     });
 
     files.parentNode.removeChild(loading);
