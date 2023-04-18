@@ -236,7 +236,7 @@ FileJs.prototype.imageViewing = function (images, convertMode = true) {
 FileJs.prototype.baseMaker = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight, searchModeButtonsClassName } = this;
-  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref } = GeneralJs;
+  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref, linkToString } = GeneralJs;
   const fileBaseClassName = "fileBase";
   const contextmenuClassName = "contextmenuFactor";
   const tempInputClassName = "tempInputClassName";
@@ -364,7 +364,7 @@ FileJs.prototype.baseMaker = function () {
           if (selected.length === 1) {
             [ thisDom ] = selected;
             absolute = thisDom.getAttribute("absolute")
-            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute)) {
+            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /link$/.test(absolute)) {
               fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
               blankHref(JSON.parse(fileContents.contents).url);
             } else if (/drawio$/.test(absolute)) {
@@ -388,7 +388,7 @@ FileJs.prototype.baseMaker = function () {
         try {
           if (instance.selected.length === 1) {
             const absolute = instance.selected[0].getAttribute("absolute");
-            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /drawio$/.test(absolute) || /pdf$/.test(absolute)) {
+            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /drawio$/.test(absolute) || /pdf$/.test(absolute) || /link$/.test(absolute)) {
               return true;
             } else {
               return false;
@@ -1102,6 +1102,60 @@ FileJs.prototype.baseMaker = function () {
                   await sleep(1000);
                   newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
                   boo = newList.map((obj) => { return obj.fileName }).includes(name + ".drawio");
+                } while (!boo)
+              } else {
+                window.alert("생성에 실패하였습니다! 다시 시도해주세요!");
+              }
+            }
+            loading.remove();
+
+            removeByClass(contextmenuClassName);
+            instance.fileLoad(instance.path);
+          } else {
+            removeByClass(contextmenuClassName);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          if (instance.selected.length === 0) {
+            return true;
+          } else {
+            return false;
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+    },
+    {
+      text: "링크 파일 만들기",
+      event: async function (e) {
+        try {
+          const thisHref = await GeneralJs.prompt("저장할 링크를 복사 붙여넣기 해주세요!");
+          const newPageName = await GeneralJs.prompt("새로운 파일명을 적어주세요!");
+          let loading, id;
+          let name;
+          let response;
+          let newList;
+          let boo;
+          if (typeof newPageName === "string" && newPageName !== "") {
+            loading = instance.mother.grayLoading();
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+            if (id === undefined) {
+              window.alert("해당 폴더에는 링크 파일을 만들 수 없습니다!");
+            } else {
+              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              response = await ajaxJson({ name, parent: instance.path, link: linkToString(thisHref) }, S3HOST + ":3000/createNewLinkFile");
+              if (response.message === "success") {
+                await sleep(500);
+                do {
+                  await sleep(1000);
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
+                  boo = newList.map((obj) => { return obj.fileName }).includes(name + ".link");
                 } while (!boo)
               } else {
                 window.alert("생성에 실패하였습니다! 다시 시도해주세요!");
@@ -2346,7 +2400,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
                     await instance.fileLoad(absolute);
                   }, 201);
                 } else {
-                  if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute)) {
+                  if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /link$/.test(absolute)) {
                     fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
                     blankHref(JSON.parse(fileContents.contents).url);
                   } else if (/drawio$/.test(absolute)) {
