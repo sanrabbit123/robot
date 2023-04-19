@@ -525,9 +525,9 @@ FrontAboutJs.prototype.insertMainContentsBox = function () {
   rightBoxPaddingTop = <%% 7, 5, 7, 7, 6.5 %%>;
   lineHeight = <%% 1.42, 1.42, 1.42, 1.42, 1.42 %%>;
 
-  titleFont = <%% 22, 22, 18, 16, 4.2 %%>;
+  titleFont = <%% 20, 18, 14, 13, 3.8 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
-  titleFontWeight = <%% 700, 700, 700, 700, 700 %%>;
+  titleFontWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleMarginBottom = <%% 0, 0, 18, 12, 0.5 %%>;
   titleVisualTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), 1 %%>;
 
