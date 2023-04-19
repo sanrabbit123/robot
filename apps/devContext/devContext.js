@@ -242,12 +242,34 @@ DevContext.prototype.launching = async function () {
 
   
     
+    // let accessToken, response;
 
 
+    // response = await requestSystem("https://login.microsoftonline.com/consumers/oauth2/v2.0/token", {
+    //   client_id: "64d37228-e5f4-491c-9da5-9fe553de04ea",
+    //   scope: "https://graph.microsoft.com/Files.Read",
+    //   redirect_uri: "https://google.com",
+    //   grant_type: "client_credentials",
+    //   client_secret: "Oew8Q~M4Z.inZBSW5oufwjvpwUE9~LRp7ej3hcfE",
+    // }, {
+    //   headers: {
+    //     "Content-Type": "application/x-www-form-urlencoded",
+    //   }
+    // })
     
-    
-    
+    // accessToken = response.data.access_token;
 
+
+    // response = await requestSystem("https://graph.microsoft.com/v1.0/me/drive/root/children", {}, {
+    //   method: "get",
+    //   headers: {
+    //     Authorization: "Bearer " + accessToken,
+    //   }
+    // })
+
+    // console.log(response.data.value);
+
+    
 
     /*
 
@@ -5461,9 +5483,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "전은해",
-    //     designer: "김우현",
-    //     link: "https://drive.google.com/drive/folders/1hcDkTflt1W-I08l5gfKpapIv2_DVJwix",
+    //     client: "김동혁",
+    //     designer: "이정아",
+    //     link: "https://drive.google.com/drive/folders/1GNkl2PBgaxsvBFV1L54E5eER7jBx6qfg",
     //     pay: true
     //   },
     // ]);
