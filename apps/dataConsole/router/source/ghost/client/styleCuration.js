@@ -5895,6 +5895,202 @@ StyleCurationJs.prototype.forceConverting = async function () {
   }
 }
 
+StyleCurationJs.prototype.insertDescriptionBox = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, serviceParsing } = GeneralJs;
+  const { ea, media, osException, testMode } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  let whiteBlock;
+  let style;
+  let bottomMargin;
+  let leftBox, rightBox;
+  let margin, marginTop;
+  let contents;
+  let leftBoxWidth;
+  let titleBarTop, titleBarWidth, titleBarHeight, titleBarMarginRight;
+  let titleSize, titleWeight, titleLineHeight;
+  let descriptionSize, descriptionWeight, descriptionLineHeight;
+  let descriptionBoldWeight;
+  let mobilePaddingLeft;
+  let mobileTitleMarginBottom;
+  let mobileTitleToken;
+  let imageHeight;
+  let mobileImageMarginBottom;
+  let titleVisualTextTop;
+  let descriptionVisualTextTop;
+
+  bottomMargin = <%% 16, 16, 16, 12, 4 %%>;
+  margin = <%% 55, 55, 47, 39, 5.5 %%>;
+  marginTop = <%% 52, 50, 40, 32, 7 %%>;
+
+  leftBoxWidth = <%% 414, 343, 274, 222, 32 %%>;
+
+  titleBarTop = <%% 8, 7, (isMac() ? 6 : 7), (isMac() ? 6 : 7), 8 %%>;
+  titleBarWidth = <%% 5, 5, 4, 3, 5 %%>;
+  titleBarHeight = <%% 47, 42, 40, 38, 4 %%>;
+  titleBarMarginRight = <%% 15, 14, 12, 10, 15 %%>;
+
+  titleSize = <%% 20, 18, 17, 16, 3.6 %%>;
+  titleWeight = <%% 800, 800, 800, 800, 800 %%>;
+  titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+
+  descriptionSize = <%% 15, 15, 14, 12, 3.3 %%>;
+  descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+  descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
+  descriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
+
+  imageHeight = <%% 320, 270, 230, 180, 28 %%>;
+
+  mobilePaddingLeft = 3.3;
+  mobileTitleMarginBottom = 4;
+  mobileImageMarginBottom = 4.5;
+  mobileTitleToken = "<u%>%u>&nbsp;&nbsp;";
+
+  titleVisualTextTop = desktop ? (isMac() ? 0 : 3) : 0;
+  descriptionVisualTextTop = desktop ? (isMac() ? 0 : 2) : 0;
+
+  contents = {
+    left: {
+      title: [
+        big ? `상세한 큐레이션을 위해` : `큐레이션을 위해`,
+        big ? `아래 내용에 대해 알려주세요!` : `아래 내용을 알려주세요!`,
+      ]
+    },
+    right: {
+      description: [
+        `홈리에종의 디자이너를 먼저 만나는 과정부터 시작합니다. 디자이너와 함께 디자인을 먼저 진행한 후, 그에 따라 시공과 구매가 이루어지는 프로세스입니다. 따라서 <b%자신과 잘 맞는 디자이너와 매칭되는 것은 중요%b>합니다.`,
+        `고객님의 소중한 정보를 바탕으로, 홈리에종은 고객님과 잘 맞고 합리적인 가격에 결과를 제공할 수 있는 디자이너를 큐레이션하여 추천드리는 서비스를 제공합니다. 이를 위해 고객님의 현장과 취향에 대한 상세한 정보가 필요합니다. <b%아래 내용에 대해 알려주시면 보다 맞춤화된 서비스를 제공할 수 있습니다.%b> 상세한 큐레이션을 위해 아래 내용에 대해서 알려주세요!`,      
+      ],
+      image: StyleCurationJs.binaryPath + "/curation_designer_00.jpg",
+    }
+  };
+
+  whiteBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      display: "flex",
+      position: "relative",
+      flexDirection: desktop ? "row" : "column",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      paddingTop: String(marginTop) + ea,
+      paddingBottom: String(marginTop) + ea,
+      background: colorChip.white,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      justifyContent: "start",
+      alignItems: "start",
+    }
+  });
+
+  leftBox = createNode({
+    mother: whiteBlock,
+    style: {
+      width: desktop ? String(leftBoxWidth) + ea : withOut(margin * 2, ea),
+      display: desktop ? "inline-flex" : "flex",
+      flexDirection: "row",
+      position: "relative",
+      justifyContent: "start",
+      alignItems: "start",
+      marginLeft: String(margin) + ea,
+      marginBottom: desktop ? "" : String(mobileTitleMarginBottom) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "inline-block" : "none",
+          position: "relative",
+          top: String(titleBarTop) + ea,
+          width: String(titleBarWidth) + ea,
+          height: String(titleBarHeight) + ea,
+          borderRadius: String(5) + "px",
+          background: colorChip.black,
+          marginRight: String(titleBarMarginRight) + ea,
+        }
+      },
+      {
+        text: (mobile ? mobileTitleToken : "") + contents.left.title.join(desktop ? "\n" : " "),
+        style: {
+          display: "inline-block",
+          verticalAlign: "top",
+          position: "relative",
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(titleWeight),
+          color: colorChip.black,
+          lineHeight: String(titleLineHeight),
+          top: String(titleVisualTextTop) + ea,
+        },
+        under: {
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(200),
+          color: colorChip.green,
+          lineHeight: String(titleLineHeight),
+        }
+      }
+    ]
+  });
+
+  rightBox = createNode({
+    mother: whiteBlock,
+    style: {
+      width: desktop ? withOut(leftBoxWidth + (margin * 2), ea) : withOut(margin * 2, ea),
+      display: desktop ? "inline-flex" : "flex",
+      verticalAlign: "top",
+      position: "relative",
+      justifyContent: "start",
+      alignItems: "start",
+      marginLeft: desktop ? "" : String(margin) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "flex",
+          position: "relative",
+          flexDirection: "column",
+          justifyContent: "start",
+          alignItems: "start",
+        },
+        children: [
+          {
+            mode: "img",
+            attribute: { src: contents.right.image },
+            style: {
+              display: desktop ? "none" : "block",
+              position: "relative",
+              width: mobile ? withOut(mobilePaddingLeft, ea) : withOut(0, ea),
+              marginLeft: mobile ? String(mobilePaddingLeft) + ea : "",
+              borderRadius: String(5) + "px",
+              marginBottom: String(mobileImageMarginBottom) + ea,
+            }
+          },
+          {
+            text: contents.right.description.join("\n\n"),
+            style: {
+              display: "block",
+              position: "relative",
+              top: String(descriptionVisualTextTop) + ea,
+              fontSize: String(descriptionSize) + ea,
+              fontWeight: String(descriptionWeight),
+              color: colorChip.black,
+              lineHeight: String(descriptionLineHeight),
+              paddingLeft: mobile ? String(mobilePaddingLeft) + ea : "",
+            },
+            bold: {
+              fontSize: String(descriptionSize) + ea,
+              fontWeight: String(descriptionBoldWeight),
+              color: colorChip.green,
+            }
+          }
+        ]
+      }
+    ]
+  });
+
+}
+
 StyleCurationJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -6018,6 +6214,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
+          instance.insertDescriptionBox();
           instance.insertCenterBox();
           instance.insertPhotoBox();
           instance.insertPannelBox();
