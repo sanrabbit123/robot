@@ -654,6 +654,10 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
         ]
       }
     },
+  };
+
+  if (mobile) {
+    contents.designer.image = AboutServiceJs.binaryPath + "/about_designer_00.jpg";
   }
 
   basicContentsMaker = (mother, keyword, backgroundColor) => {
