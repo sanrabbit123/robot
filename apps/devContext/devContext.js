@@ -277,13 +277,11 @@ DevContext.prototype.launching = async function () {
       method: "get",
     });
 
-    console.log(response.request.res.responseUrl);
-
-    // response = await requestSystem("https://home-liaison.serveftp.com:53000/browserRequest", { link: linkToString(response.request.res.responseUrl) }, {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   }
-    // })
+    response = await requestSystem("https://" + address.secondinfo.host + "/browserRequest", { link: linkToString(response.request.res.responseUrl) }, {
+      headers: {
+        "Content-Type": "application/json",
+      }
+    })
 
 
     

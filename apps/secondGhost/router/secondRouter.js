@@ -2152,6 +2152,38 @@ SecondRouter.prototype.rou_post_receiptSend = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_browserRequest = function () {
+  const instance = this;
+  const { secondHost } = this;
+  const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/browserRequest" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.link === undefined) {
+        throw new Error("invaild post");
+      }
+      const { link } = req.body;
+      requestSystem("https://" + secondHost + "/browserRequest", {
+        link,
+      }, {
+        headers: { "Content-Type": "application/json" }
+      }).catch((err) => { console.log(err); });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_browserRequest): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_pageToPdf = function () {
   const instance = this;
   const address = this.address;
