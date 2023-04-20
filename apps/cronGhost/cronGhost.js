@@ -123,7 +123,7 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
   }
 }
 
-CronGhost.prototype.manyAsyncRequest = async function (MONGOC) {
+CronGhost.prototype.pollingAsyncRequest = async function (MONGOC) {
   const instance = this;
   const address = this.address;
   const { requestSystem, messageLog, errorLog } = this.mother;
@@ -342,7 +342,7 @@ CronGhost.prototype.cronServer = async function () {
     }
     intervalFunc3 = async () => {
       try {
-        await instance.manyAsyncRequest(MONGOLOCALC);
+        await instance.pollingAsyncRequest(MONGOLOCALC);
       } catch (e) {
         console.log(e);
       }
@@ -364,7 +364,7 @@ CronGhost.prototype.cronServer = async function () {
       setInterval(intervalFunc0, 4 * 60 * 60 * 1000);
       setInterval(intervalFunc1, 1 * 30 * 60 * 1000);
       setInterval(intervalFunc2, 1 * 10 * 60 * 1000);
-      setInterval(intervalFunc3, 1 * 1 * 60 * 1000)
+      setInterval(intervalFunc3, 1 * 2 * 60 * 1000)
     }, startTime);
 
 

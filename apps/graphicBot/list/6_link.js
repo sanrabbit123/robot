@@ -1,9 +1,9 @@
 module.exports = function (arg, info) {
   return [
-    "https://naver.com",
+    "https://home-liaison.xyz:3000/blackPrint",
     async function () {
       const { link } = equalJson(JSON.stringify(POSTCONST));
-      await sleep(2000);
+      await sleep(1000);
       selfHref(stringToLink(link));
     },
   ];

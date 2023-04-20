@@ -121,6 +121,28 @@ ReceiptRouter.prototype.rou_get_bluePrint = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_get_blackPrint = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = "/blackPrint";
+  obj.func = async function (req, res) {
+    try {
+      const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8"><style media="screen">*::-webkit-scrollbar{display:none;}html{overflow:hidden}body {position: absolute;top: 0px;left: 0px;width: 100vw;height: 100vh;background: #000000;}</style></head><body></body></html>`;
+      res.set({
+        "Content-Type": "text/html",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(html);
+    } catch (e) {
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_get_blackPrint): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.rou_get_isOffice = function () {
   const instance = this;
   const address = this.address;
