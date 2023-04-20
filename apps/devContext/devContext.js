@@ -242,52 +242,51 @@ DevContext.prototype.launching = async function () {
 
   
     
-    // const tenant = "consumers";
-    // const clientId = "64d37228-e5f4-491c-9da5-9fe553de04ea";
-    // const redirectUri = "https://google.com";
-    // const clientSecret = "Oew8Q~M4Z.inZBSW5oufwjvpwUE9~LRp7ej3hcfE";
-    // const loginUrl = "https://login.microsoftonline.com";
-    // let accessToken, response;
-    // let html;
-    // let scope;
-    // let code;
+    const tenant = "consumers";
+    const clientId = "64d37228-e5f4-491c-9da5-9fe553de04ea";
+    const redirectUri = "https://home-liaison.serveftp.com/microsoft";
+    const clientSecret = "Oew8Q~M4Z.inZBSW5oufwjvpwUE9~LRp7ej3hcfE";
+    const loginUrl = "https://login.microsoftonline.com";
+    let accessToken, response;
+    let html;
+    let scope;
+    let code;
 
-    // scope = [
-    //   "email",
-    //   "files.read",
-    //   "files.read.all",
-    //   "files.read.selected",
-    //   "files.readwrite",
-    //   "files.readwrite.all",
-    //   "files.readwrite.appfolder",
-    //   "files.readwrite.selected",
-    //   "openid",
-    //   "profile",
-    //   "user.read",
-    // ]
+    scope = [
+      "email",
+      "files.read",
+      "files.read.all",
+      "files.read.selected",
+      "files.readwrite",
+      "files.readwrite.all",
+      "files.readwrite.appfolder",
+      "files.readwrite.selected",
+      "openid",
+      "profile",
+      "user.read",
+    ]
 
-    // response = await requestSystem(loginUrl + "/" + tenant + "/oauth2/v2.0/authorize", {
-    //   client_id: clientId,
-    //   scope: scope.join(" "),
-    //   redirect_uri: redirectUri,
-    //   client_secret: clientSecret,
-    //   response_type: "code",
-    //   response_mode: "query",
-    // }, {
-    //   method: "get",
-    // });
-    // console.log(linkToString(response.request.res.responseUrl));
+    response = await requestSystem(loginUrl + "/" + tenant + "/oauth2/v2.0/authorize", {
+      client_id: clientId,
+      scope: scope.join(" "),
+      redirect_uri: redirectUri,
+      client_secret: clientSecret,
+      response_type: "code",
+      response_mode: "query",
+    }, {
+      method: "get",
+    });
+
+    console.log(response.request.res.responseUrl);
+
+    // response = await requestSystem("https://home-liaison.serveftp.com:53000/browserRequest", { link: linkToString(response.request.res.responseUrl) }, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   }
+    // })
 
 
-
-    const response = await requestSystem("https://home-liaison.serveftp.com:53000/browserRequest", { link: linkToString("https://google.com") }, {
-      headers: {
-        "Content-Type": "application/json",
-      }
-    })
-
-    console.log(response);
-
+    
 
     
 

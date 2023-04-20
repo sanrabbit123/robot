@@ -101,6 +101,8 @@ StaticRouter.prototype.rou_get_First = function () {
         const disk = await diskReading();
         res.send(JSON.stringify({ disk: disk.toArray() }));
       } else {
+        console.log(req.params.id);
+        console.log(req.query);
         res.send(JSON.stringify({ message: "hi" }));
       }
 

@@ -761,6 +761,7 @@ GraphicBot.prototype.startWork = function () {
         await sleep(500);
         totalSuccess.push(workSuccess);
         if (workSuccess) {
+          await sleep(5000);
           await instance.chromeHistoryClean();
           shell.exec(`rm -rf ${shellLink(instance.tong + "/" + name)}`);
         }

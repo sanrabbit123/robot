@@ -3,7 +3,7 @@ module.exports = function (arg, info) {
     "https://naver.com",
     async function () {
       const { link } = equalJson(JSON.stringify(POSTCONST));
-      await sleep(3000);
+      await sleep(2000);
       selfHref(stringToLink(link));
     },
   ];
