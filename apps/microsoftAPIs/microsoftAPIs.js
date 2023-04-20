@@ -16,9 +16,9 @@ const MicrosoftAPIs = function (mother = null, back = null, address = null) {
   this.tokenFileName = "accessToken.dat";
 
   this.tenant = "consumers";
-  this.clientId = "64d37228-e5f4-491c-9da5-9fe553de04ea";
+  this.clientId = "ee656079-c22a-46ae-9081-ceb06c1d54c9";
   this.redirectUri = "https://home-liaison.serveftp.com/microsoft";
-  this.clientSecret = "Oew8Q~M4Z.inZBSW5oufwjvpwUE9~LRp7ej3hcfE";
+  this.clientSecret = "Ufr8Q~cQxarROQ6YD9~4oQ02Rvno2vJGLY2tKdCo";
   this.loginUrl = "https://login.microsoftonline.com";
   this.scope = [
     "email",

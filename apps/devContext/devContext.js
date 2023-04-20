@@ -308,6 +308,28 @@ DevContext.prototype.launching = async function () {
 
     
 
+    
+    // await microsoft.renewAccessToken();
+    // const url = "https://graph.microsoft.com/v1.0/devices";
+    // let res, accessToken;
+
+    // accessToken = await microsoft.getAccessToken();
+
+    // try {
+    //   res = await requestSystem(url, {}, {
+    //     method: "get",
+    //     headers: {
+    //       "Authorization": "Bearer " + accessToken,
+    //     }
+    //   })
+  
+    //   console.log(res.data);
+    // } catch (e) {
+    //   console.log(e.response.data)
+    // }
+
+
+
 
     
 
