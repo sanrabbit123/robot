@@ -114,9 +114,24 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
       return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.backinfo.host + ":" + String(generalPort) + "/callHistory", { data: null }, { headers: { "Content-Type": "application/json" } });
-    }).then(() => {
-      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/renewMicrosoftAccessToken", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).catch((e) => {
+      throw new Error(e);
+    });
+
+  } catch (e) {
+    await errorLog("basic async request error : " + e.message);
+  }
+}
+
+CronGhost.prototype.manyAsyncRequest = async function (MONGOC) {
+  const instance = this;
+  const address = this.address;
+  const { requestSystem, messageLog, errorLog } = this.mother;
+  const generalPort = 3000;
+  const selfMongo = MONGOC;
+  try {
+
+    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/renewMicrosoftAccessToken", { data: null }, { headers: { "Content-Type": "application/json" } }).catch((e) => {
       throw new Error(e);
     });
 
@@ -202,7 +217,7 @@ CronGhost.prototype.cronServer = async function () {
     let keyDir;
     let caDir;
     let intervalFunc, startTime, today;
-    let intervalFunc0, intervalFunc1, intervalFunc2;
+    let intervalFunc0, intervalFunc1, intervalFunc2, intervalFunc3;
     let generalSocket, server;
 
     app.use(useragent.express());
@@ -325,6 +340,13 @@ CronGhost.prototype.cronServer = async function () {
         console.log(e);
       }
     }
+    intervalFunc3 = async () => {
+      try {
+        await instance.manyAsyncRequest(MONGOLOCALC);
+      } catch (e) {
+        console.log(e);
+      }
+    }
 
     today = new Date();
     startTime = Number(zeroAddition(today.getMinutes()).slice(1));
@@ -337,10 +359,12 @@ CronGhost.prototype.cronServer = async function () {
       intervalFunc().catch((err) => { console.log(err); });
       intervalFunc0().catch((err) => { console.log(err); });
       intervalFunc2().catch((err) => { console.log(err); });
+      intervalFunc3().catch((err) => { console.log(err); });
       setInterval(intervalFunc, interval);
       setInterval(intervalFunc0, 4 * 60 * 60 * 1000);
       setInterval(intervalFunc1, 1 * 30 * 60 * 1000);
       setInterval(intervalFunc2, 1 * 10 * 60 * 1000);
+      setInterval(intervalFunc3, 5 * 60 * 1000)
     }, startTime);
 
 
