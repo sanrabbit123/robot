@@ -1944,6 +1944,8 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
       str = "odxlsx";
     } else if (/\.(oddocx)$/gi.test(fileName)) {
       str = "oddocx";
+    } else if (/\.(odpptx)$/gi.test(fileName)) {
+      str = "odpptx";
     } else {
       str = "general";
     }

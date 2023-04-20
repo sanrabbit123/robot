@@ -43,12 +43,17 @@ const MicrosoftAPIs = function (mother = null, back = null, address = null) {
 
   this.excelFolderId = "46518F7E2F1AC0C3!126";
   this.defaultExcelId = "46518F7E2F1AC0C3!127";
+
   this.wordFolderId = "46518F7E2F1AC0C3!159";
   this.defaultWordId = "46518F7E2F1AC0C3!160";
+
+  this.powerFolderId = "46518F7E2F1AC0C3!202";
+  this.defaultPowerId = "46518F7E2F1AC0C3!203";
 
   this.exe = {
     excel: "xlsx",
     word: "docx",
+    power: "pptx",
   };
 
   this.folderNameToken = "______folderName______";
@@ -279,6 +284,79 @@ MicrosoftAPIs.prototype.createWord = async function (name = "default", safeLinkM
 
     return {
       name: name + "." + exe.word,
+      id: response.data.value[0].id,
+      cTag: response.data.value[0].cTag,
+      eTag: response.data.value[0].eTag,
+      webUrl: safeLinkMode ? linkToString(response.data.value[0].webUrl) : response.data.value[0].webUrl,
+      editUrl: safeLinkMode ? linkToString(editUrl) : editUrl,
+    };
+
+  } catch (e) {
+    await instance.renewAccessToken();
+    console.log(e);
+    return null;
+  }
+}
+
+MicrosoftAPIs.prototype.createPowerPoint = async function (name = "default", safeLinkMode = false) {
+  if (typeof name !== "string") {
+    throw new Error("invalid input");
+  }
+  const instance = this;
+  const { graphUrl, version, driveId, powerFolderId, defaultPowerId, exe, folderNameToken, oneDriveUrl } = this;
+  const { requestSystem, uniqueValue, sleep, linkToString } = this.mother;
+  try {
+    let response;
+    let newFolderId;
+    let accessToken;
+    let editUrl;
+
+    name = name.trim().replace(/ /gi, "_").replace(/[\=\+\?\/\\\|\!\#\$\%\^\&\*\~\n\t\.]/gi, '').replace(/ /gi, "_");
+    accessToken = await this.getAccessToken();
+
+    response = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + powerFolderId + "/children", {
+      name: uniqueValue("hex") + folderNameToken + name,
+      folder: {},
+      "@microsoft.graph.conflictBehavior": "rename"
+    }, {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+        "Content-Type": "application/json",
+      }
+    })
+    newFolderId = response.data.id;
+
+    await sleep(500);
+
+    response = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + defaultPowerId + "/copy", {
+      parentReference: {
+        driveId,
+        id: newFolderId
+      },
+      name: name + "." + exe.power,
+    }, {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+        "Content-Type": "application/json",
+      }
+    })
+
+    do {
+      await sleep(500);
+      response = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + newFolderId + "/children", {}, {
+        method: "get",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+        }
+      })
+    } while (response.data.value.length !== 1)
+
+    await sleep(1000);
+
+    editUrl = oneDriveUrl + "/edit.aspx?resid=" + globalThis.encodeURIComponent(response.data.value[0].id);
+
+    return {
+      name: name + "." + exe.power,
       id: response.data.value[0].id,
       cTag: response.data.value[0].cTag,
       eTag: response.data.value[0].eTag,

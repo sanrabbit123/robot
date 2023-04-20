@@ -30,6 +30,7 @@ FileJs.staticSvg = {
   link: `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 16.933 16.933" xml:space="preserve"><path style="fill:#14B478;" d="M9.7891,0.975H4.1669c-0.5285,0-0.9918,0.4627-0.9918,0.9923v12.5663 c0,0.5291,0.4627,0.9923,0.9923,0.9923h8.5981c0.5291,0,0.9923-0.4627,0.9923-0.9923V4.9432l-2.3147-1.6535L9.7891,0.975z"/><path style="fill:#148C64;" d="M9.7891,0.975v2.9764c0,0.5291,0.4627,0.9918,0.9918,0.9918h2.9764L9.7891,0.975z"/><path style="fill:#FFFFFF;" d="M8.0064,11.0319c0.0579-0.0614,0.1467-0.0794,0.2242-0.0459c0.2282,0.099,0.4509,0.1208,0.6936,0.084 c-0.0199,0.0275-0.0282,0.0431-0.0402,0.055c-0.3081,0.3075-0.6093,0.6225-0.9268,0.92c-0.44,0.4126-1.0467,0.4976-1.5339,0.2331 c-0.7144-0.3878-0.8741-1.3467-0.3039-1.9843c0.3803-0.4251,0.7891-0.8277,1.2111-1.2118c0.5165-0.47,1.2962-0.457,1.7558-0.0056 C9.1897,9.178,9.2298,9.2971,9.1905,9.435C9.1541,9.5627,9.0636,9.66,8.9333,9.6656c-0.0994,0.0042-0.2201-0.0247-0.2988-0.083 C8.3363,9.3618,8.0154,9.3573,7.7489,9.6157c-0.3743,0.363-0.7423,0.7329-1.102,1.1103c-0.263,0.2759-0.2518,0.6613,0.006,0.8847 c0.2311,0.2003,0.5693,0.1817,0.8272-0.0566c0.1798-0.166,0.3492-0.3433,0.5214-0.5174 C8.0032,11.0352,8.0048,11.0335,8.0064,11.0319z M8.9049,8.4709C8.8613,8.5154,8.794,8.5288,8.7374,8.5026 C8.5055,8.3953,8.2728,8.3608,8.026,8.4023c0-0.0116-0.0034-0.0229,0.0005-0.0267c0.3268-0.327,0.6407-0.6687,0.9845-0.9769 c0.6339-0.5683,1.5841-0.4301,1.9818,0.2706c0.2714,0.4779,0.2083,1.0977-0.1925,1.5267c-0.3897,0.4171-0.7942,0.8226-1.2166,1.2063 C9.0857,10.8547,8.3426,10.848,7.8711,10.42c-0.1677-0.1522-0.1924-0.3534-0.0618-0.5049c0.1333-0.1546,0.3289-0.1602,0.507-0.0146 C8.5722,10.11,8.9012,10.1208,9.146,9.8887c0.398-0.3773,0.7828-0.7689,1.1601-1.1669c0.1649-0.174,0.2187-0.3967,0.1301-0.6322 c-0.0765-0.2036-0.23-0.3254-0.4438-0.3559C9.77,7.7021,9.5823,7.7884,9.4267,7.9423C9.2519,8.1149,9.0809,8.2913,8.9049,8.4709z"/></svg>`,
   odxlsx: `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 16.933 16.933" xml:space="preserve"><path style="fill:#2B8B56;" d="M9.7891,0.975H4.1669c-0.5285,0-0.9918,0.4627-0.9918,0.9923v12.5663 c0,0.5291,0.4627,0.9923,0.9923,0.9923h8.5981c0.5291,0,0.9923-0.4627,0.9923-0.9923V4.9432l-2.3147-1.6535L9.7891,0.975z"/><path style="fill:#2CAE71;" d="M9.7891,0.975v2.9764c0,0.5291,0.4627,0.9918,0.9918,0.9918h2.9764L9.7891,0.975z"/><circle style="fill-rule:evenodd;clip-rule:evenodd;fill:#235E3C;" cx="8.4659" cy="10.0247" r="2.7339"/><path style="fill:#FFFFFF;" d="M6.9575,8.4589l1.0938,1.5655l-1.0938,1.5661h0.8293l0.6789-0.9723l0.679,0.9723h0.8293 l-1.0938-1.5661l1.0938-1.5655H9.1447l-0.679,0.9723L7.7868,8.4589H6.9575z"/></svg>`,
   oddocx: `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 16.933 16.933" xml:space="preserve"><path style="fill:#3365B4;" d="M9.7891,0.975H4.1669c-0.5285,0-0.9918,0.4627-0.9918,0.9923v12.5663 c0,0.5291,0.4627,0.9923,0.9923,0.9923h8.5981c0.5291,0,0.9923-0.4627,0.9923-0.9923V4.9432l-2.3147-1.6535L9.7891,0.975z"/><path style="fill:#7FADEF;" d="M9.7891,0.975v2.9764c0,0.5291,0.4627,0.9918,0.9918,0.9918h2.9764L9.7891,0.975z"/><circle style="fill-rule:evenodd;clip-rule:evenodd;fill:#223F7E;" cx="8.4659" cy="10.0247" r="2.7339"/><path style="fill:#FFFFFF;" d="M6.831,8.7846h0.6829l0.2943,1.611l0.3772-1.611h0.5614l0.3666,1.6262l0.3168-1.6262h0.6702 l-0.5796,2.7505H8.8257l-0.3568-1.494l-0.3363,1.494h-0.713L6.831,8.7846z"/></svg>`,
+  odpptx: `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 16.933 16.933" xml:space="preserve"><path style="fill:#CA4827;" d="M9.7891,0.975H4.1669c-0.5285,0-0.9918,0.4627-0.9918,0.9923v12.5663 c0,0.5291,0.4627,0.9923,0.9923,0.9923h8.5981c0.5291,0,0.9923-0.4627,0.9923-0.9923V4.9432l-2.3147-1.6535L9.7891,0.975z"/><path style="fill:#ED9265;" d="M9.7891,0.975v2.9764c0,0.5291,0.4627,0.9918,0.9918,0.9918h2.9764L9.7891,0.975z"/><circle style="fill-rule:evenodd;clip-rule:evenodd;fill:#992017;" cx="8.4659" cy="10.0247" r="2.7339"/><path style="fill:#FFFFFF;" d="M7.3211,8.5038v3.2559h0.8587v-1.0046c1.1762,0.0023,1.7739-0.1508,1.7739-1.1173 c0-1.0696-0.5849-1.1377-1.7739-1.1339L7.3211,8.5038z M8.492,9.1912C8.7772,9.1978,9.1577,9.277,9.1577,9.65 c0,0.5967-0.9741,0.4407-0.9741,0.4407V9.2088c0,0,0.137-0.0215,0.3082-0.0175L8.492,9.1912z"/></svg>`,
 };
 
 FileJs.prototype.staticSvg = FileJs.staticSvg;
@@ -366,7 +367,7 @@ FileJs.prototype.baseMaker = function () {
           if (selected.length === 1) {
             [ thisDom ] = selected;
             absolute = thisDom.getAttribute("absolute")
-            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /link$/.test(absolute) || /odxlsx$/.test(absolute) || /oddocx$/.test(absolute)) {
+            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /link$/.test(absolute) || /odxlsx$/.test(absolute) || /oddocx$/.test(absolute) || /odpptx$/.test(absolute)) {
               fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
               blankHref(JSON.parse(fileContents.contents).url);
             } else if (/drawio$/.test(absolute)) {
@@ -390,7 +391,7 @@ FileJs.prototype.baseMaker = function () {
         try {
           if (instance.selected.length === 1) {
             const absolute = instance.selected[0].getAttribute("absolute");
-            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /drawio$/.test(absolute) || /pdf$/.test(absolute) || /link$/.test(absolute) || /odxlsx$/.test(absolute) || /oddocx$/.test(absolute)) {
+            if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /drawio$/.test(absolute) || /pdf$/.test(absolute) || /link$/.test(absolute) || /odxlsx$/.test(absolute) || /oddocx$/.test(absolute) || /odpptx$/.test(absolute)) {
               return true;
             } else {
               return false;
@@ -834,6 +835,60 @@ FileJs.prototype.baseMaker = function () {
                   await sleep(1000);
                   newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
                   boo = newList.map((obj) => { return obj.fileName }).includes(name + ".oddocx");
+                } while (!boo)
+              } else {
+                window.alert("생성에 실패하였습니다! 다시 시도해주세요!");
+              }
+            }
+            loading.remove();
+
+            removeByClass(contextmenuClassName);
+            instance.fileLoad(instance.path);
+          } else {
+            removeByClass(contextmenuClassName);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          if (instance.selected.length === 0) {
+            return true;
+          } else {
+            return false;
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+    },
+    {
+      text: "파워포인트 만들기",
+      event: async function (e) {
+        try {
+          const newPageName = await GeneralJs.prompt("새로운 파워포인트명을 적어주세요!");
+          let loading, id;
+          let name;
+          let response;
+          let newList;
+          let boo;
+          if (typeof newPageName === "string" && newPageName !== "") {
+            loading = instance.mother.grayLoading();
+            ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+            if (id === undefined) {
+              window.alert("해당 폴더에는 파워포인트를 만들 수 없습니다!");
+            } else {
+              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3000/createNewPowerPoint");
+              if (response.message === "success" && typeof response.editId === "string" && typeof response.editUrl === "string") {
+                await sleep(500);
+                blankHref(stringToLink(response.editUrl));
+                do {
+                  await sleep(1000);
+                  newList = await ajaxJson({ path: instance.path }, S3HOST + ":3000/listFiles", { equal: true });
+                  boo = newList.map((obj) => { return obj.fileName }).includes(name + ".odpptx");
                 } while (!boo)
               } else {
                 window.alert("생성에 실패하였습니다! 다시 시도해주세요!");
@@ -2520,7 +2575,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
                     await instance.fileLoad(absolute);
                   }, 201);
                 } else {
-                  if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /link$/.test(absolute) || /odxlsx$/.test(absolute) || /oddocx$/.test(absolute)) {
+                  if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /link$/.test(absolute) || /odxlsx$/.test(absolute) || /oddocx$/.test(absolute) || /odpptx$/.test(absolute)) {
                     fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
                     blankHref(JSON.parse(fileContents.contents).url);
                   } else if (/drawio$/.test(absolute)) {
