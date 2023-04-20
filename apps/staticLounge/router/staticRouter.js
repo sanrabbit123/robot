@@ -100,9 +100,13 @@ StaticRouter.prototype.rou_get_First = function () {
       } else if (req.params.id === "disk") {
         const disk = await diskReading();
         res.send(JSON.stringify({ disk: disk.toArray() }));
+
+      } else if (((req.params.id === "microsoft" && typeof req.query === "object") && req.query !== null) && typeof req.query.code === "string") {
+
+        console.log(req.query.code);
+
+        res.send(JSON.stringify({ message: "hi" }));
       } else {
-        console.log(req.params.id);
-        console.log(req.query);
         res.send(JSON.stringify({ message: "hi" }));
       }
 
