@@ -644,15 +644,15 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
           await sleep(1000);
           frontWaitingNumber = frontWaitingNumber + 1;
           if (instance.frontProblem) {
-            await errorLog("Graphic server front js 문제 일어남 => front problem");
+            await errorLog("Graphic server => front close");
             if (instance.frontProcess !== null) {
               clearTimeout(instance.frontProcess);
               instance.frontProcess = null;
             }
             await sleep(500);
-            await instance.chromeClose();
-            await sleep(500);
-            return false;
+            // await instance.chromeClose();
+            // await sleep(500);
+            return true;
           }
           if (frontWaitingNumber >= (60 * 20)) {
             await errorLog("Graphic server front js 문제 일어남 => timeout");
@@ -840,7 +840,7 @@ GraphicBot.prototype.botRouter = function () {
         instance.frontProcess = null;
       }
       instance.frontProcess = setTimeout(function () {
-        console.log("something bad");
+        console.log("script timeout end");
         instance.frontProblem = true;
       }, 20 * 1000);
 

@@ -4,7 +4,6 @@ module.exports = function (arg, info) {
     async function () {
       const { link } = equalJson(JSON.stringify(POSTCONST));
       selfHref(stringToLink(link));
-      await sleep(5000);
     },
   ];
 };
