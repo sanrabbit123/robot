@@ -1940,6 +1940,10 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
       str = "drawio";
     } else if (/\.(link)$/gi.test(fileName)) {
       str = "link";
+    } else if (/\.(odxlsx)$/gi.test(fileName)) {
+      str = "odxlsx";
+    } else if (/\.(oddocx)$/gi.test(fileName)) {
+      str = "oddocx";
     } else {
       str = "general";
     }

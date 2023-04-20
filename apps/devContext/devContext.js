@@ -248,38 +248,12 @@ DevContext.prototype.launching = async function () {
     
 
     
-
-    // response = await requestSystem(loginUrl + "/" + tenant + "/oauth2/v2.0/token", {
-    //   client_id: clientId,
-    //   scope: scope.join(" "),
-    //   code: code,
-    //   redirect_uri: redirectUri,
-    //   client_secret: clientSecret,
-    //   grant_type: "authorization_code",
-    // }, {
-    //   headers: {
-    //     "Content-Type": "application/x-www-form-urlencoded",
-    //   }
-    // })
-    // console.log(response.data);
     
-    // accessToken = "EwCQA8l6BAAUAOyDv0l6PcCVu89kmzvqZmkWABkAAWKwF3UIJUEhccLrvpbZMj0GFqV5QFLTanVl6Mun3gPh/cRDpQhMPOW15vLVI8xiPNoFJnwqTTTWvThJmoFPIGVyJaPcF6qyDHWY3DX3+Xa+Y1MepAFbLvc74t5kmH4TUXuiQ4RcaH+Q68MNcPfayNVV6sKbIDos3wX/D7ngr9C3MtRvSLMkItgqx+J/6cPJF4nk/FlY/P9utfGhXeqyF9sXe78D7js/MKO/37hC3U/bEx3L8L9N6ts5zO3LIcVp74IEMZ6KMHU6VNsRc+px+Ml4P4BmCZV5NWv9gBfUqRZeZ2quR+FZz6+CZgemmqJk0Xdk8nHFDQnuwGxBTvlVt6QDZgAACA68ixY7zKEWYAL59qd2u5h6qPhZFBQKJp9WzJYlpwZNyf/bZcXJP0lk+d9I3UdVbI7MswF2TxnauhpN+oKESNaCxCz6J/mQ6lvq7/3XX8FH7C+O4/XByy2SqA3sma60iLZPwFXo8995Xrz9Oc9uJnCF7sVJJhzq29SA3HVZLLj/b2BOg8SoAav2cQY5NZNonLtGh0HA4enLWAX0ezSlU6MCIpF8egQ5K592PJ6s2i/6jUxxJ2IiazqK0JaZHdLY1VTnYyxNRUQUyYFQTrYHlQ9ghVPJUlqMsCA8ei+42GpiRdnU+2igw/gwZcfLMRncV5B5VVX6i4zvJygde+qYvD1vbTKtZuJLmTFfY010rr7F0xjOs/ojF1vNA5Dct0QdVE9W0E4bQVLNuVWRKGe0Sr1ftN/TQE5it4lxdDfvl/C/KqPs2Vyu95OfggvGDSXEC7RiaqTMSL549PUieyvP6pb1Pr/t4TSjHBUZVJywJk+GcudbOCQUsSdqim8JW1QLdb13cD8DzL/dtlLGiP2EVfrF8m7y5JbkwmPHJFXXoTg5VOon5LDGMyD51V61aChFAcIw3tDUBeaXJeoA7xJ6T4EDf/Y6rABeik4aptjyxHg8mLSNcZu1qUcO2GvQ8UziRzC9k5du/zzNPcaGE0uTZZA6ZpOq2ANzayeuUZlvfuD1SuwhIvkr2l7MGnYstOqGBZReo94FV4KqJihcjlVVgljEH5lhE77JuERpxaJxIyZm1KPW51/0mnsDRsjy7yRMnhhLzg1G5FN9GXZL/DAG2q+L04Quruf8qNVjnXJleUV9IgISB3/1YnrKuKIC";
 
-    // response = await requestSystem("https://graph.microsoft.com/v1.0/me/drive/root/children", {}, {
-    //   method: "get",
-    //   headers: {
-    //     Authorization: "Bearer " + accessToken,
-    //   }
-    // })
-
-    // console.log(response.data.value);
+    
 
 
-
-
-
-
-
+    
 
 
     
