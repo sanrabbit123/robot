@@ -13,6 +13,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const NotionAPIs = require(process.cwd() + "/apps/notionAPIs/notionAPIs.js");
+  const MicrosoftAPIs = require(`${process.cwd()}/apps/microsoftAPIs/microsoftAPIs.js`);
 
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -34,6 +35,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   this.slides = new GoogleSlides();
   this.forms = new GoogleForms();
   this.notion = new NotionAPIs();
+  this.microsoft = new MicrosoftAPIs();
 
   this.staticConst = process.env.HOME + "/samba";
   this.sambaToken = "__samba__";
@@ -82,6 +84,7 @@ StaticRouter.prototype.fireWall = function (req) {
 
 StaticRouter.prototype.rou_get_First = function () {
   const instance = this;
+  const microsoft = this.microsoft;
   const { errorLog, diskReading } = this.mother;
   let obj = {};
   obj.link = "/:id";
@@ -102,9 +105,7 @@ StaticRouter.prototype.rou_get_First = function () {
         res.send(JSON.stringify({ disk: disk.toArray() }));
 
       } else if (((req.params.id === "microsoft" && typeof req.query === "object") && req.query !== null) && typeof req.query.code === "string") {
-
-        console.log(req.query.code);
-
+        microsoft.codeToAccessToken(req.query.code).catch((err) => { console.log(err) });
         res.send(JSON.stringify({ message: "hi" }));
       } else {
         res.send(JSON.stringify({ message: "hi" }));
@@ -2216,6 +2217,30 @@ StaticRouter.prototype.rou_post_deleteFile = function () {
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       errorLog("Static lounge 서버 문제 생김 (rou_post_deleteFile): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_getMicrosoftAccessToken = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
+  const microsoft = this.microsoft;
+  let obj = {};
+  obj.link = [ "/getMicrosoftAccessToken" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const accessToken = await microsoft.getAccessToken();
+      res.send(JSON.stringify({ accessToken }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_getMicrosoftAccessToken): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }

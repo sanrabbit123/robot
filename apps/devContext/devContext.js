@@ -49,6 +49,7 @@ const AwsAPIs = require(APP_PATH + "/awsAPIs/awsAPIs.js");
 const CronGhost = require(APP_PATH + "/cronGhost/cronGhost.js");
 const TextDecorator = require(APP_PATH + "/textDecorator/textDecorator.js");
 const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
+const MicrosoftAPIs = require(`${process.cwd()}/apps/microsoftAPIs/microsoftAPIs.js`);
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -242,51 +243,8 @@ DevContext.prototype.launching = async function () {
 
   
     
-    const tenant = "consumers";
-    const clientId = "64d37228-e5f4-491c-9da5-9fe553de04ea";
-    const redirectUri = "https://home-liaison.serveftp.com/microsoft";
-    const clientSecret = "Oew8Q~M4Z.inZBSW5oufwjvpwUE9~LRp7ej3hcfE";
-    const loginUrl = "https://login.microsoftonline.com";
-    let accessToken, response;
-    let html;
-    let scope;
-    let code;
-
-    scope = [
-      "email",
-      "files.read",
-      "files.read.all",
-      "files.read.selected",
-      "files.readwrite",
-      "files.readwrite.all",
-      "files.readwrite.appfolder",
-      "files.readwrite.selected",
-      "openid",
-      "profile",
-      "user.read",
-    ]
-
-    response = await requestSystem(loginUrl + "/" + tenant + "/oauth2/v2.0/authorize", {
-      client_id: clientId,
-      scope: scope.join(" "),
-      redirect_uri: redirectUri,
-      client_secret: clientSecret,
-      response_type: "code",
-      response_mode: "query",
-    }, {
-      method: "get",
-    });
-
-    response = await requestSystem("https://" + address.secondinfo.host + "/browserRequest", { link: linkToString(response.request.res.responseUrl) }, {
-      headers: {
-        "Content-Type": "application/json",
-      }
-    })
-
-
-    
-
-    
+    const microsoft = new MicrosoftAPIs();
+    await microsoft.renewAccessToken();
 
 
 
