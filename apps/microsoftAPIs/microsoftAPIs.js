@@ -55,6 +55,11 @@ const MicrosoftAPIs = function (mother = null, back = null, address = null) {
     word: "docx",
     power: "pptx",
   };
+  this.odExe = {
+    excel: "odxlsx",
+    word: "oddocx",
+    power: "odpptx",
+  };
 
   this.folderNameToken = "______folderName______";
 }
@@ -151,6 +156,44 @@ MicrosoftAPIs.prototype.getAccessToken = async function () {
     return null;
   }
 }
+
+MicrosoftAPIs.prototype.isMicrosoftFile = function (fileName) {
+  const instance = this;
+  const { exe } = this;
+  let boo;
+  boo = false;
+  if (typeof fileName !== "string") {
+    throw new Error("invalid input");
+  }
+  for (let key in exe) {
+    if ((new RegExp("." + exe[key] + "$")).test(fileName)) {
+      boo = true;
+      break;
+    }
+  }
+  return boo;
+}
+
+MicrosoftAPIs.prototype.localToOneDriveName = function (fileName) {
+  const instance = this;
+  const { exe, odExe } = this;
+  if (typeof fileName !== "string") {
+    throw new Error("invalid input");
+  }
+  if (!this.isMicrosoftFile(fileName)) {
+    throw new Error("invalid input");
+  }
+  if ((new RegExp("." + exe.excel + "$")).test(fileName)) {
+    return fileName.replace((new RegExp(exe.excel + "$"), odExe.excel));
+  } else if ((new RegExp("." + exe.word + "$")).test(fileName)) {
+    return fileName.replace((new RegExp(exe.word + "$"), odExe.word));
+  } else if ((new RegExp("." + exe.power + "$")).test(fileName)) {
+    return fileName.replace((new RegExp(exe.power + "$"), odExe.power));
+  } else {
+    throw new Error("invalid input 2");
+  }
+}
+
 
 MicrosoftAPIs.prototype.createExcel = async function (name = "default", safeLinkMode = false) {
   if (typeof name !== "string") {
@@ -389,6 +432,321 @@ MicrosoftAPIs.prototype.getDownloadUrl = async function (id, safeLinkMode = fals
     } else {
       return response.data["@microsoft.graph.downloadUrl"];
     }
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+MicrosoftAPIs.prototype.uploadExcel = async function (filePath, safeLinkMode = false) {
+  const instance = this;
+  const axios = require("axios");
+  const { graphUrl, driveId, version, exe, excelFolderId, folderNameToken, oneDriveUrl } = this;
+  const { fileSystem, requestSystem, uniqueValue, sleep, linkToString } = this.mother;
+  try {
+    let buffer;
+    let res;
+    let filePathArr;
+    let fileName, fileName_full;
+    let thisExe;
+    let accessToken;
+    let newFileName;
+    let newFileNamePure;
+    let newFolderId;
+    let editUrl;
+
+    if (typeof filePath !== "string") {
+      throw new Error("invalid input 1");
+    }
+    if (!(new RegExp(exe.excel + "$")).test(filePath)) {
+      throw new Error("invalid input 2");
+    }
+
+    filePathArr = filePath.split("/");
+    fileName_full = filePathArr[filePathArr.length - 1];
+    thisExe = fileName_full.split(".")[fileName_full.split(".").length - 1];
+    if (thisExe !== exe.excel) {
+      throw new Error("invalid input 3");
+    }
+    fileName = fileName_full.split(".").slice(0, -1).join(".");
+    newFileNamePure = fileName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_").replace(/\t/gi, "_");
+    newFileName = newFileNamePure + "." + thisExe;
+
+    accessToken = await this.getAccessToken();
+    buffer = await fileSystem(`readBuffer`, [ filePath ]);
+
+
+    res = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + excelFolderId + "/children", {
+      name: uniqueValue("hex") + folderNameToken + newFileNamePure,
+      folder: {},
+      "@microsoft.graph.conflictBehavior": "rename"
+    }, {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+        "Content-Type": "application/json",
+      }
+    })
+    newFolderId = res.data.id;
+
+    await sleep(500);
+
+    res = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + newFolderId + ":/" + newFileName + ":/createUploadSession", {
+      "@microsoft.graph.conflictBehavior": "replace",
+      name: newFileName,
+    }, {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+        "Content-Type": "application/json",
+      }
+    })
+
+    res = await axios.put(res.data.uploadUrl, buffer, {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+      }
+    });
+    
+    do {
+      await sleep(500);
+      res = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + newFolderId + "/children", {}, {
+        method: "get",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+        }
+      })
+    } while (res.data.value.length !== 1)
+
+    await sleep(1000);
+
+    editUrl = oneDriveUrl + "/edit.aspx?resid=" + globalThis.encodeURIComponent(res.data.value[0].id);
+
+    return {
+      name: newFileName,
+      id: res.data.value[0].id,
+      cTag: res.data.value[0].cTag,
+      eTag: res.data.value[0].eTag,
+      webUrl: safeLinkMode ? linkToString(res.data.value[0].webUrl) : res.data.value[0].webUrl,
+      editUrl: safeLinkMode ? linkToString(editUrl) : editUrl,
+    };
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+MicrosoftAPIs.prototype.uploadWord = async function (filePath, safeLinkMode = false) {
+  const instance = this;
+  const axios = require("axios");
+  const { graphUrl, driveId, version, exe, wordFolderId, folderNameToken, oneDriveUrl } = this;
+  const { fileSystem, requestSystem, uniqueValue, sleep, linkToString } = this.mother;
+  try {
+    let buffer;
+    let res;
+    let filePathArr;
+    let fileName, fileName_full;
+    let thisExe;
+    let accessToken;
+    let newFileName;
+    let newFileNamePure;
+    let newFolderId;
+    let editUrl;
+
+    if (typeof filePath !== "string") {
+      throw new Error("invalid input 1");
+    }
+    if (!(new RegExp(exe.word + "$")).test(filePath)) {
+      throw new Error("invalid input 2");
+    }
+
+    filePathArr = filePath.split("/");
+    fileName_full = filePathArr[filePathArr.length - 1];
+    thisExe = fileName_full.split(".")[fileName_full.split(".").length - 1];
+    if (thisExe !== exe.word) {
+      throw new Error("invalid input 3");
+    }
+    fileName = fileName_full.split(".").slice(0, -1).join(".");
+    newFileNamePure = fileName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_").replace(/\t/gi, "_");
+    newFileName = newFileNamePure + "." + thisExe;
+
+    accessToken = await this.getAccessToken();
+    buffer = await fileSystem(`readBuffer`, [ filePath ]);
+
+    res = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + wordFolderId + "/children", {
+      name: uniqueValue("hex") + folderNameToken + newFileNamePure,
+      folder: {},
+      "@microsoft.graph.conflictBehavior": "rename"
+    }, {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+        "Content-Type": "application/json",
+      }
+    })
+    newFolderId = res.data.id;
+
+    await sleep(500);
+
+    res = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + newFolderId + ":/" + newFileName + ":/createUploadSession", {
+      "@microsoft.graph.conflictBehavior": "replace",
+      name: newFileName,
+    }, {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+        "Content-Type": "application/json",
+      }
+    })
+
+    res = await axios.put(res.data.uploadUrl, buffer, {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+      }
+    });
+    
+    do {
+      await sleep(500);
+      res = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + newFolderId + "/children", {}, {
+        method: "get",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+        }
+      })
+    } while (res.data.value.length !== 1)
+
+    await sleep(1000);
+
+    editUrl = oneDriveUrl + "/edit.aspx?resid=" + globalThis.encodeURIComponent(res.data.value[0].id);
+
+    return {
+      name: newFileName,
+      id: res.data.value[0].id,
+      cTag: res.data.value[0].cTag,
+      eTag: res.data.value[0].eTag,
+      webUrl: safeLinkMode ? linkToString(res.data.value[0].webUrl) : res.data.value[0].webUrl,
+      editUrl: safeLinkMode ? linkToString(editUrl) : editUrl,
+    };
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+MicrosoftAPIs.prototype.uploadPowerPoint = async function (filePath, safeLinkMode = false) {
+  const instance = this;
+  const axios = require("axios");
+  const { graphUrl, driveId, version, exe, powerFolderId, folderNameToken, oneDriveUrl } = this;
+  const { fileSystem, requestSystem, uniqueValue, sleep, linkToString } = this.mother;
+  try {
+    let buffer;
+    let res;
+    let filePathArr;
+    let fileName, fileName_full;
+    let thisExe;
+    let accessToken;
+    let newFileName;
+    let newFileNamePure;
+    let newFolderId;
+    let editUrl;
+
+    if (typeof filePath !== "string") {
+      throw new Error("invalid input 1");
+    }
+    if (!(new RegExp(exe.power + "$")).test(filePath)) {
+      throw new Error("invalid input 2");
+    }
+
+    filePathArr = filePath.split("/");
+    fileName_full = filePathArr[filePathArr.length - 1];
+    thisExe = fileName_full.split(".")[fileName_full.split(".").length - 1];
+    if (thisExe !== exe.power) {
+      throw new Error("invalid input 3");
+    }
+    fileName = fileName_full.split(".").slice(0, -1).join(".");
+    newFileNamePure = fileName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_").replace(/\t/gi, "_");
+    newFileName = newFileNamePure + "." + thisExe;
+
+    accessToken = await this.getAccessToken();
+    buffer = await fileSystem(`readBuffer`, [ filePath ]);
+
+    res = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + powerFolderId + "/children", {
+      name: uniqueValue("hex") + folderNameToken + newFileNamePure,
+      folder: {},
+      "@microsoft.graph.conflictBehavior": "rename"
+    }, {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+        "Content-Type": "application/json",
+      }
+    })
+    newFolderId = res.data.id;
+
+    await sleep(500);
+
+    res = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + newFolderId + ":/" + newFileName + ":/createUploadSession", {
+      "@microsoft.graph.conflictBehavior": "replace",
+      name: newFileName,
+    }, {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+        "Content-Type": "application/json",
+      }
+    })
+
+    res = await axios.put(res.data.uploadUrl, buffer, {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+      }
+    });
+    
+    do {
+      await sleep(500);
+      res = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + newFolderId + "/children", {}, {
+        method: "get",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+        }
+      })
+    } while (res.data.value.length !== 1)
+
+    await sleep(1000);
+
+    editUrl = oneDriveUrl + "/edit.aspx?resid=" + globalThis.encodeURIComponent(res.data.value[0].id);
+
+    return {
+      name: newFileName,
+      id: res.data.value[0].id,
+      cTag: res.data.value[0].cTag,
+      eTag: res.data.value[0].eTag,
+      webUrl: safeLinkMode ? linkToString(res.data.value[0].webUrl) : res.data.value[0].webUrl,
+      editUrl: safeLinkMode ? linkToString(editUrl) : editUrl,
+    };
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+MicrosoftAPIs.prototype.uploadDocument = async function (filePath) {
+  const instance = this;
+  const { exe } = this;
+  try {
+    let thisResult;
+
+    if (typeof filePath !== "string") {
+      throw new Error("invalid input 0");
+    }
+    if (!this.isMicrosoftFile(filePath)) {
+      throw new Error("invalid input");
+    }
+    if ((new RegExp("." + exe.excel + "$")).test(filePath)) {
+      thisResult = await this.uploadExcel(filePath, false);
+    } else if ((new RegExp("." + exe.word + "$")).test(filePath)) {
+      thisResult = await this.uploadWord(filePath, false);
+    } else if ((new RegExp("." + exe.power + "$")).test(filePath)) {
+      thisResult = await this.uploadPowerPoint(filePath, false);
+    } else {
+      throw new Error("invalid input 2");
+    }
+
+    return thisResult;
   } catch (e) {
     console.log(e);
     return null;

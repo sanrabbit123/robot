@@ -242,11 +242,62 @@ DevContext.prototype.launching = async function () {
     // console.log(res.data);
 
   
+
+    
+
+
+
+
+
+
     
 
 
 
+
+
+
+
+    // const axios = require("axios");
+    // const parentFolderId = "46518F7E2F1AC0C3!192";
+    // const driveId = "46518f7e2f1ac0c3";
+    // const graphUrl = "https://graph.microsoft.com";
+    // const version = "v1.0";
+    // let buffer;
+    // let res;
+    // let newFileName;
+    // let accessToken;
+
+    // accessToken = await microsoft.getAccessToken();
+    // buffer = await fileSystem(`readBuffer`, [ `${process.cwd()}/temp/target.xlsx` ]);
+    // newFileName = "imageExcel.xlsx";
+
+    // res = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + parentFolderId + ":/" + newFileName + ":/createUploadSession", {
+    //   "@microsoft.graph.conflictBehavior": "replace",
+    //   name: newFileName,
+    // }, {
+    //   headers: {
+    //     "Authorization": "Bearer " + accessToken,
+    //     "Content-Type": "application/json",
+    //   }
+    // })
+
+    // res = await axios.put(res.data.uploadUrl, buffer, {
+    //   headers: {
+    //     "Authorization": "Bearer " + accessToken,
+    //   }
+    // });
     
+    // console.log(res);
+
+    
+    
+
+    // res = await axios.put("https://graph.microsoft.com/v1.0/drives/46518f7e2f1ac0c3/items/" + parentFolderId + ":/" + newFileName + ":/content", buffer, {
+    //   headers: {
+    //     "Authorization": "Bearer " + accessToken,
+    //   }
+    // });
 
 
     

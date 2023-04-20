@@ -458,6 +458,8 @@ FileJs.prototype.baseMaker = function () {
           let directory;
           let loading;
           let response;
+          let fileContents;
+          let serverResponse;
           if (selected.length > 0) {
 
             loading = instance.mother.whiteProgressLoading();
@@ -472,7 +474,13 @@ FileJs.prototype.baseMaker = function () {
             if (files.length === 1 && files[0].type !== "folder") {
               for (let { absolute, type } of files) {
                 if (type === "file") {
-                  await downloadFile(instance.absoluteParsing(absolute), null, loading.progress.firstChild);
+                  if (/odxlsx$/.test(absolute) || /oddocx$/.test(absolute) || /odpptx$/.test(absolute)) {
+                    fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
+                    serverResponse = await ajaxJson({ id: JSON.parse(fileContents.contents).id }, S3HOST + ":3000/downloadUrlFromOneDrive", { equal: true });
+                    blankHref(stringToLink(serverResponse.url));
+                  } else {
+                    await downloadFile(instance.absoluteParsing(absolute), null, loading.progress.firstChild);
+                  }
                 }
               }
             } else {
@@ -772,7 +780,7 @@ FileJs.prototype.baseMaker = function () {
             if (id === undefined) {
               window.alert("해당 폴더에는 엑셀을 만들 수 없습니다!");
             } else {
-              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
               response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3000/createNewExcel");
               if (response.message === "success" && typeof response.editId === "string" && typeof response.editUrl === "string") {
                 await sleep(500);
@@ -826,7 +834,7 @@ FileJs.prototype.baseMaker = function () {
             if (id === undefined) {
               window.alert("해당 폴더에는 워드를 만들 수 없습니다!");
             } else {
-              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
               response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3000/createNewWord");
               if (response.message === "success" && typeof response.editId === "string" && typeof response.editUrl === "string") {
                 await sleep(500);
@@ -880,7 +888,7 @@ FileJs.prototype.baseMaker = function () {
             if (id === undefined) {
               window.alert("해당 폴더에는 파워포인트를 만들 수 없습니다!");
             } else {
-              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
               response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3000/createNewPowerPoint");
               if (response.message === "success" && typeof response.editId === "string" && typeof response.editUrl === "string") {
                 await sleep(500);
@@ -934,7 +942,7 @@ FileJs.prototype.baseMaker = function () {
             if (id === undefined) {
               window.alert("해당 폴더에는 시트를 만들 수 없습니다!");
             } else {
-              name = newSheetsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              name = newSheetsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
               response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewSheets");
               if (response.message === "success" && typeof response.sheetsId === "string") {
                 await sleep(500);
@@ -988,7 +996,7 @@ FileJs.prototype.baseMaker = function () {
             if (id === undefined) {
               window.alert("해당 폴더에는 문서를 만들 수 없습니다!");
             } else {
-              name = newDocsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              name = newDocsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
               response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewDocs");
               if (response.message === "success" && typeof response.docsId === "string") {
                 await sleep(500);
@@ -1042,7 +1050,7 @@ FileJs.prototype.baseMaker = function () {
             if (id === undefined) {
               window.alert("해당 폴더에는 슬라이드를 만들 수 없습니다!");
             } else {
-              name = newSlidesName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              name = newSlidesName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
               response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewSlides");
               if (response.message === "success" && typeof response.slidesId === "string") {
                 await sleep(500);
@@ -1096,7 +1104,7 @@ FileJs.prototype.baseMaker = function () {
             if (id === undefined) {
               window.alert("해당 폴더에는 설문지를 만들 수 없습니다!");
             } else {
-              name = newFormsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              name = newFormsName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
               response = await ajaxJson({ name, parent: id }, S3HOST + ":3000/createNewForms");
               if (response.message === "success" && typeof response.formsId === "string") {
                 await sleep(500);
@@ -1150,7 +1158,7 @@ FileJs.prototype.baseMaker = function () {
             if (id === undefined) {
               window.alert("해당 폴더에는 노션 페이지를 만들 수 없습니다!");
             } else {
-              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
               response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3000/createNewNotionPage");
               if (response.message === "success" && typeof response.editId === "string" && typeof response.workspace === "string") {
                 await sleep(500);
@@ -1204,7 +1212,7 @@ FileJs.prototype.baseMaker = function () {
             if (id === undefined) {
               window.alert("해당 폴더에는 칸반보드를 만들 수 없습니다!");
             } else {
-              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
               response = await ajaxJson({ name, parent: instance.path }, S3HOST + ":3000/createNewNotionKanban");
               if (response.message === "success" && typeof response.editId === "string" && typeof response.workspace === "string") {
                 await sleep(500);
@@ -1258,7 +1266,7 @@ FileJs.prototype.baseMaker = function () {
             if (id === undefined) {
               window.alert("해당 폴더에는 다이어그램을 만들 수 없습니다!");
             } else {
-              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
               response = await ajaxJson({ mode: "create", name, parent: id }, S3HOST + ":3000/parsingDrawio");
               if (typeof response.url === "string") {
                 await sleep(500);
@@ -1313,7 +1321,7 @@ FileJs.prototype.baseMaker = function () {
             if (id === undefined) {
               window.alert("해당 폴더에는 링크 파일을 만들 수 없습니다!");
             } else {
-              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~]/gi, '').replace(/ /gi, "_");
+              name = newPageName.trim().replace(/[\?\/\\\!\@\#\$\%\^\&\*\=\+\!\:\;\`\~\.]/gi, '').replace(/ /gi, "_");
               response = await ajaxJson({ name, parent: instance.path, link: linkToString(thisHref) }, S3HOST + ":3000/createNewLinkFile");
               if (response.message === "success") {
                 await sleep(500);

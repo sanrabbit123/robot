@@ -1190,9 +1190,10 @@ StaticRouter.prototype.rou_post_renameTargets = function () {
 
 StaticRouter.prototype.rou_post_generalFileUpload = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { errorLog, fileSystem, shellExec, shellLink, sleep } = this.mother;
   const { staticConst } = this;
   const hangul = this.hangul;
+  const microsoft = this.microsoft;
   let obj;
   obj = {};
   obj.link = [ "/generalFileUpload" ];
@@ -1217,6 +1218,8 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
             const toArr = JSON.parse(fields.toArr).map((path) => { return hangul.fixString(path); });
             let filesKey, fromArr, num;
             let tempArr, tempString, tempDir;
+            let thisFileName;
+            let microsoftResult;
 
             filesKey = Object.keys(files);
             filesKey.sort((a, b) => {
@@ -1231,6 +1234,7 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
             num = 0;
             for (let { filepath: path } of fromArr) {
               tempArr = toArr[num].split("/");
+              thisFileName = tempArr[tempArr.length - 1];
               tempString = staticConst;
               if (tempArr.length === 0) {
                 throw new Error("invaild to array");
@@ -1243,8 +1247,17 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
                 tempString += '/';
                 tempString += tempArr[i];
               }
-              await shellExec(`mv ${shellLink(path)} ${shellLink(staticConst + "/" + toArr[num].replace(/^\//i, ''))}`);
-
+              if (microsoft.isMicrosoftFile(thisFileName)) {
+                microsoftResult = await microsoft.uploadDocument(path);
+                await sleep(500);
+                await shellExec(`rm -rf ${shellLink(path)}`);
+                await fileSystem(`writeJson`, [ microsoft.localToOneDriveName(staticConst + "/" + toArr[num].replace(/^\//i, '')), {
+                  url: microsoftResult.editUrl,
+                  ...microsoftResult
+                } ]);
+              } else {
+                await shellExec(`mv ${shellLink(path)} ${shellLink(staticConst + "/" + toArr[num].replace(/^\//i, ''))}`);
+              }
               num++;
             }
 

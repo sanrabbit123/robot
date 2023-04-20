@@ -246,6 +246,15 @@ Mother.prototype.fileSystem = function (sw, arr) {
         });
       });
       break;
+    case "readBuffer":
+      return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
+        fs.readFile(arr[0], null, (err, data) => {
+          if (err) { reject(err); }
+          else { resolve(data); }
+        });
+      });
+      break;
     case "readString":
       return new Promise(function (resolve, reject) {
         if (arr.length !== 1) { reject("second argument must be length 1 array"); }
