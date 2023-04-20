@@ -32,6 +32,13 @@ const MicrosoftAPIs = function (mother = null, back = null, address = null) {
     "openid",
     "profile",
     "user.read",
+    "devicemanagementmanageddevices.read.all",
+    "devicemanagementmanageddevices.readwrite.all",
+    "device.read",
+    "device.command",
+    "device.read.all",
+    "directory.read.all",
+    "directory.readwrite.all",
   ];
 
   this.accessToken = null;
