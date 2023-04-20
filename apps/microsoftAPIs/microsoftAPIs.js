@@ -97,7 +97,7 @@ MicrosoftAPIs.prototype.codeToAccessToken = async function (code) {
   }
 }
 
-MicrosoftAPIs.prototype.getAccessToken = async function () {
+MicrosoftAPIs.prototype.getAccessTokenInServer = async function () {
   const instance = this;
   const address = this.address;
   const { tenant, clientId, redirectUri, clientSecret, loginUrl, scope, tokenDir, tokenFileName } = this;
@@ -112,5 +112,21 @@ MicrosoftAPIs.prototype.getAccessToken = async function () {
     return null;
   }
 }
+
+MicrosoftAPIs.prototype.getAccessToken = async function () {
+  const instance = this;
+  const address = this.address;
+  const { tenant, clientId, redirectUri, clientSecret, loginUrl, scope, tokenDir, tokenFileName } = this;
+  const { requestSystem } = this.mother;
+  try {
+    let response;
+    response = await requestSystem("https://" + address.officeinfo.ghost.host + "/getMicrosoftAccessToken", { data: null }, { headers: { "Content-Type": "application/json" } });
+    return response.data.accessToken;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 
 module.exports = MicrosoftAPIs;

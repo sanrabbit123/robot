@@ -2237,10 +2237,34 @@ StaticRouter.prototype.rou_post_getMicrosoftAccessToken = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const accessToken = await microsoft.getAccessToken();
+      const accessToken = await microsoft.getAccessTokenInServer();
       res.send(JSON.stringify({ accessToken }));
     } catch (e) {
       errorLog("Static lounge 서버 문제 생김 (rou_post_getMicrosoftAccessToken): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_renewMicrosoftAccessToken = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
+  const microsoft = this.microsoft;
+  let obj = {};
+  obj.link = [ "/renewMicrosoftAccessToken" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      microsoft.renewAccessToken().catch((err) => { console.log(err); });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_renewMicrosoftAccessToken): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }

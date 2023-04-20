@@ -243,10 +243,11 @@ DevContext.prototype.launching = async function () {
 
   
     
-    const microsoft = new MicrosoftAPIs();
-    await microsoft.renewAccessToken();
+
+    await requestSystem("https://home-liaison.serveftp.com/renewMicrosoftAccessToken", { data: null }, { headers: { "Content-Type": "application/json" } });
 
 
+    
 
     // response = await requestSystem(loginUrl + "/" + tenant + "/oauth2/v2.0/token", {
     //   client_id: clientId,
