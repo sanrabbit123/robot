@@ -184,11 +184,12 @@ MicrosoftAPIs.prototype.localToOneDriveName = function (fileName) {
     throw new Error("invalid input");
   }
   if ((new RegExp("." + exe.excel + "$")).test(fileName)) {
-    return fileName.replace((new RegExp(exe.excel + "$"), odExe.excel));
+    console.log(fileName.replace((new RegExp(exe.excel + "$", 'i'), odExe.excel)));
+    return fileName.replace((new RegExp(exe.excel + "$", 'i'), odExe.excel));
   } else if ((new RegExp("." + exe.word + "$")).test(fileName)) {
-    return fileName.replace((new RegExp(exe.word + "$"), odExe.word));
+    return fileName.replace((new RegExp(exe.word + "$", 'i'), odExe.word));
   } else if ((new RegExp("." + exe.power + "$")).test(fileName)) {
-    return fileName.replace((new RegExp(exe.power + "$"), odExe.power));
+    return fileName.replace((new RegExp(exe.power + "$", 'i'), odExe.power));
   } else {
     throw new Error("invalid input 2");
   }
