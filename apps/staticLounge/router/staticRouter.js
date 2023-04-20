@@ -1015,7 +1015,7 @@ StaticRouter.prototype.rou_post_createNewWord = function () {
       }
       target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
 
-      microsoftResult = await microsoft.createExcel(name);
+      microsoftResult = await microsoft.createWord(name);
       await fileSystem(`writeJson`, [ target + "/" + name + ".oddocx", {
         url: microsoftResult.editUrl,
         ...microsoftResult

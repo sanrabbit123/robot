@@ -214,6 +214,7 @@ MicrosoftAPIs.prototype.createExcel = async function (name = "default", safeLink
     };
 
   } catch (e) {
+    await instance.renewAccessToken();
     console.log(e);
     return null;
   }
@@ -286,6 +287,7 @@ MicrosoftAPIs.prototype.createWord = async function (name = "default", safeLinkM
     };
 
   } catch (e) {
+    await instance.renewAccessToken();
     console.log(e);
     return null;
   }
