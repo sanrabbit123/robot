@@ -1248,6 +1248,7 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
                 tempString += tempArr[i];
               }
               if (microsoft.isMicrosoftFile(thisFileName)) {
+                console.log(path);
                 microsoftResult = await microsoft.uploadDocument(path);
                 await sleep(500);
                 await shellExec(`rm -rf ${shellLink(path)}`);
