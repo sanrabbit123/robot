@@ -371,4 +371,28 @@ MicrosoftAPIs.prototype.createPowerPoint = async function (name = "default", saf
   }
 }
 
+MicrosoftAPIs.prototype.getDownloadUrl = async function (id, safeLinkMode = false) {
+  const instance = this;
+  const { graphUrl, version, driveId } = this;
+  const { requestSystem, linkToString } = this.mother;
+  try {
+    let response, accessToken;
+    accessToken = await this.getAccessToken();
+    response = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + id, {}, {
+      method: "get",
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+      }
+    });
+    if (safeLinkMode) {
+      return linkToString(response.data["@microsoft.graph.downloadUrl"]);
+    } else {
+      return response.data["@microsoft.graph.downloadUrl"];
+    }
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 module.exports = MicrosoftAPIs;
