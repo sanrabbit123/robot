@@ -786,7 +786,7 @@ GraphicBot.prototype.botRouter = function () {
   const back = this.back;
   const chromeGhost = this.chromeGhost;
   const staticHomeFolder = this.staticHomeFolder;
-  const { fileSystem, shell, shellExec, shellLink, equalJson, requestSystem, sleep, stringToDate, getDateMatrix, setQueue, uniqueValue } = this.mother;
+  const { fileSystem, shell, shellExec, shellLink, equalJson, requestSystem, sleep, stringToDate, getDateMatrix, setQueue, uniqueValue, linkToString, stringToLink } = this.mother;
   const orderConst = 'g';
   const tong = this.tong;
   const address = this.address;
@@ -1344,6 +1344,40 @@ GraphicBot.prototype.botRouter = function () {
         }
         instance.task = setTimeout(instance.startWork(), 3000);
         res.send({ message: "will do" });
+      } catch (e) {
+        console.log(e);
+        res.send({ error: e.message });
+      }
+    }
+  };
+
+  funcObj.post_browserRequest = {
+    link: [ "/browserRequest" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      try {
+        const { link } = equalJson(req.body);
+        const targetLink = stringToLink(link);
+        const linkToFile = (link) => { return `module.exports = function (arg, info) { return [ "${link}", async function () { await sleep(5000); } ]; };`; }
+        const fileName = "6_link.js";
+        let taskNumber;
+
+        await fileSystem(`write`, [ `${instance.list}/${fileName}`, linkToFile(targetLink) ]);
+
+        taskNumber = 6;
+        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, JSON.stringify(req.body) ]);
+        if (instance.task !== null) {
+          clearTimeout(instance.task);
+          instance.task = null;
+        }
+        instance.task = setTimeout(instance.startWork(), 3000);
+        res.send({ message: "will do" });
+
       } catch (e) {
         console.log(e);
         res.send({ error: e.message });

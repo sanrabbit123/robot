@@ -970,7 +970,7 @@ FileJs.prototype.baseMaker = function () {
       }
     },
     {
-      text: "페이지 만들기",
+      text: "노션 만들기",
       event: async function (e) {
         try {
           const newPageName = await GeneralJs.prompt("새로운 노션 페이지명을 적어주세요!");
