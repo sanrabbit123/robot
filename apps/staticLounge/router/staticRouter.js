@@ -1112,6 +1112,70 @@ StaticRouter.prototype.rou_post_downloadUrlFromOneDrive = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_microsoftConvert = function () {
+  const instance = this;
+  const microsoft = this.microsoft;
+  const { fileSystem, errorLog, equalJson, shellExec } = this.mother;
+  const { staticConst, sambaToken } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/microsoftConvert" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.target === undefined || req.body.path === undefined) {
+        throw new Error("invalid post");
+      }
+      const { target, path } = equalJson(req.body);
+      let motherFolder, thisTarget;
+      let microsoftResult;
+
+      if (!microsoft.isMicrosoftFile(target)) {
+        throw new Error("invalid target");
+      }
+
+      motherFolder = path.replace(/^\//i, '').replace(/\/$/i, '');
+      if (motherFolder.trim() === '') {
+        motherFolder = sambaToken;
+      }
+      if (!/^__/.test(motherFolder)) {
+        motherFolder = sambaToken + "/" + motherFolder;
+      }
+      motherFolder = motherFolder.replace(new RegExp(sambaToken, "gi"), staticConst);
+
+      thisTarget = target.replace(/^\//i, '').replace(/\/$/i, '');
+      if (thisTarget.trim() === '') {
+        thisTarget = sambaToken;
+      }
+      if (!/^__/.test(thisTarget)) {
+        thisTarget = sambaToken + "/" + thisTarget;
+      }
+      thisTarget = thisTarget.replace(new RegExp(sambaToken, "gi"), staticConst);
+
+      microsoftResult = await microsoft.uploadDocument(thisTarget);
+      await fileSystem(`writeJson`, [ microsoft.localToOneDriveName(thisTarget), {
+        url: microsoftResult.editUrl,
+        ...microsoftResult
+      } ]);
+      await shellExec(`rm`, [ `-rf`, thisTarget ]);
+
+      res.send(JSON.stringify({ url: microsoftResult.editUrl }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_microsoftConvert): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_renameTargets = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;

@@ -1437,6 +1437,62 @@ FileJs.prototype.baseMaker = function () {
         }
       }
     },
+    {
+      text: "파일 변환",
+      event: async function (e) {
+        try {
+          const selected = instance.selected;
+          const targets = document.querySelectorAll('.' + contextmenuClassName);
+          let thisDom;
+          let absolute;
+          let id, fileContents, loading;
+          if (selected.length === 1) {
+            [ thisDom ] = selected;
+            absolute = thisDom.getAttribute("absolute");
+
+            loading = instance.mother.grayLoading();
+            await ajaxJson({ target: absolute, path: instance.path }, S3HOST + ":3000/microsoftConvert", { equal: true });
+            loading.remove();
+
+            // if (/gddoc$/.test(absolute) || /gdsheet$/.test(absolute) || /gdslides$/.test(absolute) || /gdform$/.test(absolute) || /ntpage$/.test(absolute) || /ntkanban$/.test(absolute) || /link$/.test(absolute) || /odxlsx$/.test(absolute) || /oddocx$/.test(absolute) || /odpptx$/.test(absolute)) {
+            //   fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
+            //   blankHref(JSON.parse(fileContents.contents).url);
+            // } else if (/drawio$/.test(absolute)) {
+            //   loading = instance.mother.grayLoading();
+            //   ({ id } = await ajaxJson({ path: instance.path }, S3HOST + ":3000/findFolderId", { equal: true }));
+            //   ({ url } = await ajaxJson({ mode: "get", name: absolute.split("/")[absolute.split("/").length - 1], parent: id }, S3HOST + ":3000/parsingDrawio", { equal: true }));
+            //   if (typeof url === "string") {
+            //     blankHref(url);
+            //   }
+            //   loading.remove();
+            // } else if (/pdf$/.test(absolute)) {
+            //   blankHref(absolute.split("/").map((str) => { return window.encodeURIComponent(str) }).join("/").replace(new RegExp("^" + instance.rootToken), S3HOST));
+            // }
+
+          }
+          removeByClass(contextmenuClassName);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          if (instance.selected.length === 1) {
+            const absolute = instance.selected[0].getAttribute("absolute");
+            if (/xlsx$/.test(absolute) || /docx$/.test(absolute) || /pptx$/.test(absolute)) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return false;
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      },
+    },
   ];
   let mother, files;
   let innerMargin;
