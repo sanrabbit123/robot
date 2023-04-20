@@ -536,6 +536,11 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     frontFirst += "const serviceParsing = " + this.frontGeneral.serviceParsing.toString() + ";\n\n";
     frontFirst += "const autoComma = " + this.frontGeneral.autoComma.toString() + ";\n\n";
 
+    frontFirst += "const linkToString = " + this.frontGeneral.linkToString.toString() + ";\n\n";
+    frontFirst += "const stringToLink = " + this.frontGeneral.stringToLink.toString() + ";\n\n";
+    frontFirst += "const blankHref = " + this.frontGeneral.blankHref.toString() + ";\n\n";
+    frontFirst += "const selfHref = " + this.frontGeneral.selfHref.toString() + ";\n\n";
+
     frontFirst += "const injectionInput = " + this.frontGeneral.injectionInput.toString() + ";\n\n";
     frontFirst += "const scrollTo = " + this.frontGeneral.scrollTo.toString() + ";\n\n";
     frontFirst += "const scrollWindow = " + this.frontGeneral.scrollWindow.toString() + ";\n\n";
@@ -1361,14 +1366,7 @@ GraphicBot.prototype.botRouter = function () {
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       try {
-        const { link } = equalJson(req.body);
-        const targetLink = stringToLink(link);
-        const linkToFile = (link) => { return `module.exports = function (arg, info) { return [ "${link}", async function () { await sleep(5000); } ]; };`; }
-        const fileName = "6_link.js";
         let taskNumber;
-
-        await fileSystem(`write`, [ `${instance.list}/${fileName}`, linkToFile(targetLink) ]);
-
         taskNumber = 6;
         await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, JSON.stringify(req.body) ]);
         if (instance.task !== null) {

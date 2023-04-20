@@ -280,9 +280,13 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+    const response = await requestSystem("https://home-liaison.serveftp.com:53000/browserRequest", { link: linkToString("https://google.com") }, {
+      headers: {
+        "Content-Type": "application/json",
+      }
+    })
 
-
+    console.log(response);
 
 
     
