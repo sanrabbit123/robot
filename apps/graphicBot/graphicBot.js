@@ -650,9 +650,9 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
               instance.frontProcess = null;
             }
             await sleep(500);
-            // await instance.chromeClose();
-            // await sleep(500);
-            return true;
+            await instance.chromeClose();
+            await sleep(500);
+            return false;
           }
           if (frontWaitingNumber >= (60 * 20)) {
             await errorLog("Graphic server front js 문제 일어남 => timeout");
