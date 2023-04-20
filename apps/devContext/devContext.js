@@ -244,8 +244,8 @@ DevContext.prototype.launching = async function () {
   
     
 
-    await requestSystem("https://home-liaison.serveftp.com/renewMicrosoftAccessToken", { data: null }, { headers: { "Content-Type": "application/json" } });
 
+    
 
     
 
