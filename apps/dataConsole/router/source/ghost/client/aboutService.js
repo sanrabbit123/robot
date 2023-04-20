@@ -280,7 +280,7 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
   titleTop = <%% 108, 54, 40, 30, 8.5 %%>;
-  descriptionSize = <%% 15, 14, 13, 12, 3.2 %%>;
+  descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
   descriptionBottom = <%% 0, -8, -7, -2, 0 %%>;
 
   barWidth = <%% 70, 80, 80, 80, 80 %%>;
@@ -333,7 +333,7 @@ AboutServiceJs.prototype.insertPeopleBox = function () {
 
   mobileGrayUpHeight = 18;
   mobileRightBoxHeight = 78;
-  mobileLeftBoxHeight = 38.5;
+  mobileLeftBoxHeight = 39;
 
   grayBoxImageVisualWidth = <%% 16, 4, 0, 0, 19 %%>;
 
@@ -499,7 +499,7 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
   marginTop = <%% 52, 50, 40, 32, 7 %%>;
   whiteVisualPaddingTop = <%% 10, 10, 9, 8, 0 %%>;
 
-  middleTitleSize = <%% 23, 23, 20, 18, 4 %%>;
+  middleTitleSize = <%% 23, 23, 20, 18, 4.2 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   middleTitlePadding = <%% 16, 16, 12, 10, 0 %%>;
   middleTitleLineTop = <%% 14, 14, 13, 11, (isIphone() ? 2.9 : 2.6) %%>;
@@ -510,11 +510,11 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
   middleTitleMarginBottom = <%% 30, 30, 30, 30, 7.5 %%>;
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
 
-  downTitleSize = <%% 20, 18, 14, 13, 3.8 %%>;
-  contentsSize = <%% 16, 15, 14, 13, 3.5 %%>;
-  contentsSmallSize = <%% 15, 14, 13, 12, 3.5 %%>;
+  downTitleSize = <%% 20, 18, 14, 13, 4 %%>;
+  contentsSize = <%% 16, 15, 14, 13, 3.7 %%>;
+  contentsSmallSize = <%% 15, 14, 13, 12, 3.7 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
-  contentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
   contentsMotherBoxMarginTop = <%% 60, 60, 50, 40, 21 %%>;
   contentsMotherBoxPaddingTop = <%% 32, 32, 30, 24, 5 %%>;
@@ -569,7 +569,7 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
           },
           {
             description: [
-              `세 번째로, <b%전문가와 함께하는 이유는 결과물에 대한 보증입니다.%b> 디자이너는 단순히 감각이 좋은 사람이 아니라, 인테리어 디자인 분야에서 경력을 쌓은 전문가들입니다. 이들은 실제 현장을 다녀보고 구현해본 경험이 많으며, 주거 인테리어 시공 분야에 대한 경험이 풍부합니다. 또한, 가구와 소품 브랜드에 대한 깊은 지식을 갖고 있습니다. 주거 인테리어에 대한 경험치 자체가 다르기 때문에 어떤 컨셉으로 디자인을 진행하면 어떻게 구현될지 미리 예측할 수 있으며, 가상적으로 구현해 볼 수도 있습니다. 또한, 전문가는 도면과 3D에 대한 능력도 있어 현장 작업자들과 원활한 소통이 가능합니다. 따라서 전문가에게 맡기면 전문적인 지식과 경험, 감각 등이 더해져 월등히 좋은 결과물이 나오게 됩니다.`
+              `세 번째로, <b%전문가와 함께하는 이유는 결과물에 대한 보증입니다.%b> 디자이너는 단순히 감각이 좋은 사람이 아니라, 인테리어 디자인 분야에서 경력을 쌓은 전문가들입니다. 이들은 실제 현장을 다녀보고 구현해본 경험이 많으며, 주거 인테리어 시공 분야에 대한 경험이 풍부합니다. 또한, 가구와 소품 브랜드에 대한 깊은 지식을 갖고 있습니다. 주거 인테리어에 대한 경험치가 다르기 때문에 어떤 컨셉으로 디자인을 진행하면 어떻게 구현될지 미리 예측할 수 있으며, 가상적으로 구현해 볼 수도 있습니다. 또한, 전문가는 도면과 3D에 대한 능력도 있어 현장 작업자들과 원활한 소통이 가능합니다. 따라서 전문가에게 맡기면 전문적인 지식과 경험, 감각 등이 더해져 월등히 좋은 결과물이 나오게 됩니다.`
             ],
           },
         ]
@@ -696,7 +696,7 @@ AboutServiceJs.prototype.insertMainContentsBox = function () {
           style: {
             display: "inline-block",
             position: "relative",
-            fontSize: (mobile && whiteBoardMode) ? String(3.9) + ea : String(middleTitleSize) + ea,
+            fontSize: (mobile && whiteBoardMode) ? String(4) + ea : String(middleTitleSize) + ea,
             fontWeight: String(middleTitleWeight),
             color: colorChip.black,
             textAlign: desktop ? "center" : "left",

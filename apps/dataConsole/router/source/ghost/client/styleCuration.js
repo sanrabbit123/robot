@@ -1772,12 +1772,12 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   lineHeight = 1.6;
   barEntireValue = 100;
 
-  wordingSize = <%% 15, 15, 15, 13, 3.5 %%>;
+  wordingSize = <%% 15, 15, 15, 13, 3.6 %%>;
   standardSize = <%% 13, 13, 13, 13, 2.5 %%>;
   listWordingSize = <%% 14, 13, 12, 12, 3 %%>;
 
   paddingTop = <%% 38, 36, 36, 28, 7 %%>;
-  paddingBottom = <%% 40, 38, 38, 30, 3 %%>;
+  paddingBottom = <%% 40, 38, 38, 30, 2 %%>;
 
   if (desktop) {
     if (!isMac()) {
@@ -3979,18 +3979,18 @@ StyleCurationJs.prototype.insertPendingProposal = function () {
   titleBarHeight = <%% 47, 42, 40, 38, 4 %%>;
   titleBarMarginRight = <%% 15, 14, 12, 10, 15 %%>;
 
-  titleSize = <%% 20, 18, 17, 16, 3.8 %%>;
+  titleSize = <%% 20, 18, 17, 16, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  descriptionSize = <%% 15, 15, 14, 12, 3.4 %%>;
+  descriptionSize = <%% 15, 15, 14, 12, 3.6 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
   imageHeight = <%% 320, 270, 230, 180, 28 %%>;
 
-  mobilePaddingLeft = 3.3;
+  mobilePaddingLeft = 3.8;
   mobileTitleMarginBottom = 4;
   mobileImageMarginBottom = 4.5;
   mobileTitleToken = "<u%>%u>&nbsp;&nbsp;";
@@ -4191,7 +4191,7 @@ StyleCurationJs.prototype.insertMainContentsBox = function () {
   margin = <%% 55, 55, 47, 39, 5.5 %%>;
   marginTop = <%% 52, 50, 40, 32, 7 %%>;
 
-  middleTitleSize = <%% 22, 22, 20, 18, 3.8 %%>;
+  middleTitleSize = <%% 22, 22, 20, 18, 4 %%>;
   middleTitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   middleTitlePadding = <%% 16, 16, 12, 10, 0 %%>;
   middleTitleLineTop = <%% 14, 14, 13, 11, (isIphone() ? 2.9 : 2.6) %%>;
@@ -4202,11 +4202,11 @@ StyleCurationJs.prototype.insertMainContentsBox = function () {
   middleTitleMarginBottom = <%% 30, 30, 30, 30, 7.5 %%>;
   middleAreaPaddingTop = <%% 40, 40, 30, 20, 5 %%>;
 
-  downTitleSize = <%% 20, 18, 14, 13, 3.6 %%>;
-  contentsSize = <%% 16, 15, 14, 13, 3.4 %%>;
-  contentsSmallSize = <%% 15, 14, 13, 12, 3.4 %%>;
+  downTitleSize = <%% 20, 18, 14, 13, 4 %%>;
+  contentsSize = <%% 16, 15, 14, 13, 3.6 %%>;
+  contentsSmallSize = <%% 15, 14, 13, 12, 3.6 %%>;
   contentsWeight = <%% 400, 400, 400, 400, 400 %%>;
-  contentsLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
+  contentsLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
   contentsMotherBoxMarginTop = <%% 60, 60, 50, 40, 11 %%>;
   contentsMotherBoxPaddingTop = <%% 32, 32, 30, 24, 5 %%>;
@@ -5902,9 +5902,9 @@ StyleCurationJs.prototype.insertNoticeBox = function (whiteBlock) {
   contents0TitleWeight = <%% 800, 800, 800, 800, 800 %%>;
   contents0TitleWhiteBoxMargin = <%% 15, 15, 15, 15, 15 %%>;
 
-  contents0DescriptionSize = <%% 16, 16, 16, 15, 3.2 %%>;
+  contents0DescriptionSize = <%% 16, 16, 16, 15, 3.4 %%>;
   contents0DescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  contents0DescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  contents0DescriptionLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.8 %%>;
   contents0DescriptionWeightBold = <%% 700, 700, 700, 700, 700 %%>;
   contents0DescriptionMarginTop = <%% 20, 15, 15, 20, 4 %%>;
 
@@ -5914,7 +5914,7 @@ StyleCurationJs.prototype.insertNoticeBox = function (whiteBlock) {
   contents0WhitePaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 16 : 14), (isMac() ? 20 : 18), (isMac() ? 15 : 13), 3.5 %%>;
   contents0WhitePaddingLeft = <%% 30, 26, 30, 24, 5.5 %%>;
 
-  contents0IconWidth = <%% 14, 12, 14, 12, 2.5 %%>;
+  contents0IconWidth = <%% 14, 12, 14, 12, 2.8 %%>;
   contents0IconMarginRight = <%% 7, 6, 7, 7, 1.5 %%>;
   contents0IconTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), 1.2 %%>;
 
@@ -6204,18 +6204,18 @@ StyleCurationJs.prototype.insertDescriptionBox = function () {
   titleBarHeight = <%% 47, 42, 40, 38, 4 %%>;
   titleBarMarginRight = <%% 15, 14, 12, 10, 15 %%>;
 
-  titleSize = <%% 20, 18, 17, 16, 3.8 %%>;
+  titleSize = <%% 20, 18, 17, 16, 4 %%>;
   titleWeight = <%% 800, 800, 800, 800, 800 %%>;
   titleLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
-  descriptionSize = <%% 15, 15, 14, 12, 3.4 %%>;
+  descriptionSize = <%% 15, 15, 14, 12, 3.6 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;
   descriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.7 %%>;
 
   imageHeight = <%% 320, 270, 230, 180, 28 %%>;
 
-  mobilePaddingLeft = 3.3;
+  mobilePaddingLeft = 3.8;
   mobileTitleMarginBottom = 4;
   mobileImageMarginBottom = 4.5;
   mobileTitleToken = "<u%>%u>&nbsp;&nbsp;";
@@ -6232,8 +6232,8 @@ StyleCurationJs.prototype.insertDescriptionBox = function () {
     },
     right: {
       description: [
-        `홈리에종의 디자이너를 먼저 만나는 과정부터 시작합니다. 디자이너와 함께 디자인을 먼저 진행한 후, 그에 따라 시공과 구매가 이루어지는 프로세스입니다. 따라서 <b%자신과 잘 맞는 디자이너와 매칭되는 것은 중요%b>합니다.`,
-        `고객님의 소중한 정보를 바탕으로, 홈리에종은 고객님과 잘 맞고 합리적인 가격에 결과를 제공할 수 있는 디자이너를 큐레이션하여 추천드리는 서비스를 제공합니다. 이를 위해 고객님의 현장과 취향에 대한 상세한 정보가 필요합니다. <b%아래 내용에 대해 알려주시면 보다 맞춤화된 서비스를 제공할 수 있습니다.%b> 상세한 큐레이션을 위해 아래 내용에 대해서 알려주세요!`,      
+        `홈리에종의 디자이너를 먼저 만나는 과정부터 시작합니다. 디자이너와 디자인을 먼저 진행한 후, 시공과 구매가 이루어지는 프로세스입니다. 따라서 <b%잘 맞는 디자이너와의 매칭은 중요%b>합니다.`,
+        `고객님의 정보를 바탕으로, 홈리에종은 고객님께 적합한 디자이너를 큐레이션하여 추천드리는 서비스를 제공합니다. 이를 위해 고객님의 현장과 취향에 대한 상세한 정보가 필요합니다. <b%아래 내용에 대해 알려주시면 맞춤화된 서비스를 제공할 수 있습니다.%b> 큐레이션을 위해 아래 내용에 대해서 알려주세요!`,      
       ],
       image: StyleCurationJs.binaryPath + "/curation_designer_00.jpg",
     }
