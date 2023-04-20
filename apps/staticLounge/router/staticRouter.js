@@ -1192,6 +1192,7 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink, sleep } = this.mother;
   const { staticConst } = this;
+  const osTempFolder = "/tmp";
   const hangul = this.hangul;
   const microsoft = this.microsoft;
   let obj;
@@ -1220,6 +1221,7 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
             let tempArr, tempString, tempDir;
             let thisFileName;
             let microsoftResult;
+            let thisFileExe;
 
             filesKey = Object.keys(files);
             filesKey.sort((a, b) => {
@@ -1235,6 +1237,7 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
             for (let { filepath: path } of fromArr) {
               tempArr = toArr[num].split("/");
               thisFileName = tempArr[tempArr.length - 1];
+              thisFileExe = thisFileName.split(".")[thisFileName.split(".").length - 1];
               tempString = staticConst;
               if (tempArr.length === 0) {
                 throw new Error("invaild to array");
@@ -1248,10 +1251,10 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
                 tempString += tempArr[i];
               }
               if (microsoft.isMicrosoftFile(thisFileName)) {
-                console.log(path);
-                microsoftResult = await microsoft.uploadDocument(path);
+                await shellExec(`mv ${shellLink(path)} ${shellLink(osTempFolder + "/" + thisFileName)}`);
+                microsoftResult = await microsoft.uploadDocument(osTempFolder + "/" + thisFileName);
                 await sleep(500);
-                await shellExec(`rm -rf ${shellLink(path)}`);
+                await shellExec(`rm -rf ${shellLink(osTempFolder + "/" + thisFileName)}`);
                 await fileSystem(`writeJson`, [ microsoft.localToOneDriveName(staticConst + "/" + toArr[num].replace(/^\//i, '')), {
                   url: microsoftResult.editUrl,
                   ...microsoftResult
