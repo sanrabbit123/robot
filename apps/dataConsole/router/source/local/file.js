@@ -238,8 +238,8 @@ FileJs.prototype.imageViewing = function (images, convertMode = true) {
 
 FileJs.prototype.baseMaker = function () {
   const instance = this;
-  const { ea, totalContents, grayBarWidth, belowHeight, searchModeButtonsClassName } = this;
-  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref, linkToString, stringToLink } = GeneralJs;
+  const { ea, totalContents, grayBarWidth, belowHeight, searchModeButtonsClassName, thisMember } = this;
+  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref, linkToString, stringToLink, equalJson } = GeneralJs;
   const fileBaseClassName = "fileBase";
   const contextmenuClassName = "contextmenuFactor";
   const tempInputClassName = "tempInputClassName";
@@ -1508,6 +1508,19 @@ FileJs.prototype.baseMaker = function () {
   let buttonClickEvent;
   let pathClickEvent;
   let pathContextMenuEvent;
+  let starAreaWidth;
+  let starAreaBetween;
+  let starContents;
+  let starItemMarginBottom;
+  let starItemSize;
+  let starItemWeight;
+  let starItemTextTop;
+  let starItemIconWidth;
+  let starItemIconTop;
+  let starItemIconBetween;
+  let starDropEvent;
+  let memberContents;
+  let memberToNumber;
 
   innerMargin = 30;
   filesBoxPaddingTop = 35;
@@ -1521,7 +1534,7 @@ FileJs.prototype.baseMaker = function () {
   contextmenuPaddingTop = isMac() ? 5 : 6.5;
   contextmenuPaddingBottom = isMac() ? 7 : 5;
   contextmenuBetween = 2;
-  searchBarWidth = 210;
+  searchBarWidth = 220;
   textBoxTop = isMac() ? -2 : 0;
   buttonWidth = 40;
   buttonBetween = 4;
@@ -1530,6 +1543,78 @@ FileJs.prototype.baseMaker = function () {
   inputIndent = 8;
   pathIndent = 20;
   pathBoxMaxWidth = 8000;
+
+  starAreaWidth = searchBarWidth;
+  starAreaBetween = 10;
+
+  starItemMarginBottom = 10;
+  starItemSize = 14;
+  starItemWeight = 600;
+  starItemTextTop = isMac() ? 0 : 2;
+  starItemIconWidth = 17;
+  starItemIconTop = 1.5;
+  starItemIconBetween = 5;
+
+  starContents = [
+    {
+      title: "# 홈리에종",
+      absolute: "__samba__/drive/# 홈리에종",
+    },
+    {
+      title: "홈리에종 파일 서버",
+      absolute: "__samba__/drive/HomeLiaisonServer",
+    },
+    {
+      title: "진행중 프로젝트",
+      absolute: "__samba__/drive/# 홈리에종/200_development/201_진행중_project",
+    },
+    {
+      title: "임시 공유",
+      absolute: "__samba__/drive/HomeLiaisonServer/일시적_공유",
+    },
+    {
+      title: "고객 파일",
+      absolute: "__samba__/drive/HomeLiaisonServer/고객/401_고객응대",
+    },
+    {
+      title: "디자이너 파일",
+      absolute: "__samba__/drive/HomeLiaisonServer/디자이너/partnership",
+    },
+    {
+      title: "포트폴리오 사진",
+      absolute: "__samba__/drive/HomeLiaisonServer/사진_등록_포트폴리오",
+    },
+    {
+      title: thisMember.name,
+      absolute: "__samba__/drive/members/" + thisMember.id + "_" + thisMember.name,
+    },
+  ]
+
+  memberContents = equalJson(JSON.stringify(this.members.filter((obj) => {
+    return obj.alive && obj.resident;
+  }))).map((member) => {
+    member.absolute = "__samba__/drive/members/" + member.id + "_" + member.name;
+    member.folderName = member.name + " <u%" + member.title + "%u>";
+    return member;
+  });
+  memberToNumber = (member) => {
+    let number;
+    if (member.roles.includes("CEO")) {
+      number = 9000000000;
+    } else if (member.roles.includes("CX")) {
+      number = 800000000;
+    } else if (member.roles.includes("Developer")) {
+      number = 700000000;
+    } else {
+      number = 300000000;
+    }
+    number = number + (member.level * 10000000);
+    number = number + member.name.charCodeAt(0);
+    return number;
+  }
+  memberContents.sort((a, b) => {
+    return memberToNumber(b) - memberToNumber(a);
+  });
 
   calculationEvent = function (e) {
     e.stopPropagation();
@@ -1827,6 +1912,51 @@ FileJs.prototype.baseMaker = function () {
     }
   }
 
+  starDropEvent = () => {
+    return async function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      try {
+        let thisPath;
+        let fromItems;
+        let moveSuccess;
+
+        thisPath = this.getAttribute("absolute");
+        if (thisPath !== instance.path) {
+
+          fromItems = null;
+          moveSuccess = false;
+
+          if (instance.selected.length > 0) {
+            fromItems = instance.selected.map((dom) => {
+              return dom.getAttribute("absolute");
+            });
+            if (fromItems.length > 0) {
+              moveSuccess = true;
+            }
+          } else {
+            if (instance.dragFrom !== null) {
+              fromItems = [ instance.dragFrom.getAttribute("absolute") ];
+              if (fromItems.length > 0) {
+                moveSuccess = true;
+              }                    
+            }
+          }
+
+          if (moveSuccess && Array.isArray(fromItems)) {  
+            await ajaxJson({ fromItems, toFolder: thisPath }, S3HOST + ":3000/moveFiles");
+            instance.fileLoad(instance.path);
+          }
+
+        }
+        this.children[0].style.opacity = String(1);
+        this.children[1].style.color = colorChip.black;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
   mother = createNode({
     mother: totalContents,
     style: {
@@ -2053,6 +2183,216 @@ FileJs.prototype.baseMaker = function () {
             ]
           },
           {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              right: String(innerMargin) + ea,
+              bottom: "calc(" + String(innerMargin + starAreaBetween) + ea + " + " + ("calc(calc(" + withOut(titleHeight + titlePaddingBottom + (innerMargin * 2), ea) + " - " + String(starAreaBetween) + ea + ") / 2)") + ")",
+              height: "calc(calc(" + withOut(titleHeight + titlePaddingBottom + (innerMargin * 2), ea) + " - " + String(starAreaBetween) + ea + ") / 2)",
+              width: String(starAreaWidth) + ea,
+              borderRadius: String(5) + "px",
+              border: "1px solid " + colorChip.gray4,
+              boxSizing: "border-box",
+              paddingTop: String(filesBoxPaddingTop) + ea,
+              paddingLeft: String(filesBoxPaddingLeft) + ea,
+              paddingRight: String(filesBoxPaddingLeft) + ea,
+              flexDirection: "column",
+              justifyContent: "start",
+              alignItems: "start",
+            },
+            child: {
+              class: [ "star" ],
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0, ea),
+                overflow: "scroll",
+                height: withOut(0, ea),
+              },
+              children: starContents.map((obj) => {
+                return {
+                  attribute: {
+                    absolute: obj.absolute,
+                  },
+                  event: {
+                    click: function (e) {
+                      instance.fileLoad(this.getAttribute("absolute"));
+                    },
+                    dragenter: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      this.children[0].style.opacity = String(0.4);
+                      this.children[1].style.color = colorChip.green;
+                    },
+                    dragleave: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      this.children[0].style.opacity = String(1);
+                      this.children[1].style.color = colorChip.black;
+                    },
+                    dragover: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    },
+                    selectstart: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    },
+                    drop: starDropEvent(),
+                  },
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    marginBottom: String(starItemMarginBottom) + ea,
+                    width: withOut(0, ea),
+                    justifyContent: "start",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    cursor: "pointer",
+                  },
+                  children: [
+                    {
+                      mode: "svg",
+                      source: FileJs.staticSvg.folder,
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        width: String(starItemIconWidth) + ea,
+                        top: String(starItemIconTop) + ea,
+                        marginRight: String(starItemIconBetween) + ea,
+                        transition: "all 0.3s ease",
+                      }
+                    },
+                    {
+                      text: obj.title,
+                      event: {
+                        selectstart: (e) =>{
+                          e.preventDefault();
+                        }
+                      },
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        fontSize: String(starItemSize) + ea,
+                        fontWeight: String(starItemWeight),
+                        top: String(starItemTextTop) + ea,
+                        color: colorChip.black,
+                        transition: "all 0.3s ease",
+                      }
+                    }
+                  ]
+                }
+              })
+            }
+          },
+          {
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              right: String(innerMargin) + ea,
+              bottom: String(innerMargin) + ea,
+              height: "calc(calc(" + withOut(titleHeight + titlePaddingBottom + (innerMargin * 2), ea) + " - " + String(starAreaBetween) + ea + ") / 2)",
+              width: String(starAreaWidth) + ea,
+              borderRadius: String(5) + "px",
+              border: "1px solid " + colorChip.gray4,
+              boxSizing: "border-box",
+              paddingTop: String(filesBoxPaddingTop) + ea,
+              paddingLeft: String(filesBoxPaddingLeft) + ea,
+              paddingRight: String(filesBoxPaddingLeft) + ea,
+              flexDirection: "column",
+              justifyContent: "start",
+              alignItems: "start",
+            },
+            child: {
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0, ea),
+                overflow: "scroll",
+                height: withOut(0, ea),
+              },
+              children: memberContents.map((obj) => {
+                return {
+                  attribute: {
+                    absolute: obj.absolute,
+                  },
+                  event: {
+                    click: function (e) {
+                      instance.fileLoad(this.getAttribute("absolute"));
+                    },
+                    dragenter: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      this.children[0].style.opacity = String(0.4);
+                      this.children[1].style.color = colorChip.green;
+                    },
+                    dragleave: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      this.children[0].style.opacity = String(1);
+                      this.children[1].style.color = colorChip.black;
+                    },
+                    dragover: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    },
+                    selectstart: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    },
+                    drop: starDropEvent(),
+                  },
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    marginBottom: String(starItemMarginBottom) + ea,
+                    width: withOut(0, ea),
+                    justifyContent: "start",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    cursor: "pointer",
+                  },
+                  children: [
+                    {
+                      mode: "svg",
+                      source: FileJs.staticSvg.folder,
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        width: String(starItemIconWidth) + ea,
+                        top: String(starItemIconTop) + ea,
+                        marginRight: String(starItemIconBetween) + ea,
+                        transition: "all 0.3s ease",
+                      }
+                    },
+                    {
+                      text: obj.folderName,
+                      event: {
+                        selectstart: (e) =>{
+                          e.preventDefault();
+                        }
+                      },
+                      style: {
+                        display: "inline-block",
+                        position: "relative",
+                        fontSize: String(starItemSize) + ea,
+                        fontWeight: String(starItemWeight),
+                        top: String(starItemTextTop) + ea,
+                        color: colorChip.black,
+                        transition: "all 0.3s ease",
+                      },
+                      under: {
+                        fontSize: String(starItemSize) + ea,
+                        fontWeight: String(200),
+                        color: colorChip.black,
+                      }
+                    }
+                  ]
+                }
+              })
+            }
+          },
+          {
             attribute: [
               { draggable: "true" }
             ],
@@ -2250,7 +2590,7 @@ FileJs.prototype.baseMaker = function () {
             style: {
               display: "block",
               position: "relative",
-              width: String(100) + '%',
+              width: withOut(starAreaWidth + starAreaBetween, ea),
               height: withOut(titleHeight + titlePaddingBottom, ea),
               overflow: "scroll",
               borderRadius: String(5) + "px",
@@ -2351,7 +2691,6 @@ FileJs.prototype.pathReload = function (searchResult = false) {
 
     thisPtags = Array.from(target.querySelectorAll("p"));
     for (let ptag of thisPtags) {
-      ptag.setAttribute("draggable", "true");
       ptag.addEventListener("dragenter", function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -2363,6 +2702,10 @@ FileJs.prototype.pathReload = function (searchResult = false) {
         this.style.color = "inherit";
       });
       ptag.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+      ptag.addEventListener("selectstart", function (e) {
         e.preventDefault();
         e.stopPropagation();
       });
@@ -2866,6 +3209,7 @@ FileJs.prototype.launching = async function () {
     let pathResponse;
     let loadingIconVisualTop;
     let loadingIconWidth;
+    let memberes;
 
     loadingIconWidth = 50;
     loadingIconVisualTop = -34;
@@ -2878,6 +3222,9 @@ FileJs.prototype.launching = async function () {
       this.belowHeight = this.mother.belowHeight = 0;
       this.grayBarWidth = this.mother.grayBarWidth = 0;
     }
+
+    this.members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
+    this.thisMember = this.members.find((obj) => { return obj.email.includes(JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail) });
 
     this.latestPathLocalSaveHomeLiaisonKeyName = "latestPathLocalSaveHomeLiaisonKeyName";
     this.path = "";

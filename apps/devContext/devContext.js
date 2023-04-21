@@ -262,7 +262,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    /*
+    // /*
 
     const microsoft = new MicrosoftAPIs();
     const schoolTenantId = "161b815d-7df2-4663-b9ae-883f18f6a4ff";
@@ -376,7 +376,7 @@ DevContext.prototype.launching = async function () {
     }
 
 
-    */
+    // */
 
 
 
@@ -5641,9 +5641,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김동혁",
-    //     designer: "이정아",
-    //     link: "https://drive.google.com/drive/folders/1GNkl2PBgaxsvBFV1L54E5eER7jBx6qfg",
+    //     client: "박태민",
+    //     designer: "김우현",
+    //     link: "https://drive.google.com/drive/folders/1MDO2-GYQnkmeVQ2L9M2LC0d5fUpK3YwW",
     //     pay: true
     //   },
     // ]);
