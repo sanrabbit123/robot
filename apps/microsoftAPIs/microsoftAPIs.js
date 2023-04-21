@@ -20,6 +20,13 @@ const MicrosoftAPIs = function (mother = null, back = null, address = null) {
   this.redirectUri = "https://home-liaison.serveftp.com/microsoft";
   this.clientSecret = "Ufr8Q~cQxarROQ6YD9~4oQ02Rvno2vJGLY2tKdCo";
   this.loginUrl = "https://login.microsoftonline.com";
+
+  this.schoolTenantId = "161b815d-7df2-4663-b9ae-883f18f6a4ff";
+  this.schoolClientId = "2be47b0a-0076-4252-9504-c8ec2586382e";
+  this.schoolRedirectUri = "https://home-liaison.serveftp.com/microsoft";
+  this.schoolClientSecret = "bRX8Q~Lvraflo50A0YzNK4wXXkbcKSGX.EZimbQ1";
+  this.schoolUserId = "5b8991a0-62b3-4b66-a286-9f2d0164f8e1";
+
   this.scope = [
     "email",
     "files.read",
@@ -158,6 +165,34 @@ MicrosoftAPIs.prototype.getAccessToken = async function () {
     let response;
     response = await requestSystem("https://" + address.officeinfo.ghost.host + "/getMicrosoftAccessToken", { data: null }, { headers: { "Content-Type": "application/json" } });
     return response.data.accessToken;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+MicrosoftAPIs.prototype.getSchoolAccessToken = async function () {
+  const instance = this;
+  const address = this.address;
+  const { schoolTenantId, schoolClientId, schoolRedirectUri, schoolClientSecret, schoolUserId, loginUrl } = this;
+  const { requestSystem } = this.mother;
+  try {
+    let res;
+    let accessToken;
+
+    res = await requestSystem(loginUrl + "/" + schoolTenantId + "/oauth2/v2.0/token", {
+      client_id: schoolClientId,
+      client_secret: schoolClientSecret,
+      scope: "https://graph.microsoft.com/.default",
+      grant_type: "client_credentials"
+    }, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      }
+    })
+    accessToken = res.data.access_token
+
+    return accessToken;
   } catch (e) {
     console.log(e);
     return null;
@@ -791,6 +826,109 @@ MicrosoftAPIs.prototype.uploadDocument = async function (filePath) {
     }
 
     return thisResult;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+MicrosoftAPIs.prototype.storeDevicesStatus = async function () {
+  const instance = this;
+  const address = this.address;
+  const { graphUrl, version } = this;
+  const { fileSystem, sleep, requestSystem, equalJson } = this.mother;
+  try {
+    const deltaTime = 50;
+    let res, accessToken;
+    let url;
+    let syncDate;
+    let deviceList;
+    let members;
+    let lastSyncDateTime;
+    let now;
+    let finalObject;
+    let path;
+    let previousObject;
+
+    members = (await requestSystem("https://" + address.backinfo.host + "/getMembers", { type: "get" }, {
+      headers: {
+        "Content-Type": "application/json",
+      }
+    })).data;
+
+    accessToken = await this.getSchoolAccessToken();
+    path = "/deviceManagement/managedDevices";
+
+    url = graphUrl + "/" + version + path;
+    res = await requestSystem(url, {}, {
+      method: "get",
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+      }
+    })
+
+    deviceList = res.data.value.map((obj) => {
+      let thisMember;
+      thisMember = members.find((member) => { return member.computer.id === obj.id });
+      return {
+        id: obj.id,
+        name: obj.deviceName,
+        os: {
+          type: obj.operatingSystem,
+          version: obj.osVersion,
+        },
+        storage: {
+          total: obj.totalStorageSpaceInBytes,
+          free: obj.freeStorageSpaceInBytes
+        },
+        mac: thisMember.computer.mac,
+        member: {
+          id: thisMember.id,
+          name: thisMember.name,
+        }
+      }
+    });
+
+    syncDate = new Date();
+    for (let { id } of deviceList) {
+      url = graphUrl + "/" + version + path + "/" + id + "/syncDevice";
+      res = await requestSystem(url, { data: null }, {
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        }
+      })
+    }
+
+    await sleep(deltaTime * 1000);
+    now = new Date();
+
+    for (let obj of deviceList) {
+      url = graphUrl + "/" + version + path + "/" + obj.id;
+      res = await requestSystem(url, {}, {
+        method: "get",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+        }
+      })
+      lastSyncDateTime = new Date(res.data.lastSyncDateTime);
+      obj.online = ((syncDate.valueOf() <= lastSyncDateTime.valueOf()) && (lastSyncDateTime.valueOf() <= now.valueOf()));
+    }
+
+    finalObject = {
+      date: new Date(),
+      devices: deviceList,
+    };
+    previousObject = await fileSystem(`readJson`, [ `${process.cwd()}/apps/microsoftAPIs/token/nowStatus.json` ]);
+
+    await fileSystem(`writeJson`, [ `${process.cwd()}/apps/microsoftAPIs/token/pastStatus.json`, previousObject ]);
+    await fileSystem(`writeJson`, [ `${process.cwd()}/apps/microsoftAPIs/token/nowStatus.json`, finalObject ]);
+
+    return {
+      from: previousObject,
+      to: finalObject
+    };
+
   } catch (e) {
     console.log(e);
     return null;
