@@ -303,18 +303,42 @@ DevContext.prototype.launching = async function () {
     
 
     // const microsoft = new MicrosoftAPIs();
-    // await microsoft.renewAccessToken();
+    // // await microsoft.renewAccessToken();
 
-
-    
-
-    
-    // await microsoft.renewAccessToken();
-    // const url = "https://graph.microsoft.com/v1.0/devices";
+    // const tenantId = "627eb66a-1f39-411e-b741-ad5eabeef9ff";
+    // const clientId = "ee656079-c22a-46ae-9081-ceb06c1d54c9";
+    // const redirectUri = "https://home-liaison.serveftp.com/microsoft";
+    // const clientSecret = "Ufr8Q~cQxarROQ6YD9~4oQ02Rvno2vJGLY2tKdCo";
+    // const loginUrl = "https://login.microsoftonline.com";
+    // const graphUrl = "https://graph.microsoft.com";
+    // const version = "v1.0";
+    // const driveId = "46518f7e2f1ac0c3";
+    // const userId = "ad3469f3-ae8f-4f8e-a8f0-0325348c9efb";
+  
     // let res, accessToken;
 
-    // accessToken = await microsoft.getAccessToken();
 
+    // // res = await requestSystem(loginUrl + "/" + tenantId + "/" + "adminconsent", {
+    // //   client_id: clientId,
+    // //   redirect_uri: redirectUri
+    // // }, { method: "get" })
+    // // console.log(res);
+
+
+    // res = await requestSystem(loginUrl + "/" + tenantId + "/oauth2/v2.0/token", {
+    //   client_id: clientId,
+    //   client_secret: clientSecret,
+    //   scope: "https://graph.microsoft.com/.default",
+    //   grant_type: "client_credentials"
+    // }, {
+    //   headers: {
+    //     "Content-Type": "application/x-www-form-urlencoded",
+    //   }
+    // })
+    
+    // accessToken = res.data.access_token
+
+    // const url = "https://graph.microsoft.com/v1.0/users/" + userId + "/ownedDevices";
     // try {
     //   res = await requestSystem(url, {}, {
     //     method: "get",
@@ -322,7 +346,6 @@ DevContext.prototype.launching = async function () {
     //       "Authorization": "Bearer " + accessToken,
     //     }
     //   })
-  
     //   console.log(res.data);
     // } catch (e) {
     //   console.log(e.response.data)
