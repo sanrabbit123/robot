@@ -2169,7 +2169,7 @@ FileJs.prototype.baseMaker = function () {
               borderRadius: String(5) + "px",
               border: "1px solid " + colorChip.gray4,
               boxSizing: "border-box",
-              paddingTop: String(filesBoxPaddingTop) + ea,
+              paddingTop: String(filesBoxPaddingLeft) + ea,
               paddingLeft: String(filesBoxPaddingLeft) + ea,
               paddingRight: String(filesBoxPaddingLeft) + ea,
               flexDirection: "column",
@@ -2272,7 +2272,7 @@ FileJs.prototype.baseMaker = function () {
               borderRadius: String(5) + "px",
               border: "1px solid " + colorChip.gray4,
               boxSizing: "border-box",
-              paddingTop: String(filesBoxPaddingTop) + ea,
+              paddingTop: String(filesBoxPaddingLeft) + ea,
               paddingLeft: String(filesBoxPaddingLeft) + ea,
               paddingRight: String(filesBoxPaddingLeft) + ea,
               flexDirection: "column",
@@ -3240,6 +3240,22 @@ FileJs.prototype.fromParentSearch = function () {
   });
 }
 
+FileJs.prototype.fileSearchEvent = function () {
+  const instance = this;
+  const { ea, totalContents } = this;
+  const { searchInput } = this;
+  searchInput.addEventListener("keypress", async function (e) {
+    try {
+      if (e.key === "Enter") {
+        const value = this.value.trim().replace(/[\=\?\\\/\+\&]/gi, '');
+        window.postMessage(JSON.stringify({ mode: "search", value }), "*");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  })
+}
+
 FileJs.prototype.launching = async function () {
   const instance = this;
   const { ea } = this;
@@ -3337,6 +3353,9 @@ FileJs.prototype.launching = async function () {
     this.baseMaker();
     this.fileLoad(this.path);
     this.fromParentSearch();
+    if (!entireMode) {
+      this.fileSearchEvent();
+    }
 
     window.addEventListener("popstate", (e) => {
       e.preventDefault();
