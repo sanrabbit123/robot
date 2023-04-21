@@ -244,13 +244,20 @@ DevContext.prototype.launching = async function () {
   
 
     
-    const microsoft = new MicrosoftAPIs();
-    await microsoft.renewAccessToken();
+    // const microsoft = new MicrosoftAPIs();
+    // await microsoft.renewAccessToken();
+
 
 
     
 
+
+
+
+
     
+
+
 
     
 

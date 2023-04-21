@@ -238,8 +238,8 @@ FileJs.prototype.imageViewing = function (images, convertMode = true) {
 
 FileJs.prototype.baseMaker = function () {
   const instance = this;
-  const { ea, totalContents, grayBarWidth, belowHeight, searchModeButtonsClassName, thisMember } = this;
-  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref, linkToString, stringToLink, equalJson } = GeneralJs;
+  const { ea, totalContents, grayBarWidth, belowHeight, searchModeButtonsClassName, thisMember, memberTongClassName, intervalDelta } = this;
+  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm, downloadFile, removeByClass, sleep, blankHref, linkToString, stringToLink, equalJson, cleanChildren } = GeneralJs;
   const fileBaseClassName = "fileBase";
   const contextmenuClassName = "contextmenuFactor";
   const tempInputClassName = "tempInputClassName";
@@ -1519,8 +1519,7 @@ FileJs.prototype.baseMaker = function () {
   let starItemIconTop;
   let starItemIconBetween;
   let starDropEvent;
-  let memberContents;
-  let memberToNumber;
+  let onlineCircleWidth, onlineCircleTop;
 
   innerMargin = 30;
   filesBoxPaddingTop = 35;
@@ -1554,6 +1553,9 @@ FileJs.prototype.baseMaker = function () {
   starItemIconWidth = 17;
   starItemIconTop = 1.5;
   starItemIconBetween = 5;
+
+  onlineCircleWidth = 7;
+  onlineCircleTop = 6;
 
   starContents = [
     {
@@ -1589,32 +1591,6 @@ FileJs.prototype.baseMaker = function () {
       absolute: "__samba__/drive/members/" + thisMember.id + "_" + thisMember.name,
     },
   ]
-
-  memberContents = equalJson(JSON.stringify(this.members.filter((obj) => {
-    return obj.alive && obj.resident;
-  }))).map((member) => {
-    member.absolute = "__samba__/drive/members/" + member.id + "_" + member.name;
-    member.folderName = member.name + " <u%" + member.title + "%u>";
-    return member;
-  });
-  memberToNumber = (member) => {
-    let number;
-    if (member.roles.includes("CEO")) {
-      number = 9000000000;
-    } else if (member.roles.includes("CX")) {
-      number = 800000000;
-    } else if (member.roles.includes("Developer")) {
-      number = 700000000;
-    } else {
-      number = 300000000;
-    }
-    number = number + (member.level * 10000000);
-    number = number + member.name.charCodeAt(0);
-    return number;
-  }
-  memberContents.sort((a, b) => {
-    return memberToNumber(b) - memberToNumber(a);
-  });
 
   calculationEvent = function (e) {
     e.stopPropagation();
@@ -2304,6 +2280,7 @@ FileJs.prototype.baseMaker = function () {
               alignItems: "start",
             },
             child: {
+              class: [ memberTongClassName ],
               style: {
                 display: "block",
                 position: "relative",
@@ -2311,85 +2288,6 @@ FileJs.prototype.baseMaker = function () {
                 overflow: "scroll",
                 height: withOut(0, ea),
               },
-              children: memberContents.map((obj) => {
-                return {
-                  attribute: {
-                    absolute: obj.absolute,
-                  },
-                  event: {
-                    click: function (e) {
-                      instance.fileLoad(this.getAttribute("absolute"));
-                    },
-                    dragenter: function (e) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      this.children[0].style.opacity = String(0.4);
-                      this.children[1].style.color = colorChip.green;
-                    },
-                    dragleave: function (e) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      this.children[0].style.opacity = String(1);
-                      this.children[1].style.color = colorChip.black;
-                    },
-                    dragover: function (e) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    },
-                    selectstart: function (e) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    },
-                    drop: starDropEvent(),
-                  },
-                  style: {
-                    display: "flex",
-                    position: "relative",
-                    marginBottom: String(starItemMarginBottom) + ea,
-                    width: withOut(0, ea),
-                    justifyContent: "start",
-                    alignItems: "center",
-                    flexDirection: "row",
-                    cursor: "pointer",
-                  },
-                  children: [
-                    {
-                      mode: "svg",
-                      source: FileJs.staticSvg.folder,
-                      style: {
-                        display: "inline-block",
-                        position: "relative",
-                        width: String(starItemIconWidth) + ea,
-                        top: String(starItemIconTop) + ea,
-                        marginRight: String(starItemIconBetween) + ea,
-                        transition: "all 0.3s ease",
-                      }
-                    },
-                    {
-                      text: obj.folderName,
-                      event: {
-                        selectstart: (e) =>{
-                          e.preventDefault();
-                        }
-                      },
-                      style: {
-                        display: "inline-block",
-                        position: "relative",
-                        fontSize: String(starItemSize) + ea,
-                        fontWeight: String(starItemWeight),
-                        top: String(starItemTextTop) + ea,
-                        color: colorChip.black,
-                        transition: "all 0.3s ease",
-                      },
-                      under: {
-                        fontSize: String(starItemSize) + ea,
-                        fontWeight: String(200),
-                        color: colorChip.black,
-                      }
-                    }
-                  ]
-                }
-              })
             }
           },
           {
@@ -2629,6 +2527,151 @@ FileJs.prototype.baseMaker = function () {
     ]
   }).firstChild.lastChild.firstChild;
   this.motherTong = { mother, files };
+  this.memberLoad = () => {
+    const memberContents = equalJson(JSON.stringify(instance.members.filter((obj) => {
+      return obj.alive && obj.resident;
+    }))).map((member) => {
+      member.absolute = "__samba__/drive/members/" + member.id + "_" + member.name;
+      member.folderName = member.name + " <u%" + member.title + "%u>";
+      return member;
+    });
+    const memberToNumber = (member) => {
+      let number;
+      if (member.roles.includes("CEO")) {
+        number = 9000000000;
+      } else if (member.roles.includes("CX")) {
+        number = 800000000;
+      } else if (member.roles.includes("Developer")) {
+        number = 700000000;
+      } else {
+        number = 300000000;
+      }
+      number = number + (member.level * 10000000);
+      number = number + member.name.charCodeAt(0);
+      return number;
+    }
+    memberContents.sort((a, b) => {
+      return memberToNumber(b) - memberToNumber(a);
+    });
+    const thisMother = document.querySelector('.' + memberTongClassName);
+  
+    ajaxJson({ data: null }, S3HOST + ":3000/getDevicesStatus", { equal: true }).then((deviceStatus) => {
+      let thisStatusIndex, targetChildren;
+      for (let obj of memberContents) {
+        thisStatusIndex = deviceStatus.devices.findIndex((o) => {
+          return o.id === obj.computer.id;
+        });
+        if (thisStatusIndex === -1) {
+          obj.online = false;
+        } else {
+          obj.online = deviceStatus.devices[thisStatusIndex].online;
+        }
+      }
+      targetChildren = memberContents.map((obj) => {
+        return {
+          attribute: {
+            absolute: obj.absolute,
+          },
+          event: {
+            click: function (e) {
+              instance.fileLoad(this.getAttribute("absolute"));
+            },
+            dragenter: function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              this.children[0].style.opacity = String(0.4);
+              this.children[1].style.color = colorChip.green;
+            },
+            dragleave: function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              this.children[0].style.opacity = String(1);
+              this.children[1].style.color = colorChip.black;
+            },
+            dragover: function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+            },
+            selectstart: function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+            },
+            drop: starDropEvent(),
+          },
+          style: {
+            display: "flex",
+            position: "relative",
+            marginBottom: String(starItemMarginBottom) + ea,
+            width: withOut(0, ea),
+            justifyContent: "start",
+            alignItems: "center",
+            flexDirection: "row",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: FileJs.staticSvg.folder,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(starItemIconWidth) + ea,
+                top: String(starItemIconTop) + ea,
+                marginRight: String(starItemIconBetween) + ea,
+                transition: "all 0.3s ease",
+              }
+            },
+            {
+              text: obj.folderName,
+              event: {
+                selectstart: (e) =>{
+                  e.preventDefault();
+                }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(starItemSize) + ea,
+                fontWeight: String(starItemWeight),
+                top: String(starItemTextTop) + ea,
+                color: colorChip.black,
+                transition: "all 0.3s ease",
+              },
+              under: {
+                fontSize: String(starItemSize) + ea,
+                fontWeight: String(200),
+                color: colorChip.black,
+              }
+            },
+            {
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                right: String(0),
+                top: String(onlineCircleTop) + ea,
+                width: String(onlineCircleWidth) + ea,
+                height: String(onlineCircleWidth) + ea,
+                borderRadius: String(onlineCircleWidth) + ea,
+                background: obj.online ? colorChip.green : colorChip.gray3,
+              }
+            }
+          ]
+        }
+      });
+      cleanChildren(thisMother);
+      for (let obj of targetChildren) {
+        obj.mother = thisMother;
+        createNode(obj);
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
+  this.memberLoad();
+  setInterval(() => {
+    this.memberLoad();
+  }, intervalDelta * 1000);
 }
 
 FileJs.prototype.pathReload = function (searchResult = false) {
@@ -3287,7 +3330,9 @@ FileJs.prototype.launching = async function () {
     this.pastDown = null;
     this.dragFrom = null;
     this.searchModeButtonsClassName = "searchModeButtonsClassName";
+    this.memberTongClassName = "memberTongClassName";
     this.rootWording = "root";
+    this.intervalDelta = 180;
 
     this.baseMaker();
     this.fileLoad(this.path);
