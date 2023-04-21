@@ -114,6 +114,8 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
       return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.backinfo.host + ":" + String(generalPort) + "/callHistory", { data: null }, { headers: { "Content-Type": "application/json" } });
+    }).then(() => {
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/renewMicrosoftAccessToken", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).catch((e) => {
       throw new Error(e);
     });
@@ -131,7 +133,7 @@ CronGhost.prototype.pollingAsyncRequest = async function (MONGOC) {
   const selfMongo = MONGOC;
   try {
 
-    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/renewMicrosoftAccessToken", { data: null }, { headers: { "Content-Type": "application/json" } }).catch((e) => {
+    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/storeDevicesStatus", { data: null }, { headers: { "Content-Type": "application/json" } }).catch((e) => {
       throw new Error(e);
     });
 
@@ -364,7 +366,7 @@ CronGhost.prototype.cronServer = async function () {
       setInterval(intervalFunc0, 4 * 60 * 60 * 1000);
       setInterval(intervalFunc1, 1 * 30 * 60 * 1000);
       setInterval(intervalFunc2, 1 * 10 * 60 * 1000);
-      setInterval(intervalFunc3, 1 * 15 * 60 * 1000)
+      setInterval(intervalFunc3, 1 * 2 * 60 * 1000)
     }, startTime);
 
 
