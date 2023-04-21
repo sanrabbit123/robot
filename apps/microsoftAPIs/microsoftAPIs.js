@@ -74,6 +74,10 @@ const MicrosoftAPIs = function (mother = null, back = null, address = null) {
     word: "oddocx",
     power: "odpptx",
   };
+  this.statusJson = {
+    past: "pastStatus.json",
+    now: "nowStatus.json",
+  }
 
   this.folderNameToken = "______folderName______";
 }
@@ -832,10 +836,10 @@ MicrosoftAPIs.prototype.uploadDocument = async function (filePath) {
   }
 }
 
-MicrosoftAPIs.prototype.storeDevicesStatus = async function () {
+MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function () {
   const instance = this;
   const address = this.address;
-  const { graphUrl, version } = this;
+  const { graphUrl, version, tokenDir, statusJson } = this;
   const { fileSystem, sleep, requestSystem, equalJson } = this.mother;
   try {
     const deltaTime = 50;
@@ -910,7 +914,7 @@ MicrosoftAPIs.prototype.storeDevicesStatus = async function () {
         headers: {
           "Authorization": "Bearer " + accessToken,
         }
-      })
+      });
       lastSyncDateTime = new Date(res.data.lastSyncDateTime);
       obj.online = ((syncDate.valueOf() <= lastSyncDateTime.valueOf()) && (lastSyncDateTime.valueOf() <= now.valueOf()));
     }
@@ -919,10 +923,10 @@ MicrosoftAPIs.prototype.storeDevicesStatus = async function () {
       date: new Date(),
       devices: deviceList,
     };
-    previousObject = await fileSystem(`readJson`, [ `${process.cwd()}/apps/microsoftAPIs/token/nowStatus.json` ]);
+    previousObject = equalJson(JSON.stringify(await fileSystem(`readJson`, [ `${tokenDir}/${statusJson.now}` ])));
 
-    await fileSystem(`writeJson`, [ `${process.cwd()}/apps/microsoftAPIs/token/pastStatus.json`, previousObject ]);
-    await fileSystem(`writeJson`, [ `${process.cwd()}/apps/microsoftAPIs/token/nowStatus.json`, finalObject ]);
+    await fileSystem(`writeJson`, [ `${tokenDir}/${statusJson.past}`, previousObject ]);
+    await fileSystem(`writeJson`, [ `${tokenDir}/${statusJson.now}`, finalObject ]);
 
     return {
       from: previousObject,
@@ -932,6 +936,36 @@ MicrosoftAPIs.prototype.storeDevicesStatus = async function () {
   } catch (e) {
     console.log(e);
     return null;
+  }
+}
+
+MicrosoftAPIs.prototype.storeDevicesStatus = async function () {
+  const instance = this;
+  const { sleep } = this.mother;
+  try {
+    let result;
+    result = await this.storeDevicesStatusOneTime();
+    while (result === null) {
+      await sleep(1000);
+      result = await this.storeDevicesStatusOneTime();
+    }
+    return result;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+MicrosoftAPIs.prototype.getDevicesStatus = async function () {
+  const instance = this;
+  const { graphUrl, version, tokenDir, statusJson } = this;
+  const { fileSystem, equalJson } = this.mother;
+  try {
+    let nowObject;
+    nowObject = equalJson(JSON.stringify(await fileSystem(`readJson`, [ `${tokenDir}/${statusJson.now}` ])));
+    return nowObject;
+  } catch (e) {
+    console.log(e);
   }
 }
 

@@ -1,5 +1,5 @@
 {
-  "date": "2023-04-21T11:02:08.510Z",
+  "date": "2023-04-21T11:27:36.687Z",
   "devices": [
     {
       "id": "64e3d40e-ff19-4a54-8289-3e24d8a7577f",
@@ -53,7 +53,7 @@
         "id": "m2304_aa01s",
         "name": "이지안"
       },
-      "online": true
+      "online": false
     },
     {
       "id": "c9bc5e1f-c038-4538-9abe-a179b320a5fd",
@@ -82,14 +82,14 @@
       },
       "storage": {
         "total": 118632742912,
-        "free": 51774488576
+        "free": 52107935744
       },
       "mac": "2C:F0:5D:7C:CB:37",
       "member": {
         "id": "m1707_aa01s",
         "name": "강해진"
       },
-      "online": true
+      "online": false
     },
     {
       "id": "2e9d1a89-086b-4174-98e7-a045a25b656f",
@@ -125,7 +125,7 @@
         "id": "m1810_aa01s",
         "name": "배창규"
       },
-      "online": true
+      "online": false
     }
   ]
 }
