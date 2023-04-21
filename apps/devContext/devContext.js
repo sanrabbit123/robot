@@ -250,97 +250,71 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
-
-
-
-    // const axios = require("axios");
-    // const parentFolderId = "46518F7E2F1AC0C3!192";
-    // const driveId = "46518f7e2f1ac0c3";
-    // const graphUrl = "https://graph.microsoft.com";
-    // const version = "v1.0";
-    // let buffer;
-    // let res;
-    // let newFileName;
-    // let accessToken;
-
-    // accessToken = await microsoft.getAccessToken();
-    // buffer = await fileSystem(`readBuffer`, [ `${process.cwd()}/temp/target.xlsx` ]);
-    // newFileName = "imageExcel.xlsx";
-
-    // res = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + parentFolderId + ":/" + newFileName + ":/createUploadSession", {
-    //   "@microsoft.graph.conflictBehavior": "replace",
-    //   name: newFileName,
-    // }, {
-    //   headers: {
-    //     "Authorization": "Bearer " + accessToken,
-    //     "Content-Type": "application/json",
-    //   }
-    // })
-
-    // res = await axios.put(res.data.uploadUrl, buffer, {
-    //   headers: {
-    //     "Authorization": "Bearer " + accessToken,
-    //   }
-    // });
     
+
+
+
+    
+
+
+
+
+
+
+
+    /*
+
+    const microsoft = new MicrosoftAPIs();
+    const schoolTenantId = "161b815d-7df2-4663-b9ae-883f18f6a4ff";
+    const schoolClientId = "2be47b0a-0076-4252-9504-c8ec2586382e";
+    const schoolRedirectUri = "https://home-liaison.serveftp.com/microsoft";
+    const schoolClientSecret = "bRX8Q~Lvraflo50A0YzNK4wXXkbcKSGX.EZimbQ1";
+    const schoolUserId = "5b8991a0-62b3-4b66-a286-9f2d0164f8e1";
+    const loginUrl = "https://login.microsoftonline.com";
+    let thisDeviceId;
+    let res, accessToken;
+    let url;
+    let syncDate;
+    let rightNow;
+    let thisUpdatedDate;
+    let deviceList;
+
+    // res = await requestSystem(loginUrl + "/" + schoolTenantId + "/" + "adminconsent", {
+    //   client_id: schoolClientId,
+    //   redirect_uri: schoolRedirectUri
+    // }, { method: "get" })
     // console.log(res);
 
-    
-    
 
-    // res = await axios.put("https://graph.microsoft.com/v1.0/drives/46518f7e2f1ac0c3/items/" + parentFolderId + ":/" + newFileName + ":/content", buffer, {
+    res = await requestSystem(loginUrl + "/" + schoolTenantId + "/oauth2/v2.0/token", {
+      client_id: schoolClientId,
+      client_secret: schoolClientSecret,
+      scope: "https://graph.microsoft.com/.default",
+      grant_type: "client_credentials"
+    }, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      }
+    })
+
+    accessToken = res.data.access_token
+
+    // thisDeviceId = "0577126f-d73a-4e61-8f29-16dbfa4b4bfa";
+    // url = "https://graph.microsoft.com/beta/devices/" + thisDeviceId;
+    // res = await requestSystem(url, {}, {
+    //   method: "get",
     //   headers: {
     //     "Authorization": "Bearer " + accessToken,
     //   }
-    // });
-
-
-    
-
-    // const microsoft = new MicrosoftAPIs();
-    // // await microsoft.renewAccessToken();
-
-    // const tenantId = "627eb66a-1f39-411e-b741-ad5eabeef9ff";
-    // const clientId = "ee656079-c22a-46ae-9081-ceb06c1d54c9";
-    // const redirectUri = "https://home-liaison.serveftp.com/microsoft";
-    // const clientSecret = "Ufr8Q~cQxarROQ6YD9~4oQ02Rvno2vJGLY2tKdCo";
-    // const loginUrl = "https://login.microsoftonline.com";
-    // const graphUrl = "https://graph.microsoft.com";
-    // const version = "v1.0";
-    // const driveId = "46518f7e2f1ac0c3";
-    // const userId = "ad3469f3-ae8f-4f8e-a8f0-0325348c9efb";
-  
-    // let res, accessToken;
-
-
-    // // res = await requestSystem(loginUrl + "/" + tenantId + "/" + "adminconsent", {
-    // //   client_id: clientId,
-    // //   redirect_uri: redirectUri
-    // // }, { method: "get" })
-    // // console.log(res);
-
-
-    // res = await requestSystem(loginUrl + "/" + tenantId + "/oauth2/v2.0/token", {
-    //   client_id: clientId,
-    //   client_secret: clientSecret,
-    //   scope: "https://graph.microsoft.com/.default",
-    //   grant_type: "client_credentials"
-    // }, {
-    //   headers: {
-    //     "Content-Type": "application/x-www-form-urlencoded",
-    //   }
     // })
-    
-    // accessToken = res.data.access_token
+    // console.log(res.data);
 
-    // const url = "https://graph.microsoft.com/v1.0/users/" + userId + "/ownedDevices";
+    // url = "https://graph.microsoft.com/v1.0/deviceManagement/managedDevices";
+    // "lastSyncDateTime"
+
     // try {
-    //   res = await requestSystem(url, {}, {
+    //   res = await requestSystem(url, {
+    //   }, {
     //     method: "get",
     //     headers: {
     //       "Authorization": "Bearer " + accessToken,
@@ -350,6 +324,105 @@ DevContext.prototype.launching = async function () {
     // } catch (e) {
     //   console.log(e.response.data)
     // }
+
+    url = "https://graph.microsoft.com/v1.0/deviceManagement/managedDevices";
+    res = await requestSystem(url, {}, {
+      method: "get",
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+      }
+    })
+    
+    deviceList = res.data.value.map((obj) => {
+      return {
+        id: obj.id,
+        name: obj.deviceName,
+        os: {
+          type: obj.operatingSystem,
+          version: obj.osVersion,
+        },
+        storage: {
+          total: obj.totalStorageSpaceInBytes,
+          free: obj.freeStorageSpaceInBytes
+        }
+      }
+    });
+
+    console.log(deviceList);
+
+    syncDate = new Date();
+    for (let { id } of deviceList) {
+      url = "https://graph.microsoft.com/v1.0/deviceManagement/managedDevices/" + id + "/syncDevice";
+      res = await requestSystem(url, { data: null }, {
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        }
+      })
+    }
+
+    await sleep(10 * 1000);
+    console.log(syncDate);
+    console.log("=======================")
+    for (let obj of deviceList) {
+      url = "https://graph.microsoft.com/v1.0/deviceManagement/managedDevices/" + obj.id;
+      res = await requestSystem(url, {}, {
+        method: "get",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+        }
+      })
+      console.log(new Date(res.data.lastSyncDateTime));
+    }
+
+
+    */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // url = "https://graph.microsoft.com/v1.0/deviceManagement/managedDevices/64e3d40e-ff19-4a54-8289-3e24d8a7577f/syncDevice";
+    // res = await requestSystem(url, {
+    //   data: null
+    // }, {
+    //   headers: {
+    //     "Authorization": "Bearer " + accessToken,
+    //     "Content-Type": "application/json",
+    //   }
+    // })
+    
+    // syncDate = new Date();
+
+    // await sleep(30 * 1000);
+
+    // url = "https://graph.microsoft.com/v1.0/deviceManagement/managedDevices/64e3d40e-ff19-4a54-8289-3e24d8a7577f";
+    // res = await requestSystem(url, {}, {
+    //   method: "get",
+    //   headers: {
+    //     "Authorization": "Bearer " + accessToken,
+    //   }
+    // })
+
+    // rightNow = new Date();
+    // thisUpdatedDate = new Date(res.data.lastSyncDateTime);
+
+
+    // console.log(syncDate.valueOf() <= thisUpdatedDate.valueOf() && thisUpdatedDate.valueOf() <= rightNow.valueOf());
+
+
+
+
 
 
 

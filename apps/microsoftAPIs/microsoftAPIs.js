@@ -201,6 +201,43 @@ MicrosoftAPIs.prototype.localToOneDriveName = function (fileName) {
   }
 }
 
+MicrosoftAPIs.prototype.listOnedrive = async function (id = "root") {
+  if (typeof id !== "string") {
+    throw new Error("invalid input");
+  }
+  const instance = this;
+  const { graphUrl, version, driveId } = this;
+  const { requestSystem } = this.mother;
+  try {
+    let response;
+    let accessToken;
+
+    accessToken = await this.getAccessToken();
+
+    if (id === "root") {
+      response = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/" + id + "/children", {}, {
+        method: "get",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+        }
+      });
+    } else {
+      response = await requestSystem(graphUrl + "/" + version + "/drives/" + driveId + "/items/" + id + "/children", {}, {
+        method: "get",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+        }
+      });
+    }
+
+    return response.data.value;
+    
+  } catch (e) {
+    await instance.renewAccessToken();
+    console.log(e);
+    return null;
+  }
+}
 
 MicrosoftAPIs.prototype.createExcel = async function (name = "default", safeLinkMode = false) {
   if (typeof name !== "string") {
