@@ -969,4 +969,28 @@ MicrosoftAPIs.prototype.getDevicesStatus = async function () {
   }
 }
 
+MicrosoftAPIs.prototype.schoolTokenAdminConsent = async function () {
+  const instance = this;
+  const { loginUrl, schoolTenantId, schoolClientId, schoolRedirectUri, schoolClientSecret } = this;
+  const { requestSystem } = this.mother;
+  try {
+    let url;
+    let res;
+
+    url = `${loginUrl}/${schoolTenantId}/adminconsent`;
+
+    res = await requestSystem(url, {
+      client_id: schoolClientId,
+      redirect_uri: schoolRedirectUri,
+    }, {
+      method: "get",
+    })
+
+    console.log(res.request.res.responseUrl);
+    
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = MicrosoftAPIs;
