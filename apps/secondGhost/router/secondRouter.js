@@ -2279,6 +2279,7 @@ SecondRouter.prototype.rou_post_printClient = function () {
 
 SecondRouter.prototype.rou_post_slackEvents = function () {
   const instance = this;
+  const address = this.address;
   const { slack_info: { userDictionary, channelDictionary }, telegram } = this;
   const { errorLog, messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
   let obj = {};
@@ -2316,7 +2317,16 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
               });
             } else {
               if (members.map((member) => { return member.slack.fairy }).includes(thisBody.event.channel)) {
-                console.log("gpt", thisBody.event);
+                requestSystem("https://" + address.secondinfo.host + ":3000/fairyAi", {
+                  id: members.find((obj) => { return obj.slack.id === thisBody.event.user }).id,
+                  text: thisBody.event.text,
+                }, {
+                  headers: {
+                    "Content-Type": "application/json"
+                  }
+                }).catch((err) => {
+                  console.log(err);
+                })
               }
               text = `(unknown) ${userDictionary[thisBody.event.user]} : ${thisBody.event.text}`;
               thisChannel = "plan";

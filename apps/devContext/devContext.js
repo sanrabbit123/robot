@@ -171,9 +171,6 @@ DevContext.prototype.launching = async function () {
     // await microsoft.storeDevicesStatusOneTime()
 
 
-    const openAi = new OpenAiAPIs();
-
-    console.log(await openAi.fairyGPT("m1810_aa01s", "안녕, 친구야"));
 
     
 
