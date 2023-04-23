@@ -842,7 +842,7 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
   const { graphUrl, version, tokenDir, statusJson } = this;
   const { fileSystem, sleep, requestSystem, equalJson } = this.mother;
   try {
-    const deltaTime = 0;
+    const deltaTime = 3;
     const agoMinutesDelta = 120;
     let res, accessToken;
     let url;
@@ -912,11 +912,11 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
 
     await sleep(deltaTime * 1000);
     now = new Date();
-    macArr = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/getMacArr", { data: null }, {
+    macArr =( await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/getMacArr", { data: null }, {
       headers: {
         "Content-Type": "application/json",
       }
-    });
+    })).data;
 
     for (let obj of deviceList) {
       url = graphUrl + "/" + version + path + "/" + obj.id;
