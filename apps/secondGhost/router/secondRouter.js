@@ -245,7 +245,6 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       if (!fairyMode) {
         instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
       } else {
-        console.log(Object.keys(instance.slack_info.channelDictionary)[Object.keys(instance.slack_info.channelDictionary).findIndex((str) => { return ('#' + instance.slack_info.channelDictionary[str]) === (channel === "silent" ? "#error_log" : channel) })]);
         requestSystem(instance.slack_info.endPoint + "/chat.postMessage", {
           channel: Object.keys(instance.slack_info.channelDictionary)[Object.keys(instance.slack_info.channelDictionary).findIndex((str) => { return ('#' + instance.slack_info.channelDictionary[str]) === (channel === "silent" ? "#error_log" : channel) })],
           text: slackText,
