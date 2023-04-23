@@ -13,6 +13,7 @@ const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack
   this.timeouts = {};
   this.sheets = new GoogleSheet();
   this.drive = new GoogleDrive();
+  this.members = {};
 
   this.slack_userToken = slack_userToken;
   this.slack_bot = slack_bot;
@@ -2992,6 +2993,18 @@ SecondRouter.prototype.rou_post_photoParsing = function () {
 }
 
 //ROUTING ----------------------------------------------------------------------
+
+SecondRouter.prototype.setMembers = async function () {
+  const instance = this;
+  const back = this.back;
+  const { fileSystem, errorLog } = this.mother;
+  try {
+    this.members = await back.setMemberObj({ getMode: true, selfMongo: instance.mongo });
+  } catch (e) {
+    await errorLog("Second ghost 서버 문제 생김 (setMembers): " + e.message);
+    console.log(e);
+  }
+}
 
 SecondRouter.prototype.getAll = function () {
   let result, result_arr;

@@ -18,18 +18,7 @@ const SecondGhost = function (mother = null, back = null, address = null) {
   this.slack_bot = new WebClient(this.slack_token);
   this.slack_user = new WebClient("xoxp-717757271335-4693762967475-4723976908816-94869470cce7af216e5fb9b1b09c00c2");
   this.slack_info = {
-    userDictionary: {
-      "ULQEAUF2N": "homeliaison",
-      "UM1S7H3GQ": "Clarehye",
-      "UM1SUNFFX": "Jini",
-      "U019UTQL6UB": "Olivia",
-      "U01HFUADKB8": "이큰별",
-      "U01JL6U5NPP": "Pepper",
-      "U02U8GH963C": "김지은",
-      "U048W15FA1M": "박혜정",
-      "U04Q72MTD37": "배창규",
-      "U0531MDH89L": "이지안",
-    },
+    userDictionary: {},
     channelDictionary: {
       "CLQERRWR1": "general",
       "CLQERS2CB": "homestyling-platform",
@@ -97,6 +86,7 @@ const SecondGhost = function (mother = null, back = null, address = null) {
 
 SecondGhost.prototype.ghostConnect = async function () {
   const instance = this;
+  const back = this.back;
   const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, equalJson } = this.mother;
   const { slack_userToken, slack_info, telegram } = this;
   const PORT = 3000;
@@ -175,10 +165,22 @@ SecondGhost.prototype.ghostConnect = async function () {
     }
     pems.allowHTTP1 = true;
     
+    //set member slack info
+    let members;
+    members = await back.setMemberObj({ getMode: true, selfMongo: MONGOC });
+    members = members.map((member) => {
+      return member.slack;
+    }).filter((obj) => {
+      return obj.id !== null;
+    });
+    for (let { id, name } of members) {
+      slack_info.userDictionary[id] = name;
+    }
+
     //set router
     const SecondRouter = require(`${this.dir}/router/secondRouter.js`);
     const router = new SecondRouter(this.slack_bot, this.slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, telegram, kakaoInstance, humanInstance);
-
+    await router.setMembers();
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
       app.get(obj.link, obj.func);

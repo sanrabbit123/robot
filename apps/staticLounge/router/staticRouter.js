@@ -21,6 +21,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   this.host = this.address.officeinfo.ghost.host;
   this.mongo = MONGOC;
   this.mongolocal = MONGOLOCALC;
+  this.members = {};
 
   this.formidable = require("formidable");
   this.imageReader = new ImageReader(this.mother, this.back, this.address);
@@ -1195,8 +1196,8 @@ StaticRouter.prototype.rou_post_storeDevicesStatus = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      microsoft.storeDevicesStatus().then((result) => {
-        return microsoft.getDevicesFlow(result);
+      microsoft.storeDevicesStatus(instance.members).then((result) => {
+        return microsoft.getDevicesFlow(result, instance.members);
       }).catch((err) => {
         console.log(err);
       });
@@ -2596,6 +2597,18 @@ StaticRouter.prototype.rou_post_renewMicrosoftAccessToken = function () {
 }
 
 //ROUTING ----------------------------------------------------------------------
+
+StaticRouter.prototype.setMembers = async function () {
+  const instance = this;
+  const back = this.back;
+  const { fileSystem, errorLog } = this.mother;
+  try {
+    this.members = await back.setMemberObj({ getMode: true, selfMongo: instance.mongo });
+  } catch (e) {
+    await errorLog("Static lounge 서버 문제 생김 (setMembers): " + e.message);
+    console.log(e);
+  }
+}
 
 StaticRouter.prototype.getAll = function () {
   let result, result_arr;

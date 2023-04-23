@@ -836,29 +836,30 @@ MicrosoftAPIs.prototype.uploadDocument = async function (filePath) {
   }
 }
 
-MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function () {
+MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []) {
   const instance = this;
   const address = this.address;
   const { graphUrl, version, tokenDir, statusJson } = this;
   const { fileSystem, sleep, requestSystem, equalJson } = this.mother;
   try {
-    const deltaTime = 50;
+    const deltaTime = 40;
     let res, accessToken;
     let url;
     let syncDate;
     let deviceList;
-    let members;
     let lastSyncDateTime;
     let now;
     let finalObject;
     let path;
     let previousObject;
 
-    members = (await requestSystem("https://" + address.backinfo.host + "/getMembers", { type: "get" }, {
-      headers: {
-        "Content-Type": "application/json",
-      }
-    })).data;
+    if (members.length === 0) {
+      members = (await requestSystem("https://" + address.backinfo.host + "/getMembers", { type: "get" }, {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      })).data;
+    }
 
     accessToken = await this.getSchoolAccessToken();
     path = "/deviceManagement/managedDevices";
@@ -939,15 +940,15 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function () {
   }
 }
 
-MicrosoftAPIs.prototype.storeDevicesStatus = async function () {
+MicrosoftAPIs.prototype.storeDevicesStatus = async function (members = []) {
   const instance = this;
   const { sleep } = this.mother;
   try {
     let result;
-    result = await this.storeDevicesStatusOneTime();
+    result = await this.storeDevicesStatusOneTime(members);
     while (result === null) {
       await sleep(1000);
-      result = await this.storeDevicesStatusOneTime();
+      result = await this.storeDevicesStatusOneTime(members);
     }
     return result;
   } catch (e) {
@@ -993,11 +994,11 @@ MicrosoftAPIs.prototype.schoolTokenAdminConsent = async function () {
   }
 }
 
-MicrosoftAPIs.prototype.getDevicesFlow = async function (result) {
+MicrosoftAPIs.prototype.getDevicesFlow = async function (result = null, members = []) {
   const instance = this;
   const address = this.address;
   const { tokenDir, statusJson } = this;
-  const { equalJson, fileSystem, requestSystem } = this.mother;
+  const { equalJson, fileSystem, requestSystem, messageSend } = this.mother;
   try {
     if (typeof result !== "object" || result === null) {
       result = {};
@@ -1010,17 +1011,18 @@ MicrosoftAPIs.prototype.getDevicesFlow = async function (result) {
     const deathKeyword = "death";
     const aliveKeyword = "alive";
     const toToken = "_____to_____";
+    const channel = "#general";
     let devicesArr;
     let thisObject;
     let toObject;
     let statusObject;
-    let allMembers;
     let deathToAliveTargets;
     let aliveToDateTargets;
     let tempObj;
     let thisMember;
     let helloMember;
     let goodByeMember;
+    let messageArr;
 
     helloMember = (slack, name, title) => {
       return `<@${slack}> 안녕하세요, ${name} ${title}님! 좋은 아침입니다!`;
@@ -1061,14 +1063,16 @@ MicrosoftAPIs.prototype.getDevicesFlow = async function (result) {
       })
     }
 
-    allMembers = (await requestSystem("https://" + address.backinfo.host + "/getMembers", { type: "get" }, { headers: { "Content-Type": "application/json" } })).data;
+    if (members.length === 0) {
+      members = (await requestSystem("https://" + address.backinfo.host + "/getMembers", { type: "get" }, { headers: { "Content-Type": "application/json" } })).data;
+    }
 
     deathToAliveTargets = [];
     aliveToDateTargets = [];
 
     for (let obj of statusObject.summary[deathKeyword + toToken + aliveKeyword]) {
       tempObj = {};
-      thisMember = allMembers.find((o) => { return o.id === obj.member.id });
+      thisMember = members.find((o) => { return o.id === obj.member.id });
       tempObj.id = thisMember.id;
       tempObj.name = thisMember.name;
       tempObj.title = thisMember.title;
@@ -1079,22 +1083,27 @@ MicrosoftAPIs.prototype.getDevicesFlow = async function (result) {
 
     for (let obj of statusObject.summary[aliveKeyword + toToken + deathKeyword]) {
       tempObj = {};
-      thisMember = allMembers.find((o) => { return o.id === obj.member.id });
+      thisMember = members.find((o) => { return o.id === obj.member.id });
       tempObj.id = thisMember.id;
       tempObj.name = thisMember.name;
       tempObj.title = thisMember.title;
       tempObj.slackId = thisMember.slack.id;
       tempObj.message = goodByeMember(thisMember.slack.id, thisMember.name, thisMember.title);
-      deathToAliveTargets.push(tempObj);
+      aliveToDateTargets.push(tempObj);
     }
 
-    console.log(deathToAliveTargets, aliveToDateTargets);
+    messageArr = deathToAliveTargets.map((o) => { return o.message }).concat(aliveToDateTargets.map((o) => { return o.message }));
+
+    for (let text of messageArr) {
+      await messageSend({ text, channel, voice: true });
+    }
+
+    return statusObject;
 
   } catch (e) {
     console.log(e);
     return null;
   }
 }
-
 
 module.exports = MicrosoftAPIs;

@@ -85,7 +85,7 @@ StaticLounge.prototype.staticConnect = async function () {
     //set router
     const StaticRouter = require(`${this.dir}/router/staticRouter.js`);
     const router = new StaticRouter(MONGOC, MONGOLOCALC);
-
+    await router.setMembers();
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
       app.get(obj.link, obj.func);
