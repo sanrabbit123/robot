@@ -1,4 +1,4 @@
-const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, telegram, kakao, human) {
+const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairyToken, telegram, kakao, human) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
@@ -19,6 +19,7 @@ const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack
   this.slack_bot = slack_bot;
   this.slack_user = slack_user;
   this.slack_info = slack_info;
+  this.slack_fairyToken = slack_fairyToken;
 
   this.secondPort = this.address.officeinfo.ghost.second.port;
   this.secondHost = this.address.officeinfo.ghost.host + ":" + String(this.secondPort);
@@ -2986,6 +2987,70 @@ SecondRouter.prototype.rou_post_photoParsing = function () {
     } catch (e) {
       console.log(e);
       errorLog("Second ghost 서버 문제 생김 (rou_post_photoParsing): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+SecondRouter.prototype.rou_post_fairyMessage = function () {
+  const instance = this;
+  const { errorLog, requestSystem, stringToLink } = this.mother;
+  const { slack_fairyToken, slack_info } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/fairyMessage" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.toId === undefined || req.body.text === undefined) {
+        throw new Error("invalid post");
+      }
+      const { toId } = req.body;
+      const fromId = req.body.fromId === undefined ? null : req.body.fromId;
+      const url = slack_info.endPoint + "/chat.postMessage";
+      const members = instance.members;
+      let targetMember;
+      let fromMember;
+      let text;
+
+      if (typeof fromId === "string") {
+        fromMember = members.find((obj) => { return obj.id === fromId });
+      } else {
+        fromMember = null;
+      }
+      targetMember = members.find((obj) => { return obj.id === toId });
+
+      if (fromMember === undefined || targetMember === undefined) {
+        throw new Error("invalid member id");
+      }
+
+      text = req.body.text;
+      if (fromMember !== null) {
+        text = text.replace(/\#\{from\}/gi, "<@" + fromMember.slack.id + ">");
+      }
+      text = stringToLink(text);
+
+      await requestSystem(url, {
+        channel: targetMember.slack.fairy,
+        text: `<@${targetMember.slack.id}> ${text}`,
+      }, {
+        headers: {
+          "Authorization": "Bearer " + slack_fairyToken,
+          "Content-Type": "application/x-www-form-urlencoded",
+        }
+      });
+
+      res.send(JSON.stringify({ message: "done" }));
+
+    } catch (e) {
+      console.log(e);
+      errorLog("Second ghost 서버 문제 생김 (rou_post_fairyMessage): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
