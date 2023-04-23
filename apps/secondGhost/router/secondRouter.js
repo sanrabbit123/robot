@@ -2290,6 +2290,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
     });
     try {
       const thisBody = equalJson(req.body);
+      const members = instance.members;
       let text;
       let thisChannel;
       
@@ -2312,9 +2313,9 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                 instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + err.message).catch((e) => { console.log(e); });
               });
             } else {
-
-              console.log(thisBody.event);
-
+              if (members.map((member) => { return member.slack.fairy }).includes(thisBody.event.channel)) {
+                console.log("gpt", thisBody.event);
+              }
               text = `(unknown) ${userDictionary[thisBody.event.user]} : ${thisBody.event.text}`;
               thisChannel = "plan";
               ajaxJson({ chat_id: telegram.chat[thisChannel], text }, telegram.url(telegram.token)).catch((err) => {
