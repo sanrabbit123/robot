@@ -50,6 +50,7 @@ const CronGhost = require(APP_PATH + "/cronGhost/cronGhost.js");
 const TextDecorator = require(APP_PATH + "/textDecorator/textDecorator.js");
 const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
 const MicrosoftAPIs = require(`${process.cwd()}/apps/microsoftAPIs/microsoftAPIs.js`);
+const OpenAiAPIs = require(`${process.cwd()}/apps/openAiAPIs/openAiAPIs.js`);
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -64,83 +65,6 @@ const DevContext = function () {
   this.MONGOCRONC = new mongo(mongocroninfo, { useUnifiedTopology: true });
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = `${process.cwd()}/apps/devContext`;
-}
-
-DevContext.prototype.chatGPT = async function () {
-  const instance = this;
-  const { requestSystem, consoleQ } = this.mother;
-  try {
-    const openAiToken = "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";
-    const hostname = "api.openai.com";
-    const port = 443;
-    const path = "/v1/chat/completions";
-    const url = "https://" + hostname + path;
-    const model = "gpt-3.5-turbo";
-    const https = require("https");
-    const streamGPT = (input) => {
-      let options;
-      let req;  
-      return new Promise((resolve, reject) => {
-        options = {
-          hostname,
-          port,
-          path,
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + openAiToken,
-          }
-        }
-    
-        req = https.request(options, (res) => {
-          res.on("data", (chunk) => {
-            const rawResponse = String(chunk);
-            let rawArr;
-            let parsedChunk;
-            if (/^data\: /.test(rawResponse)) {
-              rawArr = rawResponse.split(": ");
-              if (rawArr.length > 0) {
-                try {
-                  parsedChunk = JSON.parse(rawArr[1]);
-                  process.stdout.write(parsedChunk.choices.filter((obj) => { return typeof obj.delta.content === "string" }).map((obj) => { return obj.delta.content }).join(""))
-                } catch {}
-              }
-            }
-          });
-          res.on("end", () => {
-            console.log("\n")
-            resolve(null);
-          });
-          res.on("error", (e) => {
-            console.log(e);
-            reject(e);
-          });
-        });
-    
-        req.write(JSON.stringify({
-          model,
-          messages: [
-            {
-              role: "user",
-              content: input
-            }
-          ],
-          stream: true,
-        }));
-        req.end();
-
-      })
-    }
-    let input;
-
-    while (true) {
-      input = await consoleQ("\n");
-      await streamGPT(input);
-    }
-
-  } catch (e) {
-    console.log(e);
-  }
 }
 
 DevContext.prototype.launching = async function () {
@@ -168,13 +92,6 @@ DevContext.prototype.launching = async function () {
         const history = await back.getHistoryById("client", cliid, { selfMongo });
         await requestSystem("https://" + address.secondinfo.host + "/printClient", { cliid: cliid, curation: history.curation }, { headers: { "Content-Type": "application/json" } });
         await instance.MONGOCONSOLEC.close();
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    const question = async () => {
-      try {
-        await instance.chatGPT();
       } catch (e) {
         console.log(e);
       }
@@ -254,13 +171,9 @@ DevContext.prototype.launching = async function () {
     // await microsoft.storeDevicesStatusOneTime()
 
 
+    const openAi = new OpenAiAPIs();
 
-
-
-
-
-
-    
+    console.log(await openAi.fairyGPT("m1810_aa01s", "안녕, 친구야"));
 
     
 

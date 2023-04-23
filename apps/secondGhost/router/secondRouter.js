@@ -3,6 +3,7 @@ const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
+  const OpenAiAPIs = require(`${process.cwd()}/apps/openAiAPIs/openAiAPIs.js`);
 
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -14,6 +15,7 @@ const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack
   this.sheets = new GoogleSheet();
   this.drive = new GoogleDrive();
   this.members = {};
+  this.openAi = new OpenAiAPIs();
 
   this.slack_userToken = slack_userToken;
   this.slack_bot = slack_bot;
@@ -3039,10 +3041,15 @@ SecondRouter.prototype.rou_post_fairyMessage = function () {
         text = text.replace(/\#\{from\}/gi, "<@" + fromMember.slack.id + ">");
       }
       text = stringToLink(text);
+      if (req.body.noIdMode === true || req.body.noIdMode === "true") {
+        text = text;
+      } else {
+        text = `<@${targetMember.slack.id}> ${text}`;
+      }
 
       await requestSystem(url, {
         channel: targetMember.slack.fairy,
-        text: `<@${targetMember.slack.id}> ${text}`,
+        text: text,
       }, {
         headers: {
           "Authorization": "Bearer " + slack_fairyToken,
@@ -3055,6 +3062,40 @@ SecondRouter.prototype.rou_post_fairyMessage = function () {
     } catch (e) {
       console.log(e);
       errorLog("Second ghost 서버 문제 생김 (rou_post_fairyMessage): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+SecondRouter.prototype.rou_post_fairyAi = function () {
+  const instance = this;
+  const { errorLog } = this.mother;
+  const { openAi } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/fairyAi" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.id === undefined || req.body.text === undefined) {
+        throw new Error("invalid post");
+      }
+      const { id, text } = req.body;
+      openAi.fairyGPT(id, text).then((res) => {
+        console.log(res.data);
+      }).catch((err) => {
+        console.log(err);
+      })
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      console.log(e);
+      errorLog("Second ghost 서버 문제 생김 (rou_post_fairyAi): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
