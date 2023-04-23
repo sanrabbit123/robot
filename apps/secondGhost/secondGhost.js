@@ -27,7 +27,8 @@ const SecondGhost = function (mother = null, back = null, address = null) {
       "U01JL6U5NPP": "Pepper",
       "U02U8GH963C": "김지은",
       "U048W15FA1M": "박혜정",
-      "U04LDNEUFDZ": "배창규",
+      "U04Q72MTD37": "배창규",
+      "U0531MDH89L": "이지안",
     },
     channelDictionary: {
       "CLQERRWR1": "general",

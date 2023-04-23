@@ -987,10 +987,114 @@ MicrosoftAPIs.prototype.schoolTokenAdminConsent = async function () {
     })
 
     console.log(res.request.res.responseUrl);
-    
+
   } catch (e) {
     console.log(e);
   }
 }
+
+MicrosoftAPIs.prototype.getDevicesFlow = async function (result) {
+  const instance = this;
+  const address = this.address;
+  const { tokenDir, statusJson } = this;
+  const { equalJson, fileSystem, requestSystem } = this.mother;
+  try {
+    if (typeof result !== "object" || result === null) {
+      result = {};
+      result.from = await fileSystem(`readJson`, [ `${tokenDir}/${statusJson.past}` ]);
+      result.to = await fileSystem(`readJson`, [ `${tokenDir}/${statusJson.now}` ]);
+    }
+    const { from: fromStatus, to: toStatus } = result;
+    const fromDevices = fromStatus.devices;
+    const toDevices = toStatus.devices;
+    const deathKeyword = "death";
+    const aliveKeyword = "alive";
+    const toToken = "_____to_____";
+    let devicesArr;
+    let thisObject;
+    let toObject;
+    let statusObject;
+    let allMembers;
+    let deathToAliveTargets;
+    let aliveToDateTargets;
+    let tempObj;
+    let thisMember;
+    let helloMember;
+    let goodByeMember;
+
+    helloMember = (slack, name, title) => {
+      return `<@${slack}> 안녕하세요, ${name} ${title}님! 좋은 아침입니다!`;
+    }
+    goodByeMember = (slack, name, title) => {
+      return `<@${slack}> ${name} ${title}님! 오늘도 수고하셨습니다. 안녕히 가세요!`;
+    }
+
+    devicesArr = [];
+    for (let obj of fromDevices) {
+      thisObject = equalJson(JSON.stringify(obj));
+      toObject = toDevices.find((o) => { return o.id === obj.id });
+      thisObject.fromOnline = obj.online;
+      thisObject.toOnline = toObject.online;
+      thisObject.flow = (thisObject.fromOnline ? aliveKeyword : deathKeyword) + toToken + (thisObject.toOnline ? aliveKeyword : deathKeyword);
+      devicesArr.push(thisObject);
+    }
+
+    statusObject = {
+      raw: equalJson(JSON.stringify(devicesArr)),
+      keywords: {
+        alive: aliveKeyword,
+        death: deathKeyword,
+        token: toToken,
+      },
+      summary: {}
+    }
+
+    statusObject.summary[aliveKeyword + toToken + aliveKeyword] = [];
+    statusObject.summary[aliveKeyword + toToken + deathKeyword] = [];
+    statusObject.summary[deathKeyword + toToken + aliveKeyword] = [];
+    statusObject.summary[deathKeyword + toToken + deathKeyword] = [];
+
+    for (let obj of devicesArr) {
+      statusObject.summary[obj.flow].push({
+        id: obj.id,
+        member: obj.member,
+      })
+    }
+
+    allMembers = (await requestSystem("https://" + address.backinfo.host + "/getMembers", { type: "get" }, { headers: { "Content-Type": "application/json" } })).data;
+
+    deathToAliveTargets = [];
+    aliveToDateTargets = [];
+
+    for (let obj of statusObject.summary[deathKeyword + toToken + aliveKeyword]) {
+      tempObj = {};
+      thisMember = allMembers.find((o) => { return o.id === obj.member.id });
+      tempObj.id = thisMember.id;
+      tempObj.name = thisMember.name;
+      tempObj.title = thisMember.title;
+      tempObj.slackId = thisMember.slack.id;
+      tempObj.message = helloMember(thisMember.slack.id, thisMember.name, thisMember.title);
+      deathToAliveTargets.push(tempObj);
+    }
+
+    for (let obj of statusObject.summary[aliveKeyword + toToken + deathKeyword]) {
+      tempObj = {};
+      thisMember = allMembers.find((o) => { return o.id === obj.member.id });
+      tempObj.id = thisMember.id;
+      tempObj.name = thisMember.name;
+      tempObj.title = thisMember.title;
+      tempObj.slackId = thisMember.slack.id;
+      tempObj.message = goodByeMember(thisMember.slack.id, thisMember.name, thisMember.title);
+      deathToAliveTargets.push(tempObj);
+    }
+
+    console.log(deathToAliveTargets, aliveToDateTargets);
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 
 module.exports = MicrosoftAPIs;

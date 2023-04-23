@@ -246,14 +246,30 @@ DevContext.prototype.launching = async function () {
     
     // const microsoft = new MicrosoftAPIs();
     // await microsoft.renewAccessToken();
+    // requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/storeDevicesStatus", { data: null }, { headers: { "Content-Type": "application/json" } }).catch((e) => {
+    //   throw new Error(e);
+    // });
+
 
 
     
 
+
+    // const microsoft = new MicrosoftAPIs();
+    // await microsoft.getDevicesFlow();
+
+
+
     
 
 
 
+
+
+    
+
+
+    
     
 
 

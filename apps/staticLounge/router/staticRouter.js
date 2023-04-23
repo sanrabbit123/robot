@@ -1196,7 +1196,7 @@ StaticRouter.prototype.rou_post_storeDevicesStatus = function () {
         throw new Error("post ban");
       }
       microsoft.storeDevicesStatus().then((result) => {
-        return errorLog("status sync success : " + JSON.stringify(new Date()));
+        return microsoft.getDevicesFlow(result);
       }).catch((err) => {
         console.log(err);
       });
