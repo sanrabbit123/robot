@@ -842,7 +842,8 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
   const { graphUrl, version, tokenDir, statusJson } = this;
   const { fileSystem, sleep, requestSystem, equalJson } = this.mother;
   try {
-    const deltaTime = 40;
+    const deltaTime = 10;
+    const agoMinutesDelta = 15;
     let res, accessToken;
     let url;
     let syncDate;
@@ -852,6 +853,7 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
     let finalObject;
     let path;
     let previousObject;
+    let syncAgo;
 
     if (members.length === 0) {
       members = (await requestSystem("https://" + address.backinfo.host + "/getMembers", { type: "get" }, {
@@ -895,6 +897,8 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
     });
 
     syncDate = new Date();
+    syncAgo = new Date(JSON.stringify(syncDate).slice(1, -1));
+    syncAgo.setMinutes(syncAgo.getMinutes() - agoMinutesDelta);
     for (let { id } of deviceList) {
       url = graphUrl + "/" + version + path + "/" + id + "/syncDevice";
       res = await requestSystem(url, { data: null }, {
@@ -902,8 +906,10 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
           "Authorization": "Bearer " + accessToken,
           "Content-Type": "application/json",
         }
-      })
+      });
     }
+
+    console.log(syncAgo, syncDate);
 
     await sleep(deltaTime * 1000);
     now = new Date();
@@ -917,7 +923,8 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
         }
       });
       lastSyncDateTime = new Date(res.data.lastSyncDateTime);
-      obj.online = ((syncDate.valueOf() <= lastSyncDateTime.valueOf()) && (lastSyncDateTime.valueOf() <= now.valueOf()));
+      obj.online = (syncAgo.valueOf() <= lastSyncDateTime.valueOf());
+      console.log(obj.name, lastSyncDateTime, obj.online);
     }
 
     finalObject = {
