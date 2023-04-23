@@ -842,8 +842,8 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
   const { graphUrl, version, tokenDir, statusJson } = this;
   const { fileSystem, sleep, requestSystem, equalJson } = this.mother;
   try {
-    const deltaTime = 3;
-    const agoMinutesDelta = 15;
+    const deltaTime = 0;
+    const agoMinutesDelta = 120;
     let res, accessToken;
     let url;
     let syncDate;
@@ -921,7 +921,15 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
         }
       });
       lastSyncDateTime = new Date(res.data.lastSyncDateTime);
+
+      console.log(res.data);
+
       obj.online = (syncAgo.valueOf() <= lastSyncDateTime.valueOf());
+
+      
+
+
+      console.log(obj.name, syncAgo, lastSyncDateTime);
     }
 
     finalObject = {
