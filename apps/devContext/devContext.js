@@ -172,7 +172,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+    console.log(await messageSend({ text: "안녕하세요 테스트입니다.", channel: "#general", fairy: true }));
 
 
 
