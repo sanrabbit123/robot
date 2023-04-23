@@ -244,6 +244,7 @@ FileJs.prototype.baseMaker = function () {
   const contextmenuClassName = "contextmenuFactor";
   const tempInputClassName = "tempInputClassName";
   const searchInputClassName = "searchInputClassName";
+  const memberContextmenuPopupClassName = "memberContextmenuPopupClassName";
   const contextmenuItems = [
     {
       text: "폴더 만들기",
@@ -1520,6 +1521,8 @@ FileJs.prototype.baseMaker = function () {
   let starItemIconBetween;
   let starDropEvent;
   let onlineCircleWidth, onlineCircleTop;
+  let contextmenuWidth2, contextmenuHeight;
+  let contextmenuTextTop;
 
   innerMargin = 30;
   filesBoxPaddingTop = 35;
@@ -1529,9 +1532,12 @@ FileJs.prototype.baseMaker = function () {
   fontSize = 16;
   titlePaddingBottom = 8;
   contextmenuWidth = 110;
+  contextmenuWidth2 = 90;
+  contextmenuHeight = 30;
   contextmenuFontSize = 13;
   contextmenuPaddingTop = isMac() ? 5 : 6.5;
   contextmenuPaddingBottom = isMac() ? 7 : 5;
+  contextmenuTextTop = isMac() ? -1 : 1;
   contextmenuBetween = 2;
   searchBarWidth = 220;
   textBoxTop = isMac() ? -2 : 0;
@@ -1927,6 +1933,105 @@ FileJs.prototype.baseMaker = function () {
         }
         this.children[0].style.opacity = String(1);
         this.children[1].style.color = colorChip.black;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  memberContextmenu = () => {
+    return async function (e) {
+      e.preventDefault();
+      try {
+        const zIndex = 4;
+        const toId = this.getAttribute("id");
+        const fromId = instance.thisMember.id;
+        let cancelBack, greenPromptBase;
+        let thisMenu;
+
+        thisMenu = [
+          {
+            title: "파일 업로드 알람",
+            event: function (e) {
+              const toId = this.getAttribute("to");
+              const fromId = this.getAttribute("from");
+              ajaxJson({ fromId, toId }, S3HOST + ":3000/fromToFileAlarm").then(() => {
+                removeByClass(memberContextmenuPopupClassName);
+              }).catch((err) => {
+                console.log(err);
+              });
+            }
+          }
+        ]
+
+        cancelBack = createNode({
+          mother: totalContents,
+          class: [ memberContextmenuPopupClassName ],
+          event: {
+            click: (e) => { removeByClass(memberContextmenuPopupClassName) },
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            background: "transparent",
+            zIndex: String(zIndex),
+          }
+        })
+
+        greenPromptBase = createNode({
+          mother: totalContents,
+          class: [ memberContextmenuPopupClassName ],
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "start",
+            alignItems: "start",
+            position: "fixed",
+            top: String(e.y) + ea,
+            left: String(e.x) + ea,
+            width: String(contextmenuWidth) + ea,
+            zIndex: String(zIndex),
+            animation: "fadeuplite 0.3s ease forwards",
+          }
+        })
+
+        for (let obj of thisMenu) {
+
+          createNode({
+            mother: greenPromptBase,
+            attribute: {
+              from: fromId,
+              to: toId
+            },
+            event: obj.event,
+            style: {
+              display: "flex",
+              position: "relative",
+              width: String(contextmenuWidth) + ea,
+              height: String(contextmenuHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gradientGreen,
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            },
+            child: {
+              text: obj.title,
+              style: {
+                fontSize: String(contextmenuFontSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.white,
+                position: "relative",
+                top: String(contextmenuTextTop) + ea,
+              }
+            }
+          })
+
+        }
+
       } catch (e) {
         console.log(e);
       }
@@ -2571,11 +2676,13 @@ FileJs.prototype.baseMaker = function () {
         return {
           attribute: {
             absolute: obj.absolute,
+            id: obj.id,
           },
           event: {
             click: function (e) {
               instance.fileLoad(this.getAttribute("absolute"));
             },
+            contextmenu: memberContextmenu(),
             dragenter: function (e) {
               e.preventDefault();
               e.stopPropagation();
