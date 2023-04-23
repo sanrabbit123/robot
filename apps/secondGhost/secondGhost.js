@@ -66,9 +66,7 @@ const SecondGhost = function (mother = null, back = null, address = null) {
       "C02FBSYM40G": "file",
       "C02KKLHUVBJ": "call",
       "C04H4LBJZ3R": "emergency_alarm",
-      "D04M3GWK3TJ": "jyeun",
       "C04LB1RBWQ5": "plan",
-      "D04LDNF1RQT": "clare",
     }
   };
   this.telegram = {

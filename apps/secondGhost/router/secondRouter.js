@@ -2293,25 +2293,29 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       
       if (typeof thisBody.event === "object") {
         if (thisBody.event.type === "message") {
-          if (channelDictionary[thisBody.event.channel] !== undefined && userDictionary[thisBody.event.user] !== undefined) {
-            text = `(${channelDictionary[thisBody.event.channel]}) ${userDictionary[thisBody.event.user]} : ${thisBody.event.text}`;
-            thisChannel = "general";
-            if (/notice/gi.test(channelDictionary[thisBody.event.channel])) {
-              thisChannel = "notice";
-            } else if (/operation/gi.test(channelDictionary[thisBody.event.channel])) {
-              thisChannel = "operation";
-            } else if (/request/gi.test(channelDictionary[thisBody.event.channel])) {
-              thisChannel = "request";
-            } else if (/plan/gi.test(channelDictionary[thisBody.event.channel])) {
+          if (userDictionary[thisBody.event.user] !== undefined) {
+            if (channelDictionary[thisBody.event.channel] !== undefined) {
+              text = `(${channelDictionary[thisBody.event.channel]}) ${userDictionary[thisBody.event.user]} : ${thisBody.event.text}`;
+              thisChannel = "general";
+              if (/notice/gi.test(channelDictionary[thisBody.event.channel])) {
+                thisChannel = "notice";
+              } else if (/operation/gi.test(channelDictionary[thisBody.event.channel])) {
+                thisChannel = "operation";
+              } else if (/request/gi.test(channelDictionary[thisBody.event.channel])) {
+                thisChannel = "request";
+              } else if (/plan/gi.test(channelDictionary[thisBody.event.channel])) {
+                thisChannel = "plan";
+              }
+              ajaxJson({ chat_id: telegram.chat[thisChannel], text }, telegram.url(telegram.token)).catch((err) => {
+                instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + err.message).catch((e) => { console.log(e); });
+              });
+            } else {
+              text = `(unknown) ${userDictionary[thisBody.event.user]} : ${thisBody.event.text}`;
               thisChannel = "plan";
-            } else if (/clare/gi.test(channelDictionary[thisBody.event.channel])) {
-              thisChannel = "clare";
-            } else if (/jyeun/gi.test(channelDictionary[thisBody.event.channel])) {
-              thisChannel = "jyeun";
+              ajaxJson({ chat_id: telegram.chat[thisChannel], text }, telegram.url(telegram.token)).catch((err) => {
+                instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + err.message).catch((e) => { console.log(e); });
+              });
             }
-            ajaxJson({ chat_id: telegram.chat[thisChannel], text }, telegram.url(telegram.token)).catch((err) => {
-              instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + err.message).catch((e) => { console.log(e); });
-            });
           }
         } else if (thisBody.event.type === "app_home_opened") {
           console.log(thisBody.event.user)
