@@ -3305,7 +3305,7 @@ Mother.prototype.emergencyAlarm = function (text) {
   });
 }
 
-Mother.prototype.messageSend = function (text, channel = "silent", voice = false, target = null) {
+Mother.prototype.messageSend = function (text, channel = "silent", voice = false, target = null, fairy = false) {
   if (typeof text === "object" && text !== null) {
     if (typeof text.text === "string" && typeof text.channel === "string") {
       channel = text.channel;
@@ -3317,6 +3317,7 @@ Mother.prototype.messageSend = function (text, channel = "silent", voice = false
       if (Array.isArray(text.target)) {
         target = text.target;
       }
+      fairy = text.fairy === undefined ? false : text.fairy;
       text = text.text;
     } else {
       throw new Error("invaild input");
@@ -3329,6 +3330,9 @@ Mother.prototype.messageSend = function (text, channel = "silent", voice = false
   if (voice !== true) {
     voice = false;
   }
+  if (fairy !== true) {
+    fairy = false;
+  }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3000/messageLog";
   const axios = require("axios");
@@ -3339,7 +3343,7 @@ Mother.prototype.messageSend = function (text, channel = "silent", voice = false
     });
   }
   return new Promise((resolve, reject) => {
-    axios.post(recordUrl, { text, channel, collection, voice, target }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+    axios.post(recordUrl, { text, channel, collection, voice, target, fairy }, { headers: { "Content-Type": "application/json" } }).then((res) => {
       if (res.status !== 200) {
         reject(res);
       } else {

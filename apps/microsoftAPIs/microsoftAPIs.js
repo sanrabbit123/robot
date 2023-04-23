@@ -1112,7 +1112,7 @@ MicrosoftAPIs.prototype.getDevicesFlow = async function (result = null, members 
     messageArr = deathToAliveTargets.map((o) => { return o.message }).concat(aliveToDateTargets.map((o) => { return o.message }));
 
     for (let text of messageArr) {
-      await messageSend({ text, channel, voice: true });
+      await messageSend({ text, channel, voice: true, fairy: true });
     }
 
     return statusObject;

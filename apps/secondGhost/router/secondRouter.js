@@ -203,6 +203,13 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       let tempName;
       let foundNames;
       let finalTargets;
+      let fairyMode;
+
+      if (req.body.fairy === true || req.body.fairy === "true") {
+        fairyMode = true;
+      } else {
+        fairyMode = false;
+      }
 
       slackText = text;
       if (Array.isArray(equalJson(req.body).target)) {
@@ -235,7 +242,19 @@ SecondRouter.prototype.rou_post_messageLog = function () {
 
       }
 
-      instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
+      if (!fairyMode) {
+        instance.slack_bot.chat.postMessage({ text: slackText, channel: (channel === "silent" ? "#error_log" : channel) }).catch((err) => { console.log(err); });
+      } else {
+        requestSystem(url, {
+          channel: (channel === "silent" ? "#error_log" : channel),
+          text: slackText,
+        }, {
+          headers: {
+            "Authorization": "Bearer " + instance.slack_fairyToken,
+            "Content-Type": "application/x-www-form-urlencoded",
+          }
+        }).catch((err) => { console.log(err); });
+      }
 
       if (req.body.voice === true || req.body.voice === "true") {
         requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/textToVoice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
