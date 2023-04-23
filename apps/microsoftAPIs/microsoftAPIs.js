@@ -842,8 +842,8 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
   const { graphUrl, version, tokenDir, statusJson } = this;
   const { fileSystem, sleep, requestSystem, equalJson } = this.mother;
   try {
-    const deltaTime = 3;
-    const agoMinutesDelta = 360;
+    const deltaTime = 1;
+    const agoMinutesDelta = 180;
     let res, accessToken;
     let url;
     let syncDate;
@@ -855,6 +855,7 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
     let previousObject;
     let syncAgo;
     let macArr;
+    let targetMac;
 
     if (members.length === 0) {
       members = (await requestSystem("https://" + address.backinfo.host + "/getMembers", { type: "get" }, {
@@ -928,8 +929,18 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
       });
       lastSyncDateTime = new Date(res.data.lastSyncDateTime);
       obj.online = (syncAgo.valueOf() <= lastSyncDateTime.valueOf());
+
+      targetMac = res.data.ethernetMacAddress;
+      if (targetMac === undefined || targetMac === null) {
+        targetMac = res.data.wiFiMacAddress;
+      }
+      if (typeof res.data.ethernetMacAddress === "string" && res.data.ethernetMacAddress.trim() === '') {
+        targetMac = res.data.wiFiMacAddress;
+      }
+      targetMac = targetMac.trim().toLowerCase();
+
       if (obj.online) {
-        if (macArr.includes(res.data.ethernetMacAddress.toLowerCase())) {
+        if (macArr.includes(targetMac)) {
           obj.online = true;
         } else {
           obj.online = false;

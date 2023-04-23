@@ -168,7 +168,7 @@ DevContext.prototype.launching = async function () {
     // });
 
     // const microsoft = new MicrosoftAPIs();
-    // await microsoft.storeDevicesStatusOneTime()
+    // await microsoft.storeDevicesStatusOneTime();
 
 
 
