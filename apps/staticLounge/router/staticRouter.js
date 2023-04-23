@@ -2596,6 +2596,39 @@ StaticRouter.prototype.rou_post_renewMicrosoftAccessToken = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_getMacArr = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
+  let obj = {};
+  obj.link = [ "/getMacArr" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const result = await shellExec("arp-scan", [ "-l" ]);
+      let tempArr;
+      let index;
+      let macArr;
+  
+      tempArr = result.split("\n").slice(2);
+      index = tempArr.findIndex((str) => { return str.trim() === '' });
+      tempArr = tempArr.slice(0, index + 1).filter((str) => { return str.trim() !== "" });
+      tempArr = tempArr.map((str) => { return str.split("\t") });
+      macArr = tempArr.map(([ ip, mac ]) => { return mac }).map((str) => { return str.replace(/\:/gi, '').toLowerCase() });
+  
+      res.send(JSON.stringify(macArr));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_getMacArr): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.setMembers = async function () {

@@ -854,6 +854,7 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
     let path;
     let previousObject;
     let syncAgo;
+    let macArr;
 
     if (members.length === 0) {
       members = (await requestSystem("https://" + address.backinfo.host + "/getMembers", { type: "get" }, {
@@ -911,6 +912,11 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
 
     await sleep(deltaTime * 1000);
     now = new Date();
+    macArr = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/getMacArr", { data: null }, {
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
 
     for (let obj of deviceList) {
       url = graphUrl + "/" + version + path + "/" + obj.id;
@@ -921,15 +927,20 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
         }
       });
       lastSyncDateTime = new Date(res.data.lastSyncDateTime);
-
-      console.log(res.data);
-
       obj.online = (syncAgo.valueOf() <= lastSyncDateTime.valueOf());
-
-      
-
-
-      console.log(obj.name, syncAgo, lastSyncDateTime);
+      if (obj.online) {
+        if (macArr.includes(res.data.ethernetMacAddress.toLowerCase())) {
+          obj.online = true;
+        } else {
+          obj.online = false;
+        }
+      } else {
+        if (macArr.includes(res.data.ethernetMacAddress.toLowerCase())) {
+          obj.online = true;
+        } else {
+          obj.online = false;
+        }
+      }
     }
 
     finalObject = {

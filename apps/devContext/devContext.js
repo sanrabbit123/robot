@@ -256,12 +256,9 @@ DevContext.prototype.launching = async function () {
     // await microsoft.storeDevicesStatusOneTime()
 
 
-    const result = await shellExec("sudo arp-scan -l")
-    console.log(result);
 
     
-
-
+    
 
 
     // const token = "xoxp-717757271335-5166005860961-5177115171232-81fe518edf959ff6d03304be6bc9e76a";
