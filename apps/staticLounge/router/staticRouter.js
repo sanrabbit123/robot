@@ -2629,6 +2629,38 @@ StaticRouter.prototype.rou_post_getMacArr = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_fromToFileAlarm = function () {
+  const instance = this;
+  const address = this.address;
+  const { requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/fromToFileAlarm" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.fromId === undefined || req.body.toId === undefined) {
+        throw new Error("invalid input");
+      }
+      const { fromId, toId } = req.body;
+      const portNumber = 3000;
+      const path = "/fairyMessage";
+      const thisMember = instance.members.find((o) => { return o.id === toId });
+      const text = "안녕하세요, " + thisMember.name + "님! #{from}님께서 새로운 파일을 업로드하셨습니다. 확인부탁드립니다!\n" + "https://" + address.backinfo.host + "/dashboard?mode=file&injection=me";
+      requestSystem("https://" + address.secondinfo.host + ":" + String(portNumber) + path, { fromId, toId, text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); })
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_fromToFileAlarm): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.setMembers = async function () {

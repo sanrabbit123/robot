@@ -3308,6 +3308,8 @@ FileJs.prototype.launching = async function () {
         startPoint = rootToken + "/drive/# 홈리에종";
       } else if (getObj.mode === "file") {
         startPoint = rootToken + "/drive/HomeLiaisonServer";
+      } else if (getObj.mode === "me") {
+        startPoint = rootToken + "/drive/members/" + this.thisMember.id + "_" + this.thisMember.name;
       } else if (getObj.mode === "general") {
         if (window.localStorage.getItem(this.latestPathLocalSaveHomeLiaisonKeyName) !== null && typeof window.localStorage.getItem(this.latestPathLocalSaveHomeLiaisonKeyName) === "string") {
           startPoint = window.localStorage.getItem(this.latestPathLocalSaveHomeLiaisonKeyName);

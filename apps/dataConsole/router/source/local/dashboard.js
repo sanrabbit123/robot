@@ -2598,11 +2598,16 @@ DashboardJs.prototype.launching = async function () {
         instance.manualMaker("aboutService");
       }
     } else if (getObj.mode === "file") {
-      if (typeof getObj.path !== "string") {
-        instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=general&entire=true&dataonly=true");
-        generalState = false;
+      if (typeof getObj.injection !== "string") {
+        if (typeof getObj.path !== "string") {
+          instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=general&entire=true&dataonly=true");
+          generalState = false;
+        } else {
+          instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=general&entire=true&dataonly=true&id=" + getObj.path);
+          generalState = false;
+        }
       } else {
-        instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=general&entire=true&dataonly=true&id=" + getObj.path);
+        instance.whiteEntireMaker(window.location.protocol + "//" + window.location.host + "/file?mode=" + getObj.injection + "&entire=true&dataonly=true");
         generalState = false;
       }
     }

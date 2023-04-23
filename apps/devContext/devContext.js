@@ -250,54 +250,17 @@ DevContext.prototype.launching = async function () {
     //   throw new Error(e);
     // });
 
-
-
     // const microsoft = new MicrosoftAPIs();
     // await microsoft.storeDevicesStatusOneTime()
 
 
 
     
-    
-
-
-    // const token = "xoxp-717757271335-5166005860961-5177115171232-81fe518edf959ff6d03304be6bc9e76a";
-    // const members = await back.setMemberObj({ getMode: true, selfMongo: instance.MONGOC });
-    // let res, url;
-
-    // url = "https://slack.com/api/chat.postMessage";
-
-    // for (let member of members) {
-    //   if (member.slack.id !== null) {
-    //     await requestSystem(url, {
-    //       channel: member.slack.fairy,
-    //       text: `<@${member.slack.id}> 안녕하세요, ${member.name + " " + member.title}님! 저는 홈리에종 사무실의 요정입니다. 본 메세지는 시스템 정상 작동 확인을 위한 발송 메세지 입니다.`,
-    //       as_user: true,
-    //     }, {
-    //       headers: {
-    //         "Content-Type": "application/x-www-form-urlencoded",
-    //         "Authorization": "Bearer " + token,
-    //       }
-    //     });
-    //   }
-    // }
-
-
-    
 
     
 
 
-
     
-    
-
-
-    
-    
-
-
-
 
 
 
