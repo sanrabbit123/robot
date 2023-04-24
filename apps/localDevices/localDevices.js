@@ -13,18 +13,20 @@ const LocalDevices = function (mother = null, back = null, address = null) {
   }
   this.dir = process.cwd() + "/apps/localDevices";
   this.tokenDir = this.dir + "/token";
-
   this.statusJson = {
+    mac: "currentMac.json",
     past: "pastStatus.json",
     now: "nowStatus.json",
   }
 }
 
-LocalDevices.prototype.scanLocalMacIp = async function () {
+LocalDevices.prototype.scanLocalMacIp = async function (waitingSeconds = 20) {
   const instance = this;
-  const { shellExec } = this.mother;
+  const address = this.address;
+  const { tokenDir, statusJson } = this;
+  const { shellExec, sleep, fileSystem, requestSystem } = this.mother;
   try {
-    const seconds = 10 * 1000;
+    const seconds = waitingSeconds * 1000;
     const backOffNumber = 10;
     const token = "__split__";
     let scanResult;
@@ -40,6 +42,7 @@ LocalDevices.prototype.scanLocalMacIp = async function () {
     let rawStdOut;
     let nmapTong;
     let nmapTongArr;
+    let response;
 
     scanResult = await shellExec("arp-scan", [ "-l", "--timeout=" + String(seconds), "--backoff=" + String(backOffNumber) ]);
 
@@ -68,39 +71,39 @@ LocalDevices.prototype.scanLocalMacIp = async function () {
     try {
       nmapResult = await shellExec(nmapCommand);
     } catch (e) {
-      await sleep(1000);
+      await sleep(500);
       try {
         nmapResult = await shellExec(nmapCommand);
       } catch (e) {
-        await sleep(1000);
+        await sleep(500);
         try {
           nmapResult = await shellExec(nmapCommand);
         } catch (e) {
-          await sleep(1000);
+          await sleep(500);
           try {
             nmapResult = await shellExec(nmapCommand);
           } catch (e) {
-            await sleep(1000);
+            await sleep(500);
             try {
               nmapResult = await shellExec(nmapCommand);
             } catch (e) {
-              await sleep(1000);
+              await sleep(500);
               try {
                 nmapResult = await shellExec(nmapCommand);
               } catch (e) {
-                await sleep(1000);
+                await sleep(500);
                 try {
                   nmapResult = await shellExec(nmapCommand);
                 } catch (e) {
-                  await sleep(1000);
+                  await sleep(500);
                   try {
                     nmapResult = await shellExec(nmapCommand);
                   } catch (e) {
-                    await sleep(1000);
+                    await sleep(500);
                     try {
                       nmapResult = await shellExec(nmapCommand);
                     } catch (e) {
-                      await sleep(1000);
+                      await sleep(500);
                       nmapResult = null;
                     }
                   }
@@ -138,6 +141,14 @@ LocalDevices.prototype.scanLocalMacIp = async function () {
     finalArr = [ ...new Set(finalArr) ];
     finalArr = finalArr.map((str) => { return { mac: str.split(token)[0], ip: str.split(token)[1] } });
 
+    await fileSystem(`writeJson`, [ `${tokenDir}/${statusJson.mac}`, finalArr ]);
+    response = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/parsingDevicesStatus", { macArr: finalArr }, {
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    console.log(response.data)
+
     return finalArr;
   } catch (e) {
     console.log(e);
@@ -145,25 +156,16 @@ LocalDevices.prototype.scanLocalMacIp = async function () {
   }
 }
 
-LocalDevices.prototype.storeDevicesStatusOneTime = async function (members = []) {
+LocalDevices.prototype.storeDevicesStatus = async function (macArr, members) {
   const instance = this;
-  const address = this.address;
   const { tokenDir, statusJson } = this;
   const { fileSystem, requestSystem, equalJson } = this.mother;
   try {
     let finalObject;
     let previousObject;
-    let macArr;
     let targetMac;
     let targetList;
-
-    if (members.length === 0) {
-      members = (await requestSystem("https://" + address.backinfo.host + "/getMembers", { type: "get" }, {
-        headers: {
-          "Content-Type": "application/json",
-        }
-      })).data;
-    }
+    let thisIp;
 
     targetList = members.filter((member) => { return member.computer.mac !== null }).map((member) => {
       return {
@@ -175,23 +177,17 @@ LocalDevices.prototype.storeDevicesStatusOneTime = async function (members = [])
       }
     });
 
-    macArr =( await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/getMacArr", { data: null }, {
-      headers: {
-        "Content-Type": "application/json",
-      }
-    })).data;
-
     for (let obj of targetList) {
       targetMac = obj.mac.replace(/\:/gi, '').trim().toLowerCase();
-
-      if (macArr.includes(targetMac)) {
+      if (macArr.map(({ mac, ip }) => { return mac; }).includes(targetMac)) {
         obj.online = true;
+        thisIp = macArr.find((o) => { return o.mac === targetMac }).ip;
       } else {
         obj.online = false;
+        thisIp = "";
       }
+      obj.ip = thisIp;
     }
-
-    console.log(targetList);
 
     finalObject = {
       date: new Date(),
@@ -207,23 +203,6 @@ LocalDevices.prototype.storeDevicesStatusOneTime = async function (members = [])
       to: finalObject
     };
 
-  } catch (e) {
-    console.log(e);
-    return null;
-  }
-}
-
-LocalDevices.prototype.storeDevicesStatus = async function (members = []) {
-  const instance = this;
-  const { sleep } = this.mother;
-  try {
-    let result;
-    result = await this.storeDevicesStatusOneTime(members);
-    while (result === null) {
-      await sleep(1000);
-      result = await this.storeDevicesStatusOneTime(members);
-    }
-    return result;
   } catch (e) {
     console.log(e);
     return null;

@@ -14,6 +14,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const NotionAPIs = require(process.cwd() + "/apps/notionAPIs/notionAPIs.js");
   const MicrosoftAPIs = require(`${process.cwd()}/apps/microsoftAPIs/microsoftAPIs.js`);
+  const LocalDevices = require(`${process.cwd()}/apps/localDevices/localDevices.js`);
 
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -37,6 +38,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   this.forms = new GoogleForms();
   this.notion = new NotionAPIs();
   this.microsoft = new MicrosoftAPIs();
+  this.devices = new LocalDevices();
 
   this.staticConst = process.env.HOME + "/samba";
   this.sambaToken = "__samba__";
@@ -1197,7 +1199,7 @@ StaticRouter.prototype.rou_post_storeDevicesStatus = function () {
         throw new Error("post ban");
       }
       microsoft.storeDevicesStatus(instance.members).then((result) => {
-        
+
         // return microsoft.getDevicesFlow(result, instance.members);
       }).catch((err) => {
         console.log(err);
@@ -2656,6 +2658,32 @@ StaticRouter.prototype.rou_post_fromToFileAlarm = function () {
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       errorLog("Static lounge 서버 문제 생김 (rou_post_fromToFileAlarm): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_parsingDevicesStatus = function () {
+  const instance = this;
+  const devices = this.devices;
+  const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
+  let obj = {};
+  obj.link = [ "/parsingDevicesStatus" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { macArr } = equalJson(req.body);
+      const { to: finalObject } = await devices.storeDevicesStatus(macArr, instance.members);
+      
+      res.send(JSON.stringify(finalObject));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_parsingDevicesStatus): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }

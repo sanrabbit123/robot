@@ -175,9 +175,9 @@ DevContext.prototype.launching = async function () {
 
 
     const local = new LocalDevices();
-    console.log(await local.scanLocalMacIp());
+    console.log(await local.scanLocalMacIp(20));
 
-
+    
 
     
 
