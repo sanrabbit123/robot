@@ -20,7 +20,7 @@ const MicrosoftAPIs = function (mother = null, back = null, address = null) {
   this.redirectUri = "https://home-liaison.serveftp.com/microsoft";
   this.clientSecret = "Ufr8Q~cQxarROQ6YD9~4oQ02Rvno2vJGLY2tKdCo";
   this.loginUrl = "https://login.microsoftonline.com";
-  
+
   this.scope = [
     "email",
     "files.read",
@@ -68,10 +68,6 @@ const MicrosoftAPIs = function (mother = null, back = null, address = null) {
     word: "oddocx",
     power: "odpptx",
   };
-  this.statusJson = {
-    past: "pastStatus.json",
-    now: "nowStatus.json",
-  }
 
   this.folderNameToken = "______folderName______";
 }
