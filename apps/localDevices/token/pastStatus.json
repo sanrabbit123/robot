@@ -1,5 +1,5 @@
 {
-  "date": "2023-04-24T01:04:18.464Z",
+  "date": "2023-04-24T03:43:04.250Z",
   "devices": [
     {
       "mac": "88:e9:fe:4f:1d:2b",
@@ -7,7 +7,8 @@
         "id": "m1701_aa01s",
         "name": "박혜연"
       },
-      "online": false
+      "online": true,
+      "ip": "192.168.0.25"
     },
     {
       "mac": "2C:F0:5D:7C:CB:37",
@@ -15,7 +16,8 @@
         "id": "m1707_aa01s",
         "name": "강해진"
       },
-      "online": true
+      "online": true,
+      "ip": "192.168.0.23"
     },
     {
       "mac": "b0:e5:f9:f3:d3:90",
@@ -23,7 +25,8 @@
         "id": "m1810_aa01s",
         "name": "배창규"
       },
-      "online": true
+      "online": true,
+      "ip": "192.168.0.14"
     },
     {
       "mac": "68:fe:f7:0f:56:c5",
@@ -31,7 +34,8 @@
         "id": "m2009_aa01s",
         "name": "임혜령"
       },
-      "online": true
+      "online": true,
+      "ip": "192.168.0.17"
     },
     {
       "mac": "B4:2E:99:ED:F3:7C",
@@ -39,7 +43,8 @@
         "id": "m2012_aa01s",
         "name": "이큰별"
       },
-      "online": true
+      "online": true,
+      "ip": "192.168.0.27"
     },
     {
       "mac": "BC:5F:F4:93:CA:50",
@@ -47,7 +52,8 @@
         "id": "m2101_aa01s",
         "name": "임지민"
       },
-      "online": true
+      "online": true,
+      "ip": "192.168.0.31"
     },
     {
       "mac": "D4:3D:7E:28:C9:79",
@@ -55,7 +61,8 @@
         "id": "m2211_aa01s",
         "name": "박혜정"
       },
-      "online": false
+      "online": true,
+      "ip": "192.168.0.47"
     },
     {
       "mac": "2C:F0:5D:6D:83:64",
@@ -63,7 +70,8 @@
         "id": "m2304_aa01s",
         "name": "이지안"
       },
-      "online": true
+      "online": true,
+      "ip": "192.168.0.19"
     }
   ]
 }

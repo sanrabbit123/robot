@@ -142,12 +142,12 @@ LocalDevices.prototype.scanLocalMacIp = async function (waitingSeconds = 20) {
     finalArr = finalArr.map((str) => { return { mac: str.split(token)[0], ip: str.split(token)[1] } });
 
     await fileSystem(`writeJson`, [ `${tokenDir}/${statusJson.mac}`, finalArr ]);
+
     response = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/parsingDevicesStatus", { macArr: finalArr }, {
       headers: {
         "Content-Type": "application/json",
       }
     });
-    console.log(response.data)
 
     return finalArr;
   } catch (e) {
@@ -222,18 +222,27 @@ LocalDevices.prototype.getDevicesStatus = async function () {
   }
 }
 
-LocalDevices.prototype.getDevicesFlow = async function (result = null, members = []) {
+LocalDevices.prototype.getMacArr = async function () {
+  const instance = this;
+  const { tokenDir, statusJson } = this;
+  const { fileSystem, equalJson } = this.mother;
+  try {
+    let macArr;
+    macArr = equalJson(JSON.stringify(await fileSystem(`readJson`, [ `${tokenDir}/${statusJson.mac}` ])));
+    return macArr;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+LocalDevices.prototype.getDevicesFlow = async function (members) {
   const instance = this;
   const address = this.address;
   const { tokenDir, statusJson } = this;
   const { equalJson, fileSystem, requestSystem, messageSend } = this.mother;
   try {
-    if (typeof result !== "object" || result === null) {
-      result = {};
-      result.from = await fileSystem(`readJson`, [ `${tokenDir}/${statusJson.past}` ]);
-      result.to = await fileSystem(`readJson`, [ `${tokenDir}/${statusJson.now}` ]);
-    }
-    const { from: fromStatus, to: toStatus } = result;
+    const fromStatus = await fileSystem(`readJson`, [ `${tokenDir}/${statusJson.past}` ]);
+    const toStatus = await fileSystem(`readJson`, [ `${tokenDir}/${statusJson.now}` ]);
     const fromDevices = fromStatus.devices;
     const toDevices = toStatus.devices;
     const deathKeyword = "death";
@@ -291,10 +300,6 @@ LocalDevices.prototype.getDevicesFlow = async function (result = null, members =
       })
     }
 
-    if (members.length === 0) {
-      members = (await requestSystem("https://" + address.backinfo.host + "/getMembers", { type: "get" }, { headers: { "Content-Type": "application/json" } })).data;
-    }
-
     deathToAliveTargets = [];
     aliveToDateTargets = [];
 
@@ -327,7 +332,6 @@ LocalDevices.prototype.getDevicesFlow = async function (result = null, members =
     }
 
     return statusObject;
-
   } catch (e) {
     console.log(e);
     return null;

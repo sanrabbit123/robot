@@ -1180,67 +1180,6 @@ StaticRouter.prototype.rou_post_microsoftConvert = function () {
   return obj;
 }
 
-StaticRouter.prototype.rou_post_storeDevicesStatus = function () {
-  const instance = this;
-  const microsoft = this.microsoft;
-  const { fileSystem, errorLog, equalJson, shellExec, messageSend } = this.mother;
-  let obj;
-  obj = {};
-  obj.link = [ "/storeDevicesStatus" ];
-  obj.func = async function (req, res) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      microsoft.storeDevicesStatus(instance.members).then((result) => {
-
-        // return microsoft.getDevicesFlow(result, instance.members);
-      }).catch((err) => {
-        console.log(err);
-      });
-      res.send(JSON.stringify({ message: "will do" }));
-    } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_storeDevicesStatus): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
-StaticRouter.prototype.rou_post_getDevicesStatus = function () {
-  const instance = this;
-  const microsoft = this.microsoft;
-  const { fileSystem, errorLog, equalJson, shellExec, messageSend } = this.mother;
-  let obj;
-  obj = {};
-  obj.link = [ "/getDevicesStatus" ];
-  obj.func = async function (req, res) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
-      const resultObj = await microsoft.getDevicesStatus();
-      res.send(JSON.stringify(resultObj));
-    } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_getDevicesStatus): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  }
-  return obj;
-}
-
 StaticRouter.prototype.rou_post_renameTargets = function () {
   const instance = this;
   const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
@@ -2601,6 +2540,7 @@ StaticRouter.prototype.rou_post_renewMicrosoftAccessToken = function () {
 
 StaticRouter.prototype.rou_post_getMacArr = function () {
   const instance = this;
+  const devices = this.devices;
   const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
   let obj = {};
   obj.link = [ "/getMacArr" ];
@@ -2612,17 +2552,7 @@ StaticRouter.prototype.rou_post_getMacArr = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const result = await shellExec("arp-scan", [ "-l" ]);
-      let tempArr;
-      let index;
-      let macArr;
-  
-      tempArr = result.split("\n").slice(2);
-      index = tempArr.findIndex((str) => { return str.trim() === '' });
-      tempArr = tempArr.slice(0, index + 1).filter((str) => { return str.trim() !== "" });
-      tempArr = tempArr.map((str) => { return str.split("\t") });
-      macArr = tempArr.map(([ ip, mac ]) => { return mac }).map((str) => { return str.replace(/\:/gi, '').toLowerCase() });
-  
+      const macArr = await devices.getMacArr();
       res.send(JSON.stringify(macArr));
     } catch (e) {
       errorLog("Static lounge 서버 문제 생김 (rou_post_getMacArr): " + e.message).catch((e) => { console.log(e); });
@@ -2685,6 +2615,66 @@ StaticRouter.prototype.rou_post_parsingDevicesStatus = function () {
     } catch (e) {
       errorLog("Static lounge 서버 문제 생김 (rou_post_parsingDevicesStatus): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_storeDevicesStatus = function () {
+  const instance = this;
+  const devices = this.devices;
+  const { fileSystem, errorLog, equalJson, shellExec, messageSend } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/storeDevicesStatus" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      devices.scanLocalMacIp(20).then(() => {
+        return devices.getDevicesFlow(instance.members);
+      }).catch((err) => {
+        console.log(err);
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_storeDevicesStatus): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_getDevicesStatus = function () {
+  const instance = this;
+  const devices = this.devices;
+  const { fileSystem, errorLog, equalJson, shellExec, messageSend } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/getDevicesStatus" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      const resultObj = await devices.getDevicesStatus();
+      res.send(JSON.stringify(resultObj));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_getDevicesStatus): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
   return obj;
