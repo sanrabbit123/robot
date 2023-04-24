@@ -2639,7 +2639,7 @@ StaticRouter.prototype.rou_post_storeDevicesStatus = function () {
         throw new Error("post ban");
       }
       devices.scanLocalMacIp(10).then(() => {
-        return devices.getDevicesFlow(instance.members);
+        // return devices.getDevicesFlow(instance.members);
       }).catch((err) => {
         console.log(err);
       });
