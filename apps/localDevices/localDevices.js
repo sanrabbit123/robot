@@ -262,10 +262,10 @@ LocalDevices.prototype.getDevicesFlow = async function (members) {
     let messageArr;
 
     helloMember = (slack, name, title) => {
-      return `<@${slack}> 안녕하세요, ${name} ${title}님! 좋은 아침입니다!`;
+      return `안녕하세요, ${name} ${title}님! 좋은 아침입니다!`;
     }
     goodByeMember = (slack, name, title) => {
-      return `<@${slack}> ${name} ${title}님! 오늘도 수고하셨습니다. 안녕히 가세요!`;
+      return `${name} ${title}님! 오늘도 수고하셨습니다. 안녕히 가세요!`;
     }
 
     devicesArr = [];
