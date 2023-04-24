@@ -168,15 +168,9 @@ DevContext.prototype.launching = async function () {
     //   throw new Error(e);
     // });
 
-    // const microsoft = new MicrosoftAPIs();
-    // await microsoft.storeDevicesStatusOneTime();
 
 
-
-
-    // const local = new LocalDevices();
-    // console.log(await local.scanLocalMacIp(20));
-
+    
 
 
     

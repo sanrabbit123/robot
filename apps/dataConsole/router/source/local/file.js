@@ -2664,7 +2664,7 @@ FileJs.prototype.baseMaker = function () {
       let thisStatusIndex, targetChildren;
       for (let obj of memberContents) {
         thisStatusIndex = deviceStatus.devices.findIndex((o) => {
-          return o.id === obj.computer.id;
+          return o.mac.trim().replace(/\:/gi, '').toLowerCase() === obj.computer.mac.trim().replace(/\:/gi, '').toLowerCase();
         });
         if (thisStatusIndex === -1) {
           obj.online = false;
