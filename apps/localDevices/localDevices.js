@@ -327,10 +327,8 @@ LocalDevices.prototype.getDevicesFlow = async function (members) {
 
     messageArr = deathToAliveTargets.map((o) => { return o.message }).concat(aliveToDateTargets.map((o) => { return o.message }));
 
-    console.log(messageArr);
-
     for (let text of messageArr) {
-      // await messageSend({ text, channel, voice: true, fairy: true });
+      await messageSend({ text, channel, voice: true, fairy: true });
     }
 
     return statusObject;

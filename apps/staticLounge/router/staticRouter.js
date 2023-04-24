@@ -2638,7 +2638,7 @@ StaticRouter.prototype.rou_post_storeDevicesStatus = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      devices.scanLocalMacIp(20).then(() => {
+      devices.scanLocalMacIp(10).then(() => {
         return devices.getDevicesFlow(instance.members);
       }).catch((err) => {
         console.log(err);
