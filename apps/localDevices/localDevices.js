@@ -271,7 +271,7 @@ LocalDevices.prototype.getDevicesFlow = async function (members) {
     devicesArr = [];
     for (let obj of fromDevices) {
       thisObject = equalJson(JSON.stringify(obj));
-      toObject = toDevices.find((o) => { return o.id === obj.id });
+      toObject = toDevices.find((o) => { return o.mac.replace(/\:/gi, '').trim().toLowerCase() === obj.mac.replace(/\:/gi, '').trim().toLowerCase() });
       thisObject.fromOnline = obj.online;
       thisObject.toOnline = toObject.online;
       thisObject.flow = (thisObject.fromOnline ? aliveKeyword : deathKeyword) + toToken + (thisObject.toOnline ? aliveKeyword : deathKeyword);
@@ -295,7 +295,7 @@ LocalDevices.prototype.getDevicesFlow = async function (members) {
 
     for (let obj of devicesArr) {
       statusObject.summary[obj.flow].push({
-        id: obj.id,
+        mac: obj.mac,
         member: obj.member,
       })
     }
