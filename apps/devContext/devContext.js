@@ -173,37 +173,14 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+    
     
 
 
 
-    // url = "https://graph.microsoft.com/v1.0/deviceManagement/managedDevices/64e3d40e-ff19-4a54-8289-3e24d8a7577f/syncDevice";
-    // res = await requestSystem(url, {
-    //   data: null
-    // }, {
-    //   headers: {
-    //     "Authorization": "Bearer " + accessToken,
-    //     "Content-Type": "application/json",
-    //   }
-    // })
-    
-    // syncDate = new Date();
-
-    // await sleep(30 * 1000);
-
-    // url = "https://graph.microsoft.com/v1.0/deviceManagement/managedDevices/64e3d40e-ff19-4a54-8289-3e24d8a7577f";
-    // res = await requestSystem(url, {}, {
-    //   method: "get",
-    //   headers: {
-    //     "Authorization": "Bearer " + accessToken,
-    //   }
-    // })
-
-    // rightNow = new Date();
-    // thisUpdatedDate = new Date(res.data.lastSyncDateTime);
 
 
-    // console.log(syncDate.valueOf() <= thisUpdatedDate.valueOf() && thisUpdatedDate.valueOf() <= rightNow.valueOf());
 
 
 

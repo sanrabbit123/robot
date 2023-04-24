@@ -843,7 +843,7 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
   const { fileSystem, sleep, requestSystem, equalJson } = this.mother;
   try {
     const deltaTime = 1;
-    const agoMinutesDelta = 180;
+    const agoMinutesDelta = 360;
     let res, accessToken;
     let url;
     let syncDate;
@@ -940,6 +940,12 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
       targetMac = targetMac.trim().toLowerCase();
 
       if (obj.online) {
+        if (macArr.includes(targetMac)) {
+          obj.online = true;
+        } else {
+          obj.online = false;
+        }
+      } else {
         if (macArr.includes(targetMac)) {
           obj.online = true;
         } else {

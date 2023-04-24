@@ -1,5 +1,5 @@
 {
-  "date": "2023-04-23T22:34:32.750Z",
+  "date": "2023-04-24T00:46:56.482Z",
   "devices": [
     {
       "id": "64e3d40e-ff19-4a54-8289-3e24d8a7577f",
@@ -28,14 +28,14 @@
       },
       "storage": {
         "total": 255274778624,
-        "free": 198468173824
+        "free": 198814203904
       },
       "mac": "B4:2E:99:ED:F3:7C",
       "member": {
         "id": "m2012_aa01s",
         "name": "이큰별"
       },
-      "online": false
+      "online": true
     },
     {
       "id": "51f72b5b-bc1f-4dd6-949e-9745d7919cfc",
@@ -46,14 +46,14 @@
       },
       "storage": {
         "total": 239271411712,
-        "free": 184542035968
+        "free": 184622776320
       },
       "mac": "2C:F0:5D:6D:83:64",
       "member": {
         "id": "m2304_aa01s",
         "name": "이지안"
       },
-      "online": false
+      "online": true
     },
     {
       "id": "c9bc5e1f-c038-4538-9abe-a179b320a5fd",
@@ -64,14 +64,14 @@
       },
       "storage": {
         "total": 248659312640,
-        "free": 178923765760
+        "free": 178437226496
       },
       "mac": "BC:5F:F4:93:CA:50",
       "member": {
         "id": "m2101_aa01s",
         "name": "임지민"
       },
-      "online": false
+      "online": true
     },
     {
       "id": "b9ce2ceb-6ada-445c-a5d0-2cc443a391b9",
@@ -82,14 +82,14 @@
       },
       "storage": {
         "total": 118632742912,
-        "free": 52107935744
+        "free": 52192870400
       },
       "mac": "2C:F0:5D:7C:CB:37",
       "member": {
         "id": "m1707_aa01s",
         "name": "강해진"
       },
-      "online": false
+      "online": true
     },
     {
       "id": "2e9d1a89-086b-4174-98e7-a045a25b656f",
@@ -100,14 +100,14 @@
       },
       "storage": {
         "total": 268435456000,
-        "free": 19327352832
+        "free": 25769803776
       },
       "mac": "68:fe:f7:0f:56:c5",
       "member": {
         "id": "m2009_aa01s",
         "name": "임혜령"
       },
-      "online": false
+      "online": true
     },
     {
       "id": "647a4217-7a62-495b-aadc-3e78d73e8d23",
@@ -118,14 +118,14 @@
       },
       "storage": {
         "total": 263066746880,
-        "free": 74088185856
+        "free": 77309411328
       },
       "mac": "b0:e5:f9:f3:d3:90",
       "member": {
         "id": "m1810_aa01s",
         "name": "배창규"
       },
-      "online": false
+      "online": true
     }
   ]
 }
