@@ -1197,7 +1197,8 @@ StaticRouter.prototype.rou_post_storeDevicesStatus = function () {
         throw new Error("post ban");
       }
       microsoft.storeDevicesStatus(instance.members).then((result) => {
-        return microsoft.getDevicesFlow(result, instance.members);
+        
+        // return microsoft.getDevicesFlow(result, instance.members);
       }).catch((err) => {
         console.log(err);
       });

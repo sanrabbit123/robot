@@ -51,6 +51,7 @@ const TextDecorator = require(APP_PATH + "/textDecorator/textDecorator.js");
 const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
 const MicrosoftAPIs = require(`${process.cwd()}/apps/microsoftAPIs/microsoftAPIs.js`);
 const OpenAiAPIs = require(`${process.cwd()}/apps/openAiAPIs/openAiAPIs.js`);
+const LocalDevices = require(`${process.cwd()}/apps/localDevices/localDevices.js`);
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -167,17 +168,37 @@ DevContext.prototype.launching = async function () {
     //   throw new Error(e);
     // });
 
-    const microsoft = new MicrosoftAPIs();
-    await microsoft.storeDevicesStatusOneTime();
+    // const microsoft = new MicrosoftAPIs();
+    // await microsoft.storeDevicesStatusOneTime();
+
+
+
+
+    const local = new LocalDevices();
+    console.log(await local.scanLocalMacIp());
+
+
+
+    
+
+
+    
+
 
 
 
 
 
     
+
+
+
+
     
 
 
+
+    
 
 
 

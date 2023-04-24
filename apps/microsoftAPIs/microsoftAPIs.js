@@ -836,6 +836,13 @@ MicrosoftAPIs.prototype.uploadDocument = async function (filePath) {
   }
 }
 
+
+
+
+
+
+
+
 MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []) {
   const instance = this;
   const address = this.address;
@@ -923,7 +930,7 @@ MicrosoftAPIs.prototype.storeDevicesStatus = async function (members = []) {
 
 MicrosoftAPIs.prototype.getDevicesStatus = async function () {
   const instance = this;
-  const { graphUrl, version, tokenDir, statusJson } = this;
+  const { tokenDir, statusJson } = this;
   const { fileSystem, equalJson } = this.mother;
   try {
     let nowObject;
@@ -1069,5 +1076,12 @@ MicrosoftAPIs.prototype.getDevicesFlow = async function (result = null, members 
     return null;
   }
 }
+
+
+
+
+
+
+
 
 module.exports = MicrosoftAPIs;
