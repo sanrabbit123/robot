@@ -839,23 +839,14 @@ MicrosoftAPIs.prototype.uploadDocument = async function (filePath) {
 MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []) {
   const instance = this;
   const address = this.address;
-  const { graphUrl, version, tokenDir, statusJson } = this;
-  const { fileSystem, sleep, requestSystem, equalJson } = this.mother;
+  const { tokenDir, statusJson } = this;
+  const { fileSystem, requestSystem, equalJson } = this.mother;
   try {
-    const deltaTime = 1;
-    const agoMinutesDelta = 360;
-    let res, accessToken;
-    let url;
-    let syncDate;
-    let deviceList;
-    let lastSyncDateTime;
-    let now;
     let finalObject;
-    let path;
     let previousObject;
-    let syncAgo;
     let macArr;
     let targetMac;
+    let targetList;
 
     if (members.length === 0) {
       members = (await requestSystem("https://" + address.backinfo.host + "/getMembers", { type: "get" }, {
@@ -865,98 +856,37 @@ MicrosoftAPIs.prototype.storeDevicesStatusOneTime = async function (members = []
       })).data;
     }
 
-    accessToken = await this.getSchoolAccessToken();
-    path = "/deviceManagement/managedDevices";
-
-    url = graphUrl + "/" + version + path;
-    res = await requestSystem(url, {}, {
-      method: "get",
-      headers: {
-        "Authorization": "Bearer " + accessToken,
-      }
-    })
-
-    deviceList = res.data.value.map((obj) => {
-      let thisMember;
-      thisMember = members.find((member) => { return member.computer.id === obj.id });
+    targetList = members.filter((member) => { return member.computer.mac !== null }).map((member) => {
       return {
-        id: obj.id,
-        name: obj.deviceName,
-        os: {
-          type: obj.operatingSystem,
-          version: obj.osVersion,
-        },
-        storage: {
-          total: obj.totalStorageSpaceInBytes,
-          free: obj.freeStorageSpaceInBytes
-        },
-        mac: thisMember.computer.mac,
+        mac: member.computer.mac,
         member: {
-          id: thisMember.id,
-          name: thisMember.name,
+          id: member.id,
+          name: member.name,
         }
       }
     });
 
-    syncDate = new Date();
-    syncAgo = new Date(JSON.stringify(syncDate).slice(1, -1));
-    syncAgo.setMinutes(syncAgo.getMinutes() - agoMinutesDelta);
-    for (let { id } of deviceList) {
-      url = graphUrl + "/" + version + path + "/" + id + "/syncDevice";
-      res = await requestSystem(url, { data: null }, {
-        headers: {
-          "Authorization": "Bearer " + accessToken,
-          "Content-Type": "application/json",
-        }
-      });
-    }
-
-    await sleep(deltaTime * 1000);
-    now = new Date();
     macArr =( await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/getMacArr", { data: null }, {
       headers: {
         "Content-Type": "application/json",
       }
     })).data;
 
-    for (let obj of deviceList) {
-      url = graphUrl + "/" + version + path + "/" + obj.id;
-      res = await requestSystem(url, {}, {
-        method: "get",
-        headers: {
-          "Authorization": "Bearer " + accessToken,
-        }
-      });
-      lastSyncDateTime = new Date(res.data.lastSyncDateTime);
-      obj.online = (syncAgo.valueOf() <= lastSyncDateTime.valueOf());
+    for (let obj of targetList) {
+      targetMac = obj.mac.replace(/\:/gi, '').trim().toLowerCase();
 
-      targetMac = res.data.ethernetMacAddress;
-      if (targetMac === undefined || targetMac === null) {
-        targetMac = res.data.wiFiMacAddress;
-      }
-      if (typeof res.data.ethernetMacAddress === "string" && res.data.ethernetMacAddress.trim() === '') {
-        targetMac = res.data.wiFiMacAddress;
-      }
-      targetMac = targetMac.trim().toLowerCase();
-
-      if (obj.online) {
-        if (macArr.includes(targetMac)) {
-          obj.online = true;
-        } else {
-          obj.online = false;
-        }
+      if (macArr.includes(targetMac)) {
+        obj.online = true;
       } else {
-        if (macArr.includes(targetMac)) {
-          obj.online = true;
-        } else {
-          obj.online = false;
-        }
+        obj.online = false;
       }
     }
 
+    console.log(targetList);
+
     finalObject = {
       date: new Date(),
-      devices: deviceList,
+      devices: targetList,
     };
     previousObject = equalJson(JSON.stringify(await fileSystem(`readJson`, [ `${tokenDir}/${statusJson.now}` ])));
 

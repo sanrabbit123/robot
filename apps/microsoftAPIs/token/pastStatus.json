@@ -1,89 +1,7 @@
 {
-  "date": "2023-04-24T00:46:56.482Z",
+  "date": "2023-04-24T00:59:03.744Z",
   "devices": [
     {
-      "id": "64e3d40e-ff19-4a54-8289-3e24d8a7577f",
-      "name": "ACCOUNT",
-      "os": {
-        "type": "Windows",
-        "version": "10.0.22000.1817"
-      },
-      "storage": {
-        "total": 239339569152,
-        "free": 187019821056
-      },
-      "mac": "D4:3D:7E:28:C9:79",
-      "member": {
-        "id": "m2211_aa01s",
-        "name": "박혜정"
-      },
-      "online": false
-    },
-    {
-      "id": "607d467f-d49c-43d7-aa6a-e4692600ac28",
-      "name": "BIGSTART",
-      "os": {
-        "type": "Windows",
-        "version": "10.0.22621.1555"
-      },
-      "storage": {
-        "total": 255274778624,
-        "free": 198814203904
-      },
-      "mac": "B4:2E:99:ED:F3:7C",
-      "member": {
-        "id": "m2012_aa01s",
-        "name": "이큰별"
-      },
-      "online": true
-    },
-    {
-      "id": "51f72b5b-bc1f-4dd6-949e-9745d7919cfc",
-      "name": "CXADMIN",
-      "os": {
-        "type": "Windows",
-        "version": "10.0.22621.1555"
-      },
-      "storage": {
-        "total": 239271411712,
-        "free": 184622776320
-      },
-      "mac": "2C:F0:5D:6D:83:64",
-      "member": {
-        "id": "m2304_aa01s",
-        "name": "이지안"
-      },
-      "online": true
-    },
-    {
-      "id": "c9bc5e1f-c038-4538-9abe-a179b320a5fd",
-      "name": "DESKTOP-CKOO5DK",
-      "os": {
-        "type": "Windows",
-        "version": "10.0.22000.1817"
-      },
-      "storage": {
-        "total": 248659312640,
-        "free": 178437226496
-      },
-      "mac": "BC:5F:F4:93:CA:50",
-      "member": {
-        "id": "m2101_aa01s",
-        "name": "임지민"
-      },
-      "online": true
-    },
-    {
-      "id": "b9ce2ceb-6ada-445c-a5d0-2cc443a391b9",
-      "name": "DESKTOP-IGNV5P5",
-      "os": {
-        "type": "Windows",
-        "version": "10.0.22000.1817"
-      },
-      "storage": {
-        "total": 118632742912,
-        "free": 52192870400
-      },
       "mac": "2C:F0:5D:7C:CB:37",
       "member": {
         "id": "m1707_aa01s",
@@ -92,16 +10,14 @@
       "online": true
     },
     {
-      "id": "2e9d1a89-086b-4174-98e7-a045a25b656f",
-      "name": "iMac",
-      "os": {
-        "type": "macOS",
-        "version": "12.6.3 (21G419)"
+      "mac": "b0:e5:f9:f3:d3:90",
+      "member": {
+        "id": "m1810_aa01s",
+        "name": "배창규"
       },
-      "storage": {
-        "total": 268435456000,
-        "free": 25769803776
-      },
+      "online": true
+    },
+    {
       "mac": "68:fe:f7:0f:56:c5",
       "member": {
         "id": "m2009_aa01s",
@@ -110,20 +26,34 @@
       "online": true
     },
     {
-      "id": "647a4217-7a62-495b-aadc-3e78d73e8d23",
-      "name": "배창규의 iMac",
-      "os": {
-        "type": "macOS",
-        "version": "13.2.1 (22D68)"
-      },
-      "storage": {
-        "total": 263066746880,
-        "free": 77309411328
-      },
-      "mac": "b0:e5:f9:f3:d3:90",
+      "mac": "B4:2E:99:ED:F3:7C",
       "member": {
-        "id": "m1810_aa01s",
-        "name": "배창규"
+        "id": "m2012_aa01s",
+        "name": "이큰별"
+      },
+      "online": true
+    },
+    {
+      "mac": "BC:5F:F4:93:CA:50",
+      "member": {
+        "id": "m2101_aa01s",
+        "name": "임지민"
+      },
+      "online": true
+    },
+    {
+      "mac": "D4:3D:7E:28:C9:79",
+      "member": {
+        "id": "m2211_aa01s",
+        "name": "박혜정"
+      },
+      "online": false
+    },
+    {
+      "mac": "2C:F0:5D:6D:83:64",
+      "member": {
+        "id": "m2304_aa01s",
+        "name": "이지안"
       },
       "online": true
     }
