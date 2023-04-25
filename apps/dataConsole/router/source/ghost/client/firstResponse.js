@@ -281,9 +281,9 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 25, 24, 20, 17, 4.5 %%>;
+  titleFont = <%% 26, 25, 20, 17, 4.5 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
-  titleFontWeight = <%% 900, 900, 900, 900, 900 %%>;
+  titleFontWeight = <%% 800, 800, 800, 800, 800 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
   titleTop = <%% 108, 54, 40, 30, 8.5 %%>;
@@ -567,6 +567,7 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
   let marginTop;
   let whiteVisualPaddingTop;
   let whiteInjectionMarginTop;
+  let imageBetween;
 
   margin = <%% 52, 52, 44, 32, 6 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 4 %%>;
@@ -619,35 +620,42 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
 
   whiteInjectionMarginTop = <%% 45, 40, 30, 16, 10 %%>;
 
+  imageBetween = <%% 6, 6, 6, 5, 2 %%>;
+
   contents = {
     designer: {
       up: {
-        title: "이젠, 디자이너와 함께 진행하세요!",
+        title: "새로운 트렌드, 홈스타일링",
         description: [
-          "인테리어는 막힘과 실패의 가능성이 높은 작업이에요. 혼서 하기보다 전문가의 도움을 받는 것이 좋습니다. 디자이너와 함께하는 홈스타일링은 과정과 결과 모두가 만족스러울 뿐",
-          "아니라 진행하는 동안 내내 편안한 경험을 하실 수 있답니다. 디자인, 예산 계획, 공간 기획 모두 한 번에 전문가에게 맡기면, 우리 집을 고급스럽고 예쁘게 변화시킬 수 있어요.",
+          `인테리어 시장에서 최근 떠오르는 트렌드는 '홈스타일링'입니다. 홈스타일링은 디자인을 먼저 진행하고, 그 디자인에 따라 시공을 진행한 뒤 스타일링으로 마무리하는 디자인 스튜디오들의 작업 구조를 적용하여`,
+          `합리적인 부분 시공과 가구, 소품, 패브릭을 이용하여 효율적으로 운영하는 인테리어입니다. 이러한 트렌드가 인기를 얻는 이유는 합리적인 예산으로 완성도 있는 인테리어를 할 수 있다는 점 때문입니다.`,
         ]
       },
       down: {
-        title: "디자이너와 함께\n해야 하는 이유",
+        title: "홈스타일링을\n해야 하는 이유",
         children: [
           {
             description: [
-              `첫 번째로, <b%인테리어의 광범위한 범위입니다.%b> 인테리어를 한 번이라도 경험해 보면 그 광범위함을 깨닫게 됩니다. 상상조차 못한 문제와 극도로 세세한 디테일이 많으며, 진행하는 동안 내내 고려해야 할 사항이 많아 끊임없이 처리해야 할 일이 발생합니다. 이렇게 생각해야 할 것이 많기 때문에 전문가를 고용하는 것은 전혀 지나친 일이 아닙니다. 전문가와 함께하면 광범위한 업무량을 쉽게 처리할 수 있으며, 시간을 절약할 수 있기 때문에 디자이너와 함께하는 것입니다.`
+              `홈스타일링은 다양한 장점을 가지고 있지만, 그 중에서도 대표적으로 3가지의 장점이 있습니다. 첫째로는 <b%'인테리어의 제대로 된 완성'입니다.%b> 인테리어는 바탕 시공만으로는 끝나지 않습니다. 바탕 시공을 어떻게 하는지는 시작에 불과하며, 이후에는 가구와 소품의 조합을 어떻게 할 지 컨셉을 정하고 구체적인 제품을 선택해야 합니다. 이러한 작업들을 통해 인테리어 디자인을 완성시키는 것이 원래의 인테리어 디자인의 작업입니다. 홈스타일링은 이러한 과정을 필수적으로 거치며, 디자인 컨셉과 제품 선택 등을 통해 주거 인테리어의 완성도를 높입니다. 이러한 점에서 리모델링과는 다른 장점을 가지고 있습니다.`,
             ],
           },
           {
             description: [
-              `두 번째로, <b%인테리어는 한번 실패하면 복구하기 힘든 점이 있습니다.%b> 인테리어는 돈도 많이 들고 시간도 많이 드는 작업에다가 복구가 쉽지 않다는 특성까지 지니고 있습니다. 돈과 시간이 무한정하지 않은 이상, 이것저것 다 해보고 마음에 드는 것으로 바꿀 수 없으며, 실패하면 실패한대로 감수해야 합니다. 실제로 혼자서 고급스럽고 예쁜 집을 시도해보다가 생각하지도 못했던 문제에 가로막혀 실패하는 경우가 매우 많으며, 이러한 실패는 큰 돈과 시간을 소모했음에도 다시 되돌릴 수 없습니다. 그렇기 때문에 경험이 많은 전문가를 고용하여 실패의 확률을 크게 낮추는 것은 필수적인 과정입니다. 이러한 선택은 오히려 돈과 시간을 절약하는 전략적인 선택일 수 있습니다.`
+              `두 번째로는 <b%합리적인 시공 진행%b>입니다. 리모델링 회사들은 시공을 많이 하면 할수록 이익이 많이 남기 때문에 고객에게 쓸데없이 시공을 많이 시키고 강요하는 경우가 많습니다. 이러한 경우 고객은 불필요한 시공을 많이 하게 되면서 예산을 낭비하게 됩니다. 하지만 홈스타일링에서는 달라집니다. 디자이너는 시공을 얼마나 많이 하는 지에 상관 없이 똑같은 디자인비를 받게 되므로 시공을 무작정 많이 하는 것에 관심이 없습니다. 게다가 디자인을 기준으로 시공 범위를 정할 수 있기 때문에 어떤 시공이 진짜로 필요하고 어떤 시공이 필요없는지를 명확하게 구체적으로 정할 수 있습니다. 이러한 이유로 불필요한 시공을 방지할 수 있으며 고객은 쓸데없이 예산을 낭비하지 않을 수 있게 됩니다.`,
             ],
           },
           {
             description: [
-              `세 번째로, <b%전문가와 함께하는 이유는 결과물에 대한 보증입니다.%b> 디자이너는 단순히 감각이 좋은 사람이 아니라, 인테리어 디자인 분야에서 경력을 쌓은 전문가들입니다. 이들은 실제 현장을 다녀보고 구현해본 경험이 많으며, 주거 인테리어 시공 분야에 대한 경험이 풍부합니다. 또한, 가구와 소품 브랜드에 대한 깊은 지식을 갖고 있습니다. 주거 인테리어에 대한 경험치가 다르기 때문에 어떤 컨셉으로 디자인을 진행하면 어떻게 구현될지 미리 예측할 수 있으며, 가상적으로 구현해 볼 수도 있습니다. 또한, 전문가는 도면과 3D에 대한 능력도 있어 현장 작업자들과 원활한 소통이 가능합니다. 따라서 전문가에게 맡기면 전문적인 지식과 경험, 감각 등이 더해져 월등히 좋은 결과물이 나오게 됩니다.`
+              `세 번째로는 <b%고객의 상황과 취향에 딱 맞는 커스터마이징 서비스%b>라는 점입니다. 디자인을 선행하면서 예산에 대한 고려도 함께 이루어집니다. 주어진 예산 안에서 어떤 시공을 하고, 어떤 가격대에 있는 가구를 구매해야 가장 효과적인 결과를 얻을 수 있는지를 고민하고 실현합니다. 예산이 부족하다면 시공 범위를 줄이고 가구 브랜드의 급을 낮춰 보여지는 모습에 집중하고, 예산이 충분하다면 그에 맞는 브랜드의 가구를 추천합니다. 또한, 예산 뿐만 아니라 고객의 집 계약 상태, 가족 구성원, 평수 등 여러 조건을 모두 고려하여 최적의 디자인을 기획합니다. 이렇게 디자인 및 기획을 선행함으로써 고객 맞춤형 결과물을 얻을 수 있습니다. 리모델링과는 달리 시공만 무조건 시작하는 것이 아니라, 디자인과 기획을 통해 최적의 결과를 얻을 수 있는 큰 장점을 가지고 있습니다.`,
             ],
           },
         ]
-      }
+      },
+      images: [
+        FRONTHOST + "/middle/detail/review/f22.jpg",
+        FRONTHOST + "/middle/detail/review/s10.jpg",
+        FRONTHOST + "/middle/detail/review/t10.jpg",
+      ]
     },
     role: {
       up: {
@@ -660,10 +668,10 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
     },
     homeliaison: {
       up: {
-        title: "전문가의 홈스타일링, 홈리에종에서!",
+        title: "홈스타일링, 홈리에종에서 해야만 하는 이유",
         description: [
-          "홈스타일링 디자이너와 함께하는 이유는 다양합니다. 홈리에종을 거치지 않고 디자이너와 직접적으로 연결하면 더 많은 비용을 절약할 수 있지 않을까 생각할 수 있겠지만,",
-          "그래도 홈리에종을 통해 디자이너를 만나야 하는 이유는 분명히 있습니다. 다음과 같이 4가지 대표적인 이유가 있습니다."
+          `이렇게 좋은 홈스타일링, 프리랜서 디자이너와 별도로 진행할 수도 있지 않을까요? 홈리에종을 거치지 않고 디자이너와 직접적으로 연결하면`,
+          `더 많은 비용을 절약할 수 있지 않을까 생각할 수 있겠지만, 그래도 홈리에종을 통해 홈스타일링을 해야 하는 이유는 분명히 있습니다. 다음과 같은 이유가 있습니다.`,
         ]
       },
       down: {
@@ -671,22 +679,17 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
         children: [
           {
             description: [
-              `첫 번째로 <b%안전한 프로젝트 운영입니다.%b> 디자이너와 직접적으로 연결하여 작업을 진행하는 경우, 문제가 발생할 때 중재해줄 제3자가 없어 리스크가 큽니다. 문제가 발생하여 해결이 되지 않으면 연락이 끊길 수 있고, 책임을 회피하느라 프로젝트가 올바르게 마무리되지 않을 수 있습니다. 특히 인테리어 분야는 예측할 수 없는 문제가 매우 빈번하게 발생하며, 피해 금액도 크기 때문에 리스크 관리가 매우 중요합니다. 디자이너 또는 작업자와 직접 연락을 취하여 중재할 제3자를 끼지 않는 것은 상당히 위험합니다. 인테리어 분야에서는 꼭 플랫폼을 끼고 프로젝트를 진행하는 것이 안전하고 올바른 선택입니다.`,
+              `<b%홈리에종에는 검증된 디자이너들만 모여 있습니다.%b> 프리랜서 디자이너는 수많이 존재하지만, 그들의 실력과 작업 방식을 정확히 평가하기는 어렵습니다. 또한 인테리어 업계에서는 표준화가 잘 이루어지지 않아, 작업 방식이 다양하고 품질이 일정하지 않을 수 있습니다. 그러나 홈리에종의 디자이너들은 검증 과정을 거쳐 선발된 전문가들로 구성되어 있으며, 홈리에종의 표준에 맞춰 작업을 수행합니다. 또한 결과물에 대한 보증 및 포트폴리오 검증도 철저히 이루어지므로, 홈리에종의 디자이너라면 믿고 인테리어를 맡길 수 있는 것입니다.`,
             ],
           },
           {
             description: [
-              `두 번째로 홈리에종에는 <b%검증된 디자이너들만 모였다는 점 때문입니다.%b> 프리랜서 디자이너는 수많이 존재하지만, 그들의 실력과 작업 방식을 정확히 평가하기는 어렵습니다. 또한 인테리어 업계에서는 표준화가 잘 이루어지지 않아, 작업 방식이 다양하고 품질이 일정하지 않을 수 있습니다. 그러나 홈리에종의 디자이너들은 검증 과정을 거쳐 선발된 전문가들로 구성되어 있으며, 홈리에종의 표준에 맞춰 작업을 수행합니다. 또한 결과물에 대한 보증 및 포트폴리오 검증도 철저히 이루어지므로, 홈리에종의 디자이너라면 믿고 인테리어를 맡길 수 있는 것입니다.`,
+              `<b%홈리에종은 체계적인 큐레이션 시스템이 있습니다.%b> 인테리어를 디자이너와 진행하려면, 수많은 디자이너들 중에서 내 취향과 조건에 부합하는 디자이너를 찾아야 합니다. 하지만 내가 원하는 디자이너가 있더라도 예산, 일정, 거리 등 다양한 요인들을 고려해야 하기 때문에 선택 과정은 복잡하고 어렵습니다. 홈리에종의 큐레이션 서비스는 이러한 문제를 해결해줍니다. 고객 상담을 통해 고객님의 기본 정보와 여러 조건들을 체계적으로 분석하여, 최적의 인테리어 디자이너 3~4명을 추천해줍니다. 이를 통해 고객님은 어떤 디자이너가 가장 적합한지를 쉽게 확인할 수 있으며, 예산, 일정, 거리 등 다양한 요인들도 모두 고려된 맞춤형 추천을 받을 수 있습니다. 홈리에종과 함께하면 디자이너를 찾기 위해 복잡하고 긴 시간을 들일 필요 없이, 쉽고 빠르게 디자이너를 추천받고 선택할 수 있습니다.`,
             ],
           },
           {
             description: [
-              `세 번째로 <b%홈리에종의 큐레이션이 있기 때문입니다.%b> 인테리어를 디자이너와 진행하려면, 수많은 디자이너들 중에서 내 취향과 조건에 부합하는 디자이너를 찾아야 합니다. 하지만 내가 원하는 디자이너가 있더라도 예산, 일정, 거리 등 다양한 요인들을 고려해야 하기 때문에 선택 과정은 복잡하고 어렵습니다. 홈리에종의 큐레이션 서비스는 이러한 문제를 해결해줍니다. 고객 상담을 통해 고객님의 기본 정보와 여러 조건들을 체계적으로 분석하여, 최적의 인테리어 디자이너 3~4명을 추천해줍니다. 이를 통해 고객님은 어떤 디자이너가 가장 적합한지를 쉽게 확인할 수 있으며, 예산, 일정, 거리 등 다양한 요인들도 모두 고려된 맞춤형 추천을 받을 수 있습니다. 홈리에종과 함께하면 디자이너를 찾기 위해 복잡하고 긴 시간을 들일 필요 없이, 쉽고 빠르게 디자이너를 추천받고 선택할 수 있습니다.`,
-            ],
-          },
-          {
-            description: [
-              `네 번째로 <b%홈리에종의 프로젝트 케어가 있기 때문입니다.%b> 인테리어 프로젝트를 진행하는 동안 디자이너와 고객만 소통하는 것이 아니라, 홈리에종은 중재 역할을 하며 문제가 발생하면 적극적으로 해결해줍니다. 만약 디자이너와 맞지 않는 경우, 다른 디자이너로 교체하는 것도 가능합니다. 프로젝트의 각 중요 단계에서 홈리에종은 고객과 디자이너에게 전화를 걸어 문제 없이 진행되고 있는지 확인하며, 현장을 사진으로 확인하여 프로젝트가 원활하게 마무리될 수 있도록 합니다. 또한, 세팅과 촬영까지 진행하게 하여 최종 결과물을 확실하게 만들어드립니다. 고객님은 프로젝트가 중간에 흐지부지 끝나거나 제대로 마무리되지 않을까 하는 걱정 없이, 프로젝트가 완성도 높게 끝나길 기다리기만 하시면 됩니다.`,
+              `<b%홈리에종은 프로젝트 케어 시스템을 갖추고 있습니다.%b> 인테리어 프로젝트를 진행하는 동안 디자이너와 고객만 소통하는 것이 아니라, 홈리에종은 중재 역할을 하며 문제가 발생하면 적극적으로 해결해줍니다. 만약 디자이너와 맞지 않는 경우, 다른 디자이너로 교체하는 것도 가능합니다. 프로젝트의 각 중요 단계에서 홈리에종은 고객과 디자이너에게 전화를 걸어 문제 없이 진행되고 있는지 확인하며, 현장을 사진으로 확인하여 프로젝트가 원활하게 마무리될 수 있도록 합니다. 또한, 세팅과 촬영까지 진행하게 하여 최종 결과물을 확실하게 만들어드립니다. 고객님은 프로젝트가 중간에 흐지부지 끝나거나 제대로 마무리되지 않을까 하는 걱정 없이, 프로젝트가 완성도 높게 끝나길 기다리기만 하시면 됩니다.`,
             ],
           },
         ]
@@ -826,6 +829,35 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
         }
       }
     });
+    if (Array.isArray(contents[keyword].images)) {
+      createNode({
+        mother: mother,
+        style: {
+          display: "flex",
+          marginTop: String(desktop ? contentsMotherBoxMarginTop : 6) + ea,
+          paddingBottom: desktop ? "" : String(5) + ea,
+          position: "relative",
+          flexDirection: "row",
+          alignItems: "start",
+          justifyContent: "start",
+        },
+        children: contents[keyword].images.map((src, index) => {
+          return {
+            style: {
+              display: "inline-block",
+              borderRadius: String(5) + "px",
+              width: "calc(calc(100% - " + String(imageBetween * (contents[keyword].images.length - 1)) + ea + ") / " + String(contents[keyword].images.length) + ")",
+              height: String(imageHeight) + ea,
+              marginRight: (index === contents[keyword].images.length - 1 ? "" : String(imageBetween) + ea),
+              background: colorChip.black,
+              backgroundImage: "url('" + src + "')",
+              backgroundSize: desktop ? "100% auto" : "auto 100%",
+              backgroundPosition: "50% 50%",
+            }
+          }
+        }),
+      });
+    }
     if (contents[keyword].down !== undefined) {
       createNode({
         mother: mother,
@@ -1063,24 +1095,25 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
   });
   basicContentsMaker(whiteBlock0, "designer", colorChip.gray1);
 
-  whiteInjection = createNode({
-    mother: baseTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: withOut(margin * 2, ea),
-      paddingLeft: String(margin) + ea,
-      paddingRight: String(margin) + ea,
-      paddingTop: String(marginTop + whiteVisualPaddingTop) + ea,
-      paddingBottom: String(marginTop) + ea,
-      background: colorChip.white,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      marginTop: String(whiteInjectionMarginTop) + ea,
-    }
-  })
-  basicContentsMaker(whiteInjection, "role", colorChip.white, true);
-  instance.insertRoleBox(whiteInjection);
+  // whiteInjection = createNode({
+  //   mother: baseTong,
+  //   style: {
+  //     display: "block",
+  //     position: "relative",
+  //     width: withOut(margin * 2, ea),
+  //     paddingLeft: String(margin) + ea,
+  //     paddingRight: String(margin) + ea,
+  //     paddingTop: String(marginTop + whiteVisualPaddingTop) + ea,
+  //     paddingBottom: String(marginTop) + ea,
+  //     background: colorChip.white,
+  //     boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+  //     borderRadius: String(desktop ? 8 : 1) + ea,
+  //     marginTop: String(whiteInjectionMarginTop) + ea,
+  //   }
+  // })
+  // basicContentsMaker(whiteInjection, "role", colorChip.white, true);
+  // instance.insertRoleBox(whiteInjection);
+
 
   // white area ---------------------------------------------------------------------------------------------------
 
