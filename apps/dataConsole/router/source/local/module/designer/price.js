@@ -590,6 +590,7 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
   const { createNode, createNodes, colorChip, withOut, isMac, ajaxJson } = GeneralJs;
   const { price, standard } = pricePast.allCase(...this.key);
   const className = "caseTarget";
+  const validRangeNumber = 12;
   let subSize;
   let size;
   let x, y;
@@ -624,13 +625,12 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
           fontSize: String(subSize) + ea,
           fontWeight: String(700),
           textAlign: "center",
-          color: colorChip.green,
+          color: j >= validRangeNumber ? colorChip.deactive : colorChip.green,
           width: "calc(calc(100% - " + String(leftPadding * 3) + ea + ") / 4)",
           top: "calc(" + String(topStart) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 4)) + "))",
           left: "calc(" + String(leftPadding) + ea + " + calc(calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 4) * " + String(j % 4) + "))",
         }
       });
-
       createNode({
         mother: doms[i],
         class: [ className ],
@@ -745,7 +745,7 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
           fontWeight: String(300),
           fontFamily: "graphik",
           textAlign: "center",
-          color: colorChip.black,
+          color: j >= validRangeNumber ? colorChip.gray3 : colorChip.black,
           width: "calc(calc(100% - " + String(leftPadding * 3) + ea + ") / 4)",
           top: "calc(" + String(topStart + between) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 4)) + "))",
           left: "calc(" + String(leftPadding) + ea + " + calc(calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 4) * " + String(j % 4) + "))",
