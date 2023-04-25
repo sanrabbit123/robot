@@ -129,8 +129,8 @@ FirstResponseJs.prototype.insertInitBox = function () {
   tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "홈리에종 서비스";
-  subTitleContents = "디자이너 추천";
+  titleWording = "서비스 상세 안내";
+  subTitleContents = "디자이너 추천전 서비스 상세 안내";
 
   mobileBlockTop = 4.5;
 
@@ -274,6 +274,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
   let imageBetween;
   let rightBoxMarginLeft;
   let titleLineHeight;
+  let circleTop, circleLeft, circleWidth;
 
   blockHeight = <%% 500, 316, 273, 226, 129.5 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -281,7 +282,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 26, 25, 20, 17, 4.5 %%>;
+  titleFont = <%% 26, 25, 23, 18, 4.5 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 800, 800, 800, 800, 800 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -296,7 +297,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  leftWidth = <%% 658, 460, 400, 210, 300 %%>;
+  leftWidth = <%% 658, 480, 412, 238, 300 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
   initWordingSize = <%% 15.5, 15, 14.5, 13.5, 5 %%>;
@@ -345,20 +346,24 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
   grayBoxImageVisualWidth = <%% 16, 4, 0, 0, 19 %%>;
 
   leftTitleWidth = <%% 180, 175, 175, 175, 18 %%>;
-  descriptionMarginTop = <%% 120, 120, 100, 90, 12 %%>; 
+  descriptionMarginTop = <%% 120, 50, 40, 25, 12 %%>; 
 
-  rightBoxHeight = <%% 552, 552, 552, 552, 55 %%>;
+  rightBoxHeight = <%% 552, 500, 476, 592, 55 %%>;
 
   imageBetween = <%% 8, 8, 6, 4, 1 %%>;
 
-  rightBoxMarginLeft = <%% 64, 64, 60, 48, 6 %%>;
+  rightBoxMarginLeft = <%% 64, 50, 50, 40, 6 %%>;
+
+  circleTop = <%% 4, 4, 5, 4, 4 %%>;
+  circleLeft = <%% -7, -7, -6, -5, -7 %%>;
+  circleWidth = <%% 6, 6, 5, 4, 1 %%>;
 
   titleLineHeight = 1.4;
 
   grayUpWordings = [ "프로세스", "후 시공 / 구매", "선 디자인 / 기획", "디자이너 선택" ];
   grayDownWordings = [ "비용 구성", "시공 비용", "구매 비용", "디자인비" ];
 
-  title = "인테리어는\n시공이 전부가\n아닙니다.";
+  title = media[0] ? "인테리어는\n시공이 전부가\n아닙니다." : "인테리어는\n시공이 전부가 아닙니다.";
   description = [
     `일반적으로 주거 인테리어를 생각하면 시공 위주의 리모델링이 떠오르곤 합니다. 1차원적인 시공 선택과 견적 내기에 방점을 찍은 리모델링 문화가 주거 인테리어의 대표적인 영역으로 자리매김하면서 <b%집을 인테리어한다는 개념은 시공에 집중하면서 비슷한 스타일을 찍어내는 형태%b>가 되었습니다.`,
     `이러한 리모델링 문화는 문제가 많습니다. 공간 디자인이 부재한 인테리어는 체계적인 시공 계획을 할 수 없고, 주먹구구식 시공 진행은 그저 하얗고 깔끔하게 찍어내는 데에 집중되기 때문입니다. 그렇게 만들어진 공간 위에 스타일링 없는 가구와 소품 배치는 그 깔끔한 바탕마저 의미 없는 것으로 만들어 버립니다. <b%조화롭지 못한 가구, 중구난방의 소품, 살림 살이 가득한 짐들로 인해 집은 리모델링을 한 의미가 없는 공간이%b> 되어버리곤 합니다.`,
@@ -388,7 +393,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
       marginTop: desktop ? String(marginTop) + ea : "",
       marginBottom: desktop ? String(margin) + ea : "",
       marginLeft: desktop ? String(margin) + ea : "",
-      flexDirection: desktop ? "row" : "",
+      flexDirection: desktop ? (media[0] ? "row" : "column") : "",
     },
     children: [
       {
@@ -400,18 +405,18 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
           top: mobile ? String(-2) + ea : "",
           left: mobile ? String(titleLeft) + ea : "",
           color: colorChip.black,
-          width: desktop ? String(leftTitleWidth) + ea : String(100) + '%',
+          width: desktop ? (media[0] ? String(leftTitleWidth) + ea : withOut(0, ea)) : String(100) + '%',
           textAlign: desktop ? "" : "center",
           lineHeight: desktop ? String(titleLineHeight) : "",
         },
         child: {
           style: {
             position: "absolute",
-            top: String(4) + ea,
-            left: String(-7) + ea,
-            width: String(6) + ea,
-            height: String(6) + ea,
-            borderRadius: String(6) + ea,
+            top: String(circleTop) + ea,
+            left: String(circleLeft) + ea,
+            width: String(circleWidth) + ea,
+            height: String(circleWidth) + ea,
+            borderRadius: String(circleWidth) + ea,
             background: colorChip.green,
           }
         }
@@ -424,7 +429,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
           left: mobile ? String(titleLeft) + ea : "",
           color: colorChip.black,
           textAlign: desktop ? "" : "center",
-          width: desktop ? withOut(leftTitleWidth, ea) : withOut(0),
+          width: desktop ? (media[0] ? withOut(leftTitleWidth, ea) : withOut(0, ea)) : withOut(0),
           fontSize: String(descriptionSize) + ea,
           fontWeight: String(400),
           lineHeight: String(1.6),
@@ -568,6 +573,10 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
   let whiteVisualPaddingTop;
   let whiteInjectionMarginTop;
   let imageBetween;
+  let whiteInjection2;
+  let buttonAreaMarginTop, buttonAreaMarginBottom;
+  let buttonWidth, buttonHeight;
+  let buttonTextTop, buttonSize, buttonWeight;
 
   margin = <%% 52, 52, 44, 32, 6 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 4 %%>;
@@ -622,13 +631,21 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
 
   imageBetween = <%% 6, 6, 6, 5, 2 %%>;
 
+  buttonAreaMarginTop = <%% 30, 30, 28, 26, 3 %%>;
+  buttonAreaMarginBottom = <%% 12, 12, 12, 12, 12 %%>;
+  buttonWidth = <%% 144, 144, 144, 132, 142 %%>;
+  buttonHeight = <%% 38, 38, 38, 36, 4 %%>;
+  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  buttonSize = <%% 15, 15, 15, 14, 3.5 %%>;
+  buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
+
   contents = {
     designer: {
       up: {
         title: "새로운 트렌드, 홈스타일링",
         description: [
-          `인테리어 시장에서 최근 떠오르는 트렌드는 '홈스타일링'입니다. 홈스타일링은 디자인을 먼저 진행하고, 그 디자인에 따라 시공을 진행한 뒤 스타일링으로 마무리하는 디자인 스튜디오들의 작업 구조를 적용하여`,
-          `합리적인 부분 시공과 가구, 소품, 패브릭을 이용하여 효율적으로 운영하는 인테리어입니다. 이러한 트렌드가 인기를 얻는 이유는 합리적인 예산으로 완성도 있는 인테리어를 할 수 있다는 점 때문입니다.`,
+          `인테리어 시장에서 떠오르는 트렌드는 '홈스타일링'입니다. 홈스타일링은 디자인을 먼저 진행하고, 그 디자인에 따라 시공을 진행한 뒤 스타일링으로 마무리하는 인테리어입니다.`,
+          `합리적 시공과 가구, 소품, 패브릭을 이용하여 운영한다는 특징이 있습니다. 이러한 트렌드가 인기를 얻는 이유는 합리적인 예산으로 완성도 있는 인테리어를 할 수 있기 때문입니다.`,
         ]
       },
       down: {
@@ -659,12 +676,31 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
     },
     role: {
       up: {
-        title: "서비스 안에서 디자이너는 어떤 역할을 하나요?",
+        title: "디자이너는 실제로 어떤 역할을 하나요?",
         description: [
           "디자이너는 프로젝트를 총괄하는 프로젝트 매니저로, 디자인은 물론, 일정의 운영, 예산 분할 계획, 시공 조율 등, 집이 만들어지는 과정에 모두 관여합니다.",
           "디자이너의 목표는 단순 디자인만 끝내는 것이 아니라 고객님의 집이 실제로 완성되는 것에 있기 때문에, 그들의 역할에 대해 신뢰와 기대를 가지셔도 좋습니다.",
         ]
       },
+    },
+    curation: {
+      up: {
+        title: "홈리에종 큐레이션과 디자이너 추천",
+        description: [
+          (media[0] || media[1]) ? "서비스에 대해 이해하셨다면, 이제 고객님은 홈리에종으로부터 취향뿐만 아니라 예산, 일정, 거리 등 다양한 요인들도 모두 고려된 맞춤형 디자이너 추천을 받을 수 있습니다." : "이제 고객님은 홈리에종으로부터 취향뿐만 아니라 예산, 일정, 거리 등 다양한 요인들도 모두 고려된 맞춤형 디자이너 추천을 받을 수 있습니다.",
+          "하단의 버튼을 눌러 나에게 딱 맞는 디자이너 추천서를 받아보세요! 손쉽게 내 상황에 딱 맞고 작업 가능한 디자이너 리스트를 제공받으실 수 있습니다."
+        ]
+      },
+      buttons: [
+        {
+          title: "디자이너 추천 받기",
+          event: () => {
+            return function (e) {
+              console.log("this");
+            }
+          }
+        }
+      ]
     },
     homeliaison: {
       up: {
@@ -694,13 +730,13 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
           },
         ]
       },
-      image: FirstResponseJs.binaryPath + "/about_homeliaison_00.jpg",
+      image: FirstResponseJs.binaryPath + "/about_homeliaison_01.jpg",
     },
     process: {
       up: {
         title: "홈리에종 프로세스, 궁금해요!",
         description: [
-          "문의 후 응대가 이루어지고, 응대가 끝나면 홈리에종은 고객님께 디자이너 추천서를 보내며, 고객님이 디자이너를 선택하신 후, 계약금을 결제하시면 계약이 체결됩니다.",
+          "문의 후 응대가 이루어지고, 끝나면 홈리에종은 고객님께 디자이너 추천서를 보내며, 고객님이 디자이너를 선택하신 후, 계약금을 결제하시면 계약이 체결됩니다.",
           "계약이 체결되면 현장 미팅이 이루어지고 미팅 후 디자이너와 매칭이 되면, 디자인이 본격적으로 시작되고 그 디자인에 맞춰 시공과 구매가 진행되는 형식입니다."
         ]
       },
@@ -713,7 +749,7 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
       up: {
         title: "홈리에종의 서비스 종류",
         description: [
-          "서비스는 시공 범위에 따라 구분됩니다. 홈퍼니싱은 시공이 없는 서비스이며, 홈스타일링과 토탈 스타일링은 부분 시공만 진행하는 지, 전체 시공을 진행하는 지에 따라 구분됩니다.",
+          "서비스는 시공에 따라 구분됩니다. 홈퍼니싱은 시공이 없는 서비스이며, 홈스타일링과 토탈 스타일링은 부분 시공만 진행하는 지, 전체 시공을 진행하는 지에 따라 구분됩니다.",
           "엑스트라 스타일링은 토탈 스타일링의 프리미엄 버전으로, '설계 변경'이라고도 불리며, 시공 디자인이 필요한지 여부에 따라 토탈과 구분됩니다.",
         ]
       },
@@ -851,7 +887,7 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
               marginRight: (index === contents[keyword].images.length - 1 ? "" : String(imageBetween) + ea),
               background: colorChip.black,
               backgroundImage: "url('" + src + "')",
-              backgroundSize: desktop ? "100% auto" : "auto 100%",
+              backgroundSize: desktop ? (media[0] ? "100% auto" : "auto 100%") : "auto 100%",
               backgroundPosition: "50% 50%",
             }
           }
@@ -1079,8 +1115,53 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
         ]
       });
     }
-  }
+    if (contents[keyword].buttons !== undefined) {
 
+      createNode({
+        mother: mother,
+        style: {
+          display: "flex",
+          marginTop: String(buttonAreaMarginTop) + ea,
+          paddingBottom: desktop ? "" : String(5) + ea,
+          position: "relative",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: String(buttonAreaMarginBottom) + ea,
+        },
+        children: contents[keyword].buttons.map(({ title, event }, index) => {
+          return {
+            event: {
+              click: event()
+            },
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(buttonWidth) + ea,
+              height: String(buttonHeight) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gradientGreen,
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            },
+            child: {
+              text: title,
+              style: {
+                position: "relative",
+                top: String(buttonTextTop) + ea,
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(buttonWeight),
+                color: colorChip.white,
+              }
+            }
+          }
+        })
+      });
+
+
+    }
+  }
 
   // box0
 
@@ -1213,6 +1294,25 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
   });
   basicContentsMaker(whiteBlock4, "etc", colorChip.white);
 
+  whiteInjection2 = createNode({
+    mother: baseTong4,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(margin * 2, ea),
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+      paddingTop: String(marginTop + whiteVisualPaddingTop) + ea,
+      paddingBottom: String(marginTop) + ea,
+      background: colorChip.white,
+      boxShadow: "0px 5px 21px -10px " + colorChip.gray5,
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      marginTop: String(whiteInjectionMarginTop) + ea,
+    }
+  })
+  basicContentsMaker(whiteInjection2, "curation", colorChip.white, true);
+
+  
 
 }
 
@@ -1605,7 +1705,7 @@ FirstResponseJs.prototype.insertThreeBox = function (middleTong) {
           "집 무드를 변화시켜주는 스타일링",
         ],
         color: "#bfb8b0",
-        background: FirstResponseJs.binaryPath + "/" + "startillf0.png",
+        background: FRONTHOST + "/middle/detail/review/f20.jpg",
         href: FRONTHOST + "/service.php?mode=furnishing",
       },
       {
@@ -1616,7 +1716,7 @@ FirstResponseJs.prototype.insertThreeBox = function (middleTong) {
           "컨셉에 맞게 변화시켜주는 스타일링",
         ],
         color: "#b1ae9d",
-        background: FirstResponseJs.binaryPath + "/" + "startills0.png",
+        background: FRONTHOST + "/middle/detail/review/s01.jpg",
         href: FRONTHOST + "/service.php?mode=styling",
       },
       {
@@ -1627,7 +1727,7 @@ FirstResponseJs.prototype.insertThreeBox = function (middleTong) {
           "전체적인 구조를 변경하는 스타일링",
         ],
         color: "#546d81",
-        background: FirstResponseJs.binaryPath + "/" + "startillt0.png",
+        background: FRONTHOST + "/middle/detail/review/t11.jpg",
         href: FRONTHOST + "/service.php?mode=total",
       },
     ]
@@ -1702,7 +1802,7 @@ FirstResponseJs.prototype.insertThreeBox = function (middleTong) {
             width: desktop ? withOut(0, ea) : String(threeBlockWidth) + ea,
             height: desktop ? String(threePhotoHeight) + ea : String(102) + '%',
             backgroundImage: "url('" + contents.three[i].background + "')",
-            backgroundSize: desktop ? "100% auto" : "100% auto",
+            backgroundSize: desktop ? "auto 100%" : "100% auto",
             backgroundPosition: "50% 50%",
             verticalAlign: desktop ? "" : "top",
           }
