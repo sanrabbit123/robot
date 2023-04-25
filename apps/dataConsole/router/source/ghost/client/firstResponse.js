@@ -273,6 +273,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
   let rightBoxHeight;
   let imageBetween;
   let rightBoxMarginLeft;
+  let titleLineHeight;
 
   blockHeight = <%% 500, 316, 273, 226, 129.5 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -352,6 +353,8 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
 
   rightBoxMarginLeft = <%% 64, 64, 60, 48, 6 %%>;
 
+  titleLineHeight = 1.4;
+
   grayUpWordings = [ "프로세스", "후 시공 / 구매", "선 디자인 / 기획", "디자이너 선택" ];
   grayDownWordings = [ "비용 구성", "시공 비용", "구매 비용", "디자인비" ];
 
@@ -400,12 +403,12 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
           color: colorChip.black,
           width: desktop ? String(leftTitleWidth) + ea : String(100) + '%',
           textAlign: desktop ? "" : "center",
-          lineHeight: desktop ? String(1.5) : "",
+          lineHeight: desktop ? String(titleLineHeight) : "",
         },
         child: {
           style: {
             position: "absolute",
-            top: String(5) + ea,
+            top: String(4) + ea,
             left: String(-7) + ea,
             width: String(6) + ea,
             height: String(6) + ea,

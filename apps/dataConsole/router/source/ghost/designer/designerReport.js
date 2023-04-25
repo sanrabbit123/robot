@@ -500,20 +500,20 @@ DesignerReportJs.prototype.contentsCenter = function () {
         average: proposalAverage,
       }
     },
-    {
-      title: "평별 가격",
-      contents: {
-        width: <&&
-          [ 40, 140, 130, 130, 130, 130, 130, 130, ] |
-          [ 30, 120, 129, 129, 129, 129, 129, 129, ] |
-          [ 24, 100, 112, 112, 112, 112, 112, 112, ] |
-          [ 16, 90, 88, 88, 88, 88, 88, 88, ] |
-          [ 10, 21, 21, 21 ]
-        &&>,
-        matrix: serviceMatrix,
-        average: serviceAverage,
-      }
-    },
+    // {
+    //   title: "평별 가격",
+    //   contents: {
+    //     width: <&&
+    //       [ 40, 140, 130, 130, 130, 130, 130, 130, ] |
+    //       [ 30, 120, 129, 129, 129, 129, 129, 129, ] |
+    //       [ 24, 100, 112, 112, 112, 112, 112, 112, ] |
+    //       [ 16, 90, 88, 88, 88, 88, 88, 88, ] |
+    //       [ 10, 21, 21, 21 ]
+    //     &&>,
+    //     matrix: serviceMatrix,
+    //     average: serviceAverage,
+    //   }
+    // },
   ];
 
   if (normalMode) {
@@ -535,14 +535,14 @@ DesignerReportJs.prototype.contentsCenter = function () {
           average: proposalAverage,
         }
       },
-      {
-        title: "평별 가격",
-        contents: {
-          width: [ 16, 90, 88, 88, 88, 88, 88, 88, ],
-          matrix: serviceMatrix,
-          average: serviceAverage,
-        }
-      },
+      // {
+      //   title: "평별 가격",
+      //   contents: {
+      //     width: [ 16, 90, 88, 88, 88, 88, 88, 88, ],
+      //     matrix: serviceMatrix,
+      //     average: serviceAverage,
+      //   }
+      // },
     ];
 
   }

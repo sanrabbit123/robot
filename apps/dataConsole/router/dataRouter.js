@@ -335,7 +335,7 @@ DataRouter.prototype.rou_get_First = function () {
   const { diskReading } = this.mother;
   let obj = {};
   let ipTong;
-  ipTong = [ 1, 127001, 19216801, 172301254, 5822475162, 112184236121, 219250244131, 11638190154, 118235266 ];
+  ipTong = [ 1, 127001, 19216801, 172301254, 5822475162, 112184236121, 219250244131, 11638190154, 118235266, 599136192 ];
   for (let info in instance.address) {
     if (instance.address[info].ip.outer.length > 0) {
       ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
