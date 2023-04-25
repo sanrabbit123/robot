@@ -659,7 +659,7 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
     },
     role: {
       up: {
-        title: "디자이너는 실제로 어떤 역할을 하나요?",
+        title: "서비스 안에서 디자이너는 어떤 역할을 하나요?",
         description: [
           "디자이너는 프로젝트를 총괄하는 프로젝트 매니저로, 디자인은 물론, 일정의 운영, 예산 분할 계획, 시공 조율 등, 집이 만들어지는 과정에 모두 관여합니다.",
           "디자이너의 목표는 단순 디자인만 끝내는 것이 아니라 고객님의 집이 실제로 완성되는 것에 있기 때문에, 그들의 역할에 대해 신뢰와 기대를 가지셔도 좋습니다.",
@@ -720,7 +720,7 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
     },
     etc: {
       up: {
-        title: "기타 안내 사항과 솔직한 고객 후기",
+        title: "기타 안내 사항",
         description: [
           "예산과 기간은 어떻게 설정되는지, 디자이너 제공물에는 무엇이 있는지, 시공사는 외부 시공사를 선택해서 진행할 수 있는지 등에 대한 안내를 드립니다.",
           "더 상세한 안내는 홈리에종 카카오 채널 또는 유선 전화를 통해 별도 문의해주시면 받으실 수 있습니다."
@@ -1095,25 +1095,6 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
   });
   basicContentsMaker(whiteBlock0, "designer", colorChip.gray1);
 
-  // whiteInjection = createNode({
-  //   mother: baseTong,
-  //   style: {
-  //     display: "block",
-  //     position: "relative",
-  //     width: withOut(margin * 2, ea),
-  //     paddingLeft: String(margin) + ea,
-  //     paddingRight: String(margin) + ea,
-  //     paddingTop: String(marginTop + whiteVisualPaddingTop) + ea,
-  //     paddingBottom: String(marginTop) + ea,
-  //     background: colorChip.white,
-  //     boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-  //     borderRadius: String(desktop ? 8 : 1) + ea,
-  //     marginTop: String(whiteInjectionMarginTop) + ea,
-  //   }
-  // })
-  // basicContentsMaker(whiteInjection, "role", colorChip.white, true);
-  // instance.insertRoleBox(whiteInjection);
-
 
   // white area ---------------------------------------------------------------------------------------------------
 
@@ -1183,8 +1164,26 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
     }
   });
   basicContentsMaker(whiteBlock3, "service", colorChip.gray0);
-
   instance.insertThreeBox(whiteBlock3);
+
+  whiteInjection = createNode({
+    mother: baseTong3,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(margin * 2, ea),
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+      paddingTop: String(marginTop + whiteVisualPaddingTop) + ea,
+      paddingBottom: String(marginTop) + ea,
+      background: colorChip.white,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      marginTop: String(whiteInjectionMarginTop) + ea,
+    }
+  })
+  basicContentsMaker(whiteInjection, "role", colorChip.white, true);
+  instance.insertRoleBox(whiteInjection);
 
 
   // white area ---------------------------------------------------------------------------------------------------
@@ -1214,16 +1213,6 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
   });
   basicContentsMaker(whiteBlock4, "etc", colorChip.white);
 
-  whiteBlock5 = createNode({
-    mother: baseTong4,
-    style: {
-      position: "relative",
-      width: "calc(100% + " + String(photoMargin) + ea + ")",
-      paddingTop: String(middleTongPaddinngTop) + ea,
-      paddingBottom: String(middleTitleMarginBottom) + ea,
-    }
-  });
-  this.portfolioBlock(whiteBlock5);
 
 }
 
