@@ -1676,12 +1676,12 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           name: "시공 유형",
           value: function (designer) {
             let contents, value;
-            contents = [ "F", "J", "S" ];
-            value = [ 0, 0, 0 ];
-            if (value[designer.analytics.construct.level - 1] === undefined) {
+            contents = [ "N", "F", "J", "S" ];
+            value = [ 0, 0, 0, 0 ];
+            if (value[designer.analytics.construct.level] === undefined) {
               throw new Error("level error");
             }
-            value[designer.analytics.construct.level - 1] = 1;
+            value[designer.analytics.construct.level] = 1;
             return { contents, value };
           },
           update: function (value, designer) {
@@ -1689,7 +1689,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
             target = null;
             for (let i = 0; i < value.length; i++) {
               if (value[i] === 1) {
-                target = i + 1;
+                target = i;
               }
             }
             if (target === null) {
@@ -2141,12 +2141,12 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           name: "스타일링 유형",
           value: function (designer) {
             let contents, value;
-            contents = [ "F", "J", "S" ];
-            value = [ 0, 0, 0 ];
-            if (value[designer.analytics.styling.level - 1] === undefined) {
+            contents = [ "N", "F", "J", "S" ];
+            value = [ 0, 0, 0, 0 ];
+            if (value[designer.analytics.styling.level] === undefined) {
               throw new Error("level error");
             }
-            value[designer.analytics.styling.level - 1] = 1;
+            value[designer.analytics.styling.level] = 1;
             return { contents, value };
           },
           update: function (value, designer) {
@@ -2154,7 +2154,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
             target = null;
             for (let i = 0; i < value.length; i++) {
               if (value[i] === 1) {
-                target = i + 1;
+                target = i;
               }
             }
             if (target === null) {

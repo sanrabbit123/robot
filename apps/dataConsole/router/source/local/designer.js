@@ -4417,14 +4417,14 @@ DesignerJs.prototype.launching = async function () {
 
     } else if (getObj.mode === "price") {
 
-      // this.grayBarWidth = 0;
-      // this.mother.grayBarWidth = 0;
-      // await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
-      // document.getElementById("grayLeftOpenButton").remove();
-      // await this.priceView();
-      // this.addTransFormEvent();
-      // document.getElementById("moveRightArea").style.display = "none";
-      // document.getElementById("moveLeftArea").style.display = "none";
+      this.grayBarWidth = 0;
+      this.mother.grayBarWidth = 0;
+      await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
+      document.getElementById("grayLeftOpenButton").remove();
+      await this.priceView();
+      this.addTransFormEvent();
+      document.getElementById("moveRightArea").style.display = "none";
+      document.getElementById("moveLeftArea").style.display = "none";
 
     } else if (getObj.mode === "normal") {
 

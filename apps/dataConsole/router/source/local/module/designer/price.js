@@ -599,10 +599,10 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
   let leftPadding;
 
   subSize = <%% 5, 4, 4, 4, 4 %%>;
-  size = <%% 18, 15, 15, 15, 15 %%>;
-  topStart = isMac() ? 10 : 11;
+  size = <%% 16, 15, 15, 15, 15 %%>;
+  topStart = isMac() ? 9 : 10;
   between = isMac() ? 7 : 6;
-  lineHeight = 29;
+  lineHeight = 21;
   leftPadding = 16;
 
   this.newcomer.boo = false;
@@ -625,9 +625,9 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
           fontWeight: String(700),
           textAlign: "center",
           color: colorChip.green,
-          width: "calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 3)",
-          top: "calc(" + String(topStart) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 3)) + "))",
-          left: "calc(" + String(leftPadding) + ea + " + calc(calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 3) * " + String(j % 3) + "))",
+          width: "calc(calc(100% - " + String(leftPadding * 3) + ea + ") / 4)",
+          top: "calc(" + String(topStart) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 4)) + "))",
+          left: "calc(" + String(leftPadding) + ea + " + calc(calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 4) * " + String(j % 4) + "))",
         }
       });
 
@@ -703,7 +703,7 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
                         collection: "designerPrice",
                         whereQuery: { key: key },
                         updateQuery
-                      }, "/generalMongo");
+                      }, BACKHOST + "/generalMongo");
                       instance.price.pick(Math.floor(key / 10), key % 10).matrix[x][y] = finalValue;
                       self.setAttribute("value", String(finalValue));
                       self.textContent = String(finalValue);
@@ -723,9 +723,9 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
                 fontFamily: "graphik",
                 textAlign: "center",
                 color: colorChip.green,
-                width: "calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 3)",
-                top: "calc(" + String(topStart + between) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 3)) + "))",
-                left: "calc(" + String(leftPadding) + ea + " + calc(calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 3) * " + String(j % 3) + "))",
+                width: "calc(calc(100% - " + String(leftPadding * 3) + ea + ") / 4)",
+                top: "calc(" + String(topStart + between) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 4)) + "))",
+                left: "calc(" + String(leftPadding) + ea + " + calc(calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 4) * " + String(j % 4) + "))",
                 border: String(0),
                 outline: String(0),
                 background: colorChip.white,
@@ -746,15 +746,14 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
           fontFamily: "graphik",
           textAlign: "center",
           color: colorChip.black,
-          width: "calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 3)",
-          top: "calc(" + String(topStart + between) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 3)) + "))",
-          left: "calc(" + String(leftPadding) + ea + " + calc(calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 3) * " + String(j % 3) + "))",
+          width: "calc(calc(100% - " + String(leftPadding * 3) + ea + ") / 4)",
+          top: "calc(" + String(topStart + between) + "% + calc(" + String(lineHeight) + "% * " + String(Math.floor(j / 4)) + "))",
+          left: "calc(" + String(leftPadding) + ea + " + calc(calc(calc(100% - " + String(leftPadding * 2) + ea + ") / 4) * " + String(j % 4) + "))",
         }
       });
 
     }
   }
-
 
 }
 
@@ -762,7 +761,7 @@ DesignerJs.prototype.pricePannel = function () {
   const instance = this;
   const { ea, belowPannel } = this;
   const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
-  const standard = [ "하", "중", "상" ];
+  const standard = [ "없", "하", "중", "상" ];
   const widthSpec = {
     left: [
       89.47,
@@ -832,7 +831,7 @@ DesignerJs.prototype.pricePannel = function () {
       num = (e.type === "click" ? 1 : 2);
     }
     instance.key[key] = num;
-    target.textContent = standard[num - 1];
+    target.textContent = standard[num];
     price = instance.price.pick(...instance.key);
     instance.priceNumbers();
   }
@@ -1214,7 +1213,7 @@ DesignerJs.prototype.priceDesignersLevelDetail = function () {
   const instance = this;
   const { ea, levelBase, designers } = this;
   const { createNode, createNodes, withOut, colorChip, autoComma, cleanChildren, ajaxJson, isMac } = GeneralJs;
-  const levelWords = [ '하', '중', '상' ];
+  const levelWords = [ '없', '하', '중', '상' ];
   const className = "baguni";
   let leftMargin, margin, baseTong;
   let size;
@@ -1236,17 +1235,17 @@ DesignerJs.prototype.priceDesignersLevelDetail = function () {
   let dragleaveEvent;
   let dragoverEvent;
 
-  size = 15;
-  margin = 28;
+  size = 13;
+  margin = 20;
   leftMargin = 32;
-  blockMargin = 12;
-  titleHeight = 30;
+  blockMargin = 8;
+  titleHeight = 24;
   innerMargin = 8;
   textTop = 1;
-  innerBlockMargin = 5;
-  innerBlockSize = 13;
-  innerBlockTextTop = isMac() ? 6 : 8;
-  innerBlockHeight = 32;
+  innerBlockMargin = 4;
+  innerBlockSize = 11;
+  innerBlockTextTop = isMac() ? 5 : 7;
+  innerBlockHeight = 27;
   blockSplit = 6;
 
   cleanChildren(levelBase);
@@ -1256,8 +1255,8 @@ DesignerJs.prototype.priceDesignersLevelDetail = function () {
     let style;
 
     block = GeneralJs.nodes.div.cloneNode(true);
-    block.setAttribute("x", String(designer.analytics.construct.level - 1));
-    block.setAttribute("y", String(designer.analytics.styling.level - 1));
+    block.setAttribute("x", String(designer.analytics.construct.level));
+    block.setAttribute("y", String(designer.analytics.styling.level));
     block.setAttribute("draggable", "true");
     block.setAttribute("desid", designer.desid);
     block.id = designer.desid;
@@ -1275,7 +1274,6 @@ DesignerJs.prototype.priceDesignersLevelDetail = function () {
     }
     block.addEventListener("dragstart", function (e) {
       e.dataTransfer.setData("dragData", this.getAttribute("desid"));
-      console.log("this!");
     });
     block.addEventListener("dragenter", (e) => { e.preventDefault(); });
     block.addEventListener("dragleave", (e) => { e.preventDefault(); });
@@ -1376,13 +1374,13 @@ DesignerJs.prototype.priceDesignersLevelDetail = function () {
     designerDom.setAttribute('x', String(x));
     designerDom.setAttribute('y', String(y));
     whereQuery = { desid };
-    updateQuery = { "analytics.construct.level": (x + 1), "analytics.styling.level": (y + 1) };
+    updateQuery = { "analytics.construct.level": (x), "analytics.styling.level": (y) };
     instance.designers.update([ whereQuery, updateQuery ]);
     ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner").catch((err) => { console.log(err); });
   }
-  for (let i = 0; i < 9; i++) {
-    x = i % 3;
-    y = 2 - Math.floor(i / 3);
+  for (let i = 0; i < 16; i++) {
+    x = i % 4;
+    y = 3 - Math.floor(i / 4);
     blocks.push(createNode({
       mother: baseTong,
       attribute: [
@@ -1406,10 +1404,10 @@ DesignerJs.prototype.priceDesignersLevelDetail = function () {
       style: {
         position: "relative",
         display: "inline-block",
-        width: "calc(calc(100% - " + String(blockMargin * 2) + ea + ") / 3)",
-        height: "calc(calc(100% - " + String(blockMargin * 2) + ea + ") / 3)",
-        marginRight: String(i % 3 === 2 ? 0 : blockMargin) + ea,
-        marginBottom: String(Math.floor(i / 3) === 2 ? 0 : blockMargin) + ea,
+        width: "calc(calc(100% - " + String(blockMargin * 3) + ea + ") / 4)",
+        height: "calc(calc(100% - " + String(blockMargin * 3) + ea + ") / 4)",
+        marginRight: String(i % 4 === 3 ? 0 : blockMargin) + ea,
+        marginBottom: String(Math.floor(i / 4) === 3 ? 0 : blockMargin) + ea,
       },
       children: [
         {
@@ -1508,7 +1506,7 @@ DesignerJs.prototype.priceDesignersLevelDetail = function () {
   }
 
   for (let designer of designers) {
-    baguni = blocks["xy" + String(designer.analytics.construct.level - 1) + String(designer.analytics.styling.level - 1)].querySelector('.' + className);
+    baguni = blocks["xy" + String(designer.analytics.construct.level) + String(designer.analytics.styling.level)].querySelector('.' + className);
     baguni.appendChild(designerBlock(designer, baguni.children.length % blockSplit === (blockSplit - 1)));
   }
 
@@ -2600,10 +2598,10 @@ DesignerJs.prototype.priceView = async function () {
         if (typeof key0 !== "number" || typeof key1 !== "number") {
           throw new Error("input must be level, level");
         }
-        if (!(0 < key0 && key0 < 4)) {
+        if (!(0 <= key0 && key0 < 4)) {
           throw new Error("invaild level");
         }
-        if (!(0 < key1 && key1 < 4)) {
+        if (!(0 <= key1 && key1 < 4)) {
           throw new Error("invaild level");
         }
         const key = (key0 * 10) + key1;
@@ -2632,33 +2630,46 @@ DesignerJs.prototype.priceView = async function () {
         if (typeof key0 !== "number" || typeof key1 !== "number") {
           throw new Error("input must be level, level");
         }
-        const words = [ "하", "중", "상" ];
+        const words = [ "없", "하", "중", "상" ];
         const add = (num) => { return ((num + 1) === 4 ? 1 : (num + 1)); }
-        const subtract = (num) => { return ((num - 1) === 0 ? 3 : (num - 1)); }
+        const subtract = (num) => { return ((num - 1) === -1 ? 3 : (num - 1)); }
+        const doubleAdd = (num) => { return ((num + 2) === 4 ? 1 : (num + 2)); }
+        const doubleSubtract = (num) => { return ((num - 2) === -1 ? 3 : (num - 2)); }
         let arr;
         let standard;
         let tempArr;
         let order = [
+          [ doubleSubtract(key0), add(key1) ],
           [ subtract(key0), add(key1) ],
           [ key0, add(key1) ],
           [ add(key0), add(key1) ],
+
+          [ doubleSubtract(key0), key1 ],
           [ subtract(key0), key1 ],
           [ key0, key1 ],
           [ add(key0), key1 ],
+          
+          [ doubleSubtract(key0), subtract(key1) ],
           [ subtract(key0), subtract(key1) ],
           [ key0, subtract(key1) ],
           [ add(key0), subtract(key1) ],
+
+          [ doubleSubtract(key0), doubleSubtract(key1) ],
+          [ subtract(key0), doubleSubtract(key1) ],
+          [ key0, doubleSubtract(key1) ],
+          [ add(key0), doubleSubtract(key1) ],
         ];
         tempArr = [];
         arr = [];
         for (let [ x, y ] of order) {
-          tempArr.push(words[x - 1] + words[y - 1]);
+          tempArr.push(words[x] + words[y]);
           arr.push(this.pick(x, y));
         }
         standard = [];
         for (let i = 0; i < 36; i++) {
           standard.push(JSON.parse(JSON.stringify(tempArr)));
         }
+
         return { price: (new PriceMatrix(arr)), standard };
       }
       update(queryArr) {
@@ -2691,14 +2702,15 @@ DesignerJs.prototype.priceView = async function () {
 
     this.designers = new Designers(await ajaxJson({ noFlat: true }, "/getDesigners", { equal: true }));
     this.domClassName = "priceDom";
-    this.seroStandards = [ 'F', 'S', 'T', 'XT' ];
-    this.garoStandards = [ '0 - 8', '9 - 14', '15 - 22', '23 - 28', '29 - 33', '34 - 38', '39 - 44', '44 - 999' ];
     this.price = new PriceMatrix(await ajaxJson({
       mode: "read",
       db: "console",
       collection: "designerPrice",
       whereQuery: {},
-    }, "/generalMongo", { equal: true }));
+    }, BACKHOST + "/generalMongo", { equal: true }));
+
+
+    
     this.seroStandards = this.price.pick(3, 3).standard.y.string;
     this.garoStandards = this.price.pick(3, 3).standard.x.string;
     this.key = [ 2, 2 ];
