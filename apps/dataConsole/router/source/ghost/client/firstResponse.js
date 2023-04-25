@@ -41,7 +41,7 @@ const FirstResponseJs = function () {
   this.mother = new GeneralJs();
 }
 
-FirstResponseJs.binaryPath = FRONTHOST + "/middle/curation";
+FirstResponseJs.binaryPath = FRONTHOST + "/middle/response";
 
 FirstResponseJs.prototype.insertInitBox = function () {
   const instance = this;
