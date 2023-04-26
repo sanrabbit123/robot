@@ -275,6 +275,10 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
   let rightBoxMarginLeft;
   let titleLineHeight;
   let circleTop, circleLeft, circleWidth;
+  let mobilePaddingTop, mobilePaddingLeft;
+  let descriptionRightBase, descriptionLeftBase;
+  let mobileDescriptionLeftBaseWidth;
+  let mobileDescriptionBlockMarginTop;
 
   blockHeight = <%% 500, 316, 273, 226, 129.5 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
@@ -282,13 +286,13 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 26, 25, 22, 18, 4.5 %%>;
+  titleFont = <%% 26, 24, 22, 18, 4.6 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 800, 800, 800, 800, 800 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
 
   titleTop = <%% 108, 54, 40, 30, 8.5 %%>;
-  descriptionSize = <%% 15, 14, 13, 12, 3.3 %%>;
+  descriptionSize = <%% 15, 14, 13, 12, 3.7 %%>;
   descriptionBottom = <%% 0, -8, -7, -2, 0 %%>;
 
   barWidth = <%% 70, 80, 80, 80, 80 %%>;
@@ -346,19 +350,24 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
   grayBoxImageVisualWidth = <%% 16, 4, 0, 0, 19 %%>;
 
   leftTitleWidth = <%% 180, 175, 175, 175, 18 %%>;
-  descriptionMarginTop = <%% 120, 50, 40, 25, 12 %%>; 
+  descriptionMarginTop = <%% 120, 50, 40, 25, 0 %%>; 
 
-  rightBoxHeight = <%% 552, 500, 474, 592, 55 %%>;
+  rightBoxHeight = <%% 552, 498, 474, 592, 40 %%>;
 
   imageBetween = <%% 8, 8, 6, 4, 1 %%>;
 
-  rightBoxMarginLeft = <%% 64, 50, 50, 40, 6 %%>;
+  rightBoxMarginLeft = <%% 64, 50, 50, 40, 11 %%>;
 
   circleTop = <%% 4, 4, 5, 4, 4 %%>;
   circleLeft = <%% -7, -7, -6, -5, -7 %%>;
   circleWidth = <%% 6, 6, 5, 4, 1 %%>;
 
   titleLineHeight = 1.4;
+
+  mobilePaddingTop = 7;
+  mobilePaddingLeft = 6;
+  mobileDescriptionLeftBaseWidth = 5;
+  mobileDescriptionBlockMarginTop = 5;
 
   grayUpWordings = [ "프로세스", "후 시공 / 구매", "선 디자인 / 기획", "디자이너 선택" ];
   grayDownWordings = [ "비용 구성", "시공 비용", "구매 비용", "디자인비" ];
@@ -367,7 +376,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
   description = [
     `일반적으로 주거 인테리어를 생각하면 시공 위주의 리모델링이 떠오르곤 합니다. 1차원적인 시공 선택과 견적 내기에 방점을 찍은 리모델링 문화가 주거 인테리어의 대표적인 영역으로 자리매김하면서 <b%집을 인테리어한다는 개념은 시공에 집중하면서 비슷한 스타일을 찍어내는 형태%b>가 되었습니다.`,
     `이러한 리모델링 문화는 문제가 많습니다. 공간 디자인이 부재한 인테리어는 체계적인 시공 계획을 할 수 없고, 주먹구구식 시공 진행은 그저 하얗고 깔끔하게 찍어내는 데에 집중되기 때문입니다. 그렇게 만들어진 공간 위에 스타일링 없는 가구와 소품 배치는 그 깔끔한 바탕마저 의미 없는 것으로 만들어 버립니다. <b%조화롭지 못한 가구, 중구난방의 소품, 살림 살이 가득한 짐들로 인해 집은 리모델링을 한 의미가 없는 공간이%b> 되어버리곤 합니다.`,
-    `공간을 인테리어한다는 것은 오로지 시공을 통해 바탕을 깔끔하게 만드는 것만이 아닙니다. 제대로 된 공간 디자인이란 인테리어를 시작하기 전에 가구와 소품이 포함 된 최종적인 모습을 먼저 생각합니다. 그리고 그 디자인에 따라 시공을 하고 가구를 구입하여 위치와 배치를 완벽하게 조정하면, 제대로 된 인테리어 디자인을 보실 수 있습니다. 따라서 인테리어는 시공이 전부가 아니라는 것을 명심해야 하며, <b%시공만 원하면서 예쁜집을 꿈꾸셨다면 그것은 잘못된 접근 방법입니다.%b>`,
+    `공간을 인테리어한다는 것은 오로지 시공을 통해 바탕을 깔끔하게 만드는 것만이 아닙니다. 제대로 된 공간 디자인이란 인테리어를 시작하기 전 가구와 소품이 포함된 최종적인 모습을 먼저 생각합니다. 그리고 그에 따라 시공을 하고 가구를 구입하여 위치와 배치를 완벽하게 조정하면, 완벼한 인테리어 디자인을 보실 수 있습니다. 따라서 인테리어는 시공이 전부가 아니라는 것을 명심해야 하며, <b%시공만 원하면서 예쁜집을 꿈꾸셨다면 그것은 잘못된 접근 방법입니다.%b>`,
   ];
 
   whiteBlock = createNode({
@@ -389,7 +398,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
       position: "relative",
       width: desktop ? String(leftWidth) + ea : String(100) + '%',
       lineHeight: String(1.42),
-      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : String(mobileLeftBoxHeight) + ea,
+      height: desktop ? "calc(100% - " + String(margin * 2) + ea + ")" : "auto",
       marginTop: desktop ? String(marginTop) + ea : "",
       marginBottom: desktop ? String(margin) + ea : "",
       marginLeft: desktop ? String(margin) + ea : "",
@@ -397,20 +406,23 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
     },
     children: [
       {
-        text: title,
+        text: desktop ? title : "",
         style: {
-          position: desktop ? "relative" : "absolute",
+          display: desktop ? "block" : "flex",
+          position: "relative",
           fontSize: String(titleFont) + ea,
           fontWeight: String(titleFontWeight),
-          top: mobile ? String(-2) + ea : "",
-          left: mobile ? String(titleLeft) + ea : "",
           color: colorChip.black,
-          width: desktop ? (media[0] ? String(leftTitleWidth) + ea : withOut(0, ea)) : String(100) + '%',
-          textAlign: desktop ? "" : "center",
+          width: desktop ? (media[0] ? String(leftTitleWidth) + ea : withOut(0, ea)) : withOut(mobilePaddingLeft * 2, ea),
           lineHeight: desktop ? String(titleLineHeight) : "",
+          flexDirection: mobile ? "row" : "",
+          paddingTop: mobile ? String(mobilePaddingTop) + ea : "",
+          paddingLeft: mobile ? String(mobilePaddingLeft) + ea : "",
+          paddingRight: mobile ? String(mobilePaddingLeft) + ea : "",
         },
         child: {
           style: {
+            display: desktop ? "inline-block" : "none",
             position: "absolute",
             top: String(circleTop) + ea,
             left: String(circleLeft) + ea,
@@ -422,18 +434,20 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
         }
       },
       {
-        text: description.join("\n\n"),
+        text: desktop ? description.join("\n\n") : "",
         style: {
-          position: desktop ? "relative" : "absolute",
+          position: "relative",
           bottom: mobile ? String(descriptionBottom) + ea : "",
           left: mobile ? String(titleLeft) + ea : "",
           color: colorChip.black,
-          textAlign: desktop ? "" : "center",
-          width: desktop ? (media[0] ? withOut(leftTitleWidth, ea) : withOut(0, ea)) : withOut(0),
+          paddingLeft: mobile ? String(mobilePaddingLeft) + ea : "",
+          paddingRight: mobile ? String(mobilePaddingLeft) + ea : "",
+          width: desktop ? (media[0] ? withOut(leftTitleWidth, ea) : withOut(0, ea)) : withOut(mobilePaddingLeft * 2, ea),
           fontSize: String(descriptionSize) + ea,
           fontWeight: String(400),
           lineHeight: String(1.6),
           marginTop: String(descriptionMarginTop) + ea,
+          paddingBottom: mobile ? String(mobilePaddingTop) + ea : "",
         },
         bold: {
           color: colorChip.black,
@@ -445,6 +459,83 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
     ]
   });
 
+  if (mobile) {
+
+    createNode({
+      mother: leftBox.children[0],
+      text: ">&nbsp;&nbsp;",
+      style: {
+        fontSize: String(titleFont) + ea,
+        fontWeight: String(200),
+        color: colorChip.green,
+      }
+    });
+    createNode({
+      mother: leftBox.children[0],
+      text: title,
+      style: {
+        fontSize: String(titleFont) + ea,
+        fontWeight: String(titleFontWeight),
+        color: colorChip.black,
+      }
+    });
+
+    for (let i = 0; i < description.length; i++) {
+      descriptionLeftBase = createNode({
+        mother: leftBox.children[1],
+        style: {
+          display: "inline-flex",
+          verticalAlign: "top",
+          position: "relative",
+          flexDirection: "column",
+          width: String(mobileDescriptionLeftBaseWidth) + ea,
+        },
+        child: {
+          text: String(i + 1),
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(200),
+            lineHeight: String(1.7),
+            color: colorChip.green,
+            marginTop: String(i === 0 ? 0 : mobileDescriptionBlockMarginTop) + ea,
+          },
+        }
+      });
+      descriptionRightBase = createNode({
+        mother: leftBox.children[1],
+        style: {
+          display: "inline-flex",
+          verticalAlign: "top",
+          position: "relative",
+          flexDirection: "column",
+          width: withOut(mobileDescriptionLeftBaseWidth, ea),
+        },
+        child: {
+          text: description[i],
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(400),
+            lineHeight: String(1.7),
+            color: colorChip.black,
+            marginTop: String(i === 0 ? 0 : mobileDescriptionBlockMarginTop) + ea,
+          },
+          bold: {
+            fontSize: String(descriptionSize) + ea,
+            fontWeight: String(700),
+            lineHeight: String(1.7),
+            color: colorChip.black,
+          }
+        }
+        
+      });
+    }
+
+  }
+
   rightBox = createNode({
     mother: whiteBlock,
     style: {
@@ -452,18 +543,18 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
       position: "relative",
       verticalAlign: "top",
       top: String(0) + ea,
-      width: desktop ? withOut(leftWidth + (margin * 2) + rightBoxMarginLeft, ea) : String(100) + '%',
-      height: desktop ? String(rightBoxHeight) + ea : withOut(mobileLeftBoxHeight, ea),
+      width: desktop ? withOut(leftWidth + (margin * 2) + rightBoxMarginLeft, ea) : withOut(rightBoxMarginLeft + mobilePaddingLeft, ea),
+      height: desktop ? String(rightBoxHeight) + ea : String(rightBoxHeight) + ea,
       borderRadius: String(5) + "px",
       overflow: "hidden",
       flexDirection: desktop ? "row" : "",
-      marginTop: desktop ? String(marginTop) + ea : "",
-      marginBottom: desktop ? String(margin) + ea : "",
+      marginTop: desktop ? String(marginTop) + ea : String(5) + ea,
+      marginBottom: desktop ? String(margin) + ea : String(7) + ea,
       marginRight: desktop ? String(margin) + ea : "",
       paddingLeft: String(rightBoxMarginLeft) + ea,
+      paddingRight: String(mobilePaddingLeft) + ea,
     },
   });
-
   createNode({
     mother: rightBox,
     style: {
@@ -476,7 +567,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
       marginRight: String(imageBetween) + ea,
       backgroundImage: "url('" + FirstResponseJs.binaryPath + "/construct0.jpg" + "')",
       backgroundPosition: "50% 50%",
-      backgroundSize: "auto 100%",
+      backgroundSize: desktop ? "auto 100%" : "100% auto",
     },
   });
   createNode({
@@ -491,7 +582,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
       marginRight: String(imageBetween) + ea,
       backgroundImage: "url('" + FirstResponseJs.binaryPath + "/construct1.jpg" + "')",
       backgroundPosition: "50% 50%",
-      backgroundSize: "auto 100%",
+      backgroundSize: desktop ? "auto 100%" : "100% auto",
     },
   });
   createNode({
@@ -505,9 +596,13 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
       borderRadius: String(5) + "px",
       backgroundImage: "url('" + FirstResponseJs.binaryPath + "/construct2.jpg" + "')",
       backgroundPosition: "50% 50%",
-      backgroundSize: "auto 100%",
+      backgroundSize: desktop ? "auto 100%" : "100% auto",
     },
   });
+
+  if (mobile) {
+    leftBox.insertBefore(rightBox, leftBox.children[1]);
+  }
 
 }
 
@@ -577,6 +672,8 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
   let buttonAreaMarginTop, buttonAreaMarginBottom;
   let buttonWidth, buttonHeight;
   let buttonTextTop, buttonSize, buttonWeight;
+  let upBase;
+  let imageBase, imagesBase;
 
   margin = <%% 52, 52, 44, 32, 6 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 4 %%>;
@@ -627,16 +724,16 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
   columns = <%% 4, 4, 3, 3, 2 %%>;
   photoMarginBottom = <%% (isMac() ? 18 : 20), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 2.5 %%>;
 
-  whiteInjectionMarginTop = <%% 45, 40, 30, 16, 10 %%>;
+  whiteInjectionMarginTop = <%% 45, 40, 30, 16, 0 %%>;
 
-  imageBetween = <%% 6, 6, 6, 5, 2 %%>;
+  imageBetween = <%% 6, 6, 6, 5, 1 %%>;
 
-  buttonAreaMarginTop = <%% 30, 30, 28, 26, 3 %%>;
-  buttonAreaMarginBottom = <%% 12, 12, 12, 12, 12 %%>;
-  buttonWidth = <%% 144, 144, 144, 132, 142 %%>;
-  buttonHeight = <%% 38, 38, 38, 36, 4 %%>;
-  buttonTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  buttonSize = <%% 15, 15, 15, 14, 3.5 %%>;
+  buttonAreaMarginTop = <%% 30, 30, 28, 26, 6 %%>;
+  buttonAreaMarginBottom = <%% 12, 12, 12, 12, 1 %%>;
+  buttonWidth = <%% 144, 144, 144, 132, 30 %%>;
+  buttonHeight = <%% 38, 38, 38, 36, 8 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+  buttonSize = <%% 15, 15, 15, 14, 3.3 %%>;
   buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
 
   contents = {
@@ -780,16 +877,16 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
           {
             title: "시공사 선택권",
             description: [
-              `일반 리모델링 회사와는 달리 홈리에종은 플랫폼으로서, 디자이너를 중심으로 한 홈스타일링 운영 체제입니다. 이러한 특성 때문에 시공 과정에서 고객이 선택권을 가질 수 있습니다. 디자이너가 진행한 디자인을 그대로 시공해줄 회사를 외부에서 찾아 시공을 진행할 수 있는 것입니다. 고객의 시공사 선택권은 홈리에종 시공사, 디자이너 시공사, 외부 시공사로 구분됩니다. 홈리에종 시공사는 홈리에종과 파트너십 계약을 맺은 시공사가 시공을 진행하는 것을 의미하며, 디자이너 시공사는 디자이너와 긴밀한 관계를 갖고 있거나 소속되어 있는 시공사와 시공을 진행하는 것을 말합니다. 외부 시공사는 홈리에종 파트너십이나 디자이너와의 관계가 없는 외부 턴키 업체를 의미합니다. 홈리에종은 공정별로 시공을 진행하길 원하는 고객의 선택을 허용하지 않습니다. 따라서 고객은 홈리에종, 디자이너, 외부 턴키 업체 중에서 하나를 선택하여 시공을 진행할 수 있습니다.`,
+              `일반 리모델링 회사와는 달리 홈리에종은 플랫폼으로서, 디자이너를 중심으로 한 홈스타일링 운영 체제입니다. 이러한 특성 때문에 시공 과정에서 선택권을 가질 수 있습니다. 디자이너가 진행한 디자인을 그대로 시공해줄 회사를 외부에서 찾아 시공을 진행할 수 있는 것입니다. 고객의 시공사 선택권은 홈리에종 시공사, 디자이너 시공사, 외부 시공사로 구분됩니다. 홈리에종 시공사는 홈리에종과 파트너십 계약을 맺은 시공사가 시공을 진행하는 것을 의미하며, 디자이너 시공사는 디자이너와 긴밀한 관계를 갖고 있거나 소속되어 있는 시공사와 시공을 진행하는 것을 말합니다. 외부 시공사는 홈리에종 파트너십이나 디자이너와의 관계가 없는 외부 턴키 업체를 의미합니다. 홈리에종은 공정별로 시공을 진행하길 원하는 고객의 선택을 허용하지 않습니다. 따라서 고객은 홈리에종, 디자이너, 외부 턴키 업체 중에서 하나를 선택하여 시공을 진행할 수 있습니다.`,
             ],
           },
         ]
       }
     },
   };
-  
+
   basicContentsMaker = (mother, keyword, backgroundColor, whiteBoardMode = false) => {
-    createNode({
+    upBase = createNode({
       mother: mother,
       style: {
         display: "flex",
@@ -837,16 +934,17 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
         }
       ]
     });
-    createNode({
+    imageBase = createNode({
       mother: mother,
       style: {
         display: contents[keyword].image !== undefined ? "flex" : "none",
-        marginTop: String(desktop ? contentsMotherBoxMarginTop : 6) + ea,
-        paddingBottom: desktop ? "" : String(5) + ea,
+        marginTop: String(desktop ? contentsMotherBoxMarginTop : 4.5) + ea,
+        paddingBottom: desktop ? "" : String(3) + ea,
         position: "relative",
         flexDirection: "column",
         alignItems: "start",
         justifyContent: "start",
+        width: mobile ? withOut(0, ea) : "",
       },
       child: {
         style: {
@@ -861,17 +959,23 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
         }
       }
     });
+
+    if (mobile) {
+      upBase.insertBefore(imageBase, upBase.children[1]);
+    }
+
     if (Array.isArray(contents[keyword].images)) {
-      createNode({
+      imagesBase = createNode({
         mother: mother,
         style: {
           display: "flex",
-          marginTop: String(desktop ? contentsMotherBoxMarginTop : 6) + ea,
-          paddingBottom: desktop ? "" : String(5) + ea,
+          marginTop: String(desktop ? contentsMotherBoxMarginTop : 4.5) + ea,
+          paddingBottom: desktop ? "" : String(3) + ea,
           position: "relative",
           flexDirection: "row",
           alignItems: "start",
           justifyContent: "start",
+          width: mobile ? withOut(0, ea) : "",
         },
         children: contents[keyword].images.map((src, index) => {
           return {
@@ -889,6 +993,11 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
           }
         }),
       });
+
+      if (mobile) {
+        upBase.insertBefore(imagesBase, upBase.children[1]);
+      }
+
     }
     if (contents[keyword].down !== undefined) {
       createNode({
@@ -1118,7 +1227,6 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
         style: {
           display: "flex",
           marginTop: String(buttonAreaMarginTop) + ea,
-          paddingBottom: desktop ? "" : String(5) + ea,
           position: "relative",
           flexDirection: "column",
           alignItems: "center",
@@ -1798,7 +1906,7 @@ FirstResponseJs.prototype.insertThreeBox = function (middleTong) {
             width: desktop ? withOut(0, ea) : String(threeBlockWidth) + ea,
             height: desktop ? String(threePhotoHeight) + ea : String(102) + '%',
             backgroundImage: "url('" + contents.three[i].background + "')",
-            backgroundSize: desktop ? "auto 100%" : "100% auto",
+            backgroundSize: desktop ? "auto 100%" : "auto 100%",
             backgroundPosition: "50% 50%",
             verticalAlign: desktop ? "" : "top",
           }
