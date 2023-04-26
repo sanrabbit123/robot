@@ -5230,8 +5230,8 @@ GeneralJs.prototype.grayLoading = function (mother = null, whiteMode = false) {
   let width, ea;
   let cancel, loading;
 
-  ea = <%% "px", "px", "px", "px", "vw" %%>;
-  width = <%% 50, 50, 50, 40, 10 %%>;
+  ea = <%% "px", "px", "px", "px", "px" %%>;
+  width = <%% 50, 50, 50, 50, 50 %%>;
 
   const GrayLoading = function (cancel, loading) {
     this.cancel = cancel;

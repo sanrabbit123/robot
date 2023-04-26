@@ -810,7 +810,7 @@ DesignerProposalJs.prototype.insertInfoBox = function () {
 
   this.expectedToString = expectedToString;
 
-  bottomMargin = <%% 16, 16, 16, 12, 2 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
   margin = <%% 60, 60, 44, 32, 7 %%>;
 
   titleFont = <%% 31, 30, 27.5, 23, 5.7 %%>;
@@ -3720,7 +3720,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { isIphone } = GeneralJs;
+  const { isIphone, isMac } = GeneralJs;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   let whiteBlock;
   let style;
@@ -3737,20 +3737,18 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
   let informationArea;
   let wordSpacing;
   let finalBottom;
+  let buttonWeight;
 
   blockHeight = <%% 820, 820, 820, 820, 820 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
-  buttonHeight = <%% 47, 48, 48, 40, 8.4 %%>;
-  buttonWidth = <%% 92, 92, 92, 74, 17 %%>;
-  buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
+  buttonHeight = <%% 38, 38, 38, 36, 8 %%>;
+  buttonWidth = <%% 92, 92, 92, 80, 19 %%>;
+  buttonMargin = <%% 6, 6, 5, 4, 1 %%>;
 
-  buttonTextTop = <%% 9, 9, 9, 9, (isIphone() ? 1.3 : 1.4) %%>;
-  buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
-
-  if (desktop) {
-    buttonTextTop = buttonTextTop + (GeneralJs.isMac() ? 0 : 2);
-  }
+  buttonTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.2 %%>;
+  buttonTextSize = <%% 15, 15, 15, 14, 3.3 %%>;
+  buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
 
   headWidth = <%% 10, 10, 10, 10, 2 %%>;
   headVisual = <%% 11, 11, 11, 11, 11 %%>;
@@ -3802,13 +3800,16 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
     designerButton.setAttribute("desid", this.proposal.detail[z].desid);
     designerButton.setAttribute("designer", this.proposal.detail[z].designer);
     style = {
-      display: "inline-block",
+      display: "inline-flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
       position: "relative",
       width: String(buttonWidth) + ea,
       height: desktop ? String(100) + '%' : String(buttonHeight) + ea,
       background: GeneralJs.colorChip.gray2,
       color: GeneralJs.colorChip.deactive,
-      borderRadius: String(3) + "px",
+      borderRadius: String(5) + "px",
       marginRight: String(buttonMargin) + ea,
       transition: "all 0.2s ease",
       cursor: "pointer",
@@ -3832,10 +3833,11 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
     designerButtonText = GeneralJs.nodes.div.cloneNode(true);
     designerButtonText.textContent = this.abc[z];
     style = {
-      position: "absolute",
+      display: "inline-block",
+      position: "relative",
       top: String(buttonTextTop) + ea,
       fontSize: String(buttonTextSize) + ea,
-      fontWeight: String(400),
+      fontWeight: String(buttonWeight),
       color: "inherit",
       width: String(100) + '%',
       textAlign: "center",
@@ -3849,7 +3851,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
     designerButton.addEventListener("click", function (e) {
       const toggle = this.getAttribute("toggle");
       const onStyle = {
-        background: GeneralJs.colorChip.green,
+        background: GeneralJs.colorChip.softGreen,
         color: GeneralJs.colorChip.white
       };
       const offStyle = {
@@ -3882,47 +3884,6 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
     this.designerButtons.push(designerButton);
   }
 
-  // if (desktop) {
-  //   for (let z = 0; z < 2; z++) {
-  //     designerButtonBar = GeneralJs.nodes.div.cloneNode(true);
-  //     style = {
-  //       position: "absolute",
-  //       width: "calc(50% - " + String((((buttonWidth * this.proposal.detail.length) + (buttonMargin * (this.proposal.detail.length - 1))) / 2) + buttonMargin + buttonMargin + leftMargin) + ea + ")",
-  //       borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-  //       left: String(leftMargin) + ea,
-  //       top: String(47) + '%',
-  //     };
-  //     if (z === 1) {
-  //       style.right = style.left;
-  //       delete style.left;
-  //     }
-  //     for (let i in style) {
-  //       designerButtonBar.style[i] = style[i];
-  //     }
-  //     designerButtonTong.appendChild(designerButtonBar);
-  //
-  //     designerButtonBarHead = GeneralJs.nodes.div.cloneNode(true);
-  //     style = {
-  //       position: "absolute",
-  //       width: String(headWidth) + ea,
-  //       height: String(headWidth) + ea,
-  //       borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-  //       borderRight: "1px solid " + GeneralJs.colorChip.gray3,
-  //       transform: "rotate(-45deg)",
-  //       left: "calc(50% - " + String((((buttonWidth * this.proposal.detail.length) + (buttonMargin * (this.proposal.detail.length - 1))) / 2) + buttonMargin + buttonMargin + headVisual) + ea + ")",
-  //       top: String(36) + '%',
-  //     };
-  //     if (z === 1) {
-  //       style.right = style.left;
-  //       style.transform = "rotate(135deg)";
-  //       delete style.left;
-  //     }
-  //     for (let i in style) {
-  //       designerButtonBarHead.style[i] = style[i];
-  //     }
-  //     designerButtonTong.appendChild(designerButtonBarHead);
-  //   }
-  // }
   whiteBlock.appendChild(designerButtonTong);
 
   designerButtonTong = GeneralJs.nodes.div.cloneNode(true);
@@ -3938,12 +3899,15 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
 
   designerButton = GeneralJs.nodes.div.cloneNode(true);
   style = {
-    display: "inline-block",
+    display: "inline-flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     position: "relative",
-    width: String(buttonWidth * 1.7) + ea,
+    width: String(buttonWidth * 1.25) + ea,
     height: String(100) + '%',
-    background: GeneralJs.colorChip.green,
-    borderRadius: String(3) + "px",
+    background: GeneralJs.colorChip.gradientGreen,
+    borderRadius: String(5) + "px",
     cursor: "pointer",
   };
   for (let i in style) {
@@ -3952,10 +3916,11 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
   designerButtonText = GeneralJs.nodes.div.cloneNode(true);
   designerButtonText.textContent = "디자이너 선택";
   style = {
-    position: "absolute",
+    display: "inline-block",
+    position: "relative",
     top: String(buttonTextTop) + ea,
     fontSize: String(buttonTextSize) + ea,
-    fontWeight: String(400),
+    fontWeight: String(buttonWeight),
     color: GeneralJs.colorChip.white,
     width: String(100) + '%',
     textAlign: "center",

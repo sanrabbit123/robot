@@ -358,7 +358,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
 
   rightBoxMarginLeft = <%% 64, 50, 50, 40, 11 %%>;
 
-  circleTop = <%% 4, 4, 5, 4, 4 %%>;
+  circleTop = <%% (isMac() ? 4 : 2), (isMac() ? 4 : 2), (isMac() ? 5 : 3), (isMac() ? 4 : 2), 4 %%>;
   circleLeft = <%% -7, -7, -6, -5, -7 %%>;
   circleWidth = <%% 6, 6, 5, 4, 1 %%>;
 
@@ -552,7 +552,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
       marginBottom: desktop ? String(margin) + ea : String(7) + ea,
       marginRight: desktop ? String(margin) + ea : "",
       paddingLeft: String(rightBoxMarginLeft) + ea,
-      paddingRight: String(mobilePaddingLeft) + ea,
+      paddingRight: mobile ? String(mobilePaddingLeft) + ea : "",
     },
   });
   createNode({
@@ -609,7 +609,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
 FirstResponseJs.prototype.insertMainContentsBox = function () {
   const instance = this;
   const { ea, media, baseTong } = this;
-  const { withOut, returnGet, createNode, colorChip, isIphone, isMac, svgMaker, serviceParsing, variableArray } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isIphone, isMac, svgMaker, serviceParsing, variableArray, ajaxJson, sleep, selfHref } = GeneralJs;
   const mobileTitleToken = "<u%>%u>&nbsp;&nbsp;";
   const mobile = media[4];
   const desktop = !mobile;
@@ -732,7 +732,7 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
   buttonAreaMarginBottom = <%% 12, 12, 12, 12, 1 %%>;
   buttonWidth = <%% 144, 144, 144, 132, 30 %%>;
   buttonHeight = <%% 38, 38, 38, 36, 8 %%>;
-  buttonTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
+  buttonTextTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.2 %%>;
   buttonSize = <%% 15, 15, 15, 14, 3.3 %%>;
   buttonWeight = <%% 800, 800, 800, 800, 800 %%>;
 
@@ -792,8 +792,29 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
         {
           title: "디자이너 추천 받기",
           event: () => {
-            return function (e) {
-              console.log("this");
+            return async function (e) {
+              try {
+                let projects, loading;
+
+                loading = instance.mother.grayLoading();
+                projects = await ajaxJson({ whereQuery: { cliid: instance.client.cliid } }, SECONDHOST + "/getProjects", { equal: true });
+                projects.sort((a, b) => {
+                  return b.proposal.date.valueOf() - a.proposal.date.valueOf();
+                })
+
+                if (projects.length > 0) {
+                  await sleep(2 * 1000);
+                  selfHref(FRONTHOST + "/proposal.php?proid=" + projects[0].proid);
+                  loading.remove();
+                } else {
+                  window.alert("스타일 체크를 진행하지 않아 디자이너 추천서를 받으실 수 없습니다! 스타일 체크를 진행하시고 홈리에종에 문의주세요!");
+                  selfHref(FRONTHOST + "/curation.php?cliid=" + instance.client.cliid);
+                  loading.remove();
+                }
+
+              } catch (e) {
+                console.log(e);
+              }
             }
           }
         }
@@ -1415,271 +1436,6 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
     }
   })
   basicContentsMaker(whiteInjection2, "curation", colorChip.white, true);
-
-  
-
-}
-
-FirstResponseJs.prototype.generateGsArray = function (number) {
-  if (typeof number !== "number") {
-    throw new Error("invaild input");
-  }
-  const instance = this;
-  const standard = [
-    'g', 's', 's',
-    's', 's', 's', 's',
-    's', 's', 'g',
-    's', 's', 's', 's',
-    's', 's', 's', 's',
-    's', 's', 'g',
-  ];
-  let additional;
-  let add;
-  let multi;
-  let result;
-  additional = number % standard.length;
-  add = standard.slice(0, additional);
-  multi = Math.floor(number / standard.length);
-  result = [];
-  for (let i = 0; i < multi; i++) {
-    result = result.concat(JSON.parse(JSON.stringify(standard)));
-  }
-  result = result.concat(add);
-  return result;
-}
-
-FirstResponseJs.prototype.portfolioBlock = function (baseBlock) {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, svgMaker, equalJson, cleanChildren, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref } = GeneralJs;
-  const { ea, media, baseTong } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const photoChar = 't';
-  const photoCharMobile = "mot";
-  const touchStartConst = "touchStartConstName";
-  let { contentsArr, designers } = this;
-  let gsArray;
-  let baseWidth;
-  let photoMargin;
-  let columns;
-  let seroWidth, garoWidth;
-  let photoRatio;
-  let photoHeight;
-  let src;
-  let contents;
-  let title;
-  let quoteWidth, quoteHeight;
-  let quoteTop;
-  let photoMarginBottom;
-  let titleSize, titleWeight, titleMarginLeft;
-  let tag;
-  let block;
-  let tagTong;
-  let photoBlockMarginBottom;
-  let garoSliceStart, garoSliceEnd, garoSliceLimit;
-  let seroSliceStart, seroSliceEnd, seroSliceLimit;
-  let tagTongMarginTop, tagTongWidthRatio;
-  let tagSize, tagWeight;
-  let tagPaddingLeft, tagPaddingTop, tagPaddingBottom;
-  let tagMarginRight;
-  let contentsArrCopied;
-  let attach;
-  let tagBlock;
-  let limitLength;
-
-  limitLength = contentsArr.length;
-
-  gsArray = this.generateGsArray(limitLength);
-
-  baseWidth = Number(baseTong.style.width.replace(/[^0-9\.]/gi, ''));
-  photoMargin = <%% 20, 18, 18, 16, 3 %%>;
-  columns = <%% 4, 4, 3, 3, 2 %%>;
-
-  photoRatio = (297 / 210);
-  seroWidth = (baseWidth - (photoMargin * (columns - 1))) / columns;
-  garoWidth = (seroWidth * 2) + photoMargin;
-  photoHeight = seroWidth * photoRatio;
-  photoMarginBottom = <%% (isMac() ? 18 : 20), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 2.5 %%>;
-
-  quoteHeight = <%% 10, 8, 8, 7, 1.6 %%>;
-  quoteWidth = SvgTong.getRatio(SvgTong.stringParsing(svgMaker.doubleQuote(colorChip.green))) * quoteHeight;
-  quoteTop = <%% (isMac() ? 7 : 5), (isMac() ? 5 : 3), (isMac() ? 5 : 3), (isMac() ? 5 : 3), isIphone() ? 1.2 : 1.1 %%>;
-
-  titleSize = <%% 21, 17, 17, 15, 3.4 %%>;
-  titleWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleMarginLeft = <%% 6, 6, 5, 5, 1.1 %%>;
-
-  photoBlockMarginBottom = <%% 72, 66, 66, 62, 8 %%>;
-
-  garoSliceStart = <%% 5, 5, 5, 5, 5 %%>;
-  garoSliceEnd = <%% 10, 10, 10, 10, 9 %%>;
-  garoSliceLimit = <%% 17, 17, 17, 17, 17 %%>;
-
-  seroSliceStart = <%% 5, 5, 5, 5, 5 %%>;
-  seroSliceEnd = <%% 16, 15, 17, 15, 13 %%>;
-  seroSliceLimit = <%% 30, 30, 30, 30, 30 %%>;
-
-  tagTongMarginTop = <%% 11, 11, 10, 8, 1.4 %%>;
-  tagTongWidthRatio = <%% 2, 2, 2, 2, 2 %%>;
-
-  tagSize = <%% 12, 10, 10, 9, 2 %%>;
-  tagWeight = <%% 500, 500, 500, 500, 500 %%>;
-
-  tagPaddingLeft = <%% 10, 8, 8, 7, 1 %%>;
-  tagPaddingTop = <%% (isMac() ? 5 : 6), (isMac() ? 4 : 5), (isMac() ? 4 : 5), (isMac() ? 4 : 5), 0.9 %%>;
-  tagPaddingBottom = <%% (isMac() ? 7 : 6), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), isIphone() ? 1.2 : 1.4 %%>;
-  tagMarginRight = <%% 4, 3, 3, 3, 1 %%>;
-
-  for (let i = 0; i < limitLength; i++) {
-    ({ contents } = contentsArr[i]);
-
-    if (contents.review.detailInfo.photodae.length > 1) {
-
-      if (desktop) {
-        src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/" + photoChar + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
-      } else {
-        src = FRONTHOST + "/list_image/portp" + contents.portfolio.pid + "/mobile/" + photoCharMobile + String(contents.review.detailInfo.photodae[gsArray[i] === 'g' ? 1 : 0]) + contents.portfolio.pid + ".jpg";
-      }
-
-      title = contents.review.title.sub.split(", ").join(" ");
-      tag = equalJson(JSON.stringify(contents.portfolio.detailInfo.tag));
-
-      if (gsArray[i] !== 'g') {
-        tag = tag.slice(garoSliceStart, garoSliceEnd);
-        if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > garoSliceLimit) {
-          tag = tag.slice(0, -1);
-        }
-      } else {
-        tag = tag.slice(seroSliceStart, seroSliceEnd);
-        if (tag.reduce((acc, curr) => { return acc + curr.length }, 0) > seroSliceLimit) {
-          tag = tag.slice(0, -1);
-        }
-      }
-
-      block = createNode({
-        mother: baseBlock,
-        attribute: {
-          pid: contents.portfolio.pid,
-        },
-        event: {
-          click: function (e) {
-            const pid = this.getAttribute("pid");
-            selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
-          },
-          touchstart: function (e) {
-            const self = this;
-            self.setAttribute(touchStartConst, "on");
-            setQueue(() => {
-              self.setAttribute(touchStartConst, "off");
-            });
-          },
-          touchend: function (e) {
-            if (this.getAttribute(touchStartConst) === "on") {
-              const pid = this.getAttribute("pid");
-              selfHref(FRONTHOST + "/revdetail.php?pid=" + pid);
-            }
-          }
-        },
-        style: {
-          display: "inline-block",
-          width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
-          borderRadius: String(5) + "px",
-          marginRight: String(photoMargin) + ea,
-          marginBottom: String(photoBlockMarginBottom) + ea,
-          verticalAlign: "top",
-          overflow: "hidden",
-          cursor: "pointer",
-        },
-        children: [
-          {
-            style: {
-              display: "block",
-              width: String(gsArray[i] === 'g' ? garoWidth : seroWidth) + ea,
-              height: String(photoHeight) + ea,
-              borderRadius: String(5) + "px",
-              marginBottom: String(photoMarginBottom) + ea,
-              backgroundSize: "100% auto",
-              backgroundPosition: "50% 50%",
-              backgroundImage: "url('" + src + "')",
-            }
-          },
-          {
-            style: {
-              display: "block",
-              position: "relative",
-              width: String(100) + '%',
-            },
-            children: [
-              {
-                mode: "svg",
-                source: svgMaker.doubleQuote(colorChip.green),
-                style: {
-                  display: "inline-block",
-                  height: String(quoteHeight) + ea,
-                  width: String(quoteWidth) + ea,
-                  verticalAlign: "top",
-                  position: "relative",
-                  top: String(quoteTop) + ea,
-                }
-              },
-              {
-                text: title,
-                style: {
-                  display: "inline-block",
-                  fontSize: String(titleSize) + ea,
-                  fontWeight: String(titleWeight),
-                  color: colorChip.black,
-                  marginLeft: String(titleMarginLeft) + ea,
-                  width: withOut(quoteWidth + titleMarginLeft, ea),
-                  verticalAlign: "top",
-                }
-              }
-            ]
-          },
-          {
-            style: {
-              display: "block",
-              position: "relative",
-              marginTop: String(tagTongMarginTop) + ea,
-              width: String(tagTongWidthRatio * 100) + '%',
-              left: String(0) + ea,
-            }
-          }
-        ]
-      });
-      tagTong = block.children[2];
-      for (let t of tag) {
-        tagBlock = createNode({
-          mother: tagTong,
-          text: "<b%#%b> " + t,
-          style: {
-            display: "inline-block",
-            fontSize: String(tagSize) + ea,
-            fontWeight: String(tagWeight),
-            color: colorChip.black,
-            paddingLeft: String(tagPaddingLeft) + ea,
-            paddingTop: String(tagPaddingTop) + ea,
-            paddingBottom: String(tagPaddingBottom) + ea,
-            paddingRight: String(tagPaddingLeft) + ea,
-            borderRadius: String(3) + "px",
-            marginRight: String(tagMarginRight) + ea,
-            background: colorChip.gray2,
-            textAlign: "center",
-          },
-          bold: {
-            fontWeight: String(400),
-            color: colorChip.deactive,
-          }
-        });
-
-        tagBlock.style.width = String(Math.ceil(tagBlock.getBoundingClientRect().width - (tagPaddingLeft * 2)) + 1) + "px";
-
-      }
-
-    }
-
-  }
-
 
 }
 
@@ -2464,49 +2220,34 @@ FirstResponseJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    class SearchArray extends Array {
-      constructor(arr) {
-        super();
-        for (let i of arr) {
-          this.push(i);
-        }
-      }
-      search(target, value) {
-        let obj = null;
-        for (let i of this) {
-          if (i[target] === value) {
-            obj = i;
-          }
-        }
-        return obj;
-      }
-      toNormal() {
-        let arr = [];
-        for (let i of this) {
-          arr.push(i);
-        }
-        return arr;
-      }
-    }
-
     const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip } = GeneralJs;
     const getObj = returnGet();
-    let response;
+    let cliid;
+    let clients, client;
 
-    response = await ajaxJson({ mode: "review", limit: 42 }, LOGHOST + "/getContents", { equal: true });
-    this.contentsArr = new SearchArray(response.contentsArr);
-    this.designers = new SearchArray(response.designers);
+    if (getObj.cliid === undefined) {
+      window.alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+    }
+
+    clients = await ajaxJson({ whereQuery: { cliid: getObj.cliid } }, SECONDHOST + "/getClients", { equal: true });
+    if (clients.length === 0) {
+      window.alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+    }
+    client = clients[0];
+    this.client = client;
 
     await this.mother.ghostClientLaunching({
       mode: "ghost",
       name: "firstResponse",
-      client: null,
+      client: this.client,
       base: {
         instance: this,
         binaryPath: FirstResponseJs.binaryPath,
-        subTitle: "홈리에종 서비스 설명",
+        subTitle: (this.client.name + " 고객님 서비스 설명"),
         secondBackground: false,
-        backgroundType: 0,
+        backgroundType: 1,
         talk: {
           text: "기타 문의 사항은 홈리에종 채널에 주세요!",
           event: "channel",

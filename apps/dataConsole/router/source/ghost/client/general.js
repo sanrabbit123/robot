@@ -13,7 +13,7 @@ GeneralJs.prototype.setGeneralProperties = function (instance) {
   this.sero = <%% false, false, false, false, true %%>;
   this.modeMinus = <%% 0, 1, 1, 1, 1 %%>;
   this.naviHeight = <%% 72, 72, 66, 60, 60 %%>;
-  this.backHeight = <%% 860, 840, 700, 640, 80 %%>;
+  this.backHeight = <%% 860, 830, 670, 640, 80 %%>;
   this.margin = 20 - this.modeMinus;
 
   instance.mode = this.mode;
