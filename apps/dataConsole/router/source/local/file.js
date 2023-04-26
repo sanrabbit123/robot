@@ -706,7 +706,7 @@ FileJs.prototype.baseMaker = function () {
               dom.parentNode.removeChild(dom);
             }
             [ thisDom ] = selected;
-            newName = await GeneralJs.prompt("새로운 이름을 알려주세요!");
+            newName = await GeneralJs.prompt("새로운 이름을 알려주세요!", thisDom.getAttribute("name"));
             if (typeof newName === "string") {
               newName = newName.replace(/ /gi, "_").replace(/\.[a-zA-Z0-9]+$/i, '').replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\-\<\>\.]/gi, '');
               absolute = thisDom.getAttribute("absolute")
@@ -2980,6 +2980,12 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
         thisFolderFiles = await ajaxJson({ path: this.path, keyword: path, mode: searchMode }, S3HOST + ":3000" + "/searchFiles");
       }
     }
+
+    if (typeof thisFolderFiles.message === "string" && /error \:/gi.test(thisFolderFiles.message)){
+      window.localStorage.clear();
+      window.location.reload();
+    }
+
     thisFolderFiles.sort((a, b) => {
       const fileConst = 1000000000000;
       let aCode, bCode;

@@ -282,7 +282,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
   marginTop = <%% 52, 50, 40, 32, 52 %%>;
   leftRatio = <%% 0.32, 0.32, 0.32, 0.32, 0.32 %%>;
 
-  titleFont = <%% 26, 25, 23, 18, 4.5 %%>;
+  titleFont = <%% 26, 25, 22, 18, 4.5 %%>;
   titleLeft = <%% 6, 6, 6, 6, 0 %%>;
   titleFontWeight = <%% 800, 800, 800, 800, 800 %%>;
   wordSpacing = <%% -3, -3, -3, -3, -2 %%>;
@@ -297,7 +297,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
   indexFont = <%% 19, 19, 19, 19, 19 %%>;
   indexFontWeight = <%% 200, 200, 200, 200, 200 %%>;
 
-  leftWidth = <%% 658, 480, 412, 238, 300 %%>;
+  leftWidth = <%% 658, 480, 412, 230, 300 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 9 %%>;
   initWordingSize = <%% 15.5, 15, 14.5, 13.5, 5 %%>;
@@ -348,7 +348,7 @@ FirstResponseJs.prototype.insertDescriptionBox = function () {
   leftTitleWidth = <%% 180, 175, 175, 175, 18 %%>;
   descriptionMarginTop = <%% 120, 50, 40, 25, 12 %%>; 
 
-  rightBoxHeight = <%% 552, 500, 476, 592, 55 %%>;
+  rightBoxHeight = <%% 552, 500, 474, 592, 55 %%>;
 
   imageBetween = <%% 8, 8, 6, 4, 1 %%>;
 
@@ -787,11 +787,7 @@ FirstResponseJs.prototype.insertMainContentsBox = function () {
       }
     },
   };
-
-  if (mobile) {
-    contents.designer.image = FirstResponseJs.binaryPath + "/about_designer_00.jpg";
-  }
-
+  
   basicContentsMaker = (mother, keyword, backgroundColor, whiteBoardMode = false) => {
     createNode({
       mother: mother,
