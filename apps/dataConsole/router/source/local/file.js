@@ -706,7 +706,7 @@ FileJs.prototype.baseMaker = function () {
               dom.parentNode.removeChild(dom);
             }
             [ thisDom ] = selected;
-            newName = await GeneralJs.prompt("새로운 이름을 알려주세요!", thisDom.getAttribute("name"));
+            newName = await GeneralJs.prompt("새로운 이름을 알려주세요!", thisDom.getAttribute("name").split(".").slice(0, -1).join("."));
             if (typeof newName === "string") {
               newName = newName.replace(/ /gi, "_").replace(/\.[a-zA-Z0-9]+$/i, '').replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}\+\?\-\<\>\.]/gi, '');
               absolute = thisDom.getAttribute("absolute")
