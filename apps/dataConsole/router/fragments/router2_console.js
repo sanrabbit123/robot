@@ -231,6 +231,9 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
   obj.link = [ "/searchClients", "/searchProjects", "/searchDesigners", "/searchContents" ];
   obj.func = async function (req, res) {
     try {
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      const db = "miro81";
       let standard;
       let map, mapArr;
       let searchQuery, searchArr, tempObj, tempObj2;
