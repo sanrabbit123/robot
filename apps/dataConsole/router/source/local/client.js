@@ -1836,18 +1836,16 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
           instance.cases[thisCase["index"]][column] = finalValue;
 
-          if ((DataPatch.clientMap())[column].position !== "null") {
-            await GeneralJs.updateValue({
-              thisId: thisId,
-              requestIndex: requestIndex,
-              column: column,
-              pastValue: pastRawData,
-              value: finalValue,
-              index: thisCase["index"],
-              thisCase: instance.cases[thisCase["index"]],
-            });
-            await instance.globalChaining(instance.cases[thisCase["index"]], column, finalValue, pastRawData);  
-          }
+          await GeneralJs.updateValue({
+            thisId: thisId,
+            requestIndex: requestIndex,
+            column: column,
+            pastValue: pastRawData,
+            value: finalValue,
+            index: thisCase["index"],
+            thisCase: instance.cases[thisCase["index"]],
+          });
+          await instance.globalChaining(instance.cases[thisCase["index"]], column, finalValue, pastRawData);  
 
           if (instance.totalFather !== null) {
             for (let father of instance.totalFatherChildren) {

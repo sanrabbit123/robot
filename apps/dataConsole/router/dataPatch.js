@@ -2337,27 +2337,10 @@ DataPatch.prototype.clientMap = function () {
   };
 
   const hahaToObject = function (value, pastValue, vaildMode) {
-    let boo = false;
-    let finalValue;
-    let targetArr;
-
     if (vaildMode) {
-      return { boo: !boo, value: null };
+      return { boo: true, value: null };
     }
-
-    if (typeof globalThis.XMLHttpRequest === "function") {
-      targetArr = GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX"); }).map((obj) => { return obj.name });
-    } else {
-      targetArr = [];
-    }
-
-    if (targetArr.includes(value)) {
-      finalValue = value;
-    } else {
-      finalValue = pastValue;
-    }
-
-    return finalValue;
+    return '-';
   };
   const hahaInputFunction = function (mother, input, callback, instance) {
     const grandMother = mother.parentElement;
@@ -2394,16 +2377,9 @@ DataPatch.prototype.clientMap = function () {
         thisRequestNumber = Number(mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("request"));
       }
 
-      /*
-      GeneralJs.ajaxJson({
-        id: thisCliid,
-        column: "manager",
-        value: finalValue,
-        email: JSON.parse(window.localStorage.getItem("GoogleClientProfile")).homeliaisonConsoleLoginedEmail,
-      }, "/updateClientHistory").catch((err) => {
+      GeneralJs.ajaxJson({ mode: "lowLow", cliid: thisCliid }, "/salesClient", { equal: true }).catch((err) => {
         console.log(err);
       });
-      */
 
       input.style.transition = "0s all ease";
       input.style.color = "transparent";
@@ -2557,20 +2533,24 @@ DataPatch.prototype.clientMap = function () {
     outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [
       "연결 안 됨",
       "가벼운 문의",
-      "타사 계약",
-      "가족 의견 불일치",
+      "고객 미션 미응답",
       "직접 진행",
       "고객 상황 변동",
+      "가족 의견 불일치",
       "기간 임박",
-      "디자인비 문제",
-      "총 예산 문제",
-      "서비스 불일치",
-      "프로세스 문제",
+      "장기 고객",
+      "시공만 필요",
+      "거주중 시공",
+      "일단 견적 먼저",
       "시공 문제",
+      "서비스 불일치",
+      "타사 계약",
       "지역 이슈",
-      "제안서 매력도",
+      "총 예산 문제",
+      "디자인비 문제",
+      "프로세스 문제",
       "디자이너 부족",
-      "고객 미션 미응답"
+      "제안서 매력도",
     ], multiple: true, searchBoo: true, },
     kakao: { name: "채널 등록", position: "requests.0.analytics.response.kakao", type: "boolean", items: [ "등록", "미등록" ], searchBoo: false, },
     service: { name: "예상 서비스", position: "requests.0.analytics.response.service", type: "object", inputFunction: serviceInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: serviceToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },

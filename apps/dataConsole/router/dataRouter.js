@@ -959,10 +959,14 @@ DataRouter.prototype.rou_post_getDocuments = function () {
 
 DataRouter.prototype.rou_post_searchDocuments = function () {
   const instance = this;
+  const { equalJson, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/searchClients", "/searchProjects", "/searchDesigners", "/searchContents" ];
   obj.func = async function (req, res) {
     try {
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      const db = "miro81";
       let standard;
       let map, mapArr;
       let searchQuery, searchArr, tempObj, tempObj2;
@@ -1405,87 +1409,93 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       if (!noUpdate) {
         updateQuery = {};
         position = map[column].position.replace(/\.0\./, ("." + requestIndex + "."));
-        updateQuery[position] = finalValue;
+        if (position !== "null") {
 
-        whereQuery = {};
-        if (req.url === "/updateClient") {
-          whereQuery[map.cliid.position] = thisId;
-        } else if (req.url === "/updateDesigner") {
-          whereQuery[map.desid.position] = thisId;
-        } else if (req.url === "/updateProject") {
-          whereQuery[map.proid.position] = thisId;
-        } else if (req.url === "/updateContents") {
-          whereQuery[map.conid.position] = thisId;
-        }
+          updateQuery[position] = finalValue;
 
-        if (map[column].isHistory !== undefined && map[column].isHistory !== null) {
+          whereQuery = {};
           if (req.url === "/updateClient") {
-            message = await instance.back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+            whereQuery[map.cliid.position] = thisId;
           } else if (req.url === "/updateDesigner") {
-            message = await instance.back.updateHistory("designer", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+            whereQuery[map.desid.position] = thisId;
           } else if (req.url === "/updateProject") {
-            message = await instance.back.updateHistory("project", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+            whereQuery[map.proid.position] = thisId;
           } else if (req.url === "/updateContents") {
-            message = await instance.back.updateHistory("contents", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+            whereQuery[map.conid.position] = thisId;
           }
+  
+          if (map[column].isHistory !== undefined && map[column].isHistory !== null) {
+            if (req.url === "/updateClient") {
+              message = await instance.back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+            } else if (req.url === "/updateDesigner") {
+              message = await instance.back.updateHistory("designer", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+            } else if (req.url === "/updateProject") {
+              message = await instance.back.updateHistory("project", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+            } else if (req.url === "/updateContents") {
+              message = await instance.back.updateHistory("contents", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+            }
+          } else {
+            if (req.url === "/updateClient") {
+              message = await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+            } else if (req.url === "/updateDesigner") {
+              message = await instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+            } else if (req.url === "/updateProject") {
+              message = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+            } else if (req.url === "/updateContents") {
+              message = await instance.back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+            }
+          }
+  
+          //update log
+          const members = instance.members;
+          const logDir = `${instance.dir}/log`;
+          let thisPerson, fileTarget;
+  
+          userArr = user.split("__split__");
+          today = new Date();
+  
+          for (let { name, email } of members) {
+            if (email.includes(userArr[1])) {
+              thisPerson = name;
+              break;
+            }
+          }
+  
+          updateTong = {
+            user: {
+              name: thisPerson,
+              email: userArr[1]
+            },
+            where: thisId,
+            update: {
+              target: position,
+              value: finalValue,
+              pastValue: pastFinalValue
+            },
+            date: today
+          };
+  
+          back.mongoCreate((req.url.replace(/^\//, '') + "Log"), updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
+            throw new Error(e);
+          });
+  
+          await fileSystem(`write`, [ logDir + "/" + thisPath + "_" + "latest.json", JSON.stringify({ path: thisPath, who: thisPerson, where: thisId, column: column, value: value, date: today }) ]);
+          const dir = await fileSystem(`readDir`, [ logDir ]);
+          fileTarget = null;
+  
+          for (let fileName of dir) {
+            if ((new RegExp("^" + thisId)).test(fileName)) {
+              fileTarget = fileName;
+            }
+          }
+          if (fileTarget !== null) {
+            await shellExec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
+          }
+          await fileSystem(`write`, [ `${instance.dir}/log/${thisId}__name__${thisPerson}`, `0` ]);
+  
         } else {
-          if (req.url === "/updateClient") {
-            message = await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-          } else if (req.url === "/updateDesigner") {
-            message = await instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-          } else if (req.url === "/updateProject") {
-            message = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-          } else if (req.url === "/updateContents") {
-            message = await instance.back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-          }
-        }
-
-        //update log
-        const members = instance.members;
-        const logDir = `${instance.dir}/log`;
-        let thisPerson, fileTarget;
-
-        userArr = user.split("__split__");
-        today = new Date();
-
-        for (let { name, email } of members) {
-          if (email.includes(userArr[1])) {
-            thisPerson = name;
-            break;
-          }
-        }
-
-        updateTong = {
-          user: {
-            name: thisPerson,
-            email: userArr[1]
-          },
-          where: thisId,
-          update: {
-            target: position,
-            value: finalValue,
-            pastValue: pastFinalValue
-          },
-          date: today
-        };
-
-        back.mongoCreate((req.url.replace(/^\//, '') + "Log"), updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
-          throw new Error(e);
-        });
-
-        await fileSystem(`write`, [ logDir + "/" + thisPath + "_" + "latest.json", JSON.stringify({ path: thisPath, who: thisPerson, where: thisId, column: column, value: value, date: today }) ]);
-        const dir = await fileSystem(`readDir`, [ logDir ]);
-        fileTarget = null;
-
-        for (let fileName of dir) {
-          if ((new RegExp("^" + thisId)).test(fileName)) {
-            fileTarget = fileName;
-          }
-        }
-        if (fileTarget !== null) {
-          await shellExec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
-        }
-        await fileSystem(`write`, [ `${instance.dir}/log/${thisId}__name__${thisPerson}`, `0` ]);
+          message = "success";
+        }   
       }
 
       //calendar
@@ -7741,7 +7751,6 @@ DataRouter.prototype.rou_post_salesClient = function () {
         resultObj = { message: "done" };
 
       } else if (mode === "lowLow") {
-
         if (typeof req.body.cliid === "string") {
 
           targetClients = await back.getClientsByQuery({ cliid: req.body.cliid }, { selfMongo: selfCoreMongo });
