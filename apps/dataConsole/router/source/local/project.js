@@ -417,7 +417,7 @@ ProjectJs.prototype.infoArea = function (info) {
     let finalColor;
     finalColor = GeneralJs.colorChip.black;
     if (mother.getAttribute("red") === "true") {
-      finalColor = GeneralJs.colorChip.darkRed;
+      finalColor = GeneralJs.colorChip.red;
     }
     if (mother.getAttribute("drop") === "true") {
       finalColor = GeneralJs.colorChip.gray4;
@@ -471,7 +471,7 @@ ProjectJs.prototype.infoArea = function (info) {
                 finalColor = GeneralJs.colorChip.gray4;
               }
               if (standardArea.children[z].getAttribute("red") === "true") {
-                finalColor = GeneralJs.colorChip.darkRed;
+                finalColor = GeneralJs.colorChip.red;
               }
               for (let y = 0; y < standardArea.children[z].children.length; y++) {
                 if (!onOffObj[standardArea.children[z].children[y].getAttribute("column")]) {
@@ -1414,9 +1414,9 @@ ProjectJs.prototype.infoArea = function (info) {
         }
         div_clone2.setAttribute("drop", "true");
       } else if (redPoint.values.includes(obj[redPoint.column])) {
-        style2.color = GeneralJs.colorChip.darkRed;
+        style2.color = GeneralJs.colorChip.red;
         for (let z = 0; z < this.standardDoms[num].children.length; z++) {
-          this.standardDoms[num].children[z].style.color = GeneralJs.colorChip.darkRed;
+          this.standardDoms[num].children[z].style.color = GeneralJs.colorChip.red;
         }
         div_clone2.setAttribute("red", "true");
       } else {
@@ -1461,13 +1461,12 @@ ProjectJs.prototype.infoArea = function (info) {
       div_clone3.setAttribute("column", columns[z]);
 
       if (num === 0) {
-        div_clone3.setAttribute("draggable", "true");
+        div_clone3.addEventListener("click", sortEventFunction((leftPosition[z] - (window.innerWidth / 2) + grayBarWidth), z));
         div_clone3.addEventListener("contextmenu", sortEventFunction((leftPosition[z] - (window.innerWidth / 2) + grayBarWidth), z));
         div_clone3.addEventListener("dragstart", dragstartEventFunction);
         div_clone3.addEventListener("dragenter", dragenterEventFunction);
         div_clone3.addEventListener("dragleave", dragleaveEventFunction);
         div_clone3.addEventListener("dragover", dragoverEventFunction);
-        div_clone3.addEventListener("drop", dropEventFunction);
       } else {
         div_clone3.addEventListener("mouseenter", enterEventFunction);
         div_clone3.addEventListener("mouseleave", leaveEventFunction);

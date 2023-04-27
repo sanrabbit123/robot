@@ -28,6 +28,10 @@ DataRouter.prototype.rou_post_getDocuments = function () {
       let allProjects;
       let allDesigners;
       let desidArr, designersArr;
+      let thisDailySales;
+      let dailySalesArr;
+      let thisRequestIndex;
+      let thisSalesDate;
       if (req.body.where === undefined && req.body.whereQuery !== undefined) {
         req.body.where = req.body.whereQuery;
       }
@@ -132,6 +136,18 @@ DataRouter.prototype.rou_post_getDocuments = function () {
           historyWhereQuery = {};
           historyWhereQuery["$or"] = thisCliids.map((cliid) => { return { cliid } });
           thisHistories = await selfMongo.db(db).collection("clientHistory").find(historyWhereQuery).project({ cliid: 1, manager: 1, "curation.analytics.send": 1, _id: 0 }).toArray();
+          thisDailySales = await selfMongo.db(db).collection("dailySales").find({
+            $or: thisCliids.map((thisCliid) => {
+              return {
+                cliids: {
+                  $elemMatch: {
+                    cliid: thisCliid
+                  }
+                }
+              }
+            })
+          }).project({ date: 1, cliids: 1, _id: 0 }).toArray();
+
           allProjects = await selfCoreMongo.db(db).collection("project").find(historyWhereQuery).project({ cliid: 1, proid: 1, proposal: 1, _id: 0 }).toArray();
           allDesigners =await selfCoreMongo.db(db).collection("designer").find({}).project({ desid: 1, designer: 1, _id: 0 }).toArray();
           resultArr = [];
@@ -142,6 +158,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
               proposal: send.filter((obj) => { return obj.page === "designerProposal" }),
               about: send.filter((obj) => { return obj.page === "finalPush" }),
               pure: send.filter((obj) => { return obj.page === "pureOutOfClient" }),
+              haha: send.filter((obj) => { return obj.page === "lowLowPush" }),
             })
           }
 
@@ -165,8 +182,33 @@ DataRouter.prototype.rou_post_getDocuments = function () {
             obj.info.proposalSend = proposalSend;
             obj.info.pureSend = thisHistory.pure.length > 0 ? dateToString(thisHistory.pure[0].date) : '-';
             obj.info.aboutSend = thisHistory.about.length > 0 ? dateToString(thisHistory.about[0].date) : '-';
+            obj.info.hahaSend = thisHistory.haha.length > 0 ? dateToString(thisHistory.haha[0].date) : '-';
             obj.info.desids = desidArr.length > 0 ? desidArr.join(", ") : "-";
             obj.info.proposalDesigners = designersArr.length > 0 ? designersArr.join(", ") : "-";
+            dailySalesArr = thisDailySales.filter((s) => {
+              if (s.cliids.findIndex((o) => { return o.cliid === obj.standard.cliid }) === -1) {
+                return false;
+              } else {
+                return true;
+              }
+            }).map((o) => { return o.date });
+
+            if (dailySalesArr.length === 0) {
+              obj.info.standardDate = '-';
+            } else if (dailySalesArr.length === 1) {
+              obj.info.standardDate = dateToString(dailySalesArr[0]);
+            } else {
+              dailySalesArr.sort((a, b) => { return b.valueOf() - a.valueOf() });
+              thisRequestIndex = raw_data.find((client) => { return client.cliid === obj.standard.cliid }).requests.toNormal().map((re) => {
+                return dateToString(re.request.timeline, true).slice(0, 13);
+              }).findIndex((str) => { return str === obj.info.timeline.slice(0, 13) });
+              thisSalesDate = dailySalesArr[thisRequestIndex]
+              if (thisSalesDate === undefined) {
+              obj.info.standardDate = '-';
+              } else {
+              obj.info.standardDate = dateToString(thisSalesDate);
+              }
+            }
           }
 
         }

@@ -285,6 +285,7 @@ ClientJs.prototype.standardBar = function (standard) {
 ClientJs.prototype.infoArea = function (info) {
   const instance = this;
   const grayBarWidth = this.grayBarWidth;
+  const { dateToString, colorChip } = GeneralJs;
   let div_clone, div_clone2, div_clone3;
   let style, style2, style3;
   let ea = "px";
@@ -422,18 +423,22 @@ ClientJs.prototype.infoArea = function (info) {
     const onOffObj = JSON.parse(window.localStorage.getItem(thisId));
     const cliidChildren = instance.totalMother.children[0].children;
     let finalColor;
-    finalColor = GeneralJs.colorChip.black;
+    finalColor = colorChip.black;
     if (mother.getAttribute("red") === "true") {
-      finalColor = GeneralJs.colorChip.darkRed;
+      finalColor = colorChip.red;
     }
     if (mother.getAttribute("drop") === "true") {
-      finalColor = GeneralJs.colorChip.gray4;
+      finalColor = colorChip.gray4;
     }
     for (let z = 0; z < mother.children.length; z++) {
       if (!onOffObj[mother.children[z].getAttribute("column")]) {
-        mother.children[z].style.color = finalColor;
+        if (mother.children[z].getAttribute("constantColor") !== null) {
+          mother.children[z].style.color = mother.children[z].getAttribute("constantColor");
+        } else {
+          mother.children[z].style.color = finalColor;
+        }
       } else {
-        mother.children[z].style.color = GeneralJs.colorChip.green;
+        mother.children[z].style.color = colorChip.green;
       }
     }
     for (let z = 0; z < cliidChildren.length; z++) {
@@ -479,7 +484,7 @@ ClientJs.prototype.infoArea = function (info) {
                 finalColor = GeneralJs.colorChip.gray4;
               }
               if (standardArea.children[z].getAttribute("red") === "true") {
-                finalColor = GeneralJs.colorChip.darkRed;
+                finalColor = GeneralJs.colorChip.red;
               }
               for (let y = 0; y < standardArea.children[z].children.length; y++) {
                 if (!onOffObj[standardArea.children[z].children[y].getAttribute("column")]) {
@@ -1334,9 +1339,9 @@ ClientJs.prototype.infoArea = function (info) {
         }
         div_clone2.setAttribute("drop", "true");
       } else if (redPoint.values.includes(obj[redPoint.column])) {
-        style2.color = GeneralJs.colorChip.darkRed;
+        style2.color = GeneralJs.colorChip.red;
         for (let z = 0; z < this.standardDoms[num].children.length; z++) {
-          this.standardDoms[num].children[z].style.color = GeneralJs.colorChip.darkRed;
+          this.standardDoms[num].children[z].style.color = GeneralJs.colorChip.red;
         }
         div_clone2.setAttribute("red", "true");
       } else {
@@ -1368,8 +1373,14 @@ ClientJs.prototype.infoArea = function (info) {
       div_clone3.style.width = String(widthArr[z]) + ea;
       div_clone3.style.left = String(leftPosition[z]) + ea;
       div_clone3.setAttribute("column", columns[z]);
+      if (num !== 0 && columns[z] === "standardDate" && obj[columns[z]] === dateToString(new Date())) {
+        div_clone3.style.color = GeneralJs.colorChip.red;
+        div_clone3.setAttribute("constantColor", GeneralJs.colorChip.red);
+      }
+
 
       if (num === 0) {
+        div_clone3.addEventListener("click", sortEventFunction((leftPosition[z] - (window.innerWidth / 2) + grayBarWidth), z));
         div_clone3.addEventListener("contextmenu", sortEventFunction((leftPosition[z] - (window.innerWidth / 2) + grayBarWidth), z));
         div_clone3.addEventListener("dragstart", dragstartEventFunction);
         div_clone3.addEventListener("dragenter", dragenterEventFunction);

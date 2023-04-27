@@ -500,10 +500,14 @@ DataPatch.prototype.clientStandard = function () {
     }
   };
   model.info = {
+    standardDate: {
+      name: "기준일",
+      width: 100,
+      left: 30,
+    },
     timeline: {
       name: "문의일",
       width: 100,
-      left: 30,
     },
     manager: {
       name: "담당자",
@@ -525,6 +529,14 @@ DataPatch.prototype.clientStandard = function () {
       name: "우선 순위",
       width: 80,
     },
+    memo: {
+      name: "간단 메모",
+      width: 160,
+    },
+    hahaSend: {
+      name: "하하 발송",
+      width: 100,
+    },
     next: {
       name: "1차 응대",
       width: 100,
@@ -537,13 +549,13 @@ DataPatch.prototype.clientStandard = function () {
       name: "피드백 통화",
       width: 100,
     },
-    service: {
-      name: "예상 서비스",
-      width: 160,
-    },
     proposalDesigners: {
       name: "추천 디자이너",
       width: 280,
+    },
+    service: {
+      name: "예상 서비스",
+      width: 160,
     },
     kakao: {
       name: "채널 등록",
@@ -701,6 +713,9 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "화장실", target: "bathroom" },
       { name: "발코니", target: "valcony" },
       { name: "가족 구성원", target: "family" },
+      { name: "계약 가능성", target: "possible" },
+      { name: "우선 순위", target: "priority" },
+      { name: "하하 발송", target: "hahaSend" },
       { name: "1차 응대", target: "next" },
       { name: "추천서 발송", target: "proposalSend" },
       { name: "피드백 통화", target: "recommend" },
@@ -2408,9 +2423,12 @@ DataPatch.prototype.clientMap = function () {
     proposalSend: { name: "추천서 발송", position: "null", type: "constant", searchBoo: false },
     aboutSend: { name: "서비스 소개 발송", position: "null", type: "constant", searchBoo: false },
     pureSend: { name: "부재중 발송", position: "null", type: "constant", searchBoo: false },
+    hahaSend: { name: "하하 발송", position: "null", type: "constant", searchBoo: false },
     proposalDesigners: { name: "추천한 디자이너", position: "null", type: "constant", searchBoo: false },
     possible: { name: "계약 가능성", position: "requests.0.analytics.response.possible", type: "string", items: [ "낮음", "애매", "높음" ], searchBoo: false },
     priority: { name: "우선 순위", position: "requests.0.analytics.response.priority", type: "string", items: [ "하", "중", "상" ], searchBoo: false },
+    memo: { name: "간단 메모", position: "requests.0.analytics.response.memo", type: "string", searchBoo: false },
+    standardDate: { name: "기준일", position: "null", type: "constant", searchBoo: false },
   };
   return map;
 }
