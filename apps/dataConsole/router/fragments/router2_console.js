@@ -227,6 +227,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
 
 DataRouter.prototype.rou_post_searchDocuments = function () {
   const instance = this;
+  const { equalJson, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/searchClients", "/searchProjects", "/searchDesigners", "/searchContents" ];
   obj.func = async function (req, res) {
