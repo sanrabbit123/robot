@@ -517,6 +517,14 @@ DataPatch.prototype.clientStandard = function () {
       name: "유출 이유",
       width: 100,
     },
+    possible: {
+      name: "계약 가능성",
+      width: 80,
+    },
+    priority: {
+      name: "우선 순위",
+      width: 80,
+    },
     next: {
       name: "1차 응대",
       width: 100,
@@ -2401,6 +2409,8 @@ DataPatch.prototype.clientMap = function () {
     aboutSend: { name: "서비스 소개 발송", position: "null", type: "constant", searchBoo: false },
     pureSend: { name: "부재중 발송", position: "null", type: "constant", searchBoo: false },
     proposalDesigners: { name: "추천한 디자이너", position: "null", type: "constant", searchBoo: false },
+    possible: { name: "계약 가능성", position: "requests.0.analytics.response.possible", type: "string", items: [ "낮음", "애매", "높음" ], searchBoo: false },
+    priority: { name: "우선 순위", position: "requests.0.analytics.response.priority", type: "string", items: [ "하", "중", "상" ], searchBoo: false },
   };
   return map;
 }

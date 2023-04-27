@@ -86,6 +86,7 @@ const Response = function (response) {
     "애매",
     "낮음",
   ], false);
+  this.memo = response.memo;
 }
 
 Response.prototype.actionInfo = function () {
@@ -198,6 +199,7 @@ Response.prototype.toNormal = function () {
   obj.designers = this.designers.toNormal();
   obj.priority = this.priority.toNormal();
   obj.possible = this.possible.toNormal();
+  obj.memo = this.memo;
   return obj;
 }
 

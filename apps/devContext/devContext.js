@@ -171,6 +171,12 @@ DevContext.prototype.launching = async function () {
 
     
 
+
+    
+    
+
+
+
     
     // const selfMongo = this.MONGOC;
     // const db = "miro81";
@@ -183,8 +189,7 @@ DevContext.prototype.launching = async function () {
     //   updateQuery = {};
 
     //   for (let i = 0; i < client.requests.length; i++) {
-    //     updateQuery["requests." + String(i) + ".analytics.response.priority"] = "하";
-    //     updateQuery["requests." + String(i) + ".analytics.response.possible"] = "낮음";
+    //     updateQuery["requests." + String(i) + ".analytics.response.memo"] = "";
     //   }
 
     //   await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });

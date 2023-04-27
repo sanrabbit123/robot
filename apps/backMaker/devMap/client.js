@@ -88,6 +88,7 @@ module.exports = {
             designers: [],
             priority: "하",
             possible: "낮음",
+            memo: "",
           },
           date: {
             call: {
