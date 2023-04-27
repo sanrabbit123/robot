@@ -389,7 +389,7 @@ const withTools = function (Client) {
     let tong = [];
     let temp;
 
-    for (let { request: { timeline, budget, family, furniture, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living, expected }, partial: { boo: partialBoo, pyeong: partialPyeong, detail: partialDetail } }, etc: { comment, channel } }, analytics: { response: { status, action, outreason, kakao, service, designers, priority, possible, memo }, date: { call: { next, history: callHistory, recommend }, space: { precheck, empty, movein } }, picture: { space: spacePicture, prefer: preferPicture } } } of client.requests) {
+    for (let { request: { timeline, budget, family, furniture, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living, expected }, partial: { boo: partialBoo, pyeong: partialPyeong, detail: partialDetail } }, etc: { comment, channel } }, analytics: { response: { status, action, outreason, kakao, service, designers, priority, possible, target, memo }, date: { call: { next, history: callHistory, recommend }, space: { precheck, empty, movein } }, picture: { space: spacePicture, prefer: preferPicture } } } of client.requests) {
 
       temp = {};
       temp.standard = {
@@ -431,6 +431,7 @@ const withTools = function (Client) {
         partialDetail,
         designers: designers.join(", "),
         priority,
+        target,
         possible,
         memo,
       }

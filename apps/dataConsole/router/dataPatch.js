@@ -521,6 +521,10 @@ DataPatch.prototype.clientStandard = function () {
       name: "유출 이유",
       width: 100,
     },
+    target: {
+      name: "타겟 고객",
+      width: 80,
+    },
     possible: {
       name: "계약 가능성",
       width: 80,
@@ -713,6 +717,7 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "화장실", target: "bathroom" },
       { name: "발코니", target: "valcony" },
       { name: "가족 구성원", target: "family" },
+      { name: "타겟 고객", target: "target" },
       { name: "계약 가능성", target: "possible" },
       { name: "우선 순위", target: "priority" },
       { name: "하하 발송", target: "hahaSend" },
@@ -2574,6 +2579,7 @@ DataPatch.prototype.clientMap = function () {
     proposalDesigners: { name: "추천한 디자이너", position: "null", type: "constant", searchBoo: false },
     possible: { name: "계약 가능성", position: "requests.0.analytics.response.possible", type: "string", items: [ "낮음", "애매", "높음" ], searchBoo: false },
     priority: { name: "우선 순위", position: "requests.0.analytics.response.priority", type: "string", items: [ "하", "중", "상" ], searchBoo: false },
+    target: { name: "타겟 고객", position: "requests.0.analytics.response.target", type: "string", items: [ "타겟", "애매", "해당 없음" ], searchBoo: false },
     memo: { name: "응대 후 피드백", position: "requests.0.analytics.response.memo", type: "string", searchBoo: false },
     standardDate: { name: "기준일", position: "null", type: "constant", searchBoo: false },
   };

@@ -1198,20 +1198,27 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
           thisCliids = data.map((obj) => { return obj.standard.cliid });
           historyWhereQuery = {};
           historyWhereQuery["$or"] = thisCliids.map((cliid) => { return { cliid } });
-          thisHistories = await selfMongo.db(db).collection("clientHistory").find(historyWhereQuery).project({ cliid: 1, manager: 1, "curation.analytics.send": 1, _id: 0 }).toArray();
-          thisDailySales = await selfMongo.db(db).collection("dailySales").find({
-            $or: thisCliids.map((thisCliid) => {
-              return {
-                cliids: {
-                  $elemMatch: {
-                    cliid: thisCliid
+
+          if (thisCliids.length > 0) {
+            thisHistories = await selfMongo.db(db).collection("clientHistory").find(historyWhereQuery).project({ cliid: 1, manager: 1, "curation.analytics.send": 1, _id: 0 }).toArray();
+            thisDailySales = await selfMongo.db(db).collection("dailySales").find({
+              $or: thisCliids.map((thisCliid) => {
+                return {
+                  cliids: {
+                    $elemMatch: {
+                      cliid: thisCliid
+                    }
                   }
                 }
-              }
-            })
-          }).project({ date: 1, cliids: 1, _id: 0 }).toArray();
-
-          allProjects = await selfCoreMongo.db(db).collection("project").find(historyWhereQuery).project({ cliid: 1, proid: 1, proposal: 1, _id: 0 }).toArray();
+              })
+            }).project({ date: 1, cliids: 1, _id: 0 }).toArray();
+            allProjects = await selfCoreMongo.db(db).collection("project").find(historyWhereQuery).project({ cliid: 1, proid: 1, proposal: 1, _id: 0 }).toArray();
+          } else {
+            thisHistories = [];
+            thisDailySales = [];
+            allProjects = [];
+          }
+          
           allDesigners =await selfCoreMongo.db(db).collection("designer").find({}).project({ desid: 1, designer: 1, _id: 0 }).toArray();
           resultArr = [];
           for (let { manager, cliid, curation: { analytics: { send } } } of thisHistories) {

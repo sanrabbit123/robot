@@ -82,10 +82,7 @@ SalesJs.prototype.baseMaker = function () {
   let createUpdateMenu;
   let statusUpdateEvent;
   let dropReasonUpdateEvent;
-  let contractPossibleUpdateEvent;
   let contractPossibleColumns;
-  let priorityUpdateEvent;
-  let targetUpdateEvent;
   let clientColumnsFunctionsTong;
   let buttonOuterPadding, buttonInnerPadding;
   let number;
@@ -156,26 +153,18 @@ SalesJs.prototype.baseMaker = function () {
       title: "계약 가능성",
       menu: [
         { title: "전체 보기", key: "totalFilter" },
-        { title: "높음", key: "contractPossibleHighFilter" },
-        { title: "낮음", key: "contractPossibleLowFilter" },
       ],
     },
     {
       title: "우선순위",
       menu: [
         { title: "전체 보기", key: "totalFilter" },
-        { title: "상", key: "priorityThreeFilter" },
-        { title: "중", key: "priorityTwoFilter" },
-        { title: "하", key: "priorityOneFilter" },
       ],
     },
     {
       title: "타겟 고객",
       menu: [
         { title: "전체 보기", key: "totalFilter" },
-        { title: "타겟", key: "targetClientThreeFilter" },
-        { title: "애매", key: "targetClientTwoFilter" },
-        { title: "해당 없음", key: "targetClientOneFilter" },
       ],
     },
     {
@@ -218,10 +207,6 @@ SalesJs.prototype.baseMaker = function () {
       ],
     },
   ];
-
-  contractPossibleColumns = [ "낮음", "높음" ];
-  priorityColumns = [ '하', '중', '상' ];
-  targetClientColumns = [ "해당 없음", "애매", "타겟" ];
 
   outerMargin = 30;
   innerPadding = 10;
@@ -516,180 +501,6 @@ SalesJs.prototype.baseMaker = function () {
     }
   }
   this.statusUpdateEvent = statusUpdateEvent;
-
-  contractPossibleUpdateEvent = () => {
-    return async function (e) {
-      try {
-        e.preventDefault();
-        e.stopPropagation();
-        const cliid = this.getAttribute("cliid");
-        const requestNumber = Number(this.getAttribute("number"));
-        let updateContractPossible;
-        let thisMenu;
-
-        updateContractPossible = equalJson(JSON.stringify(contractPossibleColumns));
-        
-        thisMenu = updateContractPossible.map((str) => {
-          const thisStatus = str;
-          return {
-            title: thisStatus,
-            event: async function (e) {
-              try {
-                const cliid = this.getAttribute("cliid");
-                const thisSalesObject = instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
-                const cliidIndex = thisSalesObject.cliids.findIndex((o) => { return o.cliid === cliid });
-                const thisValue = updateContractPossible.findIndex((s) => { return s === thisStatus });
-                let whereQuery, updateQuery;
-                let tempObj, tempObj2;
-                whereQuery = { id: thisSalesObject.id };
-                updateQuery = {};
-                updateQuery["cliids." + String(cliidIndex) + ".possible"] = thisValue;
-                await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/salesClient");
-                thisSalesObject.cliids[cliidIndex].possible = thisValue;
-
-                tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
-                if (tempObj !== undefined) {
-                  tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
-                  if (tempObj2 !== undefined) {
-                    tempObj2.possible = thisValue;
-                  }
-                }
-
-              } catch (e) {
-                console.log(e);
-              }
-            }
-          }
-        })
-        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName), requestNumber)) {
-          if (instance.filteredSales.length !== 0) {
-            instance.contentsLoad(true, instance.filteredSales);
-          } else {
-            instance.contentsLoad(false);
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
-  this.contractPossibleUpdateEvent = contractPossibleUpdateEvent;
-
-  priorityUpdateEvent = () => {
-    return async function (e) {
-      try {
-        e.preventDefault();
-        e.stopPropagation();
-        const cliid = this.getAttribute("cliid");
-        const requestNumber = Number(this.getAttribute("number"));
-        let updatePriorityPossible;
-        let thisMenu;
-
-        updatePriorityPossible = equalJson(JSON.stringify(priorityColumns));
-        
-        thisMenu = updatePriorityPossible.map((str) => {
-          const thisStatus = str;
-          return {
-            title: thisStatus,
-            event: async function (e) {
-              try {
-                const cliid = this.getAttribute("cliid");
-                const thisSalesObject = instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
-                const cliidIndex = thisSalesObject.cliids.findIndex((o) => { return o.cliid === cliid });
-                const thisValue = updatePriorityPossible.findIndex((s) => { return s === thisStatus });
-                let whereQuery, updateQuery;
-                let tempObj, tempObj2;
-                whereQuery = { id: thisSalesObject.id };
-                updateQuery = {};
-                updateQuery["cliids." + String(cliidIndex) + ".priority"] = thisValue;
-                await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/salesClient");
-                thisSalesObject.cliids[cliidIndex].priority = thisValue;
-
-                tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
-                if (tempObj !== undefined) {
-                  tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
-                  if (tempObj2 !== undefined) {
-                    tempObj2.priority = thisValue;
-                  }
-                }
-              } catch (e) {
-                console.log(e);
-              }
-            }
-          }
-        });
-
-        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName), requestNumber)) {
-          if (instance.filteredSales.length !== 0) {
-            instance.contentsLoad(true, instance.filteredSales);
-          } else {
-            instance.contentsLoad(false);
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
-  this.priorityUpdateEvent = priorityUpdateEvent;
-
-  targetUpdateEvent = () => {
-    return async function (e) {
-      try {
-        e.preventDefault();
-        e.stopPropagation();
-        const cliid = this.getAttribute("cliid");
-        const requestNumber = Number(this.getAttribute("number"));
-        let updateTargetPossible;
-        let thisMenu;
-
-        updateTargetPossible = equalJson(JSON.stringify(targetClientColumns));
-        
-        thisMenu = updateTargetPossible.map((str) => {
-          const thisStatus = str;
-          return {
-            title: thisStatus,
-            event: async function (e) {
-              try {
-                const cliid = this.getAttribute("cliid");
-                const thisSalesObject = instance.sales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
-                const cliidIndex = thisSalesObject.cliids.findIndex((o) => { return o.cliid === cliid });
-                const thisValue = updateTargetPossible.findIndex((s) => { return s === thisStatus });
-                let whereQuery, updateQuery;
-                let tempObj, tempObj2;
-                whereQuery = { id: thisSalesObject.id };
-                updateQuery = {};
-                updateQuery["cliids." + String(cliidIndex) + ".target"] = thisValue;
-                await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/salesClient");
-                thisSalesObject.cliids[cliidIndex].target = thisValue;
-
-                tempObj = instance.filteredSales.find((o) => { return o.cliids.map(({ cliid }) => { return cliid }).includes(cliid) });
-                if (tempObj !== undefined) {
-                  tempObj2 = tempObj.cliids.find((o) => { return o.cliid === cliid });
-                  if (tempObj2 !== undefined) {
-                    tempObj2.target = thisValue;
-                  }
-                }
-              } catch (e) {
-                console.log(e);
-              }
-            }
-          }
-        });
-
-        if (await createUpdateMenu(cliid, thisMenu, e, this.querySelector('.' + valueTextClassName), requestNumber)) {
-          if (instance.filteredSales.length !== 0) {
-            instance.contentsLoad(true, instance.filteredSales);
-          } else {
-            instance.contentsLoad(false);
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
-  this.targetUpdateEvent = targetUpdateEvent;
 
   firstResponseUpdateEvent = () => {
     return async function (e) {
@@ -1504,6 +1315,47 @@ SalesJs.prototype.baseMaker = function () {
       }
     },
     contractPossibleHighFilter: async function (e, menuIndex) {
+      try {
+        const index = Number(this.getAttribute("index"));
+        const thisMenu = equalJson(this.getAttribute("menu"));
+        const thisItem = thisMenu[menuIndex];
+        const title = thisItem.title;
+        let copiedSales;
+        let newSales;
+        let newCliids;
+
+        if (instance.filterLog.length > 0 && instance.filterLog[0] === "contractPossible") {
+          copiedSales = equalJson(JSON.stringify(instance.sales));
+        } else {
+          if (instance.filteredSales.length !== 0) {
+            copiedSales = equalJson(JSON.stringify(instance.filteredSales));
+          } else {
+            copiedSales = equalJson(JSON.stringify(instance.sales));
+          }
+        }
+
+        newSales = [];
+        for (let { id, date, cliids } of copiedSales) {
+          newCliids = cliids.filter((o) => {
+            return o.possible === 1;
+          });
+          newSales.push({
+            id,
+            date,
+            cliids: newCliids
+          });
+        }
+
+        instance.filteredSales = newSales;
+        instance.contentsLoad(true, instance.filteredSales);
+
+        instance.filterLog.unshift("contractPossible");
+
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    contractPossibleMiddleFilter: async function (e, menuIndex) {
       try {
         const index = Number(this.getAttribute("index"));
         const thisMenu = equalJson(this.getAttribute("menu"));
@@ -2637,13 +2489,13 @@ SalesJs.prototype.baseMaker = function () {
           firstResponseNumber = firstResponseNumber + 1;
         }
 
-        contractPossible = contractPossibleColumns[cliids[z].possible];
+        contractPossible = thisAnalytics.response.possible;
         if (contractPossible === "높음") {
           contractPossibleNumber = contractPossibleNumber + 1;
         }
 
-        priority = priorityColumns[cliids[z].priority];
-        targetClient = targetClientColumns[cliids[z].target];
+        priority = thisAnalytics.response.priority;
+        targetClient = thisAnalytics.response.target;
         if (targetClient === "타겟") {
           targetClientNumber = targetClientNumber + 1;
         }
@@ -2880,14 +2732,14 @@ SalesJs.prototype.baseMaker = function () {
             clientDom.addEventListener("click", firstResponseUpdateEvent());
             clientDom.addEventListener("contextmenu", firstResponseUpdateEvent());
           } else if (i === 5) {
-            clientDom.addEventListener("click", contractPossibleUpdateEvent());
-            clientDom.addEventListener("contextmenu", contractPossibleUpdateEvent());
+
+            
           } else if (i === 6) {
-            clientDom.addEventListener("click", priorityUpdateEvent());
-            clientDom.addEventListener("contextmenu", priorityUpdateEvent());
+
+            
           } else if (i === 7) {
-            clientDom.addEventListener("click", targetUpdateEvent());
-            clientDom.addEventListener("contextmenu", targetUpdateEvent());
+
+            
           } else if (i === 8) {
             clientDom.addEventListener("click", lowLowSendEvent());
             clientDom.addEventListener("contextmenu", lowLowSendEvent());

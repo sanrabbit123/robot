@@ -301,6 +301,7 @@ ClientJs.prototype.infoArea = function (info) {
   let onoffDummy;
   let thisOnOff;
   let originalColumns;
+  let constantColorChip;
 
   temp = {};
   columns = [];
@@ -476,6 +477,8 @@ ClientJs.prototype.infoArea = function (info) {
           const infoArea = instance.totalMother.children[0];
           const onOffObj = JSON.parse(window.localStorage.getItem(thisId));
           let finalColor;
+          let constantColorChip;
+          let constantColorChipResult;
 
           for (let z = 0; z < standardArea.children.length; z++) {
             if (standardArea.children[z].getAttribute("index") === thisIndex) {
@@ -487,11 +490,36 @@ ClientJs.prototype.infoArea = function (info) {
                 finalColor = GeneralJs.colorChip.red;
               }
               for (let y = 0; y < standardArea.children[z].children.length; y++) {
+
                 if (!onOffObj[standardArea.children[z].children[y].getAttribute("column")]) {
-                  standardArea.children[z].children[y].style.color = finalColor;
+                  if (standardArea.children[z].children[y].getAttribute("constantColorChip") !== null) {
+
+                    constantColorChip = JSON.parse(standardArea.children[z].children[y].getAttribute("constantColorChip"));
+                    constantColorChipResult = constantColorChip.find((o) => { return o.value === standardArea.children[z].children[y].firstChild.textContent.trim() });
+
+                    if (constantColorChipResult === undefined) {
+                      standardArea.children[z].children[y].style.color = finalColor;
+                      if (standardArea.children[z].children[y].getAttribute("constantColor") !== null) {
+                        standardArea.children[z].children[y].removeAttribute("constantColor")
+                      }
+                    } else {
+                      standardArea.children[z].children[y].style.color = constantColorChipResult.color;
+                      standardArea.children[z].children[y].setAttribute("constantColor", constantColorChipResult.color);
+                    }
+
+                  } else {
+
+                    if (standardArea.children[z].children[y].getAttribute("constantColor") !== null) {
+                      standardArea.children[z].children[y].style.color = standardArea.children[z].children[y].getAttribute("constantColor");
+                    } else {
+                      standardArea.children[z].children[y].style.color = finalColor;
+                    }
+
+                  }
                 } else {
                   standardArea.children[z].children[y].style.color = GeneralJs.colorChip.green;
                 }
+
               }
             }
           }
@@ -521,7 +549,7 @@ ClientJs.prototype.infoArea = function (info) {
         originalDiv.style.color = "inherit";
         originalDiv.style.transition = "";
 
-        window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
+        window.removeEventListener("message", GeneralJs.stacks["addressEvent"]);
         GeneralJs.stacks["addressEvent"] = null;
       }
       const updateValueEvent = async function (e) {
@@ -1373,11 +1401,45 @@ ClientJs.prototype.infoArea = function (info) {
       div_clone3.style.width = String(widthArr[z]) + ea;
       div_clone3.style.left = String(leftPosition[z]) + ea;
       div_clone3.setAttribute("column", columns[z]);
-      if (num !== 0 && columns[z] === "standardDate" && obj[columns[z]] === dateToString(new Date())) {
-        div_clone3.style.color = GeneralJs.colorChip.red;
-        div_clone3.setAttribute("constantColor", GeneralJs.colorChip.red);
-      }
 
+      if (num !== 0) {
+        if (columns[z] === "standardDate" && obj[columns[z]] === dateToString(new Date())) {
+          div_clone3.style.color = GeneralJs.colorChip.red;
+          div_clone3.setAttribute("constantColor", GeneralJs.colorChip.red);
+        } else if (columns[z] === "manager") {
+
+          constantColorChip = [
+            {
+              value: "리에종",
+              color: GeneralJs.colorChip.gray4,
+            },
+            {
+              value: "-",
+              color: GeneralJs.colorChip.red,
+            },
+          ];
+          div_clone3.setAttribute("constantColorChip", JSON.stringify(constantColorChip));
+          if (constantColorChip.find((o) => { return o.value === obj[columns[z]] }) !== undefined) {
+            div_clone3.style.color = constantColorChip.find((o) => { return o.value === obj[columns[z]] }).color;
+            div_clone3.setAttribute("constantColor", div_clone3.style.color);
+          }
+
+        } else if (columns[z] === "possible") {
+
+          constantColorChip = [
+            {
+              value: "높음",
+              color: GeneralJs.colorChip.purple,
+            },
+          ];
+          div_clone3.setAttribute("constantColorChip", JSON.stringify(constantColorChip));
+          if (constantColorChip.find((o) => { return o.value === obj[columns[z]] }) !== undefined) {
+            div_clone3.style.color = constantColorChip.find((o) => { return o.value === obj[columns[z]] }).color;
+            div_clone3.setAttribute("constantColor", div_clone3.style.color);
+          }
+
+        }
+      }
 
       if (num === 0) {
         div_clone3.addEventListener("click", sortEventFunction((leftPosition[z] - (window.innerWidth / 2) + grayBarWidth), z));
