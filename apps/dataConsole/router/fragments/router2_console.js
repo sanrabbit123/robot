@@ -457,7 +457,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
 
       if (req.body.noFlat === undefined) {
         data = rawJson.flatDeath();
-        if (req.url === "/getClients") {
+        if (req.url === "/searchClients") {
 
           thisCliids = data.map((obj) => { return obj.standard.cliid });
           historyWhereQuery = {};
