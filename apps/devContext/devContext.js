@@ -172,14 +172,24 @@ DevContext.prototype.launching = async function () {
     
 
     
+    // const selfMongo = this.MONGOC;
+    // const db = "miro81";
+    // const collection = "client";
+    // const clients = await selfMongo.db(db).collection(collection).find({}).toArray();
+    // let whereQuery, updateQuery;
 
+    // for (let client of clients) {
+    //   whereQuery = { cliid: client.cliid };
+    //   updateQuery = {};
 
+    //   for (let i = 0; i < client.requests.length; i++) {
+    //     updateQuery["requests." + String(i) + ".analytics.response.priority"] = "하";
+    //     updateQuery["requests." + String(i) + ".analytics.response.possible"] = "낮음";
+    //   }
 
-
-
-
-
-
+    //   await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+    //   console.log(whereQuery, updateQuery);
+    // }
 
 
 

@@ -76,6 +76,16 @@ const Response = function (response) {
   this.kakao = response.kakao;
   this.service = new ProjectService(response.service);
   this.designers = new PredictDesigners(response.designers);
+  this.priority = new Menu(response.priority, [
+    "상",
+    "중",
+    "하",
+  ], false);
+  this.possible = new Menu(response.possible, [
+    "높음",
+    "애매",
+    "낮음",
+  ], false);
 }
 
 Response.prototype.actionInfo = function () {
@@ -186,6 +196,8 @@ Response.prototype.toNormal = function () {
   obj.kakao = this.kakao;
   obj.service = this.service.toNormal();
   obj.designers = this.designers.toNormal();
+  obj.priority = this.priority.toNormal();
+  obj.possible = this.possible.toNormal();
   return obj;
 }
 

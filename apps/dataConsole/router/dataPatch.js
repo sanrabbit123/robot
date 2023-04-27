@@ -500,29 +500,21 @@ DataPatch.prototype.clientStandard = function () {
     }
   };
   model.info = {
-    status: {
-      name: "상태",
-      width: 50,
+    timeline: {
+      name: "문의일",
+      width: 100,
       left: 30,
     },
-    action: {
-      name: "응대",
-      width: 100,
+    manager: {
+      name: "담당자",
+      width: 80,
+    },
+    status: {
+      name: "상태",
+      width: 80,
     },
     outreason: {
       name: "유출 이유",
-      width: 100,
-    },
-    phone: {
-      name: "연락처",
-      width: 120,
-    },
-    service: {
-      name: "예상 서비스",
-      width: 160,
-    },
-    timeline: {
-      name: "문의일",
       width: 100,
     },
     next: {
@@ -537,17 +529,17 @@ DataPatch.prototype.clientStandard = function () {
       name: "피드백 통화",
       width: 100,
     },
-    kakao: {
-      name: "채널 등록",
-      width: 60,
-    },
-    spacePicture: {
-      name: "사진",
-      width: 60,
+    service: {
+      name: "예상 서비스",
+      width: 160,
     },
     proposalDesigners: {
       name: "추천 디자이너",
       width: 280,
+    },
+    kakao: {
+      name: "채널 등록",
+      width: 80,
     },
     email: {
       name: "이메일",
@@ -681,9 +673,8 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       "cliid",
     ],
     info: [
-      { name: "상태", target: "status" },
-      { name: "응대", target: "action" },
       { name: "문의일", target: "timeline" },
+      { name: "상태", target: "status" },
       { name: "유출 이유", target: "outreason" },
       { name: "연락처", target: "phone" },
       { name: "이메일", target: "email" },
@@ -702,13 +693,13 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "화장실", target: "bathroom" },
       { name: "발코니", target: "valcony" },
       { name: "가족 구성원", target: "family" },
-      { name: "부분 여부", target: "partialBoo" },
-      { name: "부분 평수", target: "partialPyeong" },
-      { name: "부분 공간", target: "partialDetail" },
       { name: "1차 응대", target: "next" },
       { name: "추천서 발송", target: "proposalSend" },
       { name: "피드백 통화", target: "recommend" },
       { name: "추천 디자이너", target: "proposalDesigners" },
+      { name: "부분 공간", target: "partialBoo" },
+      { name: "부분 평수", target: "partialPyeong" },
+      { name: "부분 메모", target: "partialDetail" },
       { name: "채널 등록", target: "kakao" },
       { name: "사진", target: "spacePicture" },
     ],

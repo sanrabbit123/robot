@@ -295,7 +295,7 @@ ClientJs.prototype.infoArea = function (info) {
   let eventFunction, updateEventFunction;
   let enterEventFunction, leaveEventFunction;
   let sortEventFunction;
-  let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
+  let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction;
   let dropPoint, redPoint;
   let onoffDummy;
   let thisOnOff;
@@ -305,18 +305,6 @@ ClientJs.prototype.infoArea = function (info) {
   columns = [];
   leftPosition = [];
   widthArr = [];
-
-  if (window.localStorage.getItem("client_columnsOrder") !== null && window.localStorage.getItem("client_columnsOrder") !== undefined) {
-    originalColumns = JSON.parse(window.localStorage.getItem("client_columnsOrder"));
-    for (let c of originalColumns) {
-      if (Number.isNaN(Number(c.left))) {
-        window.localStorage.clear();
-        window.location.reload();
-        break;
-      }
-      info.standard[c.name].left = c.left;
-    }
-  }
 
   for (let i in info.standard) {
     temp[i] = info.standard[i].name;
@@ -1317,75 +1305,6 @@ ClientJs.prototype.infoArea = function (info) {
     e.preventDefault();
   }
 
-  dropEventFunction = function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.style.opacity = String(1);
-    const movingColumn = e.dataTransfer.getData("dragData");
-    const thisColumn = this.getAttribute("column");
-    let allColumns;
-    let originalColumns;
-    let margin, initialLeft;
-    let thisWidth, thisLeft;
-    let ea = "px";
-
-    margin = 20;
-    initialLeft = 30;
-    originalColumns = [];
-    allColumns = [];
-
-    if (window.localStorage.getItem("client_columnsOrder") !== null && window.localStorage.getItem("client_columnsOrder") !== undefined) {
-      originalColumns = JSON.parse(window.localStorage.getItem("client_columnsOrder"));
-    } else {
-      for (let c of instance.caseDoms[0].children) {
-        originalColumns.push({ name: c.getAttribute("column"), width: info.standard[c.getAttribute("column")].width, left: info.standard[c.getAttribute("column")].left });
-      }
-    }
-
-    for (let obj of originalColumns) {
-      if (Number.isNaN(Number(obj.width)) || Number.isNaN(Number(obj.left))) {
-        window.localStorage.clear();
-        window.location.reload();
-        break;
-      }
-    }
-
-    for (let c of originalColumns) {
-      if (c.name === movingColumn) {
-        thisWidth = c.width;
-        thisLeft = c.left;
-      }
-    }
-    for (let c of originalColumns) {
-      if (c.name !== movingColumn) {
-        if (thisColumn === c.name) {
-          allColumns.push({ name: movingColumn, width: thisWidth, left: thisLeft });
-        }
-        allColumns.push({ name: c.name, width: c.width, left: c.left });
-      }
-    }
-    for (let c = 0; c < allColumns.length; c++) {
-      if (c === 0) {
-        allColumns[c].left = initialLeft;
-      } else {
-        allColumns[c].left = allColumns[c - 1].width + allColumns[c - 1].left + margin;
-      }
-    }
-
-    window.localStorage.setItem("client_columnsOrder", JSON.stringify(allColumns));
-
-    for (let c of instance.caseDoms) {
-      for (let d of c.children) {
-        for (let { name, left } of allColumns) {
-          if (d.getAttribute("column") === name) {
-            d.style.left = String(left) + ea;
-          }
-        }
-      }
-    }
-
-  }
-
   dropPoint = DataPatch.clientDropPoint();
   redPoint = DataPatch.clientRedPoint();
 
@@ -1451,13 +1370,11 @@ ClientJs.prototype.infoArea = function (info) {
       div_clone3.setAttribute("column", columns[z]);
 
       if (num === 0) {
-        div_clone3.setAttribute("draggable", "true");
         div_clone3.addEventListener("contextmenu", sortEventFunction((leftPosition[z] - (window.innerWidth / 2) + grayBarWidth), z));
         div_clone3.addEventListener("dragstart", dragstartEventFunction);
         div_clone3.addEventListener("dragenter", dragenterEventFunction);
         div_clone3.addEventListener("dragleave", dragleaveEventFunction);
         div_clone3.addEventListener("dragover", dragoverEventFunction);
-        div_clone3.addEventListener("drop", dropEventFunction);
       } else {
         div_clone3.addEventListener("mouseenter", enterEventFunction);
         div_clone3.addEventListener("mouseleave", leaveEventFunction);
@@ -1593,7 +1510,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let visualSpecificMarginTop;
   let textAreas;
   let callEvent;
-  let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
+  let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction;
   let betweenSpace;
   let cliidDom;
   let subButtonsTong;
@@ -2293,74 +2210,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     e.preventDefault();
   }
 
-  dropEventFunction = function (e) {
-    e.preventDefault();
-    this.style.opacity = String(1);
-    const { info } = DataPatch.clientWhiteViewStandard();
-    const movingColumn = e.dataTransfer.getData("dragData");
-    const thisColumn = this.parentNode.getAttribute("index");
-    let originalColumns, originalColumns_filtered, originalTops;
-    let thisStorage;
-    let movingColumnIndex, thisColumnIndex;
-    let tempObj;
-    let infoObj;
-    let infoObjKey;
-
-    infoObj = {};
-    for (let c of info) {
-      infoObj[c.target] = c.name;
-    }
-    infoObjKey = Object.keys(infoObj);
-
-    originalColumns = [];
-    originalColumns_filtered = [];
-    originalTops = [];
-    thisStorage = [];
-
-    for (let c = 0; c < this.parentNode.parentNode.children.length; c++) {
-      if (this.parentNode.parentNode.children[c].getAttribute("index") !== null && this.parentNode.parentNode.children[c].getAttribute("index") !== undefined) {
-        if (infoObjKey.includes(this.parentNode.parentNode.children[c].getAttribute("index"))) {
-          tempObj = { dom: this.parentNode.parentNode.children[c], name: this.parentNode.parentNode.children[c].getAttribute("index"), top: this.parentNode.parentNode.children[c].style.top };
-          originalColumns.push(tempObj);
-          originalTops.push(tempObj.top);
-          if (tempObj.name === movingColumn) {
-            movingColumnIndex = c;
-          }
-          if (tempObj.name === thisColumn) {
-            thisColumnIndex = c;
-          }
-        }
-      }
-    }
-
-    for (let c = 0; c < originalColumns.length; c++) {
-      if (c !== movingColumnIndex) {
-        if (c === thisColumnIndex) {
-          originalColumns_filtered.push(originalColumns[movingColumnIndex]);
-        }
-        originalColumns_filtered.push(originalColumns[c]);
-      }
-    }
-
-    for (let c = 0; c < originalColumns_filtered.length; c++) {
-      originalColumns_filtered[c].dom.style.top = originalTops[c];
-      originalColumns_filtered[c].top = originalTops[c];
-    }
-
-    originalColumns_filtered.sort((a, b) => {
-      return Number(a.top.replace(/[^0-9\.\-]/gi, '')) - Number(b.top.replace(/[^0-9\.\-]/gi, ''));
-    });
-
-    for (let c = 0; c < originalColumns_filtered.length; c++) {
-      thisStorage.push({ name: infoObj[originalColumns_filtered[c].name], target: originalColumns_filtered[c].name });
-      this.parentNode.parentNode.insertBefore(originalColumns_filtered[originalColumns_filtered.length - 1 - c].dom, this.parentNode.parentNode.firstChild);
-    }
-
-    window.localStorage.setItem("client_whiteOrder", JSON.stringify(thisStorage));
-
-    e.stopPropagation();
-  }
-
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
@@ -2384,10 +2233,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   };
   for (let i in style) {
     propertyBox.style[i] = style[i];
-  }
-
-  if (window.localStorage.getItem("client_whiteOrder") !== null && window.localStorage.getItem("client_whiteOrder") !== undefined) {
-    info = JSON.parse(window.localStorage.getItem("client_whiteOrder"));
   }
 
   for (let i = 0; i < info.length; i++) {
@@ -2422,12 +2267,10 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     for (let j in style) {
       div_clone4.style[j] = style[j];
     }
-    div_clone4.setAttribute("draggable", "true");
     div_clone4.addEventListener("dragstart", dragstartEventFunction);
     div_clone4.addEventListener("dragenter", dragenterEventFunction);
     div_clone4.addEventListener("dragleave", dragleaveEventFunction);
     div_clone4.addEventListener("dragover", dragoverEventFunction);
-    div_clone4.addEventListener("drop", dropEventFunction);
     div_clone3.appendChild(div_clone4);
 
     //value
@@ -7219,6 +7062,10 @@ ClientJs.prototype.launching = async function () {
       this.addExtractEvent();
       this.whiteResize();
       this.communicationRender();
+    }
+
+    if (document.getElementById("grayLeftOpenButton") !== null) {
+      document.getElementById("grayLeftOpenButton").remove();
     }
 
     getTarget = null;

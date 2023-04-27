@@ -86,6 +86,8 @@ module.exports = {
               online: false,
             },
             designers: [],
+            priority: "하",
+            possible: "낮음",
           },
           date: {
             call: {
