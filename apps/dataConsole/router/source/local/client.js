@@ -4179,7 +4179,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
 
   margin = 18;
   boxNumber = Math.floor((motherWidth - (margin * 3)) / (margin + 400));
-  boxHeight = 430;
+  boxHeight = 450;
   boxWidth = (motherWidth - (margin * (boxNumber + 1 + 2))) / boxNumber;
   boxTop = 88;
   propertyNum = 7;
@@ -4623,6 +4623,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     reportNumbersObj.processCac = Math.round((summaryTong.process === 0 ? 0 : (report[i].charge / summaryTong.process)));
 
     summaryBox.insertAdjacentHTML(`beforeend`, `명<br>추천율 <b style="color:${colorChip.green}">${String(reportNumbersObj.recommendRate)}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;계약율 <b style="color:${colorChip.green}">${String(reportNumbersObj.contractRate)}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;전환율 <b style="color:${colorChip.green}">${String(reportNumbersObj.convertRate)}</b>%&nbsp;&nbsp;/&nbsp;&nbsp;진행율 <b style="color:${colorChip.green}">${String(reportNumbersObj.processRate)}</b>%`);
+    summaryBox.insertAdjacentHTML(`beforeend`, `<br>계약성공 <b style="color:${colorChip.green}">${String(report[i].contractsPure)}</b>명&nbsp;&nbsp;/&nbsp;&nbsp;계약공급가 <b style="color:${colorChip.green}">${autoComma(report[i].contractsPureAmount)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;계약순이익 <b style="color:${colorChip.green}">${autoComma(report[i].contractAmountSubtract)}</b>원`);
     summaryBox.insertAdjacentHTML(`beforeend`, `<br>MAU <b style="color:${colorChip.green}">${String(report[i].mau)}</b>명&nbsp;&nbsp;/&nbsp;&nbsp;광고비용 <b style="color:${colorChip.green}">${autoComma(report[i].charge)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;광고유입 <b style="color:${colorChip.green}">${String(report[i].adClients)}</b>명`);
     summaryBox.insertAdjacentHTML(`beforeend`, `<br>문의CAC <b style="color:${colorChip.green}">${autoComma(reportNumbersObj.clientCac)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;계약CAC <b style="color:${colorChip.green}">${autoComma(reportNumbersObj.contractCac)}</b>원&nbsp;&nbsp;/&nbsp;&nbsp;진행CAC <b style="color:${colorChip.green}">${autoComma(reportNumbersObj.processCac)}</b>원`);
 

@@ -1269,7 +1269,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
               obj.info.standardDate = dateToString(dailySalesArr[0]);
             } else {
               dailySalesArr.sort((a, b) => { return b.valueOf() - a.valueOf() });
-              thisRequestIndex = raw_data.find((client) => { return client.cliid === obj.standard.cliid }).requests.toNormal().map((re) => {
+              thisRequestIndex = rawJson.find((client) => { return client.cliid === obj.standard.cliid }).requests.toNormal().map((re) => {
                 return dateToString(re.request.timeline, true).slice(0, 13);
               }).findIndex((str) => { return str === obj.info.timeline.slice(0, 13) });
               thisSalesDate = dailySalesArr[thisRequestIndex]
@@ -1847,6 +1847,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       let logRes;
       let logFound;
       let contractsPure, contractsAmount, contractsPureAmount;
+      let calculationPureAmount;
 
       if (req.body.month === undefined) {
         if (req.body.startYear === undefined) {
@@ -1983,23 +1984,23 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.cliid.contract = [ ...new Set(contracts.map((obj) => { return obj.cliid; })) ];
           obj.proid.contract = contracts.map((obj) => { return obj.proid });
 
-
           //contract pure
           contractsPure = contracts.filter((c) => { return !/드[랍롭]/gi.test(c.process.status) });
           obj.contractsPure = contractsPure.length;
           obj.cliid.contractsPure = [ ...new Set(contractsPure.map((obj) => { return obj.cliid; })) ];
           obj.proid.contractsPure = contractsPure.map((obj) => { return obj.proid });
 
-
           //contract amount
-          contractsAmount = contractsPure.map((c) => { return c.process.contract.remain.calculation.amount.supply })
-          console.log(contractsAmount);
-
+          contractsAmount = contractsPure.map((c) => { return c.process.contract.remain.calculation.amount.consumer });
+          obj.contractsAmount = contractsAmount.reduce((acc, curr) => { return acc + curr }, 0);
 
           //contract amount pure
+          contractsPureAmount = contractsPure.map((c) => { return c.process.contract.remain.calculation.amount.supply });
+          obj.contractsPureAmount = contractsPureAmount.reduce((acc, curr) => { return acc + curr }, 0);
 
-
-
+          //calculation subtract
+          calculationPureAmount = contractsPure.map((c) => { return c.process.calculation.payments.totalAmount });
+          obj.contractAmountSubtract = obj.contractsPureAmount - calculationPureAmount.reduce((acc, curr) => { return acc + curr }, 0);
 
           //process start
           cliidArr_raw = clients.filter((obj) => { return !/드[롭랍]/gi.test(obj.analytics.response.status) }).map((obj) => { return obj.cliid; });
@@ -2011,14 +2012,15 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.cliid.process = [ ...new Set(process.map((obj) => { return obj.cliid })) ];
           obj.proid.process = [ ...new Set(process.map((obj) => { return obj.proid })) ];
 
-
-
-
-
-
           monthArr.push(obj);
         }
         monthObject.data = equalJson(JSON.stringify(monthArr));
+
+        monthObject.contractsPure = monthObject.data.reduce((acc, curr) => { return acc + curr.contractsPure }, 0);
+        monthObject.contractsAmount = monthObject.data.reduce((acc, curr) => { return acc + curr.contractsAmount }, 0);
+        monthObject.contractsPureAmount = monthObject.data.reduce((acc, curr) => { return acc + curr.contractsPureAmount }, 0);
+        monthObject.contractAmountSubtract = monthObject.data.reduce((acc, curr) => { return acc + curr.contractAmountSubtract }, 0);
+
         resultArr.push(monthObject);
       }
 
