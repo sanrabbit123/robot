@@ -1218,7 +1218,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
             thisDailySales = [];
             allProjects = [];
           }
-          
+
           allDesigners =await selfCoreMongo.db(db).collection("designer").find({}).project({ desid: 1, designer: 1, _id: 0 }).toArray();
           resultArr = [];
           for (let { manager, cliid, curation: { analytics: { send } } } of thisHistories) {
@@ -1846,6 +1846,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       let yearMonthArr;
       let logRes;
       let logFound;
+      let contractsPure, contractsAmount, contractsPureAmount;
 
       if (req.body.month === undefined) {
         if (req.body.startYear === undefined) {
@@ -1982,6 +1983,24 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.cliid.contract = [ ...new Set(contracts.map((obj) => { return obj.cliid; })) ];
           obj.proid.contract = contracts.map((obj) => { return obj.proid });
 
+
+          //contract pure
+          contractsPure = contracts.filter((c) => { return !/드[랍롭]/gi.test(c.process.status) });
+          obj.contractsPure = contractsPure.length;
+          obj.cliid.contractsPure = [ ...new Set(contractsPure.map((obj) => { return obj.cliid; })) ];
+          obj.proid.contractsPure = contractsPure.map((obj) => { return obj.proid });
+
+
+          //contract amount
+          contractsAmount = contractsPure.map((c) => { return c.process.contract.remain.calculation.amount.supply })
+          console.log(contractsAmount);
+
+
+          //contract amount pure
+
+
+
+
           //process start
           cliidArr_raw = clients.filter((obj) => { return !/드[롭랍]/gi.test(obj.analytics.response.status) }).map((obj) => { return obj.cliid; });
           cliidArr_raw = Array.from(new Set(cliidArr_raw));
@@ -1991,6 +2010,11 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.process = process.length;
           obj.cliid.process = [ ...new Set(process.map((obj) => { return obj.cliid })) ];
           obj.proid.process = [ ...new Set(process.map((obj) => { return obj.proid })) ];
+
+
+
+
+
 
           monthArr.push(obj);
         }
@@ -7764,7 +7788,7 @@ DataRouter.prototype.rou_post_salesClient = function () {
           targetHistories = await back.mongoRead("clientHistory", { cliid: req.body.cliid }, { selfMongo });
 
           for (let client of targetClients) {
-            await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name });
+            await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name, host: instance.address.frontinfo.host, cliid: client.cliid });
             await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#cx", voice: false });
           }
 
@@ -7812,7 +7836,7 @@ DataRouter.prototype.rou_post_salesClient = function () {
               targetHistories = await back.mongoRead("clientHistory", { $or: targetCliids.map((obj) => { return { cliid: obj.cliid } }) }, { selfMongo });
   
               for (let client of targetClients) {
-                await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name });
+                await kakao.sendTalk("hahaClientSend", client.name, client.phone, { client: client.name, host: instance.address.frontinfo.host, cliid: client.cliid });
                 await messageSend({ text: client.name + " 고객님께 하하(타겟 하, 우선순위 하) 고객용 알림톡을 전송하였습니다!", channel: "#cx", voice: false });
               }
   
