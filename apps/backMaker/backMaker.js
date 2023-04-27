@@ -714,6 +714,13 @@ BackMaker.prototype.updateClient = async function (queryArr, option = { selfMong
   try {
     const [ whereQuery, updateQuery ] = queryArr;
 
+    if (typeof updateQuery !== "object" || updateQuery === null) {
+      throw new Error("invalid updateQuery");
+    }
+    if (updateQuery["null"] !== undefined) {
+      delete updateQuery["null"];
+    }
+
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
@@ -725,6 +732,7 @@ BackMaker.prototype.updateClient = async function (queryArr, option = { selfMong
     return "success";
   } catch (e) {
     console.log(e);
+    return "fail";
   }
 }
 
@@ -1305,6 +1313,13 @@ BackMaker.prototype.updateContents = async function (queryArr, option = { selfMo
   try {
     const [ whereQuery, updateQuery ] = queryArr;
 
+    if (typeof updateQuery !== "object" || updateQuery === null) {
+      throw new Error("invalid updateQuery");
+    }
+    if (updateQuery["null"] !== undefined) {
+      delete updateQuery["null"];
+    }
+
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
@@ -1316,6 +1331,7 @@ BackMaker.prototype.updateContents = async function (queryArr, option = { selfMo
     return "success";
   } catch (e) {
     console.log(e);
+    return "fail";
   }
 }
 
@@ -1620,6 +1636,7 @@ BackMaker.prototype.updateService = async function (queryArr, option = { selfMon
     return "success";
   } catch (e) {
     console.log(e);
+    return "fail";
   }
 }
 
@@ -1836,6 +1853,13 @@ BackMaker.prototype.updateDesigner = async function (queryArr, option = { selfMo
   try {
     const [ whereQuery, updateQuery ] = queryArr;
 
+    if (typeof updateQuery !== "object" || updateQuery === null) {
+      throw new Error("invalid updateQuery");
+    }
+    if (updateQuery["null"] !== undefined) {
+      delete updateQuery["null"];
+    }
+
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
@@ -1847,6 +1871,7 @@ BackMaker.prototype.updateDesigner = async function (queryArr, option = { selfMo
     return "success";
   } catch (e) {
     console.log(e);
+    return "fail";
   }
 }
 
@@ -2233,6 +2258,13 @@ BackMaker.prototype.updateProject = async function (queryArr, option = { selfMon
   try {
     const [ whereQuery, updateQuery ] = queryArr;
 
+    if (typeof updateQuery !== "object" || updateQuery === null) {
+      throw new Error("invalid updateQuery");
+    }
+    if (updateQuery["null"] !== undefined) {
+      delete updateQuery["null"];
+    }
+
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
@@ -2244,6 +2276,7 @@ BackMaker.prototype.updateProject = async function (queryArr, option = { selfMon
     return "success";
   } catch (e) {
     console.log(e);
+    return "fail";
   }
 }
 
@@ -2447,6 +2480,13 @@ BackMaker.prototype.updateAspirant = async function (queryArr, option = { selfMo
   try {
     const [ whereQuery, updateQuery ] = queryArr;
 
+    if (typeof updateQuery !== "object" || updateQuery === null) {
+      throw new Error("invalid updateQuery");
+    }
+    if (updateQuery["null"] !== undefined) {
+      delete updateQuery["null"];
+    }
+
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
@@ -2458,6 +2498,7 @@ BackMaker.prototype.updateAspirant = async function (queryArr, option = { selfMo
     return "success";
   } catch (e) {
     console.log(e);
+    return "fail";
   }
 }
 
@@ -2658,6 +2699,13 @@ BackMaker.prototype.updateBuilder = async function (queryArr, option = { selfMon
   try {
     const [ whereQuery, updateQuery ] = queryArr;
 
+    if (typeof updateQuery !== "object" || updateQuery === null) {
+      throw new Error("invalid updateQuery");
+    }
+    if (updateQuery["null"] !== undefined) {
+      delete updateQuery["null"];
+    }
+
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
       await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
@@ -2669,6 +2717,7 @@ BackMaker.prototype.updateBuilder = async function (queryArr, option = { selfMon
     return "success";
   } catch (e) {
     console.log(e);
+    return "fail";
   }
 }
 
@@ -3254,6 +3303,13 @@ BackMaker.prototype.updateHistory = async function (method, queryArr, option = {
     const [ whereQuery, updateQuery ] = queryArr;
     let collection;
 
+    if (typeof updateQuery !== "object" || updateQuery === null) {
+      throw new Error("invalid updateQuery");
+    }
+    if (updateQuery["null"] !== undefined) {
+      delete updateQuery["null"];
+    }
+
     if (/client/gi.test(method)) {
       collection = "clientHistory";
     } else if (/designer/gi.test(method)) {
@@ -3277,6 +3333,7 @@ BackMaker.prototype.updateHistory = async function (method, queryArr, option = {
     return "success";
   } catch (e) {
     console.log(e);
+    return "fail";
   }
 }
 

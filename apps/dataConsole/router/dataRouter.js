@@ -8132,8 +8132,8 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
         thisHistories = await selfMongo.db(db).collection(historyCollection).find(whereQuery).project({ cliid: 1, manager: 1, _id: 0 }).toArray();
         contractProjectsCopied = contractProjects.toNormal();
 
-        managers = [ ...new Set(thisHistories.map((o) => { return o.manager.trim() }).filter((str) => { return str !== '' && str !== '-' })) ];
-        managers.sort();
+        managers = await back.setMemberObj({ getMode: true, selfMongo: selfCoreMongo });
+        managers = managers.filter((member) => { return member.roles.includes("CX") }).map((member) => { return member.name });
         managers.push("미지정");
         managers.push("total");
   
@@ -8252,7 +8252,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
           // current clients
           currentClients = targetClients.filter((client) => {
             return client.requests.some(({ analytics }) => { return /^[응장]/gi.test(analytics.response.status) })
-          })
+          });
           reportObject.currentClients = [];
           for (let manager of managers) {
             if (manager === "total") {
@@ -8279,17 +8279,17 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
             if (manager === "total") {
               reportObject.contractPossible.push({
                 manager,
-                value: currentClients.filter((c) => { return c.row.possible > 0 }).length,
+                value: currentClients.filter((c) => { return c.requests[0].analytics.response.possible === "높음" }).length,
               })
             } else if (manager === "미지정") {
               reportObject.contractPossible.push({
                 manager,
-                value: currentClients.filter((c) => { return c.row.possible > 0 }).filter((c) => { return !managers.includes(c.history.manager) }).length,
+                value: currentClients.filter((c) => { return c.requests[0].analytics.response.possible === "높음" }).filter((c) => { return !managers.includes(c.history.manager) }).length,
               })
             } else {
               reportObject.contractPossible.push({
                 manager,
-                value: currentClients.filter((c) => { return c.row.possible > 0 }).filter((c) => { return c.history.manager === manager }).length,
+                value: currentClients.filter((c) => { return c.requests[0].analytics.response.possible === "높음" }).filter((c) => { return c.history.manager === manager }).length,
               })
             }
           }
