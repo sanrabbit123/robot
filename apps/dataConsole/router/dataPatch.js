@@ -529,10 +529,6 @@ DataPatch.prototype.clientStandard = function () {
       name: "우선 순위",
       width: 80,
     },
-    memo: {
-      name: "간단 메모",
-      width: 160,
-    },
     hahaSend: {
       name: "하하 발송",
       width: 100,
@@ -540,6 +536,10 @@ DataPatch.prototype.clientStandard = function () {
     next: {
       name: "1차 응대",
       width: 100,
+    },
+    memo: {
+      name: "응대 후 피드백",
+      width: 160,
     },
     proposalSend: {
       name: "추천서 발송",
@@ -2574,7 +2574,7 @@ DataPatch.prototype.clientMap = function () {
     proposalDesigners: { name: "추천한 디자이너", position: "null", type: "constant", searchBoo: false },
     possible: { name: "계약 가능성", position: "requests.0.analytics.response.possible", type: "string", items: [ "낮음", "애매", "높음" ], searchBoo: false },
     priority: { name: "우선 순위", position: "requests.0.analytics.response.priority", type: "string", items: [ "하", "중", "상" ], searchBoo: false },
-    memo: { name: "간단 메모", position: "requests.0.analytics.response.memo", type: "string", searchBoo: false },
+    memo: { name: "응대 후 피드백", position: "requests.0.analytics.response.memo", type: "string", searchBoo: false },
     standardDate: { name: "기준일", position: "null", type: "constant", searchBoo: false },
   };
   return map;

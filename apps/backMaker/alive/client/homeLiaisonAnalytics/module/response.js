@@ -90,6 +90,11 @@ const Response = function (response) {
     "애매",
     "낮음",
   ], false);
+  this.target = new Menu(response.target, [
+    "타겟",
+    "애매",
+    "해당 없음",
+  ], false);
   this.memo = response.memo;
 }
 
@@ -203,6 +208,7 @@ Response.prototype.toNormal = function () {
   obj.designers = this.designers.toNormal();
   obj.priority = this.priority.toNormal();
   obj.possible = this.possible.toNormal();
+  obj.target = this.target.toNormal();
   obj.memo = this.memo;
   return obj;
 }

@@ -174,27 +174,71 @@ DevContext.prototype.launching = async function () {
 
     
 
+
+    
     
 
-
+    // await this.MONGOCONSOLEC.connect();
 
     // const selfMongo = this.MONGOC;
     // const db = "miro81";
     // const collection = "client";
     // const clients = await selfMongo.db(db).collection(collection).find({}).toArray();
+    // const dailyClients = await this.MONGOCONSOLEC.db(db).collection("dailySales").find({}).toArray();
+
     // let whereQuery, updateQuery;
+    // let thisObject;
+    // let flatBase;
+    // let priority, possible, target;
+    // let possibleArr;
+    // let priorityArr;
+    // let targetArr;
+
+    // possibleArr = [ "낮음", "높음" ];
+    // priorityArr = [
+    //   "하",
+    //   "중",
+    //   "상",
+    // ];
+    // targetArr = [
+    //   "해당 없음",
+    //   "애매",
+    //   "타겟",
+    // ];
+
+    // flatBase = dailyClients.map((obj) => { return obj.cliids }).flat();
 
     // for (let client of clients) {
     //   whereQuery = { cliid: client.cliid };
     //   updateQuery = {};
 
+    //   thisObject = flatBase.find((o) => { return o.cliid === client.cliid });
+    //   if (thisObject === undefined) {
+    //     priority = "하";
+    //     possible = "낮음";
+    //     target = "해당 없음";
+    //   } else {
+    //     possible = possibleArr[thisObject.possible];
+    //     priority = priorityArr[thisObject.priority];
+    //     target = targetArr[thisObject.target];
+    //   }
+
     //   for (let i = 0; i < client.requests.length; i++) {
+    //     updateQuery["requests." + String(i) + ".analytics.response.priority"] = priority;
+    //     updateQuery["requests." + String(i) + ".analytics.response.possible"] = possible;
+    //     updateQuery["requests." + String(i) + ".analytics.response.target"] = target;
     //     updateQuery["requests." + String(i) + ".analytics.response.memo"] = "";
     //   }
 
     //   await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
     //   console.log(whereQuery, updateQuery);
     // }
+
+
+    
+
+    // await this.MONGOCONSOLEC.close();
+
 
 
 

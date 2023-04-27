@@ -88,6 +88,7 @@ module.exports = {
             designers: [],
             priority: "하",
             possible: "낮음",
+            target: "해당 없음",
             memo: "",
           },
           date: {
