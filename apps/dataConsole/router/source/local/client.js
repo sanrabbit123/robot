@@ -6805,6 +6805,49 @@ ClientJs.prototype.communicationRender = function () {
     }
   ]);
   communication.setItem([
+    () => { return "하하 발송"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let cliid, thisCase, serid, thisHistory, callBoo, liteBoo, inspectionArr;
+        let requestNumber;
+        let caseTong;
+        let answer;
+        let updateQuery;
+        let name;
+
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            cliid = (await GeneralJs.prompt("고객 아이디를 입력하세요!")).trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        } else {
+          cliid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        caseTong = [];
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+              caseTong.push(c);
+            }
+          }
+        }
+        if (thisCase !== null) {
+          if (window.confirm(thisCase.name + " 고객님께 하하 알림톡을 전송합니다. 확실합니까?")) {
+            ajaxJson({ mode: "lowLow", cliid: cliid }, "/salesClient", { equal: true }).catch((err) => {
+              console.log(err);
+            });
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+  communication.setItem([
     () => { return "순수 부재중 알림"; },
     function () {
       return true;
