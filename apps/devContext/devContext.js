@@ -175,18 +175,12 @@ DevContext.prototype.launching = async function () {
 
     // open ai 개선
 
-    // english to korean
-    // korean to english
-
-
-
     // dall-e
     // whisper
 
 
+    await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/centrexSession", { data: null }, { headers: { "Content-Type": "application/json" } });
 
-
-    
 
     // await this.MONGOCONSOLEC.connect();
 

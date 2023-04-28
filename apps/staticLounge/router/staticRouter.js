@@ -46,6 +46,12 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   this.designerPhotoConst = "사진_등록_포트폴리오";
   this.designerFolderConst = "디자이너";
 
+  this.centrex = {
+    host: "centrex.uplus.co.kr",
+    sessionConst: "PHPSESSID",
+    sessionValue: "1df507d66618fa05fd4e82bf26176c73",
+  };
+
   this.vaildHost = [
     this.address.frontinfo.host,
     this.address.secondinfo.host,
@@ -1584,17 +1590,18 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
 StaticRouter.prototype.rou_post_recordBackup = function () {
   const instance = this;
   const address = this.address;
-  const { errorLog, fileSystem, shellExec, shellLink, requestSystem, dateToString, uniqueValue, binaryRequest } = this.mother;
+  const { errorLog, fileSystem, shellExec, shellLink, requestSystem, dateToString, uniqueValue, binaryRequest, emergencyAlarm } = this.mother;
   const { staticConst, sambaToken, homeliaisonOfficeConst, designerFolderConst } = this;
+  const { centrex: { host, sessionConst, sessionValue } } = this;
   const storeMother = staticConst + homeliaisonOfficeConst + "/통화녹취파일";
   const recordBackupExecute = async function () {
     const jsdom = require("jsdom");
     const { JSDOM } = jsdom;
     const urls = {
-      init: "https://centrex.uplus.co.kr/premium",
-      login: "https://centrex.uplus.co.kr/premium/PHP/web_login.php",
-      list: "https://centrex.uplus.co.kr/premium/backoffice/record_list.html",
-      delete: "https://centrex.uplus.co.kr/premium/PHP/deleteRecordFile.php"
+      init: "https://" + host + "/premium",
+      login: "https://" + host + "/premium/PHP/web_login.php",
+      list: "https://" + host + "/premium/backoffice/record_list.html",
+      delete: "https://" + host + "/premium/PHP/deleteRecordFile.php"
     };
     const splitToken = "__split__";
     const tempFolder = process.cwd() + "/temp";
@@ -1615,22 +1622,8 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
       let downloadedFiles;
       let errorBoo;
       let safeNum;
-  
-      url = urls.init;
-      res = await requestSystem(url);
-  
-      dom = new JSDOM(res.data);
-  
-      token = dom.window.document.querySelectorAll("input")[2].value;
-      session = res.headers["set-cookie"][0].split(';')[0];
-      idsave = 1;
-      id = address.officeinfo.phone.total.number;
-      pass = address.officeinfo.phone.total.password;
-  
-      url = urls.login;
-      res = await requestSystem(url, { token, idsave, id, pass }, { headers: { Cookie: session } });
-  
-      console.log(res.data);
+
+      session = sessionConst + "=" + sessionValue;
 
       url = urls.list;
       res = await requestSystem(url, {}, { method: "get", headers: { Cookie: session } });
@@ -1762,9 +1755,14 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
               break;
             }
           } while (log === false);
-          await errorLog("record backup and delete done");
+
+          if (!log) {
+            throw new Error("session expired");
+          }
+
+          await emergencyAlarm("record backup and delete success");
         } catch (e) {
-          await errorLog("record backup and delete error : " + e.message);
+          await emergencyAlarm("record backup and delete error : " + e.message);
         }
       }
       
@@ -1776,6 +1774,40 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
 
     } catch (e) {
       errorLog("Static lounge 서버 문제 생김 (rou_post_recordBackup): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_centrexSession = function () {
+  const instance = this;
+  const { centrex: { host, sessionConst, sessionValue } } = this;
+  const { errorLog, requestSystem } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/centrexSession" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      const url = "https://" + host + "/premium/backoffice/main.su.html";
+      await requestSystem(url, {}, {
+        method: "get",
+        headers: {
+          Cookie: sessionConst + "=" + sessionValue
+        }
+      });
+      res.send(JSON.stringify({ message: "reload done" }));
+    } catch (e) {
+      errorLog("Static lounge 서버 문제 생김 (rou_post_centrexSession): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
