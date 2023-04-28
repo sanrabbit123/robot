@@ -174,23 +174,60 @@ DevContext.prototype.launching = async function () {
     
 
 
-
-    
-
-
-
-
-
     // open ai 개선
 
     // dall-e
     // whisper
 
 
+    // ga4
+
+    // const envConst = "GOOGLE_APPLICATION_CREDENTIALS";
+    // const dir = process.cwd() + "/apps/googleAPIs";
+    // const tokenDir = dir + "/python/google/tokens";
+    // const iamSecrets = tokenDir + "/iam_secrets.json";
+  
+    // process.env[envConst] = iamSecrets;
+    
+    // const { BetaAnalyticsDataClient } = require('@google-analytics/data');
+
+    // const analyticsDataClient = new BetaAnalyticsDataClient();
+    // const propertyId = "227717726";
+
+    // async function runReport() {
+    //   const [ response ] = await analyticsDataClient.runReport({
+    //     property: `properties/${propertyId}`,
+    //     dateRanges: [
+    //       {
+    //         startDate: '2023-04-26',
+    //         endDate: 'today',
+    //       },
+    //     ],
+    //     dimensions: [
+    //       {
+    //         name: 'city',
+    //       },
+    //     ],
+    //     metrics: [
+    //       {
+    //         name: 'screenPageViews',
+    //       },
+    //     ],
+    //   });
+    //   console.log(response.rows.map(({ dimensionValues, metricValues }) => { return metricValues }))
+    // }
+
+    // await runReport();
+
+
 
 
 
     
+
+
+
+
 
 
     
