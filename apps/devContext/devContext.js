@@ -179,8 +179,8 @@ DevContext.prototype.launching = async function () {
     // whisper
 
 
-    await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/centrexSession", { data: null }, { headers: { "Content-Type": "application/json" } });
 
+    
 
     // await this.MONGOCONSOLEC.connect();
 
