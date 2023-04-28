@@ -158,7 +158,7 @@ OpenAiAPIs.prototype.fairyGPT = function (fromId, input) {
       instance.shellGPT(input, false).then((result) => {
         return requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
           toId: fromId,
-          text: ("`한글`\n" + result.korean + "\n\n-\n\n`영어`\n" + "```" + result.english + "```"),
+          text: ("`한글`\n" + result.korean + "\n\n`영어`\n" + "```" + result.english + "```"),
           noIdMode: true,
         }, {
           headers: {
