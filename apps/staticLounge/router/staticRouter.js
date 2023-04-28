@@ -1630,9 +1630,11 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
       url = urls.login;
       res = await requestSystem(url, { token, idsave, id, pass }, { headers: { Cookie: session } });
   
+      console.log(res.data);
+
       url = urls.list;
       res = await requestSystem(url, {}, { method: "get", headers: { Cookie: session } });
-  
+
       dom = new JSDOM(res.data);
       inputs = dom.window.document.querySelector('form').children;
       postData = {};
@@ -1756,7 +1758,10 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
           do {
             log = await recordBackupExecute();
             safeNum++;
-          } while (log === false || safeNum < 10);
+            if (safeNum > 20) {
+              break;
+            }
+          } while (log === false);
           await errorLog("record backup and delete done");
         } catch (e) {
           await errorLog("record backup and delete error : " + e.message);

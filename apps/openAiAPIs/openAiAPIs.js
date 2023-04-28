@@ -14,17 +14,14 @@ const OpenAiAPIs = function (mother = null, back = null, address = null) {
   this.dir = process.cwd() + "/apps/openAiAPIs";
   this.token = "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";
   this.host = "api.openai.com";
-  this.port = 443;
 }
 
 OpenAiAPIs.prototype.chatGPT = function (input) {
   const instance = this;
   const { requestSystem } = this.mother;
-  const { token, host, port } = this;
+  const { token, host } = this;
   const path = "/v1/chat/completions";
   const model = "gpt-3.5-turbo";
-  let options;
-  let req;  
   return new Promise((resolve, reject) => {
     requestSystem("https://" + host + path, {
       model,
@@ -45,7 +42,7 @@ OpenAiAPIs.prototype.chatGPT = function (input) {
     }).catch((err) => {
       reject(err.response.data);
     });
-  })
+  });
 }
 
 OpenAiAPIs.prototype.fairyGPT = function (fromId, input) {
