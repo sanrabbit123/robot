@@ -177,53 +177,11 @@ DevContext.prototype.launching = async function () {
 
     // english to korean
     // korean to english
+
+
+
     // dall-e
     // whisper
-
-
-    
-    // process.env.GOOGLE_APPLICATION_CREDENTIALS = process.cwd() + "/apps/googleAPIs/python/google/tokens/iam_secrets.json";
-
-    // const projectId = "rich-chiller-250415";
-    // const location = "global";
-
-    // const { TranslationServiceClient } = require('@google-cloud/translate');
-    // const translationClient = new TranslationServiceClient();
-
-    // async function translateText() {
-    //   const request = {
-    //     parent: `projects/${projectId}/locations/${location}`,
-    //     contents: [ `세련되고 독특한 디자인의, 서울숲 트리마제 56py 홈스타일링
-
-    //     고객님은 홈스타일링을 통해 한강뷰의 멋을 강조하고, 집 전체의 대폭적인 변화를 원하셨어요. 또한 본인에 대한 선물을 주고 싶은 욕구도 크셨습니다. 따라서 부분 시공과 전체 홈스타일링을 진행하게 되었습니다. 자택에는 집무공간과 휴식공간을 모두 두고 싶어하셨습니다. 낮에는 사무실로, 밤에는 고급호텔처럼 편안한 휴식을 취할 수 있는 공간, 저녁에는 거실에 설치한 바에서 와인을 마시며 지인들과 함께 한강을 감상하면서 사업 아이디어를 나누고 싶어하셨습니다. 특히 홈바는 한번 방문한 사람이라면 재방문을 유도할 정도로 멋지게 꾸미길 원하셨습니다.
-        
-    //     선호하시는 스타일로는 각 공간마다 독창성이 있으면서도 너무 튀지 않는 디자인을 원하셨습니다. 안방은 해외 출장에서 자주 묵는 5성급 호텔 침실의 고급스러움과 편안함을 강조하고, 집무공간인 서재는 젊고 세련된 분위기를 연출하면서도 실용적이어야 했습니다. 거실은 한강뷰를 최대한 살릴 수 있도록 럭셔리호텔 바를 연상시키는 화려하면서도 무겁지 않은 분위기로 꾸미길 원하셨습니다. 홈바는 특히 세련되고 독특한 디자인을 선호하셨습니다. 기존의 개인 운동실은 드레스룸이자 게스트룸으로 변신하여 멋지게 꾸미길 원하셨습니다.
-    //     ` ],
-    //     mimeType: 'text/plain',
-    //     sourceLanguageCode: 'ko',
-    //     targetLanguageCode: 'en',
-    //   };
-    //   const [ response ] = await translationClient.translateText(request);
-    //   console.log(response);
-    //   for (const translation of response.translations) {
-    //     console.log(`Translation: ${translation.translatedText}`);
-    //   }
-    // }
-
-    // await translateText();
-
-
-    // await requestSystem("https://home-liaison.serveftp.com:3000/recordBackup", { data: null }, {
-    //   headers: {
-    //     "Content-Type": "application/json"
-    //   }
-    // })
-
-
-
-
-
-
 
 
 
