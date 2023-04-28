@@ -1783,7 +1783,7 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
 StaticRouter.prototype.rou_post_centrexSession = function () {
   const instance = this;
   const { centrex: { host, sessionConst, sessionValue } } = this;
-  const { errorLog, requestSystem } = this.mother;
+  const { errorLog, requestSystem, emergencyAlarm } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/centrexSession" ];
@@ -1799,12 +1799,36 @@ StaticRouter.prototype.rou_post_centrexSession = function () {
         throw new Error("post ban");
       }
       const url = "https://" + host + "/premium/backoffice/main.su.html";
-      await requestSystem(url, {}, {
+      const successKeyPoint = [
+        ".onButton",
+        "libgoff3",
+        "MM_swapImgRestore",
+        "MM_swapImage",
+        "MM_preloadImages",
+        "MM_findObj",
+        "lgdacom_high.css",
+        "info_box_bottom.gif",
+        "btn_03_04",
+        "popup_custom_coloring.html",
+        "number_manage_list",
+        "OVKEY",
+        "popup_call.html",
+        "popup_conference.html",
+      ];
+      let response, resultBoo;
+
+      response = await requestSystem(url, {}, {
         method: "get",
         headers: {
           Cookie: sessionConst + "=" + sessionValue
         }
       });
+
+      resultBoo = successKeyPoint.map((str) => { return new RegExp(str, "g"); }).every((re) => { return re.test(response.data) });
+      if (!resultBoo) {
+        emergencyAlarm("centrex token expired").catch((err) => { console.log(err); });
+      }
+
       res.send(JSON.stringify({ message: "reload done" }));
     } catch (e) {
       errorLog("Static lounge 서버 문제 생김 (rou_post_centrexSession): " + e.message).catch((e) => { console.log(e); });
