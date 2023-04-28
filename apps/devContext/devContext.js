@@ -172,8 +172,8 @@ DevContext.prototype.launching = async function () {
 
     
 
-    
-
+    const ai = new OpenAiAPIs();
+    console.log(await ai.chatGPT("안녕?"));
 
 
     
