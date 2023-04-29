@@ -199,28 +199,28 @@ DevContext.prototype.launching = async function () {
     //     property: `properties/${propertyId}`,
     //     dateRanges: [
     //       {
-    //         startDate: '2023-04-26',
+    //         startDate: '2023-03-06',
     //         endDate: 'today',
     //       },
     //     ],
     //     dimensions: [
     //       {
-    //         name: 'city',
+    //         name: 'streamId',
     //       },
     //     ],
     //     metrics: [
     //       {
-    //         name: 'screenPageViews',
+    //         name: 'sessions',
     //       },
     //     ],
     //   });
-    //   console.log(response.rows.map(({ dimensionValues, metricValues }) => { return metricValues }))
+    //   console.log(response.rows.map(({ dimensionValues, metricValues }) => { return dimensionValues }))
     // }
 
     // await runReport();
 
 
-
+    
 
 
     
