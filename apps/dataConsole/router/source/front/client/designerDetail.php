@@ -5,6 +5,8 @@ $general = new GeneralPhp();
 $host = $general->host;
 $protocol = $general->protocol;
 $hostLink = $protocol.$host;
+$sessionId = $general->setSessionId();
+$clientInfo = $general->getClientInfo();
 
 if (!isset($_GET["desid"])) {
   header("Location: ".$hostLink."/designer.php");
@@ -31,7 +33,7 @@ for ($i = 0; $i < count($contentsList); $i++) {
   }
 }
 
-$html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink);
+$html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo);
 echo $html;
 
 ?>

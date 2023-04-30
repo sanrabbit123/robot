@@ -8,9 +8,9 @@ class GeneralPhp {
   public $backHost = "__backHost__";
   public $protocol = "https://";
 
-  function __construct () {}
+  function __construct() {}
 
-  public function bastHtml ($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink) {
+  public function bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo) {
 
     $gtagManagerId = "GTM-W6FSR8M";
     $gtagId = "UA-97880990-1";
@@ -45,6 +45,12 @@ class GeneralPhp {
       $html .= '<script type="application/ld+json">{"@context": "http:\/\/schema.org","@id": "'.$hostLink.'#","@type": "ProfessionalService","url": "'.$hostLink.'","name": "홈리에종 | 디자이너와 함께하는 홈스타일링 플랫폼","description": "홈리에종은 홈스타일링 플랫폼으로, 집을 디자인하는 새로운 방법을 제안합니다.","sameAs": ["https:\/\/www.facebook.com\/homeliaison","https:\/\/blog.naver.com\/homeliaison","https:\/\/www.instagram.com\/homeliaison"],"address": {"@type": "PostalAddress","streetAddress": "279, Dongmak-ro","addressLocality": "Seoul","addressRegion": "Mapo-gu","postalCode": "04151","addressCountry": "KR"},"telephone": "02-2039-2252","image": "'.$hostLink.'/share/lb-image-0.jpg","openingHoursSpecification": {"@type": "OpeningHoursSpecification","dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens": "09:00","closes": "18:00"}}</script>'."\n";
     }
     $html .= '<title>'.$titleString.'</title><style></style>'."\n";
+
+    // session and client info
+    $html .= '<script>'."\n";
+    $html .= 'window.homeliaisonSessionId = "'.$sessionId.'";'."\n";
+    $html .= 'window.homeliaisonClientInfo = '.$clientInfo.';'."\n";
+    $html .= '</script>'."\n";
 
     // google
     $html .= '<!-- Google Tag Manager -->'."\n";
@@ -107,7 +113,7 @@ class GeneralPhp {
     return $html;
   }
 
-  public function hiddenHtml ($hiddenString) {
+  public function hiddenHtml($hiddenString) {
     $html = '<header class="hiddenobject"><h1>홈스타일링 플랫폼 : 홈리에종</h1></header>'."\n";
     $html .= '<nav class="hiddenobject"><a href="/about.php" class="hiddenobject">홈스타일링 서비스 소개</a>'."\n";
     $html .= '<a href="/portfolio.php" class="hiddenobject"><b>홈스타일링</b> 디자이너 주거 인테리어 디자인 포트폴리오</a>'."\n";
@@ -135,7 +141,7 @@ class GeneralPhp {
     return $html;
   }
 
-  public function mysqlGet ($query) {
+  public function mysqlGet($query) {
     $connection = new mysqli("localhost", "__user__", "__password__", "__database__");
     $connection->set_charset("utf8");
 
@@ -265,6 +271,102 @@ class GeneralPhp {
     $dataJson = json_encode($data);
     $response = $this->ajaxJson($dataJson, $url);
     return $response->contentsArr;
+  }
+
+  public function getRandomHex(int $bytesNumber) {
+    return bin2hex(openssl_random_pseudo_bytes($bytesNumber));
+  }
+
+  public function getHomeLiaisonSessionId() {
+    $str0 = $this->getRandomHex(8);
+    $str1 = $this->getRandomHex(4);
+    $token = "_";
+    return "homeliaison".$token.$str0.$token.(string)(time()).$token.$str1;
+  }
+
+  public function setSessionId() {
+    $sessionName = "HLSESSIONID";
+    $expire = time() + (86400 * 365 * 30);
+    if (!isset($_COOKIE["HLSESSIONID"])) {
+      $newId = $this->getHomeLiaisonSessionId();
+      setcookie($sessionName, $newId, $expire, "/", '.'.$this->host, true, true);
+      return $newId;
+    } else {
+      return $_COOKIE["HLSESSIONID"];
+    }
+  }
+
+  public function getClientIp() {
+    $ipaddress = '';
+    if (getenv("HTTP_CLIENT_IP")) {
+      $ipaddress = getenv("HTTP_CLIENT_IP");
+    } else if (getenv("HTTP_X_FORWARDED_FOR")) {
+      $ipaddress = getenv("HTTP_X_FORWARDED_FOR");
+    } else if (getenv("HTTP_X_FORWARDED")) {
+      $ipaddress = getenv("HTTP_X_FORWARDED");
+    } else if (getenv("HTTP_FORWARDED_FOR")) {
+      $ipaddress = getenv("HTTP_FORWARDED_FOR");
+    } else if (getenv("HTTP_FORWARDED")) {
+      $ipaddress = getenv("HTTP_FORWARDED");
+    } else if (getenv("REMOTE_ADDR")) {
+      $ipaddress = getenv("REMOTE_ADDR");
+    } else {
+      if (isset($_SERVER["REMOTE_ADDR"])) {
+        $ipaddress = $_SERVER["REMOTE_ADDR"];
+      } else if (isset($_SERVER["HTTP_X_SIMPLEXI"])) {
+        $ipaddress = $_SERVER["HTTP_X_SIMPLEXI"];
+      } else {
+        $ipaddress = "(not set)";
+      }
+    }
+    return $ipaddress;
+  }
+
+  public function getClientUserAgent() {
+    $userAgent = "";
+    if (getenv("http_user_agnet")) {
+      $userAgent = getenv("http_user_agnet");
+    } else {
+      if (isset($_SERVER["HTTP_USER_AGENT"])) {
+        $userAgent = $_SERVER["HTTP_USER_AGENT"];
+      } else {
+        $userAgent = "(not set)";
+      }
+    }
+    return $userAgent;
+  }
+
+  public function getClientReferer() {
+    $referer = "";
+    if (getenv("http_referer")) {
+      $referer = getenv("http_referer");
+    } else {
+      if (isset($_SERVER["HTTP_REFERER"])) {
+        $referer = $_SERVER["HTTP_REFERER"];
+      } else {
+        $referer = "(not set)";
+      }
+    }
+    return $referer;
+  }
+
+  public function getClientRequestUrl () {
+    $requestUrl = "";
+    if (isset($_SERVER["REQUEST_URI"])) {
+      $requestUrl = $_SERVER["REQUEST_URI"];
+    } else {
+      $requestUrl = "(not set)";
+    }
+    return $requestUrl;
+  }
+
+  public function getClientInfo() {
+    $clientInfo = array();
+    $clientInfo["ip"] = $this->getClientIp();
+    $clientInfo["userAgent"] = $this->getClientUserAgent();
+    $clientInfo["referer"] = $this->getClientReferer();
+    $clientInfo["requestUrl"] = $this->getClientRequestUrl();
+    return json_encode($clientInfo);
   }
 
 }

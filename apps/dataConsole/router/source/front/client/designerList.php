@@ -5,6 +5,8 @@ $general = new GeneralPhp();
 $host = $general->host;
 $protocol = $general->protocol;
 $hostLink = $protocol.$host;
+$sessionId = $general->setSessionId();
+$clientInfo = $general->getClientInfo();
 
 $name = "designerList";
 $fullLink = $hostLink."/designer.php";
@@ -20,7 +22,7 @@ for ($i = 0; $i < count($designerList); $i++) {
   $hiddenString .= "\n".'<a href="/desdetail.php?desid='.$designerList[$i][0].'">'.$designerList[$i][1]." 디자이너 상세 페이지".'</a>';
 }
 
-$html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink);
+$html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo);
 echo $html;
 
 ?>

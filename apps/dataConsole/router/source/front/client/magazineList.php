@@ -5,6 +5,8 @@ $general = new GeneralPhp();
 $host = $general->host;
 $protocol = $general->protocol;
 $hostLink = $protocol.$host;
+$sessionId = $general->setSessionId();
+$clientInfo = $general->getClientInfo();
 
 $magazineList = $general->getMagazineList();
 
@@ -20,6 +22,6 @@ for ($i = 0; $i < count($magazineList); $i++) {
   $hiddenString .= '<a href="/magdetail.php?mid='.$magazineList[$i]->mid.'" class="hiddenobject">'.$magazineList[$i]->contents->detail[0]->text[0]." ".$magazineList[$i]->contents->detail[0]->text[1].'</a>';
 }
 
-$html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink);
+$html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo);
 echo $html;
 ?>

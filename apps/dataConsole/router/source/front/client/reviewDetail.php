@@ -5,6 +5,8 @@ $general = new GeneralPhp();
 $host = $general->host;
 $protocol = $general->protocol;
 $hostLink = $protocol.$host;
+$sessionId = $general->setSessionId();
+$clientInfo = $general->getClientInfo();
 
 if (!isset($_GET["pid"])) {
   header("Location: ".$hostLink."/review.php");
@@ -22,6 +24,6 @@ $imageString = "/list_image/portp".$contentsList[0][0]."/".$contentsList[0][4].$
 
 $hiddenString = '<h1>'.$contentsList[0][1].'</h1><p>'.$contentsList[0][3].'</p>';
 
-$html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink);
+$html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo);
 echo $html;
 ?>

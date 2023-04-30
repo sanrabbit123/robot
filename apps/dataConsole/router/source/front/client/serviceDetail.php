@@ -5,6 +5,8 @@ $general = new GeneralPhp();
 $host = $general->host;
 $protocol = $general->protocol;
 $hostLink = $protocol.$host;
+$sessionId = $general->setSessionId();
+$clientInfo = $general->getClientInfo();
 
 $name = "serviceDetail";
 $fullLink = $hostLink."/service.php";
@@ -33,6 +35,6 @@ if ($thisMode === "furnishing") {
 
 $imageString = "/list_image/portpp18/t19p18.jpg";
 
-$html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink);
+$html = $general->bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo);
 echo $html;
 ?>
