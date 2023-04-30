@@ -11,6 +11,11 @@ $clientInfo = $general->getClientInfo();
 $name = "frontNotfound";
 $fullLink = $hostLink."/notfound.php";
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "잘못 들어오셨습니다! | 홈리에종";
 $descriptionString = "잘못 들어오셨습니다! | 홈리에종";
 $imageString = "/list_image/portpp18/t19p18.jpg";

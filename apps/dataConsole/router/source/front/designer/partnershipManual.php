@@ -11,6 +11,11 @@ $clientInfo = $general->getClientInfo();
 $name = "partnershipManual";
 $fullLink = $hostLink."/designer/partnership.php";
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "홈리에종 파트너십";
 $descriptionString = "홈리에종 파트너십";
 $imageString = "/list_image/portpp18/t19p18.jpg";

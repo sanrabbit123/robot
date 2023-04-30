@@ -11,6 +11,11 @@ $clientInfo = $general->getClientInfo();
 $name = "designerReport";
 $fullLink = $hostLink."/designer/report.php";
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "정산 리포트";
 $descriptionString = "정산 리포트";
 $imageString = "/list_image/portpp18/t19p18.jpg";

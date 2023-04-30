@@ -18,6 +18,11 @@ $magazine = $general->getMagazine($mid);
 $name = "magazineDetail";
 $fullLink = $hostLink."/magdetail.php?mid=".$mid;
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = $magazine->contents->detail[0]->text[0]." ".$magazine->contents->detail[0]->text[1]." | 홈리에종";
 $descriptionString = $magazine->contents->detail[1]->text[0];
 $imageString = "/list_image/magaz".$magazine->mid.$magazine->contents->init[1];

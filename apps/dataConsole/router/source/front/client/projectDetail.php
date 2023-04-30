@@ -19,6 +19,11 @@ $client = $general->getClient($project->cliid);
 $name = "projectDetail";
 $fullLink = $hostLink."/project.php?proid=".$proid;
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "프로젝트 상세 | 홈리에종";
 $descriptionString = $client->name." 고객님 프로젝트 상세 페이지입니다!";
 $imageString = "/list_image/portpp18/t19p18.jpg";

@@ -19,6 +19,11 @@ $client = $general->getClient($project->cliid);
 $name = "designerProposal";
 $fullLink = $hostLink."/proposal.php?proid=".$proid;
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "디자이너 추천서 | 홈리에종";
 $descriptionString = $client->name." 고객님을 위한 서비스와 디자이너 추천 페이지입니다.";
 $imageString = "/list_image/portpp18/t19p18.jpg";

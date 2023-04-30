@@ -11,6 +11,11 @@ $clientInfo = $general->getClientInfo();
 $name = "processDetail";
 $fullLink = $hostLink."/designer/process.php";
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "프로젝트 상세";
 $descriptionString = "프로젝트 상세";
 $imageString = "/list_image/portpp18/t19p18.jpg";

@@ -11,6 +11,11 @@ $clientInfo = $general->getClientInfo();
 $name = "requestList";
 $fullLink = $hostLink."/designer/requests.php";
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "홈스타일링 의뢰서 목록";
 $descriptionString = "홈스타일링 의뢰서 목록";
 $imageString = "/list_image/portpp18/t19p18.jpg";

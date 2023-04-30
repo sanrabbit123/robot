@@ -11,6 +11,11 @@ $clientInfo = $general->getClientInfo();
 $name = "designManual";
 $fullLink = $hostLink."/designer/provision.php";
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "홈스타일링 제공 내역";
 $descriptionString = "홈스타일링 제공 내역";
 $imageString = "/list_image/portpp18/t19p18.jpg";

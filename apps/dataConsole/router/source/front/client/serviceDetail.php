@@ -11,6 +11,10 @@ $clientInfo = $general->getClientInfo();
 $name = "serviceDetail";
 $fullLink = $hostLink."/service.php";
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
 
 $thisMode = "furnishing";
 if (!isset($_GET["mode"])) {

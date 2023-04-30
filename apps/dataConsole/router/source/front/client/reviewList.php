@@ -11,6 +11,11 @@ $clientInfo = $general->getClientInfo();
 $name = "reviewList";
 $fullLink = $hostLink."/review.php";
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "홈리에종 고객 리뷰 | 홈리에종";
 $descriptionString = "홈리에종 고객 리뷰 리스트 페이지 입니다! | 홈리에종";
 $imageString = "/list_image/portpp18/t19p18.jpg";

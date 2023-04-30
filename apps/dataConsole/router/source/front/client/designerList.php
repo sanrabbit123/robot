@@ -11,6 +11,11 @@ $clientInfo = $general->getClientInfo();
 $name = "designerList";
 $fullLink = $hostLink."/designer.php";
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "디자이너 리스트 | 홈리에종";
 $descriptionString = "홈리에종 협업 디자이너 리스트 페이지 입니다! | 홈리에종";
 $imageString = "/list_image/portpp18/t19p18.jpg";

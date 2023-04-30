@@ -11,6 +11,11 @@ $clientInfo = $general->getClientInfo();
 $name = "designerLogin";
 $fullLink = $hostLink."/designer/login.php";
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "디자이너 콘솔";
 $descriptionString = "디자이너 콘솔";
 $imageString = "/list_image/portpp18/t19p18.jpg";

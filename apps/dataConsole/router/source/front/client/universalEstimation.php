@@ -19,6 +19,11 @@ $needs = $_GET["needs"];
 $name = "universalEstimation";
 $fullLink = $hostLink."/estimation.php?cliid=".$cliid."&needs=".$needs;
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "결제 안내 | 홈리에종";
 $descriptionString = $client->name." 고객님의 결제 안내 페이지입니다.";
 $imageString = "/list_image/portpp18/t19p18.jpg";

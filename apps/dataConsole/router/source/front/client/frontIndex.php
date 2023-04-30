@@ -11,6 +11,11 @@ $clientInfo = $general->getClientInfo();
 $name = "frontIndex";
 $fullLink = $hostLink."/index.php";
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "홈리에종 | 디자이너와 함께 하는 홈스타일링";
 $descriptionString = "홈리에종은 홈스타일링 전문 플랫폼으로, 집을 디자인하는 새로운 방법을 제안합니다.";
 $imageString = "/list_image/portpp18/t19p18.jpg";

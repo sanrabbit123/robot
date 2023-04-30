@@ -11,6 +11,11 @@ $clientInfo = $general->getClientInfo();
 $name = "designerAbout";
 $fullLink = $hostLink."/designer/about.php";
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "디자이너 체크리스트";
 $descriptionString = "디자이너 체크리스트";
 $imageString = "/list_image/portpp18/t19p18.jpg";

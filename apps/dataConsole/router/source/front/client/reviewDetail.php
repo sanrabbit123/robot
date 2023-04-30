@@ -18,6 +18,11 @@ $contentsList = $general->mysqlGet("SELECT pid, reviewtitlemain, reviewtitlesub,
 $name = "reviewDetail";
 $fullLink = $hostLink."/revdetail.php?pid=".$pid;
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = $contentsList[0][2]." | 홈리에종";
 $descriptionString = explode("\n", $contentsList[0][3])[0];
 $imageString = "/list_image/portp".$contentsList[0][0]."/".$contentsList[0][4].$contentsList[0][0].".jpg";

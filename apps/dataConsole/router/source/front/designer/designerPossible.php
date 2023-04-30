@@ -11,6 +11,11 @@ $clientInfo = $general->getClientInfo();
 $name = "designerPossible";
 $fullLink = $hostLink."/designer/possible.php";
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "가능 일정 관리";
 $descriptionString = "홈스타일링 프로젝트 가능 일정 관리 콘솔";
 $imageString = "/list_image/portpp18/t19p18.jpg";

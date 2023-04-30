@@ -19,6 +19,11 @@ $client = $general->getClient($project->cliid);
 $name = "firstMeeting";
 $fullLink = $hostLink."/meeting.php?proid=".$proid;
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = "현장 미팅 안내 | 홈리에종";
 $descriptionString = $client->name." 고객님 프로젝트의 현장 미팅 안내입니다!";
 $imageString = "/list_image/portpp18/t19p18.jpg";

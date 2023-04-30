@@ -19,6 +19,11 @@ $contentsList = $general->mysqlGet("SELECT pid, portfoliotitlemain, reviewtitlem
 $name = "designerDetail";
 $fullLink = $hostLink."/desdetail.php?desid=".$desid;
 
+if (!($sessionId)) {
+  $general->clearAllCookies();
+  header("Location: ".$fullLink);
+}
+
 $titleString = $designerList[0][1]." 디자이너 | 홈리에종";
 $descriptionString = "홈리에종 디자이너, ".$designerList[0][1]." 디자이너의 상세 내용 페이지 입니다! | 홈리에종";
 $imageString = "/list_image/portp".$designerList[0][3]."/".$designerList[0][4].$designerList[0][3].".jpg";
