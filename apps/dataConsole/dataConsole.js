@@ -531,6 +531,7 @@ DataConsole.prototype.renderFrontPhp = async function () {
   const address = this.address;
   const staticFolder = process.env.HOME + "/static";
   const staticMiddleFolder = staticFolder + "/middle";
+  const frontGeneralDir = this.frontDir + "/general";
   const frontDir = this.frontDir + "/client";
   const DataPatch = require(`${this.dir}/router/dataPatch.js`);
   const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
@@ -579,6 +580,8 @@ DataConsole.prototype.renderFrontPhp = async function () {
     let input;
     let phpScript;
     let generalPhpScript;
+    let generalTargets;
+    let generalTargetScript;
 
     motherTong = [];
     middleTong = [];
@@ -621,8 +624,15 @@ DataConsole.prototype.renderFrontPhp = async function () {
 
     command += `;scp ${process.cwd()}/temp/general.php ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`;
 
-    console.log(command);
+    generalTargets = await fileSystem(`readDir`, [ frontGeneralDir ]);
+    generalTargets = generalTargets.filter((str) => { return str !== ".DS_Store" });
+    for (let target of generalTargets) {
+      generalTargetScript = await fileSystem(`readString`, [ frontGeneralDir + "/" + target ]);
+      await fileSystem(`write`, [ `${process.cwd()}/temp/${target}`, generalTargetScript ]);
+      command += `scp ${process.cwd()}/temp/${target} ${address.frontinfo.user}@${address.frontinfo.host}:/${address.frontinfo.user}/www/;`;
+    }
 
+    console.log(command);
     input = await consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
     if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
 
@@ -646,6 +656,7 @@ DataConsole.prototype.renderDesignerPhp = async function () {
   const staticFolder = process.env.HOME + "/static";
   const staticMiddleFolder = staticFolder + "/middle";
   const frontClientDir = this.frontDir + "/client";
+  const frontGeneralDir = this.frontDir + "/general";
   const frontDir = this.frontDir + "/designer";
   const DataPatch = require(`${this.dir}/router/dataPatch.js`);
   const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
