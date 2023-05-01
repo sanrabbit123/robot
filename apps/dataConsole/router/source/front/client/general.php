@@ -375,7 +375,11 @@ class GeneralPhp {
       foreach ($cookies as $cookie) {
         $parts = explode('=', $cookie);
         $name = trim($parts[0]);
+        setcookie($name, '', time() - 3600);
         setcookie($name, '', time() - 3600, "/");
+        setcookie($name, '', time() - 3600, "/", $this->host);
+        setcookie($name, '', time() - 3600, "/", "www.".$this->host);
+        setcookie($name, '', time() - 3600, "/", ".".$this->host);
         unset($_COOKIE[$name]);
       }
     }
