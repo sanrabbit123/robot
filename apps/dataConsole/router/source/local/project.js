@@ -4101,7 +4101,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                       break;
                                     }
                                   }
-                                  url = BACKHOST + "/middle/estimation?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',') + "&view=test&request=" + String(thisIndex);
+                                  url = FRONTHOST + "/estimation.php?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',') + "&view=test&request=" + String(thisIndex);
                                   GeneralJs.blankHref(url);
                                 }
                               },
@@ -4247,7 +4247,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                       break;
                                     }
                                   }
-                                  url = BACKHOST + "/middle/estimation?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',') + "&view=test&request=" + String(thisIndex);
+                                  url = FRONTHOST + "/estimation.php?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',') + "&view=test&request=" + String(thisIndex);
                                   GeneralJs.blankHref(url);
                                 }
                               },

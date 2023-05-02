@@ -2410,7 +2410,7 @@ ReviewDetailJs.prototype.launching = async function (loading) {
           instance.reviewContentsBox();
           instance.reviewRelativeBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "ReviewDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+          await GeneralJs.ajaxJson({ message: "ReviewDetailJs.launching.ghostClientLaunching : " + e.message + "\n\n" + JSON.stringify(instance.contentsArr)}, BACKHOST + "/errorLog");
         }
       }
     });

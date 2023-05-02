@@ -1998,10 +1998,122 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   });
 
 
-
+  // // 10 : margin
+  // createNode({
+  //   mother: rightBox,
+  //   style: {
+  //     display: "block",
+  //     position: "relative",
+  //     marginBottom: String(blockMarginBottom) + ea,
+  //     height: String(moduleHeight * marginRatio) + ea,
+  //   }
+  // });
   
+  // // 11
+  // createNode({
+  //   mother: rightBox,
+  //   style: {
+  //     display: "block",
+  //     position: "relative",
+  //     marginBottom: String(blockMarginBottom) + ea,
+  //     height: String(moduleHeight * 5) + ea,
+  //   },
+  //   children: [
+  //     {
+  //       style: {
+  //         display: "inline-block",
+  //         position: "relative",
+  //         width: String(circleRadius * 2) + ea,
+  //         height: String(circleRadius * 2) + ea,
+  //         marginRight: String(circleBetween) + ea,
+  //         borderRadius: String(circleRadius) + ea,
+  //         background: colorChip.green,
+  //         top: String(circleTop) + ea,
+  //         verticalAlign: "top",
+  //       }
+  //     },
+  //     {
+  //       text: "예산",
+  //       style: {
+  //         display: "inline-block",
+  //         position: "relative",
+  //         top: String(mainTop) + ea,
+  //         fontSize: String(mainSize) + ea,
+  //         fontWeight: String(mainWeight),
+  //         color: colorChip.black,
+  //         verticalAlign: "top",
+  //       }
+  //     },
+  //     {
+  //       style: {
+  //         display: "inline-flex",
+  //         position: "absolute",
+  //         top: String(0) + ea,
+  //         left: String(leftGrayType2) + ea,
+  //         width: withOut(leftGrayType2, ea),
+  //         height: "auto",
+  //         flexDirection: "column",
+  //         justifyContent: "start",
+  //         alignItems: "start",
+  //       },
+  //       children: [
+  //         {
+  //           text: [
+  //             "인테리어에 사용하실 <b%전체 예산을 알려주세요!%b>",
+  //             "(스타일링, 시공 포함 / 가전 예산은 제외)"
+  //           ].join("\n"),
+  //           style: {
+  //             display: "block",
+  //             position: "relative",
+  //             fontSize: String(descriptionSize) + ea,
+  //             fontWeight: String(descriptionWeight),
+  //             lineHeight: String(descriptionLineHeight),
+  //             color: colorChip.black,
+  //             top: String(submitTextTop) + ea,
+  //           },
+  //           bold: {
+  //             fontSize: String(descriptionSize) + ea,
+  //             fontWeight: String(descriptionBoldWeight),
+  //             color: colorChip.black
+  //           }
+  //         },
+  //         {
+  //           style: {
+  //             display: "block",
+  //             position: "relative",
+  //             height: String(49) + ea,
+  //             cursor: "pointer",
+  //             width: withOut(0, ea),
+  //           },
+  //           children: [
+  //             {
+  //               style: {
+  //                 position: "absolute",
+  //                 top: String(28) + ea,
+  //                 height: String(9) + ea,
+  //                 borderRadius: String(9 + 1) + ea,
+  //                 background: colorChip.gray3,
+  //                 width: withOut(0, ea),
+  //                 left: String(0) + ea,
+  //               }
+  //             }
+  //           ]
+  //         },
+  //       ]
+  //     },
+  //   ]
+  // });
 
-
+  // // 10 : margin
+  // createNode({
+  //   mother: rightBox,
+  //   style: {
+  //     display: "block",
+  //     position: "relative",
+  //     marginBottom: String(blockMarginBottom) + ea,
+  //     height: String(moduleHeight * marginRatio) + ea,
+  //   }
+  // });
 
   // 10
   createNode({
