@@ -2616,7 +2616,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       requestObject["requests.0.request.etc.channel"] = "인터넷 검색";
       requestObject["requests.0.request.timeline"] = new Date();
 
-      requestObject["requests.0.analytics.googleAnalytics.userType"] = sessionId.join(", ");
+      requestObject["requests.0.analytics.session"] = sessionId;
 
       message = '';
       ifOverlap = await back.getClientsByQuery({ phone }, { selfMongo });
