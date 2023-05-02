@@ -246,7 +246,7 @@ LogRouter.prototype.rou_post_receiveLog = function () {
       const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
       const rawUserAgent = req.useragent;
       const { source: userAgent, browser, os, platform } = rawUserAgent;
-      const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
+      const referer = (req.headers.referer === undefined ? "" : req.headers.referer);
       let ipObj, json;
 
       ipObj = await ipParsing(ip);
@@ -256,7 +256,7 @@ LogRouter.prototype.rou_post_receiveLog = function () {
 
       json = {
         network: {
-          referrer,
+          referer,
           userAgent,
           browser,
           os,
@@ -758,21 +758,38 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
+      const collection = "homeliaisonAnalytics";
       const rawUserAgent = req.useragent;
       const { source: userAgent, browser, os, platform } = rawUserAgent;
-      const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
       let name;
       let ipObj, custom;
+      let ip, referer;
+      let thisData;
+      let thisId;
 
-      console.log(equalJson(req.body));
+      thisData = equalJson(req.body);
+      if (typeof thisData.info === "object" && thisData.info !== null) {
+        ip = thisData.info.ip;
+        referer = thisData.info.referer;
+      } else {
+        ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
+        referer = (req.headers.referer === undefined ? "" : req.headers.referer);  
+      }
 
-      name = "fromServer_" + req.body.action;
+      if (typeof thisData.id === "string") {
+        thisId = thisData.id;
+      } else {
+        thisId = "(not set)";
+      }
+
+      name = "fromServer_" + thisData.action;
 
       ipObj = await ipParsing(ip);
       custom = {
+        id: thisData.id,
         network: {
-          referrer,
+          ip,
+          referer,
           userAgent,
           browser,
           os,
@@ -782,11 +799,13 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
         },
         date: (new Date()).valueOf(),
         data: {
-          page: req.body.page,
-          action: req.body.action,
-          raw: req.body.data,
+          page: thisData.page,
+          action: thisData.action,
+          raw: thisData.data,
         }
       };
+      thisData.date = new Date();
+      thisData.network = { ...ipObj };
 
       instance.facebook.conversionEvent({
         name,
@@ -795,7 +814,9 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
           userAgent: userAgent,
         },
         custom
-      }).catch((err) => { console.log(err); })
+      }).catch((err) => { console.log(err); });
+
+      console.log(thisData);
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {

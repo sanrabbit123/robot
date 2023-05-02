@@ -6466,11 +6466,18 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
         };
         resolve(json);
       } else {
-        obj.id = window.homeliaisonSessionId;
-        obj.info = window.homeliaisonClientInfo;
-        if (typeof obj.id === "string" && /^homeliaison/i.test(obj.id)) {
+        if (typeof window.homeliaisonSessionId === "string" && /^homeliaison/i.test(window.homeliaisonSessionId)) {
+          obj.id = window.homeliaisonSessionId;
+          obj.info = {
+            ip: window.homeliaisonClientInfo.ip,
+            userAgent: window.homeliaisonClientInfo.userAgent,
+            referer: window.encodeURIComponent(window.homeliaisonClientInfo.referer),
+            requestUrl: window.encodeURIComponent(window.homeliaisonClientInfo.requestUrl),
+          };
           GeneralJs.ajaxJson(obj, LOGHOST + "/getAnalytics").then(() => {
             const json = {
+              id: obj.id,
+              info: obj.info,
               page: obj.page,
               action: obj.action,
               standard: obj.standard.valueOf(),
@@ -6486,6 +6493,13 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
                 "event_label": JSON.stringify(json),
               });
             }
+            resolve({
+              date: {
+                standard: new Date(),
+                now: new Date(),
+              },
+              data: json,
+            });
           }).catch((err) => {
             reject(err);
           })

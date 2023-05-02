@@ -612,8 +612,8 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
         date: dateToString(new Date(), true),
       },
     }).then((json) => {
-      base.instance.googleClientId = json.data.id;
-      base.instance.mother.googleClientId = json.data.id;
+      base.instance.clientSessionId = json.data.id;
+      base.instance.mother.clientSessionId = json.data.id;
       base.instance.userInfo = json;
     }).catch((err) => {
       console.log(err);

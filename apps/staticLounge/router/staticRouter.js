@@ -168,7 +168,7 @@ StaticRouter.prototype.rou_post_listFiles = function () {
       target = target.replace(new RegExp(sambaToken, "gi"), staticConst);
       list = await leafParsing(target);
       if (!Array.isArray(list)) {
-        throw new Error(list.error);
+        throw new Error(list);
       }
 
       list = list.map((i) => {

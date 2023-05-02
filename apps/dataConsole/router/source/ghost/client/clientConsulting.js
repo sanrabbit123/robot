@@ -2357,16 +2357,20 @@ ClientConsultingJs.prototype.finalSubmit = function () {
           map.push(tempObj)
         }
 
-        if (typeof instance.googleClientId === "string") {
+        if (typeof instance.clientSessionId === "string") {
           map.push({
             property: "googleId",
-            value: instance.googleClientId
+            value: instance.clientSessionId,
           });
         } else {
-          map.push({
-            property: "googleId",
-            value: ""
-          });
+          if (typeof window.homeliaisonSessionId === "string") {
+            map.push({
+              property: "googleId",
+              value: window.homeliaisonSessionId,
+            });
+          } else {
+            window.location.href = FRONTHOST + "/sessionClear.php";
+          }
         }
 
         if (boo) {
