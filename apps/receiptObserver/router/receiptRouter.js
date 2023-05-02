@@ -1261,8 +1261,9 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
               thisProject = await back.getProjectById(target2.proid, { selfMongo: instance.mongo });
               thisClient = await back.getClientById(target2.cliid, { selfMongo: instance.mongo });
 
+              messageSend(`${target2.name} 실장님이 계좌 이체로 ${thisClient.name} 고객님 현장의 ${target2.goodname}를 결제하셨습니다.`, "#301_console", true).catch((err) => { throw new Error(err.message); });
               messageSend(`${target2.name} 실장님이 계좌 이체로 ${thisClient.name} 고객님 현장의 ${target2.goodname}를 결제하셨습니다.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
-
+              
               whereQuery = { proid: target2.proid };
               updateQuery = {};
               updateQuery["contents.payment.status"] = "결제 완료";

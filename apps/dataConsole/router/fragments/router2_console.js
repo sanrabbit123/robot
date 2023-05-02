@@ -7278,6 +7278,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
       let contractProjectsCopied;
       let monthProjects;
       let thisDateCopied;
+      let totalProjects;
 
       startDate = new Date(Number(startYear), Number(startMonth) - 1, 1, 8, 0, 0);
       endDate = new Date(Number(endYear), Number(endMonth) - 1, 1, 10, 0, 0);
@@ -7383,6 +7384,13 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
             return (obj.process.contract.first.date.valueOf() > fromDate.valueOf() && obj.process.contract.first.date.valueOf() < toDate.valueOf()) && (obj.process.contract.first.date.valueOf() <= toDateStandard.valueOf());
           });
           for (let project of monthProjects) {
+            project.history = thisHistories.find((h) => { return h.cliid === project.cliid });
+          }
+
+          totalProjects = contractProjectsCopied.filter((obj) => {
+            return (obj.process.contract.first.date.valueOf() > startDate.valueOf() && obj.process.contract.first.date.valueOf() < toDate.valueOf()) && (obj.process.contract.first.date.valueOf() <= toDateStandard.valueOf());
+          });
+          for (let project of totalProjects) {
             project.history = thisHistories.find((h) => { return h.cliid === project.cliid });
           }
 
@@ -7500,17 +7508,17 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
             if (manager === "total") {
               reportObject.totalContracts.push({
                 manager,
-                value: targetClients.filter((client) => { return client.project !== undefined && client.project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf() }).length,
+                value: totalProjects.length,
               })
             } else if (manager === "미지정") {
               reportObject.totalContracts.push({
                 manager,
-                value: targetClients.filter((client) => { return client.project !== undefined && client.project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf() }).filter((c) => { return !managers.includes(c.history.manager) }).length,
+                value: totalProjects.filter((p) => { return !managers.includes(p.history.manager) }).length,
               })
             } else {
               reportObject.totalContracts.push({
                 manager,
-                value: targetClients.filter((client) => { return client.project !== undefined && client.project.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf() }).filter((c) => { return c.history.manager === manager }).length,
+                value: totalProjects.filter((p) => { return p.history.manager === manager }).length,
               })
             }
           }

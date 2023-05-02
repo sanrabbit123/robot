@@ -10148,7 +10148,8 @@ ProcessDetailJs.prototype.paymentByCard = function () {
                 updateQuery["contents.payment.calculation.info.to"] = designer.designer;
                 
                 await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
-                await ajaxJson({ message: designer.designer + " 실장님이 콘솔을 통해 " + client.name + " 고객님 촬영비를 결제하셨습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
+                await ajaxJson({ message: designer.designer + " 실장님이 콘솔을 통해 " + client.name + " 고객님 촬영비를 카드 결제하셨습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
+                await ajaxJson({ message: designer.designer + " 실장님이 콘솔을 통해 " + client.name + " 고객님 촬영비를 카드 결제하셨습니다!", channel: "#700_operation" }, BACKHOST + "/sendSlack");
 
                 window.alert("결제가 완료 되었습니다!");
                 window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + proid;
@@ -16978,7 +16979,8 @@ ProcessDetailJs.prototype.launching = async function (loading) {
           updateQuery["contents.payment.calculation.info.to"] = instance.designer.designer;
 
           await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
-          await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + instance.client.name + " 고객님 촬영비를 결제하셨습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
+          await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + instance.client.name + " 고객님 카드 촬영비를 결제하셨습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
+          await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + instance.client.name + " 고객님 카드 촬영비를 결제하셨습니다!", channel: "#700_operation" }, BACKHOST + "/sendSlack");
 
           window.alert("결제가 완료 되었습니다!");
           window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
