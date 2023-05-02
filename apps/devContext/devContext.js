@@ -173,13 +173,72 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
 
     
 
-    
 
+
+
+
+
+
+    /*
+
+    await this.MONGOCONSOLEC.connect();
+
+    const selfLocalMongo = this.MONGOCONSOLEC;
+    const selfMongo = this.MONGOC;
+    const designers = (await back.getDesignersByQuery({}, { selfMongo })).toNormal().filter((obj) => { return !/해지/gi.test(obj.information.contract.status) });
+    const services = [
+      "s2011_aa01s",
+      "s2011_aa02s",
+      "s2011_aa03s",
+      "s2011_aa04s",
+    ]
+    const servicesName = [
+      "홈퍼니싱",
+      "홈스타일링",
+      "토탈 스타일링",
+      "엑스트라 스타일링"
+    ]
+    const pyeongTarget = [
+      30,
+      31, 
+      32,
+      33
+    ];
+    let report;
+    let matrix;
+    let sheetsId;
+
+    matrix = [
+      [
+        "아이디",
+        "디자이너",
+        "서비스",
+        "평수",
+        "가격",
+      ]
+    ]
+
+    for (let x = 0; x < designers.length; x++) {
+      report = await work.designerFeeTable(designers[x].desid, { selfMongo, selfLocalMongo });
+      for (let y = 0; y < services.length; y++) {
+        for (let z = 0; z < pyeongTarget.length; z++) {
+          matrix.push([ designers[x].desid, designers[x].designer, servicesName[y], pyeongTarget[z], report.service[services[y]].example.find((obj) => { return obj.pyeong === pyeongTarget[z] }).price ]);
+        }
+      }
+    }
+
+
+    sheetsId = "13-NKMFOnxnFE103vrenD8TWJ9mgFy3KA5KEIOM8-tBU";
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
+    console.log(matrix);
     
+    await this.MONGOCONSOLEC.close();
+
+    */
 
     // remove google analytics
 

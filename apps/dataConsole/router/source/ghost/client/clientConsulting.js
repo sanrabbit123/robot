@@ -378,6 +378,17 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   let bigAddressBlurEvent;
   let commentsFocusEvent, commentsBlurEvent;
   let greenNoticeWidth3, greenNoticeBottom3;
+  let barDescriptionLingHeight;
+  let barDescriptionTextTop;
+  let barDescriptionSubSize;
+  let barTongHeight, barTongMarginTop;
+  let barTop, barHeight;
+  let barFactorWeight;
+  let barFactorTop;
+  let barCircleTop, barCircleRadius;
+  let barFactorA0Left, barFactorA1Left, barFactorA2Left;
+  let barFactorB0Left;
+  let mobileGrayTextAreaTop;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -429,7 +440,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   grayTop = <%% 0, 0, 0, 0, 0 %%>;
   grayInputTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.2 %%>;
   grayHeight = <%% 32, 32, 31, 31, 7 %%>;
-  grayBigHeight = <%% 114, 114, 122, 124, 36 %%>;
+  grayBigHeight = <%% 156, 137, 136, 135, 38 %%>;
   grayTextAreaTop = <%% 3, 3, 3, 3, 1.3 %%>;
   grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
 
@@ -532,7 +543,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   greenNoticeWidth0 = <%% 96, 96, 96, 96, 28 %%>;
   greenNoticeWidth1 = <%% 120, 120, 120, 120, 28 %%>;
   greenNoticeWidth3 = <%% 210, 210, 190, 190, 48.5 %%>;
-  greenNoticeBottom3 = <%% 124, 124, 132, 134, 38 %%>;
+  greenNoticeBottom3 = <%% 164, 144, 144, 142, 40 %%>;
 
   calendarWidth = <%% 260, 250, 230, 210, 56 %%>;
   calendarTop = <%% 41, 41, 41, 40, 8.2 %%>;
@@ -577,7 +588,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   reviewTitleMarginBottom = <%% 32, 32, 32, 32, 32 %%>;
 
   leftBoxWidth = <%% 398, 250, 209, 160, 0 %%>;
-  textAreaBlockHeight = <%% 118, 118, 118, 118, 37 %%>;
+  textAreaBlockHeight = <%% 156, 136, 133, 130, 44.2 %%>;
 
   descriptionSize = <%% 15, 14, 13, 12, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -607,6 +618,33 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   submitWeight = <%% 400, 400, 400, 400, 400 %%>;
   submitLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   submitTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+
+  // new var ================================================
+
+  barDescriptionLingHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>
+  barDescriptionTextTop = <%% -1, -1, 1, 1, 0.5 %%>;
+  barDescriptionSubSize = <%% 13, 12, 11, 10, 2.6 %%>;
+
+  barTongHeight = <%% 50, 48, 40, 40, 12 %%>;
+  barTongMarginTop = <%% 12, 10, 10, 8, 3.4 %%>;
+
+  barTop = <%% 28, 28, 24, 20, 5 %%>;
+  barHeight = <%% 9, 9, 9, 9, 2 %%>;
+  barFactorWeight = <%% 700, 700, 700, 700, 700 %%>;
+  barFactorTop = <%% 3, 3, 2, 1, 0 %%>;
+
+  barCircleTop = <%% 26, 26, 23, 19, 4.8 %%>;
+  barCircleRadius = <%% 6, 6, 5, 5, 1.2 %%>
+
+  barFactorA0Left = <%% 183, 142, 122, 92, 18.6 %%>;
+  barFactorA1Left = <%% 349, 268, 227, 168, 33.6 %%>;
+  barFactorA2Left = <%% 518, 397, 341, 253, 49.4 %%>;
+
+  barFactorB0Left = <%% 332, 250, 211, 154, 28.6 %%>;
+
+  mobileGrayTextAreaTop = 7.8;
+
+  // new var ================================================
 
   contents = {
     main: [
@@ -1996,126 +2034,562 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       },
     ]
   });
-
-
-  // // 10 : margin
-  // createNode({
-  //   mother: rightBox,
-  //   style: {
-  //     display: "block",
-  //     position: "relative",
-  //     marginBottom: String(blockMarginBottom) + ea,
-  //     height: String(moduleHeight * marginRatio) + ea,
-  //   }
-  // });
-  
-  // // 11
-  // createNode({
-  //   mother: rightBox,
-  //   style: {
-  //     display: "block",
-  //     position: "relative",
-  //     marginBottom: String(blockMarginBottom) + ea,
-  //     height: String(moduleHeight * 5) + ea,
-  //   },
-  //   children: [
-  //     {
-  //       style: {
-  //         display: "inline-block",
-  //         position: "relative",
-  //         width: String(circleRadius * 2) + ea,
-  //         height: String(circleRadius * 2) + ea,
-  //         marginRight: String(circleBetween) + ea,
-  //         borderRadius: String(circleRadius) + ea,
-  //         background: colorChip.green,
-  //         top: String(circleTop) + ea,
-  //         verticalAlign: "top",
-  //       }
-  //     },
-  //     {
-  //       text: "예산",
-  //       style: {
-  //         display: "inline-block",
-  //         position: "relative",
-  //         top: String(mainTop) + ea,
-  //         fontSize: String(mainSize) + ea,
-  //         fontWeight: String(mainWeight),
-  //         color: colorChip.black,
-  //         verticalAlign: "top",
-  //       }
-  //     },
-  //     {
-  //       style: {
-  //         display: "inline-flex",
-  //         position: "absolute",
-  //         top: String(0) + ea,
-  //         left: String(leftGrayType2) + ea,
-  //         width: withOut(leftGrayType2, ea),
-  //         height: "auto",
-  //         flexDirection: "column",
-  //         justifyContent: "start",
-  //         alignItems: "start",
-  //       },
-  //       children: [
-  //         {
-  //           text: [
-  //             "인테리어에 사용하실 <b%전체 예산을 알려주세요!%b>",
-  //             "(스타일링, 시공 포함 / 가전 예산은 제외)"
-  //           ].join("\n"),
-  //           style: {
-  //             display: "block",
-  //             position: "relative",
-  //             fontSize: String(descriptionSize) + ea,
-  //             fontWeight: String(descriptionWeight),
-  //             lineHeight: String(descriptionLineHeight),
-  //             color: colorChip.black,
-  //             top: String(submitTextTop) + ea,
-  //           },
-  //           bold: {
-  //             fontSize: String(descriptionSize) + ea,
-  //             fontWeight: String(descriptionBoldWeight),
-  //             color: colorChip.black
-  //           }
-  //         },
-  //         {
-  //           style: {
-  //             display: "block",
-  //             position: "relative",
-  //             height: String(49) + ea,
-  //             cursor: "pointer",
-  //             width: withOut(0, ea),
-  //           },
-  //           children: [
-  //             {
-  //               style: {
-  //                 position: "absolute",
-  //                 top: String(28) + ea,
-  //                 height: String(9) + ea,
-  //                 borderRadius: String(9 + 1) + ea,
-  //                 background: colorChip.gray3,
-  //                 width: withOut(0, ea),
-  //                 left: String(0) + ea,
-  //               }
-  //             }
-  //           ]
-  //         },
-  //       ]
-  //     },
-  //   ]
-  // });
-
-  // // 10 : margin
-  // createNode({
-  //   mother: rightBox,
-  //   style: {
-  //     display: "block",
-  //     position: "relative",
-  //     marginBottom: String(blockMarginBottom) + ea,
-  //     height: String(moduleHeight * marginRatio) + ea,
-  //   }
-  // });
-
   // 10
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(moduleHeight) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: colorChip.green,
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "계약 형태",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+        }
+      },
+      {
+        class: [ inputClassName ],
+        attribute: {
+          toggle: "on",
+          property: "contract",
+        },
+        event: {
+          click: checkboxClickEvent0
+        },
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(leftCheck0) + ea,
+          height: String(100) + '%',
+          verticalAlign: "top",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.gray3),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(0),
+            }
+          },
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.green),
+            style: {
+              position: "absolute",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              left: String(0),
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(1),
+            }
+          },
+          {
+            text: "자가",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              marginLeft: String(checkboxBetween) + ea,
+              top: String(mainTop) + ea,
+              fontSize: String(mainSize) + ea,
+              fontWeight: String(checkboxWeight),
+              color: colorChip.green,
+              verticalAlign: "top",
+              cursor: "pointer",
+            }
+          },
+        ]
+      },
+      {
+        class: [ inputClassName ],
+        attribute: {
+          toggle: "off",
+          property: "contract",
+        },
+        event: {
+          click: checkboxClickEvent0
+        },
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(leftCheck1) + ea,
+          height: String(100) + '%',
+          verticalAlign: "top",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.gray3),
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(1),
+            }
+          },
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckBox(colorChip.green),
+            style: {
+              position: "absolute",
+              width: String(checkboxWidth) + ea,
+              top: String(checkboxTop) + ea,
+              left: String(0),
+              verticalAlign: "top",
+              cursor: "pointer",
+              opacity: String(0),
+            }
+          },
+          {
+            text: "전월세",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              marginLeft: String(checkboxBetween) + ea,
+              top: String(mainTop) + ea,
+              fontSize: String(mainSize) + ea,
+              fontWeight: String(checkboxWeight),
+              color: colorChip.black,
+              verticalAlign: "top",
+              cursor: "pointer",
+            }
+          },
+        ]
+      },
+    ]
+  });
+
+  // 11 : margin
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(moduleHeight * marginRatio) + ea,
+    }
+  });
+  
+  // 12
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(moduleHeight * 3) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: colorChip.green,
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "예산",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+        }
+      },
+      {
+        style: {
+          display: "inline-flex",
+          position: "absolute",
+          top: String(0) + ea,
+          left: String(leftGrayType2) + ea,
+          width: withOut(leftGrayType2, ea),
+          height: "auto",
+          flexDirection: "column",
+          justifyContent: "start",
+          alignItems: "start",
+        },
+        children: [
+          {
+            text: [
+              "인테리어에 사용할 <b%전체 예산을 알려주세요!%b>",
+              desktop ? "<u%* 스타일링, 시공을 모두 포함하는 예산 / 가전 예산은 제외%u>" : "<u%* 스타일링, 시공 모두 포함 예산 / 가전 제외%u>"
+            ].join("\n"),
+            style: {
+              display: "block",
+              position: "relative",
+              fontSize: String(descriptionSize) + ea,
+              fontWeight: String(descriptionWeight),
+              lineHeight: String(barDescriptionLingHeight),
+              color: colorChip.black,
+              top: String(barDescriptionTextTop) + ea,
+            },
+            bold: {
+              fontSize: String(descriptionSize) + ea,
+              fontWeight: String(descriptionBoldWeight),
+              color: colorChip.black
+            },
+            under: {
+              fontSize: String(barDescriptionSubSize) + ea,
+              fontWeight: String(descriptionWeight),
+              color: colorChip.green
+            },
+          },
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              height: String(barTongHeight) + ea,
+              cursor: "pointer",
+              width: desktop ? withOut(0, ea) : withOut(-1 * leftGrayType2, ea),
+              marginTop: String(barTongMarginTop) + ea,
+              left: mobile ? String(-1 * leftGrayType2) + ea : "",
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  top: String(barTop) + ea,
+                  height: String(barHeight) + ea,
+                  borderRadius: String(barHeight + 1) + ea,
+                  background: colorChip.gray3,
+                  width: withOut(0, ea),
+                  left: String(0) + ea,
+                }
+              },
+              {
+                text: desktop ? "1,000만원 이하" : "1천만원 이하",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(barDescriptionSubSize) + ea,
+                  fontWeight: String(barFactorWeight),
+                  color: colorChip.black,
+                  top: String(barFactorTop) + ea,
+                }
+              },
+              {
+                text: desktop ? "3,000만원" : "3천만원",
+                style: {
+                  position: "absolute",
+                  fontSize: String(barDescriptionSubSize) + ea,
+                  fontWeight: String(barFactorWeight),
+                  color: colorChip.black,
+                  top: String(barFactorTop) + ea,
+                  left: String(barFactorA0Left) + ea,
+                }
+              },
+              {
+                text: desktop ? "5,000만원" : "5천만원",
+                style: {
+                  position: "absolute",
+                  fontSize: String(barDescriptionSubSize) + ea,
+                  fontWeight: String(700),
+                  color: colorChip.black,
+                  top: String(barFactorTop) + ea,
+                  left: String(barFactorA1Left) + ea,
+                }
+              },
+              {
+                text: desktop ? "7,000만원" : "7천만원",
+                style: {
+                  position: "absolute",
+                  fontSize: String(barDescriptionSubSize) + ea,
+                  fontWeight: String(barFactorWeight),
+                  color: colorChip.black,
+                  top: String(barFactorTop) + ea,
+                  left: String(barFactorA2Left) + ea,
+                }
+              },
+              {
+                text: "1억원 이상",
+                style: {
+                  position: "absolute",
+                  fontSize: String(barDescriptionSubSize) + ea,
+                  fontWeight: String(barFactorWeight),
+                  color: colorChip.black,
+                  top: String(barFactorTop) + ea,
+                  right: String(0) + ea,
+                }
+              },
+              {
+                style: {
+                  position: "absolute",
+                  left: String(0) + ea,
+                  top: String(0) + ea,
+                  width: String(50) + '%',
+                  height: String(100) + '%',
+                  transition: "all 0s ease",
+                },
+                children: [
+                  {
+                    style: {
+                      position: "absolute",
+                      top: String(barTop) + ea,
+                      height: String(barHeight) + ea,
+                      borderRadius: String(barHeight + 1) + ea,
+                      background: colorChip.black,
+                      width: withOut(0, ea),
+                      left: String(0) + ea,
+                    }
+                  },
+                  {
+                    style: {
+                      position: "absolute",
+                      top: String(barCircleTop) + ea,
+                      right: String(-1 * barCircleRadius) + ea,
+                      width: String(barCircleRadius * 2) + ea,
+                      height: String(barCircleRadius * 2) + ea,
+                      borderRadius: String(barCircleRadius + 1) + ea,
+                      background: colorChip.white,
+                      border: "1px solid " + colorChip.gray4,
+                      cursor: "pointer",
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+        ]
+      },
+    ]
+  });
+
+  // 13 : margin
+  createNode({
+    mother: rightBox,
+    style: {
+      display: (media[2] || media[3]) ? "none" : "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(moduleHeight * marginRatio) + ea,
+    }
+  });
+
+  // 14
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(moduleHeight * 3) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(circleRadius * 2) + ea,
+          height: String(circleRadius * 2) + ea,
+          marginRight: String(circleBetween) + ea,
+          borderRadius: String(circleRadius) + ea,
+          background: colorChip.green,
+          top: String(circleTop) + ea,
+          verticalAlign: "top",
+        }
+      },
+      {
+        text: "가구",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(mainTop) + ea,
+          fontSize: String(mainSize) + ea,
+          fontWeight: String(mainWeight),
+          color: colorChip.black,
+          verticalAlign: "top",
+        }
+      },
+      {
+        style: {
+          display: "inline-flex",
+          position: "absolute",
+          top: String(0) + ea,
+          left: String(leftGrayType2) + ea,
+          width: withOut(leftGrayType2, ea),
+          height: "auto",
+          flexDirection: "column",
+          justifyContent: "start",
+          alignItems: "start",
+        },
+        children: [
+          {
+            text: [
+              "가구의 <b%재사용과 구매의 비율을 알려주세요!%b>",
+              desktop ? "<u%* 재배치 = 기존 가구를 재사용 / 구매 = 새로운 가구를 구매%u>" : "<u%* 재배치 = 기존 가구 재사용 / 구매 = 새로 구매%u>",
+            ].join("\n"),
+            style: {
+              display: "block",
+              position: "relative",
+              fontSize: String(descriptionSize) + ea,
+              fontWeight: String(descriptionWeight),
+              lineHeight: String(barDescriptionLingHeight),
+              color: colorChip.black,
+              top: String(barDescriptionTextTop) + ea,
+            },
+            bold: {
+              fontSize: String(descriptionSize) + ea,
+              fontWeight: String(descriptionBoldWeight),
+              color: colorChip.black
+            },
+            under: {
+              fontSize: String(barDescriptionSubSize) + ea,
+              fontWeight: String(descriptionWeight),
+              color: colorChip.green
+            },
+          },
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              height: String(barTongHeight) + ea,
+              cursor: "pointer",
+              width: desktop ? withOut(0, ea) : withOut(-1 * leftGrayType2, ea),
+              marginTop: String(barTongMarginTop) + ea,
+              left: mobile ? String(-1 * leftGrayType2) + ea : "",
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  top: String(barTop) + ea,
+                  height: String(barHeight) + ea,
+                  borderRadius: String(barHeight + 1) + ea,
+                  background: colorChip.gray3,
+                  width: withOut(0, ea),
+                  left: String(0) + ea,
+                }
+              },
+              {
+                text: "재배치",
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(barDescriptionSubSize) + ea,
+                  fontWeight: String(barFactorWeight),
+                  color: colorChip.black,
+                  top: String(barFactorTop) + ea,
+                }
+              },
+              {
+                text: "재배치 + 일부 구매",
+                style: {
+                  position: "absolute",
+                  fontSize: String(barDescriptionSubSize) + ea,
+                  fontWeight: String(barFactorWeight),
+                  color: colorChip.black,
+                  top: String(barFactorTop) + ea,
+                  left: String(barFactorB0Left) + ea,
+                }
+              },
+              {
+                text: "전체 구매",
+                style: {
+                  position: "absolute",
+                  fontSize: String(barDescriptionSubSize) + ea,
+                  fontWeight: String(barFactorWeight),
+                  color: colorChip.black,
+                  top: String(barFactorTop) + ea,
+                  right: String(0) + ea,
+                }
+              },
+              {
+                style: {
+                  position: "absolute",
+                  left: String(0) + ea,
+                  top: String(0) + ea,
+                  width: String(50) + '%',
+                  height: String(100) + '%',
+                  transition: "all 0s ease",
+                },
+                children: [
+                  {
+                    style: {
+                      position: "absolute",
+                      top: String(barTop) + ea,
+                      height: String(barHeight) + ea,
+                      borderRadius: String(barHeight + 1) + ea,
+                      background: colorChip.gradientGreen,
+                      width: withOut(0, ea),
+                      left: String(0) + ea,
+                    }
+                  },
+                  {
+                    style: {
+                      position: "absolute",
+                      top: String(barCircleTop) + ea,
+                      right: String(-1 * barCircleRadius) + ea,
+                      width: String(barCircleRadius * 2) + ea,
+                      height: String(barCircleRadius * 2) + ea,
+                      borderRadius: String(barCircleRadius + 1) + ea,
+                      background: colorChip.white,
+                      border: "1px solid " + colorChip.gray4,
+                      cursor: "pointer",
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+        ]
+      },
+    ]
+  });
+
+  // 15 : margin
+  createNode({
+    mother: rightBox,
+    style: {
+      display: "block",
+      position: "relative",
+      marginBottom: String(blockMarginBottom) + ea,
+      height: String(moduleHeight * marginRatio) + ea,
+    }
+  });
+
+  // 16
   createNode({
     mother: rightBox,
     style: {
@@ -2153,9 +2627,9 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       {
         style: {
           position: "absolute",
-          top: String(grayTextAreaTop) + ea,
-          left: String(leftGrayType2) + ea,
-          width: String(widthGrayType2) + ea,
+          top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
+          left: String(desktop ? leftGrayType2 : 0) + ea,
+          width: desktop ? String(widthGrayType2) + ea : withOut(0, ea),
           height: String(grayBigHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
@@ -2165,7 +2639,22 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         mode: "textarea",
         class: [ inputClassName ],
         attribute: {
-          placeholder: desktop ? "(예시)\n=> 시공: 도배, 조명만 부분적으로 원해요.\n=> 스타일링: 가구, 패브릭, 소품은 전체 구매를 해야 해요.\n=> 예산: 최대 00만원 이내로 하고 싶어요." : "(예시)\n시공: 도배, 조명만 부분적으로 원해요.\n스타일링: 가구, 패브릭, 소품은 전체 구매를 해야 해요.\n예산: 최대 00만원 이내로 하고 싶어요.",
+          placeholder: (desktop ? [
+            "스타일링, 예산, 시공 등의 요청사항을 적어주세요!",
+            "홈리에종은 스타일링 없이 시공만 하지 않습니다. 문의 전 고려해 주세요 :)",
+            "(예시)",
+            "=> 시공: 도배, 조명만 부분적으로 원해요.",
+            "=> 스타일링: 가구, 패브릭, 소품은 전체 구매를 해야 해요.",
+            "=> 예산: 최대 00만원 이내로 하고 싶어요.",
+          ].join("\n") : [
+            "스타일링, 예산, 시공 등의 요청사항을 적어주세요!",
+            "홈리에종은 스타일링 없이 시공만 하지 않습니다.",
+            "문의 전 고려해 주세요 :)",
+            "(예시)",
+            "시공: 도배, 조명만 부분적으로 원해요.",
+            "스타일링: 가구, 패브릭, 소품은 전체 구매를 해야 해요.",
+            "예산: 최대 00만원 이내로 하고 싶어요.",
+          ].join("\n")),
           property: "etc",
         },
         event: {
@@ -2174,9 +2663,9 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
         },
         style: {
           position: "absolute",
-          top: String(grayTextAreaTop + textareaTop) + ea,
-          left: String(leftGrayType2 + textareaLeft) + ea,
-          width: String(widthGrayType2 - (textareaLeft * 2)) + ea,
+          top: String((desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + textareaTop) + ea,
+          left: String((desktop ? leftGrayType2 : 0) + textareaLeft) + ea,
+          width: desktop ? String(widthGrayType2 - (textareaLeft * 2)) + ea : withOut(textareaLeft * 2, ea),
           height: String(grayBigHeight - (textareaTop * 1)) + ea,
           fontSize: String(grayLineBlockFontSize) + ea,
           fontWeight: String(grayLineBlockFontWeight),
