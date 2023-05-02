@@ -12,7 +12,6 @@ class GeneralPhp {
 
   public function bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo) {
 
-    $gtagManagerId = "GTM-W6FSR8M";
     $gtagId = "UA-97880990-1";
     $googleSearchId = "YRxCc6xhQlM3qTygta5Qw0CObJJrLDYmUE8_wCR0AQc";
     $naverSearchId = "59096f538ddb9a8704025cefc11269d504f62aac";
@@ -53,13 +52,6 @@ class GeneralPhp {
     $html .= '</script>'."\n";
 
     // google
-    $html .= '<!-- Google Tag Manager -->'."\n";
-    $html .= '<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({"gtm.start":'."\n";
-    $html .= 'new Date().getTime(),event:"gtm.js"});var f=d.getElementsByTagName(s)[0],'."\n";
-    $html .= 'j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";j.async=true;j.src='."\n";
-    $html .= '"https://www.googletagmanager.com/gtm.js?id="+i+dl;f.parentNode.insertBefore(j,f);'."\n";
-    $html .= '})(window,document,"script","dataLayer","'.$gtagManagerId.'");</script>'."\n";
-    $html .= '<!-- End Google Tag Manager -->'."\n";
     $html .= '<script async src="https://www.googletagmanager.com/gtag/js?id='.$gtagId.'"></script>'."\n";
     $html .= '<script>'."\n";
     $html .= 'window.dataLayer = window.dataLayer || [];'."\n";

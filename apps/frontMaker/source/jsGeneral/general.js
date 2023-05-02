@@ -6449,8 +6449,10 @@ GeneralJs.promiseTogether = function (promiseArr) {
 
 GeneralJs.homeliaisonAnalytics = function (obj) {
   return new Promise((resolve, reject) => {
-    if (window.location.host === "localhost:3000" || window.location.host === "localhost:8080" || window.location.host === "localhost") {
-      window.gtag("get", window.gtagId, "client_id", (client_id) => {
+    if (typeof obj !== "object" || obj === null) {
+      resolve(null);
+    } else {
+      if (window.location.host === "localhost:3000" || window.location.host === "localhost:8080" || window.location.host === "localhost" || /^192/gi.test(window.location.host)) {
         const json = {
           date: {
             now: new Date(),
@@ -6463,50 +6465,30 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
           }
         };
         resolve(json);
-      });
-    } else {
-
-      GeneralJs.ajaxJson(obj, LOGHOST + "/getAnalytics").then(() => {
-        if (typeof window.gtag === "function") {
-          if (typeof obj === "object" && obj !== null) {
-            if (typeof obj.page === "string" && obj.standard instanceof Date && typeof obj.action === "string" && typeof obj.data === "object" && obj.data !== null) {
-              window.gtag("get", window.gtagId, "client_id", (client_id) => {
-                const json = {
-                  page: obj.page,
-                  action: obj.action,
-                  standard: obj.standard.valueOf(),
-                  date: (new Date()).valueOf(),
-                  googleId: client_id,
-                  id: client_id,
-                  ...obj.data
-                };
-                if (typeof window.fbq === "function") {
-                  window.fbq("trackCustom", obj.action, json);
-                }
-                window.gtag("event", obj.action, {
-                  "event_category": obj.page,
-                  "event_label": JSON.stringify(json),
-                });
-                resolve({
-                  date: {
-                    standard: new Date(),
-                    now: new Date(),
-                  },
-                  data: json
-                });
-              });
-            } else {
-              reject("input must be { page: String, standard: Date, action: String, data: Object } }");
-            }
-          } else {
-            reject("invaild input");
+      } else {
+        obj.id = window.homeliaisonSessionId;
+        obj.info = window.homeliaisonClientInfo;
+        GeneralJs.ajaxJson(obj, LOGHOST + "/getAnalytics").then(() => {
+          const json = {
+            page: obj.page,
+            action: obj.action,
+            standard: obj.standard.valueOf(),
+            date: (new Date()).valueOf(),
+            ...obj.data
+          };
+          if (typeof window.fbq === "function") {
+            window.fbq("trackCustom", obj.action, json);
           }
-        } else {
-          reject("there is no gtag");
-        }
-      }).catch((err) => {
-        reject(err);
-      })
+          if (typeof window.gtag === "function") {
+            window.gtag("event", obj.action, {
+              "event_category": obj.page,
+              "event_label": JSON.stringify(json),
+            });
+          }
+        }).catch((err) => {
+          reject(err);
+        })
+      }
     }
   });
 }
