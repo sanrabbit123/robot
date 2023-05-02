@@ -6468,26 +6468,31 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
       } else {
         obj.id = window.homeliaisonSessionId;
         obj.info = window.homeliaisonClientInfo;
-        GeneralJs.ajaxJson(obj, LOGHOST + "/getAnalytics").then(() => {
-          const json = {
-            page: obj.page,
-            action: obj.action,
-            standard: obj.standard.valueOf(),
-            date: (new Date()).valueOf(),
-            ...obj.data
-          };
-          if (typeof window.fbq === "function") {
-            window.fbq("trackCustom", obj.action, json);
-          }
-          if (typeof window.gtag === "function") {
-            window.gtag("event", obj.action, {
-              "event_category": obj.page,
-              "event_label": JSON.stringify(json),
-            });
-          }
-        }).catch((err) => {
-          reject(err);
-        })
+        if (typeof obj.id === "string" && /^homeliaison/i.test(obj.id)) {
+          GeneralJs.ajaxJson(obj, LOGHOST + "/getAnalytics").then(() => {
+            const json = {
+              page: obj.page,
+              action: obj.action,
+              standard: obj.standard.valueOf(),
+              date: (new Date()).valueOf(),
+              ...obj.data
+            };
+            if (typeof window.fbq === "function") {
+              window.fbq("trackCustom", obj.action, json);
+            }
+            if (typeof window.gtag === "function") {
+              window.gtag("event", obj.action, {
+                "event_category": obj.page,
+                "event_label": JSON.stringify(json),
+              });
+            }
+          }).catch((err) => {
+            reject(err);
+          })
+        } else {
+          window.location.href = FRONTHOST + "/sessionClear.php";
+          reject("invalid id");
+        }
       }
     }
   });
