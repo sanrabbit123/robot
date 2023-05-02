@@ -691,6 +691,7 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
     let cliid;
     let requestTravel;
     let bilid, responseIndex;
+    let thisTargetDesigner;
 
     ago = new Date();
     ago.setDate(ago.getDate() - 28);
@@ -702,7 +703,6 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
     whereQuery = {
       $and: [
         { desid: { $regex: "^d" } },
-        // { "process.status": { $regex: "^[대진완]" } },
         { "proposal.date": { $gt: limitAgo } },
         { "process.contract.first.date": { $gt: new Date(2000, 0, 1) } },
         { proid: { $not: { $regex: "p1801_aa01s" } } },
@@ -777,6 +777,8 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
             return acc + curr.amount;
           }, 0))
 
+          thisTargetDesigner = designers.find((d) => { return d.desid === response.target.id });
+
           if (itemAmount > 0) {
             if (itemAmount > payAmount) {
               if (/홈리에종 선금/gi.test(response.name)) {
@@ -786,10 +788,10 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                   condition = false;
                 } else {
                   if (Math.floor(requestRemain.items.reduce((acc, curr) => { return acc + curr.amount.consumer; }, 0)) <= Math.floor(requestRemain.pay.reduce((acc, curr) => { return acc + curr.amount; }, 0))) {
-                    businessNumber = designer.information.business.businessInfo.businessNumber.replace(/-/g, '');
-                    if (/프리/gi.test(designer.information.business.businessInfo.classification)) {
+                    businessNumber = thisTargetDesigner.information.business.businessInfo.businessNumber.replace(/-/g, '');
+                    if (/프리/gi.test(thisTargetDesigner.information.business.businessInfo.classification)) {
                       condition = true;
-                    } else if (/간이/gi.test(designer.information.business.businessInfo.classification)) {
+                    } else if (/간이/gi.test(thisTargetDesigner.information.business.businessInfo.classification)) {
                       condition = (cashReceipts.filter((obj) => {
                         return obj.method === 1;
                       }).filter((obj) => {
@@ -797,7 +799,7 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                       }).filter((obj) => {
                         return obj.amount.total === itemAmount
                       }).filter((obj) => {
-                        return obj.date.valueOf() > designer.projects[i].process.contract.meeting.date.valueOf()
+                        return obj.date.valueOf() > thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf()
                       }).length > 0);
                     } else {
                       condition = (taxBills.filter((obj) => {
@@ -805,11 +807,11 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                       }).filter((obj) => {
                         return obj.sum.total === itemAmount
                       }).filter((obj) => {
-                        return obj.date.valueOf() > designer.projects[i].process.contract.meeting.date.valueOf()
+                        return obj.date.valueOf() > thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf()
                       }).length > 0);
                     }
                   } else {
-                    if (/드랍/gi.test(designer.projects[i].process.status)) {
+                    if (/드랍/gi.test(thisTargetDesigner.projects[i].process.status)) {
                       condition = true;
                     } else {
                       condition = false;
@@ -825,15 +827,15 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                 } else {
 
                   if (Math.floor(requestRemain.items.reduce((acc, curr) => { return acc + curr.amount.consumer; }, 0)) <= Math.floor(requestRemain.pay.reduce((acc, curr) => { return acc + curr.amount; }, 0))) {
-                    if (designer.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
-                      if (([ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '해당 없음' ]).includes(designer.projects[i].contents.raw.portfolio.status)) {
+                    if (thisTargetDesigner.projects[i].process.calculation.payments.remain.date.valueOf() <= emptyDateValue) {
+                      if (([ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '해당 없음' ]).includes(thisTargetDesigner.projects[i].contents.raw.portfolio.status)) {
                         condition = false;
                       } else {
-                        if (designer.projects[i].contents.photo.boo) {
-                          if (/완료/gi.test(designer.projects[i].contents.photo.status) && (/디자이너/gi.test(designer.projects[i].contents.photo.info.photographer) || /고객/gi.test(designer.projects[i].contents.photo.info.photographer))) {
+                        if (thisTargetDesigner.projects[i].contents.photo.boo) {
+                          if (/완료/gi.test(thisTargetDesigner.projects[i].contents.photo.status) && (/디자이너/gi.test(thisTargetDesigner.projects[i].contents.photo.info.photographer) || /고객/gi.test(thisTargetDesigner.projects[i].contents.photo.info.photographer))) {
                             condition = true;
                           } else {
-                            if (designer.projects[i].contents.photo.date.valueOf() < (new Date(3000, 0, 1)).valueOf() && designer.projects[i].contents.photo.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
+                            if (thisTargetDesigner.projects[i].contents.photo.date.valueOf() < (new Date(3000, 0, 1)).valueOf() && thisTargetDesigner.projects[i].contents.photo.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
                               condition = true;
                             } else {
                               condition = false;
@@ -852,10 +854,10 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                 }
 
                 if (condition) {
-                  businessNumber = designer.information.business.businessInfo.businessNumber.replace(/-/g, '');
-                  if (/프리/gi.test(designer.information.business.businessInfo.classification)) {
+                  businessNumber = thisTargetDesigner.information.business.businessInfo.businessNumber.replace(/-/g, '');
+                  if (/프리/gi.test(thisTargetDesigner.information.business.businessInfo.classification)) {
                     condition = true;
-                  } else if (/간이/gi.test(designer.information.business.businessInfo.classification)) {
+                  } else if (/간이/gi.test(thisTargetDesigner.information.business.businessInfo.classification)) {
                     condition = (cashReceipts.filter((obj) => {
                       return obj.method === 1;
                     }).filter((obj) => {
@@ -863,7 +865,7 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                     }).filter((obj) => {
                       return obj.amount.total === itemAmount
                     }).filter((obj) => {
-                      return obj.date.valueOf() > designer.projects[i].process.calculation.payments.first.date.valueOf()
+                      return obj.date.valueOf() > thisTargetDesigner.projects[i].process.calculation.payments.first.date.valueOf()
                     }).length > 0);
                   } else {
                     condition = (taxBills.filter((obj) => {
@@ -871,7 +873,7 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                     }).filter((obj) => {
                       return obj.sum.total === itemAmount
                     }).filter((obj) => {
-                      return obj.date.valueOf() > designer.projects[i].process.calculation.payments.first.date.valueOf()
+                      return obj.date.valueOf() > thisTargetDesigner.projects[i].process.calculation.payments.first.date.valueOf()
                     }).length > 0);
                   }
                 }
@@ -903,10 +905,10 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                 }
 
                 if (requestTravel !== undefined && condition) {
-                  businessNumber = designer.information.business.businessInfo.businessNumber.replace(/-/g, '');
-                  if (/프리/gi.test(designer.information.business.businessInfo.classification)) {
+                  businessNumber = thisTargetDesigner.information.business.businessInfo.businessNumber.replace(/-/g, '');
+                  if (/프리/gi.test(thisTargetDesigner.information.business.businessInfo.classification)) {
                     condition = true;
-                  } else if (/간이/gi.test(designer.information.business.businessInfo.classification)) {
+                  } else if (/간이/gi.test(thisTargetDesigner.information.business.businessInfo.classification)) {
                     condition = (cashReceipts.filter((obj) => {
                       return obj.method === 1;
                     }).filter((obj) => {
@@ -943,46 +945,46 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                 needsResponses.push({
                   cliid,
                   proid,
-                  desid: designer.desid,
+                  desid: thisTargetDesigner.desid,
                   bill: {
                     bilid,
                     responseIndex: responseIndex,
                   },
                   names: {
                     name,
-                    designer: designer.designer,
+                    designer: thisTargetDesigner.designer,
                   },
                   item: {
                     name: response.name,
                     amount: itemAmount,
                   },
                   classification: {
-                    classification: designer.information.business.businessInfo.classification,
-                    free: /프리/gi.test(designer.information.business.businessInfo.classification),
-                    simple: /간이/gi.test(designer.information.business.businessInfo.classification),
+                    classification: thisTargetDesigner.information.business.businessInfo.classification,
+                    free: /프리/gi.test(thisTargetDesigner.information.business.businessInfo.classification),
+                    simple: /간이/gi.test(thisTargetDesigner.information.business.businessInfo.classification),
                   },
                 });
               } else {
                 pendingResponses.push({
                   cliid,
                   proid,
-                  desid: designer.desid,
+                  desid: thisTargetDesigner.desid,
                   bill: {
                     bilid,
                     responseIndex: responseIndex,
                   },
                   names: {
                     name,
-                    designer: designer.designer,
+                    designer: thisTargetDesigner.designer,
                   },
                   item: {
                     name: response.name,
                     amount: itemAmount,
                   },
                   classification: {
-                    classification: designer.information.business.businessInfo.classification,
-                    free: /프리/gi.test(designer.information.business.businessInfo.classification),
-                    simple: /간이/gi.test(designer.information.business.businessInfo.classification),
+                    classification: thisTargetDesigner.information.business.businessInfo.classification,
+                    free: /프리/gi.test(thisTargetDesigner.information.business.businessInfo.classification),
+                    simple: /간이/gi.test(thisTargetDesigner.information.business.businessInfo.classification),
                   },
                 });
               }

@@ -6460,7 +6460,7 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
           data: {
             page: obj.page,
             action: obj.action,
-            id: client_id,
+            id: "",
             value: { ...obj.data }
           }
         };
