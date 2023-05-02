@@ -3240,7 +3240,7 @@ ReceiptRouter.prototype.rou_post_excuteResponse = function () {
         await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: instance.mongo });
         thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
         thisClient = await back.getClientById(thisProject.cliid, { selfMongo: instance.mongo });
-        thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: instance.mongo });
+        thisDesigner = await back.getDesignerById(thisResponse.target.id, { selfMongo: instance.mongo });
 
         if (type === "first") {
           await kakao.sendTalk("paymentFirstDesigner", thisDesigner.designer, thisDesigner.information.phone, {
