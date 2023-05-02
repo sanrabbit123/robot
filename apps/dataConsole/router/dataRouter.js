@@ -3060,73 +3060,6 @@ DataRouter.prototype.rou_post_getMembers = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_getAnalytics = function () {
-  const instance = this;
-  const { shell, shellLink, equalJson } = this.mother;
-  const stringToArr = function (dateString) {
-    let tempArr0, tempArr1, tempArr2;
-    tempArr0 = dateString.split(' ');
-    tempArr1 = tempArr0[0].split('-');
-    tempArr2 = tempArr0[1].split(':');
-    return [ Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')) ];
-  }
-  let obj = {};
-  obj.link = "/getAnalytics_total";
-  obj.func = async function (req, res) {
-    try {
-      let rangeObj = equalJson(req.body.range);
-      let { startDate, endDate } = rangeObj;
-      let searchQuery, rows;
-      let andSearchQuery, orSearchQuery, search;
-      const columns = [
-        "userid",
-        "userType",
-        "campaign",
-        "referrer.name",
-        "referrer.detail.host",
-        "referrer.raw",
-        "device.type",
-        "device.os",
-        "device.mobileDevice",
-        "region.country",
-        "region.city",
-      ];
-      let temp;
-
-      startDate = new Date(...stringToArr(startDate));
-      endDate = new Date(...stringToArr(endDate));
-      searchQuery = { "latestTimeline": { "$gte": startDate, "$lte": endDate } };
-
-      if (rangeObj.search !== undefined) {
-        andSearchQuery = {};
-        andSearchQuery["$and"] = [];
-        andSearchQuery["$and"].push(searchQuery);
-
-        orSearchQuery = {};
-        orSearchQuery["$or"] = [];
-        for (let c of columns) {
-          temp = {};
-          temp[c] = { "$regex": rangeObj.search };
-          orSearchQuery["$or"].push(temp);
-        }
-
-        andSearchQuery["$and"].push(orSearchQuery);
-      } else {
-        andSearchQuery = searchQuery;
-      }
-
-      rows = await instance.back.mongoRead("googleAnalytics_total", andSearchQuery, { home: true });
-
-      res.set("Content-Type", "application/json");
-      res.send(JSON.stringify(rows));
-    } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getAnalytics): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
 DataRouter.prototype.rou_post_parsingLatestLog = function () {
   const instance = this;
   const { fileSystem, equalJson } = this.mother;
@@ -3332,7 +3265,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       let cliid;
       let message;
       let thisClient;
-      let googleId;
+      let sessionId;
       let overlapTimeline;
 
       name = map.find((obj) => { return obj.property === "name" });
@@ -3344,7 +3277,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       movein = map.find((obj) => { return obj.property === "movein" });
       living = map.find((obj) => { return obj.property === "living" });
       etc = map.find((obj) => { return obj.property === "etc" });
-      googleId = map.find((obj) => { return obj.property === "googleId" });
+      sessionId = map.find((obj) => { return obj.property === "sessionId" });
 
       if (name === undefined || phone === undefined || address0 === undefined || address1 === undefined || email === undefined || pyeong === undefined || movein === undefined || living === undefined || etc === undefined) {
         throw new Error("invaild post");
@@ -3359,10 +3292,10 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       movein = movein.value.trim();
       living = living.value.trim();
       etc = etc.value.trim();
-      if (googleId === undefined) {
-        googleId = "";
+      if (sessionId === undefined) {
+        sessionId = [];
       } else {
-        googleId = googleId.value.trim();
+        sessionId = [ sessionId.value.trim() ];
       }
 
       requestObject = {};
@@ -3415,7 +3348,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       requestObject["requests.0.request.etc.channel"] = "인터넷 검색";
       requestObject["requests.0.request.timeline"] = new Date();
 
-      requestObject["requests.0.analytics.googleAnalytics.userType"] = googleId;
+      requestObject["requests.0.analytics.googleAnalytics.userType"] = sessionId.join(", ");
 
       message = '';
       ifOverlap = await back.getClientsByQuery({ phone }, { selfMongo });
@@ -3482,7 +3415,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       thisClient = await back.getClientById(cliid, { selfMongo, withTools: true });
       message += thisClient.toMessage();
       message += "\n";
-      message += "구글 아이디 : " + googleId;
+      message += "세션 아이디 : " + sessionId.join(", ");
       await messageSend({ text: message, channel: "#401_consulting" });
       await requestSystem("https://" + instance.address.testinfo.host + "/marketingMessage", {
         text: message,
@@ -3490,7 +3423,6 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       }, {
         headers: { "Content-Type": "application/json" }
       });
-
       requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
 
       res.send(JSON.stringify({ cliid }));

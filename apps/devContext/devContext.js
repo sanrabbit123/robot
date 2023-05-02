@@ -130,7 +130,7 @@ DevContext.prototype.launching = async function () {
     // const facebook = new FacebookAPIs();
     // await facebook.getAccessToken();
 
-    
+
     // kakao template json
 
     // const kakao = new KakaoTalk();

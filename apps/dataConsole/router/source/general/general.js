@@ -7379,13 +7379,13 @@ GeneralJs.prototype.finalSubmit = function () {
 
         if (typeof instance.clientSessionId === "string") {
           map.push({
-            property: "googleId",
+            property: "sessionId",
             value: instance.clientSessionId,
           });
         } else {
           if (typeof window.homeliaisonSessionId === "string") {
             map.push({
-              property: "googleId",
+              property: "sessionId",
               value: window.homeliaisonSessionId,
             });
           } else {
