@@ -104,6 +104,7 @@ module.exports = {
             },
           },
           proposal: [],
+          session: []
         },
       };
     } else if (subject === "analytics.date.history") {
