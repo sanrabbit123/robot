@@ -172,29 +172,13 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const selfMongo = this.MONGOC;
-    // const db = "miro81";
-    // const collection = "client";
-    // const clients = await selfMongo.db(db).collection(collection).find({}).toArray();
-    // let whereQuery, updateQuery;
-
-    // for (let client of clients) {
-    //   whereQuery = { cliid: client.cliid };
-    //   updateQuery = {};
-
-    //   for (let i = 0; i < client.requests.length; i++) {
-    //     updateQuery["requests." + String(i) + ".analytics.session"] = [];
-    //   }
-
-    //   await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
-    //   console.log(whereQuery, updateQuery);
-    // }
 
 
     
 
     
 
+    
 
     // remove google analytics
 

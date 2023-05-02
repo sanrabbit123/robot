@@ -261,35 +261,6 @@ const withTools = function (Client) {
     return documentArr.join("\n");
   }
 
-  Client.prototype.toGoogleAnalyticsSheet = function () {
-    const { request, analytics: { googleAnalytics } } = this.requests[0];
-    let sheet = [];
-
-    sheet.push(request.timeline.toString(true));
-    sheet.push(this.cliid);
-    sheet.push(this.name);
-    sheet.push(this.phone);
-    sheet.push(this.email);
-    sheet.push(request.space.address.value);
-    sheet.push(request.family.value);
-    sheet.push(request.budget.value);
-    sheet.push(request.space.pyeong.toMessage());
-    sheet.push(request.space.resident.expected.toString());
-    sheet.push(request.space.contract.value);
-    sheet.push(request.space.spec.toMessage());
-    sheet.push(request.etc.comment);
-    sheet.push(request.etc.channel);
-
-    sheet.push(googleAnalytics.userType);
-    sheet.push(googleAnalytics.referrerString);
-    sheet.push(googleAnalytics.deviceString);
-    sheet.push(googleAnalytics.regionString);
-    sheet.push(googleAnalytics.campaign);
-    sheet.push(googleAnalytics.historyString);
-
-    return sheet;
-  }
-
   Client.prototype.flatDeath = function () {
     const client = this.toNormal();
     const { name, phone, email, cliid } = client;
@@ -916,14 +887,6 @@ const withToolsArr = function (Clients) {
     let arr = [];
     for (let i of this) {
       arr.push(i.toMessage());
-    }
-    return arr;
-  }
-
-  Clients.prototype.toGoogleAnalyticsSheet = function () {
-    let arr = [];
-    for (let i of this) {
-      arr.push(i.toGoogleAnalyticsSheet());
     }
     return arr;
   }

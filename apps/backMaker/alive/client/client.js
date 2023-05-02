@@ -22,12 +22,6 @@ Client.prototype.latestRequest = function () {
   return this.requests[0];
 }
 
-Client.prototype.googleAnalyticsUpdate = function (obj) {
-  const request = this.requests[0];
-  request.google.jsonUpdate(obj);
-  return this;
-}
-
 Client.prototype.toJson = function () {
   let obj = {};
   obj.name = this.name;

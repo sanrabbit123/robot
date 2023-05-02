@@ -18,10 +18,6 @@ class Request extends Array {
     return this.request.space;
   }
 
-  get google() {
-    return this.analytics.googleAnalytics;
-  }
-
   toNormal() {
     let obj = {};
     obj.request = this.request.toNormal();
