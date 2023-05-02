@@ -11,8 +11,6 @@ const Client = function (json) {
     newId = rawId;
     return newId;
   }
-  let requestsInstance;
-
   this.name = json.name;
   this.phone = json.phone;
   this.email = json.email;

@@ -47,34 +47,6 @@ module.exports = {
           },
         },
         analytics: {
-          googleAnalytics: {
-            timeline: new Date(1800, 0, 1),
-            userType: "",
-            referrer: {
-              name: "",
-              detail: {
-                host: null,
-                queryString: {},
-              },
-            },
-            device: {
-              type: "",
-              os: "",
-              mobileDevice: "",
-            },
-            region: {
-              country: "",
-              city: "",
-              latitude: 0,
-              longitude: 0,
-            },
-            personalInfo: {
-              age: null,
-              gender: null
-            },
-            campaign: "",
-            history: [],
-          },
           response: {
             status: "응대중",
             action: "1차 응대 예정",
