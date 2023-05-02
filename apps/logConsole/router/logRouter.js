@@ -746,6 +746,7 @@ LogRouter.prototype.rou_post_errorMessage = function () {
 
 LogRouter.prototype.rou_post_getAnalytics = function () {
   const instance = this;
+  const back = this.back;
   const { equalJson, ipParsing } = this.mother;
   let obj;
   obj = {};
@@ -816,7 +817,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
         custom
       }).catch((err) => { console.log(err); });
 
-      console.log(thisData);
+      await back.mongoCreate(collection, thisData, { selfMongo: instance.mongo });
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
