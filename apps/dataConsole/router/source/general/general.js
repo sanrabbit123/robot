@@ -5380,7 +5380,7 @@ GeneralJs.prototype.whiteProgressLoading = function (mother = null) {
 
 GeneralJs.prototype.consultingPopup = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, ajaxJson, homeliaisonAnalytics } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, ajaxJson, homeliaisonAnalytics, equalJson } = GeneralJs;
   const { ea, naviHeight } = this;
   const media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
   const mobile = media[4];
@@ -5390,6 +5390,7 @@ GeneralJs.prototype.consultingPopup = function () {
   const whitePopupClassName = "whitePopupClassName";
   const inputClassName = "whitePopupInputClassName";
   const agreeTargetClassName = "agreeTargetClassName";
+  const variableBarClassName = "variableBarClassName";
   const totalContents = document.getElementById("totalcontents");
   const zIndex = 4;
   return (e) => {
@@ -5496,17 +5497,43 @@ GeneralJs.prototype.consultingPopup = function () {
     let commentsBlurEvent;
     let greenNoticeWidth3;
     let greenNoticeBottom3;
+    let barDescriptionLingHeight;
+    let barDescriptionTextTop;
+    let barDescriptionSubSize;
+    let barTongHeight;
+    let barTongMarginTop;
+    let barTop;
+    let barHeight;
+    let barFactorWeight;
+    let barFactorTop;
+    let barCircleTop;
+    let barCircleRadius;
+    let barFactorA0Left;
+    let barFactorA1Left;
+    let barFactorA2Left;
+    let barFactorB0Left;
+    let mobileGrayTextAreaTop;
+    let defaultRatio;
+    let budgetValues;
+    let furnitureValues;
+    let barClickEvent;
+    let descriptionSize;
+    let descriptionWeight;
+    let descriptionLineHeight;
+    let descriptionMarginTop;
+    let descriptionBoldWeight;
+    let textAreaBlockHeight;
 
-    whiteWidth = <%% 1000, 1000, 800, 660, 88 %%>;
+    whiteWidth = <%% 990, 980, 710, 660, 88 %%>;
     whiteMargin = <%% 54, 54, 54, 54, 6 %%>;
     innerMargin = <%% 54, 54, 54, 54, 6 %%>;
 
     whiteMaxHeight = 900;
 
-    titleHeight = <%% 41, 39, 37, 35, 8 %%>;
+    titleHeight = <%% 41, 39, 37, 28, 8 %%>;
     paymentHeight = <%% 70, 70, 70, 70, 14 %%>;
 
-    titleSize = <%% 27, 26, 24, 22, 4 %%>;
+    titleSize = <%% 27, 26, 24, 21, 4 %%>;
     titleWeight = <%% 700, 700, 700, 700, 700 %%>;
     titleLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
     titleTop = <%% (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), (isMac() ? -10 : -7), -0.2 %%>;
@@ -5520,7 +5547,7 @@ GeneralJs.prototype.consultingPopup = function () {
     grayTop = <%% 0, 0, 0, 0, 0 %%>;
     grayInputTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.2 %%>;
     grayHeight = <%% 32, 32, 31, 31, 7 %%>;
-    grayBigHeight = <%% 92, 92, 92, 92, 31 %%>;
+    grayBigHeight = <%% 156, 137, 136, 135, 38 %%>;
     grayTextAreaTop = <%% 0, 0, 0, 0, 0 %%>;
     grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
 
@@ -5536,12 +5563,12 @@ GeneralJs.prototype.consultingPopup = function () {
 
     leftGrayType0 = <%% 101, 90, 78, 78, 18 %%>;
     leftGrayType1 = <%% 418, 361, 318, 96, 22.8 %%>;
-    leftGrayType2 = <%% 125, 112, 98, 98, 22.8 %%>;
+    leftGrayType2 = <%% 125, 115, 99, 98, 22.8 %%>;
     leftGrayType3 = <%% 164, 151, 130, 129, 30.5 %%>;
 
     widthGrayType0 = <%% 160, 140, 130, 150, 34 %%>;
     widthGrayType1 = <%% 455, 329, 283, 403, 58 %%>;
-    widthGrayType2 = <%% 767, 588, 503, 383, 53.2 %%>;
+    widthGrayType2 = <%% 757, 757, 503, 454, 53.2 %%>;
     widthGrayType3 = <%% 392, 268, 231, 352, 45.5 %%>;
 
     addressWidth = <%% 54, 54, 46, 46, 11 %%>;
@@ -5581,8 +5608,8 @@ GeneralJs.prototype.consultingPopup = function () {
     checkboxBetween = <%% 8, 8, 8, 6, 1.5 %%>;
     checkboxWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-    leftCheck0 = <%% 125, 112, 98, 98, 22.8 %%>;
-    leftCheck1 = <%% 195, 176, 156, 152, 36.5 %%>;
+    leftCheck0 = <%% 125, 115, 99, 98, 22.8 %%>;
+    leftCheck1 = <%% 195, 179, 157, 152, 36.5 %%>;
 
     calendarWidth = <%% 260, 250, 230, 210, 56 %%>;
     calendarTop = <%% 41, 41, 41, 40, 8.2 %%>;
@@ -5615,7 +5642,75 @@ GeneralJs.prototype.consultingPopup = function () {
     greenNoticeWidth0 = <%% 96, 96, 96, 96, 28 %%>;
     greenNoticeWidth1 = <%% 120, 120, 120, 120, 28 %%>;
     greenNoticeWidth3 = <%% 210, 210, 190, 190, 48.5 %%>;
-    greenNoticeBottom3 = <%% 102, 102, 102, 102, 33 %%>;  
+    greenNoticeBottom3 = <%% 164, 144, 144, 142, 40 %%>;
+
+    descriptionSize = <%% 15, 15, 13, 13, 3 %%>;
+    descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
+    descriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.66 %%>;
+    descriptionMarginTop = <%% 10, 10, 8, 6, 10 %%>;
+    descriptionBoldWeight = <%% 700, 700, 700, 700, 700 %%>;  
+
+    barDescriptionLingHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>
+    barDescriptionTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 1 : 3), (isMac() ? 2 : 4), (isMac() ? 1 : 3), (isIphone() ? 0.8 : 0.6) %%>;
+    barDescriptionSubSize = <%% 13, 13, 11, 11, 2.6 %%>;
+  
+    barTongHeight = <%% 50, 48, 40, 40, 12 %%>;
+    barTongMarginTop = <%% 12, 10, 10, 8, 3.4 %%>;
+  
+    barTop = <%% 28, 28, 24, 21, 5 %%>;
+    barHeight = <%% 9, 9, 9, 9, 2 %%>;
+    barFactorWeight = <%% 700, 700, 700, 700, 700 %%>;
+    barFactorTop = <%% (isMac() ? 3 : 4), (isMac() ? 3 : 4), (isMac() ? 2 : 3), (isMac() ? 1 : 2), 0 %%>;
+  
+    barCircleTop = <%% 26, 26, 23, 20, 4.7 %%>;
+    barCircleRadius = <%% 6, 6, 5, 5, 1.2 %%>
+  
+    barFactorA0Left = <%% 183, 183, 122, 109, 18.6 %%>;
+    barFactorA1Left = <%% 349, 349, 227, 200, 33.6 %%>;
+    barFactorA2Left = <%% 518, 518, 341, 299, 49.4 %%>;
+  
+    barFactorB0Left = <%% 332, 332, 211, 186, 28.6 %%>;
+  
+    mobileGrayTextAreaTop = 7.8;
+  
+    defaultRatio = 0.5;
+
+    textAreaBlockHeight = <%% 156, 136, 133, 130, 44.2 %%>;
+
+    budgetValues = [
+      { title: (desktop ? "1,000만원 이하" : "1천만원 이하"), value: "1,000만원", },
+      { title: (desktop ? "2,000만원" : "2천만원"), value: "2,000만원", },
+      { title: (desktop ? "3,000만원" : "3천만원"), value: "3,000만원", },
+      { title: (desktop ? "4,000만원" : "4천만원"), value: "4,000만원", },
+      { title: (desktop ? "5,000만원" : "5천만원"), value: "5,000만원 이상", },
+      { title: (desktop ? "6,000만원" : "6천만원"), value: "6,000만원 이상", },
+      { title: (desktop ? "7,000만원" : "7천만원"), value: "7,000만원 이상", },
+      { title: (desktop ? "8,000만원" : "8천만원"), value: "8,000만원 이상", },
+      { title: "1억원 이상", value: "1억원 이상", },
+    ];
+  
+    furnitureValues = [
+      { title: "재배치", value: "재배치", },
+      { title: "재배치 + 일부 구매", value: "일부 구매", },
+      { title: "전체 구매", value: "전체 구매", },
+    ];
+  
+    barClickEvent = (arr) => {
+      const valuesArr = equalJson(JSON.stringify(arr));
+      return function (e) {
+        const bar = this.querySelector("." + variableBarClassName);
+        const box = this.getBoundingClientRect();
+        let thisLength;
+        let ratio;
+  
+        thisLength = e.x - box.x;
+        ratio = Math.round((thisLength / box.width) * 1000000) / 1000000;
+  
+        bar.style.width = String(ratio * 100) + '%';
+        this.setAttribute("ratio", String(ratio));
+        this.setAttribute("value", valuesArr[Math.round((valuesArr.length - 1) * ratio)].value);
+      }
+    }
 
     homeliaisonAnalytics({
       page: instance.pageName,
@@ -7028,7 +7123,584 @@ GeneralJs.prototype.consultingPopup = function () {
         display: "block",
         position: "relative",
         marginBottom: String(blockMarginBottom) + ea,
-        height: String(grayTextAreaTop + grayBigHeight) + ea,
+        height: String(moduleHeight) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "계약 형태",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: "on",
+            property: "contract",
+          },
+          event: {
+            click: checkboxClickEvent0
+          },
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(leftCheck0) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.returnCheckBox(colorChip.gray3),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(0),
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.returnCheckBox(colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                left: String(0),
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            },
+            {
+              text: "자가",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: colorChip.green,
+                verticalAlign: "top",
+                cursor: "pointer",
+              }
+            },
+          ]
+        },
+        {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: "off",
+            property: "contract",
+          },
+          event: {
+            click: checkboxClickEvent0
+          },
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(leftCheck1) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.returnCheckBox(colorChip.gray3),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(1),
+              }
+            },
+            {
+              mode: "svg",
+              source: instance.returnCheckBox(colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                left: String(0),
+                verticalAlign: "top",
+                cursor: "pointer",
+                opacity: String(0),
+              }
+            },
+            {
+              text: "전월세",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: colorChip.black,
+                verticalAlign: "top",
+                cursor: "pointer",
+              }
+            },
+          ]
+        },
+      ]
+    });
+
+    // 11 : margin
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+
+    // 12
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * 3) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "예산",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(leftGrayType2) + ea,
+            width: withOut(leftGrayType2, ea),
+            height: "auto",
+            flexDirection: "column",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              text: [
+                "인테리어에 사용할 <b%전체 예산을 알려주세요!%b>",
+                desktop ? "<u%* 스타일링, 시공을 모두 포함하는 예산 / 가전 예산은 제외%u>" : "<u%* 스타일링, 시공 모두 포함 예산 / 가전 제외%u>"
+              ].join("\n"),
+              style: {
+                display: "block",
+                position: "relative",
+                fontSize: String(descriptionSize) + ea,
+                fontWeight: String(descriptionWeight),
+                lineHeight: String(barDescriptionLingHeight),
+                color: colorChip.black,
+                top: String(barDescriptionTextTop) + ea,
+              },
+              bold: {
+                fontSize: String(descriptionSize) + ea,
+                fontWeight: String(descriptionBoldWeight),
+                color: colorChip.black
+              },
+              under: {
+                fontSize: String(barDescriptionSubSize) + ea,
+                fontWeight: String(descriptionWeight),
+                color: colorChip.green
+              },
+            },
+            {
+              mode: "aside",
+              class: [ inputClassName ],
+              attribute: {
+                ratio: String(defaultRatio),
+                value: budgetValues[Math.round((budgetValues.length - 1) * defaultRatio)].value,
+                property: "budget",
+              },
+              event: {
+                click: barClickEvent(budgetValues),
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(barTongHeight) + ea,
+                cursor: "pointer",
+                width: desktop ? withOut(0, ea) : withOut(-1 * leftGrayType2, ea),
+                marginTop: String(barTongMarginTop) + ea,
+                left: mobile ? String(-1 * leftGrayType2) + ea : "",
+              },
+              children: [
+                {
+                  style: {
+                    position: "absolute",
+                    top: String(barTop) + ea,
+                    height: String(barHeight) + ea,
+                    borderRadius: String(barHeight + 1) + ea,
+                    background: colorChip.gray3,
+                    width: withOut(0, ea),
+                    left: String(0) + ea,
+                  }
+                },
+                {
+                  text: budgetValues[0].title,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(barDescriptionSubSize) + ea,
+                    fontWeight: String(barFactorWeight),
+                    color: colorChip.black,
+                    top: String(barFactorTop) + ea,
+                  }
+                },
+                {
+                  text: budgetValues[2].title,
+                  style: {
+                    position: "absolute",
+                    fontSize: String(barDescriptionSubSize) + ea,
+                    fontWeight: String(barFactorWeight),
+                    color: colorChip.black,
+                    top: String(barFactorTop) + ea,
+                    left: String(barFactorA0Left) + ea,
+                  }
+                },
+                {
+                  text: budgetValues[4].title,
+                  style: {
+                    position: "absolute",
+                    fontSize: String(barDescriptionSubSize) + ea,
+                    fontWeight: String(700),
+                    color: colorChip.black,
+                    top: String(barFactorTop) + ea,
+                    left: String(barFactorA1Left) + ea,
+                  }
+                },
+                {
+                  text: budgetValues[6].title,
+                  style: {
+                    position: "absolute",
+                    fontSize: String(barDescriptionSubSize) + ea,
+                    fontWeight: String(barFactorWeight),
+                    color: colorChip.black,
+                    top: String(barFactorTop) + ea,
+                    left: String(barFactorA2Left) + ea,
+                  }
+                },
+                {
+                  text: budgetValues[8].title,
+                  style: {
+                    position: "absolute",
+                    fontSize: String(barDescriptionSubSize) + ea,
+                    fontWeight: String(barFactorWeight),
+                    color: colorChip.black,
+                    top: String(barFactorTop) + ea,
+                    right: String(0) + ea,
+                  }
+                },
+                {
+                  class: [ variableBarClassName ],
+                  style: {
+                    position: "absolute",
+                    left: String(0) + ea,
+                    top: String(0) + ea,
+                    width: String(defaultRatio * 100) + '%',
+                    height: String(100) + '%',
+                    transition: "all 0.3s ease",
+                  },
+                  children: [
+                    {
+                      style: {
+                        position: "absolute",
+                        top: String(barTop) + ea,
+                        height: String(barHeight) + ea,
+                        borderRadius: String(barHeight + 1) + ea,
+                        background: colorChip.black,
+                        width: withOut(0, ea),
+                        left: String(0) + ea,
+                      }
+                    },
+                    {
+                      style: {
+                        position: "absolute",
+                        top: String(barCircleTop) + ea,
+                        right: String(-1 * barCircleRadius) + ea,
+                        width: String(barCircleRadius * 2) + ea,
+                        height: String(barCircleRadius * 2) + ea,
+                        borderRadius: String(barCircleRadius + 1) + ea,
+                        background: colorChip.white,
+                        border: "1px solid " + colorChip.gray4,
+                        cursor: "pointer",
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+          ]
+        },
+      ]
+    });
+
+    // 13 : margin
+    createNode({
+      mother: formBox,
+      style: {
+        display: (media[2] || media[3]) ? "none" : "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+
+    // 14
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * 3) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "가구",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(leftGrayType2) + ea,
+            width: withOut(leftGrayType2, ea),
+            height: "auto",
+            flexDirection: "column",
+            justifyContent: "start",
+            alignItems: "start",
+          },
+          children: [
+            {
+              text: [
+                "가구의 <b%재사용과 구매의 비율을 알려주세요!%b>",
+                desktop ? "<u%* 재배치 = 기존 가구를 재사용 / 구매 = 새로운 가구를 구매%u>" : "<u%* 재배치 = 기존 가구 재사용 / 구매 = 새로 구매%u>",
+              ].join("\n"),
+              style: {
+                display: "block",
+                position: "relative",
+                fontSize: String(descriptionSize) + ea,
+                fontWeight: String(descriptionWeight),
+                lineHeight: String(barDescriptionLingHeight),
+                color: colorChip.black,
+                top: String(barDescriptionTextTop) + ea,
+              },
+              bold: {
+                fontSize: String(descriptionSize) + ea,
+                fontWeight: String(descriptionBoldWeight),
+                color: colorChip.black
+              },
+              under: {
+                fontSize: String(barDescriptionSubSize) + ea,
+                fontWeight: String(descriptionWeight),
+                color: colorChip.green
+              },
+            },
+            {
+              mode: "aside",
+              class: [ inputClassName ],
+              attribute: {
+                ratio: String(defaultRatio),
+                value: furnitureValues[Math.round((furnitureValues.length - 1) * defaultRatio)].value,
+                property: "furniture",
+              },
+              event: {
+                click: barClickEvent(furnitureValues),
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(barTongHeight) + ea,
+                cursor: "pointer",
+                width: desktop ? withOut(0, ea) : withOut(-1 * leftGrayType2, ea),
+                marginTop: String(barTongMarginTop) + ea,
+                left: mobile ? String(-1 * leftGrayType2) + ea : "",
+              },
+              children: [
+                {
+                  style: {
+                    position: "absolute",
+                    top: String(barTop) + ea,
+                    height: String(barHeight) + ea,
+                    borderRadius: String(barHeight + 1) + ea,
+                    background: colorChip.gray3,
+                    width: withOut(0, ea),
+                    left: String(0) + ea,
+                  }
+                },
+                {
+                  text: furnitureValues[0].title,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(barDescriptionSubSize) + ea,
+                    fontWeight: String(barFactorWeight),
+                    color: colorChip.black,
+                    top: String(barFactorTop) + ea,
+                  }
+                },
+                {
+                  text: furnitureValues[1].title,
+                  style: {
+                    position: "absolute",
+                    fontSize: String(barDescriptionSubSize) + ea,
+                    fontWeight: String(barFactorWeight),
+                    color: colorChip.black,
+                    top: String(barFactorTop) + ea,
+                    left: String(barFactorB0Left) + ea,
+                  }
+                },
+                {
+                  text: furnitureValues[2].title,
+                  style: {
+                    position: "absolute",
+                    fontSize: String(barDescriptionSubSize) + ea,
+                    fontWeight: String(barFactorWeight),
+                    color: colorChip.black,
+                    top: String(barFactorTop) + ea,
+                    right: String(0) + ea,
+                  }
+                },
+                {
+                  class: [ variableBarClassName ],
+                  style: {
+                    position: "absolute",
+                    left: String(0) + ea,
+                    top: String(0) + ea,
+                    width: String(defaultRatio * 100) + '%',
+                    height: String(100) + '%',
+                    transition: "all 0.3s ease",
+                  },
+                  children: [
+                    {
+                      style: {
+                        position: "absolute",
+                        top: String(barTop) + ea,
+                        height: String(barHeight) + ea,
+                        borderRadius: String(barHeight + 1) + ea,
+                        background: colorChip.gradientGreen,
+                        width: withOut(0, ea),
+                        left: String(0) + ea,
+                      }
+                    },
+                    {
+                      style: {
+                        position: "absolute",
+                        top: String(barCircleTop) + ea,
+                        right: String(-1 * barCircleRadius) + ea,
+                        width: String(barCircleRadius * 2) + ea,
+                        height: String(barCircleRadius * 2) + ea,
+                        borderRadius: String(barCircleRadius + 1) + ea,
+                        background: colorChip.white,
+                        border: "1px solid " + colorChip.gray4,
+                        cursor: "pointer",
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+          ]
+        },
+      ]
+    });
+
+    // 15 : margin
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+
+    // 16
+    createNode({
+      mother: formBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(textAreaBlockHeight) + ea,
       },
       children: [
         {
@@ -7059,9 +7731,9 @@ GeneralJs.prototype.consultingPopup = function () {
         {
           style: {
             position: "absolute",
-            top: String(grayTextAreaTop) + ea,
-            left: String(leftGrayType2) + ea,
-            width: String(widthGrayType2) + ea,
+            top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
+            left: String(desktop ? leftGrayType2 : 0) + ea,
+            width: desktop ? String(widthGrayType2) + ea : withOut(0, ea),
             height: String(grayBigHeight) + ea,
             background: colorChip.gray1,
             borderRadius: String(3) + "px",
@@ -7071,7 +7743,22 @@ GeneralJs.prototype.consultingPopup = function () {
           mode: "textarea",
           class: [ inputClassName ],
           attribute: {
-            placeholder: desktop ? "(예) => 시공: 도배, 조명만 부분적으로 원해요.\n=> 스타일링: 가구, 패브릭, 소품은 전체 구매를 해야 해요.\n=> 예산: 최대 00만원 이내로 하고 싶어요." : "(예시)\n시공: 도배, 조명만 부분적으로 원해요.\n스타일링: 가구, 패브릭, 소품은 전체 구매를 해야 해요.\n예산: 최대 00만원 이내로 하고 싶어요.",
+            placeholder: (desktop ? [
+              "스타일링, 예산, 시공 등의 요청사항을 적어주세요!",
+              "홈리에종은 스타일링 없이 시공만 하지 않습니다. 문의 전 고려해 주세요 :)",
+              "(예시)",
+              "=> 시공: 도배, 조명만 부분적으로 원해요.",
+              "=> 스타일링: 가구, 패브릭, 소품은 전체 구매를 해야 해요.",
+              "=> 예산: 최대 00만원 이내로 하고 싶어요.",
+            ].join("\n") : [
+              "스타일링, 예산, 시공 등의 요청사항을 적어주세요!",
+              "홈리에종은 스타일링 없이 시공만 하지 않습니다.",
+              "문의 전 고려해 주세요 :)",
+              "(예시)",
+              "시공: 도배, 조명만 부분적으로 원해요.",
+              "스타일링: 가구, 패브릭, 소품은 전체 구매를 해야 해요.",
+              "예산: 최대 00만원 이내로 하고 싶어요.",
+            ].join("\n")),
             property: "etc",
           },
           event: {
@@ -7080,9 +7767,9 @@ GeneralJs.prototype.consultingPopup = function () {
           },
           style: {
             position: "absolute",
-            top: String(grayTextAreaTop + textareaTop) + ea,
-            left: String(leftGrayType2 + textareaLeft) + ea,
-            width: String(widthGrayType2 - (textareaLeft * 2)) + ea,
+            top: String((desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + textareaTop) + ea,
+            left: String((desktop ? leftGrayType2 : 0) + textareaLeft) + ea,
+            width: desktop ? String(widthGrayType2 - (textareaLeft * 2)) + ea : withOut(textareaLeft * 2, ea),
             height: String(grayBigHeight - (textareaTop * 1)) + ea,
             fontSize: String(grayLineBlockFontSize) + ea,
             fontWeight: String(grayLineBlockFontWeight),
@@ -7096,7 +7783,8 @@ GeneralJs.prototype.consultingPopup = function () {
         }
       ]
     });
-    // 11 : margin
+
+    // 17 : margin
     createNode({
       mother: formBox,
       style: {

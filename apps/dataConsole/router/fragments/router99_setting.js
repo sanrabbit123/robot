@@ -3,7 +3,7 @@
 DataRouter.prototype.setMembers = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, errorLog } = this.mother;
+  const { errorLog } = this.mother;
   try {
     this.members = await back.setMemberObj({ getMode: true, selfMongo: instance.mongo });
   } catch (e) {

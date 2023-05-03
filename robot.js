@@ -234,6 +234,10 @@ Robot.prototype.proposalMaker = function (button, arg) {
     }).then(() => {
       return messageSend({ text: name + " 고객님께 추천서를 전송하였어요.\nlink : https://" + host + "/" + path + ".php?proid=" + proid + "&mode=test", channel: "#403_proposal", voice: false });
 
+    }).then(() => {
+
+      resolve({ message: "done" });
+
     }).catch((err) => {
       errorLog("추천서 보내는 도중 오류남 : " + err.message).catch((e) => { console.log(e); });
       reject(err);
@@ -928,7 +932,7 @@ const MENU = {
       if (process.argv[3] === undefined) {
         throw new Error("must be proid");
       }
-      robot.proposalMaker("make", process.argv[3]);
+      robot.proposalMaker("make", process.argv[3]).catch((err) => { console.log(err); });
     } catch (e) {
       console.log(e);
     }

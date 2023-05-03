@@ -226,7 +226,7 @@ ClientConsultingJs.prototype.insertInitBox = function () {
 
 ClientConsultingJs.prototype.insertConsultingBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson } = GeneralJs;
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -234,6 +234,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   const small = !big;
   const inputClassName = "inputClassName";
   const agreeTargetClassName = "agreeTargetClassName";
+  const variableBarClassName = "variableBarClassName";
   let mainBlock;
   let mainPaddingTop, mainPaddingBottom;
   let contents;
@@ -389,6 +390,10 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   let barFactorA0Left, barFactorA1Left, barFactorA2Left;
   let barFactorB0Left;
   let mobileGrayTextAreaTop;
+  let budgetValues;
+  let furnitureValues;
+  let defaultRatio;
+  let barClickEvent;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -590,7 +595,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   leftBoxWidth = <%% 398, 250, 209, 160, 0 %%>;
   textAreaBlockHeight = <%% 156, 136, 133, 130, 44.2 %%>;
 
-  descriptionSize = <%% 15, 14, 13, 12, 3 %%>;
+  descriptionSize = <%% 15, 14, 13, 13, 3 %%>;
   descriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
   descriptionLineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.66 %%>;
   descriptionMarginTop = <%% 10, 10, 8, 6, 10 %%>;
@@ -619,32 +624,30 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   submitLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
   submitTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
 
-  // new var ================================================
-
   barDescriptionLingHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>
-  barDescriptionTextTop = <%% -1, -1, 1, 1, 0.5 %%>;
-  barDescriptionSubSize = <%% 13, 12, 11, 10, 2.6 %%>;
+  barDescriptionTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 2 : 4), (isMac() ? 1 : 3), (isIphone() ? 0.8 : 0.6) %%>;
+  barDescriptionSubSize = <%% 13, 12, 11, 11, 2.6 %%>;
 
   barTongHeight = <%% 50, 48, 40, 40, 12 %%>;
   barTongMarginTop = <%% 12, 10, 10, 8, 3.4 %%>;
 
-  barTop = <%% 28, 28, 24, 20, 5 %%>;
+  barTop = <%% 28, 28, 24, 21, 5 %%>;
   barHeight = <%% 9, 9, 9, 9, 2 %%>;
   barFactorWeight = <%% 700, 700, 700, 700, 700 %%>;
-  barFactorTop = <%% 3, 3, 2, 1, 0 %%>;
+  barFactorTop = <%% (isMac() ? 3 : 4), (isMac() ? 3 : 4), (isMac() ? 2 : 3), (isMac() ? 1 : 2), 0 %%>;
 
-  barCircleTop = <%% 26, 26, 23, 19, 4.8 %%>;
+  barCircleTop = <%% 26, 26, 23, 20, 4.7 %%>;
   barCircleRadius = <%% 6, 6, 5, 5, 1.2 %%>
 
   barFactorA0Left = <%% 183, 142, 122, 92, 18.6 %%>;
-  barFactorA1Left = <%% 349, 268, 227, 168, 33.6 %%>;
-  barFactorA2Left = <%% 518, 397, 341, 253, 49.4 %%>;
+  barFactorA1Left = <%% 349, 268, 227, 167, 33.6 %%>;
+  barFactorA2Left = <%% 518, 397, 341, 252, 49.4 %%>;
 
-  barFactorB0Left = <%% 332, 250, 211, 154, 28.6 %%>;
+  barFactorB0Left = <%% 332, 250, 211, 153, 28.6 %%>;
 
   mobileGrayTextAreaTop = 7.8;
 
-  // new var ================================================
+  defaultRatio = 0.5;
 
   contents = {
     main: [
@@ -657,6 +660,41 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
       <&& "<b%디자이너의 1:1 맞춤 상담%b>을 받아보세요!" | "<b%1:1 맞춤 상담%b>을 받아보세요!" | "<b%1:1 상담%b>을 받아보세요!" | "<b%1:1 상담%b>을 받아보세요!" | "<b%1:1 맞춤 상담%b>을 받아보세요!" &&>,
     ]
   };
+
+  budgetValues = [
+    { title: (desktop ? "1,000만원 이하" : "1천만원 이하"), value: "1,000만원", },
+    { title: (desktop ? "2,000만원" : "2천만원"), value: "2,000만원", },
+    { title: (desktop ? "3,000만원" : "3천만원"), value: "3,000만원", },
+    { title: (desktop ? "4,000만원" : "4천만원"), value: "4,000만원", },
+    { title: (desktop ? "5,000만원" : "5천만원"), value: "5,000만원 이상", },
+    { title: (desktop ? "6,000만원" : "6천만원"), value: "6,000만원 이상", },
+    { title: (desktop ? "7,000만원" : "7천만원"), value: "7,000만원 이상", },
+    { title: (desktop ? "8,000만원" : "8천만원"), value: "8,000만원 이상", },
+    { title: "1억원 이상", value: "1억원 이상", },
+  ];
+
+  furnitureValues = [
+    { title: "재배치", value: "재배치", },
+    { title: "재배치 + 일부 구매", value: "일부 구매", },
+    { title: "전체 구매", value: "전체 구매", },
+  ];
+
+  barClickEvent = (arr) => {
+    const valuesArr = equalJson(JSON.stringify(arr));
+    return function (e) {
+      const bar = this.querySelector("." + variableBarClassName);
+      const box = this.getBoundingClientRect();
+      let thisLength;
+      let ratio;
+
+      thisLength = e.x - box.x;
+      ratio = Math.round((thisLength / box.width) * 1000000) / 1000000;
+
+      bar.style.width = String(ratio * 100) + '%';
+      this.setAttribute("ratio", String(ratio));
+      this.setAttribute("value", valuesArr[Math.round((valuesArr.length - 1) * ratio)].value);
+    }
+  }
 
   phoneHypenEvent = function (e) {
     this.value = autoHypenPhone(this.value);
@@ -2277,6 +2315,16 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
             },
           },
           {
+            mode: "aside",
+            class: [ inputClassName ],
+            attribute: {
+              ratio: String(defaultRatio),
+              value: budgetValues[Math.round((budgetValues.length - 1) * defaultRatio)].value,
+              property: "budget",
+            },
+            event: {
+              click: barClickEvent(budgetValues),
+            },
             style: {
               display: "block",
               position: "relative",
@@ -2299,7 +2347,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                 }
               },
               {
-                text: desktop ? "1,000만원 이하" : "1천만원 이하",
+                text: budgetValues[0].title,
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -2310,7 +2358,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                 }
               },
               {
-                text: desktop ? "3,000만원" : "3천만원",
+                text: budgetValues[2].title,
                 style: {
                   position: "absolute",
                   fontSize: String(barDescriptionSubSize) + ea,
@@ -2321,7 +2369,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                 }
               },
               {
-                text: desktop ? "5,000만원" : "5천만원",
+                text: budgetValues[4].title,
                 style: {
                   position: "absolute",
                   fontSize: String(barDescriptionSubSize) + ea,
@@ -2332,7 +2380,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                 }
               },
               {
-                text: desktop ? "7,000만원" : "7천만원",
+                text: budgetValues[6].title,
                 style: {
                   position: "absolute",
                   fontSize: String(barDescriptionSubSize) + ea,
@@ -2343,7 +2391,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                 }
               },
               {
-                text: "1억원 이상",
+                text: budgetValues[8].title,
                 style: {
                   position: "absolute",
                   fontSize: String(barDescriptionSubSize) + ea,
@@ -2354,13 +2402,14 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                 }
               },
               {
+                class: [ variableBarClassName ],
                 style: {
                   position: "absolute",
                   left: String(0) + ea,
                   top: String(0) + ea,
-                  width: String(50) + '%',
+                  width: String(defaultRatio * 100) + '%',
                   height: String(100) + '%',
-                  transition: "all 0s ease",
+                  transition: "all 0.3s ease",
                 },
                 children: [
                   {
@@ -2481,6 +2530,16 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
             },
           },
           {
+            mode: "aside",
+            class: [ inputClassName ],
+            attribute: {
+              ratio: String(defaultRatio),
+              value: furnitureValues[Math.round((furnitureValues.length - 1) * defaultRatio)].value,
+              property: "furniture",
+            },
+            event: {
+              click: barClickEvent(furnitureValues),
+            },
             style: {
               display: "block",
               position: "relative",
@@ -2503,7 +2562,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                 }
               },
               {
-                text: "재배치",
+                text: furnitureValues[0].title,
                 style: {
                   display: "inline-block",
                   position: "relative",
@@ -2514,7 +2573,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                 }
               },
               {
-                text: "재배치 + 일부 구매",
+                text: furnitureValues[1].title,
                 style: {
                   position: "absolute",
                   fontSize: String(barDescriptionSubSize) + ea,
@@ -2525,7 +2584,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                 }
               },
               {
-                text: "전체 구매",
+                text: furnitureValues[2].title,
                 style: {
                   position: "absolute",
                   fontSize: String(barDescriptionSubSize) + ea,
@@ -2536,13 +2595,14 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
                 }
               },
               {
+                class: [ variableBarClassName ],
                 style: {
                   position: "absolute",
                   left: String(0) + ea,
                   top: String(0) + ea,
-                  width: String(50) + '%',
+                  width: String(defaultRatio * 100) + '%',
                   height: String(100) + '%',
-                  transition: "all 0s ease",
+                  transition: "all 0.3s ease",
                 },
                 children: [
                   {
@@ -2943,7 +3003,7 @@ ClientConsultingJs.prototype.finalSubmit = function () {
               }
               break;
             }
-          } else {
+          } else if (/DIV/gi.test(nodeName)) {
 
             tempTargets = [];
             for (let dom of targets) {
@@ -2961,7 +3021,12 @@ ClientConsultingJs.prototype.finalSubmit = function () {
             }
             tempObj.value = onValue;
 
+          } else if (/ASIDE/gi.test(nodeName)) {
+
+            tempObj.value = firstDom.getAttribute("value");
+
           }
+
           map.push(tempObj)
         }
 

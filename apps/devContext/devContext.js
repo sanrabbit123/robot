@@ -175,7 +175,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    
 
 
 
@@ -211,7 +211,7 @@ DevContext.prototype.launching = async function () {
       rows = await back.mongoRead(collection, whereQuery, { selfMongo });
       rows.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
       
-      rows = rows.filter((obj) => { return [ "pageInit", "login", "submitForm" ].includes(obj.action) });
+      rows = rows.filter((obj) => { return [ "pageInit", "login", "submitForm", "popupOpen" ].includes(obj.action) });
 
 
       console.log(rows);

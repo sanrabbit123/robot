@@ -3005,12 +3005,6 @@ DataRouter.prototype.rou_post_getMembers = function () {
           }
         }
 
-        //dev------------------------------------------------------
-        if (req.body.value === "homeliaisonphoto@gmail.com") {
-          targetMember = membersArr[7];
-        }
-        //---------------------------------------------------------
-
         if (targetMember === undefined || targetMember === null) {
           res.send(JSON.stringify({ result: null }));
         } else {
@@ -3241,6 +3235,8 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       const selfMongo = instance.mongo;
       const { map } = equalJson(req.body);
       const budgetArr = [ '500만원 이하', '1,000만원', '1,500만원', '2,000만원', '2,500만원', '3,000만원', '3,500만원', '4,000만원', '4,500만원', '5,000만원 이상', '6,000만원 이상', '7,000만원 이상', '8,000만원 이상', '9,000만원 이상', '1억원 이상', '1억 5,000만원 이상', '2억원 이상', '3억원 이상', '5억원 이상', '10억원 이상', ];
+      const furnitureArr = [ "재배치", "일부 구매", "전체 구매" ];
+      const contractArr = [ "자가", "전월세" ];
       const ignorePhone = [ "010-2747-3403" ];
       const overlapStandardHours = 12;
       const defaultPyeong = 34;
@@ -3267,6 +3263,9 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       let thisClient;
       let sessionId;
       let overlapTimeline;
+      let budget;
+      let furniture;
+      let contract;
 
       name = map.find((obj) => { return obj.property === "name" });
       phone = map.find((obj) => { return obj.property === "phone" });
@@ -3277,10 +3276,31 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       movein = map.find((obj) => { return obj.property === "movein" });
       living = map.find((obj) => { return obj.property === "living" });
       etc = map.find((obj) => { return obj.property === "etc" });
+
       sessionId = map.find((obj) => { return obj.property === "sessionId" });
+
+      budget = map.find((obj) => { return obj.property === "budget" });
+      furniture = map.find((obj) => { return obj.property === "furniture" });
+      contract = map.find((obj) => { return obj.property === "contract" });
 
       if (name === undefined || phone === undefined || address0 === undefined || address1 === undefined || email === undefined || pyeong === undefined || movein === undefined || living === undefined || etc === undefined) {
         throw new Error("invaild post");
+      }
+
+      if (sessionId === undefined) {
+        sessionId = [];
+      } else {
+        sessionId = [ sessionId.value.trim() ];
+      }
+
+      if (budget === undefined) {
+        budget = { property: "budget", value: budgetArr[9] };
+      }
+      if (furniture === undefined) {
+        furniture = { property: "furniture", value: furnitureArr[1] };
+      }
+      if (contract === undefined) {
+        contract = { property: "contract", value: contractArr[0] };
       }
 
       name = name.value.trim();
@@ -3292,11 +3312,10 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       movein = movein.value.trim();
       living = living.value.trim();
       etc = etc.value.trim();
-      if (sessionId === undefined) {
-        sessionId = [];
-      } else {
-        sessionId = [ sessionId.value.trim() ];
-      }
+
+      budget = budget.value.trim();
+      furniture = furniture.value.trim();
+      contract = contract.value.trim();
 
       requestObject = {};
 
@@ -3307,7 +3326,8 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       requestObject["requests.0.request.space.address"] = address0 + " " + address1;
       requestObject["requests.0.request.family"] = "";
 
-      requestObject["requests.0.request.budget"] = budgetArr[0];
+      requestObject["requests.0.request.budget"] = budget;
+      requestObject["requests.0.request.furniture"] = furniture;
 
       if (Number.isNaN(Number(pyeong.replace(/[^0-9\.]/gi, ''))) || Number(pyeong.replace(/[^0-9\.]/gi, '')) === 0) {
         requestObject["requests.0.request.space.pyeong"] = defaultPyeong;
@@ -3339,7 +3359,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
         requestObject["requests.0.analytics.date.space.movein"] = future;
       }
 
-      requestObject["requests.0.request.space.contract"] = "자가";
+      requestObject["requests.0.request.space.contract"] = contract;
       requestObject["requests.0.request.space.spec.room"] = 3;
       requestObject["requests.0.request.space.spec.bathroom"] = 2;
       requestObject["requests.0.request.space.spec.valcony"] = false;
@@ -9091,7 +9111,7 @@ DataRouter.prototype.rou_post_styleCuration_styleChecking = function () {
 DataRouter.prototype.setMembers = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, errorLog } = this.mother;
+  const { errorLog } = this.mother;
   try {
     this.members = await back.setMemberObj({ getMode: true, selfMongo: instance.mongo });
   } catch (e) {
