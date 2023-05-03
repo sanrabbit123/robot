@@ -2892,6 +2892,10 @@ Mother.prototype.ipParsing = async function (ip) {
     num = 0;
     resultBoo = false;
     do {
+      if (num > 20) {
+        finalResult = {};
+        break;
+      }
       try {
         if (tokenArr[num] === undefined) {
           throw new Error("more token need");

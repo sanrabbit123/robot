@@ -747,7 +747,7 @@ LogRouter.prototype.rou_post_errorMessage = function () {
 LogRouter.prototype.rou_post_getAnalytics = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, ipParsing } = this.mother;
+  const { equalJson, ipParsing, sleep } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/getAnalytics" ];
@@ -768,6 +768,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
       let thisData;
       let thisId;
       let ipObj;
+      let safeNum;
 
       thisData = equalJson(req.body);
       if (typeof thisData.info === "object" && thisData.info !== null) {
@@ -787,6 +788,16 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
       name = "fromServer_" + thisData.action;
 
       ipObj = await ipParsing(ip);
+
+      safeNum = 0;
+      while (Object.keys(ipObj).length === 0) {
+        if (safeNum > 10) {
+          break;
+        }
+        await sleep(100);
+        ipObj = await ipParsing(ip);
+        safeNum = safeNum + 1;
+      }
 
       custom = {
         id: thisData.id,

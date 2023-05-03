@@ -173,8 +173,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-    /*
+
 
     await this.MONGOLOGC.connect();
 
@@ -183,7 +182,10 @@ DevContext.prototype.launching = async function () {
     let rows;
     let targetCliid;
     let sessionIds;
-    let whereQuery;
+    let whereQuery, updateQuery;
+    let targetRows;
+    let thisIp;
+    let thisObj;
 
 
     // targetCliid = "c2305_aa21s";
@@ -205,12 +207,9 @@ DevContext.prototype.launching = async function () {
     // }
   
 
-    rows = await back.mongoRead(collection, {}, { selfMongo });
-    console.log(rows);
 
     await this.MONGOLOGC.close();
 
-    */
 
     
 
