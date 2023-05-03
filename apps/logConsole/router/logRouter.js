@@ -829,8 +829,38 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
 
       try {
         parserResult = parser(user);
+
         delete parserResult.cpu;
         delete parserResult.ua;
+        delete parserResult.engine;
+
+        parserResult.browser = parserResult.browser.name;
+        parserResult.os.browser = parserResult.browser;
+
+        delete parserResult.browser;
+  
+        if (parserResult.os.name === "Windows") {
+          if (parserResult.device.vendor === undefined) {
+            parserResult.device.vendor = "Unknown";
+          }
+          if (parserResult.device.model === undefined) {
+            parserResult.device.model = "Unknown";
+          }
+          parserResult.device.type = "desktop";
+        } else if (/Mac OS/gi.test(parserResult.os.name)) {
+          parserResult.device.type = "desktop";
+        }
+  
+        if (parserResult.device.vendor === undefined) {
+          parserResult.device.vendor = "Unknown";
+        }
+        if (parserResult.device.model === undefined) {
+          parserResult.device.model = "Unknown";
+        }
+        if (parserResult.device.type === undefined) {
+          parserResult.device.type = "desktop";
+        }
+
         thisData.device = equalJson(JSON.stringify(parserResult));
       } catch {
         thisData.device = {};
