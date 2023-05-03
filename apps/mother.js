@@ -2861,39 +2861,56 @@ Mother.prototype.colorParsing = function (str) {
   }
 }
 
-Mother.prototype.ipParsing = function (ip) {
+Mother.prototype.ipParsing = async function (ip) {
   if (typeof ip !== "string") {
     throw new Error("input must be ip");
   }
-  ip = ip.trim().replace(/[^0-9\.]/gi, '');
-  if (ip.replace(/[0-9\.]/g, '') !== '') {
-    return new Promise((resolve, reject) => {
-      resolve(null);
-    });
-  }
-  if (!/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/g.test(ip)) {
-    return new Promise((resolve, reject) => {
-      resolve(null);
-    });
-  }
-  const axios = require('axios');
-  let url;
+  const axios = require("axios");
+  const tokenArr = [
+    "5364d1717afd33",
+    "e0cda9d974c871",
+    "43e500b8c6c967",
+    "e9604175815438",
+  ];
+  try {
+    ip = ip.trim().replace(/[^0-9\.]/gi, '');
+    if (ip.replace(/[0-9\.]/g, '') !== '') {
+      throw new Error("invalid ip");
+    }
+    if (!/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/g.test(ip)) {
+      throw new Error("invalid ip");
+    }
+    let url;
+    let res;
+    let resultBoo;
+    let num;
+    let finalResult;
 
-  url = "https://ipinfo.io";
-  url += "/" + ip;
-
-  return new Promise(function (resolve, reject) {
-    axios.get(url).then(function (response) {
-      if (response.status === 200 && typeof response.data === "object") {
-        if (response.data.readme !== undefined) {
-          delete response.data.readme;
+    url = "https://ipinfo.io";
+    url += "/" + ip;
+  
+    num = 0;
+    resultBoo = false;
+    do {
+      try {
+        if (tokenArr[num] === undefined) {
+          throw new Error("more token need");
         }
-        resolve(response.data);
+        res = await axios.get(url + "?token=" + tokenArr[num]);
+        finalResult = res.data;
+        resultBoo = true;
+      } catch {
+        resultBoo = false;
+        finalResult = {};
+        num = num + 1;
       }
-    }).catch(function (error) {
-      resolve(null);
-    });
-  });
+    } while (!resultBoo)
+
+    return finalResult;
+  } catch (e) {
+    console.log(e);
+    return {};
+  }
 }
 
 Mother.prototype.s3FileUpload = function (fromArr, toArr) {

@@ -173,16 +173,46 @@ DevContext.prototype.launching = async function () {
 
 
 
+    
+    /*
+
+    await this.MONGOLOGC.connect();
+
+    const selfMongo = this.MONGOLOGC;
+    const collection = "homeliaisonAnalytics";
+    let rows;
+    let targetCliid;
+    let sessionIds;
+    let whereQuery;
+
+
+    // targetCliid = "c2305_aa21s";
+
+
+    // rows = await back.mongoRead(collection, { "data.cliid": targetCliid }, { selfMongo });
+    // rows = rows.map((obj) => { return obj.id });
+    // sessionIds = [ ...new Set(rows) ];
+
+    // if (sessionIds.length > 0) {
+
+    //   whereQuery = {};
+    //   whereQuery["$or"] = sessionIds.map((id) => { return { id } });
+    //   rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+    //   rows.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
+      
+    //   // console.log(rows);
+
+    // }
+  
+
+    rows = await back.mongoRead(collection, {}, { selfMongo });
+    console.log(rows);
+
+    await this.MONGOLOGC.close();
+
+    */
 
     
-
-
-    
-
-
-
-
-
 
 
 

@@ -767,6 +767,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
       let ip, referer;
       let thisData;
       let thisId;
+      let ipObj;
 
       thisData = equalJson(req.body);
       if (typeof thisData.info === "object" && thisData.info !== null) {
@@ -784,46 +785,46 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
       }
 
       name = "fromServer_" + thisData.action;
-      custom = {};
 
-      ipParsing(ip).then((ipObj) => {
-        custom = {
-          id: thisData.id,
-          network: {
-            ip,
-            referer,
-            userAgent,
-            browser,
-            os,
-            platform,
-            mobile: rawUserAgent.isMobile,
-            ...ipObj
-          },
-          date: (new Date()).valueOf(),
-          data: {
-            page: thisData.page,
-            action: thisData.action,
-            raw: thisData.data,
-          }
-        };
-        thisData.date = new Date();
-        thisData.network = { ...ipObj };
+      ipObj = await ipParsing(ip);
 
-        return back.mongoCreate(collection, thisData, { selfMongo: instance.mongo });
-      }).then(() => {
-        return instance.facebook.conversionEvent({
-          name,
-          data: {
-            ip: ip,
-            userAgent: userAgent,
-          },
-          custom
-        });
+      custom = {
+        id: thisData.id,
+        network: {
+          ip,
+          referer,
+          userAgent,
+          browser,
+          os,
+          platform,
+          mobile: rawUserAgent.isMobile,
+          ...ipObj
+        },
+        date: (new Date()).valueOf(),
+        data: {
+          page: thisData.page,
+          action: thisData.action,
+          raw: thisData.data,
+        }
+      };
+
+      thisData.date = new Date();
+      thisData.network = { ...ipObj };
+
+      await back.mongoCreate(collection, thisData, { selfMongo: instance.mongo });
+
+      instance.facebook.conversionEvent({
+        name,
+        data: {
+          ip: ip,
+          userAgent: userAgent,
+        },
+        custom,
       }).catch((err) => {
         console.log(err);
       });
 
-      res.send(JSON.stringify({ message: "will do" }));
+      res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       errorLog("Log console 서버 문제 생김 (rou_post_getAnalytics): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
