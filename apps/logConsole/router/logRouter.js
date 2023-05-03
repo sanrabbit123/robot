@@ -747,6 +747,7 @@ LogRouter.prototype.rou_post_errorMessage = function () {
 LogRouter.prototype.rou_post_getAnalytics = function () {
   const instance = this;
   const back = this.back;
+  const parser = require("ua-parser-js");
   const { equalJson, ipParsing, sleep } = this.mother;
   let obj;
   obj = {};
@@ -769,14 +770,18 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
       let thisId;
       let ipObj;
       let safeNum;
+      let parserResult;
+      let user;
 
       thisData = equalJson(req.body);
       if (typeof thisData.info === "object" && thisData.info !== null) {
         ip = thisData.info.ip;
         referer = thisData.info.referer;
+        user = thisData.info.userAgent;
       } else {
         ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
         referer = (req.headers.referer === undefined ? "" : req.headers.referer);  
+        user = userAgent;
       }
 
       if (typeof thisData.id === "string") {
@@ -821,6 +826,15 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
 
       thisData.date = new Date();
       thisData.network = { ...ipObj };
+
+      try {
+        parserResult = parser(user);
+        delete parserResult.cpu;
+        delete parserResult.ua;
+        thisData.device = equalJson(JSON.stringify(parserResult));
+      } catch {
+        thisData.device = {};
+      }
 
       await back.mongoCreate(collection, thisData, { selfMongo: instance.mongo });
 

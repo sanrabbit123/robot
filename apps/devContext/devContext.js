@@ -174,9 +174,10 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    
     await this.MONGOLOGC.connect();
 
+    const parser = require("ua-parser-js");
     const selfMongo = this.MONGOLOGC;
     const collection = "homeliaisonAnalytics";
     let rows;
@@ -186,28 +187,50 @@ DevContext.prototype.launching = async function () {
     let targetRows;
     let thisIp;
     let thisObj;
+    let thisResult;
 
 
-    // targetCliid = "c2305_aa21s";
+    targetCliid = "c2305_aa21s";
 
 
-    // rows = await back.mongoRead(collection, { "data.cliid": targetCliid }, { selfMongo });
-    // rows = rows.map((obj) => { return obj.id });
-    // sessionIds = [ ...new Set(rows) ];
+    rows = await back.mongoRead(collection, { "data.cliid": targetCliid }, { selfMongo });
+    rows = rows.map((obj) => { return obj.id });
+    sessionIds = [ ...new Set(rows) ];
 
-    // if (sessionIds.length > 0) {
+    if (sessionIds.length > 0) {
 
-    //   whereQuery = {};
-    //   whereQuery["$or"] = sessionIds.map((id) => { return { id } });
-    //   rows = await back.mongoRead(collection, whereQuery, { selfMongo });
-    //   rows.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
+      whereQuery = {};
+      whereQuery["$or"] = sessionIds.map((id) => { return { id } });
+      rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+      rows.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
       
-    //   // console.log(rows);
+      rows = rows.filter((obj) => { return [ "pageInit", "login", "submitForm" ].includes(obj.action) });
+
+      rows.forEach((obj) => {
+        thisResult = parser(obj.info.userAgent);
+        delete thisResult.cpu;
+        console.log(thisResult);
+      })
+      
+    } 
+  
+    // rows = await back.mongoRead(collection, {}, { selfMongo });
+    // targetRows = rows.filter((row) => { return Object.keys(row.network).length === 0 });
+    // for (let row of targetRows) {
+
+    //   try {
+    //     thisIp = row.info.ip;
+    //     thisObj = await ipParsing(thisIp);
+    //     whereQuery = { _id: row._id };
+    //     updateQuery = {};
+    //     updateQuery["network"] = thisObj;
+    //     await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+    //     console.log(whereQuery, updateQuery);
+    //   } catch {
+    //   }
 
     // }
-  
-
-
+    
     await this.MONGOLOGC.close();
 
 

@@ -20,8 +20,7 @@ const FacebookAPIs = function (mother = null, back = null, address = null) {
   this.instagramId = "17841405547472752";
   this.facebookAdId = "505249990112820";
   this.pixelId = "814052605684956";
-  this.appVersion = "v14.0";
-
+  this.appVersion = "v16.0";
 }
 
 FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
@@ -113,7 +112,7 @@ FacebookAPIs.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3)
         if (tempRows.length !== 0) {
           await back.mongoDelete(campaignCollection, { key }, { selfMongo });
         }
-        await back.mongoCreate(campaignCollection, json, { selfMongo })
+        await back.mongoCreate(campaignCollection, json, { selfMongo });
         console.log(json);
         num++;
       }
@@ -250,7 +249,7 @@ FacebookAPIs.prototype.getAccessToken = async function () {
       client_id: facebookAppId,
       client_secret: facebookAppSecret,
       fb_exchange_token: token,
-    }, { method: "get" })
+    }, { method: "get" });
 
     console.log(res.data);
 
