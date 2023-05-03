@@ -2176,7 +2176,7 @@ StaticRouter.prototype.rou_post_getUtilization = function () {
           target = await fileSystem("readString", [ `${fileTargetFolder}/${fileName}` ])
       
           targetArr = target.split("\n");
-      
+
           matrix = [];
           tempArr = null;
           for (let raw of targetArr) {
@@ -2193,14 +2193,31 @@ StaticRouter.prototype.rou_post_getUtilization = function () {
                 } else if (/^CPU_ALL,/.test(raw)) {
                   tempArr.push(raw);
                 }
+                
+                /*
+                else if (/^MEM,/.test(raw)) {
+                  tempArr.push(raw);
+                  // MEM,Memory MB homeliaison,memtotal,hightotal,lowtotal,swaptotal,memfree,highfree,lowfree,swapfree,memshared,cached,active,bigfree,buffers,swapcached,inactive
+                  // MEM,T0005,15673.3,-0.0,-0.0,4096.0,1012.6,-0.0,-0.0,4004.7,212.4,9534.0,7820.2,-1.0,1297.8,2.4,5574.1
+                } else if (/^TOP,/.test(raw)) {
+                  tempArr.push(raw);
+                  // TOP,0802321,T0005,9.51,9.51,0.00,651452,114816,78112,136592,37600,0,0,node,7,0
+                }
+                */
+               
               }
             }
           }
       
-          filteredMatrix = matrix.map(([ , cpu, net ]) => {
+          filteredMatrix = matrix.map((arr) => {
+            const [ , cpu, net, memory ] = arr;
             const cpuUsage = (100 - Number(cpu.split(",")[5])) / 100;
             const networkIn = Number(net.split(",")[3]) * 1024;
             const networkOut = Number(net.split(",")[5]) * 1024;
+            /*
+            const totalMemory = memory.split(",")[5];
+            const memoryUsage = (100 - Number(memory.split(",")[5])) / 100;
+            */
             return [ cpuUsage, networkIn, networkOut ];
           });
   
