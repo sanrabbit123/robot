@@ -2871,6 +2871,10 @@ Mother.prototype.ipParsing = async function (ip) {
     "e0cda9d974c871",
     "43e500b8c6c967",
     "e9604175815438",
+    "aa1c080944cc62",
+    "89880f9c17d281",
+    "f4b7957331df41",
+    "85fbcc3242a42d",
   ];
   try {
     ip = ip.trim().replace(/[^0-9\.]/gi, '');
@@ -2883,27 +2887,40 @@ Mother.prototype.ipParsing = async function (ip) {
     let url;
     let res;
     let resultBoo;
-    let num;
+    let num, num2;
     let finalResult;
+    let thisNumber;
+    let expired;
 
     url = "https://ipinfo.io";
     url += "/" + ip;
   
     num = 0;
     resultBoo = false;
+    expired = [];
+    
     do {
-      if (num > 20) {
+      if (num > (tokenArr.length * 3)) {
         finalResult = {};
         break;
       }
-      try {
-        if (tokenArr[num] === undefined) {
-          throw new Error("more token need");
+
+      thisNumber = Math.floor(Math.random() * tokenArr.length);
+      num2 = 0;
+      while (expired.includes(thisNumber)) {
+        if (num2 > tokenArr.length) {
+          break;
         }
-        res = await axios.get(url + "?token=" + tokenArr[num]);
+        thisNumber = Math.floor(Math.random() * tokenArr.length);
+        num2 = num2 + 1;
+      }
+
+      try {
+        res = await axios.get(url + "?token=" + tokenArr[thisNumber]);
         finalResult = res.data;
         resultBoo = true;
       } catch {
+        expired.push(thisNumber);
         resultBoo = false;
         finalResult = {};
         num = num + 1;

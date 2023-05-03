@@ -171,13 +171,20 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
     
+
+
+
+
+
+
+
+    /*
+    
+    // homeliaison analytics
+
     await this.MONGOLOGC.connect();
 
-    const parser = require("ua-parser-js");
     const selfMongo = this.MONGOLOGC;
     const collection = "homeliaisonAnalytics";
     let rows;
@@ -188,79 +195,50 @@ DevContext.prototype.launching = async function () {
     let thisIp;
     let thisObj;
     let thisResult;
-    let vendor;
-    let model;
-    let type;
 
 
-    // targetCliid = "c2305_aa21s";
+    targetCliid = "c2305_aa21s";
 
 
-    // rows = await back.mongoRead(collection, { "data.cliid": targetCliid }, { selfMongo });
-    // rows = rows.map((obj) => { return obj.id });
-    // sessionIds = [ ...new Set(rows) ];
+    rows = await back.mongoRead(collection, { "data.cliid": targetCliid }, { selfMongo });
+    rows = rows.map((obj) => { return obj.id });
+    sessionIds = [ ...new Set(rows) ];
 
-    // if (sessionIds.length > 0) {
+    if (sessionIds.length > 0) {
 
-    //   whereQuery = {};
-    //   whereQuery["$or"] = sessionIds.map((id) => { return { id } });
-    //   rows = await back.mongoRead(collection, whereQuery, { selfMongo });
-    //   rows.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
+      whereQuery = {};
+      whereQuery["$or"] = sessionIds.map((id) => { return { id } });
+      rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+      rows.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
       
-    //   rows = rows.filter((obj) => { return [ "pageInit", "login", "submitForm" ].includes(obj.action) });
+      rows = rows.filter((obj) => { return [ "pageInit", "login", "submitForm" ].includes(obj.action) });
 
+
+      console.log(rows);
       
-    // } 
+    } 
   
-    rows = await back.mongoRead(collection, {}, { selfMongo });
 
-    targetRows = rows.filter((row) => { return (row.info !== undefined && typeof row.info.userAgent === "string") });
+    // rows = await back.mongoRead(collection, {}, { selfMongo });
+    // targetRows = rows.filter((row) => { return Object.keys(row.network).length === 0 });
+    // for (let row of targetRows) {
 
-    for (let row of targetRows) {
+    //   try {
+    //     thisIp = row.info.ip;
+    //     thisObj = await ipParsing(thisIp);
+    //     whereQuery = { _id: row._id };
+    //     updateQuery = {};
+    //     updateQuery["network"] = thisObj;
+    //     await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+    //     console.log(whereQuery, updateQuery);
+    //   } catch {
+    //   }
 
-      thisIp = row.info.userAgent;
-      thisObj = parser(thisIp);
-      whereQuery = { _id: row._id };
-      updateQuery = {};
-      delete thisObj.cpu;
-      delete thisObj.ua;
-      delete thisObj.engine;
-
-      thisObj.browser = thisObj.browser.name;
-      thisObj.os.browser = thisObj.browser;
-      delete thisObj.browser;
-
-      if (thisObj.os.name === "Windows") {
-        if (thisObj.device.vendor === undefined) {
-          thisObj.device.vendor = "Unknown";
-        }
-        if (thisObj.device.model === undefined) {
-          thisObj.device.model = "Unknown";
-        }
-        thisObj.device.type = "desktop";
-      } else if (/Mac OS/gi.test(thisObj.os.name)) {
-        thisObj.device.type = "desktop";
-      }
-
-      if (thisObj.device.vendor === undefined) {
-        thisObj.device.vendor = "Unknown";
-      }
-      if (thisObj.device.model === undefined) {
-        thisObj.device.model = "Unknown";
-      }
-      if (thisObj.device.type === undefined) {
-        thisObj.device.type = "desktop";
-      }
-
-      updateQuery["device"] = thisObj;
-      // await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
-      console.log(whereQuery, updateQuery);
-
-    }
+    // }
     
     await this.MONGOLOGC.close();
 
-
+    */
     
 
 
