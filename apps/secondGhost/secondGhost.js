@@ -89,7 +89,7 @@ const SecondGhost = function (mother = null, back = null, address = null) {
 SecondGhost.prototype.ghostConnect = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, equalJson } = this.mother;
+  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, equalJson, expressLog } = this.mother;
   const { slack_userToken, slack_info, slack_fairyToken, telegram } = this;
   const PORT = 3000;
   const https = require("https");
@@ -99,6 +99,11 @@ SecondGhost.prototype.ghostConnect = async function () {
   const multiForms = multer();
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + "/static";
+  const fs = require("fs");
+  const logKeyword = "expressLog";
+  const logFolder = process.env.HOME + "/server/log";
+  const thisLogFile = `${logFolder}/${logKeyword}_${(new Date()).valueOf()}.log`;
+  const serverName = "second";
 
   app.use(useragent.express());
   app.use(express.json({ limit : "50mb" }));
@@ -184,11 +189,32 @@ SecondGhost.prototype.ghostConnect = async function () {
     const router = new SecondRouter(this.slack_bot, this.slack_user, MONGOC, MONGOLOCALC, slack_userToken, slack_info, slack_fairyToken, telegram, kakaoInstance, humanInstance);
     await router.setMembers();
     const rouObj = router.getAll();
+    const logStream = fs.createWriteStream(thisLogFile);
+    await expressLog(serverName, logStream, "start");
+
     for (let obj of rouObj.get) {
-      app.get(obj.link, obj.func);
+      app.get(obj.link, async function (req, res) {
+        try {
+          expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
+          await obj.func(req, res);
+        } catch (e) {
+          console.log(e);
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
+        }
+      });
     }
     for (let obj of rouObj.post) {
-      app.post(obj.link, obj.func);
+      app.post(obj.link, async function (req, res) {
+        try {
+          expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
+          await obj.func(req, res);
+        } catch (e) {
+          console.log(e);
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
+        }
+      });
     }
     console.log(`set router`);
 

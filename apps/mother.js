@@ -3358,10 +3358,18 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
   return new Promise((resolve, reject) => {
     let obj;
     let thisId;
+    let thisIp;
 
     thisId = idKeyword + "_" + server + "_" + uniqueHex() + String((new Date()).valueOf());
+    thisIp = "unknown";
 
     if (mode === "route") {
+      thisIp = (req.headers["x-forwarded-for"] || req.socket.remoteAddress);
+      if (typeof thisIp === "string") {
+        thisIp = thisIp.replace(/[^0-9\.]/gi, '');
+      } else {
+        thisIp = "unknown";
+      }
       obj = {
         id: thisId,
         server: server,
@@ -3370,7 +3378,7 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
         data: {
           method: req.method,
           url: req.url,
-          ip: (req.headers["x-forwarded-for"] || req.socket.remoteAddress),
+          ip: thisIp,
           userAgent: req.useragent.source,
           origin: (req.headers.origin || "unknown"),
         }
@@ -3384,7 +3392,7 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
         mode: mode,
         data: {}
       };
-      stream.write(JSON.stringify(obj));  
+      stream.write(JSON.stringify(obj));
     }
 
     resolve(obj);

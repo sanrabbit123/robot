@@ -146,12 +146,17 @@ ReceiptObserver.prototype.wssClientLaunching = async function (url = "") {
 
 ReceiptObserver.prototype.taxServerLaunching = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, expressLog } = this.mother;
   const https = require("https");
   const express = require("express");
   const app = express();
   const multer = require("multer");
   const multiForms = multer();
+  const fs = require("fs");
+  const logKeyword = "expressLog";
+  const logFolder = process.env.HOME + "/server/log";
+  const thisLogFile = `${logFolder}/${logKeyword}_${(new Date()).valueOf()}.log`;
+  const serverName = "python";
 
   app.use(express.json({ limit : "50mb" }));
   app.use(multiForms.array());
@@ -216,11 +221,32 @@ ReceiptObserver.prototype.taxServerLaunching = async function () {
     const ReceiptRouter = require(`${this.dir}/router/receiptRouter.js`);
     const router = new ReceiptRouter(MONGOC, MONGOLOCALC, kakaoInstance, humanInstance);
     const rouObj = router.getAll();
+    const logStream = fs.createWriteStream(thisLogFile);
+    await expressLog(serverName, logStream, "start");
+    
     for (let obj of rouObj.get) {
-      app.get(obj.link, obj.func);
+      app.get(obj.link, async function (req, res) {
+        try {
+          expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
+          await obj.func(req, res);
+        } catch (e) {
+          console.log(e);
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
+        }
+      });
     }
     for (let obj of rouObj.post) {
-      app.post(obj.link, obj.func);
+      app.post(obj.link, async function (req, res) {
+        try {
+          expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
+          await obj.func(req, res);
+        } catch (e) {
+          console.log(e);
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
+        }
+      });
     }
     console.log(`set router`);
 

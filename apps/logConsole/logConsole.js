@@ -150,7 +150,7 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
 
 LogConsole.prototype.logConnect = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog, messageLog } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog, messageLog, expressLog } = this.mother;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
@@ -159,6 +159,11 @@ LogConsole.prototype.logConnect = async function () {
   const multiForms = multer();
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + "/static";
+  const fs = require("fs");
+  const logKeyword = "expressLog";
+  const logFolder = process.env.HOME + "/server/log";
+  const thisLogFile = `${logFolder}/${logKeyword}_${(new Date()).valueOf()}.log`;
+  const serverName = "log";
 
   app.use(useragent.express());
   app.use(express.json({ limit : "50mb" }));
@@ -223,11 +228,32 @@ LogConsole.prototype.logConnect = async function () {
     const router = new LogRouter(this.slack_bot, MONGOC);
 
     const rouObj = router.getAll();
+    const logStream = fs.createWriteStream(thisLogFile);
+    await expressLog(serverName, logStream, "start");
+
     for (let obj of rouObj.get) {
-      app.get(obj.link, obj.func);
+      app.get(obj.link, async function (req, res) {
+        try {
+          expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
+          await obj.func(req, res);
+        } catch (e) {
+          console.log(e);
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
+        }
+      });
     }
     for (let obj of rouObj.post) {
-      app.post(obj.link, obj.func);
+      app.post(obj.link, async function (req, res) {
+        try {
+          expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
+          await obj.func(req, res);
+        } catch (e) {
+          console.log(e);
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
+        }
+      });
     }
     console.log(`set router`);
 
