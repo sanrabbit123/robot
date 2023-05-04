@@ -3443,7 +3443,9 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       }, {
         headers: { "Content-Type": "application/json" }
       });
-      requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+      requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }, { headers: { "Content-Type": "application/json" } }).then(() => {
+        return requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/printClient", { cliid: thisClient.cliid }, { headers: { "Content-Type": "application/json" } });
+      }).catch((err) => { console.log(err); });
 
       res.send(JSON.stringify({ cliid }));
     } catch (e) {
@@ -8944,8 +8946,6 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
             client: client.name,
           });
           await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈어요.", channel: "#404_curation" });
-
-          requestSystem("https://" + address.secondinfo.host + "/printClient", { cliid: client.cliid, curation: history.curation }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
         }
 
         res.send(JSON.stringify({ service: [], client: client.toNormal(), history }));

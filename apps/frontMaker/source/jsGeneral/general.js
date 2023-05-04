@@ -5861,18 +5861,6 @@ GeneralJs.prototype.greenTalk = function (input) {
     class: [ eventClassName ],
     event: {
       click: eventFunc,
-      touchstart: function (e) {
-        const self = this;
-        self.setAttribute(touchStartConst, "on");
-        setQueue(() => {
-          self.setAttribute(touchStartConst, "off");
-        });
-      },
-      touchend: function (e) {
-        if (this.getAttribute(touchStartConst) === "on") {
-          eventFunc.call(this, e);
-        }
-      }
     },
     style: {
       display: "flex",
@@ -5969,19 +5957,10 @@ GeneralJs.prototype.greenTalk = function (input) {
       toggle: "off"
     },
     event: {
-      click: eventFunc,
-      touchstart: function (e) {
-        const self = this;
-        self.setAttribute(touchStartConst, "on");
-        setQueue(() => {
-          self.setAttribute(touchStartConst, "off");
-        });
+      click: function (e) {
+        e.stopPropagation();
+        eventFunc.call(this, e);
       },
-      touchend: function (e) {
-        if (this.getAttribute(touchStartConst) === "on") {
-          eventFunc.call(this, e);
-        }
-      }
     },
     style: {
       display: "inline-flex",

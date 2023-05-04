@@ -205,11 +205,15 @@ const withTools = function (Client) {
     message += "이메일 : " + this.email + "\n";
     message += "주소 : " + request.space.address.value + "\n";
     message += "평수 : " + request.space.pyeong.toMessage() + "\n";
-    message += "입주 예정일 : " + request.space.resident.expected.toString() + "\n";
+    if (!request.space.resident.living) {
+      message += "입주 예정일 : " + request.space.resident.expected.toString() + "\n";
+    } else {
+      message += "입주 예정일 : " + "거주중" + "\n";
+    }
     message += "계약 형태 : " + request.space.contract.value + "\n";
-    message += "공간 상태 : " + request.space.spec.toMessage() + "\n";
+    message += "예산 : " + request.budget.toNormal() + "\n";
+    message += "가구 : " + request.furniture.toNormal() + "\n";
     message += "요청 사항 : " + request.etc.comment + "\n";
-    message += "유입 경로 : " + request.etc.channel + "\n";
 
     return message.replace(/\n$/, '');
   }
@@ -238,8 +242,6 @@ const withTools = function (Client) {
     documentArr.push("계약 형태 : " + request.space.contract.value + "\n");
     documentArr.push("예산 : " + request.budget.value + "\n");
     documentArr.push("가구 구매 : " + request.furniture.value + "\n");
-    thisSerid = analytics.response.service.serid;
-    documentArr.push("시공 정도 : " + [ "시공 없음", "부분 시공", "전체 시공", "구조 변경" ][Number(thisSerid.split("_")[1].replace(/[^0-9]/gi, '')) - 1] + "\n");
 
     comment = "요청 사항 : " + request.etc.comment;
     commentArr = [];

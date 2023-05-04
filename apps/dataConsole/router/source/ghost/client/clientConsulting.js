@@ -1181,6 +1181,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
 
   calendarViewEvent = async function (e) {
     try {
+      this.blur();
       const mother = this.previousElementSibling;
       const removeTargets = "removeTargets";
       const zIndex = 4;

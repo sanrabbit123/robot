@@ -2711,7 +2711,9 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       }, {
         headers: { "Content-Type": "application/json" }
       });
-      requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+      requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }, { headers: { "Content-Type": "application/json" } }).then(() => {
+        return requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/printClient", { cliid: thisClient.cliid }, { headers: { "Content-Type": "application/json" } });
+      }).catch((err) => { console.log(err); });
 
       res.send(JSON.stringify({ cliid }));
     } catch (e) {

@@ -6123,6 +6123,7 @@ GeneralJs.prototype.consultingPopup = function () {
 
     calendarViewEvent = async function (e) {
       try {
+        this.blur();
         const mother = this.previousElementSibling;
         const removeTargets = "removeTargets";
         const zIndex = 4;
@@ -8043,7 +8044,7 @@ GeneralJs.prototype.finalSubmit = function () {
               }
               break;
             }
-          } else {
+          } else if (/DIV/gi.test(nodeName)) {
 
             tempTargets = [];
             for (let dom of targets) {
@@ -8061,7 +8062,12 @@ GeneralJs.prototype.finalSubmit = function () {
             }
             tempObj.value = onValue;
 
+          } else if (/ASIDE/gi.test(nodeName)) {
+
+            tempObj.value = firstDom.getAttribute("value");
+
           }
+
           map.push(tempObj);
         }
 
