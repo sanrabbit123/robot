@@ -7,9 +7,10 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
       return ((to.getFullYear() * 12) + to.getMonth() + 1) - ((from.getFullYear() * 12) + from.getMonth() + 1) + 1;
     }
     const now = new Date();
-    const past = new Date(2019, 0, 1);
+    const past = new Date();
     const yearsAgo = new Date();
     const agoDelta = 6;
+    const agoYearDelta = 1;
     let columns;
     let values;
     let timeDelta;
@@ -27,6 +28,13 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
     let filteredFilteredProjectsContract;
     let thisDate;
     let standards;
+
+    past.setFullYear(past.getFullYear() - agoYearDelta);
+    past.setMonth(0);
+    past.setDate(1);
+    past.setHours(9);
+    past.setMinutes(0);
+    past.setSeconds(0);
 
     yearsAgo.setMonth(yearsAgo.getMonth() - agoDelta);
     yearDelta = now.getFullYear() - past.getFullYear() + 1
@@ -518,7 +526,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
     if (firstLoad) {
 
-      ajaxJson({ noFlat: true, whereQuery: {} }, BACKHOST + "/getProjects", { equal: true }).then((projects) => {
+      ajaxJson({ noFlat: true, whereQuery: { "proposal.date": { $gte: past } } }, BACKHOST + "/getProjects", { equal: true }).then((projects) => {
 
         instance.projects = projects;
         instance.normalMatrix = {};
