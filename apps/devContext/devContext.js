@@ -147,7 +147,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
     // const url = "https://api.openai.com/v1/images/generations";
     // const openAiToken = "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";
     // const size = "1024x1024";
@@ -5841,8 +5840,8 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "김희원";
-    // const amount = 13010800;
+    // const name = "권정수";
+    // const amount = 4647500;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
