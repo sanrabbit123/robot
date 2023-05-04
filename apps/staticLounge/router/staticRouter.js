@@ -1,6 +1,7 @@
 const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+  const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
   const ImageReader = require(process.cwd() + "/apps/imageReader/imageReader.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
@@ -18,6 +19,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
 
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.work = new BackWorker();
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.host = this.address.officeinfo.ghost.host;
   this.mongo = MONGOC;
@@ -2994,6 +2996,201 @@ StaticRouter.prototype.rou_post_callHistory = function () {
   }
   return obj;
 }
+
+StaticRouter.prototype.rou_post_calendarSync = function () {
+  const instance = this;
+  const back = this.back;
+  const calendar = this.calendar;
+  const address = this.address;
+  const { errorLog, sleep } = this.mother;
+  const calendarSyncFunc = async (MONGOC, index) => {
+    try {
+      const selfMongo = MONGOC;
+      const today = new Date();
+      const standardDay = new Date();
+      const pastConst = 3;
+      standardDay.setDate(standardDay.getDate() - pastConst);
+      let projects, from;
+      let clients, designers;
+      let client, designer;
+      let title, list;
+      let allEvents;
+
+      from = "photographing";
+      projects = await back.getProjectsByQuery({
+        $and: [
+          { "desid": { $regex: "^d" } },
+          { "contents.photo.date": { $gt: standardDay } },
+          { "contents.photo.date": { $lt: new Date(3000, 0, 1) } },
+        ]
+      }, { selfMongo });
+
+      if (projects.length > 0) {
+        clients = await back.getClientsByQuery({
+          $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.cliid; })) ].map((c) => { return { cliid: c } }),
+        }, { selfMongo });
+        designers = await back.getDesignersByQuery({
+          $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.desid; })) ].map((c) => { return { desid: c } }),
+        }, { selfMongo });
+        allEvents = await calendar.listEvents(from);
+
+        for (let project of projects) {
+          if (!/디자이너/gi.test(project.contents.photo.info.photographer) && !/고객/gi.test(project.contents.photo.info.photographer)) {
+            client = clients.toNormal().find((obj) => { return obj.cliid === project.cliid });
+            designer = designers.toNormal().find((obj) => { return obj.desid === project.desid });
+            title = `촬영 W ${client.name}C ${designer.designer}D ${project.contents.photo.info.photographer}P ${project.contents.photo.info.interviewer}I ${project.proid}`;
+            list = allEvents.filter((obj) => { return (new RegExp(project.proid, "gi")).test(obj.title) });
+            if (list.length === 1) {
+              await calendar.updateSchedule(from, list[0].eventId, { start: project.contents.photo.date.toNormal(), title });
+            } else if (list.length === 0) {
+              await calendar.makeSchedule(from, title, '', project.contents.photo.date.toNormal());
+            } else {
+              for (let i = 0; i < list.length; i++) {
+                if (i === 0) {
+                  await calendar.updateSchedule(from, list[i].eventId, { start: project.contents.photo.date.toNormal(), title });
+                } else {
+                  await calendar.deleteSchedule(from, list[i].eventId);
+                }
+              }
+            }
+          } else {
+            list = allEvents.filter((obj) => { return (new RegExp(project.proid, "gi")).test(obj.title) });
+            if (list.length !== 0) {
+              for (let i = 0; i < list.length; i++) {
+                await calendar.deleteSchedule(from, list[i].eventId);
+              }
+            }
+          }
+        }
+      }
+
+      from = "designerMeeting";
+      projects = await back.getProjectsByQuery({
+        $and: [
+          { "desid": { $regex: "^d" } },
+          { "process.contract.meeting.date": { $gt: standardDay } },
+          { "process.contract.meeting.date": { $lt: new Date(3000, 0, 1) } },
+        ]
+      }, { selfMongo });
+
+      if (projects.length > 0) {
+
+        clients = await back.getClientsByQuery({
+          $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.cliid; })) ].map((c) => { return { cliid: c } }),
+        }, { selfMongo });
+        designers = await back.getDesignersByQuery({
+          $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.desid; })) ].map((c) => { return { desid: c } }),
+        }, { selfMongo });  
+        allEvents = await calendar.listEvents(from);
+
+        for (let project of projects) {
+          client = clients.toNormal().find((obj) => { return obj.cliid === project.cliid });
+          designer = designers.toNormal().find((obj) => { return obj.desid === project.desid });
+          title = `현장 미팅 W ${client.name}C ${designer.designer}D ${project.proid}`;
+          list = allEvents.filter((obj) => { return (new RegExp(project.proid, "gi")).test(obj.title) });
+          if (list.length === 1) {
+            await calendar.updateSchedule(from, list[0].eventId, { start: project.process.contract.meeting.date.toNormal(), title });
+          } else if (list.length === 0) {
+            await calendar.makeSchedule(from, title, '', project.process.contract.meeting.date.toNormal());
+          } else {
+            for (let i = 0; i < list.length; i++) {
+              if (i === 0) {
+                await calendar.updateSchedule(from, list[i].eventId, { start: project.process.contract.meeting.date.toNormal(), title });
+              } else {
+                await calendar.deleteSchedule(from, list[i].eventId);
+              }
+            }
+          }
+        }
+
+      }
+
+      errorLog("calendar sync success " + String(index) + " : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_calendarSync): " + e.message);
+    }
+  }
+  let obj = {};
+  obj.link = [ "/calendarSync" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      calendarSyncFunc(instance.mongo, 0).then(() => {
+        return calendarSyncFunc(instance.mongo, 1);
+      }).catch((err) => {
+        errorLog("Static lounge 서버 문제 생김 (rou_post_calendarSync): " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Static lounge 서버 문제 생김 (rou_post_calendarSync): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_workProposalToClient = function () {
+  const instance = this;
+  const work = this.work;
+  const { errorLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/workProposalToClient" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      work.setProposalToClient("cron", { selfMongo: instance.mongo }).then(() => {
+        return errorLog("proposal to client sync done : " + JSON.stringify(new Date()));
+      }).catch((err) => {
+        errorLog("Static lounge 서버 문제 생김 (rou_post_workProposalToClient): " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Static lounge 서버 문제 생김 (rou_post_workProposalToClient): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_workProjectActionSync = function () {
+  const instance = this;
+  const work = this.work;
+  const { errorLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/workProjectActionSync" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      work.projectActionSync({ selfMongo: instance.mongo, selfConsoleMongo: instance.mongoconsole, updateMongo: instance.mongo }).then(() => {
+        return errorLog("project action sync done : " + JSON.stringify(new Date()));
+      }).catch((err) => {
+        errorLog("Static lounge 서버 문제 생김 (rou_post_workProjectActionSync): " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Static lounge 서버 문제 생김 (rou_post_workProjectActionSync): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 
 //ROUTING ----------------------------------------------------------------------
 
