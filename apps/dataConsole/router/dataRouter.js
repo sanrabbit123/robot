@@ -4922,7 +4922,7 @@ DataRouter.prototype.rou_post_ghostDesigner_updateAnalytics = function () {
       if (mode === "page") {
 
         ipObj = await ipParsing(ip);
-        if (ipObj === null) {
+        if (Object.keys(ipObj).length === 0) {
           ipObj = { ip };
         }
         history[page].analytics.page.push({ page, date: new Date(), who, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj });
@@ -4941,7 +4941,7 @@ DataRouter.prototype.rou_post_ghostDesigner_updateAnalytics = function () {
       } else if (mode === "send") {
 
         ipObj = await ipParsing(ip);
-        if (ipObj === null) {
+        if (Object.keys(ipObj).length === 0) {
           ipObj = { ip };
         }
         updateObj = { page, date: new Date(), who, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj };
@@ -8478,7 +8478,7 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
       if (mode === "page") {
 
         ipObj = await ipParsing(ip);
-        if (ipObj === null) {
+        if (Object.keys(ipObj).length === 0) {
           ipObj = { ip };
         }
 

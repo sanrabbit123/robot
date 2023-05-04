@@ -36,7 +36,7 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
       if (mode === "page") {
 
         ipObj = await ipParsing(ip);
-        if (ipObj === null) {
+        if (Object.keys(ipObj).length === 0) {
           ipObj = { ip };
         }
 
