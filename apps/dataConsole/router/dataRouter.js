@@ -351,7 +351,7 @@ DataRouter.prototype.rou_get_First = function () {
       let ip, pass;
       let target;
 
-      ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
       if (typeof ip !== "string") {
         pass = false;
         ip = '';
@@ -3805,7 +3805,7 @@ DataRouter.prototype.rou_post_generalMongo = function () {
           if (req.body.who === undefined) {
             throw new Error("in log, must be who");
           }
-          ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+          ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
           device = req.headers['user-agent'] || "unknown";
           logObject = {
             date: (new Date()),
@@ -4901,7 +4901,7 @@ DataRouter.prototype.rou_post_ghostDesigner_updateAnalytics = function () {
         throw new Error("invaild post");
       }
       const { mode, desid, page, who } = req.body;
-      const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
+      const ip = String(req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"]).trim().replace(/[^0-9\.]/gi, '');
       const rawUserAgent = req.useragent;
       const { source: userAgent, browser, os, platform } = rawUserAgent;
       const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
@@ -7874,7 +7874,7 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
         throw new Error("invaild post");
       }
       const { mode, cliid, page } = req.body;
-      const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
+      const ip = String(req.headers['x-forwarded-for'] === undefined ? req.socket.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
       const rawUserAgent = req.useragent;
       const { source: userAgent, browser, os, platform } = rawUserAgent;
       const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);

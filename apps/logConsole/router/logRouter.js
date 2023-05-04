@@ -243,7 +243,7 @@ LogRouter.prototype.rou_post_receiveLog = function () {
       const { data } = equalJson(req.body);
       const { page, action, standard, id, value } = data;
       const selfMongo = instance.mongo;
-      const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
+      const ip = String(req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"]).trim().replace(/[^0-9\.]/gi, '');
       const rawUserAgent = req.useragent;
       const { source: userAgent, browser, os, platform } = rawUserAgent;
       const referer = (req.headers.referer === undefined ? "" : req.headers.referer);
@@ -779,7 +779,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
         referer = thisData.info.referer;
         user = thisData.info.userAgent;
       } else {
-        ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
+        ip = String(req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"]).trim().replace(/[^0-9\.]/gi, '');
         referer = (req.headers.referer === undefined ? "" : req.headers.referer);  
         user = userAgent;
       }

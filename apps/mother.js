@@ -3370,7 +3370,7 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
         data: {
           method: req.method,
           url: req.url,
-          ip: (req.connection.remoteAddress || "unknown"),
+          ip: (req.headers["x-forwarded-for"] || req.socket.remoteAddress),
           userAgent: req.useragent.source,
           origin: (req.headers.origin || "unknown"),
         }

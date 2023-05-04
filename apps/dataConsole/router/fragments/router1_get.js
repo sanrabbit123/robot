@@ -179,7 +179,7 @@ DataRouter.prototype.rou_get_First = function () {
       let ip, pass;
       let target;
 
-      ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
       if (typeof ip !== "string") {
         pass = false;
         ip = '';

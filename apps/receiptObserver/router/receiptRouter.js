@@ -35,7 +35,7 @@ ReceiptRouter.prototype.rou_get_Root = function () {
   obj.link = '/';
   obj.func = async function (req, res) {
     try {
-      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
       res.set({
         "Content-Type": "text/plain",
         "Access-Control-Allow-Origin": "*",
@@ -156,7 +156,7 @@ ReceiptRouter.prototype.rou_get_isOffice = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
       res.send(JSON.stringify({ result: (String(ip).replace(/[^0-9\.]/gi, '').trim() === address.officeinfo.ip.outer.trim() ? 1 : 0) }));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_get_isOffice): " + e.message).catch((e) => { console.log(e); });

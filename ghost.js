@@ -699,7 +699,7 @@ Ghost.prototype.ghostRouter = function (needs) {
     link: [ "/ip" ],
     func: async function (req, res) {
       try {
-        const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
         res.set({
           "Content-Type": "text/html",
           "Access-Control-Allow-Origin": '*',
@@ -2409,7 +2409,7 @@ Ghost.prototype.ghostRouter = function (needs) {
       });
       try {
         const collection = "statusLog";
-        const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
+        const ip = String(req.headers['x-forwarded-for'] === undefined ? req.socket.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
         const rawUserAgent = req.useragent;
         const { source: userAgent, browser, os, platform } = rawUserAgent;
         const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);

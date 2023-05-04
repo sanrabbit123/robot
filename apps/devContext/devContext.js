@@ -124,6 +124,14 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
+    // to construction (시공화)
+    // const res = await ajaxJson({
+    //   mode: "constructOnoff",
+    //   action: "on",
+    //   proid: "p2303_ab27s",
+    // }, "https://" + address.backinfo.host + ":3000/constructInteraction");
+    // console.log(res);
+
 
     // facebook token
     // const facebook = new FacebookAPIs();
@@ -172,8 +180,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
 
+    
     
 
 

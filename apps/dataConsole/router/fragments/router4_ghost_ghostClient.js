@@ -16,7 +16,7 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
         throw new Error("invaild post");
       }
       const { mode, cliid, page } = req.body;
-      const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
+      const ip = String(req.headers['x-forwarded-for'] === undefined ? req.socket.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
       const rawUserAgent = req.useragent;
       const { source: userAgent, browser, os, platform } = rawUserAgent;
       const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
