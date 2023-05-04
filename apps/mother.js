@@ -1,5 +1,3 @@
-const { resolve } = require("path");
-
 const Mother = function () {
   const infoObj = require(process.cwd() + "/apps/infoObj.js");
 
