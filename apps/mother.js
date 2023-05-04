@@ -1,3 +1,5 @@
+const { resolve } = require("path");
+
 const Mother = function () {
   const infoObj = require(process.cwd() + "/apps/infoObj.js");
 
@@ -10,7 +12,6 @@ const Mother = function () {
   this.mongolocalinfo = "mongodb://" + infoObj.mongoinfo.user + ':' + infoObj.mongoinfo.password + '@' + "127.0.0.1" + ':' + String(infoObj.mongoinfo.port) + "/admin";
   this.mongotestinfo = "mongodb://" + infoObj.testinfo.user + ':' + infoObj.testinfo.password + '@' + infoObj.testinfo.host + ':' + String(infoObj.testinfo.port) + "/admin";
   this.mongosecondinfo = "mongodb://" + infoObj.secondinfo.user + ':' + infoObj.secondinfo.password + '@' + infoObj.secondinfo.host + ':' + String(infoObj.secondinfo.port) + "/admin";
-  this.mongocroninfo = "mongodb://" + infoObj.croninfo.user + ':' + infoObj.croninfo.password + '@' + infoObj.croninfo.host + ':' + String(infoObj.croninfo.port) + "/admin";
 
   this.mongo = require("mongodb").MongoClient;
 
@@ -3313,6 +3314,81 @@ Mother.prototype.errorLog = function (text) {
       reject(err);
     });
   });
+}
+
+Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
+  if (typeof server !== "string") {
+    throw new Error("server name need");
+  }
+  if (typeof stream !== "object" || stream === null) {
+    throw new Error("invalid input 0");
+  }
+  if (typeof mode !== "string") {
+    throw new Error("mode need");
+  }
+  const idKeyword = "log";
+  const uniqueHex = function () {
+    const x = 16;
+    const length = 11;
+    const uniqueNumber = (new Date()).valueOf();
+    const hexChars = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' ];
+    const randomKeyWords = [ 'A', 'B', 'C', 'D', 'E', 'F' ];
+    let uniqueNumber_copied;
+    let maxExponent;
+    let cArr;
+    let temp;
+    let hexString;
+    uniqueNumber_copied = uniqueNumber;
+    maxExponent = 0;
+    while (Math.pow(x, maxExponent) <= uniqueNumber) {
+      maxExponent++;
+    }
+    cArr = [];
+    for (let i = 0; i < maxExponent; i++) {
+      temp = ((uniqueNumber_copied / Math.pow(x, i)) % x);
+      cArr.push(temp);
+      uniqueNumber_copied = uniqueNumber_copied - (temp * Math.pow(x, i));
+    }
+    hexString = cArr.map((index) => { return hexChars[index] }).join('');
+    for (let i = 0; i < length; i++) {
+      hexString += hexChars[Math.floor(hexChars.length * Math.random())];
+    }
+    return randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + hexChars[Math.floor(hexChars.length * Math.random())] + randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + String(uniqueNumber) + 'A' + hexString;
+  }
+  return new Promise((resolve, reject) => {
+    let obj;
+    let thisId;
+
+    thisId = idKeyword + "_" + server + "_" + uniqueHex() + String((new Date()).valueOf());
+
+    if (mode === "route") {
+      obj = {
+        id: thisId,
+        server: server,
+        date: new Date(),
+        mode: mode,
+        data: {
+          method: req.method,
+          url: req.url,
+          ip: (req.connection.remoteAddress || "unknown"),
+          userAgent: req.useragent.source,
+          origin: (req.headers.origin || "unknown"),
+        }
+      };
+      stream.write("\n" + JSON.stringify(obj));  
+    } else if (mode === "start") {
+      obj = {
+        id: thisId,
+        server: server,
+        date: new Date(),
+        mode: mode,
+        data: {}
+      };
+      stream.write(JSON.stringify(obj));  
+    }
+
+    resolve(obj);
+  })
 }
 
 Mother.prototype.emergencyAlarm = function (text) {

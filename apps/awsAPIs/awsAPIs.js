@@ -155,7 +155,6 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
       secondGhost: { info: "secondinfo", key: "se0000" },
       pythonCloud: { info: "pythoninfo", key: "py0000" },
       transferLounge: { info: "transinfo", key: "tr0000" },
-      cronLauncher: { info: "croninfo", key: "cr0000" },
     };
     const idKeyword = "alive_";
     const region = "ap-northeast-2";
@@ -181,48 +180,50 @@ AwsAPIs.prototype.getInstancesStatus = async function () {
     instances = [];
     for (let obj of data.Reservations) {
       for (let obj2 of obj.Instances) {
-        instances.push({
-          id: idKeyword + nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value].key + "_" + str,
-          name: obj2.Tags.find((o) => { return o.Key === "Name" }).Value,
-          alive: /running/gi.test(obj2.State.Name),
-          date: {
-            from: ago,
-            to: now,
-          },
-          info: nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value].info,
-          instance: {
-            id: obj2.InstanceId,
-            type: obj2.InstanceType,
-          },
-          network: {
-            host: instance.address[nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value].info].host,
-            ip: {
-              outer: {
-                value: obj2.PublicIpAddress,
-                match: instance.address[nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value].info].ip.outer === obj2.PublicIpAddress,
-              },
-              inner: {
-                value: obj2.PrivateIpAddress,
-                match: instance.address[nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value].info].ip.inner === obj2.PrivateIpAddress,
-              }
+        if (nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value] !== undefined) {
+          instances.push({
+            id: idKeyword + nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value].key + "_" + str,
+            name: obj2.Tags.find((o) => { return o.Key === "Name" }).Value,
+            alive: /running/gi.test(obj2.State.Name),
+            date: {
+              from: ago,
+              to: now,
             },
-          },
-          utilization: {
-            cpu: {
-              average: 0,
-              maximum: 0
+            info: nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value].info,
+            instance: {
+              id: obj2.InstanceId,
+              type: obj2.InstanceType,
             },
             network: {
-              in: 0,
-              out: 0
+              host: instance.address[nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value].info].host,
+              ip: {
+                outer: {
+                  value: obj2.PublicIpAddress,
+                  match: instance.address[nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value].info].ip.outer === obj2.PublicIpAddress,
+                },
+                inner: {
+                  value: obj2.PrivateIpAddress,
+                  match: instance.address[nameDictionary[obj2.Tags.find((o) => { return o.Key === "Name" }).Value].info].ip.inner === obj2.PrivateIpAddress,
+                }
+              },
             },
-            disk: {
-              total: 0,
-              used: 0,
-              available: 0,
-            },
-          }
-        });
+            utilization: {
+              cpu: {
+                average: 0,
+                maximum: 0
+              },
+              network: {
+                in: 0,
+                out: 0
+              },
+              disk: {
+                total: 0,
+                used: 0,
+                available: 0,
+              },
+            }
+          });
+        }
       }
     }
     for (let obj of instances) {

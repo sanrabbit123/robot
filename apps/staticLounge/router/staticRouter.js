@@ -63,7 +63,6 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
     this.address.backinfo.host,
     this.address.pythoninfo.host,
     this.address.testinfo.host,
-    this.address.croninfo.host,
     this.address.officeinfo.ghost.host,
     "home-liaison.servehttp.com",
     "localhost:3000",
@@ -1863,7 +1862,6 @@ StaticRouter.prototype.rou_post_mongoToJson = function () {
         [ "pythoninfo", "python" ],
         [ "testinfo", "log" ],
         [ "secondinfo", "second" ],
-        [ "croninfo", "cron" ],
       ];
       const robotDirArr = process.cwd().split("/");
       robotDirArr.pop();

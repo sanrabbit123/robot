@@ -7,7 +7,7 @@ const ProcessJs = function () {
 
 ProcessJs.prototype.baseMaker = function (searchMode = false) {
   const instance = this;
-  const { totalContents, ea, belowHeight, projects, media, onofflineCircleClassName, entireMode } = this;
+  const { totalContents, ea, belowHeight, projects, media, entireMode } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing, equalJson, svgMaker, removeByClass, findByAttribute, returnGet } = GeneralJs;
   const splitToken = "__split__";
   const checkBoxLocalStorageName = "checkBoxLocalStorageName";
@@ -2459,20 +2459,6 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
                 color: colorChip.deactive,
               },
             },
-            {
-              class: [ onofflineCircleClassName ],
-              attribute: { desid, status: "offline" },
-              style: {
-                display: "inline-block",
-                position: "relative",
-                top: String(circleTop) + ea,
-                width: String(circleWidth) + ea,
-                height: String(circleWidth) + ea,
-                borderRadius: String(circleWidth) + ea,
-                marginLeft: String(circleMarginLeft) + ea,
-                background: colorChip.gray3,
-              }
-            }
           ]
         });
         
@@ -3229,8 +3215,8 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
       createNode({
         mother: titleArea,
         class: [ onofflineWordsClassName ],
-        attribute: { proid: project.proid, desid: project.desid, status: instance.onofflineDesid.includes(project.desid) ? "online" : "offline" },
-        text: project.proid + blank + "<u%/%u>" + blank + project.designer.designer + " D" + blank + "<u%/%u>" + blank + serviceParsing(project.service) + blank + "<u%/%u>" + blank + (instance.onofflineDesid.includes(project.desid) ? "online" : "offline"),
+        attribute: { proid: project.proid, desid: project.desid, status: "online" },
+        text: project.proid + blank + "<u%/%u>" + blank + project.designer.designer + " D" + blank + "<u%/%u>" + blank + serviceParsing(project.service),
         event: {
           click: async function (e) {
             try {
@@ -3258,7 +3244,7 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
           display: "inline-flex",
           fontSize: String(subSize) + ea,
           fontWeight: String(subWeight),
-          color: instance.onofflineDesid.includes(project.desid) ? colorChip.green : colorChip.deactive,
+          color: colorChip.green,
           marginLeft: String(subMarginLeft) + ea,
           position: "relative",
           top: String(subTextTop) + ea,
@@ -11323,7 +11309,7 @@ ProcessJs.prototype.addTransFormEvent = function () {
 
 ProcessJs.prototype.launching = async function () {
   const instance = this;
-  const { ajaxJson, equalJson, returnGet, ajaxMultiple, backgroundSse, colorChip } = GeneralJs;
+  const { ajaxJson, equalJson, returnGet, ajaxMultiple, colorChip } = GeneralJs;
   try {
     const getObj = returnGet();
     const emptyDate = () => { return new Date(1800, 0, 1) };
@@ -11408,10 +11394,8 @@ ProcessJs.prototype.launching = async function () {
     this.clientDoms = [];
     this.totalValues = [];
     this.totalNumbers = [];
-    this.onofflineCircleClassName = "onofflineCircleClassName";
     this.onofflineWordsClassName = "onofflineWordsClassName";
     this.numbersExtractClassName = "numbersExtractClassName";
-    this.onofflineDesid = [];
 
     this.baseMaker(typeof getObj.proid === "string");
     this.searchProjects();
@@ -11430,39 +11414,6 @@ ProcessJs.prototype.launching = async function () {
         this.clientDoms.find((dom) => { return dom.getAttribute("proid") === getObj.proid }).click();
       }
     }
-
-    backgroundSse({
-      url: CRONHOST + "/sse/onlineDesigners",
-      callback: async (response) => {
-        try {
-          instance.onofflineDesid = equalJson(JSON.stringify(response));
-          const circleTargets = [ ...document.querySelectorAll('.' + instance.onofflineCircleClassName) ];
-          for (let circle of circleTargets) {
-            if (instance.onofflineDesid.includes(circle.getAttribute("desid"))) {
-              circle.style.background = colorChip.softGreen;
-              circle.setAttribute("status", "online");
-            } else {
-              circle.style.background = colorChip.gray3;
-              circle.setAttribute("status", "offline");
-            }
-          }
-          const wordsTarget = document.querySelector('.' + instance.onofflineWordsClassName);
-          if (wordsTarget !== null) {
-            if (instance.onofflineDesid.includes(wordsTarget.getAttribute("desid"))) {
-              wordsTarget.style.color = colorChip.green;
-              wordsTarget.setAttribute("status", "online");
-              wordsTarget.innerHTML = wordsTarget.innerHTML.replace(/offline/gi, "online");
-            } else {
-              wordsTarget.style.color = colorChip.deactive;
-              wordsTarget.setAttribute("status", "offline");
-              wordsTarget.innerHTML = wordsTarget.innerHTML.replace(/online/gi, "offline");
-            }
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      } 
-    });
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e.message).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});

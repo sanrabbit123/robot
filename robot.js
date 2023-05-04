@@ -796,94 +796,6 @@ Robot.prototype.magazineMaker = function (mid) {
   app.magazineMaker(mid).catch((err) => { console.log(err); })
 }
 
-Robot.prototype.gitLogToJson = async function () {
-  const instance = this;
-  const { shellExec, requestSystem } = this.mother;
-  try {
-    let rawStdout;
-    let stdoutArr;
-    let commitRaw, authorRaw, dateRaw;
-    let message;
-    let commitId;
-    let authorRawArr;
-    let name, email;
-    let dateRawArr;
-    let date;
-    let log;
-    let files;
-    let insertions;
-    let deletions;
-    let diffArr;
-    let previousCommitRaw;
-    let previoustCommitId;
-
-    rawStdout = await shellExec("git log -n 2");
-    stdoutArr = rawStdout.split("\n").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
-
-    commitRaw = stdoutArr.find((str) => { return /^commit/i.test(str) });
-    authorRaw = stdoutArr.find((str) => { return /^Author/i.test(str) });
-    dateRaw = stdoutArr.find((str) => { return /^Date/i.test(str) });
-
-    message = stdoutArr[3];
-
-    commitId = commitRaw.split(" ").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
-    commitId = commitId[commitId.length - 1];
-
-    authorRawArr = authorRaw.split(":").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
-    [ name, email ] = authorRawArr[authorRawArr.length - 1].split(' ');
-    name = name.trim();
-    email = email.trim().slice(1, -1);
-
-    dateRawArr = dateRaw.split(": ").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
-
-    date = new Date(dateRawArr[dateRawArr.length - 1]);
-
-    previousCommitRaw = stdoutArr.slice(4).find((str) => { return /^commit/i.test(str) });
-
-    previoustCommitId = previousCommitRaw.split(" ").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
-    previoustCommitId = previoustCommitId[previoustCommitId.length - 1];
-
-    rawStdout = await shellExec("git diff --stat " + previoustCommitId + " " + commitId);
-    stdoutArr = rawStdout.split("\n").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
-    
-    diffArr = stdoutArr[stdoutArr.length - 1].split(", ").map((str) => { return str.trim() });
-
-    files = diffArr.find((str) => { return /file/gi.test(str) });
-    insertions = diffArr.find((str) => { return /insertions/gi.test(str) });
-    deletions = diffArr.find((str) => { return /deletions/gi.test(str) });
-
-    if (files === undefined) {
-      files = 0;
-    } else {
-      files = Number(files.replace(/[^0-9]/gi, ''));
-    }
-    if (insertions === undefined) {
-      insertions = 0;
-    } else {
-      insertions = Number(insertions.replace(/[^0-9]/gi, ''));
-    }
-    if (deletions === undefined) {
-      deletions = 0;
-    } else {
-      deletions = Number(deletions.replace(/[^0-9]/gi, ''));
-    }
-
-    log = {
-      id: commitId,
-      date,
-      author: { name, email },
-      message,
-      detail: { files, insertions, deletions }
-    };
-
-    await requestSystem("https://" + instance.address.croninfo.host + ":" + String(3000) + "/receiveGitLog", { log }, { headers: { "Content-Type": "application/json" } });
-    console.log("done :", log);
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Robot.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
@@ -1347,13 +1259,6 @@ const MENU = {
   basic: async function () {
     try {
       await robot.basicConnect();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  gitLogToJson: async function () {
-    try {
-      await robot.gitLogToJson();
     } catch (e) {
       console.log(e);
     }

@@ -25,7 +25,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const FRONTHOST = "https://" + this.address.frontinfo.host;
   const BACKHOST = "https://" + this.address.backinfo.host + ":3000";
   const SECONDHOST = "https://" + this.address.secondinfo.host + ":3000";
-  const CRONHOST = "https://" + this.address.croninfo.host + ":3000";
   const classException = {
     proposal: [ "designer.js" ],
     bill: [ "designer.js" ],
@@ -132,7 +131,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     let result;
     let prototypes, dataPatchScript, prototypeBoo;
     let resultFromArr;
-    let cronString;
 
     //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
@@ -145,7 +143,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     backString = "const BACKHOST = \"" + BACKHOST + "\";";
     secondString = "const SECONDHOST = \"" + SECONDHOST + "\";";
     officeString = "const FILEHOST = \"" + FILEHOST + "\";";
-    cronString = "const CRONHOST = \"" + CRONHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
@@ -185,7 +182,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       }
 
       //merge
-      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n" + cronString + "\n\n";
+      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
       code1 = dataPatchScript;
       code2 = generalString + "\n\n" + consoleGeneralString;
       code3 = fileString + "\n\n" + execString;
@@ -241,7 +238,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const FRONTHOST = "https://" + this.address.frontinfo.host;
   const BACKHOST = "https://" + this.address.backinfo.host + ":3000";
   const SECONDHOST = "https://" + this.address.secondinfo.host + ":3000";
-  const CRONHOST = "https://" + this.address.croninfo.host + ":3000";
   try {
 
     //module transform function
@@ -320,7 +316,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let ghostClientGeneral, ghostDesignerGeneral;
     let ghostClientGeneralString, ghostDesignerGeneralString;
     let generalMediaBoo;
-    let cronString;
 
     staticDirList = [];
     for (let s of staticTargets) {
@@ -358,7 +353,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     secondString = "const SECONDHOST = \"" + SECONDHOST + "\";";
     frontWebString = "const FRONTHOST = \"" + FRONTHOST + "\";";
     officeString = "const FILEHOST = \"" + FILEHOST + "\";";
-    cronString = "const CRONHOST = \"" + CRONHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
     polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
@@ -431,7 +425,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       }
 
       //merge
-      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n" + cronString + "\n\n";
+      code0 = svgTongString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + logString + "\n\n" + backString + "\n\n" + secondString + "\n\n" + frontWebString + "\n\n" + officeString + "\n\n";
       code1 = dataPatchScript + "\n\n";
       if (kinds === "MIDDLE") {
         code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + frontClassString + "\n\n";
@@ -845,8 +839,9 @@ DataConsole.prototype.readGhostPatch = async function () {
 
 DataConsole.prototype.connect = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog } = this.mother;
+  const { fileSystem, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog, expressLog, dateToString } = this.mother;
   const PORT = 3000;
+  const fs = require("fs");
   const https = require("https");
   const express = require("express");
   const app = express();
@@ -854,6 +849,10 @@ DataConsole.prototype.connect = async function () {
   const multiForms = multer();
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + "/static";
+  const logKeyword = "expressLog";
+  const logFolder = process.env.HOME + "/server/log";
+  const thisLogFile = `${logFolder}/${logKeyword}_${(new Date()).valueOf()}.log`;
+  const serverName = "back";
 
   app.use(useragent.express());
   app.use(express.json({ limit : "50mb" }));
@@ -947,74 +946,100 @@ DataConsole.prototype.connect = async function () {
     const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, isLocal);
     await router.setMembers();
     const rouObj = router.getAll();
+    const logStream = fs.createWriteStream(thisLogFile);
+    await expressLog(serverName, logStream, "start");
     for (let obj of rouObj.get) {
-      app.get(obj.link, obj.func);
+      app.get(obj.link, async function (req, res) {
+        try {
+          expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
+          await obj.func(req, res);
+        } catch (e) {
+          console.log(e);
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ error: e.message }));
+        }
+      });
     }
     for (let obj of rouObj.post) {
       if (obj.public !== true) {
-        app.post(obj.link, function (req, res) {
-          let __wallLogicBoo, __vailHosts, __authorization, __originTarget, __headers, __slackMessage;
+        app.post(obj.link, async function (req, res) {
+          try {
 
-          __vailHosts = [
-            instance.address.frontinfo.host,
-            instance.address.frontinfo.host + ":3000",
-            instance.address.backinfo.host,
-            instance.address.backinfo.host + ":3000",
-            instance.address.pythoninfo.host,
-            instance.address.pythoninfo.host + ":3000",
-            instance.address.testinfo.host,
-            instance.address.testinfo.host + ":3000",
-            instance.address.secondinfo.host,
-            instance.address.secondinfo.host + ":3000",
-            instance.address.officeinfo.ghost.host,
-            instance.address.officeinfo.ghost.host + ":3000",
-            instance.address.transinfo.host,
-            instance.address.transinfo.host + ":3000",
-            instance.address.croninfo.host,
-            instance.address.croninfo.host + ":3000",
-            "localhost:3000",
-            "localhost:8080",
-            "stdpay.inicis.com",
-            "fcstdpay.inicis.com",
-            "ksstdpay.inicis.com",
-            "stgmobile.inicis.com",
-            "ksmobile.inicis.com",
-            "fcmobile.inicis.com",
-            "192.168.0.14:3000",
-            "172.30.1.37:3000",
-          ];
+            expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
 
-          __wallLogicBoo = false;
+            let __wallLogicBoo, __vailHosts, __authorization, __originTarget, __headers, __slackMessage;
 
-          __originTarget = req.headers["origin"] || "invaild";
-          if (__originTarget === "invaild" || __originTarget === "null" || __originTarget === "undefined" || __originTarget === null) {
-            __originTarget = req.headers["host"] || "invaild";
-          }
-          for (let host of __vailHosts) {
-            __wallLogicBoo = (new RegExp(host, "gi")).test(__originTarget.trim().replace(/\/$/, ''));
-            if (__wallLogicBoo) {
-              break;
+            __vailHosts = [
+              instance.address.frontinfo.host,
+              instance.address.frontinfo.host + ":3000",
+              instance.address.backinfo.host,
+              instance.address.backinfo.host + ":3000",
+              instance.address.pythoninfo.host,
+              instance.address.pythoninfo.host + ":3000",
+              instance.address.testinfo.host,
+              instance.address.testinfo.host + ":3000",
+              instance.address.secondinfo.host,
+              instance.address.secondinfo.host + ":3000",
+              instance.address.officeinfo.ghost.host,
+              instance.address.officeinfo.ghost.host + ":3000",
+              instance.address.transinfo.host,
+              instance.address.transinfo.host + ":3000",
+              "localhost:3000",
+              "localhost:8080",
+              "stdpay.inicis.com",
+              "fcstdpay.inicis.com",
+              "ksstdpay.inicis.com",
+              "stgmobile.inicis.com",
+              "ksmobile.inicis.com",
+              "fcmobile.inicis.com",
+              "192.168.0.14:3000",
+              "172.30.1.37:3000",
+            ];
+            __wallLogicBoo = false;
+            __originTarget = req.headers["origin"] || "invaild";
+            if (__originTarget === "invaild" || __originTarget === "null" || __originTarget === "undefined" || __originTarget === null) {
+              __originTarget = req.headers["host"] || "invaild";
             }
-          }
+            for (let host of __vailHosts) {
+              __wallLogicBoo = (new RegExp(host, "gi")).test(__originTarget.trim().replace(/\/$/, ''));
+              if (__wallLogicBoo) {
+                break;
+              }
+            }
+  
+            if (!__wallLogicBoo) {
+              __headers = JSON.parse(JSON.stringify(req.headers));
+              __slackMessage = JSON.stringify(__headers, null, 2);
+              if (req.body !== null && req.body !== undefined) {
+                __slackMessage += "\n\n";
+                __slackMessage += JSON.stringify(req.body, null, 2);
+              }
+              errorLog({ text: "잘못된 보안 접근 감지 : (dataConsole) \n" + __slackMessage, channel: "#error_log" }).catch((e) => { console.log(e); });
+  
+              res.set("Content-Type", "application/json");
+              res.send(JSON.stringify({ message: "OK" }));
+  
+            } else {
+              await obj.func(req, res);
+            }
 
-          if (!__wallLogicBoo) {
+          } catch (e) {
+            console.log(e);
             res.set("Content-Type", "application/json");
-            res.send(JSON.stringify({ message: "OK" }));
-            __headers = req.headers;
-            __headers = JSON.parse(JSON.stringify(__headers));
-            __slackMessage = JSON.stringify(__headers, null, 2);
-            if (req.body !== null && req.body !== undefined) {
-              __slackMessage += "\n\n";
-              __slackMessage += JSON.stringify(req.body, null, 2);
-            }
-            errorLog({ text: "잘못된 보안 접근 감지 : (dataConsole) \n" + JSON.stringify(__headers, null, 2), channel: "#error_log" }).catch((e) => { console.log(e); });
-          } else {
-            obj.func(req, res);
+            res.send(JSON.stringify({ error: e.message }));
           }
-
         });
       } else {
-        app.post(obj.link, obj.func);
+        app.post(obj.link, async function (req, res) {
+          try {
+            expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
+            await obj.func(req, res);
+          } catch (e) {
+            console.log(e);
+            res.set("Content-Type", "application/json");
+            res.send(JSON.stringify({ error: e.message }));
+          }
+        });
       }
     }
     console.log(`set router`);

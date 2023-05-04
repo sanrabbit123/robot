@@ -2704,45 +2704,6 @@ DesignManualJs.prototype.launching = async function (loading) {
 
     loading.parentNode.removeChild(loading);
 
-    // web socket
-    socket = {};
-    if (!document.hidden) {
-      wsOpenEvent = (ws) => {
-        return async function () {
-          try {
-            ws.send(JSON.stringify({
-              mode: "register",
-              to: "homeliaison",
-              data: instance.designer.desid
-            }));
-          } catch (e) {
-            console.log(e);
-          }
-        }
-      }
-      wsLaunching = () => {
-        let ws;
-        if (typeof socket.close === "function") {
-          socket.close();
-          socket = {};
-        }
-        ws = new WebSocket(CRONHOST.replace(/https\:\/\//, "wss://") + "/realTimeCommunication");
-        ws.addEventListener("open", wsOpenEvent(ws));
-        return ws;
-      }
-      socket = wsLaunching();
-    }
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        if (typeof socket.close === "function") {
-          socket.close();
-          socket = {};
-        }
-      } else {
-        socket = wsLaunching();
-      }
-    });
-
   } catch (err) {
     console.log(err);
     await GeneralJs.ajaxJson({ message: "DesignManualJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");

@@ -32,7 +32,6 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
       { name: "logConsole", protocol: "https:", host: address.testinfo.host, port: generalPort, },
       { name: "secondGhost", protocol: "https:", host: address.secondinfo.host, port: generalPort, },
       { name: "transferLounge", protocol: "https:", host: address.transinfo.host, port: generalPort, },
-      { name: "cronLauncher", protocol: "https:", host: address.croninfo.host, port: generalPort, },
       { name: "staticLounge", protocol: "https:", host: address.officeinfo.ghost.host, port: generalPort, },
     ];
 
@@ -162,7 +161,6 @@ CronGhost.prototype.diskTestAndCost = async function (MONGOC) {
       { name: "log", host: instance.address.testinfo.host },
       { name: "second", host: instance.address.secondinfo.host },
       { name: "trans", host: instance.address.transinfo.host },
-      { name: "cron", host: instance.address.croninfo.host },
     ]
     const robotPort = 3000;
     const pathConst = "/disk";
@@ -209,7 +207,7 @@ CronGhost.prototype.cronServer = async function () {
   const instance = this;
   const address = this.address;
   const { shellExec, fileSystem, messageSend, requestSystem, pureServer, dateToString, mongo, mongolocalinfo, mongoinfo, mongoconsoleinfo, errorLog } = this.mother;
-  const port = 3000;
+  const port = 8080;
   const interval = (10 * 60 * 1000);
   const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
   const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num) }
@@ -375,14 +373,14 @@ CronGhost.prototype.cronServer = async function () {
       setInterval(intervalFunc, interval);
       setInterval(intervalFunc0, 4 * 60 * 60 * 1000);
       setInterval(intervalFunc1, 1 * 30 * 60 * 1000);
-      setInterval(intervalFunc2, 1 * 10 * 60 * 1000);
+      setInterval(intervalFunc2, 1 * 5 * 60 * 1000);
       setInterval(intervalFunc3, 1 * 3 * 60 * 1000)
     }, startTime);
 
 
     // set pem key
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + address.croninfo.host;
+    pemsLink = process.cwd() + "/pems/" + address.officeinfo.ghost.host;
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
     caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);

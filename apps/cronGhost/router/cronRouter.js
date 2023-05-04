@@ -5,7 +5,6 @@ const CronRouter = function (MONGOC, MONGOLOCALC, socket) {
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
-  this.host = this.address.croninfo.host;
   this.mongo = MONGOC;
   this.mongolocal = MONGOLOCALC;
   this.socket = socket;
@@ -19,9 +18,7 @@ const CronRouter = function (MONGOC, MONGOLOCALC, socket) {
     this.address.backinfo.host,
     this.address.pythoninfo.host,
     this.address.testinfo.host,
-    this.address.croninfo.host,
     this.address.officeinfo.ghost.host,
-    "home-liaison.servehttp.com",
     "localhost:3000",
     "192.168.0.14:3000",
   ];
