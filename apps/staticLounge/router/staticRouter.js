@@ -1,4 +1,4 @@
-const StaticRouter = function (MONGOC, MONGOLOCALC) {
+const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const ImageReader = require(process.cwd() + "/apps/imageReader/imageReader.js");
@@ -22,6 +22,8 @@ const StaticRouter = function (MONGOC, MONGOLOCALC) {
   this.host = this.address.officeinfo.ghost.host;
   this.mongo = MONGOC;
   this.mongolocal = MONGOLOCALC;
+  this.mongoconsole = MONGOCONSOLEC;
+  this.mongolog = MONGOLOGC;
   this.members = {};
 
   this.formidable = require("formidable");
@@ -2753,6 +2755,241 @@ StaticRouter.prototype.rou_post_getDevicesStatus = function () {
     } catch (e) {
       errorLog("Static lounge 서버 문제 생김 (rou_post_getDevicesStatus): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_callHistory = function () {
+  const instance = this;
+  const back = this.back;
+  const { requestSystem, stringToDate, errorLog, autoHypenPhone } = this.mother;
+  const url = "https://centrex.uplus.co.kr/RestApi/callhistory";
+  const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = instance.address;
+  const querystring = require("querystring");
+  const callConst = "c_";
+  const successStandardSec = 200;
+  const parsingCallHistory = async (MONGOC, MONGOCONSOLEC) => {
+    try {
+      const selfMongo = MONGOC;
+      const selfConsoleInfo = MONGOCONSOLEC;
+      let res, tong, data, query, calltype, page;
+      let outArr, inArr;
+      let tempObj;
+      let rows, cliid;
+      let whereQuery, updateQuery;
+      let historyObj;
+      let boo;
+      let requestNumber;
+      let targetColumn;
+      let pastHistory;
+      let index, indexTarget;
+
+      calltype = "outbound";
+      tong = {};
+      for (let id of phoneNumbers) {
+        page = 0;
+        do {
+          page++;
+          query = { id, pass, calltype, page };
+          res = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+          data = res.data;
+          if (data.DATAS === null) {
+            break;
+          }
+          for (let obj of data.DATAS) {
+            if (!Array.isArray(tong[callConst + obj.SRC])) {
+              tong[callConst + obj.SRC] = [];
+            }
+            tong[callConst + obj.SRC].push(JSON.parse(JSON.stringify(obj)));
+          }
+        } while (data.SVC_RT === '0000');
+      }
+
+      for (let c in tong) {
+        tong[c].sort((a, b) => { return a.NO - b.NO; });
+        tong[c] = { out: JSON.parse(JSON.stringify(tong[c])), in: [] };
+      }
+
+      calltype = "inbound";
+      for (let id of phoneNumbers) {
+        page = 0;
+        do {
+          page++;
+          query = { id, pass, calltype, page };
+          res = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+          data = res.data;
+          if (data.DATAS === null) {
+            break;
+          }
+          for (let obj of data.DATAS) {
+            if (tong[callConst + obj.DST] !== undefined) {
+              tong[callConst + obj.DST].in.push(JSON.parse(JSON.stringify(obj)));
+            }
+          }
+        } while (data.SVC_RT === '0000');
+      }
+
+      outArr = [];
+      inArr = [];
+      for (let c in tong) {
+        for (let obj of tong[c].out) {
+          tempObj = {};
+          tempObj.date = stringToDate(obj.TIME);
+          tempObj.to = autoHypenPhone(obj.DST);
+          tempObj.duration = Number.isNaN(Number(obj.DURATION.replace(/[^0-9]/gi, ''))) ? 0 : Number(obj.DURATION.replace(/[^0-9]/gi, ''));
+          if (obj.STATUS === "OK") {
+            if (tempObj.duration >= successStandardSec) {
+              tempObj.success = true;
+            } else {
+              tempObj.success = false;
+            }
+          } else {
+            tempObj.success = false;
+          }
+          outArr.push(tempObj);
+        }
+        for (let obj of tong[c].in) {
+          tempObj = {};
+          tempObj.date = stringToDate(obj.TIME);
+          tempObj.from = autoHypenPhone(obj.SRC);
+          tempObj.duration = Number.isNaN(Number(obj.DURATION.replace(/[^0-9]/gi, ''))) ? 0 : Number(obj.DURATION.replace(/[^0-9]/gi, ''));
+          if (obj.STATUS === "OK") {
+            if (tempObj.duration >= successStandardSec) {
+              tempObj.success = true;
+            } else {
+              tempObj.success = false;
+            }
+          } else {
+            tempObj.success = false;
+          }
+          inArr.push(tempObj);
+        }
+      }
+
+      outArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+      inArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+
+      for (let { date, to, duration, success } of outArr) {
+        rows = await back.getClientsByQuery({ phone: to }, { selfMongo });
+        if (rows.length !== 0) {
+          cliid = rows[0].cliid;
+          historyObj = await back.getHistoryById("client", cliid, { selfMongo: selfConsoleInfo });
+          boo = true;
+          index = 0;
+          indexTarget = -1;
+          for (let obj of historyObj.curation.analytics.call.out) {
+            if (obj.date.getFullYear() === date.getFullYear() && obj.date.getMonth() === date.getMonth() && obj.date.getDate() === date.getDate() && obj.date.getHours() === date.getHours() && obj.date.getMinutes() === date.getMinutes()) {
+              boo = false;
+              indexTarget = index;
+            }
+            index++;
+          }
+          if (boo) {
+            historyObj.curation.analytics.call.out.push({ date, success, duration });
+            whereQuery = { cliid };
+            updateQuery = {};
+            updateQuery["curation.analytics.call.out"] = historyObj.curation.analytics.call.out;
+            await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+          } else {
+            if (typeof historyObj.curation.analytics.call.out[indexTarget] === "object") {
+              if (historyObj.curation.analytics.call.out[indexTarget].duration !== duration) {
+                historyObj.curation.analytics.call.out[indexTarget].duration = duration;
+                historyObj.curation.analytics.call.out[indexTarget].success = success;
+                whereQuery = { cliid };
+                updateQuery = {};
+                updateQuery["curation.analytics.call.out"] = historyObj.curation.analytics.call.out;
+                await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+              }
+            }
+          }
+
+          requestNumber = 0;
+          for (let i = 0; i < rows[0].requests.length; i++) {
+            if (rows[0].requests[i].request.timeline.valueOf() <= date.valueOf()) {
+              requestNumber = i;
+              break;
+            }
+          }
+          pastHistory = rows[0].requests[requestNumber].analytics.date.call.history.toNormal();
+          targetColumn = "requests." + String(requestNumber) + ".analytics.date.call.history";
+          boo = true;
+          for (let obj of pastHistory) {
+            if (obj.date.getFullYear() === date.getFullYear() && obj.date.getMonth() === date.getMonth() && obj.date.getDate() === date.getDate() && obj.date.getHours() === date.getHours() && obj.date.getMinutes() === date.getMinutes()) {
+              boo = false;
+            }
+          }
+          if (boo) {
+            pastHistory.push({ date, who: '' });
+            whereQuery = { cliid };
+            updateQuery = {};
+            updateQuery[targetColumn] = pastHistory;
+            await back.updateClient([ whereQuery, updateQuery ], { selfMongo });
+          }
+
+        }
+      }
+
+      for (let { date, from, duration, success } of inArr) {
+        rows = await back.getClientsByQuery({ phone: from }, { selfMongo });
+        if (rows.length !== 0) {
+          cliid = rows[0].cliid;
+          historyObj = await back.getHistoryById("client", cliid, { selfMongo: selfConsoleInfo });
+          boo = true;
+          index = 0;
+          indexTarget = -1;
+          for (let obj of historyObj.curation.analytics.call.in) {
+            if (obj.date.getFullYear() === date.getFullYear() && obj.date.getMonth() === date.getMonth() && obj.date.getDate() === date.getDate() && obj.date.getHours() === date.getHours() && obj.date.getMinutes() === date.getMinutes()) {
+              boo = false;
+              indexTarget = index;
+            }
+            index++;
+          }
+          if (boo) {
+            historyObj.curation.analytics.call.in.push({ date, success, duration });
+            whereQuery = { cliid };
+            updateQuery = {};
+            updateQuery["curation.analytics.call.in"] = historyObj.curation.analytics.call.in;
+            await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+          } else {
+            if (typeof historyObj.curation.analytics.call.in[indexTarget] === "object") {
+              if (historyObj.curation.analytics.call.in[indexTarget].duration !== duration) {
+                historyObj.curation.analytics.call.in[indexTarget].duration = duration;
+                historyObj.curation.analytics.call.in[indexTarget].success = success;
+                whereQuery = { cliid };
+                updateQuery = {};
+                updateQuery["curation.analytics.call.in"] = historyObj.curation.analytics.call.in;
+                await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+              }
+            }
+          }
+        }
+      }
+
+      console.log("call history update success");
+      errorLog("callHistory update sync success : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+
+    } catch (e) {
+      await errorLog("call history fail " + e.message);
+    }
+  }
+  let obj = {};
+  obj.link = [ "/callHistory" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      parsingCallHistory(instance.mongo, instance.mongoconsole).catch((err) => {
+        errorLog("Static lounge 서버 문제 생김 (rou_post_callHistory): " + e.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await errorLog("Static lounge 서버 문제 생김 (rou_post_callHistory): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;

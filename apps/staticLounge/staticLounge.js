@@ -16,7 +16,7 @@ const StaticLounge = function (mother = null, back = null, address = null) {
 
 StaticLounge.prototype.staticConnect = async function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep } = this.mother;
+  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, mongocroninfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep } = this.mother;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
@@ -45,13 +45,17 @@ StaticLounge.prototype.staticConnect = async function () {
     console.log(``);
 
     //set mongo connetion
-    let MONGOC, MONGOLOCALC;
+    let MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC;
     MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
     MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    MONGOLOGC = new mongo(mongotestinfo, { useUnifiedTopology: true });
     console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
     console.log(``);
     await MONGOC.connect();
     await MONGOLOCALC.connect();
+    await MONGOCONSOLEC.connect();
+    await MONGOLOGC.connect();
 
     //set pem key
     let pems, pemsLink;
@@ -84,7 +88,7 @@ StaticLounge.prototype.staticConnect = async function () {
 
     //set router
     const StaticRouter = require(`${this.dir}/router/staticRouter.js`);
-    const router = new StaticRouter(MONGOC, MONGOLOCALC);
+    const router = new StaticRouter(MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC);
     await router.setMembers();
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {

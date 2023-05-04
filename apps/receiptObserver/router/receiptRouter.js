@@ -3476,7 +3476,6 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
   const instance = this;
   const { requestSystem, equalJson, stringToDate, messageLog, errorLog, messageSend } = this.mother;
   const address = this.address;
-  const kakao = this.kakao;
   const { officeinfo: { widsign: { id, key, endPoint } } } = address;
   const collections = [ "stylingForm", "constructForm" ];
   const back = this.back;
@@ -3589,16 +3588,6 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
 
                           text = thisClient.name + " 고객님이 계약서에 서명을 완료하셨습니다!";
                           await messageSend({ text, channel: "#cx", voice: true });
-
-                          if (thisDesigner !== null) {
-                            // await kakao.sendTalk("contractConfirmDesigner", thisDesigner.designer, thisDesigner.information.phone, {
-                            //   client: thisClient.name,
-                            //   designer: thisDesigner.designer,
-                            //   host: address.frontinfo.host,
-                            //   proid: thisProject.proid,
-                            // });
-                            // await messageSend(thisDesigner.designer + " 실장님께 계약서 서명 완료 알림을 전송하였어요.", "#300_designer", false);
-                          }
 
                         }
                         await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
