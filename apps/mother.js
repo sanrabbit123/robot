@@ -2879,10 +2879,10 @@ Mother.prototype.ipParsing = async function (ip) {
   try {
     ip = ip.trim().replace(/[^0-9\.]/gi, '');
     if (ip.replace(/[0-9\.]/g, '') !== '') {
-      throw new Error("invalid ip");
+      throw new Error("invalid ip => " + ip);
     }
     if (!/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/g.test(ip)) {
-      throw new Error("invalid ip");
+      throw new Error("invalid ip => " + ip);
     }
     let url;
     let res;
