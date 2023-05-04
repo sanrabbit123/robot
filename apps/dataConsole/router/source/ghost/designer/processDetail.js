@@ -10106,6 +10106,11 @@ ProcessDetailJs.prototype.paymentByCard = function () {
   return (project) => {
     return async function (e) {
       try {
+
+        window.alert("카드 결제 시스템 점검중입니다! 촬영비 결제는 계좌 이체로 부탁드립니다 :)");
+
+        /*
+
         const amount = 165000;
         const proid = project.proid;
         const cliid = project.cliid;
@@ -10180,6 +10185,8 @@ ProcessDetailJs.prototype.paymentByCard = function () {
           }, (rsp) => {});
 
         }
+
+        */
 
       } catch (e) {
         console.log(e);
