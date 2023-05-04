@@ -152,12 +152,14 @@ ReceiptObserver.prototype.taxServerLaunching = async function () {
   const app = express();
   const multer = require("multer");
   const multiForms = multer();
+  const useragent = require("express-useragent");
   const fs = require("fs");
   const logKeyword = "expressLog";
   const logFolder = process.env.HOME + "/server/log";
   const thisLogFile = `${logFolder}/${logKeyword}_${(new Date()).valueOf()}.log`;
   const serverName = "python";
 
+  app.use(useragent.express());
   app.use(express.json({ limit : "50mb" }));
   app.use(multiForms.array());
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
