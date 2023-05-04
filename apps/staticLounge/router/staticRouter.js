@@ -1863,6 +1863,7 @@ StaticRouter.prototype.rou_post_mongoToJson = function () {
         [ "pythoninfo", "python" ],
         [ "testinfo", "log" ],
         [ "secondinfo", "second" ],
+        [ "croninfo", "cron" ],
       ];
       const robotDirArr = process.cwd().split("/");
       robotDirArr.pop();

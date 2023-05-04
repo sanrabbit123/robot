@@ -134,51 +134,6 @@ CronRouter.prototype.rou_get_ServerSent = function () {
 
 //POST ---------------------------------------------------------------------------------------------
 
-CronRouter.prototype.rou_post_receiveGitLog = function () {
-  const instance = this;
-  const back = this.back;
-  const { errorLog, equalJson } = this.mother;
-  let obj = {};
-  obj.link = [ "/receiveGitLog" ];
-  obj.func = async function (req, res) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (req.body.log === undefined) {
-        throw new Error("invalid post");
-      }
-      const selfMongo = instance.mongolocal;
-      const collection = "commitLog";
-      const { log } = equalJson(req.body);
-      let thisId;
-      let rows;
-
-      if (typeof log.id !== "string") {
-        throw new Error("invalid structure");
-      }
-
-      thisId = log.id;
-
-      rows = await back.mongoRead(collection, { id: thisId }, { selfMongo });
-      if (rows.length === 0) {
-        await back.mongoCreate(collection, log, { selfMongo });
-      }
-
-      res.send(JSON.stringify({ message: "done" }));
-    } catch (e) {
-      errorLog("Cron launcher 서버 문제 생김 (rou_get_receiveGitLog): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-
-  return obj;
-}
-
 CronRouter.prototype.rou_post_wssStatus = function () {
   const instance = this;
   const socket = this.socket;
