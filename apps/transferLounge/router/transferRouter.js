@@ -71,7 +71,7 @@ TransferRouter.prototype.fireWall = function (req) {
 
 TransferRouter.prototype.rou_get_First = function () {
   const instance = this;
-  const { errorLog, diskReading } = this.mother;
+  const { diskReading } = this.mother;
   let obj = {};
   obj.link = "/:id";
   obj.func = async function (req, res, logger) {
@@ -107,7 +107,7 @@ TransferRouter.prototype.rou_get_First = function () {
 
 TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   const folderConst = this.folderConst;
   let obj;
   obj = {};
@@ -201,7 +201,7 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
 
 TransferRouter.prototype.rou_post_middlePhotoRead = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   const { folderConst } = this;
   let obj;
   obj = {};
@@ -253,7 +253,7 @@ TransferRouter.prototype.rou_post_middlePhotoRead = function () {
 
 TransferRouter.prototype.rou_post_clientPhoto = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   const back = this.back;
   const { clientConst } = this;
   let obj;
@@ -325,7 +325,7 @@ TransferRouter.prototype.rou_post_clientPhoto = function () {
 
 TransferRouter.prototype.rou_post_clientBinary = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, todayMaker, messageSend } = this.mother;
+  const { fileSystem, shellExec, shellLink, todayMaker, messageSend } = this.mother;
   const { clientConst } = this;
   let obj;
   obj = {};
@@ -411,7 +411,7 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
 
 TransferRouter.prototype.rou_post_clientDelete = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   const { staticConst } = this;
   let obj;
   obj = {};
@@ -459,7 +459,7 @@ TransferRouter.prototype.rou_post_clientDelete = function () {
 
 TransferRouter.prototype.rou_post_middleLinkParsing = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson, decryptoHash } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson, decryptoHash } = this.mother;
   const { folderConst } = this;
   let obj;
   obj = {};
@@ -522,7 +522,7 @@ TransferRouter.prototype.rou_post_middleLinkParsing = function () {
 
 TransferRouter.prototype.rou_post_middleLinkSave = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, cryptoString } = this.mother;
+  const { fileSystem, shellExec, shellLink, cryptoString } = this.mother;
   const { folderConst } = this;
   let obj;
   obj = {};
@@ -558,7 +558,7 @@ TransferRouter.prototype.rou_post_middleLinkSave = function () {
 
 TransferRouter.prototype.rou_post_middlePhotoRemove = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
   const { folderConst, clientConst } = this;
   let obj;
   obj = {};
@@ -635,7 +635,7 @@ TransferRouter.prototype.rou_post_middlePhotoRemove = function () {
 
 TransferRouter.prototype.rou_post_middlePhotoUpdate = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
   const { folderConst, clientConst, hashConst } = this;
   let obj;
   obj = {};
@@ -725,7 +725,7 @@ TransferRouter.prototype.rou_post_middlePhotoUpdate = function () {
 
 TransferRouter.prototype.rou_post_generalFileUpload = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   const { staticConst } = this;
   const hangul = this.hangul;
   let obj;
@@ -802,7 +802,7 @@ TransferRouter.prototype.rou_post_generalFileUpload = function () {
 
 TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson, requestSystem } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson, requestSystem } = this.mother;
   const { folderConst } = this;
   const address = this.address;
   const drive = this.drive;
@@ -892,7 +892,7 @@ TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
 
 TransferRouter.prototype.rou_post_middlePhotoAlarm = function () {
   const instance = this;
-  const { errorLog, messageSend, equalJson } = this.mother;
+  const { messageSend, equalJson } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/middlePhotoAlarm" ];
@@ -936,7 +936,7 @@ TransferRouter.prototype.rou_post_middlePhotoAlarm = function () {
 
 TransferRouter.prototype.rou_post_userBinary = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
   const { userConst } = this;
   const back = this.back;
   let obj;
@@ -1033,7 +1033,7 @@ TransferRouter.prototype.rou_post_userBinary = function () {
 
 TransferRouter.prototype.rou_post_userConfirm = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
   const { userConst } = this;
   const back = this.back;
   let obj;
@@ -1178,7 +1178,7 @@ TransferRouter.prototype.rou_post_userConfirm = function () {
 
 TransferRouter.prototype.rou_post_userPhoto = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
   const { userConst, userLinkConst } = this;
   const back = this.back;
   const address = this.address;
@@ -1226,7 +1226,7 @@ TransferRouter.prototype.rou_post_userPhoto = function () {
 
 TransferRouter.prototype.rou_post_userKey = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
   const { userConst, userLinkConst } = this;
   let obj;
   obj = {};
@@ -1257,7 +1257,7 @@ TransferRouter.prototype.rou_post_userKey = function () {
 
 TransferRouter.prototype.rou_post_excelToMatrix = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
   const ExcelReader = require(`${process.cwd()}/apps/excelReader/excelReader.js`);
   const excel = new ExcelReader();
   let obj;
@@ -1306,7 +1306,7 @@ TransferRouter.prototype.rou_post_excelToMatrix = function () {
 
 TransferRouter.prototype.rou_post_contractList = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson, messageSend } = this.mother;
   const { contractLinkConst, contractConst } = this;
   const address = this.address;
   let obj;
