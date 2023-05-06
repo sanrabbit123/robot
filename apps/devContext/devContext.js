@@ -178,7 +178,7 @@ DevContext.prototype.launching = async function () {
 
 
     
-    
+    await alertLog("안녕");
 
 
 

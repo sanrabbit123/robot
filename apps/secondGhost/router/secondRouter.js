@@ -265,6 +265,8 @@ SecondRouter.prototype.rou_post_messageLog = function () {
         thisChannel = "alive";
       } else if (/cron_log/gi.test(channel)) {
         thisChannel = "cron";
+      } else if (/alert_log/gi.test(channel)) {
+        thisChannel = "error";
       } else if (/consulting/gi.test(channel)) {
         thisChannel = "consulting";
       } else if (/operation/gi.test(channel)) {
