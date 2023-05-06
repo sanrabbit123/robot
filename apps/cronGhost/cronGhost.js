@@ -13,7 +13,7 @@ const CronGhost = function () {
 CronGhost.prototype.aliveTest = async function (MONGOC) {
   const instance = this;
   const address = this.address;
-  const { requestSystem, messageLog, errorLog, emergencyAlarm } = this.mother;
+  const { requestSystem, messageLog, errorLog, emergencyAlarm, aliveLog } = this.mother;
   const generalPort = 3000;
   const controlPath = "/ssl";
   const aws = this.aws;
@@ -70,7 +70,7 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
             }
             if (successNum === targetNumber) {
               message = "server all alive";
-              await emergencyAlarm(message);
+              await aliveLog(message);
             } else if (successNum + failNum === targetNumber) {
               message += "\n======================================";
               message += "\nsomething death";
@@ -153,7 +153,7 @@ CronGhost.prototype.pollingAsyncRequest = async function (MONGOC) {
 
 CronGhost.prototype.diskTestAndCost = async function (MONGOC) {
   const instance = this;
-  const { requestSystem, errorLog } = this.mother;
+  const { requestSystem, errorLog, emergencyAlarm, aliveLog } = this.mother;
   try {
     const targets = [
       { name: "post", host: instance.address.backinfo.host },
@@ -178,7 +178,7 @@ CronGhost.prototype.diskTestAndCost = async function (MONGOC) {
       response = await requestSystem(protocol + "//" + host + ":" + String(robotPort) + pathConst);
       console.log(response.data.disk);
       if (response.data.disk[2] < 100000) {
-        await errorLog(name + " " + "disk warning");
+        await emergencyAlarm(name + " " + "disk warning");
       }
     }
 
@@ -197,7 +197,7 @@ CronGhost.prototype.diskTestAndCost = async function (MONGOC) {
       }
     }
 
-    await errorLog("disk test and cost save done");
+    await aliveLog("disk test and cost save done");
   } catch (e) {
     console.log(e);
   }

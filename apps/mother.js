@@ -3451,6 +3451,50 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
         data: {}
       };
       stream.write(JSON.stringify(obj));
+    } else if (mode === "alert") {
+      obj = {
+        id: thisId,
+        server: server,
+        date: new Date(),
+        mode: mode,
+        data: {
+          text: req.text,
+        }
+      };
+      stream.write("\n" + JSON.stringify(obj));  
+    } else if (mode === "log") {
+      obj = {
+        id: thisId,
+        server: server,
+        date: new Date(),
+        mode: mode,
+        data: {
+          text: req.text,
+        }
+      };
+      stream.write("\n" + JSON.stringify(obj));  
+    } else if (mode === "cron") {
+      obj = {
+        id: thisId,
+        server: server,
+        date: new Date(),
+        mode: mode,
+        data: {
+          text: req.text,
+        }
+      };
+      stream.write("\n" + JSON.stringify(obj));  
+    } else if (mode === "alive") {
+      obj = {
+        id: thisId,
+        server: server,
+        date: new Date(),
+        mode: mode,
+        data: {
+          text: req.text,
+        }
+      };
+      stream.write("\n" + JSON.stringify(obj));  
     }
 
     resolve(obj);
