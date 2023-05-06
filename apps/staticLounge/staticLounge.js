@@ -16,7 +16,7 @@ const StaticLounge = function (mother = null, back = null, address = null) {
 
 StaticLounge.prototype.staticConnect = async function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, expressLog, emergencyAlarm, aliveLog, cronLog } = this.mother;
+  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
@@ -111,6 +111,14 @@ StaticLounge.prototype.staticConnect = async function () {
         try {
           expressLog(serverName, logStream, "log", { text }).catch((err) => { console.log(err) });
           await errorLog(text);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      error: async (text) => {
+        try {
+          expressLog(serverName, logStream, "error", { text }).catch((err) => { console.log(err) });
+          await alertLog(text);
         } catch (e) {
           console.log(e);
         }

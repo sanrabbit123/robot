@@ -94,7 +94,7 @@ TransferRouter.prototype.rou_get_First = function () {
       }
 
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -181,18 +181,18 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
 
           } else {
             console.log(e);
-            errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary 1): " + e.message).catch((e) => { console.log(e); });
+            logger.error("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary 1): " + e.message).catch((e) => { console.log(e); });
             res.send(JSON.stringify({ message: "error : " + e.message }));
           }
         } catch (e) {
           console.log(e);
-          errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary 2): " + e.message).catch((e) => { console.log(e); });
+          logger.error("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary 2): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
       });
     } catch (e) {
       console.log(e);
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary 3): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary 3): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -244,7 +244,7 @@ TransferRouter.prototype.rou_post_middlePhotoRead = function () {
 
       res.send(JSON.stringify(list));
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoRead): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoRead): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -316,7 +316,7 @@ TransferRouter.prototype.rou_post_clientPhoto = function () {
       res.send(JSON.stringify({ sitePhoto, preferredPhoto }));
 
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientPhoto): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_clientPhoto): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -389,20 +389,20 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
             res.send(JSON.stringify({ message: "done" }));
 
           } else {
-            errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary 1)").catch((e) => { console.log(e); });
+            logger.error("Transfer lounge 서버 문제 생김 (rou_post_clientBinary 1)").catch((e) => { console.log(e); });
             console.log(err);
             res.send(JSON.stringify({ message: "error" }));
           }
         } catch (e) {
           console.log(e);
-          errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary 2): " + e.message).catch((e) => { console.log(e); });
+          logger.error("Transfer lounge 서버 문제 생김 (rou_post_clientBinary 2): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
       });
 
     } catch (e) {
       console.log(e);
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientBinary 3): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_clientBinary 3): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -450,7 +450,7 @@ TransferRouter.prototype.rou_post_clientDelete = function () {
       res.send(JSON.stringify({ message: "success" }));
 
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_clientDelete): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_clientDelete): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -513,7 +513,7 @@ TransferRouter.prototype.rou_post_middleLinkParsing = function () {
 
       res.send(JSON.stringify(tong));
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleLinkParsing): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_middleLinkParsing): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -549,7 +549,7 @@ TransferRouter.prototype.rou_post_middleLinkSave = function () {
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleLinkSave): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_middleLinkSave): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -626,7 +626,7 @@ TransferRouter.prototype.rou_post_middlePhotoRemove = function () {
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoRemove): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoRemove): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -716,7 +716,7 @@ TransferRouter.prototype.rou_post_middlePhotoUpdate = function () {
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       console.log(e);
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoUpdate): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoUpdate): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -793,7 +793,7 @@ TransferRouter.prototype.rou_post_generalFileUpload = function () {
       });
     } catch (e) {
       console.log(e);
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_generalFileUpload): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_generalFileUpload): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -865,7 +865,7 @@ TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
                 }).then(() => {
                   return shellExec(`rm -rf ${newFileName};`);
                 }).catch((err) => {
-                  errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary): " + err.message).catch((e) => { console.log(e); });
+                  logger.error("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary): " + err.message).catch((e) => { console.log(e); });
                 });
 
               }
@@ -874,16 +874,16 @@ TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
             res.send(JSON.stringify(tongContents));
 
           } else {
-            errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary 1): " + e.message).catch((e) => { console.log(e); });
+            logger.error("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary 1): " + e.message).catch((e) => { console.log(e); });
             res.send(JSON.stringify({ message: "error : " + e.message }));
           }
         } catch (e) {
-          errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary 2): " + e.message).catch((e) => { console.log(e); });
+          logger.error("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary 2): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
       });
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary 3): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_middleCommentsBinary 3): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -927,7 +927,7 @@ TransferRouter.prototype.rou_post_middlePhotoAlarm = function () {
       await messageSend({ text, channel, voice });
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoAlarm): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoAlarm): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1015,16 +1015,16 @@ TransferRouter.prototype.rou_post_userBinary = function () {
             res.send(JSON.stringify({ message: "success" }));
 
           } else {
-            errorLog("Transfer lounge 서버 문제 생김 (rou_post_userBinary 1): " + e.message).catch((e) => { console.log(e); });
+            logger.error("Transfer lounge 서버 문제 생김 (rou_post_userBinary 1): " + e.message).catch((e) => { console.log(e); });
             res.send(JSON.stringify({ message: "error : " + e.message }));
           }
         } catch (e) {
-          errorLog("Transfer lounge 서버 문제 생김 (rou_post_userBinary 2): " + e.message).catch((e) => { console.log(e); });
+          logger.error("Transfer lounge 서버 문제 생김 (rou_post_userBinary 2): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
       });
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_userBinary 3): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_userBinary 3): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1160,16 +1160,16 @@ TransferRouter.prototype.rou_post_userConfirm = function () {
             res.send(JSON.stringify({ message: "success" }));
 
           } else {
-            errorLog("Transfer lounge 서버 문제 생김 (rou_post_userConfirm 1): " + e.message).catch((e) => { console.log(e); });
+            logger.error("Transfer lounge 서버 문제 생김 (rou_post_userConfirm 1): " + e.message).catch((e) => { console.log(e); });
             res.send(JSON.stringify({ message: "error : " + e.message }));
           }
         } catch (e) {
-          errorLog("Transfer lounge 서버 문제 생김 (rou_post_userConfirm 2): " + e.message).catch((e) => { console.log(e); });
+          logger.error("Transfer lounge 서버 문제 생김 (rou_post_userConfirm 2): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
       });
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_userConfirm 3): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_userConfirm 3): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1217,7 +1217,7 @@ TransferRouter.prototype.rou_post_userPhoto = function () {
       res.send(JSON.stringify({ list: tong }));
 
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_userPhoto): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_userPhoto): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1248,7 +1248,7 @@ TransferRouter.prototype.rou_post_userKey = function () {
       const keyDetailList = (await fileSystem("readDir", [ staticPath + "/" + key ])).filter((str) => { return str !== ".DS_Store" });
       res.send(JSON.stringify({ list: keyDetailList.map((str) => { return userLinkConst + "/" + key + "/" + str }) }));
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_userKey): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_userKey): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1288,16 +1288,16 @@ TransferRouter.prototype.rou_post_excelToMatrix = function () {
             await shellExec(`rm -rf ${shellLink(file.filepath)};`);
             res.send(JSON.stringify(matrix));
           } else {
-            errorLog("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix 1): " + e.message).catch((e) => { console.log(e); });
+            logger.error("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix 1): " + e.message).catch((e) => { console.log(e); });
             res.send(JSON.stringify({ message: "error : " + e.message }));
           }
         } catch (e) {
-          errorLog("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix 2): " + e.message).catch((e) => { console.log(e); });
+          logger.error("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix 2): " + e.message).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error : " + e.message }));
         }
       });
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix 3): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_excelToMatrix 3): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1349,7 +1349,7 @@ TransferRouter.prototype.rou_post_contractList = function () {
       res.send(JSON.stringify(result));
 
     } catch (e) {
-      errorLog("Transfer lounge 서버 문제 생김 (rou_post_contractList): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_contractList): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

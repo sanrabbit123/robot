@@ -136,7 +136,7 @@ LogRouter.prototype.rou_get_Root = function () {
 
 LogRouter.prototype.rou_get_First = function () {
   const instance = this;
-  const { diskReading, errorLog } = this.mother;
+  const { diskReading } = this.mother;
   const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
   const reflection = new MongoReflection();
   let obj = {};
@@ -167,7 +167,7 @@ LogRouter.prototype.rou_get_First = function () {
         }).then(() => {
           return instance.dailySubAnalytics(instance.mongo);
         }).then(() => {
-          return errorLog("front reflection, daily campaign, daily channel done");
+          return logger.cron("front reflection, daily campaign, daily channel done");
         }).catch((err) => { console.log(err); });
         res.send(JSON.stringify({ disk: disk.toArray() }));
 
@@ -180,7 +180,7 @@ LogRouter.prototype.rou_get_First = function () {
       }
 
     } catch (e) {
-      errorLog("Log Console 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Log Console 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -213,7 +213,7 @@ LogRouter.prototype.rou_get_Address = function () {
       res.set("Content-Type", "text/html");
       res.send(html);
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Address): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_Address): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -285,7 +285,7 @@ LogRouter.prototype.rou_post_receiveLog = function () {
       res.send(JSON.stringify(json));
 
     } catch (e) {
-      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_receiveLog): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Log Console 서버 문제 생김 (rou_post_receiveLog): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -404,7 +404,7 @@ LogRouter.prototype.rou_post_extractLog = function () {
 
       res.send(JSON.stringify(tong));
     } catch (e) {
-      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_extractLog): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Log Console 서버 문제 생김 (rou_post_extractLog): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -580,7 +580,7 @@ LogRouter.prototype.rou_post_getContents = function () {
       }
 
     } catch (e) {
-      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_post_getContents): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Log Console 서버 문제 생김 (rou_post_getContents): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -590,7 +590,7 @@ LogRouter.prototype.rou_post_getContents = function () {
 LogRouter.prototype.rou_post_analyticsGeneral = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, errorLog, dateToString } = this.mother;
+  const { equalJson, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/analyticsGeneral" ];
   obj.func = async function (req, res, logger) {
@@ -614,11 +614,11 @@ LogRouter.prototype.rou_post_analyticsGeneral = function () {
       }
       await back.mongoCreate(analyticsCollection, result, { selfMongo });
 
-      errorLog("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+      logger.cron("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
 
       res.send({ message: "success" });
     } catch (e) {
-      await errorLog("Log Console 서버 문제 생김 (rou_post_analyticsGeneral): " + e.message).catch((e) => { console.log(e); });
+      await logger.error("Log Console 서버 문제 생김 (rou_post_analyticsGeneral): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -628,7 +628,7 @@ LogRouter.prototype.rou_post_analyticsGeneral = function () {
 LogRouter.prototype.rou_post_analyticsClients = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, errorLog, dateToString } = this.mother;
+  const { equalJson, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/analyticsClients" ];
   obj.func = async function (req, res, logger) {
@@ -652,11 +652,11 @@ LogRouter.prototype.rou_post_analyticsClients = function () {
       }
       await back.mongoCreate(analyticsCollection, result, { selfMongo });
 
-      errorLog("daily clients done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+      logger.cron("daily clients done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
 
       res.send({ message: "success" });
     } catch (e) {
-      await errorLog("Log Console 서버 문제 생김 (rou_post_analyticsClients): " + e.message).catch((e) => { console.log(e); });
+      await logger.error("Log Console 서버 문제 생김 (rou_post_analyticsClients): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -666,7 +666,7 @@ LogRouter.prototype.rou_post_analyticsClients = function () {
 LogRouter.prototype.rou_post_basicReport = function () {
   const instance = this;
   const report = this.report;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/basicReport" ];
@@ -679,11 +679,11 @@ LogRouter.prototype.rou_post_basicReport = function () {
     });
     try {
       report.dailyReports().catch((err) => {
-        errorLog("Log console, basic dailyReports error : " + err.message).catch((err) => { console.log(err) });
+        logger.error("Log console, basic dailyReports error : " + err.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      instance.mother.errorLog("Log console 서버 문제 생김 (rou_post_basicReport): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Log console 서버 문제 생김 (rou_post_basicReport): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -710,7 +710,7 @@ LogRouter.prototype.rou_post_marketingMessage = function () {
       await instance.slack_bot.chat.postMessage({ text, channel });
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      instance.mother.errorLog("Log console 서버 문제 생김 (rou_post_marketingMessage): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Log console 서버 문제 생김 (rou_post_marketingMessage): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -719,7 +719,7 @@ LogRouter.prototype.rou_post_marketingMessage = function () {
 
 LogRouter.prototype.rou_post_errorMessage = function () {
   const instance = this;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/errorMessage" ];
@@ -735,10 +735,10 @@ LogRouter.prototype.rou_post_errorMessage = function () {
         throw new Error("invaild post, must be text");
       }
       const { text } = req.body;
-      await errorLog(text);
+      await logger.error(text);
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      errorLog("Log console 서버 문제 생김 (rou_post_errorMessage): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Log console 서버 문제 생김 (rou_post_errorMessage): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -882,7 +882,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      errorLog("Log console 서버 문제 생김 (rou_post_getAnalytics): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Log console 서버 문제 생김 (rou_post_getAnalytics): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -892,7 +892,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
 LogRouter.prototype.rou_post_updateContents = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, errorLog, messageLog, messageSend } = this.mother;
+  const { equalJson, messageLog, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/updateContents" ];
   obj.func = async function (req, res, logger) {
@@ -925,7 +925,7 @@ LogRouter.prototype.rou_post_updateContents = function () {
       res.send(JSON.stringify({ message: data }));
 
     } catch (e) {
-      errorLog("Log console 문제 생김 (rou_post_updateContents): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Log console 문제 생김 (rou_post_updateContents): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -936,7 +936,7 @@ LogRouter.prototype.rou_post_updateContents = function () {
 LogRouter.prototype.rou_post_getClientReport = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, errorLog, messageLog, messageSend, dateToString } = this.mother;
+  const { equalJson, messageLog, messageSend, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/getClientReport" ];
   obj.func = async function (req, res, logger) {
@@ -1024,7 +1024,7 @@ LogRouter.prototype.rou_post_getClientReport = function () {
       res.send(JSON.stringify(monthlyAnalytics));
 
     } catch (e) {
-      errorLog("Log console 문제 생김 (rou_post_getClientReport): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Log console 문제 생김 (rou_post_getClientReport): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }

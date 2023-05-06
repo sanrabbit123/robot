@@ -150,7 +150,7 @@ LogConsole.prototype.renderStatic = async function (staticFolder) {
 
 LogConsole.prototype.logConnect = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog, messageLog, expressLog, emergencyAlarm, aliveLog, cronLog } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog, messageLog, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
@@ -243,6 +243,14 @@ LogConsole.prototype.logConnect = async function () {
         try {
           expressLog(serverName, logStream, "log", { text }).catch((err) => { console.log(err) });
           await errorLog(text);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      error: async (text) => {
+        try {
+          expressLog(serverName, logStream, "error", { text }).catch((err) => { console.log(err) });
+          await alertLog(text);
         } catch (e) {
           console.log(e);
         }

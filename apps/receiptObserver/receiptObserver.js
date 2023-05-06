@@ -146,7 +146,7 @@ ReceiptObserver.prototype.wssClientLaunching = async function (url = "") {
 
 ReceiptObserver.prototype.taxServerLaunching = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, expressLog, errorLog, emergencyAlarm, aliveLog, cronLog } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, expressLog, errorLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
   const https = require("https");
   const express = require("express");
   const app = express();
@@ -238,6 +238,14 @@ ReceiptObserver.prototype.taxServerLaunching = async function () {
         try {
           expressLog(serverName, logStream, "log", { text }).catch((err) => { console.log(err) });
           await errorLog(text);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      error: async (text) => {
+        try {
+          expressLog(serverName, logStream, "error", { text }).catch((err) => { console.log(err) });
+          await alertLog(text);
         } catch (e) {
           console.log(e);
         }

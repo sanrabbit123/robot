@@ -16,7 +16,7 @@ const TransferLounge = function (mother = null, back = null, address = null) {
 
 TransferLounge.prototype.transConnect = async function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, expressLog, emergencyAlarm, cronLog, aliveLog } = this.mother;
+  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, expressLog, emergencyAlarm, cronLog, aliveLog, alertLog } = this.mother;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
@@ -107,6 +107,14 @@ TransferLounge.prototype.transConnect = async function () {
         try {
           expressLog(serverName, logStream, "log", { text }).catch((err) => { console.log(err) });
           await errorLog(text);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      error: async (text) => {
+        try {
+          expressLog(serverName, logStream, "error", { text }).catch((err) => { console.log(err) });
+          await alertLog(text);
         } catch (e) {
           console.log(e);
         }
