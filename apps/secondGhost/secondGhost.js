@@ -72,6 +72,8 @@ const SecondGhost = function (mother = null, back = null, address = null) {
     },
     bot: {
       log: "-741702420",
+      alive: "-965706823",
+      cron: "-977560893",
       general: "-771644766",
       emergency: "-754872890",
       consulting: "-856907489",

@@ -261,6 +261,10 @@ SecondRouter.prototype.rou_post_messageLog = function () {
 
       if (/silent/gi.test(channel) || /error_log/gi.test(channel)) {
         thisChannel = "log";
+      } else if (/alive_log/gi.test(channel)) {
+        thisChannel = "alive";
+      } else if (/cron_log/gi.test(channel)) {
+        thisChannel = "cron";
       } else if (/consulting/gi.test(channel)) {
         thisChannel = "consulting";
       } else if (/operation/gi.test(channel)) {
@@ -2359,59 +2363,6 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       }
     } catch (e) {
       instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-SecondRouter.prototype.rou_post_telegramEvents = function () {
-  const instance = this;
-  const { slack_info: { userDictionary, channelDictionary }, telegram, slack_user } = this;
-  const { errorLog, messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
-  let obj = {};
-  obj.link = [ "/telegramEvents" ];
-  obj.func = async function (req, res) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      const thisBody = equalJson(req.body);
-      if (typeof thisBody.message === "object" && thisBody.message !== null) {
-        if (typeof thisBody.message.chat === "object") {
-          const { text, chat: { id } } = thisBody.message;
-          const keyArr = Object.keys(channelDictionary);
-          let valueArr;
-          let targetChannel;
-
-          valueArr = [];
-          for (let key of keyArr) {
-            valueArr.push(channelDictionary[key]);
-          }
-
-          targetChannel = null;
-          if (String(id) === telegram.chat.plan) {
-            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "plan" })];
-          } else if (String(id) === telegram.chat.clare) {
-            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "clare" })];
-          } else if (String(id) === telegram.chat.jyeun) {
-            targetChannel = keyArr[valueArr.findIndex((str) => { return str === "jyeun" })];
-          } else {
-            targetChannel = null;
-          }
-
-          if (targetChannel !== null) {
-            await slack_user.chat.postMessage({ text, channel: targetChannel });
-          }
-
-        }
-      }
-      res.send(JSON.stringify({ message: "OK" }));
-    } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_telegramEvents): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }

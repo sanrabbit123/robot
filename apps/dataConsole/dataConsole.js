@@ -948,11 +948,43 @@ DataConsole.prototype.connect = async function () {
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);
     await expressLog(serverName, logStream, "start");
+    const logger = {
+      alert: async (text) => {
+        try {
+
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      error: async (text) => {
+        try {
+
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      cron: async (text) => {
+        try {
+
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      alive: async (text) => {
+        try {
+
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      stream: logStream,
+      path: thisLogFile,
+    };
     for (let obj of rouObj.get) {
       app.get(obj.link, async function (req, res) {
         try {
           expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
-          await obj.func(req, res);
+          await obj.func(req, res, logger);
         } catch (e) {
           console.log(e);
           res.set("Content-Type", "application/json");
@@ -1020,7 +1052,7 @@ DataConsole.prototype.connect = async function () {
               res.send(JSON.stringify({ message: "OK" }));
   
             } else {
-              await obj.func(req, res);
+              await obj.func(req, res, logger);
             }
 
           } catch (e) {
@@ -1033,7 +1065,7 @@ DataConsole.prototype.connect = async function () {
         app.post(obj.link, async function (req, res) {
           try {
             expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
-            await obj.func(req, res);
+            await obj.func(req, res, logger);
           } catch (e) {
             console.log(e);
             res.set("Content-Type", "application/json");
