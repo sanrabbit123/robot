@@ -147,7 +147,7 @@ DataRouter.prototype.rou_get_Root = function () {
   const instance = this;
   let obj = {};
   obj.link = '/';
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       res.redirect("/client");
     } catch (e) {
@@ -174,7 +174,7 @@ DataRouter.prototype.rou_get_First = function () {
   }
   ipTong = Array.from(new Set(ipTong));
   obj.link = "/:id";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       let ip, pass;
       let target;
@@ -291,7 +291,7 @@ DataRouter.prototype.rou_get_Middle = function () {
   const instance = this;
   let obj = {};
   obj.link = "/middle/:id";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       instance.baseMaker(req.params.id, "middle", req).then(function (html) {
         res.set("Content-Type", "text/html");
@@ -311,7 +311,7 @@ DataRouter.prototype.rou_get_Address = function () {
   const instance = this;
   let obj = {};
   obj.link = "/tools/address";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8">
         <style>*{margin:0}body{width:100vh;height:100vh;overflow:hidden}body::-webkit-scrollbar{display:none;}img{cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1}div{border:0;width:100vw;height:100vh;position:relative}</style><script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script></head><body><script>
@@ -342,7 +342,7 @@ DataRouter.prototype.rou_get_AddressLite = function () {
   const instance = this;
   let obj = {};
   obj.link = "/tools/addressLite";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8">
         <style>*{margin:0}body{width:100vh;height:100vh;overflow:hidden}body::-webkit-scrollbar{display:none;}img{cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1}div{border:0;width:100vw;height:100vh;position:relative}</style><script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script></head><body><script>
@@ -372,7 +372,7 @@ DataRouter.prototype.rou_get_Trigger = function () {
   const instance = this;
   let obj = {};
   obj.link = "/tools/trigger";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8">
         <style>*{margin:0}body{width:100vh;height:100vh;overflow:hidden}body::-webkit-scrollbar{display:none;}img{cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1}div{border:0;width:100vw;height:100vh;position:relative}</style><script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script></head><body><script>
@@ -392,7 +392,7 @@ DataRouter.prototype.rou_get_Patch = function () {
   const { fileSystem } = this.mother;
   let obj = {};
   obj.link = "/patch/:key";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*",
@@ -429,7 +429,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
   const { readFileSync } = require(`fs`);
   let obj = {};
   obj.link = [ "/sse/get_client", "/sse/get_designer", "/sse/get_project", "/sse/get_contents" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const thisPath = req.url.split('_')[1];
       const sseStream = new SseStream(req);
@@ -481,7 +481,7 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
   let totalOrder = 0;
   let obj = {};
   obj.link = [ "/specificsse/:id" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const idConst = "sse";
       const sseConst = idConst + "_" + req.params.id;

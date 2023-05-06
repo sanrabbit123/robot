@@ -100,7 +100,7 @@ StaticRouter.prototype.rou_get_First = function () {
   const { errorLog, diskReading } = this.mother;
   let obj = {};
   obj.link = "/:id";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -142,7 +142,7 @@ StaticRouter.prototype.rou_post_listFiles = function () {
   let obj;
   obj = {};
   obj.link = [ "/listFiles" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -199,7 +199,7 @@ StaticRouter.prototype.rou_post_searchFiles = function () {
   let obj;
   obj = {};
   obj.link = [ "/searchFiles" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -268,7 +268,7 @@ StaticRouter.prototype.rou_post_readDir = function () {
   let obj;
   obj = {};
   obj.link = [ "/readDir" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -313,7 +313,7 @@ StaticRouter.prototype.rou_post_readFile = function () {
   let obj;
   obj = {};
   obj.link = [ "/readFile" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -369,7 +369,7 @@ StaticRouter.prototype.rou_post_findFolderId = function () {
   let obj;
   obj = {};
   obj.link = [ "/findFolderId" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -444,7 +444,7 @@ StaticRouter.prototype.rou_post_findFileId = function () {
   let obj;
   obj = {};
   obj.link = [ "/findFileId" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -492,7 +492,7 @@ StaticRouter.prototype.rou_post_parsingDrawio = function () {
   let obj;
   obj = {};
   obj.link = [ "/parsingDrawio" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -569,7 +569,7 @@ StaticRouter.prototype.rou_post_getPathFromId = function () {
   let obj;
   obj = {};
   obj.link = [ "/getPathFromId" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -608,7 +608,7 @@ StaticRouter.prototype.rou_post_moveFiles = function () {
   let obj;
   obj = {};
   obj.link = [ "/moveFiles" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -672,7 +672,7 @@ StaticRouter.prototype.rou_post_createNewSheets = function () {
   let obj;
   obj = {};
   obj.link = [ "/createNewSheets" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -706,7 +706,7 @@ StaticRouter.prototype.rou_post_createNewDocs = function () {
   let obj;
   obj = {};
   obj.link = [ "/createNewDocs" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -740,7 +740,7 @@ StaticRouter.prototype.rou_post_createNewSlides = function () {
   let obj;
   obj = {};
   obj.link = [ "/createNewSlides" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -774,7 +774,7 @@ StaticRouter.prototype.rou_post_createNewForms = function () {
   let obj;
   obj = {};
   obj.link = [ "/createNewForms" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -808,7 +808,7 @@ StaticRouter.prototype.rou_post_createNewNotionPage = function () {
   let obj;
   obj = {};
   obj.link = [ "/createNewNotionPage" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -855,7 +855,7 @@ StaticRouter.prototype.rou_post_createNewNotionKanban = function () {
   let obj;
   obj = {};
   obj.link = [ "/createNewNotionKanban" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -901,7 +901,7 @@ StaticRouter.prototype.rou_post_createNewLinkFile = function () {
   let obj;
   obj = {};
   obj.link = [ "/createNewLinkFile" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -951,7 +951,7 @@ StaticRouter.prototype.rou_post_createNewExcel = function () {
   let obj;
   obj = {};
   obj.link = [ "/createNewExcel" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1001,7 +1001,7 @@ StaticRouter.prototype.rou_post_createNewWord = function () {
   let obj;
   obj = {};
   obj.link = [ "/createNewWord" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1051,7 +1051,7 @@ StaticRouter.prototype.rou_post_createNewPowerPoint = function () {
   let obj;
   obj = {};
   obj.link = [ "/createNewPowerPoint" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1100,7 +1100,7 @@ StaticRouter.prototype.rou_post_downloadUrlFromOneDrive = function () {
   let obj;
   obj = {};
   obj.link = [ "/downloadUrlFromOneDrive" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1133,7 +1133,7 @@ StaticRouter.prototype.rou_post_microsoftConvert = function () {
   let obj;
   obj = {};
   obj.link = [ "/microsoftConvert" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1196,7 +1196,7 @@ StaticRouter.prototype.rou_post_renameTargets = function () {
   let obj;
   obj = {};
   obj.link = [ "/renameTargets" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1275,7 +1275,7 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
   let obj;
   obj = {};
   obj.link = [ "/generalFileUpload" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1363,7 +1363,7 @@ StaticRouter.prototype.rou_post_makeFolder = function () {
   let obj;
   obj = {};
   obj.link = [ "/makeFolder" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1419,7 +1419,7 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
   let obj;
   obj = {};
   obj.link = [ "/zipPhoto" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1528,7 +1528,7 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
   let obj;
   obj = {};
   obj.link = [ "/designerFolder" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1736,7 +1736,7 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
   let obj;
   obj = {};
   obj.link = [ "/recordBackup" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1790,7 +1790,7 @@ StaticRouter.prototype.rou_post_centrexSession = function () {
   let obj;
   obj = {};
   obj.link = [ "/centrexSession" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1891,7 +1891,7 @@ StaticRouter.prototype.rou_post_mongoToJson = function () {
   let obj;
   obj = {};
   obj.link = [ "/mongoToJson" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1925,7 +1925,7 @@ StaticRouter.prototype.rou_post_dataReflection = function () {
   let obj;
   obj = {};
   obj.link = [ "/dataReflection" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1959,7 +1959,7 @@ StaticRouter.prototype.rou_post_mysqlQuery = function () {
   let obj;
   obj = {};
   obj.link = [ "/mysqlQuery" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2001,7 +2001,7 @@ StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
   let obj;
   obj = {};
   obj.link = [ "/parsingCashReceipt" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2033,7 +2033,7 @@ StaticRouter.prototype.rou_post_textToVoice = function () {
   let obj;
   obj = {};
   obj.link = [ "/textToVoice" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2066,7 +2066,7 @@ StaticRouter.prototype.rou_post_printText = function () {
   let obj;
   obj = {};
   obj.link = [ "/printText" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2120,7 +2120,7 @@ StaticRouter.prototype.rou_post_pageToPdf = function () {
   let obj;
   obj = {};
   obj.link = [ "/pageToPdf" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2272,7 +2272,7 @@ StaticRouter.prototype.rou_post_getUtilization = function () {
   }
   let obj = {};
   obj.link = [ "/getUtilization" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2303,7 +2303,7 @@ StaticRouter.prototype.rou_post_removeCronNmon = function () {
   const targetDir = process.env.HOME + "/nmontong";
   let obj = {};
   obj.link = [ "/removeCronNmon" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2357,7 +2357,7 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
   const address = this.address;
   let obj = {};
   obj.link = [ "/analyticsDaily" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2424,7 +2424,7 @@ StaticRouter.prototype.rou_post_filesToZip = function () {
   const address = this.address;
   let obj = {};
   obj.link = [ "/filesToZip" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2485,7 +2485,7 @@ StaticRouter.prototype.rou_post_renameFile = function () {
   const address = this.address;
   let obj = {};
   obj.link = [ "/renameFile" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2526,7 +2526,7 @@ StaticRouter.prototype.rou_post_deleteFile = function () {
   const address = this.address;
   let obj = {};
   obj.link = [ "/deleteFile" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2577,7 +2577,7 @@ StaticRouter.prototype.rou_post_getMicrosoftAccessToken = function () {
   const microsoft = this.microsoft;
   let obj = {};
   obj.link = [ "/getMicrosoftAccessToken" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2601,7 +2601,7 @@ StaticRouter.prototype.rou_post_renewMicrosoftAccessToken = function () {
   const microsoft = this.microsoft;
   let obj = {};
   obj.link = [ "/renewMicrosoftAccessToken" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2625,7 +2625,7 @@ StaticRouter.prototype.rou_post_getMacArr = function () {
   const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
   let obj = {};
   obj.link = [ "/getMacArr" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2649,7 +2649,7 @@ StaticRouter.prototype.rou_post_fromToFileAlarm = function () {
   const { requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/fromToFileAlarm" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2681,7 +2681,7 @@ StaticRouter.prototype.rou_post_parsingDevicesStatus = function () {
   const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
   let obj = {};
   obj.link = [ "/parsingDevicesStatus" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2708,7 +2708,7 @@ StaticRouter.prototype.rou_post_storeDevicesStatus = function () {
   let obj;
   obj = {};
   obj.link = [ "/storeDevicesStatus" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2740,7 +2740,7 @@ StaticRouter.prototype.rou_post_getDevicesStatus = function () {
   let obj;
   obj = {};
   obj.link = [ "/getDevicesStatus" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2976,7 +2976,7 @@ StaticRouter.prototype.rou_post_callHistory = function () {
   }
   let obj = {};
   obj.link = [ "/callHistory" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3112,7 +3112,7 @@ StaticRouter.prototype.rou_post_calendarSync = function () {
   }
   let obj = {};
   obj.link = [ "/calendarSync" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3140,7 +3140,7 @@ StaticRouter.prototype.rou_post_workProposalToClient = function () {
   const { errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/workProposalToClient" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3168,7 +3168,7 @@ StaticRouter.prototype.rou_post_workProjectActionSync = function () {
   const { errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/workProjectActionSync" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3296,7 +3296,7 @@ StaticRouter.prototype.rou_post_photoStatusSync = function () {
   }
   let obj = {};
   obj.link = [ "/photoStatusSync" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",

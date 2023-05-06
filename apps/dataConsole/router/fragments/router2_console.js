@@ -6,7 +6,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
   const { equalJson, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getBuilders" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -230,7 +230,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
   const { equalJson, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/searchClients", "/searchProjects", "/searchDesigners", "/searchContents" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const selfMongo = instance.mongolocal;
       const selfCoreMongo = instance.mongo;
@@ -570,7 +570,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
   const { fileSystem, pythonExecute, shellExec, shellLink, equalJson, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       let { thisId, requestIndex, column, value, pastValue, user, thisCase } = equalJson(req.body);
       let thisPath;
@@ -810,7 +810,7 @@ DataRouter.prototype.rou_post_updateLog = function () {
   const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/updateLog" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.id === undefined || req.body.column === undefined || req.body.position === undefined || req.body.pastValue === undefined || req.body.finalValue === undefined) {
         throw new Error("invaild post");
@@ -898,7 +898,7 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
   const { equalJson, errorLog, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/rawUpdateClient", "/rawUpdateDesigner", "/rawUpdateProject", "/rawUpdateContents", "/rawUpdateAspirant" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -979,7 +979,7 @@ DataRouter.prototype.rou_post_deleteDocument = function () {
   const instance = this;
   let obj = {};
   obj.link = [ "/deleteClient", "/deleteDesigner", "/deleteProject", "/deleteContents" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.url === "/deleteClient") {
         await instance.back.deleteClient(req.body.id, { selfMongo: instance.mongo });
@@ -1007,7 +1007,7 @@ DataRouter.prototype.rou_post_createDocument = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/createClient", "/createDesigner", "/createProject", "/createContents" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const updateQuery = equalJson(req.body.updateQuery);
       let id;
@@ -1039,7 +1039,7 @@ DataRouter.prototype.rou_post_getServices = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/getServices", "/getServiceByKey", "/getServicesByKind" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*",
@@ -1085,7 +1085,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
   const { equalJson, zeroAddition, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/getClientReport";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const today = new Date();
       const proposalStandardDate = new Date(2021, 8, 1);
@@ -1336,7 +1336,7 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
   const { equalJson, serviceParsing } = this.mother;
   let obj = {};
   obj.link = "/getProjectReport";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set("Content-Type", "application/json");
     try {
       const { mode, start, end } = equalJson(req.body);
@@ -1487,7 +1487,7 @@ DataRouter.prototype.rou_post_getAspirantInfo = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/getAspirants" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set("Content-Type", "application/json");
     try {
       if (req.body.whereQuery === undefined) {
@@ -1515,7 +1515,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
   const back = this.back;
   let obj = {};
   obj.link = "/getDesignerReport";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.desid === undefined) {
         throw new Error("must be desid");
@@ -1629,7 +1629,7 @@ DataRouter.prototype.rou_post_getHistory = function () {
   }
   let obj = {};
   obj.link = [ "/getClientHistory", "/getProjectHistory", "/getHistoryProperty", "/getHistoryTotal", "/getClientsImportant", "/getProjectsImportant", "/getClientsManager", "/getProjectsManager", "/getClientsIssue", "/getProjectsIssue" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1715,7 +1715,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
   const members = this.members;
   let obj = {};
   obj.link = [ "/updateHistory", "/updateClientHistory", "/updateProjectHistory", "/updateDesignerHistory" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const today = new Date();
       const { id, column, value, email } = equalJson(req.body);
@@ -1891,7 +1891,7 @@ DataRouter.prototype.rou_post_getContentsDetail = function () {
   const back = this.back;
   let obj = {};
   obj.link = [ "/getContentsDetail" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       let contents;
 
@@ -1919,7 +1919,7 @@ DataRouter.prototype.rou_post_sendSlack = function () {
   const url = require("url");
   let obj = {};
   obj.link = "/sendSlack";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1977,7 +1977,7 @@ DataRouter.prototype.rou_post_sendSheets = function () {
   }
   let obj = {};
   obj.link = "/sendSheets";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set("Content-Type", "application/json");
     try {
       if (req.body.sheetName === undefined || req.body.parentId === undefined || req.body.values === undefined) {
@@ -2045,7 +2045,7 @@ DataRouter.prototype.rou_post_createProposalDocument = function () {
   const { shellExec, shellLink, requestSystem, errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/createProposalDocument" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set("Content-Type", "application/json");
     try {
 
@@ -2129,7 +2129,7 @@ DataRouter.prototype.rou_post_proposalLog = function () {
   const { shell, shellLink, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/proposalLog" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2165,7 +2165,7 @@ DataRouter.prototype.rou_post_proposalReset = function () {
   const { requestSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/proposalReset", "/proposalCreate" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       let id, historyObj;
       let requestObj;
@@ -2239,7 +2239,7 @@ DataRouter.prototype.rou_post_getMembers = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/getMembers";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2327,7 +2327,7 @@ DataRouter.prototype.rou_post_parsingLatestLog = function () {
   const { fileSystem, equalJson } = this.mother;
   let obj = {};
   obj.link = "/parsingLatestLog";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.idArr === undefined) {
         throw new Error("must be id arr: Array");
@@ -2377,7 +2377,7 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
   const work = this.work;
   let obj = {};
   obj.link = "/parsingProposal";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.id === undefined || req.body.serid === undefined) {
         throw new Error("must be cliid, seridNumber");
@@ -2407,7 +2407,7 @@ DataRouter.prototype.rou_post_alimTalk = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/alimTalk";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": '*',
@@ -2450,7 +2450,7 @@ DataRouter.prototype.rou_post_sendCertification = function () {
   const { errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/sendCertification" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2492,7 +2492,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
   const { equalJson, stringToDate, errorLog, messageSend, messageLog, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/clientSubmit" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2729,7 +2729,7 @@ DataRouter.prototype.rou_post_getDesignerGhost = function () {
   const back = this.back;
   let obj = {};
   obj.link = "/getDesignerGhost";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2779,7 +2779,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
   let obj = {};
   obj.link = "/webHookPayment";
   obj.public = true;
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2891,7 +2891,7 @@ DataRouter.prototype.rou_post_webHookGoogle = function () {
   let obj = {};
   obj.link = "/webHookGoogle";
   obj.public = true;
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       let boo;
       res.set({ "Content-Type": "application/json" });
@@ -2964,7 +2964,7 @@ DataRouter.prototype.rou_post_generalMongo = function () {
   const { equalJson, fileSystem } = this.mother;
   let obj = {};
   obj.link = "/generalMongo";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3105,7 +3105,7 @@ DataRouter.prototype.rou_post_generalCalendar = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/makeSchedule", "/listSchedule", "/updateSchedule", "/deleteSchedule" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       let resultObj;
       if (req.url === "/makeSchedule") {
@@ -3160,7 +3160,7 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
   const { equalJson, autoComma, fileSystem } = this.mother;
   let obj = {};
   obj.link = [ "/parsingAddress" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3239,7 +3239,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
   const { equalJson, fileSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/realtimeClient" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (!req.body.hasOwnProperty("method")) {
         throw new Error("invaild post");
@@ -3606,7 +3606,7 @@ DataRouter.prototype.rou_post_realtimeDesigner = function () {
   const { equalJson, fileSystem } = this.mother;
   let obj = {};
   obj.link = [ "/realtimeDesigner" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3683,7 +3683,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
   const { equalJson, serviceParsing, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/designerFee" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const option = { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal };
       if (req.body.matrix === undefined) {
@@ -3769,7 +3769,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
   const password = "homeliaison";
   let obj = {};
   obj.link = [ "/inicisPayment" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -4079,7 +4079,7 @@ DataRouter.prototype.rou_post_pythonPass = function () {
   const { requestSystem, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/pythonPass_ghostClientBill", "/pythonPass_generalBill", "/pythonPass_invoiceRead", "/pythonPass_invoiceCreate", "/pythonPass_generalMongo", "/pythonPass_returnDummy", "/pythonPass_invoiceRequest" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -4112,7 +4112,7 @@ DataRouter.prototype.rou_post_callTo = function () {
   const { requestSystem, equalJson, errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/callTo" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({ "Content-Type": "application/json" });
     try {
       if (req.body.who === undefined) {
@@ -4163,7 +4163,7 @@ DataRouter.prototype.rou_post_ghostDesigner_updateAnalytics = function () {
   const { equalJson, ipParsing } = this.mother;
   let obj = {};
   obj.link = [ "/ghostDesigner_updateAnalytics" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.mode === undefined || req.body.desid === undefined || req.body.page === undefined || req.body.who === undefined) {
         throw new Error("invaild post");
@@ -4242,7 +4242,7 @@ DataRouter.prototype.rou_post_ghostDesigner_getAnalytics = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/ghostDesigner_getAnalytics" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -4292,7 +4292,7 @@ DataRouter.prototype.rou_post_errorLog = function () {
   const { errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/errorLog" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -4318,7 +4318,7 @@ DataRouter.prototype.rou_post_getDataPatch = function () {
   const { errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/getDataPatch", "/dataPatch" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*",
@@ -4397,7 +4397,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
   }
   let obj = {};
   obj.link = [ "/constructInteraction" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*",
@@ -4788,7 +4788,7 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
   const { errorLog, equalJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/getOpenGraph" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*",
@@ -4907,7 +4907,7 @@ DataRouter.prototype.rou_post_mysqlQuery = function () {
   const { errorLog, equalJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/mysqlQuery" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -4940,7 +4940,7 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
   const { errorLog, requestSystem, uniqueValue, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/generalImpPayment" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5009,7 +5009,7 @@ DataRouter.prototype.rou_post_getUpdateUser = function () {
   const { errorLog, requestSystem, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/getUsers", "/updateUser" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5045,7 +5045,7 @@ DataRouter.prototype.rou_post_userSubmit = function () {
   const { errorLog, equalJson, requestSystem, dateToString, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/userSubmit" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5134,7 +5134,7 @@ DataRouter.prototype.rou_post_requestScript = function () {
   const { errorLog, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/requestScript" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5161,7 +5161,7 @@ DataRouter.prototype.rou_post_designerFeeTable = function () {
   const { errorLog, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/designerFeeTable" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5186,7 +5186,7 @@ DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
   const back = this.back;
   let obj = {};
   obj.link = [ "/homeliaisonCrypto" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5558,7 +5558,7 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
   }
   let obj = {};
   obj.link = [ "/timeDeltaAlarm" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5631,7 +5631,7 @@ DataRouter.prototype.rou_post_pushClient = function () {
   }
   let obj = {};
   obj.link = [ "/pushClient" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5658,7 +5658,7 @@ DataRouter.prototype.rou_post_processConsole = function () {
   const { equalJson, requestSystem, errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/processConsole" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5880,7 +5880,7 @@ DataRouter.prototype.rou_post_designerSubmit = function () {
   const { equalJson, requestSystem, errorLog, dateToString, stringToDate, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/designerSubmit" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -6209,7 +6209,7 @@ DataRouter.prototype.rou_post_salesClient = function () {
   const { equalJson, errorLog, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/salesClient" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -6524,7 +6524,7 @@ DataRouter.prototype.rou_post_dailySales = function () {
   const { equalJson, errorLog, messageSend, dateToString, stringToDate } = this.mother;
   let obj = {};
   obj.link = [ "/dailySales" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -6667,7 +6667,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
   const { equalJson, errorLog, messageSend, dateToString, stringToDate } = this.mother;
   let obj = {};
   obj.link = [ "/dailySalesReport" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",

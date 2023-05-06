@@ -33,7 +33,7 @@ ReceiptRouter.prototype.rou_get_Root = function () {
   const instance = this;
   let obj = {};
   obj.link = '/';
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
       res.set({
@@ -56,7 +56,7 @@ ReceiptRouter.prototype.rou_get_Ssl = function () {
   const { diskReading } = this.mother;
   let obj = {};
   obj.link = "/ssl";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -80,7 +80,7 @@ ReceiptRouter.prototype.rou_get_Disk = function () {
   const { diskReading } = this.mother;
   let obj = {};
   obj.link = "/disk";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -103,7 +103,7 @@ ReceiptRouter.prototype.rou_get_bluePrint = function () {
   const instance = this;
   let obj = {};
   obj.link = "/bluePrint";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8"><style media="screen">*::-webkit-scrollbar{display:none;}html{overflow:hidden}body {position: absolute;top: 0px;left: 0px;width: 100vw;height: 100vh;background: #00ff00;}</style></head><body></body></html>`;
       res.set({
@@ -125,7 +125,7 @@ ReceiptRouter.prototype.rou_get_blackPrint = function () {
   const instance = this;
   let obj = {};
   obj.link = "/blackPrint";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8"><style media="screen">*::-webkit-scrollbar{display:none;}html{overflow:hidden}body {position: absolute;top: 0px;left: 0px;width: 100vw;height: 100vh;background: #000000;}</style></head><body></body></html>`;
       res.set({
@@ -148,7 +148,7 @@ ReceiptRouter.prototype.rou_get_isOffice = function () {
   const address = this.address;
   let obj = {};
   obj.link = "/isOffice";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -173,7 +173,7 @@ ReceiptRouter.prototype.rou_post_generalMongo = function () {
   const { equalJson, fileSystem } = this.mother;
   let obj = {};
   obj.link = "/generalMongo";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -267,7 +267,7 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
   const { equalJson, messageLog } = this.mother;
   let obj = {};
   obj.link = "/cashReceipt";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -322,7 +322,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
   const { requestSystem, messageSend, dateToString, serviceParsing, autoComma } = this.mother;
   let obj = {};
   obj.link = "/createStylingContract";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -482,7 +482,7 @@ ReceiptRouter.prototype.rou_post_createConstructContract = function () {
   const { requestSystem, messageSend, messageLog, errorLog, dateToString, serviceParsing, autoComma } = this.mother;
   let obj = {};
   obj.link = "/createConstructContract";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -708,7 +708,7 @@ ReceiptRouter.prototype.rou_post_receiveConstructContract = function () {
   const { equalJson, fileSystem, dateToString, autoComma, messageSend, errorLog, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/receiveConstructContract";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.json === undefined) {
         throw new Error("must be json");
@@ -757,7 +757,7 @@ ReceiptRouter.prototype.rou_post_constructAmountSync = function () {
   const { equalJson, messageSend, messageLog, errorLog } = this.mother;
   let obj = {};
   obj.link = "/constructAmountSync";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -927,7 +927,7 @@ ReceiptRouter.prototype.rou_post_stylingAmountSync = function () {
   const { equalJson, messageSend, messageLog, errorLog } = this.mother;
   let obj = {};
   obj.link = "/stylingAmountSync";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1138,7 +1138,7 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
   const standardDay = 7;
   let obj = {};
   obj.link = "/smsParsing";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1317,7 +1317,7 @@ ReceiptRouter.prototype.rou_post_accountTimeSet = function () {
   const collection = "accountTransfer";
   let obj = {};
   obj.link = "/accountTimeSet";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1354,7 +1354,7 @@ ReceiptRouter.prototype.rou_post_designerTransfer = function () {
   const collection = "designerTransfer";
   let obj = {};
   obj.link = "/designerTransfer";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1402,7 +1402,7 @@ ReceiptRouter.prototype.rou_post_accountTimeUpdate = function () {
   const collection = "accountTransfer";
   let obj = {};
   obj.link = "/accountTimeUpdate";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1436,7 +1436,7 @@ ReceiptRouter.prototype.rou_post_createStylingBill = function () {
   const bill = this.bill;
   let obj = {};
   obj.link = "/createStylingBill";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.proid === undefined) {
         throw new Error("invaild post, must be { proid }");
@@ -1470,7 +1470,7 @@ ReceiptRouter.prototype.rou_post_generalBill = function () {
   const { equalJson, fileSystem } = this.mother;
   let obj = {};
   obj.link = "/generalBill";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1758,7 +1758,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
   const { equalJson, autoComma, requestSystem, messageSend, errorLog } = this.mother;
   let obj = {};
   obj.link = "/ghostClientBill";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.bilid === undefined || req.body.requestNumber === undefined || req.body.data === undefined) {
         throw new Error("invaild post");
@@ -1960,7 +1960,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
   let obj = {};
   obj.link = "/webHookVAccount";
   obj.public = true;
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const oid = req.body.no_oid;
       const inisis = "현금 영수증";
@@ -2125,7 +2125,7 @@ ReceiptRouter.prototype.rou_post_designerSelect = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/designerSelect";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.proid === undefined || req.body.desid === undefined) {
         throw new Error("invaild post, must be proid / desid : " + JSON.stringify(req.body, null, 2));
@@ -2161,7 +2161,7 @@ ReceiptRouter.prototype.rou_post_travelInjection = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/travelInjection";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.injectionCase === undefined || req.body.proid === undefined || req.body.method === undefined || req.body.number === undefined) {
         throw new Error("invaild post");
@@ -2198,7 +2198,7 @@ ReceiptRouter.prototype.rou_post_travelEjection = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/travelEjection";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.injectionCase === undefined || req.body.proid === undefined || req.body.method === undefined || req.body.index === undefined) {
         throw new Error("invaild post");
@@ -2235,7 +2235,7 @@ ReceiptRouter.prototype.rou_post_travelUpDown = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/travelUpDown";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.order === undefined || req.body.proid === undefined || req.body.method === undefined || req.body.index === undefined) {
         throw new Error("invaild post");
@@ -2272,7 +2272,7 @@ ReceiptRouter.prototype.rou_post_travelReconfig = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/travelReconfig";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.injectionCase === undefined || req.body.proid === undefined || req.body.method === undefined || req.body.index === undefined || req.body.number === undefined) {
         throw new Error("invaild post");
@@ -2313,7 +2313,7 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
   const { equalJson, requestSystem, sleep, serviceParsing, messageSend, autoComma } = this.mother;
   let obj = {};
   obj.link = "/serviceConverting";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.proid === undefined || req.body.method === undefined || req.body.serid === undefined) {
         throw new Error("invaild post");
@@ -2465,7 +2465,7 @@ ReceiptRouter.prototype.rou_post_designerConverting = function () {
   const { equalJson, requestSystem, sleep, serviceParsing, messageSend, autoComma } = this.mother;
   let obj = {};
   obj.link = "/designerConverting";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.proid === undefined || req.body.method === undefined || req.body.desid === undefined) {
         throw new Error("invaild post");
@@ -2603,7 +2603,7 @@ ReceiptRouter.prototype.rou_post_amountConverting = function () {
   const { equalJson, sleep } = this.mother;
   let obj = {};
   obj.link = "/amountConverting";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2636,7 +2636,7 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
   const { equalJson, sleep, requestSystem, messageSend, messageLog, errorLog } = this.mother;
   let obj = {};
   obj.link = "/requestRefund";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2794,7 +2794,7 @@ ReceiptRouter.prototype.rou_post_contractCancel = function () {
   const { equalJson, sleep, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/contractCancel";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2864,7 +2864,7 @@ ReceiptRouter.prototype.rou_post_returnBankCode = function () {
   const { equalJson, sleep } = this.mother;
   let obj = {};
   obj.link = "/returnBankCode";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2889,7 +2889,7 @@ ReceiptRouter.prototype.rou_post_designerCalculation = function () {
   const { equalJson, sleep } = this.mother;
   let obj = {};
   obj.link = "/designerCalculation";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2948,7 +2948,7 @@ ReceiptRouter.prototype.rou_post_returnDummy = function () {
   const { equalJson, sleep } = this.mother;
   let obj = {};
   obj.link = "/returnDummy";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2977,7 +2977,7 @@ ReceiptRouter.prototype.rou_post_invoiceRead = function () {
   const { equalJson, sleep } = this.mother;
   let obj = {};
   obj.link = "/invoiceRead";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3007,7 +3007,7 @@ ReceiptRouter.prototype.rou_post_invoiceRequest = function () {
   const { equalJson, sleep } = this.mother;
   let obj = {};
   obj.link = "/invoiceRequest";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3037,7 +3037,7 @@ ReceiptRouter.prototype.rou_post_invoiceCreate = function () {
   const { equalJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/invoiceCreate";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3068,7 +3068,7 @@ ReceiptRouter.prototype.rou_post_taxBill = function () {
   const { equalJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/taxBill";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3099,7 +3099,7 @@ ReceiptRouter.prototype.rou_post_weeklyCalculation = function () {
   const { equalJson, errorLog } = this.mother;
   let obj = {};
   obj.link = "/weeklyCalculation";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3128,7 +3128,7 @@ ReceiptRouter.prototype.rou_post_nonPaidResponses = function () {
   const { equalJson, errorLog } = this.mother;
   let obj = {};
   obj.link = "/nonPaidResponses";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3156,7 +3156,7 @@ ReceiptRouter.prototype.rou_post_excuteResponse = function () {
   const { equalJson, errorLog, messageSend } = this.mother;
   let obj = {};
   obj.link = "/excuteResponse";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3287,7 +3287,7 @@ ReceiptRouter.prototype.rou_post_excuteRepay = function () {
   const { equalJson, errorLog } = this.mother;
   let obj = {};
   obj.link = "/excuteRepay";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3394,7 +3394,7 @@ ReceiptRouter.prototype.rou_post_passiveResponse = function () {
   const { equalJson, errorLog } = this.mother;
   let obj = {};
   obj.link = "/passiveResponse";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3618,7 +3618,7 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
   }
   let obj = {};
   obj.link = "/stylingFormSync";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3649,7 +3649,7 @@ ReceiptRouter.prototype.rou_post_stylingFormFile = function () {
   const back = this.back;
   let obj = {};
   obj.link = "/stylingFormFile";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3721,7 +3721,7 @@ ReceiptRouter.prototype.rou_post_responseInjection = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/responseInjection";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3772,7 +3772,7 @@ ReceiptRouter.prototype.rou_post_calculationConsole = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/calculationConsole";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",

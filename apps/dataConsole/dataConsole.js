@@ -1050,7 +1050,7 @@ DataConsole.prototype.connect = async function () {
                 __slackMessage += "\n\n";
                 __slackMessage += JSON.stringify(req.body, null, 2);
               }
-              errorLog({ text: "잘못된 보안 접근 감지 : (dataConsole) \n" + __slackMessage, channel: "#error_log" }).catch((e) => { console.log(e); });
+              emergencyAlarm({ text: "잘못된 보안 접근 감지 : (dataConsole) \n" + __slackMessage, channel: "#error_log" }).catch((e) => { console.log(e); });
   
               res.set("Content-Type", "application/json");
               res.send(JSON.stringify({ message: "OK" }));

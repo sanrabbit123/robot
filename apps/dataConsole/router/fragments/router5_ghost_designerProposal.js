@@ -5,7 +5,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
   const address = this.address;
   let obj = {};
   obj.link = "/designerProposal_submit";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -81,7 +81,7 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
   const address = this.address;
   let obj = {};
   obj.link = "/designerProposal_policy";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -113,7 +113,7 @@ DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
   const work = this.work;
   let obj = {};
   obj.link = "/designerProposal_getDesigners";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",

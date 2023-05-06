@@ -16,7 +16,7 @@ const TransferLounge = function (mother = null, back = null, address = null) {
 
 TransferLounge.prototype.transConnect = async function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, expressLog } = this.mother;
+  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, expressLog, emergencyAlarm, cronLog, aliveLog } = this.mother;
   const PORT = 3000;
   const https = require("https");
   const express = require("express");
@@ -94,12 +94,47 @@ TransferLounge.prototype.transConnect = async function () {
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);
     await expressLog(serverName, logStream, "start");
-
+    const logger = {
+      alert: async (text) => {
+        try {
+          expressLog(serverName, logStream, "alert", { text }).catch((err) => { console.log(err) });
+          await emergencyAlarm(text);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      log: async (text) => {
+        try {
+          expressLog(serverName, logStream, "log", { text }).catch((err) => { console.log(err) });
+          await errorLog(text);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      cron: async (text) => {
+        try {
+          expressLog(serverName, logStream, "cron", { text }).catch((err) => { console.log(err) });
+          await cronLog(text);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      alive: async (text) => {
+        try {
+          expressLog(serverName, logStream, "alive", { text }).catch((err) => { console.log(err) });
+          await aliveLog(text);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      stream: logStream,
+      path: thisLogFile,
+    };
     for (let obj of rouObj.get) {
       app.get(obj.link, async function (req, res) {
         try {
           expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
-          await obj.func(req, res);
+          await obj.func(req, res, logger);
         } catch (e) {
           console.log(e);
           res.set("Content-Type", "application/json");
@@ -111,7 +146,7 @@ TransferLounge.prototype.transConnect = async function () {
       app.post(obj.link, async function (req, res) {
         try {
           expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
-          await obj.func(req, res);
+          await obj.func(req, res, logger);
         } catch (e) {
           console.log(e);
           res.set("Content-Type", "application/json");

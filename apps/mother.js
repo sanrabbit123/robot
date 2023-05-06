@@ -3374,6 +3374,36 @@ Mother.prototype.cronLog = function (text) {
   });
 }
 
+Mother.prototype.alertLog = function (text) {
+  if (typeof text === "object" && text !== null) {
+    if (typeof text.text === "string") {
+      text = text.text;
+    } else {
+      throw new Error("invaild input");
+    }
+  } else {
+    if (typeof text !== "string") {
+      throw new Error("invaild input");
+    }
+  }
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const recordUrl = "https://" + ADDRESS.secondinfo.host + ":3000/messageLog";
+  const axios = require("axios");
+  const collection = "errorLog";
+  const channel = "#alert_log";
+  return new Promise((resolve, reject) => {
+    axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+      if (res.status !== 200) {
+        reject(res);
+      } else {
+        resolve(res);
+      }
+    }).catch((err) => {
+      reject(err);
+    });
+  });
+}
+
 Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
   if (typeof server !== "string") {
     throw new Error("server name need");
@@ -3463,6 +3493,17 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
       };
       stream.write("\n" + JSON.stringify(obj));  
     } else if (mode === "log") {
+      obj = {
+        id: thisId,
+        server: server,
+        date: new Date(),
+        mode: mode,
+        data: {
+          text: req.text,
+        }
+      };
+      stream.write("\n" + JSON.stringify(obj));
+    } else if (mode === "error") {
       obj = {
         id: thisId,
         server: server,

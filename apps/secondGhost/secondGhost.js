@@ -73,6 +73,7 @@ const SecondGhost = function (mother = null, back = null, address = null) {
     bot: {
       log: "-741702420",
       alive: "-965706823",
+      error: "-952575178",
       cron: "-977560893",
       general: "-771644766",
       emergency: "-754872890",
@@ -91,7 +92,7 @@ const SecondGhost = function (mother = null, back = null, address = null) {
 SecondGhost.prototype.ghostConnect = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, equalJson, expressLog } = this.mother;
+  const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, equalJson, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
   const { slack_userToken, slack_info, slack_fairyToken, telegram } = this;
   const PORT = 3000;
   const https = require("https");
@@ -193,12 +194,55 @@ SecondGhost.prototype.ghostConnect = async function () {
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);
     await expressLog(serverName, logStream, "start");
-
+    const logger = {
+      alert: async (text) => {
+        try {
+          expressLog(serverName, logStream, "alert", { text }).catch((err) => { console.log(err) });
+          await emergencyAlarm(text);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      log: async (text) => {
+        try {
+          expressLog(serverName, logStream, "log", { text }).catch((err) => { console.log(err) });
+          await errorLog(text);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      error: async (text) => {
+        try {
+          expressLog(serverName, logStream, "error", { text }).catch((err) => { console.log(err) });
+          await alertLog(text);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      cron: async (text) => {
+        try {
+          expressLog(serverName, logStream, "cron", { text }).catch((err) => { console.log(err) });
+          await cronLog(text);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      alive: async (text) => {
+        try {
+          expressLog(serverName, logStream, "alive", { text }).catch((err) => { console.log(err) });
+          await aliveLog(text);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      stream: logStream,
+      path: thisLogFile,
+    };
     for (let obj of rouObj.get) {
       app.get(obj.link, async function (req, res) {
         try {
           expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
-          await obj.func(req, res);
+          await obj.func(req, res, logger);
         } catch (e) {
           console.log(e);
           res.set("Content-Type", "application/json");
@@ -210,7 +254,7 @@ SecondGhost.prototype.ghostConnect = async function () {
       app.post(obj.link, async function (req, res) {
         try {
           expressLog(serverName, logStream, "route", req).catch((err) => { console.log(err) });
-          await obj.func(req, res);
+          await obj.func(req, res, logger);
         } catch (e) {
           console.log(e);
           res.set("Content-Type", "application/json");

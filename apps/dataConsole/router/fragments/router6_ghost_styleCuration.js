@@ -4,7 +4,7 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
   const { errorLog } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_getPhotos";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -71,7 +71,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
   const { equalJson, requestSystem, errorLog, messageSend, serviceParsing } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_updateCalculation";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -282,7 +282,7 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
   const { equalJson, requestSystem, messageSend, errorLog } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_styleCheckComplete";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -334,7 +334,7 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
   const { equalJson, requestSystem, messageSend, errorLog } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_pageInitComplete";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -391,7 +391,7 @@ DataRouter.prototype.rou_post_styleCuration_styleChecking = function () {
   const { equalJson, messageSend, errorLog } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_styleChecking";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",

@@ -74,7 +74,7 @@ TransferRouter.prototype.rou_get_First = function () {
   const { errorLog, diskReading } = this.mother;
   let obj = {};
   obj.link = "/:id";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -112,7 +112,7 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
   let obj;
   obj = {};
   obj.link = [ "/middlePhotoBinary" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -206,7 +206,7 @@ TransferRouter.prototype.rou_post_middlePhotoRead = function () {
   let obj;
   obj = {};
   obj.link = [ "/middlePhotoRead" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -259,7 +259,7 @@ TransferRouter.prototype.rou_post_clientPhoto = function () {
   let obj;
   obj = {};
   obj.link = [ "/clientPhoto" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -330,7 +330,7 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
   let obj;
   obj = {};
   obj.link = [ "/clientBinary", "/binary" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -416,7 +416,7 @@ TransferRouter.prototype.rou_post_clientDelete = function () {
   let obj;
   obj = {};
   obj.link = [ "/clientDelete" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -464,7 +464,7 @@ TransferRouter.prototype.rou_post_middleLinkParsing = function () {
   let obj;
   obj = {};
   obj.link = [ "/middleLinkParsing" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -527,7 +527,7 @@ TransferRouter.prototype.rou_post_middleLinkSave = function () {
   let obj;
   obj = {};
   obj.link = [ "/middleLinkSave" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -563,7 +563,7 @@ TransferRouter.prototype.rou_post_middlePhotoRemove = function () {
   let obj;
   obj = {};
   obj.link = [ "/middlePhotoRemove" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -640,7 +640,7 @@ TransferRouter.prototype.rou_post_middlePhotoUpdate = function () {
   let obj;
   obj = {};
   obj.link = [ "/middlePhotoUpdate" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -731,7 +731,7 @@ TransferRouter.prototype.rou_post_generalFileUpload = function () {
   let obj;
   obj = {};
   obj.link = [ "/generalFileUpload" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -810,7 +810,7 @@ TransferRouter.prototype.rou_post_middleCommentsBinary = function () {
   let obj;
   obj = {};
   obj.link = [ "/middleCommentsBinary" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -896,7 +896,7 @@ TransferRouter.prototype.rou_post_middlePhotoAlarm = function () {
   let obj;
   obj = {};
   obj.link = [ "/middlePhotoAlarm" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -942,7 +942,7 @@ TransferRouter.prototype.rou_post_userBinary = function () {
   let obj;
   obj = {};
   obj.link = [ "/userBinary" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1039,7 +1039,7 @@ TransferRouter.prototype.rou_post_userConfirm = function () {
   let obj;
   obj = {};
   obj.link = [ "/userConfirm" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1185,7 +1185,7 @@ TransferRouter.prototype.rou_post_userPhoto = function () {
   let obj;
   obj = {};
   obj.link = [ "/userPhoto" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1231,7 +1231,7 @@ TransferRouter.prototype.rou_post_userKey = function () {
   let obj;
   obj = {};
   obj.link = [ "/userKey" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1263,7 +1263,7 @@ TransferRouter.prototype.rou_post_excelToMatrix = function () {
   let obj;
   obj = {};
   obj.link = [ "/excelToMatrix" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1312,7 +1312,7 @@ TransferRouter.prototype.rou_post_contractList = function () {
   let obj;
   obj = {};
   obj.link = [ "/contractList" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",

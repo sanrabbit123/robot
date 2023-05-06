@@ -144,7 +144,7 @@ SecondRouter.prototype.rou_get_First = function () {
   const { errorLog, diskReading } = this.mother;
   let obj = {};
   obj.link = "/:id";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -183,7 +183,7 @@ SecondRouter.prototype.rou_post_messageLog = function () {
   let obj;
   obj = {};
   obj.link = [ "/messageLog" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -299,7 +299,7 @@ SecondRouter.prototype.rou_post_emergencyAlarm = function () {
   let obj;
   obj = {};
   obj.link = [ "/emergencyAlarm" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -333,7 +333,7 @@ SecondRouter.prototype.rou_post_parsingCall = function () {
   const { JSDOM } = jsdom;
   let obj = {};
   obj.link = [ "/parsingCall" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -430,7 +430,7 @@ SecondRouter.prototype.rou_post_receiveCall = function () {
   const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/receiveCall" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -524,7 +524,7 @@ SecondRouter.prototype.rou_post_clickDial = function () {
   const querystring = require("querystring");
   let obj = {};
   obj.link = [ "/clickDial" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -557,7 +557,7 @@ SecondRouter.prototype.rou_post_getDocuments = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getBuilders" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -612,7 +612,7 @@ SecondRouter.prototype.rou_post_updateDocument = function () {
   const { equalJson, errorLog, messageLog, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents", "/updateAspirant" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -672,7 +672,7 @@ SecondRouter.prototype.rou_post_designerProjects = function () {
   const querystring = require("querystring");
   let obj = {};
   obj.link = [ "/designerProjects" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -738,7 +738,7 @@ SecondRouter.prototype.rou_post_getChecklist = function () {
   const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/getChecklist" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -782,7 +782,7 @@ SecondRouter.prototype.rou_post_projectDesignerMemo = function () {
   const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/projectDesignerMemo" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -853,7 +853,7 @@ SecondRouter.prototype.rou_post_projectDesignerRaw = function () {
   const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/projectDesignerRaw" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -936,7 +936,7 @@ SecondRouter.prototype.rou_post_getProcessData = function () {
   const { equalJson, errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/getProcessData" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1010,7 +1010,7 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
   const { errorLog, equalJson, serviceParsing } = this.mother;
   let obj = {};
   obj.link = [ "/projectDesignerSchedule" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1405,7 +1405,7 @@ SecondRouter.prototype.rou_post_projectDesignerTravel = function () {
   const { errorLog, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/projectDesignerTravel" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1467,7 +1467,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
   const { errorLog, equalJson, serviceParsing, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/projectDesignerStatus" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2039,7 +2039,7 @@ SecondRouter.prototype.rou_post_projectDesignerDownloadLog = function () {
   const { errorLog, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/projectDesignerDownloadLog" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2119,7 +2119,7 @@ SecondRouter.prototype.rou_post_voice = function () {
   const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/voice" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2151,7 +2151,7 @@ SecondRouter.prototype.rou_post_receiptSend = function () {
   const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/receiptSend" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2184,7 +2184,7 @@ SecondRouter.prototype.rou_post_cashReceipt = function () {
   const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/cashReceipt" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2208,7 +2208,7 @@ SecondRouter.prototype.rou_post_browserRequest = function () {
   const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/browserRequest" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2240,7 +2240,7 @@ SecondRouter.prototype.rou_post_pageToPdf = function () {
   const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/pageToPdf" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2265,7 +2265,7 @@ SecondRouter.prototype.rou_post_printClient = function () {
   const { requestSystem, messageSend, errorLog, messageLog, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/printClient" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2302,7 +2302,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
   const { errorLog, messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/slackEvents" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2376,7 +2376,7 @@ SecondRouter.prototype.rou_post_rawImageParsing = function () {
   const { errorLog, ajaxJson } = this.mother;
   let obj = {};
   obj.link = [ "/rawImageParsing" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2531,7 +2531,7 @@ SecondRouter.prototype.rou_post_rawContentsSync = function () {
   }
   let obj = {};
   obj.link = [ "/rawContentsSync" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2629,7 +2629,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
 
   let obj = {};
   obj.link = [ "/slackForm", "/slackForm_rawPhoto" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2897,7 +2897,7 @@ SecondRouter.prototype.rou_post_photoParsing = function () {
   let obj;
   obj = {};
   obj.link = [ "/photoParsing" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2981,7 +2981,7 @@ SecondRouter.prototype.rou_post_fairyMessage = function () {
   let obj;
   obj = {};
   obj.link = [ "/fairyMessage" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3050,7 +3050,7 @@ SecondRouter.prototype.rou_post_fairyAi = function () {
   let obj;
   obj = {};
   obj.link = [ "/fairyAi" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",

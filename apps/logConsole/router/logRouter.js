@@ -122,12 +122,13 @@ LogRouter.prototype.rou_get_Root = function () {
   const address = this.address;
   let obj = {};
   obj.link = '/';
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       res.redirect("https://" + address.frontinfo.host);
     } catch (e) {
-      instance.mother.errorLog("Log Console 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Log Console 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.redirect("https://" + address.frontinfo.host);
     }
   }
   return obj;
@@ -140,7 +141,7 @@ LogRouter.prototype.rou_get_First = function () {
   const reflection = new MongoReflection();
   let obj = {};
   obj.link = "/:id";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -192,7 +193,7 @@ LogRouter.prototype.rou_get_Address = function () {
   const instance = this;
   let obj = {};
   obj.link = "/tools/address";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8">
         <style>*{margin:0}body{width:100vh;height:100vh;overflow:hidden}body::-webkit-scrollbar{display:none;}img{cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1}div{border:0;width:100vw;height:100vh;position:relative}</style><script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script></head><body><script>
@@ -228,7 +229,7 @@ LogRouter.prototype.rou_post_receiveLog = function () {
   const ignoreList = [ 121130214221, 2201171312 ];
   let obj = {};
   obj.link = [ "/receiveLog" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -343,7 +344,7 @@ LogRouter.prototype.rou_post_extractLog = function () {
   }
 
   obj.link = [ "/extractLog" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -416,7 +417,7 @@ LogRouter.prototype.rou_post_getContents = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/getContents" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -592,7 +593,7 @@ LogRouter.prototype.rou_post_analyticsGeneral = function () {
   const { equalJson, errorLog, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/analyticsGeneral" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -630,7 +631,7 @@ LogRouter.prototype.rou_post_analyticsClients = function () {
   const { equalJson, errorLog, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/analyticsClients" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -669,7 +670,7 @@ LogRouter.prototype.rou_post_basicReport = function () {
   let obj;
   obj = {};
   obj.link = [ "/basicReport" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -694,7 +695,7 @@ LogRouter.prototype.rou_post_marketingMessage = function () {
   let obj;
   obj = {};
   obj.link = [ "/marketingMessage" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -722,7 +723,7 @@ LogRouter.prototype.rou_post_errorMessage = function () {
   let obj;
   obj = {};
   obj.link = [ "/errorMessage" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -752,7 +753,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
   let obj;
   obj = {};
   obj.link = [ "/getAnalytics" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -894,7 +895,7 @@ LogRouter.prototype.rou_post_updateContents = function () {
   const { equalJson, errorLog, messageLog, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/updateContents" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -938,7 +939,7 @@ LogRouter.prototype.rou_post_getClientReport = function () {
   const { equalJson, errorLog, messageLog, messageSend, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/getClientReport" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",

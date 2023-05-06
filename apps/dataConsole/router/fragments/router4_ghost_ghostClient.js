@@ -4,7 +4,7 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
   const { equalJson, ipParsing, errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/ghostClient_updateAnalytics" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
