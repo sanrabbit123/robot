@@ -97,7 +97,7 @@ StaticRouter.prototype.fireWall = function (req) {
 StaticRouter.prototype.rou_get_First = function () {
   const instance = this;
   const microsoft = this.microsoft;
-  const { errorLog, diskReading } = this.mother;
+  const { diskReading } = this.mother;
   let obj = {};
   obj.link = "/:id";
   obj.func = async function (req, res, logger) {
@@ -124,7 +124,7 @@ StaticRouter.prototype.rou_get_First = function () {
       }
 
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -137,7 +137,7 @@ StaticRouter.prototype.rou_get_First = function () {
 
 StaticRouter.prototype.rou_post_listFiles = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, leafParsing } = this.mother;
+  const { fileSystem, shellExec, shellLink, leafParsing } = this.mother;
   const { staticConst, sambaToken } = this;
   let obj;
   obj = {};
@@ -185,7 +185,7 @@ StaticRouter.prototype.rou_post_listFiles = function () {
 
       res.send(JSON.stringify(list));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_listFiles): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_listFiles): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -194,7 +194,7 @@ StaticRouter.prototype.rou_post_listFiles = function () {
 
 StaticRouter.prototype.rou_post_searchFiles = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, leafParsing } = this.mother;
+  const { fileSystem, shellExec, shellLink, leafParsing } = this.mother;
   const { staticConst } = this;
   let obj;
   obj = {};
@@ -254,7 +254,7 @@ StaticRouter.prototype.rou_post_searchFiles = function () {
 
       res.send(JSON.stringify(list));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_searchFiles): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_searchFiles): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -299,7 +299,7 @@ StaticRouter.prototype.rou_post_readDir = function () {
 
       res.send(JSON.stringify(list));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_readDir): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_readDir): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -343,7 +343,7 @@ StaticRouter.prototype.rou_post_readFile = function () {
       
       res.send(JSON.stringify({ contents }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_readFile): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_readFile): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -429,7 +429,7 @@ StaticRouter.prototype.rou_post_findFolderId = function () {
       res.send(JSON.stringify({ id: finalId }));
 
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_findFolderId): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_findFolderId): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -466,7 +466,7 @@ StaticRouter.prototype.rou_post_findFileId = function () {
       res.send(JSON.stringify({ id: finalId }));
 
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_findFileId): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_findFileId): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -553,7 +553,7 @@ StaticRouter.prototype.rou_post_parsingDrawio = function () {
       }
 
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_parsingDrawio): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_parsingDrawio): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -594,7 +594,7 @@ StaticRouter.prototype.rou_post_getPathFromId = function () {
       res.send(JSON.stringify({ path: sambaToken + "/" + sambaKeyword + resultObj.absolute }));
 
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_getPathFromId): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_getPathFromId): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -657,7 +657,7 @@ StaticRouter.prototype.rou_post_moveFiles = function () {
       
     } catch (e) {
       console.log(e);
-      errorLog("Static lounge 서버 문제 생김 (rou_post_moveFiles): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_moveFiles): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -691,7 +691,7 @@ StaticRouter.prototype.rou_post_createNewSheets = function () {
       sheetsId = await sheets.create_newSheets_inPython(name, parent);
       res.send(JSON.stringify({ message: "success", sheetsId }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewSheets): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewSheets): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -725,7 +725,7 @@ StaticRouter.prototype.rou_post_createNewDocs = function () {
       docsId = await docs.create_newDocs_inPython(name, parent);
       res.send(JSON.stringify({ message: "success", docsId }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewDocs): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewDocs): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -735,7 +735,7 @@ StaticRouter.prototype.rou_post_createNewDocs = function () {
 StaticRouter.prototype.rou_post_createNewSlides = function () {
   const instance = this;
   const slides = this.slides;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
   const { staticConst } = this;
   let obj;
   obj = {};
@@ -759,7 +759,7 @@ StaticRouter.prototype.rou_post_createNewSlides = function () {
       slidesId = await slides.create_newSlides_inPython(name, parent);
       res.send(JSON.stringify({ message: "success", slidesId }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewSlides): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewSlides): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -793,7 +793,7 @@ StaticRouter.prototype.rou_post_createNewForms = function () {
       formsId = await forms.create_newForms_inPython(name, parent);
       res.send(JSON.stringify({ message: "success", formsId }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewForms): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewForms): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -840,7 +840,7 @@ StaticRouter.prototype.rou_post_createNewNotionPage = function () {
 
       res.send(JSON.stringify({ message: "success", editId: notionResult.editId, workspace: notionResult.workspace }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewNotionPage): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewNotionPage): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -887,7 +887,7 @@ StaticRouter.prototype.rou_post_createNewNotionKanban = function () {
 
       res.send(JSON.stringify({ message: "success", editId: notionResult.editId, workspace: notionResult.workspace }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewNotionKanban): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewNotionKanban): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -936,7 +936,7 @@ StaticRouter.prototype.rou_post_createNewLinkFile = function () {
 
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewLinkFile): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewLinkFile): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -986,7 +986,7 @@ StaticRouter.prototype.rou_post_createNewExcel = function () {
 
       res.send(JSON.stringify({ message: "success", editId: microsoftResult.id, editUrl: linkToString(microsoftResult.editUrl) }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewExcel): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewExcel): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1036,7 +1036,7 @@ StaticRouter.prototype.rou_post_createNewWord = function () {
 
       res.send(JSON.stringify({ message: "success", editId: microsoftResult.id, editUrl: linkToString(microsoftResult.editUrl) }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewWord): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewWord): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1086,7 +1086,7 @@ StaticRouter.prototype.rou_post_createNewPowerPoint = function () {
 
       res.send(JSON.stringify({ message: "success", editId: microsoftResult.id, editUrl: linkToString(microsoftResult.editUrl) }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_createNewPowerPoint): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_createNewPowerPoint): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1118,7 +1118,7 @@ StaticRouter.prototype.rou_post_downloadUrlFromOneDrive = function () {
       const encodedUrl = await microsoft.getDownloadUrl(id, true);
       res.send(JSON.stringify({ url: encodedUrl }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_downloadUrlFromOneDrive): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_downloadUrlFromOneDrive): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1182,7 +1182,7 @@ StaticRouter.prototype.rou_post_microsoftConvert = function () {
 
       res.send(JSON.stringify({ url: microsoftResult.editUrl }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_microsoftConvert): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_microsoftConvert): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1258,7 +1258,7 @@ StaticRouter.prototype.rou_post_renameTargets = function () {
 
       res.send(JSON.stringify({ message: "succcess" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_renameTargets): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_renameTargets): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1349,7 +1349,7 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
         }
       });
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_generalFileUpload): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_generalFileUpload): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1404,7 +1404,7 @@ StaticRouter.prototype.rou_post_makeFolder = function () {
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_makeFolder): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_makeFolder): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1512,7 +1512,7 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
       res.send(JSON.stringify({ designer: zipLinkDesigner, client: zipLinkClient }));
 
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_zipPhoto): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_zipPhoto): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1583,7 +1583,7 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
       }));
 
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_designerFolder): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_designerFolder): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1593,7 +1593,7 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
 StaticRouter.prototype.rou_post_recordBackup = function () {
   const instance = this;
   const address = this.address;
-  const { errorLog, fileSystem, shellExec, shellLink, requestSystem, dateToString, uniqueValue, binaryRequest, emergencyAlarm } = this.mother;
+  const { errorLog, fileSystem, shellExec, shellLink, requestSystem, dateToString, uniqueValue, binaryRequest } = this.mother;
   const { staticConst, sambaToken, homeliaisonOfficeConst, designerFolderConst } = this;
   const { centrex: { host, sessionConst, sessionValue } } = this;
   const storeMother = staticConst + homeliaisonOfficeConst + "/통화녹취파일";
@@ -1763,20 +1763,20 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
             throw new Error("session expired");
           }
 
-          await emergencyAlarm("record backup and delete success");
+          await logger.cron("record backup and delete success");
         } catch (e) {
-          await emergencyAlarm("record backup and delete error : " + e.message);
+          await logger.error("record backup and delete error : " + e.message);
         }
       }
       
       backupFunc().catch((err) => {
-        errorLog("record backup and delete error : " + err.message).catch((e) => { console.log(e); });
+        logger.error("record backup and delete error : " + err.message).catch((e) => { console.log(e); });
       });
 
       res.send(JSON.stringify({ message: "will do" }));
 
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_recordBackup): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_recordBackup): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1786,7 +1786,7 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
 StaticRouter.prototype.rou_post_centrexSession = function () {
   const instance = this;
   const { centrex: { host, sessionConst, sessionValue } } = this;
-  const { errorLog, requestSystem, emergencyAlarm } = this.mother;
+  const { errorLog, requestSystem } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/centrexSession" ];
@@ -1829,12 +1829,12 @@ StaticRouter.prototype.rou_post_centrexSession = function () {
 
       resultBoo = successKeyPoint.map((str) => { return new RegExp(str, "g"); }).every((re) => { return re.test(response.data) });
       if (!resultBoo) {
-        emergencyAlarm("centrex token expired").catch((err) => { console.log(err); });
+        logger.alert("centrex token expired").catch((err) => { console.log(err); });
       }
 
       res.send(JSON.stringify({ message: "reload done" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_centrexSession): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_centrexSession): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1843,7 +1843,7 @@ StaticRouter.prototype.rou_post_centrexSession = function () {
 
 StaticRouter.prototype.rou_post_mongoToJson = function () {
   const instance = this;
-  const { shellExec, shellLink, fileSystem, errorLog } = this.mother;
+  const { shellExec, shellLink, fileSystem } = this.mother;
   const address = this.address;
   const mongoToJsonFunction = async function () {
     try {
@@ -1882,10 +1882,10 @@ StaticRouter.prototype.rou_post_mongoToJson = function () {
 
       await shellExec(`cd ${shellLink(backDir)};zip -r ./${timeString}.zip ./${timeString};rm -rf ${shellLink(backDir)}/${timeString}`);
 
-      await errorLog("mongo to json done");
+      return true;
 
     } catch (e) {
-      await errorLog("mongo to json error : " + e.message);
+      return false;
     }
   }
   let obj;
@@ -1903,13 +1903,19 @@ StaticRouter.prototype.rou_post_mongoToJson = function () {
         throw new Error("post ban");
       }
     
-      mongoToJsonFunction().catch((err) => {
-        errorLog("mongo to json error : " + err.message).catch((e) => { console.log(e); });
+      mongoToJsonFunction().then((boo) => {
+        if (boo) {
+          return logger.cron("mongo to json done");
+        } else {
+          return logger.error("mongo to json error");
+        }
+      }).catch((err) => {
+        logger.error("mongo to json error : " + err.message).catch((e) => { console.log(e); });
       });
 
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_mongoToJson): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_mongoToJson): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1918,7 +1924,7 @@ StaticRouter.prototype.rou_post_mongoToJson = function () {
 
 StaticRouter.prototype.rou_post_dataReflection = function () {
   const instance = this;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   const address = this.address;
   const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
   const reflection = new MongoReflection();
@@ -1945,7 +1951,7 @@ StaticRouter.prototype.rou_post_dataReflection = function () {
     
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_dataReflection): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_dataReflection): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1954,7 +1960,7 @@ StaticRouter.prototype.rou_post_dataReflection = function () {
 
 StaticRouter.prototype.rou_post_mysqlQuery = function () {
   const instance = this;
-  const { errorLog, mysqlQuery } = this.mother;
+  const { mysqlQuery } = this.mother;
   const address = this.address;
   let obj;
   obj = {};
@@ -1986,7 +1992,7 @@ StaticRouter.prototype.rou_post_mysqlQuery = function () {
       }
       res.send(JSON.stringify(response));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_mysqlQuery): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_mysqlQuery): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1995,7 +2001,7 @@ StaticRouter.prototype.rou_post_mysqlQuery = function () {
 
 StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
   const instance = this;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
   const bill = new BillMaker();
   let obj;
@@ -2014,12 +2020,12 @@ StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
       }
 
       bill.parsingCashReceipt().catch((err) => {
-        errorLog("cash receipt error : " + err.message).catch((e) => { console.log(e); });
+        logger.error("cash receipt error : " + err.message).catch((e) => { console.log(e); });
       });
 
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_parsingCashReceipt): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_parsingCashReceipt): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -2029,7 +2035,7 @@ StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
 StaticRouter.prototype.rou_post_textToVoice = function () {
   const instance = this;
   const audio = this.audio;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/textToVoice" ];
@@ -2052,7 +2058,7 @@ StaticRouter.prototype.rou_post_textToVoice = function () {
       })
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_textToVoice): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_textToVoice): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -2062,7 +2068,7 @@ StaticRouter.prototype.rou_post_textToVoice = function () {
 StaticRouter.prototype.rou_post_printText = function () {
   const instance = this;
   const audio = this.audio;
-  const { errorLog, uniqueValue, fileSystem, shellExec, shellLink } = this.mother;
+  const { uniqueValue, fileSystem, shellExec, shellLink } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/printText" ];
@@ -2104,7 +2110,7 @@ StaticRouter.prototype.rou_post_printText = function () {
 
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_printText): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_printText): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -2115,7 +2121,7 @@ StaticRouter.prototype.rou_post_pageToPdf = function () {
   const instance = this;
   const chrome = this.chrome;
   const address = this.address;
-  const { errorLog, fileSystem, shellExec, shellLink, uniqueValue } = this.mother;
+  const { fileSystem, shellExec, shellLink, uniqueValue } = this.mother;
   const { staticConst } = this;
   let obj;
   obj = {};
@@ -2154,7 +2160,7 @@ StaticRouter.prototype.rou_post_pageToPdf = function () {
       }));
 
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_pageToPdf): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_pageToPdf): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -2163,7 +2169,7 @@ StaticRouter.prototype.rou_post_pageToPdf = function () {
 
 StaticRouter.prototype.rou_post_getUtilization = function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, dateToString, errorLog } = this.mother;
+  const { fileSystem, shellExec, shellLink, dateToString } = this.mother;
   const fileTargetFolder = process.env.HOME + "/nmontong";
   const delta = 10;
   const fileKeyWords = "homeliaison_";
@@ -2290,7 +2296,7 @@ StaticRouter.prototype.rou_post_getUtilization = function () {
 
       res.send(JSON.stringify(result));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_getUtilization): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_getUtilization): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2299,7 +2305,7 @@ StaticRouter.prototype.rou_post_getUtilization = function () {
 
 StaticRouter.prototype.rou_post_removeCronNmon = function () {
   const instance = this;
-  const { fileSystem, dateToString, errorLog } = this.mother;
+  const { fileSystem, dateToString } = this.mother;
   const targetDir = process.env.HOME + "/nmontong";
   let obj = {};
   obj.link = [ "/removeCronNmon" ];
@@ -2343,7 +2349,7 @@ StaticRouter.prototype.rou_post_removeCronNmon = function () {
       
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_removeCronNmon): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_removeCronNmon): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2352,7 +2358,7 @@ StaticRouter.prototype.rou_post_removeCronNmon = function () {
 
 StaticRouter.prototype.rou_post_analyticsDaily = function () {
   const instance = this;
-  const { errorLog, equalJson, stringToDate, requestSystem, sleep } = this.mother;
+  const { equalJson, stringToDate, requestSystem, sleep } = this.mother;
   const analytics = this.analytics;
   const address = this.address;
   let obj = {};
@@ -2411,7 +2417,7 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
 
       res.send({ message: "will do" });
     } catch (e) {
-      await errorLog("Static lounge 서버 문제 생김 (rou_post_analyticsDaily): " + e.message);
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_analyticsDaily): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2420,7 +2426,7 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
 
 StaticRouter.prototype.rou_post_filesToZip = function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
+  const { fileSystem, shellExec, shellLink, dateToString, equalJson, uniqueValue } = this.mother;
   const address = this.address;
   let obj = {};
   obj.link = [ "/filesToZip" ];
@@ -2472,7 +2478,7 @@ StaticRouter.prototype.rou_post_filesToZip = function () {
 
       res.send(JSON.stringify({ link: "__samba__/" + uniqueValueFileName + ".zip" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_filesToZip): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_filesToZip): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2481,7 +2487,7 @@ StaticRouter.prototype.rou_post_filesToZip = function () {
 
 StaticRouter.prototype.rou_post_renameFile = function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
+  const { fileSystem, shellExec, shellLink, dateToString, equalJson, uniqueValue } = this.mother;
   const address = this.address;
   let obj = {};
   obj.link = [ "/renameFile" ];
@@ -2513,7 +2519,7 @@ StaticRouter.prototype.rou_post_renameFile = function () {
       await shellExec(`mv`, [ targetFile, targetPlace.replace(/\/$/, '') + "/" + name.replace(/^\//, '').replace(/\/$/, '') + thisFinal ]);
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_renameFile): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_renameFile): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2522,7 +2528,7 @@ StaticRouter.prototype.rou_post_renameFile = function () {
 
 StaticRouter.prototype.rou_post_deleteFile = function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
+  const { fileSystem, shellExec, shellLink, dateToString, equalJson, uniqueValue } = this.mother;
   const address = this.address;
   let obj = {};
   obj.link = [ "/deleteFile" ];
@@ -2564,7 +2570,7 @@ StaticRouter.prototype.rou_post_deleteFile = function () {
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_deleteFile): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_deleteFile): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2573,7 +2579,7 @@ StaticRouter.prototype.rou_post_deleteFile = function () {
 
 StaticRouter.prototype.rou_post_getMicrosoftAccessToken = function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
+  const { fileSystem, shellExec, shellLink, dateToString, equalJson, uniqueValue } = this.mother;
   const microsoft = this.microsoft;
   let obj = {};
   obj.link = [ "/getMicrosoftAccessToken" ];
@@ -2588,7 +2594,7 @@ StaticRouter.prototype.rou_post_getMicrosoftAccessToken = function () {
       const accessToken = await microsoft.getAccessTokenInServer();
       res.send(JSON.stringify({ accessToken }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_getMicrosoftAccessToken): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_getMicrosoftAccessToken): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2597,7 +2603,7 @@ StaticRouter.prototype.rou_post_getMicrosoftAccessToken = function () {
 
 StaticRouter.prototype.rou_post_renewMicrosoftAccessToken = function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
+  const { fileSystem, shellExec, shellLink, dateToString, equalJson, uniqueValue } = this.mother;
   const microsoft = this.microsoft;
   let obj = {};
   obj.link = [ "/renewMicrosoftAccessToken" ];
@@ -2612,7 +2618,7 @@ StaticRouter.prototype.rou_post_renewMicrosoftAccessToken = function () {
       microsoft.renewAccessToken().catch((err) => { console.log(err); });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_renewMicrosoftAccessToken): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_renewMicrosoftAccessToken): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2622,7 +2628,7 @@ StaticRouter.prototype.rou_post_renewMicrosoftAccessToken = function () {
 StaticRouter.prototype.rou_post_getMacArr = function () {
   const instance = this;
   const devices = this.devices;
-  const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
+  const { fileSystem, shellExec, shellLink, dateToString, equalJson, uniqueValue } = this.mother;
   let obj = {};
   obj.link = [ "/getMacArr" ];
   obj.func = async function (req, res, logger) {
@@ -2636,7 +2642,7 @@ StaticRouter.prototype.rou_post_getMacArr = function () {
       const macArr = await devices.getMacArr();
       res.send(JSON.stringify(macArr));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_getMacArr): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_getMacArr): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2668,7 +2674,7 @@ StaticRouter.prototype.rou_post_fromToFileAlarm = function () {
       requestSystem("https://" + address.secondinfo.host + ":" + String(portNumber) + path, { fromId, toId, text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); })
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_fromToFileAlarm): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_fromToFileAlarm): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2678,7 +2684,7 @@ StaticRouter.prototype.rou_post_fromToFileAlarm = function () {
 StaticRouter.prototype.rou_post_parsingDevicesStatus = function () {
   const instance = this;
   const devices = this.devices;
-  const { fileSystem, shellExec, shellLink, dateToString, errorLog, equalJson, uniqueValue } = this.mother;
+  const { fileSystem, shellExec, shellLink, dateToString, equalJson, uniqueValue } = this.mother;
   let obj = {};
   obj.link = [ "/parsingDevicesStatus" ];
   obj.func = async function (req, res, logger) {
@@ -2694,7 +2700,7 @@ StaticRouter.prototype.rou_post_parsingDevicesStatus = function () {
       
       res.send(JSON.stringify(finalObject));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_parsingDevicesStatus): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_parsingDevicesStatus): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2704,7 +2710,7 @@ StaticRouter.prototype.rou_post_parsingDevicesStatus = function () {
 StaticRouter.prototype.rou_post_storeDevicesStatus = function () {
   const instance = this;
   const devices = this.devices;
-  const { fileSystem, errorLog, equalJson, shellExec, messageSend } = this.mother;
+  const { fileSystem, equalJson, shellExec, messageSend } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/storeDevicesStatus" ];
@@ -2726,7 +2732,7 @@ StaticRouter.prototype.rou_post_storeDevicesStatus = function () {
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_storeDevicesStatus): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_storeDevicesStatus): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -2736,7 +2742,7 @@ StaticRouter.prototype.rou_post_storeDevicesStatus = function () {
 StaticRouter.prototype.rou_post_getDevicesStatus = function () {
   const instance = this;
   const devices = this.devices;
-  const { fileSystem, errorLog, equalJson, shellExec, messageSend } = this.mother;
+  const { fileSystem, equalJson, shellExec, messageSend } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/getDevicesStatus" ];
@@ -2754,7 +2760,7 @@ StaticRouter.prototype.rou_post_getDevicesStatus = function () {
       const resultObj = await devices.getDevicesStatus();
       res.send(JSON.stringify(resultObj));
     } catch (e) {
-      errorLog("Static lounge 서버 문제 생김 (rou_post_getDevicesStatus): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Static lounge 서버 문제 생김 (rou_post_getDevicesStatus): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -2764,7 +2770,7 @@ StaticRouter.prototype.rou_post_getDevicesStatus = function () {
 StaticRouter.prototype.rou_post_callHistory = function () {
   const instance = this;
   const back = this.back;
-  const { requestSystem, stringToDate, errorLog, autoHypenPhone } = this.mother;
+  const { requestSystem, stringToDate, autoHypenPhone } = this.mother;
   const url = "https://centrex.uplus.co.kr/RestApi/callhistory";
   const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = instance.address;
   const querystring = require("querystring");
@@ -2967,11 +2973,10 @@ StaticRouter.prototype.rou_post_callHistory = function () {
         }
       }
 
-      console.log("call history update success");
-      errorLog("callHistory update sync success : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+      return true;
 
     } catch (e) {
-      await errorLog("call history fail " + e.message);
+      return false;
     }
   }
   let obj = {};
@@ -2984,12 +2989,18 @@ StaticRouter.prototype.rou_post_callHistory = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      parsingCallHistory(instance.mongo, instance.mongoconsole).catch((err) => {
-        errorLog("Static lounge 서버 문제 생김 (rou_post_callHistory): " + e.message).catch((err) => { console.log(err) });
+      parsingCallHistory(instance.mongo, instance.mongoconsole).then((boo) => {
+        if (boo) {
+          return logger.cron("callHistory update sync success : " + JSON.stringify(new Date()));
+        } else {
+          return logger.alert("call history fail");
+        }
+      }).catch((err) => {
+        logger.error("Static lounge 서버 문제 생김 (rou_post_callHistory): " + err.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      await errorLog("Static lounge 서버 문제 생김 (rou_post_callHistory): " + e.message);
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_callHistory): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -3104,10 +3115,10 @@ StaticRouter.prototype.rou_post_calendarSync = function () {
 
       }
 
-      errorLog("calendar sync success " + String(index) + " : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+      return true;
 
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_calendarSync): " + e.message);
+      return false;
     }
   }
   let obj = {};
@@ -3120,14 +3131,25 @@ StaticRouter.prototype.rou_post_calendarSync = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      calendarSyncFunc(instance.mongo, 0).then(() => {
+      calendarSyncFunc(instance.mongo, 0).then((boo) => {
+        if (boo) {
+          logger.cron("calendar sync success " + String(0) + " : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+        } else {
+          logger.error("calendar sync fail " + String(0) + " : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+        }
         return calendarSyncFunc(instance.mongo, 1);
+      }).then((boo) => {
+        if (boo) {
+          return logger.cron("calendar sync success " + String(1) + " : " + JSON.stringify(new Date()));
+        } else {
+          return logger.error("calendar sync fail " + String(1) + " : " + JSON.stringify(new Date()));
+        }
       }).catch((err) => {
-        errorLog("Static lounge 서버 문제 생김 (rou_post_calendarSync): " + err.message).catch((err) => { console.log(err) });
+        logger.error("Static lounge 서버 문제 생김 (rou_post_calendarSync): " + err.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      await errorLog("Static lounge 서버 문제 생김 (rou_post_calendarSync): " + e.message);
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_calendarSync): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -3149,13 +3171,13 @@ StaticRouter.prototype.rou_post_workProposalToClient = function () {
     });
     try {
       work.setProposalToClient("cron", { selfMongo: instance.mongo }).then(() => {
-        return errorLog("proposal to client sync done : " + JSON.stringify(new Date()));
+        return logger.cron("proposal to client sync done : " + JSON.stringify(new Date()));
       }).catch((err) => {
-        errorLog("Static lounge 서버 문제 생김 (rou_post_workProposalToClient): " + err.message).catch((err) => { console.log(err) });
+        logger.error("Static lounge 서버 문제 생김 (rou_post_workProposalToClient): " + err.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      await errorLog("Static lounge 서버 문제 생김 (rou_post_workProposalToClient): " + e.message);
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_workProposalToClient): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -3177,13 +3199,13 @@ StaticRouter.prototype.rou_post_workProjectActionSync = function () {
     });
     try {
       work.projectActionSync({ selfMongo: instance.mongo, selfConsoleMongo: instance.mongoconsole, updateMongo: instance.mongo }).then(() => {
-        return errorLog("project action sync done : " + JSON.stringify(new Date()));
+        return logger.cron("project action sync done : " + JSON.stringify(new Date()));
       }).catch((err) => {
-        errorLog("Static lounge 서버 문제 생김 (rou_post_workProjectActionSync): " + err.message).catch((err) => { console.log(err) });
+        logger.error("Static lounge 서버 문제 생김 (rou_post_workProjectActionSync): " + err.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      await errorLog("Static lounge 서버 문제 생김 (rou_post_workProjectActionSync): " + e.message);
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_workProjectActionSync): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -3305,11 +3327,11 @@ StaticRouter.prototype.rou_post_photoStatusSync = function () {
     });
     try {
       photoStatusSyncFunc(instance.mongo).catch((err) => {
-        errorLog("Static lounge 서버 문제 생김 (rou_post_photoStatusSync): " + err.message).catch((err) => { console.log(err) });
+        logger.error("Static lounge 서버 문제 생김 (rou_post_photoStatusSync): " + err.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      await errorLog("Static lounge 서버 문제 생김 (rou_post_photoStatusSync): " + e.message);
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_photoStatusSync): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -3325,7 +3347,7 @@ StaticRouter.prototype.setMembers = async function () {
   try {
     this.members = await back.setMemberObj({ getMode: true, selfMongo: instance.mongo });
   } catch (e) {
-    await errorLog("Static lounge 서버 문제 생김 (setMembers): " + e.message);
+    await logger.error("Static lounge 서버 문제 생김 (setMembers): " + e.message);
     console.log(e);
   }
 }
