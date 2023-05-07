@@ -849,6 +849,7 @@ DataConsole.prototype.connect = async function () {
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + "/static";
   const fs = require("fs");
+  const allLogKeyword = "allExpressLog";
   const logKeyword = "expressLog";
   const logFolder = process.env.HOME + "/server/log";
   const thisLogFile = `${logFolder}/${logKeyword}_${(new Date()).valueOf()}.log`;
@@ -991,6 +992,10 @@ DataConsole.prototype.connect = async function () {
       },
       stream: logStream,
       path: thisLogFile,
+      keyword: logKeyword,
+      all: allLogKeyword,
+      folder: logFolder,
+      instances: 2,
     };
     for (let obj of rouObj.get) {
       app.get(obj.link, async function (req, res) {

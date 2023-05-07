@@ -387,6 +387,104 @@ DataRouter.prototype.rou_get_Trigger = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_get_AllLogStore = function () {
+  const instance = this;
+  const { fileSystem, requestSystem, equalJson } = this.mother;
+  const allLogToFile = async (logger) => {
+    try {
+      const allLogKeyword = logger.all;
+      const logFolder = logger.folder;
+      const allLogFileName = `${allLogKeyword}_${(new Date()).valueOf()}.json`;
+      const allLogFile = `${logFolder}/${allLogFileName}`;
+      let stringTemp;
+      let logString, pastJsonArr;
+      let pastPastArr;
+      let pastLoggerFiles;
+      let thisLoggerFiles;
+      let allLoggerFiles;
+
+      pastLoggerFiles = (await fileSystem("readDir", [ logFolder ])).filter((str) => { return str !== ".DS_Store" });
+
+      thisLoggerFiles = pastLoggerFiles.filter((str) => { return (new RegExp("^" + logger.keyword, "gi")).test(str) });
+      thisLoggerFiles.sort((a, b) => {
+        return Number(b.split("_")[1].replace(/[^0-9]/gi, '')) - Number(a.split("_")[1].replace(/[^0-9]/gi, ''));
+      })
+      thisLoggerFiles = thisLoggerFiles.slice(0, logger.instances);
+
+      allLoggerFiles = equalJson(JSON.stringify(pastLoggerFiles));
+      pastLoggerFiles = pastLoggerFiles.filter((str) => { return !thisLoggerFiles.includes(str) });
+
+      if (allLoggerFiles.length > 0) {
+        logString = '';
+        pastPastArr = [];
+        for (let fileName of allLoggerFiles) {
+          stringTemp = await fileSystem(`readString`, [ `${logFolder}/${fileName}` ]);
+          if (/^\{/.test(stringTemp)) {
+            logString += stringTemp;
+            logString += "\n\n";
+          } else if (/^\[/.test(stringTemp)) {
+            pastPastArr = JSON.parse(stringTemp);
+          }
+        }
+    
+        pastJsonArr = logString.split("\n").map((str) => { return str.trim(); }).filter((str) => { return str !== "" }).filter((str) => {
+          return (/^\{/.test(str) && /\}$/.test(str))
+        }).filter((str) => {
+          try {
+            const obj = JSON.parse(str);
+            return true;
+          } catch {
+            return false;
+          }
+        }).map((str) => {
+          return equalJson(str);
+        });
+    
+        pastJsonArr = pastPastArr.concat(pastJsonArr);
+        pastJsonArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+
+        await fileSystem(`write`, [ allLogFile, JSON.stringify(pastJsonArr) ]);
+        for (let fileName of pastLoggerFiles) {
+          await fileSystem(`remove`, [ `${logFolder}/${fileName}` ]);
+        }
+      }
+
+      return allLogFileName;
+    } catch (e) {
+      await logger.error("past log to file error : " + e.message);
+      console.log(e);
+      return null;
+    }
+  }
+  let obj = {};
+  obj.link = "/log/allLogStore";
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      allLogToFile(logger).then((file) => {
+        if (typeof file === "string") {
+          logger.cron("back console all log store success").catch((err) => { console.log(err); });
+        } else {
+          throw new Error("back console all log store fail");
+        }
+      }).catch((err) => {
+        logger.error("Console 서버 문제 생김 (rou_get_AllLogStore): " + err.message).catch((err) => { console.log(err); });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      logger.error("Console 서버 문제 생김 (rou_get_AllLogStore): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_get_Patch = function () {
   const instance = this;
   const { fileSystem } = this.mother;
