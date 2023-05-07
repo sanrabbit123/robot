@@ -279,7 +279,7 @@ DataRouter.prototype.getCalendar = async function (length = 12) {
   }
 }
 
-DataRouter.prototype.parsingAddress = async function (id, rawString, MONGOC) {
+DataRouter.prototype.parsingAddress = async function (id, rawString, MONGOC, logger) {
   if (typeof id !== "string" || typeof rawString !== "string" || MONGOC === undefined) {
     throw new Error("invaild input");
   }
@@ -287,7 +287,7 @@ DataRouter.prototype.parsingAddress = async function (id, rawString, MONGOC) {
   const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
   const app = new AddressParser();
   const back = this.back;
-  const { messageSend, errorLog, messageLog } = this.mother;
+  const { messageSend, messageLog } = this.mother;
   try {
     let arr;
 
@@ -308,7 +308,7 @@ DataRouter.prototype.parsingAddress = async function (id, rawString, MONGOC) {
       }
     }
   } catch (e) {
-    await errorLog("주소 연산 중 오류 생김 (parsingAddress): " + e.message);
+    await logger.error("주소 연산 중 오류 생김 (parsingAddress): " + e.message);
     console.log(e);
   }
 }
@@ -319,11 +319,11 @@ DataRouter.prototype.rou_get_Root = function () {
   const instance = this;
   let obj = {};
   obj.link = '/';
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       res.redirect("/client");
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -346,7 +346,7 @@ DataRouter.prototype.rou_get_First = function () {
   }
   ipTong = Array.from(new Set(ipTong));
   obj.link = "/:id";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       let ip, pass;
       let target;
@@ -450,7 +450,7 @@ DataRouter.prototype.rou_get_First = function () {
       }
 
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.set({ "Content-Type": "text/plain" });
       res.send("error");
@@ -463,7 +463,7 @@ DataRouter.prototype.rou_get_Middle = function () {
   const instance = this;
   let obj = {};
   obj.link = "/middle/:id";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       instance.baseMaker(req.params.id, "middle", req).then(function (html) {
         res.set("Content-Type", "text/html");
@@ -472,7 +472,7 @@ DataRouter.prototype.rou_get_Middle = function () {
         throw new Error(err);
       });
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Middle): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_Middle): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -483,7 +483,7 @@ DataRouter.prototype.rou_get_Address = function () {
   const instance = this;
   let obj = {};
   obj.link = "/tools/address";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8">
         <style>*{margin:0}body{width:100vh;height:100vh;overflow:hidden}body::-webkit-scrollbar{display:none;}img{cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1}div{border:0;width:100vw;height:100vh;position:relative}</style><script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script></head><body><script>
@@ -503,7 +503,7 @@ DataRouter.prototype.rou_get_Address = function () {
       res.set("Content-Type", "text/html");
       res.send(html);
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Address): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_Address): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -514,7 +514,7 @@ DataRouter.prototype.rou_get_AddressLite = function () {
   const instance = this;
   let obj = {};
   obj.link = "/tools/addressLite";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8">
         <style>*{margin:0}body{width:100vh;height:100vh;overflow:hidden}body::-webkit-scrollbar{display:none;}img{cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1}div{border:0;width:100vw;height:100vh;position:relative}</style><script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script></head><body><script>
@@ -533,7 +533,7 @@ DataRouter.prototype.rou_get_AddressLite = function () {
       res.set("Content-Type", "text/html");
       res.send(html);
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Address): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_Address): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -544,7 +544,7 @@ DataRouter.prototype.rou_get_Trigger = function () {
   const instance = this;
   let obj = {};
   obj.link = "/tools/trigger";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8">
         <style>*{margin:0}body{width:100vh;height:100vh;overflow:hidden}body::-webkit-scrollbar{display:none;}img{cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1}div{border:0;width:100vw;height:100vh;position:relative}</style><script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script></head><body><script>
@@ -552,7 +552,7 @@ DataRouter.prototype.rou_get_Trigger = function () {
       res.set("Content-Type", "text/html");
       res.send(html);
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Trigger): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_Trigger): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -564,7 +564,7 @@ DataRouter.prototype.rou_get_Patch = function () {
   const { fileSystem } = this.mother;
   let obj = {};
   obj.link = "/patch/:key";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*",
@@ -585,7 +585,7 @@ DataRouter.prototype.rou_get_Patch = function () {
         throw new Error("invaild key");
       }
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Patch): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_Patch): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send("error : " + e.message);
     }
@@ -601,7 +601,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
   const { readFileSync } = require(`fs`);
   let obj = {};
   obj.link = [ "/sse/get_client", "/sse/get_designer", "/sse/get_project", "/sse/get_contents" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const thisPath = req.url.split('_')[1];
       const sseStream = new SseStream(req);
@@ -633,7 +633,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
       });
 
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_ServerSent): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_ServerSent): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -653,7 +653,7 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
   let totalOrder = 0;
   let obj = {};
   obj.link = [ "/specificsse/:id" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const idConst = "sse";
       const sseConst = idConst + "_" + req.params.id;
@@ -722,7 +722,7 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
       });
 
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_SpecificServerSent): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_SpecificServerSent): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -738,7 +738,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
   const { equalJson, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getBuilders" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -949,7 +949,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
         res.send(JSON.stringify(raw_data.toNormal()));
       }
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getDocuments): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_getDocuments): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -962,7 +962,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
   const { equalJson, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/searchClients", "/searchProjects", "/searchDesigners", "/searchContents" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const selfMongo = instance.mongolocal;
       const selfCoreMongo = instance.mongo;
@@ -1289,7 +1289,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
         res.send(JSON.stringify(rawJson.toNormal()));
       }
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_searchDocuments): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_searchDocuments): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -1302,7 +1302,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
   const { fileSystem, pythonExecute, shellExec, shellLink, equalJson, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       let { thisId, requestIndex, column, value, pastValue, user, thisCase } = equalJson(req.body);
       let thisPath;
@@ -1529,7 +1529,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message }));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_updateDocument): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_updateDocument): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -1542,7 +1542,7 @@ DataRouter.prototype.rou_post_updateLog = function () {
   const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/updateLog" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.id === undefined || req.body.column === undefined || req.body.position === undefined || req.body.pastValue === undefined || req.body.finalValue === undefined) {
         throw new Error("invaild post");
@@ -1617,7 +1617,7 @@ DataRouter.prototype.rou_post_updateLog = function () {
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_updateLog): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_updateLog): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -1627,10 +1627,10 @@ DataRouter.prototype.rou_post_updateLog = function () {
 DataRouter.prototype.rou_post_rawUpdateDocument = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, errorLog, messageLog } = this.mother;
+  const { equalJson, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/rawUpdateClient", "/rawUpdateDesigner", "/rawUpdateProject", "/rawUpdateContents", "/rawUpdateAspirant" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -1699,7 +1699,7 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
       res.send(JSON.stringify({ message: raw_data }));
 
     } catch (e) {
-      errorLog("Console 서버 문제 생김 (rou_post_rawUpdateDocument): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_rawUpdateDocument): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -1711,7 +1711,7 @@ DataRouter.prototype.rou_post_deleteDocument = function () {
   const instance = this;
   let obj = {};
   obj.link = [ "/deleteClient", "/deleteDesigner", "/deleteProject", "/deleteContents" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.url === "/deleteClient") {
         await instance.back.deleteClient(req.body.id, { selfMongo: instance.mongo });
@@ -1727,7 +1727,7 @@ DataRouter.prototype.rou_post_deleteDocument = function () {
       res.send(JSON.stringify({ message: "success" }));
 
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_deleteDocument): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_deleteDocument): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -1739,7 +1739,7 @@ DataRouter.prototype.rou_post_createDocument = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/createClient", "/createDesigner", "/createProject", "/createContents" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const updateQuery = equalJson(req.body.updateQuery);
       let id;
@@ -1758,7 +1758,7 @@ DataRouter.prototype.rou_post_createDocument = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ id: id }));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_createDocument): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_createDocument): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -1771,7 +1771,7 @@ DataRouter.prototype.rou_post_getServices = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/getServices", "/getServiceByKey", "/getServicesByKind" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*",
@@ -1802,7 +1802,7 @@ DataRouter.prototype.rou_post_getServices = function () {
         res.send(JSON.stringify(services.toNormal()));
       }
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_getServices): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_getServices): " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -1817,7 +1817,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
   const { equalJson, zeroAddition, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/getClientReport";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const today = new Date();
       const proposalStandardDate = new Date(2021, 8, 1);
@@ -2055,7 +2055,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(resultArr));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getClientReport): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_getClientReport): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -2068,7 +2068,7 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
   const { equalJson, serviceParsing } = this.mother;
   let obj = {};
   obj.link = "/getProjectReport";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set("Content-Type", "application/json");
     try {
       const { mode, start, end } = equalJson(req.body);
@@ -2205,7 +2205,7 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
       }
 
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getProjectReport): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_getProjectReport): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
@@ -2219,7 +2219,7 @@ DataRouter.prototype.rou_post_getAspirantInfo = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/getAspirants" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set("Content-Type", "application/json");
     try {
       if (req.body.whereQuery === undefined) {
@@ -2234,7 +2234,7 @@ DataRouter.prototype.rou_post_getAspirantInfo = function () {
 
       res.send(JSON.stringify(rows));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getAspirantInfo): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_getAspirantInfo): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
@@ -2247,7 +2247,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
   const back = this.back;
   let obj = {};
   obj.link = "/getDesignerReport";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.desid === undefined) {
         throw new Error("must be desid");
@@ -2322,7 +2322,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
 
       res.send(JSON.stringify({ projects, clients, contentsArr, price }));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getDesignerReport): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_getDesignerReport): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -2361,7 +2361,7 @@ DataRouter.prototype.rou_post_getHistory = function () {
   }
   let obj = {};
   obj.link = [ "/getClientHistory", "/getProjectHistory", "/getHistoryProperty", "/getHistoryTotal", "/getClientsImportant", "/getProjectsImportant", "/getClientsManager", "/getProjectsManager", "/getClientsIssue", "/getProjectsIssue" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2433,7 +2433,7 @@ DataRouter.prototype.rou_post_getHistory = function () {
       }
       res.send(JSON.stringify(responseArr));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getHistory): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_getHistory): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2447,7 +2447,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
   const members = this.members;
   let obj = {};
   obj.link = [ "/updateHistory", "/updateClientHistory", "/updateProjectHistory", "/updateDesignerHistory" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const today = new Date();
       const { id, column, value, email } = equalJson(req.body);
@@ -2611,7 +2611,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_updateHistory): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_updateHistory): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -2623,7 +2623,7 @@ DataRouter.prototype.rou_post_getContentsDetail = function () {
   const back = this.back;
   let obj = {};
   obj.link = [ "/getContentsDetail" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       let contents;
 
@@ -2637,7 +2637,7 @@ DataRouter.prototype.rou_post_getContentsDetail = function () {
         res.send(JSON.stringify([ contents.getPortfolioDetail(), contents.getReviewDetail(), contents.getGsArr() ]));
       }
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getContentsDetail): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_getContentsDetail): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -2647,11 +2647,11 @@ DataRouter.prototype.rou_post_getContentsDetail = function () {
 DataRouter.prototype.rou_post_sendSlack = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, messageSend, errorLog } = this.mother;
+  const { equalJson, messageSend } = this.mother;
   const url = require("url");
   let obj = {};
   obj.link = "/sendSlack";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2668,7 +2668,7 @@ DataRouter.prototype.rou_post_sendSlack = function () {
       text = message.replace(/__equal__/g, '=').replace(/__amper__/g, '&').replace(/__query__/g, '?').replace(/__plus__/g, '+');
 
       if (channel === "#error_log") {
-        await errorLog(text);
+        await logger.error(text);
       } else {
         await messageSend({ text, channel, voice: (req.body.voice !== undefined ? true : false), target: (req.body.target !== undefined ? equalJson(req.body).target : null) });
       }
@@ -2676,7 +2676,7 @@ DataRouter.prototype.rou_post_sendSlack = function () {
       res.send(JSON.stringify({ message: "success" }));
 
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_sendSlack): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_sendSlack): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -2689,7 +2689,7 @@ DataRouter.prototype.rou_post_sendSheets = function () {
   const back = this.back;
   const sheets = this.sheets;
   const drive = this.drive;
-  const { equalJson, errorLog, messageSend } = this.mother;
+  const { equalJson, messageSend } = this.mother;
   const asyncFunc = async (sheetName, parentId, values, tapName) => {
     let sheetsId, result;
     try {
@@ -2709,7 +2709,7 @@ DataRouter.prototype.rou_post_sendSheets = function () {
   }
   let obj = {};
   obj.link = "/sendSheets";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set("Content-Type", "application/json");
     try {
       if (req.body.sheetName === undefined || req.body.parentId === undefined || req.body.values === undefined) {
@@ -2763,7 +2763,7 @@ DataRouter.prototype.rou_post_sendSheets = function () {
 
       res.send(JSON.stringify({ link: response }));
     } catch (e) {
-      errorLog("Console 서버 문제 생김 (rou_post_sendSheets): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_sendSheets): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2774,10 +2774,10 @@ DataRouter.prototype.rou_post_createProposalDocument = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { shellExec, shellLink, requestSystem, errorLog } = this.mother;
+  const { shellExec, shellLink, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/createProposalDocument" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set("Content-Type", "application/json");
     try {
 
@@ -2847,7 +2847,7 @@ DataRouter.prototype.rou_post_createProposalDocument = function () {
       res.send(JSON.stringify({ link: proposalLink }));
 
     } catch (e) {
-      errorLog("Console 서버 문제 생김 (rou_post_createProposalDocument): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_createProposalDocument): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -2861,7 +2861,7 @@ DataRouter.prototype.rou_post_proposalLog = function () {
   const { shell, shellLink, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/proposalLog" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -2881,7 +2881,7 @@ DataRouter.prototype.rou_post_proposalLog = function () {
 
       res.send(JSON.stringify(rows.map((obj) => { return obj.project })));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_proposalLog): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_proposalLog): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -2897,7 +2897,7 @@ DataRouter.prototype.rou_post_proposalReset = function () {
   const { requestSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/proposalReset", "/proposalCreate" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       let id, historyObj;
       let requestObj;
@@ -2958,7 +2958,7 @@ DataRouter.prototype.rou_post_proposalReset = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_proposalReset): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_proposalReset): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -2971,7 +2971,7 @@ DataRouter.prototype.rou_post_getMembers = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/getMembers";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3046,7 +3046,7 @@ DataRouter.prototype.rou_post_getMembers = function () {
 
       }
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getMembers): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_getMembers): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
@@ -3059,7 +3059,7 @@ DataRouter.prototype.rou_post_parsingLatestLog = function () {
   const { fileSystem, equalJson } = this.mother;
   let obj = {};
   obj.link = "/parsingLatestLog";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.idArr === undefined) {
         throw new Error("must be id arr: Array");
@@ -3096,7 +3096,7 @@ DataRouter.prototype.rou_post_parsingLatestLog = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(result));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_parsingLatestLog): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_parsingLatestLog): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -3109,7 +3109,7 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
   const work = this.work;
   let obj = {};
   obj.link = "/parsingProposal";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.id === undefined || req.body.serid === undefined) {
         throw new Error("must be cliid, seridNumber");
@@ -3125,7 +3125,7 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
         res.send(JSON.stringify({ result: { proposal: selected } }));
       }
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_parsingProposal): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_parsingProposal): " + e.message).catch((e) => { console.log(e); });
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ result: null }));
     }
@@ -3139,7 +3139,7 @@ DataRouter.prototype.rou_post_alimTalk = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/alimTalk";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": '*',
@@ -3167,7 +3167,7 @@ DataRouter.prototype.rou_post_alimTalk = function () {
       await instance.kakao.sendTalk(req.body.method, req.body.name, req.body.phone, option);
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_alimTalk): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_alimTalk): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -3179,10 +3179,10 @@ DataRouter.prototype.rou_post_sendCertification = function () {
   const back = this.back;
   const human = this.human;
   const kakao = this.kakao;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/sendCertification" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3192,13 +3192,13 @@ DataRouter.prototype.rou_post_sendCertification = function () {
     try {
       const { name, phone, certification } = req.body;
 
-      errorLog("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
+      logger.log("인증번호 요청 감지 : " + name + " / " + phone + " / " + certification).catch((e) => { console.log(e); });
 
       human.sendSms({
         to: phone,
         body: "[홈리에종] 안녕하세요! " + name + "님,\n휴대폰 인증번호를 보내드립니다.\n\n인증번호 : " + certification + "\n\n인증번호를 팝업창에 입력해주세요!"
       }).then(() => {
-        return errorLog("인증번호 문자 전송 완료");
+        return logger.log("인증번호 문자 전송 완료");
       }).catch((e) => { console.log(e); });
 
       kakao.sendTalk("certification", name, phone, {
@@ -3206,12 +3206,12 @@ DataRouter.prototype.rou_post_sendCertification = function () {
         name,
         certification
       }).then(() => {
-        return errorLog("인증번호 카카오 전송 완료");
+        return logger.log("인증번호 카카오 전송 완료");
       }).catch((e) => { console.log(e); });
 
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Console 서버 문제 생김 (rou_post_sendCertification): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_sendCertification): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -3221,10 +3221,10 @@ DataRouter.prototype.rou_post_sendCertification = function () {
 DataRouter.prototype.rou_post_clientSubmit = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, stringToDate, errorLog, messageSend, messageLog, requestSystem } = this.mother;
+  const { equalJson, stringToDate, messageSend, messageLog, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/clientSubmit" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3401,13 +3401,13 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
 
       }
 
-      instance.parsingAddress(cliid, requestObject["requests.0.request.space.address"], instance.mongo).then((r) => {
+      instance.parsingAddress(cliid, requestObject["requests.0.request.space.address"], instance.mongo, logger).then((r) => {
         const { result, id } = r;
         if (!result) {
           return messageSend({ text: "표준 주소 체계 위반 사례, 바르게 고쳐주세요! : https://" + instance.address.backinfo.host + "/client?cliid=" + id, channel: "#401_consulting" });
         }
       }).catch((err) => {
-        errorLog("주소 연산 중 오류 생김 : " + err.message).catch((e) => { console.log(e); });
+        logger.error("주소 연산 중 오류 생김 : " + err.message).catch((e) => { console.log(e); });
         console.log(err);
       });
 
@@ -3427,9 +3427,9 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
           return (new Promise((resolve, reject) => { resolve("fail"); }));
         }
       }).then((message) => {
-        console.log(cliid, "case update " + message);
+        logger.log(cliid, "case update " + message);
       }).catch((err) => {
-        errorLog("Console 서버 문제 생김 (submit, case 연산) : " + err.message).catch((e) => { console.log(e); });
+        logger.error("Console 서버 문제 생김 (submit, case 연산) : " + err.message).catch((e) => { console.log(e); });
       });
 
       thisClient = await back.getClientById(cliid, { selfMongo, withTools: true });
@@ -3449,7 +3449,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
 
       res.send(JSON.stringify({ cliid }));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_sendCertification): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_sendCertification): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -3461,7 +3461,7 @@ DataRouter.prototype.rou_post_getDesignerGhost = function () {
   const back = this.back;
   let obj = {};
   obj.link = "/getDesignerGhost";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3496,7 +3496,7 @@ DataRouter.prototype.rou_post_getDesignerGhost = function () {
       }
 
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getDesignerGhost): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_getDesignerGhost): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -3511,7 +3511,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
   let obj = {};
   obj.link = "/webHookPayment";
   obj.public = true;
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3607,7 +3607,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
 
       res.send(JSON.stringify({ "message": "ok" }));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_webHookPayment): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_webHookPayment): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ "message": "error" }));
     }
   }
@@ -3623,7 +3623,7 @@ DataRouter.prototype.rou_post_webHookGoogle = function () {
   let obj = {};
   obj.link = "/webHookGoogle";
   obj.public = true;
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       let boo;
       res.set({ "Content-Type": "application/json" });
@@ -3683,7 +3683,7 @@ DataRouter.prototype.rou_post_webHookGoogle = function () {
         res.send(JSON.stringify({ "message": "error" }));
       }
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_webHookGoogle): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_webHookGoogle): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -3696,7 +3696,7 @@ DataRouter.prototype.rou_post_generalMongo = function () {
   const { equalJson, fileSystem } = this.mother;
   let obj = {};
   obj.link = "/generalMongo";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3823,7 +3823,7 @@ DataRouter.prototype.rou_post_generalMongo = function () {
 
       res.send(JSON.stringify(result));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_generalMongo): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_generalMongo): " + e.message).catch((e) => { console.log(e); });
       res.send({ message: "error" });
     }
   }
@@ -3837,7 +3837,7 @@ DataRouter.prototype.rou_post_generalCalendar = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/makeSchedule", "/listSchedule", "/updateSchedule", "/deleteSchedule" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       let resultObj;
       if (req.url === "/makeSchedule") {
@@ -3876,7 +3876,7 @@ DataRouter.prototype.rou_post_generalCalendar = function () {
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(resultObj));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_generalCalendar): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_generalCalendar): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -3892,7 +3892,7 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
   const { equalJson, autoComma, fileSystem } = this.mother;
   let obj = {};
   obj.link = [ "/parsingAddress" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -3958,7 +3958,7 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
 
       res.send(JSON.stringify(result));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_parsingAddress): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_parsingAddress): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -3971,7 +3971,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
   const { equalJson, fileSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/realtimeClient" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (!req.body.hasOwnProperty("method")) {
         throw new Error("invaild post");
@@ -4324,7 +4324,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(result));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_realtimeClient): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_realtimeClient): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -4338,7 +4338,7 @@ DataRouter.prototype.rou_post_realtimeDesigner = function () {
   const { equalJson, fileSystem } = this.mother;
   let obj = {};
   obj.link = [ "/realtimeDesigner" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -4401,7 +4401,7 @@ DataRouter.prototype.rou_post_realtimeDesigner = function () {
 
       res.send(JSON.stringify(result));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_realtimeDesigner): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_realtimeDesigner): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -4415,7 +4415,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
   const { equalJson, serviceParsing, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/designerFee" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       const option = { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal };
       if (req.body.matrix === undefined) {
@@ -4484,7 +4484,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(resultObj));
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_designerFee): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_designerFee): " + e.message).catch((e) => { console.log(e); });
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify([ null ]));
     }
@@ -4501,7 +4501,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
   const password = "homeliaison";
   let obj = {};
   obj.link = [ "/inicisPayment" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -4785,11 +4785,11 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
             if (convertTong.resultCode === "0000") {
               res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=complete" + "&hash=" + responseData);
             } else {
-              instance.mother.errorLog("결제 문제 생김 (rou_post_inicisPayment) : " + JSON.stringify(convertTong, null, 2) + "\n" + JSON.stringify(req.body, null, 2)).catch((e) => { console.log(e); });
+              logger.alert("결제 문제 생김 (rou_post_inicisPayment) : " + JSON.stringify(convertTong, null, 2) + "\n" + JSON.stringify(req.body, null, 2)).catch((e) => { console.log(e); });
               res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail" + "&hash=" + responseData);
             }
           } else {
-            instance.mother.errorLog("결제 문제 생김 (rou_post_inicisPayment) : " + resultCode + "\n" + JSON.stringify(req.body, null, 2)).catch((e) => { console.log(e); });
+            logger.alert("결제 문제 생김 (rou_post_inicisPayment) : " + resultCode + "\n" + JSON.stringify(req.body, null, 2)).catch((e) => { console.log(e); });
             res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail");
           }
         }
@@ -4797,7 +4797,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
       }
 
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_inicisPayment): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_inicisPayment): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -4811,7 +4811,7 @@ DataRouter.prototype.rou_post_pythonPass = function () {
   const { requestSystem, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/pythonPass_ghostClientBill", "/pythonPass_generalBill", "/pythonPass_invoiceRead", "/pythonPass_invoiceCreate", "/pythonPass_generalMongo", "/pythonPass_returnDummy", "/pythonPass_invoiceRequest" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -4830,7 +4830,7 @@ DataRouter.prototype.rou_post_pythonPass = function () {
         res.send(JSON.stringify(pythonResponse.data));
       }
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_pythonPass): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_pythonPass): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -4841,10 +4841,10 @@ DataRouter.prototype.rou_post_callTo = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, equalJson, errorLog } = this.mother;
+  const { requestSystem, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/callTo" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({ "Content-Type": "application/json" });
     try {
       if (req.body.who === undefined) {
@@ -4872,7 +4872,7 @@ DataRouter.prototype.rou_post_callTo = function () {
         index = address.officeinfo.phone.members.indexOf(thisPerson);
 
         if (index === -1 || address.officeinfo.phone.numbers[index] === undefined) {
-          errorLog("Console 서버 문제 생김 (rou_post_callTo): cannot find member index => " + String(index) + ", " + thisPerson + ", " + who + ", " + JSON.stringify(req.body)).catch((e) => { console.log(e); });
+          logger.alert("Console 서버 문제 생김 (rou_post_callTo): cannot find member index => " + String(index) + ", " + thisPerson + ", " + who + ", " + JSON.stringify(req.body)).catch((e) => { console.log(e); });
           res.send(JSON.stringify({ message: "error" }));
         } else {
           number = address.officeinfo.phone.numbers[index];
@@ -4882,7 +4882,7 @@ DataRouter.prototype.rou_post_callTo = function () {
       }
     } catch (e) {
       console.log(e);
-      errorLog("Console 서버 문제 생김 (rou_post_callTo): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_callTo): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -4895,7 +4895,7 @@ DataRouter.prototype.rou_post_ghostDesigner_updateAnalytics = function () {
   const { equalJson, ipParsing } = this.mother;
   let obj = {};
   obj.link = [ "/ghostDesigner_updateAnalytics" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     try {
       if (req.body.mode === undefined || req.body.desid === undefined || req.body.page === undefined || req.body.who === undefined) {
         throw new Error("invaild post");
@@ -4961,7 +4961,7 @@ DataRouter.prototype.rou_post_ghostDesigner_updateAnalytics = function () {
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_ghostDesigner_updateAnalytics): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_ghostDesigner_updateAnalytics): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -4974,7 +4974,7 @@ DataRouter.prototype.rou_post_ghostDesigner_getAnalytics = function () {
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/ghostDesigner_getAnalytics" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5011,7 +5011,7 @@ DataRouter.prototype.rou_post_ghostDesigner_getAnalytics = function () {
       }
       
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_ghostDesigner_getAnalytics): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_post_ghostDesigner_getAnalytics): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -5021,10 +5021,10 @@ DataRouter.prototype.rou_post_ghostDesigner_getAnalytics = function () {
 
 DataRouter.prototype.rou_post_errorLog = function () {
   const instance = this;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/errorLog" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5035,10 +5035,10 @@ DataRouter.prototype.rou_post_errorLog = function () {
       if (typeof req.body.message !== "string") {
         throw new Error("invalid post");
       }
-      await errorLog(req.body.message);
+      await logger.error(req.body.message);
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_errorLog): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_errorLog): " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -5047,10 +5047,10 @@ DataRouter.prototype.rou_post_errorLog = function () {
 
 DataRouter.prototype.rou_post_getDataPatch = function () {
   const instance = this;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/getDataPatch", "/dataPatch" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*",
@@ -5065,7 +5065,7 @@ DataRouter.prototype.rou_post_getDataPatch = function () {
       const result = (instance.patch[method])();
       res.send(JSON.stringify(result));
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_getDataPatch): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_getDataPatch): " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -5076,7 +5076,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
   const instance = this;
   const back = this.back;
   const kakao = this.kakao;
-  const { errorLog, equalJson, dateToString, stringToDate, requestSystem, autoComma, messageSend } = this.mother;
+  const { equalJson, dateToString, stringToDate, requestSystem, autoComma, messageSend } = this.mother;
   const numberToHangul = (number) => {
     if (typeof number !== "number") {
       throw new Error("input must be integer");
@@ -5129,7 +5129,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
   }
   let obj = {};
   obj.link = [ "/constructInteraction" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*",
@@ -5508,7 +5508,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
 
       res.send(JSON.stringify(result));
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_constructInteraction): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_constructInteraction): " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -5517,10 +5517,10 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
 
 DataRouter.prototype.rou_post_getOpenGraph = function () {
   const instance = this;
-  const { errorLog, equalJson, requestSystem } = this.mother;
+  const { equalJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/getOpenGraph" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*",
@@ -5626,7 +5626,7 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
       res.send(JSON.stringify(result));
     } catch (e) {
       console.log(e);
-      await errorLog("Console 서버 문제 생김 (rou_post_getOpenGraph): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_getOpenGraph): " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -5636,10 +5636,10 @@ DataRouter.prototype.rou_post_getOpenGraph = function () {
 DataRouter.prototype.rou_post_mysqlQuery = function () {
   const instance = this;
   const address = this.address;
-  const { errorLog, equalJson, requestSystem } = this.mother;
+  const { equalJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/mysqlQuery" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5658,7 +5658,7 @@ DataRouter.prototype.rou_post_mysqlQuery = function () {
       }
       res.send(JSON.stringify(response.data));
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_mysqlQuery): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_mysqlQuery): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -5669,10 +5669,10 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { errorLog, requestSystem, uniqueValue, equalJson } = this.mother;
+  const { requestSystem, uniqueValue, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/generalImpPayment" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5728,7 +5728,7 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
       }
 
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_generalImpPayment): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_generalImpPayment): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -5738,10 +5738,10 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
 DataRouter.prototype.rou_post_getUpdateUser = function () {
   const instance = this;
   const back = this.back;
-  const { errorLog, requestSystem, equalJson } = this.mother;
+  const { requestSystem, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/getUsers", "/updateUser" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5763,7 +5763,7 @@ DataRouter.prototype.rou_post_getUpdateUser = function () {
         res.send(JSON.stringify({ message: "done" }));
       }
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_getUpdateUser): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_getUpdateUser): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -5774,10 +5774,10 @@ DataRouter.prototype.rou_post_userSubmit = function () {
   const instance = this;
   const back = this.back;
   const kakao = this.kakao;
-  const { errorLog, equalJson, requestSystem, dateToString, messageSend } = this.mother;
+  const { equalJson, requestSystem, dateToString, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/userSubmit" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5854,7 +5854,7 @@ DataRouter.prototype.rou_post_userSubmit = function () {
 
       res.send(JSON.stringify({ useid }));
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_userSubmit): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_userSubmit): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -5863,10 +5863,10 @@ DataRouter.prototype.rou_post_userSubmit = function () {
 
 DataRouter.prototype.rou_post_requestScript = function () {
   const instance = this;
-  const { errorLog, requestSystem } = this.mother;
+  const { requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/requestScript" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5880,7 +5880,7 @@ DataRouter.prototype.rou_post_requestScript = function () {
       const responses = await requestSystem(global.decodeURIComponent(req.body.url));
       res.send(JSON.stringify({ data: responses.data }));
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_requestScript): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_requestScript): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -5890,10 +5890,10 @@ DataRouter.prototype.rou_post_requestScript = function () {
 DataRouter.prototype.rou_post_designerFeeTable = function () {
   const instance = this;
   const work = this.work;
-  const { errorLog, requestSystem } = this.mother;
+  const { requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/designerFeeTable" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5905,7 +5905,7 @@ DataRouter.prototype.rou_post_designerFeeTable = function () {
       json = await work.designerFeeTable(req.body.desid, { selfMongo: this.mongo, selfLocalMongo: this.mongolocal, jsonMode: true });
       res.send(json);
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_designerFeeTable): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_designerFeeTable): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -5914,11 +5914,11 @@ DataRouter.prototype.rou_post_designerFeeTable = function () {
 
 DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
   const instance = this;
-  const { errorLog, equalJson, cryptoString, decryptoHash } = this.mother;
+  const { equalJson, cryptoString, decryptoHash } = this.mother;
   const back = this.back;
   let obj = {};
   obj.link = [ "/homeliaisonCrypto" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -5991,7 +5991,7 @@ DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
       res.send(JSON.stringify(resultObj));
 
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_homeliaisonCrypto): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_homeliaisonCrypto): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -6003,8 +6003,8 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
   const back = this.back;
   const kakao = this.kakao;
   const address = this.address;
-  const { errorLog, messageSend, dateToString, stringToDate, sleep } = this.mother;
-  const firstMeetingAlarmFunc = async (MONGOC) => {
+  const { messageSend, dateToString, stringToDate, sleep } = this.mother;
+  const firstMeetingAlarmFunc = async (MONGOC, logger) => {
     try {
       const selfMongo = MONGOC;
       const today = new Date();
@@ -6078,13 +6078,13 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
         }
       }
 
-      await errorLog("first meeting alarm done");
+      await logger.cron("first meeting alarm done");
 
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
     }
   }
-  const afterMeetingAlarmFunc = async (MONGOC) => {
+  const afterMeetingAlarmFunc = async (MONGOC, logger) => {
     try {
       const selfMongo = MONGOC;
       const today = new Date();
@@ -6141,13 +6141,13 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
         }
       }
 
-      await errorLog("first meeting feedback alarm done");
+      await logger.cron("first meeting feedback alarm done");
 
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
     }
   }
-  const photoDesignerAlarmFunc = async (MONGOC) => {
+  const photoDesignerAlarmFunc = async (MONGOC, logger) => {
     try {
       const selfMongo = MONGOC;
       const today = new Date();
@@ -6212,13 +6212,13 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
         }
       }
 
-      await errorLog("photo designer alarm done");
+      await logger.cron("photo designer alarm done");
 
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
     }
   }
-  const contractStartAlarmFunc = async (MONGOC) => {
+  const contractStartAlarmFunc = async (MONGOC, logger) => {
     try {
       const selfMongo = MONGOC;
       const today = new Date();
@@ -6282,15 +6282,15 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
         }
       }
 
-      await errorLog("contract start designer alarm done");
+      await logger.cron("contract start designer alarm done");
 
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
     }
   }
   let obj = {};
   obj.link = [ "/timeDeltaAlarm" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -6298,20 +6298,20 @@ DataRouter.prototype.rou_post_timeDeltaAlarm = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      firstMeetingAlarmFunc(instance.mongo).then(() => {
-      //   return afterMeetingAlarmFunc(instance.mongo);
+      firstMeetingAlarmFunc(instance.mongo, logger).then(() => {
+      //   return afterMeetingAlarmFunc(instance.mongo, logger);
       // }).then(() => {
-      //   return photoDesignerAlarmFunc(instance.mongo);
+      //   return photoDesignerAlarmFunc(instance.mongo, logger);
       // }).then(() => {
-        return contractStartAlarmFunc(instance.mongo);
+        return contractStartAlarmFunc(instance.mongo, logger);
       }).then(() => {
-        return errorLog("time delta alarm done : " + JSON.stringify(new Date()));
+        return logger.cron("time delta alarm done : " + JSON.stringify(new Date()));
       }).catch((err) => {
-        errorLog("Console 서버 문제 생김 (rou_post_timeDeltaAlarm): " + e.message).catch((err) => { console.log(err) });
+        logger.error("Console 서버 문제 생김 (rou_post_timeDeltaAlarm): " + e.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_timeDeltaAlarm): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_timeDeltaAlarm): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -6323,8 +6323,8 @@ DataRouter.prototype.rou_post_pushClient = function () {
   const back = this.back;
   const kakao = this.kakao;
   const address = this.address;
-  const { errorLog, messageSend, dateToString, stringToDate, sleep } = this.mother;
-  const pushClientFunc = async (MONGOC) => {
+  const { messageSend, dateToString, stringToDate, sleep } = this.mother;
+  const pushClientFunc = async (MONGOC, logger) => {
     try {
       const selfMongo = MONGOC;
       const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
@@ -6354,16 +6354,16 @@ DataRouter.prototype.rou_post_pushClient = function () {
         await sleep(1000);
       }
 
-      await errorLog("push client done");
+      await logger.cron("push client done");
 
 
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_firstMeetingAlarm): " + e.message);
     }
   }
   let obj = {};
   obj.link = [ "/pushClient" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -6371,12 +6371,12 @@ DataRouter.prototype.rou_post_pushClient = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      pushClientFunc(instance.mongo).catch((err) => {
-        errorLog("Console 서버 문제 생김 (rou_post_pushClient): " + e.message).catch((err) => { console.log(err) });
+      pushClientFunc(instance.mongo, logger).catch((err) => {
+        logger.error("Console 서버 문제 생김 (rou_post_pushClient): " + e.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_pushClient): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_pushClient): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -6387,10 +6387,10 @@ DataRouter.prototype.rou_post_processConsole = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { equalJson, requestSystem, errorLog } = this.mother;
+  const { equalJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/processConsole" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -6596,7 +6596,7 @@ DataRouter.prototype.rou_post_processConsole = function () {
       }
 
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_processConsole): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_processConsole): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -6609,10 +6609,10 @@ DataRouter.prototype.rou_post_designerSubmit = function () {
   const address = this.address;
   const kakao = this.kakao;
   const ignorePhone = [ "010-2747-3403" ];
-  const { equalJson, requestSystem, errorLog, dateToString, stringToDate, messageSend } = this.mother;
+  const { equalJson, requestSystem, dateToString, stringToDate, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/designerSubmit" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -6925,7 +6925,7 @@ DataRouter.prototype.rou_post_designerSubmit = function () {
       res.send(JSON.stringify({ message: "success" }));
 
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_designerSubmit): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_designerSubmit): " + e.message);
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -6938,10 +6938,10 @@ DataRouter.prototype.rou_post_salesClient = function () {
   const back = this.back;
   const address = this.address;
   const kakao = this.kakao;
-  const { equalJson, errorLog, messageSend } = this.mother;
+  const { equalJson, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/salesClient" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -7243,7 +7243,7 @@ DataRouter.prototype.rou_post_salesClient = function () {
       res.send(JSON.stringify(resultObj));
 
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_salesClient): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_salesClient): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -7253,10 +7253,10 @@ DataRouter.prototype.rou_post_salesClient = function () {
 DataRouter.prototype.rou_post_dailySales = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, errorLog, messageSend, dateToString, stringToDate } = this.mother;
+  const { equalJson, messageSend, dateToString, stringToDate } = this.mother;
   let obj = {};
   obj.link = [ "/dailySales" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -7386,7 +7386,7 @@ DataRouter.prototype.rou_post_dailySales = function () {
       res.send(JSON.stringify(resultObj));
 
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_dailySales): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_dailySales): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -7396,10 +7396,10 @@ DataRouter.prototype.rou_post_dailySales = function () {
 DataRouter.prototype.rou_post_dailySalesReport = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, errorLog, messageSend, dateToString, stringToDate } = this.mother;
+  const { equalJson, messageSend, dateToString, stringToDate } = this.mother;
   let obj = {};
   obj.link = [ "/dailySalesReport" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -7788,7 +7788,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
       res.send(JSON.stringify(resultObj));
 
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_dailySalesReport): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_dailySalesReport): " + e.message);
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -7859,10 +7859,10 @@ DataRouter.policyButton = function () {
 DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, ipParsing, errorLog } = this.mother;
+  const { equalJson, ipParsing } = this.mother;
   let obj = {};
   obj.link = [ "/ghostClient_updateAnalytics" ];
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -7942,7 +7942,7 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
-      await errorLog("GhostClient general 서버 문제 생김 (rou_post_ghostClient_updateAnalytics) : " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_ghostClient_updateAnalytics) : " + e.message);
       console.log(e);
     }
   }
@@ -7952,12 +7952,12 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
 
 DataRouter.prototype.rou_post_designerProposal_submit = function () {
   const instance = this;
-  const { requestSystem, messageSend, errorLog } = this.mother;
+  const { requestSystem, messageSend } = this.mother;
   const back = this.back;
   const address = this.address;
   let obj = {};
   obj.link = "/designerProposal_submit";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -8005,7 +8005,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
         updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
         return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
       }).catch((err) => {
-        errorLog({ text: "Ghost Client 서버 문제 생김 (designerProposal_submit) : " + err.message, channel: "#error_log" }).catch((e) => { console.log(e); });
+        logger.error({ text: "Console 서버 문제 생김 (designerProposal_submit) : " + err.message, channel: "#error_log" }).catch((e) => { console.log(e); });
       });
 
       await instance.kakao.sendTalk("designerSelect", name, phone, {
@@ -8019,7 +8019,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
 
       res.send(JSON.stringify({ index: 0 }));
     } catch (e) {
-      await errorLog("Ghost Client 서버 문제 생김 (designerProposal_submit) : " + e.message);
+      await logger.error("Console 서버 문제 생김 (designerProposal_submit) : " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -8028,12 +8028,12 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
 
 DataRouter.prototype.rou_post_designerProposal_policy = function () {
   const instance = this;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   const back = this.back;
   const address = this.address;
   let obj = {};
   obj.link = "/designerProposal_policy";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -8048,7 +8048,7 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
       };
       res.send(JSON.stringify(resultObj));
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_designerProposal_policy): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_designerProposal_policy): " + e.message);
       res.send(JSON.stringify({
         policy: DataRouter.policy(),
         button: DataRouter.policyButton(),
@@ -8060,12 +8060,12 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
 
 DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
   const instance = this;
-  const { equalJson, errorLog } = this.mother;
+  const { equalJson } = this.mother;
   const back = this.back;
   const work = this.work;
   let obj = {};
   obj.link = "/designerProposal_getDesigners";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -8090,7 +8090,7 @@ DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
       }
       res.send(JSON.stringify(designersNormal));
     } catch (e) {
-      await errorLog("Console 서버 문제 생김(designerProposal_getDesigners) : " + e.message);
+      await logger.error("Console 서버 문제 생김(designerProposal_getDesigners) : " + e.message);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -8101,10 +8101,10 @@ DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
 DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
   const instance = this;
   const back = this.back;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_getPhotos";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -8155,7 +8155,7 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
 
       res.send(JSON.stringify({ photos, contentsArr, designers: sendingDesigners }));
     } catch (e) {
-      await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_getPhotos): " + e.message);
+      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_getPhotos): " + e.message);
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -8168,10 +8168,10 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
   const back = this.back;
   const work = this.work;
   const address = this.address;
-  const { equalJson, requestSystem, errorLog, messageSend, serviceParsing } = this.mother;
+  const { equalJson, requestSystem, messageSend, serviceParsing } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_updateCalculation";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -8368,7 +8368,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
       }
     } catch (e) {
-      await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + e.message);
+      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + e.message);
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -8379,10 +8379,10 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, requestSystem, messageSend, errorLog } = this.mother;
+  const { equalJson, requestSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_styleCheckComplete";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -8419,7 +8419,7 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
-      await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message);
+      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -8431,10 +8431,10 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
   const back = this.back;
   const kakao = this.kakao;
   const address = this.address;
-  const { equalJson, requestSystem, messageSend, errorLog } = this.mother;
+  const { equalJson, requestSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_pageInitComplete";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -8469,17 +8469,17 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
               path: "curation",
               cliid: cliid,
             });
-            await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
+            await messageSend({ text: client.name + " 고객님께 신청 완료해달라고 부탁했어요.", channel: "#404_curation", voice: true });
           }
         } catch (e) {
-          await errorLog("독촉하는 과정중 오류남 : " + e.message);
+          await logger.error("독촉하는 과정중 오류남 : " + e.message);
         }
       }, 30 * 60 * 1000);
 
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
-      await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message);
+      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -8488,10 +8488,10 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
 
 DataRouter.prototype.rou_post_styleCuration_styleChecking = function () {
   const instance = this;
-  const { equalJson, messageSend, errorLog } = this.mother;
+  const { equalJson, messageSend } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_styleChecking";
-  obj.func = async function (req, res) {
+  obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -8514,7 +8514,7 @@ DataRouter.prototype.rou_post_styleCuration_styleChecking = function () {
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleChecking) : " + e.message);
+      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleChecking) : " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -8527,11 +8527,10 @@ DataRouter.prototype.rou_post_styleCuration_styleChecking = function () {
 DataRouter.prototype.setMembers = async function () {
   const instance = this;
   const back = this.back;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   try {
     this.members = await back.setMemberObj({ getMode: true, selfMongo: instance.mongo });
   } catch (e) {
-    await errorLog("Console 서버 문제 생김 (setMembers): " + e.message);
     console.log(e);
   }
 }

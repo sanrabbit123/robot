@@ -3,11 +3,10 @@
 DataRouter.prototype.setMembers = async function () {
   const instance = this;
   const back = this.back;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   try {
     this.members = await back.setMemberObj({ getMode: true, selfMongo: instance.mongo });
   } catch (e) {
-    await errorLog("Console 서버 문제 생김 (setMembers): " + e.message);
     console.log(e);
   }
 }

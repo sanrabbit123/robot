@@ -1,6 +1,6 @@
 DataRouter.prototype.rou_post_designerProposal_submit = function () {
   const instance = this;
-  const { requestSystem, messageSend, errorLog } = this.mother;
+  const { requestSystem, messageSend } = this.mother;
   const back = this.back;
   const address = this.address;
   let obj = {};
@@ -53,7 +53,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
         updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
         return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
       }).catch((err) => {
-        errorLog({ text: "Ghost Client 서버 문제 생김 (designerProposal_submit) : " + err.message, channel: "#error_log" }).catch((e) => { console.log(e); });
+        logger.error({ text: "Console 서버 문제 생김 (designerProposal_submit) : " + err.message, channel: "#error_log" }).catch((e) => { console.log(e); });
       });
 
       await instance.kakao.sendTalk("designerSelect", name, phone, {
@@ -67,7 +67,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
 
       res.send(JSON.stringify({ index: 0 }));
     } catch (e) {
-      await errorLog("Ghost Client 서버 문제 생김 (designerProposal_submit) : " + e.message);
+      await logger.error("Console 서버 문제 생김 (designerProposal_submit) : " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -76,7 +76,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
 
 DataRouter.prototype.rou_post_designerProposal_policy = function () {
   const instance = this;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   const back = this.back;
   const address = this.address;
   let obj = {};
@@ -96,7 +96,7 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
       };
       res.send(JSON.stringify(resultObj));
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_designerProposal_policy): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_designerProposal_policy): " + e.message);
       res.send(JSON.stringify({
         policy: DataRouter.policy(),
         button: DataRouter.policyButton(),
@@ -108,7 +108,7 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
 
 DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
   const instance = this;
-  const { equalJson, errorLog } = this.mother;
+  const { equalJson } = this.mother;
   const back = this.back;
   const work = this.work;
   let obj = {};
@@ -138,7 +138,7 @@ DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
       }
       res.send(JSON.stringify(designersNormal));
     } catch (e) {
-      await errorLog("Console 서버 문제 생김(designerProposal_getDesigners) : " + e.message);
+      await logger.error("Console 서버 문제 생김(designerProposal_getDesigners) : " + e.message);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

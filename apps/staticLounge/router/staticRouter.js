@@ -263,7 +263,7 @@ StaticRouter.prototype.rou_post_searchFiles = function () {
 
 StaticRouter.prototype.rou_post_readDir = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   const { staticConst } = this;
   let obj;
   obj = {};
@@ -308,7 +308,7 @@ StaticRouter.prototype.rou_post_readDir = function () {
 
 StaticRouter.prototype.rou_post_readFile = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   const { staticConst, sambaToken } = this;
   let obj;
   obj = {};
@@ -353,7 +353,7 @@ StaticRouter.prototype.rou_post_readFile = function () {
 StaticRouter.prototype.rou_post_findFolderId = function () {
   const instance = this;
   const drive = this.drive;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   const { staticConst } = this;
   const sambaKeyword = "drive";
   const rootFolders = [
@@ -439,7 +439,7 @@ StaticRouter.prototype.rou_post_findFolderId = function () {
 StaticRouter.prototype.rou_post_findFileId = function () {
   const instance = this;
   const drive = this.drive;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   const { staticConst } = this;
   let obj;
   obj = {};
@@ -476,7 +476,7 @@ StaticRouter.prototype.rou_post_findFileId = function () {
 StaticRouter.prototype.rou_post_parsingDrawio = function () {
   const instance = this;
   const drive = this.drive;
-  const { errorLog, fileSystem, shellExec, shellLink, uniqueValue, sleep } = this.mother;
+  const { fileSystem, shellExec, shellLink, uniqueValue, sleep } = this.mother;
   const { staticConst } = this;
   const drawioHost = "app.diagrams.net";
   const drawioUrlMother = "https://" + drawioHost;
@@ -563,7 +563,7 @@ StaticRouter.prototype.rou_post_parsingDrawio = function () {
 StaticRouter.prototype.rou_post_getPathFromId = function () {
   const instance = this;
   const drive = this.drive;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   const { staticConst, sambaToken } = this;
   const sambaKeyword = "drive";
   let obj;
@@ -603,7 +603,7 @@ StaticRouter.prototype.rou_post_getPathFromId = function () {
 
 StaticRouter.prototype.rou_post_moveFiles = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
   const { staticConst } = this;
   let obj;
   obj = {};
@@ -667,7 +667,7 @@ StaticRouter.prototype.rou_post_moveFiles = function () {
 StaticRouter.prototype.rou_post_createNewSheets = function () {
   const instance = this;
   const sheets = this.sheets;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
   const { staticConst } = this;
   let obj;
   obj = {};
@@ -701,7 +701,7 @@ StaticRouter.prototype.rou_post_createNewSheets = function () {
 StaticRouter.prototype.rou_post_createNewDocs = function () {
   const instance = this;
   const docs = this.docs;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
   const { staticConst } = this;
   let obj;
   obj = {};
@@ -769,7 +769,7 @@ StaticRouter.prototype.rou_post_createNewSlides = function () {
 StaticRouter.prototype.rou_post_createNewForms = function () {
   const instance = this;
   const forms = this.forms;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
   const { staticConst } = this;
   let obj;
   obj = {};
@@ -803,7 +803,7 @@ StaticRouter.prototype.rou_post_createNewForms = function () {
 StaticRouter.prototype.rou_post_createNewNotionPage = function () {
   const instance = this;
   const notion = this.notion;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
   const { staticConst, sambaToken } = this;
   let obj;
   obj = {};
@@ -850,7 +850,7 @@ StaticRouter.prototype.rou_post_createNewNotionPage = function () {
 StaticRouter.prototype.rou_post_createNewNotionKanban = function () {
   const instance = this;
   const notion = this.notion;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
   const { staticConst, sambaToken } = this;
   let obj;
   obj = {};
@@ -896,7 +896,7 @@ StaticRouter.prototype.rou_post_createNewNotionKanban = function () {
 
 StaticRouter.prototype.rou_post_createNewLinkFile = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson, stringToLink } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson, stringToLink } = this.mother;
   const { staticConst, sambaToken } = this;
   let obj;
   obj = {};
@@ -946,7 +946,7 @@ StaticRouter.prototype.rou_post_createNewLinkFile = function () {
 StaticRouter.prototype.rou_post_createNewExcel = function () {
   const instance = this;
   const microsoft = this.microsoft;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson, linkToString } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson, linkToString } = this.mother;
   const { staticConst, sambaToken } = this;
   let obj;
   obj = {};
@@ -996,7 +996,7 @@ StaticRouter.prototype.rou_post_createNewExcel = function () {
 StaticRouter.prototype.rou_post_createNewWord = function () {
   const instance = this;
   const microsoft = this.microsoft;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson, linkToString } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson, linkToString } = this.mother;
   const { staticConst, sambaToken } = this;
   let obj;
   obj = {};
@@ -1046,7 +1046,7 @@ StaticRouter.prototype.rou_post_createNewWord = function () {
 StaticRouter.prototype.rou_post_createNewPowerPoint = function () {
   const instance = this;
   const microsoft = this.microsoft;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson, linkToString } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson, linkToString } = this.mother;
   const { staticConst, sambaToken } = this;
   let obj;
   obj = {};
@@ -1096,7 +1096,7 @@ StaticRouter.prototype.rou_post_createNewPowerPoint = function () {
 StaticRouter.prototype.rou_post_downloadUrlFromOneDrive = function () {
   const instance = this;
   const microsoft = this.microsoft;
-  const { errorLog, equalJson } = this.mother;
+  const { equalJson } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/downloadUrlFromOneDrive" ];
@@ -1128,7 +1128,7 @@ StaticRouter.prototype.rou_post_downloadUrlFromOneDrive = function () {
 StaticRouter.prototype.rou_post_microsoftConvert = function () {
   const instance = this;
   const microsoft = this.microsoft;
-  const { fileSystem, errorLog, equalJson, shellExec } = this.mother;
+  const { fileSystem, equalJson, shellExec } = this.mother;
   const { staticConst, sambaToken } = this;
   let obj;
   obj = {};
@@ -1191,7 +1191,7 @@ StaticRouter.prototype.rou_post_microsoftConvert = function () {
 
 StaticRouter.prototype.rou_post_renameTargets = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
   const { staticConst } = this;
   let obj;
   obj = {};
@@ -1267,7 +1267,7 @@ StaticRouter.prototype.rou_post_renameTargets = function () {
 
 StaticRouter.prototype.rou_post_generalFileUpload = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, sleep } = this.mother;
+  const { fileSystem, shellExec, shellLink, sleep } = this.mother;
   const { staticConst } = this;
   const osTempFolder = "/tmp";
   const hangul = this.hangul;
@@ -1358,7 +1358,7 @@ StaticRouter.prototype.rou_post_generalFileUpload = function () {
 
 StaticRouter.prototype.rou_post_makeFolder = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   const { staticConst, sambaToken } = this;
   let obj;
   obj = {};
@@ -1413,7 +1413,7 @@ StaticRouter.prototype.rou_post_makeFolder = function () {
 
 StaticRouter.prototype.rou_post_zipPhoto = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, dateToString, sleep } = this.mother;
+  const { fileSystem, shellExec, shellLink, dateToString, sleep } = this.mother;
   const { staticConst, sambaToken, homeliaisonOfficeConst, designerPhotoConst } = this;
   const drive = this.drive;
   let obj;
@@ -1521,7 +1521,7 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
 
 StaticRouter.prototype.rou_post_designerFolder = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, dateToString, sleep } = this.mother;
+  const { fileSystem, shellExec, shellLink, dateToString, sleep } = this.mother;
   const { staticConst, sambaToken, homeliaisonOfficeConst, designerFolderConst } = this;
   const drive = this.drive;
   const docs = this.docs;
@@ -1593,7 +1593,7 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
 StaticRouter.prototype.rou_post_recordBackup = function () {
   const instance = this;
   const address = this.address;
-  const { errorLog, fileSystem, shellExec, shellLink, requestSystem, dateToString, uniqueValue, binaryRequest } = this.mother;
+  const { fileSystem, shellExec, shellLink, requestSystem, dateToString, uniqueValue, binaryRequest } = this.mother;
   const { staticConst, sambaToken, homeliaisonOfficeConst, designerFolderConst } = this;
   const { centrex: { host, sessionConst, sessionValue } } = this;
   const storeMother = staticConst + homeliaisonOfficeConst + "/통화녹취파일";
@@ -1786,7 +1786,7 @@ StaticRouter.prototype.rou_post_recordBackup = function () {
 StaticRouter.prototype.rou_post_centrexSession = function () {
   const instance = this;
   const { centrex: { host, sessionConst, sessionValue } } = this;
-  const { errorLog, requestSystem } = this.mother;
+  const { requestSystem } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/centrexSession" ];
@@ -3012,7 +3012,7 @@ StaticRouter.prototype.rou_post_calendarSync = function () {
   const back = this.back;
   const calendar = this.calendar;
   const address = this.address;
-  const { errorLog, sleep } = this.mother;
+  const { sleep } = this.mother;
   const calendarSyncFunc = async (MONGOC, index) => {
     try {
       const selfMongo = MONGOC;
@@ -3159,7 +3159,7 @@ StaticRouter.prototype.rou_post_calendarSync = function () {
 StaticRouter.prototype.rou_post_workProposalToClient = function () {
   const instance = this;
   const work = this.work;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/workProposalToClient" ];
   obj.func = async function (req, res, logger) {
@@ -3187,7 +3187,7 @@ StaticRouter.prototype.rou_post_workProposalToClient = function () {
 StaticRouter.prototype.rou_post_workProjectActionSync = function () {
   const instance = this;
   const work = this.work;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/workProjectActionSync" ];
   obj.func = async function (req, res, logger) {
@@ -3215,7 +3215,7 @@ StaticRouter.prototype.rou_post_workProjectActionSync = function () {
 StaticRouter.prototype.rou_post_photoStatusSync = function () {
   const instance = this;
   const back = this.back;
-  const { errorLog, sleep, equalJson } = this.mother;
+  const { sleep, equalJson } = this.mother;
   const photoStatusSyncFunc = async (MONGOC) => {
     try {
       const selfMongo = MONGOC;
@@ -3309,11 +3309,9 @@ StaticRouter.prototype.rou_post_photoStatusSync = function () {
         
       }
   
-      await errorLog("photoStatus sync done : " + JSON.stringify(new Date()));
-
-
+      return true;
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_photoStatusSync): " + e.message);
+      return false;
     }
   }
   let obj = {};
@@ -3326,7 +3324,13 @@ StaticRouter.prototype.rou_post_photoStatusSync = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      photoStatusSyncFunc(instance.mongo).catch((err) => {
+      photoStatusSyncFunc(instance.mongo).then((boo) => {
+        if (boo) {
+          return logger.cron("photoStatus sync done : " + JSON.stringify(new Date()));
+        } else {
+          return logger.error("photoStatus sync error");
+        }
+      }).catch((err) => {
         logger.error("Static lounge 서버 문제 생김 (rou_post_photoStatusSync): " + err.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));
@@ -3343,7 +3347,7 @@ StaticRouter.prototype.rou_post_photoStatusSync = function () {
 StaticRouter.prototype.setMembers = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, errorLog } = this.mother;
+  const { fileSystem } = this.mother;
   try {
     this.members = await back.setMemberObj({ getMode: true, selfMongo: instance.mongo });
   } catch (e) {

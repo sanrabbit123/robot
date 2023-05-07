@@ -91,10 +91,10 @@ SecondRouter.prototype.fireWall = function (req) {
   return __wallLogicBoo;
 }
 
-SecondRouter.prototype.telegramSend = async function (chat_id, text) {
+SecondRouter.prototype.telegramSend = async function (chat_id, text, logger) {
   const instance = this;
   const { telegram } = this;
-  const { ajaxJson, sleep, errorLog } = this.mother;
+  const { ajaxJson, sleep } = this.mother;
   try {
     let result;
     
@@ -132,7 +132,7 @@ SecondRouter.prototype.telegramSend = async function (chat_id, text) {
     }
     return result;
   } catch (e) {
-    errorLog("SecondRouter.prototype.telegramSend error : " + e.message).catch((err) => { console.log(err) });
+    logger.error("SecondRouter.prototype.telegramSend error : " + e.message).catch((err) => { console.log(err) });
     return false;
   }
 }
@@ -141,7 +141,7 @@ SecondRouter.prototype.telegramSend = async function (chat_id, text) {
 
 SecondRouter.prototype.rou_get_First = function () {
   const instance = this;
-  const { errorLog, diskReading } = this.mother;
+  const { diskReading } = this.mother;
   let obj = {};
   obj.link = "/:id";
   obj.func = async function (req, res, logger) {
@@ -165,7 +165,7 @@ SecondRouter.prototype.rou_get_First = function () {
       }
 
     } catch (e) {
-      errorLog("Second Ghost 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -283,11 +283,11 @@ SecondRouter.prototype.rou_post_messageLog = function () {
         thisChannel = "general";
       }
 
-      await instance.telegramSend(telegram.bot[thisChannel], `(${channel}) ${slackText}`);
+      await instance.telegramSend(telegram.bot[thisChannel], `(${channel}) ${slackText}`, logger);
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_messageLog): " + JSON.stringify(req.body) + " " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_messageLog): " + JSON.stringify(req.body) + " " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -316,11 +316,11 @@ SecondRouter.prototype.rou_post_emergencyAlarm = function () {
       const channel = "#emergency_alarm";
 
       await instance.slack_bot.chat.postMessage({ text, channel });
-      await instance.telegramSend(telegram.bot["emergency"], `(${channel}) ${text}`);
+      await instance.telegramSend(telegram.bot["emergency"], `(${channel}) ${text}`, logger);
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_emergencyAlarm): " + JSON.stringify(req.body) + " " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_emergencyAlarm): " + JSON.stringify(req.body) + " " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -330,7 +330,7 @@ SecondRouter.prototype.rou_post_emergencyAlarm = function () {
 SecondRouter.prototype.rou_post_parsingCall = function () {
   const instance = this;
   const back = this.back;
-  const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
+  const { requestSystem, messageSend, messageLog } = this.mother;
   const jsdom = require("jsdom");
   const { JSDOM } = jsdom;
   let obj = {};
@@ -419,7 +419,7 @@ SecondRouter.prototype.rou_post_parsingCall = function () {
         res.send(JSON.stringify({ message: "success" }));
       }
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_parsingCall): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_parsingCall): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -429,7 +429,7 @@ SecondRouter.prototype.rou_post_parsingCall = function () {
 SecondRouter.prototype.rou_post_receiveCall = function () {
   const instance = this;
   const back = this.back;
-  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
+  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/receiveCall" ];
   obj.func = async function (req, res, logger) {
@@ -511,7 +511,7 @@ SecondRouter.prototype.rou_post_receiveCall = function () {
         res.send(JSON.stringify({ message: "success" }));
       }
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_receiveCall): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_receiveCall): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -522,7 +522,7 @@ SecondRouter.prototype.rou_post_clickDial = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
+  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, messageLog } = this.mother;
   const querystring = require("querystring");
   let obj = {};
   obj.link = [ "/clickDial" ];
@@ -541,12 +541,12 @@ SecondRouter.prototype.rou_post_clickDial = function () {
       let query, phone;
       query = { id: req.body.id, pass: address.officeinfo.phone.password, destnumber: req.body.destnumber.replace(/[^0-9]/g, '') };
       requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } }).catch((err) => {
-        errorLog("Ghost error (rou_post_clickDial) : " + "전화 거는 도중 문제 생김 => " + err.message).catch((er) => { console.log(er); });
+        logger.alert("Ghost error (rou_post_clickDial) : " + "전화 거는 도중 문제 생김 => " + err.message).catch((er) => { console.log(er); });
       });
       res.send(JSON.stringify({ message: "hello?" }));
 
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_clickDial): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_clickDial): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -600,7 +600,7 @@ SecondRouter.prototype.rou_post_getDocuments = function () {
       res.send(JSON.stringify(rows.toNormal()));
 
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_getDocuments): " + req.url + " " + req.headers["origin"] + " " + JSON.stringify(req.body) + " " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_getDocuments): " + req.url + " " + req.headers["origin"] + " " + JSON.stringify(req.body) + " " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -611,7 +611,7 @@ SecondRouter.prototype.rou_post_getDocuments = function () {
 SecondRouter.prototype.rou_post_updateDocument = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, errorLog, messageLog, messageSend } = this.mother;
+  const { equalJson, messageLog, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents", "/updateAspirant" ];
   obj.func = async function (req, res, logger) {
@@ -658,7 +658,7 @@ SecondRouter.prototype.rou_post_updateDocument = function () {
       res.send(JSON.stringify({ message: data }));
 
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_updateDocument): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_updateDocument): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -670,10 +670,10 @@ SecondRouter.prototype.rou_post_designerProjects = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
+  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, messageLog } = this.mother;
   const querystring = require("querystring");
   let obj = {};
-  obj.link = [ "/designerProjects" ];
+  obj.link = [ "/designerProjects" ]
   obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
@@ -726,7 +726,7 @@ SecondRouter.prototype.rou_post_designerProjects = function () {
       res.send(JSON.stringify({ totalClient, contractProjects, proposalProjects, designer: designer.toNormal() }));
 
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_designerProjects): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_designerProjects): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -737,7 +737,7 @@ SecondRouter.prototype.rou_post_getChecklist = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
+  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/getChecklist" ];
   obj.func = async function (req, res, logger) {
@@ -771,7 +771,7 @@ SecondRouter.prototype.rou_post_getChecklist = function () {
       res.send(JSON.stringify(contents));
 
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_getChecklist): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_getChecklist): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -781,7 +781,7 @@ SecondRouter.prototype.rou_post_getChecklist = function () {
 SecondRouter.prototype.rou_post_projectDesignerMemo = function () {
   const instance = this;
   const back = this.back;
-  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
+  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/projectDesignerMemo" ];
   obj.func = async function (req, res, logger) {
@@ -842,7 +842,7 @@ SecondRouter.prototype.rou_post_projectDesignerMemo = function () {
       res.send(JSON.stringify(resultObj));
 
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_projectDesignerMemo): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_projectDesignerMemo): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -852,7 +852,7 @@ SecondRouter.prototype.rou_post_projectDesignerMemo = function () {
 SecondRouter.prototype.rou_post_projectDesignerRaw = function () {
   const instance = this;
   const back = this.back;
-  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, errorLog, messageLog } = this.mother;
+  const { requestSystem, messageSend, fileSystem, setQueue, sleep, shellExec, shellLink, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/projectDesignerRaw" ];
   obj.func = async function (req, res, logger) {
@@ -925,7 +925,7 @@ SecondRouter.prototype.rou_post_projectDesignerRaw = function () {
       res.send(JSON.stringify(resultObj));
 
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_projectDesignerRaw): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_projectDesignerRaw): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -935,7 +935,7 @@ SecondRouter.prototype.rou_post_projectDesignerRaw = function () {
 SecondRouter.prototype.rou_post_getProcessData = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, errorLog } = this.mother;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/getProcessData" ];
   obj.func = async function (req, res, logger) {
@@ -999,7 +999,7 @@ SecondRouter.prototype.rou_post_getProcessData = function () {
       }));
 
     } catch (e) {
-      errorLog("Second Ghost 서버 문제 생김 (rou_post_getProcessData): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_getProcessData): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -1009,7 +1009,7 @@ SecondRouter.prototype.rou_post_getProcessData = function () {
 SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
   const instance = this;
   const back = this.back;
-  const { errorLog, equalJson, serviceParsing } = this.mother;
+  const { equalJson, serviceParsing } = this.mother;
   let obj = {};
   obj.link = [ "/projectDesignerSchedule" ];
   obj.func = async function (req, res, logger) {
@@ -1394,7 +1394,7 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
       res.send(JSON.stringify(resultObj));
 
     } catch (e) {
-      errorLog("Second Ghost 서버 문제 생김 (rou_post_projectDesignerSchedule): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_projectDesignerSchedule): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -1404,7 +1404,7 @@ SecondRouter.prototype.rou_post_projectDesignerSchedule = function () {
 SecondRouter.prototype.rou_post_projectDesignerTravel = function () {
   const instance = this;
   const back = this.back;
-  const { errorLog, equalJson } = this.mother;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/projectDesignerTravel" ];
   obj.func = async function (req, res, logger) {
@@ -1454,7 +1454,7 @@ SecondRouter.prototype.rou_post_projectDesignerTravel = function () {
       res.send(JSON.stringify(resultObj));
 
     } catch (e) {
-      errorLog("Second Ghost 서버 문제 생김 (rou_post_projectDesignerTravel): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_projectDesignerTravel): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -1466,7 +1466,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
   const back = this.back;
   const address = this.address;
   const kakao = this.kakao;
-  const { errorLog, equalJson, serviceParsing, messageSend } = this.mother;
+  const { equalJson, serviceParsing, messageSend } = this.mother;
   let obj = {};
   obj.link = [ "/projectDesignerStatus" ];
   obj.func = async function (req, res, logger) {
@@ -2028,7 +2028,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
       res.send(JSON.stringify(resultObj));
 
     } catch (e) {
-      errorLog("Second Ghost 서버 문제 생김 (rou_post_projectDesignerStatus): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_projectDesignerStatus): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2038,7 +2038,7 @@ SecondRouter.prototype.rou_post_projectDesignerStatus = function () {
 SecondRouter.prototype.rou_post_projectDesignerDownloadLog = function () {
   const instance = this;
   const back = this.back;
-  const { errorLog, equalJson } = this.mother;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/projectDesignerDownloadLog" ];
   obj.func = async function (req, res, logger) {
@@ -2108,7 +2108,7 @@ SecondRouter.prototype.rou_post_projectDesignerDownloadLog = function () {
       res.send(JSON.stringify(resultObj));
 
     } catch (e) {
-      errorLog("Second Ghost 서버 문제 생김 (rou_post_projectDesignerDownloadLog): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_projectDesignerDownloadLog): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2118,7 +2118,7 @@ SecondRouter.prototype.rou_post_projectDesignerDownloadLog = function () {
 SecondRouter.prototype.rou_post_voice = function () {
   const instance = this;
   const address = this.address;
-  const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
+  const { requestSystem, messageSend, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/voice" ];
   obj.func = async function (req, res, logger) {
@@ -2139,7 +2139,7 @@ SecondRouter.prototype.rou_post_voice = function () {
       }).catch((err) => { console.log(err); });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_voice): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_voice): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2150,7 +2150,7 @@ SecondRouter.prototype.rou_post_receiptSend = function () {
   const instance = this;
   const back = this.back;
   const { secondHost } = this;
-  const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
+  const { requestSystem, messageSend, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/receiptSend" ];
   obj.func = async function (req, res, logger) {
@@ -2173,7 +2173,7 @@ SecondRouter.prototype.rou_post_receiptSend = function () {
       }).catch((err) => { console.log(err); });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_receiptSend): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_receiptSend): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2183,7 +2183,7 @@ SecondRouter.prototype.rou_post_receiptSend = function () {
 SecondRouter.prototype.rou_post_cashReceipt = function () {
   const instance = this;
   const { secondHost } = this;
-  const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
+  const { requestSystem, messageSend, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/cashReceipt" ];
   obj.func = async function (req, res, logger) {
@@ -2197,7 +2197,7 @@ SecondRouter.prototype.rou_post_cashReceipt = function () {
       requestSystem("https://" + secondHost + "/cash").catch((err) => { console.log(err); });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_cashReceipt): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_cashReceipt): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2207,7 +2207,7 @@ SecondRouter.prototype.rou_post_cashReceipt = function () {
 SecondRouter.prototype.rou_post_browserRequest = function () {
   const instance = this;
   const { secondHost } = this;
-  const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
+  const { requestSystem, messageSend, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/browserRequest" ];
   obj.func = async function (req, res, logger) {
@@ -2229,7 +2229,7 @@ SecondRouter.prototype.rou_post_browserRequest = function () {
       }).catch((err) => { console.log(err); });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_browserRequest): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_browserRequest): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2239,7 +2239,7 @@ SecondRouter.prototype.rou_post_browserRequest = function () {
 SecondRouter.prototype.rou_post_pageToPdf = function () {
   const instance = this;
   const address = this.address;
-  const { requestSystem, messageSend, errorLog, messageLog } = this.mother;
+  const { requestSystem, messageSend, messageLog } = this.mother;
   let obj = {};
   obj.link = [ "/pageToPdf" ];
   obj.func = async function (req, res, logger) {
@@ -2253,7 +2253,7 @@ SecondRouter.prototype.rou_post_pageToPdf = function () {
       const ghostResponse = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/pageToPdf", req.body, { headers: { "Content-Type": "application/json" } });
       res.send(JSON.stringify(ghostResponse.data));
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_pageToPdf): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_pageToPdf): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2264,7 +2264,7 @@ SecondRouter.prototype.rou_post_printClient = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, messageSend, errorLog, messageLog, equalJson } = this.mother;
+  const { requestSystem, messageSend, messageLog, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/printClient" ];
   obj.func = async function (req, res, logger) {
@@ -2290,7 +2290,7 @@ SecondRouter.prototype.rou_post_printClient = function () {
       res.send(JSON.stringify({ message: "will do" }));
 
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_printClient): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_printClient): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2301,7 +2301,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
   const instance = this;
   const address = this.address;
   const { slack_info: { userDictionary, channelDictionary }, telegram } = this;
-  const { errorLog, messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
+  const { messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = [ "/slackEvents" ];
   obj.func = async function (req, res, logger) {
@@ -2333,7 +2333,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                 thisChannel = "plan";
               }
               ajaxJson({ chat_id: telegram.chat[thisChannel], text }, telegram.url(telegram.token)).catch((err) => {
-                instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + err.message).catch((e) => { console.log(e); });
+                logger.error("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + err.message).catch((e) => { console.log(e); });
               });
             } else {
               if (members.map((member) => { return member.slack.fairy }).includes(thisBody.event.channel)) {
@@ -2351,7 +2351,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
               text = `(unknown) ${userDictionary[thisBody.event.user]} : ${thisBody.event.text}`;
               thisChannel = "plan";
               ajaxJson({ chat_id: telegram.chat[thisChannel], text }, telegram.url(telegram.token)).catch((err) => {
-                instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + err.message).catch((e) => { console.log(e); });
+                logger.error("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + err.message).catch((e) => { console.log(e); });
               });
             }
           }
@@ -2364,7 +2364,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
         res.send(JSON.stringify({ challenge: thisBody.challenge }));
       }
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_slackEvents): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2375,7 +2375,7 @@ SecondRouter.prototype.rou_post_rawImageParsing = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { errorLog, ajaxJson } = this.mother;
+  const { ajaxJson } = this.mother;
   let obj = {};
   obj.link = [ "/rawImageParsing" ];
   obj.func = async function (req, res, logger) {
@@ -2451,7 +2451,7 @@ SecondRouter.prototype.rou_post_rawImageParsing = function () {
       }
 
     } catch (e) {
-      await errorLog("Second Ghost 서버 문제 생김 (rou_post_rawImageParsing): " + e.message);
+      await logger.error("Second Ghost 서버 문제 생김 (rou_post_rawImageParsing): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2462,8 +2462,8 @@ SecondRouter.prototype.rou_post_rawContentsSync = function () {
   const instance = this;
   const back = this.back;
   const drive = this.drive;
-  const { errorLog, emergencyAlarm } = this.mother;
-  const rawcontentsSyncFunc = async function (MONGOLOCALC, MONGOC) {
+  const { equalJson } = this.mother;
+  const rawcontentsSyncFunc = async function (MONGOLOCALC, MONGOC, logger) {
     try {
       const targetDriveId0 = "1iqH3Ajbz5CB2jXIiMuDKTnc33e36laUr";
       const targetDriveId1 = "1k-vo9L_WB90ACup7WarklVIUFq1mf1ay";
@@ -2521,14 +2521,15 @@ SecondRouter.prototype.rou_post_rawContentsSync = function () {
       for (let [ client, designer ] of nameArr) {
         tempArr = nameTargets.filter(({ name }) => { return (new RegExp(client, "gi")).test(name) }).filter(({ name }) => { return (new RegExp(designer, "gi")).test(name) })
         if (tempArr.length > 0) {
-          await emergencyAlarm(JSON.stringify(tempArr, null, 2));
+          await logger.alert(JSON.stringify(tempArr, null, 2));
         }
       }
 
-      await errorLog("raw contents sync done");
+      return true;
 
     } catch (e) {
       console.log(e);
+      return false;
     }
   }
   let obj = {};
@@ -2541,10 +2542,16 @@ SecondRouter.prototype.rou_post_rawContentsSync = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      rawcontentsSyncFunc(instance.mongolocal, instance.mongo).catch((err) => { console.log(err); });
+      rawcontentsSyncFunc(instance.mongolocal, instance.mongo, logger).then((boo) => {
+        if (boo) {
+          return logger.cron("raw contents sync done");
+        } else {
+          return logger.error("raw contents sync fail");
+        }
+      }).catch((err) => { console.log(err); });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      await errorLog("Second Ghost 서버 문제 생김 (rou_post_rawContentsSync): " + e.message);
+      await logger.error("Second Ghost 서버 문제 생김 (rou_post_rawContentsSync): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2556,8 +2563,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
   const back = this.back;
   const address = this.address;
   const { slack_info: { userDictionary, channelDictionary }, telegram } = this;
-  const { errorLog, messageSend, equalJson, ajaxJson, requestSystem, dateToString } = this.mother;
-
+  const { messageSend, equalJson, ajaxJson, requestSystem, dateToString } = this.mother;
   const divider = () => {
     return {
       "type": "divider"
@@ -2885,7 +2891,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
 
       res.send(JSON.stringify(resultJson));
     } catch (e) {
-      instance.mother.errorLog("Second Ghost 서버 문제 생김 (rou_post_slackForm): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_slackForm): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }
@@ -2894,7 +2900,7 @@ SecondRouter.prototype.rou_post_slackForm = function () {
 
 SecondRouter.prototype.rou_post_photoParsing = function () {
   const instance = this;
-  const { errorLog, fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
   const back = this.back;
   let obj;
   obj = {};
@@ -2969,7 +2975,7 @@ SecondRouter.prototype.rou_post_photoParsing = function () {
       }
     } catch (e) {
       console.log(e);
-      errorLog("Second ghost 서버 문제 생김 (rou_post_photoParsing): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_photoParsing): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -2978,7 +2984,7 @@ SecondRouter.prototype.rou_post_photoParsing = function () {
 
 SecondRouter.prototype.rou_post_fairyMessage = function () {
   const instance = this;
-  const { errorLog, requestSystem, stringToLink } = this.mother;
+  const { requestSystem, stringToLink } = this.mother;
   const { slack_fairyToken, slack_info } = this;
   let obj;
   obj = {};
@@ -3038,7 +3044,7 @@ SecondRouter.prototype.rou_post_fairyMessage = function () {
 
     } catch (e) {
       console.log(e);
-      errorLog("Second ghost 서버 문제 생김 (rou_post_fairyMessage): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_fairyMessage): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -3047,7 +3053,7 @@ SecondRouter.prototype.rou_post_fairyMessage = function () {
 
 SecondRouter.prototype.rou_post_fairyAi = function () {
   const instance = this;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   const { openAi } = this;
   let obj;
   obj = {};
@@ -3072,7 +3078,7 @@ SecondRouter.prototype.rou_post_fairyAi = function () {
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       console.log(e);
-      errorLog("Second ghost 서버 문제 생김 (rou_post_fairyAi): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_fairyAi): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -3084,11 +3090,11 @@ SecondRouter.prototype.rou_post_fairyAi = function () {
 SecondRouter.prototype.setMembers = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, errorLog } = this.mother;
+  const { fileSystem } = this.mother;
   try {
     this.members = await back.setMemberObj({ getMode: true, selfMongo: instance.mongo });
   } catch (e) {
-    await errorLog("Second ghost 서버 문제 생김 (setMembers): " + e.message);
+    await logger.error("Second Ghost 서버 문제 생김 (setMembers): " + e.message);
     console.log(e);
   }
 }

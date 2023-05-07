@@ -1,7 +1,7 @@
 DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, ipParsing, errorLog } = this.mother;
+  const { equalJson, ipParsing } = this.mother;
   let obj = {};
   obj.link = [ "/ghostClient_updateAnalytics" ];
   obj.func = async function (req, res, logger) {
@@ -84,7 +84,7 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
-      await errorLog("GhostClient general 서버 문제 생김 (rou_post_ghostClient_updateAnalytics) : " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_ghostClient_updateAnalytics) : " + e.message);
       console.log(e);
     }
   }

@@ -1,7 +1,7 @@
 DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
   const instance = this;
   const back = this.back;
-  const { errorLog } = this.mother;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_getPhotos";
   obj.func = async function (req, res, logger) {
@@ -55,7 +55,7 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
 
       res.send(JSON.stringify({ photos, contentsArr, designers: sendingDesigners }));
     } catch (e) {
-      await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_getPhotos): " + e.message);
+      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_getPhotos): " + e.message);
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -68,7 +68,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
   const back = this.back;
   const work = this.work;
   const address = this.address;
-  const { equalJson, requestSystem, errorLog, messageSend, serviceParsing } = this.mother;
+  const { equalJson, requestSystem, messageSend, serviceParsing } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_updateCalculation";
   obj.func = async function (req, res, logger) {
@@ -268,7 +268,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
       }
     } catch (e) {
-      await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + e.message);
+      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + e.message);
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -279,7 +279,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, requestSystem, messageSend, errorLog } = this.mother;
+  const { equalJson, requestSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_styleCheckComplete";
   obj.func = async function (req, res, logger) {
@@ -319,7 +319,7 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
-      await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message);
+      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -331,7 +331,7 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
   const back = this.back;
   const kakao = this.kakao;
   const address = this.address;
-  const { equalJson, requestSystem, messageSend, errorLog } = this.mother;
+  const { equalJson, requestSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_pageInitComplete";
   obj.func = async function (req, res, logger) {
@@ -369,17 +369,17 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
               path: "curation",
               cliid: cliid,
             });
-            await messageSend({ text: client.name + " 고객님께 신청 완료하라고 독촉했어요.", channel: "#404_curation", voice: true });
+            await messageSend({ text: client.name + " 고객님께 신청 완료해달라고 부탁했어요.", channel: "#404_curation", voice: true });
           }
         } catch (e) {
-          await errorLog("독촉하는 과정중 오류남 : " + e.message);
+          await logger.error("독촉하는 과정중 오류남 : " + e.message);
         }
       }, 30 * 60 * 1000);
 
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
-      await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message);
+      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -388,7 +388,7 @@ DataRouter.prototype.rou_post_styleCuration_pageInitComplete = function () {
 
 DataRouter.prototype.rou_post_styleCuration_styleChecking = function () {
   const instance = this;
-  const { equalJson, messageSend, errorLog } = this.mother;
+  const { equalJson, messageSend } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_styleChecking";
   obj.func = async function (req, res, logger) {
@@ -414,7 +414,7 @@ DataRouter.prototype.rou_post_styleCuration_styleChecking = function () {
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleChecking) : " + e.message);
+      await logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleChecking) : " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }

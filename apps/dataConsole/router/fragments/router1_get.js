@@ -107,7 +107,7 @@ DataRouter.prototype.getCalendar = async function (length = 12) {
   }
 }
 
-DataRouter.prototype.parsingAddress = async function (id, rawString, MONGOC) {
+DataRouter.prototype.parsingAddress = async function (id, rawString, MONGOC, logger) {
   if (typeof id !== "string" || typeof rawString !== "string" || MONGOC === undefined) {
     throw new Error("invaild input");
   }
@@ -115,7 +115,7 @@ DataRouter.prototype.parsingAddress = async function (id, rawString, MONGOC) {
   const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
   const app = new AddressParser();
   const back = this.back;
-  const { messageSend, errorLog, messageLog } = this.mother;
+  const { messageSend, messageLog } = this.mother;
   try {
     let arr;
 
@@ -136,7 +136,7 @@ DataRouter.prototype.parsingAddress = async function (id, rawString, MONGOC) {
       }
     }
   } catch (e) {
-    await errorLog("주소 연산 중 오류 생김 (parsingAddress): " + e.message);
+    await logger.error("주소 연산 중 오류 생김 (parsingAddress): " + e.message);
     console.log(e);
   }
 }
@@ -151,7 +151,7 @@ DataRouter.prototype.rou_get_Root = function () {
     try {
       res.redirect("/client");
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -278,7 +278,7 @@ DataRouter.prototype.rou_get_First = function () {
       }
 
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.set({ "Content-Type": "text/plain" });
       res.send("error");
@@ -300,7 +300,7 @@ DataRouter.prototype.rou_get_Middle = function () {
         throw new Error(err);
       });
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Middle): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_Middle): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -331,7 +331,7 @@ DataRouter.prototype.rou_get_Address = function () {
       res.set("Content-Type", "text/html");
       res.send(html);
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Address): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_Address): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -361,7 +361,7 @@ DataRouter.prototype.rou_get_AddressLite = function () {
       res.set("Content-Type", "text/html");
       res.send(html);
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Address): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_Address): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -380,7 +380,7 @@ DataRouter.prototype.rou_get_Trigger = function () {
       res.set("Content-Type", "text/html");
       res.send(html);
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Trigger): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_Trigger): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -413,7 +413,7 @@ DataRouter.prototype.rou_get_Patch = function () {
         throw new Error("invaild key");
       }
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Patch): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_Patch): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send("error : " + e.message);
     }
@@ -461,7 +461,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
       });
 
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_ServerSent): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_ServerSent): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -550,7 +550,7 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
       });
 
     } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_SpecificServerSent): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Console 서버 문제 생김 (rou_get_SpecificServerSent): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }

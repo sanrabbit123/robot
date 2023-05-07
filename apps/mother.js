@@ -3471,7 +3471,7 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           origin: (req.headers.origin || "unknown"),
         }
       };
-      stream.write("\n" + JSON.stringify(obj));  
+      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));  
     } else if (mode === "start") {
       obj = {
         id: thisId,
@@ -3480,7 +3480,7 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
         mode: mode,
         data: {}
       };
-      stream.write(JSON.stringify(obj));
+      stream.write(JSON.stringify(obj).replace(/\n/g, " "));
     } else if (mode === "alert") {
       obj = {
         id: thisId,
@@ -3491,7 +3491,7 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           text: req.text,
         }
       };
-      stream.write("\n" + JSON.stringify(obj));  
+      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));  
     } else if (mode === "log") {
       obj = {
         id: thisId,
@@ -3502,7 +3502,7 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           text: req.text,
         }
       };
-      stream.write("\n" + JSON.stringify(obj));
+      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));
     } else if (mode === "error") {
       obj = {
         id: thisId,
@@ -3513,7 +3513,7 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           text: req.text,
         }
       };
-      stream.write("\n" + JSON.stringify(obj));  
+      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));  
     } else if (mode === "cron") {
       obj = {
         id: thisId,
@@ -3524,7 +3524,7 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           text: req.text,
         }
       };
-      stream.write("\n" + JSON.stringify(obj));  
+      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));  
     } else if (mode === "alive") {
       obj = {
         id: thisId,
@@ -3535,7 +3535,7 @@ Mother.prototype.expressLog = function (server, stream, mode, req = {}) {
           text: req.text,
         }
       };
-      stream.write("\n" + JSON.stringify(obj));  
+      stream.write("\n" + JSON.stringify(obj).replace(/\n/g, " "));  
     }
 
     resolve(obj);

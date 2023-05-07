@@ -44,7 +44,7 @@ ReceiptRouter.prototype.rou_get_Root = function () {
       });
       res.send(String(ip).replace(/[^0-9\.]/gi, ''));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -67,7 +67,7 @@ ReceiptRouter.prototype.rou_get_Ssl = function () {
       const disk = await diskReading();
       res.send(JSON.stringify({ disk: disk.toArray() }));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_get_Ssl): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_get_Ssl): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -91,7 +91,7 @@ ReceiptRouter.prototype.rou_get_Disk = function () {
       const disk = await diskReading();
       res.send(JSON.stringify({ disk: disk.toArray() }));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_get_Disk): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_get_Disk): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -114,7 +114,7 @@ ReceiptRouter.prototype.rou_get_bluePrint = function () {
       });
       res.send(html);
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_get_bluePrint): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_get_bluePrint): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -136,7 +136,7 @@ ReceiptRouter.prototype.rou_get_blackPrint = function () {
       });
       res.send(html);
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_get_blackPrint): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_get_blackPrint): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -159,7 +159,7 @@ ReceiptRouter.prototype.rou_get_isOffice = function () {
       const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
       res.send(JSON.stringify({ result: (String(ip).replace(/[^0-9\.]/gi, '').trim() === address.officeinfo.ip.outer.trim() ? 1 : 0) }));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_get_isOffice): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_get_isOffice): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -252,7 +252,7 @@ ReceiptRouter.prototype.rou_post_generalMongo = function () {
       }
       res.send(JSON.stringify(result));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_generalMongo): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_generalMongo): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -306,7 +306,7 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
 
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_cashReceipt): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_cashReceipt): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -466,7 +466,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
       }
     } catch (e) {
       console.log(e);
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_createStylingContract): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_createStylingContract): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "ERROR" }));
     }
   }
@@ -479,7 +479,7 @@ ReceiptRouter.prototype.rou_post_createConstructContract = function () {
   const bill = this.bill;
   const kakao = this.kakao;
   const address = this.address;
-  const { requestSystem, messageSend, messageLog, errorLog, dateToString, serviceParsing, autoComma } = this.mother;
+  const { requestSystem, messageSend, messageLog, dateToString, serviceParsing, autoComma } = this.mother;
   let obj = {};
   obj.link = "/createConstructContract";
   obj.func = async function (req, res, logger) {
@@ -693,7 +693,7 @@ ReceiptRouter.prototype.rou_post_createConstructContract = function () {
       }
     } catch (e) {
       console.log(e);
-      errorLog("Python 서버 문제 생김 (rou_post_createConstructContract): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_createConstructContract): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "ERROR" }));
     }
   }
@@ -705,7 +705,7 @@ ReceiptRouter.prototype.rou_post_receiveConstructContract = function () {
   const back = this.back;
   const bill = this.bill;
   const kakao = this.kakao;
-  const { equalJson, fileSystem, dateToString, autoComma, messageSend, errorLog, requestSystem } = this.mother;
+  const { equalJson, fileSystem, dateToString, autoComma, messageSend, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/receiveConstructContract";
   obj.func = async function (req, res, logger) {
@@ -742,7 +742,7 @@ ReceiptRouter.prototype.rou_post_receiveConstructContract = function () {
       });
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_receiveConstructContract): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_receiveConstructContract): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -754,7 +754,7 @@ ReceiptRouter.prototype.rou_post_constructAmountSync = function () {
   const back = this.back;
   const bill = this.bill;
   const address = this.address;
-  const { equalJson, messageSend, messageLog, errorLog } = this.mother;
+  const { equalJson, messageSend, messageLog } = this.mother;
   let obj = {};
   obj.link = "/constructAmountSync";
   obj.func = async function (req, res, logger) {
@@ -912,7 +912,7 @@ ReceiptRouter.prototype.rou_post_constructAmountSync = function () {
 
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_constructAmountSync): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_constructAmountSync): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -924,7 +924,7 @@ ReceiptRouter.prototype.rou_post_stylingAmountSync = function () {
   const back = this.back;
   const bill = this.bill;
   const address = this.address;
-  const { equalJson, messageSend, messageLog, errorLog } = this.mother;
+  const { equalJson, messageSend, messageLog } = this.mother;
   let obj = {};
   obj.link = "/stylingAmountSync";
   obj.func = async function (req, res, logger) {
@@ -1121,7 +1121,7 @@ ReceiptRouter.prototype.rou_post_stylingAmountSync = function () {
 
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_stylingAmountSync): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_stylingAmountSync): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
@@ -1132,7 +1132,7 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, messageLog, messageSend, errorLog, autoComma, requestSystem, sleep, emergencyAlarm } = this.mother;
+  const { equalJson, messageLog, messageSend, autoComma, requestSystem, sleep } = this.mother;
   const collection = "accountTransfer";
   const designerCollection = "designerTransfer";
   const standardDay = 7;
@@ -1206,7 +1206,7 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
           requestSystem("https://" + instance.address.pythoninfo.host + ":3000/webHookVAccount", target.accountInfo, {
             headers: { "Content-Type": "application/json" }
           }).then(() => {
-            errorLog("현금 영수증 관련 핸드폰 번호 감지 => " + phone).catch((e) => { console.log(e); });
+            logger.log("현금 영수증 관련 핸드폰 번호 감지 => " + phone).catch((e) => { console.log(e); });
             if (/^010/.test(phone)) {
               return requestSystem(`https://${instance.address.secondinfo.host}/receiptSend`, {
                 amount: String(amount),
@@ -1222,7 +1222,7 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
               return messageSend(`${name} 고객님의 세금계산서를 발행해주세요!\n번호 : ${phone}\n가격 : ${autoComma(amount)}원`, "#700_operation", false);
             }
           }).catch((err) => {
-            console.log(err);
+            logger.error(err.message).catch((e) => { console.log(e); });
           });
 
         } else {
@@ -1285,23 +1285,23 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
 
             } else {
               messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
-              emergencyAlarm(errorMessage).catch((e) => { console.log(e); });
+              logger.alert(errorMessage).catch((e) => { console.log(e); });
             }
 
           } else {
             messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
-            emergencyAlarm(errorMessage).catch((e) => { console.log(e); });
+            logger.alert(errorMessage).catch((e) => { console.log(e); });
           }
 
         }
 
       } else {
-        errorLog(ignoreMessage).catch((e) => { console.log(e); });
+        logger.log(ignoreMessage).catch((e) => { console.log(e); });
       }
 
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_smsParsing): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_smsParsing): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error" }));
     }
@@ -1313,7 +1313,7 @@ ReceiptRouter.prototype.rou_post_accountTimeSet = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, messageLog, messageSend, errorLog, autoComma } = this.mother;
+  const { equalJson, messageLog, messageSend, autoComma } = this.mother;
   const collection = "accountTransfer";
   let obj = {};
   obj.link = "/accountTimeSet";
@@ -1337,7 +1337,7 @@ ReceiptRouter.prototype.rou_post_accountTimeSet = function () {
 
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_accountTimeSet): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_accountTimeSet): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error" }));
     }
@@ -1350,7 +1350,7 @@ ReceiptRouter.prototype.rou_post_designerTransfer = function () {
   const back = this.back;
   const bill = this.bill;
   const kakao = this.kakao;
-  const { equalJson, messageLog, messageSend, errorLog, autoComma } = this.mother;
+  const { equalJson, messageLog, messageSend, autoComma } = this.mother;
   const collection = "designerTransfer";
   let obj = {};
   obj.link = "/designerTransfer";
@@ -1386,7 +1386,7 @@ ReceiptRouter.prototype.rou_post_designerTransfer = function () {
 
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_designerTransfer): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_designerTransfer): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error" }));
     }
@@ -1398,7 +1398,7 @@ ReceiptRouter.prototype.rou_post_accountTimeUpdate = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, messageLog, messageSend, errorLog, autoComma } = this.mother;
+  const { equalJson, messageLog, messageSend, autoComma } = this.mother;
   const collection = "accountTransfer";
   let obj = {};
   obj.link = "/accountTimeUpdate";
@@ -1414,7 +1414,7 @@ ReceiptRouter.prototype.rou_post_accountTimeUpdate = function () {
       const { whereQuery, updateQuery, name, phone } = equalJson(req.body);
 
       if (/^010/.test(phone)) {
-        errorLog(`현금영수증 번호 업데이트 감지 => \n${JSON.stringify(whereQuery, null, 2)}\n${JSON.stringify(updateQuery, null, 2)}`).catch((err) => { throw new Error(err.message); });
+        logger.log(`현금영수증 번호 업데이트 감지 => \n${JSON.stringify(whereQuery, null, 2)}\n${JSON.stringify(updateQuery, null, 2)}`).catch((err) => { throw new Error(err.message); });
       } else {
         await messageSend({ text: `${name} 고객님이 ${phone} 번호로 세금 계산서 신청을 하셨습니다!`, channel: "#400_customer", voice: true });
       }
@@ -1422,7 +1422,7 @@ ReceiptRouter.prototype.rou_post_accountTimeUpdate = function () {
 
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_accountTimeUpdate): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_accountTimeUpdate): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error" }));
     }
@@ -1456,7 +1456,7 @@ ReceiptRouter.prototype.rou_post_createStylingBill = function () {
       });
       res.send(JSON.stringify(bilidArr));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_createStylingBill): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_createStylingBill): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -1515,7 +1515,7 @@ ReceiptRouter.prototype.rou_post_generalBill = function () {
 
       res.send(JSON.stringify(result));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_generalBill): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_generalBill): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
@@ -1523,11 +1523,11 @@ ReceiptRouter.prototype.rou_post_generalBill = function () {
   return obj;
 }
 
-ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumber, data, amount, proofs, inisis, needs) {
+ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumber, data, amount, proofs, inisis, needs, logger) {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, autoComma, requestSystem, messageSend, errorLog } = this.mother;
+  const { equalJson, autoComma, requestSystem, messageSend } = this.mother;
   try {
     const { thisBill, client, designer, project, proposal } = needs;
     const { cliid } = client;
@@ -1648,7 +1648,7 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
             }
           });
         }).catch((err) => {
-          errorLog({ text: "Python 서버 문제 생김 (sync_paymentProject, history 연산중 콘솔에서 문제 생김) : " + err.message, channel: "#error_log" }).catch((e) => { console.log(e); })
+          logger.error("Python 서버 문제 생김 (sync_paymentProject, history 연산중 콘솔에서 문제 생김) : " + err.message).catch((e) => { console.log(e); })
         });
 
         instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
@@ -1667,10 +1667,10 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
           }
         }).then((obj) => {
           if (obj.status >= 300) {
-            return errorLog({ text: "Python 서버 문제 생김 (sync_paymentProject, realtime 연산중 콘솔에서 문제 생김) ", channel: "#error_log" }).catch((err) => { console.log(err); });
+            return logger.error("Python 서버 문제 생김 (sync_paymentProject, realtime 연산중 콘솔에서 문제 생김) ");
           }
         }).catch((err) => {
-          errorLog({ text: "Python 서버 문제 생김 (sync_paymentProject, realtime 연산중 콘솔에서 문제 생김) : " + err.message, channel: "#error_log" }).catch((e) => { console.log(e); })
+          logger.error("Python 서버 문제 생김 (sync_paymentProject, realtime 연산중 콘솔에서 문제 생김) : " + err.message).catch((e) => { console.log(e); })
         });
 
       } else if (/잔금/gi.test(data.goodName.trim())) {
@@ -1746,7 +1746,7 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
     }
 
   } catch (e) {
-    errorLog({ text: "Python 서버 문제 생김 (sync_paymentProject) : " + e.message, channel: "#error_log" }).catch((e) => { console.log(e); })
+    logger.error("Python 서버 문제 생김 (sync_paymentProject) : " + e.message).catch((e) => { console.log(e); })
     console.log(e);
   }
 }
@@ -1755,7 +1755,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, autoComma, requestSystem, messageSend, errorLog } = this.mother;
+  const { equalJson, autoComma, requestSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = "/ghostClientBill";
   obj.func = async function (req, res, logger) {
@@ -1876,7 +1876,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
             console.log(err);
           })
           await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
-          await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal });
+          await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal }, logger);
 
         } else {
 
@@ -1938,7 +1938,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       }
 
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_ghostClientBill): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_ghostClientBill): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1956,7 +1956,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, requestSystem, messageSend, errorLog } = this.mother;
+  const { equalJson, requestSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = "/webHookVAccount";
   obj.public = true;
@@ -2105,12 +2105,12 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
         console.log(err);
       });
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-      await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal });
+      await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal }, logger);
 
       res.set({ "Content-Type": "text/plain" });
       res.send("OK");
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_webHookVAccount): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_webHookVAccount): " + e.message).catch((e) => { console.log(e); });
       res.set({ "Content-Type": "text/plain" });
       res.send("FAIL");
       console.log(e);
@@ -2141,7 +2141,7 @@ ReceiptRouter.prototype.rou_post_designerSelect = function () {
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_designerSelect): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_designerSelect): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -2178,7 +2178,7 @@ ReceiptRouter.prototype.rou_post_travelInjection = function () {
       });
       res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_travelInjection): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_travelInjection): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -2215,7 +2215,7 @@ ReceiptRouter.prototype.rou_post_travelEjection = function () {
       });
       res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_travelEjection): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_travelEjection): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -2252,7 +2252,7 @@ ReceiptRouter.prototype.rou_post_travelUpDown = function () {
       });
       res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_travelUpDown): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_travelUpDown): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -2290,7 +2290,7 @@ ReceiptRouter.prototype.rou_post_travelReconfig = function () {
       });
       res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_travelReconfig): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_travelReconfig): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -2442,7 +2442,7 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
 
       }
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_serviceConverting): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_serviceConverting): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -2580,7 +2580,7 @@ ReceiptRouter.prototype.rou_post_designerConverting = function () {
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_designerConverting): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_designerConverting): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -2619,7 +2619,7 @@ ReceiptRouter.prototype.rou_post_amountConverting = function () {
       await bill.amountConverting(bilid, { selfMongo, selfCoreMongo: instance.mongo });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_amountConverting): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_amountConverting): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
@@ -2633,7 +2633,7 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
   const bill = this.bill;
   const address = this.address;
   const kakao = this.kakao;
-  const { equalJson, sleep, requestSystem, messageSend, messageLog, errorLog } = this.mother;
+  const { equalJson, sleep, requestSystem, messageSend, messageLog } = this.mother;
   let obj = {};
   obj.link = "/requestRefund";
   obj.func = async function (req, res, logger) {
@@ -2777,7 +2777,7 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
       }
 
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_requestRefund): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_requestRefund): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
@@ -2850,7 +2850,7 @@ ReceiptRouter.prototype.rou_post_contractCancel = function () {
 
       res.send(JSON.stringify(report));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_contractCancel): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_contractCancel): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
@@ -2874,7 +2874,7 @@ ReceiptRouter.prototype.rou_post_returnBankCode = function () {
     try {
       res.send(JSON.stringify(bankCode));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_returnBankCode): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_returnBankCode): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
@@ -2934,7 +2934,7 @@ ReceiptRouter.prototype.rou_post_designerCalculation = function () {
         res.send(JSON.stringify({ calculate }));
       }
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_designerCalculation): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_designerCalculation): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
@@ -2963,7 +2963,7 @@ ReceiptRouter.prototype.rou_post_returnDummy = function () {
       const dummy = bill.returnDummies(collection, subject);
       res.send(JSON.stringify(dummy));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_returnDummy): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_returnDummy): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
@@ -2993,7 +2993,7 @@ ReceiptRouter.prototype.rou_post_invoiceRead = function () {
       const rows = await back.mongoRead(collection, whereQuery, { selfMongo: instance.mongolocal });
       res.send(JSON.stringify(rows));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_invoiceRead): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_invoiceRead): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
@@ -3022,7 +3022,7 @@ ReceiptRouter.prototype.rou_post_invoiceRequest = function () {
       const request = await bill.matrixToRequest(matrix);
       res.send(JSON.stringify(request));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_invoiceRequest): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_invoiceRequest): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
@@ -3054,7 +3054,7 @@ ReceiptRouter.prototype.rou_post_invoiceCreate = function () {
       const invoice = await bill.requestInvoice(buiid, proid, request, { selfMongo: instance.mongolocal, selfCoreMongo: instance.mongo });
       res.send(JSON.stringify(invoice));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_invoiceCreate): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_invoiceCreate): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
@@ -3081,11 +3081,11 @@ ReceiptRouter.prototype.rou_post_taxBill = function () {
       }
       const count = Number(req.body.count);
       bill.taxBill([ count ]).catch((err) => {
-        instance.mother.errorLog("Python 서버 문제 생김 (rou_post_taxBill): " + err.message).catch((e) => { console.log(e); });
+        logger.error("Python 서버 문제 생김 (rou_post_taxBill): " + err.message).catch((e) => { console.log(e); });
       })
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_taxBill): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_taxBill): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
@@ -3096,7 +3096,7 @@ ReceiptRouter.prototype.rou_post_taxBill = function () {
 ReceiptRouter.prototype.rou_post_weeklyCalculation = function () {
   const instance = this;
   const work = this.work;
-  const { equalJson, errorLog } = this.mother;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/weeklyCalculation";
   obj.func = async function (req, res, logger) {
@@ -3108,13 +3108,13 @@ ReceiptRouter.prototype.rou_post_weeklyCalculation = function () {
     });
     try {
       work.designerCalculation().then(() => {
-        console.log("weeklyCalculation success");
+        return logger.cron("weeklyCalculation success");
       }).catch((e) => {
-        errorLog("Python 서버 문제 생김 (rou_post_weeklyCalculation): " + e.message).catch((e) => { console.log(e); });
+        logger.error("Python 서버 문제 생김 (rou_post_weeklyCalculation): " + e.message).catch((e) => { console.log(e); });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_weeklyCalculation): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_weeklyCalculation): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
@@ -3125,7 +3125,7 @@ ReceiptRouter.prototype.rou_post_weeklyCalculation = function () {
 ReceiptRouter.prototype.rou_post_nonPaidResponses = function () {
   const instance = this;
   const work = this.work;
-  const { equalJson, errorLog } = this.mother;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/nonPaidResponses";
   obj.func = async function (req, res, logger) {
@@ -3139,7 +3139,7 @@ ReceiptRouter.prototype.rou_post_nonPaidResponses = function () {
       const result = await work.designerCalculation(false);
       res.send(JSON.stringify(result));
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_nonPaidResponses): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_nonPaidResponses): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
@@ -3153,7 +3153,7 @@ ReceiptRouter.prototype.rou_post_excuteResponse = function () {
   const bill = this.bill;
   const address = this.address;
   const kakao = this.kakao;
-  const { equalJson, errorLog, messageSend } = this.mother;
+  const { equalJson, messageSend } = this.mother;
   let obj = {};
   obj.link = "/excuteResponse";
   obj.func = async function (req, res, logger) {
@@ -3272,7 +3272,7 @@ ReceiptRouter.prototype.rou_post_excuteResponse = function () {
       }));
 
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_excuteResponse): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_excuteResponse): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error" }));
     }
@@ -3284,7 +3284,7 @@ ReceiptRouter.prototype.rou_post_excuteRepay = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, errorLog } = this.mother;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/excuteRepay";
   obj.func = async function (req, res, logger) {
@@ -3379,7 +3379,7 @@ ReceiptRouter.prototype.rou_post_excuteRepay = function () {
       }));
 
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_excuteRepay): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_excuteRepay): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error" }));
     }
@@ -3391,7 +3391,7 @@ ReceiptRouter.prototype.rou_post_passiveResponse = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, errorLog } = this.mother;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/passiveResponse";
   obj.func = async function (req, res, logger) {
@@ -3464,7 +3464,7 @@ ReceiptRouter.prototype.rou_post_passiveResponse = function () {
       }));
 
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_passiveResponse): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_passiveResponse): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error" }));
     }
@@ -3474,7 +3474,7 @@ ReceiptRouter.prototype.rou_post_passiveResponse = function () {
 
 ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
   const instance = this;
-  const { requestSystem, equalJson, stringToDate, messageLog, errorLog, messageSend } = this.mother;
+  const { requestSystem, equalJson, stringToDate, messageLog, messageSend } = this.mother;
   const address = this.address;
   const { officeinfo: { widsign: { id, key, endPoint } } } = address;
   const collections = [ "stylingForm", "constructForm" ];
@@ -3609,11 +3609,11 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
         }
 
       }
-      
-      errorLog("styling form sync success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+    
+      return true;
 
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_stylingFormSync): " + e.message).catch((e) => { console.log(e); });
+      return false;
     }
   }
   let obj = {};
@@ -3626,14 +3626,19 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      formSync(instance.mongo, instance.mongolocal).then(() => {
+      formSync(instance.mongo, instance.mongolocal).then((boo) => {
+        if (boo) {
+          logger.cron("styling form sync success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+        } else {
+          logger.error("styling form sync fail : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+        }
         return requestSystem("https://" + address.pythoninfo.host + ":3000/stylingFormFile", { data: null }, { headers: { "Content-Type": "application/json" } });;
       }).catch((err) => {
-        errorLog("Python 서버 문제 생김 (rou_post_stylingFormSync): " + err.message).catch((e) => { console.log(e); });
+        logger.error("Python 서버 문제 생김 (rou_post_stylingFormSync): " + err.message).catch((e) => { console.log(e); });
       });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_stylingFormSync): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_stylingFormSync): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error" }));
     }
@@ -3643,7 +3648,7 @@ ReceiptRouter.prototype.rou_post_stylingFormSync = function () {
 
 ReceiptRouter.prototype.rou_post_stylingFormFile = function () {
   const instance = this;
-  const { requestSystem, binaryRequest, fileSystem, shellExec, sleep, generalFileUpload, equalJson, stringToDate, messageLog, errorLog, messageSend } = this.mother;
+  const { requestSystem, binaryRequest, fileSystem, shellExec, sleep, generalFileUpload, equalJson, stringToDate, messageLog, messageSend } = this.mother;
   const address = this.address;
   const { officeinfo: { widsign: { id, key, endPoint } } } = address;
   const back = this.back;
@@ -3702,11 +3707,11 @@ ReceiptRouter.prototype.rou_post_stylingFormFile = function () {
   
       }
 
-      errorLog("styling form file success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+      logger.cron("styling form file success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_stylingFormFile): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_stylingFormFile): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
       res.send(JSON.stringify({ message: "error " + e.message }));
     }
@@ -3758,7 +3763,7 @@ ReceiptRouter.prototype.rou_post_responseInjection = function () {
 
       res.send(JSON.stringify({ bill: thisBill }));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_responseInjection): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_responseInjection): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
@@ -3831,7 +3836,7 @@ ReceiptRouter.prototype.rou_post_calculationConsole = function () {
       }
 
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_calculationConsole): " + e.message).catch((e) => { console.log(e); });
+      logger.error("Python 서버 문제 생김 (rou_post_calculationConsole): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
