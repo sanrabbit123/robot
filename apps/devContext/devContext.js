@@ -176,20 +176,21 @@ DevContext.prototype.launching = async function () {
     // });
 
 
+    await this.MONGOLOGC.connect();
 
 
-
+    const analytics = new GoogleAnalytics();
+    const res = (await analytics.queryParsing(new Date(2023, 4, 7), this.MONGOLOGC));
+    await fileSystem("writeJson", [ `${process.cwd()}/temp/target.json`, res ]);
 
     
-
-
+    await this.MONGOLOGC.close();
 
 
 
 
     /*
     ** caution **
-
     1. userAgeBracket, userGender => delete
     2. userDefinedValue => delete / userDefinedValue ---> referer
     3. new "browser" in views

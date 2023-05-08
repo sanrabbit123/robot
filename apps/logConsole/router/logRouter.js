@@ -114,7 +114,7 @@ LogRouter.prototype.dailySubAnalytics = async function (selfMongo) {
   const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
   try {
     const analytics = new GoogleAnalytics();
-    const dayNumber = 3;
+    const dayNumber = 5;
 
     await analytics.dailyQuery(selfMongo, dayNumber);
 
@@ -176,7 +176,10 @@ LogRouter.prototype.rou_get_First = function () {
           return instance.dailySubAnalytics(instance.mongo);
         }).then(() => {
           return logger.cron("front reflection, daily campaign, daily channel done");
-        }).catch((err) => { console.log(err); });
+        }).catch((err) => {
+          logger.error("log disk cron error : " + err.message).catch((e) => { console.log(e); });
+          console.log(err);
+        });
         res.send(JSON.stringify({ disk: disk.toArray() }));
 
       } else {

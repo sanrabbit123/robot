@@ -129,12 +129,12 @@ try:
         result = analytics.getConsultingPageDetail(data["startDate"], data["endDate"], data["dimensions"])
         print(result)
 
-    elif argv[1] == 'analytics' and argv[2] == 'basicImpressions':
+    elif argv[1] == 'console' and argv[2] == 'basicImpressions':
         analytics = GoogleSearchConsole()
         result = analytics.basicImpressions(data["startDate"], data["endDate"])
         print(result)
 
-    elif argv[1] == 'analytics' and argv[2] == 'queryImpressions':
+    elif argv[1] == 'console' and argv[2] == 'queryImpressions':
         analytics = GoogleSearchConsole()
         result = analytics.queryImpressions(data["startDate"], data["endDate"])
         print(result)

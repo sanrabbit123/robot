@@ -2883,13 +2883,11 @@ LogReport.prototype.dailyReports = async function () {
     nowDate = new Date();
     nowDate.setDate(nowDate.getDate() - (dateAgo + 2));
 
-    console.log((await marketingBasicMatrix(nowDate)));
-
-    // const {
-    //   matrix: [ first, second, third, fourth, fifth, sixth, seventh ],
-    //   month: { totalFunnelMonthMatrix, facebookPaidMonthMatrix, naverPaidMonthMatrix, googlePaidMonthMatrix },
-    //   week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix }
-    // } = await marketingBasicMatrix(startDay);
+    const {
+      matrix: [ first, second, third, fourth, fifth, sixth, seventh ],
+      month: { totalFunnelMonthMatrix, facebookPaidMonthMatrix, naverPaidMonthMatrix, googlePaidMonthMatrix },
+      week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix }
+    } = await marketingBasicMatrix(startDay);
     // const [ ninth ] = await subAnalyticsMatrix(startDay);
     // const tenth = await tenthParsingMatrix(sixth);
 

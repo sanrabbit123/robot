@@ -422,94 +422,6 @@ GoogleAnalytics.prototype.reportParsing = function (reports) {
   return result;
 }
 
-GoogleAnalytics.prototype.simpleMetric = async function (startDate, endDate) {
-  const instance = this;
-  const { dateToString, stringToDate, pythonExecute } = this.mother;
-  const zeroAddition = function (num) {
-    if (num < 10) {
-      return `0${String(num)}`;
-    } else {
-      return `${String(num)}`;
-    }
-  }
-  try {
-
-    if (startDate === undefined || endDate === undefined) {
-      throw new Error("must be start-date and end-date");
-    }
-
-    if (startDate instanceof Date) {
-      startDate = dateToString(startDate);
-    }
-
-    if (endDate instanceof Date) {
-      endDate = dateToString(endDate);
-    }
-
-    const userDimensions = [
-      { name: "ga:userType", meaning: "유저 타입" },
-      { name: "ga:campaign", meaning: "캠페인" },
-    ];
-    let temp, tempObj, result, tempArr;
-    let totalNumbers;
-    let finalObj;
-    let detailObj;
-    let keyArr;
-    let start, next, end;
-    let endNext;
-    let conversion;
-    let conversionObj;
-    let users;
-    let usersDetail;
-    let userResult;
-    let userTotalNumbers;
-    let userDetailObj;
-
-    // users
-
-    userResult = [];
-    for (let i of userDimensions) {
-      temp = [];
-      temp.push({ name: i.name });
-      tempObj = await pythonExecute(this.pythonApp, [ "analytics", "getUserMetric" ], { startDate, endDate, dimensions: temp });
-      userResult.push(this.reportParsing(tempObj));
-    }
-
-    userTotalNumbers = userResult.map((obj) => { return obj.total });
-
-    userDetailObj = {};
-    keyArr = userDimensions.map((obj) => { return obj.name.replace(/ga\:/gi, '') })
-    for (let i = 0; i < keyArr.length; i++) {
-      userDetailObj[keyArr[i]] = userResult[i];
-    }
-
-    start = stringToDate(startDate);
-    next = stringToDate(startDate);
-    next.setDate(next.getDate() + 1);
-    end = stringToDate(endDate);
-    endNext = stringToDate(endDate);
-    endNext.setDate(endNext.getDate() + 1);
-
-    finalObj = {
-      key: "simple_analytics_" + startDate.replace(/\-/gi, '') + "_" + endDate.replace(/\-/gi, ''),
-      date: {
-        from: start,
-        to: (endDate === startDate ? next : endNext),
-      },
-      data: {
-        users: {
-          total: userTotalNumbers.reduce((acc, cur) => { return (acc >= cur ? acc : cur) }, 0),
-          detail: userDetailObj,
-        },
-      }
-    };
-
-    return finalObj;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 GoogleAnalytics.prototype.complexMetric = async function (startDate, endDate) {
   const instance = this;
   const { dateToString, stringToDate, pythonExecute, zeroAddition } = this.mother;
@@ -2184,11 +2096,10 @@ GoogleAnalytics.prototype.complexMonthly = async function (year, month) {
   }
 }
 
-GoogleAnalytics.prototype.dailyQuery = async function (selfMongo, dayNumber = 3) {
+GoogleAnalytics.prototype.dailyQuery = async function (selfMongo, dayNumber = 5) {
   const instance = this;
   const back = this.back;
   const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog } = this.mother;
-  const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
   try {
     const queryCollection = "queryAnalytics";
     let from, to;
@@ -2239,198 +2150,6 @@ GoogleAnalytics.prototype.dailyQuery = async function (selfMongo, dayNumber = 3)
   }
 }
 
-GoogleAnalytics.prototype.queryParsing = async function (targetDate, selfMongo) {
-  const instance = this;
-  const { dateToString, stringToDate, pythonExecute, equalJson } = this.mother;
-  const back = this.back;
-  const querystring = require("querystring");
-  const zeroAddition = function (num) {
-    if (num < 10) {
-      return `0${String(num)}`;
-    } else {
-      return `${String(num)}`;
-    }
-  }
-  try {
-
-    if (targetDate === undefined) {
-      throw new Error("must be targetDate");
-    }
-
-    if (targetDate instanceof Date) {
-      targetDate = dateToString(targetDate);
-    }
-
-    const collection = "dailyAnalytics";
-    let key;
-    let start, end;
-    let targetReport;
-    let targetCases;
-    let res;
-    let tong;
-    let googleRes;
-    let result;
-    let finalObj;
-
-    start = stringToDate(targetDate);
-    end = stringToDate(targetDate);
-    end.setDate(end.getDate() + 1);
-    key = ('n' + String(start.getFullYear()).slice(2) + zeroAddition(start.getMonth() + 1) + '_' + "aa" + zeroAddition(start.getDate()) + 's');
-    [ targetReport ] = await back.mongoRead(collection, { anaid: key }, { selfMongo });
-    if (targetReport !== undefined) {
-
-
-      // from referrer
-
-      targetCases = targetReport.data.views.detail.userDefinedValue.cases;
-
-      res = targetCases.map((obj) => {
-        return obj.case;
-      }).filter((str) => {
-        return /\?/gi.test(str)
-      }).map((str) => {
-        return querystring.parse(str.split('?')[1])
-      }).map((obj) => {
-        return Object.values(obj);
-      }).map((arr) => {
-        return arr.filter((str) => { return /[ㄱ-ㅎㅏ-ㅣ가-힣]/gi.test(str) })
-      }).flat(10).map((str) => {
-        return str.trim();
-      });
-
-      tong = [ ...new Set(res) ].map((str) => {
-        return { case: str, value: 0 };
-      });
-
-      for (let str of res) {
-        for (let obj of tong) {
-          if (str === obj.case) {
-            obj.value = obj.value + 1;
-          }
-        }
-      }
-
-      tong.sort((a, b) => { return b.value - a.value });
-
-
-
-      // from google
-
-      googleRes = (await this.googleQuery(targetDate)).data.detail;
-      googleRes = googleRes.filter((obj) => { return obj.clicks >= 1 }).map((obj) => { obj.query = obj.query.trim(); return obj; });
-
-      for (let z of googleRes) {
-        for (let obj of tong) {
-          if (obj.case === z.query) {
-            obj.value = obj.value + z.clicks;
-            z.done = true;
-          }
-        }
-      }
-      googleRes = googleRes.filter((obj) => { return obj.done !== true });
-      for (let { query, clicks } of googleRes) {
-        tong.push({
-          case: query,
-          value: clicks,
-        });
-      }
-
-      tong.sort((a, b) => { return b.value - a.value });
-
-
-      // result
-
-      finalObj = {
-        key: targetDate.replace(/\-/gi, '') + "_query",
-        date: {
-          from: start,
-          to: end,
-        },
-        data: {
-          total: tong.reduce((acc, curr) => { return acc + curr.value }, 0),
-          detail: tong
-        }
-      };
-
-      return finalObj;
-
-    } else {
-
-      return null;
-
-    }
-
-  } catch (e) {
-    console.log(e);
-    return null;
-  }
-}
-
-GoogleAnalytics.prototype.googleQuery = async function (targetDate) {
-  const instance = this;
-  const { dateToString, stringToDate, pythonExecute, equalJson } = this.mother;
-  const zeroAddition = function (num) {
-    if (num < 10) {
-      return `0${String(num)}`;
-    } else {
-      return `${String(num)}`;
-    }
-  }
-  try {
-
-    if (targetDate === undefined) {
-      throw new Error("must be targetDate");
-    }
-
-    if (targetDate instanceof Date) {
-      targetDate = dateToString(targetDate);
-    }
-
-    let res;
-    let report;
-    let start, end, next;
-
-    start = stringToDate(targetDate);
-    end = stringToDate(targetDate);
-    end.setDate(end.getDate() + 1);
-
-    report = {
-      key: targetDate.replace(/\-/gi, '') + "_googleQuery",
-      date: {
-        from: start,
-        to: end,
-      },
-      data: {
-        clicks: 0,
-        impressions: 0,
-        detail: [],
-      }
-    };
-
-    res = equalJson(await pythonExecute(this.pythonApp, [ "analytics", "basicImpressions" ], { startDate: targetDate, endDate: targetDate }));
-    if (Array.isArray(res.rows)) {
-      report.data.clicks = res.rows[0].clicks;
-      report.data.impressions = res.rows[0].impressions;
-    }
-
-    res = equalJson(await pythonExecute(this.pythonApp, [ "analytics", "queryImpressions" ], { startDate: targetDate, endDate: targetDate }));
-    if (Array.isArray(res.rows)) {
-      report.data.detail = res.rows.map((obj) => {
-        return {
-          query: obj.keys[0],
-          clicks: obj.clicks,
-          impressions: obj.impressions
-        }
-      });
-    }
-
-    return report;
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 // new area ============================================================================================
 
 GoogleAnalytics.prototype.setCredentials = async function () {
@@ -2450,9 +2169,70 @@ GoogleAnalytics.prototype.setCredentials = async function () {
   }
 }
 
-GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
+GoogleAnalytics.prototype.returnAnalyticsObject = async function (analyticsDataClient, startDate, endDate, metric, dimensionsArr, dimensionFilter = null) {
   const instance = this;
   const { property } = this;
+  const { dateToString, equalJson, stringToDate, requestSystem, fileSystem, zeroAddition } = this.mother;
+  try {
+    let metrics, dimensions;
+    let thisCases, thisTotal, thisKinds;
+    let detailObj;
+    let metricResult;
+    let parsingResponse;
+    let reportRequest;
+
+    parsingResponse = (arr) => {
+      const [ response ] = arr;
+      const result = response.rows.map((obj) => {
+        let arr;
+        arr = [];
+        for (let i = 0; i < obj.dimensionValues.length; i++) {
+          arr.push({
+            case: obj.dimensionValues[i].value,
+            value: Number(obj.metricValues[i].value),
+          })
+        }
+        return arr;
+      }).flat();
+      result.sort((a, b) => { return b.value - a.value });
+      return result;
+    }
+    metricResult = {};
+    metrics = [ { name: metric } ];
+    detailObj = {};
+    for (let { title, name, filter } of dimensionsArr) {
+      dimensions = [ { name } ];
+      reportRequest = { property, dateRanges: [ { startDate: startDate, endDate: endDate } ], dimensions, metrics };
+      if (dimensionFilter !== null) {
+        reportRequest.dimensionFilter = dimensionFilter;
+      }
+      thisCases = parsingResponse(await analyticsDataClient.runReport(reportRequest));
+      if (typeof filter === "function") {
+        thisCases = thisCases.map((obj) => {
+          obj.case = filter(obj.case);
+          return obj;
+        })
+      }
+      thisTotal = thisCases.reduce((acc, curr) => { return acc + curr.value }, 0);
+      thisKinds = thisCases.length;
+      detailObj[title] = {
+        cases: thisCases,
+        total: thisTotal,
+        kinds: thisKinds,
+      };
+    }
+    metricResult.total = Object.values(detailObj).reduce((acc, curr) => { return acc >= curr.total ? acc : curr.total }, 0)
+    metricResult.detail = detailObj;
+
+    return metricResult;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
+  const instance = this;
   const { dateToString, equalJson, stringToDate, requestSystem, fileSystem, zeroAddition } = this.mother;
   const { BetaAnalyticsDataClient } = require("@google-analytics/data");
   try {
@@ -2463,13 +2243,7 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
     let conversionPopupOpenMetric, conversionPopupOpenDimensions;
     let conversionConsultingPageMetric, conversionConsultingPageDimensions;
     let analyticsDataClient;
-    let metrics, dimensions;
-    let thisCases, thisTotal, thisKinds;
-    let detailObj;
-    let metricResult;
-    let parsingResponse, returnAnalyticsObject;
     let dataObject;
-    let reportRequest;
     let finalObj;
     let start;
     let next;
@@ -2485,59 +2259,7 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
 
     await this.setCredentials();
     analyticsDataClient = new BetaAnalyticsDataClient();
-
-    returnAnalyticsObject = async (metric, dimensionsArr, dimensionFilter = null) => {
-      try {
-        parsingResponse = (arr) => {
-          const [ response ] = arr;
-          const result = response.rows.map((obj) => {
-            let arr;
-            arr = [];
-            for (let i = 0; i < obj.dimensionValues.length; i++) {
-              arr.push({
-                case: obj.dimensionValues[i].value,
-                value: Number(obj.metricValues[i].value),
-              })
-            }
-            return arr;
-          }).flat();
-          result.sort((a, b) => { return b.value - a.value });
-          return result;
-        }
-        metricResult = {};
-        metrics = [ { name: metric } ];
-        detailObj = {};
-        for (let { title, name, filter } of dimensionsArr) {
-          dimensions = [ { name } ];
-          reportRequest = { property, dateRanges: [ { startDate: startDate, endDate: endDate } ], dimensions, metrics };
-          if (dimensionFilter !== null) {
-            reportRequest.dimensionFilter = dimensionFilter;
-          }
-          thisCases = parsingResponse(await analyticsDataClient.runReport(reportRequest));
-          if (typeof filter === "function") {
-            thisCases = thisCases.map((obj) => {
-              obj.case = filter(obj.case);
-              return obj;
-            })
-          }
-          thisTotal = thisCases.reduce((acc, curr) => { return acc + curr.value }, 0);
-          thisKinds = thisCases.length;
-          detailObj[title] = {
-            cases: thisCases,
-            total: thisTotal,
-            kinds: thisKinds,
-          };
-        }
-        metricResult.total = Object.values(detailObj).reduce((acc, curr) => { return acc >= curr.total ? acc : curr.total }, 0)
-        metricResult.detail = detailObj;
-        return metricResult;
-      } catch (e) {
-        console.log(e);
-        return null;
-      }
-    }
     dataObject = {};
-
 
     // users
     userMetric = "totalUsers";
@@ -2549,7 +2271,7 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
       { title: "source", name: "sessionSource", meaning: "소스", filter: null },
       { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
     ];
-    dataObject.users = await returnAnalyticsObject(userMetric, userDimensions);
+    dataObject.users = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, userMetric, userDimensions);
 
 
     // views
@@ -2564,7 +2286,7 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
       { title: "source", name: "sessionSource", meaning: "소스", filter: null },
       { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
     ];
-    dataObject.views = await returnAnalyticsObject(viewMetric, viewDimensions);
+    dataObject.views = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, viewMetric, viewDimensions);
 
 
     // events
@@ -2576,7 +2298,7 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
       { title: "source", name: "sessionSource", meaning: "소스", filter: null },
       { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
     ];
-    dataObject.events = await returnAnalyticsObject(eventMetric, eventDimensions);
+    dataObject.events = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, eventMetric, eventDimensions);
 
 
     // conversion
@@ -2593,7 +2315,7 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
       { title: "source", name: "sessionSource", meaning: "소스", filter: null },
       { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
     ];
-    dataObject.conversion.popupOpen = await returnAnalyticsObject(conversionPopupOpenMetric, conversionPopupOpenDimensions, { filter: { fieldName: "eventName", stringFilter: { matchType: "CONTAINS", value: "popupOpen", caseSensitive: true } } });
+    dataObject.conversion.popupOpen = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, conversionPopupOpenMetric, conversionPopupOpenDimensions, { filter: { fieldName: "eventName", stringFilter: { matchType: "CONTAINS", value: "popupOpen", caseSensitive: true } } });
 
 
     // conversion - consulting page
@@ -2606,7 +2328,7 @@ GoogleAnalytics.prototype.dailyMetric = async function (thisDate) {
       { title: "source", name: "sessionSource", meaning: "소스", filter: null },
       { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
     ];
-    dataObject.conversion.consultingPage = await returnAnalyticsObject(conversionConsultingPageMetric, conversionConsultingPageDimensions, { filter: { fieldName: "pagePath", stringFilter: { matchType: "CONTAINS", value: "consulting.php", caseSensitive: true } } });
+    dataObject.conversion.consultingPage = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, conversionConsultingPageMetric, conversionConsultingPageDimensions, { filter: { fieldName: "pagePath", stringFilter: { matchType: "CONTAINS", value: "consulting.php", caseSensitive: true } } });
 
 
     // final
@@ -2825,6 +2547,258 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
   } catch (e) {
     console.log(e);
     return null;
+  }
+}
+
+GoogleAnalytics.prototype.simpleMetric = async function (startDate, endDate) {
+  const instance = this;
+  const { dateToString, equalJson, stringToDate, requestSystem, fileSystem, zeroAddition } = this.mother;
+  const { BetaAnalyticsDataClient } = require("@google-analytics/data");
+  try {
+    let analyticsDataClient;
+    let dataObject;
+    let userMetric;
+    let userDimensions;
+    let eventMetric;
+    let eventDimensions;
+    let finalObj;
+    let start;
+    let next;
+    let end;
+    let endNext;
+
+    if (startDate === undefined || endDate === undefined) {
+      throw new Error("must be start-date and end-date");
+    }
+    if (startDate instanceof Date) {
+      startDate = dateToString(startDate);
+    }
+    if (endDate instanceof Date) {
+      endDate = dateToString(endDate);
+    }
+
+    await this.setCredentials();
+    analyticsDataClient = new BetaAnalyticsDataClient();
+    dataObject = {};
+
+    // users
+    userMetric = "totalUsers";
+    userDimensions = [
+      { title: "userType", name: "newVsReturning", meaning: "유저 타입", filter: (str) => { return (str === "new" ? "New Visitor" : (str === "returning" ? "Returning Visitor" : str)) } },
+      { title: "campaign", name: "sessionCampaignName", meaning: "캠페인", filter: null },
+      { title: "source", name: "sessionSource", meaning: "소스", filter: null },
+      { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
+    ];
+    dataObject.users = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, userMetric, userDimensions);
+
+
+    // events
+    eventMetric = "eventCount";
+    eventDimensions = [
+      { title: "eventName", name: "eventName", meaning: "이벤트 이름", filter: null },
+      { title: "campaign", name: "sessionCampaignName", meaning: "캠페인", filter: null },
+      { title: "source", name: "sessionSource", meaning: "소스", filter: null },
+      { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
+    ];
+    dataObject.events = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, eventMetric, eventDimensions);
+
+
+    // end
+    start = stringToDate(startDate);
+    next = stringToDate(startDate);
+    next.setDate(next.getDate() + 1);
+    end = stringToDate(endDate);
+    endNext = stringToDate(endDate);
+    endNext.setDate(endNext.getDate() + 1);
+
+    finalObj = {
+      key: "simple_analytics_" + startDate.replace(/\-/gi, '') + "_" + endDate.replace(/\-/gi, ''),
+      date: {
+        from: start,
+        to: (endDate === startDate ? next : endNext),
+      },
+      data: dataObject
+    };
+
+    return finalObj;
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+GoogleAnalytics.prototype.queryParsing = async function (targetDate, selfMongo) {
+  const instance = this;
+  const { dateToString, stringToDate, equalJson, zeroAddition } = this.mother;
+  const back = this.back;
+  const querystring = require("querystring");
+  try {
+    if (targetDate === undefined) {
+      throw new Error("must be targetDate");
+    }
+    if (targetDate instanceof Date) {
+      targetDate = dateToString(targetDate);
+    }
+    const collection = "dailyAnalytics";
+    let key;
+    let start, end;
+    let targetReport;
+    let targetCases;
+    let res;
+    let tong;
+    let googleRes;
+    let result;
+    let finalObj;
+
+    start = stringToDate(targetDate);
+    end = stringToDate(targetDate);
+    end.setDate(end.getDate() + 1);
+    key = ('n' + String(start.getFullYear()).slice(2) + zeroAddition(start.getMonth() + 1) + '_' + "aa" + zeroAddition(start.getDate()) + 's');
+    [ targetReport ] = await back.mongoRead(collection, { anaid: key }, { selfMongo });
+    if (targetReport !== undefined) {
+
+
+      // from referrer
+      targetCases = targetReport.data.views.detail.referer.cases;
+
+      res = targetCases.map((obj) => {
+        return obj.case;
+      }).filter((str) => {
+        return /\?/gi.test(str)
+      }).map((str) => {
+        return querystring.parse(str.split('?')[1])
+      }).map((obj) => {
+        return Object.values(obj);
+      }).map((arr) => {
+        return arr.filter((str) => { return /[ㄱ-ㅎㅏ-ㅣ가-힣]/gi.test(str) })
+      }).flat(10).map((str) => {
+        return str.trim();
+      });
+
+      tong = [ ...new Set(res) ].map((str) => {
+        return { case: str, value: 0 };
+      });
+
+      for (let str of res) {
+        for (let obj of tong) {
+          if (str === obj.case) {
+            obj.value = obj.value + 1;
+          }
+        }
+      }
+
+      tong.sort((a, b) => { return b.value - a.value });
+
+
+      // from google
+      googleRes = (await this.googleQuery(targetDate)).data.detail;
+      googleRes = googleRes.filter((obj) => { return obj.clicks >= 1 }).map((obj) => { obj.query = obj.query.trim(); return obj; });
+
+      for (let z of googleRes) {
+        for (let obj of tong) {
+          if (obj.case === z.query) {
+            obj.value = obj.value + z.clicks;
+            z.done = true;
+          }
+        }
+      }
+      googleRes = googleRes.filter((obj) => { return obj.done !== true });
+
+      for (let { query, clicks } of googleRes) {
+        tong.push({
+          case: query,
+          value: clicks,
+        });
+      }
+
+      tong.sort((a, b) => { return b.value - a.value });
+
+      // result
+
+      finalObj = {
+        key: targetDate.replace(/\-/gi, '') + "_query",
+        date: {
+          from: start,
+          to: end,
+        },
+        data: {
+          total: tong.reduce((acc, curr) => { return acc + curr.value }, 0),
+          detail: tong
+        }
+      };
+
+      return finalObj;
+
+    } else {
+
+      return null;
+
+    }
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+GoogleAnalytics.prototype.googleQuery = async function (targetDate) {
+  const instance = this;
+  const { dateToString, stringToDate, pythonExecute, equalJson, zeroAddition } = this.mother;
+  try {
+
+    if (targetDate === undefined) {
+      throw new Error("must be targetDate");
+    }
+
+    if (targetDate instanceof Date) {
+      targetDate = dateToString(targetDate);
+    }
+
+    let res;
+    let report;
+    let start, end, next;
+
+    start = stringToDate(targetDate);
+    end = stringToDate(targetDate);
+    end.setDate(end.getDate() + 1);
+
+    report = {
+      key: targetDate.replace(/\-/gi, '') + "_googleQuery",
+      date: {
+        from: start,
+        to: end,
+      },
+      data: {
+        clicks: 0,
+        impressions: 0,
+        detail: [],
+      }
+    };
+
+    res = equalJson(await pythonExecute(this.pythonApp, [ "console", "basicImpressions" ], { startDate: targetDate, endDate: targetDate }));
+    console.log(res);
+    if (Array.isArray(res.rows)) {
+      report.data.clicks = res.rows[0].clicks;
+      report.data.impressions = res.rows[0].impressions;
+    }
+
+    res = equalJson(await pythonExecute(this.pythonApp, [ "console", "queryImpressions" ], { startDate: targetDate, endDate: targetDate }));
+    console.log(res);
+    if (Array.isArray(res.rows)) {
+      report.data.detail = res.rows.map((obj) => {
+        return {
+          query: obj.keys[0],
+          clicks: obj.clicks,
+          impressions: obj.impressions
+        }
+      });
+    }
+
+    return report;
+
+  } catch (e) {
+    console.log(e);
   }
 }
 
