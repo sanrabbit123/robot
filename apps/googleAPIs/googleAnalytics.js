@@ -2096,60 +2096,6 @@ GoogleAnalytics.prototype.complexMonthly = async function (year, month) {
   }
 }
 
-GoogleAnalytics.prototype.dailyQuery = async function (selfMongo, dayNumber = 5) {
-  const instance = this;
-  const back = this.back;
-  const { sleep, dateToString, stringToDate, sha256Hmac, requestSystem, errorLog } = this.mother;
-  try {
-    const queryCollection = "queryAnalytics";
-    let from, to;
-    let startDate;
-    let now;
-    let key;
-    let json;
-    let tempRows;
-
-    now = new Date();
-    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    for (let i = 0; i < dayNumber; i++) {
-      startDate.setDate(startDate.getDate() - 1);
-    }
-
-    for (let i = 0; i < dayNumber; i++) {
-
-      await sleep(500);
-
-      if (i === 0) {
-        from = new Date(JSON.stringify(startDate).slice(1, -1));
-        to = new Date(JSON.stringify(startDate).slice(1, -1));
-        to.setDate(to.getDate() + 1);
-      } else {
-        from.setDate(from.getDate() + 1);
-        to.setDate(to.getDate() + 1);
-      }
-
-      json = await this.queryParsing(from, selfMongo);
-
-      if (json !== null) {
-        key = json.key;
-
-        tempRows = await back.mongoRead(queryCollection, { key }, { selfMongo });
-        if (tempRows.length !== 0) {
-          await back.mongoDelete(queryCollection, { key }, { selfMongo });
-        }
-        await back.mongoCreate(queryCollection, json, { selfMongo })
-        console.log(json);
-      } else {
-        console.log(from, null);
-      }
-
-    }
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 // new area ============================================================================================
 
 GoogleAnalytics.prototype.setCredentials = async function () {
@@ -2658,7 +2604,6 @@ GoogleAnalytics.prototype.queryParsing = async function (targetDate, selfMongo) 
     [ targetReport ] = await back.mongoRead(collection, { anaid: key }, { selfMongo });
     if (targetReport !== undefined) {
 
-
       // from referrer
       targetCases = targetReport.data.views.detail.referer.cases;
 
@@ -2731,9 +2676,7 @@ GoogleAnalytics.prototype.queryParsing = async function (targetDate, selfMongo) 
       return finalObj;
 
     } else {
-
       return null;
-
     }
 
   } catch (e) {

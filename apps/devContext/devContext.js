@@ -182,11 +182,8 @@ DevContext.prototype.launching = async function () {
     // await this.MONGOLOGC.close();
 
 
-    // const { google } = require("googleapis");
-    // console.log(google.searchconsole)
 
-
-
+    
     /*
     ** caution **
     1. userAgeBracket, userGender => delete
@@ -199,6 +196,9 @@ DevContext.prototype.launching = async function () {
 
 
     
+    
+
+
 
     
     

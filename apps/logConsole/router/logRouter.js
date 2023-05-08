@@ -109,20 +109,6 @@ LogRouter.prototype.dailyChannel = async function (selfMongo) {
   }
 }
 
-LogRouter.prototype.dailySubAnalytics = async function (selfMongo) {
-  const instance = this;
-  const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
-  try {
-    const analytics = new GoogleAnalytics();
-    const dayNumber = 5;
-
-    await analytics.dailyQuery(selfMongo, dayNumber);
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 //GET ---------------------------------------------------------------------------------------------
 
 LogRouter.prototype.rou_get_Root = function () {
@@ -172,8 +158,6 @@ LogRouter.prototype.rou_get_First = function () {
           return instance.dailyChannel(instance.mongo);
         }).then(() => {
           return instance.dailyAnalytics();
-        }).then(() => {
-          return instance.dailySubAnalytics(instance.mongo);
         }).then(() => {
           return logger.cron("front reflection, daily campaign, daily channel done");
         }).catch((err) => {
@@ -668,6 +652,44 @@ LogRouter.prototype.rou_post_analyticsClients = function () {
       res.send({ message: "success" });
     } catch (e) {
       await logger.error("Log Console 서버 문제 생김 (rou_post_analyticsClients): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+LogRouter.prototype.rou_post_analyticsQuery = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, dateToString } = this.mother;
+  let obj = {};
+  obj.link = [ "/analyticsQuery" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      const analyticsCollection = "queryAnalytics";
+      const { result } = equalJson(req.body);
+      let key;
+      let rows;
+
+      key = result.key;
+      rows = await back.mongoRead(analyticsCollection, { key }, { selfMongo });
+      if (rows.length !== 0) {
+        await back.mongoDelete(analyticsCollection, { key }, { selfMongo })
+      }
+      await back.mongoCreate(analyticsCollection, result, { selfMongo });
+
+      logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
+
+      res.send({ message: "success" });
+    } catch (e) {
+      await logger.error("Log Console 서버 문제 생김 (rou_post_analyticsQuery): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }

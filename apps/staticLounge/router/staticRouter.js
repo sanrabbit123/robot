@@ -2403,6 +2403,14 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
           }
           await sleep(1000);
         }
+        for (let thisDate of dateArr) {
+          result = await analytics.queryParsing(thisDate, instance.mongolog);
+          if (result === null) {
+            await logger.error("query parsing error : " + dateToString(thisDate));
+          } else {
+            await requestSystem("https://" + address.testinfo.host + "/analyticsQuery", { result }, { headers: { "Content-Type": "application/json" } });
+          }
+        }
       })().catch((err) => {
         console.log(err);
       });
