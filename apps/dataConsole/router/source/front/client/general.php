@@ -12,7 +12,7 @@ class GeneralPhp {
 
   public function bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo) {
 
-    $gtagId = "UA-97880990-1";
+    $gtagId = "G-XCNTB3TRCK";
     $googleSearchId = "YRxCc6xhQlM3qTygta5Qw0CObJJrLDYmUE8_wCR0AQc";
     $naverSearchId = "59096f538ddb9a8704025cefc11269d504f62aac";
     $naverLogId = "s_dc977e44f53";

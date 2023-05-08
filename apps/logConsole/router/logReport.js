@@ -944,12 +944,11 @@ LogReport.prototype.dailyReports = async function () {
   const back = this.back;
   const address = this.address;
   const { host } = this;
-  const { mongo, mongoinfo, fileSystem, requestSystem, autoComma, dateToString, stringToDate, equalJson, errorLog, messageLog, messageSend, serviceParsing, getDateMatrix } = this.mother;
+  const { mongo, mongoinfo, fileSystem, requestSystem, autoComma, dateToString, stringToDate, equalJson, errorLog, messageLog, messageSend, serviceParsing, getDateMatrix, zeroAddition } = this.mother;
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
   const querystring = require("querystring");
   try {
-    const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
     const selfCoreMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
     const selfMongo = this.mongo;
     const sheets = new GoogleSheet();
@@ -991,9 +990,6 @@ LogReport.prototype.dailyReports = async function () {
         }
 
         const getReportsByDate = async (targetDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories) => {
-          const campaignCollection = "dailyCampaign";
-          const analyticsCollection = "dailyAnalytics";
-          const clientsCollection = "dailyClients";
           const keyMaker = (date) => {
             const keyRegMaker = (date) => {
               return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}_`;

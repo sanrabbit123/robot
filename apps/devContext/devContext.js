@@ -177,132 +177,29 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
     
-    
+
+
 
 
     /*
-    
-    // homeliaison analytics
+    ** caution **
 
-    await this.MONGOLOGC.connect();
-
-    const querystring = require("querystring");
-
-    const selfMongo = this.MONGOLOGC;
-    const collection = "homeliaisonAnalytics";
-    const unknownKeyword = "(not set)";
-    let rows;
-    let targetCliid;
-    let sessionIds;
-    let whereQuery, updateQuery;
-    let thisIp;
-    let thisObj;
-    let queryStrings;
-    let sourceArr, campaignArr;
-    let thisSource, thisCampaign;
-    let referrerArr;
-    let userObj;
-    let historyFactor;
-
-    targetCliid = "c2305_aa21s";
-
-    rows = await back.mongoRead(collection, { "data.cliid": targetCliid }, { selfMongo });
-    rows = rows.map((obj) => { return obj.id });
-    sessionIds = [ ...new Set(rows) ];
-
-    for (let id of sessionIds) {
-
-      whereQuery = { id };
-      rows = await back.mongoRead(collection, whereQuery, { selfMongo });
-
-      if (rows.length > 0) {
-
-        rows.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
-        rows = rows.filter((obj) => { return [ "pageInit", "login", "submitForm", "popupOpen" ].includes(obj.action) });
-  
-        queryStrings = [];
-        referrerArr = [];
-        for (let row of rows) {
-          if (/\?/gi.test(row.info.requestUrl)) {
-            queryStrings.push(querystring.parse(row.info.requestUrl.split("?")[1]));
-          }
-          if (!(new RegExp(instance.address.frontinfo.host, "gi")).test(row.info.referer)) {
-            referrerArr.push(row.info.referer);
-          }
-        }
-  
-        referrerArr = [ ...new Set(referrerArr) ];
-  
-        sourceArr = [];
-        campaignArr = [];
-  
-        for (let obj of queryStrings) {
-          if (obj["utm_source"] !== undefined) {
-            sourceArr.push(obj["utm_source"]);
-          }
-          if (obj["utm_campaign"] !== undefined) {
-            campaignArr.push(obj["utm_campaign"]);
-          }
-        }
-  
-        thisSource = sourceArr.length > 0 ? sourceArr[0] : unknownKeyword;
-        thisCampaign = campaignArr.length > 0 ? [ ...new Set(campaignArr) ].join(", ") : unknownKeyword;
-        
-        if (/naver/gi.test(thisSource)) {
-          thisSource = "naver";
-        } else if (/instagram/gi.test(thisSource) || /facebook/gi.test(thisSource)) {
-          thisSource = "facebook";
-        } else {
-          thisSource = str;
-        }
-  
-        if (Object.keys(rows[0].network).length === 0) {
-          thisIp = rows[0].info.ip;
-          thisObj = await ipParsing(thisIp);
-          rows[0].network = thisObj;
-
-          if (Object.keys(rows[0].network).length === 0) {
-            throw new Error("invalid ip address");
-          }
-        }
-
-        userObj = {
-          id: id,
-          type: (rows[rows.length - 1].date.valueOf() - rows[0].date.valueOf()) >= (1000 * 60 * 60 * 24) ? "Returning Visitor" : "New Visitor",
-          history: [],
-          source: {
-            referrer: referrerArr,
-            mother: thisSource,
-            campaign: thisCampaign
-          },
-          device: {
-            kinds: rows[0].device.device.type,
-            os: rows[0].device.os.name,
-            browser: rows[0].device.os.browser,
-          },
-          region: {
-            country: /KR/gi.test(rows[0].network.country) ? "South Korea" : rows[0].network.country,
-            city: (rows[0].network.region === rows[0].network.city) ? rows[0].network.city : (rows[0].network.region + " " + rows[0].network.city),
-          }
-        };
-
-        for (let row of rows) {
-          historyFactor = {};
-          historyFactor.date = new Date(JSON.stringify(row.date).slice(1, -1));
-          historyFactor.path = row.info.requestUrl
-          historyFactor.title = (/\<title\>([^\<]*)\<\/title\>/gi.exec((await requestSystem("https://" + instance.address.frontinfo.host + row.info.requestUrl)).data))[1];
-          historyFactor.event = row.action;
-          userObj.history.push(historyFactor);
-        }
-
-        console.log(userObj);
-      }
-    }
-
-    await this.MONGOLOGC.close();
-
+    1. userAgeBracket, userGender => delete
+    2. userDefinedValue => delete / userDefinedValue ---> referer
+    3. new "browser" in views
+    4. eventAction in views => delete
+    5. new "events" value
+    6. conversion remodeling
     */
+
+
+    
+
+    
     
 
 
@@ -5730,9 +5627,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "홍성애",
-    //     designer: "호지희",
-    //     link: "https://drive.google.com/drive/folders/17syKNNj5i19-anRYfJBVk_QwQusMqJ2z",
+    //     client: "강태경",
+    //     designer: "이정아",
+    //     link: "https://drive.google.com/drive/folders/1X0Xea3EwBePskeBtVpc1ioCGhTD_s-XG",
     //     pay: true
     //   },
     // ]);

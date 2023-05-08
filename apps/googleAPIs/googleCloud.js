@@ -92,5 +92,4 @@ GoogleCloud.prototype.isKorean = async function (input) {
   }
 }
 
-
 module.exports = GoogleCloud;

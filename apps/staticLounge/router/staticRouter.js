@@ -2358,7 +2358,7 @@ StaticRouter.prototype.rou_post_removeCronNmon = function () {
 
 StaticRouter.prototype.rou_post_analyticsDaily = function () {
   const instance = this;
-  const { equalJson, stringToDate, requestSystem, sleep } = this.mother;
+  const { equalJson, stringToDate, requestSystem, sleep, dateToString } = this.mother;
   const analytics = this.analytics;
   const address = this.address;
   let obj = {};
@@ -2372,48 +2372,40 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
     });
     try {
       const { date } = equalJson(req.body);
-      let thisDate;
       let dateArr;
 
       if (typeof date !== "string") {
         throw new Error("invaild post");
       }
-      if (date.length === 10) {
 
-        thisDate = stringToDate(date);
-        analytics.generalMetric(thisDate, thisDate).then((result) => {
-          return requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
-        }).then(() => {
-          return analytics.getSubmitClients(thisDate, instance.mongo);
-        }).then((result) => {
-          return requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
-        }).catch((err) => {
-          console.log(err);
-        });
-
-      } else {
-
-        dateArr = date.split(",").map((str) => { return str.trim(); });
-        if (!(dateArr.every((str) => { return str.length === 10 }))) {
-          throw new Error("invaild post");
-        }
-        (async () => {
-          let result;
-          for (let thisDate of dateArr) {
-            result = await analytics.generalMetric(thisDate, thisDate);
-            await requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
-            await sleep(1000);
-          }
-          for (let thisDate of dateArr) {
-            result = await analytics.getSubmitClients(thisDate, instance.mongo);
-            await requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
-            await sleep(1000);
-          }
-        })().catch((err) => {
-          console.log(err);
-        });
-
+      dateArr = date.split(",").map((str) => { return str.trim(); }).filter((str) => { return str !== ''; });
+      if (!(dateArr.every((str) => { return str.length === 10 }))) {
+        throw new Error("invaild post");
       }
+      dateArr = dateArr.map((str) => { return stringToDate(str) });
+      (async () => {
+        let result;
+        for (let thisDate of dateArr) {
+          result = await analytics.dailyMetric(thisDate);
+          if (result === null) {
+            await logger.error("daily metric error : " + dateToString(thisDate));
+          } else {
+            await requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
+          }
+          await sleep(1000);
+        }
+        for (let thisDate of dateArr) {
+          result = await analytics.dailyClients(thisDate, instance.mongo, instance.mongolog);
+          if (result === null) {
+            await logger.error("daily clients error : " + dateToString(thisDate));
+          } else {
+            await requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
+          }
+          await sleep(1000);
+        }
+      })().catch((err) => {
+        console.log(err);
+      });
 
       res.send({ message: "will do" });
     } catch (e) {
