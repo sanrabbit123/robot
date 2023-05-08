@@ -956,8 +956,10 @@ LogReport.prototype.dailyReports = async function () {
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    const startDay = new Date(2022, 5, 1);
+    const startDay = new Date(2023, 4, 3);
+    const dateAgo = 3;
     let slackMessage;
+    let nowDate;
 
     await selfCoreMongo.connect();
 
@@ -965,8 +967,6 @@ LogReport.prototype.dailyReports = async function () {
     const marketingBasicMatrix = async (startDate) => {
       try {
         const queryStandardDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-        queryStandardDate.setMonth(queryStandardDate.getMonth() - 3);
-
         const clients = await back.getClientsByQuery({ $or: [ { cliid: "c1801_aa01s" }, { requests: { $elemMatch: { "request.timeline": { $gte: queryStandardDate } } } } ] }, { selfMongo: selfCoreMongo, withTools: true });
         const projects = await back.getProjectsByQuery({ "proposal.date": { $gte: queryStandardDate } }, { selfMongo: selfCoreMongo, withTools: true });
         const clientHistories = (await requestSystem("https://" + address.backinfo.host + "/getHistoryProperty", {
@@ -980,13 +980,13 @@ LogReport.prototype.dailyReports = async function () {
         const clientsEntireRows = await back.mongoRead("dailyClients", { "date.from": { $gte: queryStandardDate } }, { selfMongo });
 
         const facebookCampaignBoo = (str) => {
-          return ((/^[A-Z]/.test(str) || /^t/.test(str) || /^s/.test(str) || /^link/.test(str) || /^facebook/.test(str) || /^main_video/.test(str) || /^Mag/.test(str) || /^maposketch/.test(str) || /^MV/.test(str) || /^appeal/.test(str) || /^De_image/.test(str) || /^video_mom/.test(str)) && !/^home/.test(str) && !/^PO3/.test(str) && !/^M_DA/.test(str) && !/^apart/.test(str) && !/^interior/.test(str) && !/^about/.test(str) && !/^local/.test(str) && !/^consul/.test(str) && !/not set/g.test(str) && !/^mini/.test(str) && !/^local/.test(str) && !/^naver/.test(str) && !/^google/.test(str));
+          return ((/^[A-Z]/.test(str) || /^t/.test(str) || /^s/.test(str) || /^link/.test(str) || /^facebook/.test(str) || /^main_video/.test(str) || /^Mag/.test(str) || /^maposketch/.test(str) || /^MV/.test(str) || /^appeal/.test(str) || /^De_image/.test(str) || /^video_mom/.test(str)) && !/^home/.test(str) && !/^PO3/.test(str) && !/^M_DA/.test(str) && !/^apart/.test(str) && !/^interior/.test(str) && !/^about/.test(str) && !/^local/.test(str) && !/^consul/.test(str) && !/not set/g.test(str) && !/\(direct\)/g.test(str) && !/\(organic\)/g.test(str) && !/\(referral\)/g.test(str) && !/^mini/.test(str) && !/^local/.test(str) && !/^naver/.test(str) && !/^google/.test(str));
         }
         const naverCampaignBoo = (str) => {
-          return ((/^home/.test(str) || /^naver/.test(str) || /^[0-9]/.test(str) || /^PO3/.test(str) || /^M_DA/.test(str) || /^conver/.test(str) || /^mini/.test(str) || /^local/.test(str) || /^conver/.test(str)  || /^apart/.test(str) || /^about/.test(str)  || /^interior/.test(str) || /^new/.test(str) || /^port/.test(str) || /^recruit/.test(str) || /^review/.test(str) || /^traffic/.test(str) || /^consul/.test(str)) && !/not set/g.test(str) && !/^link/g.test(str) && !/^facebook/g.test(str) && !/^main_video/g.test(str) && !/^google/.test(str));
+          return ((/^home/.test(str) || /^naver/.test(str) || /^[0-9]/.test(str) || /^PO3/.test(str) || /^M_DA/.test(str) || /^conver/.test(str) || /^mini/.test(str) || /^local/.test(str) || /^conver/.test(str)  || /^apart/.test(str) || /^about/.test(str)  || /^interior/.test(str) || /^new/.test(str) || /^port/.test(str) || /^recruit/.test(str) || /^review/.test(str) || /^traffic/.test(str) || /^consul/.test(str)) && !/not set/g.test(str) && !/\(direct\)/g.test(str) && !/\(organic\)/g.test(str) && !/\(referral\)/g.test(str) && !/^link/g.test(str) && !/^facebook/g.test(str) && !/^main_video/g.test(str) && !/^google/.test(str));
         }
         const googleCampaignBoo = (str) => {
-          return ((/^[ㄱ-ㅎ]/.test(str) || /^[가-힣]/.test(str) || /^google/.test(str)) && !/not set/g.test(str) && !/^home/g.test(str) && !/^facebook/g.test(str) && !/^link/g.test(str) && !/^local/g.test(str) && !/^naver/g.test(str));
+          return ((/^[ㄱ-ㅎ]/.test(str) || /^[가-힣]/.test(str) || /^google/.test(str)) && !/not set/g.test(str) && !/\(direct\)/g.test(str) && !/\(organic\)/g.test(str) && !/\(referral\)/g.test(str) && !/^home/g.test(str) && !/^facebook/g.test(str) && !/^link/g.test(str) && !/^local/g.test(str) && !/^naver/g.test(str));
         }
 
         const getReportsByDate = async (targetDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories) => {
@@ -1108,7 +1108,7 @@ LogReport.prototype.dailyReports = async function () {
             return acc + curr.value;
           }, 0);
 
-          popupOpenEvents = analyticsRows.data.views.detail.eventAction.cases.filter((obj) => {
+          popupOpenEvents = analyticsRows.data.events.detail.eventName.cases.filter((obj) => {
             return /popupOpen/gi.test(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
@@ -1170,13 +1170,13 @@ LogReport.prototype.dailyReports = async function () {
             return acc + curr.value;
           }, 0);
 
-          facebookFromClicks = analyticsRows.data.conversion[1].detail.campaign.cases.filter((obj) => {
+          facebookFromClicks = analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((obj) => {
             return facebookCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
-          facebookFromPopups = analyticsRows.data.conversion[0].detail.campaign.cases.filter((obj) => {
+          facebookFromPopups = analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((obj) => {
             return facebookCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
@@ -1187,7 +1187,7 @@ LogReport.prototype.dailyReports = async function () {
               if (obj === null) {
                 return false;
               } else {
-                return facebookCampaignBoo(obj.source.campaign)
+                return obj.source.campaign.some((c) => { return facebookCampaignBoo(c); });
               }
             });
           }).length;
@@ -1268,13 +1268,13 @@ LogReport.prototype.dailyReports = async function () {
             return acc + curr.value;
           }, 0);
 
-          naverFromClicks = analyticsRows.data.conversion[1].detail.campaign.cases.filter((obj) => {
+          naverFromClicks = analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((obj) => {
             return naverCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
-          naverFromPopups = analyticsRows.data.conversion[0].detail.campaign.cases.filter((obj) => {
+          naverFromPopups = analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((obj) => {
             return naverCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
@@ -1285,7 +1285,7 @@ LogReport.prototype.dailyReports = async function () {
               if (obj === null) {
                 return false;
               } else {
-                return naverCampaignBoo(obj.source.campaign)
+                return obj.source.campaign.some((c) => { return naverCampaignBoo(c); });
               }
             });
           }).length;
@@ -1362,17 +1362,17 @@ LogReport.prototype.dailyReports = async function () {
               returnType = "재방문";
             }
 
-            sourceArr = users.map((obj) => { return obj.source.mother }).filter((str) => { return str !== "(direct)" });
-            campaignArr = users.map((obj) => { return obj.source.campaign }).filter((str) => { return str !== "(not set)" });
+            sourceArr = users.map((obj) => { return obj.source.mother }).filter((arr) => { return arr.length > 0 });
+            campaignArr = users.map((obj) => { return obj.source.campaign }).filter((arr) => { return arr.length > 0 });
 
             if (sourceArr.length > 0) {
-              source = sourceArr[0];
+              source = sourceArr.flat().join(", ");
             } else {
               source = "(direct)";
             }
 
             if (campaignArr.length > 0) {
-              campaign = campaignArr[0];
+              campaign = campaignArr.flat().join(", ");
             } else {
               campaign = "(not set)";
             }
@@ -1456,17 +1456,17 @@ LogReport.prototype.dailyReports = async function () {
               returnType = "재방문";
             }
 
-            sourceArr = users.map((obj) => { return obj.source.mother }).filter((str) => { return str !== "(direct)" });
-            campaignArr = users.map((obj) => { return obj.source.campaign }).filter((str) => { return str !== "(not set)" });
+            sourceArr = users.map((obj) => { return obj.source.mother }).filter((arr) => { return arr.length > 0 });
+            campaignArr = users.map((obj) => { return obj.source.campaign }).filter((arr) => { return arr.length > 0 });
 
             if (sourceArr.length > 0) {
-              source = sourceArr[0];
+              source = sourceArr.flat().join(", ");
             } else {
               source = "(direct)";
             }
 
             if (campaignArr.length > 0) {
-              campaign = campaignArr[0];
+              campaign = campaignArr.flat().join(", ");
             } else {
               campaign = "(not set)";
             }
@@ -1578,13 +1578,13 @@ LogReport.prototype.dailyReports = async function () {
             return acc + curr.value;
           }, 0);
 
-          googleFromClicks = analyticsRows.data.conversion[1].detail.campaign.cases.filter((obj) => {
+          googleFromClicks = analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((obj) => {
             return googleCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
-          googleFromPopups = analyticsRows.data.conversion[0].detail.campaign.cases.filter((obj) => {
+          googleFromPopups = analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((obj) => {
             return googleCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
@@ -1595,7 +1595,7 @@ LogReport.prototype.dailyReports = async function () {
               if (obj === null) {
                 return false;
               } else {
-                return googleCampaignBoo(obj.source.campaign)
+                return obj.source.campaign.some((c) => { return googleCampaignBoo(c); });
               }
             });
           }).length;
@@ -1816,16 +1816,7 @@ LogReport.prototype.dailyReports = async function () {
         standardDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         standardDate.setDate(standardDate.getDate() - 1);
 
-        numberDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        numberDate.setDate(numberDate.getDate() - 1);
-
-        dateNumber = 0;
-        while (numberDate.valueOf() >= startDate.valueOf()) {
-          numberDate.setDate(numberDate.getDate() - 1);
-          dateNumber++;
-        }
-
-        for (let i = 0; i < dateNumber; i++) {
+        for (let i = 0; i < dateAgo; i++) {
           resMatrix = await getReportsByDate(standardDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories);
           for (let i = 0; i < matrix.length; i++) {
             for (let arr of resMatrix[i]) {
@@ -2319,100 +2310,6 @@ LogReport.prototype.dailyReports = async function () {
         googlePaidWeekMatrix = googlePaidWeekMatrix.map(weekSpread);
 
         return { matrix, month: { totalFunnelMonthMatrix, facebookPaidMonthMatrix, naverPaidMonthMatrix, googlePaidMonthMatrix }, week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix } };
-
-      } catch (e) {
-        console.log(e);
-      }
-    }
-
-    // week report
-    const saDefaultMatrix = async (startDate) => {
-      try {
-        const now = new Date();
-        const res = await requestSystem("https://" + address.backinfo.host + "/getClientReport", {
-          startYear: String(startDate.getFullYear()),
-          startMonth: String(startDate.getMonth() + 1),
-          endYear: String(now.getFullYear()),
-          endMonth: String(now.getMonth() + 1),
-        }, {
-          headers: { "Content-Type": "application/json" }
-        });
-        let weekMatrix;
-        let thisYear, thisMonth;
-        let clientSum, proposalSum, recommendSum, contractSum, processSum;
-
-        weekMatrix = [];
-        weekMatrix.push([ "년도", "월", "주 시작일", "주 종료일", "문의수", "제안수", "추천수", "계약수", "진행수" ]);
-
-        for (let arr of res.data) {
-
-          clientSum = 0;
-          proposalSum = 0;
-          recommendSum = 0;
-          contractSum = 0;
-          processSum = 0;
-
-          for (let { startDay, endDay, client, proposal, recommend, contract, process } of arr.data) {
-            [ thisYear, thisMonth ] = startDay.split('-').map((str) => { return Number(str); });
-            weekMatrix.push([
-              thisYear,
-              thisMonth,
-              startDay,
-              endDay,
-              client,
-              proposal,
-              recommend,
-              contract,
-              process
-            ]);
-
-            clientSum += client;
-            proposalSum += proposal;
-            recommendSum += recommend;
-            contractSum += contract;
-            processSum += process;
-
-          }
-
-          weekMatrix.push([
-            '',
-            '',
-            '',
-            String(thisMonth) + "월 총합",
-            clientSum,
-            proposalSum,
-            recommendSum,
-            contractSum,
-            processSum,
-          ]);
-
-          weekMatrix.push([
-            '',
-            '',
-            '',
-            '',
-            '',
-            "제안율",
-            (clientSum === 0 ? 0 : String((Math.round((proposalSum / clientSum) * 10000)) / 100) + '%'),
-            "진행율",
-            (clientSum === 0 ? 0 : String((Math.round((processSum / clientSum) * 10000)) / 100) + '%'),
-          ]);
-
-          weekMatrix.push([
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-          ]);
-
-        }
-
-        return [ weekMatrix ];
 
       } catch (e) {
         console.log(e);
@@ -2983,17 +2880,22 @@ LogReport.prototype.dailyReports = async function () {
       googlePaidWeekMatrix: "15Rd2JbqCcm9LjIIMuPVm0U13cDJC_uYxyPdFRjf4b2Y",
     };
 
-    const {
-      matrix: [ first, second, third, fourth, fifth, sixth, seventh ],
-      month: { totalFunnelMonthMatrix, facebookPaidMonthMatrix, naverPaidMonthMatrix, googlePaidMonthMatrix },
-      week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix }
-    } = await marketingBasicMatrix(startDay);
-    const [ eighth ] = await saDefaultMatrix(startDay);
-    const [ ninth ] = await subAnalyticsMatrix(startDay);
-    const tenth = await tenthParsingMatrix(sixth);
+    nowDate = new Date();
+    nowDate.setDate(nowDate.getDate() - (dateAgo + 2));
+
+    console.log((await marketingBasicMatrix(nowDate)));
+
+    // const {
+    //   matrix: [ first, second, third, fourth, fifth, sixth, seventh ],
+    //   month: { totalFunnelMonthMatrix, facebookPaidMonthMatrix, naverPaidMonthMatrix, googlePaidMonthMatrix },
+    //   week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix }
+    // } = await marketingBasicMatrix(startDay);
+    // const [ ninth ] = await subAnalyticsMatrix(startDay);
+    // const tenth = await tenthParsingMatrix(sixth);
+
+    /*
 
     // sheets update
-
     await sheets.update_value_inPython(firstSheetsId, "", first);
     await sheets.update_value_inPython(secondSheetsId, "", second);
     await sheets.update_value_inPython(thirdSheetsId, "", third);
@@ -3001,7 +2903,6 @@ LogReport.prototype.dailyReports = async function () {
     await sheets.update_value_inPython(fifthSheetsId, "", fifth);
     await sheets.update_value_inPython(sixthSheetsId, "", sixth);
     await sheets.update_value_inPython(seventhSheetsId, "", seventh);
-    await sheets.update_value_inPython(eighthSheetsId, "", eighth);
     await sheets.update_value_inPython(ninthSheetsId, "", ninth);
     await sheets.update_value_inPython(tenthSheetsId, "", tenth);
 
@@ -3015,23 +2916,25 @@ LogReport.prototype.dailyReports = async function () {
     await sheets.update_value_inPython(weekSheets.naverPaidWeekMatrix, "", naverPaidWeekMatrix);
     await sheets.update_value_inPython(weekSheets.googlePaidWeekMatrix, "", googlePaidWeekMatrix);
 
+    */
+
     console.log("sheets update all done");
 
     await selfCoreMongo.close();
 
-    slackMessage = '';
-    slackMessage += dateToString(today) + " ====================================================";
-    slackMessage += "\n";
-    slackMessage += dateToString(startDay) + " ~ " + dateToString(yesterday) + " 기간의 지표를 업데이트하였습니다!";
-    slackMessage += "\n";
-    slackMessage += "MPR 통합관리장표 : " + "https://docs.google.com/spreadsheets/d/" + zeroSheetsId + "/edit?usp=sharing";
+    // slackMessage = '';
+    // slackMessage += dateToString(today) + " ====================================================";
+    // slackMessage += "\n";
+    // slackMessage += dateToString(startDay) + " ~ " + dateToString(yesterday) + " 기간의 지표를 업데이트하였습니다!";
+    // slackMessage += "\n";
+    // slackMessage += "MPR 통합관리장표 : " + "https://docs.google.com/spreadsheets/d/" + zeroSheetsId + "/edit?usp=sharing";
 
-    await requestSystem("https://" + host + "/marketingMessage", {
-      text: slackMessage,
-      channel: "#marketing",
-    }, {
-      headers: { "Content-Type": "application/json" }
-    });
+    // await requestSystem("https://" + host + "/marketingMessage", {
+    //   text: slackMessage,
+    //   channel: "#marketing",
+    // }, {
+    //   headers: { "Content-Type": "application/json" }
+    // });
 
   } catch (e) {
     console.log(e);

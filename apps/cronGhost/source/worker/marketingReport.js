@@ -8,7 +8,7 @@ const worker = async function (package) {
   const { mother, address, back, mongo, mongolocal } = package;
   const { messageLog, errorLog, requestSystem } = mother;
   try {
-    await requestSystem("https://" + address.testinfo.host + "/basicReport", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
+    // await requestSystem("https://" + address.testinfo.host + "/basicReport", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
     await errorLog("marketing reporting done");
     return true;
   } catch (e) {
