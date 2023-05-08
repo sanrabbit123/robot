@@ -27,7 +27,7 @@ class GoogleSearchConsole:
             credentials = tools.run_flow(flow, storage, flags)
         http = credentials.authorize(http=httplib2.Http())
 
-        self.app = build('webmasters', 'v3', http=http)
+        self.app = build('searchconsole', 'v1', http=http)
 
     def basicImpressions(self, startDate, endDate):
         request = { "startDate": startDate, "endDate": endDate, "dimensions": [ "date" ] }

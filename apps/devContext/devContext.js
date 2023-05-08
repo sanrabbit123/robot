@@ -176,16 +176,14 @@ DevContext.prototype.launching = async function () {
     // });
 
 
-    await this.MONGOLOGC.connect();
+    // await this.MONGOLOGC.connect();
+    // const analytics = new GoogleAnalytics();
+    // const res = (await analytics.queryParsing(new Date(2023, 4, 7), this.MONGOLOGC));
+    // await this.MONGOLOGC.close();
 
 
-    const analytics = new GoogleAnalytics();
-    const res = (await analytics.queryParsing(new Date(2023, 4, 7), this.MONGOLOGC));
-    await fileSystem("writeJson", [ `${process.cwd()}/temp/target.json`, res ]);
-
-    
-    await this.MONGOLOGC.close();
-
+    // const { google } = require("googleapis");
+    // console.log(google.searchconsole)
 
 
 

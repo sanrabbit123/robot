@@ -2777,14 +2777,12 @@ GoogleAnalytics.prototype.googleQuery = async function (targetDate) {
     };
 
     res = equalJson(await pythonExecute(this.pythonApp, [ "console", "basicImpressions" ], { startDate: targetDate, endDate: targetDate }));
-    console.log(res);
     if (Array.isArray(res.rows)) {
       report.data.clicks = res.rows[0].clicks;
       report.data.impressions = res.rows[0].impressions;
     }
 
     res = equalJson(await pythonExecute(this.pythonApp, [ "console", "queryImpressions" ], { startDate: targetDate, endDate: targetDate }));
-    console.log(res);
     if (Array.isArray(res.rows)) {
       report.data.detail = res.rows.map((obj) => {
         return {
