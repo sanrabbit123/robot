@@ -518,12 +518,25 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
       } else {
         form = new FormData();
         for (let key in data) {
-          if (typeof data[key] === 'object') {
-            form.append(key, JSON.stringify(data[key]));
+          if (typeof data[key] === "object") {
+            if (data[key].constructor.name === "ReadStream") {
+              if (/\.png$/gi.test(data[key].path)) {
+                form.append(key, data[key], { filename: data[key].path.split("/")[data[key].path.split("/").length - 1], contentType: "image/png" });
+              } else if (/\.(jpg|jpeg)$/gi.test(data[key].path)) {
+                form.append(key, data[key], { filename: data[key].path.split("/")[data[key].path.split("/").length - 1], contentType: "image/jpeg" });
+              } else {
+                form.append(key, data[key]);
+              }
+            } else if (data[key].constructor.name === "Buffer") {
+              form.append(key, data[key]);
+            } else {
+              form.append(key, JSON.stringify(data[key]));
+            }
           } else {
             form.append(key, data[key]);
           }
         }
+        
         form.getLength((err, length) => {
           if (err) {
             reject(err);

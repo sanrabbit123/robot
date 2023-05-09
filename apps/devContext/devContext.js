@@ -131,19 +131,71 @@ DevContext.prototype.launching = async function () {
     //   proid: "p2303_ab27s",
     // }, "https://" + address.backinfo.host + ":3000/constructInteraction");
     // console.log(res);
-
+    // =======================================================================================================================================================
 
     // facebook token
     // const facebook = new FacebookAPIs();
     // await facebook.getAccessToken();
-
+    // =======================================================================================================================================================
 
     // kakao template json
-
     // const kakao = new KakaoTalk();
     // const json = await kakao.getTemplate();
     // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/kakaoJson.json`, json ]);
     // await shellExec(`code`, [ `${process.cwd()}/temp/kakaoJson.json` ]);
+    // =======================================================================================================================================================
+
+    // kakao friend send
+    // const kakao = new KakaoTalk();
+    // console.log(await kakao.friendsTalk([
+    //   {
+    //     name: "배창규",
+    //     phone: "010-2747-3403",
+    //   },
+    //   {
+    //     name: "임혜령",
+    //     phone: "010-6367-1297",
+    //   },
+    // ], {
+    //   title: `23년 5월 어버이날 친구톡`,
+    //   body: `#{name}님, 이번 어버이날 선물로\n홈스타일링 어떠세요?\n부모님께 행복을 선사하세요!`,
+    //   image: `${process.cwd()}/temp/target3.jpg`,
+    //   convert: {
+    //     name: (name, phone) => { return name; },
+    //   },
+    //   button: {
+    //     title: "상담 신청하기",
+    //     link: "https://home-liaison.com/consulting.php",
+    //   }
+    // }));
+    // =======================================================================================================================================================
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -169,58 +221,21 @@ DevContext.prototype.launching = async function () {
   
 
     
-    // const microsoft = new MicrosoftAPIs();
-    // await microsoft.renewAccessToken();
-    // requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/storeDevicesStatus", { data: null }, { headers: { "Content-Type": "application/json" } }).catch((e) => {
-    //   throw new Error(e);
-    // });
+
+    
 
 
-    // await this.MONGOLOGC.connect();
-    // const analytics = new GoogleAnalytics();
-    // const res = (await analytics.queryParsing(new Date(2023, 4, 7), this.MONGOLOGC));
-    // await this.MONGOLOGC.close();
+
 
 
 
     
-    /*
-    ** caution **
-    1. userAgeBracket, userGender => delete
-    2. userDefinedValue => delete / userDefinedValue ---> referer
-    3. new "browser" in views
-    4. eventAction in views => delete
-    5. new "events" value
-    6. conversion remodeling
-    */
 
 
-    
-    
-
-    // const appId = "297555";
-    // const appKey = "fd31662d2d01e26c39c99cfd568bfd10";
-    // const baseUrl = "bizmsg-web.kakaoenterprise.com";
-    // let url, res;
-
-    // // curl -X POST "https://{base_url}/v2/oauth/token" \
-    // // -H  "accept: */*" \
-    // // -H  "Authorization: Basic {clientID} {clientSecret}" \
-    // // -H  "Content-Type: application/x-www-form-urlencoded" \
-    // // -d  "grant_type=client_credentials"
 
 
-    // url = `https://${baseUrl}/v2/oauth/token`;
-    // res = await requestSystem(url, { grant_type: "client_credentials" }, {
-    //   headers: {
-    //     "accept": "*/*",
-    //     "Authorization": "Basic " + appId + " " + appKey,
-    //     "Content-Type": "application/x-www-form-urlencoded",
-    //   }
-    // });
 
-    // console.log(res);
-    
+
 
 
 

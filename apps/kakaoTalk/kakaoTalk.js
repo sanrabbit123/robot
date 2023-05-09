@@ -11,6 +11,8 @@ const KakaoTalk = function () {
   this.apikey = "mnpm8c1h078n2gtpoqgzck6gpfvg0dq2";
   this.senderkey = "dd2f3f0b034a044b16531e5171cbcc764fb716eb";
   this.senderPhone = "0220392252";
+  this.plusId = "@홈리에종";
+  this.channelId = "_vxixkjxl";
   this.ip = {
     office: address.officeinfo.ip.outer,
     console: address.backinfo.ip.outer,
@@ -3345,6 +3347,148 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
       to: phone,
       body: (await this.templateToBody(method, name, phone, convertObj)),
     });
+    return null;
+  }
+}
+
+KakaoTalk.prototype.friendTalk = async function (name, phone, bodyObject) {
+  const instance = this;
+  const { requestSystem, fileSystem } = this.mother;
+  try {
+    const subject = "(광고) 홈리에종 HomeLiaison";
+    let options, boo, data;
+    let result;
+    let body;
+    let res;
+
+    if (typeof name !== "string" || typeof phone !== "string" || bodyObject === null || typeof bodyObject !== "object") {
+      throw new Error("invalid input");
+    }
+    if (typeof bodyObject.body !== "string") {
+      throw new Error("must be body");
+    }
+    if (typeof bodyObject.convert !== "object" || bodyObject.convert === null) {
+      throw new Error("must be convert object");
+    }
+
+    boo = false;
+    data = null;
+
+    result = await this.setAuth();
+
+    // body
+
+    body = bodyObject.body;
+
+    for (let key in bodyObject.convert) {
+      body = body.replace(new RegExp("#\\{" + key + "\\}", "g"), bodyObject.convert[key](name, phone));
+    }
+
+    options = {
+      apikey: this.authObj.apikey,
+      userid: this.authObj.userid,
+      token: this.authObj.token,
+      senderkey: this.authObj.senderkey,
+      sender: this.senderPhone,
+      advert: "Y",
+      receiver_1: phone.replace(/-/g, ''),
+      recvname_1: name,
+      subject_1: subject,
+      message_1: body,
+      failover: "N",
+    };
+
+    if (typeof bodyObject.image === "string") {
+      options.image = await fileSystem(`readStream`, [ bodyObject.image ]);
+    }
+    if (typeof bodyObject.button === "object" && bodyObject.button !== null) {
+      options.button_1 = {
+        button: [
+          {
+            name: bodyObject.button.title,
+            linkType: "WL",
+            linkTypeName: "웹링크",
+            linkMo: bodyObject.button.link,
+            linkPc: bodyObject.button.link,
+          }
+        ]
+      };
+    }
+
+    // send
+
+    try {
+      ({ data } = await requestSystem("https://kakaoapi.aligo.in/akv10/friend/send", options));
+    } catch (e) {
+      console.log(e);
+      data = null;
+    }
+    if (data !== null && typeof data === "object" && typeof data.message === "string" && /성공/gi.test(data.message)) {
+      boo = true;
+    } else {
+      boo = false;
+    }
+
+    return boo;
+      
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+KakaoTalk.prototype.friendsTalk = async function (friends, bodyObject) {
+  const instance = this;
+  const { sleep, messageSend, requestSystem } = this.mother;
+  try {
+    const channel = "#500_marketing";
+    const channel2 = "#marketing";
+    const delta = 2000;
+    let boo;
+    let successList;
+    let failList;
+    let text;
+
+    if (!Array.isArray(friends)) {
+      throw new Error("invalid input 0");
+    }
+    if (!friends.every((obj) => { return typeof obj === "object" && obj !== null })) {
+      throw new Error("invalid input 1");
+    }
+    if (!friends.every((obj) => { return typeof obj.name === "string" && typeof obj.phone === "string" })) {
+      throw new Error("invalid input 2");
+    }
+    if (typeof bodyObject.convert !== "object" || bodyObject.convert === null) {
+      throw new Error("must be convert object");
+    }
+
+    successList = [];
+    failList = [];
+
+    for (let { name, phone } of friends) {
+      boo = await this.friendTalk(name, phone, bodyObject);
+      if (boo) {
+        console.log(`${name} / ${phone} success`);
+        text = `${name} (${phone}) 고객님께 ${bodyObject.title} 친구톡을 전송하였습니다!`;
+        await messageSend({ text, channel, voice: false });
+        await requestSystem("https://" + instance.address.testinfo.host + "/marketingMessage", { text, channel: channel2 }, { headers: { "Content-Type": "application/json" } });
+        successList.push({ name, phone });
+      } else {
+        console.log(`${name} / ${phone} fail`);
+        text = `${name} (${phone}) 고객님께 ${bodyObject.title} 친구톡 전송에 실패하였습니다!`;
+        await messageSend({ text, channel, voice: false });
+        await requestSystem("https://" + instance.address.testinfo.host + "/marketingMessage", { text, channel: channel2 }, { headers: { "Content-Type": "application/json" } });
+        failList.push({ name, phone });
+      }
+      await sleep(delta);
+    }
+
+    return {
+      success: successList,
+      fail: failList,
+    };
+  } catch (e) {
+    console.log(e);
     return null;
   }
 }
