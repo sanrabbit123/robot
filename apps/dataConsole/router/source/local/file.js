@@ -480,7 +480,8 @@ FileJs.prototype.baseMaker = function () {
                     serverResponse = await ajaxJson({ id: JSON.parse(fileContents.contents).id }, S3HOST + ":3000/downloadUrlFromOneDrive", { equal: true });
                     blankHref(stringToLink(serverResponse.url));
                   } else {
-                    await downloadFile(instance.absoluteParsing(absolute), null, loading.progress.firstChild);
+                    response = await ajaxJson({ files }, S3HOST + ":3000/filesToZip");
+                    await downloadFile(instance.absoluteParsing(response.link), null, loading.progress.firstChild);
                   }
                 }
               }
