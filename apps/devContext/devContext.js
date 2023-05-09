@@ -196,14 +196,28 @@ DevContext.prototype.launching = async function () {
 
 
     
-    
+    // const appId = "297555";
+    // const appKey = "fd31662d2d01e26c39c99cfd568bfd10";
+    // const baseUrl = "bizmsg-web.kakaoenterprise.com";
+    // let url, res;
+
+    // // curl -X POST "https://{base_url}/v2/oauth/token" \
+    // // -H  "accept: */*" \
+    // // -H  "Authorization: Basic {clientID} {clientSecret}" \
+    // // -H  "Content-Type: application/x-www-form-urlencoded" \
+    // // -d  "grant_type=client_credentials"
 
 
+    // url = `https://${baseUrl}/v2/oauth/token`;
+    // res = await requestSystem(url, { grant_type: "client_credentials" }, {
+    //   headers: {
+    //     "accept": "*/*",
+    //     "Authorization": "Basic " + appId + " " + appKey,
+    //     "Content-Type": "application/x-www-form-urlencoded",
+    //   }
+    // });
 
-    
-    
-
-
+    // console.log(res);
 
 
 

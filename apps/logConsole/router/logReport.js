@@ -957,7 +957,87 @@ LogReport.prototype.dailyReports = async function () {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const startDay = new Date(2023, 4, 3);
-    const dateAgo = 3;
+    const dateAgo = 35;
+    const sixthTypeArr = [
+      "string",
+      "string",
+      "string",
+      "string",
+      "string",
+      "string",
+      "string",
+      "string",
+      "string",
+      "string",
+      "string",
+      "string",
+      "number",
+      "string",
+      "string",
+      "string",
+      "string",
+      "string",
+      "string",
+      "string",
+      "string",
+      "string",
+      "number",
+      "string",
+    ]
+    const applyUpdate = async (sheetsId, newMatrix) => {
+      const typePatch = (typeArr) => {
+        return (arr, index) => {
+          let newArr;
+          if (index === 0) {
+            return arr;
+          } else {
+            newArr = new Array(arr.length);
+            for (let i = 0; i < arr.length; i++) {
+              if (typeArr[i] === "string") {
+                newArr[i] = arr[i];
+              } else if (typeArr[i] === "number") {
+                newArr[i] = Number(arr[i].replace(/[^0-9\.\-]/gi, ''));
+              } else {
+                newArr[i] = arr[i];
+              }
+            }
+            return newArr;
+          }
+        }
+      }
+      const returnFinalArr = async (sheetsId, newMatrix) => {
+        try {
+          let pastValues, sliceIndexFirst, lastDateNumbers;
+          if (newMatrix.length > 1) {
+            pastValues = (await sheets.get_value_inPython(sheetsId, "A1:" + sheets.abc[newMatrix[0].length])).map(typePatch(newMatrix[1].map((o) => { return (typeof o); })));
+            console.log(pastValues);
+            sliceIndexFirst = pastValues.findIndex((arr) => {
+              return arr[0] === newMatrix[newMatrix.length - 1][0];
+            });
+            lastDateNumbers = pastValues.filter((arr) => {
+              return arr[0] === newMatrix[newMatrix.length - 1][0];
+            }).length;
+            return newMatrix.concat(pastValues.slice(sliceIndexFirst + lastDateNumbers));
+          } else {
+            return null;
+          }
+        } catch (e) {
+          console.log(e);
+          return null;
+        }
+      }
+      try {
+        const finalArr = await returnFinalArr(sheetsId, newMatrix);
+        if (finalArr !== null) {
+          // await sheets.update_value_inPython(sheetsId, "", finalArr);
+          return finalArr;
+        } else {
+          return (await sheets.get_value_inPython(sheetsId, "A1:" + sheets.abc[newMatrix[0].length])).map(typePatch(sixthTypeArr));
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
     let slackMessage;
     let nowDate;
 
@@ -2888,21 +2968,34 @@ LogReport.prototype.dailyReports = async function () {
       month: { totalFunnelMonthMatrix, facebookPaidMonthMatrix, naverPaidMonthMatrix, googlePaidMonthMatrix },
       week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix }
     } = await marketingBasicMatrix(startDay);
+
+    // const newFirst = await applyUpdate(firstSheetsId, first);
+    // const newSecond = await applyUpdate(secondSheetsId, second);
+    // const newThird = await applyUpdate(thirdSheetsId, third);
+    // const newFourth = await applyUpdate(fourthSheetsId, fourth);
+    // const newFifth = await applyUpdate(fifthSheetsId, fifth);
+    // const newSixth = await applyUpdate(sixthSheetsId, sixth);
+    // const newSeventh = await applyUpdate(seventhSheetsId, seventh);
+
     // const [ ninth ] = await subAnalyticsMatrix(startDay);
-    // const tenth = await tenthParsingMatrix(sixth);
+    // const tenth = await tenthParsingMatrix(newSixth);
+
+    // await sheets.update_value_inPython(ninthSheetsId, "", ninth);
+    // await sheets.update_value_inPython(tenthSheetsId, "", tenth);
+
+
+
+    
+
+
+    console.log(totalFunnelMonthMatrix);
+    console.log(facebookPaidMonthMatrix);
+
+    // console.log(await applyUpdate(monthSheets.totalFunnelMonthMatrix, totalFunnelMonthMatrix));
+
+    
 
     /*
-
-    // sheets update
-    await sheets.update_value_inPython(firstSheetsId, "", first);
-    await sheets.update_value_inPython(secondSheetsId, "", second);
-    await sheets.update_value_inPython(thirdSheetsId, "", third);
-    await sheets.update_value_inPython(fourthSheetsId, "", fourth);
-    await sheets.update_value_inPython(fifthSheetsId, "", fifth);
-    await sheets.update_value_inPython(sixthSheetsId, "", sixth);
-    await sheets.update_value_inPython(seventhSheetsId, "", seventh);
-    await sheets.update_value_inPython(ninthSheetsId, "", ninth);
-    await sheets.update_value_inPython(tenthSheetsId, "", tenth);
 
     await sheets.update_value_inPython(monthSheets.totalFunnelMonthMatrix, "", totalFunnelMonthMatrix);
     await sheets.update_value_inPython(monthSheets.facebookPaidMonthMatrix, "", facebookPaidMonthMatrix);
