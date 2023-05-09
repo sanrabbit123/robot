@@ -956,8 +956,8 @@ LogReport.prototype.dailyReports = async function () {
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    const startDay = new Date(2023, 4, 3);
-    const dateAgo = 35;
+    const startDay = new Date(2023, 3, 1);
+    const dateAgo = today.getDate() - 1;
     const sixthTypeArr = [
       "string",
       "string",
@@ -1010,13 +1010,17 @@ LogReport.prototype.dailyReports = async function () {
           let pastValues, sliceIndexFirst, lastDateNumbers;
           if (newMatrix.length > 1) {
             pastValues = (await sheets.get_value_inPython(sheetsId, "A1:" + sheets.abc[newMatrix[0].length])).map(typePatch(newMatrix[1].map((o) => { return (typeof o); })));
-            console.log(pastValues);
             sliceIndexFirst = pastValues.findIndex((arr) => {
               return arr[0] === newMatrix[newMatrix.length - 1][0];
             });
-            lastDateNumbers = pastValues.filter((arr) => {
-              return arr[0] === newMatrix[newMatrix.length - 1][0];
-            }).length;
+            if (sliceIndexFirst === -1) {
+              sliceIndexFirst = 1;
+              lastDateNumbers = 0;
+            } else {
+              lastDateNumbers = pastValues.filter((arr) => {
+                return arr[0] === newMatrix[newMatrix.length - 1][0];
+              }).length;
+            }
             return newMatrix.concat(pastValues.slice(sliceIndexFirst + lastDateNumbers));
           } else {
             return null;
@@ -1029,7 +1033,7 @@ LogReport.prototype.dailyReports = async function () {
       try {
         const finalArr = await returnFinalArr(sheetsId, newMatrix);
         if (finalArr !== null) {
-          // await sheets.update_value_inPython(sheetsId, "", finalArr);
+          await sheets.update_value_inPython(sheetsId, "", finalArr);
           return finalArr;
         } else {
           return (await sheets.get_value_inPython(sheetsId, "A1:" + sheets.abc[newMatrix[0].length])).map(typePatch(sixthTypeArr));
@@ -2969,63 +2973,47 @@ LogReport.prototype.dailyReports = async function () {
       week: { totalFunnelWeekMatrix, facebookPaidWeekMatrix, naverPaidWeekMatrix, googlePaidWeekMatrix }
     } = await marketingBasicMatrix(startDay);
 
-    // const newFirst = await applyUpdate(firstSheetsId, first);
-    // const newSecond = await applyUpdate(secondSheetsId, second);
-    // const newThird = await applyUpdate(thirdSheetsId, third);
-    // const newFourth = await applyUpdate(fourthSheetsId, fourth);
-    // const newFifth = await applyUpdate(fifthSheetsId, fifth);
-    // const newSixth = await applyUpdate(sixthSheetsId, sixth);
-    // const newSeventh = await applyUpdate(seventhSheetsId, seventh);
+    const newFirst = await applyUpdate(firstSheetsId, first);
+    const newSecond = await applyUpdate(secondSheetsId, second);
+    const newThird = await applyUpdate(thirdSheetsId, third);
+    const newFourth = await applyUpdate(fourthSheetsId, fourth);
+    const newFifth = await applyUpdate(fifthSheetsId, fifth);
+    const newSixth = await applyUpdate(sixthSheetsId, sixth);
+    const newSeventh = await applyUpdate(seventhSheetsId, seventh);
 
-    // const [ ninth ] = await subAnalyticsMatrix(startDay);
-    // const tenth = await tenthParsingMatrix(newSixth);
+    const [ ninth ] = await subAnalyticsMatrix(startDay);
+    const tenth = await tenthParsingMatrix(newSixth);
 
-    // await sheets.update_value_inPython(ninthSheetsId, "", ninth);
-    // await sheets.update_value_inPython(tenthSheetsId, "", tenth);
+    await sheets.update_value_inPython(ninthSheetsId, "", ninth);
+    await sheets.update_value_inPython(tenthSheetsId, "", tenth);
 
+    await applyUpdate(monthSheets.totalFunnelMonthMatrix, totalFunnelMonthMatrix);
+    await applyUpdate(monthSheets.facebookPaidMonthMatrix, facebookPaidMonthMatrix);
+    await applyUpdate(monthSheets.naverPaidMonthMatrix, naverPaidMonthMatrix);
+    await applyUpdate(monthSheets.googlePaidMonthMatrix, googlePaidMonthMatrix);
 
-
-    
-
-
-    console.log(totalFunnelMonthMatrix);
-    console.log(facebookPaidMonthMatrix);
-
-    // console.log(await applyUpdate(monthSheets.totalFunnelMonthMatrix, totalFunnelMonthMatrix));
-
-    
-
-    /*
-
-    await sheets.update_value_inPython(monthSheets.totalFunnelMonthMatrix, "", totalFunnelMonthMatrix);
-    await sheets.update_value_inPython(monthSheets.facebookPaidMonthMatrix, "", facebookPaidMonthMatrix);
-    await sheets.update_value_inPython(monthSheets.naverPaidMonthMatrix, "", naverPaidMonthMatrix);
-    await sheets.update_value_inPython(monthSheets.googlePaidMonthMatrix, "", googlePaidMonthMatrix);
-
-    await sheets.update_value_inPython(weekSheets.totalFunnelWeekMatrix, "", totalFunnelWeekMatrix);
-    await sheets.update_value_inPython(weekSheets.facebookPaidWeekMatrix, "", facebookPaidWeekMatrix);
-    await sheets.update_value_inPython(weekSheets.naverPaidWeekMatrix, "", naverPaidWeekMatrix);
-    await sheets.update_value_inPython(weekSheets.googlePaidWeekMatrix, "", googlePaidWeekMatrix);
-
-    */
+    await applyUpdate(weekSheets.totalFunnelWeekMatrix, totalFunnelWeekMatrix);
+    await applyUpdate(weekSheets.facebookPaidWeekMatrix, facebookPaidWeekMatrix);
+    await applyUpdate(weekSheets.naverPaidWeekMatrix, naverPaidWeekMatrix);
+    await applyUpdate(weekSheets.googlePaidWeekMatrix, googlePaidWeekMatrix);
 
     console.log("sheets update all done");
 
     await selfCoreMongo.close();
 
-    // slackMessage = '';
-    // slackMessage += dateToString(today) + " ====================================================";
-    // slackMessage += "\n";
-    // slackMessage += dateToString(startDay) + " ~ " + dateToString(yesterday) + " 기간의 지표를 업데이트하였습니다!";
-    // slackMessage += "\n";
-    // slackMessage += "MPR 통합관리장표 : " + "https://docs.google.com/spreadsheets/d/" + zeroSheetsId + "/edit?usp=sharing";
+    slackMessage = '';
+    slackMessage += dateToString(today) + " ====================================================";
+    slackMessage += "\n";
+    slackMessage += dateToString(startDay) + " ~ " + dateToString(yesterday) + " 기간의 지표를 업데이트하였습니다!";
+    slackMessage += "\n";
+    slackMessage += "MPR 통합관리장표 : " + "https://docs.google.com/spreadsheets/d/" + zeroSheetsId + "/edit?usp=sharing";
 
-    // await requestSystem("https://" + host + "/marketingMessage", {
-    //   text: slackMessage,
-    //   channel: "#marketing",
-    // }, {
-    //   headers: { "Content-Type": "application/json" }
-    // });
+    await requestSystem("https://" + host + "/marketingMessage", {
+      text: slackMessage,
+      channel: "#marketing",
+    }, {
+      headers: { "Content-Type": "application/json" }
+    });
 
   } catch (e) {
     console.log(e);

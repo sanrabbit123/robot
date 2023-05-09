@@ -196,6 +196,8 @@ DevContext.prototype.launching = async function () {
 
 
     
+    
+
     // const appId = "297555";
     // const appKey = "fd31662d2d01e26c39c99cfd568bfd10";
     // const baseUrl = "bizmsg-web.kakaoenterprise.com";
@@ -218,6 +220,9 @@ DevContext.prototype.launching = async function () {
     // });
 
     // console.log(res);
+    
+
+
 
 
 

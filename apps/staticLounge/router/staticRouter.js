@@ -16,6 +16,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
   const NotionAPIs = require(process.cwd() + "/apps/notionAPIs/notionAPIs.js");
   const MicrosoftAPIs = require(`${process.cwd()}/apps/microsoftAPIs/microsoftAPIs.js`);
   const LocalDevices = require(`${process.cwd()}/apps/localDevices/localDevices.js`);
+  const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
 
   this.mother = new Mother();
   this.back = new BackMaker();
@@ -43,6 +44,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
   this.notion = new NotionAPIs();
   this.microsoft = new MicrosoftAPIs();
   this.devices = new LocalDevices();
+  this.report = new LogReport(MONGOLOGC);
 
   this.staticConst = process.env.HOME + "/samba";
   this.sambaToken = "__samba__";
@@ -3337,6 +3339,33 @@ StaticRouter.prototype.rou_post_photoStatusSync = function () {
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_photoStatusSync): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_logBasicReport = function () {
+  const instance = this;
+  const report = this.report;
+  const { equalJson } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/logBasicReport" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      report.dailyReports().catch((err) => {
+        logger.error("logBasicReport error : " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_logBasicReport): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
   return obj;
