@@ -173,17 +173,37 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+    // const { BetaAnalyticsDataClient } = require("@google-analytics/data");
+    // const analyticsDataClient = new BetaAnalyticsDataClient();
+
+    // const analytics = new GoogleAnalytics();
+
+    // await analytics.setCredentials();
+
+    // const res = await analyticsDataClient.runRealtimeReport({
+    //   property: analytics.property,
+    //   dimensions: [
+    //     {
+    //       name: "unifiedScreenName",
+    //     },
+    //   ],
+    //   metrics: [
+    //     {
+    //       name: "activeUsers",
+    //     },
+    //   ],
+    // });
+
+    // for (let row of res[0].rows) {
+    //   console.log(row);
+    // }
+
+
+
     
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -613,15 +633,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
-    // mini project
-    // const client = await back.getClientById("c1801_aa01s", { selfMongo: this.MONGOC });
-    // const res = BillMaker.designerCalculation(200000, "프리랜서", 25, client, { toArray: true });
-    // console.log(res);
 
     
 
@@ -5611,10 +5622,6 @@ DevContext.prototype.launching = async function () {
     // await this.certRefreshing();
 
 
-    // convert svg to js
-    // await this.makeSvgTong();
-
-
     // get drive folder
     // const drive = new GoogleDrive();
     // await drive.get_folder_inPython("https://drive.google.com/drive/folders/1rsLsiAo012dAsjHx97-urGsyxUma2trz");
@@ -5623,11 +5630,6 @@ DevContext.prototype.launching = async function () {
     // naverBlog to json
     // const blog = new NaverBlogParsing();
     // await blog.blogToJson();
-
-
-    // spawn catfish
-    // const app = new SpawnBoradoli();
-    // await app.spawnLaunching();
 
 
     // kakao token
@@ -5645,26 +5647,13 @@ DevContext.prototype.launching = async function () {
     // });
 
 
-    // const kakao = new KakaoTalk();
-    // await kakao.sendTalk("firstMeetingDayAgo", "리에종", "010-5543-2039", {
-    //   client: "리에종",
-    //   date: "12월 26일",
-    //   day: "월",
-    //   hour: "13",
-    //   minute: "00",
-    //   host: "home-liaison.servehttp.com",
-    //   path: "meeting",
-    //   proid: "p1801_aa02s",
-    // });
-
-
     // raw photo to raw portfolio
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "강태경",
-    //     designer: "이정아",
-    //     link: "https://drive.google.com/drive/folders/1X0Xea3EwBePskeBtVpc1ioCGhTD_s-XG",
+    //     client: null,
+    //     designer: "김세영",
+    //     link: "https://drive.google.com/drive/folders/1XUZbp9mlsT40ZqWdRot-1OYCcc4syEpd",
     //     pay: true
     //   },
     // ]);
@@ -5721,27 +5710,29 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "강유정", "2022-09-30" ],
+    //   [ "김세영", "2023-04-21" ],
     // ]);
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2302_aa01s" ]);
+    // await work.newDesignerToFront([ "d2305_aa01s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2302_aa01s", [
-    //   { porlid: "a101", index: 3 },
-    //   { porlid: "a100", index: 6 },
-    //   { porlid: "a101", index: 9 },
-    //   { porlid: "a101", index: 12 },
-    //   { porlid: "a100", index: 7 },
-    //   { porlid: "a101", index: 1 },
+    // await this.setProposalSettingForDesigner("d2305_aa01s", [
+    //   { porlid: "a102", index: 5 },
+    //   { porlid: "a102", index: 1 },
+    //   { porlid: "a102", index: 4 },
+    //   { porlid: "a102", index: 7 },
+    //   { porlid: "a102", index: 10 },
+    //   { porlid: "a102", index: 11 },
     // ], [
-    //   "고객님의 취향을 정확히 파악하여 해당 스타일대로 집을 만들어 드립니다.",
-    //   "단정한 톤으로 여러가지 스타일을 할 수 있어 어떤 취향이든 깔끔히 결과를 낼 수 있습니다.",
-    //   "하얗기만 한 스타일이 아닌 컬러 포인트가 적절히 들어간 공간을 만들어 냅니다."
+    //   "다년간 아파트 인테리어 현장 노하우와, 고객 관계에 애쓰며 일해왔습니다.",
+    //   "어떤 사람인지 드러날 수 있는 세심한 홈스타일링과 합리적인 인테리어 시공까지 가능합니다.",
+    //   "고객님과 신뢰감을 쌓아가며, 즐겁게 집을 만들어 나아가는 데 초점을 두고 작업합니다.",
     // ]);
+
+
 
 
     // new designer alarm
@@ -5772,7 +5763,7 @@ DevContext.prototype.launching = async function () {
 
     // send sms
     // const name = "권정수";
-    // const amount = 4647500;
+    // const amount = 6660000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
