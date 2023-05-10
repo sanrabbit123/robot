@@ -2575,4 +2575,113 @@ GoogleAnalytics.prototype.googleQuery = async function (targetDate) {
   }
 }
 
+GoogleAnalytics.prototype.clientMetric = async function (cliid, selfMongo) {
+  const instance = this;
+  const address = this.address;
+  const { fileSystem, equalJson, requestSystem } = this.mother;
+  try {
+    let sessionResult;
+    let clientObject;
+    let pidList;
+    let desidList;
+    let res;
+
+    if (typeof cliid !== "string" || typeof selfMongo !== "object" || selfMongo === null) {
+      throw new Error("invalid input");
+    }
+
+    sessionResult = await this.getSessionObjectByCliid(cliid, selfMongo);
+    if (sessionResult === null) {
+      throw new Error("session parsing error");
+    }
+
+    clientObject = {};
+
+    clientObject.cliid = cliid;
+
+    clientObject.sessions = {};
+    clientObject.sessions.length = sessionResult.users.length;
+    clientObject.sessions.id = [];
+    clientObject.sessions.device = [];
+    for (let { id, device } of sessionResult.users) {
+      clientObject.sessions.id.push(id);
+      clientObject.sessions.device.push(device);
+    }
+
+    clientObject.source = {};
+    clientObject.source.referrer = [];
+    clientObject.source.mother = [];
+    clientObject.source.medium = [];
+    clientObject.source.campaign = [];
+
+    clientObject.history = {};
+    clientObject.history.detail = [];
+    for (let obj of sessionResult.users) {
+      for (let obj2 of obj.history) {
+        clientObject.history.detail.push(equalJson(JSON.stringify(obj2)));
+      }
+      for (let str of obj.source.referrer) {
+        clientObject.source.referrer.push(str);
+      }
+      for (let str of obj.source.mother) {
+        clientObject.source.mother.push(str);
+      }
+      for (let str of obj.source.medium) {
+        clientObject.source.medium.push(str);
+      }
+      for (let str of obj.source.campaign) {
+        clientObject.source.campaign.push(str);
+      }
+    }
+    clientObject.history.detail.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+    clientObject.history.length = clientObject.history.detail.length;
+    clientObject.history.during = clientObject.history.detail[clientObject.history.detail.length - 1].date.valueOf() - clientObject.history.detail[0].date.valueOf();
+
+    clientObject.source.referrer = [ ...new Set(clientObject.source.referrer) ];
+    clientObject.source.mother = [ ...new Set(clientObject.source.mother) ];
+    clientObject.source.medium = [ ...new Set(clientObject.source.medium) ];
+    clientObject.source.campaign = [ ...new Set(clientObject.source.campaign) ];
+
+    pidList = [];
+    desidList = [];
+    for (let { path } of clientObject.history.detail) {
+      if (/pid\=/gi.test(path)) {
+        pidList.push(path);
+      }
+      if (/desid\=/gi.test(path)) {
+        desidList.push(path);
+      }
+    }
+
+    pidList = [ ...new Set(pidList) ];
+    desidList = [ ...new Set(desidList) ];
+
+    clientObject.contents = {};
+    clientObject.contents.view = {};
+    clientObject.contents.view.portfolio = pidList.filter((str) => { return /portdetail/gi.test(str) }).map((str) => { return { link: "https://" + address.frontinfo.host + str }; });
+    clientObject.contents.view.review = pidList.filter((str) => { return /revdetail/gi.test(str) }).map((str) => { return { link: "https://" + address.frontinfo.host + str }; });
+    clientObject.contents.view.designer = desidList.map((str) => { return { link: "https://" + address.frontinfo.host + str }; });
+    for (let obj of clientObject.contents.view.portfolio) {
+      obj.title = clientObject.history.detail.find((o) => { return ("https://" + address.frontinfo.host + o.path) === obj.link }).title;
+    }
+    for (let obj of clientObject.contents.view.review) {
+      obj.title = clientObject.history.detail.find((o) => { return ("https://" + address.frontinfo.host + o.path) === obj.link }).title;
+    }
+    for (let obj of clientObject.contents.view.designer) {
+      obj.title = clientObject.history.detail.find((o) => { return ("https://" + address.frontinfo.host + o.path) === obj.link }).title;
+    }
+    clientObject.contents.designers = [];
+
+
+    await fileSystem(`writeJson`, [ `${process.cwd()}/temp/target.json`, clientObject ]);
+    console.log(clientObject.contents.view);
+
+    return clientObject;
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 module.exports = GoogleAnalytics;

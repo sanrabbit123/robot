@@ -172,10 +172,36 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // 1. immediate metric
+    // await this.MONGOLOGC.connect();
+    // const analtyics = new GoogleAnalytics();
+    // await analtyics.clientMetric("c2305_aa63s", this.MONGOLOGC);
+    // await this.MONGOLOGC.close();
 
 
-
+    // 2. complex metric
     
+
+
+
+
+
+    // 3. realtime analtyics
+    
+
+
+
+
+
+    // 4. hl analytics console
+
+
+
+
+
+
+
+
 
 
 

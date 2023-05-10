@@ -619,6 +619,29 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
       console.log(err);
     });
 
+    GeneralJs.stacks["__topLevelScrollDebounceConst__"] = 0;
+    window.addEventListener("scroll", (e) => {
+      setDebounce(() => {
+        if (GeneralJs.stacks["__topLevelScrollDebounceConst__"] === 0) {
+          homeliaisonAnalytics({
+            page: base.instance.pageName,
+            standard: base.instance.firstPageViewTime,
+            action: "scrollStop",
+            data: {
+              cliid: client !== null ? client.cliid : "null",
+              scroll: window.scrollY,
+              total: ((document.body.getBoundingClientRect() !== null && document.body.getBoundingClientRect() !== undefined) ? document.body.getBoundingClientRect().height : 0),
+              screen: window.innerHeight,
+              date: dateToString(new Date(), true),
+            },
+          }).catch((err) => {
+            console.log(err);
+          });
+          GeneralJs.stacks["__topLevelScrollDebounceConst__"] = 1;
+        }
+      }, "__topLevelScrollDebounceEvent__");
+    });
+
   } catch (e) {
     await GeneralJs.ajaxJson({ message: "GeneralJs.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
   }

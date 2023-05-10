@@ -47,7 +47,6 @@ class StylingBill {
       this[i] = json[i];
     }
   }
-
 }
 
 const UniversalEstimationJs = function () {

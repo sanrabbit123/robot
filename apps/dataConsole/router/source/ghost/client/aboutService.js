@@ -2224,7 +2224,7 @@ AboutServiceJs.prototype.launching = async function (loading) {
               standard: instance.firstPageViewTime,
               action: "readTimer",
               data: {
-                cliid: null,
+                cliid: "null",
                 href: window.encodeURIComponent(window.location.href),
                 date: dateToString(new Date(), true),
               },
