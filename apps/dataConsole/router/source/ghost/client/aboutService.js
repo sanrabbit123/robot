@@ -2189,7 +2189,7 @@ AboutServiceJs.prototype.launching = async function (loading) {
       }
     }
 
-    const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip } = GeneralJs;
+    const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip, homeliaisonAnalytics, dateToString } = GeneralJs;
     const getObj = returnGet();
     let response;
 
@@ -2217,6 +2217,22 @@ AboutServiceJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           instance.insertPeopleBox();
           instance.insertMainContentsBox();
+
+          setInterval(() => {
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "readTimer",
+              data: {
+                cliid: null,
+                href: window.encodeURIComponent(window.location.href),
+                date: dateToString(new Date(), true),
+              },
+            }).catch((err) => {
+              console.log(err);
+            });
+          }, 20 * 1000);
+
         } catch (e) {
           console.log(e);
           await GeneralJs.ajaxJson({ message: "AboutServiceJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");

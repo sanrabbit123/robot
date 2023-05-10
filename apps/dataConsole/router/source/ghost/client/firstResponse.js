@@ -2220,7 +2220,7 @@ FirstResponseJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip } = GeneralJs;
+    const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip, homeliaisonAnalytics, dateToString } = GeneralJs;
     const getObj = returnGet();
     let cliid;
     let clients, client;
@@ -2258,6 +2258,22 @@ FirstResponseJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           instance.insertDescriptionBox();
           instance.insertMainContentsBox();
+
+          setInterval(() => {
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "readTimer",
+              data: {
+                cliid: instance.client.cliid,
+                href: window.encodeURIComponent(window.location.href),
+                date: dateToString(new Date(), true),
+              },
+            }).catch((err) => {
+              console.log(err);
+            });
+          }, 20 * 1000);
+
         } catch (e) {
           console.log(e);
           await GeneralJs.ajaxJson({ message: "FirstResponseJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");

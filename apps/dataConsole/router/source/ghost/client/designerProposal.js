@@ -4072,7 +4072,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
 
 DesignerProposalJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, sleep, equalJson, requestPromise } = GeneralJs;
+  const { returnGet, ajaxJson, sleep, equalJson, requestPromise, homeliaisonAnalytics, dateToString } = GeneralJs;
   try {
 
     this.mother.setGeneralProperties(this);
@@ -4234,6 +4234,22 @@ DesignerProposalJs.prototype.launching = async function (loading) {
           instance.insertServiceBox();
           instance.insertWordBox();
           instance.insertPannelBox();
+
+          setInterval(() => {
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "readTimer",
+              data: {
+                cliid: instance.client.cliid,
+                href: window.encodeURIComponent(window.location.href),
+                date: dateToString(new Date(), true),
+              },
+            }).catch((err) => {
+              console.log(err);
+            });
+          }, 20 * 1000);
+
         } catch (e) {
           await ajaxJson({ message: "DesignerProposalJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }

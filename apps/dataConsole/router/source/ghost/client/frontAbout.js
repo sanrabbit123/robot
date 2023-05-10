@@ -2162,7 +2162,7 @@ FrontAboutJs.prototype.insertRoleBox = function (whiteBlock) {
 
 FrontAboutJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip } = GeneralJs;
+  const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip, homeliaisonAnalytics, dateToString } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 
@@ -2222,6 +2222,22 @@ FrontAboutJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           instance.insertPeopleBox();
           instance.insertMainContentsBox();
+
+          setInterval(() => {
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "readTimer",
+              data: {
+                cliid: null,
+                href: window.encodeURIComponent(window.location.href),
+                date: dateToString(new Date(), true),
+              },
+            }).catch((err) => {
+              console.log(err);
+            });
+          }, 20 * 1000);
+
         } catch (e) {
           console.log(e);
           await GeneralJs.ajaxJson({ message: "FrontAboutJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");

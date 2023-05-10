@@ -7737,7 +7737,7 @@ ServiceDetailJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip } = GeneralJs;
+    const { returnGet, ajaxJson, requestPromise, setDebounce, colorChip, homeliaisonAnalytics, dateToString } = GeneralJs;
     const getObj = returnGet();
     let newBaseTong, baseTong;
     let mode;
@@ -7802,6 +7802,21 @@ ServiceDetailJs.prototype.launching = async function (loading) {
           instance.insertWithBox(newBaseTong, baseTong);
 
           instance.insertContextBox();
+
+          setInterval(() => {
+            homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "readTimer",
+              data: {
+                cliid: null,
+                href: window.encodeURIComponent(window.location.href),
+                date: dateToString(new Date(), true),
+              },
+            }).catch((err) => {
+              console.log(err);
+            });
+          }, 20 * 1000);
 
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ServiceDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
