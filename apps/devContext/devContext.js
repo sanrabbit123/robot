@@ -191,15 +191,14 @@ DevContext.prototype.launching = async function () {
     // 3. realtime analtyics
     
 
-
-
+    
 
 
     // 4. hl analytics console
 
 
 
-
+    await findCode("analyticsComplex");
 
 
 

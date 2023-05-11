@@ -2361,6 +2361,7 @@ StaticRouter.prototype.rou_post_removeCronNmon = function () {
 StaticRouter.prototype.rou_post_analyticsDaily = function () {
   const instance = this;
   const { equalJson, stringToDate, requestSystem, sleep, dateToString } = this.mother;
+  const back = this.back;
   const analytics = this.analytics;
   const address = this.address;
   let obj = {};
@@ -2374,7 +2375,10 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
     });
     try {
       const { date } = equalJson(req.body);
+      const selfMongo = instance.mongolog;
       let dateArr;
+      let collection;
+      let anaid, ancid, key, rows;
 
       if (typeof date !== "string") {
         throw new Error("invaild post");
@@ -2388,43 +2392,74 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
       (async () => {
         try {
           let result;
+
+          // daily analytics
+          collection = "dailyAnalytics";
           for (let thisDate of dateArr) {
             result = await analytics.dailyMetric(thisDate);
             if (result === null) {
               await logger.error("daily metric error : " + dateToString(thisDate));
             } else {
-              await requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
+              anaid = result.anaid;
+              rows = await back.mongoRead(collection, { anaid }, { selfMongo });
+              if (rows.length !== 0) {
+                await back.mongoDelete(collection, { anaid }, { selfMongo })
+              }
+              await back.mongoCreate(collection, result, { selfMongo });
+              logger.cron("daily analytics done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
             }
             await sleep(1000);
           }
+
+          // daily clients
+          collection = "dailyClients";
           for (let thisDate of dateArr) {
             result = await analytics.dailyClients(thisDate, instance.mongo, instance.mongolog);
             if (result === null) {
               await logger.error("daily clients error : " + dateToString(thisDate));
             } else {
-              await requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
+              ancid = result.ancid;
+              rows = await back.mongoRead(collection, { ancid }, { selfMongo });
+              if (rows.length !== 0) {
+                await back.mongoDelete(collection, { ancid }, { selfMongo })
+              }
+              await back.mongoCreate(collection, result, { selfMongo });
+              logger.cron("daily clients done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
             }
             await sleep(1000);
           }
+
+          // daily query
+          collection = "queryAnalytics";
           for (let thisDate of dateArr) {
             result = await analytics.queryParsing(thisDate, instance.mongolog);
             if (result === null) {
               await logger.error("query parsing error : " + dateToString(thisDate));
             } else {
-              await requestSystem("https://" + address.testinfo.host + "/analyticsQuery", { result }, { headers: { "Content-Type": "application/json" } });
+              key = result.key;
+              rows = await back.mongoRead(collection, { key }, { selfMongo });
+              if (rows.length !== 0) {
+                await back.mongoDelete(collection, { key }, { selfMongo })
+              }
+              await back.mongoCreate(collection, result, { selfMongo });
+              logger.cron("daily query done : " + dateToString(result.date.from)).catch((err) => { console.log(err); });
             }
             await sleep(1000);
           }
+
+          // monthly analytics
           await sleep(1000);
           await requestSystem("https://" + address.officeinfo.ghost.host + "/analyticsMonthly", { date: new Date() }, { headers: { "Content-Type": "application/json" } });
   
           return true;
         } catch (e) {
           console.log(e);
+          logger.error("Static lounge 서버 문제 생김 (rou_post_analyticsDaily): " + e.message).catch((e) => { console.log(e); });
           return false;
         }
       })().catch((err) => {
         console.log(err);
+        logger.error("Static lounge 서버 문제 생김 (rou_post_analyticsDaily): " + err.message).catch((e) => { console.log(e); });
       });
 
       res.send({ message: "will do" });
@@ -2439,6 +2474,7 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
 StaticRouter.prototype.rou_post_analyticsMonthly = function () {
   const instance = this;
   const { equalJson, stringToDate, requestSystem, sleep, dateToString } = this.mother;
+  const back = this.back;
   const analytics = this.analytics;
   const address = this.address;
   let obj = {};
@@ -2452,7 +2488,12 @@ StaticRouter.prototype.rou_post_analyticsMonthly = function () {
     });
     try {
       const { date } = equalJson(req.body);
+      const selfMongo = instance.mongolog;
+      const collection = "complexAnalytics";
       let targetDate;
+      let key;
+      let searchKey;
+      let rows;
 
       if (!(date instanceof Date)) {
         targetDate = new Date();
@@ -2463,24 +2504,36 @@ StaticRouter.prototype.rou_post_analyticsMonthly = function () {
       (async () => {
         try {
           let result;
-
           result = await analytics.monthlyMetric(targetDate);
           if (result === null) {
             await logger.error("monthly metric error : " + dateToString(targetDate));
           } else {
-            await requestSystem("https://" + address.testinfo.host + "/analyticsComplex", { result: result.pastMonth }, { headers: { "Content-Type": "application/json" } });
+            key = result.pastMonth.key;
+            searchKey = "^" + key.split("_").slice(0, -1).join("_");
+            rows = await back.mongoRead(collection, { key: { $regex: searchKey } }, { selfMongo });
+            if (rows.length !== 0) {
+              await back.mongoDelete(collection, { key: rows[0].key }, { selfMongo })
+            }
+            await back.mongoCreate(collection, result.pastMonth, { selfMongo });
             if (result.thisMonth !== null) {
               await sleep(1000);
-              await requestSystem("https://" + address.testinfo.host + "/analyticsComplex", { result: result.thisMonth }, { headers: { "Content-Type": "application/json" } });
+              key = result.thisMonth.key;
+              searchKey = "^" + key.split("_").slice(0, -1).join("_");
+              rows = await back.mongoRead(collection, { key: { $regex: searchKey } }, { selfMongo });
+              if (rows.length !== 0) {
+                await back.mongoDelete(collection, { key: rows[0].key }, { selfMongo })
+              }
+              await back.mongoCreate(collection, result.thisMonth, { selfMongo });
             }
           }
-  
           return true;
         } catch (e) {
           console.log(e);
+          logger.error("Static lounge 서버 문제 생김 (rou_post_analyticsMonthly): " + e.message).catch((e) => { console.log(e); });
           return false;
         }
       })().catch((err) => {
+        logger.error("Static lounge 서버 문제 생김 (rou_post_analyticsMonthly): " + err.message).catch((e) => { console.log(e); }); 
         console.log(err);
       });
 
