@@ -102,17 +102,7 @@ DevContext.prototype.launching = async function () {
     // monthly must ==========================================================================================================================================
     // =======================================================================================================================================================
 
-
-    // 1: monthly GA report
-
-    // const app = new GoogleAnalytics();
-    // let pastMonthDate;
-    // pastMonthDate = new Date();
-    // pastMonthDate.setMonth(pastMonthDate.getMonth() - 1);
-    // await app.complexMonthly(pastMonthDate.getFullYear(), pastMonthDate.getMonth() + 1);
-
-
-    // 2: monthly unknown campaign sync
+    // monthly unknown campaign sync
 
     // await this.MONGOLOGC.connect();
     // const report = new LogReport(this.MONGOLOGC);
@@ -179,32 +169,27 @@ DevContext.prototype.launching = async function () {
     // await analytics.clientMetric("c2305_aa63s", this.MONGOLOGC);
     // await this.MONGOLOGC.close();
 
-
-    // 2. complex metric
+    // 2. realtime analytics
     
-    // const analytics = new GoogleAnalytics();
-    // const res = await analytics.monthlyMetric();
-    // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/target.json`, res ]);
-    // console.log(res);
+
+    // 3. hl analytics console
 
 
-    // 3. realtime analytics
-    
+
+
 
     
 
 
-    // 4. hl analytics console
-
-    // await this.MONGOLOGC.connect();
-    // const analytics = new GoogleAnalytics();
-    // const result = await analytics.dailyClients(new Date(2023, 4, 8), instance.MONGOC, instance.MONGOLOGC);
-    // console.log(result);
-    // await this.MONGOLOGC.close();
 
 
 
-      
+
+
+
+
+
+    
 
     
 

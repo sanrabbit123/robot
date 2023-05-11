@@ -925,7 +925,7 @@ LogRouter.prototype.rou_post_getClientReport = function () {
             if (obj3 === null) {
               return false;
             } else {
-              return !/not set/gi.test(obj3.source.campaign)
+              return (obj3.source.campaign.filter((str) => { return str.trim() !== "(not set)"; }).length > 0);
             }
           })
         }).length;
