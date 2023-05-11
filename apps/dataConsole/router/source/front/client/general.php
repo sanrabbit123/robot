@@ -49,6 +49,7 @@ class GeneralPhp {
     $html .= '<script>'."\n";
     $html .= 'window.homeliaisonSessionId = "'.$sessionId.'";'."\n";
     $html .= 'window.homeliaisonClientInfo = '.$clientInfo.';'."\n";
+    $html .= 'if (typeof window.homeliaisonClientInfo === "object" && window.homeliaisonClientInfo !== null) { window.homeliaisonClientInfo["pageTitle"] = "'.$titleString.'"; }'."\n";
     $html .= '</script>'."\n";
 
     // google

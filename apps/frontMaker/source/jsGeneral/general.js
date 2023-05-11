@@ -6453,6 +6453,9 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
             referer: window.encodeURIComponent(window.homeliaisonClientInfo.referer),
             requestUrl: window.encodeURIComponent(window.homeliaisonClientInfo.requestUrl),
           };
+          if (typeof window.homeliaisonClientInfo.pageTitle === "string") {
+            obj.info["pageTitle"] = window.encodeURIComponent(window.homeliaisonClientInfo.pageTitle);
+          }
           GeneralJs.ajaxJson(obj, LOGHOST + "/getAnalytics").then(() => {
             const json = {
               id: obj.id,
