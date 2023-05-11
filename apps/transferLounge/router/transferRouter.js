@@ -389,7 +389,7 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
             res.send(JSON.stringify({ message: "done" }));
 
           } else {
-            logger.error("Transfer lounge 서버 문제 생김 (rou_post_clientBinary 1)").catch((e) => { console.log(e); });
+            logger.error("Transfer lounge 서버 문제 생김 (rou_post_clientBinary 1) : " + err.message).catch((e) => { console.log(e); });
             console.log(err);
             res.send(JSON.stringify({ message: "error" }));
           }
