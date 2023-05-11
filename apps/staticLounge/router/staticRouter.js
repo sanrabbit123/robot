@@ -2515,6 +2515,8 @@ StaticRouter.prototype.rou_post_analyticsMonthly = function () {
               await back.mongoDelete(collection, { key: rows[0].key }, { selfMongo })
             }
             await back.mongoCreate(collection, result.pastMonth, { selfMongo });
+            logger.cron("monthly analytics done : " + dateToString(result.pastMonth.date.from)).catch((err) => { console.log(err); });
+
             if (result.thisMonth !== null) {
               await sleep(1000);
               key = result.thisMonth.key;
@@ -2524,6 +2526,8 @@ StaticRouter.prototype.rou_post_analyticsMonthly = function () {
                 await back.mongoDelete(collection, { key: rows[0].key }, { selfMongo })
               }
               await back.mongoCreate(collection, result.thisMonth, { selfMongo });
+              logger.cron("monthly analytics done : " + dateToString(result.thisMonth.date.from)).catch((err) => { console.log(err); });
+
             }
           }
           return true;
@@ -3479,7 +3483,9 @@ StaticRouter.prototype.rou_post_logBasicReport = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      report.dailyReports().catch((err) => {
+      report.dailyReports().then(() => {
+        logger.cron("marketing reporting done").catch((err) => { console.log(err) });
+      }).catch((err) => {
         logger.error("logBasicReport error : " + err.message).catch((err) => { console.log(err) });
       });
       res.send(JSON.stringify({ message: "will do" }));

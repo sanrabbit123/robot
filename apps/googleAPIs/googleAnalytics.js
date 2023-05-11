@@ -2164,6 +2164,7 @@ GoogleAnalytics.prototype.dailyClients = async function (thisDate, selfCoreMongo
     targetCliids = targetClients.map((client) => { return client.cliid });
     dataObject.cliid = targetCliids;
     dataObject.detail = [];
+
     for (let cliid of targetCliids) {
       sessionResult = await this.getSessionObjectByCliid(cliid, selfMongo);
       if (sessionResult === null) {
@@ -2210,6 +2211,7 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
     let mediumArr;
     let thisMedium;
     let finalObj;
+    let num;
 
     rows = await back.mongoRead(collection, { "data.cliid": cliid }, { selfMongo });
     rows = rows.map((obj) => { return obj.id });
@@ -2230,6 +2232,7 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
         rows.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
         queryStrings = [];
         referrerArr = [];
+        num = 0;
         for (let row of rows) {
           if (/\?/gi.test(row.info.requestUrl)) {
             queryStrings.push(querystring.parse(row.info.requestUrl.split("?")[1]));
@@ -2239,6 +2242,7 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
               referrerArr.push(row.info.referer);
             }
           }
+          num++;
         }
   
         referrerArr = [ ...new Set(referrerArr) ];

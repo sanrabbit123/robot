@@ -175,20 +175,20 @@ DevContext.prototype.launching = async function () {
     // 1. client metric
     
     // await this.MONGOLOGC.connect();
-    // const analtyics = new GoogleAnalytics();
-    // await analtyics.clientMetric("c2305_aa63s", this.MONGOLOGC);
+    // const analytics = new GoogleAnalytics();
+    // await analytics.clientMetric("c2305_aa63s", this.MONGOLOGC);
     // await this.MONGOLOGC.close();
 
 
     // 2. complex metric
     
-    // const analtyics = new GoogleAnalytics();
-    // const res = await analtyics.monthlyMetric();
+    // const analytics = new GoogleAnalytics();
+    // const res = await analytics.monthlyMetric();
     // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/target.json`, res ]);
     // console.log(res);
 
 
-    // 3. realtime analtyics
+    // 3. realtime analytics
     
 
     
@@ -196,9 +196,16 @@ DevContext.prototype.launching = async function () {
 
     // 4. hl analytics console
 
+    // await this.MONGOLOGC.connect();
+    // const analytics = new GoogleAnalytics();
+    // const result = await analytics.dailyClients(new Date(2023, 4, 8), instance.MONGOC, instance.MONGOLOGC);
+    // console.log(result);
+    // await this.MONGOLOGC.close();
 
 
 
+    
+    
     
 
 

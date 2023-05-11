@@ -7816,7 +7816,7 @@ ServiceDetailJs.prototype.launching = async function (loading) {
             }).catch((err) => {
               console.log(err);
             });
-          }, 20 * 1000);
+          }, 60 * 1000);
 
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "ServiceDetailJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");

@@ -2231,7 +2231,7 @@ AboutServiceJs.prototype.launching = async function (loading) {
             }).catch((err) => {
               console.log(err);
             });
-          }, 20 * 1000);
+          }, 60 * 1000);
 
         } catch (e) {
           console.log(e);
