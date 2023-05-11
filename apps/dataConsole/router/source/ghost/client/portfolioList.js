@@ -1309,6 +1309,9 @@ PortfolioListJs.prototype.launching = async function (loading) {
                 value: getObj.search,
                 date: dateToString(new Date(), true),
               },
+              dimension: {
+                search_value: getObj.search,
+              },
             }).catch((err) => {
               console.log(err);
             });

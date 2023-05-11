@@ -2622,7 +2622,7 @@ PortfolioDetailJs.prototype.portfolioRelativeBox = function () {
 
 PortfolioDetailJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce, facebookSdkPatch, kakaoSdkPatch } = GeneralJs;
+  const { returnGet, ajaxJson, setQueue, setDebounce, facebookSdkPatch, kakaoSdkPatch, homeliaisonAnalytics, dateToString } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 
@@ -2683,6 +2683,24 @@ PortfolioDetailJs.prototype.launching = async function (loading) {
           instance.portfolioMainBox();
           instance.portfolioContentsBox();
           instance.portfolioRelativeBox();
+
+          homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "contentsView",
+            data: {
+              cliid: "null",
+              href: window.encodeURIComponent(window.location.href),
+              date: dateToString(new Date(), true),
+            },
+            dimension: {
+              contents_desid: instance.designers.length > 0 ? instance.designers[0].desid : "null",
+              contents_pid: instance.pid,
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
+
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "PortfolioDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }

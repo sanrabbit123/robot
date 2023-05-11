@@ -3410,7 +3410,7 @@ KakaoTalk.prototype.friendTalk = async function (name, phone, bodyObject) {
             linkTypeName: "웹링크",
             linkMo: bodyObject.button.link,
             linkPc: bodyObject.button.link,
-          }
+          },
         ]
       };
     }

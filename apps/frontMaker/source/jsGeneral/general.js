@@ -6427,6 +6427,7 @@ GeneralJs.promiseTogether = function (promiseArr) {
 }
 
 GeneralJs.homeliaisonAnalytics = function (obj) {
+  let dimension, gtagObject;
   return new Promise((resolve, reject) => {
     if (typeof obj !== "object" || obj === null) {
       resolve(null);
@@ -6456,6 +6457,17 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
           if (typeof window.homeliaisonClientInfo.pageTitle === "string") {
             obj.info["pageTitle"] = window.encodeURIComponent(window.homeliaisonClientInfo.pageTitle);
           }
+          if (typeof obj.dimension === "object" && obj.dimension !== null) {
+            dimension = JSON.parse(JSON.stringify(obj.dimension));
+            if (typeof obj.data === "object" && obj.data !== null) {
+              for (let key in dimension) {
+                obj.data[key] = dimension[key];
+              }
+            }
+            delete obj.dimension;
+          } else {
+            dimension = null;
+          }
           GeneralJs.ajaxJson(obj, LOGHOST + "/getAnalytics").then(() => {
             const json = {
               id: obj.id,
@@ -6470,10 +6482,19 @@ GeneralJs.homeliaisonAnalytics = function (obj) {
               window.fbq("trackCustom", obj.action, json);
             }
             if (typeof window.gtag === "function") {
-              window.gtag("event", obj.action, {
-                "event_category": obj.page,
-                "event_label": JSON.stringify(json),
-              });
+              if (dimension !== null) {
+                gtagObject = {
+                  "event_category": obj.page,
+                  "event_label": JSON.stringify(json),
+                  ...dimension,
+                };
+              } else {
+                gtagObject = {
+                  "event_category": obj.page,
+                  "event_label": JSON.stringify(json),
+                };
+              }
+              window.gtag("event", obj.action, gtagObject);
             }
             resolve({
               date: {

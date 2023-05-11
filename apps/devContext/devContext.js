@@ -138,18 +138,18 @@ DevContext.prototype.launching = async function () {
     // kakao friend send
     // const kakao = new KakaoTalk();
     // console.log(await kakao.friendsTalk([
-    //   {
-    //     name: "배창규",
-    //     phone: "010-2747-3403",
-    //   },
-    //   {
-    //     name: "임혜령",
-    //     phone: "010-6367-1297",
-    //   },
+    //   // {
+    //   //   name: "배창규",
+    //   //   phone: "010-2747-3403",
+    //   // },
+    //   // {
+    //   //   name: "임혜령",
+    //   //   phone: "010-6367-1297",
+    //   // },
     // ], {
-    //   title: `23년 5월 어버이날 친구톡`,
-    //   body: `#{name}님, 이번 어버이날 선물로\n홈스타일링 어떠세요?\n부모님께 행복을 선사하세요!`,
-    //   image: `${process.cwd()}/temp/target3.jpg`,
+    //   title: `23년 5월 가정의 달 프로모션`,
+    //   body: `#{name}님, 입주를 준비하는 가족에게\n홈스타일링을 소개해주세요 (방긋)\n\n홈리에종 계약하면\n모두에게 혜택을 드려요! (선물)\n\n- 추천자에게 3만원 백화점 상품권 즉시 발송 (하트)\n- 계약하신 가족(지인)에게는 디자인비 5% 할인 적용 (꽃)\n\n* 이 메시지를 가족(지인)에게 지금 공유해 주세요 :)\n* 상담 시 추천자 성함을 말씀해 주세요.\n* 이 프로모션은 2023년 6월 16일까지 계약 성사 시 유효합니다.`,
+    //   image: `${process.cwd()}/temp/target.jpg`,
     //   convert: {
     //     name: (name, phone) => { return name; },
     //   },
@@ -189,6 +189,89 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+    // CRM 2
+
+    /*
+
+    const kakao = new KakaoTalk();
+
+    const selfMongo = this.MONGOC;
+    const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
+    const projects = await back.getProjectsByQuery({}, { selfMongo });
+    let from, to, requests;
+    let targetCliids;
+    let filteredCliid;
+    let targetClients;
+    let matrix;
+    let tempArr;
+    let sheetsId;
+    let targets;
+
+    requests = [ ...clients.getRequestsTong() ];
+
+    from = new Date(2022, 4, 12);
+    to = new Date();
+    requests = requests.filter(({ request }) => {
+      return request.timeline.valueOf() >= from.valueOf() && request.timeline.valueOf() < to.valueOf()
+    })
+
+    targetCliids = requests.map(({ cliid }) => { return cliid });
+    filteredCliid = projects.toNormal().filter((p) => { return targetCliids.includes(p.cliid) }).filter((p) => { return p.desid !== "" }).filter((p) => {
+      return !/드랍/gi.test(p.process.status) && !/대기/gi.test(p.process.status)
+    }).map((p) => { return p.cliid });
+
+    targetClients = clients.toNormal().filter((c) => { return filteredCliid.includes(c.cliid) });
+
+    matrix = [
+      [
+        "아이디",
+        "성함",
+        "문의일",
+        "계약일",
+        "연락처",
+        "상태"
+      ]
+    ];
+    targets = [];
+
+    for (let client of targetClients) {
+      if (!/드랍/gi.test(client.requests[0].analytics.response.status)) {
+        tempArr = [];
+        tempArr.push(client.cliid);
+        tempArr.push(client.name);
+        tempArr.push(dateToString(client.requests[0].request.timeline, true));
+        tempArr.push(dateToString(projects.toNormal().find((p) => { return p.cliid === client.cliid && p.desid !== "" }).process.contract.first.date, true));
+        tempArr.push(client.phone);
+        tempArr.push(client.requests[0].analytics.response.status);
+        matrix.push(tempArr);
+        targets.push({
+          name: client.name,
+          phone: client.phone,
+        });
+      }
+    }
+
+    // sheetsId = await sheets.create_newSheets_inPython("계약 고객 CRM", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix);
+    // console.log(matrix);
+
+    console.log(await kakao.friendsTalk(targets, {
+      title: `23년 5월 가정의 달 프로모션`,
+      body: `#{name}님, 입주를 준비하는 가족에게\n홈스타일링을 소개해주세요 (방긋)\n\n홈리에종 계약하면\n모두에게 혜택을 드려요! (선물)\n\n- 추천자에게 3만원 백화점 상품권 즉시 발송 (하트)\n- 계약하신 가족(지인)에게는 디자인비 5% 할인 적용 (꽃)\n\n* 이 메시지를 가족(지인)에게 지금 공유해 주세요 :)\n* 상담 시 추천자 성함을 말씀해 주세요.\n* 이 프로모션은 2023년 6월 16일까지 계약 성사 시 유효합니다.`,
+      image: `${process.cwd()}/temp/target.jpg`,
+      convert: {
+        name: (name, phone) => { return name; },
+      },
+      button: {
+        title: "상담 신청하기",
+        link: "https://home-liaison.com/consulting.php",
+      }
+    }));
+
+    */
     
 
     

@@ -449,6 +449,9 @@ DesignerListJs.prototype.insertInitBox = function () {
                         value: this.value,
                         date: dateToString(new Date(), true),
                       },
+                      dimension: {
+                        search_value: this.value,
+                      },
                     }).catch((err) => {
                       console.log(err);
                     });

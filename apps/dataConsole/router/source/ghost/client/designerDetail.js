@@ -1328,7 +1328,7 @@ DesignerDetailJs.prototype.insertBelowButton = function () {
 
 DesignerDetailJs.prototype.launching = async function (loading) {
   const instance = this;
-  const { returnGet, ajaxJson, setQueue, setDebounce, serviceParsing, setMetaData } = GeneralJs;
+  const { returnGet, ajaxJson, setQueue, setDebounce, serviceParsing, setMetaData, homeliaisonAnalytics, dateToString } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
 
@@ -1404,6 +1404,23 @@ DesignerDetailJs.prototype.launching = async function (loading) {
           instance.insertInitBox();
           instance.insertPortfolioBase();
           instance.insertBelowButton();
+
+          homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "contentsView",
+            data: {
+              cliid: "null",
+              href: window.encodeURIComponent(window.location.href),
+              date: dateToString(new Date(), true),
+            },
+            dimension: {
+              contents_desid: getObj.desid,
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
+
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "DesignerDetailJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
