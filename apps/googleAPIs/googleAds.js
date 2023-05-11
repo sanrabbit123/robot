@@ -52,55 +52,57 @@ GoogleAds.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
 
       res = await pythonExecute(`${this.dir}/python/app.py`, [ "ads", "getCampaignList" ], { date: dateToString(from) });
 
-      targetRows = res.map((obj) => {
-        return {
-          id: obj.id,
-          account: obj.account,
-          name: obj.name,
-          type: obj.type.replace(/^AdvertisingChannelType\./i, ''),
-          cost: Math.round(Number(obj.cost_micros) / 1000000),
-          impressions: Number(obj.impressions),
-          clicks: Number(obj.clicks),
-        }
-      }).filter((obj) => {
-        return !(obj.cost === 0 && obj.impressions === 0 && obj.clicks === 0);
-      });
-
-      num = 0;
-
-      for (let obj of targetRows) {
-
-        key = dateToString(from).replace(/\-/gi, '') + "_" + obj.id
-
-        json = {
-          camid: 'g' + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + 'g' + String.fromCharCode(97 + num) + zeroAddition(from.getDate()) + 's',
-          key,
-          date: { from, to },
-          value: {
-            charge: Number(obj.cost),
-            performance: {
-              impressions: Number(obj.impressions),
-              clicks: Number(obj.clicks),
-            },
-          },
-          information: {
-            mother: "google",
-            type: obj.type,
-            id: {
-              account: obj.account,
-              campaign: obj.id,
-            },
+      if (Array.isArray(res)) {
+        targetRows = res.map((obj) => {
+          return {
+            id: obj.id,
+            account: obj.account,
             name: obj.name,
+            type: obj.type.replace(/^AdvertisingChannelType\./i, ''),
+            cost: Math.round(Number(obj.cost_micros) / 1000000),
+            impressions: Number(obj.impressions),
+            clicks: Number(obj.clicks),
           }
-        };
-
-        tempRows = await back.mongoRead(campaignCollection, { key }, { selfMongo });
-        if (tempRows.length !== 0) {
-          await back.mongoDelete(campaignCollection, { key }, { selfMongo });
+        }).filter((obj) => {
+          return !(obj.cost === 0 && obj.impressions === 0 && obj.clicks === 0);
+        });
+  
+        num = 0;
+  
+        for (let obj of targetRows) {
+  
+          key = dateToString(from).replace(/\-/gi, '') + "_" + obj.id
+  
+          json = {
+            camid: 'g' + String(from.getFullYear()).slice(2) + zeroAddition(from.getMonth() + 1) + '_' + 'g' + String.fromCharCode(97 + num) + zeroAddition(from.getDate()) + 's',
+            key,
+            date: { from, to },
+            value: {
+              charge: Number(obj.cost),
+              performance: {
+                impressions: Number(obj.impressions),
+                clicks: Number(obj.clicks),
+              },
+            },
+            information: {
+              mother: "google",
+              type: obj.type,
+              id: {
+                account: obj.account,
+                campaign: obj.id,
+              },
+              name: obj.name,
+            }
+          };
+  
+          tempRows = await back.mongoRead(campaignCollection, { key }, { selfMongo });
+          if (tempRows.length !== 0) {
+            await back.mongoDelete(campaignCollection, { key }, { selfMongo });
+          }
+          await back.mongoCreate(campaignCollection, json, { selfMongo })
+          console.log(json);
+          num++;
         }
-        await back.mongoCreate(campaignCollection, json, { selfMongo })
-        console.log(json);
-        num++;
       }
 
     }
