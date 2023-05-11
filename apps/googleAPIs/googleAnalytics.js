@@ -2575,6 +2575,177 @@ GoogleAnalytics.prototype.googleQuery = async function (targetDate) {
   }
 }
 
+GoogleAnalytics.prototype.complexMetric = async function (startDate, endDate) {
+  const instance = this;
+  const { dateToString, equalJson, stringToDate, requestSystem, fileSystem, zeroAddition } = this.mother;
+  const { BetaAnalyticsDataClient } = require("@google-analytics/data");
+  try {
+    let userMetric, userDimensions;
+    let viewMetric, viewDimensions;
+    let eventMetric, eventDimensions;
+    let conversionPopupOpenMetric, conversionPopupOpenDimensions;
+    let conversionConsultingPageMetric, conversionConsultingPageDimensions;
+    let analyticsDataClient;
+    let dataObject;
+    let finalObj;
+    let start;
+    let next;
+    let end;
+    let endNext;
+
+    if (startDate === undefined || endDate === undefined) {
+      throw new Error("must be start-date and end-date");
+    }
+    if (startDate instanceof Date) {
+      startDate = dateToString(startDate);
+    }
+    if (endDate instanceof Date) {
+      endDate = dateToString(endDate);
+    }
+
+    await this.setCredentials();
+    analyticsDataClient = new BetaAnalyticsDataClient();
+    dataObject = {};
+
+    // users
+    userMetric = "totalUsers";
+    userDimensions = [
+      { title: "userType", name: "newVsReturning", meaning: "유저 타입", filter: (str) => { return (str === "new" ? "New Visitor" : (str === "returning" ? "Returning Visitor" : str)) } },
+      { title: "country", name: "country", meaning: "국가", filter: null },
+      { title: "city", name: "city", meaning: "도시", filter: null },
+      { title: "campaign", name: "sessionCampaignName", meaning: "캠페인", filter: null },
+      { title: "source", name: "sessionSource", meaning: "소스", filter: null },
+      { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
+    ];
+    dataObject.users = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, userMetric, userDimensions);
+
+    // views
+    viewMetric = "screenPageViews";
+    viewDimensions = [
+      { title: "pagePath", name: "pagePathPlusQueryString", meaning: "페이지 경로", filter: null },
+      { title: "referer", name: "pageReferrer", meaning: "레퍼럴", filter: null },
+      { title: "deviceCategory", name: "deviceCategory", meaning: "디바이스", filter: null },
+      { title: "operatingSystem", name: "operatingSystem", meaning: "운영 체제", filter: null },
+      { title: "browser", name: "browser", meaning: "브라우저", filter: null },
+      { title: "campaign", name: "sessionCampaignName", meaning: "캠페인", filter: null },
+      { title: "source", name: "sessionSource", meaning: "소스", filter: null },
+      { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
+    ];
+    dataObject.views = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, viewMetric, viewDimensions);
+
+    // events
+    eventMetric = "eventCount";
+    eventDimensions = [
+      { title: "pagePath", name: "pagePathPlusQueryString", meaning: "페이지 경로", filter: null },
+      { title: "eventName", name: "eventName", meaning: "이벤트 이름", filter: null },
+      { title: "campaign", name: "sessionCampaignName", meaning: "캠페인", filter: null },
+      { title: "source", name: "sessionSource", meaning: "소스", filter: null },
+      { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
+    ];
+    dataObject.events = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, eventMetric, eventDimensions);
+
+    // conversion
+    dataObject.conversion = {};
+
+    // conversion - popup open
+    conversionPopupOpenMetric = "eventCount";
+    conversionPopupOpenDimensions = [
+      { title: "pagePath", name: "pagePathPlusQueryString", meaning: "페이지 경로", filter: null },
+      { title: "deviceCategory", name: "deviceCategory", meaning: "디바이스", filter: null },
+      { title: "operatingSystem", name: "operatingSystem", meaning: "운영 체제", filter: null },
+      { title: "browser", name: "browser", meaning: "브라우저", filter: null },
+      { title: "campaign", name: "sessionCampaignName", meaning: "캠페인", filter: null },
+      { title: "source", name: "sessionSource", meaning: "소스", filter: null },
+      { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
+    ];
+    dataObject.conversion.popupOpen = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, conversionPopupOpenMetric, conversionPopupOpenDimensions, { filter: { fieldName: "eventName", stringFilter: { matchType: "CONTAINS", value: "popupOpen", caseSensitive: true } } });
+
+    // conversion - consulting page
+    conversionConsultingPageMetric = "screenPageViews";
+    conversionConsultingPageDimensions = [
+      { title: "deviceCategory", name: "deviceCategory", meaning: "디바이스", filter: null },
+      { title: "operatingSystem", name: "operatingSystem", meaning: "운영 체제", filter: null },
+      { title: "browser", name: "browser", meaning: "브라우저", filter: null },
+      { title: "campaign", name: "sessionCampaignName", meaning: "캠페인", filter: null },
+      { title: "source", name: "sessionSource", meaning: "소스", filter: null },
+      { title: "sourceDetail", name: "sessionSourceMedium", meaning: "소스 디테일", filter: null },
+    ];
+    dataObject.conversion.consultingPage = await this.returnAnalyticsObject(analyticsDataClient, startDate, endDate, conversionConsultingPageMetric, conversionConsultingPageDimensions, { filter: { fieldName: "pagePath", stringFilter: { matchType: "CONTAINS", value: "consulting.php", caseSensitive: true } } });
+
+    // end
+    start = stringToDate(startDate);
+    next = stringToDate(startDate);
+    next.setDate(next.getDate() + 1);
+    end = stringToDate(endDate);
+    endNext = stringToDate(endDate);
+    endNext.setDate(endNext.getDate() + 1);
+
+    finalObj = {
+      key: "complex_analytics_" + startDate.replace(/\-/gi, '') + "_" + endDate.replace(/\-/gi, ''),
+      date: {
+        from: start,
+        to: (endDate === startDate ? next : endNext),
+      },
+      data: dataObject
+    };
+
+    return finalObj;
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+GoogleAnalytics.prototype.monthlyMetric = async function (thisDate = null) {
+  const instance = this;
+  try {
+    const now = (thisDate === null ? new Date() : thisDate);
+    let year, month;
+    let pastStartDate, pastEndDate;
+    let nowStartDate, nowEndDate;
+    let thisMonthMetric, pastMonthMetric;
+
+    if (!(now instanceof Date)) {
+      throw new Error("invalid input");
+    }
+
+    year = now.getFullYear();
+    month = now.getMonth() + 1;
+
+    nowStartDate = new Date(year, month - 1, 1, 0, 0, 0);
+    nowEndDate = new Date(year, month - 1, now.getDate(), 0, 0, 0);
+    nowEndDate.setDate(nowEndDate.getDate() - 1);
+
+    pastStartDate = new Date(JSON.stringify(nowStartDate).slice(1, -1));
+    pastEndDate = new Date(JSON.stringify(nowStartDate).slice(1, -1));
+    pastStartDate.setDate(pastStartDate.getDate() - 1);
+    pastEndDate.setDate(pastEndDate.getDate() - 1);
+    pastStartDate.setDate(1);
+
+    if (nowStartDate.valueOf() >= nowEndDate.valueOf()) {
+      nowStartDate = null;
+      nowEndDate = null;
+    }
+
+    if (nowStartDate !== null) {
+      thisMonthMetric = await this.complexMetric(nowStartDate, nowEndDate);
+    } else {
+      thisMonthMetric = null;
+    }
+    pastMonthMetric = await this.complexMetric(pastStartDate, pastEndDate);
+
+    return {
+      thisMonth: thisMonthMetric,
+      pastMonth: pastMonthMetric,
+    };
+    
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 GoogleAnalytics.prototype.clientMetric = async function (cliid, selfMongo) {
   const instance = this;
   const address = this.address;

@@ -2386,32 +2386,42 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
       }
       dateArr = dateArr.map((str) => { return stringToDate(str) });
       (async () => {
-        let result;
-        for (let thisDate of dateArr) {
-          result = await analytics.dailyMetric(thisDate);
-          if (result === null) {
-            await logger.error("daily metric error : " + dateToString(thisDate));
-          } else {
-            await requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
+        try {
+          let result;
+          for (let thisDate of dateArr) {
+            result = await analytics.dailyMetric(thisDate);
+            if (result === null) {
+              await logger.error("daily metric error : " + dateToString(thisDate));
+            } else {
+              await requestSystem("https://" + address.testinfo.host + "/analyticsGeneral", { result }, { headers: { "Content-Type": "application/json" } });
+            }
+            await sleep(1000);
+          }
+          for (let thisDate of dateArr) {
+            result = await analytics.dailyClients(thisDate, instance.mongo, instance.mongolog);
+            if (result === null) {
+              await logger.error("daily clients error : " + dateToString(thisDate));
+            } else {
+              await requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
+            }
+            await sleep(1000);
+          }
+          for (let thisDate of dateArr) {
+            result = await analytics.queryParsing(thisDate, instance.mongolog);
+            if (result === null) {
+              await logger.error("query parsing error : " + dateToString(thisDate));
+            } else {
+              await requestSystem("https://" + address.testinfo.host + "/analyticsQuery", { result }, { headers: { "Content-Type": "application/json" } });
+            }
+            await sleep(1000);
           }
           await sleep(1000);
-        }
-        for (let thisDate of dateArr) {
-          result = await analytics.dailyClients(thisDate, instance.mongo, instance.mongolog);
-          if (result === null) {
-            await logger.error("daily clients error : " + dateToString(thisDate));
-          } else {
-            await requestSystem("https://" + address.testinfo.host + "/analyticsClients", { result }, { headers: { "Content-Type": "application/json" } });
-          }
-          await sleep(1000);
-        }
-        for (let thisDate of dateArr) {
-          result = await analytics.queryParsing(thisDate, instance.mongolog);
-          if (result === null) {
-            await logger.error("query parsing error : " + dateToString(thisDate));
-          } else {
-            await requestSystem("https://" + address.testinfo.host + "/analyticsQuery", { result }, { headers: { "Content-Type": "application/json" } });
-          }
+          await requestSystem("https://" + address.officeinfo.ghost.host + "/analyticsMonthly", { date: new Date() }, { headers: { "Content-Type": "application/json" } });
+  
+          return true;
+        } catch (e) {
+          console.log(e);
+          return false;
         }
       })().catch((err) => {
         console.log(err);
@@ -2420,6 +2430,63 @@ StaticRouter.prototype.rou_post_analyticsDaily = function () {
       res.send({ message: "will do" });
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_analyticsDaily): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_analyticsMonthly = function () {
+  const instance = this;
+  const { equalJson, stringToDate, requestSystem, sleep, dateToString } = this.mother;
+  const analytics = this.analytics;
+  const address = this.address;
+  let obj = {};
+  obj.link = [ "/analyticsMonthly" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { date } = equalJson(req.body);
+      let targetDate;
+
+      if (!(date instanceof Date)) {
+        targetDate = new Date();
+      } else {
+        targetDate = date;
+      }
+
+      (async () => {
+        try {
+          let result;
+
+          result = await analytics.monthlyMetric(targetDate);
+          if (result === null) {
+            await logger.error("monthly metric error : " + dateToString(targetDate));
+          } else {
+            await requestSystem("https://" + address.testinfo.host + "/analyticsComplex", { result: result.pastMonth }, { headers: { "Content-Type": "application/json" } });
+            if (result.thisMonth !== null) {
+              await sleep(1000);
+              await requestSystem("https://" + address.testinfo.host + "/analyticsComplex", { result: result.thisMonth }, { headers: { "Content-Type": "application/json" } });
+            }
+          }
+  
+          return true;
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      })().catch((err) => {
+        console.log(err);
+      });
+
+      res.send({ message: "will do" });
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_analyticsMonthly): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
   }

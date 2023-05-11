@@ -696,6 +696,46 @@ LogRouter.prototype.rou_post_analyticsQuery = function () {
   return obj;
 }
 
+LogRouter.prototype.rou_post_analyticsComplex = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, dateToString } = this.mother;
+  let obj = {};
+  obj.link = [ "/analyticsComplex" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      const analyticsCollection = "complexAnalytics";
+      const { result } = equalJson(req.body);
+      let key;
+      let searchKey;
+      let rows;
+
+      key = result.key;
+      searchKey = "^" + key.split("_").slice(0, -1).join("_");
+      rows = await back.mongoRead(analyticsCollection, { key: { $regex: searchKey } }, { selfMongo });
+      if (rows.length !== 0) {
+        await back.mongoDelete(analyticsCollection, { key: rows[0].key }, { selfMongo })
+      }
+      await back.mongoCreate(analyticsCollection, result, { selfMongo });
+
+      logger.cron("monthly analytics done : " + dateToString(result.date.from).split("-").slice(0, -1).join("-")).catch((err) => { console.log(err); });
+
+      res.send({ message: "success" });
+    } catch (e) {
+      await logger.error("Log Console 서버 문제 생김 (rou_post_analyticsComplex): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 LogRouter.prototype.rou_post_basicReport = function () {
   const instance = this;
   const report = this.report;

@@ -182,9 +182,10 @@ DevContext.prototype.launching = async function () {
 
     // 2. complex metric
     
-
-
-
+    // const analtyics = new GoogleAnalytics();
+    // const res = await analtyics.monthlyMetric();
+    // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/target.json`, res ]);
+    // console.log(res);
 
 
     // 3. realtime analtyics
