@@ -176,8 +176,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
+    const res = await requestSystem("https://" + instance.address.backinfo.host + "/friendsTalk", { data: null }, {
+      headers: {
+        "Content-Type": "application/json",
+      }
+    })
+    console.log(res);
     
 
 
@@ -193,7 +197,7 @@ DevContext.prototype.launching = async function () {
 
     // CRM 2
 
-    // /*
+    /*
 
     const kakao = new KakaoTalk();
 
@@ -277,7 +281,7 @@ DevContext.prototype.launching = async function () {
       }
     }));
 
-    // */
+    */
     
 
     
