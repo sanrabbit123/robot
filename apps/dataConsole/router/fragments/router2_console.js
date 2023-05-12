@@ -7068,7 +7068,7 @@ DataRouter.prototype.rou_post_friendsTalk = function () {
   const instance = this;
   const back = this.back;
   const kakao = this.kakao;
-  const { equalJson, messageSend, dateToString, stringToDate, errorLog } = this.mother;
+  const { equalJson, messageSend, dateToString, stringToDate } = this.mother;
   const sendFriendsTalk = async function (MONGOC) {
     try {
       const selfMongo = MONGOC;
@@ -7104,25 +7104,23 @@ DataRouter.prototype.rou_post_friendsTalk = function () {
         }
       }
 
-      // await kakao.friendsTalk([
-      //   {
-      //     name: "배창규",
-      //     phone: "010-2747-3403",
-      //   }
-      // ], {
-      //   title: `23년 5월 가정의 달 프로모션`,
-      //   body: `#{name}님, 입주를 준비하는 가족에게\n홈스타일링을 소개해주세요 (방긋)\n\n홈리에종 계약하면\n모두에게 혜택을 드려요! (선물)\n\n- 추천자에게 3만원 백화점 상품권 즉시 발송 (하트)\n- 계약하신 가족(지인)에게는 디자인비 5% 할인 적용 (꽃)\n\n* 이 메시지를 가족(지인)에게 지금 공유해 주세요 :)\n* 상담 시 추천자 성함을 말씀해 주세요.\n* 이 프로모션은 2023년 6월 16일까지 계약 성사 시 유효합니다.`,
-      //   image: `${process.cwd()}/temp/target.jpg`,
-      //   convert: {
-      //     name: (name, phone) => { return name; },
-      //   },
-      //   button: {
-      //     title: "상담 신청하기",
-      //     link: "https://home-liaison.com/consulting.php",
-      //   }
-      // });
-
-      console.log(targets);
+      await kakao.friendsTalk([
+        {
+          name: "배창규",
+          phone: "010-2747-3403",
+        }
+      ], {
+        title: `23년 5월 가정의 달 프로모션`,
+        body: `#{name}님, 입주를 준비하는 가족에게\n홈스타일링을 소개해주세요 (방긋)\n\n홈리에종 계약하면\n모두에게 혜택을 드려요! (선물)\n\n- 추천자에게 3만원 백화점 상품권 즉시 발송 (하트)\n- 계약하신 가족(지인)에게는 디자인비 5% 할인 적용 (꽃)\n\n* 이 메시지를 가족(지인)에게 지금 공유해 주세요 :)\n* 상담 시 추천자 성함을 말씀해 주세요.\n* 이 프로모션은 2023년 6월 16일까지 계약 성사 시 유효합니다.`,
+        image: `${process.cwd()}/temp/target.jpg`,
+        convert: {
+          name: (name, phone) => { return name; },
+        },
+        button: {
+          title: "상담 신청하기",
+          link: "https://home-liaison.com/consulting.php",
+        }
+      });
   
       return true;
     } catch (e) {
