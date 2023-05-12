@@ -7063,3 +7063,100 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_friendsTalk = function () {
+  const instance = this;
+  const back = this.back;
+  const kakao = this.kakao;
+  const { equalJson, messageSend, dateToString, stringToDate, errorLog } = this.mother;
+  const sendFriendsTalk = async function (MONGOC) {
+    try {
+      const selfMongo = MONGOC;
+      const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
+      const projects = await back.getProjectsByQuery({}, { selfMongo });
+      let from, to, requests;
+      let targetCliids;
+      let filteredCliid;
+      let targetClients;
+      let targets;
+  
+      requests = [ ...clients.getRequestsTong() ];
+  
+      from = new Date(2022, 4, 12);
+      to = new Date();
+      requests = requests.filter(({ request }) => {
+        return request.timeline.valueOf() >= from.valueOf() && request.timeline.valueOf() < to.valueOf()
+      })
+  
+      targetCliids = requests.map(({ cliid }) => { return cliid });
+      filteredCliid = projects.toNormal().filter((p) => { return targetCliids.includes(p.cliid) }).filter((p) => { return p.desid !== "" }).filter((p) => {
+        return !/드랍/gi.test(p.process.status) && !/대기/gi.test(p.process.status)
+      }).map((p) => { return p.cliid });
+      targetClients = clients.toNormal().filter((c) => { return filteredCliid.includes(c.cliid) });
+  
+      targets = [];
+      for (let client of targetClients) {
+        if (!/드랍/gi.test(client.requests[0].analytics.response.status)) {
+          targets.push({
+            name: client.name,
+            phone: client.phone,
+          });
+        }
+      }
+
+      await kakao.friendsTalk([
+        {
+          name: "배창규",
+          phone: "010-2747-3403",
+        }
+      ], {
+        title: `23년 5월 가정의 달 프로모션`,
+        body: `#{name}님, 입주를 준비하는 가족에게\n홈스타일링을 소개해주세요 (방긋)\n\n홈리에종 계약하면\n모두에게 혜택을 드려요! (선물)\n\n- 추천자에게 3만원 백화점 상품권 즉시 발송 (하트)\n- 계약하신 가족(지인)에게는 디자인비 5% 할인 적용 (꽃)\n\n* 이 메시지를 가족(지인)에게 지금 공유해 주세요 :)\n* 상담 시 추천자 성함을 말씀해 주세요.\n* 이 프로모션은 2023년 6월 16일까지 계약 성사 시 유효합니다.`,
+        image: `${process.cwd()}/temp/target.jpg`,
+        convert: {
+          name: (name, phone) => { return name; },
+        },
+        button: {
+          title: "상담 신청하기",
+          link: "https://home-liaison.com/consulting.php",
+        }
+      });
+
+      await errorLog(JSON.stringify(targets));
+  
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  }
+  let obj = {};
+  obj.link = [ "/friendsTalk" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+
+      sendFriendsTalk(instance.mongo).then((boo) => {
+        if (boo) {
+          logger.cron("friends talk success").catch((err) => { console.log(err); });
+        } else {
+          logger.error("friends talk fail").catch((err) => { console.log(err); });
+        }
+      }).catch((err) => {
+        logger.error("friends talk fail : " + err.message).catch((err) => { console.log(err); });
+      })
+
+      res.send(JSON.stringify({ message: "will do" }));
+
+    } catch (e) {
+      await logger.error("Console 서버 문제 생김 (rou_post_friendsTalk): " + e.message);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
