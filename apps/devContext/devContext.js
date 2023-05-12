@@ -176,12 +176,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const res = await requestSystem("https://" + instance.address.backinfo.host + "/friendsTalk", { data: null }, {
-      headers: {
-        "Content-Type": "application/json",
-      }
-    })
-    console.log(res);
+
     
 
 
