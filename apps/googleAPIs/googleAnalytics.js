@@ -317,7 +317,7 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
     rows = rows.filter((obj) => {
       return !/\&mode\=test/g.test(obj.info.requestUrl);
     }).filter((obj) => {
-      return obj.network.ip.trim() !== address.officeinfo.ghost.outer.trim();
+      return obj.network.ip.trim().replace(/[^0-9]/gi, '') !== address.officeinfo.ghost.outer.trim().replace(/[^0-9]/gi, '');
     }).map((obj) => { return obj.id });
     sessionIds = [ ...new Set(rows) ];
 
@@ -858,9 +858,11 @@ GoogleAnalytics.prototype.monthlyMetric = async function (thisDate = null) {
   }
 }
 
-GoogleAnalytics.prototype.clientMetric = async function (cliid, selfMongo) {
+GoogleAnalytics.prototype.clientMetric = async function (cliid, selfCoreMongo, selfConsoleMongo, selfMongo) {
   const instance = this;
+  const back = this.back;
   const address = this.address;
+  const unknownKeyword = this.unknownKeyword;
   const { fileSystem, equalJson, requestSystem } = this.mother;
   try {
     let sessionResult;
@@ -868,15 +870,34 @@ GoogleAnalytics.prototype.clientMetric = async function (cliid, selfMongo) {
     let pidList;
     let desidList;
     let res;
+    let constentsArr;
+    let whereQuery;
+    let thisHistory;
+    let historyAdd;
 
-    if (typeof cliid !== "string" || typeof selfMongo !== "object" || selfMongo === null) {
-      throw new Error("invalid input");
+    if (typeof cliid !== "string") {
+      throw new Error("invalid input 1");
+    }
+
+    if (typeof selfCoreMongo !== "object" || selfCoreMongo === null) {
+      throw new Error("invalid input 2");
+    }
+
+    if (typeof selfConsoleMongo !== "object" || selfConsoleMongo === null) {
+      throw new Error("invalid input 3");
+    }
+
+    if (typeof selfMongo !== "object" || selfMongo === null) {
+      throw new Error("invalid input 4");
     }
 
     sessionResult = await this.getSessionObjectByCliid(cliid, selfMongo);
     if (sessionResult === null) {
       throw new Error("session parsing error");
     }
+
+    thisClient = await back.getClientById(cliid, { selfMongo: selfCoreMongo });
+    [ thisHistory ] = await back.mongoRead("clientHistory", { cliid }, { selfMongo: selfConsoleMongo });
 
     clientObject = {};
 
@@ -901,6 +922,7 @@ GoogleAnalytics.prototype.clientMetric = async function (cliid, selfMongo) {
     clientObject.history.detail = [];
     for (let obj of sessionResult.users) {
       for (let obj2 of obj.history) {
+        obj2.session = obj.id;
         clientObject.history.detail.push(equalJson(JSON.stringify(obj2)));
       }
       for (let str of obj.source.referrer) {
@@ -916,11 +938,49 @@ GoogleAnalytics.prototype.clientMetric = async function (cliid, selfMongo) {
         clientObject.source.campaign.push(str);
       }
     }
+
+    historyAdd = [];
+    historyAdd = historyAdd.concat(thisHistory.curation.analytics.send.map((obj) => {
+      return {
+        date: obj.date,
+        path: unknownKeyword,
+        referer: unknownKeyword,
+        title: unknownKeyword,
+        event: "send" + obj.page.slice(0, 1).toUpperCase() + obj.page.slice(1),
+        session: unknownKeyword,
+      }
+    }));
+    historyAdd = historyAdd.concat(thisHistory.curation.analytics.call.out.map((obj) => {
+      return {
+        date: obj.date,
+        path: unknownKeyword,
+        referer: unknownKeyword,
+        title: unknownKeyword,
+        event: "callOut" + (obj.success ? "Success" : "Fail") + "_" + String(obj.duration),
+        session: unknownKeyword,
+      }
+    }));
+    historyAdd = historyAdd.concat(thisHistory.curation.analytics.call.in.map((obj) => {
+      return {
+        date: obj.date,
+        path: unknownKeyword,
+        referer: unknownKeyword,
+        title: unknownKeyword,
+        event: "callIn" + (obj.success ? "Success" : "Fail") + "_" + String(obj.duration),
+        session: unknownKeyword,
+      }
+    }));
+
+    clientObject.history.detail = clientObject.history.detail.concat(historyAdd);
     clientObject.history.detail.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
     clientObject.history.length = clientObject.history.detail.length;
     clientObject.history.during = clientObject.history.detail[clientObject.history.detail.length - 1].date.valueOf() - clientObject.history.detail[0].date.valueOf();
 
-    clientObject.source.referrer = [ ...new Set(clientObject.source.referrer) ];
+    clientObject.source.referrer = [ ...new Set(clientObject.source.referrer) ].filter((str) => {
+      return !(new RegExp(address.frontinfo.host, "g")).test(str);
+    }).filter((str) => {
+      return !(new RegExp(address.backinfo.host, "g")).test(str);
+    });
     clientObject.source.mother = [ ...new Set(clientObject.source.mother) ];
     clientObject.source.medium = [ ...new Set(clientObject.source.medium) ];
     clientObject.source.campaign = [ ...new Set(clientObject.source.campaign) ];
@@ -940,6 +1000,7 @@ GoogleAnalytics.prototype.clientMetric = async function (cliid, selfMongo) {
     desidList = [ ...new Set(desidList) ];
 
     clientObject.contents = {};
+
     clientObject.contents.view = {};
     clientObject.contents.view.portfolio = pidList.filter((str) => { return /portdetail/gi.test(str) }).map((str) => { return { link: "https://" + address.frontinfo.host + str }; });
     clientObject.contents.view.review = pidList.filter((str) => { return /revdetail/gi.test(str) }).map((str) => { return { link: "https://" + address.frontinfo.host + str }; });
@@ -953,11 +1014,20 @@ GoogleAnalytics.prototype.clientMetric = async function (cliid, selfMongo) {
     for (let obj of clientObject.contents.view.designer) {
       obj.title = clientObject.history.detail.find((o) => { return ("https://" + address.frontinfo.host + o.path) === obj.link }).title;
     }
-    clientObject.contents.designers = [];
 
+    clientObject.contents.designers = {};
+    whereQuery = {};
+    whereQuery["$or"] = (pidList.map((str) => { return /pid\=([^\&]+)/gi.exec(str)[1] }).map((pid) => { return { "contents.portfolio.pid": pid } }));
+    if (whereQuery["$or"].length > 0) {
+      constentsArr = await back.getContentsArrByQuery(whereQuery, { selfMongo: selfCoreMongo });
+      clientObject.contents.designers.desid = [ ...new Set(constentsArr.toNormal().map((c) => { return c.desid }).concat(desidList.map((str) => { return /desid\=([^\&]+)/gi.exec(str)[1] }))) ];
+    } else {
+      constentsArr = [];
+      clientObject.contents.designers.desid = desidList.map((str) => { return /desid\=([^\&]+)/gi.exec(str)[1] });
+    }
+    clientObject.contents.designers.length = clientObject.contents.designers.desid.length;
 
     await fileSystem(`writeJson`, [ `${process.cwd()}/temp/target.json`, clientObject ]);
-    console.log(clientObject.contents.view);
 
     return clientObject;
 

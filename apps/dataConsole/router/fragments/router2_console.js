@@ -5148,7 +5148,7 @@ DataRouter.prototype.rou_post_requestScript = function () {
       const responses = await requestSystem(global.decodeURIComponent(req.body.url));
       res.send(JSON.stringify({ data: responses.data }));
     } catch (e) {
-      await logger.error("Console 서버 문제 생김 (rou_post_requestScript): " + e.message);
+      await logger.error("Console 서버 문제 생김 (rou_post_requestScript): " + e.message + " / " + global.decodeURIComponent(req.body.url));
       res.send(JSON.stringify({ error: e.message }));
     }
   }

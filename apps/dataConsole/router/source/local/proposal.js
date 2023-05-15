@@ -4868,7 +4868,8 @@ ProposalJs.save_init = async function (update = false) {
     startDate.setDate(startDate.getDate() - GeneralJs.serviceParsing({ serid: result_obj["service.serid"], xValue: result_obj["service.xValue"], online: false }, true));
     if (!update) {
       if (startDate.valueOf() <= (new Date()).valueOf()) {
-        alert("고객의 예상 종료일을 올바르게 고쳐주세요!");
+        window.alert("고객의 예상 종료일을 올바르게 고쳐주세요!");
+        window.location.reload();
         return "fail";
       }
     }
