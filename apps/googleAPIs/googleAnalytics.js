@@ -315,6 +315,8 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
 
     rows = await back.mongoRead(collection, { "data.cliid": cliid }, { selfMongo });
     rows = rows.filter((obj) => {
+      return !/\&mode\=test/g.test(obj.info.requestUrl);
+    }).filter((obj) => {
       return obj.network.ip.trim() !== address.officeinfo.ghost.outer.trim();
     }).map((obj) => { return obj.id });
     sessionIds = [ ...new Set(rows) ];
