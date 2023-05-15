@@ -4193,11 +4193,11 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     this.proposalHistoryNumber = 0;
 
     // TEST Center ==================================================================================================
-    // if (proid === "p1801_aa01s") {
-    //   for (let d of designers) {
-    //     d.end = false;
-    //   }
-    // }
+    if (proid === "p1801_aa01s") {
+      // for (let d of designers) {
+      //   d.end = false;
+      // }
+    }
     // TEST Center ==================================================================================================
 
     if (getObj.mode === "test" && getObj.update === "true") {

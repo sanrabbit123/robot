@@ -169,10 +169,21 @@ DevContext.prototype.launching = async function () {
     // await analytics.clientMetric("c2305_aa63s", this.MONGOLOGC);
     // await this.MONGOLOGC.close();
 
+
+
+
+
+
+
+
+
     // 2. realtime analytics
     
 
     // 3. hl analytics console
+
+
+
 
 
 
@@ -5762,9 +5773,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "김세영",
-    //     link: "https://drive.google.com/drive/folders/1XUZbp9mlsT40ZqWdRot-1OYCcc4syEpd",
+    //     client: "유혜인",
+    //     designer: "정다연",
+    //     link: "https://drive.google.com/drive/folders/1kT38iP8yQSZ0BwBSa-9h8JoDTMgvPRZ-",
     //     pay: true
     //   },
     // ]);

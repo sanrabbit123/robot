@@ -292,6 +292,7 @@ GoogleAnalytics.prototype.dailyClients = async function (thisDate, selfCoreMongo
 GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfMongo) {
   const instance = this;
   const back = this.back;
+  const address = this.address;
   const { collection, unknownKeyword } = this;
   const { dateToString, stringToDate, ipParsing, requestSystem } = this.mother;
   const querystring = require("querystring");
@@ -313,7 +314,9 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
     let num;
 
     rows = await back.mongoRead(collection, { "data.cliid": cliid }, { selfMongo });
-    rows = rows.map((obj) => { return obj.id });
+    rows = rows.filter((obj) => {
+      return obj.network.ip.trim() !== address.officeinfo.ghost.outer.trim();
+    }).map((obj) => { return obj.id });
     sessionIds = [ ...new Set(rows) ];
 
     finalObj = {
