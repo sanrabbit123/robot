@@ -858,12 +858,13 @@ GoogleAnalytics.prototype.monthlyMetric = async function (thisDate = null) {
   }
 }
 
-GoogleAnalytics.prototype.clientMetric = async function (cliid, selfCoreMongo, selfConsoleMongo, selfMongo) {
+GoogleAnalytics.prototype.clientMetric = async function (cliid, selfCoreMongo, selfConsoleMongo, selfMongo, store = false) {
   const instance = this;
   const back = this.back;
   const address = this.address;
   const unknownKeyword = this.unknownKeyword;
   const { fileSystem, equalJson, requestSystem } = this.mother;
+  const collection = "clientAnalytics";
   try {
     let sessionResult;
     let clientObject;
@@ -874,6 +875,7 @@ GoogleAnalytics.prototype.clientMetric = async function (cliid, selfCoreMongo, s
     let whereQuery;
     let thisHistory;
     let historyAdd;
+    let rows;
 
     if (typeof cliid !== "string") {
       throw new Error("invalid input 1");
@@ -1028,6 +1030,14 @@ GoogleAnalytics.prototype.clientMetric = async function (cliid, selfCoreMongo, s
     clientObject.contents.designers.length = clientObject.contents.designers.desid.length;
 
     await fileSystem(`writeJson`, [ `${process.cwd()}/temp/target.json`, clientObject ]);
+
+    if (store) {
+      rows = await back.mongoRead(collection, { cliid }, { selfMongo });
+      if (rows.length !== 0) {
+        await back.mongoDelete(collection, { cliid }, { selfMongo });
+      }
+      await back.mongoCreate(collection, clientObject, { selfMongo });
+    }
 
     return clientObject;
 
