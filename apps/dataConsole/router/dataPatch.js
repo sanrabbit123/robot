@@ -710,6 +710,7 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "예상 서비스", target: "service" },
       { name: "예산", target: "budget" },
       { name: "가구 구매", target: "furniture" },
+      { name: "선택한 시공", target: "selectConstruct" },
       { name: "주소", target: "address" },
       { name: "계약 상태", target: "contract" },
       { name: "평수", target: "pyeong" },
@@ -2582,6 +2583,8 @@ DataPatch.prototype.clientMap = function () {
     target: { name: "타겟 고객", position: "requests.0.analytics.response.target", type: "string", items: [ "타겟", "애매", "해당 없음" ], searchBoo: false },
     memo: { name: "응대 후 피드백", position: "requests.0.analytics.response.memo", type: "string", searchBoo: false },
     standardDate: { name: "기준일", position: "null", type: "constant", searchBoo: false },
+    wantsService: { name: "희망 서비스", position: "null", type: "constant", searchBoo: false },
+    selectConstruct: { name: "선택한 시공", position: "null", type: "constant", searchBoo: false },
   };
   return map;
 }

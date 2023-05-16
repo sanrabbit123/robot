@@ -3,7 +3,7 @@
 DataRouter.prototype.rou_post_getDocuments = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, dateToString } = this.mother;
+  const { equalJson, dateToString, serviceParsing } = this.mother;
   let obj = {};
   obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getBuilders" ];
   obj.func = async function (req, res, logger) {
@@ -135,23 +135,32 @@ DataRouter.prototype.rou_post_getDocuments = function () {
           thisCliids = data.map((obj) => { return obj.standard.cliid });
           historyWhereQuery = {};
           historyWhereQuery["$or"] = thisCliids.map((cliid) => { return { cliid } });
-          thisHistories = await selfMongo.db(db).collection("clientHistory").find(historyWhereQuery).project({ cliid: 1, manager: 1, "curation.analytics.send": 1, _id: 0 }).toArray();
-          thisDailySales = await selfMongo.db(db).collection("dailySales").find({
-            $or: thisCliids.map((thisCliid) => {
-              return {
-                cliids: {
-                  $elemMatch: {
-                    cliid: thisCliid
+          thisHistories = await back.mongoPick("clientHistory", [ historyWhereQuery, {
+            cliid: 1,
+            manager: 1,
+            "curation.analytics.send": 1,
+            "curation.service.serid": 1,
+            "curation.construct.items": 1,
+          } ], { selfMongo });
+          thisDailySales = await back.mongoPick("dailySales", [
+            {
+              $or: thisCliids.map((thisCliid) => {
+                return {
+                  cliids: {
+                    $elemMatch: {
+                      cliid: thisCliid
+                    }
                   }
                 }
-              }
-            })
-          }).project({ date: 1, cliids: 1, _id: 0 }).toArray();
-
-          allProjects = await selfCoreMongo.db(db).collection("project").find(historyWhereQuery).project({ cliid: 1, proid: 1, proposal: 1, _id: 0 }).toArray();
-          allDesigners =await selfCoreMongo.db(db).collection("designer").find({}).project({ desid: 1, designer: 1, _id: 0 }).toArray();
+              })
+            },
+            { date: 1, cliids: 1, _id: 0 }
+          ], { selfMongo });
+          
+          allProjects = await back.mongoPick("project", [ historyWhereQuery, { cliid: 1, proid: 1, proposal: 1 } ], { selfMongo: selfCoreMongo });
+          allDesigners = await back.mongoPick("designer", [ {}, { desid: 1, designer: 1 } ], { selfMongo: selfCoreMongo });
           resultArr = [];
-          for (let { manager, cliid, curation: { analytics: { send } } } of thisHistories) {
+          for (let { manager, cliid, curation: { analytics: { send }, service: { serid }, construct: { items } } } of thisHistories) {
             resultArr.push({
               cliid,
               manager,
@@ -159,6 +168,8 @@ DataRouter.prototype.rou_post_getDocuments = function () {
               about: send.filter((obj) => { return obj.page === "finalPush" }),
               pure: send.filter((obj) => { return obj.page === "pureOutOfClient" }),
               haha: send.filter((obj) => { return obj.page === "lowLowPush" }),
+              serid,
+              construct: items,
             })
           }
 
@@ -185,6 +196,9 @@ DataRouter.prototype.rou_post_getDocuments = function () {
             obj.info.hahaSend = thisHistory.haha.length > 0 ? dateToString(thisHistory.haha[0].date) : '-';
             obj.info.desids = desidArr.length > 0 ? desidArr.join(", ") : "-";
             obj.info.proposalDesigners = designersArr.length > 0 ? designersArr.join(", ") : "-";
+            obj.info.wantsService = thisHistory.serid.length > 0 ? serviceParsing(thisHistory.serid[0]) : "-";
+            obj.info.selectConstruct = thisHistory.construct.length > 0 ? thisHistory.construct.map((str) => { return str.replace(/ 공사/gi, "").trim() }).join(", ") : "-";
+
             dailySalesArr = thisDailySales.filter((s) => {
               if (s.cliids.findIndex((o) => { return o.cliid === obj.standard.cliid }) === -1) {
                 return false;
