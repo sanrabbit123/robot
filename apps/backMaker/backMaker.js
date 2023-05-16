@@ -3829,6 +3829,62 @@ BackMaker.prototype.mongoRead = async function (collection, query, option = { lo
   }
 }
 
+BackMaker.prototype.mongoPick = async function (collection, queryArr, option = { local: null, console: null, home: null, python: null, selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongopythoninfo, mongotestinfo, hexaJson } = this.mother;
+  try {
+    let MONGOC;
+    let tong;
+
+    if (!Array.isArray(queryArr)) {
+      throw new Error("must be [ whereQuery, projectQuery ]");
+    }
+    if (!queryArr.every((o) => { return (typeof o === "object" && o !== null) })) {
+      throw new Error("must be [ whereQuery, projectQuery ]");
+    }
+    if (queryArr.length !== 2) {
+      throw new Error("must be [ whereQuery, projectQuery ]");
+    }
+
+    queryArr[1]["_id"] = 0;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      if (option.local !== undefined && option.local !== null) {
+        MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      } else if (option.console !== undefined && option.console !== null) {
+        MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else if (option.log !== undefined && option.log !== null) {
+        MONGOC = new mongo(mongotestinfo, { useUnifiedTopology: true });
+      } else if (option.python !== undefined && option.python !== null) {
+        MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      } else {
+        MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      }
+      await MONGOC.connect();
+      if (option.limit !== undefined) {
+        tong = await MONGOC.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).limit(Number(option.limit)).toArray();
+      } else {
+        tong = await MONGOC.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).toArray();
+      }
+      await MONGOC.close();
+    } else {
+      if (option.limit !== undefined) {
+        tong = await option.selfMongo.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).limit(Number(option.limit)).toArray();
+      } else {
+        tong = await option.selfMongo.db(`miro81`).collection(collection).find(queryArr[0]).project(queryArr[1]).toArray();
+      }
+    }
+
+    if (option.hexaMode === true) {
+      tong = await hexaJson(JSON.stringify(tong));
+    }
+
+    return tong;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BackMaker.prototype.mongoUpdate = async function (collection, queryArr, option = { local: null, console: null, home: null, python: null, selfMongo: null, unset: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongopythoninfo, mongotestinfo } = this.mother;

@@ -858,13 +858,68 @@ GoogleAnalytics.prototype.monthlyMetric = async function (thisDate = null) {
   }
 }
 
+GoogleAnalytics.prototype.clientsMetric = async function (cliidArr, selfCoreMongo, selfConsoleMongo, selfMongo, store = false) {
+  const instance = this;
+  const back = this.back;
+  const { sleep } = this.mother;
+  try {
+    let contentsArr;
+    let historiesArr;
+    let clientResult;
+    let clientsObjectArr;
+
+    if (!Array.isArray(cliidArr)) {
+      throw new Error("invalid input");
+    }
+    if (cliidArr.length === 0) {
+      throw new Error("no empty arr");
+    }
+    if (!cliidArr.every((str) => { return typeof str === "string" })) {
+      throw new Error("invalid input 2");
+    }
+    if (typeof selfCoreMongo !== "object" || selfCoreMongo === null) {
+      throw new Error("invalid input 3");
+    }
+    if (typeof selfConsoleMongo !== "object" || selfConsoleMongo === null) {
+      throw new Error("invalid input 4");
+    }
+    if (typeof selfMongo !== "object" || selfMongo === null) {
+      throw new Error("invalid input 5");
+    }
+    
+    contentsArr = await back.mongoPick("contents", [ {}, { "contents.portfolio.pid": 1, conid: 1, desid: 1 } ], { selfMongo: selfCoreMongo });
+    historiesArr = await back.mongoPick("clientHistory", [ { $or: cliidArr.map((cliid) => { return { cliid } }) }, { curation: 1, cliid: 1, manager: 1, important: 1 } ], { selfMongo: selfConsoleMongo });
+
+    clientsObjectArr = [];
+    for (let cliid of cliidArr) {
+      clientResult = await this.clientMetric(cliid, contentsArr, historiesArr, selfMongo, store);
+      while (typeof clientResult !== "object" || clientResult === null) {
+        await sleep(1000);
+        if (!clientResult) {
+          clientResult = await this.clientMetric(cliid, contentsArr, historiesArr, selfMongo, store);
+        } else {
+          clientResult = {};
+        }
+      }
+      clientsObjectArr.push(clientResult);
+    }
+
+    return clientsObjectArr;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 GoogleAnalytics.prototype.clientMetric = async function (cliid, selfCoreMongo, selfConsoleMongo, selfMongo, store = false) {
   const instance = this;
   const back = this.back;
   const address = this.address;
   const unknownKeyword = this.unknownKeyword;
-  const { fileSystem, equalJson, requestSystem } = this.mother;
+  const { equalJson } = this.mother;
   const collection = "clientAnalytics";
+  let storeSuccess;
+  storeSuccess = false;
   try {
     let sessionResult;
     let clientObject;
@@ -898,8 +953,11 @@ GoogleAnalytics.prototype.clientMetric = async function (cliid, selfCoreMongo, s
       throw new Error("session parsing error");
     }
 
-    thisClient = await back.getClientById(cliid, { selfMongo: selfCoreMongo });
-    [ thisHistory ] = await back.mongoRead("clientHistory", { cliid }, { selfMongo: selfConsoleMongo });
+    if (selfConsoleMongo instanceof Array) {
+      thisHistory = selfConsoleMongo.find((obj) => { return obj.cliid === cliid });
+    } else {
+      [ thisHistory ] = await back.mongoPick("clientHistory", [ { cliid }, { curation: 1, cliid: 1, manager: 1, important: 1 } ], { selfMongo: selfConsoleMongo });
+    }
 
     clientObject = {};
 
@@ -1021,29 +1079,31 @@ GoogleAnalytics.prototype.clientMetric = async function (cliid, selfCoreMongo, s
     whereQuery = {};
     whereQuery["$or"] = (pidList.map((str) => { return /pid\=([^\&]+)/gi.exec(str)[1] }).map((pid) => { return { "contents.portfolio.pid": pid } }));
     if (whereQuery["$or"].length > 0) {
-      constentsArr = await back.getContentsArrByQuery(whereQuery, { selfMongo: selfCoreMongo });
-      clientObject.contents.designers.desid = [ ...new Set(constentsArr.toNormal().map((c) => { return c.desid }).concat(desidList.map((str) => { return /desid\=([^\&]+)/gi.exec(str)[1] }))) ];
+      if (selfCoreMongo instanceof Array) {
+        constentsArr = selfCoreMongo.filter((obj) => { return whereQuery["$or"].map((o) => { return o["contents.portfolio.pid"]; }).includes(obj.contents.portfolio.pid); });
+      } else {
+        constentsArr = await back.mongoPick("contents", [ whereQuery, { "contents.portfolio.pid": 1, conid: 1, desid: 1 } ], { selfMongo: selfCoreMongo });
+      }
+      clientObject.contents.designers.desid = [ ...new Set(constentsArr.map((c) => { return c.desid }).concat(desidList.map((str) => { return /desid\=([^\&]+)/gi.exec(str)[1] }))) ];
     } else {
       constentsArr = [];
       clientObject.contents.designers.desid = desidList.map((str) => { return /desid\=([^\&]+)/gi.exec(str)[1] });
     }
     clientObject.contents.designers.length = clientObject.contents.designers.desid.length;
 
-    await fileSystem(`writeJson`, [ `${process.cwd()}/temp/target.json`, clientObject ]);
-
     if (store) {
-      rows = await back.mongoRead(collection, { cliid }, { selfMongo });
+      rows = await back.mongoPick(collection, [ { cliid }, { cliid: 1 } ], { selfMongo });
       if (rows.length !== 0) {
         await back.mongoDelete(collection, { cliid }, { selfMongo });
       }
       await back.mongoCreate(collection, clientObject, { selfMongo });
+      storeSuccess = true;
     }
 
     return clientObject;
-
   } catch (e) {
     console.log(e);
-    return null;
+    return storeSuccess;
   }
 }
 

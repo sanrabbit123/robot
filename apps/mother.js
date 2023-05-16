@@ -18,6 +18,9 @@ const Mother = function () {
 
   //temp
   this.tempDir = `${process.cwd()}/temp`;
+
+  //db
+  this.db = "miro81";
 }
 
 Mother.prototype.consoleQ = function (question) {

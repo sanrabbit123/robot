@@ -162,25 +162,25 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // 1. client metric
-    
-    // await this.MONGOLOGC.connect();
-    // await this.MONGOCONSOLEC.connect();
-
-    // const analytics = new GoogleAnalytics();
-    // await analytics.clientMetric("c2305_aa37s", this.MONGOC, this.MONGOCONSOLEC, this.MONGOLOGC, false);
-
-    // await this.MONGOLOGC.close();
-    // await this.MONGOCONSOLEC.close();
+    // 1. past events injection => 2023. 03 ~
 
 
 
-    // 2. realtime analytics
+
+    // 2. client metric store and cron system
+
+
+
+
+    // 3. realtime analytics
     
 
 
 
-    // 3. hl analytics console - analytics.js
+    // 4. hl analytics console - analytics.js
+
+
+
 
 
 
