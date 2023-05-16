@@ -163,8 +163,11 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // 2. instant metric and print
+
+
+
     // 3. realtime analytics
-    
 
 
 
@@ -173,7 +176,7 @@ DevContext.prototype.launching = async function () {
 
 
     
-    
+
 
 
 

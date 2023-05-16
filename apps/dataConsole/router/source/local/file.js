@@ -3382,7 +3382,8 @@ FileJs.prototype.launching = async function () {
     let pathResponse;
     let loadingIconVisualTop;
     let loadingIconWidth;
-    let memberes;
+    let designers;
+    let targetDesigner;
 
     loadingIconWidth = 50;
     loadingIconVisualTop = -34;
@@ -3412,6 +3413,13 @@ FileJs.prototype.launching = async function () {
         startPoint = rootToken + "/drive/HomeLiaisonServer/고객/401_고객응대";
       } else if (getObj.mode === "designer") {
         startPoint = rootToken + "/drive/HomeLiaisonServer/디자이너/partnership";
+        if (typeof getObj.desid === "string") {
+          designers = await ajaxJson({ noFlat: true, whereQuery: { desid: getObj.desid } }, BACKHOST + "/getDesigners", { equal: true });
+          if (designers.length > 0) {
+            [ targetDesigner ] = designers;
+            startPoint = startPoint + "/" + targetDesigner.information.did + "_" + targetDesigner.designer;
+          }
+        }
       } else if (getObj.mode === "photo") {
         startPoint = rootToken + "/drive/HomeLiaisonServer/사진_등록_포트폴리오";
       } else if (getObj.mode === "project") {
