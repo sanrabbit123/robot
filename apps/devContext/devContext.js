@@ -174,9 +174,9 @@ DevContext.prototype.launching = async function () {
     // 4. hl analytics console - analytics.js
 
 
-
+    const res = await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/designerFolder", { data: null }, { headers: { "Content-Type": "application/json" } });
     
-
+    console.log(res);
 
 
 

@@ -1562,11 +1562,11 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
       let mkdirTarget;
 
       if (req.body.name === undefined || req.body.subid === undefined) {
-        folderList = (await fileSystem(`readDir`, [ sambaDir ])).filter((str) => { return str !== ".DS_Store" });
+        folderList = (await fileSystem(`readDir`, [ sambaDir ])).filter((str) => { return !/DS_Store/g.test(str) });
         
         for (let thisFolderName of folderList) {
           thisFolderList = (await fileSystem(`readDir`, [ sambaDir + "/" + thisFolderName ])).filter((str) => {
-            return str !== ".DS_Store";
+            return !/DS_Store/g.test(str);
           }).filter((str) => {
             return !/gddoc$/i.test(str);
           });
@@ -1588,7 +1588,7 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
           }
 
           thisFolderList = (await fileSystem(`readDir`, [ sambaDir + "/" + thisFolderName ])).filter((str) => {
-            return str !== ".DS_Store";
+            return !/DS_Store/g.test(str);
           }).filter((str) => {
             return !/gddoc$/i.test(str);
           });
@@ -1605,7 +1605,7 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
           }
 
           thisFolderList = (await fileSystem(`readDir`, [ sambaDir + "/" + thisFolderName ])).filter((str) => {
-            return str !== ".DS_Store";
+            return !/DS_Store/g.test(str);
           }).filter((str) => {
             return !/gddoc$/i.test(str);
           });
