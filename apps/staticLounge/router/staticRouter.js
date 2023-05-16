@@ -1561,6 +1561,7 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
       let thisFolderList;
       let mvTarget;
       let mkdirTarget;
+      let rmTarget;
 
       if (req.body.name === undefined || req.body.subid === undefined) {
         folderList = (await fileSystem(`readDir`, [ sambaDir ])).filter((str) => { return !/DS_Store/g.test(str) });
@@ -1579,7 +1580,6 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
             }
           }
 
-          console.log(thisFolderName, mvTarget);
           for (let s of mvTarget) {
             if (/제안문서/gi.test(s)) {
               await shellExec(`mv ${shellLink(sambaDir + "/" + thisFolderName + "/" + s)} ${shellLink(sambaDir + "/" + thisFolderName + "/" + "제안문서")}`);
@@ -1611,7 +1611,16 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
             return !/gddoc$/i.test(str);
           });
 
-          console.log(thisFolderName, thisFolderList);
+          rmTarget = [];
+          for (let s of thisFolderList) {
+            if (!basicList.includes(s)) {
+              rmTarget.push(s);
+            }
+          }
+
+          for (let s of rmTarget) {
+            await shellExec(`rm -rf ${shellLink(sambaDir + "/" + thisFolderName + "/" + s)}`);
+          }
         }
 
         res.send(JSON.stringify({ message: "done" }));
