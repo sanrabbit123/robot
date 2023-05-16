@@ -1544,7 +1544,7 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
       if (req.body.name === undefined || req.body.subid === undefined) {
         throw new Error("invaild post");
       }
-      const designerFolderId = "1-xcQct5wXg8am57W1e8xXKwSQyLWAsMP";
+      const designerFolderId = "18PiKz57MQd8VgETd3hqp_cA-MNAXPquN";
       const sambaDir = staticConst + homeliaisonOfficeConst + "/" + designerFolderConst;
       let basicList = [
         "포트폴리오",
