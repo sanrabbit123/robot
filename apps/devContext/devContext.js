@@ -171,7 +171,40 @@ DevContext.prototype.launching = async function () {
     // 4. hl analytics console - analytics.js
 
 
+    const processList = () => {
+      return new Promise((resolve, reject) => {
+        const { spawn } = require("child_process");
+        const top = spawn("top", []);
+        let tong;
+        let pidStandardBarArr;
+        tong = [];
+        top.stdout.on("data", (data) => {
+          tong = tong.concat(String(data).split("\n").map((str) => { return str.trim() }).filter((str) => { return str !== "" }));
+          pidStandardBarArr = tong.filter((str) => { return /^PID/.test(str) });
+          if (pidStandardBarArr.length === 2) {
+            top.kill();
+          }
+        });
+        top.stderr.on("data", (data) => {
+          reject(data);
+        });
+        top.on("close", (code) => {
+          resolve(Array.from(new Set(Array.from(new Set(tong.filter((str) => {
+            return !/^Processes/.test(str) && !/^Load/.test(str) && !/^CPU/.test(str) && !/^SharedLibs/.test(str) && !/^PhysMem/.test(str) && !/^VM/.test(str) && !/^Networks/.test(str) && !/^Disks/.test(str) && !/^PID/.test(str)
+          }).map((str) => {
+            return str.slice(pidStandardBarArr[0].split("").findIndex((str) => { return str === "C" }), pidStandardBarArr[0].split("").findIndex((str) => { return str === "%" }))
+          }))).map((str) => {
+            return str.trim();
+          }).filter((str) => {
+            return !/^[\/\\0-9\*]/.test(str);
+          }))).filter((str) => {
+            return !/^ons\: /.test(str)
+          }));
+        });
+      })
+    }
 
+    console.log(await processList());
 
 
 
