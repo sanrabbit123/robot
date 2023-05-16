@@ -1541,49 +1541,109 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      if (req.body.name === undefined || req.body.subid === undefined) {
-        throw new Error("invaild post");
-      }
       const designerFolderId = "18PiKz57MQd8VgETd3hqp_cA-MNAXPquN";
       const sambaDir = staticConst + homeliaisonOfficeConst + "/" + designerFolderConst;
-      let basicList = [
+      const basicList = [
         "포트폴리오",
         "등록서류",
-        "고객안내및제안문서"
+        "제안문서",
+        "첫등록",
+        "경력관련",
+        "계약서",
+        "기타",
       ];
       let id, subid;
       let folderName;
       let folderId, docsId;
       let num;
+      let folderList;
+      let thisFolderList;
+      let mvTarget;
+      let mkdirTarget;
 
-      folderName = req.body.subid + "_" + req.body.name;
+      if (req.body.name === undefined || req.body.subid === undefined) {
+        folderList = (await fileSystem(`readDir`, [ sambaDir ])).filter((str) => { return str !== ".DS_Store" });
+        
+        for (let thisFolderName of folderList) {
+          thisFolderList = (await fileSystem(`readDir`, [ sambaDir + "/" + thisFolderName ])).filter((str) => {
+            return str !== ".DS_Store";
+          }).filter((str) => {
+            return !/gddoc$/i.test(str);
+          });
 
-      folderId = await drive.makeFolder_inPython(folderName);
-      await drive.moveFolder_inPython(folderId, designerFolderId);
+          mvTarget = [];
+          for (let s of thisFolderList) {
+            if (!basicList.includes(s)) {
+              mvTarget.push(s);
+            }
+          }
 
-      await sleep(2000);
-      num = 0;
-      while ((!(await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}` ]))) && (num < 10)) {
+          console.log(thisFolderName, mvTarget);
+          for (let s of mvTarget) {
+            if (/제안문서/gi.test(s)) {
+              await shellExec(`mv ${shellLink(sambaDir + "/" + thisFolderName + "/" + s)} ${shellLink(sambaDir + "/" + thisFolderName + "/" + "제안문서")}`);
+            } else if (/첫/gi.test(s)) {
+              await shellExec(`mv ${shellLink(sambaDir + "/" + thisFolderName + "/" + s)} ${shellLink(sambaDir + "/" + thisFolderName + "/" + "첫등록")}`);
+            }
+          }
+
+          thisFolderList = (await fileSystem(`readDir`, [ sambaDir + "/" + thisFolderName ])).filter((str) => {
+            return str !== ".DS_Store";
+          }).filter((str) => {
+            return !/gddoc$/i.test(str);
+          });
+          
+          mkdirTarget = [];
+          for (let s of basicList) {
+            if (!thisFolderList.includes(s)) {
+              mkdirTarget.push(s);
+            }
+          }
+
+          for (let s of mkdirTarget) {
+            await shellExec(`mkdir ${shellLink(sambaDir + "/" + thisFolderName + "/" + s)}`);
+          }
+
+          thisFolderList = (await fileSystem(`readDir`, [ sambaDir + "/" + thisFolderName ])).filter((str) => {
+            return str !== ".DS_Store";
+          }).filter((str) => {
+            return !/gddoc$/i.test(str);
+          });
+
+          console.log(thisFolderName, thisFolderList);
+        }
+
+        res.send(JSON.stringify({ message: "done" }));
+
+      } else {
+        folderName = req.body.subid + "_" + req.body.name;
+
+        folderId = await drive.makeFolder_inPython(folderName);
+        await drive.moveFolder_inPython(folderId, designerFolderId);
+  
         await sleep(2000);
-        num++;
-      }
-
-      if (await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}` ])) {
-        for (let b of basicList) {
-          if (!(await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}/${b}` ]))) {
-            await fileSystem(`mkdir`, [ `${sambaDir}/partnership/${folderName}/${b}` ]);
+        num = 0;
+        while ((!(await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}` ]))) && (num < 10)) {
+          await sleep(2000);
+          num++;
+        }
+  
+        if (await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}` ])) {
+          for (let b of basicList) {
+            if (!(await fileSystem(`exist`, [ `${sambaDir}/partnership/${folderName}/${b}` ]))) {
+              await fileSystem(`mkdir`, [ `${sambaDir}/partnership/${folderName}/${b}` ]);
+            }
           }
         }
+  
+        docsId = await docs.create_newDocs_inPython(folderName + '_' + "docs", folderId);
+  
+        res.send(JSON.stringify({
+          folderName: folderName,
+          drive: `https://drive.google.com/drive/folders/${folderId}`,
+          docs: `https://docs.google.com/document/d/${docsId}`,
+        }));
       }
-
-      docsId = await docs.create_newDocs_inPython(folderName + '_' + "docs", folderId);
-
-      res.send(JSON.stringify({
-        folderName: folderName,
-        drive: `https://drive.google.com/drive/folders/${folderId}`,
-        docs: `https://docs.google.com/document/d/${docsId}`,
-      }));
-
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_designerFolder): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
