@@ -161,12 +161,6 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-
-    // 1. past events injection => 2023. 03 ~
-
-
-
-
     // 2. client metric store and cron system
 
 
@@ -181,18 +175,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
-
-
     
-
-
-
-
 
 
 

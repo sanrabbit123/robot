@@ -366,6 +366,18 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
             mediumArr.push(obj["utm_medium"]);
           }
         }
+
+        if (referrerArr.some((str) => { return /naver/gi.test(str) })) {
+          sourceArr.push("naver");
+        } else if (referrerArr.some((str) => { return /google/gi.test(str) })) {
+          sourceArr.push("google");
+        } else if (referrerArr.some((str) => { return /youtube/gi.test(str) })) {
+          sourceArr.push("google");
+        } else if (referrerArr.some((str) => { return /instagram/gi.test(str) })) {
+          sourceArr.push("facebook");
+        } else if (referrerArr.some((str) => { return /facebook/gi.test(str) })) {
+          sourceArr.push("facebook");
+        }
   
         thisSource = [ ...new Set(sourceArr) ];
         thisCampaign = [ ...new Set(campaignArr) ];
@@ -858,7 +870,7 @@ GoogleAnalytics.prototype.monthlyMetric = async function (thisDate = null) {
   }
 }
 
-GoogleAnalytics.prototype.clientsMetric = async function (cliidArr, selfCoreMongo, selfConsoleMongo, selfMongo, store = false) {
+GoogleAnalytics.prototype.clientsMetric = async function (clientsArr, selfCoreMongo, selfConsoleMongo, selfMongo, store = false) {
   const instance = this;
   const back = this.back;
   const { sleep } = this.mother;
@@ -867,15 +879,13 @@ GoogleAnalytics.prototype.clientsMetric = async function (cliidArr, selfCoreMong
     let historiesArr;
     let clientResult;
     let clientsObjectArr;
+    let cliidArr;
 
-    if (!Array.isArray(cliidArr)) {
+    if (!Array.isArray(clientsArr)) {
       throw new Error("invalid input");
     }
-    if (cliidArr.length === 0) {
+    if (clientsArr.length === 0) {
       throw new Error("no empty arr");
-    }
-    if (!cliidArr.every((str) => { return typeof str === "string" })) {
-      throw new Error("invalid input 2");
     }
     if (typeof selfCoreMongo !== "object" || selfCoreMongo === null) {
       throw new Error("invalid input 3");
@@ -886,22 +896,25 @@ GoogleAnalytics.prototype.clientsMetric = async function (cliidArr, selfCoreMong
     if (typeof selfMongo !== "object" || selfMongo === null) {
       throw new Error("invalid input 5");
     }
+
+    cliidArr = Array.from(new Set(clientsArr.map((c) => { return c.cliid })));
     
     contentsArr = await back.mongoPick("contents", [ {}, { "contents.portfolio.pid": 1, conid: 1, desid: 1 } ], { selfMongo: selfCoreMongo });
     historiesArr = await back.mongoPick("clientHistory", [ { $or: cliidArr.map((cliid) => { return { cliid } }) }, { curation: 1, cliid: 1, manager: 1, important: 1 } ], { selfMongo: selfConsoleMongo });
 
     clientsObjectArr = [];
-    for (let cliid of cliidArr) {
-      clientResult = await this.clientMetric(cliid, contentsArr, historiesArr, selfMongo, store);
+    for (let client of clientsArr) {
+      clientResult = await this.clientMetric(client, contentsArr, historiesArr, selfMongo, store);
       while (typeof clientResult !== "object" || clientResult === null) {
         await sleep(1000);
         if (!clientResult) {
-          clientResult = await this.clientMetric(cliid, contentsArr, historiesArr, selfMongo, store);
+          clientResult = await this.clientMetric(client, contentsArr, historiesArr, selfMongo, store);
         } else {
           clientResult = {};
         }
       }
       clientsObjectArr.push(clientResult);
+      await sleep(500);
     }
 
     return clientsObjectArr;
@@ -911,13 +924,14 @@ GoogleAnalytics.prototype.clientsMetric = async function (cliidArr, selfCoreMong
   }
 }
 
-GoogleAnalytics.prototype.clientMetric = async function (cliid, selfCoreMongo, selfConsoleMongo, selfMongo, store = false) {
+GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMongo, selfConsoleMongo, selfMongo, store = false) {
   const instance = this;
   const back = this.back;
   const address = this.address;
   const unknownKeyword = this.unknownKeyword;
   const { equalJson } = this.mother;
   const collection = "clientAnalytics";
+  const querystring = require("querystring");
   let storeSuccess;
   storeSuccess = false;
   try {
@@ -931,10 +945,7 @@ GoogleAnalytics.prototype.clientMetric = async function (cliid, selfCoreMongo, s
     let thisHistory;
     let historyAdd;
     let rows;
-
-    if (typeof cliid !== "string") {
-      throw new Error("invalid input 1");
-    }
+    let cliid;
 
     if (typeof selfCoreMongo !== "object" || selfCoreMongo === null) {
       throw new Error("invalid input 2");
@@ -947,6 +958,8 @@ GoogleAnalytics.prototype.clientMetric = async function (cliid, selfCoreMongo, s
     if (typeof selfMongo !== "object" || selfMongo === null) {
       throw new Error("invalid input 4");
     }
+
+    cliid = thisClient.cliid;
 
     sessionResult = await this.getSessionObjectByCliid(cliid, selfMongo);
     if (sessionResult === null) {
@@ -962,6 +975,7 @@ GoogleAnalytics.prototype.clientMetric = async function (cliid, selfCoreMongo, s
     clientObject = {};
 
     clientObject.cliid = cliid;
+    clientObject.client = thisClient;
 
     clientObject.sessions = {};
     clientObject.sessions.length = sessionResult.users.length;
@@ -977,6 +991,7 @@ GoogleAnalytics.prototype.clientMetric = async function (cliid, selfCoreMongo, s
     clientObject.source.mother = [];
     clientObject.source.medium = [];
     clientObject.source.campaign = [];
+    clientObject.source.search = [];
 
     clientObject.history = {};
     clientObject.history.detail = [];
@@ -998,6 +1013,17 @@ GoogleAnalytics.prototype.clientMetric = async function (cliid, selfCoreMongo, s
         clientObject.source.campaign.push(str);
       }
     }
+
+    clientObject.source.search = Array.from(new Set(clientObject.source.referrer.filter((str) => {
+      return /\?/g.test(str);
+    }).map((str) => {
+      const queryObj = querystring.parse(str.split('?')[1]);
+      if (typeof queryObj === "object" && queryObj !== null) {
+        return Object.values(queryObj).filter((s) => { return (typeof s === "string") }).filter((str) => { return /[ㄱ-ㅎㅏ-ㅣ가-힣]/gi.test(str) })
+      } else {
+        return [];
+      }
+    }).flat(10)));
 
     historyAdd = [];
     historyAdd = historyAdd.concat(thisHistory.curation.analytics.send.map((obj) => {
@@ -1097,6 +1123,7 @@ GoogleAnalytics.prototype.clientMetric = async function (cliid, selfCoreMongo, s
         await back.mongoDelete(collection, { cliid }, { selfMongo });
       }
       await back.mongoCreate(collection, clientObject, { selfMongo });
+      console.log("mongo store success : " + cliid);
       storeSuccess = true;
     }
 
