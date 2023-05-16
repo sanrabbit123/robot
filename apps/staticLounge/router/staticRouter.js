@@ -3585,6 +3585,34 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_checkInsyncStatus = function () {
+  const instance = this;
+  const { processSystem } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/checkInsyncStatus" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const processList = await processSystem("list");
+      const result = processList.some(({ process: str }) => { return /insync/gi.test(str); });
+      if (!result) {
+        await logger.error("insync death : " + JSON.stringify(new Date()));
+      }
+      res.send(JSON.stringify({ result }));
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_checkInsyncStatus): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.setMembers = async function () {
