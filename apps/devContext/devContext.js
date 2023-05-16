@@ -172,10 +172,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log(await processSystem("list"))
-
-
-
+    
 
 
 
