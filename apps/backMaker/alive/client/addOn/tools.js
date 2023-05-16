@@ -218,7 +218,7 @@ const withTools = function (Client) {
     return message.replace(/\n$/, '');
   }
 
-  Client.prototype.toPrint = function () {
+  Client.prototype.toPrint = function (addition = []) {
     const { request, analytics } = this.requests[0];
     const indent = "    ";
     const bar = "=============================================================";
@@ -242,7 +242,9 @@ const withTools = function (Client) {
     documentArr.push("계약 형태 : " + request.space.contract.value + "\n");
     documentArr.push("예산 : " + request.budget.value + "\n");
     documentArr.push("가구 구매 : " + request.furniture.value + "\n");
-
+    for (let text of addition) {
+      documentArr.push(text + "\n");
+    }
     comment = "요청 사항 : " + request.etc.comment;
     commentArr = [];
     tempStr = '';

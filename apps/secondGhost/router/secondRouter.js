@@ -2275,16 +2275,15 @@ SecondRouter.prototype.rou_post_printClient = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (req.body.cliid === undefined) {
+      if (req.body.cliid === undefined || req.body.history === undefined) {
         throw new Error("invaild post");
       }
       const selfMongo = instance.mongo;
-      const { cliid } = equalJson(req.body);
+      const { cliid, history } = equalJson(req.body);
       const client = await back.getClientById(cliid, { selfMongo, withTools: true });
       let text;
 
-      text = client.toPrint();
-
+      text = client.toPrint([ "선택한 시공 : " + history.curation.construct.items.join(", ") ]);
       requestSystem("https://" + address.officeinfo.ghost.host + ":3000/printText", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
 
       res.send(JSON.stringify({ message: "will do" }));

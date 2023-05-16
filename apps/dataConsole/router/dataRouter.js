@@ -833,7 +833,7 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
 DataRouter.prototype.rou_post_getDocuments = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, dateToString, serviceParsing } = this.mother;
+  const { equalJson, dateToString, serviceParsing, db } = this.mother;
   let obj = {};
   obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getBuilders" ];
   obj.func = async function (req, res, logger) {
@@ -846,7 +846,6 @@ DataRouter.prototype.rou_post_getDocuments = function () {
     try {
       const selfMongo = instance.mongolocal;
       const selfCoreMongo = instance.mongo;
-      const db = "miro81";
       let standard, raw_data, data, optionQuery, whereQuery;
       let historyWhereQuery;
       let thisCliids;
@@ -3555,9 +3554,7 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       }, {
         headers: { "Content-Type": "application/json" }
       });
-      requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }, { headers: { "Content-Type": "application/json" } }).then(() => {
-        return requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/printClient", { cliid: thisClient.cliid }, { headers: { "Content-Type": "application/json" } });
-      }).catch((err) => { console.log(err); });
+      requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
 
       res.send(JSON.stringify({ cliid }));
     } catch (e) {
@@ -8475,6 +8472,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
             client: client.name,
           });
           await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈어요.", channel: "#404_curation" });
+          requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/printClient", { cliid, history }, { headers: { "Content-Type": "application/json" } }).catch((err) => { logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + err.message).catch((err) => { console.log(err) }) });
         }
 
         res.send(JSON.stringify({ service: [], client: client.toNormal(), history }));
