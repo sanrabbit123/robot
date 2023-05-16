@@ -1619,7 +1619,8 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
           }
 
           for (let s of rmTarget) {
-            await shellExec(`rm -rf ${shellLink(sambaDir + "/" + thisFolderName + "/" + s)}`);
+            await logger.error("디자이너 폴더 문제 => " + thisFolderName + " / " + s);
+            await sleep(1000);
           }
         }
 
