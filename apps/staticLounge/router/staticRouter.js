@@ -51,6 +51,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
   this.homeliaisonOfficeConst = this.address.officeinfo.ghost.file.office;
   this.designerPhotoConst = "사진_등록_포트폴리오";
   this.designerFolderConst = "디자이너";
+  this.designerFolderConst2 = "partnership";
 
   this.centrex = {
     host: "centrex.uplus.co.kr",
@@ -1524,7 +1525,7 @@ StaticRouter.prototype.rou_post_zipPhoto = function () {
 StaticRouter.prototype.rou_post_designerFolder = function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, dateToString, sleep } = this.mother;
-  const { staticConst, sambaToken, homeliaisonOfficeConst, designerFolderConst } = this;
+  const { staticConst, sambaToken, homeliaisonOfficeConst, designerFolderConst, designerFolderConst2 } = this;
   const drive = this.drive;
   const docs = this.docs;
   let obj;
@@ -1542,7 +1543,7 @@ StaticRouter.prototype.rou_post_designerFolder = function () {
         throw new Error("post ban");
       }
       const designerFolderId = "18PiKz57MQd8VgETd3hqp_cA-MNAXPquN";
-      const sambaDir = staticConst + homeliaisonOfficeConst + "/" + designerFolderConst;
+      const sambaDir = staticConst + homeliaisonOfficeConst + "/" + designerFolderConst + "/" + designerFolderConst2;
       const basicList = [
         "포트폴리오",
         "등록서류",
