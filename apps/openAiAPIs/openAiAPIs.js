@@ -175,4 +175,28 @@ OpenAiAPIs.prototype.fairyGPT = function (fromId, input) {
   });
 }
 
+OpenAiAPIs.prototype.slackGPT = function (channel, input) {
+  const instance = this;
+  const address = this.address;
+  const { requestSystem } = this.mother;
+  const port = 3000;
+  const path = "/fairySlack";
+  return new Promise((resolve, reject) => {
+    instance.chatGPT(input).then((result) => {
+      return requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
+        channel: channel,
+        text: result,
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+    }).then((res) => {
+      resolve(res.data);
+    }).catch((err) => {
+      reject(err);
+    });
+  });
+}
+
 module.exports = OpenAiAPIs;

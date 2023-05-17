@@ -2299,6 +2299,7 @@ SecondRouter.prototype.rou_post_printClient = function () {
 SecondRouter.prototype.rou_post_slackEvents = function () {
   const instance = this;
   const address = this.address;
+  const { openAi } = this;
   const { slack_info: { userDictionary, channelDictionary }, telegram } = this;
   const { messageLog, equalJson, ajaxJson, requestSystem } = this.mother;
   let obj = {};
@@ -2319,7 +2320,13 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
       if (typeof thisBody.event === "object") {
         if (thisBody.event.type === "message") {
 
-          console.log(thisBody.event);
+          if (/^요정[아]?/i.test(thisBody.event.text.trim())) {
+            openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, "")).then((res) => {
+              console.log(res.data);
+            }).catch((err) => {
+              console.log(err);
+            })
+          }
 
           if (userDictionary[thisBody.event.user] !== undefined) {
             if (channelDictionary[thisBody.event.channel] !== undefined) {
@@ -2348,7 +2355,7 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
                   }
                 }).catch((err) => {
                   console.log(err);
-                })
+                });
               }
               text = `(unknown) ${userDictionary[thisBody.event.user]} : ${thisBody.event.text}`;
               thisChannel = "plan";
@@ -3047,6 +3054,49 @@ SecondRouter.prototype.rou_post_fairyMessage = function () {
     } catch (e) {
       console.log(e);
       logger.error("Second Ghost 서버 문제 생김 (rou_post_fairyMessage): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+SecondRouter.prototype.rou_post_fairySlack = function () {
+  const instance = this;
+  const { requestSystem, stringToLink } = this.mother;
+  const { slack_fairyToken, slack_info } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/fairySlack" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.channel === undefined || req.body.text === undefined) {
+        throw new Error("invalid post");
+      }
+      const { channel } = req.body;
+      const url = slack_info.endPoint + "/chat.postMessage";
+      let text;
+
+      text = req.body.text;
+      text = stringToLink(text);
+
+      await requestSystem(url, { channel, text }, {
+        headers: {
+          "Authorization": "Bearer " + slack_fairyToken,
+          "Content-Type": "application/x-www-form-urlencoded",
+        }
+      });
+
+      res.send(JSON.stringify({ message: "done" }));
+
+    } catch (e) {
+      console.log(e);
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_fairySlack): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
