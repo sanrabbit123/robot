@@ -2321,9 +2321,23 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
         if (thisBody.event.type === "message") {
 
           if (/^요정[아]?/i.test(thisBody.event.text.trim())) {
-            openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, "")).catch((err) => {
-              console.log(err);
-            })
+            if (/온라인/gi.test(thisBody.event.text.trim()) || /실시간/gi.test(thisBody.event.text.trim()) || /현재/gi.test(thisBody.event.text.trim())) {
+              if (/웹/gi.test(thisBody.event.text.trim()) || /홈페이지/gi.test(thisBody.event.text.trim()) || /홈리에종/gi.test(thisBody.event.text.trim())) {
+                requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/realtimeMessage", { channel: thisBody.event.channel }, {
+                  headers: { "Content-Type": "application/json" }
+                }).catch((err) => {
+                  console.log(err);
+                })
+              } else {
+                openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, "")).catch((err) => {
+                  console.log(err);
+                });
+              }
+            } else {
+              openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, "")).catch((err) => {
+                console.log(err);
+              });
+            }
           }
 
           if (thisBody.event.text.trim() === "온라인" || thisBody.event.text.trim() === "현재" || thisBody.event.text.trim() === "실시간") {
