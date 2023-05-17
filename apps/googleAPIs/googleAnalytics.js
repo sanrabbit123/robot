@@ -1260,7 +1260,7 @@ GoogleAnalytics.prototype.realtimeMessage = async function (selfMongo) {
     message += "이 중 홈리에종의 고객은 " + String(clients.length) + "명" + "이 있네요.";
     if (clients.length > 0) {
       message += "\n";
-      message += "현재 온라인 상태에 있는 고객님의 명단은 " + clients.map((o) => { return o.client.name }).join(", ") + " 입니다.";
+      message += "현재 온라인 상태에 있는 고객님의 명단은 " + clients.map((o) => { return o.client.name + "(" + o.client.cliid + ")" }).join(", ") + " 입니다.";
     }
     message += "\n";
     message += "\n";
