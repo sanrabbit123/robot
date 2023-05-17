@@ -162,23 +162,49 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // 2. realtime analytics
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+    // 3. hl analytics console - analytics.js
 
     
+
+
+
+    // await this.MONGOLOGC.connect();
+
+    // const selfMongo = this.MONGOLOGC;
+    // const delta = 5;
+    // const collection = "homeliaisonAnalytics";
+    // let ago;
+    // let agoHistory;
+    // let sessions;
+    // let cliids;
+
+    // ago = new Date();
+    // ago.setMinutes(ago.getMinutes() - delta);
+
+    // agoHistory = await back.mongoRead(collection, { date: { $gte: ago } }, { selfMongo });
+    // agoHistory = agoHistory.filter((obj) => { return obj.network.ip.trim().replace(/[^0-9]/gi, '') !== address.officeinfo.ghost.outer.trim().replace(/[^0-9]/gi, '') })
+
+    // cliids = agoHistory.filter((obj) => { return (typeof obj.data.cliid === "string" && /^c/i.test(obj.data.cliid)) });
+    // sessions = [ ...new Set(agoHistory.map((o) => { return o.id })) ];
+
+    // console.log(agoHistory);
+    // console.log(agoHistory.length);
+    // console.log(sessions);
+    // console.log(sessions.length);
+    // console.log(cliids);
+
+    // await this.MONGOLOGC.close();
+
+
+
+
+
+
+
 
 
 

@@ -163,7 +163,7 @@ DataRouter.prototype.rou_get_First = function () {
   const { diskReading } = this.mother;
   let obj = {};
   let ipTong;
-  ipTong = [ 1, 127001, 19216801, 172301254, 5822475162, 112184236121, 219250244131, 11638190154, 118235266, 599136192, 12611323030 ];
+  ipTong = [ 1, 127001, 19216801, 172301254, 5822475162, 112184236121, 219250244131, 11638190154, 118235266, 599136192, 12611323030, 2233316480 ];
   for (let info in instance.address) {
     if (instance.address[info].ip.outer.length > 0) {
       ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
@@ -179,7 +179,7 @@ DataRouter.prototype.rou_get_First = function () {
       let ip, pass;
       let target;
 
-      ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+      ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
       if (typeof ip !== "string") {
         pass = false;
         ip = '';

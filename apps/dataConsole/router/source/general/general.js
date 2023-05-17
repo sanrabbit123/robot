@@ -6472,6 +6472,7 @@ GeneralJs.prototype.consultingPopup = function () {
             },
             blur: function (e) {
               this.value = this.value.replace(/[^0-9\-]/gi, '');
+              this.value = autoHypenPhone(this.value);
               if (this.value !== '') {
                 homeliaisonAnalytics({
                   page: instance.pageName,

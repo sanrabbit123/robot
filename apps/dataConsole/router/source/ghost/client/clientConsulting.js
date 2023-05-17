@@ -720,6 +720,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
 
   phoneBlurEvent = function (e) {
     this.value = this.value.trim().replace(/[^0-9\-]/gi, '');
+    this.value = autoHypenPhone(this.value);
     if (this.value !== '') {
       homeliaisonAnalytics({
         page: instance.pageName,
