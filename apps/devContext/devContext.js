@@ -166,12 +166,8 @@ DevContext.prototype.launching = async function () {
     // 3. hl analytics console - analytics.js
 
     
-    await this.MONGOLOGC.connect();
-    const analytics = new GoogleAnalytics();
-    console.log(await analytics.realtimeMessage(this.MONGOLOGC));
-    await this.MONGOLOGC.close();
 
-    
+
 
 
 

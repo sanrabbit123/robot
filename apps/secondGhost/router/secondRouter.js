@@ -2326,14 +2326,14 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
             })
           }
 
-          if (this.event.text.trim() === "온라인" || this.event.text.trim() === "현재" || this.event.text.trim() === "실시간") {
+          if (thisBody.event.text.trim() === "온라인" || thisBody.event.text.trim() === "현재" || thisBody.event.text.trim() === "실시간") {
             requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/realtimeMessage", { channel: thisBody.event.channel }, {
               headers: { "Content-Type": "application/json" }
             }).catch((err) => {
               console.log(err);
             })
           }
-          
+
           if (userDictionary[thisBody.event.user] !== undefined) {
             if (channelDictionary[thisBody.event.channel] !== undefined) {
               text = `(${channelDictionary[thisBody.event.channel]}) ${userDictionary[thisBody.event.user]} : ${thisBody.event.text}`;
