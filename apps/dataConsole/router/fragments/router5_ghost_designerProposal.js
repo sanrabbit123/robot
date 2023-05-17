@@ -59,8 +59,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       await instance.kakao.sendTalk("designerSelect", name, phone, {
         client: name,
         designer: designer,
-        host: address.backinfo.host,
-        path: "estimation",
+        host: address.frontinfo.host,
         cliid: cliid,
         needs: ("style," + desid + "," + proid + "," + method),
       });

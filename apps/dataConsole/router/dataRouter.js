@@ -335,7 +335,7 @@ DataRouter.prototype.rou_get_First = function () {
   const { diskReading } = this.mother;
   let obj = {};
   let ipTong;
-  ipTong = [ 1, 127001, 19216801, 172301254, 5822475162, 112184236121, 219250244131, 11638190154, 118235266, 599136192, 12611323030 ];
+  ipTong = [ 1, 127001, 19216801, 172301254, 5822475162, 112184236121, 219250244131, 11638190154, 118235266, 599136192, 12611323030, 2233316480 ];
   for (let info in instance.address) {
     if (instance.address[info].ip.outer.length > 0) {
       ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
@@ -351,7 +351,7 @@ DataRouter.prototype.rou_get_First = function () {
       let ip, pass;
       let target;
 
-      ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+      ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
       if (typeof ip !== "string") {
         pass = false;
         ip = '';
@@ -8121,8 +8121,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       await instance.kakao.sendTalk("designerSelect", name, phone, {
         client: name,
         designer: designer,
-        host: address.backinfo.host,
-        path: "estimation",
+        host: address.frontinfo.host,
         cliid: cliid,
         needs: ("style," + desid + "," + proid + "," + method),
       });
@@ -8472,7 +8471,9 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
             client: client.name,
           });
           await messageSend({ text: client.name + " 고객님께 큐레이션 완료 알림톡을 보냈어요.", channel: "#404_curation" });
-          requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/printClient", { cliid, history }, { headers: { "Content-Type": "application/json" } }).catch((err) => { logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + err.message).catch((err) => { console.log(err) }) });
+          requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/printClient", { cliid, history }, { headers: { "Content-Type": "application/json" } }).then(() => {
+            return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/storeClientAnalytics", { fast: true }, { headers: { "Content-Type": "application/json" } });
+          }).catch((err) => { logger.error("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + err.message).catch((err) => { console.log(err) }) });
         }
 
         res.send(JSON.stringify({ service: [], client: client.toNormal(), history }));

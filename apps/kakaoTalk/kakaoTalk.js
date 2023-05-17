@@ -563,20 +563,19 @@ KakaoTalk.prototype.templateTong = function (target) {
       }
     },
     "designerSelect": {
-      "name": "고객 디자이너 선택 최종 수정",
-      "id": "TF_7147",
+      "name": "고객 디자이너 선택 최종 수정 수정",
+      "id": "TN_1999",
       "needs": [
         "client",
         "designer",
         "host",
-        "path",
         "cliid",
         "needs"
       ],
-      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"cliid\", to: obj.cliid },\n          { from: \"needs\", to: obj.needs },\n        ];\n      }",
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"designer\", to: obj.designer },\n          { from: \"host\", to: obj.host },\n          { from: \"cliid\", to: obj.cliid },\n          { from: \"needs\", to: obj.needs },\n        ];\n      }",
       "raw": {
-        "templtContent": "안녕하세요, #{client}님.\n#{designer} 디자이너를 선택하셨군요!\n\n디자이너와 함께하면 내 마음에 쏙 드는 우리 집을 만나게 되실 거에요! 프로젝트 진행을 위해 계약금 안내드립니다 :)\n\n계약금은 전체 디자이너 비용에 포함되는 금액으로, 디자이너와의 현장 미팅 및 디자이너 일정 예약을 위해 정가제로 운영되고 있습니다.\n\n계약금을 입금해 주시면 디자이너와의 미팅 일정을 조정합니다.\n\n* 유의사항\n1. 계약자명과 입금자명이 같게 보내주셔야 합니다.\n2. 현장미팅 후 서비스를 진행하지 않더라도 계약금은 환불되지 않습니다.\n3. 현장미팅 후 계약금을 제외한 잔금을 입금하시면 서비스가 계속 진행됩니다.\n\n감사합니다 :)\n\n* 계약금 안내\nhttps://#{host}/middle/#{path}?cliid=#{cliid}&needs=#{needs}",
-        "templtName": "고객 디자이너 선택 최종 수정",
+        "templtContent": "안녕하세요, #{client}님.\n#{designer} 디자이너를 선택하셨군요!\n\n디자이너와 함께하면 내 마음에 쏙 드는 우리 집을 만나게 되실 거에요! 프로젝트 진행을 위해 계약금 안내드립니다 :)\n\n계약금은 전체 디자이너 비용에 포함되는 금액으로, 디자이너와의 현장 미팅 및 디자이너 일정 예약을 위해 정가제로 운영되고 있습니다.\n\n계약금을 입금해 주시면 디자이너와의 미팅 일정을 조정합니다.\n\n* 유의사항\n1. 계약자명과 입금자명이 같게 보내주셔야 합니다.\n2. 현장미팅 후 서비스를 진행하지 않더라도 계약금은 환불되지 않습니다.\n3. 현장미팅 후 계약금을 제외한 잔금을 입금하시면 서비스가 계속 진행됩니다.\n\n감사합니다 :)\n\n* 계약금 안내\nhttps://#{host}/estimation.php?cliid=#{cliid}&needs=#{needs}",
+        "templtName": "고객 디자이너 선택 최종 수정 수정",
         "templateType": "BA",
         "templateEmType": "NONE",
         "templateExtra": "",
@@ -588,20 +587,20 @@ KakaoTalk.prototype.templateTong = function (target) {
         "block": "N",
         "dormant": "N",
         "securityFlag": "N",
-        "status": "A",
+        "status": "R",
         "inspStatus": "APR",
         "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
         "buttons": [],
-        "cdate": "2021-09-03 10:59:23",
-        "templtCode": "TF_7147",
+        "cdate": "2023-05-17 11:54:08",
+        "templtCode": "TN_1999",
         "comments": [
           {
-            "cdate": "2021-09-03 14:36:25",
+            "cdate": "2023-05-17 14:24:32",
             "name": "검수자",
-            "id": "1519565",
+            "id": "2617237",
             "userName": "검수자",
             "commentContent": "",
-            "createdAt": "2021-09-03 14:36:25",
+            "createdAt": "2023-05-17 14:24:32",
             "status": "APR"
           }
         ]
