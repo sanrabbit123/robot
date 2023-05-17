@@ -317,6 +317,8 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
     rows = rows.filter((obj) => {
       return !/\&mode\=test/g.test(obj.info.requestUrl);
     }).filter((obj) => {
+      return !/\&view\=test/g.test(obj.info.requestUrl);
+    }).filter((obj) => {
       return obj.network.ip.trim().replace(/[^0-9]/gi, '') !== address.officeinfo.ghost.outer.trim().replace(/[^0-9]/gi, '');
     }).map((obj) => { return obj.id });
     sessionIds = [ ...new Set(rows) ];

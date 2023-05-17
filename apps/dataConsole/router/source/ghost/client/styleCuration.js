@@ -4909,6 +4909,7 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
         ]
       });
     }
+    instance.fileInput.setAttribute("cancel", JSON.stringify([]));
     cleanChildren(mother);
     for (let i = 0; i < this.files.length; i++) {
       cardMaker(this.files[i], i);

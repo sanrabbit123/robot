@@ -5863,8 +5863,8 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "이슬";
-    // const amount = 1800227;
+    // const name = "박소담";
+    // const amount = 1868000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,

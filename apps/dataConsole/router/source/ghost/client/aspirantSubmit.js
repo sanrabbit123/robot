@@ -225,7 +225,7 @@ AspirantSubmitJs.prototype.insertInitBox = function () {
 
 AspirantSubmitJs.prototype.insertAspirantBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson, cleanChildren } = GeneralJs;
   const { ea, media, standardWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -234,6 +234,8 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   const inputClassName = "inputClassName";
   const agreeTargetClassName = "agreeTargetClassName";
   const variableBarClassName = "variableBarClassName";
+  const fileTongClassName = "fileTongClassName";
+  const noticeClassName = "noticeClassName";
   let mainBlock;
   let mainPaddingTop, mainPaddingBottom;
   let contents;
@@ -340,9 +342,6 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   let grayTextAreaWidth;
   let mobileCheckBoxMainSize;
   let phoneHypenEvent;
-  let pyeongNumberEvent;
-  let pyeongBlurEvent;
-  let pyeongFocusEvent;
   let greenNoticeSize, greenNoticeWeight;
   let greenNoticePaddingTop, greenNoticePaddingBottom, greenNoticePaddingLeft;
   let greenNoticeBottom, greenNoticeBottom2;
@@ -353,8 +352,6 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   let calendarViewEvent;
   let calendarWidth;
   let calendarTop;
-  let livingAlertEvent;
-  let livingDownEvent;
   let nameBlurEvent;
   let phoneBlurEvent;
   let leftBoxWidth;
@@ -398,6 +395,22 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   let titleWidth;
   let grayWidth;
   let subFontSize, subFontTop, subFontBetween;
+  let fileChangeEvent;
+  let grayTextTop;
+  let grayMargin;
+  let portfolioBlock;
+  let mobileTitleLeft;
+  let mobileTitleTop;
+  let cardWidthNumber;
+  let cardHeightNumber;
+  let cardMargin;
+  let cardHeight;
+  let cardWordingSize;
+  let cardInnerMargin;
+  let cardInnerMarginTop;
+  let xIconWidth;
+  let xIconTop;
+  let xVisual;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -449,7 +462,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   grayTop = <%% 0, 0, 0, 0, 0 %%>;
   grayInputTop = <%% (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.2 %%>;
   grayHeight = <%% 32, 32, 31, 31, 7 %%>;
-  grayBigHeight = <%% 156, 137, 136, 135, 38 %%>;
+  grayBigHeight = <%% 164, 137, 136, 135, 38 %%>;
   grayTextAreaTop = <%% 3, 3, 3, 3, 1.3 %%>;
   grayTextAreaWidth = <%% 51.7, 51.7, 51.7, 390, 51.7 %%>;
 
@@ -649,6 +662,31 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
 
   barFactorB0Left = <%% 332, 250, 211, 153, 28.6 %%>;
 
+  grayTextTop = <%% 40, 40, 39, 39, 14 %%>;
+  grayMargin = <%% 16, 16, 16, 16, 3 %%>;
+
+  if (desktop) {
+    grayTextTop = grayTextTop + (isMac() ? 0 : 2);
+  }
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
+
+  cardWidthNumber = <%% 4, 4, 3, 2, 2 %%>;
+  cardHeightNumber = <%% 3, 3, 2, 2, 3 %%>;
+  cardMargin = <%% 6, 6, 6, 6, 1 %%>;
+  cardHeight = (grayBigHeight - (desktop ? grayMargin * 2 : (grayMargin * 2) + 2) - (cardMargin * (cardHeightNumber - 1))) / cardHeightNumber;
+
+  cardWordingSize = <%% 13, 13, 13, 13, 3 %%>;
+  cardInnerMargin = <%% 16, 16, 16, 16, 3 %%>;
+  cardInnerMarginTop = <%% 11, 11, 11, 11, 2.1 %%>;
+  if (desktop) {
+    cardInnerMarginTop = cardInnerMarginTop + (isMac() ? 0 : 1);
+  }
+  xIconWidth = <%% 10, 10, 10, 10, 2 %%>;
+  xIconTop = <%% 14, 14, 14, 14, 3 %%>;
+  xVisual = <%% 4, 4, 4, 4, 1 %%>;
+
   mobileGrayTextAreaTop = 7.8;
 
   defaultRatio = 0.5;
@@ -715,73 +753,14 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
 
   nameBlurEvent = function (e) {
     this.value = this.value.trim().replace(/[^a-zA-Z가-힣]/gi, '');
-    if (this.value !== '') {
-      homeliaisonAnalytics({
-        page: instance.pageName,
-        standard: instance.firstPageViewTime,
-        action: "inputBlur",
-        data: {
-          property: "name",
-          value: this.value,
-          date: dateToString(new Date(), true),
-        },
-      }).catch((err) => {
-        console.log(err);
-      });
-    }
   }
 
   phoneBlurEvent = function (e) {
     this.value = this.value.trim().replace(/[^0-9\-]/gi, '');
-    if (this.value !== '') {
-      homeliaisonAnalytics({
-        page: instance.pageName,
-        standard: instance.firstPageViewTime,
-        action: "inputBlur",
-        data: {
-          property: "phone",
-          value: this.value,
-          date: dateToString(new Date(), true),
-        },
-      }).catch((err) => {
-        console.log(err);
-      });
-    }
   }
 
   emailBlurEvent = function () {
     this.value = this.value.replace(/[\=\+\?\#\&\(\)]/gi, '');
-    if (this.value !== '') {
-      homeliaisonAnalytics({
-        page: instance.pageName,
-        standard: instance.firstPageViewTime,
-        action: "inputBlur",
-        data: {
-          property: "email",
-          value: this.value,
-          date: dateToString(new Date(), true),
-        },
-      }).catch((err) => {
-        console.log(err);
-      });
-    }
-  }
-
-  bigAddressBlurEvent = function () {
-    if (this.value !== '') {
-      homeliaisonAnalytics({
-        page: instance.pageName,
-        standard: instance.firstPageViewTime,
-        action: "inputBlur",
-        data: {
-          property: "address0",
-          value: this.value,
-          date: dateToString(new Date(), true),
-        },
-      }).catch((err) => {
-        console.log(err);
-      });
-    }
   }
 
   addressButtonEvent = async function (e) {
@@ -809,17 +788,6 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         }
       }
       window.addEventListener("message", GeneralJs.stacks["addressEvent"]);
-
-      homeliaisonAnalytics({
-        page: instance.pageName,
-        standard: instance.firstPageViewTime,
-        action: "addressClick",
-        data: {
-          date: dateToString(new Date(), true),
-        },
-      }).catch((err) => {
-        console.log(err);
-      });
 
       cancelBack = createNode({
         mother: totalContents,
@@ -890,70 +858,11 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   }
 
   addressBlurEvent = function (e) {
-    const self = this;
-    const mother = this.previousElementSibling;
-    const targets = [ ...mother.children ];
-    for (let dom of targets) {
-      dom.remove();
-    }
-    if (this.value !== '') {
-      homeliaisonAnalytics({
-        page: instance.pageName,
-        standard: instance.firstPageViewTime,
-        action: "inputBlur",
-        data: {
-          property: "address1",
-          value: this.value,
-          date: dateToString(new Date(), true),
-        },
-      }).catch((err) => {
-        console.log(err);
-      });
-    }
+    this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
   }
 
   addressFocusEvent = function (e) {
-    const self = this;
-    const mother = this.previousElementSibling;
-
     this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
-
-    createNode({
-      mode: "aside",
-      mother,
-      style: {
-        position: "relative",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(100) + '%',
-        textAlign: "center",
-      },
-      children: [
-        {
-          text: "주소는 인테리어를 받으실 곳으로 적어주세요!",
-          style: {
-            position: "absolute",
-            width: String(greenNoticeWidth1) + ea,
-            left: "calc(50% - " + String((greenNoticeWidth1 / 2) + greenNoticePaddingLeft) + ea + ")",
-            background: colorChip.gradientGreen,
-            fontSize: String(greenNoticeSize) + ea,
-            fontWeight: String(greenNoticeWeight),
-            color: colorChip.white,
-            paddingTop: String(greenNoticePaddingTop) + ea,
-            paddingBottom: String(greenNoticePaddingBottom) + ea,
-            paddingLeft: String(greenNoticePaddingLeft) + ea,
-            paddingRight: String(greenNoticePaddingLeft) + ea,
-            bottom: String(greenNoticeBottom) + ea,
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
-            animation: "fadeuplite 0.3s ease forwards",
-            lineHeight: String(greenNoticeLineHeight),
-          }
-        }
-      ]
-    });
-
   }
 
   commentsFocusEvent = function (e) {
@@ -1009,158 +918,6 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       dom.remove();
     }
     this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
-    if (this.value !== '') {
-      homeliaisonAnalytics({
-        page: instance.pageName,
-        standard: instance.firstPageViewTime,
-        action: "inputBlur",
-        data: {
-          property: "etc",
-          value: this.value,
-          date: dateToString(new Date(), true),
-        },
-      }).catch((err) => {
-        console.log(err);
-      });
-    }
-  }
-
-  pyeongNumberEvent = function (e) {
-    this.value = this.value.replace(/[^0-9\.]/gi, '');
-  }
-
-  pyeongBlurEvent = function (e) {
-    const self = this;
-    const mother = this.previousElementSibling;
-    const targets = [ ...mother.children ];
-    for (let dom of targets) {
-      dom.remove();
-    }
-    if (this.value.replace(/[^0-9\.]/gi, '').trim() === '') {
-      this.value = "00평";
-    } else {
-      this.value = this.value.replace(/[^0-9\.]/gi, '') + "평";
-    }
-    if (this.value !== "00평" && this.value !== '') {
-      homeliaisonAnalytics({
-        page: instance.pageName,
-        standard: instance.firstPageViewTime,
-        action: "inputBlur",
-        data: {
-          property: "pyeong",
-          value: this.value,
-          date: dateToString(new Date(), true),
-        },
-      }).catch((err) => {
-        console.log(err);
-      });
-    }
-  }
-
-  pyeongFocusEvent = function (e) {
-    const self = this;
-    const mother = this.previousElementSibling;
-
-    this.value = this.value.replace(/[^0-9\.]/gi, '');
-
-    createNode({
-      mode: "aside",
-      mother,
-      style: {
-        position: "relative",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(100) + '%',
-        textAlign: "center",
-      },
-      children: [
-        {
-          text: "평수는 반드시 분양 평수(공급 평수)로 적어주세요!",
-          style: {
-            position: "absolute",
-            width: String(greenNoticeWidth0) + ea,
-            left: "calc(50% - " + String((greenNoticeWidth0 / 2) + greenNoticePaddingLeft) + ea + ")",
-            background: colorChip.gradientGreen,
-            fontSize: String(greenNoticeSize) + ea,
-            fontWeight: String(greenNoticeWeight),
-            color: colorChip.white,
-            paddingTop: String(greenNoticePaddingTop) + ea,
-            paddingBottom: String(greenNoticePaddingBottom) + ea,
-            paddingLeft: String(greenNoticePaddingLeft) + ea,
-            paddingRight: String(greenNoticePaddingLeft) + ea,
-            bottom: String(greenNoticeBottom) + ea,
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
-            animation: "fadeuplite 0.3s ease forwards",
-            lineHeight: String(greenNoticeLineHeight),
-          }
-        }
-      ]
-    });
-
-  }
-
-  livingDownEvent = function (id) {
-    GeneralJs.stacks["currentLivingAlertId"] = null;
-    if (document.getElementById(id) !== null) {
-      document.getElementById(id).style.animation = "fadedownlite 0.3s ease forwards";
-      setQueue(() => {
-        if (document.getElementById(id) !== null) {
-          document.getElementById(id).parentElement.removeChild(document.getElementById(id));
-        }
-      }, 301);
-    }
-  }
-
-  livingAlertEvent = function (mother) {
-
-    // const tempId = uniqueValue("hex");
-    const moveinTarget = [ ...document.querySelectorAll("." + inputClassName) ].find((dom) => { return dom.getAttribute("property") === "movein" });
-    // createNode({
-    //   mode: "aside",
-    //   mother,
-    //   id: tempId,
-    //   style: {
-    //     position: "absolute",
-    //     top: String(0),
-    //     left: String(0),
-    //     width: String(100) + '%',
-    //     height: String(100) + '%',
-    //     textAlign: "center",
-    //   },
-    //   children: [
-    //     {
-    //       text: "거주중일 시, 보관 이사가 없다면 도배와 필름 제외 시공이 어렵습니다!",
-    //       style: {
-    //         position: "absolute",
-    //         width: String(greenNoticeWidth1) + ea,
-    //         left: "calc(50% - " + String((greenNoticeWidth1 / 2) + (greenNoticePaddingLeft / 2)) + ea + ")",
-    //         background: colorChip.gradientGreen,
-    //         fontSize: String(greenNoticeSize) + ea,
-    //         fontWeight: String(greenNoticeWeight),
-    //         color: colorChip.white,
-    //         paddingTop: String(greenNoticePaddingTop) + ea,
-    //         paddingBottom: String(greenNoticePaddingBottom) + ea,
-    //         paddingLeft: String(greenNoticePaddingLeft) + ea,
-    //         paddingRight: String(greenNoticePaddingLeft) + ea,
-    //         bottom: String(greenNoticeBottom2) + ea,
-    //         borderRadius: String(5) + "px",
-    //         boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
-    //         animation: "fadeuplite 0.3s ease forwards",
-    //         lineHeight: String(greenNoticeLineHeight),
-    //       }
-    //     }
-    //   ]
-    // });
-    if (moveinTarget.value.trim() === '') {
-      moveinTarget.value = dateToString(new Date());
-    }
-    // GeneralJs.stacks["currentLivingAlertId"] = tempId;
-    // setQueue(() => {
-    //   livingDownEvent(tempId);
-    // }, 5 * 1000);
-
   }
 
   checkboxClickEvent0 = async function (e) {
@@ -1282,6 +1039,110 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       words.style.color = colorChip.green;
       circle.setAttribute("toggle", "on");
       words.setAttribute("toggle", "on");
+    }
+  }
+
+  fileChangeEvent = function (e) {
+    const self = this;
+    const mother = document.querySelector('.' + fileTongClassName);
+    const cardMaker = (fileObj, index) => {
+      createNode({
+        mother,
+        events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: "calc(calc(100% - " + String(cardMargin * (cardWidthNumber - 1)) + ea + ") / " + String(cardWidthNumber) + ")",
+          height: String(cardHeight) + ea,
+          marginRight: String(index % cardWidthNumber === cardWidthNumber - 1 ? 0 : cardMargin) + ea,
+          marginBottom: String(cardMargin) + ea,
+          background: colorChip.white,
+          borderRadius: String(3) + "px",
+        },
+        children: [
+          {
+            style: {
+              position: "relative",
+              top: String(cardInnerMarginTop) + ea,
+              left: String(cardInnerMargin) + ea,
+              width: withOut(xIconWidth + (cardInnerMargin * 2.8), ea),
+              height: withOut(cardInnerMarginTop, ea),
+              overflow: "hidden",
+            },
+            children: [
+              {
+                text: fileObj.name,
+                style: {
+                  position: "absolute",
+                  fontSize: String(cardWordingSize) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.black,
+                  width: String(900) + ea,
+                }
+              }
+            ]
+          },
+          {
+            attribute: [
+              { index }
+            ],
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  const index = Number(this.getAttribute("index"));
+                  let cancel;
+                  cancel = JSON.parse(instance.fileInput.getAttribute("cancel"));
+                  cancel.push(index);
+                  instance.fileInput.setAttribute("cancel", JSON.stringify(cancel));
+                  this.parentElement.parentElement.removeChild(this.parentElement);
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              background: colorChip.white,
+              width: String(xIconWidth) + ea,
+              height: String(xIconWidth) + ea,
+              right: String(cardInnerMargin) + ea,
+              top: String(xIconTop) + ea,
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  background: colorChip.white,
+                  width: String(xIconWidth + (xVisual * 2)) + ea,
+                  height: String(xIconWidth + (xVisual * 2)) + ea,
+                  right: String(-1 * xVisual) + ea,
+                  top: String(-1 * xVisual) + ea,
+                }
+              },
+              {
+                mode: "svg",
+                source: instance.mother.returnCancel(colorChip.green),
+                style: {
+                  position: "absolute",
+                  background: colorChip.white,
+                  width: String(xIconWidth) + ea,
+                  right: String(0) + ea,
+                  top: String(0) + ea,
+                }
+              }
+            ]
+          }
+        ]
+      });
+    }
+    instance.fileInput.setAttribute("cancel", JSON.stringify([]));
+    cleanChildren(mother);
+    for (let i = 0; i < this.files.length; i++) {
+      cardMaker(this.files[i], i);
+    }
+    if (this.files.length === 0) {
+      this.previousElementSibling.style.display = "flex";
+    } else {
+      this.previousElementSibling.style.display = "none";
     }
   }
 
@@ -1669,12 +1530,9 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         class: [ inputClassName ],
         attribute: {
           type: "text",
-          placeholder: "인테리어 받을 곳의 주소",
+          placeholder: "주소",
           property: "address0",
           value: "",
-        },
-        event: {
-          blur: bigAddressBlurEvent
         },
         style: {
           position: "absolute",
@@ -1720,7 +1578,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         class: [ inputClassName ],
         attribute: {
           type: "text",
-          placeholder: "인테리어 받을 곳의 상세 주소",
+          placeholder: "상세 주소",
           property: "address1",
           value: "",
         },
@@ -1758,14 +1616,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
     }
   });
 
-
-  // ==================================================================================================================================
-  // ==================================================================================================================================
-  // ==================================================================================================================================
-  // ==================================================================================================================================
-
-
-  // 8
+  // 7
   createNode({
     mother: rightBox,
     style: {
@@ -1805,7 +1656,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         class: [ inputClassName ],
         attribute: {
           toggle: "on",
-          property: "living",
+          property: "business",
         },
         event: {
           click: checkboxClickEvent0
@@ -1866,7 +1717,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         class: [ inputClassName ],
         attribute: {
           toggle: "off",
-          property: "living",
+          property: "business",
         },
         event: {
           click: checkboxClickEvent0
@@ -1927,7 +1778,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         class: [ inputClassName ],
         attribute: {
           toggle: "off",
-          property: "living",
+          property: "business",
         },
         event: {
           click: checkboxClickEvent0
@@ -1988,7 +1839,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         class: [ inputClassName ],
         attribute: {
           toggle: "off",
-          property: "living",
+          property: "business",
         },
         event: {
           click: checkboxClickEvent0
@@ -2046,7 +1897,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       },
     ]
   });
-  // 7
+  // 8
   createNode({
     mother: rightBox,
     style: {
@@ -2098,7 +1949,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           attribute: {
             type: "text",
             placeholder: "회사명",
-            property: "pyeong",
+            property: "company",
             value: "",
           },
           style: {
@@ -2118,6 +1969,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         }
       },
       {
+        class: [ noticeClassName ],
         text: "* 사업자가 없는 경우, '프리랜서'로 작성해주세요!",
         style: {
           display: "inline-block",
@@ -2132,6 +1984,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       },
     ]
   });
+  // 9
   createNode({
     mother: rightBox,
     style: {
@@ -2183,7 +2036,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           attribute: {
             type: "text",
             placeholder: "000-00-00000",
-            property: "pyeong",
+            property: "numbers",
             value: "",
           },
           style: {
@@ -2203,6 +2056,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         }
       },
       {
+        class: [ noticeClassName ],
         text: "* 프리랜서인 경우, 생년월일 6자리를 적어주세요!",
         style: {
           display: "inline-block",
@@ -2217,6 +2071,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       },
     ]
   });
+  // 10
   createNode({
     mother: rightBox,
     style: {
@@ -2268,7 +2123,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           attribute: {
             type: "text",
             placeholder: "2000-00-00",
-            property: "pyeong",
+            property: "start",
             value: "",
           },
           style: {
@@ -2288,6 +2143,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         }
       },
       {
+        class: [ noticeClassName ],
         text: "* 프리랜서인 경우, 기입하지 않으셔도 됩니다.",
         style: {
           display: "inline-block",
@@ -2302,6 +2158,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       },
     ]
   });
+  // 11
   createNode({
     mother: rightBox,
     style: {
@@ -2353,7 +2210,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           attribute: {
             type: "text",
             placeholder: "성함",
-            property: "pyeong",
+            property: "representative",
             value: "",
           },
           style: {
@@ -2373,6 +2230,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         }
       },
       {
+        class: [ noticeClassName ],
         text: "* 프리랜서인 경우, 본인 성함을 입력해주세요!",
         style: {
           display: "inline-block",
@@ -2388,9 +2246,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
     ]
   });
 
-
-
-  // 6 : margin
+  // 12 : margin
   createNode({
     mother: rightBox,
     style: {
@@ -2402,7 +2258,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   });
 
 
-
+  // 13
   createNode({
     mother: rightBox,
     style: {
@@ -2475,6 +2331,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       },
     ]
   });
+  // 14
   createNode({
     mother: rightBox,
     style: {
@@ -2560,6 +2417,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       },
     ]
   });
+  // 15
   createNode({
     mother: rightBox,
     style: {
@@ -2633,9 +2491,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
     ]
   });
 
-
-
-  // 6 : margin
+  // 16 : margin
   createNode({
     mother: rightBox,
     style: {
@@ -2646,9 +2502,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
     }
   });
 
-
-
-  // 7
+  // 17
   createNode({
     mother: rightBox,
     style: {
@@ -3084,7 +2938,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       },
     ]
   });
-  createNode({
+  portfolioBlock = createNode({
     mother: rightBox,
     style: {
       display: "block",
@@ -3120,6 +2974,20 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         }
       },
       {
+        event: {
+          click: function (e) {
+            this.querySelector("input").click();
+          },
+          dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
+          dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
+          dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
+          drop: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.querySelector("input").files = e.dataTransfer.files;
+            fileChangeEvent.call(this.querySelector("input"), e);
+          }
+        },
         style: {
           display: "inline-block",
           position: "relative",
@@ -3128,35 +2996,78 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           height: String(grayBigHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
+          cursor: "pointer",
         },
-        child: {
-          style: {
-            display: "flex",
-            position: "absolute",
-            width: withOut(0, ea),
-            height: withOut(0, ea),
-            top: String(0),
-            left: String(0),
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          },
-          child: {
-            text: "클릭 또는 드래그하여 파일 업로드",
+        children: [
+          {
             style: {
-              display: "inline-block",
-              position: "relative",
-              top: String(-3) + ea,
-              fontSize: String(23) + ea,
-              fontWeight: String(200),
-              color: colorChip.gray4,
+              position: "absolute",
+              top: String(grayMargin + (desktop ? 0 : 2)) + ea,
+              left: String(grayMargin) + ea,
+              width: withOut(grayMargin * 2, ea),
+              height: withOut(grayMargin + grayMargin + (desktop ? 0 : 2), ea),
+              overflow: "scroll",
+              zIndex: String(1),
+            },
+            children: [
+              {
+                class: [ fileTongClassName ],
+                style: {
+                  position: "relative",
+                  width: String(100) + '%',
+                  top: String(0),
+                  left: String(0),
+                }
+              }
+            ]
+          },
+          {
+            style: {
+              display: "flex",
+              position: "absolute",
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              top: String(0),
+              left: String(0),
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              text: "클릭 또는 드래그하여 파일 업로드",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                top: String(-3) + ea,
+                fontSize: String(23) + ea,
+                fontWeight: String(200),
+                color: colorChip.gray4,
+              }
+            }
+          },
+          {
+            mode: "input",
+            attribute: {
+              type: "file",
+              name: "upload",
+              accept: "image/*,  application/pdf",
+              multiple: "true",
+              cancel: JSON.stringify([]),
+            },
+            event: {
+              change: fileChangeEvent,
+            },
+            style: {
+              position: "absolute",
+              display: "none",
             }
           }
-        }
+        ]
       },
     ]
   });
 
+  this.fileInput = portfolioBlock.querySelector("input");
 
   // policy and submit
   policyArea = createNode({
