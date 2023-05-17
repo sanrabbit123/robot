@@ -108,7 +108,7 @@ AnalyticsJs.prototype.mainDataRender = async function () {
 
     values = {};
 
-    for (let client of instance.clients) {
+    for (let { client } of instance.clients) {
 
       standards.values[client.cliid] = [
         {
@@ -1113,7 +1113,7 @@ AnalyticsJs.prototype.baseMaker = async function () {
           ]
         }).children;
       
-        for (let client of instance.clients) {
+        for (let { client } of instance.clients) {
       
           createNode({
             mother: idNameArea,
@@ -2169,13 +2169,15 @@ AnalyticsJs.prototype.launching = async function () {
     ago = new Date();
     ago.setMonth(ago.getMonth() - 3);
 
-    clients = await ajaxJson({ noFlat: true, whereQuery: {
-      "requests": {
+    clients = await ajaxJson({ mode: "get", whereQuery: {
+      "client.requests": {
         $elemMatch: {
           "request.timeline": { $gte: ago }
         }
       }
-    } }, BACKHOST + "/getClients", { equal: true });
+    }, projectQuery: {
+      "client": 1,
+    } }, LOGHOST + "/clientAnalytics", { equal: true });
 
     members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
 

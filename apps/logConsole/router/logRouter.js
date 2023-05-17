@@ -994,6 +994,8 @@ LogRouter.prototype.rou_post_clientAnalytics = function () {
           rows = await back.mongoPick(collection, [ whereQuery, projectQuery ], { selfMongo });
         }
   
+        rows.sort((a, b) => { return b.client.requests[0].request.timeline.valueOf() - a.client.requests[0].request.timeline.valueOf() });
+
         res.send(JSON.stringify(rows));
 
       } else {
