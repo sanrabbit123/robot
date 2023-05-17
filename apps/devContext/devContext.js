@@ -175,7 +175,7 @@ DevContext.prototype.launching = async function () {
     // await this.MONGOLOGC.connect();
 
     // const selfMongo = this.MONGOLOGC;
-    // const delta = 5;
+    // const delta = 10;
     // const collection = "homeliaisonAnalytics";
     // const clientAnalyticsCollection = "clientAnalytics";
     // const nullWords = "null";
@@ -210,22 +210,20 @@ DevContext.prototype.launching = async function () {
 
     // targetFindIds = [ ...new Set(sessions.filter((o) => { return o.cliid === nullWords }).map(({ id }) => { return id })) ];
 
-    // console.log(sessions);
     // console.log(targetFindIds);
+    
+
+
 
     // await this.MONGOLOGC.close();
 
 
 
 
+
+
+
     
-
-
-
-
-
-
-
 
 
 

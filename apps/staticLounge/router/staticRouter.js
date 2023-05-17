@@ -3682,9 +3682,18 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
         for (let client of targetClients) {
           finalTargets.push(client);
         }
-        await analytics.clientsMetric(finalTargets, instance.mongo, instance.mongoconsole, instance.mongolog, true, true);
 
-        res.send(JSON.stringify({ message: "done" }));
+        analytics.clientsMetric(finalTargets, instance.mongo, instance.mongoconsole, instance.mongolog, true, true).then((result) => {
+          if (Array.isArray(result)) {
+            logger.cron("client analytics store success (fast) : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+          } else {
+            logger.error("client analytics store fail (fast) : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+          }
+        }).catch((err) => {
+          logger.error("Static lounge 서버 문제 생김 (rou_post_storeClientAnalytics): " + err.message).catch((err) => { console.log(err) });
+        })
+
+        res.send(JSON.stringify({ message: "will do" }));
 
       }
 
