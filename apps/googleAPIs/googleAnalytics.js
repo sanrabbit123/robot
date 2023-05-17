@@ -1244,7 +1244,7 @@ GoogleAnalytics.prototype.realtimeMetric = async function (selfCoreMongo, selfMo
 
 GoogleAnalytics.prototype.realtimeMessage = async function (selfMongo) {
   const instance = this;
-  const { equalJson, requestSystem } = this.mother;
+  const { equalJson, requestSystem, dateToString } = this.mother;
   const { realtimeCollection } = this;
   const bar = "\n==================================================================";
   const back = this.back;
@@ -1255,7 +1255,11 @@ GoogleAnalytics.prototype.realtimeMessage = async function (selfMongo) {
     let message;
     let index;
 
-    message = "현재 홈리에종 웹 페이지에는 " + String(current.length) + "명" + "이 있습니다."
+    message = bar;
+    message += "\n" + dateToString(new Date(), true) + " 현재";
+    message += bar;
+
+    message += "\n\n현재 홈리에종 웹 페이지에는 " + String(current.length) + "명" + "이 있습니다."
     message += "\n";
     message += "이 중 홈리에종의 고객은 " + String(clients.length) + "명" + "이 있네요.";
     if (clients.length > 0) {
