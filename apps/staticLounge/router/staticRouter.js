@@ -3738,6 +3738,43 @@ StaticRouter.prototype.rou_post_storeRealtimeAnalytics = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_realtimeMessage = function () {
+  const instance = this;
+  const { equalJson, requestSystem } = this.mother;
+  const analytics = this.analytics;
+  const address = this.address;
+  let obj;
+  obj = {};
+  obj.link = [ "/realtimeMessage" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { channel } = equalJson(req.body);
+      const text = await analytics.realtimeMessage(instance.mongolog);
+
+      requestSystem("https://" + address.secondinfo.host + ":" + String(3000) + "/fairySlack", {
+        channel: channel,
+        text: text,
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).catch((err) => { console.log(err); });
+
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_realtimeMessage): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_checkInsyncStatus = function () {
   const instance = this;
   const { processSystem } = this.mother;

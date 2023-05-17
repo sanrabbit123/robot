@@ -182,7 +182,7 @@ OpenAiAPIs.prototype.slackGPT = function (channel, input) {
   const port = 3000;
   const path = "/fairySlack";
   return new Promise((resolve, reject) => {
-    instance.chatGPT(input).then((result) => {
+    instance.chatGPT(input.trim() === "" ? "안녕?" : input.trim()).then((result) => {
       return requestSystem("https://" + address.secondinfo.host + ":" + String(port) + path, {
         channel: channel,
         text: result,

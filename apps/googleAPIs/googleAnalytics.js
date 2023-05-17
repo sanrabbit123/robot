@@ -1145,7 +1145,7 @@ GoogleAnalytics.prototype.realtimeMetric = async function (selfCoreMongo, selfMo
   const instance = this;
   const { equalJson, db } = this.mother;
   const { collection, clientAnalyticsCollection, nullWords, realtimeCollection } = this;
-  const delta = 10;
+  const delta = 20;
   const back = this.back;
   const address = this.address;
   try {
@@ -1235,6 +1235,53 @@ GoogleAnalytics.prototype.realtimeMetric = async function (selfCoreMongo, selfMo
     }
     
     return sessions;
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+GoogleAnalytics.prototype.realtimeMessage = async function (selfMongo) {
+  const instance = this;
+  const { equalJson, requestSystem } = this.mother;
+  const { realtimeCollection } = this;
+  const bar = "\n==================================================================";
+  const back = this.back;
+  const address = this.address;
+  try {
+    const current = await back.mongoRead(realtimeCollection, {}, { selfMongo });
+    const clients = current.filter((o) => { return o.client !== null });
+    let message;
+    let index;
+
+    message = "현재 홈리에종 웹 페이지에는 " + String(current.length) + "명" + "이 있습니다."
+    message += "\n";
+    message += "이 중 홈리에종의 고객은 " + String(clients.length) + "명" + "이 있네요.";
+    if (clients.length > 0) {
+      message += "\n";
+      message += "현재 온라인 상태에 있는 고객님의 명단은 " + clients.map((o) => { return o.client.name }).join(", ") + " 입니다.";
+    }
+    message += "\n";
+    message += "\n";
+    if (current.length > 0) {
+      message += String(current.length) + "명의 유저가 현재 있는 페이지는 다음과 같습니다.";
+      message += bar;
+      index = 1;
+      for (let obj of current) {
+        message += "\n";
+        if (obj.client !== null) {
+          message += String(index) + "번 사용자 (" + obj.client.name + ") : " + obj.history.lastPage + " - " + obj.device.device.type;
+        } else {
+          message += String(index) + "번 사용자 : " + obj.history.lastPage + " - " + obj.device.device.type;
+        }
+        index++;
+      }
+      message += bar;
+
+    }
+
+    return message;
 
   } catch (e) {
     console.log(e);

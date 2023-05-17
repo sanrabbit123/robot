@@ -2321,13 +2321,19 @@ SecondRouter.prototype.rou_post_slackEvents = function () {
         if (thisBody.event.type === "message") {
 
           if (/^요정[아]?/i.test(thisBody.event.text.trim())) {
-            openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, "")).then((res) => {
-              console.log(res.data);
-            }).catch((err) => {
+            openAi.slackGPT(thisBody.event.channel, thisBody.event.text.trim().replace(/^요정[아]?/i, "")).catch((err) => {
               console.log(err);
             })
           }
 
+          if (this.event.text.trim() === "온라인" || this.event.text.trim() === "현재" || this.event.text.trim() === "실시간") {
+            requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/realtimeMessage", { channel: thisBody.event.channel }, {
+              headers: { "Content-Type": "application/json" }
+            }).catch((err) => {
+              console.log(err);
+            })
+          }
+          
           if (userDictionary[thisBody.event.user] !== undefined) {
             if (channelDictionary[thisBody.event.channel] !== undefined) {
               text = `(${channelDictionary[thisBody.event.channel]}) ${userDictionary[thisBody.event.user]} : ${thisBody.event.text}`;
