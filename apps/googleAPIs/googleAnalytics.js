@@ -15,7 +15,10 @@ const GoogleAnalytics = function () {
   this.propertyId = "227717726";
   this.property = `properties/${this.propertyId}`;
   this.collection = "homeliaisonAnalytics";
+  this.clientAnalyticsCollection = "clientAnalytics";
+  this.realtimeCollection = "realtimeAnalytics";
   this.unknownKeyword = "(not set)";
+  this.nullWords = "null";
 }
 
 GoogleAnalytics.prototype.returnDate = function (str) {
@@ -934,7 +937,7 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMon
   const address = this.address;
   const unknownKeyword = this.unknownKeyword;
   const { equalJson } = this.mother;
-  const collection = "clientAnalytics";
+  const collection = this.clientAnalyticsCollection;
   const querystring = require("querystring");
   let storeSuccess;
   storeSuccess = false;
@@ -1135,6 +1138,107 @@ GoogleAnalytics.prototype.clientMetric = async function (thisClient, selfCoreMon
   } catch (e) {
     console.log(e);
     return storeSuccess;
+  }
+}
+
+GoogleAnalytics.prototype.realtimeMetric = async function (selfCoreMongo, selfMongo, store = true) {
+  const instance = this;
+  const { equalJson, db } = this.mother;
+  const { collection, clientAnalyticsCollection, nullWords, realtimeCollection } = this;
+  const delta = 10;
+  const back = this.back;
+  const address = this.address;
+  try {
+    let ago;
+    let agoHistory;
+    let sessions;
+    let cliids;
+    let targetFindIds;
+    let whereQuery;
+    let targetClients;
+    let sessionTarget;
+    let targetHistories;
+    let historiesTarget;
+    let cliidsTarget;
+    let thisClients;
+
+    ago = new Date();
+    ago.setMinutes(ago.getMinutes() - delta);
+
+    agoHistory = await back.mongoRead(collection, { date: { $gte: ago } }, { selfMongo });
+    agoHistory = agoHistory.filter((obj) => { return obj.network.ip.trim().replace(/[^0-9]/gi, '') !== address.officeinfo.ghost.outer.trim().replace(/[^0-9]/gi, '') })
+
+    cliids = agoHistory.filter((obj) => { return (typeof obj.data.cliid === "string" && /^c/i.test(obj.data.cliid)) }).map((obj) => {
+      return {
+        cliid: obj.data.cliid,
+        sessionId: obj.id
+      }
+    });
+
+    sessions = [ ...new Set(agoHistory.map((o) => { return o.id })) ].filter((str) => { return typeof str === "string" });
+    sessions = sessions.map((id) => {
+      let cliid;
+      if (cliids.find((o) => { return o.sessionId === id }) === undefined) {
+        cliid = nullWords;
+      } else {
+        cliid = cliids.find((o) => { return o.sessionId === id }).cliid;
+      }
+      return { id, cliid };
+    })
+
+    targetFindIds = [ ...new Set(sessions.filter((o) => { return o.cliid === nullWords }).map(({ id }) => { return id })) ];
+
+    whereQuery = {};
+    whereQuery["sessions.id"] = { $elemMatch: { $regex: "(" + targetFindIds.join("|") + ")" } };
+
+    targetClients = await back.mongoPick(clientAnalyticsCollection, [ whereQuery, { cliid: 1, "sessions.id": 1 } ], { selfMongo });
+
+    for (let obj of sessions) {
+      for (let obj2 of targetClients) {
+        if (obj2.sessions.id.includes(obj.id)) {
+          obj.cliid = obj2.cliid;
+        }
+      }
+    }
+
+    targetHistories = await back.mongoPick(collection, [ { id: { $regex: "(" + sessions.map(({ id }) => { return id }).join("|") + ")" } }, { page: 1, action: 1, data: 1, id: 1, info: 1, date: 1 } ], { selfMongo });
+    targetHistories = targetHistories.filter((o) => { return o.action === "pageInit" && (o.info.ip.trim().replace(/[^0-9]/gi, '') !== address.officeinfo.ghost.outer.trim().replace(/[^0-9]/gi, '')) });
+
+    cliidsTarget = sessions.map((o) => { return o.cliid }).filter((str) => { return str !== nullWords });
+    if (cliidsTarget.length === 0) {
+      thisClients = [];
+    } else {
+      thisClients = (await back.getClientsByQuery({ $or: cliidsTarget.map((cliid) => { return { cliid } }) }, { selfMongo: selfCoreMongo })).toNormal();
+    }
+
+    for (let obj of sessions) {
+      sessionTarget = agoHistory.find((o) => { return obj.id === o.id });
+      historiesTarget = targetHistories.filter((o) => { return o.id === obj.id });
+      obj.device = sessionTarget.device;
+      obj.network = sessionTarget.network;
+      
+      historiesTarget.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() })
+      obj.history = {};
+      obj.history.detail = historiesTarget;
+      obj.history.length = historiesTarget.length;
+      obj.history.lastPage = historiesTarget[historiesTarget.length - 1].info.pageTitle + " (" + historiesTarget[historiesTarget.length - 1].page + ")";
+      obj.history.summary = obj.history.detail.map((o) => { return o.info.pageTitle });
+
+      obj.client = thisClients.find((o) => { return o.cliid === obj.cliid }) === undefined ? null : thisClients.find((o) => { return o.cliid === obj.cliid });
+    }
+
+    if (store) {
+      await selfMongo.db(db).collection(realtimeCollection).deleteMany({});
+      for (let obj of sessions) {
+        await back.mongoCreate(realtimeCollection, obj, { selfMongo });
+      }
+    }
+    
+    return sessions;
+
+  } catch (e) {
+    console.log(e);
+    return null;
   }
 }
 

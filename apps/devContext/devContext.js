@@ -172,54 +172,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // await this.MONGOLOGC.connect();
-
-    // const selfMongo = this.MONGOLOGC;
-    // const delta = 10;
-    // const collection = "homeliaisonAnalytics";
-    // const clientAnalyticsCollection = "clientAnalytics";
-    // const nullWords = "null";
-    // let ago;
-    // let agoHistory;
-    // let sessions;
-    // let cliids;
-    // let targetFindIds;
-
-    // ago = new Date();
-    // ago.setMinutes(ago.getMinutes() - delta);
-
-    // agoHistory = await back.mongoRead(collection, { date: { $gte: ago } }, { selfMongo });
-    // agoHistory = agoHistory.filter((obj) => { return obj.network.ip.trim().replace(/[^0-9]/gi, '') !== address.officeinfo.ghost.outer.trim().replace(/[^0-9]/gi, '') })
-
-    // cliids = agoHistory.filter((obj) => { return (typeof obj.data.cliid === "string" && /^c/i.test(obj.data.cliid)) }).map((obj) => {
-    //   return {
-    //     cliid: obj.data.cliid,
-    //     sessionId: obj.id
-    //   }
-    // });
-    // sessions = [ ...new Set(agoHistory.map((o) => { return o.id })) ];
-    // sessions = sessions.map((id) => {
-    //   let cliid;
-    //   if (cliids.find((o) => { return o.sessionId === id }) === undefined) {
-    //     cliid = nullWords;
-    //   } else {
-    //     cliid = cliids.find((o) => { return o.sessionId === id }).cliid;
-    //   }
-    //   return { id, cliid };
-    // })
-
-    // targetFindIds = [ ...new Set(sessions.filter((o) => { return o.cliid === nullWords }).map(({ id }) => { return id })) ];
-
-    // console.log(targetFindIds);
-    
-
-
-
-    // await this.MONGOLOGC.close();
-
-
-
-
 
 
 

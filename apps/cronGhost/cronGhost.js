@@ -148,6 +148,8 @@ CronGhost.prototype.pollingAsyncRequest = async function (MONGOC) {
       return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/checkInsyncStatus", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/designerFolder", { data: null }, { headers: { "Content-Type": "application/json" } });
+    }).then(() => {
+      return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/storeRealtimeAnalytics", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).catch((e) => {
       throw new Error(e);
     });

@@ -3705,6 +3705,39 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_storeRealtimeAnalytics = function () {
+  const instance = this;
+  const { equalJson } = this.mother;
+  const analytics = this.analytics;
+  let obj;
+  obj = {};
+  obj.link = [ "/storeRealtimeAnalytics" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      analytics.realtimeMetric(instance.mongo, instance.mongolog, true).then((result) => {
+        if (Array.isArray(result)) {
+          logger.cron("realtime analytics store success : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+        } else {
+          logger.error("realtime analytics store fail : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+        }
+      }).catch((err) => {
+        logger.error("Static lounge 서버 문제 생김 (rou_post_storeRealtimeAnalytics): " + err.message).catch((err) => { console.log(err) });
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_storeRealtimeAnalytics): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_checkInsyncStatus = function () {
   const instance = this;
   const { processSystem } = this.mother;
