@@ -872,7 +872,7 @@ GoogleAnalytics.prototype.monthlyMetric = async function (thisDate = null) {
   }
 }
 
-GoogleAnalytics.prototype.clientsMetric = async function (clientsArr, selfCoreMongo, selfConsoleMongo, selfMongo, store = false) {
+GoogleAnalytics.prototype.clientsMetric = async function (clientsArr, selfCoreMongo, selfConsoleMongo, selfMongo, store = false, fast = false) {
   const instance = this;
   const back = this.back;
   const { sleep } = this.mother;
@@ -916,7 +916,9 @@ GoogleAnalytics.prototype.clientsMetric = async function (clientsArr, selfCoreMo
         }
       }
       clientsObjectArr.push(clientResult);
-      await sleep(500);
+      if (!fast) {
+        await sleep(500);
+      }
     }
 
     return clientsObjectArr;

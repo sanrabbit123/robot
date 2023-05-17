@@ -3585,69 +3585,109 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
     });
     try {
       const selfCoreMongo = instance.mongo;
-      const delta = 5;
       const fromDate = new Date(2023, 4, 4, 0, 0, 0);
+      const fastMode = ((req.body.fast === "true" || req.body.fast === true) ? true : false);
       let agoDate;
       let targetClients;
       let agoClients;
       let targets;
       let finalTargets;
+      let delta;
       
-      agoDate = new Date();
-      agoDate.setDate(agoDate.getDate() - delta);
-  
-      targetClients = (await back.getClientsByQuery({
-        $and: [
-          {
-            "requests": {
-              $elemMatch: {
-                "request.timeline": {
-                  $gte: fromDate,
+      if (!fastMode) {
+
+        delta = 7;
+        agoDate = new Date();
+        agoDate.setDate(agoDate.getDate() - delta);
+    
+        targetClients = (await back.getClientsByQuery({
+          $and: [
+            {
+              "requests": {
+                $elemMatch: {
+                  "request.timeline": {
+                    $gte: fromDate,
+                  }
+                }
+              }
+            },
+            {
+              "requests": {
+                $elemMatch: {
+                  "analytics.response.status": {
+                    $regex: "^[진응장]"
+                  }
                 }
               }
             }
-          },
-          {
-            "requests": {
-              $elemMatch: {
-                "analytics.response.status": {
-                  $regex: "^[진응]"
-                }
+          ]
+        }, { selfMongo: selfCoreMongo })).toNormal();
+    
+        agoClients = (await back.getClientsByQuery({
+          "requests": {
+            $elemMatch: {
+              "request.timeline": {
+                $gte: agoDate,
               }
             }
           }
-        ]
-      }, { selfMongo: selfCoreMongo })).toNormal();
-  
-      agoClients = (await back.getClientsByQuery({
-        "requests": {
-          $elemMatch: {
-            "request.timeline": {
-              $gte: agoDate,
-            }
+        }, { selfMongo: selfCoreMongo })).toNormal();
+        
+        targets = targetClients.concat(agoClients);
+        finalTargets = [];
+        for (let client of targets) {
+          if (!finalTargets.map((c) => { return c.cliid }).includes(client.cliid)) {
+            finalTargets.push(client);
           }
         }
-      }, { selfMongo: selfCoreMongo })).toNormal();
-      
-      targets = targetClients.concat(agoClients);
-      finalTargets = [];
-      for (let client of targets) {
-        if (!finalTargets.map((c) => { return c.cliid }).includes(client.cliid)) {
+    
+        analytics.clientsMetric(finalTargets, instance.mongo, instance.mongoconsole, instance.mongolog, true, false).then((result) => {
+          if (Array.isArray(result)) {
+            logger.cron("client analytics store success : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+          } else {
+            logger.error("client analytics store fail : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+          }
+        }).catch((err) => {
+          logger.error("Static lounge 서버 문제 생김 (rou_post_storeClientAnalytics): " + err.message).catch((err) => { console.log(err) });
+        })
+    
+        res.send(JSON.stringify({ message: "will do" }));
+
+      } else {
+
+        targetClients = (await back.getClientsByQuery({
+          $and: [
+            {
+              "requests": {
+                $elemMatch: {
+                  "request.timeline": {
+                    $gte: fromDate,
+                  }
+                }
+              }
+            },
+            {
+              "requests": {
+                $elemMatch: {
+                  "analytics.response.status": {
+                    $regex: "^[응]"
+                  }
+                }
+              }
+            }
+          ]
+        }, { selfMongo: selfCoreMongo })).toNormal();
+    
+        finalTargets = [];
+        for (let client of targetClients) {
           finalTargets.push(client);
         }
+        await analytics.clientsMetric(finalTargets, instance.mongo, instance.mongoconsole, instance.mongolog, true, true);
+
+        res.send(JSON.stringify({ message: "done" }));
+
       }
-  
-      analytics.clientsMetric(finalTargets, instance.mongo, instance.mongoconsole, instance.mongolog, true).then((result) => {
-        if (Array.isArray(result)) {
-          logger.cron("client analytics store success : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
-        } else {
-          logger.error("client analytics store fail : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
-        }
-      }).catch((err) => {
-        logger.error("Static lounge 서버 문제 생김 (rou_post_storeClientAnalytics): " + err.message).catch((err) => { console.log(err) });
-      })
-  
-      res.send(JSON.stringify({ message: "will do" }));
+
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_storeClientAnalytics): " + e.message);
       res.send(JSON.stringify({ message: "error : " + e.message }));
