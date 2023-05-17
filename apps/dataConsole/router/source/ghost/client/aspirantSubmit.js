@@ -411,6 +411,14 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   let xIconWidth;
   let xIconTop;
   let xVisual;
+  let greenBasicFocusEvent;
+  let greenBasicBlurEvent;
+  let greenNumberFocusEvent;
+  let greenNumberBlurEvent;
+  let greenDateFocusEvent;
+  let greenDateBlurEvent;
+  let greenCareerFocusEvent;
+  let greenCareerBlurEvent;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -1143,6 +1151,64 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       this.previousElementSibling.style.display = "flex";
     } else {
       this.previousElementSibling.style.display = "none";
+    }
+  }
+
+  greenBasicFocusEvent = function (e) {
+    const motherBlock = this.parentElement.parentElement;
+    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
+    this.value = this.value.trim().replace(/[^a-zA-Z가-힣0-9\(\)-_\[\]\!\~\*\,\.\:\; ]/gi, '');
+    if (noticeTarget !== null) {
+      noticeTarget.style.color = colorChip.green;
+    }
+  }
+
+  greenBasicBlurEvent = function (e) {
+    const motherBlock = this.parentElement.parentElement;
+    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
+    this.value = this.value.trim().replace(/[^a-zA-Z가-힣0-9\(\)-_\[\]\!\~\*\,\.\:\; ]/gi, '');
+    if (noticeTarget !== null) {
+      noticeTarget.style.color = colorChip.deactive;
+    }
+  }
+
+  greenNumberFocusEvent = function (e) {
+    const motherBlock = this.parentElement.parentElement;
+    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
+    this.value = this.value.trim().replace(/[^0-9\-\.]/gi, '');
+    if (noticeTarget !== null) {
+      noticeTarget.style.color = colorChip.green;
+    }
+  }
+
+  greenNumberBlurEvent = function (e) {
+    const motherBlock = this.parentElement.parentElement;
+    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
+    this.value = this.value.trim().replace(/[^0-9\-\.]/gi, '');
+    if (noticeTarget !== null) {
+      noticeTarget.style.color = colorChip.deactive;
+    }
+  }
+
+  greenDateFocusEvent = function (e) {
+    const motherBlock = this.parentElement.parentElement;
+    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
+    this.value = this.value.trim().replace(/[^0-9\-\.]/gi, '');
+    if (noticeTarget !== null) {
+      noticeTarget.style.color = colorChip.green;
+    }
+  }
+
+  greenDateBlurEvent = function (e) {
+    const motherBlock = this.parentElement.parentElement;
+    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
+    this.value = this.value.trim().replace(/[^0-9\-\.]/gi, '');
+    if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(this.value)) {
+      window.alert("'yyyy-mm-dd' 형태로 적어주세요!");
+      this.value = dateToString(new Date());
+    }
+    if (noticeTarget !== null) {
+      noticeTarget.style.color = colorChip.deactive;
     }
   }
 
@@ -1952,6 +2018,10 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             property: "company",
             value: "",
           },
+          event: {
+            focus: greenBasicFocusEvent,
+            blur: greenBasicBlurEvent,
+          },
           style: {
             position: "absolute",
             top: String(inputTop) + ea,
@@ -1980,6 +2050,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           color: colorChip.deactive,
           verticalAlign: "top",
           marginLeft: String(subFontBetween) + ea,
+          transition: "all 0.3s ease",
         }
       },
     ]
@@ -2039,6 +2110,10 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             property: "numbers",
             value: "",
           },
+          event: {
+            focus: greenNumberFocusEvent,
+            blur: greenNumberBlurEvent,
+          },
           style: {
             position: "absolute",
             top: String(inputTop) + ea,
@@ -2067,6 +2142,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           color: colorChip.deactive,
           verticalAlign: "top",
           marginLeft: String(subFontBetween) + ea,
+          transition: "all 0.3s ease",
         }
       },
     ]
@@ -2126,6 +2202,10 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             property: "start",
             value: "",
           },
+          event: {
+            focus: greenDateFocusEvent,
+            blur: greenDateBlurEvent,
+          },
           style: {
             position: "absolute",
             top: String(inputTop) + ea,
@@ -2154,6 +2234,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           color: colorChip.deactive,
           verticalAlign: "top",
           marginLeft: String(subFontBetween) + ea,
+          transition: "all 0.3s ease",
         }
       },
     ]
@@ -2213,6 +2294,10 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             property: "representative",
             value: "",
           },
+          event: {
+            focus: greenBasicFocusEvent,
+            blur: greenBasicBlurEvent,
+          },
           style: {
             position: "absolute",
             top: String(inputTop) + ea,
@@ -2241,6 +2326,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           color: colorChip.deactive,
           verticalAlign: "top",
           marginLeft: String(subFontBetween) + ea,
+          transition: "all 0.3s ease",
         }
       },
     ]
@@ -2256,7 +2342,6 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       height: String(moduleHeight * marginRatio) + ea,
     }
   });
-
 
   // 13
   createNode({
@@ -2310,8 +2395,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           attribute: {
             type: "text",
             placeholder: "은행명",
-            property: "pyeong",
+            property: "bankname",
             value: "",
+          },
+          event: {
+            focus: greenBasicFocusEvent,
+            blur: greenBasicBlurEvent,
           },
           style: {
             position: "absolute",
@@ -2383,8 +2472,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           attribute: {
             type: "text",
             placeholder: "계좌 번호",
-            property: "pyeong",
+            property: "banknumber",
             value: "",
+          },
+          event: {
+            focus: greenNumberFocusEvent,
+            blur: greenNumberBlurEvent,
           },
           style: {
             position: "absolute",
@@ -2403,6 +2496,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         }
       },
       {
+        class: [ noticeClassName ],
         text: "* 은행명 없이, 계좌 번호만 적어주세요!",
         style: {
           display: "inline-block",
@@ -2413,6 +2507,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           color: colorChip.deactive,
           verticalAlign: "top",
           marginLeft: String(subFontBetween) + ea,
+          transition: "all 0.3s ease",
         }
       },
     ]
@@ -2469,8 +2564,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           attribute: {
             type: "text",
             placeholder: "예금주",
-            property: "pyeong",
+            property: "bankto",
             value: "",
+          },
+          event: {
+            focus: greenBasicFocusEvent,
+            blur: greenBasicBlurEvent,
           },
           style: {
             position: "absolute",
@@ -2574,6 +2673,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         }
       },
       {
+        class: [ noticeClassName ],
         text: "* 유관 경력 포함 예) 2년 6개월",
         style: {
           display: "inline-block",
@@ -2584,10 +2684,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           color: colorChip.deactive,
           verticalAlign: "top",
           marginLeft: String(subFontBetween) + ea,
+          transition: "all 0.3s ease",
         }
       },
     ]
   });
+  // 18
   createNode({
     mother: rightBox,
     style: {
@@ -2659,6 +2761,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         }
       },
       {
+        class: [ noticeClassName ],
         text: "* 인테리어 경력과 일치할 경우, '위와 같음'으로 기입해주세요!",
         style: {
           display: "inline-block",
@@ -2669,10 +2772,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           color: colorChip.deactive,
           verticalAlign: "top",
           marginLeft: String(subFontBetween) + ea,
+          transition: "all 0.3s ease",
         }
       },
     ]
   });
+  // 19
   createNode({
     mother: rightBox,
     style: {
@@ -2756,7 +2861,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   });
 
 
-  // 6 : margin
+  // 20 : margin
   createNode({
     mother: rightBox,
     style: {
@@ -2767,7 +2872,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
     }
   });
 
-
+  // 21
   createNode({
     mother: rightBox,
     style: {
@@ -2853,6 +2958,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       },
     ]
   });
+  // 22
   createNode({
     mother: rightBox,
     style: {
