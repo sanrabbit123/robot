@@ -2173,7 +2173,7 @@ StaticRouter.prototype.rou_post_printText = function () {
         printer = printerRaw.trim().split(' ')[1];
         lpstat.kill();
         fileSystem(`write`, [ targetFile, req.body.text ]).then(() => {
-          return shellExec(`uniprint -printer ${printer} -size 9 -hsize 0 -L -media A4 -wrap -font ${fontName} ${shellLink(targetFile)}`);
+          return shellExec(`uniprint -printer ${printer} -size 9 -hsize 0 ${req.body.landScape !== undefined ? String("-L ") : ""}-media A4 -wrap -font ${fontName} ${shellLink(targetFile)}`);
         }).then(() => {
           return shellExec("rm", [ "-rf", targetFile ]);
         }).catch((err) => {
