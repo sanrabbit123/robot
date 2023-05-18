@@ -3728,6 +3728,61 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_getClientAnalytics = function () {
+  const instance = this;
+  const { equalJson, requestSystem } = this.mother;
+  const analytics = this.analytics;
+  const back = this.back;
+  const address = this.address;
+  let obj;
+  obj = {};
+  obj.link = [ "/getClientAnalytics" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.cliid === undefined) {
+        throw new Error("invalid post");
+      }
+      const { cliid } = equalJson(req.body);
+      const textMode = ((req.body.textMode === "true" || req.body.textMode === true) ? true : false);
+      const collection = analytics.clientAnalyticsCollection;
+      let textResult;
+      let rows;
+
+      if (textMode) {
+        textResult = await analytics.clientMessage(cliid, instance.mongo, instance.mongolog);
+        if (typeof textResult === "string") {
+          res.send(JSON.stringify({ report: textResult }));
+        } else {
+          res.send(JSON.stringify({ report: "" }));
+        }
+      } else {
+        if (req.body.projectQuery !== undefined) {
+          const { projectQuery } = equalJson(req.body);
+          rows = await back.mongoPick(collection, [ { cliid }, projectQuery ], { selfMongo: instance.mongolog });
+        } else {
+          rows = await back.mongoRead(collection, { cliid }, { selfMongo: instance.mongolog });
+        }
+        if (rows.length > 0) {
+          res.send(JSON.stringify({ data: rows[0] }));
+        } else {
+          res.send(JSON.stringify({ data: null }));
+        }
+      }
+
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_getClientAnalytics): " + e.message);
+      res.send(JSON.stringify({ report: "" }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_storeRealtimeAnalytics = function () {
   const instance = this;
   const { equalJson, requestSystem } = this.mother;
