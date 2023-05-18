@@ -587,11 +587,14 @@ SecondRouter.prototype.rou_post_clickDial = function () {
         throw new Error("invaild post");
       }
       const url = "https://centrex.uplus.co.kr/RestApi/clickdial";
-      let query, phone;
+      let query;
+
       query = { id: req.body.id, pass: address.officeinfo.phone.password, destnumber: req.body.destnumber.replace(/[^0-9]/g, '') };
+
       requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } }).catch((err) => {
         logger.alert("Ghost error (rou_post_clickDial) : " + "전화 거는 도중 문제 생김 => " + err.message).catch((er) => { console.log(er); });
       });
+
       res.send(JSON.stringify({ message: "hello?" }));
 
     } catch (e) {

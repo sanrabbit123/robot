@@ -161,18 +161,61 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
+    // 1. instant analytics
+
+
+    // 2. hl analytics console - client.js and analytics.js
+
     
 
-    // 3. hl analytics console - analytics.js
-
     
+    await this.MONGOLOGC.connect();
+    const analytics = new GoogleAnalytics();
 
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab19s", this.MONGOC, this.MONGOLOGC));
+
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab18s", this.MONGOC, this.MONGOLOGC));
+
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab17s", this.MONGOC, this.MONGOLOGC));
+
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab16s", this.MONGOC, this.MONGOLOGC));
+
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab16s", this.MONGOC, this.MONGOLOGC));
     
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab15s", this.MONGOC, this.MONGOLOGC));
+
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab14s", this.MONGOC, this.MONGOLOGC));
+
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab13s", this.MONGOC, this.MONGOLOGC));
+
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab12s", this.MONGOC, this.MONGOLOGC));
+
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab11s", this.MONGOC, this.MONGOLOGC));
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab10s", this.MONGOC, this.MONGOLOGC));
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab09s", this.MONGOC, this.MONGOLOGC));
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab08s", this.MONGOC, this.MONGOLOGC));
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab07s", this.MONGOC, this.MONGOLOGC));
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab06s", this.MONGOC, this.MONGOLOGC));
+    console.log("\n");
+    console.log(await analytics.clientMessage("c2305_ab05s", this.MONGOC, this.MONGOLOGC));
 
 
-    console.log(await requestSystem("https://home-liaison.org:3000/getHistoryProperty", { method: "client", property: "manager", idArr: [ "c1801_aa01s" ] }, { headers: { "Content-Type": "application/json" } }));
-
-
+    await this.MONGOLOGC.close();
 
 
 

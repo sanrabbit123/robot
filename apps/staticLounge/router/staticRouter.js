@@ -3570,9 +3570,10 @@ StaticRouter.prototype.rou_post_logBasicReport = function () {
 
 StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
   const instance = this;
-  const { equalJson } = this.mother;
+  const { equalJson, requestSystem } = this.mother;
   const analytics = this.analytics;
   const back = this.back;
+  const address = this.address;
   let obj;
   obj = {};
   obj.link = [ "/storeClientAnalytics" ];
@@ -3587,6 +3588,7 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
       const selfCoreMongo = instance.mongo;
       const fromDate = new Date(2023, 4, 4, 0, 0, 0);
       const fastMode = ((req.body.fast === "true" || req.body.fast === true) ? true : false);
+      const talkMode = ((req.body.talk === "true" || req.body.talk === true) ? true : false);
       let agoDate;
       let targetClients;
       let agoClients;
@@ -3683,15 +3685,39 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
           finalTargets.push(client);
         }
 
-        analytics.clientsMetric(finalTargets, instance.mongo, instance.mongoconsole, instance.mongolog, true, true).then((result) => {
-          if (Array.isArray(result)) {
-            logger.cron("client analytics store success (fast) : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
-          } else {
-            logger.error("client analytics store fail (fast) : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
-          }
-        }).catch((err) => {
-          logger.error("Static lounge 서버 문제 생김 (rou_post_storeClientAnalytics): " + err.message).catch((err) => { console.log(err) });
-        })
+        if (!talkMode) {
+
+          analytics.clientsMetric(finalTargets, instance.mongo, instance.mongoconsole, instance.mongolog, true, true).then((result) => {
+            if (Array.isArray(result)) {
+              logger.cron("client analytics store success (fast) : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+            } else {
+              logger.error("client analytics store fail (fast) : " + JSON.stringify(new Date())).catch((err) => { console.log(err) });
+            }
+          }).catch((err) => {
+            logger.error("Static lounge 서버 문제 생김 (rou_post_storeClientAnalytics): " + err.message).catch((err) => { console.log(err) });
+          });
+
+        } else {
+
+          analytics.clientsMetric(finalTargets, instance.mongo, instance.mongoconsole, instance.mongolog, true, true).then((result) => {
+            if (Array.isArray(result)) {
+              const targetCliid = req.body.cliid;
+              return analytics.clientMessage(targetCliid, instance.mongo, instance.mongolog);
+            } else {
+              logger.error("Static lounge 서버 문제 생김 (rou_post_storeClientAnalytics): " + "metric fail").catch((err) => { console.log(err) });
+              return new Promise((resolve, reject) => { resolve("") });
+            }
+          }).then((str) => {
+            if (str !== "" && str !== null) {
+              return requestSystem("https://" + address.secondinfo.host + ":3000/fairySlack", { channel: "#401_consulting", text: str }, { headers: { "Content-Type": "application/json" } });
+            }
+          }).catch((err) => {
+            logger.error("Static lounge 서버 문제 생김 (rou_post_storeClientAnalytics): " + err.message).catch((err) => { console.log(err) });
+          });
+
+
+        }
+
 
         res.send(JSON.stringify({ message: "will do" }));
 

@@ -1293,4 +1293,142 @@ GoogleAnalytics.prototype.realtimeMessage = async function (selfMongo) {
   }
 }
 
+GoogleAnalytics.prototype.clientMessage = async function (cliid, selfCoreMongo, selfMongo) {
+  const instance = this;
+  const back = this.back;
+  const { requestSystem } = this.mother;
+  const { clientAnalyticsCollection } = this;
+  try {
+    const [ targetClient ] = await back.mongoRead(clientAnalyticsCollection, { cliid }, { selfMongo });
+    if (targetClient === undefined || targetClient === null) {
+      throw new Error("invalid cliid");
+    }
+    const bar = "====================================================================================================";
+    const { client, sessions, source: { mother, campaign, search }, history, contents } = targetClient;
+    let designers;
+    let designerObject;
+    let pidList;
+    let tempResult;
+    let thisContents;
+    let thisContentsArr;
+    let messageTong;
+    let aboutBoo;
+    let sourceStr;
+    let searchStr;
+    let deviceStr;
+
+    designers = await back.mongoPick("designer", [ {}, { desid: 1, designer: 1 } ], { selfMongo: selfCoreMongo });
+    designerObject = {};
+    for (let { desid, designer } of designers) {
+      designerObject[desid] = designer;
+    }
+
+    messageTong = [];
+
+    // contents view
+    pidList = [];
+    for (let { link } of contents.view.portfolio) {
+      tempResult = /pid\=([a-z][0-9]+)/gi.exec(link)
+      if (tempResult.length > 1) {
+        pidList.push({ type: "포트폴리오", pid: tempResult[1].trim() })
+      }
+    }
+    for (let { link } of contents.view.review) {
+      tempResult = /pid\=([a-z][0-9]+)/gi.exec(link)
+      if (tempResult.length > 1) {
+        pidList.push({ type: "인터뷰", pid: tempResult[1].trim() })
+      }
+    }
+
+    if (pidList.length !== 0) {
+      thisContentsArr = await back.mongoPick("contents", [ { $or: pidList.map((obj) => { return obj.pid }).map((str) => { return { "contents.portfolio.pid": str } }) }, { conid: 1, desid: 1, cliid: 1, "contents.portfolio.pid": 1, "contents.portfolio.title.main": 1 } ], { selfMongo: selfCoreMongo });
+    
+      for (let obj of pidList) {
+        thisContents = thisContentsArr.find((o) => { return o.contents.portfolio.pid === obj.pid });
+        obj.designer = designerObject[thisContents.desid]
+        obj.desid = thisContents.desid
+        obj.title = thisContents.contents.portfolio.title.main
+      }
+  
+      for (let { link } of contents.view.designer) {
+        tempResult = /desid\=([a-z][0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z])/gi.exec(link)
+        if (tempResult.length > 1) {
+          pidList.push({ type: "상세 페이지", title: "", designer: designerObject[tempResult[1]], desid: tempResult[1] });
+        }
+      }
+      messageTong.push("방문한 컨텐츠 : " + String(pidList.length) + "개");
+      pidList.forEach((obj) => {
+        messageTong.push(`${obj.designer}(${obj.desid}) 실장님의 ${obj.type}${obj.title !== "" ? " : " + obj.title : ""}`)
+      });
+    } else {
+      messageTong.push("방문한 컨텐츠 : " + String(pidList.length) + "개");
+    }
+
+    messageTong.unshift(bar);
+    messageTong.push(bar);
+    
+
+    // about boo
+
+    if (history.detail.map((o) => { return o.path }).some((str) => { return /service\.php/gi.test(str) })) {
+      messageTong.unshift("서비스 유형 페이지 " + "O");
+    } else {
+      messageTong.unshift("서비스 유형 페이지 " + "X");
+    }
+    if (history.detail.map((o) => { return o.path }).some((str) => { return /about\.php/gi.test(str) })) {
+      messageTong.unshift("서비스 소개 페이지 " + "O");
+    } else {
+      messageTong.unshift("서비스 소개 페이지 " + "X");
+    }
+    aboutBoo = history.detail.map((o) => { return o.path }).some((str) => { return /about\.php/gi.test(str) }) || history.detail.map((o) => { return o.path }).some((str) => { return /service\.php/gi.test(str) })
+    if (aboutBoo) {
+      messageTong.unshift("서비스 소개 페이지 방문함");
+    } else {
+      messageTong.unshift("서비스 소개 페이지 미방문");
+    }
+    messageTong.unshift(bar);
+
+    // source parsing
+
+    searchStr = "";
+    if (mother.length > 0) {
+      sourceStr = "출저 : " + mother.join(", ");
+      sourceStr += " / "
+      if (campaign.length > 0) {
+        sourceStr += "광고 보고 들어옴 : " + campaign.join(", ");
+      } else {
+        sourceStr += "광고 흔적 없음";
+      }
+      if (search.length > 0) {
+        searchStr = "검색어 : " + search.join(", ");
+      }
+    } else {
+      sourceStr = "출저 알 수 없음";
+    }
+    if (searchStr !== "") {
+      messageTong.unshift(searchStr);
+    }
+    messageTong.unshift(sourceStr);
+    messageTong.unshift(bar);
+
+
+    // device
+    deviceStr = sessions.device[0].kinds === "mobile" ? "모바일" : (sessions.device[0].kinds === "desktop" ? "데스크탑" : "태블릿");
+    deviceStr += "(" + sessions.device[0].os + ")";
+    deviceStr += " / ";
+    deviceStr += sessions.device[0].browser + " 브라우저";
+
+    messageTong.unshift(deviceStr);
+    messageTong.unshift("총 행동 " + String(history.length) + "회");
+    messageTong.unshift(bar);
+    messageTong.unshift(client.name + "(" + client.cliid + ") 웹 보고서");
+
+    return messageTong.join("\n");
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 module.exports = GoogleAnalytics;
