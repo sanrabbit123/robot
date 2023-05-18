@@ -369,7 +369,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
   const { client, designer, ea, baseTong, media, bill, request, completeMode, completeInfo } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, isMac, isIphone, setQueue } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, isMac, isIphone, setQueue, autoHypenPhone } = GeneralJs;
   const wordings = this.billWordings();
   const cashTarget = "cashTarget";
   const businessTarget = "businessTarget";
@@ -1215,7 +1215,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
 
           cashWording = createNode({
             mother: cashWhiteBox,
-            text: "현금영수증을 받으실 번호를 알려주세요!",
+            text: "현금 영수증을 받으실 번호를 알려주세요!",
             class: [ cashTarget ],
             style: {
               position: "absolute",
@@ -1252,11 +1252,13 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
             event: {
               keyup: function (e) {
                 this.value = this.value.replace(/[^0-9\-]/gi, '');
+                this.value = autoHypenPhone(this.value);
               },
               keypress: function (e) {
                 if (e.key === "Enter") {
                   e.preventDefault();
                   e.stopPropagation();
+                  this.value = autoHypenPhone(this.value);
                   cashSubmitEvent(cashInput).call(this, e);
                 }
               },
@@ -1308,6 +1310,8 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
                   dom.style.opacity = String(deactiveOpacity);
                 }
                 [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorChip.deactive;
+
+                this.value = autoHypenPhone(this.value);
 
                 const self = this;
                 const removeTargets = self.parentNode.querySelectorAll("aside");

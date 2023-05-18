@@ -170,7 +170,7 @@ DevContext.prototype.launching = async function () {
     
 
 
-
+    console.log(await requestSystem("https://home-liaison.org:3000/getHistoryProperty", { method: "client", property: "manager", idArr: [ "c1801_aa01s" ] }, { headers: { "Content-Type": "application/json" } }));
 
 
 

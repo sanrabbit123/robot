@@ -330,6 +330,7 @@ SecondRouter.prototype.rou_post_emergencyAlarm = function () {
 SecondRouter.prototype.rou_post_parsingCall = function () {
   const instance = this;
   const back = this.back;
+  const address = this.address;
   const { requestSystem, messageSend, messageLog } = this.mother;
   const jsdom = require("jsdom");
   const { JSDOM } = jsdom;
@@ -360,9 +361,10 @@ SecondRouter.prototype.rou_post_parsingCall = function () {
         let outerResponse;
         let entireDom, resultDom, findName;
         let builders;
+        let cliid;
+        let thisProjects, thisProject, thisHistory;
 
         if (!/^2/.test(phoneNumber)) {
-          manager = null;
           rows = await back.getClientsByQuery({ phone: phoneNumber }, { selfMongo });
           if (rows.length === 0) {
             rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo });
@@ -385,12 +387,43 @@ SecondRouter.prototype.rou_post_parsingCall = function () {
               name = rows[0].designer;
               sub = "실장님";
             }
+
+            text = `${name} ${sub}에게서 ${method}가 왔습니다!`;
           } else {
             client = rows[0];
             name = client.name;
+            cliid = client.cliid;
             sub = "고객님";
+
+            if (/^대표님/gi.test(name)) {
+              text = `대표님께 ${method}가 왔습니다!`;
+            } else if (/^김실장/gi.test(name)) {
+              text = `김지은 실장님에게서 ${method}가 왔습니다!`;
+            } else {
+              thisProjects = await back.getProjectsByQuery({ cliid }, { selfMongo });
+              thisProject = null;
+              if (thisProjects.length > 0) {
+                [ thisProject ] = thisProjects;
+              }
+              if (thisProject === null) {
+                manager = (await requestSystem("https://" + address.backinfo.host + ":3000/getHistoryProperty", { method: "client", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
+                text = `${name}(${cliid} - ${client.requests[0].analytics.response.status.value}) ${sub}에게서 ${method}가 왔습니다. ${manager}님 받아주세요!`;
+              } else {
+                if (thisProject.desid.trim() === "") {
+                  manager = (await requestSystem("https://" + address.backinfo.host + ":3000/getHistoryProperty", { method: "client", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
+                  text = `${name}(${cliid} - ${client.requests[0].analytics.response.status.value}) ${sub}에게서 ${method}가 왔습니다. ${manager}님 받아주세요!`;
+                } else {
+                  if (thisProject.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
+                    manager = (await requestSystem("https://" + address.backinfo.host + ":3000/getHistoryProperty", { method: "project", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
+                    text = `${name}(${cliid} - ${client.requests[0].analytics.response.status.value}) ${sub}에게서 ${method}가 왔습니다. ${manager}님 받아주세요!`;
+                  } else {
+                    manager = (await requestSystem("https://" + address.backinfo.host + ":3000/getHistoryProperty", { method: "client", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
+                    text = `${name}(${cliid} - ${client.requests[0].analytics.response.status.value}) ${sub}에게서 ${method}가 왔습니다. ${manager}님 받아주세요!`;
+                  }
+                }
+              }
+            }
           }
-          text = `${name} ${sub}에게서 ${method}가 왔습니다!`;
 
           if (name.trim() === "알 수 없는") {
             builders = await back.getBuildersByQuery({ "information.phone": phoneNumber }, { selfMongo });
@@ -414,7 +447,8 @@ SecondRouter.prototype.rou_post_parsingCall = function () {
               }
             }
           }
-          await messageSend({ text, channel: "#call", voice: true });
+
+          await messageSend({ text, channel: "#call", voice: true, fairy: true });
         }
         res.send(JSON.stringify({ message: "success" }));
       }
