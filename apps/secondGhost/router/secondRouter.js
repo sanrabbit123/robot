@@ -363,8 +363,12 @@ SecondRouter.prototype.rou_post_parsingCall = function () {
         let builders;
         let cliid;
         let thisProjects, thisProject, thisHistory;
+        let cliidBoo;
+        let targetLink;
 
         if (!/^2/.test(phoneNumber)) {
+          cliidBoo = false;
+          targetLink = null;
           rows = await back.getClientsByQuery({ phone: phoneNumber }, { selfMongo });
           if (rows.length === 0) {
             rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo });
@@ -408,17 +412,25 @@ SecondRouter.prototype.rou_post_parsingCall = function () {
               if (thisProject === null) {
                 manager = (await requestSystem("https://" + address.backinfo.host + ":3000/getHistoryProperty", { method: "client", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
                 text = `${name}(${cliid} - ${client.requests[0].analytics.response.status.value}) ${sub}에게서 ${method}가 왔습니다. ${manager}님 받아주세요!`;
+                cliidBoo = true;
+                targetLink = "https://" + address.backinfo.host + "/client?cliid=" + cliid;
               } else {
                 if (thisProject.desid.trim() === "") {
                   manager = (await requestSystem("https://" + address.backinfo.host + ":3000/getHistoryProperty", { method: "client", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
                   text = `${name}(${cliid} - ${client.requests[0].analytics.response.status.value}) ${sub}에게서 ${method}가 왔습니다. ${manager}님 받아주세요!`;
+                  cliidBoo = true;
+                  targetLink = "https://" + address.backinfo.host + "/client?cliid=" + cliid;
                 } else {
                   if (thisProject.process.contract.first.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
                     manager = (await requestSystem("https://" + address.backinfo.host + ":3000/getHistoryProperty", { method: "project", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
                     text = `${name}(${cliid} - ${client.requests[0].analytics.response.status.value}) ${sub}에게서 ${method}가 왔습니다. ${manager}님 받아주세요!`;
+                    cliidBoo = true;
+                    targetLink = "https://" + address.backinfo.host + "/project?cliid=" + cliid;
                   } else {
                     manager = (await requestSystem("https://" + address.backinfo.host + ":3000/getHistoryProperty", { method: "client", property: "manager", idArr: [ cliid ] }, { headers: { "Content-Type": "application/json" } })).data[cliid];
                     text = `${name}(${cliid} - ${client.requests[0].analytics.response.status.value}) ${sub}에게서 ${method}가 왔습니다. ${manager}님 받아주세요!`;
+                    cliidBoo = true;
+                    targetLink = "https://" + address.backinfo.host + "/client?cliid=" + cliid;
                   }
                 }
               }
@@ -449,6 +461,9 @@ SecondRouter.prototype.rou_post_parsingCall = function () {
           }
 
           await messageSend({ text, channel: "#call", voice: true, fairy: true });
+          if (cliidBoo && typeof targetLink === "string") {
+            await messageSend({ text: `${manager}님에게 전달드립니다!\n${targetLink}`, channel: "#cx", voice: false, fairy: true });
+          }
         }
         res.send(JSON.stringify({ message: "success" }));
       }
