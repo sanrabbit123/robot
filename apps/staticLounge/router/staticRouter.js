@@ -3715,12 +3715,9 @@ StaticRouter.prototype.rou_post_storeClientAnalytics = function () {
             logger.error("Static lounge 서버 문제 생김 (rou_post_storeClientAnalytics): " + err.message).catch((err) => { console.log(err) });
           });
 
-
         }
 
-
         res.send(JSON.stringify({ message: "will do" }));
-
       }
 
     } catch (e) {
