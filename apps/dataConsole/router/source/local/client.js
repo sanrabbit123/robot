@@ -2587,6 +2587,17 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     let obj;
     let styleAnalytics;
     let curation;
+    let analyticsData;
+    let historyFontSize;
+    let historyPaddingTop;
+    let historyPaddingBottom;
+    let historyPaddingLeft;
+    let historyBlockMargin;
+    let targetDetail;
+    let num;
+    let eventDictionary;
+    let timeWidth;
+    let eventWidth;
 
     loadingWidth = fontSize * (40 / 15);
     innerMargin = fontSize * (20 / 15);
@@ -2601,6 +2612,35 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     circleRadius = fontSize * (8 / 15);
     circleBottom = fontSize * ((isMac() ? 15 : 16) / 15);
     circleRight = fontSize * (2 / 15);
+
+    historyFontSize = 12;
+    historyPaddingTop = (isMac() ? 5 : 6)
+    historyPaddingBottom = (isMac() ? 7 : 6);
+    historyPaddingLeft = 12;
+    historyBlockMargin = 3;
+
+    timeWidth = 125;
+    eventWidth = 125;
+
+    eventDictionary = {
+      pageInit: { title: "페이지 진입", mode: "white" },
+      viewToggle: { title: "사진 전환", mode: "white" },
+      popupOpen: { title: "팝업 열어보기", mode: "white" },
+      login: { title: "상담 문의 완료", mode: "green" },
+      styleCheck: { title: "스타일체크 완료", mode: "white" },
+      submitForm: { title: "상세 큐레이션 완료", mode: "white" },
+      sendLowLowPush: { title: "하하 전송", mode: "white" },
+      sendFinalPush: { title: "서비스 소개 전송", mode: "white" },
+      sendDesignerProposal: { title: "추천서 전송", mode: "green" },
+      sendPureOutOfClient: { title: "부재중 알림", mode: "white" },
+      callInSuccess: { title: "수신 통화 성공", mode: "white" },
+      callInFail: { title: "수신 통화 실패", mode: "white" },
+      callOutSuccess: { title: "발신 통화 성공", mode: "white" },
+      callOutFail: { title: "발신 통화 실패", mode: "white" },
+      searchKeyword: { title: "키워드 검색", mode: "white" },
+      clickKeyword: { title: "키워드 클릭", mode: "white" },
+      designerSelect: { title: "디자이너 선택", mode: "green" }
+    };
 
     if (/fadeout/gi.test(historyBox.style.animation)) {
 
@@ -2640,8 +2680,13 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       images = [];
 
       ajaxJson({
-        cliid: thisCase[standard[1]]
-      }, BRIDGEHOST + "/clientPhoto").then((obj) => {
+        cliid: thisCase[standard[1]],
+      }, S3HOST + ":3000/getClientAnalytics", { equal: true }).then((thisAnalytics) => {
+        analyticsData = thisAnalytics.data;
+        return ajaxJson({
+          cliid: thisCase[standard[1]]
+        }, BRIDGEHOST + "/clientPhoto");
+      }).then((obj) => {
 
         images = images.concat(obj.sitePhoto);
         images = images.concat(obj.preferredPhoto);
@@ -2697,96 +2742,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         imageLoad = () => {};
         historyLoad = () => {};
         scrollTong = {};
-
-        historyArr = [];
-        for (let key in analytics) {
-          if (Array.isArray(analytics[key])) {
-            historyArr = historyArr.concat(analytics[key].map((obj) => { obj.key = key; obj.date = stringToDate(obj.date); return obj; }));
-          }
-        }
-
-        tempArr = [];
-        for (let { date, success } of analytics.call.out) {
-          tempArr.push({ date: stringToDate(date), key: "callOut", success, page: "전화" });
-        }
-        historyArr = historyArr.concat(tempArr);
-
-        tempArr = [];
-        for (let { date, success } of analytics.call.in) {
-          tempArr.push({ date: stringToDate(date), key: "callIn", success, page: "전화" });
-        }
-        historyArr = historyArr.concat(tempArr);
-
-        historyArr.sort((a, b) => {
-          const aDate = new Date(a.date.getFullYear(), a.date.getMonth(), a.date.getDate(), a.date.getHours(), a.date.getMinutes());
-          const bDate = new Date(b.date.getFullYear(), b.date.getMonth(), b.date.getDate(), b.date.getHours(), b.date.getMinutes());
-          if (aDate.valueOf() !== bDate.valueOf()) {
-            return aDate.valueOf() - bDate.valueOf();
-          } else {
-            return (a.key === "page" ? 3 : (a.key === "update" ? 5 : 1)) - (b.key === "page" ? 3 : (b.key === "update" ? 5 : 1));
-          }
-        });
-
-        lastPageMode = '';
-        for (let i = 0; i < historyArr.length; i++) {
-          if (/curation/gi.test(historyArr[i].page)) {
-            if (typeof historyArr[i].referrer === "string") {
-              if (/mode\=lite/gi.test(historyArr[i].referrer)) {
-                lastPageMode = "lite";
-              } else {
-                lastPageMode = "general";
-              }
-            }
-            if (typeof historyArr[i].update !== undefined) {
-              if (historyArr[i].mode === undefined) {
-                historyArr[i].mode = lastPageMode;
-              }
-            }
-          }
-        }
-
-        historyArr = historyArr.map((obj) => {
-          let text, date, pageName;
-          date = dateToString(obj.date, true).slice(2, -3);
-          if (/curation/gi.test(obj.page)) {
-            pageName = "스타일 체크";
-          } else if (/proposal/gi.test(obj.page)) {
-            pageName = "디자이너 추천서";
-          } else if (/estimation/gi.test(obj.page)) {
-            pageName = "견적서";
-          } else if (/pure/gi.test(obj.page)) {
-            pageName = "순수 부재중 알림";
-          } else if (/finalPush/gi.test(obj.page)) {
-            pageName = "서비스 소개";
-          } else {
-            pageName = obj.page;
-          }
-
-          if (obj.key === "page") {
-            text = `${date} | ${obj.city}(${obj.postal})에서 ${obj.platform}(${obj.os})로 <b%${pageName}%b> 페이지 <b%방문%b>함`;
-          } else if (obj.key === "update") {
-            text = `${date} | <b%${pageName}%b> 페이지에서 값을 <b%업데이트%b>함`;
-          } else if (obj.key === "submit") {
-            text = `${date} | <b%${pageName}%b> 페이지에서 결과를 <b%제출%b>함`;
-          } else if (obj.key === "send") {
-            text = `${date} | <b%${pageName}%b> 페이지를 고객에게 <b%전송%b>함`;
-          } else if (obj.key === "callOut") {
-            if (obj.success) {
-              text = `${date} | <b%홈리에종에서%b> 고객에게 전화를 걸고 <b%통화에 성공%b>함`;
-            } else {
-              text = `${date} | <b%홈리에종에서%b> 고객에게 전화를 걸었지만 <b%통화에 실패%b>함`;
-            }
-          } else if (obj.key === "callIn") {
-            if (obj.success) {
-              text = `${date} | <b%고객이%b> 홈리에종에 전화를 걸었고 <b%통화에 성공%b>함`;
-            } else {
-              text = `${date} | <b%고객이%b> 홈리에종에 전화를 걸었지만 <b%통화에 실패%b>함`;
-            }
-          }
-
-          obj.text = text;
-          return obj;
-        });
 
         titleTong = createNode({
           mother: tong,
@@ -3777,9 +3732,13 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         historyLoad = () => {
           scrollTong.style.height = String(8000) + ea;
-          let num;
+
+          targetDetail = analyticsData.history.detail.filter((obj) => {
+            return obj.event !== "scrollStop" && obj.event !== "contentsView" && obj.event !== "readTimer" && obj.event !== "addressClick" && obj.event !== "inputBlur" && obj.event !== "photoBigView";
+          })
+
           num = 0;
-          for (let { text } of historyArr) {
+          for (let block of targetDetail) {
             createNode({
               mother: scrollTong,
               style: {
@@ -3787,52 +3746,96 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 display: "block",
                 width: String(100) + '%',
                 height: "auto",
-                marginBottom: String(imageMargin) + ea,
+                marginBottom: String(historyBlockMargin) + ea,
               },
               children: [
                 {
-                  text: text.split('|')[0].trim(),
+                  text: dateToString(block.date, true).slice(2),
                   style: {
                     position: "relative",
                     display: "inline-block",
-                    fontSize: String(fontSize) + ea,
+                    fontSize: String(historyFontSize) + ea,
                     fontWeight: String(400),
-                    color: colorChip.shadowWhite,
-                    background: colorChip.gray2,
-                    paddingTop: String(innerPaddingTop) + ea,
-                    paddingBottom: String(innerPaddingBottom) + ea,
-                    paddingLeft: String(innerPaddingLeft) + ea,
-                    paddingRight: String(innerPaddingLeft) + ea,
+                    color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.shadowWhite,
+                    background: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.green : colorChip.gray2,
+                    paddingTop: String(historyPaddingTop) + ea,
+                    paddingBottom: String(historyPaddingBottom) + ea,
                     borderRadius: String(3) + "px",
-                    marginRight: String(imageMargin) + ea,
+                    marginRight: String(historyBlockMargin) + ea,
+                    width: String(timeWidth) + ea,
+                    textAlign: "center",
                   },
                   bold: {
-                    fontSize: String(fontSize) + ea,
+                    fontSize: String(historyFontSize) + ea,
                     fontWeight: String(600),
                     color: colorChip.green,
                   }
                 },
                 {
-                  text: text.split('|')[1].trim(),
+                  text: eventDictionary[block.event.split("_")[0]]?.title || block.event,
                   style: {
                     position: "relative",
                     display: "inline-block",
-                    fontSize: String(fontSize) + ea,
-                    fontWeight: String(300),
-                    color: colorChip.black,
-                    background: colorChip.gray0,
-                    paddingTop: String(innerPaddingTop) + ea,
-                    paddingBottom: String(innerPaddingBottom) + ea,
-                    paddingLeft: String(innerPaddingLeft) + ea,
-                    paddingRight: String(innerPaddingLeft) + ea,
-                    borderRadius: String(3) + "px"
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(600),
+                    color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.black,
+                    background: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.green : colorChip.gray0,
+                    paddingTop: String(historyPaddingTop) + ea,
+                    paddingBottom: String(historyPaddingBottom) + ea,
+                    borderRadius: String(3) + "px",
+                    marginRight: String(historyBlockMargin) + ea,
+                    width: String(eventWidth) + ea,
+                    textAlign: "center",
                   },
                   bold: {
-                    fontSize: String(fontSize) + ea,
+                    fontSize: String(historyFontSize) + ea,
                     fontWeight: String(600),
                     color: colorChip.black,
                   }
-                }
+                },
+                {
+                  text: (/\/([a-zA-Z]+\.php)/gi.exec(block.path) || [ "", "(not set)" ])[1].replace(/\.php$/gi, ''),
+                  style: {
+                    position: "relative",
+                    display: "inline-block",
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(400),
+                    color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.black,
+                    background: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.green : colorChip.gray0,
+                    paddingTop: String(historyPaddingTop) + ea,
+                    paddingBottom: String(historyPaddingBottom) + ea,
+                    paddingLeft: String(historyPaddingLeft) + ea,
+                    paddingRight: String(historyPaddingLeft) + ea,
+                    marginRight: String(historyBlockMargin) + ea,
+                    borderRadius: String(3) + "px"
+                  },
+                  bold: {
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.black,
+                  }
+                },
+                {
+                  text: block.title.replace(/\| 홈리에종$/gi, '').trim(),
+                  style: {
+                    position: "relative",
+                    display: "inline-block",
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(400),
+                    color: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.white : colorChip.black,
+                    background: eventDictionary[block.event.split("_")[0]]?.mode === "green" ? colorChip.green : colorChip.gray0,
+                    paddingTop: String(historyPaddingTop) + ea,
+                    paddingBottom: String(historyPaddingBottom) + ea,
+                    paddingLeft: String(historyPaddingLeft) + ea,
+                    paddingRight: String(historyPaddingLeft) + ea,
+                    borderRadius: String(3) + "px"
+                  },
+                  bold: {
+                    fontSize: String(historyFontSize) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.black,
+                  }
+                },
               ]
             });
             scrollTong.style.height = "auto";
@@ -3845,6 +3848,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         scrollTong.style.height = "auto";
 
       }).catch((err) => {
+        console.log(err);
         window.alert("결과가 없습니다!");
       });
 
