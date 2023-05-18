@@ -1303,7 +1303,7 @@ GoogleAnalytics.prototype.clientMessage = async function (cliid, selfCoreMongo, 
     if (targetClient === undefined || targetClient === null) {
       throw new Error("invalid cliid");
     }
-    const bar = "====================================================================================================";
+    const bar = "========================================================================";
     const { client, sessions, source: { mother, campaign, search }, history, contents } = targetClient;
     let designers;
     let designerObject;
@@ -1341,13 +1341,13 @@ GoogleAnalytics.prototype.clientMessage = async function (cliid, selfCoreMongo, 
     }
 
     if (pidList.length !== 0) {
-      thisContentsArr = await back.mongoPick("contents", [ { $or: pidList.map((obj) => { return obj.pid }).map((str) => { return { "contents.portfolio.pid": str } }) }, { conid: 1, desid: 1, cliid: 1, "contents.portfolio.pid": 1, "contents.portfolio.title.main": 1 } ], { selfMongo: selfCoreMongo });
+      thisContentsArr = await back.mongoPick("contents", [ { $or: pidList.map((obj) => { return obj.pid }).map((str) => { return { "contents.portfolio.pid": str } }) }, { conid: 1, desid: 1, cliid: 1, "contents.portfolio.pid": 1, "contents.portfolio.title.sub": 1 } ], { selfMongo: selfCoreMongo });
     
       for (let obj of pidList) {
         thisContents = thisContentsArr.find((o) => { return o.contents.portfolio.pid === obj.pid });
-        obj.designer = designerObject[thisContents.desid]
-        obj.desid = thisContents.desid
-        obj.title = thisContents.contents.portfolio.title.main
+        obj.designer = designerObject[thisContents.desid];
+        obj.desid = thisContents.desid;
+        obj.title = thisContents.contents.portfolio.title.sub;
       }
   
       for (let { link } of contents.view.designer) {
