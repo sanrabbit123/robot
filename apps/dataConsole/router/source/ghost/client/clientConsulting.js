@@ -3065,17 +3065,11 @@ ClientConsultingJs.prototype.finalSubmit = function () {
                 document.body.removeChild(back);
                 selfHref(FRONTHOST + "/curation.php?cliid=" + cliid);
               }).catch((err) => {
-                document.body.removeChild(box);
-                document.body.removeChild(back);
-                selfHref(FRONTHOST + "/curation.php?cliid=" + cliid);
+                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                window.location.reload();
               });
-              setQueue(() => {
-                document.body.removeChild(box);
-                document.body.removeChild(back);
-                selfHref(FRONTHOST + "/curation.php?cliid=" + cliid);
-              }, 20 * 1000);
             } catch (e) {
-              await ajaxJson({ message: "FrontAboutJs.certificationBox : " + e.message }, BACKHOST + "/errorLog");
+              await ajaxJson({ message: "front clientConsulting.certificationBox : " + e.message }, BACKHOST + "/errorLog");
             }
           });
         }
