@@ -784,10 +784,17 @@ BillMaker.billDictionary = {
         amount: (method, amount, distance, subObj) => {
           const { designer, freeRatio, distancePercentage } = subObj;
           let classification, calculate, commission, distanceFinalAmount;
-          distanceFinalAmount = distance.amount * distance.number;
-          classification = designer.information.business.businessInfo.classification;
-          [ calculate, commission ] = BillMaker.designerCalculation(distanceFinalAmount, classification, distancePercentage, null, { toArray: true, forcePercentage: true });
-          calculate = (distance.number === 0 ? 0 : Math.floor(calculate / distance.number));
+          if (distance.number !== 0) {
+            distanceFinalAmount = distance.amount * distance.number;
+            classification = designer.information.business.businessInfo.classification;
+            [ calculate, commission ] = BillMaker.designerCalculation(distanceFinalAmount, classification, distancePercentage, null, { toArray: true, forcePercentage: true });
+            calculate = Math.floor(calculate / distance.number);
+          } else {
+            distanceFinalAmount = distance.amount * 1;
+            classification = designer.information.business.businessInfo.classification;
+            [ calculate, commission ] = BillMaker.designerCalculation(distanceFinalAmount, classification, distancePercentage, null, { toArray: true, forcePercentage: true });
+            calculate = Math.floor(calculate / 1);
+          }
           return { amount: calculate, commission };
         },
         comments: [

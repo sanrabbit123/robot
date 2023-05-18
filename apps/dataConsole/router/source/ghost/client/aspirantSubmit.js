@@ -419,6 +419,9 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   let greenDateBlurEvent;
   let greenCareerFocusEvent;
   let greenCareerBlurEvent;
+  let textareaBlurEvent;
+  let greenLinkFocusEvent;
+  let greenLinkBlurEvent;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -1210,6 +1213,54 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
     if (noticeTarget !== null) {
       noticeTarget.style.color = colorChip.deactive;
     }
+  }
+
+  greenCareerFocusEvent = function (e) {
+    const motherBlock = this.parentElement.parentElement;
+    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
+    this.value = this.value.trim().replace(/[^0-9년개월위와같음 ]/gi, '').trim();
+    if (noticeTarget !== null) {
+      noticeTarget.style.color = colorChip.green;
+    }
+  }
+
+  greenCareerBlurEvent = function (e) {
+    const motherBlock = this.parentElement.parentElement;
+    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
+    this.value = this.value.trim().replace(/[^0-9년개월위와같음 ]/gi, '').trim();
+    if (!((/^[0-9]+년( [0-9]개월)?/.test(this.value.trim()) && !/[0-9개]$/.test(this.value.trim())) || this.value.trim() === "위와 같음" || /^[0-9]+개월$/.test(this.value.trim()))) {
+      window.alert("'y년 m개월' 형태로 적어주세요!");
+      this.value = "0년 0개월";
+    }
+    if (noticeTarget !== null) {
+      noticeTarget.style.color = colorChip.deactive;
+    }
+  }
+
+  greenLinkFocusEvent = function (e) {
+    const motherBlock = this.parentElement.parentElement;
+    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
+    this.value = this.value.trim().replace(/ /gi, '').trim();
+    if (noticeTarget !== null) {
+      noticeTarget.style.color = colorChip.green;
+    }
+  }
+
+  greenLinkBlurEvent = function (e) {
+    const motherBlock = this.parentElement.parentElement;
+    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
+    this.value = this.value.trim().replace(/ /gi, '').trim();
+    if (!/^http/.test(this.value)) {
+      window.alert("http로 시작하는 전체 링크를 복사 붙여넣기 해주세요!");
+      this.value = "";
+    }
+    if (noticeTarget !== null) {
+      noticeTarget.style.color = colorChip.deactive;
+    }
+  }
+
+  textareaBlurEvent = function (e) {
+    this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
   }
 
   mainBlock = createNode({
@@ -2653,8 +2704,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           attribute: {
             type: "text",
             placeholder: "2년 6개월",
-            property: "pyeong",
+            property: "interior",
             value: "",
+          },
+          event: {
+            focus: greenCareerFocusEvent,
+            blur: greenCareerBlurEvent,
           },
           style: {
             position: "absolute",
@@ -2741,8 +2796,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           attribute: {
             type: "text",
             placeholder: "2년 6개월 or 위와 같음",
-            property: "pyeong",
+            property: "styling",
             value: "",
+          },
+          event: {
+            focus: greenCareerFocusEvent,
+            blur: greenCareerBlurEvent,
           },
           style: {
             position: "absolute",
@@ -2838,7 +2897,10 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
               "한샘, 공간 디자이너, 대리, 4년 7개월",
               "한성아이디, 공간 디자이너, 사원, 1년 6개월",
             ].join("\n")),
-            property: "etc",
+            property: "career",
+          },
+          event: {
+            blur: textareaBlurEvent,
           },
           style: {
             position: "absolute",
@@ -2924,8 +2986,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           attribute: {
             type: "text",
             placeholder: "전체 링크",
-            property: "pyeong",
+            property: "homepage",
             value: "",
+          },
+          event: {
+            focus: greenLinkFocusEvent,
+            blur: greenLinkBlurEvent,
           },
           style: {
             position: "absolute",
@@ -2944,6 +3010,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         }
       },
       {
+        class: [ noticeClassName ],
         text: "* https로 시작하는 링크 전체를 적어주세요!",
         style: {
           display: "inline-block",
@@ -2954,6 +3021,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           color: colorChip.deactive,
           verticalAlign: "top",
           marginLeft: String(subFontBetween) + ea,
+          transition: "all 0.3s ease",
         }
       },
     ]
@@ -3010,8 +3078,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           attribute: {
             type: "text",
             placeholder: "전체 링크",
-            property: "pyeong",
+            property: "sns",
             value: "",
+          },
+          event: {
+            focus: greenLinkFocusEvent,
+            blur: greenLinkBlurEvent,
           },
           style: {
             position: "absolute",
@@ -3030,6 +3102,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         }
       },
       {
+        class: [ noticeClassName ],
         text: "* 계정명이 아닌, 링크 전체를 적어주세요!",
         style: {
           display: "inline-block",
@@ -3040,6 +3113,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           color: colorChip.deactive,
           verticalAlign: "top",
           marginLeft: String(subFontBetween) + ea,
+          transition: "all 0.3s ease",
         }
       },
     ]
@@ -3159,6 +3233,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
               accept: "image/*,  application/pdf",
               multiple: "true",
               cancel: JSON.stringify([]),
+              property: "portfolio",
             },
             event: {
               change: fileChangeEvent,
