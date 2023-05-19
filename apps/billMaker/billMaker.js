@@ -4188,6 +4188,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
     let safeNum;
     let designerCancelObject;
     let designerCancelCalculate;
+    let newFeeObjectInProposal;
 
     safeNum = 0;
     while ((await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) && safeNum < 100) {
@@ -4254,6 +4255,17 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
       feeObject = project.proposal.detail[0].fee[0];
       proposalIndex0 = 0;
       proposalIndex1 = 0;
+    }
+
+    newFeeObjectInProposal = null;
+    for (let i = 0; i < project.proposal.detail.length; i++) {
+      if (project.proposal.detail[i].desid === desid) {
+        for (let j = 0; j < project.proposal.detail[i].fee.length; j++) {
+          if (project.proposal.detail[i].fee[j].method === method) {
+            newFeeObjectInProposal = project.proposal.detail[i].fee[j];
+          }
+        }
+      }
     }
 
     pastFeeObject = await work.getDesignerFee(pastDesid, cliid, serid, xValue, { selfMongo: MONGOCOREC, selfLocalMongo: null });
@@ -4352,7 +4364,11 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
         }
       }
       pastRemainPrice = pastRemainArr[remainItemIndex].unit.price;
-      newRequestAmount = newFeeObject.detail[method] - pastFeeObject.detail[method];
+      if (newFeeObjectInProposal !== null) {
+        newRequestAmount = newFeeObjectInProposal.amount - pastRemainPrice - Math.round(project.process.contract.first.calculation.amount * (1 / (1 + vatRatio)));
+      } else {
+        newRequestAmount = newFeeObject.detail[method] - pastFeeObject.detail[method];
+      }
       newRequestPrice = pastRemainPrice + newRequestAmount;
       newSupply = newRequestPrice + Math.round(project.process.contract.first.calculation.amount * (1 / (1 + vatRatio)));
 
