@@ -2333,7 +2333,11 @@ SecondRouter.prototype.rou_post_printClient = function () {
       let webReport;
 
       text = client.toPrint([ "선택한 시공 : " + history.curation.construct.items.join(", ") ]);
-      requestSystem("https://" + address.officeinfo.ghost.host + ":3000/printText", { text, landScape: true }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+      text += "\n\n";
+      webReport = (await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/getClientAnalytics", { cliid, textMode: true }, { headers: { "Content-Type": "application/json" } })).data.report;
+      text += webReport;
+      
+      requestSystem("https://" + address.officeinfo.ghost.host + ":3000/printText", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
 
       res.send(JSON.stringify({ message: "will do" }));
 
