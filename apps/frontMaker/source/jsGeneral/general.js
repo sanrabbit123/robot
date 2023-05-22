@@ -6565,7 +6565,11 @@ GeneralJs.chartJsPatch = function (dataObject = null, url = "") {
       GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://cdn.jsdelivr.net/npm/chart.js") }, "/requestScript").then((obj) => {
         const { data } = obj;
         const chartJsPatch = new Function(data);
-        return chartJsPatch();
+        if (window.Chart !== undefined) {
+          return (new Promise((r, r2) => { return r(null); }));
+        } else {
+          return chartJsPatch();
+        }
       }).then(() => {
         try {
           if (window.Chart !== undefined) {
@@ -6585,7 +6589,11 @@ GeneralJs.chartJsPatch = function (dataObject = null, url = "") {
       GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://cdn.jsdelivr.net/npm/chart.js") }, "/requestScript").then((obj) => {
         const { data } = obj;
         const chartJsPatch = new Function(data);
-        return chartJsPatch();
+        if (window.Chart !== undefined) {
+          return (new Promise((r, r2) => { return r(null); }));
+        } else {
+          return chartJsPatch();
+        }
       }).then(() => {
         return GeneralJs.ajaxJson(dataObject, url, { equal: true });
       }).then((result) => {
@@ -6613,7 +6621,11 @@ GeneralJs.chartJsPatch = function (dataObject = null, url = "") {
       GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://cdn.jsdelivr.net/npm/chart.js") }, "/requestScript").then((obj) => {
         const { data } = obj;
         const chartJsPatch = new Function(data);
-        return chartJsPatch();
+        if (window.Chart !== undefined) {
+          return (new Promise((r, r2) => { return r(null); }));
+        } else {
+          return chartJsPatch();
+        }
       }).then(() => {
         return Promise.all(dataObject.map((obj) => {
           return GeneralJs.ajaxJson(obj.data, obj.url, { equal: true });
