@@ -163,10 +163,7 @@ DevContext.prototype.launching = async function () {
 
 
     // 2. hl analytics console - analytics.js
-
-    
-
-    // analytics reporting - graph
+    // analytics reporting - graph => chart.js
     
 
     
@@ -5768,9 +5765,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이승현",
-    //     designer: "박정훈",
-    //     link: "https://drive.google.com/drive/folders/1kl3vGy2UafV02fBaAh0iuOXcK2XmJ6Js",
+    //     client: "김정아",
+    //     designer: "박미연",
+    //     link: "https://drive.google.com/drive/folders/1MRyDptEdSN7c8fdIMoxQJtTuWgtuFNf9",
     //     pay: true
     //   },
     // ]);

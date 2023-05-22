@@ -788,7 +788,8 @@ GeneralJs.nodes = {
   iframe: document.createElement('IFRAME'),
   aside: document.createElement('ASIDE'),
   video: document.createElement('VIDEO'),
-  source: document.createElement('SOURCE')
+  source: document.createElement('SOURCE'),
+  canvas: document.createElement("CANVAS"),
 }
 
 GeneralJs.scrollTo = function (from, valueOrTo, visualSpecific = 0, noSmoothMode = false) {
@@ -6545,6 +6546,28 @@ GeneralJs.kakaoSdkPatch = function () {
       window.Kakao.init(appKey);
       try {
         if (window.Kakao.isInitialized()) {
+          resolve(null);
+        } else {
+          reject("kakao error");
+        }
+      } catch (e) {
+        reject("kakao error");
+      }
+    }).catch((err) => {
+      reject(err);
+    });
+  });
+}
+
+GeneralJs.chartJsPatch = function () {
+  return new Promise((resolve, reject) => {
+    GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://cdn.jsdelivr.net/npm/chart.js") }, "/requestScript").then((obj) => {
+      const { data } = obj;
+      const chartJsPatch = new Function(data);
+      return chartJsPatch();
+    }).then(() => {
+      try {
+        if (window.Chart !== undefined) {
           resolve(null);
         } else {
           reject("kakao error");

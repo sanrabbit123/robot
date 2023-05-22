@@ -1011,6 +1011,77 @@ LogRouter.prototype.rou_post_clientAnalytics = function () {
   return obj;
 }
 
+LogRouter.prototype.rou_post_extractAnalytics = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/extractAnalytics" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongo;
+      const { mode } = equalJson(req.body);
+      let collection;
+      let fromDate, toDate;
+      let whereQuery;
+      let rows;
+
+      if (mode === "daily") {
+
+        if (req.body.fromDate === undefined || req.body.toDate === undefined) {
+          throw new Error("invalid post 2");
+        }
+
+        ({ fromDate, toDate } = equalJson(req.body));
+        collection = "dailyAnalytics";
+
+        fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate(), 0, 0, 0);
+        toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate(), 0, 0, 0);
+
+        whereQuery = {};
+        whereQuery["$and"] = [];
+        whereQuery["$and"].push({
+          "date.from": {
+            $gte: fromDate,
+          }
+        });
+        whereQuery["$and"].push({
+          "date.from": {
+            $gte: fromDate,
+          }
+        });
+        whereQuery["$and"].push({
+          "date.from": {
+            $lte: toDate,
+          }
+        });
+
+        rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+        res.send(JSON.stringify(rows));
+
+      } else {
+        throw new Error("invalid mode");
+      }
+
+
+    } catch (e) {
+      logger.error("Log console 문제 생김 (rou_post_extractAnalytics): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 
 //ROUTING ----------------------------------------------------------------------
 

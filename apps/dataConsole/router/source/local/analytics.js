@@ -1449,54 +1449,15 @@ AnalyticsJs.prototype.makeExtractEvent = async function () {
   }
 }
 
-AnalyticsJs.prototype.normalReportWhite = function () {
+AnalyticsJs.prototype.reportWhite = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
   const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, autoComma, zeroAddition } = GeneralJs;
-  const vaildValue = function (target) {
-    const today = new Date();
-    let valueArr0, valueArr1, valueArr2;
-    target.style.color = GeneralJs.colorChip.black;
-    if (!/[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.test(target.value)) {
-      valueArr0 = target.value.split(" ~ ");
-      valueArr1 = valueArr0[0].split("-");
-      if (valueArr0[1] !== undefined) {
-        valueArr2 = valueArr0[1].split("-");
-        if (valueArr1.length === 3 && valueArr2.length === 3) {
-          target.value = String(valueArr1[0]) + '-' + zeroAddition(valueArr1[1]) + '-' + zeroAddition(valueArr1[2]) + ' ~ ' + String(valueArr2[0]) + '-' + zeroAddition(valueArr2[1]) + '-' + zeroAddition(valueArr2[2]);
-        } else {
-          target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
-        }
-      } else {
-        target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
-      }
-    }
-    target.value = (/[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/.exec(target.value))[0];
-
-    valueArr0 = target.value.split(" ~ ");
-    valueArr1 = valueArr0[0].split("-");
-    valueArr2 = valueArr0[1].split("-");
-    if ((Number(valueArr1[0]) * 12) + Number(valueArr1[1].replace(/^0/, '')) > (Number(valueArr2[0]) * 12) + Number(valueArr2[1].replace(/^0/, ''))) {
-      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
-    }
-    if (Number(valueArr1[1].replace(/^0/, '')) > 12 || Number(valueArr1[1].replace(/^0/, '')) < 1) {
-      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
-    }
-    if (Number(valueArr2[1].replace(/^0/, '')) > 12 || Number(valueArr2[1].replace(/^0/, '')) < 1) {
-      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
-    }
-    if (Number(valueArr1[0]) < 19) {
-      target.value = GeneralJs.stacks.reportBoxStartDayInputValue;
-    }
-
-    GeneralJs.stacks.reportBoxStartDayInputValue = target.value;
-  }
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, autoComma, zeroAddition, chartJsPatch } = GeneralJs;
   return async function (e) {
     try {
       const zIndex = 4;
       let cancelBack, whitePrompt;
-      let titleWhite;
       let margin;
       let titleHeight;
       let innerMargin;
@@ -1505,32 +1466,13 @@ AnalyticsJs.prototype.normalReportWhite = function () {
       let titleWeight;
       let fontTextTop, fontSize, fontBetween, fontWeight;
       let whiteReportMaker;
-      let iframeMaker;
-      let linkDictionary;
-      let base, scrollBox;
+      let scrollBox;
       let titleArea;
-      let basePaddingTop;
-      let basePaddingBottom;
-      let divideNumber;
-      let lineBetween;
-      let linePaddingLeft;
-      let wordingSize;
-      let linePaddingTop;
-      let linePaddingBottom;
-      let designerSize;
-      let desidSize;
-      let subTitleLeft;
-      let subTitleBottom;
-      let data;
       let today;
       let ago;
       let agoDate;
-      let loading;
       let loadingWidth;
-      let style;
       let startPaddingTop;
-      let todayRange, dateInput;
-      let todayString;
       let inputWidth, inputSize, inputWeight;
       let subTodaySize, subTodayWeight;
       let dataLoad;
@@ -1553,20 +1495,6 @@ AnalyticsJs.prototype.normalReportWhite = function () {
       fontSize = 14;
       fontBetween = 8;
       fontWeight = 400;
-
-      basePaddingTop = 10;
-      basePaddingBottom = 6;
-      divideNumber = 4;
-      lineBetween = 4;
-      linePaddingLeft = 16;
-      wordingSize = 14;
-      linePaddingTop = isMac() ? 10 : 12;
-      linePaddingBottom = isMac() ? 11 : 11;
-      designerSize = 16;
-      desidSize = 11;
-      subTitleLeft = 1;
-      subTitleBottom = isMac() ? 6 : 4;
-      startPaddingTop = 10;
 
       loadingWidth = 48;
 
@@ -1634,466 +1562,41 @@ AnalyticsJs.prototype.normalReportWhite = function () {
                 paddingTop: String(startPaddingTop) + ea,
                 overflow: "scroll",
               },
+              child: {
+                mode: "canvas",
+                style: {
+                  display: "block",
+                  position: "relative",
+                }
+              }
             }
           ]
         });
 
         [ titleArea, scrollBox ] = Array.from(whitePrompt.children);
 
-        todayRange = dateToString(fromDate).slice(2) + " ~ " + dateToString(toDate).slice(2);
-        todayString = dateToString(new Date());
+        chartJsPatch().then(() => {
 
-        dateInput = createNode({
-          mode: "input",
-          attribute: {
-            type: "text",
-          },
-          event: {
-            focus: function (e) {
-              this.style.color = colorChip.green;
-              GeneralJs.stacks.reportBoxStartDayInputValue = this.value;
+          new Chart(scrollBox.firstChild, {
+            type: 'bar',
+            data: {
+              labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+              datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                borderWidth: 1
+              }]
             },
-            blur: function (e) {
-              vaildValue(this);
-            },
-            keyup: function (e) {
-              if (e.key === "Enter") {
-                vaildValue(this);
-                const dateArr = this.value.split(" ~ ");
-                const startDay = "20" + dateArr[0];
-                const endDay = "20" + dateArr[1];
-
-                this.blur();
-
-                cleanChildren(scrollBox);
-
-                loading = instance.mother.returnLoadingIcon();
-                style = {
-                  position: "absolute",
-                  width: String(loadingWidth) + ea,
-                  height: String(loadingWidth) + ea,
-                  top: withOut(50, loadingWidth / 2, ea),
-                  left: withOut(50, loadingWidth / 2, ea),
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
                 }
-                for (let i in style) {
-                  loading.style[i] = style[i];
-                }
-                whitePrompt.appendChild(loading);
-
-                ajaxJson({
-                  mode: "designer",
-                  start: stringToDate(startDay),
-                  end: stringToDate(endDay)
-                }, BACKHOST + "/getProjectReport", { equal: true }).then(dataLoad(loading)).catch((err) => {
-                  console.log(err);
-                });
               }
             }
-          },
-          mother: titleArea,
-          style: {
-            position: "absolute",
-            left: String(0) + ea,
-            bottom: String(startPaddingTop) + ea,
-            width: String(inputWidth) + ea,
-            fontSize: String(inputSize) + ea,
-            fontWeight: String(inputWeight),
-            border: String(0) + ea,
-            outline: String(0) + ea,
-            color: colorChip.black,
-            fontFamily: "graphik",
-          }
-        });
-        dateInput.value = todayRange;
+          });
 
-        createNode({
-          mother: titleArea,
-          text: "today : " + todayString,
-          style: {
-            position: "absolute",
-            fontSize: String(subTodaySize) + ea,
-            fontWeight: String(subTodayWeight) + ea,
-            right: String(0) + ea,
-            bottom: String(startPaddingTop) + ea,
-            color: colorChip.green,
-            fontFamily: "graphik",
-          }
-        });
-
-        loading = instance.mother.returnLoadingIcon();
-        style = {
-          position: "absolute",
-          width: String(loadingWidth) + ea,
-          height: String(loadingWidth) + ea,
-          top: withOut(50, loadingWidth / 2, ea),
-          left: withOut(50, loadingWidth / 2, ea),
-        }
-        for (let i in style) {
-          loading.style[i] = style[i];
-        }
-        whitePrompt.appendChild(loading);
-
-        dataLoad = (loading) => {
-          return (data) => {
-            loading.remove();
-            cleanChildren(scrollBox);
-  
-            for (let designer of data.designers) {
-        
-              designer.proposal = designer.proposal.filter((obj) => { return obj.amount !== 0 });
-              designer.process = designer.process.filter((obj) => { return obj.amount !== 0 });
-              designer.first = designer.first.filter((obj) => { return obj.amount !== 0 });
-              designer.remain = designer.remain.filter((obj) => { return obj.amount !== 0 });
-          
-              base = createNode({
-                mother: scrollBox,
-                style: {
-                  display: "block",
-                  position: "relative",
-                  width: String(100) + '%',
-                  paddingTop: String(basePaddingTop) + ea,
-                  paddingBottom: String(basePaddingBottom) + ea,
-                }
-              });
-          
-              createNode({
-                mother: base,
-                class: [ "hoverDefault_lite" ],
-                attribute: { desid: designer.desid },
-                event: {
-                  click: function (e) {
-                    blankHref(FRONTHOST + "/designer/report.php?desid=" + this.getAttribute("desid"));
-                  }
-                },
-                text: `${designer.designer}&nbsp;&nbsp;<b%${designer.desid}%b>`,
-                style: {
-                  display: "inline-block",
-                  fontSize: String(designerSize) + ea,
-                  fontWeight: String(600),
-                  color: colorChip.black,
-                  marginLeft: String(subTitleLeft) + ea,
-                  marginBottom: String(subTitleBottom) + ea,
-                },
-                bold: {
-                  fontSize: String(desidSize) + ea,
-                  fontWeight: String(300),
-                  color: colorChip.green
-                }
-              });
-          
-              tong = createNode({
-                mother: base,
-                style: {
-                  display: "block",
-                  borderRadius: String(5) + "px",
-                  border: "1px solid " + colorChip.gray3,
-                  boxSizing: "border-box",
-                  width: String(100) + '%',
-                }
-              });
-          
-              for (let i = 0; i < divideNumber; i++) {
-                area = createNode({
-                  mother: tong,
-                  style: {
-                    display: "inline-block",
-                    width: String(100 / divideNumber) + '%',
-                    borderRight: i === divideNumber - 1 ? "" : "1px dashed " + colorChip.gray3,
-                    verticalAlign: "top",
-                    paddingTop: String(linePaddingTop) + ea,
-                    paddingBottom: String(linePaddingBottom) + ea,
-                    boxSizing: "border-box",
-                  }
-                });
-                if (i === 0) {
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%제안 횟수%b> : ${String(designer.proposal.length)}회`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      marginBottom: String(lineBetween) + ea,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%제안액 누계%b> : ${autoComma(designer.proposal.reduce((acc, curr) => { return acc + curr.amount }, 0))}원`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      marginBottom: String(lineBetween) + ea,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%제안액 평균%b> : ${designer.proposal.length === 0 ? String(0) : autoComma(Math.floor((designer.proposal.reduce((acc, curr) => { return acc + curr.amount }, 0) / designer.proposal.length) / 1000) * 1000)}원`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      marginBottom: String(lineBetween) + ea,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%평단가 평균%b> : ${designer.proposal.length === 0 ? String(0) : autoComma(Math.floor((designer.proposal.reduce((acc, curr) => { return acc + curr.per }, 0) / designer.proposal.length) / 1000) * 1000)}원`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-                } else if (i === 1) {
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%계약 횟수%b> : ${String(designer.process.length)}회`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      marginBottom: String(lineBetween) + ea,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%디자인비 누계%b> : ${autoComma(designer.process.reduce((acc, curr) => { return acc + curr.amount }, 0))}원`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      marginBottom: String(lineBetween) + ea,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%디자인비 평균%b> : ${designer.process.length === 0 ? String(0) : autoComma(Math.floor((designer.process.reduce((acc, curr) => { return acc + curr.amount }, 0) / designer.process.length) / 1000) * 1000)}원`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      marginBottom: String(lineBetween) + ea,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%디자인비 평단가%b> : ${designer.process.length === 0 ? String(0) : autoComma(Math.floor((designer.process.reduce((acc, curr) => { return acc + curr.per }, 0) / designer.process.length) / 1000) * 1000)}원`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-        
-                } else if (i === 2) {
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%선금 정산 횟수%b> : ${String(designer.first.length)}회`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      marginBottom: String(lineBetween) + ea,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%선금 정산 누계%b> : ${autoComma(designer.first.reduce((acc, curr) => { return acc + curr.amount }, 0))}원`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      marginBottom: String(lineBetween) + ea,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%선금 정산 평균%b> : ${designer.first.length === 0 ? String(0) : autoComma(Math.floor((designer.first.reduce((acc, curr) => { return acc + curr.amount }, 0) / designer.first.length) / 1000) * 1000)}원`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      marginBottom: String(lineBetween) + ea,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%평균 평수%b> : ${designer.first.length === 0 ? String(0) : autoComma(Math.floor((designer.first.reduce((acc, curr) => { return acc + curr.pyeong }, 0) / designer.first.length) / 1) * 1)}평`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-                } else {
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%잔금 정산 횟수%b> : ${String(designer.remain.length)}회`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      marginBottom: String(lineBetween) + ea,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%잔금 정산 누계%b> : ${autoComma(designer.remain.reduce((acc, curr) => { return acc + curr.amount }, 0))}원`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      marginBottom: String(lineBetween) + ea,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%잔금 정산 평균%b> : ${designer.remain.length === 0 ? String(0) : autoComma(Math.floor((designer.remain.reduce((acc, curr) => { return acc + curr.amount }, 0) / designer.remain.length) / 1000) * 1000)}원`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      marginBottom: String(lineBetween) + ea,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-                  createNode({
-                    mother: area,
-                    text: `<b%평균 평수%b> : ${designer.remain.length === 0 ? String(0) : autoComma(Math.floor((designer.remain.reduce((acc, curr) => { return acc + curr.pyeong }, 0) / designer.remain.length) / 1) * 1)}평`,
-                    style: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(300),
-                      color: colorChip.black,
-                      paddingLeft: String(linePaddingLeft) + ea,
-                    },
-                    bold: {
-                      fontSize: String(wordingSize) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  });
-          
-                }
-              }
-          
-            }
-          }
-        }
-
-        ajaxJson({
-          mode: "designer",
-          start: fromDate,
-          end: toDate
-        }, BACKHOST + "/getProjectReport", { equal: true }).then(dataLoad(loading)).catch((err) => {
+        }).catch((err) => {
           console.log(err);
         });
 
@@ -2132,7 +1635,7 @@ AnalyticsJs.prototype.makeReportEvent = async function () {
   const instance = this;
   const { ajaxJson } = GeneralJs;
   try {
-    this.mother.belowButtons.square.reportIcon.addEventListener("click", instance.normalReportWhite());
+    this.mother.belowButtons.square.reportIcon.addEventListener("click", instance.reportWhite());
   } catch (e) {
     console.log(e);
   }
