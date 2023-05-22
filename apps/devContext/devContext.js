@@ -163,8 +163,6 @@ DevContext.prototype.launching = async function () {
 
 
     // 2. hl analytics console - analytics.js
-    // analytics reporting - graph => chart.js
-    
 
     
 
@@ -189,6 +187,99 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+
+    const parent = "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ";
+    const clients = await back.getClientsByQuery({}, { selfMongo: this.MONGOC });
+    const projects = await back.getProjectsByQuery({ "process.contract.first.date": { $gte: new Date(2000, 0, 1) } }, { selfMongo: this.MONGOC });
+    const contractClients = await back.getClientsByQuery({ $or: Array.from(new Set(projects.toNormal().map((p) => { return p.cliid }))).map((cliid) => { return { cliid } }) }, { selfMongo: this.MONGOC });
+    let matrix0, matrix1;
+    let targets;
+    let sheetsId;
+
+
+    matrix0 = [
+      [
+        "성함",
+        "아이디",
+        "연락처",
+        "문의일",
+        "주소",
+        "평형",
+        "콘솔"
+      ]
+    ]
+
+    targets = clients.toNormal();
+    for (let { cliid, name, phone, requests } of targets) {
+      for (let { request } of requests) {
+        matrix0.push([
+          name,
+          cliid,
+          phone,
+          dateToString(request.timeline, true),
+          request.space.address,
+          request.space.pyeong,
+          "https://" + address.backinfo.host + "/client?cliid=" + cliid,
+        ]);
+      }
+    }
+
+    sheetsId = await sheets.create_newSheets_inPython("전체 고객 주소와 평형", parent);
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix0);
+
+    matrix1 = [
+      [
+        "성함",
+        "아이디",
+        "연락처",
+        "문의일",
+        "주소",
+        "평형",
+        "콘솔"
+      ]
+    ]
+
+    targets = contractClients.toNormal();
+    for (let { cliid, name, phone, requests } of targets) {
+      for (let { request } of requests) {
+        matrix1.push([
+          name,
+          cliid,
+          phone,
+          dateToString(request.timeline, true),
+          request.space.address,
+          request.space.pyeong,
+          "https://" + address.backinfo.host + "/client?cliid=" + cliid,
+        ]);
+      }
+    }
+
+    sheetsId = await sheets.create_newSheets_inPython("계약 고객 주소와 평형", parent);
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix1);
+
+    console.log(clients.toNormal().length);
+    console.log(contractClients.toNormal().length);
+
+    */
 
 
 

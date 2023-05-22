@@ -2991,6 +2991,11 @@ ClientConsultingJs.prototype.finalSubmit = function () {
                 if (!/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(firstDom.value.trim())) {
                   throw new Error("입주 예정일을 알려주세요! (정해지지 않았을 경우, 예상되는 날짜를 찍어주세요!)");
                 }
+              } else if (p === "etc") {
+                firstDom.value = firstDom.value.trim();
+                if (firstDom.value.trim() === '') {
+                  throw new Error("예시를 보시고 요청사항을 최대한 자세하게 적어주세요!");
+                }
               }
 
               tempObj.value = firstDom.value.replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
