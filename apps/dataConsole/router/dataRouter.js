@@ -2011,9 +2011,9 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           }
         ]
       }, { selfMongo: instance.mongo, withTools: true })).getRequestsTong().map((arr) => { let obj = arr[0].toNormal(); obj.cliid = arr.cliid; obj.analytics = arr[1].toNormal(); return obj; });
-      motherClientHistories = await back.mongoRead("clientHistory", {
+      motherClientHistories = await back.mongoPick("clientHistory", [ {
         $or: motherClients.map((o) => { return { cliid: o.cliid } }),
-      }, { selfMongo: instance.mongolocal });
+      }, { cliid: 1, manager: 1, curation: 1 } ], { selfMongo: instance.mongolocal });
       motherProjects_raw = (await back.getProjectsByQuery({
         $or: motherClients.map((o) => { return { cliid: o.cliid } }).concat([
           {
@@ -2168,6 +2168,123 @@ DataRouter.prototype.rou_post_getClientReport = function () {
     } catch (e) {
       logger.error("Console 서버 문제 생김 (rou_post_getClientReport): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_extractAnalytics = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/extractAnalytics" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongo;
+      const selfLocalMongo = instance.mongolocal;
+      const { mode } = equalJson(req.body);
+      let collection;
+      let fromDate, toDate;
+      let whereQuery;
+      let rows;
+      let motherClients;
+      let clients;
+      let cliidArr_raw;
+      let process;
+      let histories;
+      let motherClientHistories;
+      let motherProjects_raw;
+      let motherProjects;
+      let obj;
+      let contracts;
+
+      if (mode === "basic") {
+
+        if (req.body.fromDate === undefined || req.body.toDate === undefined) {
+          throw new Error("invalid post 2");
+        }
+
+        ({ fromDate, toDate } = equalJson(req.body));
+
+        fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate(), 0, 0, 0);
+        toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate(), 0, 0, 0);
+        toDate.setDate(toDate.getDate() + 1);
+
+        motherClients = (await back.getClientsByQuery({
+          $and: [
+            {
+              requests: {
+                $elemMatch: {
+                  "request.timeline": { $gte: fromDate }
+                }
+              }
+            },
+            {
+              requests: {
+                $elemMatch: {
+                  "request.timeline": { $lt: toDate }
+                }
+              }
+            }
+          ]
+        }, { selfMongo, withTools: true })).getRequestsTong().map((arr) => { let obj = arr[0].toNormal(); obj.cliid = arr.cliid; obj.analytics = arr[1].toNormal(); return obj; });
+        motherClientHistories = await back.mongoPick("clientHistory", [ {
+          $or: motherClients.map((o) => { return { cliid: o.cliid } }),
+        }, { cliid: 1, manager: 1, curation: 1 } ], { selfMongo: selfLocalMongo });
+        motherProjects_raw = (await back.getProjectsByQuery({
+          $or: motherClients.map((o) => { return { cliid: o.cliid } }).concat([
+            {
+              "process.contract.first.date": {
+                $gte: fromDate
+              }
+            }
+          ]),
+        }, { selfMongo })).toNormal();
+        motherProjects = motherProjects_raw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() });
+
+        obj = {};
+
+        //client
+        clients = motherClients.filter((obj) => { return obj.timeline.valueOf() >= fromDate && obj.timeline.valueOf() < toDate });
+        obj.client = clients.length;
+
+        //proposal
+        cliidArr_raw = clients.map((obj) => { return obj.cliid; });
+        cliidArr_raw = Array.from(new Set(cliidArr_raw));
+        process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
+        histories = motherClientHistories.filter((obj) => { return process.map((o) => { return o.cliid; }).includes(obj.cliid) });
+        histories = histories.filter((obj) => { return obj.curation.analytics.send.some((o) => { return /designerProposal/gi.test(o.page) }) });
+        obj.proposal = histories.length;
+
+        //recommend
+        histories = histories.filter((obj) => { return obj.curation.analytics.page.some((o) => { return /designerProposal/gi.test(o.page) }) });
+        obj.recommend = histories.length;
+
+        //contract
+        contracts = motherProjects.filter((obj) => { return obj.process.contract.first.date.valueOf() >= fromDate && obj.process.contract.first.date.valueOf() < toDate });
+        obj.contract = contracts.length;
+
+        //end
+        res.send(JSON.stringify(obj));
+
+      } else {
+        throw new Error("invalid mode");
+      }
+
+    } catch (e) {
+      logger.error("Console 문제 생김 (rou_post_extractAnalytics): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;

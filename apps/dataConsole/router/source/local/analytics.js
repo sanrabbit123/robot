@@ -1476,11 +1476,15 @@ AnalyticsJs.prototype.reportWhite = function () {
       let inputWidth, inputSize, inputWeight;
       let subTodaySize, subTodayWeight;
       let dataLoad;
+      let fromDate, toDate;
+      let chartBetween;
+      let chartHeight;
 
-      today = new Date();
-      ago = 30;
-      agoDate = new Date();
-      agoDate.setDate(agoDate.getDate() - ago);
+      toDate = new Date();
+      toDate.setDate(toDate.getDate() - 1);
+      ago = 21;
+      fromDate = new Date();
+      fromDate.setDate(fromDate.getDate() - ago);
 
       margin = 30;
       titleHeight = 58;
@@ -1505,6 +1509,11 @@ AnalyticsJs.prototype.reportWhite = function () {
       subTodaySize = 13;
       subTodayWeight = 200;
 
+      chartBetween = 30;
+      chartHeight = 480;
+
+      startPaddingTop = 20;
+
       dataLoad = () => {};
 
       whiteReportMaker = (fromDate, toDate, reload = false) => {
@@ -1517,8 +1526,8 @@ AnalyticsJs.prototype.reportWhite = function () {
             style: {
               position: "fixed",
               top: String(0),
-              left: String(grayBarWidth) + ea,
-              width: withOut(grayBarWidth, ea),
+              left: String(0) + ea,
+              width: withOut(0, ea),
               height: withOut(belowHeight, ea),
               background: colorChip.black,
             }
@@ -1531,8 +1540,8 @@ AnalyticsJs.prototype.reportWhite = function () {
           style: {
             position: "fixed",
             top: String(0 + margin) + ea,
-            left: String(grayBarWidth + margin) + ea,
-            width: withOut((margin * 2) + grayBarWidth, ea),
+            left: String(0 + margin) + ea,
+            width: withOut((margin * 2) + 0, ea),
             height: withOut(0 + (margin * 2) + belowHeight, ea),
             background: colorChip.white,
             zIndex: String(zIndex),
@@ -1562,35 +1571,346 @@ AnalyticsJs.prototype.reportWhite = function () {
                 paddingTop: String(startPaddingTop) + ea,
                 overflow: "scroll",
               },
-              child: {
-                mode: "canvas",
-                style: {
-                  display: "block",
-                  position: "relative",
-                }
-              }
+              children: [
+                {
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                    height: String(chartHeight) + ea,
+                    marginRight: String(chartBetween) + ea,
+                    marginBottom: String(chartBetween) + ea,
+                  },
+                  child: {
+                    mode: "canvas",
+                    style: {
+                      display: "block",
+                      position: "relative",      
+                    }
+                  }
+                },
+                {
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                    height: String(chartHeight) + ea,
+                    marginBottom: String(chartBetween) + ea,
+                  },
+                  child: {
+                    mode: "canvas",
+                    style: {
+                      display: "block",
+                      position: "relative",      
+                    }
+                  }
+                },
+                {
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                    height: String(chartHeight) + ea,
+                    marginRight: String(chartBetween) + ea,
+                  },
+                  child: {
+                    mode: "canvas",
+                    style: {
+                      display: "block",
+                      position: "relative",      
+                    }
+                  }
+                },
+                {
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                    height: String(chartHeight) + ea,
+                  },
+                  child: {
+                    mode: "canvas",
+                    style: {
+                      display: "block",
+                      position: "relative",      
+                    }
+                  }
+                },
+                {
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                    height: String(chartHeight) + ea,
+                    marginRight: String(chartBetween) + ea,
+                  },
+                  child: {
+                    mode: "canvas",
+                    style: {
+                      display: "block",
+                      position: "relative",      
+                    }
+                  }
+                },
+                {
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                    height: String(chartHeight) + ea,
+                  },
+                  child: {
+                    mode: "canvas",
+                    style: {
+                      display: "block",
+                      position: "relative",      
+                    }
+                  }
+                },
+              ],
             }
           ]
         });
 
         [ titleArea, scrollBox ] = Array.from(whitePrompt.children);
 
-        chartJsPatch().then(() => {
+        chartJsPatch([
+          { data: { mode: "daily", fromDate, toDate }, url: LOGHOST + "/extractAnalytics" },
+          { data: { mode: "charge", fromDate, toDate }, url: LOGHOST + "/extractAnalytics" },
+          { data: { mode: "basic", fromDate, toDate }, url: BACKHOST + "/extractAnalytics" },
+        ]).then((result) => {
+          const [ rows, charge, basic ] = result;
+          const type = "line";
+          const labels = rows.map((o) => { return dateToString(o.date.from).slice(5) });
+          const fill = false;
+          const tension = 0.3;
+          const borderJoinStyle = "round";
 
-          new Chart(scrollBox.firstChild, {
-            type: 'bar',
+          console.log(rows);
+          console.log(charge);
+          console.log(basic);
+
+          // 1
+          new window.Chart(scrollBox.children[0].querySelector("canvas"), {
+            type,
             data: {
-              labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-              datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                borderWidth: 1
-              }]
+              labels,
+              datasets: [
+                {
+                  label: "Users",
+                  data: rows.map((o) => { return o.data.users.total }),
+                  borderColor: colorChip.red,
+                  fill, tension, borderJoinStyle,
+                },
+                {
+                  label: "Views",
+                  data: rows.map((o) => { return o.data.views.total }),
+                  borderColor: colorChip.yellow,
+                  fill, tension, borderJoinStyle,
+                },
+                {
+                  label: "Conversion",
+                  data: rows.map((o) => { return o.data.conversion.consultingPage.total + o.data.conversion.popupOpen.total }),
+                  borderColor: colorChip.green,
+                  fill, tension, borderJoinStyle,
+                },
+              ]
+            },
+          });
+
+          // 2
+          new window.Chart(scrollBox.children[1].querySelector("canvas"), {
+            type,
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Users",
+                  data: rows.map((o) => { return o.data.users.total }),
+                  borderColor: colorChip.red,
+                  fill, tension, borderJoinStyle,
+                },
+                {
+                  label: "Conversion",
+                  data: rows.map((o) => { return o.data.conversion.consultingPage.total + o.data.conversion.popupOpen.total }),
+                  borderColor: colorChip.green,
+                  fill, tension, borderJoinStyle,
+                },
+              ]
+            },
+          });
+
+          // 3
+          new window.Chart(scrollBox.children[2].querySelector("canvas"), {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Organic",
+                  data: rows.map((o) => { return o.data.users.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                  borderColor: colorChip.red,
+                  backgroundColor: colorChip.red,
+                  borderRadius: 3,
+                  borderWidth: 0,
+                },
+                {
+                  label: "Ads",
+                  data: rows.map((o) => { return o.data.users.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                  borderColor: colorChip.yellow,
+                  backgroundColor: colorChip.yellow,
+                  borderRadius: 3,
+                  borderWidth: 0,
+                },
+                {
+                  label: "Direct",
+                  data: rows.map((o) => { return o.data.users.total - (o.data.users.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (o.data.users.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
+                  borderColor: colorChip.gray3,
+                  backgroundColor: colorChip.gray3,
+                  borderRadius: 3,
+                  borderWidth: 0,
+                },
+              ]
+            },
+            options: {
+              scales: {
+                x: {
+                  stacked: true,
+                },
+                y: {
+                  beginAtZero: true,
+                  stacked: true,
+                }
+              }
+            }
+          });
+
+          // 4
+          new window.Chart(scrollBox.children[3].querySelector("canvas"), {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Naver",
+                  data: rows.map((o) => { return o.data.users.detail.source.cases.filter((c) => { return /naver/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                  borderColor: colorChip.softGreen,
+                  backgroundColor: colorChip.softGreen,
+                  borderRadius: 3,
+                  borderWidth: 0,
+                },
+                {
+                  label: "Meta",
+                  data: rows.map((o) => { return o.data.users.detail.source.cases.filter((c) => { return /instagram/gi.test(c.case) || /facebook/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                  borderColor: colorChip.purple,
+                  backgroundColor: colorChip.purple,
+                  borderRadius: 3,
+                  borderWidth: 0,
+                },
+                {
+                  label: "Google",
+                  data: rows.map((o) => { return o.data.users.detail.source.cases.filter((c) => { return /google/gi.test(c.case) || /youtube/gi.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                  borderColor: colorChip.gray3,
+                  backgroundColor: colorChip.gray3,
+                  borderRadius: 3,
+                  borderWidth: 0,
+                },
+              ]
             },
             options: {
               scales: {
                 y: {
-                  beginAtZero: true
+                  beginAtZero: true,
+                }
+              }
+            }
+          });
+
+          // 5
+          new window.Chart(scrollBox.children[4].querySelector("canvas"), {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Organic",
+                  data: rows.map((o) => { return (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
+                  borderColor: colorChip.red,
+                  backgroundColor: colorChip.red,
+                  borderRadius: 3,
+                  borderWidth: 0,
+                },
+                {
+                  label: "Ads",
+                  data: rows.map((o) => { return (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
+                  borderColor: colorChip.yellow,
+                  backgroundColor: colorChip.yellow,
+                  borderRadius: 3,
+                  borderWidth: 0,
+                },
+                {
+                  label: "Direct",
+                  data: rows.map((o) => { return (o.data.conversion.consultingPage.total + o.data.conversion.popupOpen.total) - (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case === "(organic)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) - (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
+                  borderColor: colorChip.gray3,
+                  backgroundColor: colorChip.gray3,
+                  borderRadius: 3,
+                  borderWidth: 0,
+                },
+              ]
+            },
+            options: {
+              scales: {
+                x: {
+                  stacked: true,
+                },
+                y: {
+                  beginAtZero: true,
+                  stacked: true,
+                }
+              }
+            }
+          });
+
+          // 6
+          new window.Chart(scrollBox.children[5].querySelector("canvas"), {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Mobile",
+                  data: rows.map((o) => { return o.data.views.detail.deviceCategory.cases.filter((c) => { return c.case === "mobile" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                  borderColor: colorChip.purple,
+                  backgroundColor: colorChip.purple,
+                  borderRadius: 3,
+                  borderWidth: 0,
+                },
+                {
+                  label: "Desktop",
+                  data: rows.map((o) => { return o.data.views.detail.deviceCategory.cases.filter((c) => { return c.case === "desktop" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                  borderColor: colorChip.black,
+                  backgroundColor: colorChip.black,
+                  borderRadius: 3,
+                  borderWidth: 0,
+                },
+                {
+                  label: "Tablet",
+                  data: rows.map((o) => { return o.data.views.detail.deviceCategory.cases.filter((c) => { return c.case === "tablet" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                  borderColor: colorChip.gray3,
+                  backgroundColor: colorChip.gray3,
+                  borderRadius: 3,
+                  borderWidth: 0,
+                },
+              ]
+            },
+            options: {
+              scales: {
+                x: {
+                  stacked: true,
+                },
+                y: {
+                  beginAtZero: true,
+                  stacked: true,
                 }
               }
             }
@@ -1603,7 +1923,7 @@ AnalyticsJs.prototype.reportWhite = function () {
       }
 
       if (document.querySelector('.' + whiteCardClassName) === null) {
-        whiteReportMaker(agoDate, today, false);
+        whiteReportMaker(fromDate, toDate, false);
       } else {
         const [ cancelBack, w0, w1 ] = Array.from(document.querySelectorAll('.' + whiteCardClassName));
         if (w0 !== undefined) {
@@ -1620,7 +1940,7 @@ AnalyticsJs.prototype.reportWhite = function () {
             w1.remove();
           }
           setQueue(() => {
-            whiteReportMaker(agoDate, today, true);
+            whiteReportMaker(fromDate, toDate, true);
           })
         }, 350);
       }
@@ -1703,6 +2023,7 @@ AnalyticsJs.prototype.launching = async function () {
     await this.makeMessageEvent();
     await this.makeExtractEvent();
     await this.makeReportEvent();
+    await (this.reportWhite())();
 
     loading.parentNode.removeChild(loading);
 

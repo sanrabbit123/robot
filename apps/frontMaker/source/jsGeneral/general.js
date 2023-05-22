@@ -6559,26 +6559,82 @@ GeneralJs.kakaoSdkPatch = function () {
   });
 }
 
-GeneralJs.chartJsPatch = function () {
-  return new Promise((resolve, reject) => {
-    GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://cdn.jsdelivr.net/npm/chart.js") }, "/requestScript").then((obj) => {
-      const { data } = obj;
-      const chartJsPatch = new Function(data);
-      return chartJsPatch();
-    }).then(() => {
-      try {
-        if (window.Chart !== undefined) {
-          resolve(null);
-        } else {
-          reject("kakao error");
+GeneralJs.chartJsPatch = function (dataObject = null, url = "") {
+  if (dataObject === null) {
+    return new Promise((resolve, reject) => {
+      GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://cdn.jsdelivr.net/npm/chart.js") }, "/requestScript").then((obj) => {
+        const { data } = obj;
+        const chartJsPatch = new Function(data);
+        return chartJsPatch();
+      }).then(() => {
+        try {
+          if (window.Chart !== undefined) {
+            resolve(null);
+          } else {
+            reject("chart js error");
+          }
+        } catch (e) {
+          reject("chart js error");
         }
-      } catch (e) {
-        reject("kakao error");
-      }
-    }).catch((err) => {
-      reject(err);
+      }).catch((err) => {
+        reject(err);
+      });
     });
-  });
+  } else if (typeof dataObject === "object" && typeof url === "string" && !Array.isArray(dataObject)) {
+    return new Promise((resolve, reject) => {
+      GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://cdn.jsdelivr.net/npm/chart.js") }, "/requestScript").then((obj) => {
+        const { data } = obj;
+        const chartJsPatch = new Function(data);
+        return chartJsPatch();
+      }).then(() => {
+        return GeneralJs.ajaxJson(dataObject, url, { equal: true });
+      }).then((result) => {
+        try {
+          if (window.Chart !== undefined) {
+            resolve(result);
+          } else {
+            reject("chart js error");
+          }
+        } catch (e) {
+          reject("chart js error");
+        }
+      }).catch((err) => {
+        reject(err);
+      });
+    });
+  } else if (Array.isArray(dataObject)) {
+    if (!dataObject.every((o) => { return typeof o === "object" && o !== null })) {
+      throw new Error("invalid input");
+    }
+    if (!dataObject.every((o) => { return typeof o.data === "object" && o.data !== null && typeof o.url === "string" })) {
+      throw new Error("invalid input");
+    }
+    return new Promise((resolve, reject) => {
+      GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://cdn.jsdelivr.net/npm/chart.js") }, "/requestScript").then((obj) => {
+        const { data } = obj;
+        const chartJsPatch = new Function(data);
+        return chartJsPatch();
+      }).then(() => {
+        return Promise.all(dataObject.map((obj) => {
+          return GeneralJs.ajaxJson(obj.data, obj.url, { equal: true });
+        }));
+      }).then((result) => {
+        try {
+          if (window.Chart !== undefined) {
+            resolve(result);
+          } else {
+            reject("chart js error");
+          }
+        } catch (e) {
+          reject("chart js error");
+        }
+      }).catch((err) => {
+        reject(err);
+      });
+    })
+  } else {
+    throw new Error("invalid input");
+  }
 }
 
 GeneralJs.setMetaData = function (obj) {

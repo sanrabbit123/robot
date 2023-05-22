@@ -1068,6 +1068,46 @@ LogRouter.prototype.rou_post_extractAnalytics = function () {
         rows = await back.mongoRead(collection, whereQuery, { selfMongo });
         res.send(JSON.stringify(rows));
 
+      } else if (mode === "charge" || mode === "campaign") {
+
+        if (req.body.fromDate === undefined || req.body.toDate === undefined) {
+          throw new Error("invalid post 2");
+        }
+
+        ({ fromDate, toDate } = equalJson(req.body));
+        collection = "dailyCampaign";
+
+        fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate(), 0, 0, 0);
+        toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate(), 0, 0, 0);
+
+        whereQuery = {};
+        whereQuery["$and"] = [];
+        whereQuery["$and"].push({
+          "date.from": {
+            $gte: fromDate,
+          }
+        });
+        whereQuery["$and"].push({
+          "date.from": {
+            $gte: fromDate,
+          }
+        });
+        whereQuery["$and"].push({
+          "date.from": {
+            $lte: toDate,
+          }
+        });
+        if (mode === "charge") {
+          whereQuery["$and"].push({
+            "information.mother": {
+              $ne: "unknown"
+            }
+          });
+        }
+
+        rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+        res.send(JSON.stringify(rows));
+
       } else {
         throw new Error("invalid mode");
       }
@@ -1081,7 +1121,6 @@ LogRouter.prototype.rou_post_extractAnalytics = function () {
   }
   return obj;
 }
-
 
 //ROUTING ----------------------------------------------------------------------
 
