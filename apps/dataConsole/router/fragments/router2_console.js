@@ -1377,6 +1377,9 @@ DataRouter.prototype.rou_post_extractAnalytics = function () {
       let motherProjects;
       let obj;
       let contracts;
+      let matrix;
+      let fromDateCopied;
+      let tomorrow;
 
       if (mode === "basic") {
 
@@ -1387,6 +1390,7 @@ DataRouter.prototype.rou_post_extractAnalytics = function () {
         ({ fromDate, toDate } = equalJson(req.body));
 
         fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate(), 0, 0, 0);
+        fromDateCopied = new Date(JSON.stringify(fromDate).slice(1, -1));
         toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate(), 0, 0, 0);
         toDate.setDate(toDate.getDate() + 1);
 
@@ -1422,30 +1426,48 @@ DataRouter.prototype.rou_post_extractAnalytics = function () {
         }, { selfMongo })).toNormal();
         motherProjects = motherProjects_raw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() });
 
-        obj = {};
+        matrix = [];
+        while (fromDateCopied.valueOf() < toDate.valueOf()) {
+          tomorrow = new Date(JSON.stringify(fromDateCopied).slice(1, -1));
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          matrix.push([
+            new Date(JSON.stringify(fromDateCopied).slice(1, -1)),
+            tomorrow,
+          ]);
+          fromDateCopied.setDate(fromDateCopied.getDate() + 1);
+        }
 
-        //client
-        clients = motherClients.filter((obj) => { return obj.timeline.valueOf() >= fromDate && obj.timeline.valueOf() < toDate });
-        obj.client = clients.length;
+        rows = [];
 
-        //proposal
-        cliidArr_raw = clients.map((obj) => { return obj.cliid; });
-        cliidArr_raw = Array.from(new Set(cliidArr_raw));
-        process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
-        histories = motherClientHistories.filter((obj) => { return process.map((o) => { return o.cliid; }).includes(obj.cliid) });
-        histories = histories.filter((obj) => { return obj.curation.analytics.send.some((o) => { return /designerProposal/gi.test(o.page) }) });
-        obj.proposal = histories.length;
+        for (let [ fromDate, toDate ] of matrix) {
 
-        //recommend
-        histories = histories.filter((obj) => { return obj.curation.analytics.page.some((o) => { return /designerProposal/gi.test(o.page) }) });
-        obj.recommend = histories.length;
+          obj = { fromDate, toDate };
 
-        //contract
-        contracts = motherProjects.filter((obj) => { return obj.process.contract.first.date.valueOf() >= fromDate && obj.process.contract.first.date.valueOf() < toDate });
-        obj.contract = contracts.length;
+          //client
+          clients = motherClients.filter((obj) => { return obj.timeline.valueOf() >= fromDate && obj.timeline.valueOf() < toDate });
+          obj.client = clients.length;
+  
+          //proposal
+          cliidArr_raw = clients.map((obj) => { return obj.cliid; });
+          cliidArr_raw = Array.from(new Set(cliidArr_raw));
+          process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
+          histories = motherClientHistories.filter((obj) => { return process.map((o) => { return o.cliid; }).includes(obj.cliid) });
+          histories = histories.filter((obj) => { return obj.curation.analytics.send.some((o) => { return /designerProposal/gi.test(o.page) }) });
+          obj.proposal = histories.length;
+  
+          //recommend
+          histories = histories.filter((obj) => { return obj.curation.analytics.page.some((o) => { return /designerProposal/gi.test(o.page) }) });
+          obj.recommend = histories.length;
+  
+          //contract
+          contracts = motherProjects.filter((obj) => { return obj.process.contract.first.date.valueOf() >= fromDate && obj.process.contract.first.date.valueOf() < toDate });
+          obj.contract = contracts.length;
+
+          rows.push(obj);
+        }
 
         //end
-        res.send(JSON.stringify(obj));
+        res.send(JSON.stringify(rows));
 
       } else {
         throw new Error("invalid mode");
