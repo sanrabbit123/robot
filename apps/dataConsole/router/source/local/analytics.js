@@ -1667,6 +1667,37 @@ AnalyticsJs.prototype.reportWhite = function () {
                     }
                   }
                 },
+                {
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                    height: String(chartHeight) + ea,
+                    marginRight: String(chartBetween) + ea,
+                  },
+                  child: {
+                    mode: "canvas",
+                    style: {
+                      display: "block",
+                      position: "relative",      
+                    }
+                  }
+                },
+                {
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
+                    height: String(chartHeight) + ea,
+                  },
+                  child: {
+                    mode: "canvas",
+                    style: {
+                      display: "block",
+                      position: "relative",      
+                    }
+                  }
+                },
               ],
             }
           ]
@@ -1711,7 +1742,7 @@ AnalyticsJs.prototype.reportWhite = function () {
                 {
                   label: "Conversion",
                   data: rows.map((o) => { return o.data.conversion.consultingPage.total + o.data.conversion.popupOpen.total }),
-                  borderColor: colorChip.green,
+                  borderColor: colorChip.purple,
                   fill, tension, borderJoinStyle,
                 },
               ]
@@ -1733,6 +1764,12 @@ AnalyticsJs.prototype.reportWhite = function () {
                 {
                   label: "Conversion",
                   data: rows.map((o) => { return o.data.conversion.consultingPage.total + o.data.conversion.popupOpen.total }),
+                  borderColor: colorChip.purple,
+                  fill, tension, borderJoinStyle,
+                },
+                {
+                  label: "Clients",
+                  data: basic.map((o) => { return o.client }),
                   borderColor: colorChip.green,
                   fill, tension, borderJoinStyle,
                 },
@@ -1914,6 +1951,34 @@ AnalyticsJs.prototype.reportWhite = function () {
                 }
               }
             }
+          });
+
+          // 7
+          new window.Chart(scrollBox.children[6].querySelector("canvas"), {
+            type,
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Clients",
+                  data: basic.map((o) => { return o.client }),
+                  borderColor: colorChip.green,
+                  fill, tension, borderJoinStyle,
+                },
+                {
+                  label: "Recommend",
+                  data: basic.map((o) => { return o.proposal }),
+                  borderColor: colorChip.black,
+                  fill, tension, borderJoinStyle,
+                },
+                {
+                  label: "Contracts",
+                  data: basic.map((o) => { return o.contract }),
+                  borderColor: colorChip.yellow,
+                  fill, tension, borderJoinStyle,
+                },
+              ]
+            },
           });
 
         }).catch((err) => {

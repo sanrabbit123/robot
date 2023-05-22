@@ -1447,16 +1447,8 @@ DataRouter.prototype.rou_post_extractAnalytics = function () {
           clients = motherClients.filter((obj) => { return obj.timeline.valueOf() >= fromDate && obj.timeline.valueOf() < toDate });
           obj.client = clients.length;
   
-          //proposal
-          cliidArr_raw = clients.map((obj) => { return obj.cliid; });
-          cliidArr_raw = Array.from(new Set(cliidArr_raw));
-          process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
-          histories = motherClientHistories.filter((obj) => { return process.map((o) => { return o.cliid; }).includes(obj.cliid) });
-          histories = histories.filter((obj) => { return obj.curation.analytics.send.some((o) => { return /designerProposal/gi.test(o.page) }) });
-          obj.proposal = histories.length;
-  
           //recommend
-          histories = histories.filter((obj) => { return obj.curation.analytics.page.some((o) => { return /designerProposal/gi.test(o.page) }) });
+          histories = motherClientHistories.map((obj) => { return obj.curation.analytics.send.filter((o) => { return /designerProposal/gi.test(o.page) && (o.date.valueOf() >= fromDate && o.date.valueOf() < toDate) }) }).flat();
           obj.recommend = histories.length;
   
           //contract
