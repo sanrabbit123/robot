@@ -1695,10 +1695,12 @@ AnalyticsJs.prototype.reportWhite = function () {
           text: "리포트 전환",
           event: {
             click: function (e) {
-              globalThis.window.parent.postMessage(JSON.stringify({
-                target: "first",
-                report: "reset",
-              }), "*");
+              if (typeof globalThis.window.parent.postMessage === "function") {
+                globalThis.window.parent.postMessage(JSON.stringify({
+                  target: "first",
+                  report: "reset",
+                }), "*");
+              }
             }
           },
           style: {
