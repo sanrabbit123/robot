@@ -1240,7 +1240,8 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   greenLinkFocusEvent = function (e) {
     const motherBlock = this.parentElement.parentElement;
     const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
-    this.value = this.value.trim().replace(/ /gi, '').trim();
+    this.value = window.decodeURIComponent(this.value.trim().replace(/ /gi, '').trim());
+    this.style.color = colorChip.black;
     if (noticeTarget !== null) {
       noticeTarget.style.color = colorChip.green;
     }
@@ -1249,10 +1250,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   greenLinkBlurEvent = function (e) {
     const motherBlock = this.parentElement.parentElement;
     const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
-    this.value = this.value.trim().replace(/ /gi, '').trim();
+    this.value = window.encodeURIComponent(this.value.trim().replace(/ /gi, '').trim());
     if (!/^http/.test(this.value)) {
       window.alert("http로 시작하는 전체 링크를 복사 붙여넣기 해주세요!");
       this.value = "";
+    } else {
+      this.style.color = colorChip.gray4;
     }
     if (noticeTarget !== null) {
       noticeTarget.style.color = colorChip.deactive;
@@ -3649,13 +3652,12 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
               }
             });
           }
-  
         }
       }
 
     } catch (e) {
       console.log(e);
-      // window.location.reload();
+      window.location.reload();
     }
   }
 }

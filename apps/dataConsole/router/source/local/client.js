@@ -2598,6 +2598,9 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     let eventDictionary;
     let timeWidth;
     let eventWidth;
+    let infoSize, infoPaddingTop, infoPaddingLeft;
+    let infoBetween;
+    let infoTextTop;
 
     loadingWidth = fontSize * (40 / 15);
     innerMargin = fontSize * (20 / 15);
@@ -2621,6 +2624,12 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
     timeWidth = 125;
     eventWidth = 125;
+
+    infoSize = 13;
+    infoPaddingTop = 12;
+    infoPaddingLeft = 16;
+    infoBetween = 1;
+    infoTextTop = (isMac() ? 0 : 1);
 
     eventDictionary = {
       pageInit: { title: "페이지 진입", mode: "white" },
@@ -3753,31 +3762,115 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           thisMother = thisMother.trim() === '' ? directWords : thisMother.trim();
           thisMedium = thisMedium.trim() === '' ? unsetWords : thisMedium.trim();
           thisCampaign = thisCampaign.trim() === '' ? unsetWords : thisCampaign.trim();
-          thisSearch = thisSearch.trim() === '' ? "" : thisSearch.trim();
-
-          referrerArr = equalJson(analyticsData.source.referrer);
+          thisSearch = thisSearch.trim() === '' ? unknownWords : thisSearch.trim();
           
           targetDetail = analyticsData.history.detail.filter((obj) => {
             return obj.event !== "scrollStop" && obj.event !== "contentsView" && obj.event !== "readTimer" && obj.event !== "addressClick" && obj.event !== "inputBlur" && obj.event !== "photoBigView";
           })
 
-
-          // createNode({
-          //   mother: scrollTong,
-          //   style: {
-          //     display: "flex",
-          //     position: "relative",
-          //     height: "auto",
-          //     marginBottom: String(historyBlockMargin) + ea,
-          //     flexDirection: "column",
-          //     paddingTop: String(12) + ea,
-          //     paddingBottom: String(12) + ea,
-          //   }
-          // })
-
-
-
-
+          createNode({
+            mother: scrollTong,
+            style: {
+              display: "flex",
+              position: "relative",
+              height: "auto",
+              marginBottom: String(historyBlockMargin) + ea,
+              flexDirection: "column",
+              paddingTop: String(infoPaddingTop) + ea,
+              paddingBottom: String(infoPaddingTop) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gradientGray,
+              paddingLeft: String(infoPaddingLeft) + ea,
+              justifyContent: "start",
+              alignItems: "start",
+            },
+            children: [
+              {
+                text: `<b%디바이스 :%b>&nbsp;&nbsp;&nbsp;${thisDevice}`,
+                style: {
+                  display: "block",
+                  position: "relative",
+                  top: String(infoTextTop) + ea,
+                  fontSize: String(infoSize) + ea,
+                  fontWeight: String(500),
+                  color: colorChip.white,
+                },
+                bold: {
+                  fontSize: String(infoSize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.white,
+                }
+              },
+              {
+                text: `<b%소스 :%b>&nbsp;&nbsp;&nbsp;${thisMother}`,
+                style: {
+                  display: "block",
+                  position: "relative",
+                  top: String(infoTextTop) + ea,
+                  fontSize: String(infoSize) + ea,
+                  fontWeight: String(500),
+                  color: colorChip.white,
+                  marginTop: String(infoBetween) + ea,
+                },
+                bold: {
+                  fontSize: String(infoSize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.white,
+                }
+              },
+              {
+                text: `<b%미디움 :%b>&nbsp;&nbsp;&nbsp;${thisMedium}`,
+                style: {
+                  display: "block",
+                  position: "relative",
+                  top: String(infoTextTop) + ea,
+                  fontSize: String(infoSize) + ea,
+                  fontWeight: String(500),
+                  color: colorChip.white,
+                  marginTop: String(infoBetween) + ea,
+                },
+                bold: {
+                  fontSize: String(infoSize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.white,
+                }
+              },
+              {
+                text: `<b%캠패인 :%b>&nbsp;&nbsp;&nbsp;${thisCampaign}`,
+                style: {
+                  display: "block",
+                  position: "relative",
+                  top: String(infoTextTop) + ea,
+                  fontSize: String(infoSize) + ea,
+                  fontWeight: String(500),
+                  color: colorChip.white,
+                  marginTop: String(infoBetween) + ea,
+                },
+                bold: {
+                  fontSize: String(infoSize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.white,
+                }
+              },
+              {
+                text: `<b%검색어 :%b>&nbsp;&nbsp;&nbsp;${thisSearch}`,
+                style: {
+                  display: "block",
+                  position: "relative",
+                  top: String(infoTextTop) + ea,
+                  fontSize: String(infoSize) + ea,
+                  fontWeight: String(500),
+                  color: colorChip.white,
+                  marginTop: String(infoBetween) + ea,
+                },
+                bold: {
+                  fontSize: String(infoSize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.white,
+                }
+              },
+            ]
+          });
 
           num = 0;
           for (let block of targetDetail) {
