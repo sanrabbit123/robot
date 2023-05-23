@@ -2053,6 +2053,11 @@ AnalyticsJs.prototype.reportWhite = function () {
             });
 
             const [ rows, charge, basic ] = result;
+
+            rows.sort((a, b) => { return a.date.from.valueOf() - b.date.from.valueOf() });
+            charge.sort((a, b) => { return a.date.from.valueOf() - b.date.from.valueOf() });
+            basic.sort((a, b) => { return a.fromDate.valueOf() - b.fromDate.valueOf() });
+
             const type = "line";
             const labels = rows.map((o) => { return dateToString(o.date.from).slice(5) });
             const fill = false;
@@ -2132,9 +2137,17 @@ AnalyticsJs.prototype.reportWhite = function () {
                   },
                   {
                     label: "Ads",
-                    data: rows.map((o) => { return o.data.users.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    data: rows.map((o) => { return o.data.users.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
                     borderColor: colorChip.yellow,
                     backgroundColor: colorChip.yellow,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Sns",
+                    data: rows.map((o) => { return o.data.users.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) }),
+                    borderColor: colorChip.purple,
+                    backgroundColor: colorChip.purple,
                     borderRadius: 3,
                     borderWidth: 0,
                   },
@@ -2218,9 +2231,17 @@ AnalyticsJs.prototype.reportWhite = function () {
                   },
                   {
                     label: "Ads",
-                    data: rows.map((o) => { return (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)" }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
+                    data: rows.map((o) => { return (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && !/^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
                     borderColor: colorChip.yellow,
                     backgroundColor: colorChip.yellow,
+                    borderRadius: 3,
+                    borderWidth: 0,
+                  },
+                  {
+                    label: "Sns",
+                    data: rows.map((o) => { return (o.data.conversion.consultingPage.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0) + o.data.conversion.popupOpen.detail.campaign.cases.filter((c) => { return (c.case !== "(direct)" && c.case !== "(organic)" && c.case !== "(referral)" && c.case !== "(not set)") && /^link/.test(c.case) }).reduce((acc, curr) => { return acc + curr.value }, 0)) }),
+                    borderColor: colorChip.purple,
+                    backgroundColor: colorChip.purple,
                     borderRadius: 3,
                     borderWidth: 0,
                   },

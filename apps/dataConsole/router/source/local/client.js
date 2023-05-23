@@ -2572,7 +2572,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   GeneralJs.stacks["rInitialBoxButtonToggle"] = 0;
   GeneralJs.stacks["rInitialBoxButtonDom"] = null;
   rInitialBox.addEventListener("click", function (e) {
-    const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, serviceParsing, uniqueValue, ajaxForm, promptButtons } = GeneralJs;
+    const { equalJson, colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, serviceParsing, uniqueValue, ajaxForm, promptButtons } = GeneralJs;
     let matrixBox;
     let loadingWidth;
     let tong;
@@ -2731,13 +2731,21 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           return S3HOST + imageLink + "/" + pid + "/" + image;
         }).concat(images);
 
+        const unsetWords = "(not set)";
+        const unknownWords = "(unknown)";
+        const directWords = "(direct)";
         let titleTong;
         let scrollTong, pid, num;
         let scroll;
-        let historyArr;
         let imageLoad, historyLoad;
         let tempArr;
         let lastPageMode;
+        let thisDevice;
+        let thisMother;
+        let thisMedium;
+        let thisCampaign;
+        let referrerArr;
+        let thisSearch;
 
         imageLoad = () => {};
         historyLoad = () => {};
@@ -3733,9 +3741,43 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         historyLoad = () => {
           scrollTong.style.height = String(8000) + ea;
 
+          thisDevice = analyticsData.sessions.device.map((obj) => {
+            return `${obj.kinds}(${obj.os} ${obj.browser})`;
+          }).join(", ");
+          thisMother = analyticsData.source.mother.join(", ");
+          thisMedium = analyticsData.source.medium.join(", ");
+          thisCampaign = analyticsData.source.campaign.join(", ");
+          thisSearch = analyticsData.source.search.join(", ");
+
+          thisDevice = thisDevice.trim() === '' ? unknownWords : thisDevice.trim();
+          thisMother = thisMother.trim() === '' ? directWords : thisMother.trim();
+          thisMedium = thisMedium.trim() === '' ? unsetWords : thisMedium.trim();
+          thisCampaign = thisCampaign.trim() === '' ? unsetWords : thisCampaign.trim();
+          thisSearch = thisSearch.trim() === '' ? "" : thisSearch.trim();
+
+          referrerArr = equalJson(analyticsData.source.referrer);
+          
           targetDetail = analyticsData.history.detail.filter((obj) => {
             return obj.event !== "scrollStop" && obj.event !== "contentsView" && obj.event !== "readTimer" && obj.event !== "addressClick" && obj.event !== "inputBlur" && obj.event !== "photoBigView";
           })
+
+
+          // createNode({
+          //   mother: scrollTong,
+          //   style: {
+          //     display: "flex",
+          //     position: "relative",
+          //     height: "auto",
+          //     marginBottom: String(historyBlockMargin) + ea,
+          //     flexDirection: "column",
+          //     paddingTop: String(12) + ea,
+          //     paddingBottom: String(12) + ea,
+          //   }
+          // })
+
+
+
+
 
           num = 0;
           for (let block of targetDetail) {
