@@ -1555,7 +1555,7 @@ AnalyticsJs.prototype.reportWhite = function () {
       subTodaySize = 15;
       subTodayWeight = 500;
 
-      chartBetween = 30;
+      chartBetween = 40;
       chartHeight = 480;
 
       startPaddingTop = 40;
@@ -1737,7 +1737,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                   display: "inline-block",
                   position: "relative",
                   width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  height: String(chartHeight) + ea,
                   marginRight: String(chartBetween) + ea,
                   marginBottom: String(chartBetween) + ea,
                   verticalAlign: "top",
@@ -1769,7 +1768,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                   display: "inline-block",
                   position: "relative",
                   width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  height: String(chartHeight) + ea,
                   marginBottom: String(chartBetween) + ea,
                   verticalAlign: "top",
                 },
@@ -1800,7 +1798,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                   display: "inline-block",
                   position: "relative",
                   width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  height: String(chartHeight) + ea,
                   marginRight: String(chartBetween) + ea,
                   marginBottom: String(chartBetween) + ea,
                   verticalAlign: "top",
@@ -1812,7 +1809,7 @@ AnalyticsJs.prototype.reportWhite = function () {
                     position: "relative",      
                   },
                   previous: {
-                    text: "유저수 - 오가닉 / 광고 / 다이렉트",
+                    text: "유저수 - 오가닉 / 광고 / SNS / 다이렉트",
                     style: {
                       display: "flex",
                       position: "relative",
@@ -1832,7 +1829,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                   display: "inline-block",
                   position: "relative",
                   width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  height: String(chartHeight) + ea,
                   marginBottom: String(chartBetween) + ea,
                   verticalAlign: "top",
                 },
@@ -1863,7 +1859,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                   display: "inline-block",
                   position: "relative",
                   width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  height: String(chartHeight) + ea,
                   marginRight: String(chartBetween) + ea,
                   marginBottom: String(chartBetween) + ea,
                   verticalAlign: "top",
@@ -1875,7 +1870,7 @@ AnalyticsJs.prototype.reportWhite = function () {
                     position: "relative",      
                   },
                   previous: {
-                    text: "전환수 - 오가닉 / 광고 / 다이렉트",
+                    text: "전환수 - 오가닉 / 광고 / SNS / 다이렉트",
                     style: {
                       display: "flex",
                       position: "relative",
@@ -1895,7 +1890,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                   display: "inline-block",
                   position: "relative",
                   width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  height: String(chartHeight) + ea,
                   marginBottom: String(chartBetween) + ea,
                   verticalAlign: "top",
                 },
@@ -1926,7 +1920,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                   display: "inline-block",
                   position: "relative",
                   width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  height: String(chartHeight) + ea,
                   marginRight: String(chartBetween) + ea,
                   marginBottom: String(chartBetween) + ea,
                   verticalAlign: "top",
@@ -1958,7 +1951,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                   display: "inline-block",
                   position: "relative",
                   width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  height: String(chartHeight) + ea,
                   marginBottom: String(chartBetween) + ea,
                   verticalAlign: "top",
                 },
@@ -1989,7 +1981,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                   display: "inline-block",
                   position: "relative",
                   width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  height: String(chartHeight) + ea,
                   marginRight: String(chartBetween) + ea,
                   marginBottom: String(chartBetween) + ea,
                   verticalAlign: "top",
@@ -2021,7 +2012,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                   display: "inline-block",
                   position: "relative",
                   width: "calc(calc(100% - " + String(chartBetween) + ea + ") / 2)",
-                  height: String(chartHeight) + ea,
                   marginBottom: String(chartBetween) + ea,
                   verticalAlign: "top",
                 },
