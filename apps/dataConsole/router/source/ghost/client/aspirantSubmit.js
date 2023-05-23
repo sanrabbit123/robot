@@ -486,9 +486,9 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   leftGrayType3 = <%% 164, 151, 130, 129, 30.5 %%>;
 
   widthGrayType0 = <%% 160, 140, 130, 150, 34 %%>;
-  widthGrayType1 = <%% 455, 329, 283, 403, 58.1 %%>;
+  widthGrayType1 = <%% 455, 272, 283, 403, 58.1 %%>;
   widthGrayType2 = <%% 757, 588, 503, 383, 53.4 %%>;
-  widthGrayType3 = <%% 392, 268, 231, 352, 45.6 %%>;
+  widthGrayType3 = <%% 392, 211, 231, 352, 45.6 %%>;
 
   addressWidth = <%% 54, 54, 46, 46, 11 %%>;
   addressSize = <%% 13, 13, 12, 12, 3 %%>;
@@ -702,14 +702,14 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
 
   defaultRatio = 0.5;
 
-  factorBetween = 30;
-  inputTop = -1;
-  titleWidth = 165;
-  grayWidth = 226;
+  factorBetween = <%% 30, 30, 30, 30, 30 %%>;
+  inputTop = <%% -1, -1, -1, -1, -1 %%>;
+  titleWidth = <%% 165, 165, 165, 165, 165 %%>;
+  grayWidth = <%% 226, 226, 226, 226, 226 %%>;
 
-  subFontSize = 14;
-  subFontTop = 14;
-  subFontBetween = 12;
+  subFontSize = <%% 14, 14, 12, 11, 3.5 %%>;
+  subFontTop = <%% 14, 14, 17, 17, 14 %%>;
+  subFontBetween = <%% 12, 12, 12, 12, 12 %%>;
 
   contents = {
     main: [
