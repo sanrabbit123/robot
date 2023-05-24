@@ -457,7 +457,7 @@ ClientConsultingJs.prototype.insertConsultingBox = function () {
   leftGrayType2 = <%% 125, 112, 98, 98, 22.8 %%>;
   leftGrayType3 = <%% 164, 151, 130, 129, 30.5 %%>;
 
-  widthGrayType0 = <%% 160, 140, 130, 150, 34 %%>;
+  widthGrayType0 = <%% 160, 140, 140, 150, 34 %%>;
   widthGrayType1 = <%% 455, 329, 283, 403, 58.1 %%>;
   widthGrayType2 = <%% 757, 588, 503, 383, 53.4 %%>;
   widthGrayType3 = <%% 392, 268, 231, 352, 45.6 %%>;

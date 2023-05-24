@@ -386,8 +386,6 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   let barFactorA0Left, barFactorA1Left, barFactorA2Left;
   let barFactorB0Left;
   let mobileGrayTextAreaTop;
-  let budgetValues;
-  let furnitureValues;
   let defaultRatio;
   let barClickEvent;
   let factorBetween;
@@ -485,10 +483,10 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   leftGrayType2 = <%% 125, 112, 98, 98, 22.8 %%>;
   leftGrayType3 = <%% 164, 151, 130, 129, 30.5 %%>;
 
-  widthGrayType0 = <%% 160, 140, 130, 150, 34 %%>;
-  widthGrayType1 = <%% 455, 272, 283, 403, 58.1 %%>;
+  widthGrayType0 = <%% 160, 140, 140, 140, 34 %%>;
+  widthGrayType1 = <%% 455, 272, 245, 178, 58.1 %%>;
   widthGrayType2 = <%% 757, 588, 503, 383, 53.4 %%>;
-  widthGrayType3 = <%% 392, 211, 231, 352, 45.6 %%>;
+  widthGrayType3 = <%% 392, 211, 193, 127, 45.6 %%>;
 
   addressWidth = <%% 54, 54, 46, 46, 11 %%>;
   addressSize = <%% 13, 13, 12, 12, 3 %%>;
@@ -645,12 +643,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   agreeCircleMarginRight = <%% 5, 5, 5, 5, 1 %%>;
 
   submitTongMarginTop = <%% 20, 20, 20, 20, 6 %%>;
-  submitButtonWidth = <%% 180, 180, 142, 130, 33 %%>;
+  submitButtonWidth = <%% 180, 180, 160, 145, 36 %%>;
   submitButtonHeight = <%% 47, 47, 42, 38, 10 %%>;
-  submitSize = <%% 20, 20, 18, 16, 4 %%>;
+  submitSize = <%% 20, 20, 17, 16, 4 %%>;
   submitWeight = <%% 400, 400, 400, 400, 400 %%>;
   submitLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
-  submitTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.3 %%>;
+  submitTextTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -1 : 0), (isMac() ? -1 : 0), -0.3 %%>;
 
   barDescriptionLingHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>
   barDescriptionTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 2 : 4), (isMac() ? 1 : 3), (isIphone() ? 0.8 : 0.6) %%>;
@@ -698,18 +696,18 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   xIconTop = <%% 14, 14, 14, 14, 3 %%>;
   xVisual = <%% 4, 4, 4, 4, 1 %%>;
 
-  mobileGrayTextAreaTop = 7.8;
+  mobileGrayTextAreaTop = 3;
 
   defaultRatio = 0.5;
 
-  factorBetween = <%% 30, 30, 30, 30, 30 %%>;
-  inputTop = <%% -1, -1, -1, -1, -1 %%>;
-  titleWidth = <%% 165, 165, 165, 165, 165 %%>;
-  grayWidth = <%% 226, 226, 226, 226, 226 %%>;
+  factorBetween = <%% 30, 30, 24, 14, 4 %%>;
+  inputTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.1 %%>;
+  titleWidth = <%% 165, 165, 132, 114, 30 %%>;
+  grayWidth = <%% 226, 226, 190, 140, 43.5 %%>;
 
-  subFontSize = <%% 14, 14, 12, 11, 3.5 %%>;
-  subFontTop = <%% 14, 14, 17, 17, 14 %%>;
-  subFontBetween = <%% 12, 12, 12, 12, 12 %%>;
+  subFontSize = <%% 14, 13, 12, 10, 2.5 %%>;
+  subFontTop = <%% 14, 14, 15, 16, 1 %%>;
+  subFontBetween = <%% 12, 12, 9, 6, 1 %%>;
 
   contents = {
     main: [
@@ -719,27 +717,9 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       <&& "홈리에종의 파트너십 신청을 위해서는" | "홈리에종 파트너십 신청을 위해서는" | "파트너십 신청을 위해서는" | "파트너십 신청을 위해서는" | "홈리에종 파트너십 신청을 위해서는" &&>,
       <&& "다음과 같이 기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." &&>,
       <&& "파트너십 신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," &&>,
-      <&& "<b%디자이너 활동%b>을 시작해보세요!" | "<b%디자이너 활동%b>을 시작해보세요!" | "디자이너 활동%b>을 시작해보세요!" | "디자이너 활동%b>을 시작해보세요!" | "<b%디자이너 활동%b>을 시작해보세요!" &&>,
+      <&& "<b%디자이너 활동%b>을 시작해보세요!" | "<b%디자이너 활동%b>을 시작해보세요!" | "<b%디자이너 활동%b>을 시작해보세요!" | "<b%활동%b>을 시작해보세요!" | "<b%활동%b>을 시작해보세요!" &&>,
     ]
   };
-
-  budgetValues = [
-    { title: (desktop ? "1,000만원 이하" : "1천만원 이하"), value: "1,000만원", },
-    { title: (desktop ? "2,000만원" : "2천만원"), value: "2,000만원", },
-    { title: (desktop ? "3,000만원" : "3천만원"), value: "3,000만원", },
-    { title: (desktop ? "4,000만원" : "4천만원"), value: "4,000만원", },
-    { title: (desktop ? "5,000만원" : "5천만원"), value: "5,000만원 이상", },
-    { title: (desktop ? "6,000만원" : "6천만원"), value: "6,000만원 이상", },
-    { title: (desktop ? "7,000만원" : "7천만원"), value: "7,000만원 이상", },
-    { title: (desktop ? "8,000만원" : "8천만원"), value: "8,000만원 이상", },
-    { title: "1억원 이상", value: "1억원 이상", },
-  ];
-
-  furnitureValues = [
-    { title: "재배치", value: "재배치", },
-    { title: "재배치 + 일부 구매", value: "일부 구매", },
-    { title: "전체 구매", value: "전체 구매", },
-  ];
 
   barClickEvent = (arr) => {
     const valuesArr = equalJson(JSON.stringify(arr));
@@ -1742,8 +1722,8 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
     style: {
       display: "block",
       position: "relative",
-      marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight) + ea,
+      marginBottom: String(desktop ? blockMarginBottom : 5) + ea,
+      height: desktop ? String(moduleHeight) + ea : "",
     },
     children: [
       {
@@ -1849,7 +1829,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           height: String(100) + '%',
           verticalAlign: "top",
           cursor: "pointer",
-          marginRight: String(factorBetween) + ea,
+          marginRight: mobile ? "" : String(factorBetween) + ea,
         },
         children: [
           {
@@ -1911,6 +1891,8 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           verticalAlign: "top",
           cursor: "pointer",
           marginRight: String(factorBetween) + ea,
+          marginTop: mobile ? String(2) + ea : "",
+          marginLeft: mobile ? String(32.4) + ea : "",
         },
         children: [
           {
@@ -1971,6 +1953,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           height: String(100) + '%',
           verticalAlign: "top",
           cursor: "pointer",
+          marginTop: mobile ? String(2) + ea : "",
         },
         children: [
           {
@@ -2096,7 +2079,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         class: [ noticeClassName ],
         text: "* 사업자가 없는 경우, '프리랜서'로 작성해주세요!",
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           position: "relative",
           top: String(subFontTop) + ea,
           fontSize: String(subFontSize) + ea,
@@ -2188,7 +2171,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         class: [ noticeClassName ],
         text: "* 프리랜서인 경우, 생년월일 6자리를 적어주세요!",
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           position: "relative",
           top: String(subFontTop) + ea,
           fontSize: String(subFontSize) + ea,
@@ -2280,7 +2263,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         class: [ noticeClassName ],
         text: "* 프리랜서인 경우, 오늘 날짜를 기입해주세요!",
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           position: "relative",
           top: String(subFontTop) + ea,
           fontSize: String(subFontSize) + ea,
@@ -2372,7 +2355,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         class: [ noticeClassName ],
         text: "* 프리랜서인 경우, 본인 성함을 입력해주세요!",
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           position: "relative",
           top: String(subFontTop) + ea,
           fontSize: String(subFontSize) + ea,
@@ -2438,7 +2421,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           display: "inline-block",
           position: "relative",
           top: String(grayTop) + ea,
-          width: String(widthGrayType0) + ea,
+          width: String(desktop ? widthGrayType0 : grayWidth) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
@@ -2460,7 +2443,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             position: "absolute",
             top: String(inputTop) + ea,
             left: String(0) + ea,
-            width: String(widthGrayType0) + ea,
+            width: String(desktop ? widthGrayType0 : grayWidth) + ea,
             height: String(grayHeight) + ea,
             outline: String(0),
             border: String(0),
@@ -2515,7 +2498,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           display: "inline-block",
           position: "relative",
           top: String(grayTop) + ea,
-          width: String(widthGrayType1) + ea,
+          width: String(desktop ? widthGrayType1 : grayWidth) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
@@ -2537,7 +2520,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             position: "absolute",
             top: String(inputTop) + ea,
             left: String(0) + ea,
-            width: String(widthGrayType1) + ea,
+            width: String(desktop ? widthGrayType1 : grayWidth) + ea,
             height: String(grayHeight) + ea,
             outline: String(0),
             border: String(0),
@@ -2553,7 +2536,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         class: [ noticeClassName ],
         text: "* 은행명 없이, 계좌 번호만 적어주세요!",
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           position: "relative",
           top: String(subFontTop) + ea,
           fontSize: String(subFontSize) + ea,
@@ -2607,7 +2590,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           display: "inline-block",
           position: "relative",
           top: String(grayTop) + ea,
-          width: String(widthGrayType0) + ea,
+          width: String(desktop ? widthGrayType0 : grayWidth) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
@@ -2629,7 +2612,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             position: "absolute",
             top: String(inputTop) + ea,
             left: String(0) + ea,
-            width: String(widthGrayType0) + ea,
+            width: String(desktop ? widthGrayType0 : grayWidth) + ea,
             height: String(grayHeight) + ea,
             outline: String(0),
             border: String(0),
@@ -2696,7 +2679,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           display: "inline-block",
           position: "relative",
           top: String(grayTop) + ea,
-          width: String(widthGrayType0) + ea,
+          width: String(desktop ? widthGrayType0 : grayWidth) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
@@ -2718,7 +2701,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             position: "absolute",
             top: String(inputTop) + ea,
             left: String(0) + ea,
-            width: String(widthGrayType0) + ea,
+            width: String(desktop ? widthGrayType0 : grayWidth) + ea,
             height: String(grayHeight) + ea,
             outline: String(0),
             border: String(0),
@@ -2734,7 +2717,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         class: [ noticeClassName ],
         text: "* 유관 경력 포함 예) 2년 6개월",
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           position: "relative",
           top: String(subFontTop) + ea,
           fontSize: String(subFontSize) + ea,
@@ -2788,7 +2771,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           display: "inline-block",
           position: "relative",
           top: String(grayTop) + ea,
-          width: String(widthGrayType0) + ea,
+          width: String(desktop ? widthGrayType0 : grayWidth) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
@@ -2810,7 +2793,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             position: "absolute",
             top: String(inputTop) + ea,
             left: String(0) + ea,
-            width: String(widthGrayType0) + ea,
+            width: String(desktop ? widthGrayType0 : grayWidth) + ea,
             height: String(grayHeight) + ea,
             outline: String(0),
             border: String(0),
@@ -2824,9 +2807,9 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       },
       {
         class: [ noticeClassName ],
-        text: "* 인테리어 경력과 일치할 경우, '위와 같음'으로 기입해주세요!",
+        text: "* 인테리어 경력과 일치할 경우, '위와 같음'",
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           position: "relative",
           top: String(subFontTop) + ea,
           fontSize: String(subFontSize) + ea,
@@ -2978,7 +2961,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           display: "inline-block",
           position: "relative",
           top: String(grayTop) + ea,
-          width: String(widthGrayType1) + ea,
+          width: String(desktop ? widthGrayType1 : grayWidth) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
@@ -3000,7 +2983,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             position: "absolute",
             top: String(inputTop) + ea,
             left: String(0) + ea,
-            width: String(widthGrayType1) + ea,
+            width: String(desktop ? widthGrayType1 : grayWidth) + ea,
             height: String(grayHeight) + ea,
             outline: String(0),
             border: String(0),
@@ -3016,7 +2999,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         class: [ noticeClassName ],
         text: "* https로 시작하는 링크 전체를 적어주세요!",
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           position: "relative",
           top: String(subFontTop) + ea,
           fontSize: String(subFontSize) + ea,
@@ -3070,7 +3053,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           display: "inline-block",
           position: "relative",
           top: String(grayTop) + ea,
-          width: String(widthGrayType1) + ea,
+          width: String(desktop ? widthGrayType1 : grayWidth) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
@@ -3092,7 +3075,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             position: "absolute",
             top: String(inputTop) + ea,
             left: String(0) + ea,
-            width: String(widthGrayType1) + ea,
+            width: String(desktop ? widthGrayType1 : grayWidth) + ea,
             height: String(grayHeight) + ea,
             outline: String(0),
             border: String(0),
@@ -3108,7 +3091,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         class: [ noticeClassName ],
         text: "* 계정명이 아닌, 링크 전체를 적어주세요!",
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "none",
           position: "relative",
           top: String(subFontTop) + ea,
           fontSize: String(subFontSize) + ea,
@@ -3217,12 +3200,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
               alignItems: "center",
             },
             child: {
-              text: "클릭 또는 드래그하여 파일 업로드",
+              text: desktop ? "클릭 또는 드래그하여 파일 업로드..." : "클릭하여 파일 업로드...",
               style: {
                 display: "inline-block",
                 position: "relative",
-                top: String(-3) + ea,
-                fontSize: String(23) + ea,
+                top: String(desktop ? -3 : -0.3) + ea,
+                fontSize: String(desktop ? 23 : 4.5) + ea,
                 fontWeight: String(200),
                 color: colorChip.gray4,
               }
@@ -3502,12 +3485,12 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
                 } else if (p === "company") {
                   firstDom.value = firstDom.value.trim();
                   if (firstDom.value.trim() === '') {
-                    throw new Error("회사명을 적어주세요!");
+                    throw new Error("회사명을 적어주세요! (프리랜서의 경우 '프리랜서')");
                   }
                 } else if (p === "numbers") {
                   firstDom.value = firstDom.value.replace(/[^0-9\.]/gi, '');
                   if (firstDom.value.trim() === '' || Number.isNaN(Number(firstDom.value.trim())) || Number(firstDom.value.trim()) === 0) {
-                    throw new Error("사업자 등록번호를 입력해주세요!");
+                    throw new Error("사업자 등록번호를 입력해주세요! (프리랜서의 경우, 생년월일 6자리)");
                   }
                 } else if (p === "start") {
                   firstDom.value = firstDom.value.replace(/[^0-9\-]/gi, '').trim();
@@ -3517,7 +3500,7 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
                 } else if (p === "representative") {
                   firstDom.value = firstDom.value.trim();
                   if (firstDom.value.trim() === '') {
-                    throw new Error("대표자명을 적어주세요!");
+                    throw new Error("대표자명을 적어주세요! (프피랜서의 경우, 본인명)");
                   }
                 } else if (p === "bankname") {
                   firstDom.value = firstDom.value.trim();
@@ -3558,8 +3541,10 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
                 boo = false;
                 scrollTo(window, firstDom, visualSpecific);
                 if (firstDom.previousElementSibling === null) {
+                  firstDom.parentElement.style.boxSizing = "border-box";
                   firstDom.parentElement.style.border = "1px solid " + colorChip.green;
                 } else {
+                  firstDom.previousElementSibling.style.boxSizing = "border-box";
                   firstDom.previousElementSibling.style.border = "1px solid " + colorChip.green;
                 }
                 if (typeof firstDom.focus === "function") {
