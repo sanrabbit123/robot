@@ -229,7 +229,7 @@ ProcessDetailJs.prototype.insertNumbersBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, selfHref, scrollTo } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, selfHref, scrollTo, homeliaisonAnalytics } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -433,7 +433,7 @@ ProcessDetailJs.prototype.reloadNumbers = function (itemList) {
   const instance = this;
   const mother = this.mother;
   const { ea, baseTong, media } = this;
-  const { dateToString } = GeneralJs;
+  const { dateToString, homeliaisonAnalytics } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -496,7 +496,7 @@ ProcessDetailJs.prototype.insertUploadBox = function () {
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, homeliaisonAnalytics } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainTitle = "프로젝트 파일";
   const uploadIconClassName = "uploadIconClassName";
@@ -969,7 +969,7 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
   const small = !big;
   const manyBig = media[0];
   const generalSmall = !manyBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, uniqueValue, variableArray, colorCalendar } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, uniqueValue, variableArray, colorCalendar, homeliaisonAnalytics } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainTitle = "프로젝트 일정";
   const dragElementClassName = "dragElementClassName";
@@ -2393,7 +2393,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
   const desktop = !mobile;
   const manyBig = media[0];
   const generalSmall = !manyBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, homeliaisonAnalytics } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainTitle = "프로젝트 상태";
   let paddingTop;
@@ -3186,7 +3186,7 @@ ProcessDetailJs.prototype.insertTravelBox = function () {
   const desktop = !mobile;
   const manyBig = media[0];
   const generalSmall = !manyBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, variableArray } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, variableArray, homeliaisonAnalytics } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainTitle = "출장 내역";
   const travelBlockClassName = "travelBlockClassName";
@@ -4424,7 +4424,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
   const { ea, targetDrive, targetHref, media, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { ajaxJson, createNode, colorChip, withOut, cleanChildren, dateToString, isMac, isIphone, swipePatch, blankHref, removeByClass, downloadFile, equalJson } = GeneralJs;
+  const { ajaxJson, createNode, colorChip, withOut, cleanChildren, dateToString, isMac, isIphone, swipePatch, blankHref, removeByClass, downloadFile, equalJson, homeliaisonAnalytics } = GeneralJs;
   const motherChildPhotoTongClassName = "motherChildPhotoTongClassName";
   const photoItemInitClassName = "photoItemInitClassName";
   const bigPhotoClassName = "bigPhotoClassName";
@@ -5781,7 +5781,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 ProcessDetailJs.prototype.tableStatic = function (designer, project, client, clientHistory, projectHistory, requestNumber) {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma, homeliaisonAnalytics } = GeneralJs;
   const { totalMother, ea, grayBarWidth, middleMode } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -5987,7 +5987,7 @@ ProcessDetailJs.prototype.insertInformationBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, blankHref, downloadFile, returnGet, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, blankHref, downloadFile, returnGet, autoComma, homeliaisonAnalytics } = GeneralJs;
   const wordings = {
     title: [ "고객 정보" ],
     subTitle: [
@@ -6624,7 +6624,7 @@ ProcessDetailJs.prototype.insertBelowBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, blankHref, downloadFile, returnGet } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, blankHref, downloadFile, returnGet, homeliaisonAnalytics } = GeneralJs;
   const wordings = {
     title: [ "고객 정보" ],
     subTitle: [
@@ -7087,7 +7087,7 @@ ProcessDetailJs.prototype.insertDetailBox = function () {
   const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, homeliaisonAnalytics } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const { mainContents } = instance.tableStatic(instance.designer, instance.project, instance.client, instance.clientHistory, instance.projectHistory, instance.requestNumber);
   let paddingTop;
@@ -7387,7 +7387,7 @@ ProcessDetailJs.prototype.insertStyleBox = async function () {
   const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, homeliaisonAnalytics } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const { mainContents } = instance.tableStatic(instance.designer, instance.project, instance.client, instance.clientHistory, instance.projectHistory, instance.requestNumber);
   const imageStart = S3HOST + "/corePortfolio/listImage";
@@ -7860,7 +7860,7 @@ ProcessDetailJs.prototype.insertNoticeBox = function () {
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, homeliaisonAnalytics } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const { notice: mainContents } = instance.tableStatic(instance.designer, instance.project, instance.client, instance.clientHistory, instance.projectHistory, instance.requestNumber);
   let paddingTop;
@@ -8166,7 +8166,7 @@ ProcessDetailJs.prototype.isEmptyString = function (string) {
 ProcessDetailJs.prototype.returnButtonList = function () {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, blankHref, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, downloadFile, removeByClass } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, blankHref, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, downloadFile, removeByClass, homeliaisonAnalytics } = GeneralJs;
   const { project, requestNumber, ea, baseTong, media, totalContents, contentsRawInfo } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -8467,7 +8467,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
 ProcessDetailJs.prototype.insertGreenButtons = function () {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, homeliaisonAnalytics } = GeneralJs;
   const { project, requestNumber, ea, baseTong, media, totalContents } = this;
   const greenButtonClassName = "greenButtonClassName";
   const reverseButtonClassName = "reverseButtonClassName";
@@ -8610,7 +8610,7 @@ ProcessDetailJs.prototype.insertGreenButtons = function () {
 ProcessDetailJs.prototype.asyncLoadingBlock = function () {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, homeliaisonAnalytics } = GeneralJs;
   const { project, requestNumber, ea, baseTong, media, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -8743,7 +8743,7 @@ ProcessDetailJs.prototype.reloadGreenButtons = function () {
   const greenButtonClassName = "greenButtonClassName";
   const reverseButtonClassName = "reverseButtonClassName";
   const generalButtonClassName = "generalButtonClassName";
-  const { colorChip } = GeneralJs;
+  const { colorChip, homeliaisonAnalytics } = GeneralJs;
   let targets;
   let reverseTargets;
   let thisDeactive;
@@ -8801,7 +8801,7 @@ ProcessDetailJs.prototype.insertRawUploadBox = function () {
   const desktop = !mobile;
   const manyBig = media[0];
   const generalSmall = !manyBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, homeliaisonAnalytics } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   return async function (e) {
     try {
@@ -9101,7 +9101,7 @@ ProcessDetailJs.prototype.insertRawUploadBox = function () {
 ProcessDetailJs.prototype.insertRawContentsBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, removeByClass } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, removeByClass, homeliaisonAnalytics } = GeneralJs;
   const { project, requestNumber, ea, baseTong, media, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -9354,7 +9354,7 @@ ProcessDetailJs.prototype.insertRawContentsBox = function () {
 ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, homeliaisonAnalytics } = GeneralJs;
   const { project, requestNumber, ea, baseTong, media, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -9586,7 +9586,7 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
 ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, removeByClass } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, removeByClass, homeliaisonAnalytics } = GeneralJs;
   const { project, requestNumber, ea, baseTong, media, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -9832,7 +9832,7 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
 ProcessDetailJs.prototype.uploadLink = function (thisStatusNumber) {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, homeliaisonAnalytics } = GeneralJs;
   const { project, requestNumber, ea, baseTong, media, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -9888,7 +9888,7 @@ ProcessDetailJs.prototype.uploadLink = function (thisStatusNumber) {
 ProcessDetailJs.prototype.plusMemo = function (thisStatusNumber, customKey = null, customTitle = null) {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, homeliaisonAnalytics } = GeneralJs;
   const { project, requestNumber, ea, baseTong, media, totalContents } = this;
   const memoFixedTargetsClassName = "memoFixedTargetsClassName";
   const mobile = media[4];
@@ -10102,7 +10102,7 @@ ProcessDetailJs.prototype.paymentByCard = function () {
   const desktop = !mobile;
   const manyBig = media[0];
   const generalSmall = !manyBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, homeliaisonAnalytics } = GeneralJs;
   return (project) => {
     return async function (e) {
       try {
@@ -10203,7 +10203,7 @@ ProcessDetailJs.prototype.paymentByAccount = function () {
   const desktop = !mobile;
   const manyBig = media[0];
   const generalSmall = !manyBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, homeliaisonAnalytics } = GeneralJs;
   return (project) => {
     return async function (e) {
       try {
@@ -10241,7 +10241,7 @@ ProcessDetailJs.prototype.insertContentsBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, selfHref, scrollTo, blankHref, removeByClass } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, selfHref, scrollTo, blankHref, removeByClass, homeliaisonAnalytics } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   const blank = "<u%&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;%u>";
   const imageTargetClassName = "imageTargetClassName";
@@ -11388,7 +11388,7 @@ ProcessDetailJs.prototype.insertPhotoPayBox = function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, homeliaisonAnalytics } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -11790,7 +11790,7 @@ ProcessDetailJs.prototype.insertMeetingBackBox = function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, homeliaisonAnalytics } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -12212,7 +12212,7 @@ ProcessDetailJs.prototype.insertPayFirstBox = function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, homeliaisonAnalytics } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -12648,7 +12648,7 @@ ProcessDetailJs.prototype.insertPayRemainBox = function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, homeliaisonAnalytics } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -13084,7 +13084,7 @@ ProcessDetailJs.prototype.insertContractConfirmBox = function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, downloadFile } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, downloadFile, homeliaisonAnalytics } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -13536,7 +13536,7 @@ ProcessDetailJs.prototype.insertContractStartBox = function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, downloadFile } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, downloadFile, homeliaisonAnalytics } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -13988,7 +13988,7 @@ ProcessDetailJs.prototype.insertScheduleStartBox = function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, downloadFile } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, downloadFile, homeliaisonAnalytics } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -14440,7 +14440,7 @@ ProcessDetailJs.prototype.insertScheduleAboutBox = function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, homeliaisonAnalytics } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -14948,7 +14948,7 @@ ProcessDetailJs.prototype.insertAboutConsoleBox = function (feedback = false) {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, homeliaisonAnalytics } = GeneralJs;
   const buttonsClassName = "buttonsClassName";
   let margin;
   let paddingTop;
@@ -15438,7 +15438,7 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
   const small = !big;
   const veryBig = (media[0] || media[1]);
   const generalSmall = !veryBig;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, serviceParsing, removeByClass, equalJson } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, svgMaker, selfHref, scrollTo, variableArray, findByAttribute, setQueue, serviceParsing, removeByClass, equalJson, homeliaisonAnalytics } = GeneralJs;
   const siblingKeywords = "siblingKeywords__";
   const valueBlockClassName = "valueBlockClassName__";
   const blockContextMenuClassName = "blockContextMenuClassName__";
@@ -16776,7 +16776,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, setQueue } = GeneralJs;
+    const { returnGet, ajaxJson, setQueue, homeliaisonAnalytics } = GeneralJs;
     const getObj = returnGet();
     const { media } = this;
     const mobile = media[4];
