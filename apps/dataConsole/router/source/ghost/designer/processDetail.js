@@ -16776,7 +16776,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, setQueue, homeliaisonAnalytics } = GeneralJs;
+    const { returnGet, ajaxJson, setQueue, homeliaisonAnalytics, equalJson, dateToString } = GeneralJs;
     const getObj = returnGet();
     const { media } = this;
     const mobile = media[4];
@@ -16794,6 +16794,7 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     let wsOpenEvent;
     let wsMessageEvent;
     let wsCloseEvent;
+    let analyticsData;
 
     if (getObj.proid === undefined) {
       window.alert("잘못된 접근입니다!");
@@ -16955,6 +16956,22 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
+
+    analyticsData = {
+      desid: instance.designer.desid,
+      href: window.encodeURIComponent(window.location.href),
+      date: dateToString(new Date(), true),
+      mode: getObj.mode === undefined ? "general" : getObj.mode,
+      process: {
+        proid: instance.project.proid,
+        cliid: instance.project.cliid,
+        name: instance.project.name,
+        service: instance.project.service,
+        status: instance.project.process.status,
+      }
+    };
+    analyticsData = equalJson(JSON.stringify(analyticsData));
+    homeliaisonAnalytics({ page: instance.pageName, standard: instance.firstPageViewTime, action: "processDetail", data: analyticsData }).catch((err) => { console.log(err); });
 
     // mobile payment
     if (typeof getObj.mobilecard === "string") {

@@ -694,6 +694,9 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
       let user;
 
       thisData = equalJson(req.body);
+
+      console.log(thisData);
+
       if (typeof thisData.info === "object" && thisData.info !== null) {
         ip = thisData.info.ip;
         referer = thisData.info.referer;

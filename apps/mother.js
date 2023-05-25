@@ -4153,4 +4153,89 @@ Mother.prototype.designerCareer = function (designer, wordingMode = false) {
   }
 }
 
+Mother.prototype.homeliaisonAnalytics = async function (obj, infoName) {
+  const axios = require("axios");
+  const crypto = require("crypto");
+  const address = require(`${process.cwd()}/apps/infoObj.js`);
+  try {
+    if (typeof obj !== "object" || obj === null) {
+      throw new Error("invalid input");
+    }
+    if (typeof obj.action !== "string" || obj.data === undefined) {
+      throw new Error("invalid input");
+    }
+    if (typeof obj.data !== "object" || obj.data === null) {
+      throw new Error("invalid input");
+    }
+    if (typeof infoName !== "string") {
+      throw new Error("invalid input");
+    }
+    if (address[infoName] === undefined) {
+      throw new Error("invalid info name");
+    }
+    const objectToRawquery = function (dataObj) {
+      if (typeof dataObj !== "object") {
+        throw new Error("invaild input, must be object");
+      }
+      let dataString;
+      dataString = '';
+      for (let i in dataObj) {
+        dataString += i.replace(/[\=\&]/gi, '');
+        dataString += '=';
+        if (typeof dataObj[i] === "object") {
+          dataString += JSON.stringify(dataObj[i]).replace(/[\=\&]/g, '');
+        } else {
+          dataString += String(dataObj[i]).replace(/[\=\&]/g, '');
+        }
+        dataString += '&';
+      }
+      dataString = dataString.slice(0, -1);
+      return dataString;
+    }
+    const idKeyword = "homeliaisonServer";
+    const userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36";
+    const randomHex0 = crypto.randomBytes(8).toString("hex");
+    const randomHex1 = crypto.randomBytes(4).toString("hex");
+    const timeValue = String((new Date()).valueOf()).slice(0, -3);
+    const token = "_";
+    const thisId = idKeyword + token + randomHex0 + token + timeValue + token + randomHex1;
+    const thisInfo = address[infoName];
+    const url = "https://" + address.testinfo.host + ":3000/getAnalytics";
+    let res;
+    let dataObject;
+
+    dataObject = {};
+
+    dataObject.page = "serverSide";
+    dataObject.standard = new Date();
+    dataObject.action = obj.action;
+    dataObject.data = obj.data;
+    dataObject.id = thisId;
+    dataObject.info = {
+      ip: thisInfo.ip.outer,
+      userAgent: userAgent,
+      referer: "",
+      requestUrl: "",
+      pageTitle: "",
+    };
+
+    console.log(objectToRawquery(dataObject));
+
+    res = await axios.post(url, objectToRawquery(dataObject), {
+      headers: {
+        "Content-Type": "x-www-form-urlencoded",
+        "User-Agent": userAgent,
+      }
+    });
+
+    console.log(res);
+
+    return res;
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 module.exports = Mother;

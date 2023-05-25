@@ -71,7 +71,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo } = this.mother;
-  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition, linkToString, stringToLink, aliveLog, cronLog, alertLog } = this.mother;
+  const { consoleQ, fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, curlRequest, diskReading, requestSystem, ajaxJson, uniqueValue, getDateMatrix, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage, hexaJson, promiseTogether, serviceParsing, localUnique, processSystem, sha256Hmac, variableArray, autoHypenPhone, designerCareer, emergencyAlarm, mediaQuery, zeroAddition, linkToString, stringToLink, aliveLog, cronLog, alertLog, homeliaisonAnalytics } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -176,7 +176,12 @@ DevContext.prototype.launching = async function () {
 
     
 
-
+    await homeliaisonAnalytics({
+      action: "test",
+      data: {
+        date: dateToString(new Date(), true),
+      }
+    }, "backinfo");
 
 
 
@@ -5855,9 +5860,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "박새봄",
-    //     designer: "김윤진",
-    //     link: "https://drive.google.com/drive/folders/16xyyfZgU_nG4g7LxqcZHcvZjjC3_RjNj",
+    //     client: "김미애",
+    //     designer: "이정아",
+    //     link: "https://drive.google.com/drive/folders/1qdHuetINqlHdlV6mHaCRbAHNJ1A0YH2e",
     //     pay: true
     //   },
     // ]);

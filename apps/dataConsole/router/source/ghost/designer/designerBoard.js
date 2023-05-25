@@ -601,7 +601,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, selfHref, returnGet } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, selfHref, returnGet, homeliaisonAnalytics } = GeneralJs;
   const getObj = returnGet();
   const slash = "&nbsp;&nbsp;<b%/%b>&nbsp;&nbsp;";
   let paddingTop;
@@ -647,6 +647,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   let mobileCircleBoxPaddingBottom;
   let numbersTop;
   let middleState;
+  let analyticsData;
 
   grayBetween = <%% 40, 40, 36, 36, 5 %%>;
 
@@ -831,6 +832,26 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
       return ((a.process.contract.form.date.from.valueOf() + emptyValue) * bConst) - ((b.process.contract.form.date.from.valueOf() + emptyValue) * aConst);
     });
+
+    analyticsData = {
+      desid: instance.designer.desid,
+      href: window.encodeURIComponent(window.location.href),
+      date: dateToString(new Date(), true),
+      process: {
+        length: targets.length,
+        detail: targets.map((p) => {
+          return {
+            proid: p.proid,
+            cliid: p.cliid,
+            name: p.name,
+            service: p.service,
+            status: p.process.status,
+          }
+        })
+      }
+    };
+    analyticsData = equalJson(JSON.stringify(analyticsData));
+    homeliaisonAnalytics({ page: instance.pageName, standard: instance.firstPageViewTime, action: "processLoad", data: analyticsData }).catch((err) => { console.log(err); });
 
     targetLength = targets.length;
     if (targetLength < minimalLength) {
@@ -1210,7 +1231,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, selfHref, returnGet } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, selfHref, returnGet, homeliaisonAnalytics } = GeneralJs;
   const getObj = returnGet();
   const slash = "&nbsp;&nbsp;<b%/%b>&nbsp;&nbsp;";
   let paddingTop;
@@ -1255,6 +1276,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
   let circleBoxTop;
   let mobileCircleBoxPaddingBottom;
   let numbersTop;
+  let analyticsData;
 
   grayBetween = <%% 40, 40, 36, 36, 5 %%>;
 
@@ -1447,6 +1469,50 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
 
       return ((b.process.contract.form.date.from.valueOf() + emptyValue) * bConst) - ((a.process.contract.form.date.from.valueOf() + emptyValue) * aConst);
     });
+
+
+    analyticsData = {
+      desid: instance.designer.desid,
+      href: window.encodeURIComponent(window.location.href),
+      date: dateToString(new Date(), true),
+      contents: {
+        length: targets.length,
+        detail: targets.map((p) => {
+          return {
+            proid: p.proid,
+            cliid: p.cliid,
+            name: p.name,
+            service: p.service,
+            status: p.process.status,
+          }
+        })
+      }
+    };
+    analyticsData = equalJson(JSON.stringify(analyticsData));
+    for (let obj of analyticsData.contents.detail) {
+      if (instance.contentsArr.toNormal().map((o) => { return o.proid }).includes(obj.proid)) {
+        obj.contents = {
+          status: "발행",
+          pid: instance.contentsArr.toNormal().find((o) => { return o.proid === obj.proid }).contents.portfolio.pid,
+        };
+      } else if (/드[랍롭]/gi.test(obj.status) || /홀[드딩]/gi.test(obj.status)) {
+        obj.contents = {
+          status: "드랍",
+          pid: "",
+        };
+      } else if (instance.ghostContents.map((o) => { return o.proid }).includes(obj.proid)) {
+        obj.contents = {
+          status: "예정",
+          pid: instance.ghostContents.find((o) => { return o.proid === obj.proid }).pid,
+        };
+      } else {
+        obj.contents = {
+          status: "미발행",
+          pid: "",
+        };
+      }
+    }
+    homeliaisonAnalytics({ page: instance.pageName, standard: instance.firstPageViewTime, action: "contentsLoad", data: analyticsData }).catch((err) => { console.log(err); });
 
     targetLength = targets.length;
     if (targetLength < minimalLength) {
