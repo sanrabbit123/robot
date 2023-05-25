@@ -176,14 +176,8 @@ DevContext.prototype.launching = async function () {
 
     
 
-    await homeliaisonAnalytics({
-      action: "test",
-      data: {
-        date: dateToString(new Date(), true),
-      }
-    }, "backinfo");
 
-
+    
 
 
 
