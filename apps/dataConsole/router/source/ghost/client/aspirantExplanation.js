@@ -1463,10 +1463,10 @@ AspirantExplanationJs.prototype.insertThirdBox = function () {
             homeliaisonAnalytics({
               page: instance.pageName,
               standard: instance.firstPageViewTime,
-              action: "toPartnershipSubmit1",
+              action: "clickAspirantSubmitButton",
               data: {},
             }).then(() => {
-              selfHref(FRONTHOST + "/desevent.php?mode=partnership");
+              selfHref(FRONTHOST + "/aspirant.php");
             }).catch((err) => {
               console.log(err);
             });
@@ -2160,10 +2160,10 @@ AspirantExplanationJs.prototype.insertFourthBox = function () {
             homeliaisonAnalytics({
               page: instance.pageName,
               standard: instance.firstPageViewTime,
-              action: "toPartnershipSubmit2",
+              action: "clickAspirantSubmitButton",
               data: {},
             }).then(() => {
-              selfHref(FRONTHOST + "/desevent.php?mode=partnership");
+              selfHref(FRONTHOST + "/aspirant.php");
             }).catch((err) => {
               console.log(err);
             });

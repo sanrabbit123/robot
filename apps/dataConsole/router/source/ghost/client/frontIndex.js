@@ -2084,7 +2084,7 @@ FrontIndexJs.prototype.insertEndBox = function () {
     class: [ "hoverDefault_lite" ],
     event: {
       click: function (e) {
-        selfHref(FRONTHOST + "/aspirant.php");
+        selfHref(FRONTHOST + "/aspiration.php");
       }
     },
     text: "디자이너 파트너쉽",

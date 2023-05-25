@@ -2883,8 +2883,11 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      if (req.body.map === undefined || req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
       const selfMongo = instance.mongo;
-      const { map } = equalJson(req.body);
+      const { map, mode } = equalJson(req.body);
       const stringToCareer = function (str) {
         let temp;
         temp = str.split(" ");
@@ -2916,130 +2919,166 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
       let updateQuery;
       let aspid;
       let message;
+      let rows;
+      let thisAspirant;
 
-      name = map.find((obj) => { return obj.property === "name" });
-      phone = map.find((obj) => { return obj.property === "phone" });
-      email = map.find((obj) => { return obj.property === "email" });
-      address0 = map.find((obj) => { return obj.property === "address0" });
-      address1 = map.find((obj) => { return obj.property === "address1" });
-      business = map.find((obj) => { return obj.property === "business" });
-      company = map.find((obj) => { return obj.property === "company" });
-      numbers = map.find((obj) => { return obj.property === "numbers" });
-      start = map.find((obj) => { return obj.property === "start" });
-      representative = map.find((obj) => { return obj.property === "representative" });
-      bankname = map.find((obj) => { return obj.property === "bankname" });
-      banknumber = map.find((obj) => { return obj.property === "banknumber" });
-      bankto = map.find((obj) => { return obj.property === "bankto" });
-      interior = map.find((obj) => { return obj.property === "interior" });
-      styling = map.find((obj) => { return obj.property === "styling" });
-      career = map.find((obj) => { return obj.property === "career" });
-      homepage = map.find((obj) => { return obj.property === "homepage" });
-      sns = map.find((obj) => { return obj.property === "sns" });
-      sessionId = map.find((obj) => { return obj.property === "sessionId" });
+      if (mode === "general") {
 
-      if (name === undefined || phone === undefined || email === undefined || address0 === undefined || address1 === undefined || business === undefined || company === undefined || numbers === undefined || start === undefined || representative === undefined || bankname === undefined || banknumber === undefined || bankto === undefined || interior === undefined || styling === undefined || career === undefined || homepage === undefined || sns === undefined || sessionId === undefined) {
-        throw new Error("invalid map post");
-      }
-
-      if (sessionId === undefined) {
-        sessionId = [];
-      } else {
-        sessionId = [ sessionId.value.trim() ];
-      }
-
-      name = name.value.trim();
-      phone = phone.value.trim();
-      address0 = address0.value.trim();
-      address1 = address1.value.trim();
-      email = email.value.trim();
-
-
-      updateQuery = {};
-
-      updateQuery["designer"] = name.replace(/[^가-힣]/gi, '')
-      updateQuery["phone"] = phone.replace(/[^0-9\-]/gi, '');
-      updateQuery["email"] = email;
-      updateQuery["address"] = address0 + " " + address1;
-
-      updateQuery["submit.partnership.date"] = new Date();
-      updateQuery["submit.partnership.boo"] = true;
-      updateQuery["submit.comeFrom"] = "";
-
-
-      if (/개인/gi.test(business.value.trim())) {
-        if (/일반/gi.test(business.value.trim())) {
-          updateQuery["information.company.classification"] = "개인사업자(일반)";
-        } else {
-          updateQuery["information.company.classification"] = "개인사업자(간이)";
+        name = map.find((obj) => { return obj.property === "name" });
+        phone = map.find((obj) => { return obj.property === "phone" });
+        email = map.find((obj) => { return obj.property === "email" });
+        address0 = map.find((obj) => { return obj.property === "address0" });
+        address1 = map.find((obj) => { return obj.property === "address1" });
+        business = map.find((obj) => { return obj.property === "business" });
+        company = map.find((obj) => { return obj.property === "company" });
+        numbers = map.find((obj) => { return obj.property === "numbers" });
+        start = map.find((obj) => { return obj.property === "start" });
+        representative = map.find((obj) => { return obj.property === "representative" });
+        bankname = map.find((obj) => { return obj.property === "bankname" });
+        banknumber = map.find((obj) => { return obj.property === "banknumber" });
+        bankto = map.find((obj) => { return obj.property === "bankto" });
+        interior = map.find((obj) => { return obj.property === "interior" });
+        styling = map.find((obj) => { return obj.property === "styling" });
+        career = map.find((obj) => { return obj.property === "career" });
+        homepage = map.find((obj) => { return obj.property === "homepage" });
+        sns = map.find((obj) => { return obj.property === "sns" });
+        sessionId = map.find((obj) => { return obj.property === "sessionId" });
+  
+        if (name === undefined || phone === undefined || email === undefined || address0 === undefined || address1 === undefined || business === undefined || company === undefined || numbers === undefined || start === undefined || representative === undefined || bankname === undefined || banknumber === undefined || bankto === undefined || interior === undefined || styling === undefined || career === undefined || homepage === undefined || sns === undefined || sessionId === undefined) {
+          throw new Error("invalid map post");
         }
-      } else if (/법인/gi.test(business.value.trim())) {
-        if (/일반/gi.test(business.value.trim())) {
-          updateQuery["information.company.classification"] = "법인사업자(일반)";
+  
+        if (sessionId === undefined) {
+          sessionId = [];
         } else {
-          updateQuery["information.company.classification"] = "법인사업자(간이)";
+          sessionId = [ sessionId.value.trim() ];
         }
+  
+        name = name.value.trim();
+        phone = phone.value.trim();
+        address0 = address0.value.trim();
+        address1 = address1.value.trim();
+        email = email.value.trim();
+  
+  
+        updateQuery = {};
+  
+        updateQuery["designer"] = name.replace(/[^가-힣]/gi, '')
+        updateQuery["phone"] = phone.replace(/[^0-9\-]/gi, '');
+        updateQuery["email"] = email;
+        updateQuery["address"] = address0 + " " + address1;
+  
+        updateQuery["submit.partnership.date"] = new Date();
+        updateQuery["submit.partnership.boo"] = true;
+        updateQuery["submit.comeFrom"] = "";
+  
+  
+        if (/개인/gi.test(business.value.trim())) {
+          if (/일반/gi.test(business.value.trim())) {
+            updateQuery["information.company.classification"] = "개인사업자(일반)";
+          } else {
+            updateQuery["information.company.classification"] = "개인사업자(간이)";
+          }
+        } else if (/법인/gi.test(business.value.trim())) {
+          if (/일반/gi.test(business.value.trim())) {
+            updateQuery["information.company.classification"] = "법인사업자(일반)";
+          } else {
+            updateQuery["information.company.classification"] = "법인사업자(간이)";
+          }
+        } else {
+          updateQuery["information.company.classification"] = "프리랜서";
+        }
+        updateQuery["information.company.name"] = company.value.trim();
+        updateQuery["information.company.businessNumber"] = numbers.value.trim();
+        updateQuery["information.company.start"] = stringToDate(start.value.trim());
+        updateQuery["information.company.representative"] = representative.value.trim();
+  
+        updateQuery["information.account.bank"] = bankname.value.trim();
+        updateQuery["information.account.number"] = banknumber.value.trim();
+        updateQuery["information.account.to"] = bankto.value.trim();
+        updateQuery["information.account.etc"] = "";
+  
+        updateQuery["information.career.interior"] = stringToCareer(interior.value.trim());
+        updateQuery["information.career.styling"] = stringToCareer(/위와 같음/gi.test(styling.value.trim()) ? interior.value.trim() : styling.value.trim());
+        updateQuery["information.career.detail"] = career.value.trim();
+  
+        updateQuery["information.channel.web"] = [];
+        updateQuery["information.channel.sns"] = [];
+        updateQuery["information.channel.cloud"] = [];
+  
+        if (/^http/gi.test(homepage.value.trim())) {
+          updateQuery["information.channel.web"].push(homepage.value.trim());
+        }
+        if (/^http/gi.test(sns.value.trim())) {
+          updateQuery["information.channel.sns"].push(sns.value.trim());
+        }
+  
+        updateQuery["meeting.status"] = "조정 필요";
+        updateQuery["meeting.date"] = new Date(1800, 0, 1);
+        updateQuery["submit.firstRequest.date"] = new Date();
+        updateQuery["submit.firstRequest.method"] = "partnership";
+  
+
+        rows = await back.getAspirantsByQuery({ phone: phone.replace(/[^0-9\-]/gi, '') }, { selfMongo });
+        message = '';
+
+        if (rows.length === 0) {
+          aspid = await back.createAspirant(updateQuery, { selfMongo });
+          message += "새로운 디자이너 파트너십 신청이 왔습니다!\n";
+        } else {
+          [ thisAspirant ] = rows.toNormal();
+          aspid = thisAspirant.aspid;
+          await back.updateAspirant([ { aspid }, updateQuery ], { selfMongo });
+          message += "재문의 파트너십 신청이 왔습니다!\n";
+        }
+  
+        message += "문의일 : " + dateToString(new Date()) + "\n";
+        message += "성함 : " + updateQuery.designer + "\n";
+        message += "연락처 : " + updateQuery.phone + "\n";
+        message += "이메일 : " + updateQuery.email + "\n";
+        message += "주소 : " + updateQuery.address + "\n";
+        message += "사업자 분류 : " + updateQuery["information.company.classification"] + "\n";
+        message += "회사명 : " + updateQuery["information.company.name"] + "\n";
+        message += "사업자 등록번호 : " + updateQuery["information.company.businessNumber"] + "\n";
+        message += "개업일 : " + dateToString(updateQuery["information.company.start"]) + "\n";
+        message += "대표자 성함 : " + updateQuery["information.company.representative"] + "\n";
+        message += "은행명 : " + updateQuery["information.account.bank"] + "\n";
+        message += "계좌번호 : " + updateQuery["information.account.number"] + "\n";
+        message += "예금주 : " + updateQuery["information.account.to"] + "\n";
+        message += "인테리어 경력 : " + interior.value.trim() + "\n";
+        message += "스타일링 경력 : " + styling.value.trim() + "\n";
+        message += "경력 상세 : " + updateQuery["information.career.detail"] + "\n";
+        message += "홈페이지 : " + updateQuery["information.channel.web"].join(", ") + "\n";
+        message += "SNS 채널 : " + updateQuery["information.channel.sns"].join(", ") + "\n";
+        message += "세션 아이디 : " + sessionId.join(", ");
+  
+        await messageSend({ text: message, channel: "#300_designer", voice: false });
+        requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + updateQuery.designer + "입니다!" }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+
+        res.send(JSON.stringify({ aspid }));
+
+      } else if (mode === "portfolio") {
+
+        name = map.find((obj) => { return obj.property === "name" });
+        phone = map.find((obj) => { return obj.property === "phone" });
+
+        name = name.value.trim();
+        phone = phone.value.trim();
+
+        rows = await back.getAspirantsByQuery({ phone: phone.replace(/[^0-9\-]/gi, '') }, { selfMongo });
+        if (rows.length === 0) {
+          throw new Error("invalid phone number");
+        } else {
+          [ thisAspirant ] = rows.toNormal();
+          aspid = thisAspirant.aspid;
+        }
+
+        res.send(JSON.stringify({ aspid }));
+
       } else {
-        updateQuery["information.company.classification"] = "프리랜서";
-      }
-      updateQuery["information.company.name"] = company.value.trim();
-      updateQuery["information.company.businessNumber"] = numbers.value.trim();
-      updateQuery["information.company.start"] = stringToDate(start.value.trim());
-      updateQuery["information.company.representative"] = representative.value.trim();
-
-      updateQuery["information.account.bank"] = bankname.value.trim();
-      updateQuery["information.account.number"] = banknumber.value.trim();
-      updateQuery["information.account.to"] = bankto.value.trim();
-      updateQuery["information.account.etc"] = "";
-
-      updateQuery["information.career.interior"] = stringToCareer(interior.value.trim());
-      updateQuery["information.career.styling"] = stringToCareer(/위와 같음/gi.test(styling.value.trim()) ? interior.value.trim() : styling.value.trim());
-      updateQuery["information.career.detail"] = career.value.trim();
-
-      updateQuery["information.channel.web"] = [];
-      updateQuery["information.channel.sns"] = [];
-      updateQuery["information.channel.cloud"] = [];
-
-      if (/^http/gi.test(homepage.value.trim())) {
-        updateQuery["information.channel.web"].push(homepage.value.trim());
-      }
-      if (/^http/gi.test(sns.value.trim())) {
-        updateQuery["information.channel.sns"].push(sns.value.trim());
+        throw new Error("invalid mode");
       }
 
-      updateQuery["meeting.status"] = "조정 필요";
-      updateQuery["meeting.date"] = new Date(1800, 0, 1);
-      updateQuery["submit.firstRequest.date"] = new Date();
-      updateQuery["submit.firstRequest.method"] = "partnership";
-
-      message = '';
-      aspid = await back.createAspirant(updateQuery, { selfMongo });
-
-      message += "새로운 디자이너 파트너십 신청이 왔습니다!\n";
-
-      message += "문의일 : " + dateToString(new Date()) + "\n";
-      message += "성함 : " + updateQuery.designer + "\n";
-      message += "연락처 : " + updateQuery.phone + "\n";
-      message += "이메일 : " + updateQuery.email + "\n";
-      message += "주소 : " + updateQuery.address + "\n";
-      message += "사업자 분류 : " + updateQuery["information.company.classification"] + "\n";
-      message += "회사명 : " + updateQuery["information.company.name"] + "\n";
-      message += "사업자 등록번호 : " + updateQuery["information.company.businessNumber"] + "\n";
-      message += "개업일 : " + dateToString(updateQuery["information.company.start"]) + "\n";
-      message += "대표자 성함 : " + updateQuery["information.company.representative"] + "\n";
-      message += "은행명 : " + updateQuery["information.account.bank"] + "\n";
-      message += "계좌번호 : " + updateQuery["information.account.number"] + "\n";
-      message += "예금주 : " + updateQuery["information.account.to"] + "\n";
-      message += "인테리어 경력 : " + interior.value.trim() + "\n";
-      message += "스타일링 경력 : " + styling.value.trim() + "\n";
-      message += "경력 상세 : " + updateQuery["information.career.detail"] + "\n";
-      message += "홈페이지 : " + updateQuery["information.channel.web"].join(", ") + "\n";
-      message += "SNS 채널 : " + updateQuery["information.channel.sns"].join(", ") + "\n";
-      message += "세션 아이디 : " + sessionId.join(", ");
-
-      await messageSend({ text: message, channel: "#300_designer", voice: false });
-      requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + updateQuery.designer + "입니다!" }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
-
-      res.send(JSON.stringify({ aspid }));
     } catch (e) {
       console.log(e);
       logger.error("Console 서버 문제 생김 (rou_post_aspirantSubmit): " + e.message).catch((e) => { console.log(e); });

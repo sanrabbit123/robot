@@ -5104,7 +5104,7 @@ GeneralJs.prototype.footerMake = function (backgroundColor = null) {
         title: [
           { text: "프로젝트 콘솔", event: (e) => { selfHref(FRONTHOST + "/designer/login.php") } },
           { text: "블로그 & 인스타그램", event: (e) => { blankHref("https://blog.naver.com/homeliaison"); blankHref("https://www.instagram.com/homeliaison"); } },
-          { text: "디자이너 신청", event: (e) => { selfHref(FRONTHOST + "/aspirant.php") } },
+          { text: "디자이너 신청", event: (e) => { selfHref(FRONTHOST + "/aspiration.php") } },
         ],
         description: [
           "홈리에종의 모든 거래에 대한 책임과",

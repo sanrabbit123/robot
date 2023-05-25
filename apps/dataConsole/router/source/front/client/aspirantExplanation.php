@@ -9,7 +9,7 @@ $sessionId = $general->setSessionId();
 $clientInfo = $general->getClientInfo();
 
 $name = "aspirantExplanation";
-$fullLink = $hostLink."/aspirant.php";
+$fullLink = $hostLink."/aspiration.php";
 
 if (!($sessionId)) {
   $general->clearAllCookies();

@@ -533,7 +533,7 @@ DataConsole.prototype.renderFrontPhp = async function () {
     await this.renderMiddleStatic(staticFolder, address.backinfo, DataPatch, DataMiddle, true);
     const targetMap = [
       { from: "clientConsulting", to: "consulting", path: "/middle/consulting" },
-      { from: "aspirantExplanation", to: "aspirant2", path: "/middle/aspirantExplanation" },
+      { from: "aspirantExplanation", to: "aspiration", path: "/middle/aspirantExplanation" },
       { from: "aspirantSubmit", to: "aspirant", path: "/middle/aspirantSubmit" },
       { from: "frontIndex", to: "index", path: "/middle/frontIndex" },
       { from: "portfolioList", to: "portfolio", path: "/middle/portfolioList" },
