@@ -4202,7 +4202,7 @@ Mother.prototype.homeliaisonAnalytics = async function (obj, infoName) {
 
     console.log(dataObject);
 
-    res = await axios.post(url, dataObject, {
+    res = await Mother.prototype.requestSystem(url, dataObject, {
       headers: {
         "Content-Type": "applicaion/json",
         "User-Agent": userAgent,
