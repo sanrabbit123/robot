@@ -696,6 +696,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
       thisData = equalJson(req.body);
 
       console.log(thisData);
+      console.log(req.body);
 
       if (typeof thisData.info === "object" && thisData.info !== null) {
         ip = thisData.info.ip;

@@ -4173,25 +4173,6 @@ Mother.prototype.homeliaisonAnalytics = async function (obj, infoName) {
     if (address[infoName] === undefined) {
       throw new Error("invalid info name");
     }
-    const objectToRawquery = function (dataObj) {
-      if (typeof dataObj !== "object") {
-        throw new Error("invaild input, must be object");
-      }
-      let dataString;
-      dataString = '';
-      for (let i in dataObj) {
-        dataString += i.replace(/[\=\&]/gi, '');
-        dataString += '=';
-        if (typeof dataObj[i] === "object") {
-          dataString += JSON.stringify(dataObj[i]).replace(/[\=\&]/g, '');
-        } else {
-          dataString += String(dataObj[i]).replace(/[\=\&]/g, '');
-        }
-        dataString += '&';
-      }
-      dataString = dataString.slice(0, -1);
-      return dataString;
-    }
     const idKeyword = "homeliaisonServer";
     const userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36";
     const randomHex0 = crypto.randomBytes(8).toString("hex");
@@ -4219,11 +4200,11 @@ Mother.prototype.homeliaisonAnalytics = async function (obj, infoName) {
       pageTitle: "",
     };
 
-    console.log(objectToRawquery(dataObject));
+    console.log(dataObject);
 
-    res = await axios.post(url, objectToRawquery(dataObject), {
+    res = await axios.post(url, dataObject, {
       headers: {
-        "Content-Type": "x-www-form-urlencoded",
+        "Content-Type": "applicaion/json",
         "User-Agent": userAgent,
       }
     });
