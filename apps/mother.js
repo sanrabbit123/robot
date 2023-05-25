@@ -4200,16 +4200,12 @@ Mother.prototype.homeliaisonAnalytics = async function (obj, infoName) {
       pageTitle: "",
     };
 
-    console.log(dataObject);
-
     res = await Mother.prototype.requestSystem(url, dataObject, {
       headers: {
-        "Content-Type": "applicaion/json",
+        "Content-Type": "application/json",
         "User-Agent": userAgent,
       }
     });
-
-    console.log(res);
 
     return res;
 

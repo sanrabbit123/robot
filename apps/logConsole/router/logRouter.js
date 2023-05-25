@@ -680,9 +680,6 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-
-      console.log(req.body);
-
       const collection = "homeliaisonAnalytics";
       const rawUserAgent = req.useragent;
       const { source: userAgent, browser, os, platform } = rawUserAgent;
@@ -697,8 +694,6 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
       let user;
 
       thisData = equalJson(req.body);
-
-      console.log(thisData);
 
       if (typeof thisData.info === "object" && thisData.info !== null) {
         ip = thisData.info.ip;
