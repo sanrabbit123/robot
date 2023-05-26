@@ -3184,6 +3184,88 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       }
     },
+    "aspirantSubmit": {
+      "name": "파트너십 신청 완료",
+      "id": "TN_3473",
+      "needs": [
+        "client",
+        "host"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요 #{client}님!\n작성하신 디자이너 파트너십 신청서는 접수 완료되었습니다 :)\n\n추가적인 포트폴리오 발송이 필요하시다면, 아래 링크를 통해 보내주세요! 검토 후 확인 연락드리겠습니다.\n\n*추가 포트폴리오 전송\nhttps://#{host}/aspirant.php?mode=portfolio",
+        "templtName": "파트너십 신청 완료",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-05-25 15:57:46",
+        "templtCode": "TN_3473",
+        "comments": [
+          {
+            "cdate": "2023-05-25 16:40:16",
+            "name": "검수자",
+            "id": "2636062",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-05-25 16:40:16",
+            "status": "APR"
+          }
+        ]
+      },
+    },
+    "aspirantPortfolio": {
+      "name": "추가 포트폴리오 전송",
+      "id": "TN_3474",
+      "needs": [
+        "client",
+        "host"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요 #{client}님!\n보내주신 추가 포트폴리오는 접수 완료되었습니다 :)\n\n또 추가적인 포트폴리오 발송이 필요하시다면, 아래 링크를 통해 보내주세요! 최대한 많이 보내주시면 모두 검토 후, 확인 연락드리겠습니다!\n\n*추가 포트폴리오 전송\nhttps://#{host}/aspirant.php?mode=portfolio",
+        "templtName": "추가 포트폴리오 전송",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-05-25 15:59:44",
+        "templtCode": "TN_3474",
+        "comments": [
+          {
+            "cdate": "2023-05-25 16:40:21",
+            "name": "검수자",
+            "id": "2636064",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-05-25 16:40:21",
+            "status": "APR"
+          }
+        ]
+      },
+    },
   };
   if (target === "$all") {
     return tong;

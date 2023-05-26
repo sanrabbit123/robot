@@ -2886,7 +2886,9 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
 DataRouter.prototype.rou_post_aspirantSubmit = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, stringToDate, messageSend, messageLog, requestSystem, dateToString } = this.mother;
+  const address = this.address;
+  const kakao = this.kakao;
+  const { equalJson, stringToDate, messageSend, messageLog, requestSystem, dateToString, sleep } = this.mother;
   let obj = {};
   obj.link = [ "/aspirantSubmit" ];
   obj.func = async function (req, res, logger) {
@@ -3068,6 +3070,12 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
   
         await messageSend({ text: message, channel: "#300_designer", voice: false });
         requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + updateQuery.designer + "입니다!" }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+        kakao.sendTalk("aspirantSubmit", updateQuery.designer, updateQuery.phone, {
+          client: updateQuery.designer,
+          host: address.frontinfo.host,
+        }).catch((err) => {
+          console.log(err);
+        });
 
         res.send(JSON.stringify({ aspid }));
 
@@ -3086,6 +3094,15 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
           [ thisAspirant ] = rows.toNormal();
           aspid = thisAspirant.aspid;
         }
+
+        sleep(5000).then(() => {
+          return kakao.sendTalk("aspirantPortfolio", name, phone, {
+            client: name,
+            host: address.frontinfo.host,
+          })
+        }).catch((err) => {
+          console.log(err);
+        });
 
         res.send(JSON.stringify({ aspid }));
 
