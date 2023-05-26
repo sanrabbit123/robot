@@ -4153,7 +4153,7 @@ Mother.prototype.designerCareer = function (designer, wordingMode = false) {
   }
 }
 
-Mother.prototype.homeliaisonAnalytics = async function (obj, infoName) {
+Mother.prototype.homeliaisonAnalytics = async function (obj, infoName = "backinfo") {
   const axios = require("axios");
   const crypto = require("crypto");
   const address = require(`${process.cwd()}/apps/infoObj.js`);

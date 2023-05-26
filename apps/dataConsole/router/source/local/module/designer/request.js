@@ -1693,7 +1693,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
                 const desid = this.getAttribute("desid");
                 const [ standard, standard1 ] = [ ...this.querySelectorAll("b") ];
                 if (e.x <= standard.getBoundingClientRect().x) {
-                  blankHref(FRONTHOST + "/designer/process.php?proid=" + proid + "&mode=request");  
+                  blankHref(FRONTHOST + "/designer/process.php?proid=" + proid + "&mode=request&view=test");  
                 } else if (e.x <= standard1.getBoundingClientRect().x) {
                   const [ designer ] = await ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true });
                   const [ client ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
