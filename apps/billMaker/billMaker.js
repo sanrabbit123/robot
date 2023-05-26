@@ -5936,8 +5936,7 @@ BillMaker.prototype.taxBill = async function (indexArr) {
   }
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, mongolocalinfo, fileSystem, shellExec, shellLink, pythonExecute, requestSystem, decryptoHash, autoComma, messageLog, messageSend, errorLog, curlRequest, equalJson } = this.mother;
-  const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)) }
+  const { mongo, mongoinfo, mongolocalinfo, fileSystem, shellExec, shellLink, pythonExecute, requestSystem, decryptoHash, autoComma, messageLog, messageSend, errorLog, curlRequest, equalJson, zeroAddition } = this.mother;
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
   const human = new HumanPacket();
@@ -5957,10 +5956,6 @@ BillMaker.prototype.taxBill = async function (indexArr) {
     const collection = "taxBill";
 
     const { dir, mapDir } = this;
-    const moduleDir = dir + "/module";
-    const tempDir = process.cwd() + "/temp";
-    const targetModule = moduleDir + "/" + moduleName;
-    const pythonScript = await fileSystem(`readString`, [ targetModule ]);
     const host = this.address.frontinfo.host;
     const today = new Date();
 

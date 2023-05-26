@@ -174,31 +174,42 @@ DevContext.prototype.launching = async function () {
 
 
     
+
+
+
+    /*
+
+    // if cafe24 taxbill again, hacking below
+    // cafe24 parsing
     
-    
+    const jsdom = require("jsdom");
+    const { JSDOM } = jsdom;
+    const queryString = require("querystring");
+    const businessNumber = "2218149759";
+    let id0, password0;
+    let newMail;
+    let count;
+    let raw;
+    let issueId;
+    let res;
+    let dom;
+    let key;
+    id0 = "help";
+    password0 = "hlofwis83!";
+    const client = await human.homeliaisonLogin(id0, password0);
+    ({ count } = await client.list());
+    [ newMail ] = await human.getMails(id0, password0, [ count - 0 ]);
+    raw = Object.keys(queryString.decode(newMail.data.raw.slice(newMail.data.raw.findIndex((str) => { return /\<html\>/gi.test(str) })).join("\n").replace(/\=/gi, "%")))[0].replace(/\%\n/g, "");
+    dom = new JSDOM(raw);
+    key = dom.window.document.querySelectorAll("table")[1].querySelectorAll("td")[1].textContent;
+    client.quit();
+    res = await requestSystem("https://etax.cafe24.com/etax/printview/?url=setEmailViewCheck", { view_auth_key: key, biz_no: businessNumber })
+    issueId = res.data[0].issue_id;
+    res = await requestSystem("https://etax.cafe24.com/etax/printview/?url=detaliView", { issue_id: issueId });
+    await fileSystem(`write`, [ `${process.cwd()}/temp/target.html`, res.data ])
+    console.log(res.data);
 
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    */
 
 
 
@@ -5966,8 +5977,8 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "권정수";
-    // const amount = 23535000;
+    // const name = "이현지";
+    // const amount = 104500;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
