@@ -667,6 +667,7 @@ LogRouter.prototype.rou_post_errorMessage = function () {
 LogRouter.prototype.rou_post_getAnalytics = function () {
   const instance = this;
   const back = this.back;
+  const address = this.address;
   const parser = require("ua-parser-js");
   const { equalJson, ipParsing, sleep } = this.mother;
   let obj;
