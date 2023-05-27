@@ -786,9 +786,9 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
       } catch {
         thisData.device = {};
       }
-
-      await back.mongoCreate(collection, thisData, { selfMongo: instance.mongo });
-
+      if (thisData.network.ip.trim().replace(/[^0-9\.]/gi, '') !== address.officeinfo.ghost.outer.trim().replace(/[^0-9\.]/gi, '')) {
+        await back.mongoCreate(collection, thisData, { selfMongo: instance.mongo });
+      }
       instance.facebook.conversionEvent({
         name,
         data: {
