@@ -163,9 +163,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    // 0. designer flow
     // 1. designer analytics
-
     // 2. hl analytics console - analytics.js
 
     
@@ -5867,9 +5866,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김미애",
-    //     designer: "이정아",
-    //     link: "https://drive.google.com/drive/folders/1qdHuetINqlHdlV6mHaCRbAHNJ1A0YH2e",
+    //     client: "김지훈",
+    //     designer: "박미연",
+    //     link: "https://drive.google.com/drive/folders/1JHJP2Tm2jdysRDn5q1cRxyzWTgVAGxW5",
     //     pay: true
     //   },
     // ]);
