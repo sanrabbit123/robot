@@ -171,8 +171,8 @@ DevContext.prototype.launching = async function () {
     // /designer path => desid injection
 
 
-    await requestSystem("https://" + address.officeinfo.ghost.host + "/logBasicReport", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
 
+    
 
 
     
@@ -5867,9 +5867,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김지훈",
-    //     designer: "박미연",
-    //     link: "https://drive.google.com/drive/folders/1JHJP2Tm2jdysRDn5q1cRxyzWTgVAGxW5",
+    //     client: "김희선",
+    //     designer: "김우현",
+    //     link: "https://drive.google.com/drive/folders/1KnAYWA7bCwtBNUFddGqhKHkdgeyrIgal",
     //     pay: true
     //   },
     // ]);

@@ -957,7 +957,7 @@ LogReport.prototype.dailyReports = async function () {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const startDay = new Date(2023, 3, 1);
-    const dateAgo = 30;
+    const dateAgo = Math.floor((((((new Date()).valueOf() - (new Date(2023, 4, 1, 9, 0, 0)).valueOf()) / 1000) / 60) / 60) / 24);
     const sixthTypeArr = [
       "string",
       "string",
