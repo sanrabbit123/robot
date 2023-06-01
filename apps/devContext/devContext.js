@@ -171,7 +171,8 @@ DevContext.prototype.launching = async function () {
     // /designer path => desid injection
 
 
-    
+    await requestSystem("https://" + address.officeinfo.ghost.host + "/logBasicReport", { message: "do it" }, { headers: { "Content-Type": "application/json" } });
+
 
 
     

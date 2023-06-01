@@ -957,7 +957,7 @@ LogReport.prototype.dailyReports = async function () {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const startDay = new Date(2023, 3, 1);
-    const dateAgo = today.getDate() - 1;
+    const dateAgo = 30;
     const sixthTypeArr = [
       "string",
       "string",
@@ -1043,7 +1043,6 @@ LogReport.prototype.dailyReports = async function () {
       }
     }
     let slackMessage;
-    let nowDate;
 
     await selfCoreMongo.connect();
 
@@ -2963,9 +2962,6 @@ LogReport.prototype.dailyReports = async function () {
       naverPaidWeekMatrix: "1q3NFIYnbFCuQUgJRWvgchFOdAeIQxaWmkbAPIuqY1AU",
       googlePaidWeekMatrix: "15Rd2JbqCcm9LjIIMuPVm0U13cDJC_uYxyPdFRjf4b2Y",
     };
-
-    nowDate = new Date();
-    nowDate.setDate(nowDate.getDate() - (dateAgo + 2));
 
     const {
       matrix: [ first, second, third, fourth, fifth, sixth, seventh ],
