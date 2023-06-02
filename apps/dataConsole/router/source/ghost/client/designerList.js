@@ -983,6 +983,8 @@ DesignerListJs.prototype.designerBlock = function (search = null) {
     }
   });
 
+  targets.sort((a, b) => { return a.designer >= b.designer ? 1 : -1 });
+
   for (let designer of targets) {
 
     if (desktop) {

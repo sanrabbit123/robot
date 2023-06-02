@@ -5867,9 +5867,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김희선",
-    //     designer: "김우현",
-    //     link: "https://drive.google.com/drive/folders/1KnAYWA7bCwtBNUFddGqhKHkdgeyrIgal",
+    //     client: null,
+    //     designer: "김애란",
+    //     link: "https://drive.google.com/drive/folders/1J2RdvgI6zB6mvJB1cFRl8FCCiktwWxta",
     //     pay: true
     //   },
     // ]);
@@ -5926,27 +5926,28 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "김세영", "2023-04-21" ],
+    //   [ "김애란", "2023-05-22" ],
     // ]);
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2305_aa01s" ]);
+    // await work.newDesignerToFront([ "d2306_aa02s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2305_aa01s", [
-    //   { porlid: "a102", index: 5 },
-    //   { porlid: "a102", index: 1 },
-    //   { porlid: "a102", index: 4 },
-    //   { porlid: "a102", index: 7 },
-    //   { porlid: "a102", index: 10 },
-    //   { porlid: "a102", index: 11 },
-    // ], [
-    //   "다년간 아파트 인테리어 현장 노하우와, 고객 관계에 애쓰며 일해왔습니다.",
-    //   "어떤 사람인지 드러날 수 있는 세심한 홈스타일링과 합리적인 인테리어 시공까지 가능합니다.",
-    //   "고객님과 신뢰감을 쌓아가며, 즐겁게 집을 만들어 나아가는 데 초점을 두고 작업합니다.",
-    // ]);
+    await this.setProposalSettingForDesigner("d2306_aa02s", [
+      { porlid: "a104", index: 1 },
+      { porlid: "a104", index: 2 },
+      { porlid: "a104", index: 6 },
+      { porlid: "a104", index: 8 },
+      { porlid: "a104", index: 10 },
+      { porlid: "a104", index: 13 },
+      { porlid: "a104", index: 15 },
+    ], [
+      "공간에 잔잔하고 부드럽게 스며들어 기능과 스타일을 반영한 공간을 만들어 드립니다.",
+      "고객님의 취향을 있는 그대로 반영한 스타일링을 통해 힘 있는 공간을 만들어 가고자 합니다.",
+      "고객님의 라이프 스타일을 최대한 반영하여 맞춤 공간을 찾아드립니다.",
+    ]);
 
 
 
@@ -7243,8 +7244,8 @@ DevContext.prototype.setProposalSettingForDesigner = async function (desid, file
     if (!Array.isArray(files)) {
       throw new Error("files must be array");
     }
-    if (files.length !== 6 && files.length !== 5) {
-      throw new Error("files must be 5 or 6 array");
+    if (files.length !== 6 && files.length !== 5 && files.length !== 7) {
+      throw new Error("files must be 5 or 6 of 7 array");
     }
     for (let i = 0; i < files.length; i++) {
       if (files[i].porlid === undefined || files[i].index === undefined) {
@@ -7349,6 +7350,60 @@ DevContext.prototype.setProposalSettingForDesigner = async function (desid, file
               "unionPo" : "union",
               "imgSrc" : filesArr[4],
               "styleText" : "top: 67%; left: 67.2%; width: 32.8%; height: 33%; background-image: url(\"" + filesArr[4] + "\");"
+          }
+        ], description };
+
+      } else if (mode === 7) {
+
+        resultArr = { name: "기본 세팅", photo: [
+          {
+              "position" : "0",
+              "sgTrue" : "g",
+              "unionPo" : "union",
+              "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"" + filesArr[0] + "\");",
+              "imgSrc" : filesArr[0]
+          },
+          {
+              "position" : "1",
+              "sgTrue" : "s",
+              "unionPo" : "right",
+              "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"" + filesArr[1] + "\");",
+              "imgSrc" : filesArr[1]
+          },
+          {
+              "position" : "2",
+              "sgTrue" : "s",
+              "unionPo" : "left",
+              "imgSrc" : filesArr[2],
+              "styleText" : "top: 67%; left: 0%; width: 16%; height: 33%; background-image: url(\"" + filesArr[2] + "\");"
+          },
+          {
+              "position" : "3",
+              "sgTrue" : "s",
+              "unionPo" : "right",
+              "imgSrc" : filesArr[3],
+              "styleText" : "top: 67%; left: 16.8%; width: 16%; height: 33%; background-image: url(\"" + filesArr[3] + "\");"
+          },
+          {
+              "position" : "4",
+              "sgTrue" : "g",
+              "unionPo" : "union",
+              "imgSrc" : filesArr[4],
+              "styleText" : "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"" + filesArr[4] + "\");"
+          },
+          {
+              "position" : "5",
+              "sgTrue" : "s",
+              "unionPo" : "left",
+              "imgSrc" : filesArr[5],
+              "styleText" : "top: 67%; left: 67.2%; width: 16%; height: 33%; background-image: url(\"" + filesArr[5] + "\");"
+          },
+          {
+              "position" : "6",
+              "sgTrue" : "s",
+              "unionPo" : "right",
+              "imgSrc" : filesArr[6],
+              "styleText" : "top: 67%; left: 84%; width: 16%; height: 33%; background-image: url(\"" + filesArr[6] + "\");"
           }
         ], description };
 

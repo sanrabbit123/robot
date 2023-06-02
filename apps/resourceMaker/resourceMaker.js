@@ -941,6 +941,7 @@ ResourceMaker.prototype.launching = async function () {
       for (let c of clients) {
         searchQuery = { $and: [ { desid: this.result.designer }, { cliid: c.cliid } ] };
         projects = await this.back.getProjectsByQuery(searchQuery);
+        console.log(projects);
         if (projects.length > 0) {
           thisProject = projects[0];
           proid = thisProject.proid;
