@@ -3004,11 +3004,9 @@ LogReport.prototype.dailyReports = async function () {
     slackMessage += "\n";
     slackMessage += "MPR 통합관리장표 : " + "https://docs.google.com/spreadsheets/d/" + zeroSheetsId + "/edit?usp=sharing";
 
-    await requestSystem("https://" + host + "/marketingMessage", {
+    await messageSend({
       text: slackMessage,
-      channel: "#marketing",
-    }, {
-      headers: { "Content-Type": "application/json" }
+      channel: "#500_marketing",
     });
 
   } catch (e) {

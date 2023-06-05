@@ -3043,6 +3043,149 @@ DesignerBoardJs.prototype.insertFormsBox = async function () {
   }
 }
 
+DesignerBoardJs.prototype.popupLaunching = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, selfHref, blankHref } = GeneralJs;
+  const { ea, media, totalContents, standardWidth } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const popupFactorClassName = "popupFactorClassName";
+  const popupInboundClassName = "popupInboundClassName";
+  const popupCloseClassName = "popupCloseClassName";
+  const popupNeverClassName = "popupNeverClassName";
+  const keyName = "homeliaisonPopupBan";
+  let cancelBack, whitePopup;
+  let image;
+  let zIndex;
+  let speed;
+  let delay;
+  let popupWidth, popupHeight;
+  let buttonSize, buttonWeight, buttonBottom;
+  let exitEvent;
+
+  zIndex = 101;
+  speed = 0.3;
+  delay = 0.8;
+  image = DesignerBoardJs.binaryPath + "/popup" + String(media.findIndex(boo => boo)) + ".jpg";
+
+  popupWidth = <%% 500, 450, 420, 360, 80 %%>;
+  popupHeight = <%% 680, 614, 572, 490, 108 %%>;
+
+  buttonSize = <%% 15, 15, 14, 13, 3 %%>;
+  buttonWeight = <%% 600, 600, 600, 600, 600 %%>;
+  buttonBottom = <%% -27, -27, -27, -25, -6 %%>;
+
+  exitEvent = () => {
+    const removeTargets = document.querySelectorAll('.' + popupFactorClassName);
+    for (let dom of removeTargets) {
+      totalContents.removeChild(dom);
+    }
+  }
+
+  if (window.localStorage.getItem(keyName) !== String(1)) {
+    cancelBack = createNode({
+      mother: totalContents,
+      class: [ popupFactorClassName ],
+      event: {
+        click: (e) => { exitEvent(); }
+      },
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        background: colorChip.realBlack,
+        opacity: String(0),
+        animation: "justfadein " + String(speed) + "s " + String(delay) + "s ease forwards",
+        zIndex: String(zIndex),
+      }
+    });
+
+    whitePopup = createNode({
+      mother: totalContents,
+      class: [ popupFactorClassName, popupInboundClassName ],
+      event: {
+        click: (e) => {
+          exitEvent();
+        },
+      },
+      style: {
+        display: "block",
+        position: "fixed",
+        top: withOut(50, popupHeight / 2, ea),
+        left: withOut(50, popupWidth / 2, ea),
+        width: String(popupWidth) + ea,
+        height: String(popupHeight) + ea,
+        background: colorChip.white,
+        backgroundImage: "url('" + image + "')",
+        backgroundSize: "100% auto",
+        backgroundPosition: "50% 50%",
+        boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+        borderRadius: String(8) + "px",
+        animation: "fadeuporiginal " + String(speed) + "s " + String(delay) + "s ease forwards",
+        opacity: String(0),
+        transform: "translateY(20px)",
+        zIndex: String(zIndex),
+        cursor: "pointer",
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+          },
+          children: [
+            {
+              text: "닫기",
+              class: [ popupCloseClassName ],
+              event: {
+                click: (e) => {
+                  e.stopPropagation();
+                  exitEvent();
+                }
+              },
+              style: {
+                position: "absolute",
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(buttonWeight),
+                color: colorChip.white,
+                bottom: String(buttonBottom) + ea,
+                right: String(0) + ea,
+                cursor: "pointer",
+              }
+            },
+            {
+              text: "다시 보지 않기",
+              class: [ popupNeverClassName ],
+              event: {
+                click: (e) => {
+                  e.stopPropagation();
+                  window.localStorage.setItem(keyName, String(1));
+                  exitEvent();
+                }
+              },
+              style: {
+                position: "absolute",
+                fontSize: String(buttonSize) + ea,
+                fontWeight: String(buttonWeight),
+                color: colorChip.white,
+                bottom: String(buttonBottom) + ea,
+                left: String(0) + ea,
+                cursor: "pointer",
+              }
+            },
+          ]
+        }
+      ]
+    });
+
+  }
+
+}
+
 DesignerBoardJs.prototype.launching = async function (loading) {
   const instance = this;
   const { returnGet, ajaxJson, serviceParsing } = GeneralJs;
@@ -3158,6 +3301,7 @@ DesignerBoardJs.prototype.launching = async function (loading) {
           instance.insertProcessBox();
           instance.insertReleaseBox();
           instance.insertPortfolioBase();
+          instance.popupLaunching();
 
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "DesignerBoardJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
