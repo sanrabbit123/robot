@@ -174,6 +174,11 @@ DevContext.prototype.launching = async function () {
 
     
 
+
+
+
+
+
     
     
 
@@ -441,7 +446,7 @@ DevContext.prototype.launching = async function () {
     // let res;
 
     // res = await requestSystem(url, {
-    //   "prompt": "The Rabbit and the Pigeon",
+    //   "prompt": "Photo of jumping rabbits and flying pigeons",
     //   "n": 1,
     //   "size": size
     // }, {
@@ -5867,9 +5872,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "김애란",
-    //     link: "https://drive.google.com/drive/folders/1J2RdvgI6zB6mvJB1cFRl8FCCiktwWxta",
+    //     client: "허태영",
+    //     designer: "박주령",
+    //     link: "https://drive.google.com/drive/folders/1UiXT7c3xkf73bJwf45rJc0NHNv2xR13u",
     //     pay: true
     //   },
     // ]);
@@ -5935,37 +5940,20 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    await this.setProposalSettingForDesigner("d2306_aa02s", [
-      { porlid: "a104", index: 1 },
-      { porlid: "a104", index: 2 },
-      { porlid: "a104", index: 6 },
-      { porlid: "a104", index: 8 },
-      { porlid: "a104", index: 10 },
-      { porlid: "a104", index: 13 },
-      { porlid: "a104", index: 15 },
-    ], [
-      "공간에 잔잔하고 부드럽게 스며들어 기능과 스타일을 반영한 공간을 만들어 드립니다.",
-      "고객님의 취향을 있는 그대로 반영한 스타일링을 통해 힘 있는 공간을 만들어 가고자 합니다.",
-      "고객님의 라이프 스타일을 최대한 반영하여 맞춤 공간을 찾아드립니다.",
-    ]);
+    // await this.setProposalSettingForDesigner("d2306_aa02s", [
+    //   { porlid: "a104", index: 1 },
+    //   { porlid: "a104", index: 2 },
+    //   { porlid: "a104", index: 6 },
+    //   { porlid: "a104", index: 8 },
+    //   { porlid: "a104", index: 10 },
+    //   { porlid: "a104", index: 13 },
+    //   { porlid: "a104", index: 15 },
+    // ], [
+    //   "공간에 잔잔하고 부드럽게 스며들어 기능과 스타일을 반영한 공간을 만들어 드립니다.",
+    //   "고객님의 취향을 있는 그대로 반영한 스타일링을 통해 힘 있는 공간을 만들어 가고자 합니다.",
+    //   "고객님의 라이프 스타일을 최대한 반영하여 맞춤 공간을 찾아드립니다.",
+    // ]);
 
-
-
-
-    // new designer alarm
-    // let targetArr, channel, desid, designer, pid, webLinks;
-    // channel = "#200_web";
-    // targetArr = [
-    //   { designer: "김윤진", desid: "de053", pid: "a83" },
-    // ];
-    // for (let { designer, desid, pid } of targetArr) {
-    //   webLinks = [
-    //     "https://home-liaison.com/portdetail.php?qqq=" + pid,
-    //     "https://home-liaison.com/desdetail.php?qqq=" + desid,
-    //   ];
-    //   await messageSend({ text: `${designer} 디자이너의 첫 번째 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[0]}`, channel });
-    //   await messageSend({ text: `${designer} 디자이너 페이지를 생성하여 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel });
-    // }
 
 
     // send mail
