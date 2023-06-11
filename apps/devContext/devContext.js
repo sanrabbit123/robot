@@ -446,7 +446,7 @@ DevContext.prototype.launching = async function () {
     // let res;
 
     // res = await requestSystem(url, {
-    //   "prompt": "photo of rabbit on flying pigeons",
+    //   "prompt": "photo of combination of a rabbit and pigeons",
     //   "n": 1,
     //   "size": size
     // }, {
