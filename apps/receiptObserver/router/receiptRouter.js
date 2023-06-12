@@ -53,7 +53,7 @@ ReceiptRouter.prototype.rou_get_Root = function () {
 
 ReceiptRouter.prototype.rou_get_Ssl = function () {
   const instance = this;
-  const { diskReading } = this.mother;
+  const { diskReading, aliveMongo } = this.mother;
   let obj = {};
   obj.link = "/ssl";
   obj.func = async function (req, res, logger) {
@@ -65,7 +65,8 @@ ReceiptRouter.prototype.rou_get_Ssl = function () {
     });
     try {
       const disk = await diskReading();
-      res.send(JSON.stringify({ disk: disk.toArray() }));
+      const aliveMongoResult = await aliveMongo();
+      res.send(JSON.stringify({ disk: disk.toArray(), mongo: aliveMongoResult }));
     } catch (e) {
       logger.error("Python 서버 문제 생김 (rou_get_Ssl): " + e.message).catch((e) => { console.log(e); });
       console.log(e);

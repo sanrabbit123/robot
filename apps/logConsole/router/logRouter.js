@@ -130,7 +130,7 @@ LogRouter.prototype.rou_get_Root = function () {
 
 LogRouter.prototype.rou_get_First = function () {
   const instance = this;
-  const { diskReading } = this.mother;
+  const { diskReading, aliveMongo } = this.mother;
   const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
   const reflection = new MongoReflection();
   let obj = {};
@@ -147,7 +147,8 @@ LogRouter.prototype.rou_get_First = function () {
       if (req.params.id === "ssl") {
 
         const disk = await diskReading();
-        res.send(JSON.stringify({ disk: disk.toArray() }));
+        const aliveMongoResult = await aliveMongo();
+        res.send(JSON.stringify({ disk: disk.toArray(), mongo: aliveMongoResult }));
 
       } else if (req.params.id === "disk") {
 

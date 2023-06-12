@@ -59,22 +59,24 @@ CronGhost.prototype.aliveTest = async function (MONGOC) {
       if (typeof res === "object" && res !== null) {
         if (res.status !== undefined && typeof res.status === "number") {
           if (res.status === 200) {
-            successNum = successNum + 1;
-            message += "\n" +  name + " server alive";
-            boo = true;
-            if (thisObj !== undefined) {
-              thisObj.alive = true;
-              thisObj.utilization.disk.total = res.data.disk[0];
-              thisObj.utilization.disk.used = res.data.disk[1];
-              thisObj.utilization.disk.available = res.data.disk[2];
-            }
-            if (successNum === targetNumber) {
-              message = "server all alive";
-              await aliveLog(message);
-            } else if (successNum + failNum === targetNumber) {
-              message += "\n======================================";
-              message += "\nsomething death";
-              await emergencyAlarm(message);
+            if (res.data.mongo === true || res.data.mongo === undefined) {
+              successNum = successNum + 1;
+              message += "\n" +  name + " server alive";
+              boo = true;
+              if (thisObj !== undefined) {
+                thisObj.alive = true;
+                thisObj.utilization.disk.total = res.data.disk[0];
+                thisObj.utilization.disk.used = res.data.disk[1];
+                thisObj.utilization.disk.available = res.data.disk[2];
+              }
+              if (successNum === targetNumber) {
+                message = "server all alive";
+                await aliveLog(message);
+              } else if (successNum + failNum === targetNumber) {
+                message += "\n======================================";
+                message += "\nsomething death";
+                await emergencyAlarm(message);
+              }
             }
           }
         }

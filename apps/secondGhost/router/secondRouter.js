@@ -141,7 +141,7 @@ SecondRouter.prototype.telegramSend = async function (chat_id, text, logger) {
 
 SecondRouter.prototype.rou_get_First = function () {
   const instance = this;
-  const { diskReading } = this.mother;
+  const { diskReading, aliveMongo } = this.mother;
   let obj = {};
   obj.link = "/:id";
   obj.func = async function (req, res, logger) {
@@ -153,10 +153,12 @@ SecondRouter.prototype.rou_get_First = function () {
     });
     try {
       let disk;
+      let aliveMongoResult;
 
       if (req.params.id === "ssl") {
         disk = await diskReading();
-        res.send(JSON.stringify({ disk: disk.toArray() }));
+        aliveMongoResult = await aliveMongo();
+        res.send(JSON.stringify({ disk: disk.toArray(), mongo: aliveMongoResult }));
       } else if (req.params.id === "disk") {
         disk = await diskReading();
         res.send(JSON.stringify({ disk: disk.toArray() }));
