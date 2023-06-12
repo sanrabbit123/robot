@@ -160,7 +160,7 @@ DataRouter.prototype.rou_get_Root = function () {
 
 DataRouter.prototype.rou_get_First = function () {
   const instance = this;
-  const { diskReading } = this.mother;
+  const { diskReading, aliveMongo } = this.mother;
   let obj = {};
   let ipTong;
   ipTong = [ 1, 127001, 19216801, 172301254, 5822475162, 112184236121, 219250244131, 11638190154, 118235266, 599136192, 12611323030, 2233316480 ];
@@ -178,6 +178,7 @@ DataRouter.prototype.rou_get_First = function () {
     try {
       let ip, pass;
       let target;
+      let aliveMongoResult;
 
       ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
       if (typeof ip !== "string") {
@@ -205,9 +206,13 @@ DataRouter.prototype.rou_get_First = function () {
 
       if (req.params.id === "ssl") {
 
-        diskReading().then((disk) => {
+        aliveMongoResult = false;
+        aliveMongo().then((boo) => {
+          aliveMongoResult = boo;
+          return diskReading();
+        }).then((disk) => {
           res.set({ "Content-Type": "application/json" });
-          res.send(JSON.stringify({ disk: disk.toArray() }));
+          res.send(JSON.stringify({ disk: disk.toArray(), mongo: aliveMongoResult }));
         }).catch((err) => {
           throw new Error(err);
         });

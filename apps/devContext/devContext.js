@@ -174,8 +174,8 @@ DevContext.prototype.launching = async function () {
 
     
 
-    console.log(await aliveMongo());
 
+    
 
 
 
