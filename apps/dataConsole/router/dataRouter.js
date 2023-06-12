@@ -3898,7 +3898,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         message += "SNS 채널 : " + updateQuery["information.channel.sns"].join(", ") + "\n";
         message += "세션 아이디 : " + sessionId.join(", ");
   
-        await messageSend({ text: message, channel: "#300_designer", voice: false });
+        await messageSend({ text: message, channel: "#301_apply", voice: false });
         requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + updateQuery.designer + "입니다!" }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
         kakao.sendTalk("aspirantSubmit", updateQuery.designer, updateQuery.phone, {
           client: updateQuery.designer,

@@ -34,6 +34,41 @@ Mother.prototype.consoleQ = function (question) {
   });
 }
 
+Mother.prototype.aliveMongo = async function () {
+  try {
+    const os = require("os");
+    const childExec = (str) => {
+      const { exec } = require("child_process");
+      return new Promise((resolve, reject) => {
+        exec(str, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (typeof stdout === "string") {
+              resolve(stdout.trim());
+            } else {
+              resolve(stdout);
+            }
+          }
+        });
+      });
+    }
+    let res, activeStatusRaw, activeStatus, aliveStatus;
+    if (/Linux/gi.test(os.type())) {
+      res = await childExec("systemctl status mongod");
+      activeStatusRaw = res.split("\n").map((str) => { return str.trim(); } ).filter((str) => { return str !== ""; }).find((str) => { return /Active\:/gi.test(str) });
+      activeStatus = activeStatusRaw.split(":")[1].trim();
+      aliveStatus = /^active/i.test(activeStatus) && /running/gi.test(activeStatus);
+    } else {
+      aliveStatus = false;
+    }
+    return aliveStatus;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
 Mother.prototype.shellExec = function (command, args = null) {
   if (typeof command === "string") {
     if (!Array.isArray(args)) {

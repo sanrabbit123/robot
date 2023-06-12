@@ -2996,6 +2996,9 @@ ClientConsultingJs.prototype.finalSubmit = function () {
                 if (firstDom.value.trim() === '') {
                   throw new Error("예시를 보시고 요청사항을 최대한 자세하게 적어주세요!");
                 }
+                if (firstDom.value.length < 3) {
+                  throw new Error("예시를 보시고 요청사항을 최대한 자세하게 적어주세요!");
+                }
               }
 
               tempObj.value = firstDom.value.replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
