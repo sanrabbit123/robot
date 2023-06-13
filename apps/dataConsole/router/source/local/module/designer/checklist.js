@@ -112,6 +112,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           height: factorHeight,
           type: "string",
         },
+        /*
         {
           name: "결혼 여부",
           value: function (designer) {
@@ -233,7 +234,66 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           factorHeight: factorHeight,
           type: "matrix",
         },
+        */
         {
+          name: "웹페이지",
+          value: function (designer) {
+            return (designer.information.personalSystem.webPage.length === 0) ? "웹페이지 없음" : designer.information.personalSystem.webPage[0];
+          },
+          script: function (mother, designer) {
+            const text = mother.textContent.trim();
+            if (/^http/gi.test(text)) {
+              GeneralJs.blankHref(text);
+            }
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "인스타",
+          value: function (designer) {
+            const sns = designer.information.personalSystem.sns;
+            let target;
+            target = "인스타그램 없음";
+            for (let { kind, href } of sns) {
+              if (/insta/gi.test(kind)) {
+                target = href;
+              }
+            }
+            return target;
+          },
+          script: function (mother, designer) {
+            const text = mother.textContent.trim();
+            if (/^http/gi.test(text)) {
+              GeneralJs.blankHref(text);
+            }
+          },
+          height: factorHeight,
+          type: "string",
+        },
+        {
+          name: "블로그",
+          value: function (designer) {
+            const sns = designer.information.personalSystem.sns;
+            let target;
+            target = "블로그 없음";
+            for (let { kind, href } of sns) {
+              if (/naver/gi.test(kind)) {
+                target = href;
+              }
+            }
+            return target;
+          },
+          script: function (mother, designer) {
+            const text = mother.textContent.trim();
+            if (/^http/gi.test(text)) {
+              GeneralJs.blankHref(text);
+            }
+          },
+          height: factorHeight,
+          type: "string",
+        },
+                {
           name: "계약 상태",
           value: function (designer) {
             let contents, value;
@@ -319,64 +379,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           factorHeight: factorHeight,
           type: "matrix",
         },
-        {
-          name: "웹페이지",
-          value: function (designer) {
-            return (designer.information.personalSystem.webPage.length === 0) ? "웹페이지 없음" : designer.information.personalSystem.webPage[0];
-          },
-          script: function (mother, designer) {
-            const text = mother.textContent.trim();
-            if (/^http/gi.test(text)) {
-              GeneralJs.blankHref(text);
-            }
-          },
-          height: factorHeight,
-          type: "string",
-        },
-        {
-          name: "인스타",
-          value: function (designer) {
-            const sns = designer.information.personalSystem.sns;
-            let target;
-            target = "인스타그램 없음";
-            for (let { kind, href } of sns) {
-              if (/insta/gi.test(kind)) {
-                target = href;
-              }
-            }
-            return target;
-          },
-          script: function (mother, designer) {
-            const text = mother.textContent.trim();
-            if (/^http/gi.test(text)) {
-              GeneralJs.blankHref(text);
-            }
-          },
-          height: factorHeight,
-          type: "string",
-        },
-        {
-          name: "블로그",
-          value: function (designer) {
-            const sns = designer.information.personalSystem.sns;
-            let target;
-            target = "블로그 없음";
-            for (let { kind, href } of sns) {
-              if (/naver/gi.test(kind)) {
-                target = href;
-              }
-            }
-            return target;
-          },
-          script: function (mother, designer) {
-            const text = mother.textContent.trim();
-            if (/^http/gi.test(text)) {
-              GeneralJs.blankHref(text);
-            }
-          },
-          height: factorHeight,
-          type: "string",
-        },
+        /*
         {
           name: "기타 SNS",
           value: function (designer) {
@@ -399,6 +402,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           height: factorHeight * 1.1,
           type: "string",
         },
+        */
       ]
     },
     {
@@ -1505,6 +1509,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           type: "matrix",
           middle: true,
         },
+        /*
         {
           name: "고객 예산 범위",
           value: function (designer) {
@@ -1580,6 +1585,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           multiple: true,
           middle: true,
         },
+        */
         {
           name: "1차 제안 시간",
           value: function (designer) {
@@ -1732,55 +1738,55 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           factorHeight: factorHeight,
           type: "matrix",
         },
-        {
-          name: "시공 방식 (S)",
-          value: function (designer) {
-            const constructCase = designer.analytics.construct.case;
-            if (!Array.isArray(constructCase)) {
-              throw new Error("invaild value");
-            }
-            if (constructCase.length !== 3) {
-              throw new Error("invaild value");
-            }
-            let contents, value;
-            contents = [
-              "직접 계약, 직접 감리",
-              "직접 계약, 외주 감리",
-              "협업사 계약",
-              "공정별 연결"
-            ];
-            value = [];
-            for (let i of contents) {
-              value.push(constructCase[0].contract.includes(i) ? 1 : 0);
-            }
-            return { contents, value };
-          },
-          update: function (value, designer) {
-            const position = "analytics.construct.case.0.contract";
-            let contents, updateQuery, target;
-            contents = [
-              "직접 계약, 직접 감리",
-              "직접 계약, 외주 감리",
-              "협업사 계약",
-              "공정별 연결"
-            ];
-            target = [];
-            for (let i = 0; i < contents.length; i++) {
-              if (value[i] === 1) {
-                target.push(contents[i]);
-              }
-            }
-            updateQuery = {};
-            updateQuery[position] = target;
-            return updateQuery;
-          },
-          height: desktop ? factorHeight : factorHeight * 3.8,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-          multiple: true,
-        },
+        // {
+        //   name: "시공 방식 (S)",
+        //   value: function (designer) {
+        //     const constructCase = designer.analytics.construct.case;
+        //     if (!Array.isArray(constructCase)) {
+        //       throw new Error("invaild value");
+        //     }
+        //     if (constructCase.length !== 3) {
+        //       throw new Error("invaild value");
+        //     }
+        //     let contents, value;
+        //     contents = [
+        //       "직접 계약, 직접 감리",
+        //       "직접 계약, 외주 감리",
+        //       "협업사 계약",
+        //       "공정별 연결"
+        //     ];
+        //     value = [];
+        //     for (let i of contents) {
+        //       value.push(constructCase[0].contract.includes(i) ? 1 : 0);
+        //     }
+        //     return { contents, value };
+        //   },
+        //   update: function (value, designer) {
+        //     const position = "analytics.construct.case.0.contract";
+        //     let contents, updateQuery, target;
+        //     contents = [
+        //       "직접 계약, 직접 감리",
+        //       "직접 계약, 외주 감리",
+        //       "협업사 계약",
+        //       "공정별 연결"
+        //     ];
+        //     target = [];
+        //     for (let i = 0; i < contents.length; i++) {
+        //       if (value[i] === 1) {
+        //         target.push(contents[i]);
+        //       }
+        //     }
+        //     updateQuery = {};
+        //     updateQuery[position] = target;
+        //     return updateQuery;
+        //   },
+        //   height: desktop ? factorHeight : factorHeight * 3.8,
+        //   width: factorWidth,
+        //   totalWidth: factorWidth * 4,
+        //   factorHeight: factorHeight,
+        //   type: "matrix",
+        //   multiple: true,
+        // },
         {
           name: "시공 가능 (S)",
           value: function (designer) {
@@ -1828,55 +1834,55 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           type: "matrix",
           multiple: true,
         },
-        {
-          name: "시공 방식 (T)",
-          value: function (designer) {
-            const constructCase = designer.analytics.construct.case;
-            if (!Array.isArray(constructCase)) {
-              throw new Error("invaild value");
-            }
-            if (constructCase.length !== 3) {
-              throw new Error("invaild value");
-            }
-            let contents, value;
-            contents = [
-              "직접 계약, 직접 감리",
-              "직접 계약, 외주 감리",
-              "협업사 계약",
-              "공정별 연결"
-            ];
-            value = [];
-            for (let i of contents) {
-              value.push(constructCase[1].contract.includes(i) ? 1 : 0);
-            }
-            return { contents, value };
-          },
-          update: function (value, designer) {
-            const position = "analytics.construct.case.1.contract";
-            let contents, updateQuery, target;
-            contents = [
-              "직접 계약, 직접 감리",
-              "직접 계약, 외주 감리",
-              "협업사 계약",
-              "공정별 연결"
-            ];
-            target = [];
-            for (let i = 0; i < contents.length; i++) {
-              if (value[i] === 1) {
-                target.push(contents[i]);
-              }
-            }
-            updateQuery = {};
-            updateQuery[position] = target;
-            return updateQuery;
-          },
-          height: desktop ? factorHeight : factorHeight * 3.8,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-          multiple: true,
-        },
+        // {
+        //   name: "시공 방식 (T)",
+        //   value: function (designer) {
+        //     const constructCase = designer.analytics.construct.case;
+        //     if (!Array.isArray(constructCase)) {
+        //       throw new Error("invaild value");
+        //     }
+        //     if (constructCase.length !== 3) {
+        //       throw new Error("invaild value");
+        //     }
+        //     let contents, value;
+        //     contents = [
+        //       "직접 계약, 직접 감리",
+        //       "직접 계약, 외주 감리",
+        //       "협업사 계약",
+        //       "공정별 연결"
+        //     ];
+        //     value = [];
+        //     for (let i of contents) {
+        //       value.push(constructCase[1].contract.includes(i) ? 1 : 0);
+        //     }
+        //     return { contents, value };
+        //   },
+        //   update: function (value, designer) {
+        //     const position = "analytics.construct.case.1.contract";
+        //     let contents, updateQuery, target;
+        //     contents = [
+        //       "직접 계약, 직접 감리",
+        //       "직접 계약, 외주 감리",
+        //       "협업사 계약",
+        //       "공정별 연결"
+        //     ];
+        //     target = [];
+        //     for (let i = 0; i < contents.length; i++) {
+        //       if (value[i] === 1) {
+        //         target.push(contents[i]);
+        //       }
+        //     }
+        //     updateQuery = {};
+        //     updateQuery[position] = target;
+        //     return updateQuery;
+        //   },
+        //   height: desktop ? factorHeight : factorHeight * 3.8,
+        //   width: factorWidth,
+        //   totalWidth: factorWidth * 4,
+        //   factorHeight: factorHeight,
+        //   type: "matrix",
+        //   multiple: true,
+        // },
         {
           name: "시공 가능 (T)",
           value: function (designer) {
@@ -1924,55 +1930,55 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           type: "matrix",
           multiple: true,
         },
-        {
-          name: "시공 방식 (XT)",
-          value: function (designer) {
-            const constructCase = designer.analytics.construct.case;
-            if (!Array.isArray(constructCase)) {
-              throw new Error("invaild value");
-            }
-            if (constructCase.length !== 3) {
-              throw new Error("invaild value");
-            }
-            let contents, value;
-            contents = [
-              "직접 계약, 직접 감리",
-              "직접 계약, 외주 감리",
-              "협업사 계약",
-              "공정별 연결"
-            ];
-            value = [];
-            for (let i of contents) {
-              value.push(constructCase[2].contract.includes(i) ? 1 : 0);
-            }
-            return { contents, value };
-          },
-          update: function (value, designer) {
-            const position = "analytics.construct.case.2.contract";
-            let contents, updateQuery, target;
-            contents = [
-              "직접 계약, 직접 감리",
-              "직접 계약, 외주 감리",
-              "협업사 계약",
-              "공정별 연결"
-            ];
-            target = [];
-            for (let i = 0; i < contents.length; i++) {
-              if (value[i] === 1) {
-                target.push(contents[i]);
-              }
-            }
-            updateQuery = {};
-            updateQuery[position] = target;
-            return updateQuery;
-          },
-          height: desktop ? factorHeight : factorHeight * 3.8,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-          multiple: true,
-        },
+        // {
+        //   name: "시공 방식 (XT)",
+        //   value: function (designer) {
+        //     const constructCase = designer.analytics.construct.case;
+        //     if (!Array.isArray(constructCase)) {
+        //       throw new Error("invaild value");
+        //     }
+        //     if (constructCase.length !== 3) {
+        //       throw new Error("invaild value");
+        //     }
+        //     let contents, value;
+        //     contents = [
+        //       "직접 계약, 직접 감리",
+        //       "직접 계약, 외주 감리",
+        //       "협업사 계약",
+        //       "공정별 연결"
+        //     ];
+        //     value = [];
+        //     for (let i of contents) {
+        //       value.push(constructCase[2].contract.includes(i) ? 1 : 0);
+        //     }
+        //     return { contents, value };
+        //   },
+        //   update: function (value, designer) {
+        //     const position = "analytics.construct.case.2.contract";
+        //     let contents, updateQuery, target;
+        //     contents = [
+        //       "직접 계약, 직접 감리",
+        //       "직접 계약, 외주 감리",
+        //       "협업사 계약",
+        //       "공정별 연결"
+        //     ];
+        //     target = [];
+        //     for (let i = 0; i < contents.length; i++) {
+        //       if (value[i] === 1) {
+        //         target.push(contents[i]);
+        //       }
+        //     }
+        //     updateQuery = {};
+        //     updateQuery[position] = target;
+        //     return updateQuery;
+        //   },
+        //   height: desktop ? factorHeight : factorHeight * 3.8,
+        //   width: factorWidth,
+        //   totalWidth: factorWidth * 4,
+        //   factorHeight: factorHeight,
+        //   type: "matrix",
+        //   multiple: true,
+        // },
         {
           name: "시공 가능 (XT)",
           value: function (designer) {
@@ -2238,44 +2244,44 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           factorHeight: factorHeight,
           type: "matrix",
         },
-        {
-          name: "빌트인 상세",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "도면",
-              "3D",
-              "AS 가능"
-            ];
-            value = [];
-            for (let i of contents) {
-              value.push(designer.analytics.styling.furniture.builtinDetail.includes(i) ? 1 : 0);
-            }
-            return { contents, value };
-          },
-          update: function (value, designer) {
-            let contents, target;
-            contents = [
-              "도면",
-              "3D",
-              "AS 가능"
-            ];
-            target = [];
-            for (let i = 0; i < contents.length; i++) {
-              if (value[i] === 1) {
-                target.push(contents[i]);
-              }
-            }
-            return { "analytics.styling.furniture.builtinDetail": target };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-          multiple: true,
-          half: true
-        },
+        // {
+        //   name: "빌트인 상세",
+        //   value: function (designer) {
+        //     let contents, value;
+        //     contents = [
+        //       "도면",
+        //       "3D",
+        //       "AS 가능"
+        //     ];
+        //     value = [];
+        //     for (let i of contents) {
+        //       value.push(designer.analytics.styling.furniture.builtinDetail.includes(i) ? 1 : 0);
+        //     }
+        //     return { contents, value };
+        //   },
+        //   update: function (value, designer) {
+        //     let contents, target;
+        //     contents = [
+        //       "도면",
+        //       "3D",
+        //       "AS 가능"
+        //     ];
+        //     target = [];
+        //     for (let i = 0; i < contents.length; i++) {
+        //       if (value[i] === 1) {
+        //         target.push(contents[i]);
+        //       }
+        //     }
+        //     return { "analytics.styling.furniture.builtinDetail": target };
+        //   },
+        //   height: factorHeight,
+        //   width: factorWidth,
+        //   totalWidth: factorWidth * 4,
+        //   factorHeight: factorHeight,
+        //   type: "matrix",
+        //   multiple: true,
+        //   half: true
+        // },
         {
           name: "가구 제작",
           value: function (designer) {
@@ -2303,44 +2309,44 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           factorHeight: factorHeight,
           type: "matrix",
         },
-        {
-          name: "가구 상세",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "도면",
-              "3D",
-              "AS 가능"
-            ];
-            value = [];
-            for (let i of contents) {
-              value.push(designer.analytics.styling.furniture.designDetail.includes(i) ? 1 : 0);
-            }
-            return { contents, value };
-          },
-          update: function (value, designer) {
-            let contents, target;
-            contents = [
-              "도면",
-              "3D",
-              "AS 가능"
-            ];
-            target = [];
-            for (let i = 0; i < contents.length; i++) {
-              if (value[i] === 1) {
-                target.push(contents[i]);
-              }
-            }
-            return { "analytics.styling.furniture.designDetail": target };
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-          multiple: true,
-          half: true
-        },
+        // {
+        //   name: "가구 상세",
+        //   value: function (designer) {
+        //     let contents, value;
+        //     contents = [
+        //       "도면",
+        //       "3D",
+        //       "AS 가능"
+        //     ];
+        //     value = [];
+        //     for (let i of contents) {
+        //       value.push(designer.analytics.styling.furniture.designDetail.includes(i) ? 1 : 0);
+        //     }
+        //     return { contents, value };
+        //   },
+        //   update: function (value, designer) {
+        //     let contents, target;
+        //     contents = [
+        //       "도면",
+        //       "3D",
+        //       "AS 가능"
+        //     ];
+        //     target = [];
+        //     for (let i = 0; i < contents.length; i++) {
+        //       if (value[i] === 1) {
+        //         target.push(contents[i]);
+        //       }
+        //     }
+        //     return { "analytics.styling.furniture.designDetail": target };
+        //   },
+        //   height: factorHeight,
+        //   width: factorWidth,
+        //   totalWidth: factorWidth * 4,
+        //   factorHeight: factorHeight,
+        //   type: "matrix",
+        //   multiple: true,
+        //   half: true
+        // },
         {
           name: "커튼 패브릭",
           value: function (designer) {
@@ -2634,33 +2640,33 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
     {
       name: "구매",
       children: [
-        {
-          name: "구매 대행",
-          value: function (designer) {
-            let contents, value;
-            contents = [
-              "가능",
-              "불가능"
-            ];
-            value = [
-              designer.analytics.purchase.agencies ? 1 : 0,
-              designer.analytics.purchase.agencies ? 0 : 1,
-            ];
-            return { contents, value };
-          },
-          update: function (value, designer) {
-            const position = "analytics.purchase.agencies";
-            let updateQuery;
-            updateQuery = {};
-            updateQuery[position] = (value[0] === 1);
-            return updateQuery;
-          },
-          height: factorHeight,
-          width: factorWidth,
-          totalWidth: factorWidth * 4,
-          factorHeight: factorHeight,
-          type: "matrix",
-        },
+        // {
+        //   name: "구매 대행",
+        //   value: function (designer) {
+        //     let contents, value;
+        //     contents = [
+        //       "가능",
+        //       "불가능"
+        //     ];
+        //     value = [
+        //       designer.analytics.purchase.agencies ? 1 : 0,
+        //       designer.analytics.purchase.agencies ? 0 : 1,
+        //     ];
+        //     return { contents, value };
+        //   },
+        //   update: function (value, designer) {
+        //     const position = "analytics.purchase.agencies";
+        //     let updateQuery;
+        //     updateQuery = {};
+        //     updateQuery[position] = (value[0] === 1);
+        //     return updateQuery;
+        //   },
+        //   height: factorHeight,
+        //   width: factorWidth,
+        //   totalWidth: factorWidth * 4,
+        //   factorHeight: factorHeight,
+        //   type: "matrix",
+        // },
         {
           name: "설치 서비스",
           value: function (designer) {
@@ -2904,6 +2910,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
         },
       ]
     },
+    /*
     {
       name: "세팅",
       children: [
@@ -2973,6 +2980,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
         },
       ]
     }
+    */
   ];
 
   return checkListData;

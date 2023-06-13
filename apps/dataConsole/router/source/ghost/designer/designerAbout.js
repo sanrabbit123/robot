@@ -251,10 +251,24 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               whereQuery = { desid };
               updateQuery = {};
               updateQuery["designer"] = text;
-              window.alert("성함 변경은 홈리에종에 직접 문의해주세요!");
-              // await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-              // return text;
-              return designer.designer;
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              return text;
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
+          property: "아이디",
+          returnValue: (designer) => {
+            return designer.desid;
+          },
+          renderValue: (text) => {
+            return text;
+          },
+          updateValue: async (raw, designer) => {
+            try {
+              return designer.desid;
             } catch (e) {
               console.log(e);
             }
@@ -385,9 +399,12 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               console.log(e);
             }
           },
+          noticeText: (designer) => {
+            return "http로 시작하는 전체 링크를 작성해주세요!";
+          },
         },
         {
-          property: "인스타",
+          property: "인스타그램",
           returnValue: (designer) => {
             const target = designer.information.personalSystem.sns.find((obj) => { return /Insta/gi.test(obj.kind) });
             if (target === undefined) {
@@ -447,6 +464,9 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             } catch (e) {
               console.log(e);
             }
+          },
+          noticeText: (designer) => {
+            return "http로 시작하는 전체 링크를 작성해주세요!";
           },
         },
         {
@@ -511,8 +531,14 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               console.log(e);
             }
           },
+          noticeText: (designer) => {
+            return "http로 시작하는 전체 링크를 작성해주세요!";
+          },
         },
-      ]
+      ],
+      notice: [
+        "링크는 http로 시작하는 전체 링크를 작성해주세요",
+      ],
     },
     {
       title: "업무 정보",
@@ -543,6 +569,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
 
               await ajaxJson({ message: designer.designer + " 실장님이 콘솔을 통해 상태 변경을 시도하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
               window.alert("상태 변경시, 홈리에종에 직접 문의해주세요!");
+              window.location.reload();
 
               // instance.designer.analytics.grade = columns.findIndex((str) => { return str === text }) - 1;
               // updateQuery["analytics.grade"] = columns.findIndex((str) => { return str === text }) - 1;
@@ -719,7 +746,80 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
         },
-      ]
+        {
+          property: "사업자 등록번호",
+          returnValue: (designer) => {
+            return designer.information.business.businessInfo.businessNumber;
+          },
+          renderValue: (text) => {
+            return text;
+          },
+          updateValue: async (raw, designer) => {
+            try {
+              let text, whereQuery, updateQuery;
+              let arr;
+              let obj;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = raw.replace(/[^0-9\-]/g, '');
+
+              instance.designer.information.business.businessInfo.businessNumber = text;
+              updateQuery["information.business.businessInfo.businessNumber"] = text;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              return text;
+
+            } catch (e) {
+              console.log(e);
+              return designer.information.business.businessInfo.businessNumber;
+            }
+          },
+        },
+        {
+          property: "사업자 종류",
+          returnValue: (designer) => {
+            return [ "프리랜서", "개인사업자(간이)", "개인사업자(일반)", "법인사업자(간이)", "법인사업자(일반)" ];
+          },
+          selectValue: (designer) => {
+            let contents, value;
+            contents = [ "프리랜서", "개인사업자(간이)", "개인사업자(일반)", "법인사업자(간이)", "법인사업자(일반)" ];
+            value = [];
+            for (let i of contents) {
+              if (i === designer.information.business.businessInfo.classification) {
+                value.push(1);
+              } else {
+                value.push(0);
+              }
+            }
+            return [ value.findIndex((n) => { return n === 1 }) ];
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+              let text, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = columns[raw.findIndex((num) => { return num === 1 })];
+
+              instance.designer.information.business.businessInfo.classification = text;
+              updateQuery["information.business.businessInfo.classification"] = text;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        }
+      ],
+      notice: [
+        "링크는 http로 시작하는 전체 링크를 작성해주세요",
+      ],
     },
     {
       title: "공간 범위",
@@ -919,7 +1019,10 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
         }
-      ]
+      ],
+      notice: [
+        "링크는 http로 시작하는 전체 링크를 작성해주세요",
+      ],
     },
     {
       title: "작업 방식",
@@ -1039,6 +1142,48 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
         },
         {
+          property: "제안 방식",
+          returnValue: (designer) => { return [
+            "순차 제안",
+            "한번에 제안"
+          ] },
+          selectValue: (designer) => {
+            let contents, value;
+            contents = [
+              "순차 제안",
+              "한번에 제안"
+            ];
+            value = [];
+            for (let i of contents) {
+              if (i === designer.analytics.styling.method) {
+                value.push(1);
+              } else {
+                value.push(0);
+              }
+            }
+            return [ value.findIndex((n) => { return n === 1 }) ];
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+              let text, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = columns[raw.findIndex((num) => { return num === 1 })];
+
+              instance.designer.analytics.styling.method = text;
+              updateQuery["analytics.styling.method"] = text;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
           property: "페이퍼 워크",
           returnValue: (designer) => { return [
             "도면",
@@ -1086,12 +1231,168 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
         },
-      ]
+      ],
+      notice: [
+        "링크는 http로 시작하는 전체 링크를 작성해주세요",
+      ],
     },
     {
       title: "시공 관련",
       whiteType: 1,
       contents: [
+        {
+          property: "시공 감리",
+          returnValue: (designer) => { return [
+            "가능",
+            "불가능",
+          ] },
+          selectValue: (designer) => {
+            if (designer.analytics.construct.possible.supervision) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+              let text, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = columns[raw.findIndex((num) => { return num === 1 })];
+
+              instance.designer.analytics.construct.possible.supervision = (text === "가능");
+              updateQuery["analytics.construct.possible.supervision"] = (text === "가능");
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
+          property: "시공 가능 (S)",
+          returnValue: (designer) => { return [
+            "고객 시공사",
+            "홈리에종 시공사",
+            "디자이너 시공사",
+          ] },
+          selectValue: (designer) => {
+            const targets = [
+              "고객 시공사",
+              "홈리에종 시공사",
+              "디자이너 시공사",
+            ];
+            return designer.analytics.construct.case[0].possible.map((str) => {
+              return targets.findIndex((s) => { return s === str });
+            });
+          },
+          multiple: true,
+          updateValue: async (raw, columns, designer) => {
+            try {
+              let text, whereQuery, updateQuery;
+              let filtered;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              filtered = columns.filter((str, index) => {
+                return raw[index] === 1;
+              });
+
+              instance.designer.analytics.construct.case[0].possible = filtered;
+              updateQuery["analytics.construct.case.0.possible"] = filtered;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
+          property: "시공 가능 (T)",
+          returnValue: (designer) => { return [
+            "고객 시공사",
+            "홈리에종 시공사",
+            "디자이너 시공사",
+          ] },
+          selectValue: (designer) => {
+            const targets = [
+              "고객 시공사",
+              "홈리에종 시공사",
+              "디자이너 시공사",
+            ];
+            return designer.analytics.construct.case[1].possible.map((str) => {
+              return targets.findIndex((s) => { return s === str });
+            });
+          },
+          multiple: true,
+          updateValue: async (raw, columns, designer) => {
+            try {
+              let text, whereQuery, updateQuery;
+              let filtered;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              filtered = columns.filter((str, index) => {
+                return raw[index] === 1;
+              });
+
+              instance.designer.analytics.construct.case[1].possible = filtered;
+              updateQuery["analytics.construct.case.1.possible"] = filtered;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
+          property: "시공 가능 (XT)",
+          returnValue: (designer) => { return [
+            "고객 시공사",
+            "홈리에종 시공사",
+            "디자이너 시공사",
+          ] },
+          selectValue: (designer) => {
+            const targets = [
+              "고객 시공사",
+              "홈리에종 시공사",
+              "디자이너 시공사",
+            ];
+            return designer.analytics.construct.case[2].possible.map((str) => {
+              return targets.findIndex((s) => { return s === str });
+            });
+          },
+          multiple: true,
+          updateValue: async (raw, columns, designer) => {
+            try {
+              let text, whereQuery, updateQuery;
+              let filtered;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              filtered = columns.filter((str, index) => {
+                return raw[index] === 1;
+              });
+
+              instance.designer.analytics.construct.case[2].possible = filtered;
+              updateQuery["analytics.construct.case.2.possible"] = filtered;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
         {
           property: desktop ? "파트너 시공사" : "파트너",
           returnValue: (designer) => { return [
@@ -1193,7 +1494,10 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
         },
-      ]
+      ],
+      notice: [
+        "링크는 http로 시작하는 전체 링크를 작성해주세요",
+      ],
     },
     {
       title: "제작 관련",
@@ -1411,7 +1715,10 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
         },
-      ]
+      ],
+      notice: [
+        "링크는 http로 시작하는 전체 링크를 작성해주세요",
+      ],
     },
     {
       title: "스타일",
@@ -1553,17 +1860,20 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
         },
-      ]
+      ],
+      notice: [
+        "링크는 http로 시작하는 전체 링크를 작성해주세요",
+      ],
     },
   ];
   this.contents = contents;
   for (let i = 0; i < contents.length; i++) {
-    this.renderWhite(contents[i].whiteType, contents[i].title, contents[i].contents, i + 1);
+    this.renderWhite(contents[i].whiteType, contents[i].title, contents[i].contents, i + 1, i === (contents.length - 1));
   }
 
 }
 
-DesignerAboutJs.prototype.renderWhite = function (type, title, contents, index) {
+DesignerAboutJs.prototype.renderWhite = function (type, title, contents, index, lastBoo) {
   const instance = this;
   const mother = this.mother;
   const { ea, baseTong, media } = this;
@@ -1605,11 +1915,11 @@ DesignerAboutJs.prototype.renderWhite = function (type, title, contents, index) 
   });
   whiteTong = whiteBlock.children[0];
 
-  block = this.renderTong(type, title, whiteTong, index);
-  this.renderBlock(contents, block.children[1], index - 1);
+  block = this.renderTong(type, title, whiteTong, index - 1, lastBoo);
+  this.renderBlock(contents, block.lastChild, index - 1, lastBoo);
 }
 
-DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index) {
+DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index, lastBoo) {
   const instance = this;
   const { ea, baseTong, media } = this;
   const mobile = media[4];
@@ -1629,10 +1939,18 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index) 
   let mobileBasicMargin;
   let mobileBasePaddingTop;
   let mobileLineTop;
+  let grayZone;
+  let grayZoneWidth;
+  let grayZoneContentsWidth;
+  let grayPadding;
 
-  titleWidth = <%% 300, 160, 140, 120, 30 %%>;
+  grayZoneWidth = <%% 250, 200, 160, 140, 32 %%>;
+  grayZoneContentsWidth = <%% 200, 160, 140, 120, 30 %%>;
+  grayPadding = <%% 52, 52, 44, 36, 4.7 %%>;
+
+  titleWidth = <%% 200, 160, 140, 120, 30 %%>;
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
-  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  titleFontSize = <%% 18, 18, 16, 15, 4 %%>;
 
   numberRight = <%% 12, 12, 12, 12, 2 %%>;
   numberSize = <%% 18, 18, 18, 16, 3 %%>;
@@ -1650,12 +1968,39 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index) 
   return createNode({
     mother: whiteTong,
     style: {
-      display: "block",
+      display: "flex",
+      flexDirection: "row",
       position: "relative",
       width: String(100) + '%',
       paddingTop: desktop ? "" : String(mobileBasePaddingTop) + ea,
     },
     children: [
+      {
+        style: {
+          display: desktop ? "inline-flex" : "flex",
+          position: "relative",
+          width: desktop ? String(grayZoneWidth) + ea : withOut(mobileBasicMargin * 2, ea),
+          verticalAlign: "top",
+          marginLeft: desktop ? "" : String(mobileBasicMargin) + ea,
+          marginBottom: desktop ? "" : String(4) + ea,
+        },
+        child: {
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            display: "flex",
+            width: String(grayZoneContentsWidth) + ea,
+            height: !lastBoo ? withOut(-1 * grayPadding, ea) : withOut(grayPadding, ea),
+            background: colorChip.gray0,
+            zIndex: String(1),
+            borderTopLeftRadius: index === 0 ? String(5) + "px" : "",
+            borderTopRightRadius: index === 0 ? String(5) + "px" : "",
+            borderBottomLeftRadius: lastBoo ? String(5) + "px" : "",
+            borderBottomRightRadius: lastBoo ? String(5) + "px" : "",
+          }
+        }
+      },
       {
         style: {
           display: desktop ? "inline-block" : "block",
@@ -1697,7 +2042,7 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index) 
           display: desktop ? "inline-block" : "block",
           position: "relative",
           overflow: "hidden",
-          width: desktop ? withOut(titleWidth, ea) : withOut(mobileBasicMargin * 2, ea),
+          width: desktop ? withOut(grayZoneWidth + titleWidth, ea) : withOut(mobileBasicMargin * 2, ea),
           verticalAlign: "top",
           top: String(titleTopNumber) + ea,
           paddingBottom: desktop ? String(finalBottomMargin) + ea : (type === 2 ? String(mobileBasicMargin) + ea : String(0) + ea),
@@ -1706,24 +2051,12 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index) 
           marginLeft: desktop ? "" : String(mobileBasicMargin) + ea,
         }
       },
-      {
-        text: String(index),
-        style: {
-          display: big ? "inline-block" : "none",
-          position: "absolute",
-          bottom: String(numberBottom + (type === 2 ? realFinalBottomMargin : 0)) + ea,
-          right: String(0) + ea,
-          fontSize: String(numberSize) + ea,
-          fontWeight: String(numberWeight),
-          color: colorChip.deactive,
-        }
-      }
     ]
   });
 
 }
 
-DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
+DesignerAboutJs.prototype.renderBlock = function (contents, tong, x, lastBoo) {
   const instance = this;
   const { ea, baseTong, media, designer } = this;
   const mobile = media[4];
@@ -1756,6 +2089,8 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
   let z;
   let value;
   let tendencyMinusRatio;
+  let questionSize, questionWeight, questionTextTop;
+  let noticeCircleWidth, noticeCircleTop, noticeCircleMargin;
 
   blockHeight = <%% 22, 21, 21, 19, (isIphone() ? 5.2 : 4.9) %%>;
   blockMarginBottom = <%% 16, 15, 15, 12, 2.5 %%>;
@@ -1779,6 +2114,14 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
   tendencyMinusRatio = <%% 2, 1.5, 1.5, 1, 1 %%>;
 
   tendencyValueConst = 10;
+
+  questionSize = <%% 10, 10, 10, 10, 10 %%>;
+  questionWeight = <%% 500, 500, 500, 500, 500 %%>;
+  questionTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+  noticeCircleWidth = <%% 12, 12, 12, 12, 12 %%>;
+  noticeCircleTop = <%% 6, 6, 6, 6, 6 %%>;
+  noticeCircleMargin = <%% 5, 5, 5, 5, 5 %%>;
 
   z = 0;
   for (let obj of contents) {
@@ -1824,17 +2167,54 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
 
     propertyBlock = createNode({
       mother: baseBlock,
-      text: obj.property,
       style: {
-        display: "inline-block",
+        display: "inline-flex",
         position: "relative",
-        fontSize: String(contentsSize) + ea,
-        fontWeight: String(contentsWeight0),
-        color: colorChip.black,
         width: String(firstWidth) + ea,
         verticalAlign: "top",
+        flexDirection: "row",
       },
-    });
+      children: [
+        {
+          text: obj.property,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(contentsSize) + ea,
+            fontWeight: String(contentsWeight0),
+            color: colorChip.black,
+            verticalAlign: "top",
+          },
+        },
+        {
+          style: {
+            display: typeof obj.noticeText === "function" ? "inline-flex" : "none",
+            position: "relative",
+            background: colorChip.black,
+            width: String(noticeCircleWidth) + ea,
+            height: String(noticeCircleWidth) + ea,
+            borderRadius: String(noticeCircleWidth) + ea,
+            top: String(noticeCircleTop) + ea,
+            marginLeft: String(noticeCircleMargin) + ea,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          },
+          child: {
+            text: "?",
+            style: {
+              position: "relative",
+              fontSize: String(questionSize) + ea,
+              fontWeight: String(questionWeight),
+              top: String(questionTextTop) + ea,
+              color: colorChip.white,
+              fontFamily: "graphik",
+            }
+          }
+        }
+      ]
+    })
 
     if (typeof value === "string") {
       valueBlock = createNode({
@@ -1853,9 +2233,9 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
 
             saveEvent = async (raw) => {
               try {
-                // const text = await instance.contents[x].contents[z].updateValue(raw, instance.designer);
-                // self.firstChild.textContent = text;
-                // self.setAttribute("value", text);
+                const text = await instance.contents[x].contents[z].updateValue(raw, instance.designer);
+                self.firstChild.textContent = text;
+                self.setAttribute("value", text);
               } catch (e) {
                 console.log(e);
               }
@@ -1990,56 +2370,56 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x) {
             selectstart: (e) => { e.preventDefault(); },
             click: function (e) {
               e.stopPropagation();
-              // const self = this;
-              // const toggle = this.getAttribute("toggle");
-              // const x = Number(this.getAttribute("x"));
-              // const z = Number(this.getAttribute("z"));
-              // let targets;
-              // let finalTargets;
-              // let finalNumbers;
-              //
-              // if (toggle === "on") {
-              //   if (instance.contents[x].contents[z].multiple) {
-              //     self.style.color = colorChip.deactive;
-              //   } else {
-              //     targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-              //     if (targets.length === 2) {
-              //       for (let dom of targets) {
-              //         if (dom === self) {
-              //           dom.style.color = colorChip.deactive;
-              //         } else {
-              //           dom.style.color = colorChip.green;
-              //           dom.setAttribute("toggle", "on");
-              //         }
-              //       }
-              //     } else {
-              //       self.style.color = colorChip.deactive;
-              //     }
-              //   }
-              //   self.setAttribute("toggle", "off");
-              // } else {
-              //   if (instance.contents[x].contents[z].multiple) {
-              //     self.style.color = colorChip.green;
-              //   } else {
-              //     targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-              //     for (let dom of targets) {
-              //       if (dom === self) {
-              //         dom.style.color = colorChip.green;
-              //       } else {
-              //         dom.style.color = colorChip.deactive;
-              //         dom.setAttribute("toggle", "off");
-              //       }
-              //     }
-              //   }
-              //   self.setAttribute("toggle", "on");
-              // }
-              //
-              // finalTargets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-              // finalNumbers = finalTargets.map((dom) => { return dom.getAttribute("toggle") === "on" ? 1 : 0 });
-              //
-              // instance.contents[x].contents[z].updateValue(finalNumbers, instance.contents[x].contents[z].returnValue(instance.designer), instance.designer).catch((err) => {
-              //   console.log(err);
-              // });
+              const self = this;
+              const toggle = this.getAttribute("toggle");
+              const x = Number(this.getAttribute("x"));
+              const z = Number(this.getAttribute("z"));
+              let targets;
+              let finalTargets;
+              let finalNumbers;
+              
+              if (toggle === "on") {
+                if (instance.contents[x].contents[z].multiple) {
+                  self.style.color = colorChip.deactive;
+                } else {
+                  targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+                  if (targets.length === 2) {
+                    for (let dom of targets) {
+                      if (dom === self) {
+                        dom.style.color = colorChip.deactive;
+                      } else {
+                        dom.style.color = colorChip.green;
+                        dom.setAttribute("toggle", "on");
+                      }
+                    }
+                  } else {
+                    self.style.color = colorChip.deactive;
+                  }
+                }
+                self.setAttribute("toggle", "off");
+              } else {
+                if (instance.contents[x].contents[z].multiple) {
+                  self.style.color = colorChip.green;
+                } else {
+                  targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+                  for (let dom of targets) {
+                    if (dom === self) {
+                      dom.style.color = colorChip.green;
+                    } else {
+                      dom.style.color = colorChip.deactive;
+                      dom.setAttribute("toggle", "off");
+                    }
+                  }
+                }
+                self.setAttribute("toggle", "on");
+              }
+              
+              finalTargets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+              finalNumbers = finalTargets.map((dom) => { return dom.getAttribute("toggle") === "on" ? 1 : 0 });
+              
+              instance.contents[x].contents[z].updateValue(finalNumbers, instance.contents[x].contents[z].returnValue(instance.designer), instance.designer).catch((err) => {
+                console.log(err);
+              });
             }
           },
           style: {
