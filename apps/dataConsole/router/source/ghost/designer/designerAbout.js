@@ -537,7 +537,14 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
       ],
       notice: [
-        "링크는 http로 시작하는 전체 링크를 작성해주세요",
+        {
+          title: "링크 입력",
+          body: "링크는 http로 시작하는 전체 링크를 작성해주세요!",
+        },
+        {
+          title: "링크 입력",
+          body: "링크는 http로 시작하는 전체 링크를 작성해주세요!",
+        },
       ],
     },
     {
@@ -818,7 +825,14 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         }
       ],
       notice: [
-        "링크는 http로 시작하는 전체 링크를 작성해주세요",
+        {
+          title: "링크 입력",
+          body: "링크는 http로 시작하는 전체 링크를 작성해주세요!",
+        },
+        {
+          title: "링크 입력",
+          body: "링크는 http로 시작하는 전체 링크를 작성해주세요!",
+        },
       ],
     },
     {
@@ -1021,7 +1035,14 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         }
       ],
       notice: [
-        "링크는 http로 시작하는 전체 링크를 작성해주세요",
+        {
+          title: "링크 입력",
+          body: "링크는 http로 시작하는 전체 링크를 작성해주세요!",
+        },
+        {
+          title: "링크 입력",
+          body: "링크는 http로 시작하는 전체 링크를 작성해주세요!",
+        },
       ],
     },
     {
@@ -1233,7 +1254,14 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
       ],
       notice: [
-        "링크는 http로 시작하는 전체 링크를 작성해주세요",
+        {
+          title: "링크 입력",
+          body: "링크는 http로 시작하는 전체 링크를 작성해주세요!",
+        },
+        {
+          title: "링크 입력",
+          body: "링크는 http로 시작하는 전체 링크를 작성해주세요!",
+        },
       ],
     },
     {
@@ -1496,7 +1524,14 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
       ],
       notice: [
-        "링크는 http로 시작하는 전체 링크를 작성해주세요",
+        {
+          title: "링크 입력",
+          body: "링크는 http로 시작하는 전체 링크를 작성해주세요!",
+        },
+        {
+          title: "링크 입력",
+          body: "링크는 http로 시작하는 전체 링크를 작성해주세요!",
+        },
       ],
     },
     {
@@ -1717,7 +1752,14 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
       ],
       notice: [
-        "링크는 http로 시작하는 전체 링크를 작성해주세요",
+        {
+          title: "링크 입력",
+          body: "링크는 http로 시작하는 전체 링크를 작성해주세요!",
+        },
+        {
+          title: "링크 입력",
+          body: "링크는 http로 시작하는 전체 링크를 작성해주세요!",
+        },
       ],
     },
     {
@@ -1862,18 +1904,25 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
       ],
       notice: [
-        "링크는 http로 시작하는 전체 링크를 작성해주세요",
+        {
+          title: "링크 입력",
+          body: "링크는 http로 시작하는 전체 링크를 작성해주세요!",
+        },
+        {
+          title: "링크 입력",
+          body: "링크는 http로 시작하는 전체 링크를 작성해주세요!",
+        },
       ],
     },
   ];
   this.contents = contents;
   for (let i = 0; i < contents.length; i++) {
-    this.renderWhite(contents[i].whiteType, contents[i].title, contents[i].contents, i + 1, i === (contents.length - 1));
+    this.renderWhite(contents[i].whiteType, contents[i].title, contents[i].contents, contents[i].notice, i + 1, i === (contents.length - 1));
   }
 
 }
 
-DesignerAboutJs.prototype.renderWhite = function (type, title, contents, index, lastBoo) {
+DesignerAboutJs.prototype.renderWhite = function (type, title, contents, notice, index, lastBoo) {
   const instance = this;
   const mother = this.mother;
   const { ea, baseTong, media } = this;
@@ -1916,7 +1965,7 @@ DesignerAboutJs.prototype.renderWhite = function (type, title, contents, index, 
   whiteTong = whiteBlock.children[0];
 
   block = this.renderTong(type, title, whiteTong, index - 1, lastBoo);
-  this.renderBlock(contents, block.lastChild, index - 1, lastBoo);
+  this.renderBlock(contents, notice, block.lastChild, block.firstChild.firstChild, index - 1, lastBoo);
 }
 
 DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index, lastBoo) {
@@ -1943,10 +1992,17 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index, 
   let grayZoneWidth;
   let grayZoneContentsWidth;
   let grayPadding;
+  let grayInnerPadding, grayInnerPaddingTop;
 
   grayZoneWidth = <%% 250, 200, 160, 140, 32 %%>;
   grayZoneContentsWidth = <%% 200, 160, 140, 120, 30 %%>;
   grayPadding = <%% 52, 52, 44, 36, 4.7 %%>;
+  grayInnerPadding = <%% 22, 22, 22, 22, 20 %%>;
+  if (index === 0) {
+    grayInnerPaddingTop = <%% 24, 24, 24, 24, 24 %%>;
+  } else {
+    grayInnerPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
+  }
 
   titleWidth = <%% 200, 160, 140, 120, 30 %%>;
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
@@ -1986,14 +2042,17 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index, 
         },
         child: {
           style: {
+            display: "inline-flex",
+            flexDirection: "column",
             position: "absolute",
             top: String(0),
             left: String(0),
-            display: "flex",
-            width: String(grayZoneContentsWidth) + ea,
-            height: !lastBoo ? withOut(-1 * grayPadding, ea) : withOut(grayPadding, ea),
+            width: String(grayZoneContentsWidth - (grayInnerPadding * 2)) + ea,
+            height: "calc(" + String(!lastBoo ? withOut(-1 * grayPadding, ea) : withOut(grayPadding, ea)) + " - " + String(grayInnerPadding + grayInnerPaddingTop) + ea + ")",
             background: colorChip.gray0,
             zIndex: String(1),
+            padding: String(grayInnerPadding) + ea,
+            paddingTop: String(grayInnerPaddingTop) + ea,
             borderTopLeftRadius: index === 0 ? String(5) + "px" : "",
             borderTopRightRadius: index === 0 ? String(5) + "px" : "",
             borderBottomLeftRadius: lastBoo ? String(5) + "px" : "",
@@ -2056,17 +2115,18 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index, 
 
 }
 
-DesignerAboutJs.prototype.renderBlock = function (contents, tong, x, lastBoo) {
+DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBox, x, lastBoo) {
   const instance = this;
-  const { ea, baseTong, media, designer } = this;
+  const { ea, baseTong, media, designer, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, removeByClass } = GeneralJs;
   const removePopupTargetClassName = "removePopupTargetClassName";
   const menuTargetClassName = "menuTargetClassName";
   const tendencyBarTargetClassName = "tendencyBarTargetClassName";
+  const greenNoticeClassName = "greenNoticeClassName";
   let blockHeight;
   let blockMarginBottom;
   let circleBoxWidth;
@@ -2111,7 +2171,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x, lastBoo) {
   tendencyBlockTop = <%% 3, 3, 3, 3, 0.8 %%>;
   tendencyBlockWidth = <%% 100, 90, 90, 80, 20 %%>;
   tendencyBlockHeight = <%% 16, 16, 16, 16, 3.4 %%>;
-  tendencyMinusRatio = <%% 2, 1.5, 1.5, 1, 1 %%>;
+  tendencyMinusRatio = <%% 1, 1, 1, 1, 1 %%>;
 
   tendencyValueConst = 10;
 
@@ -2187,6 +2247,65 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x, lastBoo) {
           },
         },
         {
+          attribute: {
+            index: String(z),
+          },
+          event: {
+            click: function (e) {
+              const zIndex = 4;
+              const index = Number(this.getAttribute("index"));
+              const box = this.getBoundingClientRect();
+              const notice = contents[index].noticeText(designer);
+              let cancelBack, greenPrompt;
+              
+              cancelBack = createNode({
+                mother: totalContents,
+                class: [ greenNoticeClassName ],
+                event: (e) => { removeByClass(greenNoticeClassName); },
+                style: {
+                  position: "fixed",
+                  zIndex: String(zIndex),
+                  top: String(0),
+                  left: String(0),
+                  width: withOut(0, ea),
+                  height: withOut(0, ea),
+                  background: "transparent",
+                }
+              });
+
+              greenPrompt = createNode({
+                mother: totalContents,
+                class: [ greenNoticeClassName ],
+                style: {
+                  position: "absolute",
+                  zIndex: String(zIndex),
+                  top: String(box.top + 12 + 5 + window.scrollY) + "px",
+                  left: String(box.left - 1) + "px",
+                  paddingLeft: String(14) + ea,
+                  paddingRight: String(14) + ea,
+                  paddingTop: String(6) + ea,
+                  paddingBottom: String(8) + ea,                  
+                  background: colorChip.gradientGreen,
+                  borderRadius: String(5) + "px",
+                  "min-width": String(100) + ea,
+                  animation: "fadeuplite 0.3s ease forwards",
+                },
+                children: [
+                  {
+                    text: notice,
+                    style: {
+                      position: "relative",
+                      fontSize: String(12) + ea,
+                      fontWeight: String(700),
+                      color: colorChip.white,
+                      lineHeight: String(1.5),
+                    }
+                  }
+                ]
+              });
+
+            }
+          },
           style: {
             display: typeof obj.noticeText === "function" ? "inline-flex" : "none",
             position: "relative",
@@ -2530,6 +2649,47 @@ DesignerAboutJs.prototype.renderBlock = function (contents, tong, x, lastBoo) {
     }
 
     z++;
+  }
+
+  for (let { title, body } of notice) {
+    createNode({
+      mother: grayBox,
+      style: {
+        display: "flex",
+        position: "relative",
+        width: withOut(0, ea),
+        flexDirection: "row",
+        marginBottom: String(12) + ea,
+      },
+      children: [
+        {
+          text: "- ",
+          style: {
+            position: "relative",
+            fontSize: String(12) + ea,
+            fontWeight: String(600),
+            color: colorChip.gray5,
+            lineHeight: String(1.6),
+            marginRight: String(4) + ea,
+          }
+        },
+        {
+          text: "<b%" + title + "%b> : " + "\n" + body,
+          style: {
+            position: "relative",
+            fontSize: String(12) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+            lineHeight: String(1.6),
+          },
+          bold: {
+            fontSize: String(12) + ea,
+            fontWeight: String(800),
+            color: colorChip.black,
+          }
+        },
+      ]
+    })
   }
 }
 
