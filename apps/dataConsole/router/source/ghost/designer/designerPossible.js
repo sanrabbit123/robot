@@ -987,7 +987,7 @@ DesignerPossibleJs.prototype.insertNoticeBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), (isMac() ? 16 : 14), 0 %%>;
+  titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 10 : 8), 0 %%>;
   contentsAreaPaddingTop = <%% 34, 34, 34, 34, 7 %%>;
 
   mobileTitleLeft = 1.5;
@@ -1084,7 +1084,7 @@ DesignerPossibleJs.prototype.insertNoticeBox = function () {
               display: "inline-block",
               top: String(titleTopNumber) + ea,
               fontSize: String(titleFontSize) + ea,
-              fontWeight: String(600),
+              fontWeight: String(800),
               background: desktop ? colorChip.white : colorChip.gray1,
               paddingRight: String(numberRight) + ea,
               color: colorChip.black,
