@@ -1294,7 +1294,7 @@ DesignerPossibleJs.prototype.launching = async function (loading) {
       instance.isMouseDown = false;
       instance.downSelection = null;
       for (let { value, dom } of instance.possibleBoxes) {
-        dom.style.background = colorChip.white;
+        // dom.style.background = colorChip.white;
         dom.parentNode.firstChild.style.color = dom.parentNode.firstChild.getAttribute("color");
         dom.firstChild.style.color =  Number(dom.firstChild.getAttribute("possible")) === 0 ? colorChip.deactive : colorChip.green;
         dom.setAttribute("toggle", "off");
