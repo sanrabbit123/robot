@@ -298,16 +298,12 @@ DesignerPossibleJs.prototype.boxToPossible = async function () {
     }
 
 
-    if (entireMode) {
-      this.realtimeDesigner.possible = equalJson(JSON.stringify(newPossible));
-      this.realtimeDesigner.possible.sort((a, b) => { return a.start.valueOf() - b.start.valueOf() });
-      updateQuery = {};
-      updateQuery["possible"] = this.realtimeDesigner.possible;
-      await ajaxJson({ mode: "update", desid: instance.designer.desid, updateQuery }, BACKHOST + "/realtimeDesigner");
-    } else {
-      window.alert("가능 일정을 조정하고 싶으실 경우, 홈리에종에 직접 문의해주세요!");
-      window.location.reload();
-    }
+    this.realtimeDesigner.possible = equalJson(JSON.stringify(newPossible));
+    this.realtimeDesigner.possible.sort((a, b) => { return a.start.valueOf() - b.start.valueOf() });
+    updateQuery = {};
+    updateQuery["possible"] = this.realtimeDesigner.possible;
+    await ajaxJson({ mode: "update", desid: instance.designer.desid, updateQuery }, BACKHOST + "/realtimeDesigner");
+
 
   } catch (e) {
     console.log(e);
@@ -1234,32 +1230,6 @@ DesignerPossibleJs.prototype.launching = async function (loading) {
   const { returnGet, ajaxJson, serviceParsing, colorChip } = GeneralJs;
   try {
     this.mother.setGeneralProperties(this);
-
-    class SearchArray extends Array {
-      constructor(arr) {
-        super();
-        for (let i of arr) {
-          this.push(i);
-        }
-      }
-      search(target, value) {
-        let obj = null;
-        for (let i of this) {
-          if (i[target] === value) {
-            obj = i;
-          }
-        }
-        return obj;
-      }
-      toNormal() {
-        let arr = [];
-        for (let i of this) {
-          arr.push(i);
-        }
-        return arr;
-      }
-    }
-
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true");
     const normalMode = (entireMode && getObj.normal === "true");
