@@ -953,7 +953,7 @@ DevContext.prototype.launching = async function () {
     //   "광고 비율 " + String(Math.floor((thisCount / total) * 10000) / 100) + '%'
     // ])
 
-    // sheetsId = await sheets.create_newSheets_inPython("계약자 광고 비율", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    // sheetsId = await sheets.create_newSheets_inPython("계약자 광고 비율", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     // await sheets.setting_cleanView_inPython(sheetsId);
     // await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
 
@@ -1000,7 +1000,7 @@ DevContext.prototype.launching = async function () {
       }
       matrix.push(tempArr);
     }
-    sheetsId = await sheets.create_newSheets_inPython("추출_나이", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    sheetsId = await sheets.create_newSheets_inPython("추출_나이", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     await sheets.setting_cleanView_inPython(sheetsId);
     await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
 
@@ -1024,7 +1024,7 @@ DevContext.prototype.launching = async function () {
       }
       matrix.push(tempArr);
     }
-    sheetsId = await sheets.create_newSheets_inPython("추출_성별", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    sheetsId = await sheets.create_newSheets_inPython("추출_성별", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     await sheets.setting_cleanView_inPython(sheetsId);
     await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
 
@@ -1049,7 +1049,7 @@ DevContext.prototype.launching = async function () {
       }
       matrix.push(tempArr);
     }
-    sheetsId = await sheets.create_newSheets_inPython("추출_디바이스", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    sheetsId = await sheets.create_newSheets_inPython("추출_디바이스", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     await sheets.setting_cleanView_inPython(sheetsId);
     await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
 
@@ -1074,7 +1074,7 @@ DevContext.prototype.launching = async function () {
       }
       matrix.push(tempArr);
     }
-    sheetsId = await sheets.create_newSheets_inPython("추출_평형대", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    sheetsId = await sheets.create_newSheets_inPython("추출_평형대", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     await sheets.setting_cleanView_inPython(sheetsId);
     await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
 
@@ -1099,7 +1099,7 @@ DevContext.prototype.launching = async function () {
       }
       matrix.push(tempArr);
     }
-    sheetsId = await sheets.create_newSheets_inPython("추출_서비스", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    sheetsId = await sheets.create_newSheets_inPython("추출_서비스", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     await sheets.setting_cleanView_inPython(sheetsId);
     await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
 
@@ -1125,7 +1125,7 @@ DevContext.prototype.launching = async function () {
       }
       matrix.push(tempArr);
     }
-    sheetsId = await sheets.create_newSheets_inPython("추출_지역", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    sheetsId = await sheets.create_newSheets_inPython("추출_지역", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     await sheets.setting_cleanView_inPython(sheetsId);
     await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
 
@@ -1151,7 +1151,7 @@ DevContext.prototype.launching = async function () {
       }
       matrix.push(tempArr);
     }
-    sheetsId = await sheets.create_newSheets_inPython("추출_예산", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    sheetsId = await sheets.create_newSheets_inPython("추출_예산", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     await sheets.setting_cleanView_inPython(sheetsId);
     await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
 
@@ -1178,7 +1178,7 @@ DevContext.prototype.launching = async function () {
       }
       matrix.push(tempArr);
     }
-    sheetsId = await sheets.create_newSheets_inPython("추출_가족구성", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    sheetsId = await sheets.create_newSheets_inPython("추출_가족구성", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     await sheets.setting_cleanView_inPython(sheetsId);
     await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
 
@@ -1207,7 +1207,7 @@ DevContext.prototype.launching = async function () {
       }
       matrix.push(tempArr);
     }
-    sheetsId = await sheets.create_newSheets_inPython("추출_거주중", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    sheetsId = await sheets.create_newSheets_inPython("추출_거주중", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     await sheets.setting_cleanView_inPython(sheetsId);
     await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
 
@@ -1229,7 +1229,7 @@ DevContext.prototype.launching = async function () {
       }
       matrix.push(tempArr);
     }
-    sheetsId = await sheets.create_newSheets_inPython("추출_계약형태", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    sheetsId = await sheets.create_newSheets_inPython("추출_계약형태", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     await sheets.setting_cleanView_inPython(sheetsId);
     await sheets.update_value_inPython(sheetsId, "", equalJson(JSON.stringify(matrix)));
 
@@ -1575,7 +1575,7 @@ DevContext.prototype.launching = async function () {
     const selfMongo = this.MONGOC;
     const selfConsoleMongo = this.MONGOCONSOLEC;
     const selfPythonMongo = this.MONGOPYTHONC;
-    const motherSheetsFolderId = "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF";
+    const motherSheetsFolderId = "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ";
     let projects, projectsRaw;
     let clients, designers;
     let bills;
@@ -2603,6 +2603,17 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // 매칭 AI 시스템을 갖추고 있다
+    // 고객님의 취향, 조건 파악과 디자이너의 일정, 조건에 따라서 자동적으로 생산자를 소비자에게 추천하고 있는 시스템을 갖추고 있다.
+
+
+
+
+    // 퀄리티 컨트롤 시스템을 갖추고 있다.
+
+
+
+
 
 
 
@@ -2731,6 +2742,12 @@ DevContext.prototype.launching = async function () {
     let finalMatrix, sheetsId;
 
     finalMatrix = [];
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2023, 5))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2023, 4))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2023, 3))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2023, 2))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2023, 1))
+    finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2022, 12))
     finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2022, 11))
     finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2022, 10))
     finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2022, 9))
@@ -2767,9 +2784,9 @@ DevContext.prototype.launching = async function () {
     finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2020, 2))
     finalMatrix = finalMatrix.concat(getMatrix(clients, projects, histories, requests, 2020, 1))
 
-    sheetsId = await sheets.create_newSheets_inPython("응대자별 계약율", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
-    await sheets.setting_cleanView_inPython(sheetsId);
-    await sheets.update_value_inPython(sheetsId, "", finalMatrix);
+    // sheetsId = await sheets.create_newSheets_inPython("응대자별 계약율", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
+    await sheets.setting_cleanView_inPython("1Vu0VbMt-M6-vsLKfuMKBYOKk3TJZN592UPHHmOiaxk0");
+    await sheets.update_value_inPython("1Vu0VbMt-M6-vsLKfuMKBYOKk3TJZN592UPHHmOiaxk0", "", finalMatrix);
     */
 
 
@@ -3047,7 +3064,7 @@ DevContext.prototype.launching = async function () {
     matrix.unshift([ "p아이디", "c아이디", "성함", "상태", "구분", "계약 금액", "입금액", "환불액", "입금일", "환불일", "년", "월" ])
 
 
-    sheetsId = await sheets.create_newSheets_inPython("기본 추출", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    sheetsId = await sheets.create_newSheets_inPython("기본 추출", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     await sheets.setting_cleanView_inPython(sheetsId);
     await sheets.update_value_inPython(sheetsId, "", matrix);
 
@@ -3412,7 +3429,7 @@ DevContext.prototype.launching = async function () {
     //   matrix.push([ name, meters, seconds, autoComma(Math.floor(((meters * meterStandard) + (seconds * secondStandard)) / 1000) * 1000) + '원' ]);
     // }
     //
-    // sheetsId = await sheets.create_newSheets_inPython("사진 작가님 출장비", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    // sheetsId = await sheets.create_newSheets_inPython("사진 작가님 출장비", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     // await sheets.setting_cleanView_inPython(sheetsId);
     // await sheets.update_value_inPython(sheetsId, "", matrix);
     //
@@ -4083,7 +4100,7 @@ DevContext.prototype.launching = async function () {
     subtract = subtract.map((num) => { return Math.abs(num) });
     subtract.sort((a, b) => { return b - a; })
 
-    // sheetsId = await sheets.create_newSheets_inPython("새로운 디자이너 비용 계산", "1eh6ag1EhSF4CcC4mKF93Gntk5eu1ETcF");
+    // sheetsId = await sheets.create_newSheets_inPython("새로운 디자이너 비용 계산", "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ");
     sheetsId = "10OjyBrG75gukkUbzeV5wkjgiy9GlLgBft0QI8OvX88g";
     await sheets.setting_cleanView_inPython(sheetsId);
     await sheets.update_value_inPython(sheetsId, "", matrix);
@@ -5969,8 +5986,8 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "김민경";
-    // const amount = 2071300;
+    // const name = "권정수";
+    // const amount = 7185000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
