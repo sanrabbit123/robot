@@ -199,8 +199,9 @@ AbstractRabbit.prototype.connect = async function () {
     pems.allowHTTP1 = true;
 
     // set router
+    const localTargets = (await fileSystem(`readDir`, [ `${this.dir}/router/source/local` ])).filter((str) => { return str !== ".DS_Store" });
     const AbstractRouter = require(`${this.dir}/router/abstractRouter.js`);
-    const router = new AbstractRouter(MONGOC);
+    const router = new AbstractRouter(MONGOC, localTargets, staticFolder);
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);
     await expressLog(serverName, logStream, "start");
