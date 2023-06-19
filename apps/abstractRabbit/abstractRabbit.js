@@ -75,6 +75,11 @@ AbstractRabbit.prototype.renderStatic = async function (staticFolder) {
       execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/exec.js` ]);
       execString = execString.replace(/\/<%name%>\//, (name.slice(0, 1).toUpperCase() + name.replace(/\.js$/, '').slice(1)));
       fileString = await fileSystem(`readString`, [ path ]);
+      if (!/\/<%metaStart%>\//g.test(fileString)) {
+        throw new Error("There is no meta patch, impossible");
+      }
+
+      fileString = fileString.slice([ ...fileString.matchAll(/\/<%metaEnd%>\/\;/g) ][0].index + String("/<%metaEnd%>/;").length + 1);
 
       //merge
       code0 = svgTongString + "\n\n";
