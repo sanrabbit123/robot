@@ -5,7 +5,7 @@
     let fullLink;
 
     pageName = "abstractIndex";
-    titleString = "Home | Abstract rabbit";
+    titleString = "Home | AbstractRabbit";
     descriptionString = "Abstart world for abstract ideal by abstract rabbit";
     hiddenHtml = ``;
     imagePath = "/index/og_image.jpg";
@@ -27,19 +27,17 @@
 
 const AbstractIndexJs = function () {
   this.mother = new GeneralJs();
-  this.totalContents = this.mother.totalContents;
-  this.ea = <%% "px", "px", "px", "px", "vw" %%>;
 }
 
 AbstractIndexJs.prototype.launching = async function () {
   const instance = this;
+  const { totalContents, ea } = this;
   try {
-    const { returnGet, colorChip, totalContents } = GeneralJs;
+    const { returnGet, colorChip } = GeneralJs;
     let getObj;
     getObj = returnGet();
 
-    console.log(totalContents);
-
+    
   } catch (e) {
     console.log(e);
   }

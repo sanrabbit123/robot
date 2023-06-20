@@ -1,4 +1,4 @@
-const AbstractRouter = function (MONGOC, localTargets, staticDir) {
+const AbstractRouter = function (MONGOC, localTargets, metaFunctions, staticDir) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   this.mother = new Mother();
@@ -8,11 +8,11 @@ const AbstractRouter = function (MONGOC, localTargets, staticDir) {
   this.formidable = require("formidable");
   this.dir = process.cwd() + "/apps/abstractRabbit";
   this.sourceDir = this.dir + "/router/source";
-  this.localDir = this.sourceDir + "/local";
+  this.localDir = `${this.sourceDir}/local`;
   this.staticDir = staticDir;
-  this.metaLimit = 100;
   this.host = "abstract-rabbit.com";
   this.localTargets = localTargets;
+  this.metaFunctions = metaFunctions;
 }
 
 AbstractRouter.prototype.baseMaker = async function (metaObject) {
@@ -98,18 +98,17 @@ AbstractRouter.prototype.baseMaker = async function (metaObject) {
 AbstractRouter.prototype.rou_get_pathLaunching = function () {
   const instance = this;
   const { equalJson, fileSystem } = this.mother;
-  const { localDir, metaLimit, localTargets, staticDir } = this;
+  const { metaFunctions, localTargets, staticDir } = this;
   let obj = {};
   obj.link = "/:id";
   obj.func = async function (req, res, logger) {
     try {
       const { id } = req.params;
       if (localTargets.includes(id + ".js")) {
-        const targetJs = localDir + "/" + id + ".js";
-        const targetJsString = await fileSystem(`readHead`, [ targetJs, metaLimit ]);
-        const metaFunctionString = targetJsString.slice([ ...targetJsString.matchAll(/\/<%metaStart%>\/\;/g) ][0].index + String("/<%metaStart%>/;").length, [ ...targetJsString.matchAll(/\/<%metaEnd%>\/\;/g) ][0].index).trim().replace(/^\;/, '').replace(/\;$/, '').trim();
-        const metaFunction = new Function("req", "mongo", "host", metaFunctionString.replace(/\}$/, '').replace(/async function metaFunction \(req, mongo, host\) \{/gi, '').trim());
-        const metaObject = metaFunction(req, instance.mongo, instance.host);        
+        const metaObject = metaFunctions.find((obj) => { return obj.name === id }).meta(req, instance.mongo, instance.host);
+        if (metaObject === null) {
+          throw new Error("meta function error : " + id);
+        }
         const html = await instance.baseMaker(metaObject);
         res.set({
           "Content-Type": "text/html",

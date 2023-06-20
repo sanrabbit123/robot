@@ -4,6 +4,8 @@ const local_funcs = new /<%name%>/Js();
 document.addEventListener("DOMContentLoaded", async function (e) {
   try {
     local_funcs.mother.generalCss();
+    local_funcs.mother.setGeneralProperties(local_funcs);
+    local_funcs.mother.setGeneralBase(local_funcs);
     await local_funcs.launching();
   } catch (e) {
     GeneralJs.ajax("message=" + "exec : " + JSON.stringify(e.message) + "&channel=#error_log", "/sendSlack", function () {});

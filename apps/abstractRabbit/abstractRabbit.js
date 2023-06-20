@@ -7,6 +7,8 @@ const AbstractRabbit = function () {
   this.dir = process.cwd() + "/apps/abstractRabbit";
   this.console = process.cwd() + "/apps/dataConsole";
   this.sourceDir = this.dir + "/router/source";
+  this.localDir = `${this.sourceDir}/local`;
+  this.metaLimit = 150;
 }
 
 AbstractRabbit.prototype.renderStatic = async function (staticFolder) {
@@ -19,7 +21,7 @@ AbstractRabbit.prototype.renderStatic = async function (staticFolder) {
     let staticDir, staticDirFunc;
     let staticDirList_raw, staticDirList;
     let tempMediaResult;
-    let svgTongString, generalString, consoleGeneralString, execString, fileString;
+    let svgTongString, generalString, consoleGeneralString, rabbitGeneralString, execString, fileString;
     let code0, code1, code2, code3;
     let result;
     let resultFromArr;
@@ -30,6 +32,7 @@ AbstractRabbit.prototype.renderStatic = async function (staticFolder) {
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.console}/router/source/general/general.js` ]);
+    rabbitGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
 
     staticDirFunc = async (staticDir) => {
       try {
@@ -84,13 +87,13 @@ AbstractRabbit.prototype.renderStatic = async function (staticFolder) {
       //merge
       code0 = svgTongString + "\n\n";
       code1 = "";
-      code2 = generalString + "\n\n" + consoleGeneralString;
+      code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + rabbitGeneralString;
       code3 = fileString + "\n\n" + execString;
 
       //set media query
       if (/<%%/gi.test(code2)) {
-        tempMediaResult = mediaQuery(code2);
-        code2 = tempMediaResult.code;
+        tempMediaResult = mediaQuery(code2)
+        code2 = tempMediaResult.code + "\n\n" + tempMediaResult.conditions;
       }
       if (/<%%/gi.test(code3)) {
         tempMediaResult = mediaQuery(code3);
@@ -119,6 +122,38 @@ AbstractRabbit.prototype.renderStatic = async function (staticFolder) {
 
   } catch (e) {
     console.log(e);
+  }
+}
+
+AbstractRabbit.prototype.readMeta = async function () {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  const { localDir, metaLimit } = this;
+  try {
+    const localTargets = (await fileSystem(`readDir`, [ localDir ])).filter((str) => { return str !== ".DS_Store" });
+    let targetJsString;
+    let metaFunctionString;
+    let metaFunction;
+    let metaFunctions;
+    let targetJs;
+    metaFunctions = [];
+    for (let name of localTargets) {
+      targetJs = `${localDir}/${name}`;
+      targetJsString = await fileSystem(`readHead`, [ targetJs, metaLimit ]);
+      if (!/\/<%metaEnd%>\//gi.test(targetJsString)) {
+        throw new Error("meta function limit : " + String(metaLimit));
+      }
+      metaFunctionString = targetJsString.slice([ ...targetJsString.matchAll(/\/<%metaStart%>\/\;/g) ][0].index + String("/<%metaStart%>/;").length, [ ...targetJsString.matchAll(/\/<%metaEnd%>\/\;/g) ][0].index).trim().replace(/^\;/, '').replace(/\;$/, '').trim();
+      metaFunction = new Function("req", "mongo", "host", metaFunctionString.replace(/\}$/, '').replace(/async function metaFunction \(req, mongo, host\) \{/gi, '').trim());
+      metaFunctions.push({
+        name: name.split(".").slice(0, -1).join("."),
+        meta: metaFunction,
+      });
+    }
+    return metaFunctions;
+  } catch (e) {
+    console.log(e);
+    return null;
   }
 }
 
@@ -199,9 +234,10 @@ AbstractRabbit.prototype.connect = async function () {
     pems.allowHTTP1 = true;
 
     // set router
-    const localTargets = (await fileSystem(`readDir`, [ `${this.dir}/router/source/local` ])).filter((str) => { return str !== ".DS_Store" });
+    const localTargets = (await fileSystem(`readDir`, [ this.localDir ])).filter((str) => { return str !== ".DS_Store" });
+    const metaFunctions = await this.readMeta();
     const AbstractRouter = require(`${this.dir}/router/abstractRouter.js`);
-    const router = new AbstractRouter(MONGOC, localTargets, staticFolder);
+    const router = new AbstractRouter(MONGOC, localTargets, metaFunctions, staticFolder);
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);
     await expressLog(serverName, logStream, "start");
