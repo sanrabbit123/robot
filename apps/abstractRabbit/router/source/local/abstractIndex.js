@@ -29,7 +29,7 @@ const AbstractIndexJs = function () {
   this.mother = new GeneralJs();
 }
 
-AbstractIndexJs.prototype.launching = async function () {
+AbstractIndexJs.prototype.launching = async function (loading) {
   const instance = this;
   const { totalContents, ea } = this;
   try {
@@ -37,7 +37,14 @@ AbstractIndexJs.prototype.launching = async function () {
     let getObj;
     getObj = returnGet();
 
+
     
+
+
+
+
+    loading.parentElement.removeChild(loading);
+
   } catch (e) {
     console.log(e);
   }
