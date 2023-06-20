@@ -105,7 +105,8 @@ AbstractRouter.prototype.rou_get_pathLaunching = function () {
     try {
       const { id } = req.params;
       if (localTargets.includes(id + ".js")) {
-        const metaObject = metaFunctions.find((obj) => { return obj.name === id }).meta(req, instance.mongo, instance.host);
+        const metaMother = metaFunctions.find((obj) => { return obj.name === id });
+        const metaObject = await metaMother.meta(req, instance.mongo, instance.host);
         if (metaObject === null) {
           throw new Error("meta function error : " + id);
         }

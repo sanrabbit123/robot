@@ -130,6 +130,7 @@ AbstractRabbit.prototype.readMeta = async function () {
   const { fileSystem } = this.mother;
   const { localDir, metaLimit } = this;
   try {
+    const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
     const localTargets = (await fileSystem(`readDir`, [ localDir ])).filter((str) => { return str !== ".DS_Store" });
     let targetJsString;
     let metaFunctionString;
@@ -144,7 +145,7 @@ AbstractRabbit.prototype.readMeta = async function () {
         throw new Error("meta function limit : " + String(metaLimit));
       }
       metaFunctionString = targetJsString.slice([ ...targetJsString.matchAll(/\/<%metaStart%>\/\;/g) ][0].index + String("/<%metaStart%>/;").length, [ ...targetJsString.matchAll(/\/<%metaEnd%>\/\;/g) ][0].index).trim().replace(/^\;/, '').replace(/\;$/, '').trim();
-      metaFunction = new Function("req", "mongo", "host", metaFunctionString.replace(/\}$/, '').replace(/async function metaFunction \(req, mongo, host\) \{/gi, '').trim());
+      metaFunction = new AsyncFunction("req", "mongo", "host", metaFunctionString.replace(/\}$/, '').replace(/async function metaFunction \(req, mongo, host\) \{/gi, '').trim());
       metaFunctions.push({
         name: name.split(".").slice(0, -1).join("."),
         meta: metaFunction,
