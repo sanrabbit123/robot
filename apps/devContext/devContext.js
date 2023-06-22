@@ -171,10 +171,16 @@ DevContext.prototype.launching = async function () {
     // /designer path => desid injection
 
 
+    // const tf = require("@tensorflow/tfjs-node");
+
+
+    // const a = tf.tensor([ 1, 2, 3, 4 ]);
+
+    // console.log(a);
 
     
-
     
+
 
 
     
