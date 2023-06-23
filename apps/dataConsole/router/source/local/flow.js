@@ -89,7 +89,8 @@ FlowJs.prototype.launchingDiagram = function () {
 
 FlowJs.prototype.launching = async function () {
   const instance = this;
-  const { returnGet, setQueue, ajaxJson } = GeneralJs;
+  const { totalContents, ea, baseClassName } = this;
+  const { returnGet, setQueue, ajaxJson, withOut, colorChip, chartJsPatch, createNode } = GeneralJs;
   try {
     const getObj = returnGet();
     const entireMode = (getObj.dataonly === "true" &&  getObj.entire === "true")
@@ -107,7 +108,218 @@ FlowJs.prototype.launching = async function () {
     document.getElementById("moveRightArea").remove();
     document.getElementById("grayLeftOpenButton").remove();
 
-    await this.launchingDiagram();
+    // await this.launchingDiagram();
+
+    await chartJsPatch();
+
+    const base = createNode({
+      mother: totalContents,
+      class: [ baseClassName ],
+      style: {
+        position: "absolute",
+        top: String(0),
+        left: String(0) + ea,
+        width: withOut(0, ea),
+        height: withOut(this.belowHeight, ea),
+      }
+    });
+
+    const canvas = createNode({
+      mother: base,
+      mode: "canvas",
+      style: {
+        display: "block",
+        position: "relative",      
+      },
+    })
+    const type = "line";
+    const fill = false;
+    const tension = 0.3;
+    const borderJoinStyle = "round";
+
+
+    // remodeling
+
+    // new window.Chart(canvas, {
+    //   type: "bar",
+    //   data: {
+    //     labels: [ "2018년", "2019년", "2020년", "2021년" ],
+    //     datasets: [
+    //       {
+    //         label: "리모델링 시장 규모",
+    //         data: [ 37.06, 39.04, 41.5, 60 ], 
+    //         borderColor: colorChip.green,
+    //         backgroundColor: colorChip.green,
+    //         borderRadius: 3,
+    //         borderWidth: 0,
+    //       },
+    //       {
+    //         label: "홈퍼니싱 시장 규모",
+    //         data: [ 8.0902,8.0354, 9.0306, 10.0176 ], 
+    //         borderColor: colorChip.yellow,
+    //         backgroundColor: colorChip.yellow,
+    //         borderRadius: 3,
+    //         borderWidth: 0,
+    //       },
+    //     ]
+    //   },
+    //   options: {
+    //     scales: {
+    //       // x: {
+    //       //   stacked: true,
+    //       // },
+    //       y: {
+    //         beginAtZero: true,
+    //         // stacked: true,
+    //       }
+    //     }
+    //   }
+    // });
+
+    // 국민소득
+
+    // new window.Chart(canvas, {
+    //   type: "bar",
+    //   data: {
+    //     labels: [ "1990년", "1995년", "2000년", "2005년", "2010년", "2015년", "2020년" ],
+    //     datasets: [
+    //       {
+    //         label: "1인당 국민소득",
+    //         data: [ 6450, 11820, 11030, 18520, 22200, 28720, 32860 ], 
+    //         borderColor: colorChip.red,
+    //         backgroundColor: colorChip.red,
+    //         borderRadius: 3,
+    //         borderWidth: 0,
+    //       },
+    //     ]
+    //   },
+    //   options: {
+    //     scales: {
+    //       // x: {
+    //       //   stacked: true,
+    //       // },
+    //       y: {
+    //         beginAtZero: true,
+    //         // stacked: true,
+    //       }
+    //     }
+    //   }
+    // });
+
+
+    // 인테리어 니즈
+
+    // new window.Chart(canvas, {
+    //   type: "pie",
+    //   data: {
+    //     labels: [ "가끔 생각함", "자주 생각함", "생각해 본적 없음" ],
+    //     datasets: [
+    //       {
+    //         label: "1인당 국민소득",
+    //         data: [ 43.5, 17.3, 31 ], 
+    //         backgroundColor: [ colorChip.yellow, colorChip.green, colorChip.gray3 ],
+    //       },
+    //     ]
+    //   },
+    //   options: {
+    //     responsive: true,
+    //     plugins: {
+    //       legend: {
+    //         position: 'top',
+    //       },
+    //     }
+    //   }
+    // });
+
+
+    new window.Chart(canvas, {
+      type: "bar",
+      data: {
+        labels: [
+          "2021. 01",
+          "2021. 02",
+          "2021. 03",
+          "2021. 04",
+          "2021. 05",
+          "2021. 06",
+          "2021. 07",
+          "2021. 08",
+          "2021. 09",
+          "2021. 10",
+          "2021. 11",
+          "2021. 12",
+          "2022. 01",
+          "2022. 02",
+          "2022. 03",
+          "2022. 04",
+          "2022. 05",
+          "2022. 06",
+          "2022. 07",
+          "2022. 08",
+          "2022. 09",
+          "2022. 10",
+          "2022. 11",
+          "2022. 12",
+          "2023. 01",
+          "2023. 02",
+          "2023. 03",
+          "2023. 04",
+        ],
+        datasets: [
+          {
+            label: "홈리에종 웹 페이지뷰",
+            data: [
+              88,
+              75,
+              96,
+              103,
+              110,
+              104,
+              95,
+              164,
+              114,
+              130,
+              116,
+              120,
+              107,
+              86,
+              92,
+              81,
+              58,
+              82,
+              86,
+              167,
+              173,
+              150,
+              159,
+              142,
+              181,
+              145,
+              150,
+              197
+            ], 
+            borderColor: colorChip.green,
+            backgroundColor: colorChip.green,
+            borderRadius: 3,
+            borderWidth: 0,
+          },
+        ]
+      },
+      options: {
+        scales: {
+          // x: {
+          //   stacked: true,
+          // },
+          y: {
+            beginAtZero: true,
+            // stacked: true,
+          }
+        }
+      }
+    });  
+
+
+
 
     
   } catch (e) {

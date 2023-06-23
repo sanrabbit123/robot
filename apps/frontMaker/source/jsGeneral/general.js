@@ -6523,7 +6523,7 @@ GeneralJs.facebookSdkPatch = function () {
   const version = "v14.0"
   window.fbAsyncInit = () => { FB.init({ appId, autoLogAppEvents, xfbml, version }); FB.AppEvents.logPageView(); }
   return new Promise((resolve, reject) => {
-    GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://connect.facebook.net/en_US/sdk.js") }, "/requestScript").then((obj) => {
+    GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://connect.facebook.net/en_US/sdk.js") }, BACKHOST + "/requestScript").then((obj) => {
       const { data } = obj;
       const facebookFunc = new Function(data);
       return facebookFunc();
@@ -6538,7 +6538,7 @@ GeneralJs.facebookSdkPatch = function () {
 GeneralJs.kakaoSdkPatch = function () {
   const appKey = "9731e2ecf82492f8d33d98d9bac33823";
   return new Promise((resolve, reject) => {
-    GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://developers.kakao.com/sdk/js/kakao.min.js") }, "/requestScript").then((obj) => {
+    GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://developers.kakao.com/sdk/js/kakao.min.js") }, BACKHOST + "/requestScript").then((obj) => {
       const { data } = obj;
       const kakaoSdkFunction = new Function(data);
       return kakaoSdkFunction();
@@ -6562,7 +6562,7 @@ GeneralJs.kakaoSdkPatch = function () {
 GeneralJs.chartJsPatch = function (dataObject = null, url = "") {
   if (dataObject === null) {
     return new Promise((resolve, reject) => {
-      GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://cdn.jsdelivr.net/npm/chart.js") }, "/requestScript").then((obj) => {
+      GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://cdn.jsdelivr.net/npm/chart.js") }, BACKHOST + "/requestScript").then((obj) => {
         const { data } = obj;
         const chartJsPatch = new Function(data);
         if (window.Chart !== undefined) {
@@ -6586,7 +6586,7 @@ GeneralJs.chartJsPatch = function (dataObject = null, url = "") {
     });
   } else if (typeof dataObject === "object" && typeof url === "string" && !Array.isArray(dataObject)) {
     return new Promise((resolve, reject) => {
-      GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://cdn.jsdelivr.net/npm/chart.js") }, "/requestScript").then((obj) => {
+      GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://cdn.jsdelivr.net/npm/chart.js") }, BACKHOST + "/requestScript").then((obj) => {
         const { data } = obj;
         const chartJsPatch = new Function(data);
         if (window.Chart !== undefined) {
@@ -6618,7 +6618,7 @@ GeneralJs.chartJsPatch = function (dataObject = null, url = "") {
       throw new Error("invalid input");
     }
     return new Promise((resolve, reject) => {
-      GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://cdn.jsdelivr.net/npm/chart.js") }, "/requestScript").then((obj) => {
+      GeneralJs.ajaxJson({ url: window.encodeURIComponent("https://cdn.jsdelivr.net/npm/chart.js") }, BACKHOST + "/requestScript").then((obj) => {
         const { data } = obj;
         const chartJsPatch = new Function(data);
         if (window.Chart !== undefined) {
