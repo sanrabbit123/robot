@@ -171,12 +171,124 @@ DevContext.prototype.launching = async function () {
     // /designer path => desid injection
 
 
-    // const tf = require("@tensorflow/tfjs-node");
+
+    const makeModel = async (matrixX, matrixY, deepMode = 3, hiddenUnits = 200) => {
+      try {
+        const makeModelFactor = async (matrixX, matrixY, deepMode = 3, hiddenUnits = 200) => {
+          try {
+            if (![ 0, 1, 2, 3, 4, 5 ].includes(deepMode)) {
+              throw new Error("invalid mode");
+            }
+            const flow = require("@tensorflow/tfjs-node");
+            const activation = "relu";
+            const unitEpochs = 200;
+            const finalEpochs = 1200;
+            const safeConst = 250;
+            const lossArrConst = 5;
+            let tensorX, tensorY;
+            let setX, setY;
+            let model;
+            let compileParam;
+            let fitParam;
+            let fitResult;
+            let predictResult;
+            let safeNum;
+            let finalLoss;
+            let lossArr;
+            let setW, setH, setA, setB, setC;
+            
+            tensorX = flow.tensor(matrixX);
+            tensorY = flow.tensor(matrixY);
+        
+            if (deepMode === 0) {
+              setX = flow.input({ shape: [ matrixX[0].length ] });
+              setY = flow.layers.dense({ units: matrixY[0].length, activation }).apply(setX);
+            } else if (deepMode === 1) {
+              setX = flow.input({ shape: [ matrixX[0].length ] });
+              setW = flow.layers.dense({ units: hiddenUnits, activation }).apply(setX);
+              setY = flow.layers.dense({ units: matrixY[0].length, activation }).apply(setW);
+            } else if (deepMode === 2) {
+              setX = flow.input({ shape: [ matrixX[0].length ] });
+              setW = flow.layers.dense({ units: hiddenUnits, activation }).apply(setX);
+              setH = flow.layers.dense({ units: hiddenUnits, activation }).apply(setW);
+              setY = flow.layers.dense({ units: matrixY[0].length, activation }).apply(setH);
+            } else if (deepMode === 3) {
+              setX = flow.input({ shape: [ matrixX[0].length ] });
+              setW = flow.layers.dense({ units: hiddenUnits, activation }).apply(setX);
+              setH = flow.layers.dense({ units: hiddenUnits, activation }).apply(setW);
+              setA = flow.layers.dense({ units: hiddenUnits, activation }).apply(setH);
+              setY = flow.layers.dense({ units: matrixY[0].length, activation }).apply(setA);
+            } else if (deepMode === 4) {
+              setX = flow.input({ shape: [ matrixX[0].length ] });
+              setW = flow.layers.dense({ units: hiddenUnits, activation }).apply(setX);
+              setH = flow.layers.dense({ units: hiddenUnits, activation }).apply(setW);
+              setA = flow.layers.dense({ units: hiddenUnits, activation }).apply(setH);
+              setB = flow.layers.dense({ units: hiddenUnits, activation }).apply(setA);
+              setY = flow.layers.dense({ units: matrixY[0].length, activation }).apply(setB);
+            } else if (deepMode === 5) {
+              setX = flow.input({ shape: [ matrixX[0].length ] });
+              setW = flow.layers.dense({ units: hiddenUnits, activation }).apply(setX);
+              setH = flow.layers.dense({ units: hiddenUnits, activation }).apply(setW);
+              setA = flow.layers.dense({ units: hiddenUnits, activation }).apply(setH);
+              setB = flow.layers.dense({ units: hiddenUnits, activation }).apply(setA);
+              setC = flow.layers.dense({ units: hiddenUnits, activation }).apply(setB);
+              setY = flow.layers.dense({ units: matrixY[0].length, activation }).apply(setC);
+            } else {
+              throw new Error("invalid mode");
+            }
+        
+            model = flow.model({ inputs: setX, outputs: setY });
+            compileParam = { optimizer: flow.train.adam(), loss: flow.losses.meanSquaredError };
+            model.compile(compileParam);
+        
+            fitParam = { epochs: unitEpochs };
+            safeNum = 0;
+            finalLoss = 500000;
+            lossArr = (new Array(lossArrConst)).fill(0, 0);
+            do {
+              fitResult = await model.fit(tensorX, tensorY, fitParam);
+              safeNum++;
+              finalLoss = fitResult.history.loss[fitResult.history.loss.length - 1];
+              lossArr.push(finalLoss);
+              lossArr = lossArr.slice(-1 * lossArrConst);
+              if (lossArr.every((value) => { return value === lossArr[0] })) {
+                break;
+              }
+            } while (fitResult.history.loss[fitResult.history.loss.length - 1] > 1 && safeNum < safeConst)
+            fitResult = await model.fit(tensorX, tensorY, { epochs: finalEpochs });
+        
+            if (fitResult.history.loss[fitResult.history.loss.length - 1] > 1) {
+              throw new Error("mode make fail");
+            }
+    
+            await model.save("file://" + process.cwd() + "/temp/myModel");
+            return model;
+          } catch (e) {
+            return null;
+          }
+        }
+        let result;
+        do {
+          result = await makeModelFactor(matrixX, matrixY, deepMode, hiddenUnits);
+        } while (result === null)
+        return result;
+      } catch (e) {
+        console.log(e);
+        return null;
+      }
+    }
+    await makeModel(
+      [ [ 2 ], [ 3 ], [ 4 ], [ 5 ], [ 6 ], [ 7 ], [ 8 ], [ 9 ], [ 10 ], [ 11 ], [ 20 ], [ 30 ], [ 40 ] ],
+      [ [ 4 ], [ 9 ], [ 16 ], [ 25 ], [ 36 ], [ 49 ], [ 64 ], [ 81 ], [ 100 ], [ 121 ], [ 400 ], [ 900 ], [ 1600 ] ],
+      3,
+      200
+    );
 
 
-    // const a = tf.tensor([ 1, 2, 3, 4 ]);
 
-    // console.log(a);
+
+
+
 
     
 
