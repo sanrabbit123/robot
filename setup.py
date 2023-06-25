@@ -30,6 +30,8 @@ class RobotInstall:
             [ "numpy" ],
             [ "pillow" ],
             [ "google-ads" ],
+            [ "colour" ],
+            [ "colour-science" ],
         ]
 
         self.upgrade = [

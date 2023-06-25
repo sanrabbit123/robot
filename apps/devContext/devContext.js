@@ -179,6 +179,39 @@ DevContext.prototype.launching = async function () {
     // console.log(a);
 
     
+
+
+    // const abDistance = (arr0, arr1) => {
+    //   const [ x0, y0, z0 ] = arr0;
+    //   const [ x1, y1, z1 ] = arr1;
+    //   const x2 = Math.abs(x0 - x1) * Math.abs(x0 - x1);
+    //   const y2 = Math.abs(y0 - y1) * Math.abs(y0 - y1);
+    //   const z2 = Math.abs(z0 - z1) * Math.abs(z0 - z1);
+    //   let distance;
+    //   distance = Math.sqrt(x2 + y2 + z2);
+    //   return (Math.round(distance * 100)) / 100;
+    // }
+    // const a0 = [ 220, 220, 220 ];
+    // const a1 = [ 192, 192, 192 ];
+    // const a2 = [ 128, 128, 128 ];
+    // const a3 = [ 255, 255, 255 ];
+    // const a4 = [ 169, 169, 169 ];
+    // const distances = [
+    //   abDistance(a0, a1),
+    //   abDistance(a0, a2),
+    //   abDistance(a0, a3),
+    //   abDistance(a0, a4),
+    //   abDistance(a1, a2),
+    //   abDistance(a1, a3),
+    //   abDistance(a1, a4),
+    //   abDistance(a2, a3),
+    //   abDistance(a2, a4),
+    //   abDistance(a3, a4),
+    // ]
+    // console.log(distances);
+    // console.log(distances.reduce((acc, curr) => { return acc + curr }, 0) / distances.length);
+
+
     
 
 
