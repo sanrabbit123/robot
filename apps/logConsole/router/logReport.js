@@ -1063,13 +1063,13 @@ LogReport.prototype.dailyReports = async function () {
         const clientsEntireRows = await back.mongoRead("dailyClients", { "date.from": { $gte: queryStandardDate } }, { selfMongo });
 
         const facebookCampaignBoo = (str) => {
-          return ((/^[A-Z]/.test(str) || /^t/.test(str) || /^s/.test(str) || /^link/.test(str) || /^facebook/.test(str) || /^main_video/.test(str) || /^Mag/.test(str) || /^maposketch/.test(str) || /^MV/.test(str) || /^appeal/.test(str) || /^De_image/.test(str) || /^video_mom/.test(str)) && !/^home/.test(str) && !/^PO3/.test(str) && !/^M_DA/.test(str) && !/^apart/.test(str) && !/^interior/.test(str) && !/^about/.test(str) && !/^local/.test(str) && !/^consul/.test(str) && !/not set/g.test(str) && !/\(direct\)/g.test(str) && !/\(organic\)/g.test(str) && !/\(referral\)/g.test(str) && !/^mini/.test(str) && !/^local/.test(str) && !/^naver/.test(str) && !/^google/.test(str));
+          return /instagram/gi.test(str) || /facebook/gi.test(str);
         }
         const naverCampaignBoo = (str) => {
-          return ((/^home/.test(str) || /^naver/.test(str) || /^[0-9]/.test(str) || /^PO3/.test(str) || /^M_DA/.test(str) || /^conver/.test(str) || /^mini/.test(str) || /^local/.test(str) || /^conver/.test(str)  || /^apart/.test(str) || /^about/.test(str)  || /^interior/.test(str) || /^new/.test(str) || /^port/.test(str) || /^recruit/.test(str) || /^review/.test(str) || /^traffic/.test(str) || /^consul/.test(str)) && !/not set/g.test(str) && !/\(direct\)/g.test(str) && !/\(organic\)/g.test(str) && !/\(referral\)/g.test(str) && !/^link/g.test(str) && !/^facebook/g.test(str) && !/^main_video/g.test(str) && !/^google/.test(str));
+          return /naver/gi.test(str);
         }
         const googleCampaignBoo = (str) => {
-          return ((/^[ㄱ-ㅎ]/.test(str) || /^[가-힣]/.test(str) || /^google/.test(str)) && !/not set/g.test(str) && !/\(direct\)/g.test(str) && !/\(organic\)/g.test(str) && !/\(referral\)/g.test(str) && !/^home/g.test(str) && !/^facebook/g.test(str) && !/^link/g.test(str) && !/^local/g.test(str) && !/^naver/g.test(str));
+          return /google/gi.test(str) || /youtube/gi.test(str);
         }
 
         const getReportsByDate = async (targetDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories) => {
@@ -1247,19 +1247,19 @@ LogReport.prototype.dailyReports = async function () {
             facebookClicks = 0;
           }
 
-          facebookFromUsers = analyticsRows.data.users.detail.campaign.cases.filter((obj) => {
+          facebookFromUsers = analyticsRows.data.users.detail.source.cases.filter((obj) => {
             return facebookCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
-          facebookFromClicks = analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((obj) => {
+          facebookFromClicks = analyticsRows.data.conversion.consultingPage.detail.source.cases.filter((obj) => {
             return facebookCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
-          facebookFromPopups = analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((obj) => {
+          facebookFromPopups = analyticsRows.data.conversion.popupOpen.detail.source.cases.filter((obj) => {
             return facebookCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
@@ -1345,19 +1345,19 @@ LogReport.prototype.dailyReports = async function () {
             naverClicks = 0;
           }
 
-          naverFromUsers = analyticsRows.data.users.detail.campaign.cases.filter((obj) => {
+          naverFromUsers = analyticsRows.data.users.detail.source.cases.filter((obj) => {
             return naverCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
-          naverFromClicks = analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((obj) => {
+          naverFromClicks = analyticsRows.data.conversion.consultingPage.detail.source.cases.filter((obj) => {
             return naverCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
-          naverFromPopups = analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((obj) => {
+          naverFromPopups = analyticsRows.data.conversion.popupOpen.detail.source.cases.filter((obj) => {
             return naverCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
@@ -1655,19 +1655,19 @@ LogReport.prototype.dailyReports = async function () {
             googleClicks = 0;
           }
 
-          googleFromUsers = analyticsRows.data.users.detail.campaign.cases.filter((obj) => {
+          googleFromUsers = analyticsRows.data.users.detail.source.cases.filter((obj) => {
             return googleCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
-          googleFromClicks = analyticsRows.data.conversion.consultingPage.detail.campaign.cases.filter((obj) => {
+          googleFromClicks = analyticsRows.data.conversion.consultingPage.detail.source.cases.filter((obj) => {
             return googleCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
-          googleFromPopups = analyticsRows.data.conversion.popupOpen.detail.campaign.cases.filter((obj) => {
+          googleFromPopups = analyticsRows.data.conversion.popupOpen.detail.source.cases.filter((obj) => {
             return googleCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
@@ -2150,7 +2150,7 @@ LogReport.prototype.dailyReports = async function () {
             } else {
               simpleRes = simpleRows[0];
             }
-            target[5] = simpleRes.data.users.detail.campaign.cases.filter((obj) => {
+            target[5] = simpleRes.data.users.detail.source.cases.filter((obj) => {
               return facebookCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
@@ -2192,7 +2192,7 @@ LogReport.prototype.dailyReports = async function () {
             } else {
               simpleRes = simpleRows[0];
             }
-            target[5] = simpleRes.data.users.detail.campaign.cases.filter((obj) => {
+            target[5] = simpleRes.data.users.detail.source.cases.filter((obj) => {
               return facebookCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
@@ -2242,7 +2242,7 @@ LogReport.prototype.dailyReports = async function () {
             } else {
               simpleRes = simpleRows[0];
             }
-            target[4] = simpleRes.data.users.detail.campaign.cases.filter((obj) => {
+            target[4] = simpleRes.data.users.detail.source.cases.filter((obj) => {
               return naverCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
@@ -2284,7 +2284,7 @@ LogReport.prototype.dailyReports = async function () {
             } else {
               simpleRes = simpleRows[0];
             }
-            target[4] = simpleRes.data.users.detail.campaign.cases.filter((obj) => {
+            target[4] = simpleRes.data.users.detail.source.cases.filter((obj) => {
               return naverCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
@@ -2333,7 +2333,7 @@ LogReport.prototype.dailyReports = async function () {
             } else {
               simpleRes = simpleRows[0];
             }
-            target[4] = simpleRes.data.users.detail.campaign.cases.filter((obj) => {
+            target[4] = simpleRes.data.users.detail.source.cases.filter((obj) => {
               return googleCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
@@ -2375,7 +2375,7 @@ LogReport.prototype.dailyReports = async function () {
             } else {
               simpleRes = simpleRows[0];
             }
-            target[4] = simpleRes.data.users.detail.campaign.cases.filter((obj) => {
+            target[4] = simpleRes.data.users.detail.source.cases.filter((obj) => {
               return googleCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
