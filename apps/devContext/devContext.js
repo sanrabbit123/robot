@@ -171,32 +171,9 @@ DevContext.prototype.launching = async function () {
     // /designer path => desid injection
 
 
-
-
-    // const aws = new AwsAPIs();
-    // const response = await aws.detectImage(`${process.cwd()}/temp/test.jpg`);
-    // const response = await fileSystem(`readJson`, [ `${process.cwd()}/temp/test.json` ]);
-    // let newObj;
-
-    // newObj = {};
-    
-    // newObj.brightness = response.ImageProperties.Quality.Brightness;
-    // newObj.contrast = response.ImageProperties.Quality.Contrast;
-    // newObj.sharpness = response.ImageProperties.Quality.Sharpness;
-    // newObj.colors = [];
-    // for (let obj of response.ImageProperties.DominantColors) {
-    //   newObj.colors.push({
-    //     value: [ obj.Red, obj.Green, obj.Blue ],
-    //     hex: obj["HexCode"],
-    //     ratio: obj.PixelPercent / 100
-    //   })
-    // }
+    // ai study =====================================================================================================================
 
     // console.log(newObj);
-
-
-
-
 
     // const res = await requestSystem("https://api.sightengine.com/1.0/check.json", {
     //   media: (await fileSystem("readStream", [ `${process.cwd()}/temp/test.jpg` ])),
@@ -206,9 +183,6 @@ DevContext.prototype.launching = async function () {
     // })
 
     // console.log(res.data.colors);
-
-
-
 
     // const IMAGE_URL = 'https://samples.clarifai.com/metro-north.jpg';
 
@@ -253,14 +227,11 @@ DevContext.prototype.launching = async function () {
     // console.log(await image.readImage(process.cwd() + "/temp/test.jpg"));
 
 
+    // ai study =====================================================================================================================
 
 
 
-
-
-
-
-
+    // ai study =====================================================================================================================
 
 
     // const makeModel = async (matrixX, matrixY, deepMode = 3, hiddenUnits = 200) => {
@@ -376,8 +347,39 @@ DevContext.prototype.launching = async function () {
     // );
 
 
+    // ai study =====================================================================================================================
 
     
+
+
+    // real study
+
+    // const authorizationKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlJFQUxFU1RBVEUiLCJpYXQiOjE2ODc3NzAzNzgsImV4cCI6MTY4Nzc4MTE3OH0.JpP5_LSy9qBTrGtO_uCaH7-vMcR_F7OEqCzzNySAfxw";
+    // const complexId = "8298";
+
+    // const { complexDetail, complexPyeongDetailList } = (await chrome.frontScript("https://new.land.naver.com/complexes/" + complexId, (async function () {
+    //   const res = await fetch("/api/complexes/__complexId__?sameAddressGroup=false", { headers: { "Authorization": "Bearer " + "__authorizationKey__" } })
+    //   const json = await res.json();
+    //   return JSON.stringify(json);
+    // }).toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '').replace(/__authorizationKey__/gi, authorizationKey).replace(/__complexId__/gi, complexId)));
+    // let resultObj;
+
+    // resultObj = {};
+    // resultObj.id = complexDetail.complexNo;
+    // resultObj.name = complexDetail.complexName;
+    // resultObj.address = {
+    //   detail: complexDetail.address + " " + complexDetail.detailAddress,
+    //   road: complexDetail.roadAddressPrefix + " " + complexDetail.roadAddress,
+    //   latitude: complexDetail.latitude,
+    //   longitude: complexDetail.longitude,
+    //   zipCode: complexDetail.roadZipCode,
+    // }
+
+    // console.log(complexDetail);
+    // console.log(complexPyeongDetailList);
+    // console.log(resultObj);
+
+
 
 
 

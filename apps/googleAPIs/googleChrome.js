@@ -200,14 +200,11 @@ GoogleChrome.prototype.getHtml = async function (link) {
 }
 
 GoogleChrome.prototype.frontScript = async function (link, func) {
-  if (typeof link !== "string" || typeof func !== "function") {
-    throw new Error("invalid input => { link, async func }");
-  }
   if (!/^http/.test(link)) {
     throw new Error("invalid link");
   }
   const instance = this;
-  const { equalJson, fileSystem } = this.mother;
+  const { equalJson, fileSystem, mediaQuery } = this.mother;
   const { puppeteer } = this;
   const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
   try {
@@ -218,7 +215,13 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
     await page.goto(link, { waitUntil: "networkidle2" });
 
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
-    funcScript = generalString + "\n\n" + func.toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '');
+    if (typeof func === "function") {
+      funcScript = mediaQuery(generalString).code + "\n\n" + func.toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '');
+    } else if (typeof func === "string") {
+      funcScript = mediaQuery(generalString).code + "\n\n" + func;
+    } else {
+      throw new Error("invalid input");
+    }
     frontResponse = await page.evaluate(new AsyncFunction(funcScript));
 
     await browser.close();
