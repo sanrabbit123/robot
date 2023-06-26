@@ -184,7 +184,6 @@ DevContext.prototype.launching = async function () {
     // newObj.contrast = response.ImageProperties.Quality.Contrast;
     // newObj.sharpness = response.ImageProperties.Quality.Sharpness;
     // newObj.colors = [];
-
     // for (let obj of response.ImageProperties.DominantColors) {
     //   newObj.colors.push({
     //     value: [ obj.Red, obj.Green, obj.Blue ],
@@ -194,6 +193,59 @@ DevContext.prototype.launching = async function () {
     // }
 
     // console.log(newObj);
+
+
+
+
+
+    // const res = await requestSystem("https://api.sightengine.com/1.0/check.json", {
+    //   media: (await fileSystem("readStream", [ `${process.cwd()}/temp/test.jpg` ])),
+    //   models: "properties",
+    //   api_user: "1288531933",
+    //   api_secret: "sjpmis3Sg8eS3KyaSiHQ",
+    // })
+
+    // console.log(res.data.colors);
+
+
+
+
+    // const IMAGE_URL = 'https://samples.clarifai.com/metro-north.jpg';
+
+    // const raw = JSON.stringify({
+    //   "user_app_id": {
+    //     "user_id": "clarifai",
+    //     "app_id": "main"
+    //   },
+    //   "inputs": [
+    //       {
+    //           "data": {
+    //               "image": {
+    //                   "url": IMAGE_URL
+    //               }
+    //           }
+    //       }
+    //   ]
+    // });
+    
+    // const requestOptions = {
+    //     method: 'POST',
+    //     headers: {
+    //         'Accept': 'application/json',
+    //         'Authorization': 'Key ' + 'e399e812ec1d4ef8b6f441d19f1af3c7'
+    //     },
+    //     body: raw
+    // };
+    
+    // // NOTE: MODEL_VERSION_ID is optional, you can also call prediction with the MODEL_ID only
+    // // https://api.clarifai.com/v2/models/{YOUR_MODEL_ID}/outputs
+    // // this will default to the latest version_id
+    
+    // fetch(`https://api.clarifai.com/v2/models/general-image-detection/versions/1580bb1932594c93b7e2e04456af7c6f/outputs`, requestOptions)
+    //     .then(response => response.text())
+    //     .then(result => console.log(result))
+    //     .catch(error => console.log('error', error));
+
 
 
 
