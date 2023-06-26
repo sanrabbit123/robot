@@ -172,6 +172,45 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+    // const aws = new AwsAPIs();
+    // const response = await aws.detectImage(`${process.cwd()}/temp/test.jpg`);
+    // const response = await fileSystem(`readJson`, [ `${process.cwd()}/temp/test.json` ]);
+    // let newObj;
+
+    // newObj = {};
+    
+    // newObj.brightness = response.ImageProperties.Quality.Brightness;
+    // newObj.contrast = response.ImageProperties.Quality.Contrast;
+    // newObj.sharpness = response.ImageProperties.Quality.Sharpness;
+    // newObj.colors = [];
+
+    // for (let obj of response.ImageProperties.DominantColors) {
+    //   newObj.colors.push({
+    //     value: [ obj.Red, obj.Green, obj.Blue ],
+    //     hex: obj["HexCode"],
+    //     ratio: obj.PixelPercent / 100
+    //   })
+    // }
+
+    // console.log(newObj);
+
+
+
+    // const image = new ImageReader();
+    // console.log(await image.readImage(process.cwd() + "/temp/test.jpg"));
+
+
+
+
+
+
+
+
+
+
+
+
     // const makeModel = async (matrixX, matrixY, deepMode = 3, hiddenUnits = 200) => {
     //   try {
     //     const makeModelFactor = async (matrixX, matrixY, deepMode = 3, hiddenUnits = 200) => {

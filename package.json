@@ -15,6 +15,7 @@
     "@aws-sdk/client-ec2": "^3.359.0",
     "@aws-sdk/client-ec2-instance-connect": "^3.359.0",
     "@aws-sdk/client-polly": "^3.359.0",
+    "@aws-sdk/client-rekognition": "^3.359.0",
     "@aws-sdk/client-s3": "^3.359.0",
     "@aws-sdk/client-s3-control": "^3.359.0",
     "@google-analytics/data": "^3.2.0",

@@ -471,4 +471,35 @@ AwsAPIs.prototype.getCostByDate = async function (startDate, endDate) {
   }
 }
 
+AwsAPIs.prototype.detectImage = async function (filePath) {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  try {
+    if (typeof filePath !== "string") {
+      throw new Error("invalid input");
+    }
+    const { RekognitionClient, DetectLabelsCommand } = require("@aws-sdk/client-rekognition");
+    const client = new RekognitionClient({ region: "ap-northeast-2" });
+    const command = new DetectLabelsCommand({
+      Image: {
+        Bytes: (await fileSystem(`readBuffer`, [ filePath ])),
+      },
+      Features: [
+        "GENERAL_LABELS",
+        "IMAGE_PROPERTIES",
+      ]
+    });
+    const response = await client.send(command);
+    if (response["$metadata"].httpStatusCode < 300) {
+      return response;
+    } else {
+      console.log(response);
+      throw new Error("detect fail");
+    }
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 module.exports = AwsAPIs;

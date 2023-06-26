@@ -799,7 +799,11 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                       }).filter((obj) => {
                         return obj.amount.total === itemAmount
                       }).filter((obj) => {
-                        return obj.date.valueOf() > thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf()
+                        if (thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf() < emptyDateValue) {
+                          return false;
+                        } else {
+                          return obj.date.valueOf() > thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf()
+                        }
                       }).length > 0);
                     } else {
                       condition = (taxBills.filter((obj) => {
@@ -807,7 +811,11 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                       }).filter((obj) => {
                         return obj.sum.total === itemAmount
                       }).filter((obj) => {
-                        return obj.date.valueOf() > thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf()
+                        if (thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf() < emptyDateValue) {
+                          return false;
+                        } else {
+                          return obj.date.valueOf() > thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf()
+                        }
                       }).length > 0);
                     }
                   } else {
@@ -865,7 +873,11 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                     }).filter((obj) => {
                       return obj.amount.total === itemAmount
                     }).filter((obj) => {
-                      return obj.date.valueOf() > thisTargetDesigner.projects[i].process.calculation.payments.first.date.valueOf()
+                      if (thisTargetDesigner.projects[i].process.calculation.payments.first.date.valueOf() < emptyDateValue) {
+                        return false;
+                      } else {
+                        return obj.date.valueOf() > thisTargetDesigner.projects[i].process.calculation.payments.first.date.valueOf()
+                      }
                     }).length > 0);
                   } else {
                     condition = (taxBills.filter((obj) => {
@@ -873,7 +885,11 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                     }).filter((obj) => {
                       return obj.sum.total === itemAmount
                     }).filter((obj) => {
-                      return obj.date.valueOf() > thisTargetDesigner.projects[i].process.calculation.payments.first.date.valueOf()
+                      if (thisTargetDesigner.projects[i].process.calculation.payments.first.date.valueOf() < emptyDateValue) {
+                        return false;
+                      } else {
+                        return obj.date.valueOf() > thisTargetDesigner.projects[i].process.calculation.payments.first.date.valueOf()
+                      }
                     }).length > 0);
                   }
                 }
