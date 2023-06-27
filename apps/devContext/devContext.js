@@ -184,44 +184,79 @@ DevContext.prototype.launching = async function () {
 
     // console.log(res.data.colors);
 
-    // const IMAGE_URL = 'https://samples.clarifai.com/metro-north.jpg';
 
-    // const raw = JSON.stringify({
-    //   "user_app_id": {
-    //     "user_id": "clarifai",
-    //     "app_id": "main"
-    //   },
-    //   "inputs": [
-    //       {
-    //           "data": {
-    //               "image": {
-    //                   "url": IMAGE_URL
-    //               }
-    //           }
-    //       }
-    //   ]
-    // });
+
+    /*
+    const image = new ImageReader();
+    const detectImageFactors = (imagePath) => {
+      const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
+      const clarifaiKey = "e399e812ec1d4ef8b6f441d19f1af3c7";
+      const stub = ClarifaiStub.grpc();
+      const metaData = new grpc.Metadata();
+      let inputData;
+      let imageInfo;
+      return new Promise((resolve, reject) => {
+        metaData.set("authorization", "Key " + clarifaiKey);
+        image.readImage(imagePath).then((info) => {
+          imageInfo = info;
+          return fileSystem(`readBuffer`, [ imagePath ]);
+        }).then((buffer) => {
+          inputData = {
+            user_app_id: { "user_id": "clarifai", "app_id": "main" },
+            model_id: "general-image-detection",
+            inputs: [
+              { data: { image: { url: null, base64: buffer } } }
+            ]
+          };
+          stub.PostModelOutputs(inputData, metaData, (err, response) => {
+            if (err) {
+              reject(err);
+            }
+            if (response.status.code !== 10000) {
+              reject("Post model outputs failed, status: " + response.status.description);
+            }
+            const output = response.outputs[0];
+            const totalWidth = imageInfo.geometry.width;
+            const totalHeight = imageInfo.geometry.height;
+            const totalArea = totalWidth * totalHeight;
+            let resultObj;
+            let detailArr;
+
+            detailArr = output.data.regions.map((obj) => {
+              let x, y, width, height;
+              y = obj.region_info.bounding_box.top_row * totalHeight;
+              x = obj.region_info.bounding_box.left_col * totalWidth;
+              width = Math.abs(obj.region_info.bounding_box.right_col - obj.region_info.bounding_box.left_col) * totalWidth;
+              height = Math.abs(obj.region_info.bounding_box.bottom_row - obj.region_info.bounding_box.top_row) * totalHeight;
+              return {
+                name: obj.data.concepts.length > 0 ? obj.data.concepts[0].name : "unknown",
+                bound: { x, y, width, height, area: width * height, ratio: (width * height) / totalArea },
+              };
+            }).filter((obj) => {
+              return obj.name !== "House";
+            });
+
+            resultObj = {};
+            resultObj.width = totalWidth;
+            resultObj.height = totalHeight;
+            resultObj.area = totalArea;
+            resultObj.factors = {};
+            resultObj.factors.length = detailArr.length;
+            resultObj.factors.density = detailArr.reduce((acc, curr) => { return acc + curr.bound.ratio }, 0);
+            resultObj.factors.detail = detailArr;
+
+            resolve(resultObj);
+          })
+        }).catch((err) => {
+          reject(err);
+        })
+      });
+    }
+    console.log(await detectImageFactors(`${process.cwd()}/temp/test.jpg`));
+    */
+
+
     
-    // const requestOptions = {
-    //     method: 'POST',
-    //     headers: {
-    //         'Accept': 'application/json',
-    //         'Authorization': 'Key ' + 'e399e812ec1d4ef8b6f441d19f1af3c7'
-    //     },
-    //     body: raw
-    // };
-    
-    // // NOTE: MODEL_VERSION_ID is optional, you can also call prediction with the MODEL_ID only
-    // // https://api.clarifai.com/v2/models/{YOUR_MODEL_ID}/outputs
-    // // this will default to the latest version_id
-    
-    // fetch(`https://api.clarifai.com/v2/models/general-image-detection/versions/1580bb1932594c93b7e2e04456af7c6f/outputs`, requestOptions)
-    //     .then(response => response.text())
-    //     .then(result => console.log(result))
-    //     .catch(error => console.log('error', error));
-
-
-
 
     // const image = new ImageReader();
     // console.log(await image.readImage(process.cwd() + "/temp/test.jpg"));
@@ -6397,8 +6432,8 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "이준";
-    // const amount = 330000;
+    // const name = "이설화";
+    // const amount = 13584600;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
