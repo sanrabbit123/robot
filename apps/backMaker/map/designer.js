@@ -30,6 +30,8 @@ module.exports = {
               relatedM: 0,
               startY: 0,
               startM: 0,
+              detail: [],
+              school: [],
             },
             account: [],
             businessInfo: {
@@ -248,6 +250,25 @@ module.exports = {
             "NULL",
             "NULL"
           ]
+      };
+    } else if (subject === "information.business.career.detail") {
+      dummy = {
+        company: "",
+        team: "",
+        role: "",
+        date: {
+          start: new Date(1800, 0, 1),
+          end: new Date(1800, 1, 1),
+        }
+      };
+    } else if (subject === "information.business.career.school") {
+      dummy = {
+        school: "",
+        major: "",
+        date: {
+          start: new Date(1800, 0, 1),
+          end: new Date(1800, 1, 1),
+        }
       };
     }
     return dummy;

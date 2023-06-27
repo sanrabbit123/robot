@@ -93,11 +93,103 @@ PersonalSystem.prototype.toNormal = function () {
 
 //business --------------------------------------------------------------------
 
+const SchoolDetailFactorDate = function (json) {
+  this.start = new DateParse(json.start);
+  this.end = new DateParse(json.end);
+}
+
+SchoolDetailFactorDate.prototype.toNormal = function () {
+  let obj = {};
+  obj.start = this.start.toNormal();
+  obj.end = this.end.toNormal();
+  return obj;
+}
+
+const SchoolDetailFactor = function (json) {
+  this.school = json.school;
+  this.major = json.major;
+  this.date = new SchoolDetailFactorDate(json.date);
+}
+
+SchoolDetailFactor.prototype.toNormal = function () {
+  let obj = {};
+  obj.school = this.school;
+  obj.major = this.major;
+  obj.date = this.date.toNormal();
+  return obj;
+}
+
+class SchoolDetail extends Array {
+  constructor(json) {
+    super();
+    let tempInstance;
+    for (let i of json) {
+      tempInstance = new SchoolDetailFactor(i);
+      this.push(tempInstance);
+    }
+  }
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i.toNormal());
+    }
+    return arr;
+  }
+}
+
+const CareerDetailFactorDate = function (json) {
+  this.start = new DateParse(json.start);
+  this.end = new DateParse(json.end);
+}
+
+CareerDetailFactorDate.prototype.toNormal = function () {
+  let obj = {};
+  obj.start = this.start.toNormal();
+  obj.end = this.end.toNormal();
+  return obj;
+}
+
+const CareerDetailFactor = function (json) {
+  this.company = json.company;
+  this.team = json.team;
+  this.role = json.role;
+  this.date = new CareerDetailFactorDate(json.date);
+}
+
+CareerDetailFactor.prototype.toNormal = function () {
+  let obj = {};
+  obj.company = this.company;
+  obj.team = this.team;
+  obj.role = this.role;
+  obj.date = this.date.toNormal();
+  return obj;
+}
+
+class CareerDetail extends Array {
+  constructor(json) {
+    super();
+    let tempInstance;
+    for (let i of json) {
+      tempInstance = new CareerDetailFactor(i);
+      this.push(tempInstance);
+    }
+  }
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i.toNormal());
+    }
+    return arr;
+  }
+}
+
 const Career = function (json) {
   this.relatedY = Number(json.relatedY);
   this.relatedM = Number(json.relatedM);
   this.startY = Number(json.startY);
   this.startM = Number(json.startM);
+  this.detail = new CareerDetail(json.detail);
+  this.school = new SchoolDetail(json.school);
 }
 
 Career.prototype.toNormal = function () {
@@ -106,6 +198,8 @@ Career.prototype.toNormal = function () {
   obj.relatedM = Number(this.relatedM);
   obj.startY = Number(this.startY);
   obj.startM = Number(this.startM);
+  obj.detail = this.detail.toNormal();
+  obj.school = this.school.toNormal();
   return obj;
 }
 

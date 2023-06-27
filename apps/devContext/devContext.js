@@ -381,11 +381,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-    
-
-
     // const abDistance = (arr0, arr1) => {
     //   const [ x0, y0, z0 ] = arr0;
     //   const [ x1, y1, z1 ] = arr1;
@@ -421,8 +416,55 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const career = [
+    //   {
+    //     company: "홈리에종",
+    //     team: "디자인팀",
+    //     role: "디자이너",
+    //     date: {
+    //       start: new Date(2018, 9, 28),
+    //       end: new Date(2020, 2, 1),
+    //     }
+    //   },
+    //   {
+    //     company: "주식회사 홈리에종",
+    //     team: "개발팀",
+    //     role: "개발자",
+    //     date: {
+    //       start: new Date(2020, 2, 1),
+    //       end: new Date(3800, 0, 1),
+    //     }
+    //   },
+    // ];
+    // const school = [
+    //   {
+    //     school: "한양대학교 서울캠퍼스",
+    //     major: "건축학부",
+    //     date: {
+    //       start: new Date(2010, 2, 1),
+    //       end: new Date(2019, 2, 1),
+    //     }
+    //   },
+    // ];
+    // const designers = await this.MONGOC.db("miro81").collection("designer").find({}).toArray();
+    // let whereQuery, updateQuery;
+    // for (let designer of designers) {
+    //   whereQuery = { desid: designer.desid };
+    //   updateQuery = {};
+    //   updateQuery["information.business.career.detail"] = equalJson(JSON.stringify(career));
+    //   updateQuery["information.business.career.school"] = equalJson(JSON.stringify(school));
+    //   await this.MONGOC.db("miro81").collection("designer").updateOne(whereQuery, { $set: updateQuery });
+    //   console.log(whereQuery, updateQuery)
+    // }
+
     
+
     
+
+
+
+
+
 
 
     /*
