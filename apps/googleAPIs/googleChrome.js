@@ -57,7 +57,7 @@ GoogleChrome.prototype.scriptRequest = async function (url, frontCodeArr) {
   const { chromeLauncher, chromeRemote } = require(this.module + "/index.js");
   try {
     // const chrome = await chromeLauncher.launch({ chromeFlags: [] });
-    const chrome = await chromeLauncher.launch({ chromeFlags: [ "--no-sandbox", "--headless", "--disable-gpu" ] });
+    const chrome = await chromeLauncher.launch({ chromeFlags: [ "--no-sandbox", "--headless", "--disable-gpu", "--headless=new" ] });
     const protocol = await chromeRemote({ port: chrome.port });
     const { Network, Page, DOM, Emulation, Runtime, Console } = protocol;
     let result;
@@ -113,7 +113,7 @@ GoogleChrome.prototype.pdfPrint = async function (link, filePath = null, openMod
       filePath = tempDir + "/" + uniqueValue("hex") + ".pdf";
     }
     const browser = await puppeteer.launch({
-      args: [ "--no-sandbox", "--disable-setuid-sandbox" ],
+      args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ],
     });
     const page = await browser.newPage();
     await page.goto(link, { waitUntil: "networkidle2" });
@@ -152,7 +152,7 @@ GoogleChrome.prototype.pageToPng = async function (link, filePath = null, tablet
       filePath = tempDir + "/" + uniqueValue("hex") + ".png";
     }
     const browser = await puppeteer.launch({
-      args: [ "--no-sandbox", "--disable-setuid-sandbox" ],
+      args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ],
     });
     const page = await browser.newPage();
     await page.setViewport({
@@ -184,7 +184,7 @@ GoogleChrome.prototype.getHtml = async function (link) {
   const { puppeteer, fileSystem } = this;
   try {
     const browser = await puppeteer.launch({
-      args: [ "--no-sandbox", "--disable-setuid-sandbox" ],
+      args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ],
     });
     const page = await browser.newPage();
     await page.goto(link, { waitUntil: "networkidle2" });
@@ -208,7 +208,7 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
   const { puppeteer } = this;
   const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
   try {
-    const browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox" ] });
+    const browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ] });
     const page = await browser.newPage();
     let funcScript, generalString, frontResponse;
 
@@ -246,7 +246,7 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 2000) {
   const { puppeteer } = this;
   const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
   try {
-    const browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox" ] });
+    const browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ] });
     const page = await browser.newPage();
     let funcScript, generalString, frontResponse, frontResponses;
 

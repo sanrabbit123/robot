@@ -353,31 +353,157 @@ DevContext.prototype.launching = async function () {
 
 
     // real study
+    // const naver = new NaverAPIs();
+    // console.log((await naver.complexSearch("경기 평택시 상서재로5길 15 (동삭동, 평택센트럴자이 1단지) 102동")));
 
-    // const authorizationKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlJFQUxFU1RBVEUiLCJpYXQiOjE2ODc3NzAzNzgsImV4cCI6MTY4Nzc4MTE3OH0.JpP5_LSy9qBTrGtO_uCaH7-vMcR_F7OEqCzzNySAfxw";
-    // const complexId = "8298";
+    // const sampleValue = "서울 서대문구 세무서길 82-17 홍제역해링턴플레이스 108동 1504호";
+    // console.log((await naver.complexSearch(sampleValue)));
 
-    // const { complexDetail, complexPyeongDetailList } = (await chrome.frontScript("https://new.land.naver.com/complexes/" + complexId, (async function () {
-    //   const res = await fetch("/api/complexes/__complexId__?sameAddressGroup=false", { headers: { "Authorization": "Bearer " + "__authorizationKey__" } })
-    //   const json = await res.json();
-    //   return JSON.stringify(json);
-    // }).toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '').replace(/__authorizationKey__/gi, authorizationKey).replace(/__complexId__/gi, complexId)));
-    // let resultObj;
 
-    // resultObj = {};
-    // resultObj.id = complexDetail.complexNo;
-    // resultObj.name = complexDetail.complexName;
-    // resultObj.address = {
-    //   detail: complexDetail.address + " " + complexDetail.detailAddress,
-    //   road: complexDetail.roadAddressPrefix + " " + complexDetail.roadAddress,
-    //   latitude: complexDetail.latitude,
-    //   longitude: complexDetail.longitude,
-    //   zipCode: complexDetail.roadZipCode,
+    // const res = await requestSystem("https://map.naver.com/v5/api/sites/summary/1968106008", {
+    //   lang: "ko",
+    // }, {
+    //   method: "get",
+    //   headers: {
+    //     "Pragma": `no-cache`,
+    //     "Referer": `https://map.naver.com/`,
+    //     "Sec-Ch-Ua": `"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"`,
+    //     "Sec-Ch-Ua-Mobile": `?0`,
+    //     "Sec-Ch-Ua-Platform": `"macOS"`,
+    //     "Sec-Fetch-Dest": `empty`,
+    //     "Sec-Fetch-Mode": `cors`,
+    //     "Sec-Fetch-Site": `same-origin`,
+    //     "User-Agent": `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36`,
+    //   }
+    // })
+    // console.log(res.data);
+
+
+    // const sampleValue = "경기 광주시 문형산길157번길 12-7 (신현동, 큐비코) 104동 102호";
+    // const sampleValue = "경기 광주시 문형산길157번길 12-7 (신현동, 큐비코) 104동 102호";
+    // let res, firstId;
+    // let startIndex;
+    // let secondTarget;
+    // let targetObject;
+
+    // res = await requestSystem("https://hogangnono.com/api/v2/searches", {
+    //   query: sampleValue,
+    //   x: "127.107468",
+    //   y: "37.4975273",
+    // }, {
+    //   method: "get",
+    //   headers: {
+    //     "Sec-Ch-Ua": `"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"`,
+    //     "Sec-Ch-Ua-Mobile": `?0`,
+    //     "Sec-Ch-Ua-Platform": `"macOS"`,
+    //     "Sec-Fetch-Dest": `empty`,
+    //     "Sec-Fetch-Mode": `cors`,
+    //     "Sec-Fetch-Site": `same-origin`,
+    //     "User-Agent": `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36`,
+    //     "X-Hogangnono-Api-Version": `1.9.11`,
+    //     "X-Hogangnono-App-Name": `hogangnono`,
+    //     "X-Hogangnono-At": `B-77rONrQGeer_YaBA1iyqDkRtJrqOpxdtiQ`,
+    //     "X-Hogangnono-Ct": `1687844642572`,
+    //     "X-Hogangnono-Event-Duration": `740576`,
+    //     "X-Hogangnono-Event-Log": `acda0c8a03ef4f72cc8bac1a63e907f804ff68fb`,
+    //     "X-Hogangnono-Platform": `web`,
+    //     "X-Hogangnono-Release-Version": `1.9.11.33`,
+    //   }
+    // })
+
+    // if (res.data.data.matched.apt.list.length === 0) {
+    //   throw new Error("there is no information");
+    // }
+    // firstId = res.data.data.matched.apt.list[0].id;
+    // if (typeof firstId !== "string") {
+    //   throw new Error("there is no information 2");
     // }
 
-    // console.log(complexDetail);
-    // console.log(complexPyeongDetailList);
-    // console.log(resultObj);
+    // res = await requestSystem("https://hogangnono.com/apt/" + firstId, {}, {
+    //   method: "get",
+    //   headers: {
+    //     "Sec-Ch-Ua": `"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"`,
+    //     "Sec-Ch-Ua-Mobile": `?0`,
+    //     "Sec-Ch-Ua-Platform": `"macOS"`,
+    //     "Sec-Fetch-Dest": `document`,
+    //     "Sec-Fetch-Mode": `navigate`,
+    //     "Sec-Fetch-Site": `none`,
+    //     "Sec-Fetch-Site": `none`,
+    //     "Sec-Fetch-User": `?1`,
+    //     "Upgrade-Insecure-Requests": `1`,
+    //     "User-Agent": `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36`,
+    //   }
+    // })
+
+    // targetObject = JSON.parse(/<script[^\>]*>(.+AptStore.+)<\/script>/g.exec(res.data)[1].slice(1, -1).replace(/\\"/gi, '"').replace(/\\\\/gi, "\\"));
+    // console.log(targetObject.AptStore.detail.portal_id);
+
+    
+
+    // const sheetsId = "1NLr0lgiNheytUSvwn-d5Ys5QRzgW5uwv_EIbTqNKQ1s";
+    // const matrix = await sheets.get_value_inPython(sheetsId, "A2:E");
+    // const newMatrix = [[
+    //   "cliid",
+    //   "name",
+    //   "requestNumber",
+    //   "pyeong",
+    //   "address",
+    //   "complexId"
+    // ]];
+    // let tempResult;
+
+    // for (let arr of matrix) {
+    //   tempResult = await naver.complexSearch(arr[4], true);
+    //   newMatrix.push([
+    //     arr[0],
+    //     arr[1],
+    //     arr[2],
+    //     arr[3],
+    //     arr[4],
+    //     tempResult === null ? "" : tempResult,
+    //   ])
+    //   await fileSystem(`writeJson`, [ `${process.cwd()}/temp/landMatrix.json`, JSON.parse(JSON.stringify(newMatrix)) ]);
+    //   await sleep((3000 * (Math.random())) + 1000);
+    // }
+
+
+
+    // const parent = "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ";
+    // const selfMongo = this.MONGOC;
+    // const clients = await back.getClientsByQuery({}, { selfMongo });
+    // let matrix;
+    // let sheetsId;
+
+    // matrix = [
+    //   [
+    //     "cliid",
+    //     "name",
+    //     "requestNumber",
+    //     "address",
+    //     "pyeong",
+    //   ]
+    // ]
+
+    // for (let client of clients) {
+    //   for (let i = 0; i < client.requests.length; i++) {
+    //     matrix.push([
+    //       client.cliid,
+    //       client.name,
+    //       i,
+    //       client.requests[0].request.space.address.value,
+    //       client.requests[0].request.space.pyeong.value,
+    //     ]);
+    //   }
+    // }
+
+    // sheetsId = await sheets.create_newSheets_inPython("고객 주소와 평형과 네이버 부동산", parent);
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    // await sheets.update_value_inPython(sheetsId, "", matrix);
+    // console.log(matrix);
+
+
+
+
 
 
 
@@ -414,50 +540,50 @@ DevContext.prototype.launching = async function () {
 
     
 
+    
 
-
-    // const career = [
-    //   {
-    //     company: "홈리에종",
-    //     team: "디자인팀",
-    //     role: "디자이너",
-    //     date: {
-    //       start: new Date(2018, 9, 28),
-    //       end: new Date(2020, 2, 1),
-    //     }
-    //   },
-    //   {
-    //     company: "주식회사 홈리에종",
-    //     team: "개발팀",
-    //     role: "개발자",
-    //     date: {
-    //       start: new Date(2020, 2, 1),
-    //       end: new Date(3800, 0, 1),
-    //     }
-    //   },
-    // ];
-    // const school = [
-    //   {
-    //     school: "한양대학교 서울캠퍼스",
-    //     major: "건축학부",
-    //     date: {
-    //       start: new Date(2010, 2, 1),
-    //       end: new Date(2019, 2, 1),
-    //     }
-    //   },
-    // ];
-    // const designers = await this.MONGOC.db("miro81").collection("designer").find({}).toArray();
-    // let whereQuery, updateQuery;
-    // for (let designer of designers) {
-    //   whereQuery = { desid: designer.desid };
-    //   updateQuery = {};
-    //   updateQuery["information.business.career.detail"] = equalJson(JSON.stringify(career));
-    //   updateQuery["information.business.career.school"] = equalJson(JSON.stringify(school));
-    //   await this.MONGOC.db("miro81").collection("designer").updateOne(whereQuery, { $set: updateQuery });
-    //   console.log(whereQuery, updateQuery)
-    // }
 
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     
 
@@ -6272,8 +6398,8 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "이설화";
-    // const amount = 2739000;
+    // const name = "이준";
+    // const amount = 330000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,

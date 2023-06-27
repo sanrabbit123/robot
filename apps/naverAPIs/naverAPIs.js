@@ -11,6 +11,9 @@ const NaverAPIs = function (mother = null, back = null, address = null) {
     this.back = new BackMaker();
     this.address = ADDRESS;
   }
+  const GoogleChrome = require(process.cwd() + "/apps/googleAPIs/googleChrome.js");
+  this.chrome = new GoogleChrome();
+
   this.dir = process.cwd() + "/apps/naverAPIs";
   this.pythonApp = this.dir + "/python/app.py";
 
@@ -18,6 +21,15 @@ const NaverAPIs = function (mother = null, back = null, address = null) {
   this.naverSecret = "AQAAAAAd9yRZxvGGc54HeEYRIs/uQCeezUnYnLfpaLvLRNMcyg==";
   this.naverId = "1608132";
   this.naverUrl = "https://api.naver.com";
+
+  this.naverMapVersion = "v5";
+  this.naverMapUrl = "https://map.naver.com";
+  this.naverMapSearch = "/" + this.naverMapVersion + "/api/search";
+
+  this.naverLandUrl = "https://new.land.naver.com";
+  this.naverLandAuthorizationKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlJFQUxFU1RBVEUiLCJpYXQiOjE2ODc3NzAzNzgsImV4cCI6MTY4Nzc4MTE3OH0.JpP5_LSy9qBTrGtO_uCaH7-vMcR_F7OEqCzzNySAfxw";
+
+  this.complexIdKeyword = "land_complex_";
 
 }
 
@@ -423,6 +435,290 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     return finalText;
   } catch (e) {
     console.log(e);
+  }
+}
+
+NaverAPIs.prototype.mapVersionCheck = async function () {
+  const instance = this;
+  const { emergencyAlarm } = this.mother;
+  const { chrome, naverMapUrl, naverMapVersion } = this;
+  try {
+    const test = await chrome.frontScript(naverMapUrl, async function () {
+      return window.location.href;
+    })
+    const version = test.replace(new RegExp(naverMapUrl, "gi"), "").split("/").find((str) => { return /^v/i.test(str) });
+    if (version !== naverMapVersion) {
+      await emergencyAlarm("네이버 주소 버전 바뀌었음 작업 필요 : " + JSON.stringify(new Date()));
+      return false;
+    } else {
+      return true;
+    }
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+NaverAPIs.prototype.mapSearch = async function (query) {
+  const instance = this;
+  const { equalJson } = this.mother;
+  const { chrome, naverMapUrl, naverMapSearch } = this;
+  const querystring = require("querystring");
+  try {
+    const queryStr = querystring.stringify({
+      caller: "pcweb",
+      query,
+      searchCoord: "127.05840838974427;37.75015390090829",
+      page: "1",
+      displayCount: "20",
+      isPlaceRecommendationReplace: "true",
+      lang: "ko"
+    });
+    const targetUrl = naverMapUrl + naverMapSearch + "?" + queryStr;
+    const queryResult = await chrome.frontScript(targetUrl, (async function () {
+      try {
+        const targetUrl = "__targetUrl__";
+        const res = await fetch(targetUrl);
+        const json = await res.json();
+        return JSON.stringify(json);
+      } catch (e) {
+        return JSON.stringify({});
+      }
+    }).toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '').replace(/__targetUrl__/gi, targetUrl))
+    const { result } = queryResult;
+    let targetAddress;
+    let resultList;
+
+    if (typeof result !== "object") {
+      throw new Error("query fail");
+    }
+
+    targetAddress = null;
+    if (result.address !== null) {
+      if (result.address.roadAddress !== null) {
+        targetAddress = equalJson(JSON.stringify(result.address.roadAddress));
+      } else {
+        targetAddress = equalJson(JSON.stringify(result.address.jibunsAddress));
+      }
+      resultList = targetAddress.list;
+      console.log(resultList);
+      resultList = resultList.map((obj) => {
+        return {
+          name: (obj.addressElements.buildName === null || obj.addressElements.buildName === undefined) ? "" : (obj.addressElements.buildName.trim() === "" ? obj.siteRepName.trim() : obj.addressElements.buildName.trim()),
+          address: obj.fullAddress,
+          elements: obj.addressElements,
+        }
+      });
+    } else if (result.place !== null) {
+      resultList = result.place.list;
+      resultList = resultList.map((obj) => {
+        return {
+          name: obj.name,
+          address: obj.roadAddress,
+          elements: {
+            id: obj.id,
+            bcode: '',
+            hcode: '',
+            complexId: obj.poiInfo.land === null ? "" : obj.poiInfo.land.shapeKey.shapeID,
+          },
+        }
+      })
+    }
+
+    if (resultList.length === 0) {
+      return null;
+    }
+
+    return {
+      first: resultList[0],
+      list: resultList,
+    }
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+NaverAPIs.prototype.complexSearch = async function (query, complexIdMode = false) {
+  const instance = this;
+  const { equalJson, requestSystem, dateToString, stringToDate, zeroAddition } = this.mother;
+  const { chrome, naverMapUrl, naverMapSearch, naverLandUrl, naverLandAuthorizationKey } = this;
+  try {
+    const naverMapResult = await this.mapSearch(query);
+    if (naverMapResult === null) {
+      throw new Error("no result");
+    } else {
+      const response = await requestSystem(naverLandUrl + "/api/search", { keyword: naverMapResult.first.name }, { method: "get" });
+      const { bcode, hcode } = naverMapResult.first.elements;
+      let target, complexId;
+      let resultObj;
+
+      if (bcode === "" && hcode === "" && typeof naverMapResult.first.elements.complexId === "string" && naverMapResult.first.elements.complexId !== "") {
+        complexId = naverMapResult.first.elements.complexId;
+      } else {
+        if (!Array.isArray(response.data.complexes)) {
+          throw new Error("there is no information");
+        }
+        if (response.data.complexes.length === 0) {
+          throw new Error("there is no information 2");
+        }
+        target = response.data.complexes.find((obj) => {
+          if (bcode !== "" && String(obj.cortarNo) === String(bcode)) {
+            return true;
+          } else if (hcode !== "" && String(obj.cortarNo) === String(hcode)) {
+            return true;
+          } else {
+            return false;
+          }
+        })
+        if (target === undefined) {
+          throw new Error("there is no information 3");
+        }
+        complexId = target.complexNo;
+      }
+
+      if (complexIdMode) {
+        return complexId;
+      }
+
+      resultObj = await this.complexModeling(complexId, naverMapResult);
+
+      return resultObj;
+
+    }
+  } catch (e) {
+    try {
+      let justAddress;
+
+      if (query.split(" ").findIndex((str) => { return /[로길]$/gi.test(str) }) === -1) {
+        justAddress = query.split(" ").slice(0, query.split(" ").findIndex((str) => { return /[동로가]$/gi.test(str) }) + 2).join(" ");
+      } else {
+        justAddress = query.split(" ").slice(0, query.split(" ").findIndex((str) => { return /[로길]$/gi.test(str) }) + 2).join(" ");
+      }
+      const justAddressResult = await this.mapSearch(justAddress);
+      if (justAddressResult === null) {
+        throw new Error("no result");
+      } else {
+        const response = await requestSystem(naverLandUrl + "/api/search", { keyword: justAddressResult.first.name }, { method: "get" });
+        const { bcode, hcode } = justAddressResult.first.elements;
+        let target, complexId;
+        let resultObj;
+  
+        if (bcode === "" && hcode === "" && typeof justAddressResult.first.elements.complexId === "string" && justAddressResult.first.elements.complexId !== "") {
+          complexId = justAddressResult.first.elements.complexId;
+        } else {
+          if (!Array.isArray(response.data.complexes)) {
+            throw new Error("there is no information");
+          }
+          if (response.data.complexes.length === 0) {
+            throw new Error("there is no information 2");
+          }
+          target = response.data.complexes.find((obj) => {
+            if (bcode !== "" && String(obj.cortarNo) === String(bcode)) {
+              return true;
+            } else if (hcode !== "" && String(obj.cortarNo) === String(hcode)) {
+              return true;
+            } else {
+              return false;
+            }
+          })
+          if (target === undefined) {
+            throw new Error("there is no information 3");
+          }
+          complexId = target.complexNo;
+        }
+  
+        if (complexIdMode) {
+          return complexId;
+        }
+  
+        resultObj = await this.complexModeling(complexId, justAddressResult);
+  
+        return resultObj;
+  
+      }
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+}
+
+NaverAPIs.prototype.complexModeling = async function (complexId, naverMapResult = null) {
+  const instance = this;
+  const { equalJson, requestSystem, dateToString, stringToDate, zeroAddition } = this.mother;
+  const { chrome, naverMapUrl, naverMapSearch, naverLandUrl, naverLandAuthorizationKey, complexIdKeyword } = this;
+  try {
+    let resultObj;
+    let complexDetail, complexPyeongDetailList;
+    let addressValue;
+
+    ({ complexDetail, complexPyeongDetailList } = (await chrome.frontScript(naverLandUrl + "/complexes/" + complexId, (async function () {
+      const res = await fetch("/api/complexes/__complexId__?sameAddressGroup=false", { headers: { "Authorization": "Bearer " + "__authorizationKey__" } })
+      const json = await res.json();
+      return JSON.stringify(json);
+    }).toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '').replace(/__authorizationKey__/gi, naverLandAuthorizationKey).replace(/__complexId__/gi, complexId))));
+
+    if (complexDetail.roadAddress !== undefined) {
+      addressValue = (complexDetail.roadAddressPrefix + " " + complexDetail.roadAddress).trim() === "" ? complexDetail.address + " " + complexDetail.detailAddress : complexDetail.roadAddressPrefix + " " + complexDetail.roadAddress;
+    } else {
+      addressValue = complexDetail.address;
+    }
+    if (naverMapResult === null) {
+      naverMapResult = await this.mapSearch(addressValue);
+    }
+
+    resultObj = {};
+    resultObj.id = complexIdKeyword + complexDetail.complexNo;
+    resultObj.name = complexDetail.complexName;
+    resultObj.date = new Date();
+    resultObj.address = {
+      value: addressValue,
+      latitude: complexDetail.latitude,
+      longitude: complexDetail.longitude,
+      zipCode: complexDetail.roadZipCode === undefined ? "" : complexDetail.roadZipCode,
+      detail: naverMapResult === null ? {} : naverMapResult.first.elements,
+    }
+    resultObj.information = {};
+
+    if (complexDetail.useApproveYmd.length > 6) {
+      resultObj.information.date = new Date(Number(complexDetail.useApproveYmd.slice(0, 4)), Number(complexDetail.useApproveYmd.slice(4, 6)) - 1, Number(complexDetail.useApproveYmd.slice(6)));
+    } else {
+      resultObj.information.date = new Date(Number(complexDetail.useApproveYmd.slice(0, 4)), Number(complexDetail.useApproveYmd.slice(4)) - 1, 1);
+    }
+    resultObj.information.count = {
+      household: complexDetail.totalHouseholdCount,
+      dong: complexDetail.totalDongCount,
+      parking: complexDetail.parkingPossibleCount,
+    };
+    resultObj.information.floor = {
+      low: complexDetail.lowFloor,
+      high: complexDetail.highFloor,
+    };
+    resultObj.information.type = {};
+    resultObj.information.type.length = complexPyeongDetailList.length;
+    resultObj.information.type.detail = complexPyeongDetailList.map((obj) => {
+      return {
+        name: obj.pyeongName,
+        area: {
+          supply: obj.supplyAreaDouble,
+          exclusive: Number(obj.exclusiveArea),
+          pyeong: Number(obj.supplyPyeong),
+          exclusivePyeong: Number(obj.exclusivePyeong),
+        },
+        count: {
+          household: Number.isNaN(Number(obj.householdCountByPyeong)) ? 0 : Number(obj.householdCountByPyeong),
+          room: Number.isNaN(Number(obj.roomCnt)) ? 0 : Number(obj.roomCnt),
+          bathroom: Number.isNaN(Number(obj.bathroomCnt)) ? 0 : Number(obj.bathroomCnt),
+        }
+      }
+    });
+
+    return resultObj;
+
+  } catch (e) {
+    console.log(e);
+    return null;
   }
 }
 

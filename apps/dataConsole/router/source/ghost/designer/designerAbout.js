@@ -700,27 +700,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         {
           property: "경력 상세",
           returnValue: (designer) => {
-            const sampleData = [
-              {
-                company: "홈리에종",
-                team: "디자인팀",
-                role: "디자이너",
-                date: {
-                  start: new Date(2018, 9, 28),
-                  end: new Date(2020, 2, 1),
-                }
-              },
-              {
-                company: "주식회사 홈리에종",
-                team: "개발팀",
-                role: "개발자",
-                date: {
-                  start: new Date(2020, 2, 1),
-                  end: null,
-                }
-              },
-            ];
-            sampleData.sort((a, b) => {
+            const careerData = designer.information.business.career.detail;
+            careerData.sort((a, b) => {
               return b.date.start.valueOf() - a.date.start.valueOf();
             });
             const pipe = "&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;";
@@ -729,8 +710,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "직무",
               "기간",
             ];
-            const endMatrix = sampleData.map((obj) => {
-              const endDate = (obj.date.end === null) ? new Date() : obj.date.end;
+            const endMatrix = careerData.map((obj) => {
+              const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
               const startDate = obj.date.start;
               const delta = endDate.valueOf() - startDate.valueOf();
               const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
@@ -767,17 +748,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         {
           property: "학력 상세",
           returnValue: (designer) => {
-            const sampleData = [
-              {
-                school: "한양대학교 서울캠퍼스",
-                major: "건축학부",
-                date: {
-                  start: new Date(2010, 2, 1),
-                  end: new Date(2019, 2, 1),
-                }
-              },
-            ];
-            sampleData.sort((a, b) => {
+            const schoolData = designer.information.business.career.school;
+            schoolData.sort((a, b) => {
               return b.date.start.valueOf() - a.date.start.valueOf();
             });
             const titleArr = [
@@ -785,13 +757,13 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "전공",
               "졸업",
             ];
-            const endMatrix = sampleData.map((obj) => {
+            const endMatrix = schoolData.map((obj) => {
               return {
                 title: titleArr,
                 value: [
                   obj.school,
                   obj.major,
-                  (obj.date.end === null ? "재학중" : dateToString(obj.date.end).split("-").slice(0, 2).join("년 ") + "월"),
+                  ((obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재학중" : dateToString(obj.date.end).split("-").slice(0, 2).join("년 ") + "월"),
                 ]
               };
             });
