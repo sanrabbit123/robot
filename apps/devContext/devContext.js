@@ -1,3 +1,5 @@
+const { max } = require("@tensorflow/tfjs");
+
 const ROBOT_PATH = process.cwd();
 const APP_PATH = ROBOT_PATH + "/apps";
 const Mother = require(APP_PATH + "/mother.js");
@@ -173,24 +175,23 @@ DevContext.prototype.launching = async function () {
 
     // ai study =====================================================================================================================
 
-    // console.log(newObj);
-
-    // const res = await requestSystem("https://api.sightengine.com/1.0/check.json", {
-    //   media: (await fileSystem("readStream", [ `${process.cwd()}/temp/test.jpg` ])),
-    //   models: "properties",
-    //   api_user: "1288531933",
-    //   api_secret: "sjpmis3Sg8eS3KyaSiHQ",
-    // })
-
-    // console.log(res.data.colors);
-
 
 
     /*
+    
     const image = new ImageReader();
+    const imageKeyword = "imageTarget";
+    const magick = "magick";
+    const mkdir = "mkdir";
+    const imagePath = `${process.cwd()}/temp/test.jpg`;
+    const factorFolderName = "factorFolderName__" + uniqueValue("hex");
+    const factorFolder = `${process.cwd()}/temp/${factorFolderName}`;
+    const targetImageName = `${process.cwd()}/temp/${imageKeyword}_${uniqueValue("hex")}_${String(Math.floor(Math.random() * 100))}.jpg`;
+    const clarifaiKey = "e399e812ec1d4ef8b6f441d19f1af3c7";
+    const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
+    const standardWidth = 2000;
+
     const detectImageFactors = (imagePath) => {
-      const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
-      const clarifaiKey = "e399e812ec1d4ef8b6f441d19f1af3c7";
       const stub = ClarifaiStub.grpc();
       const metaData = new grpc.Metadata();
       let inputData;
@@ -252,7 +253,96 @@ DevContext.prototype.launching = async function () {
         })
       });
     }
-    console.log(await detectImageFactors(`${process.cwd()}/temp/test.jpg`));
+    let imageSizeFactors;
+    let x, y, width, height;
+    let factorFile;
+    let factorList;
+
+    await shellExec(magick, [ imagePath, "-resize", String(standardWidth), targetImageName ]);
+    imageSizeFactors = await detectImageFactors(targetImageName);
+
+    await shellExec(mkdir, [ factorFolder ]);
+    factorList = [];
+    for (let { name, bound } of imageSizeFactors.factors.detail) {
+      x = Math.round(bound.x);
+      y = Math.round(bound.y);
+      width = Math.round(bound.width);
+      height = Math.round(bound.height);
+      factorFile = `${factorFolder}/${name.replace(/ /gi, "").replace(/ /gi, "").replace(/ /gi, "")}.jpg`;
+      await shellExec(magick, [ targetImageName, "-crop", `${String(width)}x${String(height)}+${String(x)}+${String(y)}`, `${factorFile}` ]);
+      factorList.push(factorFile);
+    }
+    
+
+    // color section
+
+    const stub = ClarifaiStub.grpc();
+    const metaData = new grpc.Metadata();
+    metaData.set("authorization", "Key " + clarifaiKey);
+    stub.PostModelOutputs(
+      {
+          user_app_id: {
+              "user_id": "clarifai",
+              "app_id": "main"
+          },
+          model_id: "color-recognition",
+          inputs: [
+            { data: { image: { url: null, base64: (await fileSystem("readBuffer", [ `${process.cwd()}/temp/test.jpg` ])) } } }
+          ]
+      },
+      metaData,
+      (err, response) => {
+          if (err) {
+            throw new Error(err);
+          }
+          if (response.status.code !== 10000) {
+            throw new Error("Post model outputs failed, status: " + response.status.description);
+          }
+  
+          console.log(response);
+
+          fileSystem(`writeJson`, [ `${process.cwd()}/temp/bb.json`, response ]).catch((err) => {
+            console.log(err);
+          })
+
+        }
+    );
+
+    */
+
+    /*
+
+    r, g, b
+    max, min, average, representative
+
+    representativeDistance
+    distanceAverage
+
+    bright
+    contrast 
+    cct
+    gamma
+
+    wallRepresentativeDistance
+    floorRepresentativeDistance
+    ceilRepresentativeDistance
+
+    factorRepresentativeDistanceMax
+    factorRepresentativeDistanceMin
+    factorRepresentativeDistanceAverage
+
+    24
+
+    +
+
+    length
+    density
+    fabricBoo(0 or 1)
+    curtainBoo(0 or 1)
+    plantBoo(0 or 1)
+    
+    5
+
     */
 
 
@@ -387,13 +477,15 @@ DevContext.prototype.launching = async function () {
     
 
 
+
+
+
     // real study
     // const naver = new NaverAPIs();
     // console.log((await naver.complexSearch("경기 평택시 상서재로5길 15 (동삭동, 평택센트럴자이 1단지) 102동")));
 
     // const sampleValue = "서울 서대문구 세무서길 82-17 홍제역해링턴플레이스 108동 1504호";
     // console.log((await naver.complexSearch(sampleValue)));
-
 
 
     // const sampleValue = "경기 광주시 문형산길157번길 12-7 (신현동, 큐비코) 104동 102호";
@@ -481,7 +573,7 @@ DevContext.prototype.launching = async function () {
     //       arr[4],
     //       tempResult === null ? "" : tempResult,
     //     ])
-    //     await sleep((3000 * (Math.random())) + 1000);
+    //     await sleep((2000 * (Math.random())) + 500);
     //   } else {
     //     newMatrix.push([
     //       arr[0],
@@ -500,8 +592,9 @@ DevContext.prototype.launching = async function () {
     // 부산 영도구 태종로 611 (동삼동) 오션라이프 에일린의뜰 104동 204호
 
 
+    // const landMatrix = await fileSystem(`readJson`, [ `${process.cwd()}/temp/landMatrix2.json` ]);
     // const sheetsId = "1NLr0lgiNheytUSvwn-d5Ys5QRzgW5uwv_EIbTqNKQ1s";
-    // const matrix = await sheets.get_value_inPython(sheetsId, "A2:E");
+    // const matrix = await sheets.get_value_inPython(sheetsId, "A1:E");
     // const newMatrix = [[
     //   "cliid",
     //   "name",
@@ -511,6 +604,35 @@ DevContext.prototype.launching = async function () {
     //   "complexId"
     // ]];
     // let tempResult;
+    // let thisId;
+    // let thisCliid;
+    // let tempArr;
+
+    // for (let arr of matrix) {
+    //   thisId = "-";
+    //   thisCliid = arr[0];
+
+    //   tempArr = landMatrix.find((a) => { return a[0] === thisCliid });
+    //   if (tempArr === undefined) {
+    //     thisId = "";
+    //   } else {
+    //     thisId = tempArr[5];
+    //   }
+
+    //   newMatrix.push([
+    //     arr[0],
+    //     arr[1],
+    //     arr[2],
+    //     arr[3],
+    //     arr[4],
+    //     thisId,
+    //   ]);
+    // }
+
+    // await sheets.update_value_inPython(sheetsId, "", newMatrix);
+    
+
+
 
     // for (let arr of matrix) {
     //   tempResult = await naver.complexSearch(arr[4], true);
@@ -6457,8 +6579,8 @@ DevContext.prototype.launching = async function () {
 
 
     // send sms
-    // const name = "이설화";
-    // const amount = 13584600;
+    // const name = "최은숙";
+    // const amount = 8553000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,

@@ -32,6 +32,8 @@ class RobotInstall:
             [ "google-ads" ],
             [ "colour" ],
             [ "colour-science" ],
+            [ "opencv-python" ],
+            [ "opencv-contrib-python" ],
         ]
 
         self.upgrade = [

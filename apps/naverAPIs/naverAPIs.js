@@ -502,6 +502,9 @@ NaverAPIs.prototype.mapSearch = async function (query) {
       }
       resultList = targetAddress.list;
       resultList = resultList.map((obj) => {
+        if (obj.siteRepName === null) {
+          throw new Error("invalid address");
+        }
         return {
           name: (obj.addressElements.buildName === null || obj.addressElements.buildName === undefined) ? "" : (obj.addressElements.buildName.trim() === "" ? obj.siteRepName.trim() : obj.addressElements.buildName.trim()),
           address: obj.fullAddress,
@@ -522,6 +525,8 @@ NaverAPIs.prototype.mapSearch = async function (query) {
           },
         }
       })
+    } else {
+      return null;
     }
 
     if (resultList.length === 0) {
@@ -634,11 +639,61 @@ NaverAPIs.prototype.complexSearch = async function (query, complexIdMode = false
         resultObj = await this.complexModeling(complexId, justAddressResult);
   
         return resultObj;
-  
       }
     } catch (e) {
-      console.log(e);
-      return null;
+      try {
+        let nameAddress;
+        if (query.split(" ").findIndex((str) => { return /[로길]$/gi.test(str) }) === -1) {
+          nameAddress = query.split(" ").slice(query.split(" ").findIndex((str) => { return /[동로가]$/gi.test(str) }) + 2);
+        } else {
+          nameAddress = query.split(" ").slice(query.split(" ").findIndex((str) => { return /[로길]$/gi.test(str) }) + 2);
+        }
+        nameAddress = nameAddress.filter((str) => { return !/[동호]$/gi.test(str.trim()) });
+        nameAddress = nameAddress.join(" ");
+
+        const nameAddressResult = await this.mapSearch(nameAddress);
+        if (nameAddressResult === null) {
+          throw new Error("no result");
+        } else {
+          const response = await requestSystem(naverLandUrl + "/api/search", { keyword: nameAddressResult.first.name }, { method: "get" });
+          const { bcode, hcode } = nameAddressResult.first.elements;
+          let target, complexId;
+          let resultObj;
+    
+          if (bcode === "" && hcode === "" && typeof nameAddressResult.first.elements.complexId === "string" && nameAddressResult.first.elements.complexId !== "") {
+            complexId = nameAddressResult.first.elements.complexId;
+          } else {
+            if (!Array.isArray(response.data.complexes)) {
+              throw new Error("there is no information");
+            }
+            if (response.data.complexes.length === 0) {
+              throw new Error("there is no information 2");
+            }
+            target = response.data.complexes.find((obj) => {
+              if (bcode !== "" && String(obj.cortarNo) === String(bcode)) {
+                return true;
+              } else if (hcode !== "" && String(obj.cortarNo) === String(hcode)) {
+                return true;
+              } else {
+                return false;
+              }
+            })
+            if (target === undefined) {
+              throw new Error("there is no information 3");
+            }
+            complexId = target.complexNo;
+          }
+    
+          if (complexIdMode) {
+            return complexId;
+          }
+          resultObj = await this.complexModeling(complexId, nameAddressResult);
+          return resultObj;
+        }
+      } catch (e) {
+        console.log(e);
+        return null;
+      }
     }
   }
 }
