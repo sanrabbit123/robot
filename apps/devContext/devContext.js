@@ -1,5 +1,3 @@
-const { max } = require("@tensorflow/tfjs");
-
 const ROBOT_PATH = process.cwd();
 const APP_PATH = ROBOT_PATH + "/apps";
 const Mother = require(APP_PATH + "/mother.js");
@@ -591,10 +589,17 @@ DevContext.prototype.launching = async function () {
 
     // 부산 영도구 태종로 611 (동삼동) 오션라이프 에일린의뜰 104동 204호
 
-
+    const naver = new NaverAPIs();
     // const landMatrix = await fileSystem(`readJson`, [ `${process.cwd()}/temp/landMatrix2.json` ]);
-    // const sheetsId = "1NLr0lgiNheytUSvwn-d5Ys5QRzgW5uwv_EIbTqNKQ1s";
-    // const matrix = await sheets.get_value_inPython(sheetsId, "A1:E");
+    const sheetsId = "1NLr0lgiNheytUSvwn-d5Ys5QRzgW5uwv_EIbTqNKQ1s";
+    const matrix = await sheets.get_value_inPython(sheetsId, "A1:F");
+
+    const targetMatrix = matrix.filter((arr) => {
+      return arr[5] === '' || arr[5] === undefined
+    });
+
+
+
     // const newMatrix = [[
     //   "cliid",
     //   "name",
@@ -630,23 +635,29 @@ DevContext.prototype.launching = async function () {
     // }
 
     // await sheets.update_value_inPython(sheetsId, "", newMatrix);
+  
     
 
+    console.log(targetMatrix.length);
+    const newMatrix = [];
+    let tempResult;
+    for (let arr of targetMatrix) {
+      tempResult = await naver.complexSearch(arr[4], true);
+      newMatrix.push([
+        arr[0],
+        arr[1],
+        arr[2],
+        arr[3],
+        arr[4],
+        tempResult === null ? "" : tempResult,
+      ])
+      await fileSystem(`writeJson`, [ `${process.cwd()}/temp/landMatrix3.json`, JSON.parse(JSON.stringify(newMatrix)) ]);
+      await sleep((2000 * (Math.random())) + 1000);
+    }
 
 
-    // for (let arr of matrix) {
-    //   tempResult = await naver.complexSearch(arr[4], true);
-    //   newMatrix.push([
-    //     arr[0],
-    //     arr[1],
-    //     arr[2],
-    //     arr[3],
-    //     arr[4],
-    //     tempResult === null ? "" : tempResult,
-    //   ])
-    //   await fileSystem(`writeJson`, [ `${process.cwd()}/temp/landMatrix.json`, JSON.parse(JSON.stringify(newMatrix)) ]);
-    //   await sleep((3000 * (Math.random())) + 1000);
-    // }
+
+
 
 
 

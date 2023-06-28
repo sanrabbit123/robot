@@ -459,9 +459,9 @@ NaverAPIs.prototype.mapVersionCheck = async function () {
   }
 }
 
-NaverAPIs.prototype.mapSearch = async function (query) {
+NaverAPIs.prototype.mapSearch = async function (query, justWordingMode = false) {
   const instance = this;
-  const { equalJson } = this.mother;
+  const { equalJson, requestSystem } = this.mother;
   const { chrome, naverMapUrl, naverMapSearch } = this;
   const querystring = require("querystring");
   try {
@@ -525,12 +525,22 @@ NaverAPIs.prototype.mapSearch = async function (query) {
           },
         }
       })
+
     } else {
       return null;
     }
 
     if (resultList.length === 0) {
       return null;
+    }
+
+    if (justWordingMode) {
+      if (resultList[0].elements.bcode === '' && resultList[0].elements.hcode === '' && resultList[0].elements.complexId === '' && resultList[0].elements.id !== "") {
+        const finalRes = await requestSystem("https://map.naver.com/v5/api/sites/summary/" + resultList[0].elements.id + "?lang=ko")
+        if (finalRes.data.theme.isLand) {
+          resultList[0].elements.complexId = finalRes.data.theme.extKey;
+        }
+      }
     }
 
     return {
@@ -599,6 +609,7 @@ NaverAPIs.prototype.complexSearch = async function (query, complexIdMode = false
       } else {
         justAddress = query.split(" ").slice(0, query.split(" ").findIndex((str) => { return /[로길]$/gi.test(str) }) + 2).join(" ");
       }
+      
       const justAddressResult = await this.mapSearch(justAddress);
       if (justAddressResult === null) {
         throw new Error("no result");
@@ -691,8 +702,53 @@ NaverAPIs.prototype.complexSearch = async function (query, complexIdMode = false
           return resultObj;
         }
       } catch (e) {
-        console.log(e);
-        return null;
+        try {
+          const targetWordsArr = query.split(" ").map((str) => { return str.trim().replace(/[\, \(\)]/gi, '') }).filter((str) => { return !/[0-9]$/gi.test(str) }).filter((str) => { return !/[동로가]$/gi.test(str) }).filter((str) => { return !/[로길]$/gi.test(str) }).filter((str) => { return !/[호]$/gi.test(str) });
+          const targetWords = targetWordsArr[targetWordsArr.length - 1];
+        
+          const nameAddressResult = await this.mapSearch(targetWords, true);
+          if (nameAddressResult === null) {
+            throw new Error("no result");
+          } else {
+            const response = await requestSystem(naverLandUrl + "/api/search", { keyword: nameAddressResult.first.name }, { method: "get" });
+            const { bcode, hcode } = nameAddressResult.first.elements;
+            let target, complexId;
+            let resultObj;
+      
+            if (bcode === "" && hcode === "" && typeof nameAddressResult.first.elements.complexId === "string" && nameAddressResult.first.elements.complexId !== "") {
+              complexId = nameAddressResult.first.elements.complexId;
+            } else {
+              if (!Array.isArray(response.data.complexes)) {
+                throw new Error("there is no information");
+              }
+              if (response.data.complexes.length === 0) {
+                throw new Error("there is no information 2");
+              }
+              target = response.data.complexes.find((obj) => {
+                if (bcode !== "" && String(obj.cortarNo) === String(bcode)) {
+                  return true;
+                } else if (hcode !== "" && String(obj.cortarNo) === String(hcode)) {
+                  return true;
+                } else {
+                  return false;
+                }
+              })
+              if (target === undefined) {
+                throw new Error("there is no information 3");
+              }
+              complexId = target.complexNo;
+            }
+      
+            if (complexIdMode) {
+              return complexId;
+            }
+            resultObj = await this.complexModeling(complexId, nameAddressResult);
+            return resultObj;
+          }
+        } catch (e) {
+          console.log(e);
+          return null;
+        }
       }
     }
   }
