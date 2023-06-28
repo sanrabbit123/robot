@@ -728,7 +728,14 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             return endMatrix;
           },
           renderValue: (text) => {
-            return "";
+            const inputArr = [
+              { name: "회사", type: "string" },
+              { name: "부서", type: "string" },
+              { name: "직무", type: "string" },
+              { name: "시작일", type: "date", progressBoo: false, progressName: "" },
+              { name: "종료일", type: "date", progressBoo: true, progressName: "재직중" },
+            ];
+            return inputArr;
           },
           updateValue: async (raw, designer) => {
             try {
@@ -737,8 +744,12 @@ DesignerAboutJs.prototype.contentsCenter = function () {
 
             }
           },
-          plusValue: async (designer) => {
+          plusValue: async (matrix, designer) => {
             try {
+
+
+              console.log(matrix);
+
 
             } catch (e) {
 
@@ -770,7 +781,13 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             return endMatrix;
           },
           renderValue: (text) => {
-            return "";
+            const inputArr = [
+              { name: "학교", type: "string" },
+              { name: "전공", type: "string" },
+              { name: "입학일", type: "date", progressBoo: false, progressName: "" },
+              { name: "졸업일", type: "date", progressBoo: true, progressName: "재학중" },
+            ];
+            return inputArr;
           },
           updateValue: async (raw, designer) => {
             try {
@@ -779,8 +796,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
 
             }
           },
-          plusValue: async (designer) => {
+          plusValue: async (matrix, designer) => {
             try {
+
+              console.log(matrix);
+
 
             } catch (e) {
 
@@ -2772,11 +2792,45 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
         },
         {
           attribute: {
-            index: String(z),
+            x: String(x),
+            z: String(z),
           },
           event: {
-            click: function (e) {
+            click: async function (e) {
+              try {
+                const x = Number(this.getAttribute("x"));
+                const z = Number(this.getAttribute("z"));
+                const valueTargets = instance.contents[x].contents[z].renderValue("");
+                let valueMatrix;
+                let tempArr;
+                let tempValue;
 
+                valueMatrix = [];
+
+                for (let obj of valueTargets) {
+                  tempArr = [];
+                  if (obj.type === "string") {
+                    tempArr.push(obj.name);
+                    do {
+                      tempValue = await GeneralJs.prompt(obj.name + "명을 알려주세요!");
+                    } while (tempValue === "" || tempValue === null)
+                    tempArr.push(tempValue.trim());
+                  } else if (obj.type === "date") {
+                    tempArr.push(obj.name);
+                    do {
+                      tempValue = await GeneralJs.promptDate(obj.name + "을 알려주세요!", obj.progressBoo, obj.progressName);
+                    } while (tempValue === null)
+                    tempArr.push(tempValue);
+                  } else {
+                    throw new Error("invalid type");
+                  }
+                  valueMatrix.push(tempArr);
+                }
+
+                await instance.contents[x].contents[z].plusValue(valueMatrix, instance.designer);
+              } catch (e) {
+                console.log(e);
+              }
             }
           },
           style: {

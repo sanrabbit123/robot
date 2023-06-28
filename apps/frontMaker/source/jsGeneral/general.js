@@ -3248,6 +3248,558 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
   return bigCalendar;
 }
 
+GeneralJs.generalCalendar = function (mother, date, callback, option = {}) {
+  const instance = this;
+  let thisMatrix;
+  thisMatrix = GeneralJs.getDateMatrix(date);
+  let thisDate;
+  if (typeof date === "string") {
+    if (date.length === 10) {
+      thisDate = Number(((date.split("-"))[2]).replace(/^0/, ''));
+    } else {
+      thisDate = Number((((date.split(" ")[0]).split("-"))[2]).replace(/^0/, ''));
+    }
+  } else if (typeof date === "object") {
+    thisDate = date.getDate();
+  }
+  const CalendarMatrix = function (matrix) {
+    this.calendarBase = null;
+    this.titleZone = null;
+    this.contentsZone = null;
+    this.matrix = matrix;
+    this.calendarHeight = 0;
+  }
+  CalendarMatrix.prototype.setHeight = function (calendarHeight) {
+    this.calendarHeight = calendarHeight;
+  }
+  CalendarMatrix.prototype.setDoms = function (calendarBase, titleZone, contentsZone) {
+    this.calendarBase = calendarBase;
+    this.titleZone = titleZone;
+    this.contentsZone = contentsZone;
+  }
+  const { year, month, matrix } = thisMatrix;
+  let width, height;
+  let calendarBase, titleZone, contentsZone;
+  let div_clone, div_clone2, svg_clone, svg_zone;
+  let style;
+  let titleZoneStyle, contentsZoneStyle;
+  let ea;
+  let titleHeight;
+  let arrowWidth;
+  let arrowBottom;
+  let arrowLeft;
+  let arrowZoneWidth;
+  let arrowZoneBottom;
+  let arrowZoneLeft;
+  let leftMargin;
+  let finalHeight0, finalHeight1, finalHeight2;
+  let resultObj;
+  let mobile, desktop;
+  let motherRatio, ratio;
+  let titleBottom;
+  let contentsMarginTop;
+
+  mobile = (option.mobile === true);
+  desktop = !mobile;
+  ea = desktop ? "px" : "vw";
+  ratio = 0.38;
+
+  width = 274;
+  height = 274;
+  motherRatio = (num) => { return (num / 274); };
+  if (typeof option.width === "number") {
+    width = option.width;
+    height = width * motherRatio(height);
+  }
+  if (option.scaleUp !== undefined) {
+    width = width * option.scaleUp;
+    height = height * option.scaleUp;
+  }
+
+  resultObj = new CalendarMatrix(thisMatrix);
+  titleHeight = 45;
+  finalHeight0 = titleHeight;
+  finalHeight2 = finalHeight0 * ratio;
+  if (option.titleBottom !== undefined) {
+    titleBottom = width * motherRatio(option.titleBottom);
+  } else {
+    titleBottom = width * motherRatio(desktop ? 9 : 9);
+  }
+
+  arrowWidth = width * motherRatio(9);
+  if (option.arrow !== undefined) {
+    if (option.arrow.width !== undefined) {
+      arrowWidth = width * motherRatio(option.arrow.width);
+    }
+  }
+  arrowBottom = width * motherRatio(16);
+  arrowLeft = 0;
+  arrowZoneWidth = arrowWidth + (width * motherRatio(desktop ? 15 : 6));
+  arrowZoneBottom = width * motherRatio(desktop ? 9 : 13);
+  arrowZoneLeft = 0;
+  if (option.margin !== undefined) {
+    contentsMarginTop = option.margin;
+  } else {
+    contentsMarginTop = 2;
+  }
+
+  //matrix make function
+  const matrixMaker = function (mother, year, month, matrix, thisDate, width, height, titleHeight) {
+    const dateToString = function (year, month, date) {
+      let str = '';
+      str += String(year);
+      str += '-';
+      str += ((month < 9) ? '0' + String(month + 1) : String(month + 1));
+      str += '-';
+      str += ((date < 10) ? '0' + String(date) : String(date));
+      return str;
+    }
+    let div_clone, div_clone2, div_clone3;
+    let svg_clone;
+    let style;
+    let ea;
+    let leftMargin;
+    let indexNumber;
+    let lineHeight;
+    let matrixField;
+    let eventStyle, circleEventStyle;
+    let eventInitTop, eventLeft;
+    let circleEventInitTop, circleEventLeft;
+    let mobile, desktop;
+    let headHeight;
+    let childrenDoms;
+    let childrenDomsEmpty;
+    let setDateEvents;
+
+    mobile = (option.mobile === true);
+    desktop = !mobile;
+
+    ea = desktop ? "px" : "vw";
+    leftMargin = 0;
+    lineHeight = 20;
+
+    indexNumber = 0;
+    circleEventInitTop = 38.5;
+    circleEventLeft = 13;
+    eventInitTop = 32.5;
+    eventLeft = 20;
+
+    headHeight = desktop ? 36 : 7;
+
+    circleEventStyle = {
+      position: "absolute",
+      transformOrigin: "0 0",
+      transform: "scale(0.3)",
+      top: String(circleEventInitTop + (lineHeight * indexNumber)) + ea,
+      left: String(circleEventLeft) + ea,
+    };
+
+    eventStyle = {
+      position: "absolute",
+      fontSize: String(desktop ? 12 : 2) + ea,
+      fontWeight: String(400),
+      textAlign: "left",
+      color: GeneralJs.colorChip.black,
+      cursor: "pointer",
+      top: String(eventInitTop + (lineHeight * indexNumber)) + ea,
+      left: String(eventLeft) + ea,
+    };
+
+    setDateEvents = function (eventArr, hourOutput = true) {
+      const year = Number(this.getAttribute("year"));
+      const month = Number(this.getAttribute("month"));
+      const thisDate = Number(this.getAttribute("date"));
+      const that = this;
+      let svg_clone;
+      let div_clone3;
+      let indexNumber;
+      let ea = "px";
+      let date, title, eventFunc;
+
+      eventArr.sort((a, b) => {
+        return a.date.valueOf() - b.date.valueOf();
+      });
+
+      if (this.indexNumber !== undefined) {
+        indexNumber = this.indexNumber;
+      } else {
+        indexNumber = 0;
+      }
+
+      if (this.getAttribute("date") !== null) {
+        for (let obj of eventArr) {
+
+          date = obj.date;
+          title = obj.title;
+          eventFunc = obj.eventFunc;
+
+          if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === thisDate) {
+            svg_clone = SvgTong.stringParsing(instance.returnCircle("", GeneralJs.colorChip.green));
+            for (let k in circleEventStyle) {
+              svg_clone.style[k] = circleEventStyle[k];
+            }
+            svg_clone.style.top = String(circleEventInitTop + (lineHeight * indexNumber)) + ea;
+            this.appendChild(svg_clone);
+
+            div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+            div_clone3.classList.add("hoverDefault_lite");
+            for (let k in eventStyle) {
+              div_clone3.style[k] = eventStyle[k];
+            }
+            div_clone3.style.top = String(eventInitTop + (lineHeight * indexNumber)) + ea;
+            if (hourOutput) {
+              if (obj.hours !== undefined) {
+                div_clone3.textContent = title;
+              } else {
+                div_clone3.textContent = String(date.getHours()) + '시' + " : " + title;
+              }
+            } else {
+              div_clone3.textContent = title;
+            }
+            div_clone3.addEventListener("click", function (e) {
+              e.stopPropagation();
+              eventFunc.call(this, e);
+            });
+            div_clone3.addEventListener("contextmenu", function (e) {
+              e.stopPropagation();
+              e.preventDefault();
+              this.parentNode.removeChild(this.previousElementSibling);
+              this.parentNode.removeChild(this);
+              that.indexNumber = that.indexNumber - 1;
+            });
+            this.appendChild(div_clone3);
+
+            indexNumber++;
+          }
+        }
+        this.indexNumber = indexNumber;
+      }
+    };
+
+    for (let i = 0; i < matrix.length + 1; i++) {
+      div_clone = GeneralJs.nodes.div.cloneNode(true);
+      style = {
+        position: "relative",
+        height: ((option.bigMode !== true) ? String(height / 9) + ea : "calc(calc(100% - " + String(headHeight) + ea + ") / " + String(matrix.length) + ")"),
+        background: GeneralJs.colorChip.white,
+        width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
+        left: String(leftMargin * 1) + ea,
+      };
+      if (option.bigMode === true) {
+        style.width = String(100) + '%';
+        style.left = String(0) + ea;
+      }
+      for (let j in style) {
+        div_clone.style[j] = style[j];
+      }
+      if (option.bigMode === true && i === 0) {
+        div_clone.style.height = String(headHeight) + ea;
+      }
+
+      for (let j = 0; j < 7; j++) {
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        div_clone2.setAttribute("year", String(year));
+        div_clone2.setAttribute("month", String(month));
+        style = {
+          display: "inline-block",
+          position: "relative",
+          width: (j === 0 || j === 6) ? "calc(100% / 12)" : "calc(100% / 6)",
+          height: String(height / 8) + ea,
+          background: GeneralJs.colorChip.white,
+          cursor: "pointer",
+          overflow: "scroll",
+          borderBottom: String(0),
+          borderRight: String(0),
+          transition: "all 0.2s ease",
+        };
+        for (let k in style) {
+          div_clone2.style[k] = style[k];
+        }
+
+        if (i !== 0 && matrix[i - 1][j] !== null) {
+          div_clone2.setAttribute("date", String(matrix[i - 1][j].date));
+          div_clone2.setAttribute("buttonValue", dateToString(year, month, matrix[i - 1][j].date));
+          div_clone2.setAttribute("dateEventMethod", "true");
+          div_clone2.addEventListener("click", callback);
+        }
+
+        div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+        style = {
+          position: "absolute",
+          fontFamily: "graphik",
+          fontSize: String(15) + ea,
+          fontWeight: (i === 0) ? String(500) : String(200),
+          width: "100%",
+          textAlign: j === 0 ? "left" : (j === 6 ? "right" : "center"),
+          color: ((j < 5) ? GeneralJs.colorChip.black : GeneralJs.colorChip.green),
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+        };
+        for (let k in style) {
+          div_clone3.style[k] = style[k];
+        }
+
+        if (i === 0) {
+          div_clone3.textContent = ([ 'M', 'T', 'W', 'T', 'F', 'S', 'S' ])[j];
+        } else {
+          div_clone3.textContent = (matrix[i - 1][j] !== null) ? String(matrix[i - 1][j].date) : '';
+          if (matrix[i - 1][j] !== null) {
+            if (thisDate === matrix[i - 1][j].date) {
+              div_clone3.style.color = GeneralJs.colorChip.green;
+              div_clone3.style.fontWeight = String(400);
+            }
+          }
+        }
+        div_clone2.appendChild(div_clone3);
+
+        if (option.events !== undefined) {
+          if (i !== 0) {
+            if (matrix[i - 1][j] !== null) {
+              setDateEvents.call(div_clone2, option.events);
+            }
+          }
+        }
+
+        div_clone.appendChild(div_clone2);
+      }
+
+      mother.appendChild(div_clone);
+    }
+
+    if (option.bigMode === true && typeof option.grayMode === "function") {
+      childrenDoms = Array.from(mother.children);
+      childrenDoms.shift();
+      childrenDoms = childrenDoms.map((dom) => {
+        return Array.from(dom.children);
+      });
+      childrenDoms = childrenDoms.flat();
+      childrenDoms = childrenDoms.filter((dom) => {
+        return dom.hasAttribute("date");
+      })
+
+      option.grayMode(year, month + 1).then((booArr) => {
+        childrenDoms = Array.from(mother.children);
+        childrenDoms.shift();
+        childrenDoms = childrenDoms.map((dom) => {
+          return Array.from(dom.children);
+        });
+        childrenDoms = childrenDoms.flat();
+        childrenDomsEmpty = childrenDoms.filter((dom) => {
+          return !dom.hasAttribute("date");
+        });
+        childrenDoms = childrenDoms.filter((dom) => {
+          return dom.hasAttribute("date");
+        });
+
+        if (booArr.length !== childrenDoms.length) {
+          throw new Error("invaild boolean array");
+        }
+
+        for (let i = 0; i < booArr.length; i++) {
+          childrenDoms[i].setAttribute("color", childrenDoms[i].firstChild.style.color);
+          if (!booArr[i]) {
+            childrenDoms[i].setAttribute("deactive", "true");
+            childrenDoms[i].style.background = GeneralJs.colorChip.gray0;
+            childrenDoms[i].firstChild.style.color = GeneralJs.colorChip.deactive;
+          } else {
+            childrenDoms[i].setAttribute("deactive", "false");
+          }
+        }
+
+        for (let dom of childrenDomsEmpty) {
+          dom.style.background = GeneralJs.colorChip.gray0;
+        }
+
+      }).catch((err) => {
+        console.log(err);
+      });
+
+    }
+  }
+
+  //base maker
+  calendarBase = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    top: String(0) + ea,
+    left: String(option.left !== undefined ? option.left : 0) + ea,
+    width: ((option.bigMode !== true) ? String(width) + ea : option.width),
+  };
+  for (let i in style) {
+    calendarBase.style[i] = style[i];
+  }
+
+  //style
+  titleZoneStyle = {
+    position: "relative",
+    height: String(titleHeight) + ea,
+  };
+  contentsZoneStyle = {
+    position: "relative",
+    height: "calc(100% - " + String(titleHeight) + ea + ")",
+    marginTop: String(contentsMarginTop) + ea,
+  };
+
+  //title zone -------------------------------------------------------------- start
+  titleZone = GeneralJs.nodes.div.cloneNode(true);
+  for (let i in titleZoneStyle) {
+    titleZone.style[i] = titleZoneStyle[i];
+  }
+
+  //year month number
+  div_clone = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    height: String(titleHeight / 2) + ea,
+    fontFamily: "graphik",
+    fontSize: String(20) + ea,
+    fontWeight: String(400),
+    bottom: String(12) + ea,
+    width: "100%",
+    textAlign: "center",
+  };
+  for (let i in style) {
+    div_clone.style[i] = style[i];
+  }
+
+  if (option.bigMode === true) {
+    div_clone.style.bottom = "";
+    div_clone.style.top = String(desktop ? -6 : 0) + ea;
+    div_clone.style.fontSize = String(desktop ? 29 : 4.2) + ea;
+  }
+
+  div_clone.textContent = String(year) + '.' + ((month < 9) ? '0' + String(month + 1) : String(month + 1));
+  titleZone.appendChild(div_clone);
+
+  //previous arrow
+  svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnArrow("left", GeneralJs.colorChip.green));
+  style = {
+    position: "absolute",
+    width: String(arrowWidth) + ea,
+    height: String(arrowWidth * SvgTong.getRatio(svg_clone)) + ea,
+    bottom: String(arrowBottom) + ea,
+    left: String(arrowLeft) + ea,
+  };
+  if (option.arrow !== undefined) {
+    if (option.arrow.bottom !== undefined) {
+      style.bottom = option.arrow.bottom;
+    }
+    if (option.arrow.left !== undefined) {
+      style.left = option.arrow.left;
+    }
+  }
+  for (let i in style) {
+    svg_clone.style[i] = style[i];
+  }
+  titleZone.appendChild(svg_clone);
+
+  svg_zone = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    width: String(arrowZoneWidth) + ea,
+    height: String(arrowZoneWidth) + ea,
+    bottom: String(arrowZoneBottom) + ea,
+    left: String(arrowZoneLeft) + ea,
+    cursor: "pointer",
+  };
+  for (let i in style) {
+    svg_zone.style[i] = style[i];
+  }
+  svg_zone.addEventListener("click", function (e) {
+    const whiteBox = calendarBase.parentNode;
+    thisMatrix = thisMatrix.previousMatrix();
+    const { year, month, matrix } = thisMatrix;
+    titleZone.firstChild.textContent = String(year) + '.' + ((month < 9) ? '0' + String(month + 1) : String(month + 1));
+    calendarBase.removeChild(contentsZone);
+
+    contentsZone = GeneralJs.nodes.div.cloneNode(true);
+    for (let i in contentsZoneStyle) {
+      contentsZone.style[i] = contentsZoneStyle[i];
+    }
+    matrixMaker(contentsZone, year, month, matrix, null, width, height, titleHeight);
+    finalHeight1 = (height / 9) * (matrix.length + 1);
+    calendarBase.appendChild(contentsZone);
+
+    resultObj.contentsZone = contentsZone;
+    resultObj.calendarHeight = finalHeight0 + finalHeight1 + finalHeight2;
+    resultObj.matrix = thisMatrix;
+  });
+  titleZone.appendChild(svg_zone);
+
+  //next arrow
+  svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnArrow("right", GeneralJs.colorChip.green));
+  style = {
+    position: "absolute",
+    width: String(arrowWidth) + ea,
+    height: String(arrowWidth * SvgTong.getRatio(svg_clone)) + ea,
+    bottom: String(arrowBottom) + ea,
+    right: String(arrowLeft) + ea,
+  };
+  if (option.arrow !== undefined) {
+    if (option.arrow.bottom !== undefined) {
+      style.bottom = option.arrow.bottom;
+    }
+    if (option.arrow.left !== undefined) {
+      style.right = option.arrow.left;
+    }
+  }
+  for (let i in style) {
+    svg_clone.style[i] = style[i];
+  }
+  titleZone.appendChild(svg_clone);
+
+  svg_zone = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "absolute",
+    width: String(arrowZoneWidth) + ea,
+    height: String(arrowZoneWidth) + ea,
+    bottom: String(arrowZoneBottom) + ea,
+    right: String(arrowZoneLeft) + ea,
+    cursor: "pointer",
+  };
+  for (let i in style) {
+    svg_zone.style[i] = style[i];
+  }
+  svg_zone.addEventListener("click", function (e) {
+    const whiteBox = calendarBase.parentNode;
+    thisMatrix = thisMatrix.nextMatrix();
+    const { year, month, matrix } = thisMatrix;
+    titleZone.firstChild.textContent = String(year) + '.' + ((month < 9) ? '0' + String(month + 1) : String(month + 1));
+    calendarBase.removeChild(contentsZone);
+    contentsZone = GeneralJs.nodes.div.cloneNode(true);
+    for (let i in contentsZoneStyle) {
+      contentsZone.style[i] = contentsZoneStyle[i];
+    }
+    matrixMaker(contentsZone, year, month, matrix, null, width, height, titleHeight);
+    finalHeight1 = (height / 9) * (matrix.length + 1);
+    calendarBase.appendChild(contentsZone);
+
+    resultObj.contentsZone = contentsZone;
+    resultObj.calendarHeight = finalHeight0 + finalHeight1 + finalHeight2;
+    resultObj.matrix = thisMatrix;
+  });
+  titleZone.appendChild(svg_zone);
+
+  calendarBase.appendChild(titleZone);
+  //title zone -------------------------------------------------------------- end
+
+  //contents zone ----------------------------------------------------------- start
+  contentsZone = GeneralJs.nodes.div.cloneNode(true);
+  for (let i in contentsZoneStyle) {
+    contentsZone.style[i] = contentsZoneStyle[i];
+  }
+
+  matrixMaker(contentsZone, year, month, matrix, thisDate, width, height, titleHeight);
+  calendarBase.appendChild(contentsZone);
+  //contents zone -------------------------------------------------------------- end
+
+  resultObj.setDoms(calendarBase, titleZone, contentsZone);
+
+  mother.appendChild(resultObj.calendarBase);
+
+  return resultObj;
+}
+
 GeneralJs.sleep = function (time) {
   let timeoutId = null;
   return new Promise(function (resolve, reject) {
@@ -4761,7 +5313,6 @@ GeneralJs.promptButtons = function (message, buttons) {
     num++;
   }
 
-
   return new Promise((resolve, reject) => {
 
     whiteTongBase.addEventListener("click", function (e) {
@@ -4787,6 +5338,230 @@ GeneralJs.promptButtons = function (message, buttons) {
           } catch {}
         }
         resolve(thisValue);
+      });
+    }
+
+  });
+}
+
+GeneralJs.promptDate = function (message, progressPossible = false, progressName = "") {
+  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
+  const ea = "px";
+  const promptAsideClassName = "promptAsideClassName";
+  const mobile = window.innerWidth <= 900;
+  const desktop = !mobile;
+  let whiteTongBase;
+  let whiteTong;
+  let whiteWidth, whiteHeight;
+  let paddingTop, paddingLeft;
+  let paddingBottom;
+  let size0, size1;
+  let marginLeft;
+  let bottomVisual;
+  let inputBoxHeight;
+  let input;
+  let inputIndent;
+  let inputBottomVisual;
+  let greenBarHeight;
+  let lineHeight;
+  let wordingVisual;
+  let finalEvent;
+  let inputSize;
+  let buttonsBaseTong;
+  let buttonBetween;
+  let num;
+  let buttonSize;
+  let textTop;
+  let buttonsChildren;
+  let size2;
+  let buttonTop;
+  let buttonRight;
+  let buttonHeight;
+  let buttonPadding;
+  let subButton;
+
+  whiteWidth = 320;
+  whiteHeight = 150;
+  paddingTop = 17;
+  paddingLeft = 23;
+  paddingBottom = 15;
+  size0 = 14;
+  size1 = 15;
+  size2 = 11;
+  inputSize = 13;
+  buttonSize = 12;
+  marginLeft = 18;
+  bottomVisual = 7;
+  inputBoxHeight = 30;
+  inputIndent = 9;
+  inputBottomVisual = 0;
+  lineHeight = 1.5;
+  wordingVisual = GeneralJs.isMac() ? 0 : 2;
+  textTop = GeneralJs.isMac() ? -1 : 1;
+  buttonBetween = 6;
+  buttonTop = 20;
+  buttonRight = 21;
+  buttonHeight = 21;
+  buttonPadding = 9;
+
+  greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
+  if (Number.isNaN(greenBarHeight)) {
+    greenBarHeight = 0;
+  }
+
+  whiteTongBase = createNode({
+    mode: "aside",
+    mother: document.body,
+    class: [ promptAsideClassName ],
+    event: {
+      contextmenu: (e) => { e.stopPropagation(); },
+      dblclick: (e) => { e.stopPropagation(); },
+      drop: (e) => { e.stopPropagation(); },
+      keyup: (e) => { e.stopPropagation(); },
+      keydown: (e) => { e.stopPropagation(); },
+      keypress: (e) => { e.stopPropagation(); },
+    },
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "fixed",
+      top: String(0) + "vh",
+      left: String(1) + "vw",
+      width: String(98) + "vw",
+      height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
+      background: "transparent",
+      zIndex: String(900)
+    }
+  });
+
+  whiteTong = createNode({
+    mother: whiteTongBase,
+    event: {
+      click: (e) => { e.stopPropagation(); },
+    },
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(whiteWidth - (paddingLeft * 2)) + ea,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(paddingBottom) + ea,
+      paddingLeft: String(paddingLeft) + ea,
+      paddingRight: String(paddingLeft) + ea,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      background: colorChip.white,
+      animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    text: "Q",
+    style: {
+      fontSize: String(size0) + ea,
+      fontWeight: String(400),
+      color: colorChip.green,
+      fontFamily: "graphik",
+      position: "absolute",
+      top: String(paddingTop) + ea,
+      left: String(paddingLeft) + ea,
+      lineHeight: String(lineHeight),
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    text: message,
+    style: {
+      position: "relative",
+      marginLeft: String(marginLeft) + ea,
+      fontSize: String(size1) + ea,
+      fontWeight: String(500),
+      color: colorChip.black,
+      lineHeight: String(lineHeight),
+      top: String(wordingVisual) + ea,
+    }
+  });
+
+  subButton = null;
+  if (progressPossible && progressName !== "") {
+    subButton = createNode({
+      mother: whiteTong,
+      text: message,
+      style: {
+        display: "inline-flex",
+        textAlign: "center",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "absolute",
+        top: String(buttonTop) + ea,
+        right: String(buttonRight) + ea,
+        height: String(buttonHeight) + ea,
+        paddingLeft: String(buttonPadding) + ea,
+        paddingRight: String(buttonPadding) + ea,
+        background: colorChip.gradientGreen,
+        borderRadius: String(5) + "px",
+        zIndex: String(1),
+      },
+      child: {
+        text: progressName,
+        style: {
+          position: "relative",
+          fontSize: String(size2) + ea,
+          fontWeight: String(700),
+          color: colorChip.white,
+          top: String(textTop) + ea,
+        }
+      }
+    });
+  }
+
+  buttonsBaseTong = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0, ea),
+      borderRadius: String(5) + "px",
+      background: colorChip.white,
+    }
+  });
+
+  return new Promise((resolve, reject) => {
+
+    whiteTongBase.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+      for (let z = 0; z < targets.length; z++) {
+        try {
+          targets[z].remove();
+        } catch {}
+      }
+      resolve(null);
+    });
+
+    GeneralJs.generalCalendar(buttonsBaseTong, new Date(), function (e) {
+      const value = this.getAttribute("buttonValue");
+      const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+      for (let z = 0; z < targets.length; z++) {
+        try {
+          targets[z].remove();
+        } catch {}
+      }
+      resolve(GeneralJs.stringToDate(value));
+    }, {});
+
+    if (subButton !== null) {
+      subButton.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+        for (let z = 0; z < targets.length; z++) {
+          try {
+            targets[z].remove();
+          } catch {}
+        }
+        resolve(new Date(3800, 0, 1));
       });
     }
 

@@ -395,26 +395,7 @@ DevContext.prototype.launching = async function () {
     // console.log((await naver.complexSearch(sampleValue)));
 
 
-    // const res = await requestSystem("https://map.naver.com/v5/api/sites/summary/1968106008", {
-    //   lang: "ko",
-    // }, {
-    //   method: "get",
-    //   headers: {
-    //     "Pragma": `no-cache`,
-    //     "Referer": `https://map.naver.com/`,
-    //     "Sec-Ch-Ua": `"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"`,
-    //     "Sec-Ch-Ua-Mobile": `?0`,
-    //     "Sec-Ch-Ua-Platform": `"macOS"`,
-    //     "Sec-Fetch-Dest": `empty`,
-    //     "Sec-Fetch-Mode": `cors`,
-    //     "Sec-Fetch-Site": `same-origin`,
-    //     "User-Agent": `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36`,
-    //   }
-    // })
-    // console.log(res.data);
 
-
-    // const sampleValue = "경기 광주시 문형산길157번길 12-7 (신현동, 큐비코) 104동 102호";
     // const sampleValue = "경기 광주시 문형산길157번길 12-7 (신현동, 큐비코) 104동 102호";
     // let res, firstId;
     // let startIndex;
@@ -474,6 +455,50 @@ DevContext.prototype.launching = async function () {
     // console.log(targetObject.AptStore.detail.portal_id);
 
     
+
+    // const naver = new NaverAPIs();
+    // const result = (await fileSystem(`readJson`, [ `${process.cwd()}/temp/landMatrix.json` ])).slice(1);
+
+    // const newMatrix = [[
+    //   "cliid",
+    //   "name",
+    //   "requestNumber",
+    //   "pyeong",
+    //   "address",
+    //   "complexId"
+    // ]];
+    // let tempResult;
+
+    // for (let arr of result) {
+
+    //   if (arr[5] === '') {
+    //     tempResult = await naver.complexSearch(arr[4], true);
+    //     newMatrix.push([
+    //       arr[0],
+    //       arr[1],
+    //       arr[2],
+    //       arr[3],
+    //       arr[4],
+    //       tempResult === null ? "" : tempResult,
+    //     ])
+    //     await sleep((3000 * (Math.random())) + 1000);
+    //   } else {
+    //     newMatrix.push([
+    //       arr[0],
+    //       arr[1],
+    //       arr[2],
+    //       arr[3],
+    //       arr[4],
+    //       arr[5],
+    //     ])
+    //   }
+    //   await fileSystem(`writeJson`, [ `${process.cwd()}/temp/landMatrix2.json`, JSON.parse(JSON.stringify(newMatrix)) ]);
+    // }
+
+
+
+    // 부산 영도구 태종로 611 (동삼동) 오션라이프 에일린의뜰 104동 204호
+
 
     // const sheetsId = "1NLr0lgiNheytUSvwn-d5Ys5QRzgW5uwv_EIbTqNKQ1s";
     // const matrix = await sheets.get_value_inPython(sheetsId, "A2:E");

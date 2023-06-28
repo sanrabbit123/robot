@@ -501,7 +501,6 @@ NaverAPIs.prototype.mapSearch = async function (query) {
         targetAddress = equalJson(JSON.stringify(result.address.jibunsAddress));
       }
       resultList = targetAddress.list;
-      console.log(resultList);
       resultList = resultList.map((obj) => {
         return {
           name: (obj.addressElements.buildName === null || obj.addressElements.buildName === undefined) ? "" : (obj.addressElements.buildName.trim() === "" ? obj.siteRepName.trim() : obj.addressElements.buildName.trim()),
