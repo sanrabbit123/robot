@@ -589,16 +589,15 @@ DevContext.prototype.launching = async function () {
 
     // 부산 영도구 태종로 611 (동삼동) 오션라이프 에일린의뜰 104동 204호
 
-    const naver = new NaverAPIs();
-    // const landMatrix = await fileSystem(`readJson`, [ `${process.cwd()}/temp/landMatrix2.json` ]);
-    const sheetsId = "1NLr0lgiNheytUSvwn-d5Ys5QRzgW5uwv_EIbTqNKQ1s";
-    const matrix = await sheets.get_value_inPython(sheetsId, "A2:F");
+    // const naver = new NaverAPIs();
+    // const landMatrix = await fileSystem(`readJson`, [ `${process.cwd()}/temp/landMatrix3.json` ]);
+    // const sheetsId = "1NLr0lgiNheytUSvwn-d5Ys5QRzgW5uwv_EIbTqNKQ1s";
+    // const matrix = await sheets.get_value_inPython(sheetsId, "A2:F");
 
-    const targetMatrix = matrix.filter((arr) => {
-      return arr[5] === '' || arr[5] === undefined
-    });
-
-
+    // const targetMatrix = matrix.filter((arr) => {
+    //   return arr[5] === '' || arr[5] === undefined
+    // });
+    // console.log(targetMatrix.length)
 
     // const newMatrix = [[
     //   "cliid",
@@ -614,14 +613,22 @@ DevContext.prototype.launching = async function () {
     // let tempArr;
 
     // for (let arr of matrix) {
-    //   thisId = "-";
+    //   thisId = arr[5] === undefined ? null : arr[5];
     //   thisCliid = arr[0];
 
-    //   tempArr = landMatrix.find((a) => { return a[0] === thisCliid });
-    //   if (tempArr === undefined) {
-    //     thisId = "";
+    //   if (thisId === null) {
+    //     tempArr = landMatrix.find((a) => { return a[0] === thisCliid });
+    //     if (tempArr === undefined) {
+    //       thisId = "";
+    //     } else {
+    //       thisId = tempArr[5];
+    //     }
     //   } else {
-    //     thisId = tempArr[5];
+    //     thisId = arr[5];
+    //   }
+
+    //   if (/\?/gi.test(thisId)) {
+    //     thisId = thisId.split("?")[0];
     //   }
 
     //   newMatrix.push([
@@ -634,9 +641,9 @@ DevContext.prototype.launching = async function () {
     //   ]);
     // }
 
+
     // await sheets.update_value_inPython(sheetsId, "", newMatrix);
-  
-    
+    // console.log(newMatrix);
 
 
     // console.log(targetMatrix.length);
