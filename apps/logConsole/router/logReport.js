@@ -1270,7 +1270,7 @@ LogReport.prototype.dailyReports = async function () {
               if (obj === null) {
                 return false;
               } else {
-                return obj.source.campaign.some((c) => { return facebookCampaignBoo(c); });
+                return obj.source.mother.some((c) => { return facebookCampaignBoo(c); });
               }
             });
           }).length;
@@ -1368,7 +1368,7 @@ LogReport.prototype.dailyReports = async function () {
               if (obj === null) {
                 return false;
               } else {
-                return obj.source.campaign.some((c) => { return naverCampaignBoo(c); });
+                return obj.source.mother.some((c) => { return naverCampaignBoo(c); });
               }
             });
           }).length;
@@ -1678,7 +1678,7 @@ LogReport.prototype.dailyReports = async function () {
               if (obj === null) {
                 return false;
               } else {
-                return obj.source.campaign.some((c) => { return googleCampaignBoo(c); });
+                return obj.source.mother.some((c) => { return googleCampaignBoo(c); });
               }
             });
           }).length;
