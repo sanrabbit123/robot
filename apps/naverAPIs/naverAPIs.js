@@ -467,7 +467,7 @@ NaverAPIs.prototype.mapSearch = async function (query, justWordingMode = false) 
   try {
     const queryStr = querystring.stringify({
       caller: "pcweb",
-      query,
+      query: query.replace(/아파트/gi, ""),
       searchCoord: "127.05840838974427;37.75015390090829",
       page: "1",
       displayCount: "20",
@@ -494,7 +494,9 @@ NaverAPIs.prototype.mapSearch = async function (query, justWordingMode = false) 
     }
 
     targetAddress = null;
+
     if (result.address !== null) {
+
       if (result.address.roadAddress !== null) {
         targetAddress = equalJson(JSON.stringify(result.address.roadAddress));
       } else {
@@ -514,6 +516,20 @@ NaverAPIs.prototype.mapSearch = async function (query, justWordingMode = false) 
     } else if (result.place !== null) {
       resultList = result.place.list;
       resultList = resultList.map((obj) => {
+        let thisComplexId;
+        if (obj.poiInfo.land === null) {
+          if (obj.theme !== null) {
+            if (obj.theme.themeId !== null) {
+            thisComplexId = obj.theme.themeId;
+            } else {
+            thisComplexId = "";
+            }
+          } else {
+            thisComplexId = "";
+          }
+        } else {
+          thisComplexId = obj.poiInfo.land.shapeKey.shapeID;
+        }
         return {
           name: obj.name,
           address: obj.roadAddress,
@@ -521,10 +537,12 @@ NaverAPIs.prototype.mapSearch = async function (query, justWordingMode = false) 
             id: obj.id,
             bcode: '',
             hcode: '',
-            complexId: obj.poiInfo.land === null ? "" : obj.poiInfo.land.shapeKey.shapeID,
+            complexId: thisComplexId,
           },
         }
-      })
+      }).filter((obj) => {
+        return obj.elements.complexId !== "" && obj.elements.complexId !== null;
+      });
 
     } else {
       return null;
@@ -558,37 +576,47 @@ NaverAPIs.prototype.complexSearch = async function (query, complexIdMode = false
   const { equalJson, requestSystem, dateToString, stringToDate, zeroAddition } = this.mother;
   const { chrome, naverMapUrl, naverMapSearch, naverLandUrl, naverLandAuthorizationKey } = this;
   try {
+    query = query.replace(/전라남도 장성군 북이면 백양로 3/gi, "").trim();
     const naverMapResult = await this.mapSearch(query);
     if (naverMapResult === null) {
       throw new Error("no result");
     } else {
-      const response = await requestSystem(naverLandUrl + "/api/search", { keyword: naverMapResult.first.name }, { method: "get" });
+      const response = await requestSystem(naverLandUrl + "/api/search", { keyword: naverMapResult.first.name.replace(/아파트/gi, "").replace(/[0-9]단지/gi, '') }, { method: "get" });
       const { bcode, hcode } = naverMapResult.first.elements;
       let target, complexId;
       let resultObj;
 
-      if (bcode === "" && hcode === "" && typeof naverMapResult.first.elements.complexId === "string" && naverMapResult.first.elements.complexId !== "") {
-        complexId = naverMapResult.first.elements.complexId;
+      if (/\/complexes\/[0-9]+/g.test(response.data.deepLink)) {
+        complexId = response.data.deepLink.split("/")[2].split("?")[0];
       } else {
-        if (!Array.isArray(response.data.complexes)) {
-          throw new Error("there is no information");
-        }
-        if (response.data.complexes.length === 0) {
-          throw new Error("there is no information 2");
-        }
-        target = response.data.complexes.find((obj) => {
-          if (bcode !== "" && String(obj.cortarNo) === String(bcode)) {
-            return true;
-          } else if (hcode !== "" && String(obj.cortarNo) === String(hcode)) {
-            return true;
-          } else {
-            return false;
+        if (bcode === "" && hcode === "" && typeof naverMapResult.first.elements.complexId === "string" && naverMapResult.first.elements.complexId !== "") {
+          complexId = naverMapResult.first.elements.complexId;
+        } else {
+          if (!Array.isArray(response.data.complexes)) {
+            throw new Error("there is no information");
           }
-        })
-        if (target === undefined) {
-          throw new Error("there is no information 3");
+          if (response.data.complexes.length === 0) {
+            throw new Error("there is no information 2");
+          }
+          target = response.data.complexes.find((obj) => {
+            if (bcode !== "" && String(obj.cortarNo) === String(bcode)) {
+              return true;
+            } else if (hcode !== "" && String(obj.cortarNo) === String(hcode)) {
+              return true;
+            } else {
+              return false;
+            }
+          })
+
+          if (target === undefined && response.data.complexes.length === 1) {
+            target = response.data.complexes[0];
+          }
+
+          if (target === undefined) {
+            throw new Error("there is no information 3");
+          }
+          complexId = target.complexNo;
         }
-        complexId = target.complexNo;
       }
 
       if (complexIdMode) {

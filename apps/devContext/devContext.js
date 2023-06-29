@@ -173,7 +173,7 @@ DevContext.prototype.launching = async function () {
 
     // ai study =====================================================================================================================
 
-
+    
 
     /*
     
@@ -592,7 +592,7 @@ DevContext.prototype.launching = async function () {
     const naver = new NaverAPIs();
     // const landMatrix = await fileSystem(`readJson`, [ `${process.cwd()}/temp/landMatrix2.json` ]);
     const sheetsId = "1NLr0lgiNheytUSvwn-d5Ys5QRzgW5uwv_EIbTqNKQ1s";
-    const matrix = await sheets.get_value_inPython(sheetsId, "A1:F");
+    const matrix = await sheets.get_value_inPython(sheetsId, "A2:F");
 
     const targetMatrix = matrix.filter((arr) => {
       return arr[5] === '' || arr[5] === undefined
@@ -638,22 +638,23 @@ DevContext.prototype.launching = async function () {
   
     
 
-    console.log(targetMatrix.length);
-    const newMatrix = [];
-    let tempResult;
-    for (let arr of targetMatrix) {
-      tempResult = await naver.complexSearch(arr[4], true);
-      newMatrix.push([
-        arr[0],
-        arr[1],
-        arr[2],
-        arr[3],
-        arr[4],
-        tempResult === null ? "" : tempResult,
-      ])
-      await fileSystem(`writeJson`, [ `${process.cwd()}/temp/landMatrix3.json`, JSON.parse(JSON.stringify(newMatrix)) ]);
-      await sleep((2000 * (Math.random())) + 1000);
-    }
+
+    // console.log(targetMatrix.length);
+    // const newMatrix = [];
+    // let tempResult;
+    // for (let arr of targetMatrix) {
+    //   tempResult = await naver.complexSearch(arr[4], true);
+    //   newMatrix.push([
+    //     arr[0],
+    //     arr[1],
+    //     arr[2],
+    //     arr[3],
+    //     arr[4],
+    //     tempResult === null ? "" : tempResult,
+    //   ])
+    //   await fileSystem(`writeJson`, [ `${process.cwd()}/temp/landMatrix3.json`, JSON.parse(JSON.stringify(newMatrix)) ]);
+    //   await sleep((2000 * (Math.random())) + 1000);
+    // }
 
 
 
