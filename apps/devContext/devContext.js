@@ -594,86 +594,24 @@ DevContext.prototype.launching = async function () {
     // const sheetsId = "1NLr0lgiNheytUSvwn-d5Ys5QRzgW5uwv_EIbTqNKQ1s";
     // const matrix = await sheets.get_value_inPython(sheetsId, "A2:F");
 
-    // const targetMatrix = matrix.filter((arr) => {
-    //   return arr[5] === '' || arr[5] === undefined
-    // });
-    // console.log(targetMatrix.length)
-
-    // const newMatrix = [[
-    //   "cliid",
-    //   "name",
-    //   "requestNumber",
-    //   "pyeong",
-    //   "address",
-    //   "complexId"
-    // ]];
-    // let tempResult;
-    // let thisId;
-    // let thisCliid;
-    // let tempArr;
-
-    // for (let arr of matrix) {
-    //   thisId = arr[5] === undefined ? null : arr[5];
-    //   thisCliid = arr[0];
-
-    //   if (thisId === null) {
-    //     tempArr = landMatrix.find((a) => { return a[0] === thisCliid });
-    //     if (tempArr === undefined) {
-    //       thisId = "";
-    //     } else {
-    //       thisId = tempArr[5];
-    //     }
-    //   } else {
-    //     thisId = arr[5];
-    //   }
-
-    //   if (/\?/gi.test(thisId)) {
-    //     thisId = thisId.split("?")[0];
-    //   }
-
-    //   newMatrix.push([
-    //     arr[0],
-    //     arr[1],
-    //     arr[2],
-    //     arr[3],
-    //     arr[4],
-    //     thisId,
-    //   ]);
-    // }
-
-
-    // await sheets.update_value_inPython(sheetsId, "", newMatrix);
-    // console.log(newMatrix);
-
-
-    // console.log(targetMatrix.length);
-    // const newMatrix = [];
-    // let tempResult;
-    // for (let arr of targetMatrix) {
-    //   tempResult = await naver.complexSearch(arr[4], true);
-    //   newMatrix.push([
-    //     arr[0],
-    //     arr[1],
-    //     arr[2],
-    //     arr[3],
-    //     arr[4],
-    //     tempResult === null ? "" : tempResult,
-    //   ])
-    //   await fileSystem(`writeJson`, [ `${process.cwd()}/temp/landMatrix3.json`, JSON.parse(JSON.stringify(newMatrix)) ]);
-    //   await sleep((2000 * (Math.random())) + 1000);
-    // }
 
 
 
-
-
-
-
-    // const parent = "1XrxI7BRC8S9ZZ96ZtJf1cq5T_2rACjQJ";
     // const selfMongo = this.MONGOC;
     // const clients = await back.getClientsByQuery({}, { selfMongo });
-    // let matrix;
-    // let sheetsId;
+    // let whereQuery, updateQuery;
+
+    // for (let client of clients) {
+    //   whereQuery = { cliid: client.cliid };
+    //   for (let i = 0; i < client.requests.length; i++) {
+    //     updateQuery = {};
+    //     updateQuery["requests." + String(i) + ".request.space.naver"] = "";
+    //     await selfMongo.db("miro81").collection("client").updateOne(whereQuery, { $set: updateQuery });
+    //     console.log(whereQuery, updateQuery);
+    //   }
+    // }
+
+
 
     // matrix = [
     //   [

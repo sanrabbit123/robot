@@ -26,6 +26,7 @@ module.exports = {
             address: "",
             contract: "알 수 없음",
             pyeong: 0,
+            naver: "",
             spec: {
               room: 0,
               bathroom: 0,
