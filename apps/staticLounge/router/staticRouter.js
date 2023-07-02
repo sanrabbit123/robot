@@ -4005,12 +4005,10 @@ StaticRouter.prototype.rou_post_printComplex = function () {
               finalText += "타입 개수 : " + String(searchResult.data.information.type.length) + "개" + "\n";
               finalText += "-\n";
               for (let obj of searchResult.data.information.type.detail) {
-                finalText += "타입 이름 : " + obj.name + "\n";
-                finalText += "평수 : " + String(obj.area.pyeong) + "평 / " + String(obj.area.exclusivePyeong) + "평" + "\n";
-                finalText += "세대수 : " + String(obj.count.household) + "세대" + "\n";
-                finalText += "방 : " + String(obj.count.room) + "개" + "\n";
+                finalText += obj.name;
+                finalText += " (" + String(obj.area.pyeong) + "평 / " + String(obj.area.exclusivePyeong) + "평) - ";
+                finalText += "방 : " + String(obj.count.room) + "개" + " / ";
                 finalText += "화장실 : " + String(obj.count.bathroom) + "개" + "\n";
-                finalText += "-\n";
               }
               finalText += bar;
   
