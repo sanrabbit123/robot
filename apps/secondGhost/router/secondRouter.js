@@ -2330,6 +2330,7 @@ SecondRouter.prototype.rou_post_printClient = function () {
       }
       const selfMongo = instance.mongo;
       const { cliid, history } = equalJson(req.body);
+      const mode = (req.body.mode === undefined ? "general" : req.body.mode );
       const requestNumber = Number(req.body.requestNumber);
       const client = await back.getClientById(cliid, { selfMongo, withTools: true });
       let text;
@@ -2340,7 +2341,7 @@ SecondRouter.prototype.rou_post_printClient = function () {
       webReport = (await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/getClientAnalytics", { cliid, textMode: true }, { headers: { "Content-Type": "application/json" } })).data.report;
       text += webReport;
       
-      requestSystem("https://" + address.officeinfo.ghost.host + ":3000/printComplex", { text, cliid, requestNumber }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+      requestSystem("https://" + address.officeinfo.ghost.host + ":3000/printComplex", { text, cliid, requestNumber, mode }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
 
       res.send(JSON.stringify({ message: "will do" }));
 

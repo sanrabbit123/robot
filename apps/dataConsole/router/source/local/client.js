@@ -7427,6 +7427,49 @@ ClientJs.prototype.communicationRender = function () {
     }
   ]);
   communication.setItem([
+    () => { return "네이버 부동산 찾기"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let history;
+        let cliid, thisCase;
+        let caseTong;
+        let curation;
+        let requestNumber;
+
+        requestNumber = 0;
+
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            cliid = (await GeneralJs.prompt("고객 아이디를 입력하세요!")).trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        } else {
+          cliid = instance.whiteBox.id;
+          requestNumber = Number(instance.whiteBox.contentsBox.getAttribute("request"));
+        }
+        thisCase = null;
+        caseTong = [];
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+              caseTong.push(c);
+            }
+          }
+        }
+        if (thisCase !== null) {
+          history = await ajaxJson({ id: cliid, rawMode: true }, "/getClientHistory", { equal: true });
+          await ajaxJson({ cliid, requestNumber, history, mode: "update" }, SECONDHOST + "/printClient");
+          window.alert("찾기 요청이 완료되었습니다!");
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+  communication.setItem([
     () => { return "하하 발송"; },
     function () {
       return true;

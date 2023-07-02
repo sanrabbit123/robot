@@ -587,33 +587,11 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // reload
+    // complex update
 
     // const selfMongo = this.MONGOC;
     // const sheetsId = "1NLr0lgiNheytUSvwn-d5Ys5QRzgW5uwv_EIbTqNKQ1s";
     // const matrix = await sheets.get_value_inPython(sheetsId, "A2:F");
-    // const clients = await back.getClientsByQuery({}, { selfMongo });
-    // let whereQuery, updateQuery;
-
-    // for (let client of clients) {
-    //   whereQuery = { cliid: client.cliid };
-    //   for (let i = 0; i < client.requests.length; i++) {
-    //     updateQuery = {};
-    //     updateQuery["requests." + String(i) + ".request.space.naver"] = "";
-    //     await selfMongo.db("miro81").collection("client").updateOne(whereQuery, { $set: updateQuery });
-    //     console.log(whereQuery, updateQuery);
-    //   }
-    // }
-
-    // for (let [ cliid, name, requestNumber, pyeong, address, naver ] of matrix) {
-    //   whereQuery = { cliid };
-    //   updateQuery = {};
-    //   updateQuery["requests." + String(requestNumber.replace(/[^0-9]/gi, '')) + ".request.space.naver"] = naver.replace(/[^0-9]/gi, '').trim() === '-' ? "" : naver.replace(/[^0-9]/gi, '').trim();
-    //   await selfMongo.db("miro81").collection("client").updateOne(whereQuery, { $set: updateQuery });
-    //   console.log(whereQuery, updateQuery);
-    // }
-
-
     // let res;
 
     // for (let [ cliid, name, requestNumber, pyeong, address, naver ] of matrix) {

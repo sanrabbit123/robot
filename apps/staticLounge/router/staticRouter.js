@@ -3924,7 +3924,7 @@ StaticRouter.prototype.rou_post_printComplex = function () {
   const address = this.address;
   const back = this.back;
   const naver = this.naver;
-  const { equalJson, requestSystem, dateToString } = this.mother;
+  const { equalJson, requestSystem, dateToString, messageSend } = this.mother;
   let obj;
   obj = {};
   obj.link = [ "/printComplex" ];
@@ -3942,9 +3942,9 @@ StaticRouter.prototype.rou_post_printComplex = function () {
       const selfMongo = instance.mongo;
       const bar = "========================================================================";
       const { text, cliid } = equalJson(req.body);
+      const mode = (req.body.mode === undefined ? "general" : req.body.mode );
       const requestNumber = Number(req.body.requestNumber);
       const client = await back.getClientById(cliid, { selfMongo });
-      const targetAddress = client.requests[requestNumber].request.space.address.value.trim();
       const now = new Date();
       let finalText;
       let dateValue;
@@ -3998,12 +3998,9 @@ StaticRouter.prototype.rou_post_printComplex = function () {
               finalText += " / " + howLong + " 아파트" + "\n";
 
               finalText += "총 세대수 : " + String(searchResult.data.information.count.household) + "세대" + "\n";
-              finalText += "동 개수 : " + String(searchResult.data.information.count.dong) + "동" + "\n";
-              finalText += "최대 층수 : " + String(searchResult.data.information.floor.high) + "층" + "\n";
               finalText += bar;
               finalText += "\n";
               finalText += "타입 개수 : " + String(searchResult.data.information.type.length) + "개" + "\n";
-              finalText += "-\n";
               for (let obj of searchResult.data.information.type.detail) {
                 finalText += obj.name;
                 finalText += " (" + String(obj.area.pyeong) + "평 / " + String(obj.area.exclusivePyeong) + "평) - ";
@@ -4032,7 +4029,18 @@ StaticRouter.prototype.rou_post_printComplex = function () {
 
         return back.updateClient([ whereQuery, updateQuery ], { selfMongo });
       }).then(() => {
-        return requestSystem("https://" + address.officeinfo.ghost.host + ":3000/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+        if (mode === "general") {
+          return requestSystem("https://" + address.officeinfo.ghost.host + ":3000/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+        } else if (mode === "update") {
+          if (naverId !== "") {
+            logger.log("Static lounge 네이버 부동산 아이디 찾고 업데이트 성공함 : " + cliid + " / " + naverId).catch((err) => {
+              console.log(err);
+            });
+            return messageSend({ text: client.name + "(" + client.cliid + ")" + " 고객님의 네이버 부동산 찾기를 완료하였어요.\nlink : https://new.land.naver.com/complexes/" + naverId, channel: "#400_customer", voice: true, fairy: true });
+          } else {
+            return messageSend({ text: client.name + "(" + client.cliid + ")" + " 고객님의 네이버 부동산 찾기에 실패하였어요.", channel: "#400_customer", voice: true, fairy: true });
+          }
+        }
       }).catch((err) => {
         console.log(err);
       });
