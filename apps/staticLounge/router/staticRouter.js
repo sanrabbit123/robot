@@ -3945,12 +3945,14 @@ StaticRouter.prototype.rou_post_printComplex = function () {
       const mode = (req.body.mode === undefined ? "general" : req.body.mode );
       const requestNumber = Number(req.body.requestNumber);
       const client = await back.getClientById(cliid, { selfMongo });
+      const targetAddress = client.requests[requestNumber].request.space.address.value.trim();
       const now = new Date();
       let finalText;
       let dateValue;
       let howLong;
       let naverId;
       let whereQuery, updateQuery;
+      let originalArr, foundArr;
 
       const searchId = (client, requestNumber) => {
         if (client.requests[requestNumber].request.space.naver !== "") {
@@ -3958,7 +3960,7 @@ StaticRouter.prototype.rou_post_printComplex = function () {
             resolve(client.requests[requestNumber].request.space.naver);
           });
         } else {
-          return naver.complexSearch(client.requests[requestNumber].request.space.address.value.trim(), true);
+          return naver.complexSearch(targetAddress, true);
         }
       }
 
@@ -3979,35 +3981,42 @@ StaticRouter.prototype.rou_post_printComplex = function () {
             if (typeof searchResult.data.message === "string" && /error/gi.test(searchResult.data.message)) {
               naverId = "";
             } else {
-              
-              naverId = searchResult.data.naver;
 
-              finalText += "\n\n";
-              finalText += client.name + "(" + client.cliid + ") " + "네이버 부동산 정보 - " + searchResult.data.name;
-              finalText += "\n";
-              finalText += bar;
-              finalText += "\n";
+              originalArr = targetAddress.split(" ").map((str) => { return str.trim().replace(/[시도군구]$/gi, '') })
+              foundArr = searchResult.data.address.value.split(" ").map((str) => { return str.trim().replace(/[시도군구]$/gi, '') })
 
-              finalText += "아파트명 : " + searchResult.data.name + "\n";
-              finalText += "주소 : " + searchResult.data.address.value + "\n";
-              finalText += "사용승인일 : " + dateToString(equalJson(searchResult.data).information.date);
+              if ((new RegExp("^" + foundArr[0].slice(0, 1), "gi")).test(originalArr[0]) && (new RegExp("^" + foundArr[1].slice(0, 1), "gi")).test(originalArr[1])) {
+                naverId = searchResult.data.naver;
 
-              dateValue = (((((now.valueOf() - (equalJson(searchResult.data).information.date).valueOf()) / 1000) / 60) / 60) / 24) / 365;
-              howLong = String(Math.floor(dateValue)) + "년 " + String(Math.floor((dateValue % 1) * 12)) + "개월차";
-
-              finalText += " / " + howLong + " 아파트" + "\n";
-
-              finalText += "총 세대수 : " + String(searchResult.data.information.count.household) + "세대" + "\n";
-              finalText += bar;
-              finalText += "\n";
-              finalText += "타입 개수 : " + String(searchResult.data.information.type.length) + "개" + "\n";
-              for (let obj of searchResult.data.information.type.detail) {
-                finalText += obj.name;
-                finalText += " (" + String(obj.area.pyeong) + "평 / " + String(obj.area.exclusivePyeong) + "평) - ";
-                finalText += "방 : " + String(obj.count.room) + "개" + " / ";
-                finalText += "화장실 : " + String(obj.count.bathroom) + "개" + "\n";
+                finalText += "\n\n";
+                finalText += client.name + "(" + client.cliid + ") " + "네이버 부동산 정보 - " + searchResult.data.name;
+                finalText += "\n";
+                finalText += bar;
+                finalText += "\n";
+  
+                finalText += "아파트명 : " + searchResult.data.name + "\n";
+                finalText += "주소 : " + searchResult.data.address.value + "\n";
+                finalText += "사용승인일 : " + dateToString(equalJson(searchResult.data).information.date);
+  
+                dateValue = (((((now.valueOf() - (equalJson(searchResult.data).information.date).valueOf()) / 1000) / 60) / 60) / 24) / 365;
+                howLong = String(Math.floor(dateValue)) + "년 " + String(Math.floor((dateValue % 1) * 12)) + "개월차";
+  
+                finalText += " / " + howLong + " 아파트" + "\n";
+  
+                finalText += "총 세대수 : " + String(searchResult.data.information.count.household) + "세대" + "\n";
+                finalText += bar;
+                finalText += "\n";
+                finalText += "타입 개수 : " + String(searchResult.data.information.type.length) + "개" + "\n";
+                for (let obj of searchResult.data.information.type.detail) {
+                  finalText += obj.name;
+                  finalText += " (" + String(obj.area.pyeong) + "평 / " + String(obj.area.exclusivePyeong) + "평) - ";
+                  finalText += "방 : " + String(obj.count.room) + "개" + " / ";
+                  finalText += "화장실 : " + String(obj.count.bathroom) + "개" + "\n";
+                }
+                finalText += bar;
+              } else {
+                naverId = "";
               }
-              finalText += bar;
   
             }
           } else {
