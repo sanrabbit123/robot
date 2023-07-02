@@ -3980,9 +3980,9 @@ StaticRouter.prototype.rou_post_printComplex = function () {
               finalText += "아이디 : " + searchResult.data.id + "\n";
               finalText += "아파트명 : " + searchResult.data.name + "\n";
               finalText += "주소 : " + searchResult.data.address.value + "\n";
-              finalText += "사용승인일 : " + dateToString(searchResult.data.information.date);
+              finalText += "사용승인일 : " + dateToString(equalJson(searchResult.data).information.date);
 
-              dateValue = (((((now.valueOf() - (searchResult.data.information.date).valueOf()) / 1000) / 60) / 60) / 24) / 365;
+              dateValue = (((((now.valueOf() - (equalJson(searchResult.data).information.date).valueOf()) / 1000) / 60) / 60) / 24) / 365;
               howLong = String(Math.floor(dateValue)) + "년 " + String(Math.floor((dateValue % 1) * 12)) + "개월차";
 
               finalText += " / " + howLong + " 아파트" + "\n";
