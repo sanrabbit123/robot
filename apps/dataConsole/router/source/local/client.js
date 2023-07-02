@@ -7394,6 +7394,9 @@ ClientJs.prototype.communicationRender = function () {
         let cliid, thisCase;
         let caseTong;
         let curation;
+        let requestNumber;
+
+        requestNumber = 0;
 
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
@@ -7401,6 +7404,7 @@ ClientJs.prototype.communicationRender = function () {
           } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
         } else {
           cliid = instance.whiteBox.id;
+          requestNumber = Number(instance.whiteBox.contentsBox.getAttribute("request"));
         }
         thisCase = null;
         caseTong = [];
@@ -7414,7 +7418,7 @@ ClientJs.prototype.communicationRender = function () {
         }
         if (thisCase !== null) {
           history = await ajaxJson({ id: cliid, rawMode: true }, "/getClientHistory", { equal: true });
-          await ajaxJson({ cliid, history }, SECONDHOST + "/printClient");
+          await ajaxJson({ cliid, requestNumber, history }, SECONDHOST + "/printClient");
           window.alert("출력 요청이 완료되었습니다!");
         }
       } catch (e) {

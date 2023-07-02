@@ -3904,7 +3904,7 @@ StaticRouter.prototype.rou_post_naverComplex = function () {
       } else if (rows.length === 0) {
         naverResult = await naver.complexModeling(id);
         if (naverResult === null) {
-          throw new Error("invalid id, no result");
+          throw new Error("invalid id : " + id + ", no result");
         } else {
           await back.mongoCreate(collection, naverResult, { selfMongo });
           res.send(JSON.stringify(naverResult));
@@ -3913,6 +3913,120 @@ StaticRouter.prototype.rou_post_naverComplex = function () {
 
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_naverComplex): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_printComplex = function () {
+  const instance = this;
+  const address = this.address;
+  const back = this.back;
+  const naver = this.naver;
+  const { equalJson, requestSystem, dateToString } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/printComplex" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.text === undefined || req.body.cliid === undefined || req.body.requestNumber === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongo;
+      const bar = "========================================================================";
+      const { text, cliid } = equalJson(req.body);
+      const requestNumber = Number(req.body.requestNumber);
+      const client = await back.getClientById(cliid, { selfMongo });
+      const targetAddress = client.requests[requestNumber].request.space.address.value.trim();
+      const now = new Date();
+      let finalText;
+      let dateValue;
+      let howLong;
+      let naverId;
+      let whereQuery, updateQuery;
+
+      finalText = text;
+      naverId = "";
+      naver.complexSearch(targetAddress, true).then((complexResult) => {
+        if (typeof complexResult === "string" && /[0-9]/gi.test(complexResult)) {
+          return requestSystem("https://" + address.officeinfo.ghost.host + "/naverComplex", { id: complexResult.trim() }, { headers: {
+            "Content-Type": "application/json",
+          } });
+        } else {
+          return (new Promise((resolve, reject) => { return resolve(null) }));
+        }
+      }).then((searchResult) => {
+        if (searchResult !== null) {
+          if (typeof searchResult.data === "object") {
+            if (typeof searchResult.data.message === "string" && /error/gi.test(searchResult.data.message)) {
+              naverId = "";
+            } else {
+              
+              naverId = searchResult.data.naver;
+
+              finalText += "\n\n";
+              finalText += client.name + "(" + client.cliid + ") " + "네이버 부동산 정보";
+              finalText += "\n";
+              finalText += bar;
+              finalText += "\n";
+
+              finalText += "아이디 : " + searchResult.data.id + "\n";
+              finalText += "아파트명 : " + searchResult.data.name + "\n";
+              finalText += "주소 : " + searchResult.data.address.value + "\n";
+              finalText += "사용승인일 : " + dateToString(searchResult.data.information.date);
+
+              dateValue = (((((now.valueOf() - (searchResult.data.information.date).valueOf()) / 1000) / 60) / 60) / 24) / 365;
+              howLong = String(Math.floor(dateValue)) + "년 " + String(Math.floor((dateValue % 1) * 12)) + "개월차";
+
+              finalText += " / " + howLong + " 아파트" + "\n";
+
+              finalText += "총 세대수 : " + String(searchResult.data.information.count.household) + "세대" + "\n";
+              finalText += "동 개수 : " + String(searchResult.data.information.count.dong) + "동" + "\n";
+              finalText += "최대 층수 : " + String(searchResult.data.information.floor.high) + "층" + "\n";
+              finalText += bar;
+              finalText += "\n";
+              finalText += "타입 개수 : " + String(searchResult.data.information.type.length) + "개" + "\n";
+              finalText += "-\n";
+              for (let obj of searchResult.data.information.type.detail) {
+                finalText += obj.name + "\n";
+                finalText += "평수 : " + String(obj.area.pyeong) + "평 / " + String(obj.area.exclusivePyeong) + "평" + "\n";
+                finalText += "세대수 : " + String(obj.count.household) + "세대" + "\n";
+                finalText += "방 : " + String(obj.count.room) + "개" + "\n";
+                finalText += "화장실 : " + String(obj.count.bathroom) + "개" + "\n";
+                finalText += "-\n";
+              }
+              finalText += bar;
+  
+            }
+          } else {
+            naverId = "";
+          }
+        } else {
+          naverId = "";
+        }
+
+        whereQuery = { cliid };
+        updateQuery = {};
+        updateQuery["requests." + String(requestNumber) + ".request.space.naver"] = naverId;
+
+        return back.updateClient([ whereQuery, updateQuery ], { selfMongo });
+      }).then(() => {
+        return requestSystem("https://" + address.officeinfo.ghost.host + ":3000/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      res.send(JSON.stringify({ message: "will do" }));
+
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_printComplex): " + e.message);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

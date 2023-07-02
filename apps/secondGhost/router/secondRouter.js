@@ -2325,21 +2325,22 @@ SecondRouter.prototype.rou_post_printClient = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (req.body.cliid === undefined || req.body.history === undefined) {
+      if (req.body.cliid === undefined || req.body.requestNumber === undefined || req.body.history === undefined) {
         throw new Error("invaild post");
       }
       const selfMongo = instance.mongo;
       const { cliid, history } = equalJson(req.body);
+      const requestNumber = Number(req.body.requestNumber);
       const client = await back.getClientById(cliid, { selfMongo, withTools: true });
       let text;
       let webReport;
 
-      text = client.toPrint([ "선택한 시공 : " + history.curation.construct.items.join(", ") ]);
+      text = client.toPrint([ "선택한 시공 : " + history.curation.construct.items.join(", ") ], requestNumber);
       text += "\n\n";
       webReport = (await requestSystem("https://" + address.officeinfo.ghost.host + ":3000/getClientAnalytics", { cliid, textMode: true }, { headers: { "Content-Type": "application/json" } })).data.report;
       text += webReport;
       
-      requestSystem("https://" + address.officeinfo.ghost.host + ":3000/printText", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+      requestSystem("https://" + address.officeinfo.ghost.host + ":3000/printComplex", { text, cliid, requestNumber }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
 
       res.send(JSON.stringify({ message: "will do" }));
 

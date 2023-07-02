@@ -3295,7 +3295,7 @@ SalesJs.prototype.communicationRender = function () {
 
         history = await ajaxJson({ id: cliid, rawMode: true }, "/getClientHistory", { equal: true });
         curation = history.curation;
-        await ajaxJson({ cliid, curation }, SECONDHOST + "/printClient");
+        await ajaxJson({ cliid, requestNumber, curation }, SECONDHOST + "/printClient");
         window.alert("출력 요청이 완료되었습니다!");
 
       } catch (e) {

@@ -218,8 +218,8 @@ const withTools = function (Client) {
     return message.replace(/\n$/, '');
   }
 
-  Client.prototype.toPrint = function (addition = []) {
-    const { request, analytics } = this.requests[0];
+  Client.prototype.toPrint = function (addition = [], requestNumber = 0) {
+    const { request, analytics } = this.requests[requestNumber];
     const indent = "    ";
     const bar = "=============================================================";
     const wordEaLength = 70;
@@ -364,7 +364,7 @@ const withTools = function (Client) {
     let tong = [];
     let temp;
 
-    for (let { request: { timeline, budget, family, furniture, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living, expected }, partial: { boo: partialBoo, pyeong: partialPyeong, detail: partialDetail } }, etc: { comment, channel } }, analytics: { response: { status, action, outreason, kakao, service, designers, priority, possible, target, memo }, date: { call: { next, history: callHistory, recommend }, space: { precheck, empty, movein } }, picture: { space: spacePicture, prefer: preferPicture } } } of client.requests) {
+    for (let { request: { timeline, budget, family, furniture, space: { address, contract, pyeong, naver, spec: { room, bathroom, valcony }, resident: { living, expected }, partial: { boo: partialBoo, pyeong: partialPyeong, detail: partialDetail } }, etc: { comment, channel } }, analytics: { response: { status, action, outreason, kakao, service, designers, priority, possible, target, memo }, date: { call: { next, history: callHistory, recommend }, space: { precheck, empty, movein } }, picture: { space: spacePicture, prefer: preferPicture } } } of client.requests) {
 
       temp = {};
       temp.standard = {
@@ -389,6 +389,7 @@ const withTools = function (Client) {
         address,
         contract,
         pyeong,
+        naver,
         living,
         precheck: dateToString(precheck),
         empty: dateToString(empty),

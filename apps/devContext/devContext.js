@@ -480,7 +480,7 @@ DevContext.prototype.launching = async function () {
 
     // real study
     // const naver = new NaverAPIs();
-    // console.log((await naver.complexSearch("경기 평택시 상서재로5길 15 (동삭동, 평택센트럴자이 1단지) 102동")));
+    // console.log((await naver.complexSearch("인천 연수구 컨벤시아대로274번길 62 (송도동, 더샵 송도센터니얼) 1903-3203", true)));
 
     // const sampleValue = "서울 서대문구 세무서길 82-17 홍제역해링턴플레이스 108동 1504호";
     // console.log((await naver.complexSearch(sampleValue)));
@@ -613,12 +613,22 @@ DevContext.prototype.launching = async function () {
     //   console.log(whereQuery, updateQuery);
     // }
 
-    const naver = new NaverAPIs();
-    const target = "112917";
- 
-    console.log(await naver.complexModeling(target));
 
+    // let res;
 
+    // for (let [ cliid, name, requestNumber, pyeong, address, naver ] of matrix) {
+    //   if (naver.replace(/[^0-9]/gi, '').trim() !== "") {
+    //     await sleep(Math.round(3000 * Math.random()) + 1000);
+    //     res = await requestSystem("https://home-liaison.serveftp.com/naverComplex", { id: naver.replace(/[^0-9]/gi, '').trim() }, { headers: {
+    //       "Content-Type": "application/json",
+    //     } })
+    //     console.log(res.data);
+    //   }
+    // }
+
+      
+
+    
 
 
 
