@@ -2515,12 +2515,10 @@ DataPatch.prototype.clientMap = function () {
                   thisCliid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
                   thisRequestNumber = Number(mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("request"));
                 }
-
                 whereQuery = {};
                 whereQuery["cliid"] = thisCliid;
                 updateQuery = {};
                 updateQuery["requests." + String(thisRequestNumber) + ".request.space.naver"] = String(value);
-
                 return GeneralJs.ajaxJson({ whereQuery, updateQuery }, "/rawUpdateClient");
               }
             }
@@ -2528,6 +2526,7 @@ DataPatch.prototype.clientMap = function () {
         }
         return (new Promise((resolve, reject) => { resolve(null); }));
       }).then(() => {
+        window.location.reload();
         callback();
       }).catch((err) => { console.log(err); });
     } else {
