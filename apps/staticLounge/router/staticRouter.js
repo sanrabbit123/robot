@@ -4026,6 +4026,12 @@ StaticRouter.prototype.rou_post_printComplex = function () {
         updateQuery = {};
         updateQuery["requests." + String(requestNumber) + ".request.space.naver"] = naverId;
 
+        if (naverId === "") {
+          logger.error("Static lounge 네이버 부동산 아이디 찾기 실패 : " + cliid).catch((err) => {
+            console.log(err);
+          });
+        }
+
         return back.updateClient([ whereQuery, updateQuery ], { selfMongo });
       }).then(() => {
         return requestSystem("https://" + address.officeinfo.ghost.host + ":3000/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
