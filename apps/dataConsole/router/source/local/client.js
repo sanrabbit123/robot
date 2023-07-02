@@ -1851,6 +1851,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           thisId = grandMother.getAttribute("index");
           requestIndex = grandMother.getAttribute("request");
           column = mother.getAttribute("index");
+          targetDom = null;
           for (let dom of document.querySelectorAll('.' + thisId)) {
             if (Number(dom.getAttribute("index")) === thisCase["index"]) {
               for (let ch of dom.children) {
@@ -1922,7 +1923,9 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             }
           }
           originalDiv.textContent = finalValue;
-          targetDom.textContent = finalValue;
+          if (targetDom !== null) {
+            targetDom.textContent = finalValue;
+          }
 
           removeAllEvent();
         }

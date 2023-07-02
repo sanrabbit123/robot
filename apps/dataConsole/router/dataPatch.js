@@ -2486,6 +2486,22 @@ DataPatch.prototype.clientMap = function () {
     mother.appendChild(div_clone);
   };
 
+  const naverToObject = function (value, pastValue, vaildMode) {
+    let boo = false;
+    if (vaildMode) {
+      return { boo: !boo, value };
+    }
+    return value;
+  };
+  const naverInputFunction = function (mother, input, callback, instance) {
+    if (input.value.trim() === "") {
+      window.alert("부동산 아이디를 찾을 수 없습니다!");
+    } else {
+      GeneralJs.blankHref("https://new.land.naver.com/complexes/" + input.value);
+    }
+    callback();
+  };
+
   const map = {
     name: { name: "성함", position: "name", type: "string", searchBoo: true, },
     cliid: { name: "아이디", position: "cliid", type: "string", searchBoo: true, },
@@ -2498,7 +2514,7 @@ DataPatch.prototype.clientMap = function () {
     address: { name: "주소", position: "requests.0.request.space.address", type: "string", address: true, searchBoo: true, },
     contract: { name: "계약 상태", position: "requests.0.request.space.contract", type: "string", items: [ "자가", "전월세" ], searchBoo: true, },
     pyeong: { name: "평수", position: "requests.0.request.space.pyeong", type: "number", searchBoo: true, },
-    naver: { name: "네이버 부동산", position: "requests.0.request.space.naver", type: "string", constant: true, searchBoo: true, },
+    naver: { name: "네이버 부동산", position: "requests.0.request.space.naver", type: "object", inputFunction: naverInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: naverToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     room: { name: "방", position: "requests.0.request.space.spec.room", type: "number", searchBoo: false, },
     bathroom: { name: "화장실", position: "requests.0.request.space.spec.bathroom", type: "number", searchBoo: false, },
     valcony: { name: "발코니", position: "requests.0.request.space.spec.valcony", type: "boolean", items: [ "true", "false" ], searchBoo: false, },
