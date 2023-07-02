@@ -944,9 +944,7 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
       }
 
       if (req.url === "/rawUpdateClient") {
-        console.log(whereQuery, updateQuery);
         raw_data = await back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-        console.log(raw_data);
       } else if (req.url === "/rawUpdateDesigner") {
         raw_data = await back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       } else if (req.url === "/rawUpdateProject") {

@@ -2527,7 +2527,6 @@ DataPatch.prototype.clientMap = function () {
         return (new Promise((resolve, reject) => { resolve(null); }));
       }).then(() => {
         window.location.reload();
-        callback();
       }).catch((err) => { console.log(err); });
     } else {
       GeneralJs.blankHref("https://new.land.naver.com/complexes/" + input.value);
