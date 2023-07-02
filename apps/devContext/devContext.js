@@ -587,17 +587,11 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // 부산 영도구 태종로 611 (동삼동) 오션라이프 에일린의뜰 104동 204호
-
-    // const naver = new NaverAPIs();
-    // const landMatrix = await fileSystem(`readJson`, [ `${process.cwd()}/temp/landMatrix3.json` ]);
-    // const sheetsId = "1NLr0lgiNheytUSvwn-d5Ys5QRzgW5uwv_EIbTqNKQ1s";
-    // const matrix = await sheets.get_value_inPython(sheetsId, "A2:F");
-
-
-
+    // reload
 
     // const selfMongo = this.MONGOC;
+    // const sheetsId = "1NLr0lgiNheytUSvwn-d5Ys5QRzgW5uwv_EIbTqNKQ1s";
+    // const matrix = await sheets.get_value_inPython(sheetsId, "A2:F");
     // const clients = await back.getClientsByQuery({}, { selfMongo });
     // let whereQuery, updateQuery;
 
@@ -611,34 +605,20 @@ DevContext.prototype.launching = async function () {
     //   }
     // }
 
-
-
-    // matrix = [
-    //   [
-    //     "cliid",
-    //     "name",
-    //     "requestNumber",
-    //     "address",
-    //     "pyeong",
-    //   ]
-    // ]
-
-    // for (let client of clients) {
-    //   for (let i = 0; i < client.requests.length; i++) {
-    //     matrix.push([
-    //       client.cliid,
-    //       client.name,
-    //       i,
-    //       client.requests[0].request.space.address.value,
-    //       client.requests[0].request.space.pyeong.value,
-    //     ]);
-    //   }
+    // for (let [ cliid, name, requestNumber, pyeong, address, naver ] of matrix) {
+    //   whereQuery = { cliid };
+    //   updateQuery = {};
+    //   updateQuery["requests." + String(requestNumber.replace(/[^0-9]/gi, '')) + ".request.space.naver"] = naver.replace(/[^0-9]/gi, '').trim() === '-' ? "" : naver.replace(/[^0-9]/gi, '').trim();
+    //   await selfMongo.db("miro81").collection("client").updateOne(whereQuery, { $set: updateQuery });
+    //   console.log(whereQuery, updateQuery);
     // }
 
-    // sheetsId = await sheets.create_newSheets_inPython("고객 주소와 평형과 네이버 부동산", parent);
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    // await sheets.update_value_inPython(sheetsId, "", matrix);
-    // console.log(matrix);
+    const naver = new NaverAPIs();
+    const target = "112917";
+ 
+    console.log(await naver.complexModeling(target));
+
+
 
 
 

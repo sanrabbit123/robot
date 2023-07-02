@@ -808,6 +808,7 @@ NaverAPIs.prototype.complexModeling = async function (complexId, naverMapResult 
 
     resultObj = {};
     resultObj.id = complexIdKeyword + complexDetail.complexNo;
+    resultObj.naver = complexId;
     resultObj.name = complexDetail.complexName;
     resultObj.date = new Date();
     resultObj.address = {

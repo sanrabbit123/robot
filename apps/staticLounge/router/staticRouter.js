@@ -15,6 +15,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const NotionAPIs = require(process.cwd() + "/apps/notionAPIs/notionAPIs.js");
   const MicrosoftAPIs = require(`${process.cwd()}/apps/microsoftAPIs/microsoftAPIs.js`);
+  const NaverAPIs = require(`${process.cwd()}/apps/naverAPIs/naverAPIs.js`);
   const LocalDevices = require(`${process.cwd()}/apps/localDevices/localDevices.js`);
   const LogReport = require(`${process.cwd()}/apps/logConsole/router/logReport.js`);
 
@@ -45,6 +46,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
   this.microsoft = new MicrosoftAPIs();
   this.devices = new LocalDevices();
   this.report = new LogReport(MONGOLOGC);
+  this.naver = new NaverAPIs();
 
   this.staticConst = process.env.HOME + "/samba";
   this.sambaToken = "__samba__";
@@ -3856,6 +3858,61 @@ StaticRouter.prototype.rou_post_checkInsyncStatus = function () {
       res.send(JSON.stringify({ result }));
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_checkInsyncStatus): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_naverComplex = function () {
+  const instance = this;
+  const back = this.back;
+  const naver = this.naver;
+  const { equalJson } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/naverComplex" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.id === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongolocal;
+      const collection = "naverComplex";
+      const { id } = equalJson(req.body);
+      let result;
+      let rows;
+      let naverResult;
+
+      if (typeof id !== "string") {
+        throw new Error("invalid post");
+      }
+      if (id.trim() === '') {
+        throw new Error("invalid id");
+      }
+
+      rows = await back.mongoRead(collection, { naver: id.trim() }, { selfMongo });
+      if (rows.length > 0) {
+        result = rows[0];
+        res.send(JSON.stringify(result));
+      } else if (rows.length === 0) {
+        naverResult = await naver.complexModeling(id);
+        if (naverResult === null) {
+          throw new Error("invalid id, no result");
+        } else {
+          await back.mongoCreate(collection, naverResult, { selfMongo });
+          res.send(JSON.stringify(naverResult));
+        }
+      }
+
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_naverComplex): " + e.message);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
