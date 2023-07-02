@@ -2495,11 +2495,45 @@ DataPatch.prototype.clientMap = function () {
   };
   const naverInputFunction = function (mother, input, callback, instance) {
     if (input.value.trim() === "") {
-      window.alert("부동산 아이디를 찾을 수 없습니다!");
+      GeneralJs.prompt("부동산 아이디를 입력해주세요!").then((value) => {
+        if (typeof value === "string") {
+          value = value.trim();
+          if (value !== "") {
+            if (/[0-9]/gi.test(value)) {
+              if (value.replace(/[0-9]/gi, '') === "") {
+                let whereQuery, updateQuery;
+                let thisCliid;
+                let blocks;
+                let thisRequestNumber;
+
+                if (typeof mother.parentElement.getAttribute("class") === "string") {
+                  thisCliid = mother.parentElement.getAttribute("class");
+                  blocks = [ ...document.querySelectorAll('.' + thisCliid) ];
+                  blocks.sort((a, b) => { return Number(a.getAttribute("index")) - Number(b.getAttribute("index")) });
+                  thisRequestNumber = blocks.findIndex((dom) => { return dom ===  mother.parentElement; });
+                } else {
+                  thisCliid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+                  thisRequestNumber = Number(mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("request"));
+                }
+
+                whereQuery = {};
+                whereQuery["cliid"] = thisCliid;
+                updateQuery = {};
+                updateQuery["requests." + String(thisRequestNumber) + ".request.space.naver"] = String(value);
+
+                return GeneralJs.ajaxJson({ whereQuery, updateQuery }, "/rawUpdateClient");
+              }
+            }
+          }
+        }
+        return (new Promise((resolve, reject) => { resolve(null); }));
+      }).then(() => {
+        callback();
+      }).catch((err) => { console.log(err); });
     } else {
       GeneralJs.blankHref("https://new.land.naver.com/complexes/" + input.value);
+      callback();
     }
-    callback();
   };
 
   const map = {
