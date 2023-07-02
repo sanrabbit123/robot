@@ -3952,9 +3952,20 @@ StaticRouter.prototype.rou_post_printComplex = function () {
       let naverId;
       let whereQuery, updateQuery;
 
+      const searchId = (client, requestNumber) => {
+        if (client.requests[requestNumber].request.space.naver !== "") {
+          return new Promise((resolve, reject) => {
+            resolve(client.requests[requestNumber].request.space.naver);
+          });
+        } else {
+          return naver.complexSearch(client.requests[requestNumber].request.space.address.value.trim(), true);
+        }
+      }
+
       finalText = text;
       naverId = "";
-      naver.complexSearch(targetAddress, true).then((complexResult) => {
+
+      searchId(client, requestNumber).then((complexResult) => {
         if (typeof complexResult === "string" && /[0-9]/gi.test(complexResult)) {
           return requestSystem("https://" + address.officeinfo.ghost.host + "/naverComplex", { id: complexResult.trim() }, { headers: {
             "Content-Type": "application/json",
@@ -3972,12 +3983,11 @@ StaticRouter.prototype.rou_post_printComplex = function () {
               naverId = searchResult.data.naver;
 
               finalText += "\n\n";
-              finalText += client.name + "(" + client.cliid + ") " + "네이버 부동산 정보";
+              finalText += client.name + "(" + client.cliid + ") " + "네이버 부동산 정보 - " + searchResult.data.name;
               finalText += "\n";
               finalText += bar;
               finalText += "\n";
 
-              finalText += "아이디 : " + searchResult.data.id + "\n";
               finalText += "아파트명 : " + searchResult.data.name + "\n";
               finalText += "주소 : " + searchResult.data.address.value + "\n";
               finalText += "사용승인일 : " + dateToString(equalJson(searchResult.data).information.date);
@@ -3995,7 +4005,7 @@ StaticRouter.prototype.rou_post_printComplex = function () {
               finalText += "타입 개수 : " + String(searchResult.data.information.type.length) + "개" + "\n";
               finalText += "-\n";
               for (let obj of searchResult.data.information.type.detail) {
-                finalText += obj.name + "\n";
+                finalText += "타입 이름 : " + obj.name + "\n";
                 finalText += "평수 : " + String(obj.area.pyeong) + "평 / " + String(obj.area.exclusivePyeong) + "평" + "\n";
                 finalText += "세대수 : " + String(obj.count.household) + "세대" + "\n";
                 finalText += "방 : " + String(obj.count.room) + "개" + "\n";
