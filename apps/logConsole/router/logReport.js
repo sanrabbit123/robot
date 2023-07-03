@@ -1063,13 +1063,13 @@ LogReport.prototype.dailyReports = async function () {
         const clientsEntireRows = await back.mongoRead("dailyClients", { "date.from": { $gte: queryStandardDate } }, { selfMongo });
 
         const facebookCampaignBoo = (str) => {
-          return /instagram/gi.test(str) || /facebook/gi.test(str);
+          return (/instagram/gi.test(str) || /facebook/gi.test(str));
         }
         const naverCampaignBoo = (str) => {
-          return /naver/gi.test(str);
+          return (/naver/gi.test(str)) && !(/organic/gi.test(str) || /referral/gi.test(str));
         }
         const googleCampaignBoo = (str) => {
-          return /google/gi.test(str) || /youtube/gi.test(str);
+          return (/google/gi.test(str) || /youtube/gi.test(str));
         }
 
         const getReportsByDate = async (targetDate, campaignEntireRows, analyticsEntireRows, clientsEntireRows, clients, projects, clientHistories) => {
@@ -2150,7 +2150,7 @@ LogReport.prototype.dailyReports = async function () {
             } else {
               simpleRes = simpleRows[0];
             }
-            target[5] = simpleRes.data.users.detail.source.cases.filter((obj) => {
+            target[5] = simpleRes.data.users.detail.sourceDetail.cases.filter((obj) => {
               return facebookCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
@@ -2192,7 +2192,7 @@ LogReport.prototype.dailyReports = async function () {
             } else {
               simpleRes = simpleRows[0];
             }
-            target[5] = simpleRes.data.users.detail.source.cases.filter((obj) => {
+            target[5] = simpleRes.data.users.detail.sourceDetail.cases.filter((obj) => {
               return facebookCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
@@ -2242,7 +2242,7 @@ LogReport.prototype.dailyReports = async function () {
             } else {
               simpleRes = simpleRows[0];
             }
-            target[4] = simpleRes.data.users.detail.source.cases.filter((obj) => {
+            target[4] = simpleRes.data.users.detail.sourceDetail.cases.filter((obj) => {
               return naverCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
@@ -2284,7 +2284,7 @@ LogReport.prototype.dailyReports = async function () {
             } else {
               simpleRes = simpleRows[0];
             }
-            target[4] = simpleRes.data.users.detail.source.cases.filter((obj) => {
+            target[4] = simpleRes.data.users.detail.sourceDetail.cases.filter((obj) => {
               return naverCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
@@ -2333,7 +2333,7 @@ LogReport.prototype.dailyReports = async function () {
             } else {
               simpleRes = simpleRows[0];
             }
-            target[4] = simpleRes.data.users.detail.source.cases.filter((obj) => {
+            target[4] = simpleRes.data.users.detail.sourceDetail.cases.filter((obj) => {
               return googleCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
@@ -2375,7 +2375,7 @@ LogReport.prototype.dailyReports = async function () {
             } else {
               simpleRes = simpleRows[0];
             }
-            target[4] = simpleRes.data.users.detail.source.cases.filter((obj) => {
+            target[4] = simpleRes.data.users.detail.sourceDetail.cases.filter((obj) => {
               return googleCampaignBoo(obj.case);
             }).reduce((acc, curr) => {
               return acc + curr.value;
