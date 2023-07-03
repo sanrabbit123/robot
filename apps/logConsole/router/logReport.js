@@ -1247,19 +1247,19 @@ LogReport.prototype.dailyReports = async function () {
             facebookClicks = 0;
           }
 
-          facebookFromUsers = analyticsRows.data.users.detail.source.cases.filter((obj) => {
+          facebookFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
             return facebookCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
-          facebookFromClicks = analyticsRows.data.conversion.consultingPage.detail.source.cases.filter((obj) => {
+          facebookFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
             return facebookCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
-          facebookFromPopups = analyticsRows.data.conversion.popupOpen.detail.source.cases.filter((obj) => {
+          facebookFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
             return facebookCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
@@ -1345,19 +1345,19 @@ LogReport.prototype.dailyReports = async function () {
             naverClicks = 0;
           }
 
-          naverFromUsers = analyticsRows.data.users.detail.source.cases.filter((obj) => {
+          naverFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
             return naverCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
-          naverFromClicks = analyticsRows.data.conversion.consultingPage.detail.source.cases.filter((obj) => {
+          naverFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
             return naverCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
-          naverFromPopups = analyticsRows.data.conversion.popupOpen.detail.source.cases.filter((obj) => {
+          naverFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
             return naverCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
@@ -1655,19 +1655,19 @@ LogReport.prototype.dailyReports = async function () {
             googleClicks = 0;
           }
 
-          googleFromUsers = analyticsRows.data.users.detail.source.cases.filter((obj) => {
+          googleFromUsers = analyticsRows.data.users.detail.sourceDetail.cases.filter((obj) => {
             return googleCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
-          googleFromClicks = analyticsRows.data.conversion.consultingPage.detail.source.cases.filter((obj) => {
+          googleFromClicks = analyticsRows.data.conversion.consultingPage.detail.sourceDetail.cases.filter((obj) => {
             return googleCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
           }, 0);
 
-          googleFromPopups = analyticsRows.data.conversion.popupOpen.detail.source.cases.filter((obj) => {
+          googleFromPopups = analyticsRows.data.conversion.popupOpen.detail.sourceDetail.cases.filter((obj) => {
             return googleCampaignBoo(obj.case);
           }).reduce((acc, curr) => {
             return acc + curr.value;
