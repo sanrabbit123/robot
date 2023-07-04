@@ -2053,6 +2053,7 @@ AnalyticsJs.prototype.reportWhite = function () {
             });
 
             const [ rows, charge, basic, complex ] = result;
+            const { contractDetail } = complex;
 
             rows.sort((a, b) => { return a.date.from.valueOf() - b.date.from.valueOf() });
             charge.sort((a, b) => { return a.date.from.valueOf() - b.date.from.valueOf() });
@@ -3731,6 +3732,15 @@ AnalyticsJs.prototype.reportWhite = function () {
               }
             });
   
+            // contracts detail
+            ajaxJson({ idArr: contractDetail.clients.map((obj) => { return obj.space.naver }) }, S3HOST + ":3000/naverComplexes", { equal: true }).then((naverDetail) => {
+              naverDetail = naverDetail.filter((o) => { return o !== null });
+              console.log(contractDetail);
+              console.log(naverDetail);
+            }).catch((err) => {
+              console.log(err);
+            });
+
           }
         }
 
