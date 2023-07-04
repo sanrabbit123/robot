@@ -4249,6 +4249,14 @@ StaticRouter.prototype.rou_post_complexReport = function () {
       let process;
       let histories;
       let proposalLength;
+      let cliid;
+      let timeline;
+      let budget;
+      let resident;
+      let addressRaw;
+      let pyeong;
+      let contract;
+      let naver;
 
       thisIdArr = motherClients.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" });
       response = await requestSystem("https://home-liaison.serveftp.com:3000/naverComplexes", { idArr: thisIdArr }, { headers: { "Content-Type": "application/json" } });
@@ -4477,7 +4485,6 @@ StaticRouter.prototype.rou_post_complexReport = function () {
             value: 0,
           },
         ];
-
         floorSet = [
           {
             case: "10층 이하",
@@ -4500,7 +4507,6 @@ StaticRouter.prototype.rou_post_complexReport = function () {
             value: 0,
           },
         ];
-
         roomSet = [
           {
             case: "방 1개",
@@ -4527,7 +4533,6 @@ StaticRouter.prototype.rou_post_complexReport = function () {
             value: 0,
           },
         ];
-
         householdSet = [
           {
             case: "500세대 이하",
@@ -4554,7 +4559,6 @@ StaticRouter.prototype.rou_post_complexReport = function () {
             value: 0,
           },
         ];
-
         livingSet = [
           {
             case: "이사",
@@ -4566,8 +4570,11 @@ StaticRouter.prototype.rou_post_complexReport = function () {
           },
         ];
   
-        for (let { cliid, timeline, budget, space: { resident, address: addressRaw, pyeong, contract, naver } } of motherClients) {
-          
+        for (let motherClient of motherClients) {
+
+          ({ cliid, timeline, budget, space: { resident, address: addressRaw, pyeong, contract, naver } } = motherClient);
+          motherClient.summary = {};
+
           targetUsers = [];
           if (usersArr.find((obj) => { return obj.cliid === cliid }) !== undefined) {
             targetUsers = usersArr.find((obj) => { return obj.cliid === cliid }).users;
@@ -4616,7 +4623,8 @@ StaticRouter.prototype.rou_post_complexReport = function () {
             thisNaver = consultingAparts.find((obj) => { return obj.naver === naver });
           }
           address = thisNaver === null ? addressRaw : thisNaver.address.value;
-  
+          motherClient.summary.naverObject = thisNaver;
+
           if (thisNaver === null) {
             howLong = "알 수 없음";
           } else {
@@ -4624,7 +4632,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
             dateValue = (((((thisOld.valueOf() - (thisNaver.information.date).valueOf()) / 1000) / 60) / 60) / 24) / 365;
             howLong = String(Math.floor(dateValue)) + "년 " + String(Math.floor((dateValue % 1) * 12)) + "개월차";
           }
-  
+          motherClient.summary.howLong = howLong;
 
           if (thisNaver !== null) {
             thisNaver.information.type.detail.sort((a, b) => {
@@ -4642,25 +4650,35 @@ StaticRouter.prototype.rou_post_complexReport = function () {
             household = 0;
             floor = 0;
           }
+          motherClient.summary.count = { room, household, floor };
 
           if (/^서울/gi.test(address) || /^강서/gi.test(address) || /^양천/gi.test(address) || /^구로/gi.test(address) || /^영등포/gi.test(address) || /^금천/gi.test(address)|| /^동작/gi.test(address)|| /^관악/gi.test(address)|| /^서초/gi.test(address)|| /^강남/gi.test(address)|| /^송파/gi.test(address)|| /^강동/gi.test(address)|| /^광진/gi.test(address)|| /^동대문/gi.test(address)|| /^성동/gi.test(address)|| /^중랑/gi.test(address)|| /^성북/gi.test(address)|| /^강북/gi.test(address)|| /^도봉/gi.test(address)|| /^노원/gi.test(address)|| /^종로/gi.test(address)|| /^서대문/gi.test(address)|| /^마포/gi.test(address)|| /^용산/gi.test(address)|| /^은평/gi.test(address)) {
             regionSet[0].value = regionSet[0].value + 1;
+            motherClient.summary.region = "서울";
           } else if (/^경기/gi.test(address) || /^인천/gi.test(address) || /^수원/gi.test(address) || /^부평/gi.test(address) || /^의정부/gi.test(address) || /^부천/gi.test(address) || /^과천/gi.test(address) || /^고양/gi.test(address) || /^시흥/gi.test(address) || /^성남/gi.test(address) || /^파주/gi.test(address) || /^김포/gi.test(address) || /^양주/gi.test(address) || /^남양주/gi.test(address) || /^포천/gi.test(address) || /^안양/gi.test(address) || /^의왕/gi.test(address) || /^광명/gi.test(address) || /^동두천/gi.test(address) || /^화성/gi.test(address) || /^오산/gi.test(address) || /^안성/gi.test(address) || /^평택/gi.test(address) || /^이천/gi.test(address) || /^여주/gi.test(address) || /^안산/gi.test(address) || /^가평/gi.test(address) || /^양평/gi.test(address)) {
             regionSet[1].value = regionSet[1].value + 1;
+            motherClient.summary.region = "경기";
           } else if (/^충청/gi.test(address) || /^충북/gi.test(address) || /^충남/gi.test(address) || /^세종/gi.test(address) || /^대전/gi.test(address) || /^충주/gi.test(address)) {
             regionSet[2].value = regionSet[2].value + 1;
+            motherClient.summary.region = "충청";
           } else if (/^강원/gi.test(address) || /^원주/gi.test(address) || /^강릉/gi.test(address) || /^속초/gi.test(address)) {
             regionSet[3].value = regionSet[3].value + 1;
+            motherClient.summary.region = "강원";
           } else if (/^경상/gi.test(address) || /^경북/gi.test(address) || /^경남/gi.test(address) || /^부산/gi.test(address) || /^울산/gi.test(address) || /^대구/gi.test(address)) {
             regionSet[4].value = regionSet[4].value + 1;
+            motherClient.summary.region = "경상";
           } else if (/^전라/gi.test(address) || /^전북/gi.test(address) || /^전남/gi.test(address) || /^광주/gi.test(address) || /^전주/gi.test(address)) {
             regionSet[5].value = regionSet[5].value + 1;
+            motherClient.summary.region = "전라";
           } else if (/^제주/gi.test(address)) {
             regionSet[6].value = regionSet[6].value + 1;
+            motherClient.summary.region = "제주";
           } else {
             regionSet[7].value = regionSet[7].value + 1;
+            motherClient.summary.region = "기타";
           }
     
+          motherClient.summary.pyeong = pyeong;
           if (pyeong < 10) {
             pyeongSet[0].value = pyeongSet[0].value + 1;
           } else if (pyeong >= 10 && pyeong < 20) {
@@ -4677,6 +4695,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
             pyeongSet[6].value = pyeongSet[6].value + 1;
           }
     
+          motherClient.summary.contract = contract;
           if (/자가/gi.test(contract)) {
             contractSet[0].value = contractSet[0].value + 1;
           } else {
@@ -4688,6 +4707,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
           } else {
             budget = Number(budget.replace(/[^0-9]/gi, '')) * 10000;
           }
+          motherClient.summary.budget = budget;
   
           if (budget < 10000000) {
             budgetSet[0].value = budgetSet[0].value + 1;
@@ -4753,32 +4773,44 @@ StaticRouter.prototype.rou_post_complexReport = function () {
   
           if (targetUserObject.campaign === unknownKeyword) {
             adSet[1].value = adSet[1].value + 1;
+            motherClient.summary.ad = adSet[1].case;
           } else {
             adSet[0].value = adSet[0].value + 1;
+            motherClient.summary.ad = adSet[0].case;
           }
   
           if (targetUserObject.source === unknownKeyword) {
             sourceSet[5].value = sourceSet[5].value + 1;
+            motherClient.summary.source = sourceSet[5].case;
           } else if (/meta/gi.test(targetUserObject.source) || /facebook/gi.test(targetUserObject.source) || /instagram/gi.test(targetUserObject.source)) {
             sourceSet[0].value = sourceSet[0].value + 1;
+            motherClient.summary.source = sourceSet[0].case;
           } else if (/naver/gi.test(targetUserObject.source)) {
             sourceSet[1].value = sourceSet[1].value + 1;
+            motherClient.summary.source = sourceSet[1].case;
           } else if (/google/gi.test(targetUserObject.source)) {
             sourceSet[2].value = sourceSet[2].value + 1;
+            motherClient.summary.source = sourceSet[2].case;
           } else if (/youtube/gi.test(targetUserObject.source)) {
             sourceSet[3].value = sourceSet[3].value + 1;
+            motherClient.summary.source = sourceSet[3].case;
           } else if (/kakao/gi.test(targetUserObject.source)) {
             sourceSet[4].value = sourceSet[4].value + 1;
+            motherClient.summary.source = sourceSet[4].case;
           } else {
             sourceSet[5].value = sourceSet[5].value + 1;
+            motherClient.summary.source = sourceSet[5].case;
           }
 
           if (/mobile/gi.test(targetUserObject.device)) {
             deviceSet[0].value = deviceSet[0].value + 1;
+            motherClient.summary.device = deviceSet[0].case;
           } else if (/desktop/gi.test(targetUserObject.device)) {
             deviceSet[1].value = deviceSet[1].value + 1;
+            motherClient.summary.device = deviceSet[1].case;
           } else {
             deviceSet[2].value = deviceSet[2].value + 1;
+            motherClient.summary.device = deviceSet[2].case;
           }
 
           if (floor === 0) {
@@ -4821,6 +4853,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
             householdSet[4].value = householdSet[4].value + 1;
           }
 
+          motherClient.summary.living = living;
           if (living === "이사") {
             livingSet[0].value = livingSet[0].value + 1;
           } else {
@@ -4842,6 +4875,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
           room: roomSet,
           household: householdSet,
           living: livingSet,
+          original: motherClients,
         }
       }
   
@@ -4902,7 +4936,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
         graph: graphObject,
         contractDetail: {
           projects: motherProjects,
-          clients: motherContracts,
+          clients: finalContractSet.original,
         },
       };
 
