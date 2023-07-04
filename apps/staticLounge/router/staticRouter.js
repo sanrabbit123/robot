@@ -4827,7 +4827,6 @@ StaticRouter.prototype.rou_post_complexReport = function () {
             livingSet[1].value = livingSet[1].value + 1;
           }
 
-
         }
     
         return {
@@ -4901,6 +4900,10 @@ StaticRouter.prototype.rou_post_complexReport = function () {
         impressions: motherCampaign.map((o) => { return o.value.performance.impressions }).reduce((acc, curr) => { return acc + curr }, 0),
         clicks: motherCampaign.map((o) => { return o.value.performance.clicks }).reduce((acc, curr) => { return acc + curr }, 0),
         graph: graphObject,
+        contractDetail: {
+          projects: motherProjects,
+          clients: motherContracts,
+        },
       };
 
       res.send(JSON.stringify(finalObject));
