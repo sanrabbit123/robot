@@ -4178,7 +4178,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
         return motherProjects.map((o) => { return o.cliid }).includes(obj.cliid);
       }).filter((obj) => {
         return obj.analytics.response.status === "진행" && obj.timeline.valueOf() > standardDate.valueOf();
-      })
+      });
       const motherAnalytics = await back.mongoRead("dailyAnalytics", {
         $and: [
           {
@@ -4257,6 +4257,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
       let pyeong;
       let contract;
       let naver;
+      let foundProject;
 
       thisIdArr = motherClients.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" });
       response = await requestSystem("https://home-liaison.serveftp.com:3000/naverComplexes", { idArr: thisIdArr }, { headers: { "Content-Type": "application/json" } });
@@ -4919,6 +4920,12 @@ StaticRouter.prototype.rou_post_complexReport = function () {
         proposalLength = process.length;
       }
 
+      for (let clientObj of finalContractSet.original) {
+        foundProject = motherProjects.find((o) => { return o.proposal.date.valueOf() >= clientObj.timeline.valueOf() && o.cliid === clientObj.cliid });
+        clientObj.thisProject = foundProject === undefined ? null : foundProject;
+      }
+      finalContractSet.original = finalContractSet.original.filter((c) => { return c.thisProject !== null });
+
       finalObject = {
         clients: motherClients.length,
         proposal: proposalLength,
@@ -4934,10 +4941,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
         impressions: motherCampaign.map((o) => { return o.value.performance.impressions }).reduce((acc, curr) => { return acc + curr }, 0),
         clicks: motherCampaign.map((o) => { return o.value.performance.clicks }).reduce((acc, curr) => { return acc + curr }, 0),
         graph: graphObject,
-        contractDetail: {
-          projects: motherProjects,
-          clients: finalContractSet.original,
-        },
+        contractDetail: finalContractSet.original,
       };
 
       res.send(JSON.stringify(finalObject));

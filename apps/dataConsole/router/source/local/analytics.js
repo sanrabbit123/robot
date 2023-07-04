@@ -3733,13 +3733,10 @@ AnalyticsJs.prototype.reportWhite = function () {
             });
   
             // contracts detail
-            ajaxJson({ idArr: contractDetail.clients.map((obj) => { return obj.space.naver }) }, S3HOST + ":3000/naverComplexes", { equal: true }).then((naverDetail) => {
-              naverDetail = naverDetail.filter((o) => { return o !== null });
-              console.log(contractDetail);
-              console.log(naverDetail);
-            }).catch((err) => {
-              console.log(err);
-            });
+            
+            console.log(contractDetail);
+
+
 
           }
         }
