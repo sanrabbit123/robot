@@ -4107,6 +4107,812 @@ StaticRouter.prototype.rou_post_printComplex = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_complexReport = function () {
+  const instance = this;
+  const address = this.address;
+  const back = this.back;
+  const { equalJson, requestSystem, dateToString, messageSend } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/complexReport" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.fromDate === undefined || req.body.toDate === undefined) {
+        throw new Error("invalid post");
+      }
+      const { fromDate, toDate } = equalJson(req.body);
+      const selfMongo = instance.mongo;
+      const selfLocalMongo = instance.mongolocal;
+      const selfConsoleMongo = instance.mongoconsole;
+      const selfLogMongo = instance.mongolog;
+      const unknownKeyword = "unknown";
+      const proposalStandardDate = new Date(2021, 8, 1);
+      const proposalStandardDateValue = proposalStandardDate.valueOf();
+      const fromAgoDate = new Date(JSON.stringify(fromDate).slice(1, -1));
+      fromAgoDate.setMonth(fromAgoDate.getMonth() - 3);
+      const motherClients_rawRaw = await back.getClientsByQuery({
+        $and: [
+          {
+            requests: {
+              $elemMatch: {
+                "request.timeline": { $gte: fromAgoDate }
+              }
+            }
+          },
+          {
+            requests: {
+              $elemMatch: {
+                "request.timeline": { $lt: toDate }
+              }
+            }
+          }
+        ]
+      }, { selfMongo, withTools: true });
+      const motherClients_raw = motherClients_rawRaw.getRequestsTong().map((arr) => { let obj = arr[0].toNormal(); obj.cliid = arr.cliid; obj.analytics = arr[1].toNormal(); return obj; });
+      const motherClients = motherClients_raw.filter((obj) => {
+        return obj.timeline.valueOf() >= fromDate.valueOf() && obj.timeline.valueOf() < toDate.valueOf();
+      });
+      const motherClientHistories = await back.mongoPick("clientHistory", [ {
+        $or: motherClients.map((o) => { return { cliid: o.cliid } }),
+      }, { cliid: 1, manager: 1, curation: 1 } ], { selfMongo: selfConsoleMongo });
+      const motherProjects_raw = (await back.getProjectsByQuery({
+        $or: motherClients.map((o) => { return { cliid: o.cliid } }).concat([
+          {
+            "process.contract.first.date": {
+              $gte: fromDate
+            }
+          }
+        ]),
+      }, { selfMongo })).toNormal();
+      const motherProjects = motherProjects_raw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= fromDate.valueOf() && obj.process.contract.first.date.valueOf() < toDate.valueOf() });
+      motherProjects.sort((a, b) => { return a.proposal.date.valueOf() - b.proposal.date.valueOf() });
+      const standardDate = new Date(JSON.stringify(motherProjects[0].proposal.date).slice(1, -1));
+      standardDate.setMonth(standardDate.getMonth() - 3);
+      const motherContracts = motherClients_raw.filter((obj) => {
+        return motherProjects.map((o) => { return o.cliid }).includes(obj.cliid);
+      }).filter((obj) => {
+        return obj.analytics.response.status === "진행" && obj.timeline.valueOf() > standardDate.valueOf();
+      })
+      const motherAnalytics = await back.mongoRead("dailyAnalytics", {
+        $and: [
+          {
+            "date.from": { $gte: fromDate }
+          },
+          {
+            "date.from": { $lt: toDate }
+          },
+        ]
+      }, { selfMongo: selfLogMongo });
+      const motherClientsAnalytics = await back.mongoRead("dailyClients", {
+        $and: [
+          {
+            "date.from": { $gte: fromDate }
+          },
+          {
+            "date.from": { $lt: toDate }
+          },
+        ]
+      }, { selfMongo: selfLogMongo });
+      const motherCampaign = await back.mongoRead("dailyCampaign", {
+        $and: [
+          {
+            "date.from": { $gte: fromDate }
+          },
+          {
+            "date.from": { $lt: toDate }
+          },
+        ]
+      }, { selfMongo: selfLogMongo });
+      let thisIdArr;
+      let res;
+      let consultingAparts, contractAparts;
+      let regionSet;
+      let pyeongSet;
+      let sourceSet;
+      let budgetSet;
+      let adSet;
+      let contractSet;
+      let address;
+      let thisNaver;
+      let oldSet;
+      let thisOld;
+      let dateValue;
+      let howLong;
+      let returnSet;
+      let usersArr;
+      let targetUsers;
+      let targetUserObject;
+      let sourceArr;
+      let campaignArr;
+      let deviceArr;
+      let deviceSet;
+      let household;
+      let targetType;
+      let floor;
+      let room;
+      let floorSet;
+      let roomSet;
+      let householdSet;
+      let livingSet;
+      let living;
+      let graphObject;
+      let consultingSet, finalContractSet;
+      let thisValue;
+      let finalObject;
+      let cliidArr_raw;
+      let process;
+      let histories;
+      let proposalLength;
+
+      thisIdArr = motherClients.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" });
+      res = await requestSystem("https://home-liaison.serveftp.com:3000/naverComplexes", { idArr: thisIdArr }, { headers: { "Content-Type": "application/json" } });
+      consultingAparts = equalJson(JSON.stringify(res.data.filter((str) => { return str !== null })));
+  
+      thisIdArr = motherContracts.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" });
+      res = await requestSystem("https://home-liaison.serveftp.com:3000/naverComplexes", { idArr: thisIdArr }, { headers: { "Content-Type": "application/json" } });
+      contractAparts = equalJson(JSON.stringify(res.data.filter((str) => { return str !== null })));
+  
+      usersArr = equalJson(JSON.stringify(motherClientsAnalytics.map((o) => { return o.data.detail }).flat()));
+
+      returnSet = (motherClients, consultingAparts) => {
+        regionSet = [
+          {
+            case: "서울",
+            value: 0,
+          },
+          {
+            case: "경기",
+            value: 0,
+          },
+          {
+            case: "충청",
+            value: 0,
+          },
+          {
+            case: "강원",
+            value: 0,
+          },
+          {
+            case: "경상",
+            value: 0,
+          },
+          {
+            case: "전라",
+            value: 0,
+          },
+          {
+            case: "제주",
+            value: 0,
+          },
+          {
+            case: "기타",
+            value: 0,
+          },
+        ];
+        pyeongSet = [
+          {
+            case: "10평 미만",
+            value: 0,
+          },
+          {
+            case: "10평대",
+            value: 0,
+          },
+          {
+            case: "20평대",
+            value: 0,
+          },
+          {
+            case: "30평대",
+            value: 0,
+          },
+          {
+            case: "40평대",
+            value: 0,
+          },
+          {
+            case: "50평대",
+            value: 0,
+          },
+          {
+            case: "60평 이상",
+            value: 0,
+          }
+        ];
+        sourceSet = [
+          {
+            case: "메타",
+            value: 0,
+          },
+          {
+            case: "네이버",
+            value: 0,
+          },
+          {
+            case: "구글",
+            value: 0,
+          },
+          {
+            case: "유튜브",
+            value: 0,
+          },
+          {
+            case: "카카오",
+            value: 0,
+          },
+          {
+            case: "기타",
+            value: 0,
+          }
+        ];
+        budgetSet = [
+          {
+            case: "500만원 이하",
+            value: 0,
+          },
+          {
+            case: "1,000만원대",
+            value: 0,
+          },
+          {
+            case: "2,000만원대",
+            value: 0,
+          },
+          {
+            case: "3,000만원대",
+            value: 0,
+          },
+          {
+            case: "4,000만원대",
+            value: 0,
+          },
+          {
+            case: "5,000만원대",
+            value: 0,
+          },
+          {
+            case: "6,000만원대",
+            value: 0,
+          },
+          {
+            case: "7,000만원대",
+            value: 0,
+          },
+          {
+            case: "8,000만원대",
+            value: 0,
+          },
+          {
+            case: "9,000만원대",
+            value: 0,
+          },
+          {
+            case: "1억원대",
+            value: 0,
+          },
+        ];
+        adSet = [
+          {
+            case: "광고 유입",
+            value: 0,
+          },
+          {
+            case: "비광고",
+            value: 0,
+          },
+        ];
+        contractSet = [
+          {
+            case: "자가",
+            value: 0,
+          },
+          {
+            case: "전월세",
+            value: 0,
+          },
+        ];
+        oldSet = [
+          {
+            case: "예정 1년 이내",
+            value: 0,
+          },
+          {
+            case: "예정 1년 ~ 2년 이내",
+            value: 0,
+          },
+          {
+            case: "예정 2년 ~ 3년 이내",
+            value: 0,
+          },
+          {
+            case: "예정 3년 초과",
+            value: 0,
+          },
+          {
+            case: "3년 이하",
+            value: 0,
+          },
+          {
+            case: "3년 초과 5년 이하",
+            value: 0,
+          },
+          {
+            case: "5년 초과 10년 이하",
+            value: 0,
+          },
+          {
+            case: "10년 초과 20년 이하",
+            value: 0,
+          },
+          {
+            case: "20년 초과 30년 이하",
+            value: 0,
+          },
+          {
+            case: "30년 초과",
+            value: 0,
+          },
+          {
+            case: "알 수 없음",
+            value: 0,
+          }
+        ];
+        deviceSet = [
+          {
+            case: "모바일",
+            value: 0,
+          },
+          {
+            case: "데스크탑",
+            value: 0,
+          },
+          {
+            case: "기타",
+            value: 0,
+          },
+        ];
+
+        floorSet = [
+          {
+            case: "10층 이하",
+            value: 0,
+          },
+          {
+            case: "20층 이하",
+            value: 0,
+          },
+          {
+            case: "30층 이하",
+            value: 0,
+          },
+          {
+            case: "30층 초과",
+            value: 0,
+          },
+          {
+            case: "알 수 없음",
+            value: 0,
+          },
+        ];
+
+        roomSet = [
+          {
+            case: "방 1개",
+            value: 0,
+          },
+          {
+            case: "방 2개",
+            value: 0,
+          },
+          {
+            case: "방 3개",
+            value: 0,
+          },
+          {
+            case: "방 4개",
+            value: 0,
+          },
+          {
+            case: "방 5개 이상",
+            value: 0,
+          },
+          {
+            case: "알 수 없음",
+            value: 0,
+          },
+        ];
+
+        householdSet = [
+          {
+            case: "500세대 이하",
+            value: 0,
+          },
+          {
+            case: "500세대 ~ 1000세대",
+            value: 0,
+          },
+          {
+            case: "1000세대 ~ 2000세대",
+            value: 0,
+          },
+          {
+            case: "2000세대 ~ 3000세대",
+            value: 0,
+          },
+          {
+            case: "3000세대 초과",
+            value: 0,
+          },
+          {
+            case: "알 수 없음",
+            value: 0,
+          },
+        ];
+
+        livingSet = [
+          {
+            case: "이사",
+            value: 0,
+          },
+          {
+            case: "거주중",
+            value: 0,
+          },
+        ];
+  
+        for (let { cliid, timeline, budget, space: { resident, address: addressRaw, pyeong, contract, naver } } of motherClients) {
+          
+          targetUsers = [];
+          if (usersArr.find((obj) => { return obj.cliid === cliid }) !== undefined) {
+            targetUsers = usersArr.find((obj) => { return obj.cliid === cliid }).users;
+          }
+
+          if (targetUsers.length > 0) {
+            targetUsers.forEach((o) => {
+              o.history.sort((a, b) => {
+                return a.date.valueOf() - b.date.valueOf();
+              })
+            })
+            targetUsers.sort((a, b) => {
+              return a.history[0].date.valueOf() - b.history[0].date.valueOf();
+            })
+            targetUsers = targetUsers.map((o) => { return { source: o.source, device: o.device.kinds } });
+  
+            sourceArr = [];
+            campaignArr = [];
+            deviceArr = [];
+            for (let userObject of targetUsers) {
+              for (let str of userObject.source.mother) {
+                sourceArr.push(str);
+              }
+              for (let str of userObject.source.campaign) {
+                campaignArr.push(str);
+              }
+              deviceArr.push(userObject.device);
+            }
+            targetUserObject = {
+              source: sourceArr.length === 0 ? unknownKeyword : sourceArr[0],
+              campaign: campaignArr.length === 0 ? unknownKeyword : campaignArr[0],
+              device: deviceArr.length === 0 ? unknownKeyword : deviceArr[0],
+            }
+          } else {
+            targetUserObject = {
+              source: unknownKeyword,
+              campaign: unknownKeyword,
+              device: unknownKeyword,
+            }
+          }
+
+          living = resident.living ? "거주중" : "이사"
+
+          thisNaver = null;
+          if (consultingAparts.find((obj) => { return obj.naver === naver }) !== undefined) {
+            thisNaver = consultingAparts.find((obj) => { return obj.naver === naver });
+          }
+          address = thisNaver === null ? addressRaw : thisNaver.address.value;
+  
+          if (thisNaver === null) {
+            howLong = "알 수 없음";
+          } else {
+            thisOld = new Date(JSON.stringify(timeline).slice(1, -1));
+            dateValue = (((((thisOld.valueOf() - (thisNaver.information.date).valueOf()) / 1000) / 60) / 60) / 24) / 365;
+            howLong = String(Math.floor(dateValue)) + "년 " + String(Math.floor((dateValue % 1) * 12)) + "개월차";
+          }
+  
+
+          if (thisNaver !== null) {
+            thisNaver.information.type.detail.sort((a, b) => {
+              return Math.abs(a.area.pyeong - pyeong) - Math.abs(b.area.pyeong - pyeong);
+            })
+            if (thisNaver.information.type.detail.length > 0) {
+              room = thisNaver.information.type.detail[0].count.room;
+            } else {
+              room = 0;
+            }
+            household = thisNaver.information.count.household;
+            floor = thisNaver.information.floor.high;
+          } else {
+            room = 0;
+            household = 0;
+            floor = 0;
+          }
+
+          if (/^서울/gi.test(address) || /^강서/gi.test(address) || /^양천/gi.test(address) || /^구로/gi.test(address) || /^영등포/gi.test(address) || /^금천/gi.test(address)|| /^동작/gi.test(address)|| /^관악/gi.test(address)|| /^서초/gi.test(address)|| /^강남/gi.test(address)|| /^송파/gi.test(address)|| /^강동/gi.test(address)|| /^광진/gi.test(address)|| /^동대문/gi.test(address)|| /^성동/gi.test(address)|| /^중랑/gi.test(address)|| /^성북/gi.test(address)|| /^강북/gi.test(address)|| /^도봉/gi.test(address)|| /^노원/gi.test(address)|| /^종로/gi.test(address)|| /^서대문/gi.test(address)|| /^마포/gi.test(address)|| /^용산/gi.test(address)|| /^은평/gi.test(address)) {
+            regionSet[0].value = regionSet[0].value + 1;
+          } else if (/^경기/gi.test(address) || /^인천/gi.test(address) || /^수원/gi.test(address) || /^부평/gi.test(address) || /^의정부/gi.test(address) || /^부천/gi.test(address) || /^과천/gi.test(address) || /^고양/gi.test(address) || /^시흥/gi.test(address) || /^성남/gi.test(address) || /^파주/gi.test(address) || /^김포/gi.test(address) || /^양주/gi.test(address) || /^남양주/gi.test(address) || /^포천/gi.test(address) || /^안양/gi.test(address) || /^의왕/gi.test(address) || /^광명/gi.test(address) || /^동두천/gi.test(address) || /^화성/gi.test(address) || /^오산/gi.test(address) || /^안성/gi.test(address) || /^평택/gi.test(address) || /^이천/gi.test(address) || /^여주/gi.test(address) || /^안산/gi.test(address) || /^가평/gi.test(address) || /^양평/gi.test(address)) {
+            regionSet[1].value = regionSet[1].value + 1;
+          } else if (/^충청/gi.test(address) || /^충북/gi.test(address) || /^충남/gi.test(address) || /^세종/gi.test(address) || /^대전/gi.test(address) || /^충주/gi.test(address)) {
+            regionSet[2].value = regionSet[2].value + 1;
+          } else if (/^강원/gi.test(address) || /^원주/gi.test(address) || /^강릉/gi.test(address) || /^속초/gi.test(address)) {
+            regionSet[3].value = regionSet[3].value + 1;
+          } else if (/^경상/gi.test(address) || /^경북/gi.test(address) || /^경남/gi.test(address) || /^부산/gi.test(address) || /^울산/gi.test(address) || /^대구/gi.test(address)) {
+            regionSet[4].value = regionSet[4].value + 1;
+          } else if (/^전라/gi.test(address) || /^전북/gi.test(address) || /^전남/gi.test(address) || /^광주/gi.test(address) || /^전주/gi.test(address)) {
+            regionSet[5].value = regionSet[5].value + 1;
+          } else if (/^제주/gi.test(address)) {
+            regionSet[6].value = regionSet[6].value + 1;
+          } else {
+            regionSet[7].value = regionSet[7].value + 1;
+          }
+    
+          if (pyeong < 10) {
+            pyeongSet[0].value = pyeongSet[0].value + 1;
+          } else if (pyeong >= 10 && pyeong < 20) {
+            pyeongSet[1].value = pyeongSet[1].value + 1;
+          } else if (pyeong >= 20 && pyeong < 30) {
+            pyeongSet[2].value = pyeongSet[2].value + 1;
+          } else if (pyeong >= 30 && pyeong < 40) {
+            pyeongSet[3].value = pyeongSet[3].value + 1;
+          } else if (pyeong >= 40 && pyeong < 50) {
+            pyeongSet[4].value = pyeongSet[4].value + 1;
+          } else if (pyeong >= 50 && pyeong < 60) {
+            pyeongSet[5].value = pyeongSet[5].value + 1;
+          } else {
+            pyeongSet[6].value = pyeongSet[6].value + 1;
+          }
+    
+          if (/자가/gi.test(contract)) {
+            contractSet[0].value = contractSet[0].value + 1;
+          } else {
+            contractSet[1].value = contractSet[1].value + 1;
+          }
+    
+          if (/1억/gi.test(budget)) {
+            budget = 100000000;
+          } else {
+            budget = Number(budget.replace(/[^0-9]/gi, '')) * 10000;
+          }
+  
+          if (budget < 10000000) {
+            budgetSet[0].value = budgetSet[0].value + 1;
+          } else if (budget >= 10000000 && budget < 20000000) {
+            budgetSet[1].value = budgetSet[1].value + 1;
+          } else if (budget >= 20000000 && budget < 30000000) {
+            budgetSet[2].value = budgetSet[2].value + 1;
+          } else if (budget >= 30000000 && budget < 40000000) {
+            budgetSet[3].value = budgetSet[3].value + 1;
+          } else if (budget >= 40000000 && budget < 50000000) {
+            budgetSet[4].value = budgetSet[4].value + 1;
+          } else if (budget >= 50000000 && budget < 60000000) {
+            budgetSet[5].value = budgetSet[5].value + 1;
+          } else if (budget >= 60000000 && budget < 70000000) {
+            budgetSet[6].value = budgetSet[6].value + 1;
+          } else if (budget >= 70000000 && budget < 80000000) {
+            budgetSet[7].value = budgetSet[7].value + 1;
+          } else if (budget >= 80000000 && budget < 90000000) {
+            budgetSet[8].value = budgetSet[8].value + 1;
+          } else if (budget >= 90000000 && budget < 100000000) {
+            budgetSet[9].value = budgetSet[9].value + 1;
+          } else {
+            budgetSet[10].value = budgetSet[10].value + 1;
+          }
+  
+          if (/없음/gi.test(howLong)) {
+            oldSet[10].value = budgetSet[10].value + 1;
+          } else {
+            if (/^\-/gi.test(howLong)) {
+  
+              howLong = Number(howLong.replace(/년/gi, ".").replace(/[^0-9\.]/gi, ''));
+              if (howLong <= 1) {
+                oldSet[0].value = oldSet[0].value + 1;
+              } else if (howLong > 1 && howLong <= 2) {
+                oldSet[1].value = oldSet[1].value + 1;
+              } else if (howLong > 2 && howLong <= 3) {
+                oldSet[2].value = oldSet[2].value + 1;
+              } else {
+                oldSet[3].value = oldSet[3].value + 1;
+              }
+  
+            } else {
+  
+              howLong = Number(howLong.replace(/년/gi, ".").replace(/[^0-9\.]/gi, ''));
+              if (howLong <= 3) {
+                oldSet[4].value = oldSet[4].value + 1;
+              } else if (howLong > 3 && howLong <= 5) {
+                oldSet[5].value = oldSet[5].value + 1;
+              } else if (howLong > 5 && howLong <= 10) {
+                oldSet[6].value = oldSet[6].value + 1;
+              } else if (howLong > 10 && howLong <= 20) {
+                oldSet[7].value = oldSet[7].value + 1;
+              } else if (howLong > 20 && howLong <= 30) {
+                oldSet[8].value = oldSet[8].value + 1;
+              } else if (howLong > 30) {
+                oldSet[9].value = oldSet[9].value + 1;
+              } else {
+                oldSet[10].value = oldSet[10].value + 1;
+              }
+  
+            }
+          }
+  
+          if (targetUserObject.campaign === unknownKeyword) {
+            adSet[1].value = adSet[1].value + 1;
+          } else {
+            adSet[0].value = adSet[0].value + 1;
+          }
+  
+          if (targetUserObject.source === unknownKeyword) {
+            sourceSet[5].value = sourceSet[5].value + 1;
+          } else if (/meta/gi.test(targetUserObject.source) || /facebook/gi.test(targetUserObject.source) || /instagram/gi.test(targetUserObject.source)) {
+            sourceSet[0].value = sourceSet[0].value + 1;
+          } else if (/naver/gi.test(targetUserObject.source)) {
+            sourceSet[1].value = sourceSet[1].value + 1;
+          } else if (/google/gi.test(targetUserObject.source)) {
+            sourceSet[2].value = sourceSet[2].value + 1;
+          } else if (/youtube/gi.test(targetUserObject.source)) {
+            sourceSet[3].value = sourceSet[3].value + 1;
+          } else if (/kakao/gi.test(targetUserObject.source)) {
+            sourceSet[4].value = sourceSet[4].value + 1;
+          } else {
+            sourceSet[5].value = sourceSet[5].value + 1;
+          }
+
+          if (/mobile/gi.test(targetUserObject.device)) {
+            deviceSet[0].value = deviceSet[0].value + 1;
+          } else if (/desktop/gi.test(targetUserObject.device)) {
+            deviceSet[1].value = deviceSet[1].value + 1;
+          } else {
+            deviceSet[2].value = deviceSet[2].value + 1;
+          }
+
+          if (floor === 0) {
+            floorSet[4].value = floorSet[4].value + 1;
+          } else if (floor <= 10) {
+            floorSet[0].value = floorSet[0].value + 1;
+          } else if (floor > 10 && floor <= 20) {
+            floorSet[1].value = floorSet[1].value + 1;
+          } else if (floor > 20 && floor <= 30) {
+            floorSet[2].value = floorSet[2].value + 1;
+          } else {
+            floorSet[3].value = floorSet[3].value + 1;
+          }
+
+          if (room === 0) {
+            roomSet[5].value = roomSet[5].value + 1;
+          } else if (room === 1) {
+            roomSet[0].value = roomSet[0].value + 1;
+          } else if (room === 2) {
+            roomSet[1].value = roomSet[1].value + 1;
+          } else if (room === 3) {
+            roomSet[2].value = roomSet[2].value + 1;
+          } else if (room === 4) {
+            roomSet[3].value = roomSet[3].value + 1;
+          } else {
+            roomSet[4].value = roomSet[4].value + 1;
+          }
+
+          if (household === 0) {
+            householdSet[5].value = householdSet[5].value + 1;
+          } else if (household <= 500) {
+            householdSet[0].value = householdSet[0].value + 1;
+          } else if (household > 500 && household <= 1000) {
+            householdSet[1].value = householdSet[1].value + 1;
+          } else if (household > 1000 && household <= 2000) {
+            householdSet[2].value = householdSet[2].value + 1;
+          } else if (household > 2000 && household <= 3000) {
+            householdSet[3].value = householdSet[3].value + 1;
+          } else {
+            householdSet[4].value = householdSet[4].value + 1;
+          }
+
+          if (living === "이사") {
+            livingSet[0].value = livingSet[0].value + 1;
+          } else {
+            livingSet[1].value = livingSet[1].value + 1;
+          }
+
+
+        }
+    
+        return {
+          region: regionSet,
+          pyeong: pyeongSet,
+          contract: contractSet,
+          budget: budgetSet,
+          old: oldSet,
+          ad: adSet,
+          source: sourceSet,
+          device: deviceSet,
+          floor: floorSet,
+          room: roomSet,
+          household: householdSet,
+          living: livingSet,
+        }
+      }
+  
+      consultingSet = returnSet(motherClients, consultingAparts);
+      finalContractSet = returnSet(motherContracts, contractAparts);
+
+      graphObject = {
+        region: equalJson(JSON.stringify(consultingSet.region)),
+        pyeong: equalJson(JSON.stringify(consultingSet.pyeong)),
+        contract: equalJson(JSON.stringify(consultingSet.contract)),
+        budget: equalJson(JSON.stringify(consultingSet.budget)),
+        old: equalJson(JSON.stringify(consultingSet.old)),
+        ad: equalJson(JSON.stringify(consultingSet.ad)),
+        source: equalJson(JSON.stringify(consultingSet.source)),
+        device: equalJson(JSON.stringify(consultingSet.device)),
+        floor: equalJson(JSON.stringify(consultingSet.floor)),
+        room: equalJson(JSON.stringify(consultingSet.room)),
+        household: equalJson(JSON.stringify(consultingSet.household)),
+        living: equalJson(JSON.stringify(consultingSet.living)),
+      };
+
+      for (let key in graphObject) {
+        for (let obj of graphObject[key]) {
+          thisValue = finalContractSet[key].find((o) => { return o.case === obj.case }).value;
+          obj.contract = thisValue;
+          obj.ratio = obj.value === 0 ? 0 : thisValue / obj.value;
+        }
+      }
+
+      if (fromDate.valueOf() >= proposalStandardDateValue) {
+        cliidArr_raw = motherClients.map((obj) => { return obj.cliid; });
+        cliidArr_raw = Array.from(new Set(cliidArr_raw));
+        process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
+        histories = motherClientHistories.filter((obj) => { return process.map((o) => { return o.cliid; }).includes(obj.cliid) });
+        histories = histories.filter((obj) => { return obj.curation.analytics.send.some((o) => { return /designerProposal/gi.test(o.page) }) });
+        proposalLength = histories.length;
+      } else {
+        cliidArr_raw = clients.map((obj) => { return obj.cliid; });
+        cliidArr_raw = Array.from(new Set(cliidArr_raw));
+        process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
+        proposalLength = process.length;
+      }
+
+      finalObject = {
+        clients: motherClients.length,
+        proposal: proposalLength,
+        contracts: motherContracts.length,
+        contractsSuccess: motherProjects.filter((p) => { return !/드랍/gi.test(p.process.status) }).length,
+        contractsSupply: motherProjects.filter((p) => { return !/드랍/gi.test(p.process.status) }).reduce((acc, curr) => {
+          return acc + curr.process.contract.remain.calculation.amount.supply;
+        }, 0),
+        mau: motherAnalytics.map((o) => { return o.data.users }).reduce((acc, curr) => { return acc + curr.total }, 0),
+        pageViews: motherAnalytics.map((o) => { return o.data.views }).reduce((acc, curr) => { return acc + curr.total }, 0),
+        consulting: motherAnalytics.map((o) => { return o.data.conversion.consultingPage.total }).reduce((acc, curr) => { return acc + curr }, 0) + motherAnalytics.map((o) => { return o.data.conversion.popupOpen.total }).reduce((acc, curr) => { return acc + curr }, 0),
+        charge: motherCampaign.map((o) => { return o.value.charge }).reduce((acc, curr) => { return acc + curr }, 0),
+        impressions: motherCampaign.map((o) => { return o.value.performance.impressions }).reduce((acc, curr) => { return acc + curr }, 0),
+        clicks: motherCampaign.map((o) => { return o.value.performance.clicks }).reduce((acc, curr) => { return acc + curr }, 0),
+        graph: graphObject,
+      };
+
+      res.send(JSON.stringify(finalObject));
+
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_complexReport): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.setMembers = async function () {
