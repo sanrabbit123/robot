@@ -545,8 +545,8 @@ DevContext.prototype.launching = async function () {
     // console.log(targetObject.AptStore.detail.portal_id);
 
 
-    
-        
+    const res = await requestSystem("https://home-liaison.serveftp.com:3000/complexReport", { fromDate: new Date(2023, 5, 1), toDate: new Date(2023, 6, 1) }, { headers: { "Content-Type": "application/json" } });
+    console.log(res);
 
     
 

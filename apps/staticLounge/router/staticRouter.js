@@ -4210,7 +4210,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
         ]
       }, { selfMongo: selfLogMongo });
       let thisIdArr;
-      let res;
+      let response;
       let consultingAparts, contractAparts;
       let regionSet;
       let pyeongSet;
@@ -4251,12 +4251,12 @@ StaticRouter.prototype.rou_post_complexReport = function () {
       let proposalLength;
 
       thisIdArr = motherClients.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" });
-      res = await requestSystem("https://home-liaison.serveftp.com:3000/naverComplexes", { idArr: thisIdArr }, { headers: { "Content-Type": "application/json" } });
-      consultingAparts = equalJson(JSON.stringify(res.data.filter((str) => { return str !== null })));
+      response = await requestSystem("https://home-liaison.serveftp.com:3000/naverComplexes", { idArr: thisIdArr }, { headers: { "Content-Type": "application/json" } });
+      consultingAparts = equalJson(JSON.stringify(response.data.filter((str) => { return str !== null })));
   
       thisIdArr = motherContracts.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" });
-      res = await requestSystem("https://home-liaison.serveftp.com:3000/naverComplexes", { idArr: thisIdArr }, { headers: { "Content-Type": "application/json" } });
-      contractAparts = equalJson(JSON.stringify(res.data.filter((str) => { return str !== null })));
+      response = await requestSystem("https://home-liaison.serveftp.com:3000/naverComplexes", { idArr: thisIdArr }, { headers: { "Content-Type": "application/json" } });
+      contractAparts = equalJson(JSON.stringify(response.data.filter((str) => { return str !== null })));
   
       usersArr = equalJson(JSON.stringify(motherClientsAnalytics.map((o) => { return o.data.detail }).flat()));
 
