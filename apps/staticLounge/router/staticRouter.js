@@ -3949,7 +3949,7 @@ StaticRouter.prototype.rou_post_naverComplexes = function () {
 
       rows = await back.mongoRead(collection, { $or: idArr.map((id) => { return { naver: id } }) }, { selfMongo });
       result = idArr.map((id) => {
-        return rows.find((o) => { o.naver === id }) === undefined ? null : rows.find((o) => { o.naver === id });
+        return rows.find((o) => { return o.naver === id }) === undefined ? null : rows.find((o) => { return o.naver === id });
       });
 
       res.send(JSON.stringify(result));

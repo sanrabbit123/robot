@@ -591,12 +591,19 @@ DevContext.prototype.launching = async function () {
     }).filter((obj) => {
       return obj.analytics.response.status === "진행" && obj.timeline.valueOf() > standardDate.valueOf();
     })
-    
-    
+    let thisIdArr;
+    let res;
+
     console.log(motherProjects.length);
 
-    console.log(motherClients.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" }));
-    console.log(motherContracts.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" }))
+    thisIdArr = motherClients.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" });
+    res = await requestSystem("https://home-liaison.serveftp.com:3000/naverComplexes", { idArr: thisIdArr }, { headers: { "Content-Type": "application/json" } });
+    console.log(res.data);
+
+
+
+
+    // console.log(motherContracts.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" }))
   
 
 
