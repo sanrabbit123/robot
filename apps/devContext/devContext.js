@@ -106,7 +106,7 @@ DevContext.prototype.launching = async function () {
 
     // await this.MONGOLOGC.connect();
     // const report = new LogReport(this.MONGOLOGC);
-    // await report.unknownCampaign(2023, 6, 7674482 - 6388269);
+    // await report.unknownCampaign(2023, 6, 8191922 - 7674482);
     // await this.MONGOLOGC.close();
 
 
@@ -546,65 +546,65 @@ DevContext.prototype.launching = async function () {
 
     
 
-    // const naver = new NaverAPIs();
-    // const result = (await fileSystem(`readJson`, [ `${process.cwd()}/temp/landMatrix.json` ])).slice(1);
-
-    // const newMatrix = [[
-    //   "cliid",
-    //   "name",
-    //   "requestNumber",
-    //   "pyeong",
-    //   "address",
-    //   "complexId"
-    // ]];
-    // let tempResult;
-
-    // for (let arr of result) {
-
-    //   if (arr[5] === '') {
-    //     tempResult = await naver.complexSearch(arr[4], true);
-    //     newMatrix.push([
-    //       arr[0],
-    //       arr[1],
-    //       arr[2],
-    //       arr[3],
-    //       arr[4],
-    //       tempResult === null ? "" : tempResult,
-    //     ])
-    //     await sleep((2000 * (Math.random())) + 500);
-    //   } else {
-    //     newMatrix.push([
-    //       arr[0],
-    //       arr[1],
-    //       arr[2],
-    //       arr[3],
-    //       arr[4],
-    //       arr[5],
-    //     ])
-    //   }
-    //   await fileSystem(`writeJson`, [ `${process.cwd()}/temp/landMatrix2.json`, JSON.parse(JSON.stringify(newMatrix)) ]);
-    // }
 
 
+    // complex analytics
 
-    // complex update
+    const fromDate = new Date(2023, 5, 1);
+    const toDate = new Date(2023, 6, 1);
+    const fromAgoDate = new Date(JSON.stringify(fromDate).slice(1, -1));
+    fromAgoDate.setMonth(fromAgoDate.getMonth() - 3);
+    const motherClients_rawRaw = await back.getClientsByQuery({
+      $and: [
+        {
+          requests: {
+            $elemMatch: {
+              "request.timeline": { $gte: fromAgoDate }
+            }
+          }
+        },
+        {
+          requests: {
+            $elemMatch: {
+              "request.timeline": { $lt: toDate }
+            }
+          }
+        }
+      ]
+    }, { selfMongo: instance.mongo, withTools: true });
+    const motherClients_raw = motherClients_rawRaw.getRequestsTong().map((arr) => { let obj = arr[0].toNormal(); obj.cliid = arr.cliid; obj.analytics = arr[1].toNormal(); return obj; });
+    const motherClients = motherClients_raw.filter((obj) => {
+      return obj.timeline.valueOf() >= fromDate.valueOf() && obj.timeline.valueOf() < toDate.valueOf();
+    });
 
-    // const selfMongo = this.MONGOC;
-    // const sheetsId = "1NLr0lgiNheytUSvwn-d5Ys5QRzgW5uwv_EIbTqNKQ1s";
-    // const matrix = await sheets.get_value_inPython(sheetsId, "A2:F");
-    // let res;
+    const motherProjects_raw = (await back.getProjectsByQuery({
+      "process.contract.first.date": {
+        $gte: fromDate
+      }
+    }, { selfMongo: instance.mongo })).toNormal();
+    const motherProjects = motherProjects_raw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= fromDate.valueOf() && obj.process.contract.first.date.valueOf() < toDate.valueOf() });
+    motherProjects.sort((a, b) => { return a.proposal.date.valueOf() - b.proposal.date.valueOf() });
+    const standardDate = new Date(JSON.stringify(motherProjects[0].proposal.date).slice(1, -1));
+    standardDate.setMonth(standardDate.getMonth() - 3);
+    const motherContracts = motherClients_raw.filter((obj) => {
+      return motherProjects.map((o) => { return o.cliid }).includes(obj.cliid);
+    }).filter((obj) => {
+      return obj.analytics.response.status === "진행" && obj.timeline.valueOf() > standardDate.valueOf();
+    })
+    
+    
+    console.log(motherProjects.length);
 
-    // for (let [ cliid, name, requestNumber, pyeong, address, naver ] of matrix) {
-    //   if (naver.replace(/[^0-9]/gi, '').trim() !== "") {
-    //     await sleep(Math.round(3000 * Math.random()) + 1000);
-    //     res = await requestSystem("https://home-liaison.serveftp.com/naverComplex", { id: naver.replace(/[^0-9]/gi, '').trim() }, { headers: {
-    //       "Content-Type": "application/json",
-    //     } })
-    //     console.log(res.data);
-    //   }
-    // }
+    console.log(motherClients.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" }));
+    console.log(motherContracts.map((obj) => { return obj.space.naver }).filter((obj) => { return obj.trim() !== "" }))
+  
 
-      
+
+
+
+
+
+
 
 
 

@@ -3919,6 +3919,49 @@ StaticRouter.prototype.rou_post_naverComplex = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_naverComplexes = function () {
+  const instance = this;
+  const back = this.back;
+  const naver = this.naver;
+  const { equalJson } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/naverComplexes" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.idArr === undefined) {
+        throw new Error("invalid post");
+      }
+      const { idArr } = equalJson(req.body);
+      if (idArr.length === 0) {
+        throw new Error("invalid post 2");
+      }
+      const selfMongo = instance.mongolocal;
+      const collection = "naverComplex";
+      let rows;
+      let result;
+
+      rows = await back.mongoRead(collection, { $or: idArr.map((id) => { return { naver: id } }) }, { selfMongo });
+      result = idArr.map((id) => {
+        return rows.find((o) => { o.naver === id }) === undefined ? null : rows.find((o) => { o.naver === id });
+      });
+
+      res.send(JSON.stringify(result));
+
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_naverComplexes): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 StaticRouter.prototype.rou_post_printComplex = function () {
   const instance = this;
   const address = this.address;
