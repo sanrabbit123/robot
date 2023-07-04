@@ -8720,6 +8720,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         let newProid;
         let requestNumber;
         let action;
+        let targetSerid;
 
         client = clientCase.client;
         requestNumber = 0;
@@ -8733,8 +8734,9 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         updateQuery = {};
         newProid = null;
 
-        work.designerCuration(cliid, 4, history.curation.service.serid, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal }).then((detail) => {
+        targetSerid = (req.body.fromConsole !== undefined && Number(req.body.fromConsole) === 1) ? [ client.requests[requestNumber].analytics.response.service.serid ] : history.curation.service.serid;
 
+        work.designerCuration(cliid, 4, targetSerid, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal }).then((detail) => {
           for (let obj of detail) {
             detailUpdate.push(obj.toNormal());
           }
@@ -8746,7 +8748,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           updateQuery["proposal.status"] = "작성중";
           updateQuery["proposal.date"] = new Date();
           updateQuery["cliid"] = cliid;
-          updateQuery["service.serid"] = history.curation.service.serid[0];
+          updateQuery["service.serid"] = targetSerid[0];
           if (service === null) {
             updateQuery["service.xValue"] = "B";
           } else {
