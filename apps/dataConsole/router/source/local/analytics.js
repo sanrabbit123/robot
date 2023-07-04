@@ -2564,6 +2564,8 @@ AnalyticsJs.prototype.reportWhite = function () {
               }
             });
 
+            // 0 - 12
+
             new window.Chart((createNode({
               mother: complexMother,
               style: {
