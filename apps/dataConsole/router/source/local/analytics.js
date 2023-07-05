@@ -2047,6 +2047,15 @@ AnalyticsJs.prototype.reportWhite = function () {
                   }
                 }
               },
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  verticalAlign: "top",
+                  marginBottom: String(chartBetween) + ea,
+                },
+              },
             ].forEach((obj) => {
               obj.mother = scrollBox;
               createNode(obj);
@@ -2069,6 +2078,8 @@ AnalyticsJs.prototype.reportWhite = function () {
             const visualDivideFinal = 1;
             let naverAds, metaAds, googleAds;
             let complexMother;
+            let summaryMother;
+            let contractBlockMother;
     
             // 0 - complex report
             complexMother = scrollBox.children[0];
@@ -2627,7 +2638,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                 indexAxis: 'y',
               }
             });
-
             new window.Chart((createNode({
               mother: complexMother,
               style: {
@@ -2687,7 +2697,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                 indexAxis: 'y',
               }
             });
-
             new window.Chart((createNode({
               mother: complexMother,
               style: {
@@ -2748,7 +2757,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                 indexAxis: 'y',
               }
             });
-
             new window.Chart((createNode({
               mother: complexMother,
               style: {
@@ -2808,7 +2816,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                 indexAxis: 'y',
               }
             });
-
             new window.Chart((createNode({
               mother: complexMother,
               style: {
@@ -2869,7 +2876,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                 indexAxis: 'y',
               }
             });
-
             new window.Chart((createNode({
               mother: complexMother,
               style: {
@@ -2929,7 +2935,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                 indexAxis: 'y',
               }
             });
-
             new window.Chart((createNode({
               mother: complexMother,
               style: {
@@ -2990,7 +2995,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                 indexAxis: 'y',
               }
             });
-
             new window.Chart((createNode({
               mother: complexMother,
               style: {
@@ -3050,7 +3054,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                 indexAxis: 'y',
               }
             });
-
             new window.Chart((createNode({
               mother: complexMother,
               style: {
@@ -3111,7 +3114,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                 indexAxis: 'y',
               }
             });
-
             new window.Chart((createNode({
               mother: complexMother,
               style: {
@@ -3171,7 +3173,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                 indexAxis: 'y',
               }
             });
-
             new window.Chart((createNode({
               mother: complexMother,
               style: {
@@ -3232,7 +3233,6 @@ AnalyticsJs.prototype.reportWhite = function () {
                 indexAxis: 'y',
               }
             });
-
             new window.Chart((createNode({
               mother: complexMother,
               style: {
@@ -3732,9 +3732,67 @@ AnalyticsJs.prototype.reportWhite = function () {
               }
             });
   
-            // contracts detail
-            
-            console.log(contractDetail);
+            // contracts detail    
+            summaryMother = scrollBox.lastChild;
+
+            createNode({
+              mother: summaryMother,
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0, ea),
+                marginBottom: String(chartBetween / visualDivide2) + ea,
+                verticalAlign: "top",
+                borderBottom: "1px solid " + colorChip.gray3,
+              },
+              child: {
+                text: "계약자 상세 (" + String(contractDetail.length) + "명)",
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.black,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              }
+            });
+
+            for (let contractClient of contractDetail) {
+
+              console.log(contractClient);
+
+              contractBlockMother = createNode({
+                mother: summaryMother,
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: withOut(0, ea),
+                  marginBottom: String(chartBetween / visualDivide) + ea,
+                  verticalAlign: "top",
+                },
+              });
+
+              createNode({
+                mother: contractBlockMother,
+                text: contractClient.name + "(" + contractClient.cliid + ")",
+                style: {
+                  display: "flex",
+                  position: "relative",
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(800),
+                  color: colorChip.black,
+                  top: String(titleTextTop) + ea,
+                  justifyContent: "start",
+                  alignItems: "start",
+                  height: String(middleTitleHeight) + ea,
+                }
+              })
+
+            }
 
 
 

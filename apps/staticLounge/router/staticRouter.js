@@ -4154,7 +4154,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
           }
         ]
       }, { selfMongo, withTools: true });
-      const motherClients_raw = motherClients_rawRaw.getRequestsTong().map((arr) => { let obj = arr[0].toNormal(); obj.cliid = arr.cliid; obj.analytics = arr[1].toNormal(); return obj; });
+      const motherClients_raw = motherClients_rawRaw.getRequestsTong().map((arr) => { let obj = arr[0].toNormal(); obj.cliid = arr.cliid; obj.name = arr.name; obj.analytics = arr[1].toNormal(); return obj; });
       const motherClients = motherClients_raw.filter((obj) => {
         return obj.timeline.valueOf() >= fromDate.valueOf() && obj.timeline.valueOf() < toDate.valueOf();
       });
