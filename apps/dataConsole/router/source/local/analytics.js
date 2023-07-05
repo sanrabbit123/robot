@@ -1524,9 +1524,11 @@ AnalyticsJs.prototype.reportWhite = function () {
       let dateInput;
       let inputBottom;
       let middleTitleHeight;
+      let previousToDate;
 
       toDate = new Date();
-      toDate.setDate(toDate.getDate() - 1);
+      previousToDate = new Date();
+      previousToDate.setDate(previousToDate.getDate() - 1);
       ago = 21;
       fromDate = new Date();
       fromDate.setDate(fromDate.getDate() - ago);
@@ -1646,6 +1648,7 @@ AnalyticsJs.prototype.reportWhite = function () {
                 const dateArr = this.value.split(" ~ ");
                 const startDay = "20" + dateArr[0];
                 const endDay = "20" + dateArr[1];
+                let endPreviousDay;
 
                 this.blur();
 
@@ -1664,11 +1667,13 @@ AnalyticsJs.prototype.reportWhite = function () {
                 }
                 whitePrompt.appendChild(loading);
 
+                endPreviousDay = stringToDate(endDay);
+                endPreviousDay.setDate(endPreviousDay.getDate() - 1);
                 chartJsPatch([
-                  { data: { mode: "daily", fromDate: stringToDate(startDay), toDate: stringToDate(endDay) }, url: LOGHOST + "/extractAnalytics" },
-                  { data: { mode: "charge", fromDate: stringToDate(startDay), toDate: stringToDate(endDay) }, url: LOGHOST + "/extractAnalytics" },
-                  { data: { mode: "basic", fromDate: stringToDate(startDay), toDate: stringToDate(endDay) }, url: BACKHOST + "/extractAnalytics" },
-                  { data: { fromDate, toDate }, url: S3HOST + ":3000/complexReport" },
+                  { data: { mode: "daily", fromDate: stringToDate(startDay), toDate: endPreviousDay }, url: LOGHOST + "/extractAnalytics" },
+                  { data: { mode: "charge", fromDate: stringToDate(startDay), toDate: endPreviousDay }, url: LOGHOST + "/extractAnalytics" },
+                  { data: { mode: "basic", fromDate: stringToDate(startDay), toDate: endPreviousDay }, url: BACKHOST + "/extractAnalytics" },
+                  { data: { fromDate: stringToDate(startDay), toDate: stringToDate(endDay) }, url: S3HOST + ":3000/complexReport" },
                 ]).then(dataLoad(loading)).catch((err) => {
                   console.log(err);
                 });
@@ -3878,9 +3883,9 @@ AnalyticsJs.prototype.reportWhite = function () {
         }
 
         chartJsPatch([
-          { data: { mode: "daily", fromDate, toDate }, url: LOGHOST + "/extractAnalytics" },
-          { data: { mode: "charge", fromDate, toDate }, url: LOGHOST + "/extractAnalytics" },
-          { data: { mode: "basic", fromDate, toDate }, url: BACKHOST + "/extractAnalytics" },
+          { data: { mode: "daily", fromDate, toDate: previousToDate }, url: LOGHOST + "/extractAnalytics" },
+          { data: { mode: "charge", fromDate, toDate: previousToDate }, url: LOGHOST + "/extractAnalytics" },
+          { data: { mode: "basic", fromDate, toDate: previousToDate }, url: BACKHOST + "/extractAnalytics" },
           { data: { fromDate, toDate }, url: S3HOST + ":3000/complexReport" },
         ]).then(dataLoad(loading)).catch((err) => {
           console.log(err);
