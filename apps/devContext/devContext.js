@@ -475,16 +475,7 @@ DevContext.prototype.launching = async function () {
     
 
 
-
-
-
-    // real study
-    // const naver = new NaverAPIs();
-    // console.log((await naver.complexSearch("인천 연수구 컨벤시아대로274번길 62 (송도동, 더샵 송도센터니얼) 1903-3203", true)));
-
-    // const sampleValue = "서울 서대문구 세무서길 82-17 홍제역해링턴플레이스 108동 1504호";
-    // console.log((await naver.complexSearch(sampleValue)));
-
+    
 
     // const sampleValue = "경기 광주시 문형산길157번길 12-7 (신현동, 큐비코) 104동 102호";
     // let res, firstId;

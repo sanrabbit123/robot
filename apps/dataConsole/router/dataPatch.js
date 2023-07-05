@@ -4388,6 +4388,10 @@ DataPatch.prototype.projectStandard = function () {
       name: "응대",
       width: 100,
     },
+    designer: {
+      name: "디자이너",
+      width: 80,
+    },
     meetingDate: {
       name: "1차 미팅",
       width: 170,
@@ -4443,10 +4447,6 @@ DataPatch.prototype.projectStandard = function () {
     discount: {
       name: "할인율",
       width: 200,
-    },
-    designer: {
-      name: "디자이너",
-      width: 80,
     },
     method: {
       name: "정산 방식",
