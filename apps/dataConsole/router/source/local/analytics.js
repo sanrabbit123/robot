@@ -1453,7 +1453,7 @@ AnalyticsJs.prototype.reportWhite = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight, entireMode } = this;
   const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, autoComma, zeroAddition, chartJsPatch } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, autoComma, zeroAddition, chartJsPatch, serviceParsing } = GeneralJs;
   const vaildValue = function (target) {
     const today = new Date();
     let valueArr0, valueArr1, valueArr2;
@@ -2075,11 +2075,23 @@ AnalyticsJs.prototype.reportWhite = function () {
             const borderJoinStyle = "round";
             const complexBoxesLength = 1;
             const visualDivide = 3;
+            const visualDivideBlock = 4;
             const visualDivideFinal = 1;
+            const detailBlockWidth = 60;
+            const detailNormalWidth = 120;
+            const detailServiceWidth = 162;
+            const detailDoubleBlockWidth = 220;
+            const nameBlockWidth = 200;
+            const barWidth = 38;
+            const contentsLongWidth = 3000;
+            const detailBlockHeight = 30;
+            const detailBlockSize = 16;
             let naverAds, metaAds, googleAds;
             let complexMother;
             let summaryMother;
             let contractBlockMother;
+            let detailValueInjection;
+            let totalWidth;
     
             // 0 - complex report
             complexMother = scrollBox.children[0];
@@ -3741,7 +3753,7 @@ AnalyticsJs.prototype.reportWhite = function () {
                 display: "block",
                 position: "relative",
                 width: withOut(0, ea),
-                marginBottom: String(chartBetween / visualDivide2) + ea,
+                marginBottom: String(chartBetween / visualDivide) + ea,
                 verticalAlign: "top",
                 borderBottom: "1px solid " + colorChip.gray3,
               },
@@ -3761,40 +3773,105 @@ AnalyticsJs.prototype.reportWhite = function () {
               }
             });
 
+            detailValueInjection = (contractBlockMother, value, width) => {
+              createNode({
+                mother: contractBlockMother,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: typeof width === "number" ? String(width) + ea : width,
+                  height: String(detailBlockHeight) + ea,
+                  overflow: "scroll",
+                },
+                child: {
+                  text: value,
+                  style: {
+                    position: "relative",
+                    fontSize: String(detailBlockSize) + ea,
+                    fontWeight: String(300),
+                    color: colorChip.green,
+                    top: String(titleTextTop) + ea,
+                    width: String(contentsLongWidth) + ea,
+                  }
+                }
+              });
+              if (typeof width === "number") {
+                createNode({
+                  mother: contractBlockMother,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(barWidth) + ea,
+                    height: String(detailBlockHeight) + ea,
+                    overflow: "scroll",
+                  },
+                  child: {
+                    text: "|",
+                    style: {
+                      position: "relative",
+                      fontSize: String(detailBlockSize) + ea,
+                      fontWeight: String(200),
+                      color: colorChip.gray3,
+                      top: String(titleTextTop) + ea,
+                      width: String(contentsLongWidth) + ea,
+                    }
+                  }
+                });
+              }
+              return width + barWidth;
+            }
+
             for (let contractClient of contractDetail) {
 
-              console.log(contractClient);
-
+              // mother
               contractBlockMother = createNode({
                 mother: summaryMother,
                 style: {
                   display: "block",
                   position: "relative",
                   width: withOut(0, ea),
-                  marginBottom: String(chartBetween / visualDivide) + ea,
+                  marginBottom: String(chartBetween / visualDivideBlock) + ea,
                   verticalAlign: "top",
                 },
               });
 
+              // name
               createNode({
                 mother: contractBlockMother,
-                text: contractClient.name + "(" + contractClient.cliid + ")",
                 style: {
-                  display: "flex",
+                  display: "inline-block",
                   position: "relative",
-                  fontSize: String(titleSize) + ea,
-                  fontWeight: String(800),
-                  color: colorChip.black,
-                  top: String(titleTextTop) + ea,
-                  justifyContent: "start",
-                  alignItems: "start",
-                  height: String(middleTitleHeight) + ea,
+                  width: String(nameBlockWidth) + ea,
+                  height: String(detailBlockHeight) + ea,
+                  overflow: "scroll",
+                },
+                child: {
+                  text: contractClient.name + "(" + contractClient.cliid + ")",
+                  style: {
+                    position: "relative",
+                    fontSize: String(detailBlockSize) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.black,
+                    top: String(titleTextTop) + ea,
+                    width: String(contentsLongWidth) + ea,
+                  }
                 }
-              })
+              });
+
+              // values
+              totalWidth = nameBlockWidth;
+              totalWidth += detailValueInjection(contractBlockMother, contractClient.summary.region, detailBlockWidth);
+              totalWidth += detailValueInjection(contractBlockMother, (contractClient.summary.naverObject === null ? "알 수 없음" : contractClient.summary.naverObject.name), detailDoubleBlockWidth);
+              totalWidth += detailValueInjection(contractBlockMother, contractClient.summary.howLong, detailNormalWidth);
+              totalWidth += detailValueInjection(contractBlockMother, String(contractClient.summary.pyeong) + "평", detailBlockWidth);
+              totalWidth += detailValueInjection(contractBlockMother, contractClient.summary.living, detailBlockWidth);
+              totalWidth += detailValueInjection(contractBlockMother, contractClient.summary.contract, detailBlockWidth);
+              totalWidth += detailValueInjection(contractBlockMother, contractClient.budget.replace(/ 이상/gi, ""), detailNormalWidth);
+              totalWidth += detailValueInjection(contractBlockMother, serviceParsing(contractClient.thisProject.service).replace(/[a-zA-Z]/gi, '').trim(), detailServiceWidth);
+              totalWidth += detailValueInjection(contractBlockMother, contractClient.summary.ad.replace(/ 유입/gi, ""), detailBlockWidth);
+              detailValueInjection(contractBlockMother, contractClient.family, withOut(totalWidth, ea));
 
             }
-
-
 
           }
         }
