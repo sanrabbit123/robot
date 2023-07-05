@@ -1668,6 +1668,7 @@ AnalyticsJs.prototype.reportWhite = function () {
                   { data: { mode: "daily", fromDate: stringToDate(startDay), toDate: stringToDate(endDay) }, url: LOGHOST + "/extractAnalytics" },
                   { data: { mode: "charge", fromDate: stringToDate(startDay), toDate: stringToDate(endDay) }, url: LOGHOST + "/extractAnalytics" },
                   { data: { mode: "basic", fromDate: stringToDate(startDay), toDate: stringToDate(endDay) }, url: BACKHOST + "/extractAnalytics" },
+                  { data: { fromDate, toDate }, url: S3HOST + ":3000/complexReport" },
                 ]).then(dataLoad(loading)).catch((err) => {
                   console.log(err);
                 });
