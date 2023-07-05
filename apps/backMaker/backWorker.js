@@ -820,7 +820,35 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                     }
                   } else {
                     if (/드랍/gi.test(thisTargetDesigner.projects[i].process.status)) {
-                      condition = true;
+                      if (/프리/gi.test(thisTargetDesigner.information.business.businessInfo.classification)) {
+                        condition = true;
+                      } else if (/간이/gi.test(thisTargetDesigner.information.business.businessInfo.classification)) {
+                        condition = (cashReceipts.filter((obj) => {
+                          return obj.method === 1;
+                        }).filter((obj) => {
+                          return obj.who.business.replace(/\-/gi, '') === businessNumber
+                        }).filter((obj) => {
+                          return obj.amount.total === itemAmount
+                        }).filter((obj) => {
+                          if (thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf() < emptyDateValue) {
+                            return false;
+                          } else {
+                            return obj.date.valueOf() > thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf()
+                          }
+                        }).length > 0);
+                      } else {
+                        condition = (taxBills.filter((obj) => {
+                          return obj.who.from.business.replace(/\-/gi, '') === businessNumber
+                        }).filter((obj) => {
+                          return obj.sum.total === itemAmount
+                        }).filter((obj) => {
+                          if (thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf() < emptyDateValue) {
+                            return false;
+                          } else {
+                            return obj.date.valueOf() > thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf()
+                          }
+                        }).length > 0);
+                      }
                     } else {
                       condition = false;
                     }
