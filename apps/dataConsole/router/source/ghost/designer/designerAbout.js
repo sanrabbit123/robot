@@ -3587,6 +3587,407 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
 
 }
 
+DesignerAboutJs.prototype.insertIntroduceBox = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { designer, ea, baseTong, media, project } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const blank = "&nbsp;&nbsp;&nbsp;";
+  const mainContents = [
+    {
+      contents: [
+        "디자이너님이 홈리에종 홈페이지와 추천서에 소개되는 모습입니다. 대표 색상, 대표 공간 사진을 지정해주시고, 소개글을 작성해주세요! 고객님들께서 보시게 되는 디자이너님의 첫 인상입니다."
+      ],
+    },
+  ];
+  let paddingTop;
+  let block;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let titleFontSize;
+  let num, num2;
+  let numberRight;
+  let titleTop, titleTopNumber;
+  let titleBottom;
+  let index;
+  let mobileTitleLeft, mobileTitleTop;
+  let secondBlockWidth, secondBlockMargin;
+  let tong;
+  let contentsWordingSize;
+  let contentsBottom;
+  let whiteBottomMargin;
+  let contentsTitleMarginTop, contentsMarginTop;
+  let contentsPaddingLeft;
+  let arrowWidth;
+  let arrowTop;
+  let arrorLeft;
+  let bigNumberSize;
+  let bigNumberBetween;
+  let bigNumberMargin;
+  let bigNumberBetweenMargin;
+  let matrix;
+  let firstWidth, secondWidth, secondMarginRight;
+  let contentsAreaPaddingTop;
+  let zeroWidth, zeroMarginRight;
+  let checkBoxWidth, checkBoxTop;
+  let arrowBoxWidth, arrowBoxTop;
+  let contentsMarginBottom0, contentsMarginBottom1;
+  let mobilePaddingLeft;
+  let mobileContentsWordingSize;
+  let wordings;
+  let lineTop, linePadding;
+  let photoZone;
+  let exampleUpZone;
+  let exampleDownZone;
+  let exampleZone;
+  let profilePhotoZone;
+  let profileWidth;
+  let profileMarginLeft;
+  let profileUploadButtonRight, profileUploadButtonWidth, profileUploadButtonHeight;
+  let profileUploadButtonSize, profileUploadButtonWeight, profileUploadButtonTextTop;
+  let exampleZoneWidth, exampleZoneMarginLeft;
+  let exampleUpDownBetween;
+  let exampleTextWidth, exampleTextSize, exampleTextWeight, exampleTextTextTop;
+  let exampleFactorWidth, exampleFactorMargin;
+  let goodBadSize, goodBadWeight, goodBadRight;
+  let introductionSize, introductionWeight;
+  let leftTotalWidth;
+  let leftTotalMarginRight;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
+  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+
+  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+
+  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 10 : 8), 0 %%>;
+  contentsAreaPaddingTop = <%% 20, 20, 20, 20, 7 %%>;
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
+
+  secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
+  secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
+
+  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+
+  contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
+  contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
+  contentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
+  arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
+  arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
+  arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
+
+  bigNumberSize = <%% 37, 37, 37, 37, 5 %%>;
+  bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
+  bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
+  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
+
+  zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
+  zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
+  secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
+
+  checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
+  arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
+  checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
+  arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
+
+  contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
+  contentsMarginBottom1 = <%% 32, 32, 30, 28, 3 %%>;
+
+  lineTop = <%% 10, 10, 10, 10, 10 %%>;
+  linePadding = <%% 12, 12, 12, 12, 12 %%>;
+
+  mobilePaddingLeft = 6;
+
+  mobileContentsWordingSize = 3.2;
+
+  profileWidth = <%% 160, 160, 160, 160, 160 %%>;
+  profileMarginLeft = <%% 34, 34, 34, 34, 34 %%>;
+
+  profileUploadButtonRight = <%% -2, -2, -2, -2, -2 %%>;
+  profileUploadButtonWidth = <%% 46, 46, 46, 46, 46 %%>;
+  profileUploadButtonHeight = <%% 20, 20, 20, 20, 20 %%>;
+
+  profileUploadButtonSize = <%% 10, 10, 10, 10, 10 %%>;
+  profileUploadButtonWeight = <%% 500, 500, 500, 500, 500 %%>;
+  profileUploadButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
+
+  exampleZoneWidth = <%% 511, 511, 511, 511, 511 %%>;
+  exampleZoneMarginLeft = <%% 72, 72, 72, 72, 72 %%>;
+  exampleUpDownBetween = <%% 18, 18, 18, 18, 18 %%>;
+
+  exampleTextWidth = <%% 70, 70, 70, 70, 66 %%>;
+  exampleTextSize = <%% 13, 13, 13, 13, 13 %%>;
+  exampleTextWeight = <%% 700, 700, 700, 700, 700 %%>;
+  exampleTextTextTop = <%% -1, -1, -1, -1, -1 %%>;
+
+  exampleFactorWidth = <%% 115, 115, 115, 115, 115 %%>;
+  exampleFactorMargin = <%% 29, 29, 29, 29, 29 %%>;
+
+  goodBadSize = <%% 12, 12, 12, 12, 12 %%>;
+  goodBadWeight = <%% 500, 500, 500, 500, 500 %%>;
+  goodBadRight = <%% -14, -14, -14, -14, -14 %%>;
+
+  introductionSize = <%% 16, 16, 16, 16, 16 %%>;
+  introductionWeight = <%% 400, 400, 400, 400, 400 %%>;
+
+  leftTotalWidth = <%% 770, 770, 770, 770, 770 %%>;
+  leftTotalMarginRight = <%% 96, 96, 96, 96, 96 %%>;
+
+  this.whiteMargin = (desktop ? margin : 0);
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: desktop ? colorChip.white : "",
+      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+      paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+        height: String(100) + '%',
+        marginLeft: String(desktop ? margin : 0) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  photoZone = createNode({
+    mother: whiteTong,
+    style: {
+      display: "inline-flex",
+      flexDirection: "row",
+      position: "relative",
+      width: String(leftTotalWidth) + ea,
+      height: String(profileWidth) + ea,
+      marginRight: String(leftTotalMarginRight) + ea,
+    }
+  });
+
+  profilePhotoZone = createNode({
+    mother: photoZone,
+    style: {
+      display: "inline-flex",
+      flexDirection: "row",
+      position: "relative",
+      width: String(profileWidth) + ea,
+      height: withOut(0, ea),
+      marginRight: String(profileMarginLeft) + ea,
+      paddingLeft: String(profileWidth) + ea,
+    },
+    child: {
+      style: {
+        display: "flex",
+        flexDirection: "row",
+        position: "relative",
+        width: String(profileWidth) + ea,
+        height: withOut(0, ea),
+        borderRadius: String(profileWidth) + ea,
+        backgroundImage: "url('" + DesignerAboutJs.binaryPath + "/goodProfileExample0.jpg" + "')",
+        backgroundPosition: "50% 50%",
+        backgroundSize: "auto 102%",
+        zIndex: String(2),
+      }
+    }
+  });
+
+  createNode({
+    mother: photoZone,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      position: "absolute",
+      width: String(profileWidth) + ea,
+      height: withOut(0, ea),
+      borderRadius: String(profileWidth) + ea,
+      background: "#b78a64",
+      left: String(0),
+      top: String(0),
+    }
+  });
+
+  createNode({
+    mother: photoZone,
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      position: "absolute",
+      width: String(profileWidth) + ea,
+      height: withOut(0, ea),
+      borderRadius: String(profileWidth) + ea,
+      backgroundImage: "url('" + FRONTHOST + "/middle/index/slide0_0.jpg" + "')",
+      backgroundPosition: "50% 50%",
+      backgroundSize: "auto 102%",
+      left: String(profileWidth / 2) + ea,
+      top: String(0),
+    }
+  });
+
+  createNode({
+    mother: photoZone,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      flexDirection: "column",
+      justifyContent: "start",
+      alignItems: "start",
+      width: withOut(profileWidth, ea),
+    },
+    children: [
+      {
+        text: designer.designer,
+        style: {
+          fontSize: String(titleFontSize) + ea,
+          fontWeight: String(800),
+          color: colorChip.black,
+          lineHeight: String(1.6),
+          marginBottom: String(8) + ea,
+        }
+      },
+      {
+        text: designer.setting.front.introduction.desktop.join("\n"),
+        style: {
+          fontSize: String(introductionSize) + ea,
+          fontWeight: String(introductionWeight),
+          color: colorChip.black,
+          lineHeight: String(1.6),
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          bottom: String(0),
+          left: String(0),
+          width: String(30) + ea,
+          height: String(0),
+          borderBottom: "1px solid " + colorChip.black,
+        }
+      }
+    ]
+  })
+
+  block = createNode({
+    mother: whiteTong,
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: withOut(leftTotalWidth + leftTotalMarginRight, ea),
+      verticalAlign: "bottom",
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "block" : "none",
+          position: mobile ? "absolute" : "relative",
+          left: desktop ? "" : String(mobileTitleLeft) + ea,
+          top: desktop ? "" : String(mobileTitleTop) + ea,
+          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+          marginBottom: String(titleBottom) + ea,
+          zIndex: mobile ? String(1) : "",
+        },
+        children: [
+          {
+            text: "대표 색상 지정, 소개글 작성",
+            style: {
+              position: "relative",
+              display: "inline-block",
+              top: String(titleTopNumber) + ea,
+              fontSize: String(titleFontSize) + ea,
+              fontWeight: String(800),
+              background: desktop ? colorChip.white : colorChip.gray1,
+              paddingRight: String(numberRight) + ea,
+              color: colorChip.black,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
+          background: desktop ? "" : colorChip.white,
+          boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+          borderRadius: mobile ? String(1) + ea : "",
+          overflow: "hidden",
+          marginBottom: String(0) + ea,
+          marginTop: desktop ? "" : String(14) + ea,
+          paddingTop: String(contentsAreaPaddingTop) + ea,
+          borderTop: desktop ? "1px solid " + colorChip.shadow : "",
+          paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingBottom: desktop ? "" : String(5.5) + ea,
+        }
+      },
+    ]
+  });
+  tong = block.lastChild;
+
+  num = 0;
+  for (let { contents } of mainContents) {
+    num2 = 0;
+    for (let str of contents) {
+      createNode({
+        mother: tong,
+        style: {
+          display: "block",
+          position: "relative",
+          marginTop: desktop ? "" : ((num === 0 || num2 !== 0) ? "" : String(6) + ea)
+        },
+        children: [
+          {
+            text: str,
+            style: {
+              display: "inline-block",
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+              fontWeight: String(400),
+              verticalAlign: "top",
+              lineHeight: String(1.6),
+              width: withOut(0, ea),
+              textAlign: "left",
+              color: colorChip.black,
+            },
+            bold: {
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.black,
+            },
+            under: {
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.green,
+            },
+          },
+        ]
+      });
+
+      num2++;
+    }
+    num++;
+  }
+
+}
+
 DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBox, x, lastBoo) {
   const instance = this;
   const { ea, baseTong, media, designer, totalContents } = this;
@@ -5492,6 +5893,7 @@ DesignerAboutJs.prototype.launching = async function (loading) {
           instance.insertNoticeBox();
           instance.insertProfileBox();
           instance.insertWorkingBox();
+          instance.insertIntroduceBox();
           instance.contentsCenter();
           instance.insertPossibleNoticeBox();
           instance.calendarChain();
