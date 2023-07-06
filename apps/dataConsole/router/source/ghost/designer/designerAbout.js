@@ -1889,6 +1889,136 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       notice: [],
     },
     {
+      title: "레벨",
+      whiteType: 1,
+      contents: [
+        {
+          property: "페이퍼 레벨",
+          returnValue: (designer) => { return {
+            modeling: { name: "3D", value: designer.analytics.styling.tendency.style.modern },
+            plan: { name: "도면", value: designer.analytics.styling.tendency.style.classic },
+            collage: { name: "콜라주", value: designer.analytics.styling.tendency.style.natural },
+            excel: { name: "엑셀", value: designer.analytics.styling.tendency.style.mixmatch },
+            powerpoint: { name: "피피티", value: designer.analytics.styling.tendency.style.scandinavian },
+            __order__: [
+              "modeling",
+              "plan",
+              "collage",
+              "excel",
+              "powerpoint",
+            ],
+            __color__: colorChip.yellow,
+          } },
+          updateValue: async (raw, target, designer) => {
+            try {
+              let whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              designer.analytics.styling.tendency.style[target] = raw;
+              updateQuery["analytics.styling.tendency.style." + target] = raw;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
+          property: "제작 레벨",
+          returnValue: (designer) => { return {
+            builtin: { name: "빌트인", value: designer.analytics.styling.tendency.texture.darkWood },
+            furniture: { name: "가구", value: designer.analytics.styling.tendency.texture.whiteWood },
+            curtain: { name: "커튼", value: designer.analytics.styling.tendency.texture.coating },
+            bedding: { name: "베딩", value: designer.analytics.styling.tendency.texture.metal },
+            __order__: [
+              "builtin",
+              "furniture",
+              "curtain",
+              "bedding",
+            ],
+            __color__: colorChip.yellow,
+          } },
+          updateValue: async (raw, target, designer) => {
+            try {
+              let whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              designer.analytics.styling.tendency.texture[target] = raw;
+              updateQuery["analytics.styling.tendency.texture." + target] = raw;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+      ],
+      notice: [
+        {
+          title: "경향성 체크",
+          body: "스타일 경향에 대한 값들은 모두 고객님들께 노출되오니 정확하게 기입해주세요!",
+        },
+      ],
+    },
+    {
+      title: "성격",
+      whiteType: 1,
+      contents: [
+        {
+          property: "개인 성향",
+          returnValue: (designer) => { return {
+            lively: { name: "활기찬", value: designer.analytics.styling.tendency.style.modern },
+            intimate: { name: "친밀한", value: designer.analytics.styling.tendency.style.classic },
+            pleasant: { name: "유쾌한", value: designer.analytics.styling.tendency.style.natural },
+            tranquil: { name: "차분한", value: designer.analytics.styling.tendency.style.natural },
+            precise: { name: "정밀한", value: designer.analytics.styling.tendency.style.mixmatch },
+            scrupulous: { name: "꼼꼼한", value: designer.analytics.styling.tendency.style.scandinavian },
+            leading: { name: "리드하는", value: designer.analytics.styling.tendency.style.scandinavian },
+            planned: { name: "계획적인", value: designer.analytics.styling.tendency.style.scandinavian },
+            __order__: [
+              "lively",
+              "intimate",
+              "pleasant",
+              "tranquil",
+              "precise",
+              "scrupulous",
+              "leading",
+              "planned",
+            ],
+            __color__: colorChip.red,
+          } },
+          updateValue: async (raw, target, designer) => {
+            try {
+              let whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              designer.analytics.styling.tendency.style[target] = raw;
+              updateQuery["analytics.styling.tendency.style." + target] = raw;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+      ],
+      notice: [
+        {
+          title: "경향성 체크",
+          body: "스타일 경향에 대한 값들은 모두 고객님들께 노출되오니 정확하게 기입해주세요!",
+        },
+      ],
+    },
+    {
       title: "스타일",
       whiteType: 2,
       contents: [
@@ -1912,7 +2042,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "vintage",
               "oriental",
               "exotic",
-            ]
+            ],
+            __color__: colorChip.green,
           } },
           updateValue: async (raw, target, designer) => {
             try {
@@ -1943,7 +2074,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "whiteWood",
               "coating",
               "metal",
-            ]
+            ],
+            __color__: colorChip.green,
           } },
           updateValue: async (raw, target, designer) => {
             try {
@@ -1982,7 +2114,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "mono",
               "bright",
               "dark",
-            ]
+            ],
+            __color__: colorChip.green,
           } },
           updateValue: async (raw, target, designer) => {
             try {
@@ -2009,7 +2142,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             __order__: [
               "maximun",
               "minimum",
-            ]
+            ],
+            __color__: colorChip.green,
           } },
           updateValue: async (raw, target, designer) => {
             try {
@@ -2680,8 +2814,8 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
 
   mobileContentsWordingSize = 3.2;
 
-  profileWidth = <%% 259, 259, 259, 259, 259 %%>;
-  profileMarginLeft = <%% 24, 24, 24, 24, 24 %%>;
+  profileWidth = <%% 249, 249, 249, 249, 249 %%>;
+  profileMarginLeft = <%% 34, 34, 34, 34, 34 %%>;
 
   profileUploadButtonRight = <%% -2, -2, -2, -2, -2 %%>;
   profileUploadButtonWidth = <%% 46, 46, 46, 46, 46 %%>;
@@ -2695,17 +2829,17 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   exampleZoneMarginLeft = <%% 72, 72, 72, 72, 72 %%>;
   exampleUpDownBetween = <%% 18, 18, 18, 18, 18 %%>;
 
-  exampleTextWidth = <%% 66, 66, 66, 66, 66 %%>;
+  exampleTextWidth = <%% 70, 70, 70, 70, 66 %%>;
   exampleTextSize = <%% 13, 13, 13, 13, 13 %%>;
   exampleTextWeight = <%% 700, 700, 700, 700, 700 %%>;
   exampleTextTextTop = <%% -1, -1, -1, -1, -1 %%>;
 
-  exampleFactorWidth = <%% 120, 120, 120, 120, 120 %%>;
-  exampleFactorMargin = <%% 28, 28, 28, 28, 28 %%>;
+  exampleFactorWidth = <%% 115, 115, 115, 115, 115 %%>;
+  exampleFactorMargin = <%% 29, 29, 29, 29, 29 %%>;
 
   goodBadSize = <%% 12, 12, 12, 12, 12 %%>;
   goodBadWeight = <%% 500, 500, 500, 500, 500 %%>;
-  goodBadRight = <%% -15, -15, -15, -15, -15 %%>;
+  goodBadRight = <%% -14, -14, -14, -14, -14 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -3088,7 +3222,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   const mainContents = [
     {
       contents: [
-        "디자이너님의 사진을 업로드해주세요! 프로필 사진은 홈페이지와 추천서에 노출되어 고객님께 디자이너님을 어필하는 중요한 포인트가 됩니다. 정면 또는 측면의 얼굴이 잘 보이는 사진으로 업로드 부탁드리겠습니다."
+        "디자이너님의 대표 페이퍼 워크 작업이나 작업하고 있는 사진을 업로드 해주세요. 8장의 작업 사진은 추천서에 노출되어 고객님께 어필하는 중요 포인트가 됩니다. 자신을 어필할 수 있는 대표적인 8장의 사진을 꼭 올려주세요!"
       ],
     },
   ];
@@ -3133,7 +3267,6 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   let exampleDownZone;
   let exampleZone;
   let profilePhotoZone;
-  
   let profileWidth;
   let profileMarginLeft;
   let profileUploadButtonRight, profileUploadButtonWidth, profileUploadButtonHeight;
@@ -3143,6 +3276,11 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   let exampleTextWidth, exampleTextSize, exampleTextWeight, exampleTextTextTop;
   let exampleFactorWidth, exampleFactorMargin;
   let goodBadSize, goodBadWeight, goodBadRight;
+  let blankZone;
+  let blankZoneWidth, blankZoneInnerBetween;
+  let blankNumberSize, blankNumberWeight, blankNumberTop;
+  let factorWidth;
+  let exampleTextLeft;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -3201,34 +3339,43 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
 
   mobileContentsWordingSize = 3.2;
 
-  // new
+  profileWidth = <%% 259, 259, 259, 259, 259 %%>;
+  profileMarginLeft = <%% 24, 24, 24, 24, 24 %%>;
 
-  profileWidth = 259;
-  profileMarginLeft = 24;
+  profileUploadButtonRight = <%% -2, -2, -2, -2, -2 %%>;
+  profileUploadButtonWidth = <%% 46, 46, 46, 46, 46 %%>;
+  profileUploadButtonHeight = <%% 20, 20, 20, 20, 20 %%>;
 
-  profileUploadButtonRight = -2;
-  profileUploadButtonWidth = 46;
-  profileUploadButtonHeight = 20;
+  profileUploadButtonSize = <%% 10, 10, 10, 10, 10 %%>;
+  profileUploadButtonWeight = <%% 500, 500, 500, 500, 500 %%>;
+  profileUploadButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
-  profileUploadButtonSize = 10;
-  profileUploadButtonWeight = 500;
-  profileUploadButtonTextTop = -2;
+  exampleZoneWidth = <%% 0, 0, 0, 0, 0 %%>;
+  exampleZoneMarginLeft = <%% 72, 72, 72, 72, 72 %%>;
+  exampleUpDownBetween = <%% 18, 18, 18, 18, 18 %%>;
 
-  exampleZoneWidth = 511;
-  exampleZoneMarginLeft = 72;
-  exampleUpDownBetween = 18;
+  exampleTextWidth = <%% 70, 70, 70, 70, 66 %%>;
+  exampleTextSize = <%% 13, 13, 13, 13, 13 %%>;
+  exampleTextWeight = <%% 700, 700, 700, 700, 700 %%>;
+  exampleTextTextTop = <%% 0, 0, 0, 0, 0 %%>;
 
-  exampleTextWidth = 66;
-  exampleTextSize = 13;
-  exampleTextWeight = 700;
-  exampleTextTextTop = -1;
+  exampleFactorWidth = <%% 120, 120, 120, 120, 120 %%>;
+  exampleFactorMargin = <%% 28, 28, 28, 28, 28 %%>;
 
-  exampleFactorWidth = 120;
-  exampleFactorMargin = 28;
+  goodBadSize = <%% 12, 12, 12, 12, 12 %%>;
+  goodBadWeight = <%% 500, 500, 500, 500, 500 %%>;
+  goodBadRight = <%% -15, -15, -15, -15, -15 %%>;
 
-  goodBadSize = 12;
-  goodBadWeight = 500;
-  goodBadRight = -15;
+  blankZoneWidth = 770 - exampleZoneWidth;
+  blankZoneInnerBetween = 6;
+
+  blankNumberSize = 36;
+  blankNumberWeight = 500;
+  blankNumberTop = -2;
+
+  factorWidth = 272;
+
+  exampleTextLeft = 24;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -3262,212 +3409,52 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
       display: "inline-flex",
       flexDirection: "row",
       position: "relative",
-      width: String(profileWidth + exampleZoneWidth + profileMarginLeft + exampleZoneMarginLeft) + ea,
+      width: String(blankZoneWidth + exampleZoneWidth + profileMarginLeft + exampleZoneMarginLeft) + ea,
       height: String(profileWidth) + ea,
     }
   });
 
-  profilePhotoZone = createNode({
+  blankZone = createNode({
     mother: photoZone,
     style: {
-      display: "inline-flex",
-      flexDirection: "row",
+      display: "inline-block",
       position: "relative",
-      width: String(profileWidth) + ea,
+      width: String(blankZoneWidth) + ea,
       height: withOut(0, ea),
-      marginRight: String(profileMarginLeft) + ea,
-    }
-  })
-
-  createNode({
-    mother: profilePhotoZone,
-    style: {
-      display: "flex",
-      flexDirection: "row",
-      position: "relative",
-      width: String(profileWidth) + ea,
-      height: withOut(0, ea),
-      borderRadius: String(profileWidth) + ea,
-      backgroundImage: "url('" + DesignerAboutJs.binaryPath + "/blankProfile.jpg" + "')",
-      backgroundPosition: "50% 50%",
-      backgroundSize: "auto 102%",
-      opacity: String(0.5),
     }
   });
 
-  createNode({
-    mother: profilePhotoZone,
-    style: {
-      display: "flex",
-      position: "absolute",
-      bottom: String(0),
-      right: String(profileUploadButtonRight) + ea,
-      width: String(profileUploadButtonWidth) + ea,
-      height: String(profileUploadButtonHeight) + ea,
-      borderRadius: String(5) + "px",
-      background: colorChip.green,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    child: {
-      text: "upload",
+  for (let i = 0; i < 8; i++) {
+    createNode({
+      mother: blankZone,
       style: {
-        display: "inline-block",
+        display: "inline-flex",
         position: "relative",
-        fontSize: String(profileUploadButtonSize) + ea,
-        fontWeight: String(profileUploadButtonWeight),
-        fontFamily: "graphik",
-        fontStyle: "italic",
-        color: colorChip.white,
-        top: String(profileUploadButtonTextTop) + ea,
+        width: "calc(calc(100% - " + String(blankZoneInnerBetween * 3) + ea + ") / 4)",
+        height: "calc(calc(100% - " + String(blankZoneInnerBetween * 1) + ea + ") / 2)",
+        marginBottom: String(i / 4 < 1 ? blankZoneInnerBetween : 0) + ea,
+        marginRight: String(i % 4 === 3 ? 0 : blankZoneInnerBetween) + ea,
+        background: colorChip.green,
+        borderRadius: String(5) + "px",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        opacity: String(0.5),
+      },
+      child: {
+        text: String(i + 1),
+        style: {
+          display: "inline-block",
+          fontSize: String(blankNumberSize) + ea,
+          fontWeight: String(blankNumberWeight),
+          color: colorChip.liteGreen,
+          position: "relative",
+          fontFamily: "graphik",
+          fontStyle: "italic",
+          top: String(blankNumberTop) + ea,
+        }
       }
-    }
-  })
-
-  exampleZone = createNode({
-    mother: photoZone,
-    style: {
-      display: "inline-flex",
-      flexDirection: "column",
-      position: "relative",
-      width: String(exampleZoneWidth) + ea,
-      height: withOut(0, ea),
-    },
-    children: [
-      {
-        style: {
-          display: "flex",
-          flexDirection: "row",
-          position: "relative",
-          width: withOut(0, ea),
-          height: "calc(calc(100% - " + String(exampleUpDownBetween) + ea + ") / 2)",
-          marginBottom: String(exampleUpDownBetween) + ea,
-        }
-      },
-      {
-        style: {
-          display: "flex",
-          flexDirection: "row",
-          position: "relative",
-          width: withOut(0, ea),
-          height: "calc(calc(100% - " + String(exampleUpDownBetween) + ea + ") / 2)",
-        }
-      },
-    ]
-  });
-  exampleUpZone = exampleZone.children[0];
-  exampleDownZone = exampleZone.children[1];
-
-  for (let i = -1; i < 3; i++) {
-    if (i < 0) {
-      createNode({
-        mother: exampleUpZone,
-        style: {
-          display: "inline-flex",
-          justifyContent: "start",
-          alignItems: "center",
-          flexDirection: "row",
-          position: "relative",
-          width: String(exampleTextWidth) + ea,
-          height: withOut(0, ea),
-        },
-        child: {
-          text: "<좋은 예>",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(exampleTextSize) + ea,
-            fontWeight: String(exampleTextWeight),
-            color: colorChip.black,
-            top: String(exampleTextTextTop) + ea,
-          }
-        }
-      });
-      createNode({
-        mother: exampleDownZone,
-        style: {
-          display: "inline-flex",
-          justifyContent: "start",
-          alignItems: "center",
-          flexDirection: "row",
-          position: "relative",
-          width: String(exampleTextWidth) + ea,
-          height: withOut(0, ea),
-        },
-        child: {
-          text: "<나쁜 예>",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(exampleTextSize) + ea,
-            fontWeight: String(exampleTextWeight),
-            color: colorChip.black,
-            top: String(exampleTextTextTop) + ea,
-          }
-        }
-      });
-    } else {
-      createNode({
-        mother: exampleUpZone,
-        style: {
-          display: "inline-flex",
-          flexDirection: "row",
-          position: "relative",
-          width: String(exampleFactorWidth) + ea,
-          height: withOut(0, ea),
-          borderRadius: String(exampleFactorWidth) + ea,
-          backgroundImage: "url('" + DesignerAboutJs.binaryPath + "/goodProfileExample" + String(i) + ".jpg" + "')",
-          backgroundPosition: "50% 50%",
-          backgroundSize: "auto 102%",
-          marginRight: String(i === (3 - 1) ? 0 : exampleFactorMargin) + ea,
-          justifyContent: "end",
-          alignItems: "end",
-        },
-        child: {
-          text: "good",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(goodBadSize) + ea,
-            fontWeight: String(goodBadWeight),
-            fontFamily: "graphik",
-            fontStyle: "italic",
-            color: colorChip.green,
-            right: String(goodBadRight) + ea,
-          }
-        }
-      });
-      createNode({
-        mother: exampleDownZone,
-        style: {
-          display: "inline-flex",
-          flexDirection: "row",
-          position: "relative",
-          width: String(exampleFactorWidth) + ea,
-          height: withOut(0, ea),
-          borderRadius: String(exampleFactorWidth) + ea,
-          backgroundImage: "url('" + DesignerAboutJs.binaryPath + "/badProfileExample" + String(i) + ".jpg" + "')",
-          backgroundPosition: "50% 50%",
-          backgroundSize: "auto 102%",
-          marginRight: String(i === (3 - 1) ? 0 : exampleFactorMargin) + ea,
-          justifyContent: "end",
-          alignItems: "end",
-        },
-        child: {
-          text: "bad",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(goodBadSize) + ea,
-            fontWeight: String(goodBadWeight),
-            fontFamily: "graphik",
-            fontStyle: "italic",
-            color: colorChip.red,
-            right: String(goodBadRight) + ea,
-          }
-        }
-      });
-    }
+    })
   }
 
   block = createNode({
@@ -3475,7 +3462,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      width: withOut(profileWidth + exampleZoneWidth + profileMarginLeft + exampleZoneMarginLeft, ea),
+      width: withOut(blankZoneWidth + exampleZoneWidth + profileMarginLeft + exampleZoneMarginLeft, ea),
       verticalAlign: "bottom",
     },
     children: [
@@ -3491,7 +3478,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
         },
         children: [
           {
-            text: "프로필 업로드",
+            text: "작업물, 또는 작업 사진 업로드",
             style: {
               position: "relative",
               display: "inline-block",
@@ -4248,6 +4235,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
               y: String(num),
               z: String(z),
               i: String(i),
+              color: value.__color__,
             },
             event: {
               click: function (e) {
@@ -4258,7 +4246,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
                 const targets = [ ...document.querySelectorAll('.' + tendencyBarTargetClassName + String(x) + String(y) + String(z)) ];
                 for (let a = 0; a < targets.length; a++) {
                   if (a <= i) {
-                    targets[a].style.background = colorChip.green;
+                    targets[a].style.background = this.getAttribute("color");
                   } else {
                     targets[a].style.background = colorChip.gray1;
                   }
@@ -4270,7 +4258,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
               display: "inline-block",
               height: withOut(0),
               width: "calc(100% / " + String(tendencyValueConst) + ")",
-              background: value[key].value > i ? colorChip.green : colorChip.gray1,
+              background: value[key].value > i ? value.__color__ : colorChip.gray1,
               cursor: "pointer",
               transition: "all 0s ease",
             }
