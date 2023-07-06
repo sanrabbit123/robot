@@ -6395,7 +6395,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "김애란", "2023-05-22" ],
+    //   [ "김보하", "2023-05-22" ],
     // ]);
 
 
@@ -6404,18 +6404,16 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2306_aa02s", [
-    //   { porlid: "a104", index: 1 },
-    //   { porlid: "a104", index: 2 },
-    //   { porlid: "a104", index: 6 },
-    //   { porlid: "a104", index: 8 },
-    //   { porlid: "a104", index: 10 },
-    //   { porlid: "a104", index: 13 },
-    //   { porlid: "a104", index: 15 },
+    // await this.setProposalSettingForDesigner("d2307_aa02s", [
+    //   { porlid: "ghost", index: 5 },
+    //   { porlid: "ghost", index: 2 },
+    //   { porlid: "ghost", index: 1 },
+    //   { porlid: "ghost", index: 6 },
+    //   { porlid: "ghost", index: 11 },
     // ], [
-    //   "공간에 잔잔하고 부드럽게 스며들어 기능과 스타일을 반영한 공간을 만들어 드립니다.",
-    //   "고객님의 취향을 있는 그대로 반영한 스타일링을 통해 힘 있는 공간을 만들어 가고자 합니다.",
-    //   "고객님의 라이프 스타일을 최대한 반영하여 맞춤 공간을 찾아드립니다.",
+    //   "모던하고 세련된 스타일을 구하사며, 컬러를 잘 사용한 디자인에 능합니다.",
+    //   "고객님 생활과 동선에 초점을 두고 디자인을 진행하며 아이디어가 뛰어납니다.",
+    //   "하얗기만 한 디자인이 아닌, 강약과 포잉ㄴ트가 살아 있는 디자인을 구사합니다.",
     // ]);
 
 
