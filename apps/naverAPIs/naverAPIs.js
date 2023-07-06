@@ -495,8 +495,7 @@ NaverAPIs.prototype.mapSearch = async function (query, justWordingMode = false) 
 
     targetAddress = null;
 
-    if (result.address !== null) {
-
+    if (result.address !== null) {    
       if (result.address.roadAddress !== null) {
         targetAddress = equalJson(JSON.stringify(result.address.roadAddress));
       } else {
@@ -504,12 +503,23 @@ NaverAPIs.prototype.mapSearch = async function (query, justWordingMode = false) 
       }
       resultList = targetAddress.list;
       resultList = resultList.map((obj) => {
-        if (obj.siteRepName === null) {
+        if (typeof obj.addressElements !== "object" || typeof obj.siteRepName !== "string") {
           throw new Error("invalid address");
+        }
+        let latitude, longitude;
+        latitude = 0;
+        longitude = 0;
+        if (!Number.isNaN(Number(obj.x))) {
+          longitude = Number(obj.x);
+        }
+        if (!Number.isNaN(Number(obj.y))) {
+          latitude = Number(obj.y);
         }
         return {
           name: (obj.addressElements.buildName === null || obj.addressElements.buildName === undefined) ? "" : (obj.addressElements.buildName.trim() === "" ? obj.siteRepName.trim() : obj.addressElements.buildName.trim()),
           address: obj.fullAddress,
+          latitude,
+          longitude,
           elements: obj.addressElements,
         }
       });
@@ -610,6 +620,26 @@ NaverAPIs.prototype.complexSearch = async function (query, complexIdMode = false
 
           if (target === undefined && response.data.complexes.length === 1) {
             target = response.data.complexes[0];
+          }
+
+          if (target === undefined && response.data.complexes.length > 1) {
+            if (typeof naverMapResult.first.longitude === "number") {
+              response.data.complexes.sort((a, b) => {
+                return (Math.abs(a.longitude - naverMapResult.first.longitude) + Math.abs(a.latitude - naverMapResult.first.latitude)) - (Math.abs(b.longitude - naverMapResult.first.longitude) + Math.abs(b.latitude - naverMapResult.first.latitude));
+              })
+              target = response.data.complexes.find((obj) => {
+                let tempArr = obj.cortarAddress.split(" ");
+                let tempArr2 = naverMapResult.first.address.split(" ");
+                let boo;
+                tempArr = tempArr.map((str) => { return str.slice(0, 2) });
+                tempArr2 = tempArr2.map((str) => { return str.slice(0, 2) });
+                boo = (tempArr[0] === tempArr2[0]) && (tempArr[1] === tempArr2[1]);
+                if (boo) {
+                  boo = Math.floor(naverMapResult.first.longitude * 1000) === Math.floor(obj.longitude * 1000) && Math.floor(naverMapResult.first.latitude * 1000) === Math.floor(obj.latitude * 1000);
+                }
+                return boo;
+              });
+            }
           }
 
           if (target === undefined) {
