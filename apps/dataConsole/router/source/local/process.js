@@ -5,7 +5,7 @@ const ProcessJs = function () {
   this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
 }
 
-ProcessJs.prototype.baseMaker = function (searchMode = false) {
+ProcessJs.prototype.baseMaker = function () {
   const instance = this;
   const { totalContents, ea, belowHeight, projects, media, entireMode } = this;
   const { createNode, withOut, colorChip, isMac, blankHref, ajaxJson, cleanChildren, autoComma, dateToString, stringToDate, serviceParsing, equalJson, svgMaker, removeByClass, findByAttribute, returnGet } = GeneralJs;
@@ -105,6 +105,12 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
   let projectMeetingUpdateEvent;
   let projectStartDateUpdateEvent;
   let projectEndDateUpdateEvent;
+  let emptyProjectsDesigners;
+  let notEmptyProjectsDesigners;
+  let subAreaLeft, subAreaTop;
+  let numbersSortEvent;
+  let searchByProjects;
+  let searchProjects;
 
   clientColumnsMenu = [
     { title: "내림차순", key: "downSort" },
@@ -203,12 +209,6 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
       type: "date",
     },
     {
-      title: "일정표 공유",
-      menu: [],
-      blank: true,
-      type: "date",
-    },
-    {
       title: "상태 공유",
       menu: [],
       blank: true,
@@ -255,13 +255,13 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
 
   tableBlockHeight = 34;
   tableValueBlockHeight = 28;
-  tableBlockFactorWidth = 122;
+  tableBlockFactorWidth = 110;
   tableBetween = 20;
 
   blockVisualPadding = 8;
 
   nameWidth = 56;
-  designerWidth = 98;
+  designerWidth = 280;
   idWidth = 82;
   requestWidth = tableBlockFactorWidth * clientColumns.length;
 
@@ -278,7 +278,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
   checkBoxVisualLeft = -19;
 
   subAreaBottom = 18;
-  subAreaBetween = 2;
+  subAreaBetween = 4;
 
   onlineCircleTop = 2.5;
   onlineCircleWidth = 6;
@@ -306,6 +306,9 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
 
   calendarWidth = 260;
   calendarPadding = 4;
+
+  subAreaLeft = 200;
+  subAreaTop = 10;
 
   contentsLoad = () => {};
 
@@ -1456,6 +1459,27 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
 
   }
 
+  numbersSortEvent = function (e) {
+    e.preventDefault();
+    const box = this.children[2].getBoundingClientRect();
+    const { x: standardX } = box;
+    const x = Number(e.x);
+    const sortTargets = [ ...grayTong.children ].slice(1);
+    const targetAttribute = (standardX >= x ? "standby" : "process");
+    if (Number(sortTargets[0].getAttribute(targetAttribute)) >= Number(sortTargets[sortTargets.length - 1].getAttribute(targetAttribute))) {
+      sortTargets.sort((a, b) => {
+        return Number(a.getAttribute(targetAttribute)) - Number(b.getAttribute(targetAttribute));
+      })
+    } else {
+      sortTargets.sort((a, b) => {
+        return Number(b.getAttribute(targetAttribute)) - Number(a.getAttribute(targetAttribute));
+      })
+    }
+    for (let dom of sortTargets) {
+      grayTong.appendChild(dom);
+    }
+  }
+
   projectStatusUpdateEvent = () => {
     return async function (e) {
       try {
@@ -2193,7 +2217,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
 
     createNode({
       mother: targetTong,
-      text: "담당자",
+      text: "디자이너",
       event: {
         click: managerFilterEvent,
       },
@@ -2212,7 +2236,7 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
 
     createNode({
       mother: targetTong,
-      text: "디자이너",
+      text: "아이디",
       event: {
         click: designerFilterEvent,
       },
@@ -2250,164 +2274,310 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
     managers.push('-');
 
     newProjectsTong = [];
-    for (let manager of managers) {
-      thisProjects = instance.projects.filter((obj) => { return obj.history.manager === manager });
-      designers = [ ...new Set(thisProjects.map((obj) => { return obj.designer.desid + splitToken + obj.designer.designer })) ];
-      for (let complex of designers) {
-        [ desid, designer ] = complex.split(splitToken);
-        thisProjects2 = thisProjects.filter((obj) => { return obj.designer.designer === designer && obj.designer.desid === desid });
-        if (searchMode === false) {
-          if (instance.projects.length !== 1) {
-            thisProjects2 = thisProjects2.filter((obj) => { return !/^[드완]/.test(obj.process.status) })
-          }
+    if (Array.isArray(searchMode)) {
+      designers = searchMode.map((obj) => { return obj.desid + splitToken + obj.designer });
+      searchByProjects = false;
+    } else if (typeof searchMode === "object" && searchMode !== null) {
+      designers = instance.designers.filter((d) => { return searchMode.projects.map((p) => { return p.desid }).includes(d.desid); }).map((obj) => { return obj.desid + splitToken + obj.designer });
+      searchByProjects = true;
+    } else if (typeof searchMode === "boolean" || searchMode === undefined || searchMode === null) {
+      designers = instance.designers.map((obj) => { return obj.desid + splitToken + obj.designer });
+      searchByProjects = false;
+    }
+    for (let complex of designers) {
+      [ desid, designer ] = complex.split(splitToken);
+      if (!searchByProjects) {
+        thisProjects2 = instance.projects.filter((obj) => { return obj.designer.designer === designer && obj.designer.desid === desid });
+        if (instance.projects.length !== 1) {
+          thisProjects2 = thisProjects2.filter((obj) => { return !/^[드완]/.test(obj.process.status) });
         }
-        newProjectsTong.push({ manager, designer, desid, projects: thisProjects2 });
+      } else {
+        searchProjects = searchMode.projects;
+        thisProjects2 = searchProjects.filter((obj) => { return obj.designer.designer === designer && obj.designer.desid === desid });
+        if (searchProjects.length !== 1) {
+          thisProjects2 = thisProjects2.filter((obj) => { return !/^[드완]/.test(obj.process.status) });
+        }
       }
+      newProjectsTong.push({ designer, desid, projects: thisProjects2 });
+    }
+
+    notEmptyProjectsDesigners = newProjectsTong.filter((obj) => { return obj.projects.length !== 0 });
+    emptyProjectsDesigners = newProjectsTong.filter((obj) => { return obj.projects.length === 0 });
+    newProjectsTong = notEmptyProjectsDesigners;
+    for (let obj of emptyProjectsDesigners) {
+      newProjectsTong.push(obj);
     }
 
     instance.bigDoms = [];
     instance.clientDoms = [];
     instance.totalValues = [];
-    for (let { manager, designer, desid, projects } of newProjectsTong) {
-      if (projects.length > 0) {
+    for (let { designer, desid, projects } of newProjectsTong) {
+      motherBlock = createNode({
+        mother: grayTong,
+        attribute: {
+          desid,
+          standby: String(projects.length - projects.filter((obj) => { return obj.process.contract.remain.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() }).filter((obj) => { return obj.process.contract.form.date.from.valueOf() <= (new Date()).valueOf() }).length),
+          process: String(projects.filter((obj) => { return obj.process.contract.remain.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() }).filter((obj) => { return obj.process.contract.form.date.from.valueOf() <= (new Date()).valueOf() }).length),
+        },
+        style: {
+          display: "block",
+          position: "relative",
+          "min-height": String(blockHeight * 3) + ea,
+          width: withOut(0, ea),
+          overflow: "hidden",
+          borderRadius: String(5) + "px",
+          marginBottom: String(blockMargin) + ea,
+        }
+      });
 
-        motherBlock = createNode({
-          mother: grayTong,
-          attribute: { desid },
-          style: {
-            display: "block",
-            position: "relative",
-            "min-height": String(blockHeight) + ea,
-            width: withOut(0, ea),
-            overflow: "hidden",
-            borderRadius: String(5) + "px",
-            marginBottom: String(blockMargin) + ea,
-          }
-        });
-  
-        baseBlock = createNode({
-          mother: motherBlock,
-          attribute: { desid },
+      baseBlock = createNode({
+        mother: motherBlock,
+        attribute: { desid },
+        style: {
+          display: "inline-block",
+          width: withOut(0, ea),
+          position: "relative",
+          "min-height": String(blockHeight * 3) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          verticalAlign: "top",
+        },
+        children: [
+          {
+            attribute: { desid },
+            class: [ "moveTarget" ],
+            style: {
+              display: "block",
+              position: "relative",
+              transform: "translateX(0px)",
+              width: String(8000) + ea,
+              height: withOut(0, ea),
+            }
+          },
+        ]
+      });
+
+      targetTong = baseBlock.firstChild;
+
+      subArea = createNode({
+        mother: targetTong,
+        style: {
+          display: "inline-flex",
+          flexDirection: "column",
+          position: "absolute",
+          left: String(subAreaLeft) + ea,
+          top: String(subAreaTop) + ea,
+          alignItems: "start",
+          zIndex: String(1),
+        }
+      });
+      // numbers
+      createNode({
+        mother: subArea,
+        attribute: {
+          desid,
+          standby: String(projects.length - projects.filter((obj) => { return obj.process.contract.remain.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() }).filter((obj) => { return obj.process.contract.form.date.from.valueOf() <= (new Date()).valueOf() }).length),
+          process: String(projects.filter((obj) => { return obj.process.contract.remain.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() }).filter((obj) => { return obj.process.contract.form.date.from.valueOf() <= (new Date()).valueOf() }).length),
+        },
+        event: {
+          click: numbersSortEvent,
+          contextmenu: numbersSortEvent,
+        },
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          position: "relative",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: String(subAreaBetween) + ea,
+        },
+        children: [
+          {
+            text: "대기&nbsp;&nbsp;",
+            style: {
+              fontSize: String(textSize) + ea,
+              fontWeight: String(tableMiddleWeight),
+              color: colorChip.black,
+            }
+          },
+          {
+            text: String(projects.length - projects.filter((obj) => { return obj.process.contract.remain.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() }).filter((obj) => { return obj.process.contract.form.date.from.valueOf() <= (new Date()).valueOf() }).length) + "&nbsp;&nbsp;",
+            style: {
+              fontSize: String(textSize) + ea,
+              fontWeight: String(tableMiddleWeight),
+              color: colorChip.red,
+            }
+          },
+          {
+            text: "/",
+            style: {
+              fontSize: String(textSize) + ea,
+              fontWeight: String(tableWeight),
+              color: colorChip.gray4,
+            }
+          },
+          {
+            text: "&nbsp;&nbsp;진행중&nbsp;&nbsp;",
+            style: {
+              fontSize: String(textSize) + ea,
+              fontWeight: String(tableMiddleWeight),
+              color: colorChip.black,
+            }
+          },
+          {
+            text: String(projects.filter((obj) => { return obj.process.contract.remain.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() }).filter((obj) => { return obj.process.contract.form.date.from.valueOf() <= (new Date()).valueOf() }).length),
+            style: {
+              fontSize: String(textSize) + ea,
+              fontWeight: String(tableMiddleWeight),
+              color: colorChip.green,
+            }
+          },
+        ]
+      });
+      // checklist
+      createNode({
+        mother: subArea,
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          position: "relative",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: String(subAreaBetween) + ea,
+        },
+        children: [
+          {
+            text: "체크리스트 진행&nbsp;&nbsp;",
+            style: {
+              fontSize: String(textSize) + ea,
+              fontWeight: String(tableMiddleWeight),
+              color: colorChip.black,
+            }
+          },
+          {
+            text: "안 함",
+            style: {
+              fontSize: String(textSize) + ea,
+              fontWeight: String(tableMiddleWeight),
+              color: colorChip.red,
+            }
+          },
+        ]
+      });
+      // profile
+      createNode({
+        mother: subArea,
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          position: "relative",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: String(subAreaBetween) + ea,
+        },
+        children: [
+          {
+            text: "프로필 사진 업로드&nbsp;&nbsp;",
+            style: {
+              fontSize: String(textSize) + ea,
+              fontWeight: String(tableMiddleWeight),
+              color: colorChip.black,
+            }
+          },
+          {
+            text: "안 함",
+            style: {
+              fontSize: String(textSize) + ea,
+              fontWeight: String(tableMiddleWeight),
+              color: colorChip.red,
+            }
+          },
+        ]
+      });
+      // works
+      createNode({
+        mother: subArea,
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          position: "relative",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: String(subAreaBetween) + ea,
+        },
+        children: [
+          {
+            text: "작업물 업로드&nbsp;&nbsp;",
+            style: {
+              fontSize: String(textSize) + ea,
+              fontWeight: String(tableMiddleWeight),
+              color: colorChip.black,
+            }
+          },
+          {
+            text: "안 함",
+            style: {
+              fontSize: String(textSize) + ea,
+              fontWeight: String(tableMiddleWeight),
+              color: colorChip.red,
+            }
+          },
+        ]
+      });
+
+      nameDom = createNode({
+        mother: targetTong,
+        attribute: { desid },
+        event: {
+          click: designerDomEvent,
+          contextmenu: designerDomEvent,
+        },
+        style: {
+          width: String(nameWidth) + ea,
+          display: "inline-block",
+          position: "relative",
+          verticalAlign: "top",
+          marginLeft: String(firstMargin) + ea,
+          cursor: "pointer",
+        },
+        child: {
+          text: designer,
           style: {
             display: "inline-block",
-            width: withOut(0, ea),
-            position: "relative",
-            "min-height": String(blockHeight) + ea,
-            background: colorChip.white,
-            borderRadius: String(5) + "px",
-            verticalAlign: "top",
-          },
-          children: [
-            {
-              attribute: { desid },
-              class: [ "moveTarget" ],
-              style: {
-                display: "block",
-                position: "relative",
-                transform: "translateX(0px)",
-                width: String(8000) + ea,
-                height: withOut(0, ea),
-              }
-            },
-          ]
-        });
-  
-        targetTong = baseBlock.firstChild;
-  
-        subArea = createNode({
-          mother: targetTong,
-          style: {
-            display: "inline-flex",
-            flexDirection: "column",
-            position: "absolute",
-            left: String(firstMargin) + ea,
-            bottom: String(subAreaBottom) + ea,
-            alignItems: "start",
-          }
-        });
-
-        createNode({
-          mother: subArea,
-          style: {
-            display: "flex",
-            flexDirection: "row",
-            position: "relative",
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: String(subAreaBetween) + ea,
-          },
-          children: [
-            {
-              text: "전체 :&nbsp;&nbsp;",
-              style: {
-                fontSize: String(tableSize) + ea,
-                fontWeight: String(tableMiddleWeight),
-                color: colorChip.black,
-              }
-            },
-            {
-              text: String(projects.length),
-              style: {
-                fontSize: String(tableSize) + ea,
-                fontWeight: String(tableMiddleWeight),
-                color: colorChip.green,
-              }
-            },
-            {
-              text: "건",
-              style: {
-                fontSize: String(tableSize) + ea,
-                fontWeight: String(tableMiddleWeight),
-                color: colorChip.black,
-              }
-            },
-            {
-              text: "&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;",
-              style: {
-                fontSize: String(tableSize) + ea,
-                fontWeight: String(tableWeight),
-                color: colorChip.gray4,
-              }
-            },
-            {
-              text: "진행중 :&nbsp;&nbsp;",
-              style: {
-                fontSize: String(tableSize) + ea,
-                fontWeight: String(tableMiddleWeight),
-                color: colorChip.black,
-              }
-            },
-            {
-              text: String(projects.filter((obj) => { return obj.process.contract.remain.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() }).filter((obj) => { return obj.process.contract.form.date.from.valueOf() <= (new Date()).valueOf() }).length),
-              style: {
-                fontSize: String(tableSize) + ea,
-                fontWeight: String(tableMiddleWeight),
-                color: colorChip.green,
-              }
-            },
-            {
-              text: "건",
-              style: {
-                fontSize: String(tableSize) + ea,
-                fontWeight: String(tableMiddleWeight),
-                color: colorChip.black,
-              }
-            },
-          ]
-        });
-
-        nameDom = createNode({
-          mother: targetTong,
-          style: {
-            width: String(nameWidth) + ea,
-            display: "inline-block",
             position: "relative",
             verticalAlign: "top",
-            marginLeft: String(firstMargin) + ea,
+            fontSize: String(textSize) + ea,
+            fontWeight: String(700),
+            color: colorChip.black,
+            top: String(textTop) + ea,
             cursor: "pointer",
           },
-          child: {
-            text: manager,
+          bold: {
+            fontSize: String(textSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.deactive,
+          },
+        }
+      });
+
+      designerDom = createNode({
+        mother: targetTong,
+        attribute: { desid },
+        event: {
+          click: designerDomEvent,
+          contextmenu: designerDomEvent,
+        },
+        style: {
+          width: String(designerWidth) + ea,
+          display: "inline-block",
+          position: "relative",
+          verticalAlign: "top",
+          marginLeft: String(minimumBetween) + ea,
+          cursor: "pointer",
+        },
+        children: [
+          {
+            text: desid,
             style: {
               display: "inline-block",
               position: "relative",
@@ -2416,479 +2586,206 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
               fontWeight: String(700),
               color: colorChip.black,
               top: String(textTop) + ea,
-              cursor: "pointer",
             },
             bold: {
               fontSize: String(textSize) + ea,
               fontWeight: String(300),
               color: colorChip.deactive,
             },
-          }
-        });
-  
-        designerDom = createNode({
-          mother: targetTong,
-          attribute: { desid },
+          },
+        ]
+      });
+      
+      clientTable = createNode({
+        mother: targetTong,
+        class: [ clientTableClassName ],
+        attribute: { desid },
+        style: {
+          width: String(requestWidth) + ea,
+          display: "inline-block",
+          verticalAlign: "top",
+          position: "relative",
+          marginTop: String(textTop) + ea,
+          marginLeft: String(minimumBetween) + ea,
+          marginBottom: String(textTop) + ea,
+          borderRadius: String(5) + "px",
+          border: "1px solid " + colorChip.gray3,
+          overflow: "hidden",
+        }
+      });
+
+      clientBlack = createNode({
+        mother: clientTable,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          height: String(tableBlockHeight) + ea,
+          overflow: "hidden",
+          borderRadius: String(5) + "px",
+        }
+      });
+      for (let i = 0; i < clientColumns.length; i++) {
+        createNode({
+          mother: clientBlack,
+          attribute: {
+            index: String(i),
+          },
           event: {
-            click: designerDomEvent,
-            contextmenu: designerDomEvent,
+            click: clientColumnsBaseEvent(desid),
+            contextmenu: clientColumnsBaseEvent(desid),
           },
           style: {
-            width: String(designerWidth) + ea,
-            display: "inline-block",
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
             position: "relative",
-            verticalAlign: "top",
-            marginLeft: String(minimumBetween) + ea,
+            background: colorChip.gray1,
+            height: withOut(0, ea),
+            width: i === clientColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
+            borderRight: i === clientColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
             cursor: "pointer",
           },
           children: [
             {
-              text: designer,
+              text: clientColumns[i].title,
               style: {
                 display: "inline-block",
                 position: "relative",
-                verticalAlign: "top",
-                fontSize: String(textSize) + ea,
-                fontWeight: String(700),
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableBoldWeight),
                 color: colorChip.black,
-                top: String(textTop) + ea,
-              },
-              bold: {
-                fontSize: String(textSize) + ea,
-                fontWeight: String(300),
-                color: colorChip.deactive,
-              },
-            },
+                top: String(tableTextTop) + ea,
+                cursor: "pointer",
+              }
+            }
           ]
         });
-        
-        clientTable = createNode({
-          mother: targetTong,
-          class: [ clientTableClassName ],
-          attribute: { desid },
-          style: {
-            width: String(requestWidth) + ea,
-            display: "inline-block",
-            verticalAlign: "top",
-            position: "relative",
-            marginTop: String(textTop) + ea,
-            marginLeft: String(minimumBetween) + ea,
-            marginBottom: String(textTop) + ea,
-            borderRadius: String(5) + "px",
-            border: "1px solid " + colorChip.gray3,
-            overflow: "hidden",
-          }
-        });
-  
-        clientBlack = createNode({
-          mother: clientTable,
-          style: {
-            display: "block",
-            position: "relative",
-            width: withOut(0, ea),
-            height: String(tableBlockHeight) + ea,
-            overflow: "hidden",
-            borderRadius: String(5) + "px",
-          }
-        });
-        for (let i = 0; i < clientColumns.length; i++) {
-          createNode({
-            mother: clientBlack,
-            attribute: {
-              index: String(i),
-            },
-            event: {
-              click: clientColumnsBaseEvent(desid),
-              contextmenu: clientColumnsBaseEvent(desid),
-            },
-            style: {
-              display: "inline-flex",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "relative",
-              background: colorChip.gray1,
-              height: withOut(0, ea),
-              width: i === clientColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
-              borderRight: i === clientColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
-              cursor: "pointer",
-            },
-            children: [
-              {
-                text: clientColumns[i].title,
-                style: {
-                  display: "inline-block",
-                  position: "relative",
-                  fontSize: String(tableSize) + ea,
-                  fontWeight: String(tableBoldWeight),
-                  color: colorChip.black,
-                  top: String(tableTextTop) + ea,
-                  cursor: "pointer",
-                }
-              }
-            ]
-          });
+      }
+
+      latestCallNumber = 0;
+      meetingDateNumber = 0;
+      remainDateNumber = 0;
+      startDateNumber = 0;
+      endDateNumber = 0;
+      rawDateNumber = 0;
+      sendStatusNumber = 0;
+      sendFileNumber = 0;
+      for (let z = 0; z < projects.length; z++) {
+        thisProject = projects[z];
+        callHistory = equalJson(JSON.stringify(thisProject.clientHistory.curation.analytics.call.out.concat(thisProject.clientHistory.curation.analytics.call.in)));
+        callHistory.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+
+        latestCall = '-';
+        if (callHistory.length > 0) {
+          latestCall = dateToString(callHistory[0].date);
         }
-  
-        latestCallNumber = 0;
-        meetingDateNumber = 0;
-        remainDateNumber = 0;
-        startDateNumber = 0;
-        endDateNumber = 0;
-        rawDateNumber = 0;
-        sendStatusNumber = 0;
-        sendScheduleNumber = 0;
-        sendFileNumber = 0;
-        for (let z = 0; z < projects.length; z++) {
-          thisProject = projects[z];
-          callHistory = equalJson(JSON.stringify(thisProject.clientHistory.curation.analytics.call.out.concat(thisProject.clientHistory.curation.analytics.call.in)));
-          callHistory.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        if (latestCall === '-') {
+          latestCallNumber = latestCallNumber + 1;
+        }
+        
+        partner = (thisProject.process.design.construct === null ? '-' : (thisProject.process.design.construct.contract.partner === "디자이너" ? "디자이너" : (thisProject.process.design.construct.contract.partner === "고객" ? "고객" : (thisProject.process.design.construct.contract.partner.trim() === "" ? "-" : "홈리에종"))));
 
-          latestCall = '-';
-          if (callHistory.length > 0) {
-            latestCall = dateToString(callHistory[0].date);
-          }
-          if (latestCall === '-') {
-            latestCallNumber = latestCallNumber + 1;
-          }
-          
-          partner = (thisProject.process.design.construct === null ? '-' : (thisProject.process.design.construct.contract.partner === "디자이너" ? "디자이너" : (thisProject.process.design.construct.contract.partner === "고객" ? "고객" : (thisProject.process.design.construct.contract.partner.trim() === "" ? "-" : "홈리에종"))));
-
-          meetingDate = dateConvert(thisProject.process.contract.meeting.date);
-          if (meetingDate === '-') {
-            meetingDateNumber = meetingDateNumber + 1;
-          }
-          remainDate = dateConvert(thisProject.process.contract.remain.date);
-          if (remainDate === '-') {
-            remainDateNumber = remainDateNumber + 1;
-          }
-          startDate = dateConvert(thisProject.process.contract.form.date.from);
-          if (startDate === '-') {
-            startDateNumber = startDateNumber + 1;
-          }
-          endDate = dateConvert(thisProject.process.contract.form.date.to);
-          if (endDate === '-') {
-            endDateNumber = endDateNumber + 1;
-          }
-          rawDate = dateConvert(thisProject.rawDate);
-          if (rawDate === '-') {
-            rawDateNumber = rawDateNumber + 1;
-          }
-          sendStatus = dateConvert(thisProject.sendStatus);
-          if (sendStatus === '-') {
-            sendStatusNumber = sendStatusNumber + 1;
-          }
-          sendSchedule = dateConvert(thisProject.sendSchedule);
-          if (sendSchedule === '-') {
-            sendScheduleNumber = sendScheduleNumber + 1;
-          }
-          sendFile = dateConvert(thisProject.sendFile);
-          if (sendFile === '-') {
-            sendFileNumber = sendFileNumber + 1;
-          }
-
-          clientValueArr = [
-            {
-              value: thisProject.name + "&nbsp;&nbsp;<b%" + serviceParsing(thisProject.service, false, true) + "%b>",
-              color: colorChip.black,
-              check: true,
-            },
-            {
-              value: thisProject.process.status,
-              color: colorChip.black,
-              check: false,
-            },
-            {
-              value: partner,
-              color: partner === "홈리에종" ? colorChip.green : colorChip.black,
-              check: false,
-            },
-            {
-              value: latestCall,
-              color: colorChip.black,
-              check: false,
-            },
-            {
-              value: dateConvert(thisProject.process.contract.first.date),
-              color: colorChip.black,
-              check: false,
-            },
-            {
-              value: meetingDate,
-              color: meetingDate === '-' ? colorChip.red : colorChip.black,
-              check: false,
-            },
-            {
-              value: remainDate,
-              color: remainDate === '-' ? colorChip.red : colorChip.black,
-              check: false,
-            },
-            {
-              value: startDate,
-              color: startDate === '-' ? colorChip.red : colorChip.black,
-              check: false,
-            },
-            {
-              value: endDate,
-              color: endDate === '-' ? colorChip.red : colorChip.black,
-              check: false,
-            },
-            {
-              value: sendStatus,
-              color: sendStatus === '-' ? colorChip.red : colorChip.black,
-              check: false,
-            },
-            {
-              value: sendSchedule,
-              color: sendSchedule === '-' ? colorChip.red : colorChip.black,
-              check: false,
-            },
-            {
-              value: sendFile,
-              color: sendFile === '-' ? colorChip.red : colorChip.black,
-              check: false,
-            },
-            {
-              value: rawDate,
-              color: rawDate === '-' ? colorChip.red : colorChip.black,
-              check: false,
-            },
-          ];
-  
-          clientBlack = createNode({
-            mother: clientTable,
-            attribute: {
-              proid: thisProject.proid,
-            },
-            event: {
-              click: instance.whiteCardView(thisProject.proid, equalJson(JSON.stringify(clientColumns)).slice(1), equalJson(JSON.stringify(clientValueArr)).slice(1)),
-            },
-            style: {
-              display: "block",
-              position: "relative",
-              width: withOut(0, ea),
-              overflow: "hidden",
-              borderRadius: String(5) + "px",
-            }
-          });
-          for (let i = 0; i < clientValueArr.length; i++) {
-            clientDom = createNode({
-              mother: clientBlack,
-              attribute: {
-                proid: thisProject.proid,
-                desid: thisProject.desid,
-                cliid: thisProject.cliid,
-                index: String(i)
-              },
-              style: {
-                display: "inline-flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                position: "relative",
-                background: colorChip.white,
-                height: String(tableValueBlockHeight) + ea,
-                paddingTop: String(z === 0 ? blockVisualPadding : 0) + ea,
-                paddingBottom: String(z === projects.length - 1 ? blockVisualPadding : 0) + ea,
-                width: i === clientColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
-                borderRight: i === clientColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
-                cursor: "pointer",
-              },
-              children: [
-                {
-                  text: clientValueArr[i].value,
-                  style: {
-                    display: "inline-block",
-                    position: "relative",
-                    width: String(wordingWidth) + ea,
-                    textAlign: "center",
-                    fontSize: String(tableSize) + ea,
-                    fontWeight: String(tableWeight),
-                    color: clientValueArr[i].color,
-                    top: String(tableTextTop) + ea,
-                  },
-                  bold: {
-                    fontSize: String(tableSize) + ea,
-                    fontWeight: String(200),
-                    color: colorChip.green,
-                  }
-                },
-                {
-                  style: {
-                    display: clientValueArr[i].check ? "inline-flex" : "none",
-                    position: "relative",
-                    width: String(checkBoxWidth) + ea,
-                    height: String(checkBoxWidth) + ea,
-                    borderRadius: String(1) + "px",
-                    background: colorChip.gray2,
-                    marginLeft: String(checkBoxMargin) + ea,
-                    top: String(checkBoxVisualTop) + ea,
-                    left: String(checkBoxVisualLeft) + ea,
-                    flexDirection: "center",
-                    alignItems: "center",
-                  },
-                  child: {
-                    mode: "svg",
-                    source: svgMaker.checkBox(colorChip.green),
-                    style: {
-                      display: "none",
-                      position: "relative",
-                      width: String(checkBoxWidth) + ea,
-                    }
-                  }
-                }
-              ]
-            });
-
-            // name - index : 0
-            if (clientValueArr[i].check) {
-              clientDom.setAttribute("toggle", "off");
-              checkBoxLocalStorageObj = window.localStorage.getItem(checkBoxLocalStorageName);
-              if (checkBoxLocalStorageObj === null) {
-                checkBoxLocalStorageObj = [];
-                window.localStorage.setItem(checkBoxLocalStorageName, JSON.stringify([]));
-              } else {
-                checkBoxLocalStorageObj = JSON.parse(checkBoxLocalStorageObj);
-              }
-              if (checkBoxLocalStorageObj.includes(clientDom.getAttribute("proid"))) {
-                clientDom.setAttribute("toggle", "on");
-                clientDom.children[1].style.background = colorChip.white;
-                clientDom.children[1].firstChild.style.display = "block";
-              }
-              clientDom.addEventListener("contextmenu", function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                const toggle = this.getAttribute("toggle");
-                const proid = this.getAttribute("proid");
-                let thisCheckBoxLocalStorageObj;
-
-                thisCheckBoxLocalStorageObj = window.localStorage.getItem(checkBoxLocalStorageName);
-                if (thisCheckBoxLocalStorageObj === null) {
-                  thisCheckBoxLocalStorageObj = [];
-                  window.localStorage.setItem(checkBoxLocalStorageName, JSON.stringify([]));
-                } else {
-                  thisCheckBoxLocalStorageObj = JSON.parse(thisCheckBoxLocalStorageObj);
-                }
-  
-                if (toggle === "off") {
-                  this.children[1].style.background = colorChip.white;
-                  this.children[1].firstChild.style.display = "block";
-                  this.setAttribute("toggle", "on");
-                  thisCheckBoxLocalStorageObj.push(proid);
-                } else {
-                  this.children[1].style.background = colorChip.gray2;
-                  this.children[1].firstChild.style.display = "none";
-                  this.setAttribute("toggle", "off");
-                  thisCheckBoxLocalStorageObj = thisCheckBoxLocalStorageObj.filter((str) => { return str !== proid });
-                }
-
-                window.localStorage.setItem(checkBoxLocalStorageName, JSON.stringify(thisCheckBoxLocalStorageObj));
-
-              });
-
-            // status - index: 1
-            } else if (i === 1) {
-              clientDom.addEventListener("contextmenu", projectStatusUpdateEvent());
-            // partner - index: 2
-            } else if (i === 2) {
-              clientDom.addEventListener("contextmenu", projectPartnerUpdateEvent());
-            // first meeting - index: 5
-            } else if (i === 5) {
-              clientDom.addEventListener("contextmenu", projectMeetingUpdateEvent());
-            } else if (i === 7) {
-              clientDom.addEventListener("contextmenu", projectStartDateUpdateEvent());
-            } else if (i === 8) {
-              clientDom.addEventListener("contextmenu", projectEndDateUpdateEvent());
-            } else {
-              clientDom.addEventListener("contextmenu", async function (e) {
-                try {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  // pass
-                } catch (e) {
-                  console.log(e);
-                }
-              });
-            }
-          }
-          instance.clientDoms.push(clientBlack);
-          if (!media[0]) {
-            instance.totalValues.push([ manager, designer ].concat(clientValueArr.map((obj) => { return obj.value })))
-          } else {
-            instance.totalValues.push([ manager, designer + "&nbsp;&nbsp;<u%" + desid + "%u>" ].concat(clientValueArr.map((obj) => { return obj.value })))
-          }
+        meetingDate = dateConvert(thisProject.process.contract.meeting.date);
+        if (meetingDate === '-') {
+          meetingDateNumber = meetingDateNumber + 1;
+        }
+        remainDate = dateConvert(thisProject.process.contract.remain.date);
+        if (remainDate === '-') {
+          remainDateNumber = remainDateNumber + 1;
+        }
+        startDate = dateConvert(thisProject.process.contract.form.date.from);
+        if (startDate === '-') {
+          startDateNumber = startDateNumber + 1;
+        }
+        endDate = dateConvert(thisProject.process.contract.form.date.to);
+        if (endDate === '-') {
+          endDateNumber = endDateNumber + 1;
+        }
+        rawDate = dateConvert(thisProject.rawDate);
+        if (rawDate === '-') {
+          rawDateNumber = rawDateNumber + 1;
+        }
+        sendStatus = dateConvert(thisProject.sendStatus);
+        if (sendStatus === '-') {
+          sendStatusNumber = sendStatusNumber + 1;
+        }
+        sendFile = dateConvert(thisProject.sendFile);
+        if (sendFile === '-') {
+          sendFileNumber = sendFileNumber + 1;
         }
 
         clientValueArr = [
           {
-            value: "총계",
+            value: thisProject.name + "&nbsp;&nbsp;<b%" + serviceParsing(thisProject.service, false, true) + "%b>",
+            color: colorChip.black,
+            check: true,
+          },
+          {
+            value: thisProject.process.status,
             color: colorChip.black,
             check: false,
           },
           {
-            value: String(projects.length),
+            value: partner,
+            color: partner === "홈리에종" ? colorChip.green : colorChip.black,
+            check: false,
+          },
+          {
+            value: latestCall,
             color: colorChip.black,
             check: false,
           },
           {
-            value: '-',
+            value: dateConvert(thisProject.process.contract.first.date),
             color: colorChip.black,
             check: false,
           },
           {
-            value: (latestCallNumber === 0 ? String(latestCallNumber) : "<b%" + String(latestCallNumber) + "%b>") + " <u%/%u> " + String(projects.length),
-            color: colorChip.black,
+            value: meetingDate,
+            color: meetingDate === '-' ? colorChip.red : colorChip.black,
             check: false,
           },
           {
-            value: String(0) + " <u%/%u> " + String(projects.length),
-            color: colorChip.black,
+            value: remainDate,
+            color: remainDate === '-' ? colorChip.red : colorChip.black,
             check: false,
           },
           {
-            value: (meetingDateNumber === 0 ? String(meetingDateNumber) : "<b%" + String(meetingDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
-            color: colorChip.black,
+            value: startDate,
+            color: startDate === '-' ? colorChip.red : colorChip.black,
             check: false,
           },
           {
-            value: (remainDateNumber === 0 ? String(remainDateNumber) : "<b%" + String(remainDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
-            color: colorChip.black,
+            value: endDate,
+            color: endDate === '-' ? colorChip.red : colorChip.black,
             check: false,
           },
           {
-            value: (startDateNumber === 0 ? String(startDateNumber) : "<b%" + String(startDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
-            color: colorChip.black,
+            value: sendStatus,
+            color: sendStatus === '-' ? colorChip.red : colorChip.black,
             check: false,
           },
           {
-            value: (endDateNumber === 0 ? String(endDateNumber) : "<b%" + String(endDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
-            color: colorChip.black,
+            value: sendFile,
+            color: sendFile === '-' ? colorChip.red : colorChip.black,
             check: false,
           },
           {
-            value: (sendStatusNumber === 0 ? String(sendStatusNumber) : "<b%" + String(sendStatusNumber) + "%b>") + " <u%/%u> " + String(projects.length),
-            color: colorChip.black,
-            check: false,
-          },
-          {
-            value: (sendScheduleNumber === 0 ? String(sendScheduleNumber) : "<b%" + String(sendScheduleNumber) + "%b>") + " <u%/%u> " + String(projects.length),
-            color: colorChip.black,
-            check: false,
-          },
-          {
-            value: (sendFileNumber === 0 ? String(sendFileNumber) : "<b%" + String(sendFileNumber) + "%b>") + " <u%/%u> " + String(projects.length),
-            color: colorChip.black,
-            check: false,
-          },
-          {
-            value: (rawDateNumber === 0 ? String(rawDateNumber) : "<b%" + String(rawDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
-            color: colorChip.black,
+            value: rawDate,
+            color: rawDate === '-' ? colorChip.red : colorChip.black,
             check: false,
           },
         ];
 
         clientBlack = createNode({
           mother: clientTable,
+          attribute: {
+            proid: thisProject.proid,
+          },
+          event: {
+            click: instance.whiteCardView(thisProject.proid, equalJson(JSON.stringify(clientColumns)).slice(1), equalJson(JSON.stringify(clientValueArr)).slice(1)),
+          },
           style: {
             display: "block",
             position: "relative",
@@ -2898,18 +2795,28 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
           }
         });
         for (let i = 0; i < clientValueArr.length; i++) {
-          createNode({
+          clientDom = createNode({
             mother: clientBlack,
+            attribute: {
+              proid: thisProject.proid,
+              desid: thisProject.desid,
+              cliid: thisProject.cliid,
+              index: String(i)
+            },
             style: {
               display: "inline-flex",
+              flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
               position: "relative",
-              background: colorChip.gray0,
-              height: String(tableBlockHeight) + ea,
+              background: colorChip.white,
+              height: String(tableValueBlockHeight) + ea,
+              paddingTop: String(z === 0 ? blockVisualPadding : 0) + ea,
+              paddingBottom: String(z === projects.length - 1 ? blockVisualPadding : 0) + ea,
               width: i === clientColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
               borderRight: i === clientColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
-              },
+              cursor: "pointer",
+            },
             children: [
               {
                 text: clientValueArr[i].value,
@@ -2925,25 +2832,236 @@ ProcessJs.prototype.baseMaker = function (searchMode = false) {
                 },
                 bold: {
                   fontSize: String(tableSize) + ea,
-                  fontWeight: String(tableWeight),
-                  color: colorChip.red,
+                  fontWeight: String(200),
+                  color: colorChip.green,
+                }
+              },
+              {
+                style: {
+                  display: clientValueArr[i].check ? "inline-flex" : "none",
+                  position: "relative",
+                  width: String(checkBoxWidth) + ea,
+                  height: String(checkBoxWidth) + ea,
+                  borderRadius: String(1) + "px",
+                  background: colorChip.gray2,
+                  marginLeft: String(checkBoxMargin) + ea,
+                  top: String(checkBoxVisualTop) + ea,
+                  left: String(checkBoxVisualLeft) + ea,
+                  flexDirection: "center",
+                  alignItems: "center",
                 },
-                under: {
-                  fontSize: String(tableSize) + ea,
-                  fontWeight: String(tableWeight),
-                  color: colorChip.deactive,
+                child: {
+                  mode: "svg",
+                  source: svgMaker.checkBox(colorChip.green),
+                  style: {
+                    display: "none",
+                    position: "relative",
+                    width: String(checkBoxWidth) + ea,
+                  }
                 }
               }
             ]
           });
-        }
 
-        instance.bigDoms.push(targetTong);
+          // name - index : 0
+          if (clientValueArr[i].check) {
+            clientDom.setAttribute("toggle", "off");
+            checkBoxLocalStorageObj = window.localStorage.getItem(checkBoxLocalStorageName);
+            if (checkBoxLocalStorageObj === null) {
+              checkBoxLocalStorageObj = [];
+              window.localStorage.setItem(checkBoxLocalStorageName, JSON.stringify([]));
+            } else {
+              checkBoxLocalStorageObj = JSON.parse(checkBoxLocalStorageObj);
+            }
+            if (checkBoxLocalStorageObj.includes(clientDom.getAttribute("proid"))) {
+              clientDom.setAttribute("toggle", "on");
+              clientDom.children[1].style.background = colorChip.white;
+              clientDom.children[1].firstChild.style.display = "block";
+            }
+            clientDom.addEventListener("contextmenu", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+
+              const toggle = this.getAttribute("toggle");
+              const proid = this.getAttribute("proid");
+              let thisCheckBoxLocalStorageObj;
+
+              thisCheckBoxLocalStorageObj = window.localStorage.getItem(checkBoxLocalStorageName);
+              if (thisCheckBoxLocalStorageObj === null) {
+                thisCheckBoxLocalStorageObj = [];
+                window.localStorage.setItem(checkBoxLocalStorageName, JSON.stringify([]));
+              } else {
+                thisCheckBoxLocalStorageObj = JSON.parse(thisCheckBoxLocalStorageObj);
+              }
+
+              if (toggle === "off") {
+                this.children[1].style.background = colorChip.white;
+                this.children[1].firstChild.style.display = "block";
+                this.setAttribute("toggle", "on");
+                thisCheckBoxLocalStorageObj.push(proid);
+              } else {
+                this.children[1].style.background = colorChip.gray2;
+                this.children[1].firstChild.style.display = "none";
+                this.setAttribute("toggle", "off");
+                thisCheckBoxLocalStorageObj = thisCheckBoxLocalStorageObj.filter((str) => { return str !== proid });
+              }
+
+              window.localStorage.setItem(checkBoxLocalStorageName, JSON.stringify(thisCheckBoxLocalStorageObj));
+
+            });
+
+          // status - index: 1
+          } else if (i === 1) {
+            clientDom.addEventListener("contextmenu", projectStatusUpdateEvent());
+          // partner - index: 2
+          } else if (i === 2) {
+            clientDom.addEventListener("contextmenu", projectPartnerUpdateEvent());
+          // first meeting - index: 5
+          } else if (i === 5) {
+            clientDom.addEventListener("contextmenu", projectMeetingUpdateEvent());
+          } else if (i === 7) {
+            clientDom.addEventListener("contextmenu", projectStartDateUpdateEvent());
+          } else if (i === 8) {
+            clientDom.addEventListener("contextmenu", projectEndDateUpdateEvent());
+          } else {
+            clientDom.addEventListener("contextmenu", async function (e) {
+              try {
+                e.preventDefault();
+                e.stopPropagation();
+                // pass
+              } catch (e) {
+                console.log(e);
+              }
+            });
+          }
+        }
+        instance.clientDoms.push(clientBlack);
+        if (!media[0]) {
+          instance.totalValues.push([ '-', designer ].concat(clientValueArr.map((obj) => { return obj.value })))
+        } else {
+          instance.totalValues.push([ '-', designer + "&nbsp;&nbsp;<u%" + desid + "%u>" ].concat(clientValueArr.map((obj) => { return obj.value })))
+        }
       }
+
+      clientValueArr = [
+        {
+          value: "총계",
+          color: colorChip.black,
+          check: false,
+        },
+        {
+          value: String(projects.length),
+          color: colorChip.black,
+          check: false,
+        },
+        {
+          value: '-',
+          color: colorChip.black,
+          check: false,
+        },
+        {
+          value: (latestCallNumber === 0 ? String(latestCallNumber) : "<b%" + String(latestCallNumber) + "%b>") + " <u%/%u> " + String(projects.length),
+          color: colorChip.black,
+          check: false,
+        },
+        {
+          value: String(0) + " <u%/%u> " + String(projects.length),
+          color: colorChip.black,
+          check: false,
+        },
+        {
+          value: (meetingDateNumber === 0 ? String(meetingDateNumber) : "<b%" + String(meetingDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
+          color: colorChip.black,
+          check: false,
+        },
+        {
+          value: (remainDateNumber === 0 ? String(remainDateNumber) : "<b%" + String(remainDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
+          color: colorChip.black,
+          check: false,
+        },
+        {
+          value: (startDateNumber === 0 ? String(startDateNumber) : "<b%" + String(startDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
+          color: colorChip.black,
+          check: false,
+        },
+        {
+          value: (endDateNumber === 0 ? String(endDateNumber) : "<b%" + String(endDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
+          color: colorChip.black,
+          check: false,
+        },
+        {
+          value: (sendStatusNumber === 0 ? String(sendStatusNumber) : "<b%" + String(sendStatusNumber) + "%b>") + " <u%/%u> " + String(projects.length),
+          color: colorChip.black,
+          check: false,
+        },
+        {
+          value: (sendFileNumber === 0 ? String(sendFileNumber) : "<b%" + String(sendFileNumber) + "%b>") + " <u%/%u> " + String(projects.length),
+          color: colorChip.black,
+          check: false,
+        },
+        {
+          value: (rawDateNumber === 0 ? String(rawDateNumber) : "<b%" + String(rawDateNumber) + "%b>") + " <u%/%u> " + String(projects.length),
+          color: colorChip.black,
+          check: false,
+        },
+      ];
+
+      clientBlack = createNode({
+        mother: clientTable,
+        style: {
+          display: "none",
+          position: "relative",
+          width: withOut(0, ea),
+          overflow: "hidden",
+          borderRadius: String(5) + "px",
+        }
+      });
+      for (let i = 0; i < clientValueArr.length; i++) {
+        createNode({
+          mother: clientBlack,
+          style: {
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+            background: colorChip.gray0,
+            height: String(tableBlockHeight) + ea,
+            width: i === clientColumns.length - 1 ? String(tableBlockFactorWidth) + ea : String(tableBlockFactorWidth - 1) + ea,
+            borderRight: i === clientColumns.length - 1 ?  "" : "1px solid " + colorChip.gray3,
+            },
+          children: [
+            {
+              text: clientValueArr[i].value,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                width: String(wordingWidth) + ea,
+                textAlign: "center",
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableWeight),
+                color: clientValueArr[i].color,
+                top: String(tableTextTop) + ea,
+              },
+              bold: {
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableWeight),
+                color: colorChip.red,
+              },
+              under: {
+                fontSize: String(tableSize) + ea,
+                fontWeight: String(tableWeight),
+                color: colorChip.deactive,
+              }
+            }
+          ]
+        });
+      }
+
+      instance.bigDoms.push(targetTong);
     }
   }
 
-  contentsLoad(searchMode);
+  contentsLoad(false);
 
   this.contentsLoad = contentsLoad;
 }
@@ -9983,6 +10101,7 @@ ProcessJs.prototype.searchProjects = function () {
   let searchEvent;
   let loading;
   let removeTargets;
+  let searchTarget;
 
   searchEvent = (value, e) => {
     return () => {
@@ -9994,28 +10113,37 @@ ProcessJs.prototype.searchProjects = function () {
       }
 
       if (value.trim() !== '' && value.trim() !== '.' && value.trim() !== "전체") {
-        ajaxJson({ mode: "search", value: value.trim() }, BACKHOST + "/processConsole", { equal: true }).then((serverResponse) => {
-          instance.reloadProjects(serverResponse);
-          instance.contentsLoad(true);
+
+        // ajaxJson({ mode: "search", value: value.trim() }, BACKHOST + "/processConsole", { equal: true }).then((serverResponse) => {
+        //   instance.reloadProjects(serverResponse);
+        //   instance.contentsLoad(true);
     
-          loading.remove();
+        //   loading.remove();
 
-          if (instance.clientDoms.length === 1) {
-            instance.clientDoms[0].click();
-          }
+        //   if (instance.clientDoms.length === 1) {
+        //     instance.clientDoms[0].click();
+        //   }
 
-        }).catch((err) => {
-          console.log(err);
-        });
+        // }).catch((err) => {
+        //   console.log(err);
+        // });
+
+        searchTarget = instance.designers.filter((o) => { return (new RegExp(value.trim(), "gi")).test(o.designer) })
+        if (searchTarget.length === 0) {
+          searchTarget = instance.designers.filter((o) => { return (new RegExp(value.trim(), "gi")).test(o.desid) })
+          if (searchTarget.length === 0) {
+            searchTarget = {
+              mode: "client",
+              projects: instance.projects.filter((o) => { return (new RegExp(value.trim(), "gi")).test(o.name) }),
+            };
+          }  
+        }
+        instance.contentsLoad(searchTarget);
+        loading.remove();
+
       } else {
-        ajaxJson({ mode: "init" }, BACKHOST + "/processConsole", { equal: true }).then((serverResponse) => {
-          instance.reloadProjects(serverResponse);
-          instance.contentsLoad(false);
-          loading.remove();
-
-        }).catch((err) => {
-          console.log(err);
-        });
+        instance.contentsLoad(false);
+        loading.remove();
       }
     }
   }
@@ -11347,8 +11475,10 @@ ProcessJs.prototype.launching = async function () {
       window.location.href = window.location.protocol + "//" + window.location.host + "/process";
     }
 
+    // $or: Array.from(new Set(projects.map((p) => { return p.desid }))).map((desid) => { return { desid } })
+
     matrix = await ajaxMultiple([
-      [ { noFlat: true, whereQuery: { $or: Array.from(new Set(projects.map((p) => { return p.desid }))).map((desid) => { return { desid } }) } }, BACKHOST + "/getDesigners" ],
+      [ { noFlat: true, whereQuery: {} }, BACKHOST + "/getDesigners" ],
       [ { method: "project", idArr: proidArr }, BACKHOST + "/getHistoryTotal" ],
       [ { method: "client", idArr: cliidArr }, BACKHOST + "/getHistoryTotal" ],
       [ { proidArr }, SECONDHOST + "/getProcessData" ],
@@ -11358,6 +11488,7 @@ ProcessJs.prototype.launching = async function () {
     history = Object.values(matrix[1]);
     clientHistory = Object.values(matrix[2]);
     secondRes = matrix[3];
+    designers = designers.filter((d) => { return /완료/gi.test(d.information.contract.status) })
 
     serverResponse = {
       projects,
@@ -11397,7 +11528,7 @@ ProcessJs.prototype.launching = async function () {
     this.onofflineWordsClassName = "onofflineWordsClassName";
     this.numbersExtractClassName = "numbersExtractClassName";
 
-    this.baseMaker(typeof getObj.proid === "string");
+    this.baseMaker();
     this.searchProjects();
     this.reportEvent();
     this.extractEvent();

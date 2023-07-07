@@ -1991,7 +1991,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "leading",
               "planned",
             ],
-            __color__: colorChip.red,
+            __color__: colorChip.black,
           } },
           updateValue: async (raw, target, designer) => {
             try {
@@ -2754,6 +2754,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   let exampleZoneWidth, exampleZoneMarginLeft;
   let exampleUpDownBetween;
   let exampleTextWidth, exampleTextSize, exampleTextWeight, exampleTextTextTop;
+  let exampleTextVisualLeft;
   let exampleFactorWidth, exampleFactorMargin;
   let goodBadSize, goodBadWeight, goodBadRight;
 
@@ -2814,8 +2815,8 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
 
   mobileContentsWordingSize = 3.2;
 
-  profileWidth = <%% 249, 249, 249, 249, 249 %%>;
-  profileMarginLeft = <%% 34, 34, 34, 34, 34 %%>;
+  profileWidth = <%% 239, 239, 239, 239, 239 %%>;
+  profileMarginLeft = <%% 55, 55, 55, 55, 55 %%>;
 
   profileUploadButtonRight = <%% -2, -2, -2, -2, -2 %%>;
   profileUploadButtonWidth = <%% 46, 46, 46, 46, 46 %%>;
@@ -2825,17 +2826,18 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   profileUploadButtonWeight = <%% 500, 500, 500, 500, 500 %%>;
   profileUploadButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
-  exampleZoneWidth = <%% 511, 511, 511, 511, 511 %%>;
+  exampleZoneWidth = <%% 500, 500, 500, 500, 500 %%>;
   exampleZoneMarginLeft = <%% 72, 72, 72, 72, 72 %%>;
   exampleUpDownBetween = <%% 18, 18, 18, 18, 18 %%>;
 
   exampleTextWidth = <%% 70, 70, 70, 70, 66 %%>;
-  exampleTextSize = <%% 13, 13, 13, 13, 13 %%>;
+  exampleTextSize = <%% 14, 14, 14, 14, 14 %%>;
   exampleTextWeight = <%% 700, 700, 700, 700, 700 %%>;
   exampleTextTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  exampleTextVisualLeft = <%% -2, -2, -2, -2, -2 %%>;
 
-  exampleFactorWidth = <%% 115, 115, 115, 115, 115 %%>;
-  exampleFactorMargin = <%% 29, 29, 29, 29, 29 %%>;
+  exampleFactorWidth = <%% 110, 110, 110, 110, 110 %%>;
+  exampleFactorMargin = <%% 30, 30, 30, 30, 30 %%>;
 
   goodBadSize = <%% 12, 12, 12, 12, 12 %%>;
   goodBadWeight = <%% 500, 500, 500, 500, 500 %%>;
@@ -2991,6 +2993,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
             fontWeight: String(exampleTextWeight),
             color: colorChip.black,
             top: String(exampleTextTextTop) + ea,
+            left: String(exampleTextVisualLeft) + ea,
           }
         }
       });
@@ -3740,7 +3743,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   goodBadWeight = <%% 500, 500, 500, 500, 500 %%>;
   goodBadRight = <%% -14, -14, -14, -14, -14 %%>;
 
-  introductionSize = <%% 16, 16, 16, 16, 16 %%>;
+  introductionSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
   introductionWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   leftTotalWidth = <%% 770, 770, 770, 770, 770 %%>;
@@ -3861,7 +3864,8 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
           fontWeight: String(800),
           color: colorChip.black,
           lineHeight: String(1.6),
-          marginBottom: String(8) + ea,
+          marginTop: String(7) + ea,
+          marginBottom: String(4) + ea,
         }
       },
       {

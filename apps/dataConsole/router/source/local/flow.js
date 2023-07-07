@@ -232,96 +232,182 @@ FlowJs.prototype.launching = async function () {
     // });
 
 
-    new window.Chart(canvas, {
-      type: "bar",
-      data: {
-        labels: [
-          "2021. 01",
-          "2021. 02",
-          "2021. 03",
-          "2021. 04",
-          "2021. 05",
-          "2021. 06",
-          "2021. 07",
-          "2021. 08",
-          "2021. 09",
-          "2021. 10",
-          "2021. 11",
-          "2021. 12",
-          "2022. 01",
-          "2022. 02",
-          "2022. 03",
-          "2022. 04",
-          "2022. 05",
-          "2022. 06",
-          "2022. 07",
-          "2022. 08",
-          "2022. 09",
-          "2022. 10",
-          "2022. 11",
-          "2022. 12",
-          "2023. 01",
-          "2023. 02",
-          "2023. 03",
-          "2023. 04",
-        ],
-        datasets: [
-          {
-            label: "홈리에종 웹 페이지뷰",
-            data: [
-              88,
-              75,
-              96,
-              103,
-              110,
-              104,
-              95,
-              164,
-              114,
-              130,
-              116,
-              120,
-              107,
-              86,
-              92,
-              81,
-              58,
-              82,
-              86,
-              167,
-              173,
-              150,
-              159,
-              142,
-              181,
-              145,
-              150,
-              197
-            ], 
-            borderColor: colorChip.green,
-            backgroundColor: colorChip.green,
-            borderRadius: 3,
-            borderWidth: 0,
-          },
-        ]
-      },
-      options: {
-        scales: {
-          // x: {
-          //   stacked: true,
-          // },
-          y: {
-            beginAtZero: true,
-            // stacked: true,
-          }
-        }
-      }
-    });  
+
+    // new window.Chart(canvas, {
+    //   type: "bar",
+    //   data: {
+    //     labels: [
+    //       "2021. 01",
+    //       "2021. 02",
+    //       "2021. 03",
+    //       "2021. 04",
+    //       "2021. 05",
+    //       "2021. 06",
+    //       "2021. 07",
+    //       "2021. 08",
+    //       "2021. 09",
+    //       "2021. 10",
+    //       "2021. 11",
+    //       "2021. 12",
+    //       "2022. 01",
+    //       "2022. 02",
+    //       "2022. 03",
+    //       "2022. 04",
+    //       "2022. 05",
+    //       "2022. 06",
+    //       "2022. 07",
+    //       "2022. 08",
+    //       "2022. 09",
+    //       "2022. 10",
+    //       "2022. 11",
+    //       "2022. 12",
+    //       "2023. 01",
+    //       "2023. 02",
+    //       "2023. 03",
+    //       "2023. 04",
+    //     ],
+    //     datasets: [
+    //       {
+    //         label: "홈리에종 웹 페이지뷰",
+    //         data: [
+    //           88,
+    //           75,
+    //           96,
+    //           103,
+    //           110,
+    //           104,
+    //           95,
+    //           164,
+    //           114,
+    //           130,
+    //           116,
+    //           120,
+    //           107,
+    //           86,
+    //           92,
+    //           81,
+    //           58,
+    //           82,
+    //           86,
+    //           167,
+    //           173,
+    //           150,
+    //           159,
+    //           142,
+    //           181,
+    //           145,
+    //           150,
+    //           197
+    //         ], 
+    //         borderColor: colorChip.green,
+    //         backgroundColor: colorChip.green,
+    //         borderRadius: 3,
+    //         borderWidth: 0,
+    //       },
+    //     ]
+    //   },
+    //   options: {
+    //     scales: {
+    //       // x: {
+    //       //   stacked: true,
+    //       // },
+    //       y: {
+    //         beginAtZero: true,
+    //         // stacked: true,
+    //       }
+    //     }
+    //   }
+    // });  
+
+    // new window.Chart(canvas, {
+    //   type: "bar",
+    //   data: {
+    //     labels: [ "3D", "도면", "콜라주", "엑셀", "피피티" ],
+    //     datasets: [
+    //       {
+    //         axis: 'y',
+    //         label: "문의자",
+    //         data: [ 6, 2, 8, 7, 4 ],
+    //         borderColor: colorChip.softGreen,
+    //         backgroundColor: colorChip.softGreen,
+    //         borderRadius: 3,
+    //         borderWidth: 0,
+    //       },
+    //     ]
+    //   },
+    //   options: {
+    //     indexAxis: 'y',
+    //     scales: {
+    //       x: {
+    //         min: 0,
+    //         max: 10,
+    //       }
+    //     }
+    //   }
+    // });
+
+    // new window.Chart(canvas, {
+    //   type: "bar",
+    //   data: {
+    //     labels: [ "빌트인", "가구", "커튼", "베딩" ],
+    //     datasets: [
+    //       {
+    //         axis: 'y',
+    //         label: "문의자",
+    //         data: [ 3, 9, 1, 5 ],
+    //         borderColor: colorChip.softGreen,
+    //         backgroundColor: colorChip.softGreen,
+    //         borderRadius: 3,
+    //         borderWidth: 0,
+    //       },
+    //     ]
+    //   },
+    //   options: {
+    //     indexAxis: 'y',
+    //     scales: {
+    //       x: {
+    //         min: 0,
+    //         max: 10,
+    //       }
+    //     }
+    //   }
+    // });
+
+
+    // new window.Chart(canvas, {
+    //   type: "bar",
+    //   data: {
+    //     labels: [ "활기찬", "친밀한", "유쾌한", "차분한", "정밀한", "꼼꼼한", "리드하는", "계획적인", ],
+    //     datasets: [
+    //       {
+    //         axis: 'y',
+    //         label: "문의자",
+    //         data: [ 2, 7, 4, 9, 1, 7, 5, 4 ],
+    //         borderColor: colorChip.black,
+    //         backgroundColor: colorChip.black,
+    //         borderRadius: 3,
+    //         borderWidth: 0,
+    //       },
+    //     ]
+    //   },
+    //   options: {
+    //     indexAxis: 'y',
+    //     scales: {
+    //       x: {
+    //         min: 0,
+    //         max: 10,
+    //       }
+    //     }
+    //   }
+    // });
+
+    // const rows = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { desid: "d1701_aa01s" } }, BACKHOST + "/getDesigners", { equal: true });
+    // const [ designer ] = rows;
+
+    // console.log(rows);
 
 
 
-
-    
   } catch (e) {
     GeneralJs.ajax("message=" + e.message + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
