@@ -464,7 +464,7 @@ GeneralJs.prototype.belowButtons = {
 
 GeneralJs.prototype.totalContents = document.getElementById("totalcontents");
 
-GeneralJs.prototype.generalCss = function () {
+GeneralJs.prototype.generalCss = function (justTextMode = false) {
   const styleTag = document.querySelector("style");
   const css = `
   @font-face {
@@ -819,7 +819,12 @@ GeneralJs.prototype.generalCss = function () {
   .mocenter{margin-left:auto;margin-right:auto;}
 
   `;
-  styleTag.insertAdjacentHTML(`beforeend`, css);
+  if (justTextMode) {
+    return css;
+  } else {
+    styleTag.insertAdjacentHTML(`beforeend`, css);
+    return "";
+  }
 }
 
 GeneralJs.prototype.returnCircle = function (cssString, color) {
