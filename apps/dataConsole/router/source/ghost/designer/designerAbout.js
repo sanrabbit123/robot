@@ -1889,7 +1889,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       notice: [],
     },
     {
-      title: "레벨",
+      title: "보조 수단",
       whiteType: 1,
       contents: [
         {
@@ -1931,8 +1931,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       ],
       notice: [
         {
-          title: "경향성 체크",
-          body: "스타일 경향에 대한 값들은 모두 고객님들께 노출되오니 정확하게 기입해주세요!",
+          title: "보조 수단 레벨 체크",
+          body: "스타일링을 하는 데 있어서 보조적인 역할을 하는 능력들의 레벨값입니다.",
         },
       ],
     },
@@ -1983,8 +1983,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       ],
       notice: [
         {
-          title: "경향성 체크",
-          body: "스타일 경향에 대한 값들은 모두 고객님들께 노출되오니 정확하게 기입해주세요!",
+          title: "개인 성향 체크",
+          body: "고객님과 스타일링을 진행하는 데 있어, 개인적인 성격 특성을 수치로 기입하는 칸입니다.",
         },
       ],
     },
@@ -3195,7 +3195,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   const mainContents = [
     {
       contents: [
-        "디자이너님의 대표 페이퍼 워크 작업이나 작업하고 있는 사진을 업로드 해주세요. 8장의 작업 사진은 추천서에 노출되어 고객님께 어필하는 중요 포인트가 됩니다. 자신을 어필할 수 있는 대표적인 8장의 사진을 꼭 올려주세요!"
+        "디자이너님의 대표 페이퍼 워크 작업이나 작업하고 있는 사진을 업로드 해주세요. 4장의 작업 사진은 추천서에 노출되어 고객님께 어필하는 중요 포인트가 됩니다. 자신을 어필할 수 있는 대표적인 4장의 사진을 꼭 올려주세요!"
       ],
     },
   ];
@@ -3323,16 +3323,17 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   profileUploadButtonWeight = <%% 500, 500, 500, 500, 500 %%>;
   profileUploadButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
-  exampleZoneWidth = <%% 350, 350, 350, 350, 350 %%>;
+  exampleZoneWidth = <%% 280, 280, 280, 280, 280 %%>;
   exampleZoneMarginLeft = <%% 72, 72, 72, 72, 72 %%>;
   exampleUpDownBetween = <%% 18, 18, 18, 18, 18 %%>;
 
   exampleTextWidth = <%% 70, 70, 70, 70, 66 %%>;
-  exampleTextSize = <%% 13, 13, 13, 13, 13 %%>;
+  exampleTextSize = <%% 14, 14, 14, 14, 14 %%>;
   exampleTextWeight = <%% 700, 700, 700, 700, 700 %%>;
   exampleTextTextTop = <%% 0, 0, 0, 0, 0 %%>;
+  exampleTextLeft = <%% -48, -48, -48, -48, -48 %%>;
 
-  exampleFactorWidth = <%% 120, 120, 120, 120, 120 %%>;
+  exampleFactorWidth = <%% 190, 190, 190, 190, 190 %%>;
   exampleFactorMargin = <%% 28, 28, 28, 28, 28 %%>;
 
   goodBadSize = <%% 12, 12, 12, 12, 12 %%>;
@@ -3347,8 +3348,6 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   blankNumberTop = -2;
 
   factorWidth = 272;
-
-  exampleTextLeft = 24;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -3437,6 +3436,56 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
       position: "relative",
       width: String(exampleZoneWidth) + ea,
       height: withOut(0, ea),
+      flexDirection: "column",
+      alignItems: "end",
+      justifyContent: "start",
+    }
+  });
+
+  createNode({
+    mother: exampleZone,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: String(exampleFactorWidth) + ea,
+      height: "calc(calc(100% - " + String(blankZoneInnerBetween * 1) + ea + ") / 2)",
+      marginBottom: String(blankZoneInnerBetween) + ea,
+      backgroundImage: "url('" + DesignerAboutJs.binaryPath + "/bestExample.jpg" + "')",
+      backgroundPosition: "50% 50%",
+      backgroundSize: "auto 100%",
+      borderRadius: String(5) + "px",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    child: {
+      text: "<예시>",
+      style: {
+        display: "inline-block",
+        position: "absolute",
+        fontSize: String(exampleTextSize) + ea,
+        fontWeight: String(exampleTextWeight),
+        color: colorChip.black,
+        top: String(0) + ea,
+        left: String(exampleTextLeft) + ea,
+      }
+    }
+  });
+
+  createNode({
+    mother: exampleZone,
+    style: {
+      display: "flex",
+      position: "relative",
+      width: String(exampleFactorWidth) + ea,
+      height: "calc(calc(100% - " + String(blankZoneInnerBetween * 1) + ea + ") / 2)",
+      backgroundImage: "url('" + DesignerAboutJs.binaryPath + "/bestExample2.jpg" + "')",
+      backgroundPosition: "50% 50%",
+      backgroundSize: "auto 100%",
+      borderRadius: String(5) + "px",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
     }
   });
 
@@ -3903,6 +3952,33 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
               background: desktop ? colorChip.white : colorChip.gray1,
               paddingRight: String(numberRight) + ea,
               color: colorChip.black,
+            }
+          },
+          {
+            style: {
+              display: "flex",
+              position: "absolute",
+              bottom: String(2) + ea,
+              right: String(0) + ea,
+              width: String(56) + ea,
+              height: String(24) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.green,
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            child: {
+              text: "edit",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(12) + ea,
+                fontWeight: String(500),
+                fontFamily: "graphik",
+                fontStyle: "italic",
+                color: colorChip.white,
+                top: String(-2) + ea,
+              }
             }
           }
         ]
