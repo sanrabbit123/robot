@@ -796,6 +796,16 @@ Robot.prototype.magazineMaker = function (mid) {
   app.magazineMaker(mid).catch((err) => { console.log(err); })
 }
 
+Robot.prototype.designerTendencySync = async function () {
+  try {
+    const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
+    const work = new BackWorker();
+    await work.designerTendencySync();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
@@ -805,9 +815,13 @@ Robot.prototype.launching = async function () {
     re = await consoleQ(`Choose commands : 1.contents 2.portfolio 3.magazine\n`);
 
     if (re === "contents" || re === "1") {
-      re2 = await consoleQ(`Choose commands : 1.resource 2.google\n`);
-      re3 = await consoleQ(`Porfolio number?\n`);
-      this.contentsMaker(re2, re3);
+      re2 = await consoleQ(`Choose commands : 1.resource 2.google 3.tendency\n`);
+      if (re2 === '3' || re2 === 3) {
+        await this.designerTendencySync();
+      } else {
+        re3 = await consoleQ(`Porfolio number?\n`);
+        this.contentsMaker(re2, re3);
+      }
 
     } else if (re === "portfolio" || re === "2") {
       re2 = await consoleQ(`Choose commands : 1.portfolio 2.ghost\n`);

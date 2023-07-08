@@ -1065,6 +1065,60 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
   }
 }
 
+BackWorker.prototype.designerTendencySync = async function () {
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongoinfo, equalJson } = this.mother;
+  try {
+    const selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+    await selfMongo.connect();
+    const contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
+    const designers = await back.getDesignersByQuery({}, { selfMongo });
+    let thisTendency;
+    let num;
+    let whereQuery, updateQuery;
+
+    for (let designer of designers) {
+      thisTendency = designer.analytics.styling.tendency.toNormal();
+      num = 0;
+      for (let { desid, contents } of contentsArr) {
+        if (designer.desid === desid) {
+          for (let key in thisTendency) {
+            for (let key2 in thisTendency[key]) {
+              thisTendency[key][key2] = thisTendency[key][key2] + contents.portfolio.detailInfo.tendency[key][key2];
+            }
+          }
+          num++;
+        }
+      }
+
+      if (num !== 0) {
+        for (let key in thisTendency) {
+          for (let key2 in thisTendency[key]) {
+            thisTendency[key][key2] = Math.round(thisTendency[key][key2] / (num + 1));
+            if (thisTendency[key][key2] === 0) {
+              thisTendency[key][key2] = 1;
+            }
+            if (thisTendency[key][key2] >= 10) {
+              thisTendency[key][key2] = 10;
+            }
+          }
+        }
+      }
+      whereQuery = { desid: designer.desid };
+      updateQuery = {};
+      updateQuery["analytics.styling.tendency"] = equalJson(JSON.stringify(thisTendency));
+      await back.updateDesigner([ whereQuery, updateQuery ], { selfMongo });
+      console.log(whereQuery, updateQuery);
+    }
+
+    await selfMongo.close();
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BackWorker.prototype.designerFeeTable = async function (desid, option = { selfMongo: null, selfLocalMongo: null }) {
   if (typeof desid !== "string") {
     throw new Error("invalid input");

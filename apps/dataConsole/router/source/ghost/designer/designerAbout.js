@@ -1893,19 +1893,21 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       whiteType: 1,
       contents: [
         {
-          property: "페이퍼 레벨",
+          property: "보조 수단 레벨",
           returnValue: (designer) => { return {
             modeling: { name: "3D", value: designer.analytics.styling.tendency.style.modern },
             plan: { name: "도면", value: designer.analytics.styling.tendency.style.classic },
             collage: { name: "콜라주", value: designer.analytics.styling.tendency.style.natural },
             excel: { name: "엑셀", value: designer.analytics.styling.tendency.style.mixmatch },
-            powerpoint: { name: "피피티", value: designer.analytics.styling.tendency.style.scandinavian },
+            furniture: { name: "가구 디자인", value: designer.analytics.styling.tendency.texture.whiteWood },
+            fabric: { name: "패브릭 제작", value: designer.analytics.styling.tendency.texture.darkWood },
             __order__: [
               "modeling",
               "plan",
               "collage",
               "excel",
-              "powerpoint",
+              "furniture",
+              "fabric",
             ],
             __color__: colorChip.yellow,
           } },
@@ -1918,38 +1920,6 @@ DesignerAboutJs.prototype.contentsCenter = function () {
 
               designer.analytics.styling.tendency.style[target] = raw;
               updateQuery["analytics.styling.tendency.style." + target] = raw;
-
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-
-            } catch (e) {
-              console.log(e);
-            }
-          },
-        },
-        {
-          property: "제작 레벨",
-          returnValue: (designer) => { return {
-            builtin: { name: "빌트인", value: designer.analytics.styling.tendency.texture.darkWood },
-            furniture: { name: "가구", value: designer.analytics.styling.tendency.texture.whiteWood },
-            curtain: { name: "커튼", value: designer.analytics.styling.tendency.texture.coating },
-            bedding: { name: "베딩", value: designer.analytics.styling.tendency.texture.metal },
-            __order__: [
-              "builtin",
-              "furniture",
-              "curtain",
-              "bedding",
-            ],
-            __color__: colorChip.yellow,
-          } },
-          updateValue: async (raw, target, designer) => {
-            try {
-              let whereQuery, updateQuery;
-
-              whereQuery = { desid };
-              updateQuery = {};
-
-              designer.analytics.styling.tendency.texture[target] = raw;
-              updateQuery["analytics.styling.tendency.texture." + target] = raw;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
@@ -3353,7 +3323,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   profileUploadButtonWeight = <%% 500, 500, 500, 500, 500 %%>;
   profileUploadButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
-  exampleZoneWidth = <%% 0, 0, 0, 0, 0 %%>;
+  exampleZoneWidth = <%% 350, 350, 350, 350, 350 %%>;
   exampleZoneMarginLeft = <%% 72, 72, 72, 72, 72 %%>;
   exampleUpDownBetween = <%% 18, 18, 18, 18, 18 %%>;
 
@@ -3427,16 +3397,16 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
     }
   });
 
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 4; i++) {
     createNode({
       mother: blankZone,
       style: {
         display: "inline-flex",
         position: "relative",
-        width: "calc(calc(100% - " + String(blankZoneInnerBetween * 3) + ea + ") / 4)",
+        width: "calc(calc(100% - " + String(blankZoneInnerBetween * 1) + ea + ") / 2)",
         height: "calc(calc(100% - " + String(blankZoneInnerBetween * 1) + ea + ") / 2)",
-        marginBottom: String(i / 4 < 1 ? blankZoneInnerBetween : 0) + ea,
-        marginRight: String(i % 4 === 3 ? 0 : blankZoneInnerBetween) + ea,
+        marginBottom: String(i / 2 < 1 ? blankZoneInnerBetween : 0) + ea,
+        marginRight: String(i % 2 === 1 ? 0 : blankZoneInnerBetween) + ea,
         background: colorChip.green,
         borderRadius: String(5) + "px",
         flexDirection: "row",
@@ -3459,6 +3429,16 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
       }
     })
   }
+  
+  exampleZone = createNode({
+    mother: photoZone,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: String(exampleZoneWidth) + ea,
+      height: withOut(0, ea),
+    }
+  });
 
   block = createNode({
     mother: whiteTong,
@@ -3601,7 +3581,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   const mainContents = [
     {
       contents: [
-        "디자이너님이 홈리에종 홈페이지와 추천서에 소개되는 모습입니다. 대표 색상, 대표 공간 사진을 지정해주시고, 소개글을 작성해주세요! 고객님들께서 보시게 되는 디자이너님의 첫 인상입니다."
+        "디자이너님이 홈리에종 홈페이지와 추천서에 소개되는 모습입니다. 프로필 사진 옆에 있는 소개글을 클릭하여 디자이너님만의 소개글로 작성해주세요! 고객님들께서 보시게 되는 디자이너님의 첫 인상입니다."
       ],
     },
   ];
@@ -3796,7 +3776,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
       width: String(profileWidth) + ea,
       height: withOut(0, ea),
       marginRight: String(profileMarginLeft) + ea,
-      paddingLeft: String(profileWidth) + ea,
+      paddingLeft: String(profileWidth / 2) + ea,
     },
     child: {
       style: {
@@ -3823,9 +3803,12 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
       width: String(profileWidth) + ea,
       height: withOut(0, ea),
       borderRadius: String(profileWidth) + ea,
-      background: "#b78a64",
-      left: String(0),
+      backgroundImage: "url('" + FRONTHOST + "/middle/index/slide0_0.jpg" + "')",
+      backgroundPosition: "50% 50%",
+      backgroundSize: "auto 102%",
+      left: String(0) + ea,
       top: String(0),
+      opacity: String(0.7),
     }
   });
 
@@ -3838,10 +3821,9 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
       width: String(profileWidth) + ea,
       height: withOut(0, ea),
       borderRadius: String(profileWidth) + ea,
-      backgroundImage: "url('" + FRONTHOST + "/middle/index/slide0_0.jpg" + "')",
-      backgroundPosition: "50% 50%",
-      backgroundSize: "auto 102%",
-      left: String(profileWidth / 2) + ea,
+      background: colorChip.gradientGreen,
+      "mix-blend-mode": "multiply",
+      left: String(0) + ea,
       top: String(0),
     }
   });
@@ -3911,7 +3893,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
         },
         children: [
           {
-            text: "대표 색상 지정, 소개글 작성",
+            text: "소개글 작성",
             style: {
               position: "relative",
               display: "inline-block",
