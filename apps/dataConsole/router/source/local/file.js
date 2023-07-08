@@ -766,6 +766,7 @@ FileJs.prototype.baseMaker = function () {
         }
       },
     },
+    /*
     {
       text: "엑셀 만들기",
       event: async function (e) {
@@ -928,6 +929,7 @@ FileJs.prototype.baseMaker = function () {
         }
       }
     },
+    */
     {
       text: "시트 만들기",
       event: async function (e) {
@@ -1144,6 +1146,7 @@ FileJs.prototype.baseMaker = function () {
         }
       }
     },
+    /*
     {
       text: "노션 만들기",
       event: async function (e) {
@@ -1252,6 +1255,7 @@ FileJs.prototype.baseMaker = function () {
         }
       }
     },
+    */
     {
       text: "다이어그램 만들기",
       event: async function (e) {
