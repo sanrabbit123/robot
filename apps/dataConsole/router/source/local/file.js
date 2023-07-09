@@ -1404,6 +1404,41 @@ FileJs.prototype.baseMaker = function () {
       }
     },
     {
+      text: "모듈 링크 복사",
+      event: async function (e) {
+        try {
+          const loading = instance.mother.grayLoading();
+          let targetPath;
+          if (instance.selected.length === 0) {
+            targetPath = instance.path;
+          } else {
+            targetPath = instance.selected[0].getAttribute("absolute");
+          }
+          loading.remove();
+          await window.navigator.clipboard.writeText(window.location.protocol + "//" + window.location.host + "/file?dataonly=true&entire=true&direct=" + window.encodeURIComponent(targetPath));
+          instance.mother.greenAlert(`클립보드에 저장되었습니다!`);
+          removeByClass(contextmenuClassName);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      visible: async function (e) {
+        try {
+          if (instance.selected.length === 0) {
+            return true;
+          } else {
+            if (instance.selected.length > 1) {
+              return false;
+            }
+            return (instance.selected[0].getAttribute("kind") === "folder");
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      }
+    },
+    {
       text: "드라이브 열기",
       event: async function (e) {
         try {
