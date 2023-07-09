@@ -28,7 +28,7 @@ FlowJs.prototype.calendarRender = async function () {
     calendarDateArr = [
       {
         contents: {
-          color: colorChip.red,
+          color: colorChip.yellow,
           description: "",
           title: "오늘",
         },
@@ -36,6 +36,39 @@ FlowJs.prototype.calendarRender = async function () {
           start: new Date(),
           end: new Date(),
         }
+      },
+      {
+        contents: {
+          color: colorChip.green,
+          description: "",
+          title: "프로필, 작업물 업로드 기능 backend 구축",
+        },
+        date: {
+          start: new Date(2023, 6, 10),
+          end: new Date(2023, 6, 12),
+        },
+      },
+      {
+        contents: {
+          color: colorChip.green,
+          description: "",
+          title: "경력 블록 CRUD 기능 구축",
+        },
+        date: {
+          start: new Date(2023, 6, 11),
+          end: new Date(2023, 6, 13),
+        },
+      },
+      {
+        contents: {
+          color: colorChip.red,
+          description: "",
+          title: "서비스, 디자이너 어필 페이지 디자인",
+        },
+        date: {
+          start: new Date(2023, 6, 13),
+          end: new Date(2023, 6, 14),
+        },
       },
     ];
 

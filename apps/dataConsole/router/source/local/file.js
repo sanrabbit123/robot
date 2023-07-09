@@ -3442,6 +3442,22 @@ FileJs.prototype.launching = async function () {
         } else {
           startPoint = rootToken + "/drive/# 홈리에종";
         }
+      } else if (getObj.mode === "id") {
+        if (typeof getObj.id === "string") {
+          const loading = await this.mother.loadingRun();
+          loading.style.top = "calc(calc(" + withOut(loadingIconVisualTop, ea) + " / 2) - " + String(loadingIconWidth / 2) + ea + ")";
+          pathResponse = await ajaxJson({ id: getObj.id }, S3HOST + ":3000/getPathFromId");
+
+          startPoint = rootToken + "/drive/# 홈리에종";
+
+          if (typeof pathResponse === "object" && pathResponse !== null && typeof pathResponse.path === "string") {
+            this.path = pathResponse.path;
+            startPoint = pathResponse.path;
+          }
+          loading.parentElement.removeChild(loading);
+        } else {
+          startPoint = rootToken + "/drive/# 홈리에종";
+        }
       } else {
         startPoint = rootToken + "/drive/# 홈리에종";
       }
