@@ -3409,6 +3409,9 @@ FileJs.prototype.launching = async function () {
     if (window.localStorage.getItem(this.latestPathLocalSaveHomeLiaisonKeyName) !== null && typeof window.localStorage.getItem(this.latestPathLocalSaveHomeLiaisonKeyName) === "string") {
       this.path = window.localStorage.getItem(this.latestPathLocalSaveHomeLiaisonKeyName);
     }
+    if (typeof getObj.direct === "string") {
+      this.path = window.decodeURIComponent(getObj.direct);
+    }
 
     rootToken = "__samba__";
     startPoint = rootToken + "/drive/# 홈리에종";
