@@ -1607,7 +1607,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
               }, (rsp) => {
                 try {
                   if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
-                    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid + "&imp_uid=" + rsp.imp_uid + "&merchant_uid=" + formValue.oid + "&imp_success=true";
+                    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid + "&imp_uid=" + rsp.imp_uid + "&merchant_uid=" + formValue.oid + "&imp_success=true&request=" + String(instance.requestNumber);
                   } else {
                     window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
                   }
@@ -1663,7 +1663,7 @@ UniversalEstimationJs.prototype.insertPaymentBox = function () {
                 buyer_email: instance.client.email,
                 buyer_name: instance.client.name,
                 buyer_tel: instance.client.phone,
-                m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid,
+                m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid + "&request=" + String(instance.requestNumber),
               }, (rsp) => {});
             }
 

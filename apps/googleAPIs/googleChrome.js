@@ -237,7 +237,7 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
   }
 }
 
-GoogleChrome.prototype.scriptChain = async function (map, between = 2000) {
+GoogleChrome.prototype.scriptChain = async function (map, between = 1000) {
   if (!Array.isArray(map)) {
     throw new Error("invalid input => [ { link, async func } ]");
   }

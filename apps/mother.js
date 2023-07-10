@@ -556,7 +556,7 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
       } else {
         form = new FormData();
         for (let key in data) {
-          if (typeof data[key] === "object") {
+          if (typeof data[key] === "object" && data[key] !== null) {
             if (data[key].constructor.name === "ReadStream") {
               if (/\.png$/gi.test(data[key].path)) {
                 form.append(key, data[key], { filename: data[key].path.split("/")[data[key].path.split("/").length - 1], contentType: "image/png" });
@@ -570,6 +570,8 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
             } else {
               form.append(key, JSON.stringify(data[key]));
             }
+          } else if (data[key] === null) {
+            form.append(key, "");
           } else {
             form.append(key, data[key]);
           }
