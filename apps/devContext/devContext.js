@@ -474,8 +474,8 @@ DevContext.prototype.launching = async function () {
 
 
 
+    console.log(await requestSystem("https://" + address.secondinfo.host + ":" + String(3000) + "/cashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } }))
 
-    
 
 
 

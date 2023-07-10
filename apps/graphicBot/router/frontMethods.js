@@ -141,6 +141,7 @@ FrontMethods.prototype.addFrontMethods = async function () {
 
       await ajaxPromise(data, HOSTCONST + "/clickElement");
 
+      return data;
     }
 
     frontGeneral.crossIframe = async function (dom) {
