@@ -228,7 +228,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
   const { desid } = designer;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, autoHypenPhone } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, autoHypenPhone, equalJson } = GeneralJs;
   let contents;
 
   contents = [
@@ -739,22 +739,166 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           updateValue: async (raw, designer) => {
             try {
+              const pipe = "&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;";
+              const titleArr = [
+                "회사",
+                "직무",
+                "기간",
+              ];
+              const careerData = equalJson(JSON.stringify(designer.information.business.career.detail));
+              careerData.sort((a, b) => {
+                return b.date.start.valueOf() - a.date.start.valueOf();
+              });
+              let newData, whereQuery, updateQuery, endMatrix;
+              let newValue;
+              let company;
+              let team;
+              let role;
+              let start;
+              let end;
+
+              if (raw.mode === "delete") {
+                newData = [];
+                for (let i = 0; i < careerData.length; i++) {
+                  if (i !== raw.index) {
+                    newData.push(careerData[i]);
+                  }
+                }
+  
+                instance.designer.information.business.career.detail = newData;
+                endMatrix = newData.map((obj) => {
+                  const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
+                  const startDate = obj.date.start;
+                  const delta = endDate.valueOf() - startDate.valueOf();
+                  const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
+                  const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월";
+                  return {
+                    title: titleArr,
+                    value: [
+                      obj.company + pipe + obj.team,
+                      obj.role,
+                      rangeWords
+                    ]
+                  };
+                });
+                instance.careerBlocksRender(endMatrix, raw.tong);
+  
+                whereQuery = { desid: designer.desid };
+                updateQuery = {};
+                updateQuery["information.business.career.detail"] = newData;
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              } else if (raw.mode === "update") {
+                newData = [];
+                for (let i = 0; i < careerData.length; i++) {
+                  if (i !== raw.index) {
+                    newData.push(careerData[i]);
+                  }
+                }
+
+                company = raw.value[0][1];
+                team = raw.value[1][1];
+                role = raw.value[2][1];
+                start = raw.value[3][1];
+                end = raw.value[4][1];
+
+                newValue = {
+                  company,
+                  team,
+                  role,
+                  date: { start, end }
+                };
+
+                newData.push(newValue);
+                newData.sort((a, b) => {
+                  return b.date.start.valueOf() - a.date.start.valueOf();
+                });
+
+                instance.designer.information.business.career.detail = newData;
+                endMatrix = newData.map((obj) => {
+                  const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
+                  const startDate = obj.date.start;
+                  const delta = endDate.valueOf() - startDate.valueOf();
+                  const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
+                  const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월";
+                  return {
+                    title: titleArr,
+                    value: [
+                      obj.company + pipe + obj.team,
+                      obj.role,
+                      rangeWords
+                    ]
+                  };
+                });
+                instance.careerBlocksRender(endMatrix, raw.tong);
+  
+                whereQuery = { desid: designer.desid };
+                updateQuery = {};
+                updateQuery["information.business.career.detail"] = newData;
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              }
 
             } catch (e) {
-
+              console.log(e);
             }
           },
-          plusValue: async (matrix, designer) => {
+          plusValue: async (matrix, designer, tong) => {
             try {
+              const pipe = "&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;";
+              const titleArr = [
+                "회사",
+                "직무",
+                "기간",
+              ];
+              let company, team, role, start, end;
+              let block;
+              let original;
+              let whereQuery, updateQuery;
+              let endMatrix;
 
+              company = matrix[0][1];
+              team = matrix[1][1];
+              role = matrix[2][1];
+              start = matrix[3][1];
+              end = matrix[4][1];
 
-              console.log(matrix);
+              block = {
+                company,
+                team,
+                role,
+                date: { start, end }
+              };
 
+              original = equalJson(JSON.stringify(designer.information.business.career.detail));
+              original.push(block);
+              original.sort((a, b) => { return b.date.start.valueOf() - a.date.start.valueOf() });
+
+              instance.designer.information.business.career.detail = original;
+              endMatrix = original.map((obj) => {
+                const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
+                const startDate = obj.date.start;
+                const delta = endDate.valueOf() - startDate.valueOf();
+                const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
+                const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월";
+                return {
+                  title: titleArr,
+                  value: [
+                    obj.company + pipe + obj.team,
+                    obj.role,
+                    rangeWords
+                  ]
+                };
+              });
+              instance.careerBlocksRender(endMatrix, tong);
+
+              whereQuery = { desid: designer.desid };
+              updateQuery = {};
+              updateQuery["information.business.career.detail"] = original;
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
-
+              console.log(e);
             }
-          }
+          },
         },
         {
           property: "학력 상세",
@@ -791,19 +935,143 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
           updateValue: async (raw, designer) => {
             try {
+              const pipe = "&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;";
+              const titleArr = [
+                "학교",
+                "전공",
+                "졸업",
+              ];
+              const schoolData = equalJson(JSON.stringify(designer.information.business.career.school));
+              schoolData.sort((a, b) => {
+                return b.date.start.valueOf() - a.date.start.valueOf();
+              });
+              let newData, whereQuery, updateQuery, endMatrix;
+              let newValue;
+              let school;
+              let major;
+              let start;
+              let end;
+
+              if (raw.mode === "delete") {
+                newData = [];
+                for (let i = 0; i < schoolData.length; i++) {
+                  if (i !== raw.index) {
+                    newData.push(schoolData[i]);
+                  }
+                }
+  
+                instance.designer.information.business.career.school = newData;
+                endMatrix = newData.map((obj) => {
+                  return {
+                    title: titleArr,
+                    value: [
+                      obj.school,
+                      obj.major,
+                      ((obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재학중" : dateToString(obj.date.end).split("-").slice(0, 2).join("년 ") + "월"),
+                    ]
+                  };
+                });
+                instance.careerBlocksRender(endMatrix, raw.tong);
+  
+                whereQuery = { desid: designer.desid };
+                updateQuery = {};
+                updateQuery["information.business.career.school"] = newData;
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              } else if (raw.mode === "update") {
+                newData = [];
+                for (let i = 0; i < schoolData.length; i++) {
+                  if (i !== raw.index) {
+                    newData.push(schoolData[i]);
+                  }
+                }
+  
+                school = raw.value[0][1];
+                major = raw.value[1][1];
+                start = raw.value[2][1];
+                end = raw.value[3][1];
+
+                newValue = {
+                  school,
+                  major,
+                  date: { start, end }
+                };
+
+                newData.push(newValue);
+                newData.sort((a, b) => {
+                  return b.date.start.valueOf() - a.date.start.valueOf();
+                });
+
+                instance.designer.information.business.career.school = newData;
+                endMatrix = newData.map((obj) => {
+                  return {
+                    title: titleArr,
+                    value: [
+                      obj.school,
+                      obj.major,
+                      ((obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재학중" : dateToString(obj.date.end).split("-").slice(0, 2).join("년 ") + "월"),
+                    ]
+                  };
+                });
+                instance.careerBlocksRender(endMatrix, raw.tong);
+  
+                whereQuery = { desid: designer.desid };
+                updateQuery = {};
+                updateQuery["information.business.career.school"] = newData;
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              }
 
             } catch (e) {
-
+              console.log(e);
             }
           },
-          plusValue: async (matrix, designer) => {
+          plusValue: async (matrix, designer, tong) => {
             try {
+              const titleArr = [
+                "학교",
+                "전공",
+                "졸업",
+              ];
+              let school, major, start, end;
+              let block;
+              let original;
+              let whereQuery, updateQuery;
+              let endMatrix;
 
-              console.log(matrix);
+              school = matrix[0][1];
+              major = matrix[1][1];
+              start = matrix[2][1];
+              end = matrix[3][1];
 
+              block = {
+                school,
+                major,
+                date: { start, end }
+              };
+
+              original = equalJson(JSON.stringify(designer.information.business.career.school));
+              original.push(block);
+              original.sort((a, b) => { return b.date.start.valueOf() - a.date.start.valueOf() });
+
+              instance.designer.information.business.career.school = original;
+              endMatrix = original.map((obj) => {
+                return {
+                  title: titleArr,
+                  value: [
+                    obj.school,
+                    obj.major,
+                    ((obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재학중" : dateToString(obj.date.end).split("-").slice(0, 2).join("년 ") + "월"),
+                  ]
+                };
+              });
+              instance.careerBlocksRender(endMatrix, tong);
+
+              whereQuery = { desid: designer.desid };
+              updateQuery = {};
+              updateQuery["information.business.career.school"] = original;
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
-
+              console.log(e);
             }
           }
         },
@@ -3323,7 +3591,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   profileUploadButtonWeight = <%% 500, 500, 500, 500, 500 %%>;
   profileUploadButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
-  exampleZoneWidth = <%% 280, 280, 280, 280, 280 %%>;
+  exampleZoneWidth = <%% 290, 290, 290, 290, 290 %%>;
   exampleZoneMarginLeft = <%% 72, 72, 72, 72, 72 %%>;
   exampleUpDownBetween = <%% 18, 18, 18, 18, 18 %%>;
 
@@ -4091,6 +4359,9 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   let careerBlockGrayOuterMargin;
   let plusSize;
   let plusTextTop;
+  let careerBlocksRender;
+  let blockCancelWidth, blockCancelTop;
+  let plusBlockEvent;
 
   blockHeight = <%% 22, 21, 21, 19, (isIphone() ? 5.2 : 4.9) %%>;
   blockMarginBottom = <%% 16, 15, 15, 12, 2.5 %%>;
@@ -4132,6 +4403,177 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   careerBlockInnerMargin = <%% 6, 6, 6, 6, 6 %%>;
   careerBlockInnerMarginSmall = <%% 2, 2, 2, 2, 2 %%>;
   careerBlockSize = <%% 13, 13, 13, 13, 13 %%>;
+
+  blockCancelWidth = <%% 12, 12, 12, 12, 12 %%>;
+  blockCancelTop = <%% 14, 14, 14, 14, 14 %%>;
+
+  plusBlockEvent = (mode, index = -1) => {
+    return async function (e) {
+      try {
+        const x = Number(this.getAttribute("x"));
+        const z = Number(this.getAttribute("z"));
+        const valueTargets = instance.contents[x].contents[z].renderValue("");
+        let valueMatrix;
+        let tempArr;
+        let tempValue;
+  
+        valueMatrix = [];
+  
+        for (let obj of valueTargets) {
+          tempArr = [];
+          if (obj.type === "string") {
+            tempArr.push(obj.name);
+            do {
+              tempValue = await GeneralJs.prompt(obj.name + "명을 알려주세요!");
+              if (typeof tempValue !== "string") {
+                throw new Error("cancel");
+              }
+            } while (tempValue.trim() === "")
+            tempArr.push(tempValue.trim());
+          } else if (obj.type === "date") {
+            tempArr.push(obj.name);
+            do {
+              tempValue = await GeneralJs.promptDate(obj.name + "을 알려주세요!", obj.progressBoo, obj.progressName);
+              if (tempValue === null) {
+                throw new Error("cancel");
+              }
+            } while (tempValue === null)
+            tempArr.push(tempValue);
+          } else {
+            throw new Error("invalid type");
+          }
+          valueMatrix.push(tempArr);
+        }
+  
+        if (mode === "create") {
+          await instance.contents[x].contents[z].plusValue(valueMatrix, instance.designer, this.parentElement.nextElementSibling);
+        } else {
+          await instance.contents[x].contents[z].updateValue({
+            mode: "update",
+            index,
+            value: valueMatrix,
+            tong: this.parentElement.parentElement.parentElement,
+          }, instance.designer);
+        }
+      } catch (e) {
+        window.alert("입력을 취소하셨습니다! 처음부터 다시 진행해주세요!");
+      }
+    }
+  }
+  
+  careerBlocksRender = (value, tong) => {
+    const x = Number(tong.getAttribute("x"));
+    const z = Number(tong.getAttribute("z"));
+    cleanChildren(tong);
+    createNode({
+      mother: tong,
+      style: {
+        display: "block",
+        position: "relative",
+        padding: String(careerBlockGrayOuterMargin) + ea,
+        width: withOut(careerBlockGrayOuterMargin * 2, ea),
+        borderRadius: String(5) + "px",
+        background: colorChip.gray0,
+      },
+      children: value.map((obj, index) => {
+        const { title, value: factorValue } = obj;
+        const lastBoo = (index === value.length - 1);
+        return {
+          attribute: {
+            index: String(index),
+            x: String(x),
+            z: String(z),
+          },
+          style: {
+            display: "block",
+            position: "relative",
+            padding: String(careerBlockOuterMargin) + ea,
+            paddingTop: String(careerBlockOuterMarginTop) + ea,
+            paddingBottom: String(careerBlockOuterMarginBottom) + ea,
+            width: withOut(careerBlockOuterMargin * 2, ea),
+            borderRadius: String(5) + "px",
+            marginBottom: !lastBoo ? String(careerBlockInnerMargin) + ea : "",
+            background: colorChip.white,
+            boxShadow: "0px 2px 11px -9px " + colorChip.shadow,
+          },
+          children: factorValue.map((str, index) => {
+            const lastBoo = (index === factorValue.length - 1);
+            return {
+              attribute: {
+                x: String(x),
+                z: String(z),
+              },
+              event: {
+                click: async function (e) {
+                  try {
+                    const index = Number(this.parentElement.getAttribute("index"));
+                    const updateFunction = plusBlockEvent("update", index);
+                    await updateFunction.call(this, e);
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              },
+              text: "<b%" + title[index] + " %b>:" + "&nbsp;&nbsp;&nbsp;" + str,
+              style: {
+                display: "block",
+                position: "relative",
+                fontSize: String(careerBlockSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                marginBottom: !lastBoo ? String(careerBlockInnerMarginSmall) + ea : "",
+              },
+              bold: {
+                fontSize: String(careerBlockSize) + ea,
+                fontWeight: String(800),
+                color: colorChip.black,
+              },
+              under: {
+                fontSize: String(careerBlockSize) + ea,
+                fontWeight: String(200),
+                color: colorChip.green,
+              }
+            }
+          }).concat([
+            {
+              mode: "svg",
+              attribute: {
+                index: String(index),
+                x: String(x),
+                z: String(z),
+              },
+              event: {
+                click: async function (e) {
+                  try {
+                    const index = Number(this.getAttribute("index"));
+                    const x = Number(this.getAttribute("x"));
+                    const z = Number(this.getAttribute("z"));
+                    await instance.contents[x].contents[z].updateValue({
+                      mode: "delete",
+                      index,
+                      tong: tong,
+                    }, instance.designer);  
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              },
+              source: instance.mother.returnCancelCircle(colorChip.gray4),
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                width: String(blockCancelWidth) + ea,
+                top: String(blockCancelTop) + ea,
+                right: String(blockCancelTop) + ea,
+                cursor: "pointer",
+              }
+            }
+          ])
+        }
+      })
+    });
+  };
+  this.careerBlocksRender = careerBlocksRender;
 
   z = 0;
   for (let obj of contents) {
@@ -4289,42 +4731,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
             z: String(z),
           },
           event: {
-            click: async function (e) {
-              try {
-                const x = Number(this.getAttribute("x"));
-                const z = Number(this.getAttribute("z"));
-                const valueTargets = instance.contents[x].contents[z].renderValue("");
-                let valueMatrix;
-                let tempArr;
-                let tempValue;
-
-                valueMatrix = [];
-
-                for (let obj of valueTargets) {
-                  tempArr = [];
-                  if (obj.type === "string") {
-                    tempArr.push(obj.name);
-                    do {
-                      tempValue = await GeneralJs.prompt(obj.name + "명을 알려주세요!");
-                    } while (tempValue === "" || tempValue === null)
-                    tempArr.push(tempValue.trim());
-                  } else if (obj.type === "date") {
-                    tempArr.push(obj.name);
-                    do {
-                      tempValue = await GeneralJs.promptDate(obj.name + "을 알려주세요!", obj.progressBoo, obj.progressName);
-                    } while (tempValue === null)
-                    tempArr.push(tempValue);
-                  } else {
-                    throw new Error("invalid type");
-                  }
-                  valueMatrix.push(tempArr);
-                }
-
-                await instance.contents[x].contents[z].plusValue(valueMatrix, instance.designer);
-              } catch (e) {
-                console.log(e);
-              }
-            }
+            click: plusBlockEvent("create"),
           },
           style: {
             display: typeof obj.plusValue === "function" ? "inline-flex" : "none",
@@ -4578,6 +4985,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
 
       valueBlock = createNode({
         mother: baseBlock,
+        attribute: { value, x: String(x), z: String(z) },
         style: {
           display: "inline-block",
           position: "relative",
@@ -4585,58 +4993,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
           verticalAlign: "top",
         },
       });
-      
-      createNode({
-        mother: valueBlock,
-        style: {
-          padding: String(careerBlockGrayOuterMargin) + ea,
-          width: withOut(careerBlockGrayOuterMargin * 2, ea),
-          borderRadius: String(5) + "px",
-          background: colorChip.gray0,
-        },
-        children: value.map((obj, index) => {
-          const { title, value: factorValue } = obj;
-          const lastBoo = (index === value.length - 1);
-          return {
-            style: {
-              display: "block",
-              position: "relative",
-              padding: String(careerBlockOuterMargin) + ea,
-              paddingTop: String(careerBlockOuterMarginTop) + ea,
-              paddingBottom: String(careerBlockOuterMarginBottom) + ea,
-              width: withOut(careerBlockOuterMargin * 2, ea),
-              borderRadius: String(5) + "px",
-              marginBottom: !lastBoo ? String(careerBlockInnerMargin) + ea : "",
-              background: colorChip.white,
-              boxShadow: "0px 2px 11px -9px " + colorChip.shadow,
-            },
-            children: factorValue.map((str, index) => {
-              const lastBoo = (index === factorValue.length - 1);
-              return {
-                text: "<b%" + title[index] + " %b>:" + "&nbsp;&nbsp;&nbsp;" + str,
-                style: {
-                  display: "block",
-                  position: "relative",
-                  fontSize: String(careerBlockSize) + ea,
-                  fontWeight: String(400),
-                  color: colorChip.black,
-                  marginBottom: !lastBoo ? String(careerBlockInnerMarginSmall) + ea : "",
-                },
-                bold: {
-                  fontSize: String(careerBlockSize) + ea,
-                  fontWeight: String(800),
-                  color: colorChip.black,
-                },
-                under: {
-                  fontSize: String(careerBlockSize) + ea,
-                  fontWeight: String(200),
-                  color: colorChip.green,
-                }
-              }
-            })
-          }
-        })
-      });
+      careerBlocksRender(value, valueBlock);
 
     } else if (typeof value === "object" && value !== null && Array.isArray(value.__order__)) {
 
@@ -5917,6 +6274,7 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     this.possibleBoxes = [];
     this.isMouseDown = false;
     this.downSelection = null;
+    this.careerBlocksRender = (value, tong) => {};
 
     this.entireMode = false;
     this.normalMode = false;
