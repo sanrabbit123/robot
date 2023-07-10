@@ -2681,7 +2681,7 @@ Mother.prototype.dateToString = function (date, detail = false, dayOption = fals
     throw new Error("second input must be boolean");
   }
   const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
-  const emptyDateValue = (new Date(1999, 0, 1)).valueOf();
+  const emptyDateValue = (new Date(1900, 0, 1)).valueOf();
   const futureDateValue = (new Date(3000, 0, 1)).valueOf();
   if (date.valueOf() <= emptyDateValue) {
     return "해당 없음";
@@ -2713,19 +2713,37 @@ Mother.prototype.stringToDate = function (str) {
   if (str.trim() === '' || str.trim() === '-' || /없음/gi.test(str)) {
     return (new Date(1800, 0, 1));
   }
-  if (str === "예정" || str === "진행중" || str === "미정") {
+  if (str.trim() === "예정" || str.trim() === "진행중" || str.trim() === "미정") {
     return (new Date(3800, 0, 1));
   }
+
+  const zeroAddition = function (num) { return (num < 10) ? `0${String(num)}` : String(num); };
+  let tempArr, tempArr2, tempArr3;
   str = str.trim();
+
   if (/T/g.test(str) && /Z$/.test(str) && /^[0-9]/.test(str) && /\-/g.test(str) && /\:/g.test(str)) {
     if (!Number.isNaN((new Date(str)).getTime())) {
       return new Date(str);
     }
   }
   if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str) && !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(str)) {
-    throw new Error("not date string");
+    if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str)) {
+      str = "20" + str;
+    } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]$/.test(str)) {
+      str = str + "-01";
+    } else if (/^[0-9][0-9]\-[0-9][0-9]$/.test(str)) {
+      str = "20" + str + "-01";
+    } else if (/^[0-9][0-9][년] ?[0-9]/.test(str)) {
+      tempArr = str.split("년");
+      str = String(Number(tempArr[0].replace(/[^0-9]/gi, '')) + 2000) + "-" + zeroAddition(Number(tempArr[1].replace(/[^0-9]/gi, ''))) + "-01";
+    } else if (/^[0-9][0-9][0-9][0-9][년] ?[0-9]/.test(str)) {
+      tempArr = str.split("년");
+      str = String(Number(tempArr[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr[1].replace(/[^0-9]/gi, ''))) + "-01";
+    } else {
+      throw new Error("not date string : " + str);
+    }
   }
-  let tempArr, tempArr2, tempArr3;
+
   if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str)) {
     tempArr = str.split('-');
     return (new Date(Number(tempArr[0]), Number(tempArr[1]) - 1, Number(tempArr[2])));

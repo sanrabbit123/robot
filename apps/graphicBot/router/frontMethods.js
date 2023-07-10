@@ -92,7 +92,7 @@ FrontMethods.prototype.addFrontMethods = async function () {
       await sleep(500);
     }
 
-    frontGeneral.clickElement = async function (dom, iframeBoo = false, iframe = null, alert = false, double = false) {
+    frontGeneral.clickElement = async function (dom, iframeBoo = false, iframe = null, alert = false, double = false, visualX = 0, visualY = 0) {
       if (dom === undefined || dom === null) {
         throw new Error("must be dom");
       }
@@ -134,8 +134,8 @@ FrontMethods.prototype.addFrontMethods = async function () {
         }
       }
       rect = dom.getBoundingClientRect();
-      x = iframeRect.left + rect.left + (rect.width / 2);
-      y = iframeRect.top + rect.top + (rect.height / 2);
+      x = iframeRect.left + rect.left + (rect.width / 2) + visualX;
+      y = iframeRect.top + rect.top + (rect.height / 2) + visualY;
 
       data = { x, y, alert: alert ? 1 : 0, double: double ? 1 : 0 };
 

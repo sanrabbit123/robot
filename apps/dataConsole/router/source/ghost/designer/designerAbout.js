@@ -707,15 +707,17 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             const pipe = "&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;";
             const titleArr = [
               "회사",
-              "직무",
+              "담당 업무",
               "기간",
             ];
             const endMatrix = careerData.map((obj) => {
               const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
               const startDate = obj.date.start;
+              const startWords = (String(obj.date.start.getFullYear()).slice(2) + "년 " + String(obj.date.start.getMonth() + 1) + "월");
+              const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "년 " + String(obj.date.end.getMonth() + 1) + "월");
               const delta = endDate.valueOf() - startDate.valueOf();
               const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
-              const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월";
+              const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월" + "&nbsp;&nbsp;(" + startWords + " ~ " + endWords + ")";
               return {
                 title: titleArr,
                 value: [
@@ -731,7 +733,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             const inputArr = [
               { name: "회사", type: "string" },
               { name: "부서", type: "string" },
-              { name: "직무", type: "string" },
+              { name: "담당 업무", type: "string" },
               { name: "시작일", type: "date", progressBoo: false, progressName: "" },
               { name: "종료일", type: "date", progressBoo: true, progressName: "재직중" },
             ];
@@ -742,7 +744,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               const pipe = "&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;";
               const titleArr = [
                 "회사",
-                "직무",
+                "담당 업무",
                 "기간",
               ];
               const careerData = equalJson(JSON.stringify(designer.information.business.career.detail));
@@ -769,9 +771,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 endMatrix = newData.map((obj) => {
                   const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
                   const startDate = obj.date.start;
+                  const startWords = (String(obj.date.start.getFullYear()).slice(2) + "년 " + String(obj.date.start.getMonth() + 1) + "월");
+                  const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "년 " + String(obj.date.end.getMonth() + 1) + "월");
                   const delta = endDate.valueOf() - startDate.valueOf();
                   const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
-                  const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월";
+                  const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월" + "&nbsp;&nbsp;(" + startWords + " ~ " + endWords + ")";
                   return {
                     title: titleArr,
                     value: [
@@ -817,9 +821,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 endMatrix = newData.map((obj) => {
                   const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
                   const startDate = obj.date.start;
+                  const startWords = (String(obj.date.start.getFullYear()).slice(2) + "년 " + String(obj.date.start.getMonth() + 1) + "월");
+                  const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "년 " + String(obj.date.end.getMonth() + 1) + "월");
                   const delta = endDate.valueOf() - startDate.valueOf();
                   const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
-                  const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월";
+                  const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월" + "&nbsp;&nbsp;(" + startWords + " ~ " + endWords + ")";
                   return {
                     title: titleArr,
                     value: [
@@ -846,7 +852,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               const pipe = "&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;";
               const titleArr = [
                 "회사",
-                "직무",
+                "담당 업무",
                 "기간",
               ];
               let company, team, role, start, end;
@@ -876,9 +882,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               endMatrix = original.map((obj) => {
                 const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
                 const startDate = obj.date.start;
+                const startWords = (String(obj.date.start.getFullYear()).slice(2) + "년 " + String(obj.date.start.getMonth() + 1) + "월");
+                const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "년 " + String(obj.date.end.getMonth() + 1) + "월");
                 const delta = endDate.valueOf() - startDate.valueOf();
                 const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
-                const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월";
+                const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월" + "&nbsp;&nbsp;(" + startWords + " ~ " + endWords + ")";
                 return {
                   title: titleArr,
                   value: [

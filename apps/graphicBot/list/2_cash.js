@@ -92,6 +92,13 @@ module.exports = function (arg, info) {
 
       document.getElementById("tabControl1_UTECRCB005_tab_tabs3").click();
       await sleep(500);
+
+      await clickElement(document.getElementById("selectbox5"));
+      await sleep(1000);
+      await clickElement(document.getElementById("selectbox5"), false, null, false, false, 0, 30);
+      await sleep(500);
+
+      await sleep(500);
       document.getElementById("trigger1").click();
 
       await sleep(2000);

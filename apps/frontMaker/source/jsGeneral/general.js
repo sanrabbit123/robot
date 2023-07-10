@@ -4268,7 +4268,7 @@ GeneralJs.dateToString = function (date, detail = false, dayOption = false) {
     throw new Error("second input must be boolean");
   }
   const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
-  const emptyDateValue = (new Date(1999, 0, 1)).valueOf();
+  const emptyDateValue = (new Date(1900, 0, 1)).valueOf();
   const futureDateValue = (new Date(3000, 0, 1)).valueOf();
   if (date.valueOf() <= emptyDateValue) {
     return "해당 없음";
@@ -4302,19 +4302,37 @@ GeneralJs.stringToDate = function (str) {
   if (str.trim() === '' || str.trim() === '-' || /없음/gi.test(str)) {
     return (new Date(1800, 0, 1));
   }
-  if (str === "예정" || str === "진행중" || str === "미정") {
+  if (str.trim() === "예정" || str.trim() === "진행중" || str.trim() === "미정") {
     return (new Date(3800, 0, 1));
   }
+
+  const zeroAddition = function (num) { return (num < 10) ? `0${String(num)}` : String(num); };
+  let tempArr, tempArr2, tempArr3;
   str = str.trim();
+
   if (/T/g.test(str) && /Z$/.test(str) && /^[0-9]/.test(str) && /\-/g.test(str) && /\:/g.test(str)) {
     if (!Number.isNaN((new Date(str)).getTime())) {
       return new Date(str);
     }
   }
   if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str) && !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(str)) {
-    throw new Error("not date string : " + str);
+    if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str)) {
+      str = "20" + str;
+    } else if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]$/.test(str)) {
+      str = str + "-01";
+    } else if (/^[0-9][0-9]\-[0-9][0-9]$/.test(str)) {
+      str = "20" + str + "-01";
+    } else if (/^[0-9][0-9][년] ?[0-9]/.test(str)) {
+      tempArr = str.split("년");
+      str = String(Number(tempArr[0].replace(/[^0-9]/gi, '')) + 2000) + "-" + zeroAddition(Number(tempArr[1].replace(/[^0-9]/gi, ''))) + "-01";
+    } else if (/^[0-9][0-9][0-9][0-9][년] ?[0-9]/.test(str)) {
+      tempArr = str.split("년");
+      str = String(Number(tempArr[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr[1].replace(/[^0-9]/gi, ''))) + "-01";
+    } else {
+      throw new Error("not date string : " + str);
+    }
   }
-  let tempArr, tempArr2, tempArr3;
+
   if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str)) {
     tempArr = str.split('-');
     return (new Date(Number(tempArr[0]), Number(tempArr[1]) - 1, Number(tempArr[2])));
@@ -5379,8 +5397,13 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
   let buttonHeight;
   let buttonPadding;
   let subButton;
+  let baseBox;
+  let whiteTotalHeight;
+  let toTextButton;
+  let buttonWidth;
 
   whiteWidth = 320;
+  whiteTotalHeight = 314;
   whiteHeight = 150;
   paddingTop = 17;
   paddingLeft = 23;
@@ -5398,11 +5421,12 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
   lineHeight = 1.5;
   wordingVisual = GeneralJs.isMac() ? 0 : 2;
   textTop = GeneralJs.isMac() ? -1 : 1;
-  buttonBetween = 6;
+  buttonBetween = 4;
   buttonTop = 20;
   buttonRight = 21;
   buttonHeight = 21;
-  buttonPadding = 9;
+  buttonPadding = 8;
+  buttonWidth = 56;
 
   greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
   if (Number.isNaN(greenBarHeight)) {
@@ -5424,7 +5448,7 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
     style: {
       display: "flex",
       justifyContent: "center",
-      alignItems: "center",
+      alignItems: "start",
       position: "fixed",
       top: String(0) + "vh",
       left: String(1) + "vw",
@@ -5435,6 +5459,8 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
     }
   });
 
+  baseBox = whiteTongBase.getBoundingClientRect();
+
   whiteTong = createNode({
     mother: whiteTongBase,
     event: {
@@ -5444,6 +5470,7 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
       display: "block",
       position: "relative",
       width: String(whiteWidth - (paddingLeft * 2)) + ea,
+      top: String((baseBox.height / 2) - (whiteTotalHeight / 2)) + "px",
       paddingTop: String(paddingTop) + ea,
       paddingBottom: String(paddingBottom) + ea,
       paddingLeft: String(paddingLeft) + ea,
@@ -5484,11 +5511,39 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
     }
   });
 
+  toTextButton = createNode({
+    mother: whiteTong,
+    style: {
+      display: "inline-flex",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "absolute",
+      top: String(buttonTop) + ea,
+      right: String(buttonRight) + ea,
+      height: String(buttonHeight) + ea,
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      background: colorChip.gradientGray,
+      borderRadius: String(5) + "px",
+      zIndex: String(1),
+    },
+    child: {
+      text: "직접 입력",
+      style: {
+        position: "relative",
+        fontSize: String(size2) + ea,
+        fontWeight: String(700),
+        color: colorChip.white,
+        top: String(textTop) + ea,
+      }
+    }
+  });
+
   subButton = null;
   if (progressPossible && progressName !== "") {
     subButton = createNode({
       mother: whiteTong,
-      text: message,
       style: {
         display: "inline-flex",
         textAlign: "center",
@@ -5496,7 +5551,7 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
         alignItems: "center",
         position: "absolute",
         top: String(buttonTop) + ea,
-        right: String(buttonRight) + ea,
+        right: String(buttonRight + buttonWidth + buttonBetween) + ea,
         height: String(buttonHeight) + ea,
         paddingLeft: String(buttonPadding) + ea,
         paddingRight: String(buttonPadding) + ea,
@@ -5564,6 +5619,28 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
         resolve(new Date(3800, 0, 1));
       });
     }
+
+    toTextButton.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+      for (let z = 0; z < targets.length; z++) {
+        try {
+          targets[z].remove();
+        } catch {}
+      }
+      GeneralJs.prompt("'yyyy-mm-dd' 형태로 작성해주세요!").then((result) => {
+        try {
+          const parsedResult = GeneralJs.stringToDate(result);
+          resolve(parsedResult);
+        } catch (e) {
+          console.log(e);
+          window.alert("올바른 날짜 형식이 아닙니다! => 'yyyy-mm-dd' 형태");
+          resolve(null);
+        }
+      }).catch((err) => {
+        reject(err);
+      });
+    });
 
   });
 }
