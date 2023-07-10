@@ -18,7 +18,7 @@
     "@aws-sdk/client-rekognition": "^3.359.0",
     "@aws-sdk/client-s3": "^3.359.0",
     "@aws-sdk/client-s3-control": "^3.359.0",
-    "@google-analytics/data": "^3.2.0",
+    "@google-analytics/data": "^3.2.2",
     "@google-cloud/translate": "^7.2.1",
     "@slack/web-api": "^5.15.0",
     "@tensorflow/tfjs": "^4.8.0",
