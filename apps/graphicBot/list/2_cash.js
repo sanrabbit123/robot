@@ -94,8 +94,8 @@ module.exports = function (arg, info) {
       await sleep(500);
 
       const { x, y } = await clickElement(document.getElementById("selectbox5"));
-      await sleep(500);
-      await ajaxPromise({ x, y: y + 50, alert: 0, double: 0 }, HOSTCONST + "/clickElement");
+      await sleep(300);
+      await ajaxPromise({ x, y: y + 40, alert: 0, double: 0 }, HOSTCONST + "/clickElement");
       await sleep(500);
       document.getElementById("trigger1").click();
 
