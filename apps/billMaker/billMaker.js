@@ -6462,8 +6462,12 @@ BillMaker.prototype.parsingCashReceipt = async function () {
     })
     const outList = [];
     for (let obj of outObject) {
-      for (let obj2 of obj.map.list.map) {
-        outList.push(obj2);
+      if (Array.isArray(obj.map.list.map)) {
+        for (let obj2 of obj.map.list.map) {
+          outList.push(obj2);
+        }
+      } else {
+        outList.push(obj.map.list.map);
       }
     }
     const inObject = inXml.map((text) => {
@@ -6471,8 +6475,12 @@ BillMaker.prototype.parsingCashReceipt = async function () {
     })
     const inList = [];
     for (let obj of inObject) {
-      for (let obj2 of obj.map.list.map) {
-        inList.push(obj2);
+      if (Array.isArray(obj.map.list.map)) {
+        for (let obj2 of obj.map.list.map) {
+          inList.push(obj2);
+        }
+      } else {
+        inList.push(obj.map.list.map);
       }
     }
     let outMiddle, inMiddle;
