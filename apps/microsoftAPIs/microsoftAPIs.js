@@ -69,16 +69,23 @@ const MicrosoftAPIs = function (mother = null, back = null, address = null) {
     power: "odpptx",
   };
 
+  this.microsoftId = "homeliaison2@outlook.kr";
+  this.microsoftPassword = "hlofwis83!";
+
   this.folderNameToken = "______folderName______";
 }
 
 MicrosoftAPIs.prototype.renewAccessToken = async function () {
   const instance = this;
   const address = this.address;
-  const { tenant, clientId, redirectUri, clientSecret, loginUrl, scope } = this;
+  const { tenant, clientId, redirectUri, clientSecret, loginUrl, scope, microsoftId, microsoftPassword } = this;
   const { requestSystem, linkToString } = this.mother;
+  const GoogleChrome = require(process.cwd() + "/apps/googleAPIs/googleChrome.js");
+  const chrome = new GoogleChrome();
   try {
     let response;
+    let targetLink;
+    let frontResult;
 
     response = await requestSystem(loginUrl + "/" + tenant + "/oauth2/v2.0/authorize", {
       client_id: clientId,
@@ -91,14 +98,48 @@ MicrosoftAPIs.prototype.renewAccessToken = async function () {
       method: "get",
     });
 
-    response = await requestSystem("https://" + address.secondinfo.host + "/browserRequest", { link: linkToString(response.request.res.responseUrl) }, {
-      headers: {
-        "Content-Type": "application/json",
+    targetLink = response.request.res.responseUrl;
+
+    frontResult = await chrome.scriptChain([
+      {
+        link: "https://login.live.com/",
+        func: async function () {
+          try {
+            const input = document.getElementById("i0116");
+            input.value = TONG.id;
+            input.dispatchEvent(new Event("blur", { bubbles: true }));
+            document.getElementById("idSIButton9").click();
+        
+            await GeneralJs.sleep(2000);
+
+            const password = document.getElementById("i0118");
+            password.value = TONG.password;
+            password.dispatchEvent(new Event("blur", { bubbles: true }));
+            document.getElementById("idSIButton9").click();
+
+            return 1;
+          } catch (e) {
+            console.log(e);
+            return 0;
+          }
+        }
+      },
+      {
+        link: targetLink,
+        func: async function () {
+          return 1;
+        }
       }
+    ], 2500, {
+      id: microsoftId,
+      password: microsoftPassword
     });
+
+    return frontResult.every((n) => { return n === 1 });
 
   } catch (e) {
     console.log(e);
+    return false;
   }
 }
 

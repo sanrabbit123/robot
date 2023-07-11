@@ -23,9 +23,6 @@ const SecondRouter = function (slack_bot, slack_user, MONGOC, MONGOLOCALC, slack
   this.slack_info = slack_info;
   this.slack_fairyToken = slack_fairyToken;
 
-  this.secondPort = this.address.officeinfo.ghost.second.port;
-  this.secondHost = this.address.officeinfo.ghost.host + ":" + String(this.secondPort);
-
   this.kakao = kakao;
   this.human = human;
 
@@ -2190,38 +2187,6 @@ SecondRouter.prototype.rou_post_voice = function () {
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       logger.error("Second Ghost 서버 문제 생김 (rou_post_voice): " + e.message).catch((e) => { console.log(e); });
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-SecondRouter.prototype.rou_post_browserRequest = function () {
-  const instance = this;
-  const { secondHost } = this;
-  const { requestSystem, messageSend, messageLog } = this.mother;
-  let obj = {};
-  obj.link = [ "/browserRequest" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (req.body.link === undefined) {
-        throw new Error("invaild post");
-      }
-      const { link } = req.body;
-      requestSystem("https://" + secondHost + "/browserRequest", {
-        link,
-      }, {
-        headers: { "Content-Type": "application/json" }
-      }).catch((err) => { console.log(err); });
-      res.send(JSON.stringify({ message: "will do" }));
-    } catch (e) {
-      logger.error("Second Ghost 서버 문제 생김 (rou_post_browserRequest): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }

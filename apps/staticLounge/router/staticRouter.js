@@ -2867,7 +2867,7 @@ StaticRouter.prototype.rou_post_getMicrosoftAccessToken = function () {
 
 StaticRouter.prototype.rou_post_renewMicrosoftAccessToken = function () {
   const instance = this;
-  const { fileSystem, shellExec, shellLink, dateToString, equalJson, uniqueValue } = this.mother;
+  const { fileSystem, shellExec, shellLink, dateToString, equalJson, uniqueValue, sleep } = this.mother;
   const microsoft = this.microsoft;
   let obj = {};
   obj.link = [ "/renewMicrosoftAccessToken" ];
@@ -2879,8 +2879,13 @@ StaticRouter.prototype.rou_post_renewMicrosoftAccessToken = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      microsoft.renewAccessToken().catch((err) => { console.log(err); });
-      res.send(JSON.stringify({ message: "will do" }));
+      let boo;
+      boo = await microsoft.renewAccessToken();
+      while (!boo) {
+        await sleep(3000);
+        boo = await microsoft.renewAccessToken();
+      }
+      res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_renewMicrosoftAccessToken): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
