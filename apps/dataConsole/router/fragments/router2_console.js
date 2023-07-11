@@ -3228,8 +3228,9 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
             let requestNumber;
             if (clients.length > 0) {
               const [ client ] = clients;
-              const projects = await back.getProjectsByQuery({ $and: [ { cliid: client.cliid } ] }, { selfMongo });
+              const projects = (await back.getProjectsByQuery({ $and: [ { cliid: client.cliid } ] }, { selfMongo })).toNormal();
               if (projects.length > 0) {
+                projects.sort((a, b) => { return Math.abs((a.process.contract.remain.calculation.amount.consumer - a.process.contract.first.calculation.amount) - paymentData.amount) - Math.abs((b.process.contract.remain.calculation.amount.consumer - b.process.contract.first.calculation.amount) - paymentData.amount) });
                 const [ project ] = projects;
                 let bills;
                 bills = await bill.getBillsByQuery({ $and: [
