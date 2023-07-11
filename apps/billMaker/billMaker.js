@@ -6252,7 +6252,7 @@ BillMaker.prototype.parsingCashReceipt = async function () {
   const xmlParser = require("xml2json");
   try {
     const chrome = new GoogleChrome();
-    const [ one, outXml, inXml ] = await chrome.scriptChain([
+    const frontResult = await chrome.scriptChain([
       {
         link: "https://www.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/comm/a/b/UTXPPABA01.xml&w2xHome=/ui/pp/&w2xDocumentRoot=",
         func: async function () {
@@ -6447,6 +6447,10 @@ BillMaker.prototype.parsingCashReceipt = async function () {
         }
       }
     ]);
+    if (!Array.isArray(frontResult)) {
+      throw new Error(frontResult.message);
+    }
+    const [ one, outXml, inXml ] = frontResult;
     if (!Array.isArray(outXml)) {
       throw new Error(outXml);
     }
