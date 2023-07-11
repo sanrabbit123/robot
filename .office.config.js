@@ -10,7 +10,7 @@ module.exports = {
     {
       name: "robot",
       script: "./robot.js",
-      instances: 10,
+      instances: 12,
       exec_mode: "cluster",
       args: [ "static" ]
     },

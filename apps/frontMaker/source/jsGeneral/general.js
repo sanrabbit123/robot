@@ -7657,3 +7657,11 @@ GeneralJs.variableArray = function (length, callback = null) {
   }
   return targetArray;
 }
+
+GeneralJs.fireEvent = function (dom, eventName) {
+  if (eventName !== "click") {
+    dom.dispatchEvent(new Event(eventName, { bubbles: true }));
+  } else {
+    dom.click();
+  }
+}
