@@ -80,23 +80,9 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
     const sheets = new GoogleSheet();
     const bill = new BillMaker();
-    const { Agent } = require("https");
-    const agent = new Agent({ rejectUnauthorized: false });
     const chrome = new GoogleChrome();
     const findCode = this.findCode.bind(this);
     const human = new HumanPacket();
-    const decorator = new TextDecorator();
-    const print = async (cliid) => {
-      try {
-        await instance.MONGOCONSOLEC.connect();
-        const selfMongo = instance.MONGOCONSOLEC;
-        const history = await back.getHistoryById("client", cliid, { selfMongo });
-        await requestSystem("https://" + address.secondinfo.host + "/printClient", { cliid: cliid, curation: history.curation }, { headers: { "Content-Type": "application/json" } });
-        await instance.MONGOCONSOLEC.close();
-      } catch (e) {
-        console.log(e);
-      }
-    }
 
     
     // monthly must ==========================================================================================================================================
@@ -6403,7 +6389,7 @@ DevContext.prototype.launching = async function () {
     // ], [
     //   "모던하고 세련된 스타일을 구하사며, 컬러를 잘 사용한 디자인에 능합니다.",
     //   "고객님 생활과 동선에 초점을 두고 디자인을 진행하며 아이디어가 뛰어납니다.",
-    //   "하얗기만 한 디자인이 아닌, 강약과 포잉ㄴ트가 살아 있는 디자인을 구사합니다.",
+    //   "하얗기만 한 디자인이 아닌, 강약과 포인트가 살아 있는 디자인을 구사합니다.",
     // ]);
 
 
