@@ -238,7 +238,7 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
   }
 }
 
-GoogleChrome.prototype.scriptChain = async function (map, between = 2000) {
+GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong = {}) {
   if (!Array.isArray(map)) {
     throw new Error("invalid input => [ { link, async func } ]");
   }
@@ -256,7 +256,7 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 2000) {
     generalString = mediaQuery(generalString).code;
 
     returnScript = (func) => {
-      return "const INFO = " + JSON.stringify(instance.address) + ";\n\n" + generalString + "\n\n" + func.toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '');
+      return "const INFO = " + JSON.stringify(instance.address) + ";\n\nconst TONG = " + JSON.stringify(tong) + ";\n\n" + generalString + "\n\n" + func.toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '');
     }
 
     frontResponses = [];

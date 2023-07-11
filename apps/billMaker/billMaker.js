@@ -6523,4 +6523,122 @@ BillMaker.prototype.parsingCashReceipt = async function () {
   }
 }
 
+BillMaker.prototype.issueCashReceipt = async function (amount, phone) {
+  const instance = this;
+  const address = this.address;
+  const { errorLog, emergencyAlarm, dateToString, stringToDate, equalJson, requestSystem } = this.mother;
+  const GoogleChrome = require(`${process.cwd()}/apps/googleAPIs/googleChrome.js`);
+  const xmlParser = require("xml2json");
+  try {
+    const chrome = new GoogleChrome();
+    const frontResult = await chrome.scriptChain([
+      {
+        link: "https://www.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/comm/a/b/UTXPPABA01.xml&w2xHome=/ui/pp/&w2xDocumentRoot=",
+        func: async function () {
+          try {
+            const idLoginButtonId = "anchor15";
+            const returnButtonId = "anchor25";
+            const inputs = {
+              id: "iptUserId",
+              pwd: "iptUserPw"
+            };
+            while (document.getElementById(idLoginButtonId) === null) {
+              await sleep(500);
+            }
+            document.getElementById(idLoginButtonId).click();
+  
+            document.getElementById(inputs.id).value = INFO.officeinfo.hometax.user;
+            document.getElementById(inputs.pwd).value = INFO.officeinfo.hometax.password;
+            document.getElementById(returnButtonId).click();
+  
+            return 1;
+          } catch (e) {
+            return 0;
+          }
+        },
+      },
+      {
+        link: "https://tecr.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/cr/c/b/UTECRCB041.xml",
+        func: async function () {
+          try {
+            const actionId = "ATECRCBA003C01";
+            const screenId = "UTECRCB041";
+            const txprDscmNo = INFO.officeinfo.hometax.business.replace(/[^0-9]/gi, '');
+            const tinNumber = INFO.officeinfo.hometax.tin;
+            const mapId = "cshptIsfIsnPubcDVO";
+            const headers = {
+              "Content-Type": "application/xml; charset=UTF-8",
+              "Host": `tecr.hometax.go.kr`,
+              "Origin": `https://tecr.hometax.go.kr`,
+              "Referer": `https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB013.xml`,
+              "Sec-Ch-Ua": `"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"`,
+              "Sec-Ch-Ua-Mobile": `?0`,
+              "Sec-Ch-Ua-Platform": `"macOS"`,
+              "Sec-Fetch-Dest": `empty`,
+              "Sec-Fetch-Mode": `cors`,
+              "Sec-Fetch-Site": `same-origin`,
+              "User-Agent": `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36`,
+            };
+            let res, amount;
+            let phone;
+            let supply, vat;
+            let time, date;
+            let now;
+            let tip;
+
+            amount = TONG.amount;
+            supply = Math.ceil(amount / 1.1);
+            vat = amount - supply;
+            phone = TONG.phone;
+            tip = 0;
+            now = GeneralJs.dateToString(new Date(), true);
+            date = now.split(" ")[0].replace(/[^0-9]/gi, '');
+            time = now.split(" ")[1].replace(/[^0-9]/gi, '');
+
+            res = await fetch("https://tecr.hometax.go.kr/wqAction.do?actionId=" + actionId + "&screenId=" + screenId + "&popupYn=false&realScreenId=", {
+              method: "POST",
+              headers: headers,
+              body: `
+              <map id="${actionId}">
+              <bmanTin/><tin>${tinNumber}</tin>
+              <cshptTrsTypeCd>01</cshptTrsTypeCd>
+              <map id="${mapId}">
+              <cshptUsgClCd>0</cshptUsgClCd>
+              <spstCnfrClCd>03</spstCnfrClCd>
+              <trsDt>${date}</trsDt>
+              <trsTime>${time}</trsTime>
+              <cshptInptClCd>1</cshptInptClCd>
+              <tip>${String(tip)}</tip>
+              <spstCnfrNoEncCntn>${phone.replace(/[^0-9]/gi, '')}</spstCnfrNoEncCntn>
+              <rcprTin></rcprTin>
+              <totaTrsAmt>${String(amount)}</totaTrsAmt>
+              <splCft>${String(supply)}</splCft>
+              <vaTxamt>${String(vat)}</vaTxamt>
+              <trsClCd>0</trsClCd>
+              <cshptIsnMmoCntn></cshptIsnMmoCntn></map></map>`
+            });
+            const text = await res.text();
+            return (/발급/gi.test(text) && /완료/gi.test(text));
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      }
+    ], 2500, { amount, phone });
+
+    if (!Array.isArray(frontResult)) {
+      throw new Error("issue cash receipt fail");
+    }
+    if (frontResult.length <= 1) {
+      throw new Error("issue cash receipt fail");
+    }
+
+    return frontResult[1];
+  } catch (e) {
+    await emergencyAlarm("issue cashReceipt fail : " + e.message + " / " + JSON.stringify(new Date()));
+    console.log(e);
+    return false;
+  }
+}
+
 module.exports = BillMaker;

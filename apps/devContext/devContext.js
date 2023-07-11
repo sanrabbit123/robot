@@ -474,105 +474,13 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const res = await requestSystem("https://tecr.hometax.go.kr", { data: null }, {
-    //   headers: { "Content-Type": "application/json" }
-    // });
-    // console.log(res);
-
-
-
     // "https://tecr.hometax.go.kr/wqAction.do?actionId=ATECREAA003R03&screenId=UTECRCB041&popupYn=false&realScreenId="
 
 
 
-    // await chrome.scriptChain([
-    //   {
-    //     link: "https://www.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/comm/a/b/UTXPPABA01.xml&w2xHome=/ui/pp/&w2xDocumentRoot=",
-    //     func: async function () {
-    //       try {
-    //         const idLoginButtonId = "anchor15";
-    //         const returnButtonId = "anchor25";
-    //         const inputs = {
-    //           id: "iptUserId",
-    //           pwd: "iptUserPw"
-    //         };
-    //         while (document.getElementById(idLoginButtonId) === null) {
-    //           await sleep(500);
-    //         }
-    //         document.getElementById(idLoginButtonId).click();
-  
-    //         document.getElementById(inputs.id).value = INFO.officeinfo.hometax.user;
-    //         document.getElementById(inputs.pwd).value = INFO.officeinfo.hometax.password;
-    //         document.getElementById(returnButtonId).click();
-  
-    //         return 1;
-    //       } catch (e) {
-    //         return 0;
-    //       }
-    //     },
-    //   },
-    //   {
-    //     link: "https://tecr.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/cr/c/b/UTECRCB041.xml",
-    //     func: async function () {
-    //       try {
+    await bill.issueCashReceipt(2000, "010-2747-3403");
 
-    //         const headers = {
-    //           "Content-Type": "application/xml; charset=UTF-8",
-    //           "Host": `tecr.hometax.go.kr`,
-    //           "Origin": `https://tecr.hometax.go.kr`,
-    //           "Referer": `https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB013.xml`,
-    //           "Sec-Ch-Ua": `"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"`,
-    //           "Sec-Ch-Ua-Mobile": `?0`,
-    //           "Sec-Ch-Ua-Platform": `"macOS"`,
-    //           "Sec-Fetch-Dest": `empty`,
-    //           "Sec-Fetch-Mode": `cors`,
-    //           "Sec-Fetch-Site": `same-origin`,
-    //           "User-Agent": `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36`,
-    //         };
-    //         const res = await fetch("https://tecr.hometax.go.kr/wqAction.do?actionId=ATECRCBA003C01&screenId=UTECRCB041&popupYn=false&realScreenId=", {
-    //           method: "POST",
-    //           headers: headers,
-    //           body: `
-    //           <map id="ATECRCBA003C01">
-    //           <bmanTin/><tin>100000000027321439</tin>
-        
-    //           <cshptTrsTypeCd>01</cshptTrsTypeCd>
-    //           <map id="cshptIsfIsnPubcDVO">
-        
-    //           <cshptUsgClCd>0</cshptUsgClCd>
-    //           <spstCnfrClCd>03</spstCnfrClCd>
-        
-    //           <trsDt>20230711</trsDt>
-    //           <trsTime>122351</trsTime>
-        
-    //           <cshptInptClCd>1</cshptInptClCd>
-    //           <tip>0</tip>
-        
-    //           <spstCnfrNoEncCntn>01027473403</spstCnfrNoEncCntn>
-        
-    //           <rcprTin></rcprTin>
-    //           <totaTrsAmt>1000</totaTrsAmt>
-    //           <splCft>910</splCft>
-    //           <vaTxamt>90</vaTxamt>
-    //           <trsClCd>0</trsClCd>
-    //           <cshptIsnMmoCntn></cshptIsnMmoCntn
-    //           ></map></map>`
-    //         });
-    //         const text = await res.text();
-    //         console.log(text)
-        
-
-    //       } catch (e) {
-    //         console.log(e);
-    //       }
-    //     }
-    //   }
-    // ]);
-
-
-
-
-
+    
 
 
 

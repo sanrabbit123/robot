@@ -2094,20 +2094,52 @@ StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-
-      bill.parsingCashReceipt().then((boo) => {
-        if (boo) {
-          logger.log("cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
-        } else {
-          logger.error("cash receipt fail : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
-        }
-      }).catch((err) => {
-        logger.error("cash receipt error : " + err.message).catch((e) => { console.log(e); });
-      });
-
-      res.send(JSON.stringify({ message: "will do" }));
+      const boo = await bill.parsingCashReceipt();
+      if (boo) {
+        logger.log("cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+      } else {
+        logger.error("cash receipt fail : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+      }
+      res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_parsingCashReceipt): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_issueCashReceipt = function () {
+  const instance = this;
+  const { equalJson } = this.mother;
+  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+  const bill = new BillMaker();
+  let obj;
+  obj = {};
+  obj.link = [ "/issueCashReceipt" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.amount === undefined || req.body.phone === undefined) {
+        throw new Error("invalid post");
+      }
+      const boo = await bill.issueCashReceipt(Number(req.body.amount), req.body.phone);
+      if (boo) {
+        logger.log("issue cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+      } else {
+        logger.error("issue cash receipt fail : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+      }
+      res.send(JSON.stringify({ success: boo ? 1 : 0 }));
+    } catch (e) {
+      logger.error("Static lounge 서버 문제 생김 (rou_post_issueCashReceipt): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
