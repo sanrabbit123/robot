@@ -95,10 +95,8 @@ DevContext.prototype.launching = async function () {
     // await report.unknownCampaign(2023, 6, 8191922 - 7674482);
     // await this.MONGOLOGC.close();
 
-
     // =======================================================================================================================================================
     // =======================================================================================================================================================
-
 
     // to construction (시공화)
     // const res = await ajaxJson({
@@ -159,7 +157,24 @@ DevContext.prototype.launching = async function () {
 
     // ai study =====================================================================================================================
 
-    
+    // const host = "analytics.naver.com";
+    // const siteId = "s_dc977e44f53";
+    // const accessToken = "xBEV6ywWnX1f06tB9zxvb2Hi31jhCMX9cMRu31zQrMQxSa8HjS4zvBuc7oR0JsWfTAV1k86ACkbBPMvVcHNAfwz5BDWmbYJJ1vmKey5l7tcfZFBXbDVeq0QGobh+/9WLS87NtXDJo68Thay4zpiK8JmWugAhobzpPAZV1hG9/v9WwoomU/z0ybKAZw/Jt5kmu4vQBeHNIimQC2iAQCBPY3p1926pXmoTfkK19+fv9Sj4K/RHFdJxDEzwRo7BJ5jzrMZ5AZM8RlfXJqBclgIINGssUHAGYp6nYE1akZpcdvBCjFHMBibZf2bjciXkM0jZB59YYf+AQrsDE8QQJ/kFhqW0crAaKN1FBDReFMVW72MjvNh+1qA8auWj5yNvsXAQl3K0sH8WmSXMGIpKd+mtGw==";
+    // const res = await requestSystem("https://" + host + "/api/sites/" + siteId + "/report", {
+    //   startDate: dateToString(new Date(2023, 6, 7)),
+    //   endDate: dateToString(new Date(2023, 6, 7)),
+    //   metrics: "pageView",
+    //   dimensions: [ "refInfoKeyword", "refInfoClass", "refInfoService" ],
+    //   _: String((new Date()).valueOf()),
+    // }, {
+    //   method: "get",
+    //   headers: {
+    //     "Authorization": "Bearer " + accessToken,
+    //   }
+    // })
+    // console.log(res);
+
+
 
     /*
     
