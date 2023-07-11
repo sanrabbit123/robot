@@ -481,8 +481,8 @@ DevContext.prototype.launching = async function () {
 
 
     
-    await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/parsingCashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } });
-    
+    const res = await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/parsingCashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } });
+    console.log(res);
 
 
 

@@ -6447,6 +6447,12 @@ BillMaker.prototype.parsingCashReceipt = async function () {
         }
       }
     ]);
+    if (!Array.isArray(outXml)) {
+      throw new Error(outXml);
+    }
+    if (!Array.isArray(inXml)) {
+      throw new Error(inXml);
+    }
     const outObject = outXml.map((text) => {
       return JSON.parse(xmlParser.toJson(text));
     })
