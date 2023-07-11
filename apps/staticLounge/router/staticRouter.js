@@ -2112,7 +2112,17 @@ StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
         logger.error("cash receipt fail : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
       }
 
-      while (!boo) {
+      if (!boo) {
+        await sleep(3000);
+        boo = await bill.parsingCashReceipt();
+        if (boo) {
+          logger.log("cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+        } else {
+          logger.error("cash receipt fail : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+        }
+      }
+
+      if (!boo) {
         await sleep(3000);
         boo = await bill.parsingCashReceipt();
         if (boo) {
