@@ -61,6 +61,15 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
     sessionValue: "5f251ab3230d6a117c3b62a4083f31e5",
   };
 
+  this.pushbullet = {
+    host: "api.pushbullet.com",
+    version: "v2",
+    token: "o.u4wyBN6vM9IxqjHq8SLoFE0b1D82kbGr",
+    device: "ujy8FVCcQOysjv0gcsq9DM",
+    threads: [ 33, 36 ],
+    password: "homeliaison",
+  };
+
   this.vaildHost = [
     this.address.frontinfo.host,
     this.address.secondinfo.host,
@@ -5017,6 +5026,74 @@ StaticRouter.prototype.rou_post_complexReport = function () {
 
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_complexReport): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+StaticRouter.prototype.rou_post_receiveSms = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, dateToString, stringToDate, requestSystem, cryptoString } = this.mother;
+  const { pushbullet } = this;
+  const { token, device, threads, password, host, version } = pushbullet;
+  let obj;
+  obj = {};
+  obj.link = [ "/receiveSms" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongolocal;
+      const idKeyword = "sms_";
+      const path = "/permanents";
+      const collection = "accountSms";
+      let response0, response1;
+      let textArr;
+      let headers;
+      let rows;
+
+      headers = { "Access-Token": token };
+
+      response0 = await requestSystem("https://" + host + "/" + version + path + "/" + device + "_thread_" + String(threads[0]), {}, { method: "get", headers });
+      response1 = await requestSystem("https://" + host + "/" + version + path + "/" + device + "_thread_" + String(threads[1]), {}, { method: "get", headers });
+
+      textArr = (response1.data.thread.map((obj) => {
+        return obj.body.split("\n");
+      }).concat(response0.data.thread.map((obj) => {
+        return obj.body.split("\n").filter((str) => { return str.trim() !== "" }).filter((str) => { return !/잔액 [0-9]/gi.test(str) }).map((str) => { return str.replace(/\[홈리에종\] /gi, "").trim().replace(/\:$/gi, '') });
+      })).map((arr) => {
+        const [ web, timeString, amount, name ] = arr;
+        const thisDate = stringToDate(timeString.replace(/\//gi, '-') + ":00")
+        const thisAmount = Number(amount.replace(/[^0-9\-\.]/gi, ''))
+        const thisId = "sms_" + String(thisDate.valueOf()) + "_" + String(thisAmount);
+        return {
+          id: thisId,
+          date: thisDate,
+          amount: thisAmount,
+          name: name.trim(),
+        }
+      }));
+
+      for (let obj of textArr) {
+        obj.id = obj.id + "_" + (await cryptoString(password, obj.name));
+      }
+
+      for (let obj of textArr) {
+        rows = await back.mongoRead(collection, { id: obj.id }, { selfMongo });
+        if (rows.length === 0) {
+          await back.mongoCreate(collection, obj, { selfMongo });
+        }
+      }
+
+      res.send(JSON.stringify(textArr));
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_receiveSms): " + e.message);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
