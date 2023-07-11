@@ -2095,7 +2095,13 @@ StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
         throw new Error("post ban");
       }
 
-      bill.parsingCashReceipt().catch((err) => {
+      bill.parsingCashReceipt().then((boo) => {
+        if (boo) {
+          logger.log("cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+        } else {
+          logger.error("cash receipt fail : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+        }
+      }).catch((err) => {
         logger.error("cash receipt error : " + err.message).catch((e) => { console.log(e); });
       });
 

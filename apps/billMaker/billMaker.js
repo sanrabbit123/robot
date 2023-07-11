@@ -6247,7 +6247,7 @@ BillMaker.prototype.taxBill = async function (indexArr) {
 BillMaker.prototype.parsingCashReceipt = async function () {
   const instance = this;
   const address = this.address;
-  const { errorLog, dateToString, stringToDate, equalJson, requestSystem } = this.mother;
+  const { errorLog, emergencyAlarm, dateToString, stringToDate, equalJson, requestSystem } = this.mother;
   const GoogleChrome = require(`${process.cwd()}/apps/googleAPIs/googleChrome.js`);
   const xmlParser = require("xml2json");
   try {
@@ -6509,11 +6509,13 @@ BillMaker.prototype.parsingCashReceipt = async function () {
 
     await requestSystem("https://" + address.pythoninfo.host + ":3000/cashReceipt", { json: JSON.stringify({ cashOut: [ outMiddle ] }) }, { headers: { "Content-Type": "application/json" } });
     await requestSystem("https://" + address.pythoninfo.host + ":3000/cashReceipt", { json: JSON.stringify({ cashIn: [ inMiddle ] }) }, { headers: { "Content-Type": "application/json" } });
-    await errorLog("cashReceipt done : " + JSON.stringify(new Date()));
+
+    return true;
 
   } catch (e) {
-    await errorLog("cashReceipt fail : " + JSON.stringify(new Date()));
+    await emergencyAlarm("cashReceipt fail : " + e.message + " / " + JSON.stringify(new Date()));
     console.log(e);
+    return false;
   }
 }
 
