@@ -15,13 +15,6 @@ module.exports = {
       args: [ "static" ]
     },
     {
-      name: "clown",
-      script: "./clown.js",
-      instances: 1,
-      exec_mode: "cluster",
-      args: [ "graphicServer" ]
-    },
-    {
       name: "koala",
       script: "./koala.js",
       instances: 1,

@@ -474,17 +474,14 @@ DevContext.prototype.launching = async function () {
 
 
     
-    // "https://login.live.com/";
+
+    
 
 
     
-    // const microsoft = new MicrosoftAPIs();
-    // await microsoft.renewAccessToken();
-    // console.log(await microsoft.listOnedrive());
 
+    
 
-    const res = await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/renewMicrosoftAccessToken", { data: null }, { headers: { "Content-Type": "application/json" } });
-    console.log(res);
 
 
 
