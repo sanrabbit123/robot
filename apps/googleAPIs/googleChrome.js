@@ -207,8 +207,8 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
   const { equalJson, fileSystem, mediaQuery } = this.mother;
   const { puppeteer } = this;
   const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+  const browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ] });
   try {
-    const browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ] });
     const page = await browser.newPage();
     let funcScript, generalString, frontResponse;
 
@@ -233,11 +233,12 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
     }
   } catch (e) {
     console.log(e);
+    await browser.close();
     return { message: "error : " + e.message };
   }
 }
 
-GoogleChrome.prototype.scriptChain = async function (map, between = 1000) {
+GoogleChrome.prototype.scriptChain = async function (map, between = 2000) {
   if (!Array.isArray(map)) {
     throw new Error("invalid input => [ { link, async func } ]");
   }
@@ -245,8 +246,8 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 1000) {
   const { equalJson, fileSystem, sleep, mediaQuery } = this.mother;
   const { puppeteer } = this;
   const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+  const browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ] });
   try {
-    const browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ] });
     const page = await browser.newPage();
     let funcScript, generalString, frontResponse, frontResponses;
 
@@ -260,7 +261,6 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 1000) {
 
     frontResponses = [];
     for (let { link, func } of map) {
-      console.log("go to " + link + "...");
       await page.goto(link, { waitUntil: "networkidle2" });
       frontResponse = await page.evaluate(new AsyncFunction(returnScript(func)));
       frontResponses.push(frontResponse);
@@ -272,6 +272,7 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 1000) {
     return frontResponses;
   } catch (e) {
     console.log(e);
+    await browser.close();
     return { message: "error : " + e.message };
   }
 }

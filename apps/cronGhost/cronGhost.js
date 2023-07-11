@@ -111,7 +111,7 @@ CronGhost.prototype.basicAsyncRequest = async function (MONGOC) {
   const selfMongo = MONGOC;
   try {
 
-    requestSystem("https://" + address.secondinfo.host + ":" + String(generalPort) + "/cashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
+    requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/parsingCashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } }).then(() => {
       return requestSystem("https://" + address.pythoninfo.host + ":" + String(generalPort) + "/stylingFormSync", { data: null }, { headers: { "Content-Type": "application/json" } });
     }).then(() => {
       return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/callHistory", { data: null }, { headers: { "Content-Type": "application/json" } });

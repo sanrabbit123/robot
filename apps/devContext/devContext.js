@@ -480,89 +480,9 @@ DevContext.prototype.launching = async function () {
     // console.log(res);
 
 
-
-    const [ , inXml ] = await chrome.scriptChain([
-      {
-        link: "https://www.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/comm/a/b/UTXPPABA01.xml&w2xHome=/ui/pp/&w2xDocumentRoot=",
-        func: async function () {
-          try {
-            const idLoginButtonId = "anchor15";
-            const returnButtonId = "anchor25";
-            const inputs = {
-              id: "iptUserId",
-              pwd: "iptUserPw"
-            };
-            while (document.getElementById(idLoginButtonId) === null) {
-              await sleep(500);
-            }
-            document.getElementById(idLoginButtonId).click();
-  
-            document.getElementById(inputs.id).value = INFO.officeinfo.hometax.user;
-            document.getElementById(inputs.pwd).value = INFO.officeinfo.hometax.password;
-            document.getElementById(returnButtonId).click();
-  
-            return 1;
-          } catch (e) {
-            return 0;
-          }
-        },
-      },
-      {
-        link: "https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB005.xml",
-        func: async function () {
-          try {
-            const actionId = "ATECRCBA001R02";
-            const screenId = "UTECRCB005";
-            const txprDscmNo = INFO.officeinfo.hometax.business.replace(/\-/gi, '');
-            const spjbTrsYn = "all";
-            const pubcUserNo = "all";
-            const spstCnfrId = "all";
-            const tinNumber = INFO.officeinfo.hometax.tin;
-            const fromDate = new Date();
-            const toDate = new Date();
-            const keyCode = "<nts<nts>nts>43oYsJuG1L63TPyrHnQb0Dfi2oMeVT0n1ncuaopWyaM32";
-
-            fromDate.setMonth(fromDate.getMonth() - 1);
-            fromDate.setDate(1);
-
-            const res = await fetch("https://tecr.hometax.go.kr/wqAction.do?actionId=" + actionId + "&screenId=" + screenId + "&popupYn=false&realScreenId=", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/xml; charset=UTF-8",
-                "Host": `tecr.hometax.go.kr`,
-                "Origin": `https://tecr.hometax.go.kr`,
-                "Referer": `https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB005.xml`,
-                "Sec-Ch-Ua": `"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"`,
-                "Sec-Ch-Ua-Mobile": `?0`,
-                "Sec-Ch-Ua-Platform": `"macOS"`,
-                "Sec-Fetch-Dest": `empty`,
-                "Sec-Fetch-Mode": `cors`,
-                "Sec-Fetch-Site": `same-origin`,
-                "User-Agent": `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36`,
-              },
-              body: `<map id="${actionId}">
-              <tin>${tinNumber}</tin>
-              <spjbTrsYn>${spjbTrsYn}</spjbTrsYn>
-              <pubcUserNo>${pubcUserNo}</pubcUserNo>
-              <spstCnfrId>${spstCnfrId}</spstCnfrId>
-              <sumTotaTrsAmt/>
-              <mrntTxprDscmNoEncCntn/>
-              <trsDtRngStrt>${GeneralJs.dateToString(fromDate).replace(/[^0-9]/gi, '')}</trsDtRngStrt>
-              <trsDtRngEnd>${GeneralJs.dateToString(toDate).replace(/[^0-9]/gi, '')}</trsDtRngEnd>
-              <txprDscmNo>${txprDscmNo}</txprDscmNo>
-              </map>`
-            });
-
-            const text = await res.text();
-            return text;
-          } catch (e) {
-            return e.message;
-          }
-        }
-      }
-    ]);
-
-    console.log(inXml);
+    
+    await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(generalPort) + "/parsingCashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } });
+    
 
 
 

@@ -6246,176 +6246,268 @@ BillMaker.prototype.taxBill = async function (indexArr) {
 
 BillMaker.prototype.parsingCashReceipt = async function () {
   const instance = this;
-  const { errorLog } = this.mother;
+  const address = this.address;
+  const { errorLog, dateToString, stringToDate, equalJson, requestSystem } = this.mother;
   const GoogleChrome = require(`${process.cwd()}/apps/googleAPIs/googleChrome.js`);
+  const xmlParser = require("xml2json");
   try {
     const chrome = new GoogleChrome();
-    const res = await chrome.scriptChain([
+    const [ one, outXml, inXml ] = await chrome.scriptChain([
       {
         link: "https://www.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/comm/a/b/UTXPPABA01.xml&w2xHome=/ui/pp/&w2xDocumentRoot=",
         func: async function () {
-          const { sleep } = GeneralJs;
-          const idLoginButtonId = "anchor15";
-          const returnButtonId = "anchor25";
-          const inputs = {
-            id: "iptUserId",
-            pwd: "iptUserPw"
-          };
-
-          while (document.getElementById(idLoginButtonId) === null) {
-            await sleep(500);
+          try {
+            const idLoginButtonId = "anchor15";
+            const returnButtonId = "anchor25";
+            const inputs = {
+              id: "iptUserId",
+              pwd: "iptUserPw"
+            };
+            while (document.getElementById(idLoginButtonId) === null) {
+              await sleep(500);
+            }
+            document.getElementById(idLoginButtonId).click();
+  
+            document.getElementById(inputs.id).value = INFO.officeinfo.hometax.user;
+            document.getElementById(inputs.pwd).value = INFO.officeinfo.hometax.password;
+            document.getElementById(returnButtonId).click();
+  
+            return 1;
+          } catch (e) {
+            return 0;
           }
-
-          document.getElementById(idLoginButtonId).click();
-          document.getElementById(inputs.id).value = INFO.officeinfo.hometax.user;
-          document.getElementById(inputs.pwd).value = INFO.officeinfo.hometax.password;
-          document.getElementById(returnButtonId).click();
-
-          return 0;
-        }
+        },
       },
       {
         link: "https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB013.xml",
         func: async function () {
-          const { sleep, stringToDate, ajaxPromise } = GeneralJs;
-          let buttons;
-          let pageNumber, pageButtons;
-          let domTargets, textArr;
-          let total, middle;
-          let timeIndex;
-          let tempObj;
+          try {
+            const actionId = "ATECRCBA001R03";
+            const screenId = "UTECRCB013";
+            const pageInfoId = "pageInfoVO";
+            const txprDscmNo = INFO.officeinfo.hometax.business.replace(/[^0-9]/gi, '');
+            const pblClCd = "all";
+            const tinNumber = INFO.officeinfo.hometax.tin;
+            const fromDate = new Date();
+            const toDate = new Date();
+            const headers = {
+              "Content-Type": "application/xml; charset=UTF-8",
+              "Host": `tecr.hometax.go.kr`,
+              "Origin": `https://tecr.hometax.go.kr`,
+              "Referer": `https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB013.xml`,
+              "Sec-Ch-Ua": `"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"`,
+              "Sec-Ch-Ua-Mobile": `?0`,
+              "Sec-Ch-Ua-Platform": `"macOS"`,
+              "Sec-Fetch-Dest": `empty`,
+              "Sec-Fetch-Mode": `cors`,
+              "Sec-Fetch-Site": `same-origin`,
+              "User-Agent": `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36`,
+            };
 
-          document.getElementById('tabControl1_UTECRCB057_tab_tabs3').click();
-          await sleep(500);
-          document.getElementById("trigger1").click();
+            fromDate.setMonth(fromDate.getMonth() - 1);
+            fromDate.setDate(1);
 
-          await sleep(2000);
+            const res = await fetch("https://tecr.hometax.go.kr/wqAction.do?actionId=" + actionId + "&screenId=" + screenId + "&popupYn=false&realScreenId=", {
+              method: "POST",
+              headers,
+              body: `<map id="${actionId}">
+              <sumTotaTrsAmt/><tin>${tinNumber}</tin><txprDscmNo/>
+              <trsDtRngStrt>${GeneralJs.dateToString(fromDate).replace(/[^0-9]/gi, '')}</trsDtRngStrt>
+              <trsDtRngEnd>${GeneralJs.dateToString(toDate).replace(/[^0-9]/gi, '')}</trsDtRngEnd>
+              <pblClCd>${pblClCd}</pblClCd>
+              </map>`
+            });
 
-          pageButtons = document.querySelectorAll('.w2pageList_control_label');
-          pageNumber = pageButtons.length;
+            const text = await res.text();
+            const xml = (new window.DOMParser()).parseFromString(text, "text/xml");
+            const pageSize = Number(xml.querySelector("pageSize") === null ? 10 : xml.querySelector("pageSize").textContent);
+            const countArr = [ ...xml.querySelectorAll("totalCount") ].map((dom) => { return Number(dom.textContent) }).filter((n) => { return n !== 0 && !Number.isNaN(n) });
+            countArr.sort((a, b) => { return b - a });
+            const [ totalCount ] = countArr.length > 0 ? countArr : [ 0 ];
+            const length = Math.ceil(totalCount / pageSize);
+            let thisResponse;
+            let thisText;
+            let xmlArr;
 
-          total = [];
-          for (let i = 0; i < pageNumber; i++) {
-            pageButtons = document.querySelectorAll('.w2pageList_control_label');
-            pageButtons[i].click();
-            await sleep(2000);
-
-            domTargets = document.getElementById("grdCshpt").querySelectorAll("td");
-            textArr = [];
-            for (let dom of domTargets) {
-              textArr.push(dom.textContent);
-            }
-            textArr = textArr.filter((i) => { return !(/[0-9]/g.test(i) && /\:/g.test(i) && /[A-Z]/gi.test(i) && / /gi.test(i) && /,/gi.test(i)); });
-            textArr = textArr.map((i) => { return i.trim(); });
-            textArr = textArr.filter((i) => { return i !== '' });
-
-            timeIndex = [];
-            for (let j = 0; j < textArr.length; j++) {
-              if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(textArr[j].trim())) {
-                timeIndex.push(j);
-              }
-            }
-
-            middle = [];
-            for (let index of timeIndex) {
-              middle.push({
-                method: textArr[index - 1],
-                time: stringToDate(textArr[index].trim()),
-                supply: Number(textArr[index + 1].replace(/[^0-9\-]/g, '')),
-                vat: Number(textArr[index + 2].replace(/[^0-9\-]/g, '')),
-                service: Number(textArr[index + 3].replace(/[^0-9\-]/g, '')),
-                total: Number(textArr[index + 4].replace(/[^0-9\-]/g, '')),
-                id: textArr[index + 5],
-                issuance: textArr[index + 6],
-                deal: /승인/gi.test(textArr[index + 7]),
-                etc: textArr[index + 8],
+            xmlArr = [];
+            for (let i = 0; i < length; i++) {
+              thisResponse = await fetch("https://tecr.hometax.go.kr/wqAction.do?actionId=" + actionId + "&screenId=" + screenId + "&popupYn=false&realScreenId=", {
+                method: "POST",
+                headers,
+                body: `<map id="${actionId}">
+                <sumTotaTrsAmt/>
+                <tin>${tinNumber}</tin>
+                <txprDscmNo/>
+                <trsDtRngStrt>${GeneralJs.dateToString(fromDate).replace(/[^0-9]/gi, '')}</trsDtRngStrt>
+                <trsDtRngEnd>${GeneralJs.dateToString(toDate).replace(/[^0-9]/gi, '')}</trsDtRngEnd>
+                <pblClCd>${pblClCd}</pblClCd>
+                <map id="${pageInfoId}">
+                <pageSize>${String(pageSize)}</pageSize>
+                <pageNum>${String(i + 1)}</pageNum>
+                <totalCount>${String(totalCount)}</totalCount>
+                </map></map>`,
               });
+              thisText = await thisResponse.text();
+              xmlArr.push(thisText);
             }
 
-            total.push(middle);
-            await sleep(500);
+            return xmlArr;
+          } catch (e) {
+            return "error : " + e.message;
           }
-
-          await ajaxPromise({ json: { cashOut: total } }, "https://" + INFO.pythoninfo.host + ":3000/cashReceipt");
-          return { cashOut: total }
         }
       },
       {
         link: "https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB005.xml",
         func: async function () {
-          const { sleep, stringToDate, ajaxPromise } = GeneralJs;
-          let buttons;
-          let pageNumber, pageButtons;
-          let domTargets, textArr;
-          let total, middle;
-          let timeIndex;
-          let tempObj;
+          try {
+            const actionId = "ATECRCBA001R02";
+            const screenId = "UTECRCB005";
+            const pageInfoId = "pageInfoVO";
+            const txprDscmNo = INFO.officeinfo.hometax.business.replace(/[^0-9]/gi, '');
+            const spjbTrsYn = "all";
+            const pubcUserNo = "all";
+            const spstCnfrId = "all";
+            const tinNumber = INFO.officeinfo.hometax.tin;
+            const fromDate = new Date();
+            const toDate = new Date();
+            const headers = {
+              "Content-Type": "application/xml; charset=UTF-8",
+              "Host": `tecr.hometax.go.kr`,
+              "Origin": `https://tecr.hometax.go.kr`,
+              "Referer": `https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB005.xml`,
+              "Sec-Ch-Ua": `"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"`,
+              "Sec-Ch-Ua-Mobile": `?0`,
+              "Sec-Ch-Ua-Platform": `"macOS"`,
+              "Sec-Fetch-Dest": `empty`,
+              "Sec-Fetch-Mode": `cors`,
+              "Sec-Fetch-Site": `same-origin`,
+              "User-Agent": `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36`,
+            };
 
-          document.getElementById("tabControl1_UTECRCB005_tab_tabs3").click();
-          await sleep(500);
-          document.getElementById("trigger1").click();
+            fromDate.setMonth(fromDate.getMonth() - 1);
+            fromDate.setDate(1);
 
-          await sleep(2000);
+            const res = await fetch("https://tecr.hometax.go.kr/wqAction.do?actionId=" + actionId + "&screenId=" + screenId + "&popupYn=false&realScreenId=", {
+              method: "POST",
+              headers,
+              body: `<map id="${actionId}">
+              <tin>${tinNumber}</tin>
+              <spjbTrsYn>${spjbTrsYn}</spjbTrsYn>
+              <pubcUserNo>${pubcUserNo}</pubcUserNo>
+              <spstCnfrId>${spstCnfrId}</spstCnfrId>
+              <sumTotaTrsAmt/>
+              <mrntTxprDscmNoEncCntn/>
+              <trsDtRngStrt>${GeneralJs.dateToString(fromDate).replace(/[^0-9]/gi, '')}</trsDtRngStrt>
+              <trsDtRngEnd>${GeneralJs.dateToString(toDate).replace(/[^0-9]/gi, '')}</trsDtRngEnd>
+              <txprDscmNo>${txprDscmNo}</txprDscmNo>
+              </map>`
+            });
 
-          pageButtons = document.querySelectorAll('.w2pageList_control_label');
-          pageNumber = pageButtons.length;
+            const text = await res.text();
+            const xml = (new window.DOMParser()).parseFromString(text, "text/xml");
+            const pageSize = Number(xml.querySelector("pageSize") === null ? 10 : xml.querySelector("pageSize").textContent);
+            const countArr = [ ...xml.querySelectorAll("totalCount") ].map((dom) => { return Number(dom.textContent) }).filter((n) => { return n !== 0 && !Number.isNaN(n) });
+            countArr.sort((a, b) => { return b - a });
+            const [ totalCount ] = countArr.length > 0 ? countArr : [ 0 ];
+            const length = Math.ceil(totalCount / pageSize);
+            let thisResponse;
+            let thisText;
+            let xmlArr;
 
-          total = [];
-          for (let i = 0; i < pageNumber; i++) {
-            pageButtons = document.querySelectorAll('.w2pageList_control_label');
-            pageButtons[i].click();
-            await sleep(2000);
-
-            domTargets = document.getElementById("grdCshpt").querySelectorAll("td");
-            textArr = [];
-            for (let dom of domTargets) {
-              textArr.push(dom.textContent);
-            }
-            textArr = textArr.filter((i) => { return !(/[0-9]/g.test(i) && /\:/g.test(i) && /[A-Z]/gi.test(i) && / /gi.test(i) && /,/gi.test(i)); });
-            textArr = textArr.map((i) => { return i.trim(); });
-            textArr = textArr.filter((i) => { return i !== '' });
-
-            timeIndex = [];
-            for (let j = 0; j < textArr.length; j++) {
-              if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(textArr[j].trim())) {
-                timeIndex.push(j);
-              }
-            }
-
-            middle = [];
-            for (let index of timeIndex) {
-              middle.push({
-                time: stringToDate(textArr[index].trim()),
-                business: textArr[index + 2],
-                from: textArr[index + 3],
-                item: textArr[index + 5],
-                supply: Number(textArr[index + 7].replace(/[^0-9\-]/g, '')),
-                vat: Number(textArr[index + 8].replace(/[^0-9\-]/g, '')),
-                service: Number(textArr[index + 9].replace(/[^0-9\-]/g, '')),
-                total: Number(textArr[index + 10].replace(/[^0-9\-]/g, '')),
-                id: textArr[index + 11],
-                issuance: textArr[index + 12],
-                deal: /승인/gi.test(textArr[index + 13]),
-                etc: textArr[index + 16],
+            xmlArr = [];
+            for (let i = 0; i < length; i++) {
+              thisResponse = await fetch("https://tecr.hometax.go.kr/wqAction.do?actionId=" + actionId + "&screenId=" + screenId + "&popupYn=false&realScreenId=", {
+                method: "POST",
+                headers,
+                body: `<map id="${actionId}">
+                <tin>${tinNumber}</tin>
+                <spjbTrsYn>${spjbTrsYn}</spjbTrsYn>
+                <pubcUserNo>${pubcUserNo}</pubcUserNo>
+                <spstCnfrId>${spstCnfrId}</spstCnfrId>
+                <sumTotaTrsAmt/>
+                <mrntTxprDscmNoEncCntn/>
+                <trsDtRngStrt>${GeneralJs.dateToString(fromDate).replace(/[^0-9]/gi, '')}</trsDtRngStrt>
+                <trsDtRngEnd>${GeneralJs.dateToString(toDate).replace(/[^0-9]/gi, '')}</trsDtRngEnd>
+                <txprDscmNo>${txprDscmNo}</txprDscmNo>
+                <map id="${pageInfoId}">
+                <pageSize>${String(pageSize)}</pageSize>
+                <pageNum>${String(i + 1)}</pageNum>
+                <totalCount>${String(totalCount)}</totalCount>
+                </map></map>`,
               });
+              thisText = await thisResponse.text();
+              xmlArr.push(thisText);
             }
 
-            total.push(middle);
-            await sleep(500);
+            return xmlArr;
+          } catch (e) {
+            return "error : " + e.message;
           }
-
-          await ajaxPromise({ json: { cashIn: total } }, "https://" + INFO.pythoninfo.host + ":3000/cashReceipt");
-          return { cashIn: total }
         }
       }
     ]);
+    const outObject = outXml.map((text) => {
+      return JSON.parse(xmlParser.toJson(text));
+    })
+    const outList = [];
+    for (let obj of outObject) {
+      for (let obj2 of obj.map.list.map) {
+        outList.push(obj2);
+      }
+    }
+    const inObject = inXml.map((text) => {
+      return JSON.parse(xmlParser.toJson(text));
+    })
+    const inList = [];
+    for (let obj of inObject) {
+      for (let obj2 of obj.map.list.map) {
+        inList.push(obj2);
+      }
+    }
+    let outMiddle, inMiddle;
 
-    return res;
+    outMiddle = [];
+    for (let obj of outList) {
+      outMiddle.push({
+        method: obj.pblClCd,
+        time: stringToDate(obj.trsDtm.trim()),
+        supply: Number(obj.splCft),
+        vat: Number(obj.vaTxamt),
+        service: Number(obj.tip),
+        total: Number(obj.totaTrsAmt),
+        id: obj.aprvNo,
+        issuance: obj.spstCnfrPartNo,
+        deal: /승인/gi.test(obj.trsClNm),
+        etc: obj.cshptUsgClNm,
+      });
+    }
+
+    inMiddle = [];
+    for (let obj of inList) {
+      inMiddle.push({
+        time: stringToDate(obj.trsDtTime.trim()),
+        business: obj.mrntTxprDscmNoEncCntn,
+        from: obj.mrntTxprNm,
+        item: obj.itmNm,
+        supply: Number(obj.splCft),
+        vat: Number(obj.vaTxamt),
+        service: Number(obj.tip),
+        total: Number(obj.totaTrsAmt),
+        id: obj.aprvNo,
+        issuance: obj.spstCnfrPartNo,
+        deal: /승인/gi.test(obj.trsClNm),
+        etc: obj.prhTxamtDdcClNm,
+      });
+    }
+
+    await requestSystem("https://" + address.pythoninfo.host + ":3000/cashReceipt", { json: JSON.stringify({ cashOut: [ outMiddle ] }) }, { headers: { "Content-Type": "application/json" } });
+    await requestSystem("https://" + address.pythoninfo.host + ":3000/cashReceipt", { json: JSON.stringify({ cashIn: [ inMiddle ] }) }, { headers: { "Content-Type": "application/json" } });
+    await errorLog("cashReceipt done : " + JSON.stringify(new Date()));
 
   } catch (e) {
+    await errorLog("cashReceipt fail : " + JSON.stringify(new Date()));
     console.log(e);
-  } finally {
-    await errorLog("cashReceipt done : " + JSON.stringify(new Date()));
   }
 }
 

@@ -301,7 +301,7 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
         }
       }
 
-      bill.createBill(collection, rows, { selfMongo: instance.mongolocal }).catch((err) => {
+      bill.createBill(collection, rows, { selfMongo: selfMongo }).catch((err) => {
         console.log(err);
       });
 
