@@ -269,7 +269,7 @@ Alien.prototype.wssLaunching = async function () {
 
 Alien.prototype.smsLaunching = async function () {
   const instance = this;
-  const { fileSystem, dateToString, messageLog, messageSend, errorLog, equalJson, requestSystem } = this.mother;
+  const { fileSystem, dateToString, stringToDate, messageLog, messageSend, errorLog, equalJson, requestSystem } = this.mother;
   const address = this.address;
   const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
   const sender = [ "15662566", "01027473403", "0220392252" ];
@@ -330,16 +330,15 @@ Alien.prototype.smsLaunching = async function () {
                     const { title, body, timestamp } = sms;
                     await errorLog("receive message from " + title + " : " + body);
                     if (sender.includes(title.trim().replace(/[^0-9]/gi, '')) || title.trim() === myname) {
-                      const date = new Date(timestamp * 1000);
-                      let messageArr, index, amount, name, res;
+                      let date, messageArr, index, amount, name, res;
 
                       messageArr = body.split("\n").map((str) => { return str.trim(); });
-                      messageArr = messageArr.filter((str) => {
+                      messageArr = messageArr.filter((str) => { return str.trim() !== "" }).filter((str) => {
+                        return !/잔액 [0-9]/gi.test(str)
+                      }).map((str) => {
+                        return str.replace(/\[홈리에종\] /gi, "").trim().replace(/\:$/gi, '')
+                      }).filter((str) => {
                         return !(/^\[/.test(str) && /^\]/.test(str));
-                      }).filter((str) => {
-                        return !(/[0-9]/gi.test(str) && / /gi.test(str) && /\//gi.test(str) && /\:/gi.test(str) && str.replace(/[0-9\/\: ]/gi, '') === '');
-                      }).filter((str) => {
-                        return !/^잔액/gi.test(str);
                       }).filter((str) => {
                         return !((new RegExp('^' + accountStartNumber)).test(str) && (new RegExp(accountEndNumber + '$')).test(str));
                       });
@@ -361,15 +360,9 @@ Alien.prototype.smsLaunching = async function () {
                           throw new Error("invaild message, name error");
                         }
                         name = messageArr[index + 1].trim();
+                        date = stringToDate(messageArr[index - 1].trim().replace(/\//gi, '-') + ":00");
 
-                        res = await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/smsParsing", { date, amount, name }, { headers: { "Content-Type": "application/json" } });
-                        if (typeof res.data !== "object" || res.data === null) {
-                          throw new Error("request fail");
-                        }
-                        if (res.data.message !== "will do") {
-                          throw new Error("request fail");
-                        }
-
+                        await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":3000/receiveSms", { date, amount, name }, { headers: { "Content-Type": "application/json" } });
                       }
                     }
                   }
