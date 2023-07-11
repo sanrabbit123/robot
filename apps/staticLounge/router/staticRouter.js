@@ -2077,7 +2077,7 @@ StaticRouter.prototype.rou_post_mysqlQuery = function () {
 
 StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
   const instance = this;
-  const { equalJson } = this.mother;
+  const { equalJson, sleep } = this.mother;
   const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
   const bill = new BillMaker();
   let obj;
@@ -2094,13 +2094,26 @@ StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      const boo = await bill.parsingCashReceipt();
+      let boo;
+
+      boo = await bill.parsingCashReceipt();
       if (boo) {
         logger.log("cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
       } else {
         logger.error("cash receipt fail : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
       }
-      res.send(JSON.stringify({ message: "done" }));
+
+      while (!boo) {
+        await sleep(3000);
+        boo = await bill.parsingCashReceipt();
+        if (boo) {
+          logger.log("cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+        } else {
+          logger.error("cash receipt fail : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+        }
+      }
+
+      res.send(JSON.stringify({ success: boo ? 1 : 0 }));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_parsingCashReceipt): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -2111,7 +2124,7 @@ StaticRouter.prototype.rou_post_parsingCashReceipt = function () {
 
 StaticRouter.prototype.rou_post_issueCashReceipt = function () {
   const instance = this;
-  const { equalJson } = this.mother;
+  const { equalJson, sleep } = this.mother;
   const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
   const bill = new BillMaker();
   let obj;
@@ -2131,12 +2144,25 @@ StaticRouter.prototype.rou_post_issueCashReceipt = function () {
       if (req.body.amount === undefined || req.body.phone === undefined) {
         throw new Error("invalid post");
       }
-      const boo = await bill.issueCashReceipt(Number(req.body.amount), req.body.phone);
+      let boo;
+
+      boo = await bill.issueCashReceipt(Number(req.body.amount), req.body.phone);
       if (boo) {
         logger.log("issue cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
       } else {
         logger.error("issue cash receipt fail : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
       }
+
+      while (!boo) {
+        await sleep(3000);
+        boo = await bill.issueCashReceipt(Number(req.body.amount), req.body.phone);
+        if (boo) {
+          logger.log("issue cash receipt success : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+        } else {
+          logger.error("issue cash receipt fail : " + JSON.stringify(new Date())).catch((e) => { console.log(e); });
+        }
+      }
+
       res.send(JSON.stringify({ success: boo ? 1 : 0 }));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_issueCashReceipt): " + e.message).catch((e) => { console.log(e); });

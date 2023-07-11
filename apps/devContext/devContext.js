@@ -474,13 +474,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // "https://tecr.hometax.go.kr/wqAction.do?actionId=ATECREAA003R03&screenId=UTECRCB041&popupYn=false&realScreenId="
-
-
-
-    await bill.issueCashReceipt(2000, "010-2747-3403");
-
     
+    const res = await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/parsingCashReceipt", { data: null }, { headers: { "Content-Type": "application/json" } })
+    console.log(res);
 
 
 
