@@ -7659,9 +7659,11 @@ GeneralJs.variableArray = function (length, callback = null) {
 }
 
 GeneralJs.fireEvent = function (dom, eventName) {
-  if (eventName !== "click") {
+  if (eventName !== "click" && eventName !== "focus") {
     dom.dispatchEvent(new Event(eventName, { bubbles: true }));
-  } else {
+  } else if (eventName === "click") {
     dom.click();
+  } else {
+    dom.focus();
   }
 }

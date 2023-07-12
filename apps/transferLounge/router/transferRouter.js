@@ -30,6 +30,8 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.userConst = this.staticConst + this.userLinkConst;
   this.hashConst = "homeliaisonHash";
   this.tempConst = this.staticConst + "/photo/temp";
+  this.designerProfileConst = this.folderConst + "/profile";
+  this.designerWorksConst = this.folderConst + "/works";
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -1469,11 +1471,12 @@ TransferRouter.prototype.rou_post_imageAnalytics = function () {
           if (err) {
             throw new Error(err);
           } else {
+            const { exe } = fields;
             let filesKey, fromArr;
             let thisFileName;
             let imageJson;
 
-            thisFileName = "file_" + uniqueValue("hex");
+            thisFileName = "file_" + uniqueValue("hex") + "." + exe;
 
             filesKey = Object.keys(files);
             if (filesKey.length !== 1) {
@@ -1501,6 +1504,78 @@ TransferRouter.prototype.rou_post_imageAnalytics = function () {
     } catch (e) {
       console.log(e);
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_imageAnalytics): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_designerProfilePhoto = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, uniqueValue, stringToLink, linkToString } = this.mother;
+  const address = this.address;
+  const { staticConst, designerProfileConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/designerProfilePhoto" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        try {
+          if (err) {
+            throw new Error(err);
+          } else {
+            const token = "__split__";
+            const now = new Date();
+            const { desid, gs, exe } = fields;
+            const longConst = 1500;
+            let filesKey, fromArr;
+            let thisFileName;
+            let imageJson;
+            let thisLinkPath;
+
+            thisFileName = desid + token + gs + token + String(now.valueOf()) + "." + exe;
+
+            filesKey = Object.keys(files);
+            if (filesKey.length !== 1) {
+              throw new Error("only one image must");
+            }
+
+            fromArr = [];
+            for (let key of filesKey) {
+              fromArr.push(files[key]);
+            }
+
+            for (let { filepath: path } of fromArr) {
+              await shellExec(`mv ${shellLink(path)} ${shellLink(designerProfileConst + "/" + thisFileName)}`);
+            }
+            if (gs === "g") {
+              await instance.imageReader.readImage(designerProfileConst + "/" + thisFileName, longConst, null);
+            } else {
+              await instance.imageReader.readImage(designerProfileConst + "/" + thisFileName, null, longConst);
+            }
+
+            thisLinkPath = String(designerProfileConst + "/" + thisFileName).replace(new RegExp("^" + staticConst, "g"), "");
+            
+            res.send(JSON.stringify({ link: linkToString("https://" + address.transinfo.host + thisLinkPath) }));
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerProfilePhoto): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

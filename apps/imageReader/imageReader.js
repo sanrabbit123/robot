@@ -127,6 +127,54 @@ ImageReader.prototype.readImage = async function (filePath, toJson = false) {
   }
 }
 
+ImageReader.prototype.resizeImage = async function (filePath, width = 1500, height = "auto", original = false) {
+  const instance = this;
+  const { shellExec, uniqueValue, fileSystem } = this.mother;
+  try {
+    if (typeof filePath !== "string") {
+      throw new Error("invaild input");
+    }
+    if (!/^\//.test(filePath)) {
+      throw new Error("must be absolute path");
+    }
+    if (width === null || width === 0) {
+      width = "auto";
+    }
+    if (height === null || height === 0) {
+      height = "auto";
+    }
+    const fileName = filePath.split('/')[filePath.split('/').length - 1];
+    const fileDir = filePath.split('/').slice(0, -1).join('/');
+    const filePureName = fileName.split('.').slice(0, -1).join('.');
+    const fileExe = fileName.split('.')[fileName.split('.').length - 1];
+
+    const tempDir = process.cwd() + "/temp";
+    const tempResult = tempDir + "/" + filePureName + "_" + uniqueValue("hex") + "." + fileExe;
+
+    if (typeof width === "number" && height === "auto") {
+      await shellExec(`convert`, [ filePath, "-resize", String(width) + "x", tempResult ]);
+    } else if (width === "auto" && typeof height === "number") {
+      await shellExec(`convert`, [ filePath, "-resize", "x" + String(height), tempResult ]);
+    } else if (typeof width === "number" && typeof height === "number") {
+      await shellExec(`convert`, [ filePath, "-resize", String(width) + "x" + String(height), tempResult ]);
+    } else {
+      throw new Error("invalid input");
+    }
+    
+    if (original) {
+      await shellExec(`mv`, [ filePath, fileDir + "/" + filePureName + "_original" + "." + fileExe ]);
+    } else {
+      await shellExec(`rm`, [ `-rf`, filePath ]);
+    }
+    await shellExec(`mv`, [ tempResult, filePath ]);
+    
+    return filePath;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 ImageReader.prototype.recursivePdfConvert = async function (folderPath) {
   const instance = this;
   const { shellExec } = this.mother;

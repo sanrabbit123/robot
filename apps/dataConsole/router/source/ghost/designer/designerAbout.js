@@ -2943,7 +2943,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent, equalJson, stringToLink, linkToString } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainContents = [
     {
@@ -2952,6 +2952,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
       ],
     },
   ];
+  const profileFileInputClassName = "profileFileInputClassName";
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -3003,6 +3004,8 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   let exampleTextVisualLeft;
   let exampleFactorWidth, exampleFactorMargin;
   let goodBadSize, goodBadWeight, goodBadRight;
+  let profileUploadEvent;
+  let profileFileInputEvent;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -3091,6 +3094,76 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
 
   this.whiteMargin = (desktop ? margin : 0);
 
+  profileFileInputEvent = () => {
+    return async function (e) {
+      try {
+        let formData;
+        let response;
+        let imageJson;
+        let width;
+        let height;
+        let widthHeightArr;
+        let garoBoo;
+        let thisExe;
+
+        if (this.files.length === 1) {
+          formData = new FormData();
+          formData.enctype = "multipart/form-data";
+
+          thisExe = this.files[0].name.split(".")[this.files[0].name.split(".").length - 1];
+
+          formData.append("profilePhoto0", this.files[0]);
+          formData.append("exe", thisExe);
+
+          response = await ajaxForm(formData, BRIDGEHOST + "/imageAnalytics");
+          imageJson = equalJson(response);
+
+          ({ width, height } = imageJson.geometry);
+
+          widthHeightArr = [ width, height ];
+          widthHeightArr.sort((a, b) => { return a - b; });
+
+          if (widthHeightArr[0] < 1000) {
+            window.alert("사진의 크기는 가로 크기와 세로 크기 모두 최소 1000px 이상이여야 합니다!");
+          } else {
+
+            garoBoo = (width >= height);
+            formData.append("gs", garoBoo ? "g" : "s");
+            formData.append("desid", instance.designer.desid);
+            formData.append("exe", thisExe);
+
+            response = await ajaxForm(formData, BRIDGEHOST + "/designerProfilePhoto");
+
+            console.log(response);
+
+
+
+
+
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        if (instance.grayLoading !== null) {
+          instance.grayLoading.remove();
+          instance.grayLoading = null;
+        }
+      }
+    }
+  }
+
+  profileUploadEvent = async function (e) {
+    try {
+      const fileInput = document.querySelector("." + profileFileInputClassName);
+      const loading = instance.mother.grayLoading();
+      instance.grayLoading = loading;
+      fireEvent(fileInput, "click");
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   whiteBlock = createNode({
     mother: baseTong,
     style: {
@@ -3156,6 +3229,26 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
 
   createNode({
     mother: profilePhotoZone,
+    class: [ profileFileInputClassName ],
+    mode: "input",
+    event: {
+      change: profileFileInputEvent()
+    },
+    attribute: {
+      type: "file",
+      name: "profilePhoto",
+      accept: "image/*",
+    },
+    style: {
+      display: "none",
+    }
+  })
+
+  createNode({
+    mother: profilePhotoZone,
+    event: {
+      click: profileUploadEvent,
+    },
     style: {
       display: "flex",
       position: "absolute",
@@ -6283,6 +6376,7 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     this.isMouseDown = false;
     this.downSelection = null;
     this.careerBlocksRender = (value, tong) => {};
+    this.grayLoading = null;
 
     this.entireMode = false;
     this.normalMode = false;
