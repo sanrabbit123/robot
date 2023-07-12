@@ -4692,9 +4692,12 @@ StaticRouter.prototype.rou_post_complexReport = function () {
               }
               deviceArr.push(userObject.device);
             }
+
+            campaignArr = campaignArr.filter((str) => { return !/^link_/g.test(str) });
+
             targetUserObject = {
-              source: sourceArr.length === 0 ? unknownKeyword : sourceArr[0],
-              campaign: campaignArr.length === 0 ? unknownKeyword : campaignArr[0],
+              source: sourceArr.length === 0 ? unknownKeyword : sourceArr.join(", "),
+              campaign: campaignArr.length === 0 ? unknownKeyword : campaignArr.join(", "),
               device: deviceArr.length === 0 ? unknownKeyword : deviceArr[0],
             }
           } else {
