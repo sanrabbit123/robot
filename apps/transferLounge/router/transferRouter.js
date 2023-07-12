@@ -1721,7 +1721,9 @@ TransferRouter.prototype.rou_post_designerProfileUpdate = function () {
       if (mode === "position") {
         const { x, y } = equalJson(req.body.position);
         newName = desid + splitToken + target.gs + splitToken + String(target.date.valueOf()) + splitToken + String(x) + splitToken + String(y) + splitToken + String(target.size) + splitToken + target.id + "." + target.file.exe;
-        await shellExec("mv", [ designerProfileConst + "/" + target.file.name, designerProfileConst + "/" + newName ]);
+        if (newName !== target.file.name) {
+          await shellExec("mv", [ designerProfileConst + "/" + target.file.name, designerProfileConst + "/" + newName ]);
+        }
       }
 
       res.send(JSON.stringify({ message: "done" }));
