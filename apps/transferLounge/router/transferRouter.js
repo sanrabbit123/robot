@@ -1544,7 +1544,7 @@ TransferRouter.prototype.rou_post_designerProfilePhoto = function () {
             let imageJson;
             let thisLinkPath;
 
-            thisFileName = desid + token + gs + token + String(now.valueOf()) + "." + exe;
+            thisFileName = desid + token + gs + token + String(now.valueOf()) + token + uniqueValue("hex") + "." + exe;
 
             filesKey = Object.keys(files);
             if (filesKey.length !== 1) {
@@ -1575,6 +1575,57 @@ TransferRouter.prototype.rou_post_designerProfilePhoto = function () {
     } catch (e) {
       console.log(e);
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerProfilePhoto): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_designerProfileList = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, equalJson, messageSend, linkToString } = this.mother;
+  const { designerProfileConst, staticConst } = this;
+  const address = this.address;
+  let obj;
+  obj = {};
+  obj.link = [ "/designerProfileList" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.desid === undefined) {
+        throw new Error("invalid post");
+      }
+      const { desid } = req.body;
+      const splitToken = "__split__";
+      const rawList = await fileSystem("readDir", [ designerProfileConst ]);
+      let result;
+
+      result = rawList.filter((str) => { return !/^\./.test(str) }).map((rawString) => {
+        const [ desid, gs, timeNumber, uniqueExe ] = rawString.split(splitToken);
+        const [ id, exe ] = uniqueExe.split(".");
+        return {
+          desid,
+          gs,
+          timeNumber: Number(timeNumber),
+          date: new Date(Number(timeNumber)),
+          exe,
+          fileName: rawString,
+          link: linkToString("https://" + address.transinfo.host + String(designerProfileConst + "/" + rawString).replace(new RegExp("^" + staticConst, "g"), "")),
+        }
+      });
+
+      result = result.filter((obj) => { return obj.desid === desid });
+      result.sort((a, b) => { return b.timeNumber - a.timeNumber });
+
+      res.send(JSON.stringify(result));
+
+    } catch (e) {
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerProfileList): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

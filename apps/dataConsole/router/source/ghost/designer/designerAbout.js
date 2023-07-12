@@ -3225,7 +3225,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
       width: String(profileWidth) + ea,
       height: withOut(0, ea),
       borderRadius: String(profileWidth) + ea,
-      backgroundImage: "url('" + DesignerAboutJs.binaryPath + "/blankProfile.jpg" + "')",
+      backgroundImage: "url('" + instance.profilePhoto + "')",
       backgroundPosition: "50% 50%",
       backgroundSize: "auto 102%",
       opacity: String(0.5),
@@ -6326,7 +6326,7 @@ DesignerAboutJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson, colorChip } = GeneralJs;
+    const { returnGet, ajaxJson, colorChip, stringToLink } = GeneralJs;
     const getObj = returnGet();
     let cliid, clients, client;
     let proid, projects, project;
@@ -6375,6 +6375,15 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     }
 
     this.realtimeDesigner = await ajaxJson({ mode: "get", desid }, BACKHOST + "/realtimeDesigner", { equal: true });
+
+    this.profileList = await ajaxJson({ desid }, BRIDGEHOST + "/designerProfileList", { equal: true });
+    this.profileList = this.profileList.map((o) => { o.link = stringToLink(o.link); return o; });
+    this.profilePhoto = DesignerAboutJs.binaryPath + "/blankProfile.jpg";
+    if (this.profileList.length > 0) {
+      this.profilePhoto = this.profileList[0];
+    }
+    console.log(this.profileList);
+
 
     this.selection = [];
     this.possibleBoxes = [];
