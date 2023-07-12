@@ -1551,8 +1551,6 @@ TransferRouter.prototype.rou_post_designerProfilePhoto = function () {
               throw new Error("only one image must");
             }
 
-            console.log(thisFileName);
-
             fromArr = [];
             for (let key of filesKey) {
               fromArr.push(files[key]);
@@ -1562,9 +1560,9 @@ TransferRouter.prototype.rou_post_designerProfilePhoto = function () {
               await shellExec(`mv ${shellLink(path)} ${shellLink(designerProfileConst + "/" + thisFileName)}`);
             }
             if (gs === "g") {
-              await instance.imageReader.readImage(designerProfileConst + "/" + thisFileName, longConst, null);
+              await instance.imageReader.resizeImage(designerProfileConst + "/" + thisFileName, longConst, null);
             } else {
-              await instance.imageReader.readImage(designerProfileConst + "/" + thisFileName, null, longConst);
+              await instance.imageReader.resizeImage(designerProfileConst + "/" + thisFileName, null, longConst);
             }
 
             thisLinkPath = String(designerProfileConst + "/" + thisFileName).replace(new RegExp("^" + staticConst, "g"), "");
