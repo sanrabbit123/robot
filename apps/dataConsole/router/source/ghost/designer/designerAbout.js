@@ -3012,6 +3012,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   let thisBackgroundImageBox;
   let circleWidth;
   let brightCircle;
+  let imageBaseBox;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -3098,8 +3099,8 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   goodBadWeight = <%% 500, 500, 500, 500, 500 %%>;
   goodBadRight = <%% -14, -14, -14, -14, -14 %%>;
 
-  fixImageWidth = 1000;
-  fixImageHeight = 600;
+  fixImageWidth = window.innerHeight < 900 ? 700 : 800;
+  fixImageHeight = window.innerHeight - 400;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -3173,6 +3174,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
 
   photoResizeEvent = () => {
     return function (e) {
+      const imageMother = this;
       const zIndex = 4;
       let grayBack;
       let imageBase;
@@ -3209,7 +3211,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
 
         if (instance.profileTarget.gs === "g") {
 
-          createNode({
+          thisBackgroundImage = createNode({
             mother: imageBase,
             mode: "img",
             attribute: {
@@ -3221,7 +3223,11 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
               width: String(fixImageWidth) + ea,
               height: "auto",
             }
-          })
+          });
+
+          imageBaseBox = imageBase.getBoundingClientRect();
+          thisBackgroundImageBox = thisBackgroundImage.getBoundingClientRect();
+          circleWidth = thisBackgroundImageBox.height * (100 / instance.profileTarget.size);  
 
         } else {
 
@@ -3239,48 +3245,55 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
             }
           });
 
+          imageBaseBox = imageBase.getBoundingClientRect();
           thisBackgroundImageBox = thisBackgroundImage.getBoundingClientRect();
-          circleWidth = thisBackgroundImageBox.width * (100 / instance.profileTarget.size);
+          circleWidth = thisBackgroundImageBox.width * (100 / instance.profileTarget.size);  
+        }
 
-          brightCircle = createNode({
-            mother: imageBase,
-            attribute: {
-              draggable: "true",
-              starty: String(0),
-              startx: String(0),
+        brightCircle = createNode({
+          mother: imageBase,
+          attribute: {
+            draggable: "true",
+            starty: String(0),
+            startx: String(0),
+            process: "false",
+          },
+          event: {
+            dragstart: function (e) {
+              this.setAttribute("starty", String(e.offsetY));
+              this.setAttribute("startx", String(e.offsetX));
+              this.setAttribute("process", "true");
             },
-            event: {
-              dragstart: function (e) {
-                this.setAttribute("starty", String(e.offsetY));
-                this.setAttribute("startx", String(e.offsetX));
-              },
-              dragover: function (e) {
-                const starty = Number(this.getAttribute("starty"));
-                const thisy = e.offsetY - starty;
-                const startx = Number(this.getAttribute("startx"));
-                const thisx = e.offsetX - startx;
-                this.style.transform = "translate(" + String(thisx) + "px" + " ," + String(thisy) + "px)";
-              },
-              dragend: function (e) {
-                const imageBaseBox = imageBase.getBoundingClientRect();
-                const thisBackgroundImageBox = thisBackgroundImage.getBoundingClientRect();
+            dragover: function (e) {
+              const starty = Number(this.getAttribute("starty"));
+              const thisy = e.offsetY - starty;
+              const startx = Number(this.getAttribute("startx"));
+              const thisx = e.offsetX - startx;
+              this.style.transform = "translate(" + String(thisx) + "px" + " ," + String(thisy) + "px)";
+              this.setAttribute("process", "true");
+            },
+            dragend: async function (e) {
+              try {
                 const brightCircleBox = brightCircle.getBoundingClientRect();
                 let finalX, finalY;
                 let minimumY, maximumY;
                 let minimumX, maximumX;
-
+                let rangeY, rangeX;
+  
                 minimumY = (((thisBackgroundImageBox.top - naviHeight) + (circleWidth / 2)) / imageBaseBox.height) * 100;
                 maximumY = 50 + Math.abs(50 - Math.abs(minimumY));
-
+                rangeY = Math.abs(50 - Math.abs(minimumY)) * 2;
+  
                 minimumX = (((thisBackgroundImageBox.left) + (circleWidth / 2)) / imageBaseBox.width) * 100;
                 maximumX = 50 + Math.abs(50 - Math.abs(minimumX));
-
+                rangeX = Math.abs(50 - Math.abs(minimumX)) * 2;
+  
                 finalY = ((brightCircleBox.top - naviHeight + (circleWidth / 2)) / imageBaseBox.height) * 100;
                 finalX = ((brightCircleBox.left + (circleWidth / 2)) / imageBaseBox.width) * 100;
-
+  
                 finalY = Math.round(finalY);
                 finalX = Math.round(finalX);
-
+  
                 if (finalY < minimumY) {
                   finalY = Math.ceil(minimumY);
                 }
@@ -3293,32 +3306,48 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
                 if (finalX > maximumX) {
                   finalX = Math.floor(maximumX);
                 }
-
-                console.log(finalX, finalY);
-
+  
                 this.style.top = withOut(finalY, (circleWidth / 2), ea);
                 this.style.left = withOut(finalX, (circleWidth / 2), ea);
                 this.style.transform = "translate(0px, 0px)";
-              },
+  
+                instance.profileTarget.position.x = 50 + (((finalX - 50) / rangeX) * 100);
+                instance.profileTarget.position.y = 50 + (((finalY - 50) / rangeY) * 100);
+  
+                imageMother.style.backgroundPosition = String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%";
+  
+                console.log(instance.profileTarget);
+
+                await ajaxJson({
+                  desid: instance.designer.desid,
+                  id: instance.profileTarget.id,
+                  mode: "position",
+                  position: {
+                    x: instance.profileTarget.position.x,
+                    y: instance.profileTarget.position.y,
+                  }
+                }, BRIDGEHOST + "/designerProfileUpdate");
+
+              } catch (e) {
+                console.log(e);
+              }
             },
-            style: {
-              display: "inline-block",
-              position: "absolute",
-              top: withOut(50, circleWidth / 2, ea),
-              left: withOut(50, circleWidth / 2, ea),
-              width: String(circleWidth) + ea,
-              height: String(circleWidth) + ea,
-              borderRadius: String(circleWidth) + ea,
-              background: "rgb(0, 0, 0, 0)",
-              "backdrop-filter": "brightness(2)",
-              transition: "all 0.3s ease",
-              cursor: "pointer",
-              transform: "translate(0px, 0px)",
-            }
-          })
-
-
-        }
+          },
+          style: {
+            display: "inline-block",
+            position: "absolute",
+            top: withOut(50, circleWidth / 2, ea),
+            left: withOut(50, circleWidth / 2, ea),
+            width: String(circleWidth) + ea,
+            height: String(circleWidth) + ea,
+            borderRadius: String(circleWidth) + ea,
+            background: "rgb(0, 0, 0, 0)",
+            "backdrop-filter": "brightness(2)",
+            transition: "all 0.3s ease",
+            cursor: "pointer",
+            transform: "translate(0px, 0px)",
+          }
+        });
 
       }
     }
@@ -3395,7 +3424,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
       height: withOut(0, ea),
       borderRadius: String(profileWidth) + ea,
       backgroundImage: "url('" + instance.profilePhoto + "')",
-      backgroundPosition: instance.profileTarget === null ? "50% 50%" : String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.x) + "%",
+      backgroundPosition: instance.profileTarget === null ? "50% 50%" : String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%",
       backgroundSize: instance.profileTarget === null ? "auto 102%" : (instance.profileTarget.gs === "g" ? "auto " + String(instance.profileTarget.size) + "%" : String(instance.profileTarget.size) + "% auto"),
       opacity: instance.profileTarget === null ? String(0.5) : String(1),
       cursor: "pointer",

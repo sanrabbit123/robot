@@ -1665,6 +1665,75 @@ TransferRouter.prototype.rou_post_designerProfileList = function () {
   return obj;
 }
 
+TransferRouter.prototype.rou_post_designerProfileUpdate = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, equalJson, messageSend, linkToString } = this.mother;
+  const { designerProfileConst, staticConst } = this;
+  const address = this.address;
+  let obj;
+  obj = {};
+  obj.link = [ "/designerProfileUpdate" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.desid === undefined || req.body.id === undefined || req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const { desid, id, mode } = req.body;
+      const splitToken = "__split__";
+      const rawList = await fileSystem("readDir", [ designerProfileConst ]);
+      let targetList;
+      let target;
+      let newName;
+
+      targetList = rawList.filter((str) => { return !/^\./.test(str) }).map((rawString) => {
+        const [ desid, gs, timeNumber, xPosition, yPosition, size, uniqueExe ] = rawString.split(splitToken);
+        const [ id, exe ] = uniqueExe.split(".");
+        return {
+          id,
+          desid,
+          gs,
+          date: new Date(Number(timeNumber)),
+          link: linkToString("https://" + address.transinfo.host + String(designerProfileConst + "/" + rawString).replace(new RegExp("^" + staticConst, "g"), "")),
+          file: {
+            exe,
+            name: rawString,
+          },
+          position: {
+            x: Number(xPosition),
+            y: Number(yPosition),
+          },
+          size: Number(size),
+        }
+      });
+
+      targetList = targetList.filter((obj) => { return obj.desid === desid });
+      target = targetList.find((obj) => { return obj.id === id });
+      if (target === undefined) {
+        throw new Error("There is no target");
+      }
+
+      if (mode === "position") {
+        const { x, y } = equalJson(req.body.position);
+        newName = desid + splitToken + target.gs + splitToken + String(target.date.valueOf()) + splitToken + String(x) + splitToken + String(y) + splitToken + String(target.size) + splitToken + target.id + "." + target.file.exe;
+        await shellExec("mv", [ designerProfileConst + "/" + target.file.name, designerProfileConst + "/" + newName ]);
+      }
+
+      res.send(JSON.stringify({ message: "done" }));
+
+    } catch (e) {
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerProfileUpdate): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 TransferRouter.prototype.getAll = function () {
