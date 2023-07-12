@@ -3013,6 +3013,9 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   let circleWidth;
   let brightCircle;
   let imageBaseBox;
+  let minimumY, maximumY;
+  let minimumX, maximumX;
+  let rangeY, rangeX;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -3250,6 +3253,14 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
           circleWidth = thisBackgroundImageBox.width * (100 / instance.profileTarget.size);  
         }
 
+        minimumY = (((thisBackgroundImageBox.top - naviHeight) + (circleWidth / 2)) / imageBaseBox.height) * 100;
+        maximumY = 50 + Math.abs(50 - Math.abs(minimumY));
+        rangeY = Math.abs(50 - Math.abs(minimumY)) * 2;
+
+        minimumX = (((thisBackgroundImageBox.left) + (circleWidth / 2)) / imageBaseBox.width) * 100;
+        maximumX = 50 + Math.abs(50 - Math.abs(minimumX));
+        rangeX = Math.abs(50 - Math.abs(minimumX)) * 2;
+
         brightCircle = createNode({
           mother: imageBase,
           attribute: {
@@ -3276,17 +3287,6 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
               try {
                 const brightCircleBox = brightCircle.getBoundingClientRect();
                 let finalX, finalY;
-                let minimumY, maximumY;
-                let minimumX, maximumX;
-                let rangeY, rangeX;
-  
-                minimumY = (((thisBackgroundImageBox.top - naviHeight) + (circleWidth / 2)) / imageBaseBox.height) * 100;
-                maximumY = 50 + Math.abs(50 - Math.abs(minimumY));
-                rangeY = Math.abs(50 - Math.abs(minimumY)) * 2;
-  
-                minimumX = (((thisBackgroundImageBox.left) + (circleWidth / 2)) / imageBaseBox.width) * 100;
-                maximumX = 50 + Math.abs(50 - Math.abs(minimumX));
-                rangeX = Math.abs(50 - Math.abs(minimumX)) * 2;
   
                 finalY = ((brightCircleBox.top - naviHeight + (circleWidth / 2)) / imageBaseBox.height) * 100;
                 finalX = ((brightCircleBox.left + (circleWidth / 2)) / imageBaseBox.width) * 100;
@@ -3311,13 +3311,11 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
                 this.style.left = withOut(finalX, (circleWidth / 2), ea);
                 this.style.transform = "translate(0px, 0px)";
   
-                instance.profileTarget.position.x = 50 + (((finalX - 50) / rangeX) * 100);
-                instance.profileTarget.position.y = 50 + (((finalY - 50) / rangeY) * 100);
-  
+                instance.profileTarget.position.x = Math.round(50 + (((finalX - 50) / rangeX) * 100));
+                instance.profileTarget.position.y = Math.round(50 + (((finalY - 50) / rangeY) * 100));
+
                 imageMother.style.backgroundPosition = String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%";
   
-                console.log(instance.profileTarget);
-
                 await ajaxJson({
                   desid: instance.designer.desid,
                   id: instance.profileTarget.id,
@@ -3336,8 +3334,8 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
           style: {
             display: "inline-block",
             position: "absolute",
-            top: withOut(50, circleWidth / 2, ea),
-            left: withOut(50, circleWidth / 2, ea),
+            top: withOut((((instance.profileTarget.position.y - 50) / 100) * rangeY) + 50, circleWidth / 2, ea),
+            left: withOut((((instance.profileTarget.position.x - 50) / 100) * rangeX) + 50, circleWidth / 2, ea),
             width: String(circleWidth) + ea,
             height: String(circleWidth) + ea,
             borderRadius: String(circleWidth) + ea,

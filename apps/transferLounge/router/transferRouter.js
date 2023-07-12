@@ -1727,6 +1727,7 @@ TransferRouter.prototype.rou_post_designerProfileUpdate = function () {
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
+      console.log(e);
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerProfileUpdate): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
