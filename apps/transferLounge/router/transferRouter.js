@@ -1579,7 +1579,7 @@ TransferRouter.prototype.rou_post_designerProfilePhoto = function () {
               desid,
               gs,
               date: now,
-              link: linkToString("https://" + address.transinfo.host + String(designerProfileConst + "/" + rawString).replace(new RegExp("^" + staticConst, "g"), "")),
+              link: thisLink,
               file: {
                 exe,
                 name: designerProfileConst + "/" + thisFileName,
