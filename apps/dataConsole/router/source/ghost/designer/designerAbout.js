@@ -2940,10 +2940,10 @@ DesignerAboutJs.prototype.insertNoticeBox = function () {
 DesignerAboutJs.prototype.insertProfileBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { client, ea, baseTong, media, project } = this;
+  const { client, ea, baseTong, media, project, totalContents, naviHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent, equalJson, stringToLink, linkToString } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent, equalJson, stringToLink, linkToString, setThrottle, setQueue } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainContents = [
     {
@@ -3006,6 +3006,12 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   let goodBadSize, goodBadWeight, goodBadRight;
   let profileUploadEvent;
   let profileFileInputEvent;
+  let photoResizeEvent;
+  let fixImageWidth, fixImageHeight;
+  let thisBackgroundImage;
+  let thisBackgroundImageBox;
+  let circleWidth;
+  let brightCircle;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -3092,6 +3098,9 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   goodBadWeight = <%% 500, 500, 500, 500, 500 %%>;
   goodBadRight = <%% -14, -14, -14, -14, -14 %%>;
 
+  fixImageWidth = 1000;
+  fixImageHeight = 600;
+
   this.whiteMargin = (desktop ? margin : 0);
 
   profileFileInputEvent = () => {
@@ -3162,6 +3171,159 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
     }
   }
 
+  photoResizeEvent = () => {
+    return function (e) {
+      const zIndex = 4;
+      let grayBack;
+      let imageBase;
+
+      if (instance.profileTarget !== null) {
+        grayBack = createNode({
+          mother: totalContents,
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            opacity: String(0.8),
+            background: colorChip.realBlack,
+            zIndex: String(zIndex),
+          }
+        });
+  
+        imageBase = createNode({
+          mother: totalContents,
+          style: {
+            display: "flex",
+            position: "fixed",
+            top: String(naviHeight) + ea,
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(naviHeight, ea),
+            zIndex: String(zIndex),
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        })
+
+        if (instance.profileTarget.gs === "g") {
+
+          createNode({
+            mother: imageBase,
+            mode: "img",
+            attribute: {
+              src: instance.profilePhoto,
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(fixImageWidth) + ea,
+              height: "auto",
+            }
+          })
+
+        } else {
+
+          thisBackgroundImage = createNode({
+            mother: imageBase,
+            mode: "img",
+            attribute: {
+              src: instance.profilePhoto,
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              height: String(fixImageHeight) + ea,
+              width: "auto",
+            }
+          });
+
+          thisBackgroundImageBox = thisBackgroundImage.getBoundingClientRect();
+          circleWidth = thisBackgroundImageBox.width * (100 / instance.profileTarget.size);
+
+          brightCircle = createNode({
+            mother: imageBase,
+            attribute: {
+              draggable: "true",
+              starty: String(0),
+              startx: String(0),
+            },
+            event: {
+              dragstart: function (e) {
+                this.setAttribute("starty", String(e.offsetY));
+                this.setAttribute("startx", String(e.offsetX));
+              },
+              dragover: function (e) {
+                const starty = Number(this.getAttribute("starty"));
+                const thisy = e.offsetY - starty;
+                const startx = Number(this.getAttribute("startx"));
+                const thisx = e.offsetX - startx;
+                this.style.transform = "translate(" + String(thisx) + "px" + " ," + String(thisy) + "px)";
+              },
+              dragend: function (e) {
+                const imageBaseBox = imageBase.getBoundingClientRect();
+                const thisBackgroundImageBox = thisBackgroundImage.getBoundingClientRect();
+                const brightCircleBox = brightCircle.getBoundingClientRect();
+                let finalX, finalY;
+                let minimumY, maximumY;
+                let minimumX, maximumX;
+
+                minimumY = (((thisBackgroundImageBox.top - naviHeight) + (circleWidth / 2)) / imageBaseBox.height) * 100;
+                maximumY = 50 + Math.abs(50 - Math.abs(minimumY));
+
+                minimumX = (((thisBackgroundImageBox.left) + (circleWidth / 2)) / imageBaseBox.width) * 100;
+                maximumX = 50 + Math.abs(50 - Math.abs(minimumX));
+
+                finalY = ((brightCircleBox.top - naviHeight + (circleWidth / 2)) / imageBaseBox.height) * 100;
+                finalX = ((brightCircleBox.left + (circleWidth / 2)) / imageBaseBox.width) * 100;
+
+                finalY = Math.round(finalY);
+                finalX = Math.round(finalX);
+
+                if (finalY < minimumY) {
+                  finalY = Math.ceil(minimumY);
+                }
+                if (finalY > maximumY) {
+                  finalY = Math.floor(maximumY);
+                }
+                if (finalX < minimumX) {
+                  finalX = Math.ceil(minimumX);
+                }
+                if (finalX > maximumX) {
+                  finalX = Math.floor(maximumX);
+                }
+
+                console.log(finalX, finalY);
+
+                this.style.top = withOut(finalY, (circleWidth / 2), ea);
+                this.style.left = withOut(finalX, (circleWidth / 2), ea);
+                this.style.transform = "translate(0px, 0px)";
+              },
+            },
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              top: withOut(50, circleWidth / 2, ea),
+              left: withOut(50, circleWidth / 2, ea),
+              width: String(circleWidth) + ea,
+              height: String(circleWidth) + ea,
+              borderRadius: String(circleWidth) + ea,
+              background: "rgb(0, 0, 0, 0)",
+              "backdrop-filter": "brightness(2)",
+              transition: "all 0.3s ease",
+              cursor: "pointer",
+              transform: "translate(0px, 0px)",
+            }
+          })
+
+
+        }
+
+      }
+    }
+  }
+
   profileUploadEvent = async function (e) {
     try {
       const fileInput = document.querySelector("." + profileFileInputClassName);
@@ -3222,6 +3384,9 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
 
   createNode({
     mother: profilePhotoZone,
+    event: {
+      click: photoResizeEvent(),
+    },
     style: {
       display: "flex",
       flexDirection: "row",
@@ -3233,6 +3398,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
       backgroundPosition: instance.profileTarget === null ? "50% 50%" : String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.x) + "%",
       backgroundSize: instance.profileTarget === null ? "auto 102%" : (instance.profileTarget.gs === "g" ? "auto " + String(instance.profileTarget.size) + "%" : String(instance.profileTarget.size) + "% auto"),
       opacity: instance.profileTarget === null ? String(0.5) : String(1),
+      cursor: "pointer",
     }
   });
 
