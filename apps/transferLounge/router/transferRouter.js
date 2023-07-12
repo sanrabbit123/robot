@@ -1542,6 +1542,7 @@ TransferRouter.prototype.rou_post_designerProfilePhoto = function () {
             const idConst = "profile_";
             const xPositionConst = 50;
             const yPositionConst = 50;
+            const sizeConst = 102;
             let filesKey, fromArr;
             let thisFileName;
             let imageJson;
@@ -1551,7 +1552,7 @@ TransferRouter.prototype.rou_post_designerProfilePhoto = function () {
             let id;
 
             id = (idConst + uniqueValue("hex"));
-            thisFileName = desid + token + gs + token + String(now.valueOf()) + token + String(xPositionConst) + token + String(yPositionConst) + token + id + "." + exe;
+            thisFileName = desid + token + gs + token + String(now.valueOf()) + token + String(xPositionConst) + token + String(yPositionConst) + token + String(sizeConst) + token + id + "." + exe;
 
             filesKey = Object.keys(files);
             if (filesKey.length !== 1) {
@@ -1587,7 +1588,8 @@ TransferRouter.prototype.rou_post_designerProfilePhoto = function () {
               position: {
                 x: Number(xPositionConst),
                 y: Number(yPositionConst),
-              }
+              },
+              size: Number(sizeConst),
             };
 
             res.send(JSON.stringify(resultObj));
@@ -1630,7 +1632,7 @@ TransferRouter.prototype.rou_post_designerProfileList = function () {
       let result;
 
       result = rawList.filter((str) => { return !/^\./.test(str) }).map((rawString) => {
-        const [ desid, gs, timeNumber, xPosition, yPosition, uniqueExe ] = rawString.split(splitToken);
+        const [ desid, gs, timeNumber, xPosition, yPosition, size, uniqueExe ] = rawString.split(splitToken);
         const [ id, exe ] = uniqueExe.split(".");
         return {
           id,
@@ -1645,7 +1647,8 @@ TransferRouter.prototype.rou_post_designerProfileList = function () {
           position: {
             x: Number(xPosition),
             y: Number(yPosition),
-          }
+          },
+          size: Number(size),
         }
       });
 

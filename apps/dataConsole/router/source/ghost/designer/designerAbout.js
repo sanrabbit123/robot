@@ -3105,6 +3105,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
         let widthHeightArr;
         let garoBoo;
         let thisExe;
+        let responseObj;
 
         if (this.files.length === 1) {
           formData = new FormData();
@@ -3138,9 +3139,13 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
             formData.append("exe", thisExe);
 
             response = await ajaxForm(formData, BRIDGEHOST + "/designerProfilePhoto");
+            responseObj = equalJson(response);
 
-            console.log(equalJson(response));
+            responseObj.link = stringToLink(responseObj.link);
+            instance.profileTarget = responseObj;
+            instance.profilePhoto = responseObj.link;
 
+            // dev
 
 
 
@@ -3225,9 +3230,9 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
       height: withOut(0, ea),
       borderRadius: String(profileWidth) + ea,
       backgroundImage: "url('" + instance.profilePhoto + "')",
-      backgroundPosition: "50% 50%",
-      backgroundSize: "auto 102%",
-      opacity: String(0.5),
+      backgroundPosition: instance.profileTarget === null ? "50% 50%" : String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.x) + "%",
+      backgroundSize: instance.profileTarget === null ? "auto 102%" : (instance.profileTarget.gs === "g" ? "auto " + String(instance.profileTarget.size) + "%" : String(instance.profileTarget.size) + "% auto"),
+      opacity: instance.profileTarget === null ? String(0.5) : String(1),
     }
   });
 
@@ -6383,7 +6388,6 @@ DesignerAboutJs.prototype.launching = async function (loading) {
       this.profilePhoto = this.profileList[0].link;
       this.profileTarget = this.profileList[0];
     }
-    console.log(this.profileList);
 
     this.selection = [];
     this.possibleBoxes = [];
