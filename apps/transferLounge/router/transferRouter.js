@@ -29,6 +29,7 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.userLinkConst = "/photo/user";
   this.userConst = this.staticConst + this.userLinkConst;
   this.hashConst = "homeliaisonHash";
+  this.tempConst = this.staticConst + "/photo/temp";
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -1437,6 +1438,69 @@ TransferRouter.prototype.rou_post_contractList = function () {
 
     } catch (e) {
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_contractList): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_imageAnalytics = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, uniqueValue } = this.mother;
+  const back = this.back;
+  const { tempConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/imageAnalytics" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        try {
+          if (err) {
+            throw new Error(err);
+          } else {
+            let filesKey, fromArr;
+            let thisFileName;
+            let imageJson;
+
+            thisFileName = "file_" + uniqueValue("hex");
+
+            filesKey = Object.keys(files);
+            if (filesKey.length !== 1) {
+              throw new Error("only one image must");
+            }
+
+            fromArr = [];
+            for (let key of filesKey) {
+              fromArr.push(files[key]);
+            }
+
+            for (let { filepath: path } of fromArr) {
+              await shellExec(`mv ${shellLink(path)} ${shellLink(tempConst + "/" + thisFileName)}`);
+            }
+
+            imageJson = await instance.imageReader.readImage(tempConst + "/" + thisFileName);
+            await shellExec(`rm -rf ${shellLink(tempConst + "/" + thisFileName)}`);
+
+            res.send(JSON.stringify(imageJson));
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_imageAnalytics): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
