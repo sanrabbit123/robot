@@ -3127,6 +3127,11 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
             window.alert("사진의 크기는 가로 크기와 세로 크기 모두 최소 1000px 이상이여야 합니다!");
           } else {
 
+            formData = new FormData();
+            formData.enctype = "multipart/form-data";
+    
+            formData.append("profilePhoto0", this.files[0]);
+
             garoBoo = (width >= height);
             formData.append("gs", garoBoo ? "g" : "s");
             formData.append("desid", instance.designer.desid);
@@ -3135,7 +3140,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
             response = await ajaxForm(formData, BRIDGEHOST + "/designerProfilePhoto");
 
             console.log(response);
-
+            console.log(stringToLink(equalJson(response).link))
 
 
 

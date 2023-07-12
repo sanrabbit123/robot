@@ -1551,6 +1551,8 @@ TransferRouter.prototype.rou_post_designerProfilePhoto = function () {
               throw new Error("only one image must");
             }
 
+            console.log(thisFileName);
+
             fromArr = [];
             for (let key of filesKey) {
               fromArr.push(files[key]);
@@ -1566,7 +1568,6 @@ TransferRouter.prototype.rou_post_designerProfilePhoto = function () {
             }
 
             thisLinkPath = String(designerProfileConst + "/" + thisFileName).replace(new RegExp("^" + staticConst, "g"), "");
-            
             res.send(JSON.stringify({ link: linkToString("https://" + address.transinfo.host + thisLinkPath) }));
           }
         } catch (e) {
