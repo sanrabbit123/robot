@@ -3139,8 +3139,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
 
             response = await ajaxForm(formData, BRIDGEHOST + "/designerProfilePhoto");
 
-            console.log(response);
-            console.log(stringToLink(equalJson(response).link))
+            console.log(equalJson(response));
 
 
 
@@ -6379,11 +6378,12 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     this.profileList = await ajaxJson({ desid }, BRIDGEHOST + "/designerProfileList", { equal: true });
     this.profileList = this.profileList.map((o) => { o.link = stringToLink(o.link); return o; });
     this.profilePhoto = DesignerAboutJs.binaryPath + "/blankProfile.jpg";
+    this.profileTarget = null;
     if (this.profileList.length > 0) {
-      this.profilePhoto = this.profileList[0];
+      this.profilePhoto = this.profileList[0].link;
+      this.profileTarget = this.profileList[0];
     }
     console.log(this.profileList);
-
 
     this.selection = [];
     this.possibleBoxes = [];

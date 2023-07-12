@@ -1539,12 +1539,19 @@ TransferRouter.prototype.rou_post_designerProfilePhoto = function () {
             const now = new Date();
             const { desid, gs, exe } = fields;
             const longConst = 1500;
+            const idConst = "profile_";
+            const xPositionConst = 50;
+            const yPositionConst = 50;
             let filesKey, fromArr;
             let thisFileName;
             let imageJson;
             let thisLinkPath;
+            let thisLink;
+            let resultObj;
+            let id;
 
-            thisFileName = desid + token + gs + token + String(now.valueOf()) + token + uniqueValue("hex") + "." + exe;
+            id = (idConst + uniqueValue("hex"));
+            thisFileName = desid + token + gs + token + String(now.valueOf()) + token + String(xPositionConst) + token + String(yPositionConst) + token + id + "." + exe;
 
             filesKey = Object.keys(files);
             if (filesKey.length !== 1) {
@@ -1566,7 +1573,24 @@ TransferRouter.prototype.rou_post_designerProfilePhoto = function () {
             }
 
             thisLinkPath = String(designerProfileConst + "/" + thisFileName).replace(new RegExp("^" + staticConst, "g"), "");
-            res.send(JSON.stringify({ link: linkToString("https://" + address.transinfo.host + thisLinkPath) }));
+            thisLink = linkToString("https://" + address.transinfo.host + thisLinkPath);
+            resultObj = {
+              id,
+              desid,
+              gs,
+              date: now,
+              link: linkToString("https://" + address.transinfo.host + String(designerProfileConst + "/" + rawString).replace(new RegExp("^" + staticConst, "g"), "")),
+              file: {
+                exe,
+                name: designerProfileConst + "/" + thisFileName,
+              },
+              position: {
+                x: Number(xPositionConst),
+                y: Number(yPositionConst),
+              }
+            };
+
+            res.send(JSON.stringify(resultObj));
           }
         } catch (e) {
           console.log(e);
@@ -1606,21 +1630,27 @@ TransferRouter.prototype.rou_post_designerProfileList = function () {
       let result;
 
       result = rawList.filter((str) => { return !/^\./.test(str) }).map((rawString) => {
-        const [ desid, gs, timeNumber, uniqueExe ] = rawString.split(splitToken);
+        const [ desid, gs, timeNumber, xPosition, yPosition, uniqueExe ] = rawString.split(splitToken);
         const [ id, exe ] = uniqueExe.split(".");
         return {
+          id,
           desid,
           gs,
-          timeNumber: Number(timeNumber),
           date: new Date(Number(timeNumber)),
-          exe,
-          fileName: rawString,
           link: linkToString("https://" + address.transinfo.host + String(designerProfileConst + "/" + rawString).replace(new RegExp("^" + staticConst, "g"), "")),
+          file: {
+            exe,
+            name: rawString,
+          },
+          position: {
+            x: Number(xPosition),
+            y: Number(yPosition),
+          }
         }
       });
 
       result = result.filter((obj) => { return obj.desid === desid });
-      result.sort((a, b) => { return b.timeNumber - a.timeNumber });
+      result.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
 
       res.send(JSON.stringify(result));
 
