@@ -2165,106 +2165,6 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       notice: [],
     },
     {
-      title: "보조 수단",
-      whiteType: 1,
-      contents: [
-        {
-          property: "보조 수단 레벨",
-          returnValue: (designer) => { return {
-            modeling: { name: "3D", value: designer.analytics.styling.tendency.style.modern },
-            plan: { name: "도면", value: designer.analytics.styling.tendency.style.classic },
-            collage: { name: "콜라주", value: designer.analytics.styling.tendency.style.natural },
-            excel: { name: "엑셀", value: designer.analytics.styling.tendency.style.mixmatch },
-            furniture: { name: "가구 디자인", value: designer.analytics.styling.tendency.texture.whiteWood },
-            fabric: { name: "패브릭 제작", value: designer.analytics.styling.tendency.texture.darkWood },
-            __order__: [
-              "modeling",
-              "plan",
-              "collage",
-              "excel",
-              "furniture",
-              "fabric",
-            ],
-            __color__: colorChip.yellow,
-          } },
-          updateValue: async (raw, target, designer) => {
-            try {
-              let whereQuery, updateQuery;
-
-              whereQuery = { desid };
-              updateQuery = {};
-
-              designer.analytics.styling.tendency.style[target] = raw;
-              updateQuery["analytics.styling.tendency.style." + target] = raw;
-
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-
-            } catch (e) {
-              console.log(e);
-            }
-          },
-        },
-      ],
-      notice: [
-        {
-          title: "보조 수단 레벨 체크",
-          body: "스타일링을 하는 데 있어서 보조적인 역할을 하는 능력들의 레벨값입니다.",
-        },
-      ],
-    },
-    {
-      title: "성격",
-      whiteType: 1,
-      contents: [
-        {
-          property: "개인 성향",
-          returnValue: (designer) => { return {
-            lively: { name: "활기찬", value: designer.analytics.styling.tendency.style.modern },
-            intimate: { name: "친밀한", value: designer.analytics.styling.tendency.style.classic },
-            pleasant: { name: "유쾌한", value: designer.analytics.styling.tendency.style.natural },
-            tranquil: { name: "차분한", value: designer.analytics.styling.tendency.style.natural },
-            precise: { name: "정밀한", value: designer.analytics.styling.tendency.style.mixmatch },
-            scrupulous: { name: "꼼꼼한", value: designer.analytics.styling.tendency.style.scandinavian },
-            leading: { name: "리드하는", value: designer.analytics.styling.tendency.style.scandinavian },
-            planned: { name: "계획적인", value: designer.analytics.styling.tendency.style.scandinavian },
-            __order__: [
-              "lively",
-              "intimate",
-              "pleasant",
-              "tranquil",
-              "precise",
-              "scrupulous",
-              "leading",
-              "planned",
-            ],
-            __color__: colorChip.black,
-          } },
-          updateValue: async (raw, target, designer) => {
-            try {
-              let whereQuery, updateQuery;
-
-              whereQuery = { desid };
-              updateQuery = {};
-
-              designer.analytics.styling.tendency.style[target] = raw;
-              updateQuery["analytics.styling.tendency.style." + target] = raw;
-
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-
-            } catch (e) {
-              console.log(e);
-            }
-          },
-        },
-      ],
-      notice: [
-        {
-          title: "개인 성향 체크",
-          body: "고객님과 스타일링을 진행하는 데 있어, 개인적인 성격 특성을 수치로 기입하는 칸입니다.",
-        },
-      ],
-    },
-    {
       title: "스타일",
       whiteType: 2,
       contents: [
@@ -2586,7 +2486,7 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index, 
               width: withOut(0),
               left: String(0),
               height: String(mobileLineTop) + ea,
-              borderBottom: "1px dashed " + colorChip.green,
+              borderBottom: "1px dashed " + colorChip.gray4,
             }
           },
           {
@@ -2614,7 +2514,7 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index, 
           top: String(titleTopNumber) + ea,
           paddingBottom: desktop ? String(finalBottomMargin) + ea : (type === 2 ? String(mobileBasicMargin) + ea : String(0) + ea),
           marginBottom: type === 2 ? String(realFinalBottomMargin) + ea : String(desktop ? 2 : 0) + ea,
-          borderBottom: desktop ? (type !== 2 ? "1px dashed " + colorChip.green : "") : "",
+          borderBottom: desktop ? (type !== 2 ? "1px dashed " + colorChip.gray4 : "") : "",
           marginLeft: desktop ? "" : String(mobileBasicMargin) + ea,
         }
       },
@@ -2956,6 +2856,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   const photoResizeBaseClassName = "photoResizeBaseClassName";
   const photoResizeStandardClassName = "photoResizeStandardClassName";
   const mainPhotoClassName = "mainPhotoClassName";
+  const photoWithWordsClassName = "photoWithWordsClassName";
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -3115,6 +3016,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
     return async function (e) {
       try {
         const imageMother = this;
+        const imageSecond = document.querySelector('.' + photoWithWordsClassName);
         const zIndex = 4;
         let grayBack;
         let imageBase;
@@ -3277,7 +3179,8 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
                   instance.profileTarget.position.y = Math.round(50 + (((finalY - 50) / rangeY) * 100));
   
                   imageMother.style.backgroundPosition = String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%";
-    
+                  imageSecond.style.backgroundPosition = String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%";
+
                   await ajaxJson({
                     desid: instance.designer.desid,
                     id: instance.profileTarget.id,
@@ -4261,6 +4164,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
+  const photoWithWordsClassName = "photoWithWordsClassName";
   const mainContents = [
     {
       contents: [
@@ -4462,6 +4366,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
       paddingLeft: String(profileWidth / 2) + ea,
     },
     child: {
+      class: [ photoWithWordsClassName ],
       style: {
         display: "flex",
         flexDirection: "row",
@@ -4469,10 +4374,11 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
         width: String(profileWidth) + ea,
         height: withOut(0, ea),
         borderRadius: String(profileWidth) + ea,
-        backgroundImage: "url('" + DesignerAboutJs.binaryPath + "/goodProfileExample0.jpg" + "')",
-        backgroundPosition: "50% 50%",
-        backgroundSize: "auto 102%",
+        backgroundImage: "url('" + instance.profilePhoto + "')",
+        backgroundPosition: instance.profileTarget === null ? "50% 50%" : String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%",
+        backgroundSize: instance.profileTarget === null ? "auto 102%" : (instance.profileTarget.gs === "g" ? "auto " + String(instance.profileTarget.size) + "%" : String(instance.profileTarget.size) + "% auto"),
         zIndex: String(2),
+        opacity: instance.profileTarget === null ? String(0.5) : String(1),
       }
     }
   });
@@ -4737,8 +4643,8 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   circleTop = <%% 1, 1, 1, 1, 0 %%>;
 
   contentsSize = <%% 16, 15, 15, 14, 3.4 %%>;
-  contentsWeight0 = <%% 600, 600, 600, 600, 600 %%>;
-  contentsWeight1 = <%% 300, 300, 300, 300, 300 %%>;
+  contentsWeight0 = <%% 700, 700, 700, 700, 700 %%>;
+  contentsWeight1 = <%% 400, 400, 400, 400, 400 %%>;
 
   firstWidth = <%% 180, 160, 140, 120, 23 %%>;
   factorBetween = <%% 8, 8, 8, 8, 1.5 %%>;
