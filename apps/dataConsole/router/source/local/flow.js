@@ -202,17 +202,6 @@ FlowJs.prototype.calendarRender = async function () {
           end: new Date(2023, 7, 22),
         },
       },
-      {
-        contents: {
-          color: colorChip.yellow,
-          description: "",
-          title: "새로운 어필 페이지 런칭",
-        },
-        date: {
-          start: new Date(2023, 7, 22),
-          end: new Date(2023, 7, 22),
-        },
-      },
     ];
 
     colorCalendar(calendarMother, calendarDateArr, { standardDate: new Date(2023, 6, 10) });

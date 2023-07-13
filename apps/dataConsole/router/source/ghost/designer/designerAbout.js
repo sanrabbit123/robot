@@ -2323,7 +2323,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
 DesignerAboutJs.prototype.renderWhite = function (type, title, contents, notice, index, lastBoo) {
   const instance = this;
   const mother = this.mother;
-  const { ea, baseTong, media } = this;
+  const { ea, baseTong, media, totalContents } = this;
+  const { entireMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
@@ -2342,7 +2343,7 @@ DesignerAboutJs.prototype.renderWhite = function (type, title, contents, notice,
   topPadding1 = <%% 40, 40, 38, 32, 4.7 %%>;
 
   whiteBlock = createNode({
-    mother: baseTong,
+    mother: entireMode ? totalContents : baseTong,
     style: {
       display: "block",
       position: "relative",
@@ -2353,7 +2354,7 @@ DesignerAboutJs.prototype.renderWhite = function (type, title, contents, notice,
       width: String(100) + '%',
       background: colorChip.white,
       paddingTop: desktop ? String(type === 0 ? topPadding0 : topPadding1) + ea : "",
-      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+      boxShadow: !entireMode ? (desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "") : "",
       marginBottom: lastBoo ? String(bottomMargin) + ea : "",
     },
     children: [
@@ -2836,7 +2837,7 @@ DesignerAboutJs.prototype.insertNoticeBox = function () {
 DesignerAboutJs.prototype.insertProfileBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { client, ea, baseTong, media, project, totalContents, naviHeight } = this;
+  const { ea, baseTong, media, totalContents, naviHeight, entireMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent, equalJson, stringToLink, linkToString, setThrottle, setQueue, sleep, removeByClass } = GeneralJs;
@@ -3354,7 +3355,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   window.addEventListener("focus", profileUploadCancelEvent);
 
   whiteBlock = createNode({
-    mother: baseTong,
+    mother: entireMode ? totalContents : baseTong,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
@@ -3363,7 +3364,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
       paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
       paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
       marginBottom: String(bottomMargin) + ea,
-      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+      boxShadow: !entireMode ? (desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "") : "",
     },
     children: [
       {
@@ -3754,7 +3755,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
 DesignerAboutJs.prototype.insertWorkingBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { client, ea, baseTong, media, project } = this;
+  const { ea, baseTong, media, totalContents, entireMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
@@ -3919,7 +3920,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   this.whiteMargin = (desktop ? margin : 0);
 
   whiteBlock = createNode({
-    mother: baseTong,
+    mother: entireMode ? totalContents : baseTong,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
@@ -3928,7 +3929,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
       paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
       paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
       marginBottom: String(bottomMargin) + ea,
-      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+      boxShadow: !entireMode ? (desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "") : "",
     },
     children: [
       {
@@ -4189,7 +4190,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
 DesignerAboutJs.prototype.insertIntroduceBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { designer, ea, baseTong, media, project } = this;
+  const { designer, ea, baseTong, media, totalContents, entireMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
@@ -4349,7 +4350,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   this.whiteMargin = (desktop ? margin : 0);
 
   whiteBlock = createNode({
-    mother: baseTong,
+    mother: entireMode ? totalContents : baseTong,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
@@ -4358,7 +4359,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
       paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
       paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
       marginBottom: String(bottomMargin) + ea,
-      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+      boxShadow: !entireMode ? (desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "") : "",
     },
     children: [
       {
@@ -6614,29 +6615,37 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     //   GeneralJs.selfHref(FRONTHOST + "/designer/login.php");
     // }
 
-    await this.mother.ghostDesignerLaunching({
-      name: "designerAbout",
-      designer: this.designer,
-      base: {
-        instance: this,
-        binaryPath: DesignerAboutJs.binaryPath,
-        subTitle: "",
-      },
-      local: async () => {
-        try {
-          instance.insertInitBox();
-          instance.insertNoticeBox();
-          instance.insertProfileBox();
-          instance.insertWorkingBox();
-          instance.insertIntroduceBox();
-          instance.contentsCenter();
-          instance.insertPossibleNoticeBox();
-          instance.calendarChain();
-        } catch (e) {
-          await GeneralJs.ajaxJson({ message: "DesignerAboutJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+    if (!entireMode) {
+      await this.mother.ghostDesignerLaunching({
+        name: "designerAbout",
+        designer: this.designer,
+        base: {
+          instance: this,
+          binaryPath: DesignerAboutJs.binaryPath,
+          subTitle: "",
+        },
+        local: async () => {
+          try {
+            instance.insertInitBox();
+            instance.insertNoticeBox();
+            instance.insertProfileBox();
+            instance.insertWorkingBox();
+            instance.insertIntroduceBox();
+            instance.contentsCenter();
+            instance.insertPossibleNoticeBox();
+            instance.calendarChain();
+          } catch (e) {
+            await GeneralJs.ajaxJson({ message: "DesignerAboutJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+          }
         }
-      }
-    });
+      });
+    } else {
+      instance.insertProfileBox();
+      instance.insertWorkingBox();
+      instance.insertIntroduceBox();
+      instance.contentsCenter();
+      instance.calendarChain();
+    }
 
     loading.parentNode.removeChild(loading);
 

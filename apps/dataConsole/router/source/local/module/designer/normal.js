@@ -720,7 +720,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
       let linkDictionary;
 
       linkDictionary = {
-        checklist: BACKHOST + "/designer?mode=checklist&entire=true&dataonly=true&normal=true&desid=" + designer.desid,
+        checklist: BACKHOST + "/middle/designerAbout?desid=" + designer.desid + "&entire=true&normal=true",
         possible: BACKHOST + "/middle/designerPossible?desid=" + designer.desid + "&entire=true&normal=true",
         portfolio: BACKHOST + "/designer?mode=general&desid=" + designer.desid + "&dataonly=true&entire=true&normal=true",
         report: BACKHOST + "/middle/designerReport?desid=" + designer.desid + "&entire=true&normal=true",
