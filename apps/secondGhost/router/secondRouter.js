@@ -402,6 +402,8 @@ SecondRouter.prototype.rou_post_parsingCall = function () {
               text = `대표님께 ${method}가 왔습니다!`;
             } else if (/^김실장/gi.test(name)) {
               text = `김지은 실장님에게서 ${method}가 왔습니다!`;
+            } else if (/^김남편/gi.test(name)) {
+              text = `김애란 실장님에게서 ${method}가 왔습니다!`;
             } else {
               thisProjects = await back.getProjectsByQuery({ cliid }, { selfMongo });
               thisProject = null;

@@ -588,60 +588,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
         },
         {
-          property: "유관 경력",
-          returnValue: (designer) => {
-            return `총 ${String(designer.information.business.career.relatedY)}년 ${String(designer.information.business.career.relatedM)}개월`;
-          },
-          renderValue: (text) => {
-            return text.replace(/^총 /gi, '').trim();
-          },
-          updateValue: async (raw, designer) => {
-            try {
-              let text, whereQuery, updateQuery;
-              let arr;
-
-              whereQuery = { desid };
-              updateQuery = {};
-
-              arr = raw.trim().split("년");
-              if (arr.length !== 2) {
-                throw new Error("invalid text");
-              }
-
-              arr = arr.map((str) => { return Number(str.replace(/[^0-9]/gi, '')) });
-              if (arr.some(Number.isNaN)) {
-                throw new Error("invalid text");
-              }
-
-              if (arr[1] >= 12) {
-                throw new Error("invalid text");
-              }
-
-              if (arr[0] < 0 || arr[1] < 0) {
-                throw new Error("invalid text");
-              }
-
-              updateQuery["information.business.career.relatedY"] = arr[0];
-              updateQuery["information.business.career.relatedM"] = arr[1];
-
-              instance.designer.information.business.career.relatedY = arr[0];
-              instance.designer.information.business.career.relatedM = arr[1];
-
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-
-              return `총 ${String(arr[0])}년 ${String(arr[1])}개월`;
-
-            } catch (e) {
-              window.alert("형식에 맞게 적어주세요! '00년 00개월'");
-              return `총 ${String(designer.information.business.career.relatedY)}년 ${String(designer.information.business.career.relatedM)}개월`;
-            }
-          },
-          noticeText: (designer) => {
-            return "홈스타일링과 관련이 있는 리모델링(시공) 회사 경험을 총합하여 적어주세요!";
-          },
-        },
-        {
-          property: "스타일링 경력",
+          property: "파트너십 기간",
           returnValue: (designer) => {
             return `시작일 : ${String(designer.information.business.career.startY)}년 ${String(designer.information.business.career.startM)}월`;
           },
@@ -1084,6 +1031,59 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           }
         },
         {
+          property: "유관 경력",
+          returnValue: (designer) => {
+            return `총 ${String(designer.information.business.career.relatedY)}년 ${String(designer.information.business.career.relatedM)}개월`;
+          },
+          renderValue: (text) => {
+            return text.replace(/^총 /gi, '').trim();
+          },
+          updateValue: async (raw, designer) => {
+            try {
+              let text, whereQuery, updateQuery;
+              let arr;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              arr = raw.trim().split("년");
+              if (arr.length !== 2) {
+                throw new Error("invalid text");
+              }
+
+              arr = arr.map((str) => { return Number(str.replace(/[^0-9]/gi, '')) });
+              if (arr.some(Number.isNaN)) {
+                throw new Error("invalid text");
+              }
+
+              if (arr[1] >= 12) {
+                throw new Error("invalid text");
+              }
+
+              if (arr[0] < 0 || arr[1] < 0) {
+                throw new Error("invalid text");
+              }
+
+              updateQuery["information.business.career.relatedY"] = arr[0];
+              updateQuery["information.business.career.relatedM"] = arr[1];
+
+              instance.designer.information.business.career.relatedY = arr[0];
+              instance.designer.information.business.career.relatedM = arr[1];
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              return `총 ${String(arr[0])}년 ${String(arr[1])}개월`;
+
+            } catch (e) {
+              window.alert("형식에 맞게 적어주세요! '00년 00개월'");
+              return `총 ${String(designer.information.business.career.relatedY)}년 ${String(designer.information.business.career.relatedM)}개월`;
+            }
+          },
+          noticeText: (designer) => {
+            return "홈스타일링과 관련이 있는 리모델링(시공) 회사 경험을 총합하여 적어주세요!";
+          },
+        },
+        {
           property: "계좌번호",
           returnValue: (designer) => {
             const targetArr = designer.information.business.account.filter((obj) => { return obj.accountNumber !== '' });
@@ -1219,12 +1219,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       ],
       notice: [
         {
-          title: "유관 경력",
-          body: "홈스타일링과 관련이 있는 리모델링(시공) 회사 경험을 총합하여 적어주세요!",
-        },
-        {
-          title: "스타일링 경력",
-          body: "홈스타일링을 본격적으로 시작한 날짜의 년도와 월을 적어주세요!",
+          title: "파트너십 기간",
+          body: "홈리에종과 파트너십을 시작한 날짜의 년도와 월을 적어주세요!",
         },
         {
           title: "사업자 등록번호",
@@ -3015,7 +3011,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   photoResizeEvent = () => {
     return async function (e) {
       try {
-        const imageMother = this;
+        const imageMother = document.querySelector('.' + mainPhotoClassName);
         const imageSecond = document.querySelector('.' + photoWithWordsClassName);
         const zIndex = 4;
         let grayBack;
@@ -3083,6 +3079,8 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
                 position: "relative",
                 width: String(fixImageWidth) + ea,
                 height: "auto",
+                zIndex: String(1),
+                opacity: String(0.3),
               }
             });
   
@@ -3108,6 +3106,8 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
                 position: "relative",
                 height: String(fixImageHeight) + ea,
                 width: "auto",
+                zIndex: String(1),
+                opacity: String(0.3),
               }
             });
   
@@ -3124,6 +3124,20 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
           maximumX = 50 + Math.abs(50 - Math.abs(minimumX));
           rangeX = Math.abs(50 - Math.abs(minimumX)) * 2;
   
+          createNode({
+            mother: imageBase,
+            style: {
+              display: "inline-block",
+              position: "absolute",
+              top: String(thisBackgroundImageBox.top - naviHeight) + "px",
+              left: String(thisBackgroundImageBox.left) + "px",
+              width: String(thisBackgroundImageBox.width) + "px",
+              height: String(thisBackgroundImageBox.height) + "px",
+              background: "black",
+              zIndex: String(0),
+            }
+          })
+
           brightCircle = createNode({
             mother: imageBase,
             class: [ photoResizeStandardClassName ],
@@ -3181,6 +3195,9 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
                   imageMother.style.backgroundPosition = String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%";
                   imageSecond.style.backgroundPosition = String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%";
 
+                  imageMother.style.opacity = String(1);
+                  imageSecond.style.opacity = String(1);
+
                   await ajaxJson({
                     desid: instance.designer.desid,
                     id: instance.profileTarget.id,
@@ -3210,10 +3227,11 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
               height: String(circleWidth) + ea,
               borderRadius: String(circleWidth) + ea,
               background: "rgb(0, 0, 0, 0)",
-              "backdrop-filter": "brightness(2)",
+              "backdrop-filter": "brightness(3)",
               transition: "all 0.3s ease",
               cursor: "pointer",
               transform: "translate(0px, 0px)",
+              zIndex: String(1),
             }
           });
   
@@ -3237,6 +3255,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
         let thisExe;
         let responseObj;
         let imageTarget;
+        let imageSecond;
 
         instance.profileUploadProcess = false;
         if (this.files.length === 1) {
@@ -3284,6 +3303,13 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
             imageTarget.style.backgroundImage = "url('" + instance.profilePhoto + "')";
             imageTarget.style.backgroundPosition = String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%";
             imageTarget.style.backgroundSize = instance.profileTarget.gs === "g" ? "auto " + String(instance.profileTarget.size) + "%" : String(instance.profileTarget.size) + "% auto";
+            imageTarget.style.opacity = String(1);
+
+            imageSecond = document.querySelector('.' + photoWithWordsClassName);
+            imageSecond.style.backgroundImage = "url('" + instance.profilePhoto + "')";
+            imageSecond.style.backgroundPosition = String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%";
+            imageSecond.style.backgroundSize = instance.profileTarget.gs === "g" ? "auto " + String(instance.profileTarget.size) + "%" : String(instance.profileTarget.size) + "% auto";
+            imageSecond.style.opacity = String(1);
 
             await sleep(1000);
             setQueue(() => {
@@ -3625,6 +3651,9 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
             }
           },
           {
+            event: {
+              click: profileUploadEvent,
+            },
             style: {
               display: "flex",
               position: "absolute",
@@ -3636,6 +3665,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
               background: colorChip.green,
               justifyContent: "center",
               alignItems: "center",
+              cursor: "pointer",
             },
             child: {
               text: "upload",
@@ -4392,7 +4422,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
       width: String(profileWidth) + ea,
       height: withOut(0, ea),
       borderRadius: String(profileWidth) + ea,
-      backgroundImage: "url('" + FRONTHOST + "/middle/index/slide0_0.jpg" + "')",
+      backgroundImage: "url('" + FRONTHOST + "/list_image/portp" + instance.designer.setting.front.photo.porlid + "/" + instance.designer.setting.front.photo.index + instance.designer.setting.front.photo.porlid + ".jpg" + "')",
       backgroundPosition: "50% 50%",
       backgroundSize: "auto 102%",
       left: String(0) + ea,
@@ -6494,6 +6524,8 @@ DesignerAboutJs.prototype.launching = async function (loading) {
 
     const { returnGet, ajaxJson, colorChip, stringToLink } = GeneralJs;
     const getObj = returnGet();
+    const entireMode = (getObj.entire === "true");
+    const normalMode = (entireMode && getObj.normal === "true");
     let cliid, clients, client;
     let proid, projects, project;
     let whereQuery;
@@ -6559,8 +6591,8 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     this.grayLoading = null;
     this.profileUploadProcess = false;
 
-    this.entireMode = false;
-    this.normalMode = false;
+    this.entireMode = entireMode;
+    this.normalMode = normalMode;
 
     document.body.addEventListener("mouseup", (e) => {
       instance.isMouseDown = false;
