@@ -1658,7 +1658,7 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>경력 정보", event: (e) => { modeHref("calculation"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>가격 정보", event: (e) => { modeHref("price"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>일정 관리", event: (e) => { modeHref("possible"); }, contextmenu: (e) => { modeHref("possible"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>체크리스트", event: (e) => { modeHref("checklist"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>체크리스트", event: (e) => { modeHref("admin"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">홈스타일링</b><br>의뢰서", event: (e) => { modeHref("request"); }, contextmenu: (e) => { modeHref("request"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>보고서", event: (e) => { modeHref("report"); } },
       ];
@@ -4321,7 +4321,7 @@ DesignerJs.prototype.launching = async function () {
     }
 
     if (getObj.desid !== undefined && getObj.mode === undefined) {
-      getObj.mode = "checklist";
+      getObj.mode = "admin";
     }
 
     getTarget = null;
@@ -4401,16 +4401,16 @@ DesignerJs.prototype.launching = async function () {
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";
 
-    } else if (getObj.mode === "checklist") {
+    } else if (getObj.mode === "admin") {
 
       if (getObj.entire === "true") {
         this.grayBarWidth = 0;
         this.belowHeight = 0;    
       }
 
-      await protoPatch(instance, [ `${modulePath}/checklist.js`, `${modulePath}/report.js` ]);
+      await protoPatch(instance, [ `${modulePath}/admin.js`, `${modulePath}/report.js` ]);
       document.getElementById("grayLeftOpenButton").remove();
-      await this.checkListView();
+      await this.adminView();
       this.addTransFormEvent();
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";
@@ -4434,7 +4434,7 @@ DesignerJs.prototype.launching = async function () {
 
     } else if (getObj.mode === "report") {
 
-      await protoPatch(instance, [ `${modulePath}/checklist.js`, `${modulePath}/report.js` ]);
+      await protoPatch(instance, [ `${modulePath}/admin.js`, `${modulePath}/report.js` ]);
       document.getElementById("grayLeftOpenButton").remove();
       await this.reportView();
       this.addTransFormEvent();
@@ -4481,13 +4481,6 @@ DesignerJs.prototype.launching = async function () {
 
       tempFunction = this.cardViewMaker(true);
       await tempFunction();
-
-      // await protoPatch(instance, [ `${modulePath}/checklist.js`, `${modulePath}/report.js` ]);
-      // document.getElementById("grayLeftOpenButton").remove();
-      // await this.checkListView();
-      // this.addTransFormEvent();
-      // document.getElementById("moveRightArea").style.display = "none";
-      // document.getElementById("moveLeftArea").style.display = "none";
 
       await protoPatch(instance, `${modulePath}/normal.js`);
       document.getElementById("grayLeftOpenButton").remove();

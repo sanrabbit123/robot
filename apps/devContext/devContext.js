@@ -6398,8 +6398,6 @@ DevContext.prototype.launching = async function () {
     //   "하얗기만 한 디자인이 아닌, 강약과 포인트가 살아 있는 디자인을 구사합니다.",
     // ]);
 
-
-
     // send mail
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();

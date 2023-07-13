@@ -2582,7 +2582,7 @@ DesignerJs.prototype.reportIconSet = function (desid) {
     previousIcon.addEventListener("click", function (e) {
       const { desid: previousDesid } = instance.designers.previous(desid);
       if (instance.modes.indexOf(instance.mode) === 0) {
-        instance.checkListDetailLaunching(previousDesid);
+        instance.adminDetailLaunching(previousDesid);
       } else {
         instance.reportDetailLaunching(previousDesid);
       }
@@ -2591,7 +2591,7 @@ DesignerJs.prototype.reportIconSet = function (desid) {
     nextIcon.addEventListener("click", function (e) {
       const { desid: nextDesid } = instance.designers.next(desid);
       if (instance.modes.indexOf(instance.mode) === 0) {
-        instance.checkListDetailLaunching(nextDesid);
+        instance.adminDetailLaunching(nextDesid);
       } else {
         instance.reportDetailLaunching(nextDesid);
       }
@@ -2678,7 +2678,7 @@ DesignerJs.prototype.reportIconSet = function (desid) {
   }
 
   cInitialIcon.addEventListener("click", function (e) {
-    instance.checkListDetailLaunching(desid);
+    instance.adminDetailLaunching(desid);
   });
 
   mInitialIcon.addEventListener("click", async function (e) {
@@ -2841,7 +2841,7 @@ DesignerJs.prototype.reportView = async function () {
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[1].getAttribute("desid");
     this.result = null;
     this.middleMode = middleMode;
-    this.modes = [ "checklist", "report", "request", "possible", "project", "schedule" ];
+    this.modes = [ "admin", "report", "request", "possible", "project", "schedule" ];
     this.mode = this.modes[1];
 
     motherHeight = <%% 154, 148, 148, 148, 148 %%>;
@@ -2902,12 +2902,6 @@ DesignerJs.prototype.reportView = async function () {
     }
     this.firstTop = this.standardDoms[1].getBoundingClientRect().top;
     this.motherHeight = motherHeight;
-
-    //sse
-    // const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
-    // es.addEventListener("updateTong", (e) => {
-    //   instance.checkListSseParsing(equalJson(e.data));
-    // });
 
     loading.parentNode.removeChild(loading);
 

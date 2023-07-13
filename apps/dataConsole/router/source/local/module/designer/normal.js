@@ -1833,7 +1833,7 @@ DesignerJs.prototype.normalBase = async function () {
               }
             });
           }
-      
+    
         }
     
         await this.normalColorSync();

@@ -2324,7 +2324,7 @@ DesignerAboutJs.prototype.renderWhite = function (type, title, contents, notice,
   const instance = this;
   const mother = this.mother;
   const { ea, baseTong, media, totalContents } = this;
-  const { entireMode } = this;
+  const { entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
@@ -2337,10 +2337,15 @@ DesignerAboutJs.prototype.renderWhite = function (type, title, contents, notice,
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
-  leftPadding = <%% 55, 55, 47, 39, 4.7 %%>;
-
-  topPadding0 = <%% 52, 52, 44, 36, 4.7 %%>;
-  topPadding1 = <%% 40, 40, 38, 32, 4.7 %%>;
+  if (normalMode) {
+    leftPadding = 24;
+    topPadding0 = 16;
+    topPadding1 = 40;
+  } else {
+    leftPadding = <%% 55, 55, 47, 39, 4.7 %%>;
+    topPadding0 = <%% 52, 52, 44, 36, 4.7 %%>;
+    topPadding1 = <%% 40, 40, 38, 32, 4.7 %%>;
+  }
 
   whiteBlock = createNode({
     mother: entireMode ? totalContents : baseTong,
@@ -2837,7 +2842,7 @@ DesignerAboutJs.prototype.insertNoticeBox = function () {
 DesignerAboutJs.prototype.insertProfileBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { ea, baseTong, media, totalContents, naviHeight, entireMode } = this;
+  const { ea, baseTong, media, totalContents, naviHeight, entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent, equalJson, stringToLink, linkToString, setThrottle, setQueue, sleep, removeByClass } = GeneralJs;
@@ -2920,10 +2925,16 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   let profileUploadCancelEvent;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 4.7 %%>;
-  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
-  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  if (normalMode) {
+    margin = 24;
+    paddingTop = 0;
+    whiteBottomMargin = 42;
+  } else {
+    margin = <%% 55, 55, 47, 39, 4.7 %%>;
+    paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+    whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;  
+  }
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
@@ -2988,7 +2999,11 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   profileUploadButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
   exampleZoneWidth = <%% 500, 500, 500, 500, 500 %%>;
-  exampleZoneMarginLeft = <%% 72, 72, 72, 72, 72 %%>;
+  if (normalMode) {
+    exampleZoneMarginLeft = 24;
+  } else {
+    exampleZoneMarginLeft = <%% 72, 72, 72, 72, 72 %%>;
+  }
   exampleUpDownBetween = <%% 18, 18, 18, 18, 18 %%>;
 
   exampleTextWidth = <%% 70, 70, 70, 70, 66 %%>;
@@ -3755,7 +3770,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
 DesignerAboutJs.prototype.insertWorkingBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { ea, baseTong, media, totalContents, entireMode } = this;
+  const { ea, baseTong, media, totalContents, entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
@@ -3824,10 +3839,16 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   let exampleTextLeft;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 4.7 %%>;
-  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
-  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  if (normalMode) {
+    margin = 24;
+    paddingTop = 14;
+    whiteBottomMargin = 0;
+  } else {
+    margin = <%% 55, 55, 47, 39, 4.7 %%>;
+    paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+    whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  }
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
@@ -3892,7 +3913,11 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   profileUploadButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
   exampleZoneWidth = <%% 290, 290, 290, 290, 290 %%>;
-  exampleZoneMarginLeft = <%% 72, 72, 72, 72, 72 %%>;
+  if (normalMode) {
+    exampleZoneMarginLeft = 24;
+  } else {
+    exampleZoneMarginLeft = <%% 72, 72, 72, 72, 72 %%>;
+  }
   exampleUpDownBetween = <%% 18, 18, 18, 18, 18 %%>;
 
   exampleTextWidth = <%% 70, 70, 70, 70, 66 %%>;
@@ -4190,7 +4215,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
 DesignerAboutJs.prototype.insertIntroduceBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { designer, ea, baseTong, media, totalContents, entireMode } = this;
+  const { designer, ea, baseTong, media, totalContents, entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
@@ -4258,10 +4283,16 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   let leftTotalMarginRight;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 4.7 %%>;
-  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
-  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  if (normalMode) {
+    margin = 24;
+    paddingTop = 52;
+    whiteBottomMargin = 42;
+  } else {
+    margin = <%% 55, 55, 47, 39, 4.7 %%>;
+    paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+    whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  }
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
@@ -4345,7 +4376,11 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   introductionWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   leftTotalWidth = <%% 770, 770, 770, 770, 770 %%>;
-  leftTotalMarginRight = <%% 96, 96, 96, 96, 96 %%>;
+  if (normalMode) {
+    leftTotalMarginRight = 48;
+  } else {
+    leftTotalMarginRight = <%% 96, 96, 96, 96, 96 %%>;
+  }
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -6640,11 +6675,10 @@ DesignerAboutJs.prototype.launching = async function (loading) {
         }
       });
     } else {
+      instance.contentsCenter();
       instance.insertProfileBox();
       instance.insertWorkingBox();
       instance.insertIntroduceBox();
-      instance.contentsCenter();
-      instance.calendarChain();
     }
 
     loading.parentNode.removeChild(loading);
