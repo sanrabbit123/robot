@@ -1867,31 +1867,33 @@ TransferRouter.prototype.rou_post_designerWorksList = function () {
       let mapFunction;
 
       filterFunction = (str) => { return !/^\./.test(str) };
-      mapFunction = (rawString) => {
-        const [ desid, gs, timeNumber, xPosition, yPosition, size, uniqueExe ] = rawString.split(splitToken);
-        const [ id, exe ] = uniqueExe.split(".");
-        return {
-          id,
-          desid,
-          gs,
-          date: new Date(Number(timeNumber)),
-          link: linkToString("https://" + address.transinfo.host + String(designerProfileConst + "/" + rawString).replace(new RegExp("^" + staticConst, "g"), "")),
-          file: {
-            exe,
-            name: rawString,
-          },
-          position: {
-            x: Number(xPosition),
-            y: Number(yPosition),
-          },
-          size: Number(size),
-        }
-      };
+      mapFunction = (index) => {
+        return (rawString) => {
+          const [ desid, gs, timeNumber, xPosition, yPosition, size, uniqueExe ] = rawString.split(splitToken);
+          const [ id, exe ] = uniqueExe.split(".");
+          return {
+            id,
+            desid,
+            gs,
+            date: new Date(Number(timeNumber)),
+            link: linkToString("https://" + address.transinfo.host + String(designerWorksConst + "/" + designerWorksConstFactors[index] + "/" + rawString).replace(new RegExp("^" + staticConst, "g"), "")),
+            file: {
+              exe,
+              name: rawString,
+            },
+            position: {
+              x: Number(xPosition),
+              y: Number(yPosition),
+            },
+            size: Number(size),
+          }
+        };
+      }
 
-      result0 = rawList0.filter(filterFunction).map(mapFunction);
-      result1 = rawList1.filter(filterFunction).map(mapFunction);
-      result2 = rawList2.filter(filterFunction).map(mapFunction);
-      result3 = rawList3.filter(filterFunction).map(mapFunction);
+      result0 = rawList0.filter(filterFunction).map(mapFunction(0));
+      result1 = rawList1.filter(filterFunction).map(mapFunction(1));
+      result2 = rawList2.filter(filterFunction).map(mapFunction(2));
+      result3 = rawList3.filter(filterFunction).map(mapFunction(3));
 
       result0 = result0.filter((obj) => { return obj.desid === desid });
       result0.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });

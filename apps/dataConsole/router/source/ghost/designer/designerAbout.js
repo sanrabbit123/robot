@@ -6962,6 +6962,9 @@ DesignerAboutJs.prototype.launching = async function (loading) {
       this.profileTarget = this.profileList[0];
     }
 
+    this.worksList = await ajaxJson({ desid }, BRIDGEHOST + "/designerWorksList", { equal: true });
+    console.log(this.worksList);
+
     this.selection = [];
     this.possibleBoxes = [];
     this.isMouseDown = false;
