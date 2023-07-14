@@ -5284,7 +5284,7 @@ GeneralJs.prototype.grayLoading = function (mother = null, whiteMode = false) {
   return (new GrayLoading(cancel, loading));
 }
 
-GeneralJs.prototype.whiteProgressLoading = function (mother = null) {
+GeneralJs.prototype.whiteProgressLoading = function (mother = null, emptyProgress = false) {
   if (typeof mother !== "object" || mother !== null) {
     throw new Error("input must be dom");
   }
@@ -5370,7 +5370,7 @@ GeneralJs.prototype.whiteProgressLoading = function (mother = null) {
     child: {
       text: "0%",
       style: {
-        display: "inline-block",
+        display: emptyProgress ? "none" : "inline-block",
         position: "relative",
         fontSize: String(progressSize) + ea,
         fontWeight: String(progressWeight),

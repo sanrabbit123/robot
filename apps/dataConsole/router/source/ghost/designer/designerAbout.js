@@ -3603,7 +3603,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   profileUploadEvent = async function (e) {
     try {
       const fileInput = document.querySelector("." + profileFileInputClassName);
-      const loading = instance.mother.grayLoading();
+      const loading = instance.mother.whiteProgressLoading(null, true);
       instance.grayLoading = loading;
       instance.profileUploadProcess = true;
       fireEvent(fileInput, "click");
@@ -4029,7 +4029,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   const { ea, baseTong, media, totalContents, entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, ajaxForm, equalJson, stringToLink } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainContents = [
     {
@@ -4093,6 +4093,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   let blankNumberSize, blankNumberWeight, blankNumberTop;
   let factorWidth;
   let exampleTextLeft;
+  let worksFileInputEvent;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -4200,6 +4201,73 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
 
   this.whiteMargin = (desktop ? margin : 0);
 
+  worksFileInputEvent = (index) => {
+    return async function (e) {
+      try {
+        let formData;
+        let response;
+        let imageJson;
+        let width;
+        let height;
+        let widthHeightArr;
+        let garoBoo;
+        let thisExe;
+        let responseObj;
+        let imageTarget;
+        let imageSecond;
+        let whiteLoading;
+
+        formData = await GeneralJs.promptFile(String(index + 1) + "번 자리에 들어갈 작업 사진을 올려주세요!");
+
+        if (formData !== null) {
+
+          whiteLoading = instance.mother.whiteProgressLoading(null, true);
+
+          thisExe = formData.get("exe");
+          response = await ajaxForm(formData, BRIDGEHOST + "/imageAnalytics");
+          imageJson = equalJson(response);
+          ({ width, height } = imageJson.geometry);
+
+          widthHeightArr = [ width, height ];
+          widthHeightArr.sort((a, b) => { return a - b; });
+
+          whiteLoading.remove();
+
+          if (widthHeightArr[0] < 1000) {
+            window.alert("사진의 크기는 가로 크기와 세로 크기 모두 최소 1000px 이상이여야 합니다!");
+          } else {
+
+            garoBoo = (width >= height);
+            formData.append("gs", garoBoo ? "g" : "s");
+            formData.append("desid", instance.designer.desid);
+            formData.append("index", index);
+
+            whiteLoading = instance.mother.whiteProgressLoading();
+            response = await ajaxForm(formData, BRIDGEHOST + "/designerWorksPhoto", whiteLoading.progress.firstChild);
+            responseObj = equalJson(response);
+
+            whiteLoading.remove();
+
+            responseObj.link = stringToLink(responseObj.link);
+
+            console.log(responseObj);
+
+            // instance.profileTarget = responseObj;
+            // instance.profilePhoto = responseObj.link;
+            // imageTarget = document.querySelector('.' + mainPhotoClassName);
+            // imageTarget.style.backgroundImage = "url('" + instance.profilePhoto + "')";
+            // imageTarget.style.backgroundPosition = String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%";
+            // imageTarget.style.backgroundSize = instance.profileTarget.gs === "g" ? "auto " + String(instance.profileTarget.size) + "%" : String(instance.profileTarget.size) + "% auto";
+            // imageTarget.style.opacity = String(1);
+
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
   whiteBlock = createNode({
     mother: entireMode ? totalContents : baseTong,
     style: {
@@ -4248,6 +4316,12 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   for (let i = 0; i < 4; i++) {
     createNode({
       mother: blankZone,
+      attribute: {
+        index: String(i),
+      },
+      event: {
+        click: worksFileInputEvent(i),
+      },
       style: {
         display: "inline-flex",
         position: "relative",
@@ -4261,6 +4335,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
         justifyContent: "center",
         alignItems: "center",
         opacity: String(0.5),
+        cursor: "pointer",
       },
       child: {
         text: String(i + 1),
@@ -6948,8 +7023,6 @@ DesignerAboutJs.prototype.launching = async function (loading) {
       instance.insertWorkingBox();
       instance.insertIntroduceBox();
     }
-
-    // console.log(await GeneralJs.promptFile("1번 자리에 들어갈 작업 사진을 올려주세요!"));
 
     loading.parentNode.removeChild(loading);
 

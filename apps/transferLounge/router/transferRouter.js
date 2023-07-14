@@ -1837,6 +1837,84 @@ TransferRouter.prototype.rou_post_designerWorksPhoto = function () {
   return obj;
 }
 
+TransferRouter.prototype.rou_post_designerWorksList = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, equalJson, messageSend, linkToString } = this.mother;
+  const { staticConst, designerWorksConst, designerWorksConstFactors } = this;
+  const address = this.address;
+  let obj;
+  obj = {};
+  obj.link = [ "/designerWorksList" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.desid === undefined) {
+        throw new Error("invalid post");
+      }
+      const { desid } = req.body;
+      const splitToken = "__split__";
+      const rawList0 = await fileSystem("readDir", [ designerWorksConst + "/" + designerWorksConstFactors[0] ]);
+      const rawList1 = await fileSystem("readDir", [ designerWorksConst + "/" + designerWorksConstFactors[1] ]);
+      const rawList2 = await fileSystem("readDir", [ designerWorksConst + "/" + designerWorksConstFactors[2] ]);
+      const rawList3 = await fileSystem("readDir", [ designerWorksConst + "/" + designerWorksConstFactors[3] ]);
+      let result0, result1, result2, result3;
+      let filterFunction;
+      let mapFunction;
+
+      filterFunction = (str) => { return !/^\./.test(str) };
+      mapFunction = (rawString) => {
+        const [ desid, gs, timeNumber, xPosition, yPosition, size, uniqueExe ] = rawString.split(splitToken);
+        const [ id, exe ] = uniqueExe.split(".");
+        return {
+          id,
+          desid,
+          gs,
+          date: new Date(Number(timeNumber)),
+          link: linkToString("https://" + address.transinfo.host + String(designerProfileConst + "/" + rawString).replace(new RegExp("^" + staticConst, "g"), "")),
+          file: {
+            exe,
+            name: rawString,
+          },
+          position: {
+            x: Number(xPosition),
+            y: Number(yPosition),
+          },
+          size: Number(size),
+        }
+      };
+
+      result0 = rawList0.filter(filterFunction).map(mapFunction);
+      result1 = rawList1.filter(filterFunction).map(mapFunction);
+      result2 = rawList2.filter(filterFunction).map(mapFunction);
+      result3 = rawList3.filter(filterFunction).map(mapFunction);
+
+      result0 = result0.filter((obj) => { return obj.desid === desid });
+      result0.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+
+      result1 = result1.filter((obj) => { return obj.desid === desid });
+      result1.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+
+      result2 = result2.filter((obj) => { return obj.desid === desid });
+      result2.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+
+      result3 = result3.filter((obj) => { return obj.desid === desid });
+      result3.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+
+      res.send(JSON.stringify([ result0, result1, result2, result3 ]));
+
+    } catch (e) {
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerWorksList): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 TransferRouter.prototype.getAll = function () {
