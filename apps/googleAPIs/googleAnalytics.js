@@ -1221,8 +1221,14 @@ GoogleAnalytics.prototype.realtimeMetric = async function (selfCoreMongo, selfMo
       obj.history = {};
       obj.history.detail = historiesTarget;
       obj.history.length = historiesTarget.length;
-      obj.history.lastPage = historiesTarget[historiesTarget.length - 1].info.pageTitle + " (" + historiesTarget[historiesTarget.length - 1].page + ")";
-      obj.history.summary = obj.history.detail.map((o) => { return o.info.pageTitle });
+
+      if (historiesTarget.length === 0) {
+        obj.history.lastPage = "unknown";
+        obj.history.summary = [];  
+      } else {
+        obj.history.lastPage = historiesTarget[historiesTarget.length - 1].info.pageTitle + " (" + historiesTarget[historiesTarget.length - 1].page + ")";
+        obj.history.summary = obj.history.detail.map((o) => { return o.info.pageTitle });  
+      }
 
       obj.client = thisClients.find((o) => { return o.cliid === obj.cliid }) === undefined ? null : thisClients.find((o) => { return o.cliid === obj.cliid });
     }
