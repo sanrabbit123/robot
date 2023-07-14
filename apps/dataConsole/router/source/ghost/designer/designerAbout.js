@@ -4038,6 +4038,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
       ],
     },
   ];
+  const worksPhotoClassName = "worksPhotoClassName";
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -4094,6 +4095,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   let factorWidth;
   let exampleTextLeft;
   let worksFileInputEvent;
+  let worksFileChainingInputEvent;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -4250,21 +4252,49 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
 
             responseObj.link = stringToLink(responseObj.link);
 
-            console.log(responseObj);
+            instance.worksListTarget[index] = responseObj;
+            imageTarget = document.querySelector('.' + worksPhotoClassName + String(index));
+            imageTarget.style.backgroundImage = "url('" + instance.worksListTarget[index].link + "')";
+            imageTarget.style.backgroundPosition = String(instance.worksListTarget[index].position.x) + "%" + " " + String(instance.worksListTarget[index].position.y) + "%";
+            imageTarget.style.backgroundSize = String(instance.worksListTarget[index].size) + "% auto";
+            imageTarget.style.opacity = String(1);
 
-            // instance.profileTarget = responseObj;
-            // instance.profilePhoto = responseObj.link;
-            // imageTarget = document.querySelector('.' + mainPhotoClassName);
-            // imageTarget.style.backgroundImage = "url('" + instance.profilePhoto + "')";
-            // imageTarget.style.backgroundPosition = String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%";
-            // imageTarget.style.backgroundSize = instance.profileTarget.gs === "g" ? "auto " + String(instance.profileTarget.size) + "%" : String(instance.profileTarget.size) + "% auto";
-            // imageTarget.style.opacity = String(1);
+            return responseObj;
 
           }
+
+          return null;
+        } else {
+          return null;
         }
       } catch (e) {
         console.log(e);
+        return null;
       }
+    }
+  }
+
+  worksFileChainingInputEvent = async function (e) {
+    try {
+      const worksFunction0 = worksFileInputEvent(0);
+      const worksFunction1 = worksFileInputEvent(1);
+      const worksFunction2 = worksFileInputEvent(2);
+      const worksFunction3 = worksFileInputEvent(3);
+      let result;
+
+      result = await worksFunction0(e);
+      if (result !== null) {
+        result = await worksFunction1(e);
+        if (result !== null) {
+          result = await worksFunction2(e);
+          if (result !== null) {
+            result = await worksFunction3(e);
+          }
+        }
+      }
+
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -4316,6 +4346,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   for (let i = 0; i < 4; i++) {
     createNode({
       mother: blankZone,
+      class: [ worksPhotoClassName + String(i) ],
       attribute: {
         index: String(i),
       },
@@ -4329,18 +4360,21 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
         height: "calc(calc(100% - " + String(blankZoneInnerBetween * 1) + ea + ") / 2)",
         marginBottom: String(i / 2 < 1 ? blankZoneInnerBetween : 0) + ea,
         marginRight: String(i % 2 === 1 ? 0 : blankZoneInnerBetween) + ea,
-        background: colorChip.green,
+        backgroundColor: colorChip.green,
+        backgroundImage: instance.worksListTarget[i] === null ? "" : "url('" + instance.worksListTarget[i].link + "')",
+        backgroundPosition: instance.worksListTarget[i] === null ? "50% 50%" : String(instance.worksListTarget[i].position.x) + "%" + " " + String(instance.worksListTarget[i].position.y) + "%",
+        backgroundSize: instance.worksListTarget[i] === null ? "" : String(instance.worksListTarget[i].size) + "% auto",
+        opacity: instance.worksListTarget[i] === null ? String(0.5) : String(1),
         borderRadius: String(5) + "px",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        opacity: String(0.5),
         cursor: "pointer",
       },
       child: {
         text: String(i + 1),
         style: {
-          display: "inline-block",
+          display: instance.worksListTarget[i] === null ? "inline-block" : "none",
           fontSize: String(blankNumberSize) + ea,
           fontWeight: String(blankNumberWeight),
           color: colorChip.liteGreen,
@@ -4447,6 +4481,9 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
             }
           },
           {
+            event: {
+              click: worksFileChainingInputEvent,
+            },
             style: {
               display: "flex",
               position: "absolute",
@@ -4458,6 +4495,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
               background: colorChip.green,
               justifyContent: "center",
               alignItems: "center",
+              cursor: "pointer",
             },
             child: {
               text: "upload",
@@ -6963,7 +7001,26 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     }
 
     this.worksList = await ajaxJson({ desid }, BRIDGEHOST + "/designerWorksList", { equal: true });
-    console.log(this.worksList);
+    this.worksList.forEach((arr) => {
+      arr.forEach((o) => {
+        o.link = stringToLink(o.link);
+        return o;
+      })
+    });
+
+    this.worksListTarget = [ null, null, null, null ];
+    if (this.worksList[0].length > 0) {
+      this.worksListTarget[0] = this.worksList[0][0];
+    }
+    if (this.worksList[1].length > 0) {
+      this.worksListTarget[1] = this.worksList[1][0];
+    }
+    if (this.worksList[2].length > 0) {
+      this.worksListTarget[2] = this.worksList[2][0];
+    }
+    if (this.worksList[3].length > 0) {
+      this.worksListTarget[3] = this.worksList[3][0];
+    }
 
     this.selection = [];
     this.possibleBoxes = [];
