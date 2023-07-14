@@ -167,7 +167,7 @@ DesignerJs.prototype.adminDetail = function (desid) {
       mode: "iframe",
       attribute: { src: "https://localhost:3000" + "/middle/designerAbout?desid=" + designer.desid + "&entire=true&normal=true" },
       style: {
-        position: "absolute",
+        position: "relative",
         display: "block",
         top: String(0),
         left: String(0),
@@ -178,6 +178,7 @@ DesignerJs.prototype.adminDetail = function (desid) {
     }
   });
 
+  instance.adminProjectsView(desid, baseTong0).catch((err) => { console.log(err); });
   this.mainBaseTong = baseTong0;
 }
 
@@ -251,7 +252,7 @@ DesignerJs.prototype.adminProjectsView = async function (desid, base) {
     let linkImageHeight;
     let targetProjectBlock;
 
-    motherMargin = 34;
+    motherMargin = 24;
     blockHeight = 52;
     blockMargin = 4;
 
@@ -353,7 +354,6 @@ DesignerJs.prototype.adminProjectsView = async function (desid, base) {
         display: "block",
         position: "relative",
         width: String(100) + '%',
-        borderTop: "1px solid " + colorChip.gray4,
         paddingTop: String(motherMargin) + ea,
         paddingBottom: String(motherMargin) + ea,
       },

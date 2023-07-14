@@ -86,6 +86,9 @@ GeneralJs.svgMaker = {
 
     return `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 ${calcul(standardWidth)} ${calcul(standard)}" xml:space="preserve"><path fill="${color}" d="M ${calcul(standardWidth - (((standard / 2) / y) * x))}, ${calcul(standard)}H 0l ${calcul(((standard / 2) - (z / 2)) / (y / x))}, -${calcul((standard / 2) - (z / 2))}c ${calcul(x)}, -${calcul(y)}, ${calcul(x)}, -${calcul(w)}, 0, -${calcul(z)}L 0,0h ${calcul(standardWidth - (((standard / 2) / y) * x))}l ${calcul(((standard / 2) - (z / 2)) / (y / x))}, ${calcul((standard / 2) - (z / 2))}c ${calcul(x)}, ${calcul(y)}, ${calcul(x)}, ${calcul(w)}, 0, ${calcul(z)}L ${calcul(standardWidth - (((standard / 2) / y) * x))}, ${calcul(standard)}z" /></svg>`;
   },
+  extractArrow: function (color) {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 314.679 388.43"><path d="M310.776 204.421h-67.473c-0.985 0-1.783 0.799-1.783 1.783v173.779c0 4.666-3.782 8.447-8.447 8.447H81.607c-4.665 0-8.447-3.782-8.447-8.447V206.204c0-0.985-0.799-1.783-1.783-1.783H3.903c-3.232 0-5.059-3.709-3.089-6.271L151.189 3.029c3.106-4.038 9.196-4.038 12.301 0l150.374 195.12C315.835 200.711 314.008 204.421 310.776 204.421z" fill="${color}"/></svg>`;
+  },
   commentTriangle: function (direction, color) {
     if (typeof direction !== "string" || typeof color !== "string") {
       throw new Error("direction => [ verticalRight, verticalLeft, horizontalRight, horizontalLeft ]")
@@ -5184,6 +5187,8 @@ GeneralJs.promptButtons = function (message, buttons) {
   let buttonSize;
   let textTop;
   let buttonsChildren;
+  let buttonsBaseTongMarginTop;
+  let buttonPaddingLeft;
 
   whiteWidth = 320;
   whiteHeight = 150;
@@ -5202,7 +5207,9 @@ GeneralJs.promptButtons = function (message, buttons) {
   lineHeight = 1.5;
   wordingVisual = GeneralJs.isMac() ? 0 : 2;
   textTop = GeneralJs.isMac() ? -1 : 1;
-  buttonBetween = 6;
+  buttonBetween = 4;
+  buttonsBaseTongMarginTop = 10;
+  buttonPaddingLeft = 10;
 
   greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
   if (Number.isNaN(greenBarHeight)) {
@@ -5245,7 +5252,7 @@ GeneralJs.promptButtons = function (message, buttons) {
       position: "relative",
       width: String(whiteWidth - (paddingLeft * 2)) + ea,
       paddingTop: String(paddingTop) + ea,
-      paddingBottom: String(paddingBottom) + ea,
+      paddingBottom: String(buttons.length <= 3 ? paddingBottom : (paddingLeft - buttonBetween)) + ea,
       paddingLeft: String(paddingLeft) + ea,
       paddingRight: String(paddingLeft) + ea,
       borderRadius: String(5) + "px",
@@ -5284,51 +5291,102 @@ GeneralJs.promptButtons = function (message, buttons) {
     }
   });
 
-  buttonsBaseTong = createNode({
-    mother: whiteTong,
-    style: {
-      display: "flex",
-      flexDirection: "row",
-      position: "absolute",
-      bottom: String(paddingTop + bottomVisual) + ea,
-      left: String(paddingLeft + marginLeft) + ea,
-      width: withOut((paddingLeft * 2) + marginLeft, ea),
-      height: String(inputBoxHeight) + ea,
-      borderRadius: String(5) + "px",
-      background: colorChip.white,
-      justifyContent: "start",
-      alignItems: "start",
-    }
-  });
+  if (buttons.length <= 3) {
 
-  num = 0;
-  for (let text of buttons) {
-    createNode({
-      mother: buttonsBaseTong,
-      attribute: { value: text },
+    buttonsBaseTong = createNode({
+      mother: whiteTong,
       style: {
-        display: "inline-flex",
-        position: "relative",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "calc(calc(100% - " + String(buttonBetween * (buttons.length - 1)) + ea + ") / " + String(buttons.length) + ")",
+        display: "flex",
+        flexDirection: "row",
+        position: "absolute",
+        bottom: String(paddingTop + bottomVisual) + ea,
+        left: String(paddingLeft + marginLeft) + ea,
+        width: withOut((paddingLeft * 2) + marginLeft, ea),
         height: String(inputBoxHeight) + ea,
-        marginRight: num === buttons.length - 1 ? "" : String(buttonBetween) + ea,
-        background: colorChip.softGreen,
         borderRadius: String(5) + "px",
-      },
-      child: {
-        text,
-        style: {
-          fontSize: String(buttonSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.white,
-          position: "relative",
-          top: String(textTop) + ea,
-        }
+        background: colorChip.white,
+        justifyContent: "start",
+        alignItems: "start",
       }
     });
-    num++;
+
+    num = 0;
+    for (let text of buttons) {
+      createNode({
+        mother: buttonsBaseTong,
+        attribute: { value: text },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "calc(calc(100% - " + String(buttonBetween * (buttons.length - 1)) + ea + ") / " + String(buttons.length) + ")",
+          height: String(inputBoxHeight) + ea,
+          marginRight: num === buttons.length - 1 ? "" : String(buttonBetween) + ea,
+          background: colorChip.softGreen,
+          borderRadius: String(5) + "px",
+        },
+        child: {
+          text,
+          style: {
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.white,
+            position: "relative",
+            top: String(textTop) + ea,
+          }
+        }
+      });
+      num++;
+    }
+
+  } else {
+
+    buttonsBaseTong = createNode({
+      mother: whiteTong,
+      style: {
+        display: "block",
+        position: "relative",
+        marginTop: String(buttonsBaseTongMarginTop) + ea,
+        width: withOut(0, ea),
+        height: "auto",
+        borderRadius: String(5) + "px",
+        background: colorChip.white,
+      }
+    });
+
+    num = 0;
+    for (let text of buttons) {
+      createNode({
+        mother: buttonsBaseTong,
+        attribute: { value: text },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          justifyContent: "center",
+          alignItems: "center",
+          height: String(inputBoxHeight) + ea,
+          marginRight: String(buttonBetween) + ea,
+          marginBottom: String(buttonBetween) + ea,
+          background: colorChip.softGreen,
+          borderRadius: String(5) + "px",
+          paddingLeft: String(buttonPaddingLeft) + ea,
+          paddingRight: String(buttonPaddingLeft) + ea,
+        },
+        child: {
+          text,
+          style: {
+            fontSize: String(buttonSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.white,
+            position: "relative",
+            top: String(textTop) + ea,
+          }
+        }
+      });
+      num++;
+    }
+
   }
 
   return new Promise((resolve, reject) => {
@@ -5640,6 +5698,327 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
       }).catch((err) => {
         reject(err);
       });
+    });
+
+  });
+}
+
+GeneralJs.promptFile = function (message) {
+  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
+  const ea = "px";
+  const promptAsideClassName = "promptAsideClassName";
+  const tempHiddenFileInputClassName = "tempHiddenFileInputClassName" + String(Math.round(Math.random() * 10000)) + String((new Date()).valueOf());
+  const mobile = window.innerWidth <= 900;
+  const desktop = !mobile;
+  let whiteTongBase;
+  let whiteTong;
+  let whiteWidth, whiteHeight;
+  let paddingTop, paddingLeft;
+  let paddingBottom;
+  let size0, size1;
+  let marginLeft;
+  let bottomVisual;
+  let inputBoxHeight;
+  let input;
+  let inputIndent;
+  let inputBottomVisual;
+  let greenBarHeight;
+  let lineHeight;
+  let wordingVisual;
+  let finalEvent;
+  let inputSize;
+  let buttonsBaseTong;
+  let buttonBetween;
+  let num;
+  let buttonSize;
+  let textTop;
+  let buttonsChildren;
+  let buttonsBaseTongMarginTop;
+  let buttonPaddingLeft;
+  let grayBoxMarginTop;
+  let extractArrowWidth, extractArrowMargin;
+  let fileHiddenInput;
+
+  whiteWidth = 320;
+  whiteHeight = 150;
+  paddingTop = 17;
+  paddingLeft = 23;
+  paddingBottom = 62;
+  size0 = 14;
+  size1 = 15;
+  inputSize = 13;
+  buttonSize = 12;
+  marginLeft = 18;
+  bottomVisual = 7;
+  inputBoxHeight = 100;
+  inputIndent = 9;
+  inputBottomVisual = 0;
+  lineHeight = 1.5;
+  wordingVisual = GeneralJs.isMac() ? 0 : 2;
+  textTop = GeneralJs.isMac() ? -1 : 1;
+  buttonBetween = 4;
+  buttonsBaseTongMarginTop = 10;
+  buttonPaddingLeft = 10;
+  grayBoxMarginTop = 10;
+  extractArrowWidth = 14;
+  extractArrowMargin = 4;
+
+  greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
+  if (Number.isNaN(greenBarHeight)) {
+    greenBarHeight = 0;
+  }
+
+  whiteTongBase = createNode({
+    mode: "aside",
+    mother: document.body,
+    class: [ promptAsideClassName ],
+    event: {
+      contextmenu: (e) => { e.stopPropagation(); },
+      dblclick: (e) => { e.stopPropagation(); },
+      drop: (e) => { e.stopPropagation(); },
+      keyup: (e) => { e.stopPropagation(); },
+      keydown: (e) => { e.stopPropagation(); },
+      keypress: (e) => { e.stopPropagation(); },
+    },
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "fixed",
+      top: String(0) + "vh",
+      left: String(1) + "vw",
+      width: String(98) + "vw",
+      height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
+      background: "transparent",
+      zIndex: String(900)
+    }
+  });
+
+  whiteTong = createNode({
+    mother: whiteTongBase,
+    event: {
+      click: (e) => { e.stopPropagation(); },
+    },
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(whiteWidth - (paddingLeft * 2)) + ea,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(paddingLeft) + ea,
+      paddingLeft: String(paddingLeft) + ea,
+      paddingRight: String(paddingLeft) + ea,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      background: colorChip.white,
+      animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
+    }
+  });
+
+  fileHiddenInput = createNode({
+    mother: whiteTong,
+    class: [ tempHiddenFileInputClassName ],
+    mode: "input",
+    attribute: {
+      type: "file",
+      name: "tempfile",
+    },
+    style: {
+      display: "none",
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    text: "Q",
+    style: {
+      fontSize: String(size0) + ea,
+      fontWeight: String(400),
+      color: colorChip.green,
+      fontFamily: "graphik",
+      position: "absolute",
+      top: String(paddingTop) + ea,
+      left: String(paddingLeft) + ea,
+      lineHeight: String(lineHeight),
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    text: message,
+    style: {
+      position: "relative",
+      marginLeft: String(marginLeft) + ea,
+      fontSize: String(size1) + ea,
+      fontWeight: String(500),
+      color: colorChip.black,
+      lineHeight: String(lineHeight),
+      top: String(wordingVisual) + ea,
+    }
+  });
+
+  buttonsBaseTong = createNode({
+    mother: whiteTong,
+    event: {
+      click: function (e) {
+        e.stopPropagation();
+        fileHiddenInput.click();
+      },
+      dragenter: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.style.background = colorChip.whiteGreen;
+      },
+      dragover: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      },
+      dragleave: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.style.background = colorChip.gray1;
+      },
+    },
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
+      left: String(0) + ea,
+      width: withOut(0, ea),
+      height: String(inputBoxHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gray1,
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: String(grayBoxMarginTop) + ea,
+      border: "1px dashed " + colorChip.gray4,
+    },
+    child: {
+      text: "클릭 또는 드래그하여 파일을 업로드...",
+      style: {
+        position: "relative",
+        fontSize: String(size1) + ea,
+        fontWeight: String(400),
+        color: colorChip.deactive,
+        top: String(wordingVisual) + ea,
+      },
+      previous: {
+        mode: "svg",
+        source: GeneralJs.svgMaker.extractArrow(colorChip.deactive),
+        style: {
+          position: "relative",
+          width: String(extractArrowWidth) + ea,
+          marginBottom: String(extractArrowMargin) + ea,
+        }
+      }
+    }
+  });
+
+  return new Promise((resolve, reject) => {
+
+    whiteTongBase.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+      for (let z = 0; z < targets.length; z++) {
+        try {
+          targets[z].remove();
+        } catch {}
+      }
+      resolve(null);
+    });
+
+    fileHiddenInput.addEventListener("change", async function (e) {
+      e.stopPropagation();
+      let formData;
+      let thisExe;
+      let targets;
+      try {
+        if (this.files.length === 1) {
+          formData = new FormData();
+          formData.enctype = "multipart/form-data";
+  
+          thisExe = this.files[0].name.split(".")[this.files[0].name.split(".").length - 1];
+  
+          formData.append("uploadedFile0", this.files[0]);
+          formData.append("exe", thisExe);
+
+          targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+          for (let z = 0; z < targets.length; z++) {
+            try {
+              targets[z].remove();
+            } catch {}
+          }
+
+          resolve(formData);
+
+        } else {
+
+          targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+          for (let z = 0; z < targets.length; z++) {
+            try {
+              targets[z].remove();
+            } catch {}
+          }
+
+          resolve(null);
+        }
+      } catch (e) {
+        targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+        for (let z = 0; z < targets.length; z++) {
+          try {
+            targets[z].remove();
+          } catch {}
+        }
+        console.log(e);
+        resolve(null);
+      }
+    });
+
+    buttonsBaseTong.addEventListener("drop", async function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+      let formData;
+      let thisExe;
+      let targets;
+      try {
+        if (e.dataTransfer.files.length >= 1) {
+          formData = new FormData();
+          formData.enctype = "multipart/form-data";
+  
+          thisExe = e.dataTransfer.files[0].name.split(".")[e.dataTransfer.files[0].name.split(".").length - 1];
+  
+          formData.append("uploadedFile0", e.dataTransfer.files[0]);
+          formData.append("exe", thisExe);
+
+          targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+          for (let z = 0; z < targets.length; z++) {
+            try {
+              targets[z].remove();
+            } catch {}
+          }
+
+          resolve(formData);
+
+        } else {
+
+          targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+          for (let z = 0; z < targets.length; z++) {
+            try {
+              targets[z].remove();
+            } catch {}
+          }
+
+          resolve(null);
+        }
+      } catch (e) {
+        targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+        for (let z = 0; z < targets.length; z++) {
+          try {
+            targets[z].remove();
+          } catch {}
+        }
+        console.log(e);
+        resolve(null);
+      }
     });
 
   });

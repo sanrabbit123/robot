@@ -235,9 +235,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
     {
       title: "기본 정보",
       whiteType: 0,
+      admin: false,
       contents: [
         {
           property: "성함",
+          admin: false,
           returnValue: (designer) => {
             return designer.designer;
           },
@@ -260,6 +262,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "아이디",
+          admin: false,
           returnValue: (designer) => {
             return designer.desid;
           },
@@ -276,6 +279,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "연락처",
+          admin: false,
           returnValue: (designer) => {
             return designer.information.phone;
           },
@@ -301,6 +305,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "생일",
+          admin: false,
           returnValue: (designer) => {
             return `${String(designer.information.birth.getFullYear())}년 ${String(designer.information.birth.getMonth() + 1)}월 ${String(designer.information.birth.getDate())}일`;
           },
@@ -343,6 +348,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "이메일",
+          admin: false,
           returnValue: (designer) => {
             return designer.information.email;
           },
@@ -365,6 +371,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "웹페이지",
+          admin: false,
           returnValue: (designer) => {
             return designer.information.personalSystem.webPage.length === 0 ? "없음" : designer.information.personalSystem.webPage[0];
           },
@@ -405,6 +412,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "인스타그램",
+          admin: false,
           returnValue: (designer) => {
             const target = designer.information.personalSystem.sns.find((obj) => { return /Insta/gi.test(obj.kind) });
             if (target === undefined) {
@@ -471,6 +479,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "블로그",
+          admin: false,
           returnValue: (designer) => {
             const target = designer.information.personalSystem.sns.find((obj) => { return /Naver/gi.test(obj.kind) });
             if (target === undefined) {
@@ -546,9 +555,60 @@ DesignerAboutJs.prototype.contentsCenter = function () {
     {
       title: "업무 정보",
       whiteType: 1,
+      admin: false,
       contents: [
         {
+          property: "계약 상태",
+          admin: true,
+          returnValue: (designer) => { return [
+            "협약 완료",
+            "협약 휴직",
+            "협약 해지",
+            "신청 대기",
+          ] },
+          selectValue: (designer) => {
+            let contents, value;
+            contents = [
+              "협약 완료",
+              "협약 휴직",
+              "협약 해지",
+              "신청 대기",
+            ];
+            value = [];
+            for (let i of contents) {
+              if (i === designer.information.contract.status) {
+                value.push(1);
+              } else {
+                value.push(0);
+              }
+            }
+            return [ value.findIndex((n) => { return n === 1 }) ];
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+              let text, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = columns[raw.findIndex((num) => { return num === 1 })];
+              if (typeof text !== "string") {
+                text = columns[3];
+              }
+
+              instance.designer.information.contract.status = text;
+              updateQuery["information.contract.status"] = text;
+              
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
           property: "상태",
+          admin: false,
           returnValue: (designer) => { return [
             "신규",
             "일반",
@@ -589,6 +649,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "파트너십 기간",
+          admin: false,
           returnValue: (designer) => {
             return `시작일 : ${String(designer.information.business.career.startY)}년 ${String(designer.information.business.career.startM)}월`;
           },
@@ -646,6 +707,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "경력 상세",
+          admin: false,
           returnValue: (designer) => {
             const careerData = designer.information.business.career.detail;
             careerData.sort((a, b) => {
@@ -681,6 +743,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               { name: "회사", type: "string" },
               { name: "부서", type: "string" },
               { name: "담당 업무", type: "string" },
+              { name: "업무 태그", type: "button", buttons: [
+                "리모델링",
+                "건축 설계",
+                "홈스타일링",
+                "전시",
+                "디스플레이",
+                "모델하우스",
+                "가구",
+                "패브릭",
+                "조명",
+                "기타 디자인",
+                "기타 업무",
+              ] },
               { name: "시작일", type: "date", progressBoo: false, progressName: "" },
               { name: "종료일", type: "date", progressBoo: true, progressName: "재직중" },
             ];
@@ -749,8 +824,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 company = raw.value[0][1];
                 team = raw.value[1][1];
                 role = raw.value[2][1];
-                start = raw.value[3][1];
-                end = raw.value[4][1];
+                start = raw.value[4][1];
+                end = raw.value[5][1];
 
                 newValue = {
                   company,
@@ -811,8 +886,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               company = matrix[0][1];
               team = matrix[1][1];
               role = matrix[2][1];
-              start = matrix[3][1];
-              end = matrix[4][1];
+              start = matrix[4][1];
+              end = matrix[5][1];
 
               block = {
                 company,
@@ -857,6 +932,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "학력 상세",
+          admin: false,
           returnValue: (designer) => {
             const schoolData = designer.information.business.career.school;
             schoolData.sort((a, b) => {
@@ -1032,6 +1108,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "유관 경력",
+          admin: false,
           returnValue: (designer) => {
             return `총 ${String(designer.information.business.career.relatedY)}년 ${String(designer.information.business.career.relatedM)}개월`;
           },
@@ -1085,6 +1162,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "계좌번호",
+          admin: false,
           returnValue: (designer) => {
             const targetArr = designer.information.business.account.filter((obj) => { return obj.accountNumber !== '' });
             if (targetArr.length === 0) {
@@ -1145,6 +1223,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "사업자 등록번호",
+          admin: false,
           returnValue: (designer) => {
             return designer.information.business.businessInfo.businessNumber;
           },
@@ -1179,7 +1258,44 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
         },
         {
+          property: "주민등록번호",
+          admin: false,
+          returnValue: (designer) => {
+            return designer.information.business.businessInfo.businessNumber;
+          },
+          renderValue: (text) => {
+            return text;
+          },
+          updateValue: async (raw, designer) => {
+            try {
+              let text, whereQuery, updateQuery;
+              let arr;
+              let obj;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = raw.replace(/[^0-9\-]/g, '');
+
+              instance.designer.information.business.businessInfo.businessNumber = text;
+              updateQuery["information.business.businessInfo.businessNumber"] = text;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              return text;
+
+            } catch (e) {
+              console.log(e);
+              return designer.information.business.businessInfo.businessNumber;
+            }
+          },
+          noticeText: (designer) => {
+            return "프리랜서의 경우, 필수로 입력해주세요!";
+          },
+        },
+        {
           property: "사업자 종류",
+          admin: false,
           returnValue: (designer) => {
             return [ "프리랜서", "개인사업자(간이)", "개인사업자(일반)", "법인사업자(간이)", "법인사업자(일반)" ];
           },
@@ -1215,7 +1331,125 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               console.log(e);
             }
           },
-        }
+        },
+        {
+          property: "수수료",
+          admin: true,
+          returnValue: (designer) => {
+            const dateToString = (date) => { return String(date.getFullYear()).slice(2) + '.' + String(date.getMonth() + 1) + '.' + String(date.getDate()); }
+            const history = designer.information.business.service.cost.percentageHistory;
+            const token = "&nbsp;/&nbsp;";
+            let str;
+            let tempArr, tempArr2;
+            str = String(designer.information.business.service.cost.percentage) + " (현재)";
+            for (let { date: { start, end }, percentage } of history) {
+              str += token;
+              str += String(percentage);
+              str += " (";
+              str += dateToString(start);
+              str += "-";
+              str += dateToString(end);
+              str += ")";
+            }
+            if (/\//g.test(str)) {
+              if (str.split("/").length > 5) {
+                tempArr = str.split("/");
+                tempArr2 = [];
+                for (let i = 0; i < 5; i++) {
+                  tempArr2.push(tempArr[i].trim());
+                }
+                str = tempArr2.join(token);
+              }
+            }
+            return str;
+          },
+          renderValue: (text) => {
+            const currentFee = Number(text.split("(현재)")[0].trim());
+            return String(currentFee);
+          },
+          updateValue: async (raw, designer) => {
+            const dateToString = (date) => { return String(date.getFullYear()).slice(2) + '.' + String(date.getMonth() + 1) + '.' + String(date.getDate()); }
+            const token = "&nbsp;/&nbsp;";
+            let whereQuery, updateQuery;
+            let tempArr, tempArr2;
+            let past, history, contractDate, startDate, endDate;
+            let str;
+            let newFee;
+
+            whereQuery = { desid: designer.desid };
+            updateQuery = {};
+
+            past = designer.information.business.service.cost.percentage;
+            history = designer.information.business.service.cost.percentageHistory;
+            contractDate = designer.information.contract.date;
+
+            try {
+              newFee = Number(raw.replace(/[^0-9]/gi, ''));
+              if (Number.isNaN(newFee)) {
+                throw new Error("invalid input");
+              }
+
+              endDate = new Date();
+              if (history.length === 0) {
+                startDate = contractDate;
+              } else {
+                startDate = history[0].date.end;
+              }
+              history.unshift({ date: { start: startDate, end: endDate }, percentage: past });
+              updateQuery["information.business.service.cost.percentage"] = newFee;
+              updateQuery["information.business.service.cost.percentageHistory"] = history;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              str = String(newFee) + " (현재)";
+              for (let { date: { start, end }, percentage } of history) {
+                str += token;
+                str += String(percentage);
+                str += " (";
+                str += dateToString(start);
+                str += "-";
+                str += dateToString(end);
+                str += ")";
+              }
+
+              if (/\//g.test(str)) {
+                if (str.split("/").length > 5) {
+                  tempArr = str.split("/");
+                  tempArr2 = [];
+                  for (let i = 0; i < 5; i++) {
+                    tempArr2.push(tempArr[i].trim());
+                  }
+                  str = tempArr2.join(token);
+                }
+              }
+
+              return str;
+            } catch (e) {
+              console.log(e);
+              str = String(designer.information.business.service.cost.percentage) + " (현재)";
+              for (let { date: { start, end }, percentage } of history) {
+                str += token;
+                str += String(percentage);
+                str += " (";
+                str += dateToString(start);
+                str += "-";
+                str += dateToString(end);
+                str += ")";
+              }
+              if (/\//g.test(str)) {
+                if (str.split("/").length > 5) {
+                  tempArr = str.split("/");
+                  tempArr2 = [];
+                  for (let i = 0; i < 5; i++) {
+                    tempArr2.push(tempArr[i].trim());
+                  }
+                  str = tempArr2.join(token);
+                }
+              }
+              return str;
+            }
+          },
+        },
       ],
       notice: [
         {
@@ -1231,9 +1465,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
     {
       title: "공간 범위",
       whiteType: 1,
+      admin: false,
       contents: [
         {
           property: "주소",
+          admin: false,
           returnValue: (designer) => {
             return designer.information.address.length === 0 ? "없음" : designer.information.address[0];
           },
@@ -1279,6 +1515,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "유효 범위",
+          admin: false,
           returnValue: (designer) => {
             return String(designer.analytics.region.range) + "km";
           },
@@ -1320,6 +1557,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "한계 범위",
+          admin: false,
           returnValue: (designer) => {
             return String(designer.analytics.region.expenses) + "km";
           },
@@ -1361,6 +1599,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "시공 한계",
+          admin: false,
           returnValue: (designer) => {
             return String(designer.analytics.region.construct) + "km";
           },
@@ -1402,6 +1641,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "이동 수단",
+          admin: false,
           returnValue: (designer) => {
             return [
               "대중교통",
@@ -1454,9 +1694,84 @@ DesignerAboutJs.prototype.contentsCenter = function () {
     {
       title: "작업 방식",
       whiteType: 1,
+      admin: false,
       contents: [
         {
+          property: "역량 범위",
+          admin: true,
+          returnValue: (designer) => { return [
+            "홈퍼니싱",
+            "홈스타일링",
+            "토탈 스타일링",
+            "엑스트라 스타일링",
+          ] },
+          selectValue: (designer) => {
+            const targets = [
+              "홈퍼니싱",
+              "홈스타일링",
+              "토탈 스타일링",
+              "엑스트라 스타일링",
+            ];
+            return [ 0, 1, 2 ];
+          },
+          multiple: true,
+          updateValue: async (raw, columns, designer) => {
+            try {
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
+          property: "진행 범위",
+          admin: true,
+          returnValue: (designer) => { return [
+            "홈퍼니싱",
+            "홈스타일링",
+            "토탈 스타일링",
+            "엑스트라 스타일링",
+          ] },
+          selectValue: (designer) => {
+            const targets = [
+              "홈퍼니싱",
+              "홈스타일링",
+              "토탈 스타일링",
+              "엑스트라 스타일링",
+            ];
+            return [ 0, 1, 2 ];
+          },
+          multiple: true,
+          updateValue: async (raw, columns, designer) => {
+            try {
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
+          property: "부분 공간",
+          admin: false,
+          returnValue: (designer) => { return [
+            "가능",
+            "불가능",
+          ] },
+          selectValue: (designer) => {
+            return [ 1 ];
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
           property: "온라인",
+          admin: false,
           returnValue: (designer) => { return [
             "가능",
             "불가능",
@@ -1490,6 +1805,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "거주중",
+          admin: false,
           returnValue: (designer) => { return [
             "가능",
             "불가능",
@@ -1523,6 +1839,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: desktop ? "1차 제안 시간" : "1차 제안",
+          admin: false,
           returnValue: (designer) => { return [
             "1주일 이내",
             "2주일 이내",
@@ -1570,6 +1887,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "제안 방식",
+          admin: false,
           returnValue: (designer) => { return [
             "순차 제안",
             "한번에 제안"
@@ -1611,47 +1929,58 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
         },
         {
-          property: "페이퍼 워크",
+          property: "CAD 도면",
+          admin: false,
           returnValue: (designer) => { return [
-            "도면",
-            "3D",
-            "컨셉 제안",
-            "마감재 제안",
-            "제품 리스트",
-            "제품 이미지",
-            "콜라주",
+            "가능",
+            "불가능",
           ] },
           selectValue: (designer) => {
-            const targets = [
-              "도면",
-              "3D",
-              "컨셉 제안",
-              "마감재 제안",
-              "제품 리스트",
-              "제품 이미지",
-              "콜라주",
-            ];
-            return designer.analytics.project.paperWork.map((str) => {
-              return targets.findIndex((s) => { return s === str });
-            });
+            return [ 1 ];
           },
-          multiple: true,
+          multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
-              let text, whereQuery, updateQuery;
-              let filtered;
 
-              whereQuery = { desid };
-              updateQuery = {};
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
+          property: "콜라주",
+          admin: false,
+          returnValue: (designer) => { return [
+            "가능",
+            "불가능",
+          ] },
+          selectValue: (designer) => {
+            return [ 1 ];
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
 
-              filtered = columns.filter((str, index) => {
-                return raw[index] === 1;
-              });
-
-              instance.designer.analytics.project.paperWork = filtered;
-              updateQuery["analytics.project.paperWork"] = filtered;
-
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
+          property: "3D",
+          admin: false,
+          returnValue: (designer) => { return [
+            "불가능",
+            "하",
+            "중",
+            "상",
+          ] },
+          selectValue: (designer) => {
+            return [ 2 ];
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
 
             } catch (e) {
               console.log(e);
@@ -1669,9 +1998,45 @@ DesignerAboutJs.prototype.contentsCenter = function () {
     {
       title: "시공 관련",
       whiteType: 1,
+      admin: false,
       contents: [
         {
+          property: "협업 시공사",
+          admin: false,
+          returnValue: (designer) => {
+            return "협업 시공사명";
+          },
+          renderValue: (text) => {
+            return text;
+          },
+          updateValue: async (raw, designer) => {
+            try {
+
+            } catch (e) {
+
+            }
+          },
+        },
+        {
+          property: "자체 시공사",
+          admin: false,
+          returnValue: (designer) => {
+            return "자체 시공사명";
+          },
+          renderValue: (text) => {
+            return text;
+          },
+          updateValue: async (raw, designer) => {
+            try {
+
+            } catch (e) {
+
+            }
+          },
+        },
+        {
           property: "시공 감리",
+          admin: false,
           returnValue: (designer) => { return [
             "가능",
             "불가능",
@@ -1703,236 +2068,6 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
         },
-        {
-          property: "시공 가능 (S)",
-          returnValue: (designer) => { return [
-            "고객 시공사",
-            "홈리에종 시공사",
-            "디자이너 시공사",
-          ] },
-          selectValue: (designer) => {
-            const targets = [
-              "고객 시공사",
-              "홈리에종 시공사",
-              "디자이너 시공사",
-            ];
-            return designer.analytics.construct.case[0].possible.map((str) => {
-              return targets.findIndex((s) => { return s === str });
-            });
-          },
-          multiple: true,
-          updateValue: async (raw, columns, designer) => {
-            try {
-              let text, whereQuery, updateQuery;
-              let filtered;
-
-              whereQuery = { desid };
-              updateQuery = {};
-
-              filtered = columns.filter((str, index) => {
-                return raw[index] === 1;
-              });
-
-              instance.designer.analytics.construct.case[0].possible = filtered;
-              updateQuery["analytics.construct.case.0.possible"] = filtered;
-
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-
-            } catch (e) {
-              console.log(e);
-            }
-          },
-          noticeText: (designer) => {
-            return "홈스타일링 서비스 진행시, 함께 작업이 가능한 시공사입니다. 여러개를 체크할 수 있습니다. 홈스타일링 서비스에서 가능한 시공사를 모두 선택해주세요!";
-          },
-        },
-        {
-          property: "시공 가능 (T)",
-          returnValue: (designer) => { return [
-            "고객 시공사",
-            "홈리에종 시공사",
-            "디자이너 시공사",
-          ] },
-          selectValue: (designer) => {
-            const targets = [
-              "고객 시공사",
-              "홈리에종 시공사",
-              "디자이너 시공사",
-            ];
-            return designer.analytics.construct.case[1].possible.map((str) => {
-              return targets.findIndex((s) => { return s === str });
-            });
-          },
-          multiple: true,
-          updateValue: async (raw, columns, designer) => {
-            try {
-              let text, whereQuery, updateQuery;
-              let filtered;
-
-              whereQuery = { desid };
-              updateQuery = {};
-
-              filtered = columns.filter((str, index) => {
-                return raw[index] === 1;
-              });
-
-              instance.designer.analytics.construct.case[1].possible = filtered;
-              updateQuery["analytics.construct.case.1.possible"] = filtered;
-
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-
-            } catch (e) {
-              console.log(e);
-            }
-          },
-          noticeText: (designer) => {
-            return "토탈 스타일링 서비스 진행시, 함께 작업이 가능한 시공사입니다. 여러개를 체크할 수 있습니다. 토탈 스타일링 서비스에서 가능한 시공사를 모두 선택해주세요!";
-          },
-        },
-        {
-          property: "시공 가능 (XT)",
-          returnValue: (designer) => { return [
-            "고객 시공사",
-            "홈리에종 시공사",
-            "디자이너 시공사",
-          ] },
-          selectValue: (designer) => {
-            const targets = [
-              "고객 시공사",
-              "홈리에종 시공사",
-              "디자이너 시공사",
-            ];
-            return designer.analytics.construct.case[2].possible.map((str) => {
-              return targets.findIndex((s) => { return s === str });
-            });
-          },
-          multiple: true,
-          updateValue: async (raw, columns, designer) => {
-            try {
-              let text, whereQuery, updateQuery;
-              let filtered;
-
-              whereQuery = { desid };
-              updateQuery = {};
-
-              filtered = columns.filter((str, index) => {
-                return raw[index] === 1;
-              });
-
-              instance.designer.analytics.construct.case[2].possible = filtered;
-              updateQuery["analytics.construct.case.2.possible"] = filtered;
-
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-
-            } catch (e) {
-              console.log(e);
-            }
-          },
-          noticeText: (designer) => {
-            return "엑스트라 스타일링 서비스 진행시, 함께 작업이 가능한 시공사입니다. 여러개를 체크할 수 있습니다. 엑스트라 스타일링 서비스에서 가능한 시공사를 모두 선택해주세요!";
-          },
-        },
-        {
-          property: desktop ? "파트너 시공사" : "파트너",
-          returnValue: (designer) => { return [
-            "있음",
-            "없음",
-          ] },
-          selectValue: (designer) => {
-            if (designer.analytics.construct.partner) {
-              return [ 0 ];
-            } else {
-              return [ 1 ];
-            }
-          },
-          multiple: false,
-          updateValue: async (raw, columns, designer) => {
-            try {
-              let text, whereQuery, updateQuery;
-
-              whereQuery = { desid };
-              updateQuery = {};
-
-              text = columns[raw.findIndex((num) => { return num === 1 })];
-
-              instance.designer.analytics.construct.partner = (text === "있음");
-              updateQuery["analytics.construct.partner"] = (text === "있음");
-
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-
-            } catch (e) {
-              console.log(e);
-            }
-          },
-        },
-        {
-          property: desktop ? "파트너 가능 범위" : "가능 범위",
-          returnValue: (designer) => { return [
-            "홈스타일링",
-            "토탈 스타일링",
-            "엑스트라"
-          ] },
-          selectValue: (designer) => {
-            return [ designer.analytics.construct.range - 2 ];
-          },
-          multiple: false,
-          updateValue: async (raw, columns, designer) => {
-            try {
-              let index, whereQuery, updateQuery;
-
-              whereQuery = { desid };
-              updateQuery = {};
-
-              index = raw.findIndex((num) => { return num === 1 });
-
-              instance.designer.analytics.construct.range = index + 2;
-              updateQuery["analytics.construct.range"] = index + 2;
-
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-
-            } catch (e) {
-              console.log(e);
-            }
-          },
-        },
-        {
-          property: desktop ? "주 이용 시공사" : "주 이용",
-          returnValue: (designer) => { return [
-            "고객 시공사",
-            "홈리에종 시공사",
-            "디자이너 시공사",
-          ] },
-          selectValue: (designer) => {
-            if (designer.analytics.construct.major === "고객 시공사") {
-              return [ 0 ];
-            } else if (designer.analytics.construct.major === "홈리에종 시공사") {
-              return [ 1 ];
-            } else if (designer.analytics.construct.major === "디자이너 시공사") {
-              return [ 2 ];
-            } else {
-              return [ 1 ];
-            }
-          },
-          multiple: false,
-          updateValue: async (raw, columns, designer) => {
-            try {
-              let text, whereQuery, updateQuery;
-
-              whereQuery = { desid };
-              updateQuery = {};
-
-              text = columns[raw.findIndex((num) => { return num === 1 })];
-
-              instance.designer.analytics.construct.major = text;
-              updateQuery["analytics.construct.major"] = text;
-
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-
-            } catch (e) {
-              console.log(e);
-            }
-          },
-        },
       ],
       notice: [
         {
@@ -1944,12 +2079,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
     {
       title: "제작 관련",
       whiteType: 1,
+      admin: false,
       contents: [
         {
           property: "빌트인 제작",
+          admin: false,
           returnValue: (designer) => { return [
-            "가능",
             "불가능",
+            "하",
+            "중",
+            "상",
           ] },
           selectValue: (designer) => {
             if (designer.analytics.styling.furniture.builtin) {
@@ -1961,17 +2100,17 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
-              let text, whereQuery, updateQuery;
+              // let text, whereQuery, updateQuery;
 
-              whereQuery = { desid };
-              updateQuery = {};
+              // whereQuery = { desid };
+              // updateQuery = {};
 
-              text = columns[raw.findIndex((num) => { return num === 1 })];
+              // text = columns[raw.findIndex((num) => { return num === 1 })];
 
-              instance.designer.analytics.styling.furniture.builtin = (text === "가능");
-              updateQuery["analytics.styling.furniture.builtin"] = (text === "가능");
+              // instance.designer.analytics.styling.furniture.builtin = (text === "가능");
+              // updateQuery["analytics.styling.furniture.builtin"] = (text === "가능");
 
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              // await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -1980,6 +2119,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "가구 제작",
+          admin: false,
           returnValue: (designer) => { return [
             "가능",
             "불가능",
@@ -2012,79 +2152,35 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
         },
         {
-          property: "커튼 패브릭",
+          property: "패브릭 제작",
+          admin: false,
           returnValue: (designer) => { return [
-            "업체 연결",
-            "기성 제품 추천",
-            "직접 제작",
+            "불가능",
+            "하",
+            "중",
+            "상",
           ] },
           selectValue: (designer) => {
-            const targets = [
-              "업체 연결",
-              "기성 제품 추천",
-              "직접 제작",
-            ];
-            return designer.analytics.styling.fabric.curtain.map((str) => {
-              return targets.findIndex((s) => { return s === str });
-            });
-          },
-          multiple: true,
-          updateValue: async (raw, columns, designer) => {
-            try {
-              let text, whereQuery, updateQuery;
-              let filtered;
-
-              whereQuery = { desid };
-              updateQuery = {};
-
-              filtered = columns.filter((str, index) => {
-                return raw[index] === 1;
-              });
-
-              instance.designer.analytics.styling.fabric.curtain = filtered;
-              updateQuery["analytics.styling.fabric.curtain"] = filtered;
-
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-
-            } catch (e) {
-              console.log(e);
+            if (designer.analytics.styling.furniture.builtin) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
             }
           },
-        },
-        {
-          property: "베딩 패브릭",
-          returnValue: (designer) => { return [
-            "업체 연결",
-            "기성 제품 추천",
-            "직접 제작",
-          ] },
-          selectValue: (designer) => {
-            const targets = [
-              "업체 연결",
-              "기성 제품 추천",
-              "직접 제작",
-            ];
-            return designer.analytics.styling.fabric.bedding.map((str) => {
-              return targets.findIndex((s) => { return s === str });
-            });
-          },
-          multiple: true,
+          multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
-              let text, whereQuery, updateQuery;
-              let filtered;
+              // let text, whereQuery, updateQuery;
 
-              whereQuery = { desid };
-              updateQuery = {};
+              // whereQuery = { desid };
+              // updateQuery = {};
 
-              filtered = columns.filter((str, index) => {
-                return raw[index] === 1;
-              });
+              // text = columns[raw.findIndex((num) => { return num === 1 })];
 
-              instance.designer.analytics.styling.fabric.bedding = filtered;
-              updateQuery["analytics.styling.fabric.bedding"] = filtered;
+              // instance.designer.analytics.styling.furniture.builtin = (text === "가능");
+              // updateQuery["analytics.styling.furniture.builtin"] = (text === "가능");
 
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              // await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -2093,6 +2189,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "설치 서비스",
+          admin: false,
           returnValue: (designer) => { return [
             "직접",
             "연결",
@@ -2126,6 +2223,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "정리 수납",
+          admin: false,
           returnValue: (designer) => { return [
             "연결",
             "미제공",
@@ -2161,11 +2259,166 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       notice: [],
     },
     {
-      title: "스타일",
-      whiteType: 2,
+      title: "개인 성향",
+      whiteType: 1,
+      admin: true,
       contents: [
         {
+          property: "운영 전문성",
+          admin: true,
+          returnValue: (designer) => { return [
+            "심각",
+            "하",
+            "중",
+            "상",
+          ] },
+          selectValue: (designer) => {
+            if (designer.analytics.styling.furniture.builtin) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+
+            } catch (e) {
+
+            }
+          },
+        },
+        {
+          property: "디자인 전문성",
+          admin: true,
+          returnValue: (designer) => { return [
+            "심각",
+            "하",
+            "중",
+            "상",
+          ] },
+          selectValue: (designer) => {
+            if (designer.analytics.styling.furniture.builtin) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+
+            } catch (e) {
+
+            }
+          },
+        },
+        {
+          property: "업무 효율",
+          admin: true,
+          returnValue: (designer) => { return [
+            "심각",
+            "하",
+            "중",
+            "상",
+          ] },
+          selectValue: (designer) => {
+            if (designer.analytics.styling.furniture.builtin) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+
+            } catch (e) {
+
+            }
+          },
+        },
+        {
+          property: "소통 스타일",
+          admin: true,
+          returnValue: (designer) => { return [
+            "순응",
+            "중간",
+            "리드",
+            "압박",
+          ] },
+          selectValue: (designer) => {
+            if (designer.analytics.styling.furniture.builtin) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+
+            } catch (e) {
+
+            }
+          },
+        },
+        {
+          property: "홈리에종 관계",
+          admin: true,
+          returnValue: (designer) => { return [
+            "나쁨",
+            "모름",
+            "좋음",
+            "친함",
+          ] },
+          selectValue: (designer) => {
+            if (designer.analytics.styling.furniture.builtin) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+
+            } catch (e) {
+
+            }
+          },
+        },
+      ],
+      notice: [],
+    },
+    {
+      title: "스타일",
+      whiteType: 2,
+      admin: false,
+      contents: [
+        {
+          property: "스타일링",
+          admin: true,
+          returnValue: (designer) => { return [
+            "하",
+            "중",
+            "상",
+          ] },
+          selectValue: (designer) => {
+            return [ 2 ];
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
           property: "스타일 경향성",
+          admin: false,
           returnValue: (designer) => { return {
             modern: { name: "모던", value: designer.analytics.styling.tendency.style.modern },
             classic: { name: "클래식", value: designer.analytics.styling.tendency.style.classic },
@@ -2206,6 +2459,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "텍스처 경향성",
+          admin: false,
           returnValue: (designer) => { return {
             darkWood: { name: "진한 우드", value: designer.analytics.styling.tendency.texture.darkWood },
             whiteWood: { name: "연한 우드", value: designer.analytics.styling.tendency.texture.whiteWood },
@@ -2238,6 +2492,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "컬러톤 경향성",
+          admin: false,
           returnValue: (designer) => { return {
             darkWood: { name: "다크 우드", value: designer.analytics.styling.tendency.color.darkWood },
             whiteWood: { name: "밝은 우드", value: designer.analytics.styling.tendency.color.whiteWood },
@@ -2278,6 +2533,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         },
         {
           property: "밀도 경향성",
+          admin: false,
           returnValue: (designer) => { return {
             maximun: { name: "맥시멈", value: designer.analytics.styling.tendency.density.maximun },
             minimum: { name: "미니멈", value: designer.analytics.styling.tendency.density.minimum },
@@ -3452,7 +3708,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
     style: {
       display: "none",
     }
-  })
+  });
 
   createNode({
     mother: profilePhotoZone,
@@ -4771,12 +5027,23 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
           } else if (obj.type === "date") {
             tempArr.push(obj.name);
             do {
-              tempValue = await GeneralJs.promptDate(obj.name + "을 알려주세요!", obj.progressBoo, obj.progressName);
+              tempValue = await GeneralJs.promptDate(obj.name + "을(를) 알려주세요!", obj.progressBoo, obj.progressName);
               if (tempValue === null) {
                 throw new Error("cancel");
               }
             } while (tempValue === null)
             tempArr.push(tempValue);
+
+          } else if (obj.type === "button") {
+            tempArr.push(obj.name);
+            do {
+              tempValue = await GeneralJs.promptButtons(obj.name + "을(를) 선택해주세요!", obj.buttons);
+              if (tempValue === null) {
+                throw new Error("cancel");
+              }
+            } while (tempValue === null)
+            tempArr.push(tempValue);
+
           } else {
             throw new Error("invalid type");
           }
@@ -5118,7 +5385,8 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
             saveEvent = async (raw) => {
               try {
                 const text = await instance.contents[x].contents[z].updateValue(raw, instance.designer);
-                self.firstChild.textContent = text;
+                self.firstChild.textContent = "";
+                self.insertAdjacentHTML("beforeend", text);
                 self.setAttribute("value", text);
               } catch (e) {
                 console.log(e);
@@ -6680,6 +6948,8 @@ DesignerAboutJs.prototype.launching = async function (loading) {
       instance.insertWorkingBox();
       instance.insertIntroduceBox();
     }
+
+    // console.log(await GeneralJs.promptFile("1번 자리에 들어갈 작업 사진을 올려주세요!"));
 
     loading.parentNode.removeChild(loading);
 
