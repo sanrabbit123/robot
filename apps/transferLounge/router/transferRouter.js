@@ -32,6 +32,7 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.tempConst = this.staticConst + "/photo/temp";
   this.designerProfileConst = this.folderConst + "/profile";
   this.designerWorksConst = this.folderConst + "/works";
+  this.designerWorksConstFactors = [ "w0", "w1", "w2", "w3" ];
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -1731,6 +1732,105 @@ TransferRouter.prototype.rou_post_designerProfileUpdate = function () {
     } catch (e) {
       console.log(e);
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerProfileUpdate): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_designerWorksPhoto = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, uniqueValue, stringToLink, linkToString } = this.mother;
+  const address = this.address;
+  const { staticConst, designerWorksConst, designerWorksConstFactors } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/designerWorksPhoto" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        try {
+          if (err) {
+            throw new Error(err);
+          } else {
+            const token = "__split__";
+            const now = new Date();
+            const { desid, gs, exe, index } = fields;
+            const longConst = 1920;
+            const idConst = "works" + String(index) + "_";
+            const xPositionConst = 50;
+            const yPositionConst = 50;
+            const sizeConst = 102;
+            let filesKey, fromArr;
+            let thisFileName;
+            let imageJson;
+            let thisLinkPath;
+            let thisLink;
+            let resultObj;
+            let id;
+            let targetFolder;
+
+            id = (idConst + uniqueValue("hex"));
+            thisFileName = desid + token + gs + token + String(now.valueOf()) + token + String(xPositionConst) + token + String(yPositionConst) + token + String(sizeConst) + token + id + "." + exe;
+            targetFolder = designerWorksConst + "/" + designerWorksConstFactors[Number(index)];
+
+            filesKey = Object.keys(files);
+            if (filesKey.length !== 1) {
+              throw new Error("only one image must");
+            }
+
+            fromArr = [];
+            for (let key of filesKey) {
+              fromArr.push(files[key]);
+            }
+
+            for (let { filepath: path } of fromArr) {
+              await shellExec(`mv ${shellLink(path)} ${shellLink(targetFolder + "/" + thisFileName)}`);
+            }
+            if (gs === "g") {
+              await instance.imageReader.resizeImage(targetFolder + "/" + thisFileName, longConst, null);
+            } else {
+              await instance.imageReader.resizeImage(targetFolder + "/" + thisFileName, null, longConst);
+            }
+
+            thisLinkPath = String(targetFolder + "/" + thisFileName).replace(new RegExp("^" + staticConst, "g"), "");
+            thisLink = linkToString("https://" + address.transinfo.host + thisLinkPath);
+            resultObj = {
+              id,
+              desid,
+              gs,
+              date: now,
+              link: thisLink,
+              file: {
+                exe,
+                name: targetFolder + "/" + thisFileName,
+              },
+              position: {
+                x: Number(xPositionConst),
+                y: Number(yPositionConst),
+              },
+              size: Number(sizeConst),
+            };
+
+            res.send(JSON.stringify(resultObj));
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerWorksPhoto): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
