@@ -575,10 +575,15 @@ DevContext.prototype.launching = async function () {
 
 
     
-
-
-
-
+    // const puppeteer = require("puppeteer");
+    // const browser = await puppeteer.launch({ headless: false, args: [ "--no-sandbox", "--disable-setuid-sandbox" ] });
+    // const page = await browser.newPage();
+    // await page.goto("https://www.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/comm/a/b/UTXPPABA01.xml&w2xHome=/ui/pp/&w2xDocumentRoot=", { waitUntil: "networkidle2" });
+    // await page.evaluate(async function () {
+    //   document.getElementById("anchor22").click()
+    // });
+    // await sleep(10 * 1000);
+    // await browser.close();
 
 
 
