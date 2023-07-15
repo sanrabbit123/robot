@@ -4587,7 +4587,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   const { designer, ea, baseTong, media, totalContents, entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const photoWithWordsClassName = "photoWithWordsClassName";
   const mainContents = [
@@ -4650,6 +4650,9 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   let introductionSize, introductionWeight;
   let leftTotalWidth;
   let leftTotalMarginRight;
+  let designerNameHeight, designerNameMarginTop, designerNameMarginBottom;
+  let introductionFocusEvent;
+  let introductionBlurEvent;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -4751,7 +4754,55 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
     leftTotalMarginRight = <%% 96, 96, 96, 96, 96 %%>;
   }
 
+  designerNameHeight = <%% 34, 34, 34, 34, 34 %%>;
+  designerNameMarginTop = <%% 7, 7, 7, 7, 7 %%>;
+  designerNameMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
+
   this.whiteMargin = (desktop ? margin : 0);
+
+  introductionFocusEvent = () => {
+    return async function (e) {
+      try {
+        this.value = this.value.trim().replace(/[\=\&\+\#\$\(\)]/gi, '');
+        this.style.color = colorChip.green;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  introductionBlurEvent = () => {
+    return async function (e) {
+      const originalValue = instance.designer.setting.front.introduction.desktop.join("\n");
+      try {
+        const minimum = 80;
+        const maximum = 200;
+        let whereQuery, updateQuery;
+
+        this.value = this.value.trim().replace(/[\=\&\+\#\$\(\)]/gi, '');
+        this.style.color = colorChip.black;
+
+        if (this.value.length < minimum) {
+          throw new Error(String(minimum) + "자 이상, " + String(maximum) + "자 이하로 작성해주세요!");
+        }
+        if (this.value.length > maximum) {
+          throw new Error(String(minimum) + "자 이상, " + String(maximum) + "자 이하로 작성해주세요!");
+        }
+
+        whereQuery = { desid: instance.designer.desid };
+        updateQuery = {};
+        updateQuery["setting.front.introduction.desktop"] = this.value.split("\n").map((str) => { return str.trim() });
+        updateQuery["setting.front.introduction.mobile"] = this.value.split("\n").map((str) => { return str.trim() });
+
+        await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+        instance.designer.setting.front.introduction.desktop = updateQuery["setting.front.introduction.desktop"];
+        instance.designer.setting.front.introduction.mobile = updateQuery["setting.front.introduction.mobile"];
+
+      } catch (e) {
+        window.alert(e.message);
+        this.value = originalValue;
+      }
+    }
+  }
 
   whiteBlock = createNode({
     mother: entireMode ? totalContents : baseTong,
@@ -4861,6 +4912,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
       justifyContent: "start",
       alignItems: "start",
       width: withOut(profileWidth, ea),
+      height: String(profileWidth) + ea,
     },
     children: [
       {
@@ -4870,17 +4922,33 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
           fontWeight: String(800),
           color: colorChip.black,
           lineHeight: String(1.6),
-          marginTop: String(7) + ea,
-          marginBottom: String(4) + ea,
+          marginTop: String(designerNameMarginTop) + ea,
+          marginBottom: String(designerNameMarginBottom) + ea,
+          height: String(designerNameHeight) + ea,
         }
       },
       {
+        mode: "textarea",
         text: designer.setting.front.introduction.desktop.join("\n"),
+        event: {
+          focus: introductionFocusEvent(),
+          blur: introductionBlurEvent(),
+          keydown: function (e) {
+            if (e.key === "Tab") {
+              e.preventDefault();
+              fireEvent(this, "blur");
+            }
+          }
+        },
         style: {
           fontSize: String(introductionSize) + ea,
           fontWeight: String(introductionWeight),
           color: colorChip.black,
           lineHeight: String(1.6),
+          border: String(0),
+          outline: String(0),
+          width: withOut(0, ea),
+          height: String(profileWidth - designerNameHeight) + ea,
         }
       },
       {
@@ -4930,6 +4998,11 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
             }
           },
           {
+            event: {
+              click: function (e) {
+                fireEvent(photoZone.querySelector("textarea"), "focus");
+              }
+            },
             style: {
               display: "flex",
               position: "absolute",
@@ -4941,6 +5014,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
               background: colorChip.green,
               justifyContent: "center",
               alignItems: "center",
+              cursor: "pointer",
             },
             child: {
               text: "edit",

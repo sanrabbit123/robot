@@ -8038,11 +8038,16 @@ GeneralJs.variableArray = function (length, callback = null) {
 }
 
 GeneralJs.fireEvent = function (dom, eventName) {
-  if (eventName !== "click" && eventName !== "focus") {
+  if (eventName !== "click" && eventName !== "focus" && eventName !== "blur") {
     dom.dispatchEvent(new Event(eventName, { bubbles: true }));
   } else if (eventName === "click") {
     dom.click();
-  } else {
+  } else if (eventName === "blur") {
+    dom.dispatchEvent(new Event(eventName, { bubbles: true }));
+    if (typeof dom.blur === "function") {
+      dom.blur();
+    }
+  } else if (eventName === "focus") {
     dom.focus();
   }
 }
