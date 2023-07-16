@@ -335,6 +335,16 @@ Robot.prototype.staticConnect = async function () {
   }
 }
 
+Robot.prototype.memberConnect = async function () {
+  try {
+    const MemberLounge = require(process.cwd() + "/apps/memberLounge/memberLounge.js");
+    const app = new MemberLounge();
+    await app.memberConnect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.basicConnect = async function () {
   try {
     const BasicLounge = require(process.cwd() + "/apps/basicLounge/basicLounge.js");
@@ -1266,6 +1276,13 @@ const MENU = {
   static: async function () {
     try {
       await robot.staticConnect();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  member: async function () {
+    try {
+      await robot.memberConnect();
     } catch (e) {
       console.log(e);
     }
