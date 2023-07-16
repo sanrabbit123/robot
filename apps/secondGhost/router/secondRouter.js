@@ -255,7 +255,7 @@ SecondRouter.prototype.rou_post_messageLog = function () {
       }
 
       if (req.body.voice === true || req.body.voice === "true") {
-        requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/textToVoice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+        requestSystem("https://" + instance.address.memberinfo.host + ":" + String(3000) + "/textToVoice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
       }
 
       if (/silent/gi.test(channel) || /error_log/gi.test(channel)) {
@@ -2181,7 +2181,7 @@ SecondRouter.prototype.rou_post_voice = function () {
       if (req.body.text === undefined) {
         throw new Error("invaild post");
       }
-      requestSystem("https://" + address.officeinfo.ghost.host + ":3000/textToVoice", {
+      requestSystem("https://" + address.memberinfo.host + ":3000/textToVoice", {
         text: req.body.text,
       }, {
         headers: { "Content-Type": "application/json" }

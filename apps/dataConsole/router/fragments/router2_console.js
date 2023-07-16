@@ -2863,12 +2863,6 @@ DataRouter.prototype.rou_post_clientSubmit = function () {
       message += "\n";
       message += "세션 아이디 : " + sessionId.join(", ");
       await messageSend({ text: message, channel: "#401_consulting" });
-      await requestSystem("https://" + instance.address.testinfo.host + "/marketingMessage", {
-        text: message,
-        channel: "#consulting",
-      }, {
-        headers: { "Content-Type": "application/json" }
-      });
 
       requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + thisClient.name + "입니다!" }, { headers: { "Content-Type": "application/json" } }).then(() => {
         return requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/storeClientAnalytics", { fast: true, talk: true, cliid: thisClient.cliid }, { headers: { "Content-Type": "application/json" } });
