@@ -2640,7 +2640,7 @@ ProcessDetailJs.prototype.insertControlBox = function () {
     return async function (e) {
       try {
         const loading = instance.mother.whiteProgressLoading();
-        await downloadFile(S3HOST + "/photo/sample/commentsSample.docx", null, loading.progress.firstChild);
+        await downloadFile(BRIDGEHOST.replace(/\:3000$/gi, '') + "/photo/sample/commentsSample.docx", null, loading.progress.firstChild);
         loading.remove();
       } catch (e) {
         console.log(e);
@@ -7390,7 +7390,7 @@ ProcessDetailJs.prototype.insertStyleBox = async function () {
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, homeliaisonAnalytics } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const { mainContents } = instance.tableStatic(instance.designer, instance.project, instance.client, instance.clientHistory, instance.projectHistory, instance.requestNumber);
-  const imageStart = S3HOST + "/corePortfolio/listImage";
+  const imageStart = BRIDGEHOST.replace(/\:3000$/gi, '') + "/corePortfolio/listImage";
   try {
     let paddingTop;
     let block;
@@ -8995,7 +8995,7 @@ ProcessDetailJs.prototype.insertRawUploadBox = function () {
                   click: async function (e) {
                     try {
                       const loading = instance.mother.whiteProgressLoading();
-                      await downloadFile(S3HOST + "/photo/sample/commentsSample.docx", null, loading.progress.firstChild);
+                      await downloadFile(BRIDGEHOST.replace(/\:3000$/gi, '') + "/photo/sample/commentsSample.docx", null, loading.progress.firstChild);
                       loading.remove();
                     } catch (e) {
                       console.log(e);

@@ -2896,7 +2896,7 @@ StylePartsJs.prototype.insertStyleBox = function () {
       text: "* " + n,
       event: {
         click: function (e) {
-          GeneralJs.downloadFile(S3HOST + "/photo/sample/partsSample.pdf").catch((err) => {
+          GeneralJs.downloadFile(BRIDGEHOST.replace(/\:3000$/gi, '') + "/photo/sample/partsSample.pdf").catch((err) => {
             console.log(err);
           });
         }

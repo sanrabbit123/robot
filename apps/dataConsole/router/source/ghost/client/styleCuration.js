@@ -1095,7 +1095,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   }
 
   this.randomPick = randomPick;
-  targetPhotos = randomPick.map((obj) => { return S3HOST + obj.path; });
+  targetPhotos = randomPick.map((obj) => { return BRIDGEHOST.replace(/\:3000$/gi, '') + obj.path; });
   this.photoPosition = [];
 
   mother.style.paddingTop = desktop ? String(innerMargin) + ea : String(0) + ea;
@@ -1259,7 +1259,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
         }
       });
     } else {
-      targetPhotos = instance.randomPick.map((obj) => { return S3HOST + obj.path; });
+      targetPhotos = instance.randomPick.map((obj) => { return BRIDGEHOST.replace(/\:3000$/gi, '') + obj.path; });
       sleep((animationTimes[0] * 1000) + (animationTime * 1000)).then(async () => {
         try {
           for (let i = 0; i < instance.photoPosition.length; i++) {
@@ -3141,7 +3141,7 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
   image = [];
 
   randomPick = StyleCurationJs.randomPick(photos, contentsArr, pictureNumber);
-  targetPhotos = randomPick.map((obj) => { return S3HOST + obj.path; });
+  targetPhotos = randomPick.map((obj) => { return BRIDGEHOST.replace(/\:3000$/gi, '') + obj.path; });
 
   mother.style.paddingTop = desktop ? String(innerMargin) + ea : String(0) + ea;
   if (mobile) {

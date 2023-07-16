@@ -423,7 +423,7 @@ DesignerProposalJs.styleTextParsing = function (text) {
       throw new Error("invaild css string");
     }
     if (/url\(/gi.test(tempArr[1].trim())) {
-      finalObj[tempArr[0].trim()] = "url(\"" + S3HOST + tempArr[1].trim().replace(/^url\([\"\']/gi, '').replace(/[\"\']\)$/gi, '') + "\")";
+      finalObj[tempArr[0].trim()] = "url(\"" + BRIDGEHOST.replace(/\:3000$/gi, '') + tempArr[1].trim().replace(/^url\([\"\']/gi, '').replace(/[\"\']\)$/gi, '') + "\")";
     } else {
       finalObj[tempArr[0].trim()] = tempArr[1].trim();
     }
