@@ -23,41 +23,6 @@ const MemberRouter = function (MONGOC, MONGOLOCALC) {
 
   this.staticConst = process.env.HOME + "/samba";
   this.sambaToken = "__samba__";
-
-  this.vaildHost = [
-    this.address.frontinfo.host,
-    this.address.secondinfo.host,
-    this.address.transinfo.host,
-    this.address.backinfo.host,
-    this.address.pythoninfo.host,
-    this.address.testinfo.host,
-    this.address.officeinfo.ghost.host,
-    "home-liaison.servehttp.com",
-    "localhost:3000",
-    "192.168.0.14:3000",
-  ];
-}
-
-MemberRouter.prototype.fireWall = function (req) {
-  const instance = this;
-  let __originTarget, __wallLogicBoo, __vailHosts;
-
-  __vailHosts = this.vaildHost;
-  __originTarget = req.headers["origin"];
-  if (typeof __originTarget !== "string") {
-    __originTarget = req.headers["host"];
-    if (typeof __originTarget !== "string") {
-      __originTarget = "";
-    }
-  }
-  __wallLogicBoo = false;
-  for (let host of __vailHosts) {
-    __wallLogicBoo = (new RegExp(host, "gi")).test(__originTarget.trim().replace(/\/$/, ''));
-    if (__wallLogicBoo) {
-      break;
-    }
-  }
-  return __wallLogicBoo;
 }
 
 //GET ---------------------------------------------------------------------------------------------
@@ -121,9 +86,6 @@ MemberRouter.prototype.rou_post_generalFileUpload = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
       const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (10000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
@@ -197,9 +159,6 @@ MemberRouter.prototype.rou_post_textToVoice = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
       if (typeof req.body.text !== "string") {
         throw new Error("invalid post");
       }
@@ -230,9 +189,6 @@ MemberRouter.prototype.rou_post_printText = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (!instance.fireWall(req)) {
-        throw new Error("post ban");
-      }
       if (typeof req.body.text !== "string") {
         throw new Error("invalid post");
       }
