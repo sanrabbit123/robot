@@ -20,6 +20,7 @@ const KakaoTalk = function () {
     python: address.pythoninfo.ip.outer,
     test: address.testinfo.ip.outer,
     second: address.secondinfo.ip.outer,
+    member: address.memberinfo.ip.outer,
   };
   this.ipRegExp = {
     office: new RegExp(this.ip.office, 'gi'),
@@ -28,6 +29,7 @@ const KakaoTalk = function () {
     python: new RegExp(this.ip.python, 'gi'),
     test: new RegExp(this.ip.test, 'gi'),
     second: new RegExp(this.ip.second, 'gi'),
+    member: new RegExp(this.ip.member, 'gi'),
   };
   this.token = {
     office: "12db5e3f9f69752ae47ca3895c49041f3fef3adaf0d6367e2f76d98cf79ec4a6e26dbcf5e1dde678fe8fcc6b49d11ce4928b06fa3656b5c6f72a43995ac3942fd8igM/kv6V9akkKxrdnTki9fYYNxgsKQxKoIfZIwjZxUHyiE9yQVsuMzH30PXsQigRc0jfMMogOxffpGCON0Kg==",
@@ -35,6 +37,7 @@ const KakaoTalk = function () {
     python: "6bc7b36ce07134ac35186319824016b9e86385774dda5574d5746502ccadc016b6d606c986454ad478f97aa227d5522cad5613a3e5c08ecb19a49f3a7e26cc20ysYT9g6Rf+u0hsZg2k8g4v2x32tWeq7D3ZSSzImq43fLuI2iRzKvA4uLYzpXKEksOwFjcJSzi54ySK7i92ml7Q==",
     test: "666639a00a05b4c3c9dbdc84815802c9a640d35f222155604a9e14d662404da70130a5e01a84fcf47a070331ddd0397277d30fb48759cae3628a9f19904426732wKlg9P6eu73NONhd1tAiBahj5XVFGL82SAl7gi/bCkYkhRVxgVjyT9T4AQlsuLSedDd37TIT9VAbcWAUsY9dQ==",
     second: "86d7070538aa06d9b6426d1138b99fc9df9c724aa360264d06c3643f23baada5cd9061a8b8184294ea42e4d9515714edf9a8c87e79c6e5daf7e76297627837b043INKNy+i3O7koE5RVZjpmoYYYrwksX7QKoa7F1NHDbQi+4Oe3bvEbHm/26twLtZ/FNM47nI727H8fPrwHrjIg==",
+    member: "12db5e3f9f69752ae47ca3895c49041f3fef3adaf0d6367e2f76d98cf79ec4a6e26dbcf5e1dde678fe8fcc6b49d11ce4928b06fa3656b5c6f72a43995ac3942fd8igM/kv6V9akkKxrdnTki9fYYNxgsKQxKoIfZIwjZxUHyiE9yQVsuMzH30PXsQigRc0jfMMogOxffpGCON0Kg==",
   };
   this.authObj = {};
   this.message = {};

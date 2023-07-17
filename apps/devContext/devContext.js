@@ -6327,8 +6327,8 @@ DevContext.prototype.launching = async function () {
 
 
     // kakao token
-    // const app = new KakaoTalk();
-    // await app.generateToken();
+    const app = new KakaoTalk();
+    await app.generateToken();
 
 
     // kakao test
@@ -6351,8 +6351,6 @@ DevContext.prototype.launching = async function () {
     //     pay: true
     //   },
     // ]);
-
-
 
 
 
