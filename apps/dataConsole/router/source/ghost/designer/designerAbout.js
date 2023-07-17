@@ -225,6 +225,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
   const instance = this;
   const mother = this.mother;
   const { ea, baseTong, media, designer } = this;
+  const { entireMode } = this;
   const { desid } = designer;
   const mobile = media[4];
   const desktop = !mobile;
@@ -2653,11 +2654,28 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "상",
           ] },
           selectValue: (designer) => {
-            return [ 2 ];
+            return [ designer.analytics.styling.level - 1 ];
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
+              let targetIndex;
+              let whereQuery, updateQuery;
+
+              targetIndex = 0;
+              for (let i = 0; i < raw.length; i++) {
+                if (raw[i] === 1) {
+                  targetIndex = i;
+                }
+              }
+
+              whereQuery = { desid: designer.desid };
+
+              updateQuery = {};
+              updateQuery["analytics.styling.level"] = targetIndex + 1;
+              instance.designer.analytics.styling.level = targetIndex + 1;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -2817,7 +2835,15 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       ],
     },
   ];
-  this.contents = contents;
+
+  if (entireMode) {
+    this.contents = contents;
+  } else {
+    contents = contents.map((o) => { o.contents = o.contents.filter((j) => { return !j.admin }); return o; }).filter((o) => {
+      return !o.admin;
+    });
+    this.contents = contents;
+  }
   for (let i = 0; i < contents.length; i++) {
     this.renderWhite(contents[i].whiteType, contents[i].title, contents[i].contents, contents[i].notice, i + 1, i === (contents.length - 1));
   }
