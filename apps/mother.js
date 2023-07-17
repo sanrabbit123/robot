@@ -1156,7 +1156,7 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
   const fs = require("fs");
   const FormData = require("form-data");
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  let num, form, formHeaders, toList;
+  let num, num2, form, form2, formHeaders, formHeaders2, toList;
   let doubleMode;
   return new Promise((resolve, reject) => {
 
@@ -1181,6 +1181,16 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
       num++;
     }
 
+    if (doubleMode) {
+      form2 = new FormData();
+      num2 = 0;
+      form2.append("toArr", JSON.stringify(toList));
+      for (let fileName of fromArr) {
+        form2.append("file" + String(num2), fs.readFileSync(fileName));
+        num2++;
+      }
+    }
+
     form.getLength((err, length) => {
       if (err) {
         reject(err);
@@ -1196,11 +1206,13 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
             reject(error);
           });
         } else {
+          formHeaders2 = form2.getHeaders();
+          formHeaders2["Content-Length"] = length;
           axios.post(`https://${ADDRESS.officeinfo.ghost.host}:${String(3000)}/generalFileUpload`, form, {
             headers: { ...formHeaders },
           }).then((response) => {
-            return axios.post(`https://${ADDRESS.transinfo.host}:${String(3000)}/generalFileUpload`, form, {
-              headers: { ...formHeaders },
+            return axios.post(`https://${ADDRESS.transinfo.host}:${String(3000)}/generalFileUpload`, form2, {
+              headers: { ...formHeaders2 },
             });
           }).then((response) => {
             resolve({ message: "done" });
