@@ -228,7 +228,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
   const { desid } = designer;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, autoHypenPhone, equalJson } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, autoHypenPhone, equalJson, variableArray } = GeneralJs;
   let contents;
 
   contents = [
@@ -718,6 +718,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "회사",
               "담당 업무",
               "기간",
+              "태그",
             ];
             const endMatrix = careerData.map((obj) => {
               const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
@@ -732,7 +733,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 value: [
                   obj.company + pipe + obj.team,
                   obj.role,
-                  rangeWords
+                  rangeWords,
+                  obj.tag,
                 ]
               };
             });
@@ -768,6 +770,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 "회사",
                 "담당 업무",
                 "기간",
+                "태그",
               ];
               const careerData = equalJson(JSON.stringify(designer.information.business.career.detail));
               careerData.sort((a, b) => {
@@ -780,6 +783,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               let role;
               let start;
               let end;
+              let tag;
 
               if (raw.mode === "delete") {
                 newData = [];
@@ -803,7 +807,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                     value: [
                       obj.company + pipe + obj.team,
                       obj.role,
-                      rangeWords
+                      rangeWords,
+                      obj.tag,
                     ]
                   };
                 });
@@ -812,6 +817,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 whereQuery = { desid: designer.desid };
                 updateQuery = {};
                 updateQuery["information.business.career.detail"] = newData;
+                instance.designer.information.business.career.detail = newData;
                 await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
               } else if (raw.mode === "update") {
                 newData = [];
@@ -824,6 +830,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 company = raw.value[0][1];
                 team = raw.value[1][1];
                 role = raw.value[2][1];
+                tag = raw.value[3][1];
                 start = raw.value[4][1];
                 end = raw.value[5][1];
 
@@ -831,6 +838,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                   company,
                   team,
                   role,
+                  tag,
                   date: { start, end }
                 };
 
@@ -853,7 +861,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                     value: [
                       obj.company + pipe + obj.team,
                       obj.role,
-                      rangeWords
+                      rangeWords,
+                      obj.tag,
                     ]
                   };
                 });
@@ -862,6 +871,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 whereQuery = { desid: designer.desid };
                 updateQuery = {};
                 updateQuery["information.business.career.detail"] = newData;
+                instance.designer.information.business.career.detail = newData;
                 await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
               }
 
@@ -876,8 +886,10 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 "회사",
                 "담당 업무",
                 "기간",
+                "태그",
               ];
               let company, team, role, start, end;
+              let tag;
               let block;
               let original;
               let whereQuery, updateQuery;
@@ -886,6 +898,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               company = matrix[0][1];
               team = matrix[1][1];
               role = matrix[2][1];
+              tag = matrix[3][1];
               start = matrix[4][1];
               end = matrix[5][1];
 
@@ -893,6 +906,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 company,
                 team,
                 role,
+                tag,
                 date: { start, end }
               };
 
@@ -914,7 +928,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                   value: [
                     obj.company + pipe + obj.team,
                     obj.role,
-                    rangeWords
+                    rangeWords,
+                    obj.tag,
                   ]
                 };
               });
@@ -923,6 +938,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               whereQuery = { desid: designer.desid };
               updateQuery = {};
               updateQuery["information.business.career.detail"] = original;
+              instance.designer.information.business.career.detail = original;
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
@@ -1007,6 +1023,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 whereQuery = { desid: designer.desid };
                 updateQuery = {};
                 updateQuery["information.business.career.school"] = newData;
+                instance.designer.information.business.career.school = newData;
                 await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
               } else if (raw.mode === "update") {
                 newData = [];
@@ -1048,6 +1065,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 whereQuery = { desid: designer.desid };
                 updateQuery = {};
                 updateQuery["information.business.career.school"] = newData;
+                instance.designer.information.business.career.school = newData;
                 await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
               }
 
@@ -1099,6 +1117,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               whereQuery = { desid: designer.desid };
               updateQuery = {};
               updateQuery["information.business.career.school"] = original;
+              instance.designer.information.business.career.school = original;
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
@@ -1225,7 +1244,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           property: "사업자 등록번호",
           admin: false,
           returnValue: (designer) => {
-            return designer.information.business.businessInfo.businessNumber;
+            return designer.information.business.businessInfo.businessNumber === "" ? "-" : designer.information.business.businessInfo.businessNumber;
           },
           renderValue: (text) => {
             return text;
@@ -1241,8 +1260,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
 
               text = raw.replace(/[^0-9\-]/g, '');
 
-              instance.designer.information.business.businessInfo.businessNumber = text;
-              updateQuery["information.business.businessInfo.businessNumber"] = text;
+              instance.designer.information.business.businessInfo.businessNumber = (text === "-" ? "" : text);
+              updateQuery["information.business.businessInfo.businessNumber"] = (text === "-" ? "" : text);
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
@@ -1261,7 +1280,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           property: "주민등록번호",
           admin: false,
           returnValue: (designer) => {
-            return designer.information.business.businessInfo.businessNumber;
+            return designer.information.residentNunber === "" ? "-" : designer.information.residentNunbe;
           },
           renderValue: (text) => {
             return text;
@@ -1277,8 +1296,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
 
               text = raw.replace(/[^0-9\-]/g, '');
 
-              instance.designer.information.business.businessInfo.businessNumber = text;
-              updateQuery["information.business.businessInfo.businessNumber"] = text;
+              instance.designer.information.residentNunber = (text === "-" ? "" : text);
+              updateQuery["information.residentNunber"] = (text === "-" ? "" : text);
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
@@ -1286,7 +1305,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
 
             } catch (e) {
               console.log(e);
-              return designer.information.business.businessInfo.businessNumber;
+              return designer.information.residentNunber;
             }
           },
           noticeText: (designer) => {
@@ -1712,11 +1731,28 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "토탈 스타일링",
               "엑스트라 스타일링",
             ];
-            return [ 0, 1, 2 ];
+            return variableArray(designer.analytics.construct.ability + 1);
           },
           multiple: true,
+          range: true,
           updateValue: async (raw, columns, designer) => {
             try {
+              let targetIndex;
+              let whereQuery, updateQuery;
+
+              targetIndex = 0;
+              for (let i = 0; i < raw.length; i++) {
+                if (raw[i] === 1) {
+                  targetIndex = i;
+                }
+              }
+
+              whereQuery = { desid: designer.desid };
+              updateQuery = {};
+              updateQuery["analytics.construct.ability"] = targetIndex;
+              instance.designer.analytics.construct.ability = targetIndex;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -1739,11 +1775,28 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               "토탈 스타일링",
               "엑스트라 스타일링",
             ];
-            return [ 0, 1, 2 ];
+            return variableArray(designer.analytics.construct.level + 1);
           },
           multiple: true,
+          range: true,
           updateValue: async (raw, columns, designer) => {
             try {
+              let targetIndex;
+              let whereQuery, updateQuery;
+
+              targetIndex = 0;
+              for (let i = 0; i < raw.length; i++) {
+                if (raw[i] === 1) {
+                  targetIndex = i;
+                }
+              }
+
+              whereQuery = { desid: designer.desid };
+              updateQuery = {};
+              updateQuery["analytics.construct.level"] = targetIndex;
+              instance.designer.analytics.construct.level = targetIndex;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -1758,11 +1811,26 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "불가능",
           ] },
           selectValue: (designer) => {
-            return [ 1 ];
+            if (designer.analytics.project.partial) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
+              let text, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = columns[raw.findIndex((num) => { return num === 1 })];
+
+              instance.designer.analytics.project.partial = (text === "가능");
+              updateQuery["analytics.project.partial"] = (text === "가능");
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -1936,11 +2004,26 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "불가능",
           ] },
           selectValue: (designer) => {
-            return [ 1 ];
+            if (designer.analytics.project.cad) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
+              let text, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = columns[raw.findIndex((num) => { return num === 1 })];
+
+              instance.designer.analytics.project.cad = (text === "가능");
+              updateQuery["analytics.project.cad"] = (text === "가능");
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -1955,11 +2038,26 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "불가능",
           ] },
           selectValue: (designer) => {
-            return [ 1 ];
+            if (designer.analytics.project.collage) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
+              let text, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = columns[raw.findIndex((num) => { return num === 1 })];
+
+              instance.designer.analytics.project.collage = (text === "가능");
+              updateQuery["analytics.project.collage"] = (text === "가능");
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -1976,11 +2074,26 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "상",
           ] },
           selectValue: (designer) => {
-            return [ 2 ];
+            return [ designer.analytics.project.modeling ];
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
+              let index, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              index = raw.findIndex((num) => { return num === 1 });
+              if (index === -1) {
+                index = 0;
+              }
+              instance.designer.analytics.project.modeling = index;
+              updateQuery["analytics.project.modeling"] = index;
+
+              console.log(updateQuery);
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -5717,41 +5830,70 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
               let targets;
               let finalTargets;
               let finalNumbers;
+              let targetIndex;
               
               if (toggle === "on") {
-                if (instance.contents[x].contents[z].multiple) {
-                  self.style.color = colorChip.deactive;
-                } else {
+                if (instance.contents[x].contents[z].range === true) {
                   targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-                  if (targets.length === 2) {
+                  targetIndex = targets.findIndex((d) => { return d === self });
+                  for (let s = 0; s < targets.length; s++) {
+                    if (s <= targetIndex) {
+                      targets[s].style.color = colorChip.green;
+                      targets[s].setAttribute("toggle", "on");
+                    } else {
+                      targets[s].style.color = colorChip.deactive;
+                      targets[s].setAttribute("toggle", "off");
+                    }
+                  }
+                } else {
+                  if (instance.contents[x].contents[z].multiple) {
+                    self.style.color = colorChip.deactive;
+                  } else {
+                    targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+                    if (targets.length === 2) {
+                      for (let dom of targets) {
+                        if (dom === self) {
+                          dom.style.color = colorChip.deactive;
+                        } else {
+                          dom.style.color = colorChip.green;
+                          dom.setAttribute("toggle", "on");
+                        }
+                      }
+                    } else {
+                      self.style.color = colorChip.deactive;
+                    }
+                  }
+                  self.setAttribute("toggle", "off");
+                }
+              } else {
+                if (instance.contents[x].contents[z].range === true) {
+                  targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+                  targetIndex = targets.findIndex((d) => { return d === self });
+                  for (let s = 0; s < targets.length; s++) {
+                    if (s <= targetIndex) {
+                      targets[s].style.color = colorChip.green;
+                      targets[s].setAttribute("toggle", "on");
+                    } else {
+                      targets[s].style.color = colorChip.deactive;
+                      targets[s].setAttribute("toggle", "off");
+                    }
+                  }
+                } else {
+                  if (instance.contents[x].contents[z].multiple) {
+                    self.style.color = colorChip.green;
+                  } else {
+                    targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
                     for (let dom of targets) {
                       if (dom === self) {
-                        dom.style.color = colorChip.deactive;
-                      } else {
                         dom.style.color = colorChip.green;
-                        dom.setAttribute("toggle", "on");
+                      } else {
+                        dom.style.color = colorChip.deactive;
+                        dom.setAttribute("toggle", "off");
                       }
                     }
-                  } else {
-                    self.style.color = colorChip.deactive;
                   }
+                  self.setAttribute("toggle", "on");
                 }
-                self.setAttribute("toggle", "off");
-              } else {
-                if (instance.contents[x].contents[z].multiple) {
-                  self.style.color = colorChip.green;
-                } else {
-                  targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-                  for (let dom of targets) {
-                    if (dom === self) {
-                      dom.style.color = colorChip.green;
-                    } else {
-                      dom.style.color = colorChip.deactive;
-                      dom.setAttribute("toggle", "off");
-                    }
-                  }
-                }
-                self.setAttribute("toggle", "on");
               }
               
               finalTargets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
