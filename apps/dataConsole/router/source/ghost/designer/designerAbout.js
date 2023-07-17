@@ -2091,8 +2091,6 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               instance.designer.analytics.project.modeling = index;
               updateQuery["analytics.project.modeling"] = index;
 
-              console.log(updateQuery);
-
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
@@ -2116,34 +2114,130 @@ DesignerAboutJs.prototype.contentsCenter = function () {
         {
           property: "협업 시공사",
           admin: false,
+          returnValue: (designer) => { return [
+            "있음",
+            "없음",
+          ] },
+          selectValue: (designer) => {
+            if (designer.analytics.construct.partner) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+              let text, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = columns[raw.findIndex((num) => { return num === 1 })];
+
+              instance.designer.analytics.construct.partner = (text === "있음");
+              updateQuery["analytics.construct.partner"] = (text === "있음");
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
+          property: "협업 시공사명",
+          admin: false,
           returnValue: (designer) => {
-            return "협업 시공사명";
+            return designer.analytics.construct.partnerName === "" ? '-' : designer.analytics.construct.partnerName;
           },
           renderValue: (text) => {
-            return text;
+            return text === '-' ? "" : text;
           },
           updateValue: async (raw, designer) => {
             try {
+              let whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = raw.trim();
+
+              instance.designer.analytics.construct.partnerName = text;
+              updateQuery["analytics.construct.partnerName"] = text;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              return text === '' ? '-' : text;
 
             } catch (e) {
-
+              console.log(e);
+              return (designer.analytics.construct.partnerName === "" ? '-' : designer.analytics.construct.partnerName);
             }
           },
         },
         {
           property: "자체 시공사",
           admin: false,
+          returnValue: (designer) => { return [
+            "있음",
+            "없음",
+          ] },
+          selectValue: (designer) => {
+            if (designer.analytics.construct.own) {
+              return [ 0 ];
+            } else {
+              return [ 1 ];
+            }
+          },
+          multiple: false,
+          updateValue: async (raw, columns, designer) => {
+            try {
+              let text, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = columns[raw.findIndex((num) => { return num === 1 })];
+
+              instance.designer.analytics.construct.own = (text === "있음");
+              updateQuery["analytics.construct.own"] = (text === "있음");
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+        {
+          property: "자체 시공사명",
+          admin: false,
           returnValue: (designer) => {
-            return "자체 시공사명";
+            return designer.analytics.construct.ownName === "" ? '-' : designer.analytics.construct.ownName;
           },
           renderValue: (text) => {
-            return text;
+            return text === '-' ? "" : text;
           },
           updateValue: async (raw, designer) => {
             try {
+              let whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              text = raw.trim();
+
+              instance.designer.analytics.construct.ownName = text;
+              updateQuery["analytics.construct.ownName"] = text;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              return text === '' ? '-' : text;
 
             } catch (e) {
-
+              console.log(e);
+              return (designer.analytics.construct.ownName === "" ? '-' : designer.analytics.construct.ownName);
             }
           },
         },
@@ -2204,26 +2298,24 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "상",
           ] },
           selectValue: (designer) => {
-            if (designer.analytics.styling.furniture.builtin) {
-              return [ 0 ];
-            } else {
-              return [ 1 ];
-            }
+            return [ designer.analytics.styling.furniture.builtin ];
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
-              // let text, whereQuery, updateQuery;
+              let index, whereQuery, updateQuery;
 
-              // whereQuery = { desid };
-              // updateQuery = {};
+              whereQuery = { desid };
+              updateQuery = {};
 
-              // text = columns[raw.findIndex((num) => { return num === 1 })];
+              index = raw.findIndex((num) => { return num === 1 });
+              if (index === -1) {
+                index = 0;
+              }
+              instance.designer.analytics.styling.furniture.builtin = index;
+              updateQuery["analytics.styling.furniture.builtin"] = index;
 
-              // instance.designer.analytics.styling.furniture.builtin = (text === "가능");
-              // updateQuery["analytics.styling.furniture.builtin"] = (text === "가능");
-
-              // await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -2240,26 +2332,24 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "상",
           ] },
           selectValue: (designer) => {
-            if (designer.analytics.styling.furniture.builtin) {
-              return [ 0 ];
-            } else {
-              return [ 1 ];
-            }
+            return [ designer.analytics.styling.furniture.design ];
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
-              // let text, whereQuery, updateQuery;
+              let index, whereQuery, updateQuery;
 
-              // whereQuery = { desid };
-              // updateQuery = {};
+              whereQuery = { desid };
+              updateQuery = {};
 
-              // text = columns[raw.findIndex((num) => { return num === 1 })];
+              index = raw.findIndex((num) => { return num === 1 });
+              if (index === -1) {
+                index = 0;
+              }
+              instance.designer.analytics.styling.furniture.design = index;
+              updateQuery["analytics.styling.furniture.design"] = index;
 
-              // instance.designer.analytics.styling.furniture.builtin = (text === "가능");
-              // updateQuery["analytics.styling.furniture.builtin"] = (text === "가능");
-
-              // await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -2276,26 +2366,24 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "상",
           ] },
           selectValue: (designer) => {
-            if (designer.analytics.styling.furniture.builtin) {
-              return [ 0 ];
-            } else {
-              return [ 1 ];
-            }
+            return [ designer.analytics.styling.fabric.level ];
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
-              // let text, whereQuery, updateQuery;
+              let index, whereQuery, updateQuery;
 
-              // whereQuery = { desid };
-              // updateQuery = {};
+              whereQuery = { desid };
+              updateQuery = {};
 
-              // text = columns[raw.findIndex((num) => { return num === 1 })];
+              index = raw.findIndex((num) => { return num === 1 });
+              if (index === -1) {
+                index = 0;
+              }
+              instance.designer.analytics.styling.fabric.level = index;
+              updateQuery["analytics.styling.fabric.level"] = index;
 
-              // instance.designer.analytics.styling.furniture.builtin = (text === "가능");
-              // updateQuery["analytics.styling.furniture.builtin"] = (text === "가능");
-
-              // await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);
@@ -2388,18 +2476,27 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "상",
           ] },
           selectValue: (designer) => {
-            if (designer.analytics.styling.furniture.builtin) {
-              return [ 0 ];
-            } else {
-              return [ 1 ];
-            }
+            return [ designer.analytics.personality.operation ];
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
+              let index, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              index = raw.findIndex((num) => { return num === 1 });
+              if (index === -1) {
+                index = 0;
+              }
+              instance.designer.analytics.personality.operation = index;
+              updateQuery["analytics.personality.operation"] = index;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
-
+              console.log(e);
             }
           },
         },
@@ -2413,18 +2510,27 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "상",
           ] },
           selectValue: (designer) => {
-            if (designer.analytics.styling.furniture.builtin) {
-              return [ 0 ];
-            } else {
-              return [ 1 ];
-            }
+            return [ designer.analytics.personality.design ];
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
+              let index, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              index = raw.findIndex((num) => { return num === 1 });
+              if (index === -1) {
+                index = 0;
+              }
+              instance.designer.analytics.personality.design = index;
+              updateQuery["analytics.personality.design"] = index;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
-
+              console.log(e);
             }
           },
         },
@@ -2438,18 +2544,27 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "상",
           ] },
           selectValue: (designer) => {
-            if (designer.analytics.styling.furniture.builtin) {
-              return [ 0 ];
-            } else {
-              return [ 1 ];
-            }
+            return [ designer.analytics.personality.efficient ];
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
+              let index, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              index = raw.findIndex((num) => { return num === 1 });
+              if (index === -1) {
+                index = 0;
+              }
+              instance.designer.analytics.personality.efficient = index;
+              updateQuery["analytics.personality.efficient"] = index;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
-
+              console.log(e);
             }
           },
         },
@@ -2463,18 +2578,27 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "압박",
           ] },
           selectValue: (designer) => {
-            if (designer.analytics.styling.furniture.builtin) {
-              return [ 0 ];
-            } else {
-              return [ 1 ];
-            }
+            return [ designer.analytics.personality.communication ];
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
+              let index, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              index = raw.findIndex((num) => { return num === 1 });
+              if (index === -1) {
+                index = 0;
+              }
+              instance.designer.analytics.personality.communication = index;
+              updateQuery["analytics.personality.communication"] = index;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
-
+              console.log(e);
             }
           },
         },
@@ -2488,18 +2612,27 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             "친함",
           ] },
           selectValue: (designer) => {
-            if (designer.analytics.styling.furniture.builtin) {
-              return [ 0 ];
-            } else {
-              return [ 1 ];
-            }
+            return [ designer.analytics.personality.homeliaison ];
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
+              let index, whereQuery, updateQuery;
+
+              whereQuery = { desid };
+              updateQuery = {};
+
+              index = raw.findIndex((num) => { return num === 1 });
+              if (index === -1) {
+                index = 0;
+              }
+              instance.designer.analytics.personality.homeliaison = index;
+              updateQuery["analytics.personality.homeliaison"] = index;
+
+              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
-
+              console.log(e);
             }
           },
         },
