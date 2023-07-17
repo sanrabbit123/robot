@@ -19,6 +19,11 @@ const GoogleAnalytics = function () {
   this.realtimeCollection = "realtimeAnalytics";
   this.unknownKeyword = "(not set)";
   this.nullWords = "null";
+  this.nonIpList = [
+    "2101784253",
+    "21121014882",
+    "21121014885",
+  ]
 }
 
 GoogleAnalytics.prototype.returnDate = function (str) {
@@ -322,7 +327,7 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
     }).filter((obj) => {
       return !/\&view\=test/g.test(obj.info.requestUrl);
     }).filter((obj) => {
-      return obj.network.ip.trim().replace(/[^0-9]/gi, '') !== address.officeinfo.ghost.outer.trim().replace(/[^0-9]/gi, '');
+      return !instance.nonIpList.includes(obj.network.ip.trim().replace(/[^0-9]/gi, ''));
     }).map((obj) => { return obj.id });
     sessionIds = [ ...new Set(rows) ];
 
@@ -1166,7 +1171,7 @@ GoogleAnalytics.prototype.realtimeMetric = async function (selfCoreMongo, selfMo
     ago.setMinutes(ago.getMinutes() - delta);
 
     agoHistory = await back.mongoRead(collection, { date: { $gte: ago } }, { selfMongo });
-    agoHistory = agoHistory.filter((obj) => { return obj.network.ip.trim().replace(/[^0-9]/gi, '') !== address.officeinfo.ghost.outer.trim().replace(/[^0-9]/gi, '') })
+    agoHistory = agoHistory.filter((obj) => { return !instance.nonIpList.includes(obj.network.ip.trim().replace(/[^0-9]/gi, '')); })
 
     cliids = agoHistory.filter((obj) => { return (typeof obj.data.cliid === "string" && /^c/i.test(obj.data.cliid)) }).map((obj) => {
       return {
@@ -1202,7 +1207,7 @@ GoogleAnalytics.prototype.realtimeMetric = async function (selfCoreMongo, selfMo
     }
 
     targetHistories = await back.mongoPick(collection, [ { id: { $regex: "(" + sessions.map(({ id }) => { return id }).join("|") + ")" } }, { page: 1, action: 1, data: 1, id: 1, info: 1, date: 1 } ], { selfMongo });
-    targetHistories = targetHistories.filter((o) => { return o.action === "pageInit" && (o.info.ip.trim().replace(/[^0-9]/gi, '') !== address.officeinfo.ghost.outer.trim().replace(/[^0-9]/gi, '')) });
+    targetHistories = targetHistories.filter((o) => { return o.action === "pageInit" && !instance.nonIpList.includes(o.info.ip.trim().replace(/[^0-9]/gi, '')) });
 
     cliidsTarget = sessions.map((o) => { return o.cliid }).filter((str) => { return str !== nullWords });
     if (cliidsTarget.length === 0) {
