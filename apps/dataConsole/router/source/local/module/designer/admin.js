@@ -165,7 +165,7 @@ DesignerJs.prototype.adminDetail = function (desid) {
     },
     child: {
       mode: "iframe",
-      attribute: { src: "https://localhost:3000" + "/middle/designerAbout?desid=" + designer.desid + "&entire=true&normal=true" },
+      attribute: { src: BACKHOST + "/middle/designerAbout?desid=" + designer.desid + "&entire=true&normal=true" },
       style: {
         position: "relative",
         display: "block",
