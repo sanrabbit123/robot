@@ -42,7 +42,6 @@ const KakaoTalk = function () {
   this.authObj = {};
   this.message = {};
   this.dir = process.cwd() + "/kakaoTalk";
-  
 }
 
 KakaoTalk.prototype.generateToken = async function () {
@@ -78,6 +77,8 @@ KakaoTalk.prototype.setAuth = async function () {
       this.authObj.token = this.token.test;
     } else if (this.ipRegExp.second.test(data.trim())) {
       this.authObj.token = this.token.second;
+    } else if (this.ipRegExp.member.test(data.trim())) {
+      this.authObj.token = this.token.member;
     }
 
     return true;

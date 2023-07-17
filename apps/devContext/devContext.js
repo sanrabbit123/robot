@@ -6366,32 +6366,36 @@ DevContext.prototype.launching = async function () {
     // let project;
     
     
-    // clientName = "이승연";
-    // designerName = "김우현";
+    // clientName = "김지혜";
+    // designerName = "김지은";
     
-    // shareGoogleIdClient = "1avN1pDpFtlNnXJ4nlTHqtBKXD2SbLeno";
-    // shareGoogleIdDesigner = "1-TgTQzeA8lD5xdw4SS00mBz1a8BbbNKM";
-    
+    // shareGoogleIdClient = "1lrB_asEhlaifVcUDcUqGiax0w-IEXz3M";
+    // shareGoogleIdDesigner = "1OAS6ODa3GbMPOChBYoQo8DIpkXBQRjzg";
+
     // projects = await back.getProjectsByNames([ clientName, designerName ]);
     // if (projects.length > 0) {
     //   project = projects[0];
-    //   await back.updateProject([
-    //     { proid: project.proid },
-    //     {
-    //       "contents.raw.photo.status": "원본 보정 완료",
-    //       "contents.share.client.photo": new Date(),
-    //       "contents.share.designer.photo": new Date(),
-    //     }
-    //   ]);
-    //   clientObj = await back.getClientById(project.cliid);
-    //   designerObj = await back.getDesignerById(project.desid);
-    
-    //   if (clientObj !== null && designerObj !== null) {
-    //     consoleQInput = await consoleQ(`Is it OK? (press "OK")\nclient : https://drive.google.com/file/d/${shareGoogleIdClient}/view?usp=sharing\ndesigner : https://drive.google.com/file/d/${shareGoogleIdDesigner}/view?usp=sharing\n`);
-    //     if (/OK/gi.test(consoleQInput.trim())) {
-    //       await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, file: shareGoogleIdClient });
-    //       await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, host: instance.address.frontinfo.host, proid: project.proid });
-    //       await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents`, voice: true });
+    //   console.log(project.proid);
+    //   consoleQInput = await consoleQ("Is it OK?\n");
+    //   if (/OK/gi.test(consoleQInput.trim())) {
+    //     await back.updateProject([
+    //       { proid: project.proid },
+    //       {
+    //         "contents.raw.photo.status": "원본 보정 완료",
+    //         "contents.share.client.photo": new Date(),
+    //         "contents.share.designer.photo": new Date(),
+    //       }
+    //     ]);
+    //     clientObj = await back.getClientById(project.cliid);
+    //     designerObj = await back.getDesignerById(project.desid);
+      
+    //     if (clientObj !== null && designerObj !== null) {
+    //       consoleQInput = await consoleQ(`Is it OK? (press "OK")\nclient : https://drive.google.com/file/d/${shareGoogleIdClient}/view?usp=sharing\ndesigner : https://drive.google.com/file/d/${shareGoogleIdDesigner}/view?usp=sharing\n`);
+    //       if (/OK/gi.test(consoleQInput.trim())) {
+    //         await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, file: shareGoogleIdClient });
+    //         await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, host: instance.address.frontinfo.host, proid: project.proid });
+    //         await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents`, voice: true });
+    //       }
     //     }
     //   }
     // }
