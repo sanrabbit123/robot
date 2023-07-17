@@ -1157,8 +1157,10 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
   const FormData = require("form-data");
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   let num, form, formHeaders, toList;
+  let doubleMode;
   return new Promise((resolve, reject) => {
 
+    doubleMode = false;
     form = new FormData();
     num = 0;
     for (let i = 0; i < toArr.length; i++) {
@@ -1167,6 +1169,12 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
       }
     }
     toList = toArr;
+    if (toList.some((str) => { return /^corePortfolio/i.test(str) }) || toList.some((str) => { return /^rawDesigner/i.test(str) })) {
+      doubleMode = true;
+    } else {
+      doubleMode = false;
+    }
+
     form.append("toArr", JSON.stringify(toList));
     for (let fileName of fromArr) {
       form.append("file" + String(num), fs.readFileSync(fileName));
@@ -1179,13 +1187,27 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
       } else {
         formHeaders = form.getHeaders();
         formHeaders["Content-Length"] = length;
-        axios.post(`https://${ADDRESS.officeinfo.ghost.host}:${String(3000)}/generalFileUpload`, form, {
-          headers: { ...formHeaders },
-        }).then((response) => {
-          resolve({ message: "done" });
-        }).catch((error) => {
-          reject(error);
-        });
+        if (!doubleMode) {
+          axios.post(`https://${ADDRESS.officeinfo.ghost.host}:${String(3000)}/generalFileUpload`, form, {
+            headers: { ...formHeaders },
+          }).then((response) => {
+            resolve({ message: "done" });
+          }).catch((error) => {
+            reject(error);
+          });
+        } else {
+          axios.post(`https://${ADDRESS.officeinfo.ghost.host}:${String(3000)}/generalFileUpload`, form, {
+            headers: { ...formHeaders },
+          }).then((response) => {
+            return axios.post(`https://${ADDRESS.transinfo.host}:${String(3000)}/generalFileUpload`, form, {
+              headers: { ...formHeaders },
+            });
+          }).then((response) => {
+            resolve({ message: "done" });
+          }).catch((error) => {
+            reject(error);
+          });
+        }
       }
     });
 
