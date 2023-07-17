@@ -153,6 +153,7 @@ const CareerDetailFactor = function (json) {
   this.company = json.company;
   this.team = json.team;
   this.role = json.role;
+  this.tag = json.tag;
   this.date = new CareerDetailFactorDate(json.date);
 }
 
@@ -161,6 +162,7 @@ CareerDetailFactor.prototype.toNormal = function () {
   obj.company = this.company;
   obj.team = this.team;
   obj.role = this.role;
+  obj.tag = this.tag;
   obj.date = this.date.toNormal();
   return obj;
 }
@@ -408,6 +410,7 @@ const DesignerInformation = function (json) {
     tempInstance = new Address(i);
     this.address.push(tempInstance);
   }
+  this.residentNunber = json.residentNunber;
   this.personalSystem = new PersonalSystem(json.personalSystem);
   this.business = new Business(json.business);
 }
@@ -424,6 +427,7 @@ DesignerInformation.prototype.toNormal = function () {
   obj.dog = this.dog;
   obj.did = this.did;
   obj.address = this.address.toNormal();
+  obj.residentNunber = this.residentNunber;
   obj.personalSystem = this.personalSystem.toNormal();
   obj.business = this.business.toNormal();
   return obj;

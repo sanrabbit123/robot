@@ -148,6 +148,7 @@ PurchaseAnalytics.prototype.toNormal = function () {
 //styling
 
 const StylingFabric = function (json) {
+  this.level = json.level;
   this.curtain = new Menu(json.curtain, [
     "업체 연결",
     "기성 제품 추천",
@@ -162,6 +163,7 @@ const StylingFabric = function (json) {
 
 StylingFabric.prototype.toNormal = function () {
   let obj = {};
+  obj.level = this.level;
   obj.curtain = this.curtain.toNormal();
   obj.bedding = this.bedding.toNormal();
   return obj;
@@ -408,20 +410,28 @@ ConstructPossible.prototype.toNormal = function () {
 }
 
 const ConstructAnalytics = function (json) {
+  this.ability = json.ability;
   this.level = json.level;
   this.possible = new ConstructPossible(json.possible);
   this.case = new ConstructCases(json.case);
   this.partner = json.partner;
+  this.partnerName = json.partnerName;
+  this.own = json.own;
+  this.ownName = json.ownName;
   this.range = json.range;
   this.major = json.major;
 }
 
 ConstructAnalytics.prototype.toNormal = function () {
   let obj = {};
+  obj.ability = this.ability;
   obj.level = this.level;
   obj.possible = this.possible.toNormal();
   obj.case = this.case.toNormal();
   obj.partner = this.partner;
+  obj.partnerName = this.partnerName;
+  obj.own = this.own;
+  obj.ownName = this.ownName;
   obj.range = this.range;
   obj.major = this.major;
   return obj;
@@ -453,8 +463,12 @@ const ProjectAnalytics = function (json) {
     "제품 이미지",
     "콜라주",
   ], true);
+  this.cad = json.cad;
+  this.collage = json.collage;
+  this.modeling = json.modeling;
   this.online = json.online;
   this.living = json.living;
+  this.partial = json.partial;
   this.matrix = new AreaMatrix(json.matrix);
   this.operationBudget = new OperationBudget(json.operationBudget);
 }
@@ -463,8 +477,12 @@ ProjectAnalytics.prototype.toNormal = function () {
   let obj = {};
   obj.time = this.time.toNormal();
   obj.paperWork = this.paperWork.toNormal();
+  obj.cad = this.cad;
+  obj.collage = this.collage;
+  obj.modeling = this.modeling;
   obj.online = this.online;
   obj.living = this.living;
+  obj.partial = this.partial;
   obj.matrix = this.matrix.toNormal();
   obj.operationBudget = this.operationBudget.toNormal();
   return obj;
@@ -489,6 +507,24 @@ RegionAnalytics.prototype.toNormal = function () {
   return obj;
 }
 
+const PersonalityAnalytics = function (json) {
+  this.operation = json.operation;
+  this.design = json.design;
+  this.efficient = json.efficient;
+  this.communication = json.communication;
+  this.homeliaison = json.homeliaison;
+}
+
+PersonalityAnalytics.prototype.toNormal = function () {
+  let obj = {};
+  obj.operation = this.operation;
+  obj.design = this.design;
+  obj.efficient = this.efficient;
+  obj.communication = this.communication;
+  obj.homeliaison = this.homeliaison;
+  return obj;
+}
+
 
 //total
 
@@ -499,6 +535,7 @@ const HomeLiaisonAnalytics = function (json) {
   this.styling = new StylingAnalytics(json.styling);
   this.purchase = new PurchaseAnalytics(json.purchase);
   this.etc = new EtcAnalytics(json.etc);
+  this.personality = new PersonalityAnalytics(json.personality);
   this.grade = json.grade;
 }
 
@@ -510,6 +547,7 @@ HomeLiaisonAnalytics.prototype.toNormal = function () {
   obj.styling = this.styling.toNormal();
   obj.purchase = this.purchase.toNormal();
   obj.etc = this.etc.toNormal();
+  obj.personality = this.personality.toNormal();
   obj.grade = this.grade;
   return obj;
 }

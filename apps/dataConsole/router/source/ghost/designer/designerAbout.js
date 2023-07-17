@@ -2082,7 +2082,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       admin: false,
       contents: [
         {
-          property: "빌트인 제작",
+          property: "빌트인 가구",
           admin: false,
           returnValue: (designer) => { return [
             "불가능",
@@ -2118,14 +2118,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
         },
         {
-          property: "가구 제작",
+          property: "디자인 가구",
           admin: false,
           returnValue: (designer) => { return [
-            "가능",
             "불가능",
+            "하",
+            "중",
+            "상",
           ] },
           selectValue: (designer) => {
-            if (designer.analytics.styling.furniture.design) {
+            if (designer.analytics.styling.furniture.builtin) {
               return [ 0 ];
             } else {
               return [ 1 ];
@@ -2134,17 +2136,17 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           multiple: false,
           updateValue: async (raw, columns, designer) => {
             try {
-              let text, whereQuery, updateQuery;
+              // let text, whereQuery, updateQuery;
 
-              whereQuery = { desid };
-              updateQuery = {};
+              // whereQuery = { desid };
+              // updateQuery = {};
 
-              text = columns[raw.findIndex((num) => { return num === 1 })];
+              // text = columns[raw.findIndex((num) => { return num === 1 })];
 
-              instance.designer.analytics.styling.furniture.design = (text === "가능");
-              updateQuery["analytics.styling.furniture.design"] = (text === "가능");
+              // instance.designer.analytics.styling.furniture.builtin = (text === "가능");
+              // updateQuery["analytics.styling.furniture.builtin"] = (text === "가능");
 
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              // await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
             } catch (e) {
               console.log(e);

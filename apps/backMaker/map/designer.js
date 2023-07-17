@@ -19,6 +19,7 @@ module.exports = {
           dog: false,
           did: "",
           address: [],
+          residentNunber: "",
           personalSystem: {
             showRoom: false,
             webPage: [],
@@ -85,8 +86,12 @@ module.exports = {
               entire: 30,
             },
             paperWork: [],
+            cad: true,
+            collage: true,
+            modeling: 1,
             online: true,
             living: true,
+            partial: false,
             matrix: [],
             operationBudget: {
               min: 5000000,
@@ -94,6 +99,7 @@ module.exports = {
             }
           },
           construct: {
+            ability: 1,
             level: 1,
             possible: {
               supervision: true,
@@ -116,6 +122,9 @@ module.exports = {
               }
             ],
             partner: false,
+            partnerName: "",
+            own: false,
+            ownName: "",
             range: 2,
             major: "",
           },
@@ -155,12 +164,13 @@ module.exports = {
               }
             },
             furniture: {
-              builtin: false,
+              builtin: 1,
               builtinDetail: [],
-              design: false,
+              design: 1,
               designDetail: [],
             },
             fabric: {
+              level: 1, 
               curtain: [ "업체 연결" ],
               bedding: [ "업체 연결" ]
             }
@@ -181,6 +191,13 @@ module.exports = {
               { name: "디자인 기획시 고객에게 맞추는 편", value: false },
             ],
             relation: "확인중"
+          },
+          personality: {
+            operation: 1,
+            design: 1,
+            efficient: 1,
+            communication: 1,
+            homeliaison: 1,
           },
           grade: 0,
         },
@@ -256,6 +273,7 @@ module.exports = {
         company: "",
         team: "",
         role: "",
+        tag: "",
         date: {
           start: new Date(1800, 0, 1),
           end: new Date(1800, 1, 1),
