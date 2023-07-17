@@ -42,6 +42,7 @@ const KakaoTalk = function () {
   this.authObj = {};
   this.message = {};
   this.dir = process.cwd() + "/kakaoTalk";
+  
 }
 
 KakaoTalk.prototype.generateToken = async function () {
