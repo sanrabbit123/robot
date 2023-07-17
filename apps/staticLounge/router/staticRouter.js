@@ -5058,7 +5058,7 @@ StaticRouter.prototype.rou_post_complexReport = function () {
 StaticRouter.prototype.rou_post_receiveSms = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, dateToString, stringToDate, requestSystem, cryptoString } = this.mother;
+  const { equalJson, dateToString, stringToDate, requestSystem, cryptoString, sleep } = this.mother;
   const { pushbullet } = this;
   const { token, device, threads, password, host, version } = pushbullet;
   let obj;
@@ -5081,6 +5081,8 @@ StaticRouter.prototype.rou_post_receiveSms = function () {
       let headers;
       let rows;
       let date, amount, name;
+      let filteredArr;
+      let idArr;
 
       headers = { "Access-Token": token };
 
@@ -5121,11 +5123,21 @@ StaticRouter.prototype.rou_post_receiveSms = function () {
         obj.id = obj.id + "_" + (await cryptoString(password, obj.name));
       }
 
+      filteredArr = [];
+      idArr = [];
       for (let obj of textArr) {
+        if (!idArr.includes(obj.id)) {
+          filteredArr.push(equalJson(JSON.stringify(obj)));
+        }
+        idArr.push(obj.id);
+      }
+
+      for (let obj of filteredArr) {
         rows = await back.mongoRead(collection, { id: obj.id }, { selfMongo });
         if (rows.length === 0) {
           await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/smsParsing", { date: obj.date, amount: obj.amount, name: obj.name }, { headers: { "Content-Type": "application/json" } });
           await back.mongoCreate(collection, obj, { selfMongo });
+          await sleep(500);
         }
       }
 
