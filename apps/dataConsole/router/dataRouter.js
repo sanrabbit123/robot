@@ -8293,7 +8293,7 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
 DataRouter.prototype.rou_post_updateContentsStatus = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, messageSend, dateToString, stringToDate } = this.mother;
+  const { equalJson, messageSend, dateToString, stringToDate, sleep } = this.mother;
   let obj = {};
   obj.link = [ "/updateContentsStatus" ];
   obj.func = async function (req, res, logger) {
@@ -8336,7 +8336,7 @@ DataRouter.prototype.rou_post_updateContentsStatus = function () {
           emptyObject = equalJson(JSON.stringify(dummy));
           emptyObject.conid = updateQuery.conid;
           await back.mongoCreate(collection, emptyObject, { selfMongo });
-          await sleep(500);
+          await sleep(300);
           await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
         } else {
           await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
