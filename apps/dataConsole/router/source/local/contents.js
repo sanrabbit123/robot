@@ -122,20 +122,12 @@ ContentsJs.prototype.spreadContents = function (search = null) {
         cliid: contents.cliid,
       },
       event: {
-        mouseenter: function (e) {
-          this.style.background = colorChip.liteGreen;
-          this.firstChild.style.color = colorChip.green;
-        },
-        mouseleave: function (e) {
-          this.style.background = colorChip.gray1;
-          this.firstChild.style.color = colorChip.deactive;
-        },
         click: this.whitePopupEvent(contents.conid),
       },
       style: {
         display: "inline-block",
         width: String(boxWidth) + ea,
-        background: colorChip.gray1,
+        background: instance.contentsStatus.map((o) => { return o.conid }).includes(contents.conid) ? colorChip.gradientGreen : colorChip.gray1,
         marginRight: String(num % boxNumber === boxNumber - 1 ? 0 : boxMargin) + ea,
         marginBottom: String(boxMargin) + ea,
         cursor: "pointer",
@@ -151,7 +143,7 @@ ContentsJs.prototype.spreadContents = function (search = null) {
             fontFamily: "graphik",
             fontSize: String(pidFontSize) + ea,
             fontWeight: String(pidFontWeight),
-            color: colorChip.deactive,
+            color: instance.contentsStatus.map((o) => { return o.conid }).includes(contents.conid) ? colorChip.white : colorChip.deactive,
             top: String(pidTextTop) + ea,
             transition: "all 0.5s ease",
             paddingLeft: String(pidPaddingLeft) + ea,
@@ -498,9 +490,10 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
             updateQuery.date = new Date();
 
             await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/updateContentsStatus");
-            instance.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus");
+            instance.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus", { equal: true });
 
             fireEvent(cancelBack, "click");
+            instance.spreadContents(null);
 
           } catch (e) {
             console.log(e);
@@ -1022,10 +1015,7 @@ ContentsJs.prototype.launching = async function () {
     const clients = await ajaxJson({ noFlat: true, whereQuery: { $or: projects.map((obj) => { return { cliid: obj.cliid } }) } }, "/getClients", { equal: true });
     const designers = await ajaxJson({ noFlat: true, whereQuery: { $or: contentsArr.map((obj) => { return { desid: obj.desid } }) } }, "/getDesigners", { equal: true });
 
-    this.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus");
-
-    console.log(this.contentsStatus)
-
+    this.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus", { equal: true });
     this.contentsArr = new SearchArray(contentsArr);
     this.clients = new SearchArray(clients);
     this.projects = new SearchArray(projects);
