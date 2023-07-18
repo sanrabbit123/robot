@@ -7479,6 +7479,7 @@ DataRouter.prototype.rou_post_updateContentsStatus = function () {
       let rows;
       let resultObj;
       let dummy;
+      let emptyObject;
 
       dummy = {
         conid: "",
@@ -7497,7 +7498,10 @@ DataRouter.prototype.rou_post_updateContentsStatus = function () {
 
         rows = await back.mongoRead(collection, whereQuery, { selfMongo });
         if (rows.length === 0) {
-          await back.mongoCreate(collection, equalJson(JSON.stringify(dummy)), { selfMongo });
+          emptyObject = equalJson(JSON.stringify(dummy));
+          emptyObject.conid = updateQuery.conid;
+          await back.mongoCreate(collection, emptyObject, { selfMongo });
+          await sleep(500);
           await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
         } else {
           await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
