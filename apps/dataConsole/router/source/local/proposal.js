@@ -3423,15 +3423,16 @@ ProposalJs.prototype.fifthWhitesave = function (id) {
   }
 }
 
-ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pictureSettings) {
+ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pictureSettings, desid) {
   const instance = this;
   const mother = whitebox;
+  const { createNode, withOut, colorChip, ajaxJson, cleanChildren } = GeneralJs;
+  const ea = "px";
   let whiteBoxDom = new Map();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, scroll_box, input_clone, label_clone, img_clone, img_clone2;
   let leftArea, rightArea;
   let leftMother, rightMother;
   let style;
-  let ea = "px";
 
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   div_clone.classList.add("ppw_leftbox");
@@ -3515,6 +3516,130 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
       inbutton.textContent = "완료";
       inbutton.addEventListener("click", instance.fifthWhitesave(id));
       dom.appendChild(inbutton);
+      createNode({
+        mother: dom,
+        attribute: {
+          desid: desid,
+          index: String(0),
+        },
+        event: {
+          mouseenter: function (e) {
+            this.firstChild.style.color = colorChip.whiteGreen;
+          },
+          mouseleave: function (e) {
+            this.firstChild.style.color = colorChip.whiteBlack;
+          },
+          selectstart: (e) => { e.preventDefault() },
+          click: async function (e) {
+            try {
+              const desid = this.getAttribute("desid");
+              const index = Number(this.getAttribute("index"));
+              if (instance.proposalGeneration[desid] === undefined) {
+                instance.proposalGeneration[desid] = await ajaxJson({ desid, index }, "/proposalGeneration", { equal: true });
+              }
+              const length = instance.proposalGeneration[desid].length;
+              const pictureSettings = length === 0 ? null : instance.proposalGeneration[desid][index % length];
+              const tong = document.querySelector(".ppw_left_picturebox_inbox");
+              let factor;
+
+              if (pictureSettings !== null) {
+                cleanChildren(tong);
+                for (let i = 0; i < pictureSettings.length; i++) {
+                  factor = GeneralJs.nodes.div.cloneNode(true);
+                  factor.setAttribute("cus_info", GeneralJs.tagCoverting(pictureSettings[i]));
+                  factor.classList.add("fifth_drag_img");
+                  factor.classList.add("ppw_left_picturebox_inbox_detail");
+                  if (pictureSettings[i].unionPo !== "union") {
+                    factor.addEventListener("click", ProposalJs.fifthPicturebox_union(), { once: true });
+                  } else if (pictureSettings[i].unionPo === "union") {
+                    factor.addEventListener("click", ProposalJs.fifthPicturebox_split(), { once: true });
+                  }
+                  if (/url/.test(pictureSettings[i].styleText)) {
+                    factor.style.cssText = pictureSettings[i].styleText.replace(/url\(\"/g, "url(\"" + S3HOST);
+                  } else {
+                    factor.style.cssText = pictureSettings[i].styleText;
+                  }
+                  tong.appendChild(factor);
+                }
+                this.setAttribute("index", String(index + 1));
+              }
+
+            } catch (e) {
+              console.log(e);
+            }
+          },
+          contextmenu: async function (e) {
+            e.preventDefault();
+            try {
+              const desid = this.getAttribute("desid");
+              const index = Number(this.getAttribute("index"));
+              if (instance.proposalGeneration[desid] === undefined) {
+                instance.proposalGeneration[desid] = await ajaxJson({ desid, index }, "/proposalGeneration", { equal: true });
+              }
+              const length = instance.proposalGeneration[desid].length;
+              const pictureSettings = length === 0 ? null : instance.proposalGeneration[desid][index % length];
+              const tong = document.querySelector(".ppw_left_picturebox_inbox");
+              let factor;
+
+              if (pictureSettings !== null) {
+                cleanChildren(tong);
+                for (let i = 0; i < pictureSettings.length; i++) {
+                  factor = GeneralJs.nodes.div.cloneNode(true);
+                  factor.setAttribute("cus_info", GeneralJs.tagCoverting(pictureSettings[i]));
+                  factor.classList.add("fifth_drag_img");
+                  factor.classList.add("ppw_left_picturebox_inbox_detail");
+                  if (pictureSettings[i].unionPo !== "union") {
+                    factor.addEventListener("click", ProposalJs.fifthPicturebox_union(), { once: true });
+                  } else if (pictureSettings[i].unionPo === "union") {
+                    factor.addEventListener("click", ProposalJs.fifthPicturebox_split(), { once: true });
+                  }
+                  if (/url/.test(pictureSettings[i].styleText)) {
+                    factor.style.cssText = pictureSettings[i].styleText.replace(/url\(\"/g, "url(\"" + S3HOST);
+                  } else {
+                    factor.style.cssText = pictureSettings[i].styleText;
+                  }
+                  tong.appendChild(factor);
+                }
+                if (index - 1 < 0) {
+                  this.setAttribute("index", String(0));
+                } else {
+                  this.setAttribute("index", String(index - 1));
+                }
+              }
+
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
+        style: {
+          display: "flex",
+          position: "absolute",
+          bottom: "calc(calc(" + String(28) + ea + " + " + String(3.2) + "vh" + ")" + " + " + String(7) + "px" + ")",
+          right: String(21) + ea,
+          width: String(54) + ea,
+          height: String(28) + ea,
+          background: colorChip.green,
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          borderRadius: String(4) + "px",
+          paddingBottom: String(3) + ea,
+        },
+        child: {
+          event: {
+            selectstart: (e) => { e.preventDefault() },
+          },
+          text: "발생",
+          style: {
+            position: "relative",
+            fontSize: String(14) + ea,
+            fontWeight: String(600),
+            color: colorChip.whiteBlack,
+            top: String(0) + ea,
+          }
+        }
+      })
     },
   ];
   for (let i = 0; i < leftList.length; i++) {
@@ -3770,7 +3895,7 @@ ProposalJs.prototype.fifthProcess = async function (desid, id) {
     total.appendChild(div_clone);
 
     popupDom.set("whiteBox", div_clone);
-    instance.fifthWhiteup(div_clone, contents, id, ghost, designer.setting.proposal);
+    instance.fifthWhiteup(div_clone, contents, id, ghost, designer.setting.proposal, desid);
     instance.fifthChildren = popupDom;
   }
 }
@@ -6129,6 +6254,7 @@ ProposalJs.prototype.launching = async function () {
     let clients;
 
     this.designers = new Designers(await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": { $regex: "완료" } } }, "/getDesigners", { equal: true }));
+    this.proposalGeneration = {};
 
     left.style.display = "none";
     right.style.display = "none";

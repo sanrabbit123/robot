@@ -7522,3 +7522,42 @@ DataRouter.prototype.rou_post_updateContentsStatus = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_proposalGeneration = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, messageSend, dateToString, stringToDate, sleep } = this.mother;
+  let obj = {};
+  obj.link = [ "/proposalGeneration" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.desid === undefined) {
+        throw new Error("invalid post");
+      }
+      const { desid } = equalJson(req.body);
+      const selfMongo = instance.mongo;
+      const collection = "project";
+      const projects = await back.mongoPick(collection, [ { "proposal.detail": { $elemMatch: { desid } } }, { proid: 1, desid: 1, proposal: 1 } ], { selfMongo });
+      let targetProposals;
+
+      projects.sort((a, b) => { return b.proposal.date.valueOf() - a.proposal.date.valueOf() })
+      targetProposals = projects.map((p) => { return p.proposal.detail }).flat().filter((o) => { return o.desid === desid });
+      targetProposals = targetProposals.map(({ pictureSettings }) => { return JSON.stringify(pictureSettings) });
+      targetProposals = [ ...new Set(targetProposals) ].map((str) => { return equalJson(str) });
+
+      res.send(JSON.stringify(targetProposals));
+
+    } catch (e) {
+      await logger.error("Console 서버 문제 생김 (rou_post_proposalGeneration): " + e.message);
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}

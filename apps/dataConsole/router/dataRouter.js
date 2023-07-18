@@ -8358,6 +8358,46 @@ DataRouter.prototype.rou_post_updateContentsStatus = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_proposalGeneration = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, messageSend, dateToString, stringToDate, sleep } = this.mother;
+  let obj = {};
+  obj.link = [ "/proposalGeneration" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.desid === undefined) {
+        throw new Error("invalid post");
+      }
+      const { desid } = equalJson(req.body);
+      const selfMongo = instance.mongo;
+      const collection = "project";
+      const projects = await back.mongoPick(collection, [ { "proposal.detail": { $elemMatch: { desid } } }, { proid: 1, desid: 1, proposal: 1 } ], { selfMongo });
+      let targetProposals, targetProposal;
+      let length;
+
+      projects.sort((a, b) => { return b.proposal.date.valueOf() - a.proposal.date.valueOf() })
+      targetProposals = projects.map((p) => { return p.proposal.detail }).flat().filter((o) => { return o.desid === desid });
+      targetProposals = targetProposals.map(({ pictureSettings }) => { return JSON.stringify(pictureSettings) });
+      targetProposals = [ ...new Set(targetProposals) ].map((str) => { return equalJson(str) });
+
+      res.send(JSON.stringify(targetProposals));
+
+    } catch (e) {
+      await logger.error("Console 서버 문제 생김 (rou_post_proposalGeneration): " + e.message);
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 DataRouter.policy = function () {
   let text = '';
   text += "<b>개인정보 수집 및 이용 동의서</b><br><br>주식회사 홈리에종은 아래의 목적으로 수집, 이용하며 고객님의 소중한 개인정보를 보호함으로써 안심하고 법률서비스를 이용할 수 있도록 최선을 다합니다.<br><br>";
