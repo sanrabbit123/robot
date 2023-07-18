@@ -146,7 +146,7 @@ UserJs.prototype.baseMaker = function () {
           const useid = this.getAttribute("useid");
           const user = instance.users.find((obj) => { return obj.useid === useid });
           if (user.response.design.length > 0) {
-            blankHref(BACKHOST + "/middle/miniProposal?useid=" + useid);
+            blankHref(FRONTHOST + "/miniProposal.php?useid=" + useid);
           } else {
             window.alert("현재 단계에서는 할 수 없습니다!");
           }
@@ -168,7 +168,7 @@ UserJs.prototype.baseMaker = function () {
       click: async function (e) {
         try {
           const useid = this.getAttribute("useid");
-          blankHref(BACKHOST + "/middle/miniRequest?useid=" + useid);
+          blankHref(FRONTHOST + "/miniRequest.php?useid=" + useid);
         } catch (e) {
           console.log(e);
         }
@@ -364,7 +364,7 @@ UserJs.prototype.baseMaker = function () {
       click: async function (e) {
         try {
           const useid = this.getAttribute("useid");
-          blankHref(BACKHOST + "/middle/miniGuide?useid=" + useid);
+          blankHref(FRONTHOST + "/miniGuide.php?useid=" + useid);
         } catch (e) {
           console.log(e);
         }
