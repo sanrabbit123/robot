@@ -8051,3 +8051,28 @@ GeneralJs.fireEvent = function (dom, eventName) {
     dom.focus();
   }
 }
+
+GeneralJs.getRealBox = (dom, original = null) => {
+  let box;
+  dom.style.display = "inline-block";
+  dom.style.position = "relative";
+  dom.style.width = "auto";
+  dom.style.height = "auto";
+  box = dom.getBoundingClientRect();
+  box = JSON.parse(JSON.stringify(box));
+  if (original !== null && typeof original === "object") {
+    if (typeof original.display === "string") {
+      dom.style.display = original.display;
+    }
+    if (typeof original.position === "string") {
+      dom.style.position = original.position;
+    }
+    if (typeof original.width === "string") {
+      dom.style.width = original.width;
+    }
+    if (typeof original.height === "string") {
+      dom.style.height = original.height;
+    }
+  }
+  return box;
+}

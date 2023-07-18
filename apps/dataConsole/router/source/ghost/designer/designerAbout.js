@@ -703,7 +703,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           noticeText: (designer) => {
-            return "홈스타일링을 본격적으로 시작한 날짜의 년도와 월을 적어주세요!";
+            return "홈리에종에서 홈스타일링을 본격적으로 시작한 날짜입니다.";
           },
         },
         {
@@ -1473,12 +1473,12 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       ],
       notice: [
         {
-          title: "파트너십 기간",
-          body: "홈리에종과 파트너십을 시작한 날짜의 년도와 월을 적어주세요!",
-        },
-        {
           title: "사업자 등록번호",
           body: "프리랜서의 경우, 빈칸으로 남겨주세요!",
+        },
+        {
+          title: "주민등록번호",
+          body: "프리랜서의 경우, 정산을 위해 필수적으로 작성해주세요!",
         },
       ],
     },
@@ -1572,7 +1572,10 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             }
           },
           noticeText: (designer) => {
-            return "출장비를 받지 않고 기본적으로 가줄 수 있는 거리의 최대값입니다.";
+            return "출장비를 받지 않고 기본적으로 가줄 수 있는 거리의 최대값입니다. 최소 25km, 최대 40km 내에서 작성해주세요!";
+          },
+          visualNotice: (designer) => {
+            return "(25km ~ 45km 이내)"
           },
         },
         {
@@ -1699,7 +1702,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
       notice: [
         {
           title: "유효 범위",
-          body: "출장비를 받지 않고 기본적으로 가줄 수 있는 거리의 최대값입니다.",
+          body: "출장비를 받지 않고 기본적으로 가줄 수 있는 거리의 최대값입니다. 최소 25km, 최대 40km 내에서 작성해주세요!",
         },
         {
           title: "한계 범위",
@@ -5380,7 +5383,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, removeByClass } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, removeByClass, getRealBox } = GeneralJs;
   const removePopupTargetClassName = "removePopupTargetClassName";
   const menuTargetClassName = "menuTargetClassName";
   const tendencyBarTargetClassName = "tendencyBarTargetClassName";
@@ -5417,6 +5420,9 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   let careerBlocksRender;
   let blockCancelWidth, blockCancelTop;
   let plusBlockEvent;
+  let thisWidth;
+  let thisBox;
+  let noticeBetween;
 
   blockHeight = <%% 22, 21, 21, 19, (isIphone() ? 5.2 : 4.9) %%>;
   blockMarginBottom = <%% 16, 15, 15, 12, 2.5 %%>;
@@ -5461,6 +5467,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
 
   blockCancelWidth = <%% 12, 12, 12, 12, 12 %%>;
   blockCancelTop = <%% 14, 14, 14, 14, 14 %%>;
+  noticeBetween = <%% 7, 7, 7, 7, 7 %%>;
 
   plusBlockEvent = (mode, index = -1) => {
     return async function (e) {
@@ -5846,9 +5853,13 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
             saveEvent = async (raw) => {
               try {
                 const text = await instance.contents[x].contents[z].updateValue(raw, instance.designer);
-                self.firstChild.textContent = "";
+                [ ...self.childNodes ].filter((dom) => { return dom.nodeType === 3 }).forEach((t) => { self.removeChild(t) });
                 self.insertAdjacentHTML("beforeend", text);
                 self.setAttribute("value", text);
+                if (typeof instance.contents[x].contents[z].visualNotice === "function") {
+                  const thisBox = getRealBox(self, withOut(firstWidth + circleBoxWidth, ea));
+                  self.nextElementSibling.style.left = String(firstWidth + circleBoxWidth + thisBox.width + noticeBetween) + ea;
+                }
               } catch (e) {
                 console.log(e);
               }
@@ -5956,6 +5967,24 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
           verticalAlign: "top",
         },
       });
+
+      if (typeof obj.visualNotice === "function") {
+        thisBox = getRealBox(valueBlock, { width: withOut(firstWidth + circleBoxWidth, ea) });
+        createNode({
+          mother: baseBlock,
+          text: obj.visualNotice(instance.designer),
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(firstWidth + circleBoxWidth + thisBox.width + noticeBetween) + ea,
+            fontSize: String(contentsSize) + ea,
+            fontWeight: String(contentsWeight1),
+            color: colorChip.green,
+          }
+        })
+
+      }
+
     } else if (Array.isArray(value) && value.every((s) => { return typeof s === "string" })) {
       valueBlock = createNode({
         mother: baseBlock,

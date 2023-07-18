@@ -651,7 +651,6 @@ GeneralJs.prototype.generalCss = function (justTextMode = false) {
   @media (min-width:801px) and (max-width:1060px) {
     #desknaviframe{width:900px;left:calc(50% - 450px);}
   }
-
   @media (min-width:721px) and (max-width:900px) {
     #desknaviframe{width:720px;left:calc(50% - 360px);}
   }
