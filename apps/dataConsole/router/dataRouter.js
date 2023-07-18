@@ -8321,7 +8321,7 @@ DataRouter.prototype.rou_post_updateContentsStatus = function () {
 
       } else if (mode === "update") {
         ({ whereQuery, updateQuery } = equalJson(req.body));
-        await back.mongoRead(collection, [ whereQuery, updateQuery ], { selfMongo });
+        await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
         resultObj = { message: "done" };
 
       } else {

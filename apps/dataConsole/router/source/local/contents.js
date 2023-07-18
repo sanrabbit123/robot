@@ -180,7 +180,7 @@ ContentsJs.prototype.spreadContents = function (search = null) {
 ContentsJs.prototype.whitePopupEvent = function (conid) {
   const instance = this;
   const { ea, totalMother, belowHeight, contentsArr, clients, designers, projects, whitePopupClassName } = this;
-  const { createNode, withOut, colorChip, ajaxJson, setQueue, serviceParsing, cleanChildren, isMac } = GeneralJs;
+  const { createNode, withOut, colorChip, ajaxJson, setQueue, serviceParsing, cleanChildren, isMac, fireEvent } = GeneralJs;
   const photoChar = 't';
   const blank = "&nbsp;&nbsp;/&nbsp;&nbsp;";
   const serviceName = serviceParsing().name;
@@ -497,6 +497,8 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
 
             await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/updateContentsStatus");
             instance.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus");
+
+            fireEvent(cancelBack, "click");
 
           } catch (e) {
             console.log(e);
