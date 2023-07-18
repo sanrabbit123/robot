@@ -131,9 +131,9 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
       }
       const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
+        const { proid, desid, client, name, type } = fields;
         try {
           if (!err) {
-            const { proid, desid, client, name, type } = fields;
             const requestNow = new Date();
             const requestNowValue = requestNow.valueOf();
             const token = "_";
@@ -187,13 +187,13 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
 
           } else {
             console.log(err);
-            logger.error("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary 1): " + err.message).catch((e) => { console.log(e); });
+            logger.error("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary 1): " + err.message + " / " + desid + " / " + proid).catch((e) => { console.log(e); });
             res.send(JSON.stringify({ message: "error : " + err.message }));
           }
         } catch (e) {
           console.log(e);
           logger.error("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoBinary 2): " + e.message).catch((e) => { console.log(e); });
-          res.send(JSON.stringify({ message: "error : " + e.message }));
+          res.send(JSON.stringify({ message: "error : " + e.message + " / " + desid + " / " + proid }));
         }
       });
     } catch (e) {
