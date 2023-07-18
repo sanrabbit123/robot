@@ -8052,7 +8052,7 @@ GeneralJs.fireEvent = function (dom, eventName) {
   }
 }
 
-GeneralJs.getRealBox = (dom, original = null) => {
+GeneralJs.getRealBox = (dom, original = "attribute") => {
   let box;
   dom.style.display = "inline-block";
   dom.style.position = "relative";
@@ -8072,6 +8072,19 @@ GeneralJs.getRealBox = (dom, original = null) => {
     }
     if (typeof original.height === "string") {
       dom.style.height = original.height;
+    }
+  } else if (original === "attribute") {
+    if (dom.getAttribute("display") !== null) {
+      dom.style.display = dom.getAttribute("display");
+    }
+    if (dom.getAttribute("position") !== null) {
+      dom.style.position = dom.getAttribute("position");
+    }
+    if (dom.getAttribute("width") !== null) {
+      dom.style.width = dom.getAttribute("width");
+    }
+    if (dom.getAttribute("height") !== null) {
+      dom.style.height = dom.getAttribute("height");
     }
   }
   return box;

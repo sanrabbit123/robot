@@ -225,7 +225,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
   const instance = this;
   const mother = this.mother;
   const { ea, baseTong, media, designer } = this;
-  const { entireMode } = this;
+  const { entireMode, adminMode } = this;
   const { desid } = designer;
   const mobile = media[4];
   const desktop = !mobile;
@@ -631,14 +631,20 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 text = columns[1];
               }
 
-              await ajaxJson({ message: designer.designer + " 실장님이 콘솔을 통해 상태 변경을 시도하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
-              window.alert("상태 변경시, 홈리에종에 직접 문의해주세요!");
-              window.location.reload();
+              if (entireMode || adminMode) {
 
-              // instance.designer.analytics.grade = columns.findIndex((str) => { return str === text }) - 1;
-              // updateQuery["analytics.grade"] = columns.findIndex((str) => { return str === text }) - 1;
-              //
-              // await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+                instance.designer.analytics.grade = columns.findIndex((str) => { return str === text }) - 1;
+                updateQuery["analytics.grade"] = columns.findIndex((str) => { return str === text }) - 1;
+                
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner"); 
+
+              } else {
+
+                await ajaxJson({ message: designer.designer + " 실장님이 콘솔을 통해 상태 변경을 시도하셨습니다!", channel: "#300_designer", voice: true }, BACKHOST + "/sendSlack");
+                window.alert("상태 변경시, 홈리에종에 직접 문의해주세요!");
+                window.location.reload();
+
+              }
 
             } catch (e) {
               console.log(e);
@@ -1762,6 +1768,9 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               console.log(e);
             }
           },
+          noticeText: (designer) => {
+            return "홈리에종과 진행하기로 한 서비스의 범위와 상관 없이 " + designer.designer + " 디자이너님의 역량상 할 수 있는 범위입니다.";
+          },
         },
         {
           property: "진행 범위",
@@ -1806,6 +1815,9 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               console.log(e);
             }
           },
+          noticeText: (designer) => {
+            return "홈리에종과 진행하기로 한 서비스의 범위입니다.";
+          },
         },
         {
           property: "부분 공간",
@@ -1839,6 +1851,9 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             } catch (e) {
               console.log(e);
             }
+          },
+          noticeText: (designer) => {
+            return "부분 공간 홈스타일링이 가능한 지에 대한 여부입니다.";
           },
         },
         {
@@ -1907,6 +1922,9 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             } catch (e) {
               console.log(e);
             }
+          },
+          noticeText: (designer) => {
+            return "거주중인 고객님 현장의 홈스타일링이 가능한 지에 대한 여부입니다.";
           },
         },
         {
@@ -2033,6 +2051,9 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               console.log(e);
             }
           },
+          noticeText: (designer) => {
+            return "Auto CAD와 같은 프로그램을 이용한 정식 도면을 할 수 있는지에 대한 여부입니다.";
+          },
         },
         {
           property: "콜라주",
@@ -2101,12 +2122,24 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               console.log(e);
             }
           },
+          fourStepValue: (designer) => {
+            return [
+              "3D를 아예 할 수 없음",
+              "스케치업 모델링까지만 가능",
+              "스케치업 이상의 툴로 모델링, 텍스처, 라이팅 가능",
+              "실사 랜더링까지 완벽하게 가능",
+            ]
+          },
         },
       ],
       notice: [
         {
           title: "제안 방식",
           body: "제안을 나누어서 순차적으로 하는 지, 한번에 제안하는 지에 대한 분류입니다.",
+        },
+        {
+          title: "3D 레벨의 기준",
+          body: "하 - 스케치업 모델링까지만\n중 - 스케치업 이상의 툴로 모델링, 텍스처, 라이팅까지\n상 - 실사 랜더링까지 완벽하게",
         },
       ],
     },
@@ -2147,6 +2180,9 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             } catch (e) {
               console.log(e);
             }
+          },
+          noticeText: (designer) => {
+            return "직접 운영하는 시공사가 아닌, 주로 협엽하는 시공사가 있는 지에 대한 여부입니다.";
           },
         },
         {
@@ -2212,6 +2248,9 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             } catch (e) {
               console.log(e);
             }
+          },
+          noticeText: (designer) => {
+            return "협업하는 시공사가 아닌, " + designer.designer + " 디자이너님이 직접 운영하는 시공사가 있는 지에 대한 여부입니다.";
           },
         },
         {
@@ -2280,12 +2319,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
         },
       ],
-      notice: [
-        {
-          title: "시공 가능",
-          body: "각각 서비스마다 해당 서비스에 맞게 함께 작업이 가능한 시공사를 모두 선택해주세요!",
-        },
-      ],
+      notice: [],
     },
     {
       title: "제작 관련",
@@ -2325,6 +2359,17 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               console.log(e);
             }
           },
+          noticeText: (designer) => {
+            return "붙박이장, 냉장고장, 신발장, 주방 가구 등의 빌트인 가구를 제작할 수 있는 지에 대한 여부와 레벨입니다.";
+          },
+          fourStepValue: (designer) => {
+            return [
+              "빌트인 가구 아예 할 수 없음",
+              "대략적인 사이즈와 느낌과 재질 제시만 가능",
+              "구체적인 형태까지 그릴 수 있고 디테일을 수치로 제시 가능",
+              "완벽한 CAD 까지 만들어 직접 발주를 넣을 수 있음",
+            ]
+          },
         },
         {
           property: "디자인 가구",
@@ -2359,9 +2404,20 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               console.log(e);
             }
           },
+          noticeText: (designer) => {
+            return "붙박이장이 아닌 독립적인 가구를 디자인하고 제작할 수 있는 지에 대한 여부와 레벨입니다.";
+          },
+          fourStepValue: (designer) => {
+            return [
+              "디자인 가구 아예 할 수 없음",
+              "기성 제품을 카피하여 대략적인 모델링과 재질 지정까지 가능",
+              "직접 창작한 독립적 가구를 디자인하고 제작할 수 있음",
+              "독립적 가구를 넘어서 가구 원단까지 제작 가능",
+            ]
+          },
         },
         {
-          property: "패브릭 제작",
+          property: "제작 패브릭",
           admin: false,
           returnValue: (designer) => { return [
             "불가능",
@@ -2392,6 +2448,14 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             } catch (e) {
               console.log(e);
             }
+          },
+          fourStepValue: (designer) => {
+            return [
+              "제작 패브릭 아예 할 수 없음",
+              "제작 패브릭을 잘 하는 업체 연결할 수 있음",
+              "필요한 사이즈를 실측하여 직접 발주 가능",
+              "사이즈를 넘어 구체적인 원단과 패턴으로 창작 패브릭 가능",
+            ]
           },
         },
         {
@@ -2463,7 +2527,16 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
         },
       ],
-      notice: [],
+      notice: [
+        {
+          title: "빌트인 가구",
+          body: "붙박이장, 냉장고장, 신발장, 주방 가구 등의 빌트인 가구를 제작할 수 있는 지에 대한 여부와 레벨입니다.",
+        },
+        {
+          title: "디자인 가구",
+          body: "붙박이장이 아닌 독립적인 가구를 디자인하고 제작할 수 있는 지에 대한 여부와 레벨입니다.",
+        },
+      ],
     },
     {
       title: "개인 성향",
@@ -2842,9 +2915,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
   if (entireMode) {
     this.contents = contents;
   } else {
-    contents = contents.map((o) => { o.contents = o.contents.filter((j) => { return !j.admin }); return o; }).filter((o) => {
-      return !o.admin;
-    });
+    if (!adminMode) {
+      contents = contents.map((o) => { o.contents = o.contents.filter((j) => { return !j.admin }); return o; }).filter((o) => {
+        return !o.admin;
+      });
+    }
     this.contents = contents;
   }
   for (let i = 0; i < contents.length; i++) {
@@ -5383,11 +5458,12 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, removeByClass, getRealBox } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, removeByClass, getRealBox, variableArray, findByAttribute, fireEvent } = GeneralJs;
   const removePopupTargetClassName = "removePopupTargetClassName";
   const menuTargetClassName = "menuTargetClassName";
   const tendencyBarTargetClassName = "tendencyBarTargetClassName";
   const greenNoticeClassName = "greenNoticeClassName";
+  const fourStepClassName = "fourStepClassName";
   let blockHeight;
   let blockMarginBottom;
   let circleBoxWidth;
@@ -5423,6 +5499,14 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   let thisWidth;
   let thisBox;
   let noticeBetween;
+  let questionBetween;
+  let greenNoticeMinWidth;
+  let greenNoticeMaxWidth;
+  let greenNoticePaddingLeft;
+  let greenNoticePaddingTop;
+  let greenNoticePaddingBottom;
+  let greenNoticeSize, greenNoticeWeight, greenNoticeLineHeight;
+  let greenNoticeIndent;
 
   blockHeight = <%% 22, 21, 21, 19, (isIphone() ? 5.2 : 4.9) %%>;
   blockMarginBottom = <%% 16, 15, 15, 12, 2.5 %%>;
@@ -5468,6 +5552,20 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   blockCancelWidth = <%% 12, 12, 12, 12, 12 %%>;
   blockCancelTop = <%% 14, 14, 14, 14, 14 %%>;
   noticeBetween = <%% 7, 7, 7, 7, 7 %%>;
+  questionBetween = <%% 6, 6, 6, 6, 6 %%>;
+
+  greenNoticeIndent = <%% 12, 12, 12, 12, 12 %%>;
+
+  greenNoticeMinWidth = <%% 100, 100, 100, 100, 100 %%>;
+  greenNoticeMaxWidth = <%% 300, 300, 300, 300, 300 %%>;
+
+  greenNoticePaddingLeft = <%% 12, 12, 12, 12, 12 %%>;
+  greenNoticePaddingTop = <%% 6, 6, 6, 6, 6 %%>;
+  greenNoticePaddingBottom = <%% 8, 8, 8, 8, 8 %%>;
+
+  greenNoticeSize = <%% 12, 12, 12, 12, 12 %%>;
+  greenNoticeWeight = <%% 700, 700, 700, 700, 700 %%>;
+  greenNoticeLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
   plusBlockEvent = (mode, index = -1) => {
     return async function (e) {
@@ -5744,16 +5842,16 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
                 style: {
                   position: "absolute",
                   zIndex: String(zIndex),
-                  top: String(box.top + 12 + 5 + window.scrollY) + "px",
+                  top: String(box.top + greenNoticeIndent + circleWidth + window.scrollY) + "px",
                   left: String(box.left - 1) + "px",
-                  paddingLeft: String(12) + ea,
-                  paddingRight: String(12) + ea,
-                  paddingTop: String(7) + ea,
-                  paddingBottom: String(9) + ea,                  
+                  paddingLeft: String(greenNoticePaddingLeft) + ea,
+                  paddingRight: String(greenNoticePaddingLeft) + ea,
+                  paddingTop: String(greenNoticePaddingTop) + ea,
+                  paddingBottom: String(greenNoticePaddingBottom) + ea,                  
                   background: colorChip.gradientGreen,
                   borderRadius: String(5) + "px",
-                  "min-width": String(100) + ea,
-                  "max-width": String(240) + ea,
+                  "min-width": String(greenNoticeMinWidth) + ea,
+                  "max-width": String(greenNoticeMaxWidth) + ea,
                   animation: "fadeuplite 0.3s ease forwards",
                 },
                 children: [
@@ -5761,10 +5859,10 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
                     text: notice,
                     style: {
                       position: "relative",
-                      fontSize: String(12) + ea,
-                      fontWeight: String(700),
+                      fontSize: String(greenNoticeSize) + ea,
+                      fontWeight: String(greenNoticeWeight),
                       color: colorChip.white,
-                      lineHeight: String(1.5),
+                      lineHeight: String(greenNoticeLineHeight),
                     }
                   }
                 ]
@@ -5982,12 +6080,14 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
             color: colorChip.green,
           }
         })
-
       }
 
     } else if (Array.isArray(value) && value.every((s) => { return typeof s === "string" })) {
       valueBlock = createNode({
         mother: baseBlock,
+        attribute: {
+          width: withOut(firstWidth + circleBoxWidth, ea),
+        },
         style: {
           display: "inline-block",
           position: "relative",
@@ -6006,6 +6106,8 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
             x: String(x),
             z: String(z),
             toggle: instance.contents[x].contents[z].selectValue(designer).includes(num) ? "on" : "off",
+            width: "calc(100% / " + String(divideNumber) + ")",
+            index: String(num),
           },
           event: {
             selectstart: (e) => { e.preventDefault(); },
@@ -6015,6 +6117,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
               const toggle = this.getAttribute("toggle");
               const x = Number(this.getAttribute("x"));
               const z = Number(this.getAttribute("z"));
+              const index = Number(this.getAttribute("index"));
               let targets;
               let finalTargets;
               let finalNumbers;
@@ -6036,22 +6139,8 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
                 } else {
                   if (instance.contents[x].contents[z].multiple) {
                     self.style.color = colorChip.deactive;
-                  } else {
-                    targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-                    if (targets.length === 2) {
-                      for (let dom of targets) {
-                        if (dom === self) {
-                          dom.style.color = colorChip.deactive;
-                        } else {
-                          dom.style.color = colorChip.green;
-                          dom.setAttribute("toggle", "on");
-                        }
-                      }
-                    } else {
-                      self.style.color = colorChip.deactive;
-                    }
+                    self.setAttribute("toggle", "off");
                   }
-                  self.setAttribute("toggle", "off");
                 }
               } else {
                 if (instance.contents[x].contents[z].range === true) {
@@ -6081,6 +6170,19 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
                     }
                   }
                   self.setAttribute("toggle", "on");
+                  if (typeof instance.contents[x].contents[z].fourStepValue === "function") {
+                    for (let i of variableArray(4)) {
+                      if (i === index) {
+                        if (document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)) !== null) {
+                          document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)).style.background = colorChip.green;
+                        }
+                      } else {
+                        if (document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)) !== null) {
+                          document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)).style.background = colorChip.gray4;
+                        }
+                      }
+                    }
+                  }
                 }
               }
               
@@ -6105,6 +6207,108 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
         });
         num++;
       }
+
+      if (typeof obj.fourStepValue === "function") {
+
+        for (let s = 0; s < 4; s++) {
+          createNode({
+            mother: baseBlock,
+            attribute: {
+              x: String(x),
+              z: String(z),
+              index: String(s),
+            },
+            event: {
+              click: function (e) {
+                const zIndex = 4;
+                const x = Number(this.getAttribute("x"));
+                const z = Number(this.getAttribute("z"));
+                const index = Number(this.getAttribute("index"));
+                const box = this.getBoundingClientRect();
+                const notice = instance.contents[x].contents[z].fourStepValue(designer)[index];
+                let cancelBack, greenPrompt;
+                
+                cancelBack = createNode({
+                  mother: totalContents,
+                  class: [ greenNoticeClassName ],
+                  event: (e) => { removeByClass(greenNoticeClassName); },
+                  style: {
+                    position: "fixed",
+                    zIndex: String(zIndex),
+                    top: String(0),
+                    left: String(0),
+                    width: withOut(0, ea),
+                    height: withOut(0, ea),
+                    background: "transparent",
+                  }
+                });
+  
+                greenPrompt = createNode({
+                  mother: totalContents,
+                  class: [ greenNoticeClassName ],
+                  style: {
+                    position: "absolute",
+                    zIndex: String(zIndex),
+                    top: String(box.top + greenNoticeIndent + circleWidth + window.scrollY) + "px",
+                    left: String(box.left - 1) + "px",
+                    paddingLeft: String(greenNoticePaddingLeft) + ea,
+                    paddingRight: String(greenNoticePaddingLeft) + ea,
+                    paddingTop: String(greenNoticePaddingTop) + ea,
+                    paddingBottom: String(greenNoticePaddingBottom) + ea,                  
+                    background: colorChip.gradientGreen,
+                    borderRadius: String(5) + "px",
+                    "min-width": String(greenNoticeMinWidth) + ea,
+                    "max-width": String(greenNoticeMaxWidth) + ea,
+                    animation: "fadeuplite 0.3s ease forwards",
+                  },
+                  children: [
+                    {
+                      text: notice,
+                      style: {
+                        position: "relative",
+                        fontSize: String(greenNoticeSize) + ea,
+                        fontWeight: String(greenNoticeWeight),
+                        color: colorChip.white,
+                        lineHeight: String(greenNoticeLineHeight),
+                      }
+                    }
+                  ]
+                });
+  
+                fireEvent(findByAttribute(document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)), "index", String(index)), "click");
+              }
+            },
+            class: [ fourStepClassName + String(x) + String(z) + String(s) ],
+            style: {
+              display: "inline-flex",
+              position: "absolute",
+              background: instance.contents[x].contents[z].selectValue(designer).includes(s) ? colorChip.green : colorChip.gray4,
+              width: String(noticeCircleWidth) + ea,
+              height: String(noticeCircleWidth) + ea,
+              borderRadius: String(noticeCircleWidth) + ea,
+              top: String(noticeCircleTop) + ea,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+              left: String(firstWidth + circleBoxWidth + ((valueBlock.getBoundingClientRect().width / divideNumber) * s) + getRealBox(valueBlock.children[s]).width + questionBetween) + ea,
+            },
+            child: {
+              text: "?",
+              style: {
+                position: "relative",
+                fontSize: String(questionSize) + ea,
+                fontWeight: String(questionWeight),
+                top: String(questionTextTop) + ea,
+                color: colorChip.white,
+                fontFamily: "graphik",
+              }
+            }
+          })
+        }
+
+      }
+
 
     } else if (Array.isArray(value)) {
 
@@ -7349,6 +7553,7 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
     const entireMode = (getObj.entire === "true");
     const normalMode = (entireMode && getObj.normal === "true");
+    const adminMode = (getObj.admin === "true");
     let cliid, clients, client;
     let proid, projects, project;
     let whereQuery;
@@ -7438,6 +7643,7 @@ DesignerAboutJs.prototype.launching = async function (loading) {
 
     this.entireMode = entireMode;
     this.normalMode = normalMode;
+    this.adminMode = adminMode;
 
     document.body.addEventListener("mouseup", (e) => {
       instance.isMouseDown = false;
