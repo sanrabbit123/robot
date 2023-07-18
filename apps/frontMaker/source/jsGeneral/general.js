@@ -8052,7 +8052,7 @@ GeneralJs.fireEvent = function (dom, eventName) {
   }
 }
 
-GeneralJs.getRealBox = (dom, original = "attribute") => {
+GeneralJs.getRealBox = function (dom, original = "attribute") {
   let box;
   dom.style.display = "inline-block";
   dom.style.position = "relative";
@@ -8088,4 +8088,4 @@ GeneralJs.getRealBox = (dom, original = "attribute") => {
     }
   }
   return box;
-}
+};
