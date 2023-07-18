@@ -180,7 +180,7 @@ ContentsJs.prototype.spreadContents = function (search = null) {
 ContentsJs.prototype.whitePopupEvent = function (conid) {
   const instance = this;
   const { ea, totalMother, belowHeight, contentsArr, clients, designers, projects, whitePopupClassName } = this;
-  const { createNode, withOut, colorChip, ajaxJson, setQueue, serviceParsing, cleanChildren } = GeneralJs;
+  const { createNode, withOut, colorChip, ajaxJson, setQueue, serviceParsing, cleanChildren, isMac } = GeneralJs;
   const photoChar = 't';
   const blank = "&nbsp;&nbsp;/&nbsp;&nbsp;";
   const serviceName = serviceParsing().name;
@@ -476,6 +476,58 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
         overflow: "scroll",
       }
     });
+
+    createNode({
+      mother: rightTong,
+      attribute: {
+        pid,
+        conid,
+      },
+      event: {
+        click: async function (e) {
+          try {
+            const pid = this.getAttribute("pid");
+            const conid = this.getAttribute("conid");
+            let whereQuery, updateQuery;
+            
+            whereQuery = { conid };
+            updateQuery = {};
+            updateQuery.complete = true;
+            updateQuery.date = new Date();
+
+            await ajaxJson({ mode: "update", whereQuery, updateQuery }, BACKHOST + "/updateContentsStatus");
+            instance.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus");
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      style: {
+        top: String(8) + ea,
+        right: String(0),
+        width: String(108) + ea,
+        height: String(30) + ea,
+        display: "inline-flex",
+        position: "absolute",
+        background: colorChip.gradientGreen,
+        borderRadius: String(5) + "px",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      child: {
+        text: "스타일 체크 완료",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          top: String(isMac() ? -1 : 1) + ea,
+          fontSize: String(13) + ea,
+          fontWeight: String(700),
+          color: colorChip.white,
+        }
+      }
+    })
 
     createNode({
       mother: rightTong,
@@ -966,6 +1018,7 @@ ContentsJs.prototype.launching = async function () {
     const clients = await ajaxJson({ noFlat: true, whereQuery: { $or: projects.map((obj) => { return { cliid: obj.cliid } }) } }, "/getClients", { equal: true });
     const designers = await ajaxJson({ noFlat: true, whereQuery: { $or: contentsArr.map((obj) => { return { desid: obj.desid } }) } }, "/getDesigners", { equal: true });
 
+    this.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus");
     this.contentsArr = new SearchArray(contentsArr);
     this.clients = new SearchArray(clients);
     this.projects = new SearchArray(projects);

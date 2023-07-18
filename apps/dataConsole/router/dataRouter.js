@@ -8290,6 +8290,55 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_updateContentsStatus = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, messageSend, dateToString, stringToDate } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateContentsStatus" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { mode } = equalJson(req.body);
+      const collection = "contentsStatus";
+      let whereQuery, updateQuery;
+      let rows;
+      let resultObj;
+
+      if (mode === "get") {
+        ({ whereQuery } = equalJson(req.body));
+        rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+        resultObj = rows;
+
+      } else if (mode === "update") {
+        ({ whereQuery, updateQuery } = equalJson(req.body));
+        await back.mongoRead(collection, [ whereQuery, updateQuery ], { selfMongo });
+        resultObj = { message: "done" };
+
+      } else {
+        throw new Error("invalid mode");
+      }
+
+      res.send(JSON.stringify(resultObj));
+
+    } catch (e) {
+      await logger.error("Console 서버 문제 생김 (rou_post_updateContentsStatus): " + e.message);
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 DataRouter.policy = function () {
   let text = '';
   text += "<b>개인정보 수집 및 이용 동의서</b><br><br>주식회사 홈리에종은 아래의 목적으로 수집, 이용하며 고객님의 소중한 개인정보를 보호함으로써 안심하고 법률서비스를 이용할 수 있도록 최선을 다합니다.<br><br>";

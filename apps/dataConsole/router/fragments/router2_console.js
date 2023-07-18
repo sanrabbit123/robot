@@ -7454,3 +7454,52 @@ DataRouter.prototype.rou_post_dailySalesReport = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_updateContentsStatus = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, messageSend, dateToString, stringToDate } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateContentsStatus" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { mode } = equalJson(req.body);
+      const collection = "contentsStatus";
+      let whereQuery, updateQuery;
+      let rows;
+      let resultObj;
+
+      if (mode === "get") {
+        ({ whereQuery } = equalJson(req.body));
+        rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+        resultObj = rows;
+
+      } else if (mode === "update") {
+        ({ whereQuery, updateQuery } = equalJson(req.body));
+        await back.mongoRead(collection, [ whereQuery, updateQuery ], { selfMongo });
+        resultObj = { message: "done" };
+
+      } else {
+        throw new Error("invalid mode");
+      }
+
+      res.send(JSON.stringify(resultObj));
+
+    } catch (e) {
+      await logger.error("Console 서버 문제 생김 (rou_post_updateContentsStatus): " + e.message);
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
