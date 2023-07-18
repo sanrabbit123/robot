@@ -1202,11 +1202,11 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
 
           const { phone, amount } = target;
 
-          // messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
+          messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
 
-          // await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/webHookVAccount", target.accountInfo, {
-          //   headers: { "Content-Type": "application/json" }
-          // });
+          await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/webHookVAccount", target.accountInfo, {
+            headers: { "Content-Type": "application/json" }
+          });
           logger.log("현금 영수증 관련 핸드폰 번호 감지 => " + phone).catch((e) => { console.log(e); });
           if (/^010/.test(phone)) {
             await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(3000) + "/issueCashReceipt", { amount: Number(amount), phone }, { headers: { "Content-Type": "application/json" } });

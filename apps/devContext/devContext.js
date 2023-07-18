@@ -6440,15 +6440,15 @@ DevContext.prototype.launching = async function () {
     // }));
 
 
-    // send sms
+    // // send sms
     // const name = "김재황";
     // const amount = 330000;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
     // });
-    await bill.parsingCashReceipt();
 
+    
     // bill passive sync
     // console.log(await bill.passiveSync("b219g_aa02s", "김수진", 1, 330000, new Date(2021, 8, 15, 15, 0, 0), "카드(삼성)", "이니시스"));
 
