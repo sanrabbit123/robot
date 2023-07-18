@@ -8313,6 +8313,14 @@ DataRouter.prototype.rou_post_updateContentsStatus = function () {
       let whereQuery, updateQuery;
       let rows;
       let resultObj;
+      let dummy;
+
+      dummy = {
+        conid: "",
+        pid: "",
+        complete: false,
+        date: new Date(),
+      };
 
       if (mode === "get") {
         ({ whereQuery } = equalJson(req.body));
@@ -8321,7 +8329,14 @@ DataRouter.prototype.rou_post_updateContentsStatus = function () {
 
       } else if (mode === "update") {
         ({ whereQuery, updateQuery } = equalJson(req.body));
-        await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+
+        rows = await back.mongoRead(collection, whereQuery, { selfMongo });
+        if (rows.length === 0) {
+          await back.mongoCreate(collection, equalJson(JSON.stringify(dummy)), { selfMongo });
+          await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+        } else {
+          await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+        }
         resultObj = { message: "done" };
 
       } else {

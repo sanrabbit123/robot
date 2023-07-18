@@ -492,6 +492,8 @@ ContentsJs.prototype.whitePopupEvent = function (conid) {
             
             whereQuery = { conid };
             updateQuery = {};
+            updateQuery.conid = conid;
+            updateQuery.pid = pid;
             updateQuery.complete = true;
             updateQuery.date = new Date();
 
@@ -1021,6 +1023,9 @@ ContentsJs.prototype.launching = async function () {
     const designers = await ajaxJson({ noFlat: true, whereQuery: { $or: contentsArr.map((obj) => { return { desid: obj.desid } }) } }, "/getDesigners", { equal: true });
 
     this.contentsStatus = await ajaxJson({ mode: "get", whereQuery: {} }, BACKHOST + "/updateContentsStatus");
+
+    console.log(this.contentsStatus)
+
     this.contentsArr = new SearchArray(contentsArr);
     this.clients = new SearchArray(clients);
     this.projects = new SearchArray(projects);
