@@ -87,7 +87,7 @@ UserJs.prototype.baseMaker = function () {
               phone: user.phone,
               option: {
                 client: user.name,
-                host: BACKHOST.slice(8, -5),
+                host: FRONTHOST.slice(8).replace(/\/$/, ''),
                 path: "miniProposal",
                 useid: useid,
               }
@@ -283,7 +283,7 @@ UserJs.prototype.baseMaker = function () {
                       option: {
                         designer: name,
                         client: user.name,
-                        host: BACKHOST.slice(8, -5),
+                        host: FRONTHOST.slice(8).replace(/\/$/, ''),
                         path: "miniRequest",
                         useid: useid,
                       }

@@ -5493,7 +5493,7 @@ DataRouter.prototype.rou_post_userSubmit = function () {
       // alimtalk
       await kakao.sendTalk("miniConsulting", name, phone, {
         client: name,
-        host: instance.address.backinfo.host,
+        host: instance.address.frontinfo.host,
         path: "miniGuide",
         useid: useid,
       });

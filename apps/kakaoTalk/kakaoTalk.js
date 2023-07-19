@@ -2208,8 +2208,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       }
     },
     "miniConsulting": {
-      "name": "미니 신청 완료",
-      "id": "TJ_0095",
+      "name": "미니 신청 완료 수정",
+      "id": "TO_1100",
       "needs": [
         "client",
         "host",
@@ -2218,8 +2218,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       ],
       "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"useid\", to: obj.useid },\n        ];\n      }",
       "raw": {
-        "templtContent": "안녕하세요 #{client} 고객님,\n홈리에종 Mini 서비스 결제가 완료되었습니다. \n\n담당 디자이너가 #{client}님의 정보를 확인하는 동안 다음 과정을 진행해 주시면, 디자이너와의 상담이 시작됩니다! \n\n1. 우리집 직접 실측하기 \n- 스타일링이 필요한 공간의 가로 * 세로, 창문, 사용할 가구의 사이즈를 가이드에 따라 실측해 주세요.\n\n2. 내가 원하는 컨셉 준비하기\n- 디자이너와의 상담 전, 내가 원하는 무드를 정확하게 알고있다면 좀 더 효율적으로 미팅 시간을 활용할 수 있어요! \n- 레퍼런스 이미지를 미리 준비해둔다면 훨씬 소통이 매끄럽겠죠?\n\n3. 상세 정보와 현장 사진 보내기\n- 1, 2번을 마치셨다면 실측 가이드 페이지를 통해 상세 정보와 현장 사진, 레퍼런스 이미지를 보내주세요!\n\n* 상세 정보 전송 및 실측 가이드 페이지\nhttps://#{host}/middle/#{path}?useid=#{useid}",
-        "templtName": "미니 신청 완료",
+        "templtContent": "안녕하세요 #{client} 고객님,\n홈리에종 Mini 서비스 결제가 완료되었습니다. \n\n담당 디자이너가 #{client}님의 정보를 확인하는 동안 다음 과정을 진행해 주시면, 디자이너와의 상담이 시작됩니다! \n\n1. 우리집 직접 실측하기 \n- 스타일링이 필요한 공간의 가로 * 세로, 창문, 사용할 가구의 사이즈를 가이드에 따라 실측해 주세요.\n\n2. 내가 원하는 컨셉 준비하기\n- 디자이너와의 상담 전, 내가 원하는 무드를 정확하게 알고있다면 좀 더 효율적으로 미팅 시간을 활용할 수 있어요! \n- 레퍼런스 이미지를 미리 준비해둔다면 훨씬 소통이 매끄럽겠죠?\n\n3. 상세 정보와 현장 사진 보내기\n- 1, 2번을 마치셨다면 실측 가이드 페이지를 통해 상세 정보와 현장 사진, 레퍼런스 이미지를 보내주세요!\n\n* 상세 정보 전송 및 실측 가이드 페이지\nhttps://#{host}/#{path}.php?useid=#{useid}",
+        "templtName": "미니 신청 완료 수정",
         "templateType": "BA",
         "templateEmType": "NONE",
         "templateExtra": "",
@@ -2231,18 +2231,28 @@ KakaoTalk.prototype.templateTong = function (target) {
         "block": "N",
         "dormant": "N",
         "securityFlag": "N",
-        "status": "A",
+        "status": "R",
         "inspStatus": "APR",
         "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
         "buttons": [],
-        "cdate": "2022-06-14 11:42:34",
-        "templtCode": "TJ_0095",
-        "comments": []
-      }
+        "cdate": "2023-07-18 17:43:58",
+        "templtCode": "TO_1100",
+        "comments": [
+          {
+            "cdate": "2023-07-19 14:01:51",
+            "name": "검수자",
+            "id": "2729204",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-07-19 14:01:51",
+            "status": "APR"
+          }
+        ]
+      },
     },
     "miniRequest": {
-      "name": "미니 디자인 요청 수정",
-      "id": "TJ_0147",
+      "name": "미니 디자인 요청 수정 수정",
+      "id": "TO_1104",
       "needs": [
         "designer",
         "client",
@@ -2252,8 +2262,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       ],
       "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"useid\", to: obj.useid },\n        ];\n      }",
       "raw": {
-        "templtContent": "안녕하세요 #{designer} 디자이너님, #{client} 고객님의 홈리에종 Mini 서비스 신규 프로젝트 진행을 알려드립니다!\n\n* 디자인 요청 페이지\nhttps://#{host}/middle/#{path}?useid=#{useid}\n\n#{client} 고객님이 필요한 공간을 실측해주시고, 원하는 컨셉에 대해 요청을 남기셨어요. 공간 사진과 고객의 요청사항을 꼼꼼히 비교하여 원활한 작업이 진행될 수 있도록 영업일 기준 2일 내로 고객님과 상담을 진행해 주세요!\n\n[TIP] 간혹 원하는 컨셉이 없거나 디자이너의 추천을 원하는 경우도 있기 때문에 디자이너님이 제안해주실 방향도 따로 준비해주신다면 원활하게 미팅을 진행하실 수 있을 거에요!\n\n혹시 고객님께서 실측 진행을 하지 않으셨다면, 직접 하실 수 있도록 요청해 주시고,\n실측 정보를 확인 한 기준 날짜로 제안서 작업 시작일임을 안내해 주세요!\n\n* 디자인 요청 페이지\nhttps://#{host}/middle/#{path}?useid=#{useid}",
-        "templtName": "미니 디자인 요청 수정",
+        "templtContent": "안녕하세요 #{designer} 디자이너님, #{client} 고객님의 홈리에종 Mini 서비스 신규 프로젝트 진행을 알려드립니다!\n\n* 디자인 요청 페이지\nhttps://#{host}/#{path}.php?useid=#{useid}\n\n#{client} 고객님이 필요한 공간을 실측해주시고, 원하는 컨셉에 대해 요청을 남기셨어요. 공간 사진과 고객의 요청사항을 꼼꼼히 비교하여 원활한 작업이 진행될 수 있도록 영업일 기준 2일 내로 고객님과 상담을 진행해 주세요!\n\n[TIP] 간혹 원하는 컨셉이 없거나 디자이너의 추천을 원하는 경우도 있기 때문에 디자이너님이 제안해주실 방향도 따로 준비해주신다면 원활하게 미팅을 진행하실 수 있을 거에요!\n\n혹시 고객님께서 실측 진행을 하지 않으셨다면, 직접 하실 수 있도록 요청해 주시고,\n실측 정보를 확인 한 기준 날짜로 제안서 작업 시작일임을 안내해 주세요!\n\n* 디자인 요청 페이지\nhttps://#{host}/#{path}.php?useid=#{useid}",
+        "templtName": "미니 디자인 요청 수정 수정",
         "templateType": "BA",
         "templateEmType": "NONE",
         "templateExtra": "",
@@ -2265,14 +2275,24 @@ KakaoTalk.prototype.templateTong = function (target) {
         "block": "N",
         "dormant": "N",
         "securityFlag": "N",
-        "status": "A",
+        "status": "R",
         "inspStatus": "APR",
         "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
         "buttons": [],
-        "cdate": "2022-06-14 15:23:43",
-        "templtCode": "TJ_0147",
-        "comments": []
-      }
+        "cdate": "2023-07-18 17:47:45",
+        "templtCode": "TO_1104",
+        "comments": [
+          {
+            "cdate": "2023-07-19 14:04:15",
+            "name": "검수자",
+            "id": "2729218",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2023-07-19 14:04:15",
+            "status": "APR"
+          }
+        ]
+      },
     },
     "miniFile": {
       "name": "미니 고객 파일 전송 완료",
@@ -2366,8 +2386,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       }
     },
     "miniProposal": {
-      "name": "미니 제안서 전송",
-      "id": "TJ_0109",
+      "name": "미니 제안서 전송 수정",
+      "id": "TO_1102",
       "needs": [
         "client",
         "host",
@@ -2376,41 +2396,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       ],
       "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"useid\", to: obj.useid },\n        ];\n      }",
       "raw": {
-        "templtContent": "안녕하세요, #{client}님! 디자인 제안서가 도착했어요. #{client}님 공간의 무드 체인지! 바로 시작해보세요!\n\n제안서 페이지를 오픈하여 내용을 확인해주시고, 시스템 내 리뷰창에 댓글을 남겨주세요. 확인 완료 댓글이 없는 경우, 페이지 오픈 기준 2일 내 자동으로 프로젝트가 종료됩니다.\n\n혹시 궁금한 점이 있다면 제안서 페이지 아래 부분에 위치한 댓글란에 확인 댓글과 함께 같이 문의를 남겨주세요.\n내용 확인 후, 1-2일 안으로 답변드리도록 하겠습니다!\n\n* 디자인 제안서\nhttps://#{host}/middle/#{path}?useid=#{useid}",
-        "templtName": "미니 제안서 전송",
-        "templateType": "BA",
-        "templateEmType": "NONE",
-        "templateExtra": "",
-        "templateAdvert": "",
-        "templtTitle": "",
-        "templtSubtitle": "",
-        "templtImageName": "",
-        "templtImageUrl": "",
-        "block": "N",
-        "dormant": "N",
-        "securityFlag": "N",
-        "status": "A",
-        "inspStatus": "APR",
-        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
-        "buttons": [],
-        "cdate": "2022-06-14 12:12:27",
-        "templtCode": "TJ_0109",
-        "comments": []
-      }
-    },
-    "miniComplete": {
-      "name": "미니 완료 고객",
-      "id": "TJ_0378",
-      "needs": [
-        "client",
-        "host",
-        "path",
-        "useid"
-      ],
-      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"useid\", to: obj.useid },\n        ];\n      }",
-      "raw": {
-        "templtContent": "안녕하세요 #{client}님!\n디자이너님과 진행한 홈리에종 Mini 서비스는 만족하셨나요?\n\n가구의 변경 없이 패브릭, 액자, 소품 등의 변화로도 공간의 무드를 변화시킬 수 있는 홈리에종의 Mini 서비스, 어떠셨나요?\n\n아래 공유해 드리는 고객 만족도 설문지를 통해 홈리에종이 더 나은 서비스를 제공할 수 있도록, 고객님들의 의견에 귀 기울이겠습니다. 솔직한 설문 답변을 부탁드릴게요!\n\n* 고객 만족도 설문지\nhttps://#{host}/middle/#{path}/?useid=#{useid}&reviewcard=true",
-        "templtName": "미니 완료 고객",
+        "templtContent": "안녕하세요, #{client}님! 디자인 제안서가 도착했어요. #{client}님 공간의 무드 체인지! 바로 시작해보세요!\n\n제안서 페이지를 오픈하여 내용을 확인해주시고, 시스템 내 리뷰창에 댓글을 남겨주세요. 확인 완료 댓글이 없는 경우, 페이지 오픈 기준 2일 내 자동으로 프로젝트가 종료됩니다.\n\n혹시 궁금한 점이 있다면 제안서 페이지 아래 부분에 위치한 댓글란에 확인 댓글과 함께 같이 문의를 남겨주세요.\n내용 확인 후, 1-2일 안으로 답변드리도록 하겠습니다!\n\n* 디자인 제안서\nhttps://#{host}/#{path}.php?useid=#{useid}",
+        "templtName": "미니 제안서 전송 수정",
         "templateType": "BA",
         "templateEmType": "NONE",
         "templateExtra": "",
@@ -2426,9 +2413,62 @@ KakaoTalk.prototype.templateTong = function (target) {
         "inspStatus": "APR",
         "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
         "buttons": [],
-        "cdate": "2022-06-15 15:21:38",
-        "templtCode": "TJ_0378",
-        "comments": []
+        "cdate": "2023-07-18 17:46:40",
+        "templtCode": "TO_1102",
+        "comments": [
+          {
+            "cdate": "2023-07-19 14:02:19",
+            "name": "검수자",
+            "id": "2729206",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2023-07-19 14:02:19",
+            "status": "APR"
+          }
+        ]
+      }
+    },
+    "miniComplete": {
+      "name": "미니 완료 고객 수정",
+      "id": "TO_1105",
+      "needs": [
+        "client",
+        "host",
+        "path",
+        "useid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"useid\", to: obj.useid },\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요 #{client}님!\n디자이너님과 진행한 홈리에종 Mini 서비스는 만족하셨나요?\n\n가구의 변경 없이 패브릭, 액자, 소품 등의 변화로도 공간의 무드를 변화시킬 수 있는 홈리에종의 Mini 서비스, 어떠셨나요?\n\n아래 공유해 드리는 고객 만족도 설문지를 통해 홈리에종이 더 나은 서비스를 제공할 수 있도록, 고객님들의 의견에 귀 기울이겠습니다. 솔직한 설문 답변을 부탁드릴게요!\n\n* 고객 만족도 설문지\nhttps://#{host}/#{path}.php/?useid=#{useid}&reviewcard=true",
+        "templtName": "미니 완료 고객 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-07-18 17:48:42",
+        "templtCode": "TO_1105",
+        "comments": [
+          {
+            "cdate": "2023-07-19 14:04:21",
+            "name": "검수자",
+            "id": "2729219",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-07-19 14:04:21",
+            "status": "APR"
+          }
+        ]
       }
     },
     "projectDetail": {
