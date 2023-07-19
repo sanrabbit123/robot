@@ -8379,8 +8379,7 @@ DataRouter.prototype.rou_post_proposalGeneration = function () {
       const selfMongo = instance.mongo;
       const collection = "project";
       const projects = await back.mongoPick(collection, [ { "proposal.detail": { $elemMatch: { desid } } }, { proid: 1, desid: 1, proposal: 1 } ], { selfMongo });
-      let targetProposals, targetProposal;
-      let length;
+      let targetProposals;
 
       projects.sort((a, b) => { return b.proposal.date.valueOf() - a.proposal.date.valueOf() })
       targetProposals = projects.map((p) => { return p.proposal.detail }).flat().filter((o) => { return o.desid === desid });

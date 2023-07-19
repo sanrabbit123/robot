@@ -4492,6 +4492,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
         }
         updateQuery["responses"] = equalJson(JSON.stringify(newResponses));
         await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+        // ???? 1회 출장 비용을 홈리에종이 부담하는 건지, 디자이너 정산 금액에서 까는건지..
         await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC, feeObject: newDesignerFeeObject });
         await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC, feeObject: newDesignerFeeObject });
 
@@ -4595,6 +4596,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
           updateQuery = {};
           updateQuery["responses"] = equalJson(JSON.stringify(newResponses));
           await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+          // ???? 1회 출장 비용을 홈리에종이 부담하는 건지, 디자이너 정산 금액에서 까는건지..
           await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC, feeObject: newDesignerFeeObject });
           await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC, feeObject: newDesignerFeeObject });
 

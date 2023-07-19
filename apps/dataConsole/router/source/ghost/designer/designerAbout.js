@@ -1339,6 +1339,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             return [ value.findIndex((n) => { return n === 1 }) ];
           },
           multiple: false,
+          divideNumber: 3,
           updateValue: async (raw, columns, designer) => {
             try {
               let text, whereQuery, updateQuery;
@@ -3012,8 +3013,8 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index, 
   let grayPadding;
   let grayInnerPadding, grayInnerPaddingTop;
 
-  grayZoneWidth = <%% 250, 200, 160, 140, 32 %%>;
-  grayZoneContentsWidth = <%% 200, 160, 140, 120, 30 %%>;
+  grayZoneWidth = <%% 250, 0, 0, 0, 32 %%>;
+  grayZoneContentsWidth = <%% 200, 0, 0, 0, 30 %%>;
   grayPadding = <%% 52, 52, 44, 36, 4.7 %%>;
   grayInnerPadding = <%% 22, 22, 22, 22, 20 %%>;
   if (index === 0) {
@@ -3024,7 +3025,7 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index, 
 
   titleWidth = <%% 200, 160, 140, 120, 30 %%>;
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
-  titleFontSize = <%% 18, 18, 16, 15, 4 %%>;
+  titleFontSize = <%% 18, 17, 16, 15, 4 %%>;
 
   numberRight = <%% 12, 12, 12, 12, 2 %%>;
   numberSize = <%% 18, 18, 18, 16, 3 %%>;
@@ -3051,7 +3052,7 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index, 
     children: [
       {
         style: {
-          display: desktop ? "inline-flex" : "flex",
+          display: desktop ? (media[0] ? "inline-flex" : "none") : "flex",
           position: "relative",
           width: desktop ? String(grayZoneWidth) + ea : withOut(mobileBasicMargin * 2, ea),
           verticalAlign: "top",
@@ -3453,6 +3454,8 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   const { ea, baseTong, media, totalContents, naviHeight, entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent, equalJson, stringToLink, linkToString, setThrottle, setQueue, sleep, removeByClass } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainContents = [
@@ -3531,6 +3534,14 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   let minimumX, maximumX;
   let rangeY, rangeX;
   let profileUploadCancelEvent;
+  let exampleLength;
+  let uploadButtonBottom;
+  let uploadButtonWidth;
+  let uploadButtonHeight;
+  let uploadButtonSize;
+  let uploadButtonWeight;
+  let uploadButtonTextTop;
+  let blockMarginTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -3544,14 +3555,14 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
     whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;  
   }
 
-  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  titleFontSize = <%% 21, 21, 18, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 10 : 8), 0 %%>;
-  contentsAreaPaddingTop = <%% 20, 20, 20, 20, 7 %%>;
+  titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 0 %%>;
+  contentsAreaPaddingTop = <%% 20, 20, 15, 14, 7 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
@@ -3559,7 +3570,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
   secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
 
-  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  contentsWordingSize = <%% 14.5, 14, 13, 12, 3.5 %%>;
   contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
 
   contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
@@ -3595,37 +3606,48 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
 
   mobileContentsWordingSize = 3.2;
 
-  profileWidth = <%% 239, 239, 239, 239, 239 %%>;
-  profileMarginLeft = <%% 55, 55, 55, 55, 55 %%>;
+  profileWidth = <%% 239, 200, 200, 210, 20 %%>;
+  profileMarginLeft = <%% 55, 10, 10, 20, 5 %%>;
 
   profileUploadButtonRight = <%% -2, -2, -2, -2, -2 %%>;
-  profileUploadButtonWidth = <%% 46, 46, 46, 46, 46 %%>;
-  profileUploadButtonHeight = <%% 20, 20, 20, 20, 20 %%>;
+  profileUploadButtonWidth = <%% 46, 42, 42, 42, 4 %%>;
+  profileUploadButtonHeight = <%% 20, 18, 18, 18, 2 %%>;
 
   profileUploadButtonSize = <%% 10, 10, 10, 10, 10 %%>;
   profileUploadButtonWeight = <%% 500, 500, 500, 500, 500 %%>;
   profileUploadButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
-  exampleZoneWidth = <%% 500, 500, 500, 500, 500 %%>;
+  exampleZoneWidth = <%% 500, 276, 276, 276, 50 %%>;
   if (normalMode) {
     exampleZoneMarginLeft = 24;
   } else {
-    exampleZoneMarginLeft = <%% 72, 72, 72, 72, 72 %%>;
+    exampleZoneMarginLeft = <%% 72, 54, 48, 0, 30 %%>;
   }
   exampleUpDownBetween = <%% 18, 18, 18, 18, 18 %%>;
 
-  exampleTextWidth = <%% 70, 70, 70, 70, 66 %%>;
-  exampleTextSize = <%% 14, 14, 14, 14, 14 %%>;
+  exampleTextWidth = <%% 70, 54, 54, 54, 66 %%>;
+  exampleTextSize = <%% 14, 11, 11, 11, 14 %%>;
   exampleTextWeight = <%% 700, 700, 700, 700, 700 %%>;
-  exampleTextTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  exampleTextTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1) %%>;
   exampleTextVisualLeft = <%% -2, -2, -2, -2, -2 %%>;
 
-  exampleFactorWidth = <%% 110, 110, 110, 110, 110 %%>;
-  exampleFactorMargin = <%% 30, 30, 30, 30, 30 %%>;
+  exampleFactorWidth = <%% 110, 91, 91, 96, 91 %%>;
+  exampleFactorMargin = <%% 30, 20, 20, 26, 20 %%>;
 
-  goodBadSize = <%% 12, 12, 12, 12, 12 %%>;
+  goodBadSize = <%% 12, 11, 11, 10, 12 %%>;
   goodBadWeight = <%% 500, 500, 500, 500, 500 %%>;
   goodBadRight = <%% -14, -14, -14, -14, -14 %%>;
+
+  exampleLength = <%% 3, 2, 2, 3, 2 %%>;
+
+  uploadButtonBottom = <%% 2, 2, 2, 2, 2 %%>;
+  uploadButtonWidth = <%% 56, 56, 50, 50, 56 %%>;
+  uploadButtonHeight = <%% 24, 24, 21, 21, 24 %%>;
+  uploadButtonSize = <%% 12, 12, 11, 10, 12 %%>;
+  uploadButtonWeight = <%% 500, 500, 500, 500, 500 %%>;
+  uploadButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
+
+  blockMarginTop = <%% 0, 0, 0, 30, 4 %%>;
 
   fixImageWidth = window.innerHeight < 900 ? 700 : 800;
   fixImageHeight = window.innerHeight - 400;
@@ -4004,10 +4026,10 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   photoZone = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-flex",
+      display: big ? "inline-flex" : "flex",
       flexDirection: "row",
       position: "relative",
-      width: String(profileWidth + exampleZoneWidth + profileMarginLeft + exampleZoneMarginLeft) + ea,
+      width: big ? String(profileWidth + exampleZoneWidth + profileMarginLeft + exampleZoneMarginLeft) + ea : withOut(0, ea),
       height: String(profileWidth) + ea,
     }
   });
@@ -4100,7 +4122,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
       display: "inline-flex",
       flexDirection: "column",
       position: "relative",
-      width: String(exampleZoneWidth) + ea,
+      width: big ? String(exampleZoneWidth) + ea : withOut(profileWidth + profileMarginLeft, ea),
       height: withOut(0, ea),
     },
     children: [
@@ -4128,7 +4150,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   exampleUpZone = exampleZone.children[0];
   exampleDownZone = exampleZone.children[1];
 
-  for (let i = -1; i < 3; i++) {
+  for (let i = -1; i < exampleLength; i++) {
     if (i < 0) {
       createNode({
         mother: exampleUpZone,
@@ -4244,10 +4266,11 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   block = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-block",
+      display: big ? "inline-block" : "block",
       position: "relative",
-      width: withOut(profileWidth + exampleZoneWidth + profileMarginLeft + exampleZoneMarginLeft, ea),
+      width: big ? withOut(profileWidth + exampleZoneWidth + profileMarginLeft + exampleZoneMarginLeft, ea) : "",
       verticalAlign: "bottom",
+      marginTop: big ? "" : String(blockMarginTop) + ea,
     },
     children: [
       {
@@ -4281,10 +4304,10 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
             style: {
               display: "flex",
               position: "absolute",
-              bottom: String(2) + ea,
+              bottom: String(uploadButtonBottom) + ea,
               right: String(0) + ea,
-              width: String(56) + ea,
-              height: String(24) + ea,
+              width: String(uploadButtonWidth) + ea,
+              height: String(uploadButtonHeight) + ea,
               borderRadius: String(5) + "px",
               background: colorChip.green,
               justifyContent: "center",
@@ -4296,12 +4319,12 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
               style: {
                 display: "inline-block",
                 position: "relative",
-                fontSize: String(12) + ea,
-                fontWeight: String(500),
+                fontSize: String(uploadButtonSize) + ea,
+                fontWeight: String(uploadButtonWeight),
                 fontFamily: "graphik",
                 fontStyle: "italic",
                 color: colorChip.white,
-                top: String(-2) + ea,
+                top: String(uploadButtonTextTop) + ea,
               }
             }
           }
@@ -4381,12 +4404,14 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   const { ea, baseTong, media, totalContents, entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, ajaxForm, equalJson, stringToLink } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainContents = [
     {
       contents: [
-        "디자이너님의 대표 페이퍼 워크 작업이나 작업하고 있는 사진을 업로드 해주세요. 4장의 작업 사진은 추천서에 노출되어 고객님께 어필하는 중요 포인트가 됩니다. 자신을 어필할 수 있는 대표적인 4장의 사진을 꼭 올려주세요!"
+        "디자이너님의 대표 페이퍼 워크 작업이나 작업하고 있는 사진을 업로드 해주세요. 4장의 작업 사진은 추천서에 노출되어 고객님께 어필하는 중요 포인트가 됩니다." + ((media[0] || media[1] || small) ? " 자신을 어필할 수 있는 대표적인 4장의 사진을 꼭 올려주세요!" : "")
       ],
     },
   ];
@@ -4448,6 +4473,13 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   let exampleTextLeft;
   let worksFileInputEvent;
   let worksFileChainingInputEvent;
+  let uploadButtonBottom;
+  let uploadButtonWidth;
+  let uploadButtonHeight;
+  let uploadButtonSize;
+  let uploadButtonWeight;
+  let uploadButtonTextTop;
+  let blockMarginTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -4461,14 +4493,14 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
     whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
   }
 
-  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  titleFontSize = <%% 21, 21, 18, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 10 : 8), 0 %%>;
-  contentsAreaPaddingTop = <%% 20, 20, 20, 20, 7 %%>;
+  titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 0 %%>;
+  contentsAreaPaddingTop = <%% 20, 20, 15, 14, 7 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
@@ -4476,7 +4508,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
   secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
 
-  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  contentsWordingSize = <%% 14.5, 14, 13, 12, 3.5 %%>;
   contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
 
   contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
@@ -4512,7 +4544,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
 
   mobileContentsWordingSize = 3.2;
 
-  profileWidth = <%% 259, 259, 259, 259, 259 %%>;
+  profileWidth = <%% 259, 259, 259, 240, 259 %%>;
   profileMarginLeft = <%% 24, 24, 24, 24, 24 %%>;
 
   profileUploadButtonRight = <%% -2, -2, -2, -2, -2 %%>;
@@ -4523,28 +4555,28 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   profileUploadButtonWeight = <%% 500, 500, 500, 500, 500 %%>;
   profileUploadButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
 
-  exampleZoneWidth = <%% 290, 290, 290, 290, 290 %%>;
+  exampleZoneWidth = <%% 290, 0, 0, 232, 29 %%>;
   if (normalMode) {
     exampleZoneMarginLeft = 24;
   } else {
-    exampleZoneMarginLeft = <%% 72, 72, 72, 72, 72 %%>;
+    exampleZoneMarginLeft = <%% 72, 36, 30, 30, 30 %%>;
   }
   exampleUpDownBetween = <%% 18, 18, 18, 18, 18 %%>;
 
   exampleTextWidth = <%% 70, 70, 70, 70, 66 %%>;
-  exampleTextSize = <%% 14, 14, 14, 14, 14 %%>;
+  exampleTextSize = <%% 14, 14, 14, 12, 3 %%>;
   exampleTextWeight = <%% 700, 700, 700, 700, 700 %%>;
   exampleTextTextTop = <%% 0, 0, 0, 0, 0 %%>;
   exampleTextLeft = <%% -48, -48, -48, -48, -48 %%>;
 
-  exampleFactorWidth = <%% 190, 190, 190, 190, 190 %%>;
+  exampleFactorWidth = <%% 190, 190, 190, 156, 190 %%>;
   exampleFactorMargin = <%% 28, 28, 28, 28, 28 %%>;
 
   goodBadSize = <%% 12, 12, 12, 12, 12 %%>;
   goodBadWeight = <%% 500, 500, 500, 500, 500 %%>;
   goodBadRight = <%% -15, -15, -15, -15, -15 %%>;
 
-  blankZoneWidth = 770 - exampleZoneWidth;
+  blankZoneWidth = <%% 770 - exampleZoneWidth, 480, 480, 410, 0 %%>;
   blankZoneInnerBetween = 6;
 
   blankNumberSize = 36;
@@ -4552,6 +4584,15 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   blankNumberTop = -2;
 
   factorWidth = 272;
+
+  uploadButtonBottom = <%% 2, 2, 2, 2, 2 %%>;
+  uploadButtonWidth = <%% 56, 56, 50, 50, 56 %%>;
+  uploadButtonHeight = <%% 24, 24, 21, 21, 24 %%>;
+  uploadButtonSize = <%% 12, 12, 11, 10, 12 %%>;
+  uploadButtonWeight = <%% 500, 500, 500, 500, 500 %%>;
+  uploadButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
+
+  blockMarginTop = <%% 0, 0, 0, 30, 4 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -4677,10 +4718,10 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   photoZone = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-flex",
+      display: big ? "inline-flex" : "flex",
       flexDirection: "row",
       position: "relative",
-      width: String(blankZoneWidth + exampleZoneWidth + profileMarginLeft + exampleZoneMarginLeft) + ea,
+      width: big ? String(blankZoneWidth + exampleZoneWidth + profileMarginLeft + exampleZoneMarginLeft) + ea : withOut(0, ea),
       height: String(profileWidth) + ea,
     }
   });
@@ -4742,7 +4783,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   exampleZone = createNode({
     mother: photoZone,
     style: {
-      display: "inline-flex",
+      display: (media[0] || small) ? "inline-flex" : "none",
       position: "relative",
       width: String(exampleZoneWidth) + ea,
       height: withOut(0, ea),
@@ -4802,10 +4843,11 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   block = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-block",
+      display: big ? "inline-block" : "block",
       position: "relative",
-      width: withOut(blankZoneWidth + exampleZoneWidth + profileMarginLeft + exampleZoneMarginLeft, ea),
+      width: big ? withOut(blankZoneWidth + exampleZoneWidth + profileMarginLeft + exampleZoneMarginLeft, ea) : "",
       verticalAlign: "bottom",
+      marginTop: big ? "" : String(blockMarginTop) + ea,
     },
     children: [
       {
@@ -4820,7 +4862,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
         },
         children: [
           {
-            text: "작업물, 또는 작업 사진 업로드",
+            text: "작업물, 작업 사진 업로드",
             style: {
               position: "relative",
               display: "inline-block",
@@ -4839,10 +4881,10 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
             style: {
               display: "flex",
               position: "absolute",
-              bottom: String(2) + ea,
+              bottom: String(uploadButtonBottom) + ea,
               right: String(0) + ea,
-              width: String(56) + ea,
-              height: String(24) + ea,
+              width: String(uploadButtonWidth) + ea,
+              height: String(uploadButtonHeight) + ea,
               borderRadius: String(5) + "px",
               background: colorChip.green,
               justifyContent: "center",
@@ -4854,12 +4896,12 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
               style: {
                 display: "inline-block",
                 position: "relative",
-                fontSize: String(12) + ea,
-                fontWeight: String(500),
+                fontSize: String(uploadButtonSize) + ea,
+                fontWeight: String(uploadButtonWeight),
                 fontFamily: "graphik",
                 fontStyle: "italic",
                 color: colorChip.white,
-                top: String(-2) + ea,
+                top: String(uploadButtonTextTop) + ea,
               }
             }
           }
@@ -4939,6 +4981,8 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   const { designer, ea, baseTong, media, totalContents, entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const photoWithWordsClassName = "photoWithWordsClassName";
@@ -5005,6 +5049,13 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   let designerNameHeight, designerNameMarginTop, designerNameMarginBottom;
   let introductionFocusEvent;
   let introductionBlurEvent;
+  let uploadButtonBottom;
+  let uploadButtonWidth;
+  let uploadButtonHeight;
+  let uploadButtonSize;
+  let uploadButtonWeight;
+  let uploadButtonTextTop;
+  let blockMarginTop;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -5018,14 +5069,14 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
     whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
   }
 
-  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+  titleFontSize = <%% 21, 21, 18, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 10 : 8), 0 %%>;
-  contentsAreaPaddingTop = <%% 20, 20, 20, 20, 7 %%>;
+  titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 0 %%>;
+  contentsAreaPaddingTop = <%% 20, 20, 15, 14, 7 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
@@ -5033,7 +5084,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
   secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
 
-  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  contentsWordingSize = <%% 14.5, 14, 13, 12, 3.5 %%>;
   contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
 
   contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
@@ -5069,8 +5120,8 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
 
   mobileContentsWordingSize = 3.2;
 
-  profileWidth = <%% 160, 160, 160, 160, 160 %%>;
-  profileMarginLeft = <%% 34, 34, 34, 34, 34 %%>;
+  profileWidth = <%% 160, 154, 140, 120, 160 %%>;
+  profileMarginLeft = <%% 34, 30, 24, 24, 34 %%>;
 
   profileUploadButtonRight = <%% -2, -2, -2, -2, -2 %%>;
   profileUploadButtonWidth = <%% 46, 46, 46, 46, 46 %%>;
@@ -5096,19 +5147,28 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   goodBadWeight = <%% 500, 500, 500, 500, 500 %%>;
   goodBadRight = <%% -14, -14, -14, -14, -14 %%>;
 
-  introductionSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  introductionSize = <%% 14.5, 13, 13, 13, 3.5 %%>;
   introductionWeight = <%% 400, 400, 400, 400, 400 %%>;
 
-  leftTotalWidth = <%% 770, 770, 770, 770, 770 %%>;
+  leftTotalWidth = <%% 770, 480, 480, 444, 770 %%>;
   if (normalMode) {
     leftTotalMarginRight = 48;
   } else {
-    leftTotalMarginRight = <%% 96, 96, 96, 96, 96 %%>;
+    leftTotalMarginRight = <%% 96, 60, 54, 60, 96 %%>;
   }
 
   designerNameHeight = <%% 34, 34, 34, 34, 34 %%>;
-  designerNameMarginTop = <%% 7, 7, 7, 7, 7 %%>;
-  designerNameMarginBottom = <%% 4, 4, 4, 4, 4 %%>;
+  designerNameMarginTop = <%% 7, 7, 7, 9, 7 %%>;
+  designerNameMarginBottom = <%% 4, 6, 0, 0, 6 %%>;
+
+  uploadButtonBottom = <%% 2, 2, 2, 2, 2 %%>;
+  uploadButtonWidth = <%% 56, 56, 50, 50, 56 %%>;
+  uploadButtonHeight = <%% 24, 24, 21, 21, 24 %%>;
+  uploadButtonSize = <%% 12, 12, 11, 10, 12 %%>;
+  uploadButtonWeight = <%% 500, 500, 500, 500, 500 %%>;
+  uploadButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
+
+  blockMarginTop = <%% 0, 0, 0, 30, 4 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -5183,10 +5243,10 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   photoZone = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-flex",
+      display: big ? "inline-flex" : "flex",
       flexDirection: "row",
       position: "relative",
-      width: String(leftTotalWidth) + ea,
+      width: big ? String(leftTotalWidth) + ea : withOut(0, ea),
       height: String(profileWidth) + ea,
       marginRight: String(leftTotalMarginRight) + ea,
     }
@@ -5281,7 +5341,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
       },
       {
         mode: "textarea",
-        text: designer.setting.front.introduction.desktop.join("\n"),
+        text: designer.setting.front.introduction.desktop.join(media[0] ? "\n" : " "),
         event: {
           focus: introductionFocusEvent(),
           blur: introductionBlurEvent(),
@@ -5305,6 +5365,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
       },
       {
         style: {
+          display: media[0] ? "inline-block" : "none",
           position: "absolute",
           bottom: String(0),
           left: String(0),
@@ -5319,10 +5380,11 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   block = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-block",
+      display: big ? "inline-block" : "block",
       position: "relative",
-      width: withOut(leftTotalWidth + leftTotalMarginRight, ea),
+      width: big ? withOut(leftTotalWidth + leftTotalMarginRight, ea) : withOut(0, ea),
       verticalAlign: "bottom",
+      marginTop: big ? "" : String(blockMarginTop) + ea,
     },
     children: [
       {
@@ -5358,10 +5420,10 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
             style: {
               display: "flex",
               position: "absolute",
-              bottom: String(2) + ea,
+              bottom: String(uploadButtonBottom) + ea,
               right: String(0) + ea,
-              width: String(56) + ea,
-              height: String(24) + ea,
+              width: String(uploadButtonWidth) + ea,
+              height: String(uploadButtonHeight) + ea,
               borderRadius: String(5) + "px",
               background: colorChip.green,
               justifyContent: "center",
@@ -5373,12 +5435,12 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
               style: {
                 display: "inline-block",
                 position: "relative",
-                fontSize: String(12) + ea,
-                fontWeight: String(500),
+                fontSize: String(uploadButtonSize) + ea,
+                fontWeight: String(uploadButtonWeight),
                 fontFamily: "graphik",
                 fontStyle: "italic",
                 color: colorChip.white,
-                top: String(-2) + ea,
+                top: String(uploadButtonTextTop) + ea,
               }
             }
           }
@@ -5538,11 +5600,11 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   plusTextTop = <%% -1.5, -1.5, -1.5, -1.5, -1.5 %%>;
 
   noticeCircleWidth = <%% 12, 12, 12, 12, 12 %%>;
-  noticeCircleTop = <%% 6, 6, 6, 6, 6 %%>;
+  noticeCircleTop = <%% 6, 6, 5, 4.5, 6 %%>;
   noticeCircleMargin = <%% 5, 5, 5, 5, 5 %%>;
 
   careerBlockGrayOuterMargin = <%% 10, 10, 10, 10, 10 %%>;
-  careerBlockOuterMargin = <%% 14, 14, 14, 14, 14 %%>;
+  careerBlockOuterMargin = <%% 14, 14, 14, 12, 14 %%>;
   careerBlockOuterMarginTop = <%% 10, 10, 10, 10, 10 %%>;
   careerBlockOuterMarginBottom = <%% 12, 12, 12, 12, 12 %%>;
   careerBlockInnerMargin = <%% 6, 6, 6, 6, 6 %%>;
@@ -5550,7 +5612,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   careerBlockSize = <%% 13, 13, 13, 13, 13 %%>;
 
   blockCancelWidth = <%% 12, 12, 12, 12, 12 %%>;
-  blockCancelTop = <%% 14, 14, 14, 14, 14 %%>;
+  blockCancelTop = <%% 14, 14, 13, 12, 14 %%>;
   noticeBetween = <%% 7, 7, 7, 7, 7 %%>;
   questionBetween = <%% 6, 6, 6, 6, 6 %%>;
 
@@ -6106,7 +6168,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
             x: String(x),
             z: String(z),
             toggle: instance.contents[x].contents[z].selectValue(designer).includes(num) ? "on" : "off",
-            width: "calc(100% / " + String(divideNumber) + ")",
+            width: "calc(100% / " + String((typeof instance.contents[x].contents[z].divideNumber === "number" ? instance.contents[x].contents[z].divideNumber : divideNumber)) + ")",
             index: String(num),
           },
           event: {
@@ -6200,9 +6262,9 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
             fontSize: String(contentsSize) + ea,
             fontWeight: String(contentsWeight1),
             color: instance.contents[x].contents[z].selectValue(designer).includes(num) ? colorChip.green : colorChip.deactive,
-            width: "calc(100% / " + String(divideNumber) + ")",
+            width: "calc(100% / " + String((typeof instance.contents[x].contents[z].divideNumber === "number" ? instance.contents[x].contents[z].divideNumber : divideNumber)) + ")",
             cursor: "pointer",
-            marginTop: String(num >= divideNumber ? factorBetween : 0) + ea,
+            marginTop: String(num >= (typeof instance.contents[x].contents[z].divideNumber === "number" ? instance.contents[x].contents[z].divideNumber : divideNumber) ? factorBetween : 0) + ea,
           },
         });
         num++;
