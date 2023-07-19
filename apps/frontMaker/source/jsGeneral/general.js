@@ -5893,7 +5893,7 @@ GeneralJs.promptFile = function (message) {
       border: "1px dashed " + colorChip.gray4,
     },
     child: {
-      text: "클릭 또는 드래그하여 파일을 업로드...",
+      text: desktop ? "클릭 또는 드래그하여 파일을 업로드..." : "터치하여 파일을 업로드...",
       style: {
         position: "relative",
         fontSize: String(size1) + ea,
