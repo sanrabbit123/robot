@@ -619,6 +619,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             return [ designer.analytics.grade + 1 ];
           },
           multiple: false,
+          divideNumber: (<&& 4 | 4 | 4 | 4 | 3 &&>),
           updateValue: async (raw, columns, designer) => {
             try {
               let text, whereQuery, updateQuery;
@@ -730,8 +731,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             const endMatrix = careerData.map((obj) => {
               const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
               const startDate = obj.date.start;
-              const startWords = (String(obj.date.start.getFullYear()).slice(2) + "년 " + String(obj.date.start.getMonth() + 1) + "월");
-              const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "년 " + String(obj.date.end.getMonth() + 1) + "월");
+              const startWords = (String(obj.date.start.getFullYear()).slice(2) + "." + String(obj.date.start.getMonth() + 1));
+              const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "." + String(obj.date.end.getMonth() + 1));
               const delta = endDate.valueOf() - startDate.valueOf();
               const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
               const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월" + "&nbsp;&nbsp;(" + startWords + " ~ " + endWords + ")";
@@ -804,8 +805,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 endMatrix = newData.map((obj) => {
                   const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
                   const startDate = obj.date.start;
-                  const startWords = (String(obj.date.start.getFullYear()).slice(2) + "년 " + String(obj.date.start.getMonth() + 1) + "월");
-                  const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "년 " + String(obj.date.end.getMonth() + 1) + "월");
+                  const startWords = (String(obj.date.start.getFullYear()).slice(2) + "." + String(obj.date.start.getMonth() + 1));
+                  const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "." + String(obj.date.end.getMonth() + 1));
                   const delta = endDate.valueOf() - startDate.valueOf();
                   const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
                   const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월" + "&nbsp;&nbsp;(" + startWords + " ~ " + endWords + ")";
@@ -858,8 +859,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 endMatrix = newData.map((obj) => {
                   const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
                   const startDate = obj.date.start;
-                  const startWords = (String(obj.date.start.getFullYear()).slice(2) + "년 " + String(obj.date.start.getMonth() + 1) + "월");
-                  const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "년 " + String(obj.date.end.getMonth() + 1) + "월");
+                  const startWords = (String(obj.date.start.getFullYear()).slice(2) + "." + String(obj.date.start.getMonth() + 1));
+                  const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "." + String(obj.date.end.getMonth() + 1));
                   const delta = endDate.valueOf() - startDate.valueOf();
                   const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
                   const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월" + "&nbsp;&nbsp;(" + startWords + " ~ " + endWords + ")";
@@ -925,8 +926,8 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               endMatrix = original.map((obj) => {
                 const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
                 const startDate = obj.date.start;
-                const startWords = (String(obj.date.start.getFullYear()).slice(2) + "년 " + String(obj.date.start.getMonth() + 1) + "월");
-                const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "년 " + String(obj.date.end.getMonth() + 1) + "월");
+                const startWords = (String(obj.date.start.getFullYear()).slice(2) + "." + String(obj.date.start.getMonth() + 1));
+                const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "." + String(obj.date.end.getMonth() + 1));
                 const delta = endDate.valueOf() - startDate.valueOf();
                 const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
                 const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월" + "&nbsp;&nbsp;(" + startWords + " ~ " + endWords + ")";
@@ -1248,7 +1249,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
           },
         },
         {
-          property: "사업자 등록번호",
+          property: desktop ? "사업자 등록번호" : "사업자 번호",
           admin: false,
           returnValue: (designer) => {
             return designer.information.business.businessInfo.businessNumber === "" ? "-" : designer.information.business.businessInfo.businessNumber;
@@ -1339,7 +1340,7 @@ DesignerAboutJs.prototype.contentsCenter = function () {
             return [ value.findIndex((n) => { return n === 1 }) ];
           },
           multiple: false,
-          divideNumber: 3,
+          divideNumber: (<&& 4 | 4 | 4 | 3 | 1 &&>),
           updateValue: async (raw, columns, designer) => {
             try {
               let text, whereQuery, updateQuery;
@@ -3014,7 +3015,7 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index, 
   let grayInnerPadding, grayInnerPaddingTop;
 
   grayZoneWidth = <%% 250, 0, 0, 0, 32 %%>;
-  grayZoneContentsWidth = <%% 200, 0, 0, 0, 30 %%>;
+  grayZoneContentsWidth = <%% 200, 0, 0, 0, 0 %%>;
   grayPadding = <%% 52, 52, 44, 36, 4.7 %%>;
   grayInnerPadding = <%% 22, 22, 22, 22, 20 %%>;
   if (index === 0) {
@@ -3044,7 +3045,7 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index, 
     mother: whiteTong,
     style: {
       display: "flex",
-      flexDirection: "row",
+      flexDirection: desktop ? "row" : "column",
       position: "relative",
       width: String(100) + '%',
       paddingTop: desktop ? "" : String(mobileBasePaddingTop) + ea,
@@ -3052,7 +3053,7 @@ DesignerAboutJs.prototype.renderTong = function (type, title, whiteTong, index, 
     children: [
       {
         style: {
-          display: desktop ? (media[0] ? "inline-flex" : "none") : "flex",
+          display: desktop ? (media[0] ? "inline-flex" : "none") : "none",
           position: "relative",
           width: desktop ? String(grayZoneWidth) + ea : withOut(mobileBasicMargin * 2, ea),
           verticalAlign: "top",
@@ -4282,7 +4283,6 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
         style: {
           display: "block",
           position: "relative",
-          marginBottom: String(titleBottom) + ea,
           zIndex: mobile ? String(1) : "",
           width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
           paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
@@ -5090,6 +5090,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   let uploadButtonWeight;
   let uploadButtonTextTop;
   let blockMarginTop;
+  let mobilePhotoZonePadding;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -5110,7 +5111,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
   titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 0 %%>;
-  contentsAreaPaddingTop = <%% 20, 20, 15, 14, 7 %%>;
+  contentsAreaPaddingTop = <%% 20, 20, 15, 14, 3 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
@@ -5154,7 +5155,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
 
   mobileContentsWordingSize = 3.2;
 
-  profileWidth = <%% 160, 154, 140, 120, 32 %%>;
+  profileWidth = <%% 160, 154, 140, 120, 36 %%>;
   profileMarginLeft = <%% 34, 30, 24, 24, 2 %%>;
 
   profileUploadButtonRight = <%% -2, -2, -2, -2, -2 %%>;
@@ -5181,7 +5182,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   goodBadWeight = <%% 500, 500, 500, 500, 500 %%>;
   goodBadRight = <%% -14, -14, -14, -14, -14 %%>;
 
-  introductionSize = <%% 14.5, 13, 13, 13, 3.5 %%>;
+  introductionSize = <%% 14.5, 13, 13, 13, 3.2 %%>;
   introductionWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   leftTotalWidth = <%% 770, 480, 480, 444, 770 %%>;
@@ -5192,17 +5193,19 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   }
 
   designerNameHeight = <%% 34, 34, 34, 34, 34 %%>;
-  designerNameMarginTop = <%% 7, 7, 7, 9, 7 %%>;
-  designerNameMarginBottom = <%% 4, 6, 0, 0, 6 %%>;
+  designerNameMarginTop = <%% 7, 7, 7, 9, 4 %%>;
+  designerNameMarginBottom = <%% 4, 6, 0, 0, 1 %%>;
 
-  uploadButtonBottom = <%% 2, 2, 2, 2, 2 %%>;
-  uploadButtonWidth = <%% 56, 56, 50, 50, 56 %%>;
-  uploadButtonHeight = <%% 24, 24, 21, 21, 24 %%>;
-  uploadButtonSize = <%% 12, 12, 11, 10, 12 %%>;
+  uploadButtonBottom = <%% 2, 2, 2, 2, 0.7 %%>;
+  uploadButtonWidth = <%% 56, 56, 50, 50, 12.5 %%>;
+  uploadButtonHeight = <%% 24, 24, 21, 21, 4.5 %%>;
+  uploadButtonSize = <%% 12, 12, 11, 10, 2.5 %%>;
   uploadButtonWeight = <%% 500, 500, 500, 500, 500 %%>;
-  uploadButtonTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  uploadButtonTextTop = <%% -2, -2, -2, -2, -0.3 %%>;
 
   blockMarginTop = <%% 0, 0, 0, 30, 4 %%>;
+
+  mobilePhotoZonePadding = 6;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -5278,11 +5281,15 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
     mother: whiteTong,
     style: {
       display: big ? "inline-flex" : "flex",
-      flexDirection: "row",
+      flexDirection: desktop ? "row" : "column",
       position: "relative",
-      width: big ? String(leftTotalWidth) + ea : withOut(0, ea),
-      height: String(profileWidth) + ea,
-      marginRight: String(leftTotalMarginRight) + ea,
+      width: big ? String(leftTotalWidth) + ea : (desktop ? withOut(0, ea) : withOut(mobilePhotoZonePadding * 2, ea)),
+      height: desktop ? String(profileWidth) + ea : "",
+      marginRight: desktop ? String(leftTotalMarginRight) + ea : "",
+      padding: desktop ? "" : String(mobilePhotoZonePadding) + ea,
+      paddingTop: desktop ? "" : String(7.5) + ea,
+      alignItems: desktop ? "" : "center",
+      paddingBottom: desktop ? "" : String(3) + ea,
     }
   });
 
@@ -5293,7 +5300,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
       flexDirection: "row",
       position: "relative",
       width: String(profileWidth) + ea,
-      height: withOut(0, ea),
+      height: desktop ? withOut(0, ea) : String(profileWidth) + ea,
       marginRight: String(profileMarginLeft) + ea,
       paddingLeft: String(profileWidth / 2) + ea,
     },
@@ -5316,7 +5323,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   });
 
   createNode({
-    mother: photoZone,
+    mother: (desktop ? photoZone : profilePhotoZone),
     style: {
       display: "flex",
       flexDirection: "row",
@@ -5334,7 +5341,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   });
 
   createNode({
-    mother: photoZone,
+    mother: (desktop ? photoZone : profilePhotoZone),
     style: {
       display: "flex",
       flexDirection: "row",
@@ -5356,9 +5363,9 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
       position: "relative",
       flexDirection: "column",
       justifyContent: "start",
-      alignItems: "start",
-      width: withOut(profileWidth, ea),
-      height: String(profileWidth) + ea,
+      alignItems: desktop ? "start" : "center",
+      width: desktop ? withOut(profileWidth, ea) : withOut(4, ea),
+      height: desktop ? String(profileWidth) + ea : "",
     },
     children: [
       {
@@ -5370,7 +5377,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
           lineHeight: String(1.6),
           marginTop: String(designerNameMarginTop) + ea,
           marginBottom: String(designerNameMarginBottom) + ea,
-          height: String(designerNameHeight) + ea,
+          height: desktop ? String(designerNameHeight) + ea : "",
         }
       },
       {
@@ -5394,7 +5401,8 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
           border: String(0),
           outline: String(0),
           width: withOut(0, ea),
-          height: String(profileWidth - designerNameHeight) + ea,
+          textAlign: desktop ? "left" : "center",
+          height: desktop ? String(profileWidth - designerNameHeight) + ea : String(30) + ea,
         }
       },
       {
@@ -5418,18 +5426,19 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
       position: "relative",
       width: big ? withOut(leftTotalWidth + leftTotalMarginRight, ea) : withOut(0, ea),
       verticalAlign: "bottom",
-      marginTop: big ? "" : String(blockMarginTop) + ea,
+      marginTop: big ? "" : (desktop ? String(blockMarginTop) + ea : ""),
     },
     children: [
       {
         style: {
-          display: desktop ? "block" : "none",
-          position: mobile ? "absolute" : "relative",
-          left: desktop ? "" : String(mobileTitleLeft) + ea,
-          top: desktop ? "" : String(mobileTitleTop) + ea,
-          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
-          marginBottom: String(titleBottom) + ea,
+          display: "block",
+          position: "relative",
+          width: desktop ? String(100) + '%' : "",
           zIndex: mobile ? String(1) : "",
+          paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
+          marginBottom: desktop ? "" : String(1.5) + ea,
+          marginTop: desktop ? "" : String(1) + ea,
         },
         children: [
           {
@@ -5440,7 +5449,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
               top: String(titleTopNumber) + ea,
               fontSize: String(titleFontSize) + ea,
               fontWeight: String(800),
-              background: desktop ? colorChip.white : colorChip.gray1,
+              background: colorChip.white,
               paddingRight: String(numberRight) + ea,
               color: colorChip.black,
             }
@@ -5455,7 +5464,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
               display: "flex",
               position: "absolute",
               bottom: String(uploadButtonBottom) + ea,
-              right: String(0) + ea,
+              right: desktop ? String(0) + ea : String(mobilePaddingLeft) + ea,
               width: String(uploadButtonWidth) + ea,
               height: String(uploadButtonHeight) + ea,
               borderRadius: String(5) + "px",
@@ -5485,17 +5494,13 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
           display: "block",
           position: "relative",
           width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
-          background: desktop ? "" : colorChip.white,
-          boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
-          borderRadius: mobile ? String(1) + ea : "",
           overflow: "hidden",
           marginBottom: String(0) + ea,
-          marginTop: desktop ? "" : String(14) + ea,
           paddingTop: String(contentsAreaPaddingTop) + ea,
-          borderTop: desktop ? "1px solid " + colorChip.shadow : "",
-          paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingBottom: desktop ? "" : String(5.5) + ea,
+          borderTop: "1px solid " + colorChip.shadow,
+          marginLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
+          marginRight: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingBottom: desktop ? "" : String(6.5) + ea,
         }
       },
     ]
@@ -5615,7 +5620,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   contentsWeight0 = <%% 700, 700, 700, 700, 700 %%>;
   contentsWeight1 = <%% 400, 400, 400, 400, 400 %%>;
 
-  firstWidth = <%% 180, 160, 140, 120, 23 %%>;
+  firstWidth = <%% 180, 160, 140, 120, 27 %%>;
   factorBetween = <%% 8, 8, 8, 8, 1.5 %%>;
 
   divideNumber = <%% 4, 4, 4, 4, 2 %%>;
@@ -5627,39 +5632,39 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
 
   tendencyValueConst = 10;
 
-  questionSize = <%% 10, 10, 10, 10, 10 %%>;
-  plusSize = <%% 13, 13, 13, 13, 13 %%>;
+  questionSize = <%% 10, 10, 10, 10, 2.5 %%>;
+  plusSize = <%% 13, 13, 13, 13, 2.5 %%>;
   questionWeight = <%% 500, 500, 500, 500, 500 %%>;
-  questionTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  plusTextTop = <%% -1.5, -1.5, -1.5, -1.5, -1.5 %%>;
+  questionTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
+  plusTextTop = <%% -1.5, -1.5, -1.5, -1.5, -0.3 %%>;
 
-  noticeCircleWidth = <%% 12, 12, 12, 12, 12 %%>;
-  noticeCircleTop = <%% 6, 5.5, 5, 4.5, 6 %%>;
-  noticeCircleMargin = <%% 5, 5, 5, 5, 5 %%>;
+  noticeCircleWidth = <%% 12, 12, 12, 12, 2.8 %%>;
+  noticeCircleTop = <%% 6, 5.5, 5, 4.5, 1.1 %%>;
+  noticeCircleMargin = <%% 5, 5, 5, 5, 1 %%>;
 
-  careerBlockGrayOuterMargin = <%% 10, 10, 10, 10, 10 %%>;
-  careerBlockOuterMargin = <%% 14, 14, 14, 12, 14 %%>;
-  careerBlockOuterMarginTop = <%% 10, 10, 10, 10, 10 %%>;
-  careerBlockOuterMarginBottom = <%% 12, 12, 12, 12, 12 %%>;
-  careerBlockInnerMargin = <%% 6, 6, 6, 6, 6 %%>;
-  careerBlockInnerMarginSmall = <%% 2, 2, 2, 2, 2 %%>;
-  careerBlockSize = <%% 13, 13, 13, 13, 13 %%>;
+  careerBlockGrayOuterMargin = <%% 10, 10, 9, 8, 0 %%>;
+  careerBlockOuterMargin = <%% 14, 14, 14, 12, 2 %%>;
+  careerBlockOuterMarginTop = <%% 10, 10, 10, 10, 2 %%>;
+  careerBlockOuterMarginBottom = <%% 12, 12, 12, 12, 2 %%>;
+  careerBlockInnerMargin = <%% 6, 6, 6, 4, 1 %%>;
+  careerBlockInnerMarginSmall = <%% 2, 2, 2, 2, 0 %%>;
+  careerBlockSize = <%% 13, 13, 13, 13, 2.5 %%>;
 
-  blockCancelWidth = <%% 12, 12, 12, 12, 12 %%>;
-  blockCancelTop = <%% 14, 14, 13, 12, 14 %%>;
-  noticeBetween = <%% 7, 7, 7, 7, 7 %%>;
-  questionBetween = <%% 6, 6, 6, 6, 6 %%>;
+  blockCancelWidth = <%% 12, 12, 12, 12, 2.8 %%>;
+  blockCancelTop = <%% 14, 14, 13, 12, 2 %%>;
+  noticeBetween = <%% 7, 7, 7, 7, 2 %%>;
+  questionBetween = <%% 6, 6, 6, 6, 2 %%>;
 
   greenNoticeIndent = <%% 12, 12, 12, 12, 12 %%>;
 
-  greenNoticeMinWidth = <%% 100, 100, 100, 100, 100 %%>;
-  greenNoticeMaxWidth = <%% 300, 300, 300, 300, 300 %%>;
+  greenNoticeMinWidth = <%% 100, 100, 100, 100, 10 %%>;
+  greenNoticeMaxWidth = <%% 300, 300, 300, 300, 60 %%>;
 
-  greenNoticePaddingLeft = <%% 12, 12, 12, 12, 12 %%>;
-  greenNoticePaddingTop = <%% 6, 6, 6, 6, 6 %%>;
-  greenNoticePaddingBottom = <%% 8, 8, 8, 8, 8 %%>;
+  greenNoticePaddingLeft = <%% 12, 12, 12, 12, 2.3 %%>;
+  greenNoticePaddingTop = <%% 6, 6, 6, 6, 1.1 %%>;
+  greenNoticePaddingBottom = <%% 8, 8, 8, 8, 1.4 %%>;
 
-  greenNoticeSize = <%% 12, 12, 12, 12, 12 %%>;
+  greenNoticeSize = <%% 12, 12, 12, 12, 3 %%>;
   greenNoticeWeight = <%% 700, 700, 700, 700, 700 %%>;
   greenNoticeLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
 
@@ -5740,7 +5745,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
         padding: String(careerBlockGrayOuterMargin) + ea,
         width: withOut(careerBlockGrayOuterMargin * 2, ea),
         borderRadius: String(5) + "px",
-        background: colorChip.gray0,
+        background: desktop ? colorChip.gray0 : colorChip.white,
       },
       children: value.map((obj, index) => {
         const { title, value: factorValue } = obj;
@@ -5760,8 +5765,8 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
             width: withOut(careerBlockOuterMargin * 2, ea),
             borderRadius: String(5) + "px",
             marginBottom: !lastBoo ? String(careerBlockInnerMargin) + ea : "",
-            background: colorChip.white,
-            boxShadow: "0px 2px 11px -9px " + colorChip.shadow,
+            background: desktop ? colorChip.white : colorChip.gray0,
+            boxShadow: desktop ? "0px 2px 11px -9px " + colorChip.shadow : "",
           },
           children: factorValue.map((str, index) => {
             const lastBoo = (index === factorValue.length - 1);
@@ -6052,7 +6057,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
                 self.setAttribute("value", text);
                 if (typeof instance.contents[x].contents[z].visualNotice === "function") {
                   const thisBox = getRealBox(self, withOut(firstWidth + circleBoxWidth, ea));
-                  self.nextElementSibling.style.left = String(firstWidth + circleBoxWidth + thisBox.width + noticeBetween) + ea;
+                  self.nextElementSibling.style.left = "calc(" + String(firstWidth + circleBoxWidth + noticeBetween) + ea + " + " + String(thisBox.width) + "px" + ")";
                 }
               } catch (e) {
                 console.log(e);
@@ -6170,7 +6175,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
           style: {
             position: "absolute",
             top: String(0),
-            left: String(firstWidth + circleBoxWidth + thisBox.width + noticeBetween) + ea,
+            left: "calc(" + String(firstWidth + circleBoxWidth + noticeBetween) + ea + " + " + String(thisBox.width) + "px" + ")",
             fontSize: String(contentsSize) + ea,
             fontWeight: String(contentsWeight1),
             color: colorChip.green,
