@@ -5154,8 +5154,8 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
 
   mobileContentsWordingSize = 3.2;
 
-  profileWidth = <%% 160, 154, 140, 120, 160 %%>;
-  profileMarginLeft = <%% 34, 30, 24, 24, 34 %%>;
+  profileWidth = <%% 160, 154, 140, 120, 32 %%>;
+  profileMarginLeft = <%% 34, 30, 24, 24, 2 %%>;
 
   profileUploadButtonRight = <%% -2, -2, -2, -2, -2 %%>;
   profileUploadButtonWidth = <%% 46, 46, 46, 46, 46 %%>;
@@ -5256,11 +5256,11 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      background: desktop ? colorChip.white : "",
+      background: colorChip.white,
       paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
       paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
       marginBottom: String(bottomMargin) + ea,
-      boxShadow: !entireMode ? (desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "") : "",
+      boxShadow: !entireMode ? ("0px 5px 12px -10px " + colorChip.gray5) : "",
     },
     children: [
       {
