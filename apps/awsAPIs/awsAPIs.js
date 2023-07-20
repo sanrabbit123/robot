@@ -115,7 +115,7 @@ AwsAPIs.prototype.pollyStream = function (text = "안녕하세요?") {
       }
     }).then((randoms) => {
       text = text.replace(/[\[\]\{\}\"\'\<\>\/\\\~\`\+\=\-\_\@\#\$\%\^\&\*\(\)\:\;]/g, '');
-      text = text.replace(/[^가-힣\?\!\.]/gi, '');
+      text = text.replace(/[^가-힣\?\!\. ]/gi, '');
       tempDir = process.cwd() + "/temp";
       fileName = `tempVoiceRecord_${String((new Date()).valueOf())}_${String(randoms[0])}.mp3`;
     
