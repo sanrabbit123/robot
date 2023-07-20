@@ -637,9 +637,16 @@ DevContext.prototype.launching = async function () {
         process.exit();
       }
     }
-    wsMessageEvent = async (message) => {
+    wsMessageEvent = async (buffer) => {
       try {
+        const message = String(buffer);
+
+
+
         console.log(message);
+        console.log(JSON.parse(message));
+
+
       } catch (e) {
         await errorLog(e.message);
         console.log(e);

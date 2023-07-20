@@ -25,26 +25,9 @@ Ghost.prototype.routerPatch = function (app) {
     });
     try {
       const member = [ ...Ghost.stacks.socket.clients ][0];
-
-      member.send("hey");
-      
-
-      
-      res.send(JSON.stringify({ message: "OK" }));
-    } catch (e) {
-      console.log(e);
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  });
-
-  app.get("/status", async (req, res) => {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
+      if (member !== undefined && typeof member.send === "function") {
+        member.send(JSON.stringify({ message: "hi" }));
+      }      
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
       console.log(e);
