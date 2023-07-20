@@ -619,7 +619,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await findCode("memberinfo")
+    await messageSend({ text: "안녕하세요! 테스트입니다.", channel: "#general", voice: true, fairy: true })
 
 
 
