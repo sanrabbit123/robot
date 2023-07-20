@@ -24,6 +24,10 @@ Ghost.prototype.routerPatch = function (app) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+
+      console.log(Ghost.stacks.socket);
+      console.log(typeof Ghost.stacks.socket.send);
+
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
       console.log(e);
@@ -115,9 +119,10 @@ Ghost.prototype.wssLaunching = async function () {
 
     generalSocket = new WebSocket.Server({ noServer: true });
     generalSocket.on("connection", (ws) => {
-      ws.on("message", (message) => {
+      ws.on("message", (buffer) => {
         try {
-          console.log(String(message));
+          const message = String(buffer);
+          console.log(message);
           
 
 
