@@ -1947,6 +1947,12 @@ DesignerJs.prototype.normalDetailSearchEvent = async function () {
 
         cancelBack = createNode({
           mother: totalMother,
+          class: [ detailSearchClassName ],
+          event: {
+            click: (e) => {
+              removeByClass(detailSearchClassName);
+            },
+          },
           style: {
             position: "fixed",
             top: String(0),
@@ -1961,6 +1967,7 @@ DesignerJs.prototype.normalDetailSearchEvent = async function () {
 
         whiteBase = createNode({
           mother: totalMother,
+          class: [ detailSearchClassName ],
           style: {
             position: "fixed",
             top: String(margin) + ea,
