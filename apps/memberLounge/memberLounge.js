@@ -18,7 +18,7 @@ MemberLounge.prototype.memberConnect = async function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink, mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo, mongotestinfo, mongosecondinfo, errorLog, messageLog, setQueue, requestSystem, dateToString, sleep, expressLog, emergencyAlarm, aliveLog, cronLog, alertLog } = this.mother;
   const PORT = 3000;
-  const https = require("https");
+  const http = require("http");
   const express = require("express");
   const app = express();
   const useragent = require("express-useragent");
@@ -49,48 +49,9 @@ MemberLounge.prototype.memberConnect = async function () {
     console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching member lounge ==============`);
     console.log(``);
 
-    //set mongo connetion
-    let MONGOC, MONGOLOCALC;
-    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-    MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-    console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
-    console.log(``);
-    await MONGOC.connect();
-    await MONGOLOCALC.connect();
-
-    //set pem key
-    let pems, pemsLink;
-    let certDir, keyDir, caDir;
-
-    pems = {};
-    pemsLink = process.cwd() + "/pems/" + this.address.memberinfo.host;
-
-    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
-    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
-    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
-
-    for (let i of certDir) {
-      if (i !== `.DS_Store`) {
-        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
-      }
-    }
-    for (let i of keyDir) {
-      if (i !== `.DS_Store`) {
-        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
-      }
-    }
-    pems.ca = [];
-    for (let i of caDir) {
-      if (i !== `.DS_Store`) {
-        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
-      }
-    }
-    pems.allowHTTP1 = true;
-
     //set router
     const MemberRouter = require(`${this.dir}/router/memberRouter.js`);
-    const router = new MemberRouter(MONGOC, MONGOLOCALC);
-    await router.setMembers();
+    const router = new MemberRouter();
     const rouObj = router.getAll();
     const logStream = fs.createWriteStream(thisLogFile);
     await expressLog(serverName, logStream, "start");
@@ -165,7 +126,7 @@ MemberLounge.prototype.memberConnect = async function () {
     console.log(`set router`);
 
     //server on
-    https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
+    http.createServer(app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
 
   } catch (e) {
     console.log(e);

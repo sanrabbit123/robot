@@ -39,8 +39,12 @@ Ghost.prototype.ghostClient = async function () {
     wsMessageEvent = async (buffer) => {
       try {
         const message = String(buffer);
-        console.log(message);
-        console.log(JSON.parse(message));
+        const { path, body } = equalJson(message);
+        if (/textToVoice/gi.test(path)) {
+          await requestSystem("http://" + "localhost:3000" + "/textToVoice", body, { headers: { "Content-Type": "application/json" } });
+        } else if (/printText/gi.test(path)) {
+          await requestSystem("http://" + "localhost:3000" + "/printText", body, { headers: { "Content-Type": "application/json" } });
+        }
       } catch (e) {
         await errorLog(e.message);
         console.log(e);
