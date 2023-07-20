@@ -1922,14 +1922,58 @@ DesignerJs.prototype.normalSearchEvent = async function () {
 
 DesignerJs.prototype.normalDetailSearchEvent = async function () {
   const instance = this;
-  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
-  const { ajaxJson, setQueue } = GeneralJs;
+  const { ea, totalContents, totalMother, belowHeight } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, setQueue } = GeneralJs;
+  const detailSearchClassName = "detailSearchClassName";
   try {
     this.searchInput.addEventListener("contextmenu", async function (e) {
       e.preventDefault();
       try {
+        const zIndex = 4;
+        let cancelBack, whiteBase;
+        let margin;
+        let titleSize;
+        let titleWeight;
+        let fontSize;
+        let fontWeight;
 
+        margin = 30;
 
+        titleSize = 21;
+        titleWeight = 800;
+
+        fontSize = 14;
+        fontWeight = 400;
+
+        cancelBack = createNode({
+          mother: totalMother,
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            background: colorChip.black,
+            opacity: String(0.3),
+            zIndex: String(zIndex),
+          }
+        });
+
+        whiteBase = createNode({
+          mother: totalMother,
+          style: {
+            position: "fixed",
+            top: String(margin) + ea,
+            left: String(margin) + ea,
+            width: withOut(margin * 2, ea),
+            height: withOut((margin * 2) + belowHeight, ea),
+            zIndex: String(zIndex),
+            background: colorChip.white,
+            animation: "fadeuplite 0.3s ease forwards",
+            boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+            borderRadius: String(5) + "px",
+          }
+        });
 
 
 
@@ -1980,7 +2024,7 @@ DesignerJs.prototype.normalMessageEvent = async function () {
             }).catch((err) => {
               console.log(err);
             });
-            
+
           }
         }
       } catch {}
