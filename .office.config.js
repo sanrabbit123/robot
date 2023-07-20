@@ -8,6 +8,13 @@ module.exports = {
       args: [ "receiveSms" ]
     },
     {
+      name: "ghost",
+      script: "./ghost.js",
+      instances: 1,
+      exec_mode: "cluster",
+      args: [ "static" ]
+    },
+    {
       name: "koala",
       script: "./koala.js",
       instances: 1,
