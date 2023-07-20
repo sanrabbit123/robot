@@ -5201,7 +5201,7 @@ GeneralJs.promptButtons = function (message, buttons) {
   buttonSize = 12;
   marginLeft = 18;
   bottomVisual = 7;
-  inputBoxHeight = 30;
+  inputBoxHeight = 26;
   inputIndent = 9;
   inputBottomVisual = 0;
   lineHeight = 1.5;
@@ -5468,7 +5468,7 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
   paddingBottom = 15;
   size0 = 14;
   size1 = 15;
-  size2 = 11;
+  size2 = desktop ? 10 : 10;
   inputSize = 13;
   buttonSize = 12;
   marginLeft = 18;
@@ -5483,8 +5483,8 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
   buttonTop = 20;
   buttonRight = 21;
   buttonHeight = 21;
-  buttonPadding = 8;
-  buttonWidth = 56;
+  buttonPadding = 7;
+  buttonWidth = 49;
 
   greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
   if (Number.isNaN(greenBarHeight)) {
@@ -8053,13 +8053,26 @@ GeneralJs.fireEvent = function (dom, eventName) {
 }
 
 GeneralJs.getRealBox = function (dom, original = "attribute") {
+  const mobile = window.innerWidth <= 900;
+  const desktop = !mobile;
   let box;
+  let widthVisual;
+
+  if (desktop) {
+    widthVisual = GeneralJs.isMac() ? 0.97 : 0.84;
+  } else {
+    widthVisual = 1;
+  }
+
   dom.style.display = "inline-block";
   dom.style.position = "relative";
   dom.style.width = "auto";
   dom.style.height = "auto";
   box = dom.getBoundingClientRect();
   box = JSON.parse(JSON.stringify(box));
+
+  box.width = box.width * widthVisual;
+
   if (original !== null && typeof original === "object") {
     if (typeof original.display === "string") {
       dom.style.display = original.display;

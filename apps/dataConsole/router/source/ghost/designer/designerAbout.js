@@ -3199,7 +3199,7 @@ DesignerAboutJs.prototype.insertNoticeBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
-  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  whiteBottomMargin = <%% 40, 36, 30, 22, 0 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
@@ -3208,7 +3208,7 @@ DesignerAboutJs.prototype.insertNoticeBox = function () {
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
   titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 10 : 8), 0 %%>;
-  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 7 %%>;
+  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6.5 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
@@ -3327,7 +3327,7 @@ DesignerAboutJs.prototype.insertNoticeBox = function () {
           borderTop: desktop ? "1px solid " + colorChip.shadow : "",
           paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
           paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingBottom: desktop ? "" : String(5.5) + ea,
+          paddingBottom: desktop ? "" : String(4.5) + ea,
         }
       },
     ]
@@ -3563,7 +3563,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 0 %%>;
+  titleBottom = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 0 %%>;
   contentsAreaPaddingTop = <%% 20, 20, 15, 14, 3 %%>;
 
   mobileTitleLeft = 1.5;
@@ -3642,7 +3642,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
 
   exampleLength = <%% 3, 2, 2, 3, 2 %%>;
 
-  uploadButtonBottom = <%% 2, 2, 2, 2, 0.7 %%>;
+  uploadButtonBottom = <%% 3, 3, 2, 2, 0.7 %%>;
   uploadButtonWidth = <%% 56, 56, 50, 50, 12.5 %%>;
   uploadButtonHeight = <%% 24, 24, 21, 21, 4.5 %%>;
   uploadButtonSize = <%% 12, 12, 11, 10, 2.5 %%>;
@@ -3660,234 +3660,238 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
 
   photoResizeEvent = () => {
     return async function (e) {
-      try {
-        const imageMother = document.querySelector('.' + mainPhotoClassName);
-        const imageSecond = document.querySelector('.' + photoWithWordsClassName);
-        const zIndex = 4;
-        let grayBack;
-        let imageBase;
-  
-        if (instance.profileTarget !== null) {
-          grayBack = createNode({
-            mother: totalContents,
-            class: [ photoResizeBaseClassName ],
-            style: {
-              position: "fixed",
-              top: String(0),
-              left: String(0),
-              width: withOut(0, ea),
-              height: withOut(0, ea),
-              opacity: String(0.8),
-              background: colorChip.realBlack,
-              zIndex: String(zIndex),
-            }
-          });
+      if (desktop) {
+        try {
+          const imageMother = document.querySelector('.' + mainPhotoClassName);
+          const imageSecond = document.querySelector('.' + photoWithWordsClassName);
+          const zIndex = 4;
+          let grayBack;
+          let imageBase;
     
-          imageBase = createNode({
-            mother: totalContents,
-            class: [ photoResizeBaseClassName ],
-            event: {
-              click: async function (e) {
-                try {
-                  const standard = document.querySelector('.' + photoResizeStandardClassName);
-                  if (standard.getAttribute("process") === "false") {
-                    removeByClass(photoResizeBaseClassName);
-                  }
-                } catch (e) {
-                  console.log(e);
-                }
-              }
-            },
-            style: {
-              display: "flex",
-              position: "fixed",
-              top: String(naviHeight) + ea,
-              left: String(0),
-              width: withOut(0, ea),
-              height: withOut(naviHeight, ea),
-              zIndex: String(zIndex),
-              justifyContent: "center",
-              alignItems: "center",
-            },
-          })
-  
-          if (instance.profileTarget.gs === "g") {
-  
-            thisBackgroundImage = createNode({
-              mother: imageBase,
-              mode: "img",
-              attribute: {
-                src: instance.profilePhoto,
-              },
-              event: {
-                click: function (e) {
-                  e.stopPropagation();
-                }
-              },
+          if (instance.profileTarget !== null) {
+            grayBack = createNode({
+              mother: totalContents,
+              class: [ photoResizeBaseClassName ],
               style: {
-                display: "inline-block",
-                position: "relative",
-                width: String(fixImageWidth) + ea,
-                height: "auto",
-                zIndex: String(1),
-                opacity: String(0.3),
+                position: "fixed",
+                top: String(0),
+                left: String(0),
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                opacity: String(0.8),
+                background: colorChip.realBlack,
+                zIndex: String(zIndex),
               }
             });
-  
-            imageBaseBox = imageBase.getBoundingClientRect();
-            thisBackgroundImageBox = thisBackgroundImage.getBoundingClientRect();
-            circleWidth = thisBackgroundImageBox.height * (100 / instance.profileTarget.size);  
-  
-          } else {
-  
-            thisBackgroundImage = createNode({
-              mother: imageBase,
-              mode: "img",
-              attribute: {
-                src: instance.profilePhoto,
-              },
+      
+            imageBase = createNode({
+              mother: totalContents,
+              class: [ photoResizeBaseClassName ],
               event: {
-                click: function (e) {
-                  e.stopPropagation();
-                }
-              },
-              style: {
-                display: "inline-block",
-                position: "relative",
-                height: String(fixImageHeight) + ea,
-                width: "auto",
-                zIndex: String(1),
-                opacity: String(0.3),
-              }
-            });
-  
-            imageBaseBox = imageBase.getBoundingClientRect();
-            thisBackgroundImageBox = thisBackgroundImage.getBoundingClientRect();
-            circleWidth = thisBackgroundImageBox.width * (100 / instance.profileTarget.size);  
-          }
-  
-          minimumY = (((thisBackgroundImageBox.top - naviHeight) + (circleWidth / 2)) / imageBaseBox.height) * 100;
-          maximumY = 50 + Math.abs(50 - Math.abs(minimumY));
-          rangeY = Math.abs(50 - Math.abs(minimumY)) * 2;
-  
-          minimumX = (((thisBackgroundImageBox.left) + (circleWidth / 2)) / imageBaseBox.width) * 100;
-          maximumX = 50 + Math.abs(50 - Math.abs(minimumX));
-          rangeX = Math.abs(50 - Math.abs(minimumX)) * 2;
-  
-          createNode({
-            mother: imageBase,
-            style: {
-              display: "inline-block",
-              position: "absolute",
-              top: String(thisBackgroundImageBox.top - naviHeight) + "px",
-              left: String(thisBackgroundImageBox.left) + "px",
-              width: String(thisBackgroundImageBox.width) + "px",
-              height: String(thisBackgroundImageBox.height) + "px",
-              background: "black",
-              zIndex: String(0),
-            }
-          })
-
-          brightCircle = createNode({
-            mother: imageBase,
-            class: [ photoResizeStandardClassName ],
-            attribute: {
-              draggable: "true",
-              starty: String(0),
-              startx: String(0),
-              process: "false",
-            },
-            event: {
-              dragstart: function (e) {
-                this.setAttribute("starty", String(e.offsetY));
-                this.setAttribute("startx", String(e.offsetX));
-                this.setAttribute("process", "true");
-              },
-              dragover: function (e) {
-                const starty = Number(this.getAttribute("starty"));
-                const thisy = e.offsetY - starty;
-                const startx = Number(this.getAttribute("startx"));
-                const thisx = e.offsetX - startx;
-                this.style.transform = "translate(" + String(thisx) + "px" + " ," + String(thisy) + "px)";
-                this.setAttribute("process", "true");
-              },
-              dragend: async function (e) {
-                try {
-                  const brightCircleBox = brightCircle.getBoundingClientRect();
-                  let finalX, finalY;
-    
-                  finalY = ((brightCircleBox.top - naviHeight + (circleWidth / 2)) / imageBaseBox.height) * 100;
-                  finalX = ((brightCircleBox.left + (circleWidth / 2)) / imageBaseBox.width) * 100;
-    
-                  finalY = Math.round(finalY);
-                  finalX = Math.round(finalX);
-    
-                  if (finalY < minimumY) {
-                    finalY = Math.ceil(minimumY);
-                  }
-                  if (finalY > maximumY) {
-                    finalY = Math.floor(maximumY);
-                  }
-                  if (finalX < minimumX) {
-                    finalX = Math.ceil(minimumX);
-                  }
-                  if (finalX > maximumX) {
-                    finalX = Math.floor(maximumX);
-                  }
-    
-                  this.style.top = withOut(finalY, (circleWidth / 2), ea);
-                  this.style.left = withOut(finalX, (circleWidth / 2), ea);
-                  this.style.transform = "translate(0px, 0px)";
-    
-                  instance.profileTarget.position.x = Math.round(50 + (((finalX - 50) / rangeX) * 100));
-                  instance.profileTarget.position.y = Math.round(50 + (((finalY - 50) / rangeY) * 100));
-  
-                  imageMother.style.backgroundPosition = String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%";
-                  imageSecond.style.backgroundPosition = String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%";
-
-                  imageMother.style.opacity = String(1);
-                  imageSecond.style.opacity = String(1);
-
-                  await ajaxJson({
-                    desid: instance.designer.desid,
-                    id: instance.profileTarget.id,
-                    mode: "position",
-                    position: {
-                      x: instance.profileTarget.position.x,
-                      y: instance.profileTarget.position.y,
+                click: async function (e) {
+                  try {
+                    const standard = document.querySelector('.' + photoResizeStandardClassName);
+                    if (standard.getAttribute("process") === "false") {
+                      removeByClass(photoResizeBaseClassName);
                     }
-                  }, BRIDGEHOST + "/designerProfileUpdate");
-  
-                  this.setAttribute("process", "false");
-  
-                } catch (e) {
-                  console.log(e);
+                  } catch (e) {
+                    console.log(e);
+                  }
                 }
               },
-              click: function (e) {
-                e.stopPropagation();
-              }
-            },
-            style: {
-              display: "inline-block",
-              position: "absolute",
-              top: withOut((((instance.profileTarget.position.y - 50) / 100) * rangeY) + 50, circleWidth / 2, ea),
-              left: withOut((((instance.profileTarget.position.x - 50) / 100) * rangeX) + 50, circleWidth / 2, ea),
-              width: String(circleWidth) + ea,
-              height: String(circleWidth) + ea,
-              borderRadius: String(circleWidth) + ea,
-              background: "rgb(0, 0, 0, 0)",
-              "backdrop-filter": "brightness(3)",
-              transition: "all 0.3s ease",
-              cursor: "pointer",
-              transform: "translate(0px, 0px)",
-              zIndex: String(1),
+              style: {
+                display: "flex",
+                position: "fixed",
+                top: String(naviHeight) + "px",
+                left: String(0),
+                width: withOut(0, ea),
+                height: withOut(naviHeight, "px"),
+                zIndex: String(zIndex),
+                justifyContent: "center",
+                alignItems: "center",
+              },
+            })
+    
+            if (instance.profileTarget.gs === "g") {
+    
+              thisBackgroundImage = createNode({
+                mother: imageBase,
+                mode: "img",
+                attribute: {
+                  src: instance.profilePhoto,
+                },
+                event: {
+                  click: function (e) {
+                    e.stopPropagation();
+                  }
+                },
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: String(fixImageWidth) + "px",
+                  height: "auto",
+                  zIndex: String(1),
+                  opacity: String(0.3),
+                }
+              });
+    
+              imageBaseBox = imageBase.getBoundingClientRect();
+              thisBackgroundImageBox = thisBackgroundImage.getBoundingClientRect();
+              circleWidth = thisBackgroundImageBox.height * (100 / instance.profileTarget.size);  
+    
+            } else {
+    
+              thisBackgroundImage = createNode({
+                mother: imageBase,
+                mode: "img",
+                attribute: {
+                  src: instance.profilePhoto,
+                },
+                event: {
+                  click: function (e) {
+                    e.stopPropagation();
+                  }
+                },
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  height: String(fixImageHeight) + "px",
+                  width: "auto",
+                  zIndex: String(1),
+                  opacity: String(0.3),
+                }
+              });
+    
+              imageBaseBox = imageBase.getBoundingClientRect();
+              thisBackgroundImageBox = thisBackgroundImage.getBoundingClientRect();
+              circleWidth = thisBackgroundImageBox.width * (100 / instance.profileTarget.size);  
             }
-          });
+    
+            minimumY = (((thisBackgroundImageBox.top - naviHeight) + (circleWidth / 2)) / imageBaseBox.height) * 100;
+            maximumY = 50 + Math.abs(50 - Math.abs(minimumY));
+            rangeY = Math.abs(50 - Math.abs(minimumY)) * 2;
+    
+            minimumX = (((thisBackgroundImageBox.left) + (circleWidth / 2)) / imageBaseBox.width) * 100;
+            maximumX = 50 + Math.abs(50 - Math.abs(minimumX));
+            rangeX = Math.abs(50 - Math.abs(minimumX)) * 2;
+    
+            createNode({
+              mother: imageBase,
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: String(thisBackgroundImageBox.top - naviHeight) + "px",
+                left: String(thisBackgroundImageBox.left) + "px",
+                width: String(thisBackgroundImageBox.width) + "px",
+                height: String(thisBackgroundImageBox.height) + "px",
+                background: "black",
+                zIndex: String(0),
+              }
+            })
   
+            brightCircle = createNode({
+              mother: imageBase,
+              class: [ photoResizeStandardClassName ],
+              attribute: {
+                draggable: "true",
+                starty: String(0),
+                startx: String(0),
+                process: "false",
+              },
+              event: {
+                dragstart: function (e) {
+                  this.setAttribute("starty", String(e.offsetY));
+                  this.setAttribute("startx", String(e.offsetX));
+                  this.setAttribute("process", "true");
+                },
+                dragover: function (e) {
+                  const starty = Number(this.getAttribute("starty"));
+                  const thisy = e.offsetY - starty;
+                  const startx = Number(this.getAttribute("startx"));
+                  const thisx = e.offsetX - startx;
+                  this.style.transform = "translate(" + String(thisx) + "px" + " ," + String(thisy) + "px)";
+                  this.setAttribute("process", "true");
+                },
+                dragend: async function (e) {
+                  try {
+                    const brightCircleBox = brightCircle.getBoundingClientRect();
+                    let finalX, finalY;
+      
+                    finalY = ((brightCircleBox.top - naviHeight + (circleWidth / 2)) / imageBaseBox.height) * 100;
+                    finalX = ((brightCircleBox.left + (circleWidth / 2)) / imageBaseBox.width) * 100;
+      
+                    finalY = Math.round(finalY);
+                    finalX = Math.round(finalX);
+      
+                    if (finalY < minimumY) {
+                      finalY = Math.ceil(minimumY);
+                    }
+                    if (finalY > maximumY) {
+                      finalY = Math.floor(maximumY);
+                    }
+                    if (finalX < minimumX) {
+                      finalX = Math.ceil(minimumX);
+                    }
+                    if (finalX > maximumX) {
+                      finalX = Math.floor(maximumX);
+                    }
+      
+                    this.style.top = withOut(finalY, (circleWidth / 2), "px");
+                    this.style.left = withOut(finalX, (circleWidth / 2), "px");
+                    this.style.transform = "translate(0px, 0px)";
+      
+                    instance.profileTarget.position.x = Math.round(50 + (((finalX - 50) / rangeX) * 100));
+                    instance.profileTarget.position.y = Math.round(50 + (((finalY - 50) / rangeY) * 100));
+    
+                    imageMother.style.backgroundPosition = String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%";
+                    imageSecond.style.backgroundPosition = String(instance.profileTarget.position.x) + "%" + " " + String(instance.profileTarget.position.y) + "%";
+  
+                    imageMother.style.opacity = String(1);
+                    imageSecond.style.opacity = String(1);
+  
+                    await ajaxJson({
+                      desid: instance.designer.desid,
+                      id: instance.profileTarget.id,
+                      mode: "position",
+                      position: {
+                        x: instance.profileTarget.position.x,
+                        y: instance.profileTarget.position.y,
+                      }
+                    }, BRIDGEHOST + "/designerProfileUpdate");
+    
+                    this.setAttribute("process", "false");
+    
+                  } catch (e) {
+                    console.log(e);
+                  }
+                },
+                click: function (e) {
+                  e.stopPropagation();
+                }
+              },
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: withOut((((instance.profileTarget.position.y - 50) / 100) * rangeY) + 50, circleWidth / 2, "px"),
+                left: withOut((((instance.profileTarget.position.x - 50) / 100) * rangeX) + 50, circleWidth / 2, "px"),
+                width: String(circleWidth) + "px",
+                height: String(circleWidth) + "px",
+                borderRadius: String(circleWidth) + "px",
+                background: "rgb(0, 0, 0, 0)",
+                "backdrop-filter": "brightness(3)",
+                transition: "all 0.3s ease",
+                cursor: "pointer",
+                transform: "translate(0px, 0px)",
+                zIndex: String(1),
+              }
+            });
+    
+          }
+        } catch (e) {
+          console.log(e);
         }
-      } catch (e) {
-        console.log(e);
+      } else {
+        window.alert("사진의 위치 조정은 데스크탑에서 하실 수 있습니다! 데스크탑을 통해 편집해주세요!");
       }
     }
   }
@@ -3981,9 +3985,11 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   profileUploadEvent = async function (e) {
     try {
       const fileInput = document.querySelector("." + profileFileInputClassName);
-      const loading = instance.mother.whiteProgressLoading(null, true);
-      instance.grayLoading = loading;
-      instance.profileUploadProcess = true;
+      if (desktop) {
+        const loading = instance.mother.whiteProgressLoading(null, true);
+        instance.grayLoading = loading;
+        instance.profileUploadProcess = true;
+      }
       fireEvent(fileInput, "click");
     } catch (e) {
       console.log(e);
@@ -4346,6 +4352,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
           marginBottom: String(0) + ea,
           paddingTop: String(contentsAreaPaddingTop) + ea,
           borderTop: "1px solid " + colorChip.shadow,
+          marginTop: String(titleBottom) + ea,
           marginLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
           marginRight: desktop ? "" : String(mobilePaddingLeft) + ea,
           paddingBottom: desktop ? "" : String(6.5) + ea,
@@ -4502,7 +4509,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 0 %%>;
+  titleBottom = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 0 %%>;
   contentsAreaPaddingTop = <%% 20, 20, 15, 14, 3 %%>;
 
   mobileTitleLeft = 1.5;
@@ -4588,7 +4595,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
 
   factorWidth = 272;
 
-  uploadButtonBottom = <%% 2, 2, 2, 2, 0.7 %%>;
+  uploadButtonBottom = <%% 3, 3, 2, 2, 0.7 %%>;
   uploadButtonWidth = <%% 56, 56, 50, 50, 12.5 %%>;
   uploadButtonHeight = <%% 24, 24, 21, 21, 4.5 %%>;
   uploadButtonSize = <%% 12, 12, 11, 10, 2.5 %%>;
@@ -4954,6 +4961,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
           marginBottom: String(0) + ea,
           paddingTop: String(contentsAreaPaddingTop) + ea,
           borderTop: "1px solid " + colorChip.shadow,
+          marginTop: String(titleBottom) + ea,
           marginLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
           marginRight: desktop ? "" : String(mobilePaddingLeft) + ea,
           paddingBottom: desktop ? "" : String(6.5) + ea,
@@ -5110,7 +5118,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 0 %%>;
+  titleBottom = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 9 : 7), (isMac() ? 9 : 7), 0 %%>;
   contentsAreaPaddingTop = <%% 20, 20, 15, 14, 3 %%>;
 
   mobileTitleLeft = 1.5;
@@ -5196,7 +5204,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   designerNameMarginTop = <%% 7, 7, 7, 9, 4 %%>;
   designerNameMarginBottom = <%% 4, 6, 0, 0, 1 %%>;
 
-  uploadButtonBottom = <%% 2, 2, 2, 2, 0.7 %%>;
+  uploadButtonBottom = <%% 3, 3, 2, 2, 0.7 %%>;
   uploadButtonWidth = <%% 56, 56, 50, 50, 12.5 %%>;
   uploadButtonHeight = <%% 24, 24, 21, 21, 4.5 %%>;
   uploadButtonSize = <%% 12, 12, 11, 10, 2.5 %%>;
@@ -5498,6 +5506,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
           marginBottom: String(0) + ea,
           paddingTop: String(contentsAreaPaddingTop) + ea,
           borderTop: "1px solid " + colorChip.shadow,
+          marginTop: String(titleBottom) + ea,
           marginLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
           marginRight: desktop ? "" : String(mobilePaddingLeft) + ea,
           paddingBottom: desktop ? "" : String(6.5) + ea,
@@ -5608,13 +5617,15 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   let greenNoticePaddingBottom;
   let greenNoticeSize, greenNoticeWeight, greenNoticeLineHeight;
   let greenNoticeIndent;
+  let mobileTendencyFactorBetween;
+  let factorVisualBetween;
 
   blockHeight = <%% 22, 21, 21, 19, (isIphone() ? 5.2 : 4.9) %%>;
   blockMarginBottom = <%% 16, 15, 15, 12, 2.5 %%>;
 
   circleBoxWidth = <%% 16, 16, 16, 14, 2.8 %%>;
   circleWidth = <%% 5, 5, 5, 4, 1 %%>;
-  circleTop = <%% 1, 1, 1, 1, 0 %%>;
+  circleTop = <%% (isMac() ? 1 : -1), (isMac() ? 1 : -1), (isMac() ? 1 : -1), (isMac() ? 1 : -1), 0 %%>;
 
   contentsSize = <%% 16, 15, 15, 14, 3.4 %%>;
   contentsWeight0 = <%% 700, 700, 700, 700, 700 %%>;
@@ -5622,6 +5633,8 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
 
   firstWidth = <%% 180, 160, 140, 120, 27 %%>;
   factorBetween = <%% 8, 8, 8, 8, 1.5 %%>;
+  mobileTendencyFactorBetween = 1;
+  factorVisualBetween = isIphone() ? 0.98 : 1.1;
 
   divideNumber = <%% 4, 4, 4, 4, 2 %%>;
 
@@ -5635,38 +5648,38 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   questionSize = <%% 10, 10, 10, 10, 2.5 %%>;
   plusSize = <%% 13, 13, 13, 13, 2.5 %%>;
   questionWeight = <%% 500, 500, 500, 500, 500 %%>;
-  questionTextTop = <%% -1, -1, -1, -1, -0.3 %%>;
-  plusTextTop = <%% -1.5, -1.5, -1.5, -1.5, -0.3 %%>;
+  questionTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
+  plusTextTop = <%% -1.5, -1.5, -1.5, -1.5, -0.1 %%>;
 
   noticeCircleWidth = <%% 12, 12, 12, 12, 2.8 %%>;
-  noticeCircleTop = <%% 6, 5.5, 5, 4.5, 1.1 %%>;
+  noticeCircleTop = <%% (isMac() ? 6 : 3.5), (isMac() ? 5.5 : 3), (isMac() ? 5 : 2.5), (isMac() ? 4.5 : 2), (isIphone() ? 1.3 : 1.1) %%>;
   noticeCircleMargin = <%% 5, 5, 5, 5, 1 %%>;
 
   careerBlockGrayOuterMargin = <%% 10, 10, 9, 8, 0 %%>;
   careerBlockOuterMargin = <%% 14, 14, 14, 12, 2 %%>;
-  careerBlockOuterMarginTop = <%% 10, 10, 10, 10, 2 %%>;
-  careerBlockOuterMarginBottom = <%% 12, 12, 12, 12, 2 %%>;
+  careerBlockOuterMarginTop = <%% (isMac() ? 10 : 12), (isMac() ? 10 : 12), (isMac() ? 10 : 12), (isMac() ? 10 : 12), 2 %%>;
+  careerBlockOuterMarginBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), 2 %%>;
   careerBlockInnerMargin = <%% 6, 6, 6, 4, 1 %%>;
   careerBlockInnerMarginSmall = <%% 2, 2, 2, 2, 0 %%>;
   careerBlockSize = <%% 13, 13, 13, 13, 2.5 %%>;
 
   blockCancelWidth = <%% 12, 12, 12, 12, 2.8 %%>;
   blockCancelTop = <%% 14, 14, 13, 12, 2 %%>;
-  noticeBetween = <%% 7, 7, 7, 7, 2 %%>;
-  questionBetween = <%% 6, 6, 6, 6, 2 %%>;
+  noticeBetween = <%% 7, 7, 7, 7, 1.5 %%>;
+  questionBetween = <%% 6, 6, 6, 6, 1 %%>;
 
   greenNoticeIndent = <%% 12, 12, 12, 12, 12 %%>;
 
   greenNoticeMinWidth = <%% 100, 100, 100, 100, 10 %%>;
-  greenNoticeMaxWidth = <%% 300, 300, 300, 300, 60 %%>;
+  greenNoticeMaxWidth = <%% 300, 300, 300, 300, 40 %%>;
 
-  greenNoticePaddingLeft = <%% 12, 12, 12, 12, 2.3 %%>;
-  greenNoticePaddingTop = <%% 6, 6, 6, 6, 1.1 %%>;
-  greenNoticePaddingBottom = <%% 8, 8, 8, 8, 1.4 %%>;
+  greenNoticePaddingLeft = <%% 12, 12, 12, 12, 2.6 %%>;
+  greenNoticePaddingTop = <%% (isMac() ? 6 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), (isMac() ? 6 : 8), 1.5 %%>;
+  greenNoticePaddingBottom = <%% (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), (isMac() ? 8 : 6), 1.9 %%>;
 
   greenNoticeSize = <%% 12, 12, 12, 12, 3 %%>;
-  greenNoticeWeight = <%% 700, 700, 700, 700, 700 %%>;
-  greenNoticeLineHeight = <%% 1.5, 1.5, 1.5, 1.5, 1.5 %%>;
+  greenNoticeWeight = <%% 600, 600, 600, 600, 600 %%>;
+  greenNoticeLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
   plusBlockEvent = (mode, index = -1) => {
     return async function (e) {
@@ -6387,12 +6400,12 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
               width: String(noticeCircleWidth) + ea,
               height: String(noticeCircleWidth) + ea,
               borderRadius: String(noticeCircleWidth) + ea,
-              top: String(noticeCircleTop) + ea,
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
               cursor: "pointer",
-              left: String(firstWidth + circleBoxWidth + ((valueBlock.getBoundingClientRect().width / divideNumber) * s) + getRealBox(valueBlock.children[s]).width + questionBetween) + ea,
+              top: desktop ? String(noticeCircleTop) + ea : ("calc(calc(calc(" + String(getRealBox(valueBlock.children[s]).height * factorVisualBetween) + "px" + " + " + String(factorBetween) + ea + ") * " + String(Math.floor(s / 2)) + ") + " + String(noticeCircleTop) + ea + ")"),
+              left: desktop ? "calc(" + (String(firstWidth + circleBoxWidth + questionBetween) + ea + " + " + String(((valueBlock.getBoundingClientRect().width / divideNumber) * s) + getRealBox(valueBlock.children[s]).width) + "px" + ")") : ("calc(" + String(firstWidth + circleBoxWidth + questionBetween) + ea + " + " + String(((valueBlock.getBoundingClientRect().width / divideNumber) * (s % 2)) + getRealBox(valueBlock.children[s]).width) + "px" + ")"),
             },
             child: {
               text: "?",
@@ -6447,7 +6460,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
           style: {
             display: "block",
             position: "relative",
-            marginTop: String(num !== 0 ? factorBetween : 0) + ea,
+            marginTop: String(num !== 0 ? (desktop ? factorBetween : mobileTendencyFactorBetween) : 0) + ea,
           },
           children: [
             {
@@ -6628,16 +6641,16 @@ DesignerAboutJs.prototype.insertPossibleNoticeBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
 
-  whiteBottomMargin = <%% 42, 42, 42, 42, 0 %%>;
+  whiteBottomMargin = <%% 40, 36, 30, 22, 0 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
-  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+  numberRight = <%% 12, 12, 12, 12, 2 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
   titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 10 : 8), 0 %%>;
-  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 7 %%>;
+  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6.5 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
@@ -6717,15 +6730,27 @@ DesignerAboutJs.prototype.insertPossibleNoticeBox = function () {
     children: [
       {
         style: {
-          display: desktop ? "block" : "none",
+          display: "block",
           position: mobile ? "absolute" : "relative",
           left: desktop ? "" : String(mobileTitleLeft) + ea,
           top: desktop ? "" : String(mobileTitleTop) + ea,
           width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
-          marginBottom: String(titleBottom) + ea,
+          marginBottom: desktop ? String(titleBottom) + ea : "",
           zIndex: mobile ? String(1) : "",
+          textAlign: desktop ? "" : "center",
         },
         children: [
+          {
+            style: {
+              display: desktop ? "none" : "block",
+              position: "absolute",
+              borderBottom: "1px dashed " + colorChip.gray4,
+              height: String(2.7) + ea,
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+            }
+          },
           {
             text: "가능 일정 표시 안내",
             style: {
@@ -6736,6 +6761,7 @@ DesignerAboutJs.prototype.insertPossibleNoticeBox = function () {
               fontWeight: String(800),
               background: desktop ? colorChip.white : colorChip.gray1,
               paddingRight: String(numberRight) + ea,
+              paddingLeft: desktop ? "" : String(numberRight) + ea,
               color: colorChip.black,
             }
           },
@@ -6751,12 +6777,12 @@ DesignerAboutJs.prototype.insertPossibleNoticeBox = function () {
           borderRadius: mobile ? String(1) + ea : "",
           overflow: "hidden",
           marginBottom: String(0) + ea,
-          marginTop: desktop ? "" : String(14) + ea,
+          marginTop: desktop ? "" : String(19) + ea,
           paddingTop: String(contentsAreaPaddingTop) + ea,
           borderTop: desktop ? "1px solid " + colorChip.shadow : "",
           paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
           paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingBottom: desktop ? "" : String(5.5) + ea,
+          paddingBottom: desktop ? "" : String(4.5) + ea,
         }
       },
     ]
@@ -7242,14 +7268,14 @@ DesignerAboutJs.prototype.insertCalendarBox = function (standardIndex = 0) {
   let grayZone;
   let noticeSize;
 
-  grayZoneWidth = <%% 250, 200, 160, 140, 32 %%>;
-  grayZoneContentsWidth = <%% 200, 160, 140, 120, 30 %%>;
-  grayPadding = <%% 52, 52, 44, 36, 4.7 %%>;
-  grayInnerPadding = <%% 22, 22, 22, 22, 20 %%>;
-  grayInnerPaddingTop = <%% 24, 24, 24, 24, 24 %%>;
-  noticeSize = <%% 12, 12, 12, 12, 12 %%>;
+  grayZoneWidth = <%% 250, 0, 0, 0, 0 %%>;
+  grayZoneContentsWidth = <%% 200, 0, 0, 0, 0 %%>;
+  grayPadding = <%% 52, 0, 0, 0, 0 %%>;
+  grayInnerPadding = <%% 22, 0, 0, 0, 0 %%>;
+  grayInnerPaddingTop = <%% 24, 0, 0, 0, 0 %%>;
+  noticeSize = <%% 12, 0, 0, 0, 0 %%>;
 
-  grayBetween = <%% 40, 40, 36, 36, 3 %%>;
+  grayBetween = <%% 40, 0, 0, 0, 0 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 0 %%>;
   if (normalMode) {
@@ -7259,7 +7285,7 @@ DesignerAboutJs.prototype.insertCalendarBox = function (standardIndex = 0) {
   } else {
     margin = <%% 55, 55, 47, 39, 0 %%>;
     paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
-    whiteBottomMargin = <%% 20, 20, 16, 8, 0 %%>;
+    whiteBottomMargin = <%% 20, 52, 44, 36, 0 %%>;
   }
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
