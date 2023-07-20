@@ -56,7 +56,7 @@ MemberRouter.prototype.rou_post_textToVoice = function () {
       }
       audio.textToVoice(req.body.text).catch((err) => {
         console.log(err);
-      })
+      });
       res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       logger.error("Member lounge 서버 문제 생김 (rou_post_textToVoice): " + e.message).catch((e) => { console.log(e); });
@@ -85,7 +85,6 @@ MemberRouter.prototype.rou_post_printText = function () {
       }
       const { spawn } = require("child_process");
       const lpstat = spawn("lpstat", [ "-p" ]);
-      const fontName = `/home/homeliaison/font/NanumGothicEco.ttf`;
       let printer;
       let targetFile;
 
@@ -94,10 +93,10 @@ MemberRouter.prototype.rou_post_printText = function () {
       lpstat.stdout.on("data", (data) => {
         const arr = String(data).split("\n").map((i) => { return i.trim(); });
         const printerRaw = arr.find((i) => { return /hp/gi.test(i); });
-        printer = printerRaw.trim().split(' ')[1];
+        printer = printerRaw.trim().split(' ')[0];
         lpstat.kill();
         fileSystem(`write`, [ targetFile, req.body.text ]).then(() => {
-          return shellExec(`uniprint -printer ${printer} -size 9 -hsize 0 ${req.body.landScape !== undefined ? String("-L ") : ""}-media A4 -wrap -font ${fontName} ${shellLink(targetFile)}`);
+          return shellExec(`lpr -P ${printer} ${shellLink(targetFile)}`);
         }).then(() => {
           return shellExec("rm", [ "-rf", targetFile ]);
         }).catch((err) => {

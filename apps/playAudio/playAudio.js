@@ -96,10 +96,15 @@ PlayAudio.prototype.textToVoice = async function (text = "안녕하세요?") {
   const instance = this;
   const { shellExec, shellLink } = this.mother;
   try {
+    const os = require("os");
     let file;
-    file = await this.aws.pollyStream(text);
-    await this.play(file);
-    await shellExec(`rm -rf ${shellLink(file)}`);
+    if (/Darwin/gi.test(os.type())) {
+      await shellExec(`say "${text.replace(/\"/gi, '')}"`);
+    } else {
+      file = await this.aws.pollyStream(text);
+      await this.play(file);
+      await shellExec(`rm -rf ${shellLink(file)}`);
+    }
   } catch (e) {
     console.log(e);
   }
