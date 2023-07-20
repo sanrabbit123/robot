@@ -24,10 +24,12 @@ Ghost.prototype.routerPatch = function (app) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      const member = [ ...Ghost.stacks.socket.clients ][0];
 
-      console.log(Ghost.stacks.socket);
-      console.log(typeof Ghost.stacks.socket.send);
+      console.log(member.send);
 
+
+      
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
       console.log(e);
