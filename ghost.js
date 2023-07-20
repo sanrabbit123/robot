@@ -11,6 +11,65 @@ Ghost.stacks = {
   socket: null,
 }
 
+Ghost.prototype.ghostClient = async function () {
+  const instance = this;
+  const address = this.address;
+  const { requestSystem, errorLog, equalJson } = this.mother;
+  try {
+    const WebSocket = require("ws");
+    const url = "wss://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/general";
+    let ws;
+    let wsLaunching;
+    let wsOpenEvent;
+    let wsMessageEvent;
+    let wsCloseEvent;
+    
+    ws = {};
+
+    wsOpenEvent = async () => {
+      try {
+        setInterval(() => {
+          ws.send(JSON.stringify({ message: "hi" }));
+        }, 10 * 1000);
+      } catch (e) {
+        await errorLog(e.message);
+        process.exit();
+      }
+    }
+    wsMessageEvent = async (buffer) => {
+      try {
+        const message = String(buffer);
+        console.log(message);
+        console.log(JSON.parse(message));
+      } catch (e) {
+        await errorLog(e.message);
+        console.log(e);
+        process.exit();
+      }
+    }
+    wsCloseEvent = async () => {
+      try {
+        ws = wsLaunching();
+      } catch (e) {
+        await errorLog(e.message);
+        process.exit();
+      }
+    }
+    wsLaunching = () => {
+      let ws;
+      ws = new WebSocket(url);
+      ws.on("open", wsOpenEvent);
+      ws.on("message", wsMessageEvent);
+      ws.on("close", wsCloseEvent);
+      return ws;
+    }
+    ws = wsLaunching();
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Ghost.prototype.routerPatch = function (app) {
   const instance = this;
   const address = this.address;
@@ -35,7 +94,7 @@ Ghost.prototype.routerPatch = function (app) {
     }
   });
 
-  app.post("/status", async (req, res) => {
+  app.post("/printText", async (req, res) => {
     res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -43,6 +102,31 @@ Ghost.prototype.routerPatch = function (app) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
+      const member = [ ...Ghost.stacks.socket.clients ][0];
+      const thisBody = equalJson(req.body);
+      if (member !== undefined && typeof member.send === "function") {
+        member.send(JSON.stringify({ path: "/printText", body: thisBody }));
+      }      
+      res.send(JSON.stringify({ message: "OK" }));
+    } catch (e) {
+      console.log(e);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  });
+
+  app.post("/textToVoice", async (req, res) => {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const member = [ ...Ghost.stacks.socket.clients ][0];
+      const thisBody = equalJson(req.body);
+      if (member !== undefined && typeof member.send === "function") {
+        member.send(JSON.stringify({ path: "/textToVoice", body: thisBody }));
+      }      
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
       console.log(e);
@@ -106,12 +190,7 @@ Ghost.prototype.wssLaunching = async function () {
     generalSocket.on("connection", (ws) => {
       ws.on("message", (buffer) => {
         try {
-          const message = String(buffer);
-          console.log(message);
-          
-
-
-
+          const message = String(buffer);    
         } catch (e) {
           console.log(e);
         }
@@ -140,6 +219,13 @@ Ghost.prototype.wssLaunching = async function () {
 }
 
 const ghost = new Ghost();
-ghost.wssLaunching().catch((err) => {
-  console.log(err);
-});
+
+if (/server/gi.test(process.argv[2])) {
+  ghost.wssLaunching().catch((err) => {
+    console.log(err);
+  });
+} else if (/client/gi.test(process.argv[2])) {
+  ghost.ghostClient().catch((err) => {
+    console.log(err);
+  });
+}
