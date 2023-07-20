@@ -2208,7 +2208,7 @@ StaticRouter.prototype.rou_post_textToVoice = function () {
     });
     try {
       const thisBody = equalJson(req.body);
-      requestSystem("https://" + address.memberinfo.host + "/textToVoice", thisBody, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err) });
+      requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/textToVoice", thisBody, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err) });
       res.send(JSON.stringify({ message: "toss" }));
       
       // if (!instance.fireWall(req)) {
@@ -2246,7 +2246,7 @@ StaticRouter.prototype.rou_post_printText = function () {
     });
     try {
       const thisBody = equalJson(req.body);
-      requestSystem("https://" + address.memberinfo.host + "/printText", thisBody, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err) });
+      requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/printText", thisBody, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err) });
       res.send(JSON.stringify({ message: "toss" }));
 
       // if (!instance.fireWall(req)) {
@@ -4180,7 +4180,7 @@ StaticRouter.prototype.rou_post_printComplex = function () {
         return back.updateClient([ whereQuery, updateQuery ], { selfMongo });
       }).then(() => {
         if (mode === "general") {
-          return requestSystem("https://" + address.memberinfo.host + "/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+          return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
         } else if (mode === "update") {
           if (naverId !== "") {
             logger.log("Static lounge 네이버 부동산 아이디 찾고 업데이트 성공함 : " + cliid + " / " + naverId).catch((err) => {
