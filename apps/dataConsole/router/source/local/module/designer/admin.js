@@ -1061,7 +1061,6 @@ DesignerJs.prototype.adminProjectsView = async function (desid, base) {
             }
           }
 
-
         }
       }
 
@@ -1565,93 +1564,6 @@ DesignerJs.prototype.adminIconSet = function (desid) {
     }
   });
 
-}
-
-DesignerJs.prototype.adminDetailSearchBox = function () {
-  const instance = this;
-  const { totalMother, ea, grayBarWidth, belowHeight, searchCondition } = this;
-  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
-  const className = "searchConditionBack";
-  return function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-    if (document.querySelector('.' + className) === null) {
-      let cancelBox, whiteBox, scrollBox, scrollBase;
-      let margin, innerMargin;
-      let paddingTop, paddingBottom;
-
-      innerMargin = 48;
-      margin = 100;
-      paddingTop = 63;
-      paddingBottom = 160;
-
-      cancelBox = createNode({
-        mother: totalMother,
-        class: [ className ],
-        style: {
-          position: "fixed",
-          top: String(0),
-          left: String(grayBarWidth) + ea,
-          width: withOut(grayBarWidth, ea),
-          height: withOut(belowHeight, ea),
-          background: colorChip.black,
-          animation: "justfadein 0.3s ease forwards",
-          zIndex: String(2),
-          cursor: "pointer",
-        },
-        events: [
-          {
-            type: [ "click", "contextmenu" ],
-            event: function (e) {
-              e.preventDefault();
-              e.stopPropagation();
-              instance.adminDetailSearchParsing();
-              totalMother.removeChild(totalMother.lastChild);
-              totalMother.removeChild(totalMother.lastChild);
-            }
-          }
-        ]
-      });
-      whiteBox = createNode({
-        mother: totalMother,
-        style: {
-          position: "fixed",
-          top: String(margin) + ea,
-          left: String(grayBarWidth + margin) + ea,
-          width: withOut(grayBarWidth + (margin * 2), ea),
-          height: withOut(belowHeight + (margin * 2), ea),
-          background: colorChip.white,
-          borderRadius: String(5) + "px",
-          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          animation: "fadeup 0.3s ease forwards",
-          zIndex: String(2),
-        }
-      });
-      scrollBox = createNode({
-        mother: whiteBox,
-        style: {
-          position: "absolute",
-          top: String(innerMargin) + ea,
-          left: String(innerMargin) + ea,
-          width: withOut(innerMargin * 2, ea),
-          height: withOut(innerMargin, ea),
-          overflow: "scroll",
-        }
-      });
-      scrollBase = createNode({
-        mother: scrollBox,
-        style: {
-          position: "relative",
-          top: String(0),
-          left: String(0),
-          width: String(100) + '%',
-          paddingTop: String(paddingTop) + ea,
-          paddingBottom: String(paddingBottom) + ea,
-        }
-      });
-      instance.adminDetailSearchContents(scrollBase);
-    }
-  }
 }
 
 DesignerJs.prototype.adminMemoSystem = async function (desid) {
@@ -2300,7 +2212,6 @@ DesignerJs.prototype.adminView = async function () {
           }
         }
       });
-      searchInput.addEventListener("contextmenu", this.adminDetailSearchBox());
     }
 
     //standard doms event

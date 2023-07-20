@@ -3301,7 +3301,7 @@ DesignerBoardJs.prototype.launching = async function (loading) {
           instance.insertProcessBox();
           instance.insertReleaseBox();
           instance.insertPortfolioBase();
-          instance.popupLaunching();
+          // instance.popupLaunching();
 
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "DesignerBoardJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");

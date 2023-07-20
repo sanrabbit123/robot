@@ -1920,6 +1920,29 @@ DesignerJs.prototype.normalSearchEvent = async function () {
   }
 }
 
+DesignerJs.prototype.normalDetailSearchEvent = async function () {
+  const instance = this;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
+  const { ajaxJson, setQueue } = GeneralJs;
+  try {
+    this.searchInput.addEventListener("contextmenu", async function (e) {
+      e.preventDefault();
+      try {
+
+
+
+
+
+
+      } catch (e) {
+        console.log(e);
+      }
+    })
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.normalMessageEvent = async function () {
   const instance = this;
   const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
@@ -1957,6 +1980,7 @@ DesignerJs.prototype.normalMessageEvent = async function () {
             }).catch((err) => {
               console.log(err);
             });
+            
           }
         }
       } catch {}
@@ -2788,6 +2812,7 @@ DesignerJs.prototype.normalView = async function () {
 
     await this.normalBase();
     await this.normalSearchEvent();
+    await this.normalDetailSearchEvent();
     await this.normalMessageEvent();
     await this.normalExtractEvent();
     await this.normalReportEvent();

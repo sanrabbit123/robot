@@ -1655,10 +1655,8 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
       const cards = [
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>신청자 조회", event: (e) => { modeHref("aspirant"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>기본 정보", event: (e) => { modeHref("normal"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>경력 정보", event: (e) => { modeHref("calculation"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>가격 정보", event: (e) => { modeHref("price"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>일정 관리", event: (e) => { modeHref("possible"); }, contextmenu: (e) => { modeHref("possible"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>체크리스트", event: (e) => { modeHref("admin"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">홈스타일링</b><br>의뢰서", event: (e) => { modeHref("request"); }, contextmenu: (e) => { modeHref("request"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>보고서", event: (e) => { modeHref("report"); } },
       ];
