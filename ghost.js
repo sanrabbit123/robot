@@ -74,7 +74,7 @@ Ghost.prototype.wssLaunching = async function () {
     const useragent = require("express-useragent");
     const WebSocket = require("ws");
     const url = require("url");
-    const port = 8000;
+    const port = address.officeinfo.ghost.wss;
     let generalSocket;
     let sockets, server;
     let pems, pemsLink;
@@ -117,8 +117,11 @@ Ghost.prototype.wssLaunching = async function () {
     generalSocket.on("connection", (ws) => {
       ws.on("message", (message) => {
         try {
-          console.log(message);
+          console.log(String(message));
           
+
+
+
         } catch (e) {
           console.log(e);
         }
@@ -130,7 +133,6 @@ Ghost.prototype.wssLaunching = async function () {
 
     server.on("upgrade", (request, socket, head) => {
       const { pathname } = url.parse(request.url);
-      console.log(pathname);
       if (/general/gi.test(pathname)) {
         generalSocket.handleUpgrade(request, socket, head, (ws) => {
           generalSocket.emit("connection", ws, request);

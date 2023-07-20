@@ -619,15 +619,50 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    const WebSocket = require("ws");
+    const url = "wss://home-liaison.serveftp.com:58000/general";
+    let wsLaunching;
+    let wsOpenEvent;
+    let wsMessageEvent;
+    let wsCloseEvent;
     
+    ws = {};
 
 
-
-
-
-
-
+    wsOpenEvent = async () => {
+      try {
+        ws.send("hi");
+      } catch (e) {
+        await errorLog(e.message);
+        process.exit();
+      }
+    }
+    wsMessageEvent = async (message) => {
+      try {
+        console.log(message);
+      } catch (e) {
+        await errorLog(e.message);
+        console.log(e);
+        process.exit();
+      }
+    }
+    wsCloseEvent = async () => {
+      try {
+        ws = wsLaunching();
+      } catch (e) {
+        await errorLog(e.message);
+        process.exit();
+      }
+    }
+    wsLaunching = () => {
+      let ws;
+      ws = new WebSocket(url);
+      ws.on("open", wsOpenEvent);
+      ws.on("message", wsMessageEvent);
+      ws.on("close", wsCloseEvent);
+      return ws;
+    }
+    ws = wsLaunching();
 
 
 
