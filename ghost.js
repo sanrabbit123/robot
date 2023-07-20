@@ -26,8 +26,8 @@ Ghost.prototype.routerPatch = function (app) {
     try {
       const member = [ ...Ghost.stacks.socket.clients ][0];
 
-      console.log(member.send);
-
+      member.send("hey");
+      
 
       
       res.send(JSON.stringify({ message: "OK" }));
