@@ -6259,6 +6259,15 @@ BillMaker.prototype.parsingCashReceipt = async function (noHeadlessMode = false)
         link: "https://www.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/comm/a/b/UTXPPABA01.xml&w2xHome=/ui/pp/&w2xDocumentRoot=",
         func: async function () {
           try {
+            const waitSleep = function (time) {
+              let timeoutId = null;
+              return new Promise(function (resolve, reject) {
+                timeoutId = setTimeout(function () {
+                  resolve('awake');
+                  clearTimeout(timeoutId);
+                }, time);
+              });
+            }
             const idLoginButtonId = "anchor15";
             const returnButtonId = "anchor25";
             const inputs = {
@@ -6266,16 +6275,11 @@ BillMaker.prototype.parsingCashReceipt = async function (noHeadlessMode = false)
               pwd: "iptUserPw"
             };
 
-            await sleep(500);
-            while (document.getElementById(idLoginButtonId) === null) {
-              await sleep(500);
-            }
+            await waitSleep(500);
+
             document.getElementById(idLoginButtonId).click();
-            
-            await sleep(1000);
-            while (document.getElementById(inputs.id) === null) {
-              await sleep(500);
-            }
+
+            await waitSleep(2000);
 
             document.getElementById(inputs.id).value = INFO.officeinfo.hometax.user;
             document.getElementById(inputs.pwd).value = INFO.officeinfo.hometax.password;
