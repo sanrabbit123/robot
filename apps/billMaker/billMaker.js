@@ -6265,11 +6265,18 @@ BillMaker.prototype.parsingCashReceipt = async function (noHeadlessMode = false)
               id: "iptUserId",
               pwd: "iptUserPw"
             };
+
+            await sleep(500);
             while (document.getElementById(idLoginButtonId) === null) {
               await sleep(500);
             }
             document.getElementById(idLoginButtonId).click();
-  
+            
+            await sleep(1000);
+            while (document.getElementById(inputs.id) === null) {
+              await sleep(500);
+            }
+
             document.getElementById(inputs.id).value = INFO.officeinfo.hometax.user;
             document.getElementById(inputs.pwd).value = INFO.officeinfo.hometax.password;
             document.getElementById(returnButtonId).click();
