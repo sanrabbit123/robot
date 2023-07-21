@@ -621,7 +621,9 @@ DevContext.prototype.launching = async function () {
     
 
 
-    await bill.parsingCashReceipt(true);
+
+    
+
 
 
 
