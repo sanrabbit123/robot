@@ -28,6 +28,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
     let filteredFilteredProjectsContract;
     let thisDate;
     let standards;
+    let thisValueTemp;
 
     past.setFullYear(past.getFullYear() - agoYearDelta);
     past.setMonth(0);
@@ -489,23 +490,23 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           name: "manger",
         },
         {
-          value: 0,
+          value: asyncProcessText,
           name: "processPending",
         },
         {
-          value: 0,
+          value: asyncProcessText,
           name: "processDoing",
         },
         {
-          value: "미완료",
+          value: asyncProcessText,
           name: "checklistDone",
         },
         {
-          value: "안올림",
+          value: asyncProcessText,
           name: "profilePhotoDone",
         },
         {
-          value: "안올림",
+          value: asyncProcessText,
           name: "workingPhotoDone",
         },
         {
@@ -638,6 +639,21 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
             return p.desid === designer.desid;
           });
   
+
+          thisTarget = findByAttribute(thisValueDoms, "name", "processPending");
+          thisValueTemp = filteredProjectsContract.filter((p) => { return /^대/.test(p.process.status) }).length;
+          thisTarget.textContent = String(thisValueTemp);
+          thisTarget.style.color = colorChip.black;
+
+          thisTarget = findByAttribute(thisValueDoms, "name", "processDoing");
+          thisValueTemp = filteredProjectsContract.filter((p) => { return /^진/.test(p.process.status) }).length;
+          thisTarget.textContent = String(thisValueTemp);
+          thisTarget.style.color = colorChip.black;
+
+          
+
+
+
           thisTarget = findByAttribute(thisValueDoms, "name", "proposalNumber");
           thisTarget.textContent = String(filteredProjectsProposal.length);
           thisTarget.style.color = colorChip.black;
