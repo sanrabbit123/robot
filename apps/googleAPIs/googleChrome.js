@@ -238,7 +238,7 @@ GoogleChrome.prototype.frontScript = async function (link, func) {
   }
 }
 
-GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong = {}) {
+GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong = {}, noHeadlessMode = false) {
   if (!Array.isArray(map)) {
     throw new Error("invalid input => [ { link, async func } ]");
   }
@@ -246,7 +246,12 @@ GoogleChrome.prototype.scriptChain = async function (map, between = 2500, tong =
   const { equalJson, fileSystem, sleep, mediaQuery } = this.mother;
   const { puppeteer } = this;
   const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-  const browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ] });
+  let browser;
+  if (noHeadlessMode) {
+    browser = await puppeteer.launch({ headless: false, args: [ "--no-sandbox" ] });
+  } else {
+    browser = await puppeteer.launch({ args: [ "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--headless=new" ] });
+  }
   try {
     const page = await browser.newPage();
     let funcScript, generalString, frontResponse, frontResponses;

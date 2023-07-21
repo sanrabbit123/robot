@@ -84,6 +84,78 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         ]))
       },
       {
+        title: "대기",
+        width: 80,
+        name: "processPending",
+        type: "number",
+      },
+      {
+        title: "진행중",
+        width: 80,
+        name: "processDoing",
+        type: "number",
+      },
+      {
+        title: "체크리스트",
+        width: 100,
+        name: "checklistDone",
+        type: "boolean",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "완료",
+            functionName: "filterEvent_올림",
+          },
+          {
+            value: "미완료",
+            functionName: "filterEvent_안올림",
+          },
+        ],
+      },
+      {
+        title: "프로필 사진",
+        width: 100,
+        name: "profilePhotoDone",
+        type: "boolean",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "올림",
+            functionName: "filterEvent_올림",
+          },
+          {
+            value: "안올림",
+            functionName: "filterEvent_안올림",
+          },
+        ],
+      },
+      {
+        title: "작업물",
+        width: 100,
+        name: "workingPhotoDone",
+        type: "boolean",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "올림",
+            functionName: "filterEvent_올림",
+          },
+          {
+            value: "안올림",
+            functionName: "filterEvent_안올림",
+          },
+        ],
+      },
+      {
         title: "계약 상태",
         width: 100,
         name: "status",
@@ -417,6 +489,26 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           name: "manger",
         },
         {
+          value: 0,
+          name: "processPending",
+        },
+        {
+          value: 0,
+          name: "processDoing",
+        },
+        {
+          value: "미완료",
+          name: "checklistDone",
+        },
+        {
+          value: "안올림",
+          name: "profilePhotoDone",
+        },
+        {
+          value: "안올림",
+          name: "workingPhotoDone",
+        },
+        {
           value: designer.information.contract.status,
           name: "status",
         },
@@ -526,7 +618,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
     if (firstLoad) {
 
-      ajaxJson({ noFlat: true, whereQuery: { "proposal.date": { $gte: past } } }, BACKHOST + "/getProjects", { equal: true }).then((projects) => {
+      ajaxJson({ noFlat: true, whereQuery: { $or: [ { "proposal.date": { $gte: past } }, { "process.status": { $regex: "^[대진]" } } ] } }, BACKHOST + "/getProjects", { equal: true }).then((projects) => {
 
         instance.projects = projects;
         instance.normalMatrix = {};

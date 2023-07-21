@@ -6246,7 +6246,7 @@ BillMaker.prototype.taxBill = async function (indexArr) {
   }
 }
 
-BillMaker.prototype.parsingCashReceipt = async function () {
+BillMaker.prototype.parsingCashReceipt = async function (noHeadlessMode = false) {
   const instance = this;
   const address = this.address;
   const { errorLog, emergencyAlarm, dateToString, stringToDate, equalJson, requestSystem } = this.mother;
@@ -6448,7 +6448,7 @@ BillMaker.prototype.parsingCashReceipt = async function () {
           }
         }
       }
-    ]);
+    ], 2500, {}, noHeadlessMode);
     if (!Array.isArray(frontResult)) {
       throw new Error(frontResult.message);
     }
