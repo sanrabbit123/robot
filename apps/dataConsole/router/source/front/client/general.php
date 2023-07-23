@@ -121,7 +121,7 @@ class GeneralPhp {
     $html .= '<main class="hiddenobject">'.$hiddenString.'</main>'."\n";
     $html .= '<footer class="hiddenobject"><h1 class="hiddenobject">(주)홈리에종</h1>'."\n";
     $html .= '<p class="hiddenobject">CEO : 박혜연</p>'."\n";
-    $html .= '<p class="hiddenobject">서울특별시 성동구 상원1길 26, 서울숲 A타워 1305호</p>'."\n";
+    $html .= '<p class="hiddenobject">서울특별시 성동구 성수일로 10, 서울숲ITCT지식산업센터 605호</p>'."\n";
     $html .= '<p class="hiddenobject">사업자등록번호 : 221 - 81 - 49759</p>'."\n";
     $html .= '<p class="hiddenobject">통신판매신고업 : 제 2020 - 서울성동 - 01563호</p>'."\n";
     $html .= '<p class="hiddenobject">T : 02-2039-2252</p>'."\n";

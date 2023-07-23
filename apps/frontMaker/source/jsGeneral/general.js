@@ -6296,7 +6296,7 @@ GeneralJs.prototype.footerMake = function (backgroundColor = null) {
   contents = {
     left: [
       "CEO : 박혜연",
-      "서울특별시 성동구 상원1길 26, 서울숲 A타워 1305호",
+      "서울특별시 성동구 성수일로 10, 서울숲ITCT지식산업센터 605호",
       "사업자등록번호 : 221 - 81 - 49759",
       "통신판매신고업 : 제 2020 - 서울성동 - 01563호",
     ],
