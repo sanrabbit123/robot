@@ -23,7 +23,11 @@ const GoogleAnalytics = function () {
     "2101784253",
     "21121014882",
     "21121014885",
-  ]
+    "21839149210",
+  ];
+  this.nonIpList.push(this.address.memberinfo.ip.outer.replace(/[^0-9]/gi, ''));
+  this.nonIpList.push(this.address.officeinfo.ip.outer.replace(/[^0-9]/gi, ''));
+  this.nonIpList = [ ...new Set(this.nonIpList) ];
 }
 
 GoogleAnalytics.prototype.returnDate = function (str) {

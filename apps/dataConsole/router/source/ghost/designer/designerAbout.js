@@ -226,10 +226,11 @@ DesignerAboutJs.prototype.contentsCenter = function () {
   const mother = this.mother;
   const { ea, baseTong, media, designer } = this;
   const { entireMode, adminMode } = this;
+  const { pageName, firstPageViewTime } = this;
   const { desid } = designer;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, autoHypenPhone, equalJson, variableArray } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, autoHypenPhone, equalJson, variableArray, homeliaisonAnalytics } = GeneralJs;
   let contents;
 
   contents = [
@@ -255,6 +256,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery = {};
               updateQuery["designer"] = text;
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "성함",
+                  column: "designer",
+                  value: text,
+                }
+              });
               return text;
             } catch (e) {
               console.log(e);
@@ -298,6 +312,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery = {};
               updateQuery["information.phone"] = text;
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "연락처",
+                  column: "information.phone",
+                  value: text,
+                }
+              });
               return text;
             } catch (e) {
               console.log(e);
@@ -340,6 +367,20 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["information.birth"] = new Date(year, month - 1, date);
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
 
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "생일",
+                  column: "information.birth",
+                  value: new Date(year, month - 1, date),
+                }
+              });
+
               return `${String(year)}년 ${String(month)}월 ${String(date)}일`;
             } catch (e) {
               window.alert(e.message);
@@ -364,6 +405,21 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery = {};
               updateQuery["information.email"] = text;
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "이메일",
+                  column: "information.email",
+                  value: text,
+                }
+              });
+
               return text;
             } catch (e) {
               console.log(e);
@@ -402,6 +458,20 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                   text = designer.information.personalSystem.webPage.length === 0 ? "없음" : designer.information.personalSystem.webPage[0];
                 }
               }
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "웹페이지",
+                  column: "information.personalSystem.webPage",
+                  value: text,
+                }
+              });
+
               return text;
             } catch (e) {
               console.log(e);
@@ -469,6 +539,21 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                   }
                 }
               }
+
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "인스타그램",
+                  column: "information.personalSystem.sns",
+                  value: text,
+                }
+              });
+
               return text;
             } catch (e) {
               console.log(e);
@@ -536,6 +621,21 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                   }
                 }
               }
+
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "블로그",
+                  column: "information.personalSystem.sns",
+                  value: text,
+                }
+              });
+
               return text;
             } catch (e) {
               console.log(e);
@@ -602,6 +702,20 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["information.contract.status"] = text;
               
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "업무 정보",
+                  column: "information.contract.status",
+                  value: text,
+                }
+              });
+
             } catch (e) {
               console.log(e);
             }
@@ -638,6 +752,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 updateQuery["analytics.grade"] = columns.findIndex((str) => { return str === text }) - 1;
                 
                 await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner"); 
+                await homeliaisonAnalytics({
+                  page: pageName,
+                  standard: firstPageViewTime,
+                  action: "designerAboutUpdate",
+                  data: {
+                    desid: desid,
+                    date: new Date(),
+                    type: "selection",
+                    property: "상태",
+                    column: "analytics.grade",
+                    value: columns.findIndex((str) => { return str === text }) - 1,
+                  }
+                });
 
               } else {
 
@@ -701,6 +828,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               instance.designer.information.business.career.startM = arr[1];
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "파트너십 기간",
+                  column: "information.business.career",
+                  value: `시작일 : ${String(arr[0])}년 ${String(arr[1])}월`,
+                }
+              });
 
               return `시작일 : ${String(arr[0])}년 ${String(arr[1])}월`;
 
@@ -827,6 +967,21 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 updateQuery["information.business.career.detail"] = newData;
                 instance.designer.information.business.career.detail = newData;
                 await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+                await homeliaisonAnalytics({
+                  page: pageName,
+                  standard: firstPageViewTime,
+                  action: "designerAboutUpdate",
+                  data: {
+                    desid: desid,
+                    date: new Date(),
+                    type: "block",
+                    property: "경력 상세",
+                    column: "information.business.career.detail",
+                    value: newData,
+                  }
+                });
+
               } else if (raw.mode === "update") {
                 newData = [];
                 for (let i = 0; i < careerData.length; i++) {
@@ -881,6 +1036,20 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 updateQuery["information.business.career.detail"] = newData;
                 instance.designer.information.business.career.detail = newData;
                 await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+                await homeliaisonAnalytics({
+                  page: pageName,
+                  standard: firstPageViewTime,
+                  action: "designerAboutUpdate",
+                  data: {
+                    desid: desid,
+                    date: new Date(),
+                    type: "block",
+                    property: "경력 상세",
+                    column: "information.business.career.detail",
+                    value: newData,
+                  }
+                });
               }
 
             } catch (e) {
@@ -948,6 +1117,20 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["information.business.career.detail"] = original;
               instance.designer.information.business.career.detail = original;
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "block",
+                  property: "경력 상세",
+                  column: "information.business.career.detail",
+                  value: original,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -1033,6 +1216,20 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 updateQuery["information.business.career.school"] = newData;
                 instance.designer.information.business.career.school = newData;
                 await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+                await homeliaisonAnalytics({
+                  page: pageName,
+                  standard: firstPageViewTime,
+                  action: "designerAboutUpdate",
+                  data: {
+                    desid: desid,
+                    date: new Date(),
+                    type: "block",
+                    property: "학력 상세",
+                    column: "information.business.career.school",
+                    value: newData,
+                  }
+                });
               } else if (raw.mode === "update") {
                 newData = [];
                 for (let i = 0; i < schoolData.length; i++) {
@@ -1075,6 +1272,20 @@ DesignerAboutJs.prototype.contentsCenter = function () {
                 updateQuery["information.business.career.school"] = newData;
                 instance.designer.information.business.career.school = newData;
                 await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+                await homeliaisonAnalytics({
+                  page: pageName,
+                  standard: firstPageViewTime,
+                  action: "designerAboutUpdate",
+                  data: {
+                    desid: desid,
+                    date: new Date(),
+                    type: "block",
+                    property: "학력 상세",
+                    column: "information.business.career.school",
+                    value: newData,
+                  }
+                });
               }
 
             } catch (e) {
@@ -1127,7 +1338,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["information.business.career.school"] = original;
               instance.designer.information.business.career.school = original;
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "block",
+                  property: "학력 상세",
+                  column: "information.business.career.school",
+                  value: original,
+                }
+              });
             } catch (e) {
               console.log(e);
             }
@@ -1175,6 +1398,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               instance.designer.information.business.career.relatedM = arr[1];
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "유관 경력",
+                  column: "information.business.career",
+                  value: `총 ${String(arr[0])}년 ${String(arr[1])}개월`,
+                }
+              });
 
               return `총 ${String(arr[0])}년 ${String(arr[1])}개월`;
 
@@ -1234,6 +1470,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["information.business.account"] = [ obj ];
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "계좌번호",
+                  column: "information.business.account",
+                  value: obj.bankName + " " + obj.accountNumber,
+                }
+              });
 
               return obj.bankName + " " + obj.accountNumber;
 
@@ -1272,6 +1521,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["information.business.businessInfo.businessNumber"] = (text === "-" ? "" : text);
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "사업자 등록번호",
+                  column: "information.business.businessInfo.businessNumber",
+                  value: text,
+                }
+              });
 
               return text;
 
@@ -1308,6 +1570,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["information.residentNunber"] = (text === "-" ? "" : text);
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "주민등록번호",
+                  column: "information.residentNunber",
+                  value: text,
+                }
+              });
 
               return text;
 
@@ -1354,6 +1629,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["information.business.businessInfo.classification"] = text;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "사업자 종류",
+                  column: "information.business.businessInfo.classification",
+                  value: text,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -1428,6 +1716,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["information.business.service.cost.percentageHistory"] = history;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "수수료",
+                  column: "information.business.service.cost.percentage",
+                  value: newFee,
+                }
+              });
 
               str = String(newFee) + " (현재)";
               for (let { date: { start, end }, percentage } of history) {
@@ -1532,6 +1833,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               instance.designer.information.address = [ text ];
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "주소",
+                  column: "information.address",
+                  value: text,
+                }
+              });
 
               return text;
 
@@ -1571,6 +1885,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               instance.designer.analytics.region.range = text;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "유효 범위",
+                  column: "analytics.region.range",
+                  value: text,
+                }
+              });
 
               return String(text) + "km";
 
@@ -1616,6 +1943,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               instance.designer.analytics.region.expenses = text;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "한계 범위",
+                  column: "analytics.region.expenses",
+                  value: text,
+                }
+              });
 
               return String(text) + "km";
 
@@ -1658,6 +1998,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               instance.designer.analytics.region.construct = text;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "시공 한계",
+                  column: "analytics.region.construct",
+                  value: text,
+                }
+              });
 
               return String(text) + "km";
 
@@ -1700,6 +2053,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.region.transportation"] = text;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "이동 수단",
+                  column: "analytics.region.transportation",
+                  value: text,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -1765,6 +2131,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               instance.designer.analytics.construct.ability = targetIndex;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "역량 범위",
+                  column: "analytics.construct.ability",
+                  value: targetIndex,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -1812,6 +2191,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               instance.designer.analytics.construct.level = targetIndex;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "진행 범위",
+                  column: "analytics.construct.level",
+                  value: targetIndex,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -1849,6 +2241,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.project.partial"] = (text === "가능");
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "부분 공간",
+                  column: "analytics.project.partial",
+                  value: text,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -1886,6 +2291,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.project.online"] = (text === "가능");
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "온라인",
+                  column: "analytics.project.online",
+                  value: text,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -1920,6 +2338,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.project.living"] = (text === "가능");
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "거주중",
+                  column: "analytics.project.living",
+                  value: text,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -1971,6 +2402,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.project.time.first"] = number;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "1차 제안 시간",
+                  column: "analytics.project.time.first",
+                  value: number,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2014,6 +2458,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.styling.method"] = text;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "제안 방식",
+                  column: "analytics.styling.method",
+                  value: text,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2048,6 +2505,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.project.cad"] = (text === "가능");
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "CAD 도면",
+                  column: "analytics.project.cad",
+                  value: text,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2085,6 +2555,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.project.collage"] = (text === "가능");
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "콜라주",
+                  column: "analytics.project.collage",
+                  value: text,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2119,6 +2602,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.project.modeling"] = index;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "3D",
+                  column: "analytics.project.modeling",
+                  value: index,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2178,6 +2674,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.construct.partner"] = (text === "있음");
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "협업 시공사",
+                  column: "analytics.construct.partner",
+                  value: text,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2209,6 +2718,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.construct.partnerName"] = text;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "협업 시공사명",
+                  column: "analytics.construct.partnerName",
+                  value: text,
+                }
+              });
 
               return text === '' ? '-' : text;
 
@@ -2246,6 +2768,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.construct.own"] = (text === "있음");
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "자체 시공사",
+                  column: "analytics.construct.own",
+                  value: text,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2277,6 +2812,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.construct.ownName"] = text;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "자체 시공사명",
+                  column: "analytics.construct.ownName",
+                  value: text,
+                }
+              });
 
               return text === '' ? '-' : text;
 
@@ -2314,6 +2862,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.construct.possible.supervision"] = (text === "가능");
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "시공 감리",
+                  column: "analytics.construct.possible.supervision",
+                  value: text,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2356,6 +2917,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.styling.furniture.builtin"] = index;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "빌트인 가구",
+                  column: "analytics.styling.furniture.builtin",
+                  value: index,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2401,6 +2975,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.styling.furniture.design"] = index;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "디자인 가구",
+                  column: "analytics.styling.furniture.design",
+                  value: index,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2446,6 +3033,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.styling.fabric.level"] = index;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "제작 패브릭",
+                  column: "analytics.styling.fabric.level",
+                  value: index,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2488,6 +3088,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.purchase.setting.install"] = (text === "직접");
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "설치 서비스",
+                  column: "analytics.purchase.setting.install",
+                  value: text,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2522,6 +3135,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.purchase.setting.storage"] = (text === "연결");
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "정리 수납",
+                  column: "analytics.purchase.setting.storage",
+                  value: text,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2573,6 +3199,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.personality.operation"] = index;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "운영 전문성",
+                  column: "analytics.personality.operation",
+                  value: index,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2607,6 +3246,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.personality.design"] = index;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "디자인 전문성",
+                  column: "analytics.personality.design",
+                  value: index,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2641,6 +3293,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.personality.efficient"] = index;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "업무 효율",
+                  column: "analytics.personality.efficient",
+                  value: index,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2675,6 +3340,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.personality.communication"] = index;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "소통 스타일",
+                  column: "analytics.personality.communication",
+                  value: index,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2709,6 +3387,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.personality.homeliaison"] = index;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "홈리에종 관계",
+                  column: "analytics.personality.homeliaison",
+                  value: index,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2754,6 +3445,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               instance.designer.analytics.styling.level = targetIndex + 1;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "스타일링",
+                  column: "analytics.styling.level",
+                  value: targetIndex + 1,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2795,6 +3499,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.styling.tendency.style." + target] = raw;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "tendency",
+                  property: "스타일 경향성",
+                  column: "analytics.styling.tendency.style." + target,
+                  value: raw,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2828,6 +3545,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.styling.tendency.texture." + target] = raw;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "tendency",
+                  property: "텍스처 경향성",
+                  column: "analytics.styling.tendency.texture." + target,
+                  value: raw,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2869,6 +3599,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.styling.tendency.color." + target] = raw;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "tendency",
+                  property: "컬러톤 경향성",
+                  column: "analytics.styling.tendency.color." + target,
+                  value: raw,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -2898,6 +3641,19 @@ DesignerAboutJs.prototype.contentsCenter = function () {
               updateQuery["analytics.styling.tendency.density." + target] = raw;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await homeliaisonAnalytics({
+                page: pageName,
+                standard: firstPageViewTime,
+                action: "designerAboutUpdate",
+                data: {
+                  desid: desid,
+                  date: new Date(),
+                  type: "tendency",
+                  property: "밀도 경향성",
+                  column: "analytics.styling.tendency.density." + target,
+                  value: raw,
+                }
+              });
 
             } catch (e) {
               console.log(e);
@@ -3457,7 +4213,7 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent, equalJson, stringToLink, linkToString, setThrottle, setQueue, sleep, removeByClass } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent, equalJson, stringToLink, linkToString, setThrottle, setQueue, sleep, removeByClass, homeliaisonAnalytics } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainContents = [
     {
@@ -3859,6 +4615,20 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
                       }
                     }, BRIDGEHOST + "/designerProfileUpdate");
     
+                    await homeliaisonAnalytics({
+                      page: instance.pageName,
+                      standard: instance.firstPageViewTime,
+                      action: "profilePositionUpdate",
+                      data: {
+                        desid: instance.designer.desid,
+                        date: new Date(),
+                        position: {
+                          x: instance.profileTarget.position.x,
+                          y: instance.profileTarget.position.y,
+                        }
+                      }
+                    });
+
                     this.setAttribute("process", "false");
     
                   } catch (e) {
@@ -3945,8 +4715,20 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
 
             response = await ajaxForm(formData, BRIDGEHOST + "/designerProfilePhoto");
             responseObj = equalJson(response);
-
             responseObj.link = stringToLink(responseObj.link);
+
+            await homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "profilePhotoUpload",
+              data: {
+                desid: instance.designer.desid,
+                date: new Date(),
+                gs: (garoBoo ? "g" : "s"),
+                exe: thisExe,
+              }
+            });
+
             instance.profileTarget = responseObj;
             instance.profilePhoto = responseObj.link;
             if (instance.grayLoading !== null) {
@@ -4415,7 +5197,7 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, ajaxForm, equalJson, stringToLink } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, ajaxForm, equalJson, stringToLink, homeliaisonAnalytics } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainContents = [
     {
@@ -4654,6 +5436,19 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
             responseObj = equalJson(response);
 
             whiteLoading.remove();
+
+            await homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "workPhotoUpload",
+              data: {
+                desid: instance.designer.desid,
+                date: new Date(),
+                gs: (garoBoo ? "g" : "s"),
+                exe: thisExe,
+                index: index,
+              }
+            });
 
             responseObj.link = stringToLink(responseObj.link);
 
@@ -5025,7 +5820,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent, homeliaisonAnalytics } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const photoWithWordsClassName = "photoWithWordsClassName";
   const mainContents = [
@@ -5253,6 +6048,16 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
         await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
         instance.designer.setting.front.introduction.desktop = updateQuery["setting.front.introduction.desktop"];
         instance.designer.setting.front.introduction.mobile = updateQuery["setting.front.introduction.mobile"];
+
+        await homeliaisonAnalytics({
+          page: instance.pageName,
+          standard: instance.firstPageViewTime,
+          action: "profileIntroductionUpdate",
+          data: {
+            desid: instance.designer.desid,
+            date: new Date(),
+          }
+        });
 
       } catch (e) {
         window.alert(e.message);
