@@ -427,6 +427,24 @@ JobPostingJs.prototype.insertAspirantBox = function () {
   let textareaBlurEvent;
   let greenLinkFocusEvent;
   let greenLinkBlurEvent;
+  let plusSize;
+  let questionWeight;
+  let plusTextTop;
+  let noticeCircleWidth;
+  let noticeCircleTop;
+  let noticeCircleMargin;
+  let careerBlocksRender;
+  let careerBlockGrayOuterMargin;
+  let careerBlockOuterMargin;
+  let careerBlockOuterMarginTop;
+  let careerBlockOuterMarginBottom;
+  let careerBlockInnerMargin;
+  let careerBlockInnerMarginSmall;
+  let careerBlockSize;
+  let blockCancelWidth;
+  let blockCancelTop;
+  let tempBlock;
+  let careerBlockMarginLeft;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -724,6 +742,29 @@ JobPostingJs.prototype.insertAspirantBox = function () {
   subFontTop = <%% 14, 14, 15, 16, 1 %%>;
   subFontBetween = <%% 12, 12, 9, 6, 1 %%>;
 
+  plusSize = <%% 13, 13, 13, 13, 2.5 %%>;
+
+  questionWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+  plusTextTop = <%% -1.5, -1.5, -1.5, -1.5, -0.1 %%>;
+
+  noticeCircleWidth = <%% 12, 12, 12, 12, 2.8 %%>;
+  noticeCircleTop = <%% (isMac() ? 9 : 6.5), (isMac() ? 8.5 : 6), (isMac() ? 8 : 5.5), (isMac() ? 7.5 : 5), (isIphone() ? 1.3 : 1.1) %%>;
+  noticeCircleMargin = <%% 5, 5, 5, 5, 1 %%>;
+
+  careerBlockGrayOuterMargin = <%% 10, 10, 9, 8, 0 %%>;
+  careerBlockOuterMargin = <%% 14, 14, 14, 12, 2 %%>;
+  careerBlockOuterMarginTop = <%% (isMac() ? 10 : 12), (isMac() ? 10 : 12), (isMac() ? 10 : 12), (isMac() ? 10 : 12), 2 %%>;
+  careerBlockOuterMarginBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), 2 %%>;
+  careerBlockInnerMargin = <%% 6, 6, 6, 4, 1 %%>;
+  careerBlockInnerMarginSmall = <%% 2, 2, 2, 2, 0 %%>;
+  careerBlockSize = <%% 13, 13, 13, 13, 2.5 %%>;
+
+  blockCancelWidth = <%% 12, 12, 12, 12, 2.8 %%>;
+  blockCancelTop = <%% 14, 14, 13, 12, 2 %%>;
+
+  careerBlockMarginLeft = <%% 38, 38, 38, 38, 38 %%>;
+
   if (generalMode) {
     contents = {
       main: [
@@ -749,6 +790,8 @@ JobPostingJs.prototype.insertAspirantBox = function () {
       ]
     };
   }
+
+  careerBlocksRender = () => {};
 
   barClickEvent = (arr) => {
     const valuesArr = equalJson(JSON.stringify(arr));
@@ -1274,6 +1317,104 @@ JobPostingJs.prototype.insertAspirantBox = function () {
   textareaBlurEvent = function (e) {
     this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
   }
+
+  careerBlocksRender = (value, tong) => {
+    cleanChildren(tong);
+    createNode({
+      mother: tong,
+      style: {
+        display: "block",
+        position: "relative",
+        padding: String(careerBlockGrayOuterMargin) + ea,
+        width: withOut(careerBlockGrayOuterMargin * 2, ea),
+        borderRadius: String(5) + "px",
+        background: desktop ? colorChip.gray0 : colorChip.white,
+      },
+      children: value.map((obj, index) => {
+        const { title, value: factorValue } = obj;
+        const lastBoo = (index === value.length - 1);
+        return {
+          attribute: {
+            index: String(index),
+          },
+          style: {
+            display: "block",
+            position: "relative",
+            padding: String(careerBlockOuterMargin) + ea,
+            paddingTop: String(careerBlockOuterMarginTop) + ea,
+            paddingBottom: String(careerBlockOuterMarginBottom) + ea,
+            width: withOut(careerBlockOuterMargin * 2, ea),
+            borderRadius: String(5) + "px",
+            marginBottom: !lastBoo ? String(careerBlockInnerMargin) + ea : "",
+            background: desktop ? colorChip.white : colorChip.gray0,
+            boxShadow: desktop ? "0px 2px 11px -9px " + colorChip.shadow : "",
+          },
+          children: factorValue.map((str, index) => {
+            const lastBoo = (index === factorValue.length - 1);
+            return {
+              event: {
+                click: async function (e) {
+                  try {
+                    const index = Number(this.parentElement.getAttribute("index"));
+                    const updateFunction = plusBlockEvent("update", index);
+                    await updateFunction.call(this, e);
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              },
+              text: "<b%" + title[index] + " %b>:" + "&nbsp;&nbsp;&nbsp;" + str,
+              style: {
+                display: "block",
+                position: "relative",
+                fontSize: String(careerBlockSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                marginBottom: !lastBoo ? String(careerBlockInnerMarginSmall) + ea : "",
+              },
+              bold: {
+                fontSize: String(careerBlockSize) + ea,
+                fontWeight: String(800),
+                color: colorChip.black,
+              },
+              under: {
+                fontSize: String(careerBlockSize) + ea,
+                fontWeight: String(200),
+                color: colorChip.green,
+              }
+            }
+          }).concat([
+            {
+              mode: "svg",
+              attribute: {
+                index: String(index),
+              },
+              event: {
+                click: async function (e) {
+                  try {
+                    const index = Number(this.getAttribute("index"));
+
+                    
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              },
+              source: instance.mother.returnCancelCircle(colorChip.gray4),
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                width: String(blockCancelWidth) + ea,
+                top: String(blockCancelTop) + ea,
+                right: String(blockCancelTop) + ea,
+                cursor: "pointer",
+              }
+            }
+          ])
+        }
+      })
+    });
+  };
 
   mainBlock = createNode({
     mother: this.baseTong,
@@ -1935,13 +2076,12 @@ JobPostingJs.prototype.insertAspirantBox = function () {
     }
   });
   // 7
-  createNode({
+  tempBlock = createNode({
     mother: rightBox,
     style: {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight) + ea,
     },
     children: [
       {
@@ -1971,10 +2111,39 @@ JobPostingJs.prototype.insertAspirantBox = function () {
       },
       {
         style: {
+          display: "inline-flex",
+          verticalAlign: "top",
+          position: "relative",
+          background: colorChip.green,
+          width: String(noticeCircleWidth) + ea,
+          height: String(noticeCircleWidth) + ea,
+          borderRadius: String(noticeCircleWidth) + ea,
+          top: String(noticeCircleTop) + ea,
+          marginLeft: String(noticeCircleMargin) + ea,
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+        },
+        child: {
+          text: "+",
+          style: {
+            position: "relative",
+            fontSize: String(plusSize) + ea,
+            fontWeight: String(questionWeight),
+            top: String(plusTextTop) + ea,
+            color: colorChip.white,
+            fontFamily: "graphik",
+          }
+        }
+      },
+      {
+        style: {
           display: "inline-block",
-          position: "absolute",
+          verticalAlign: "top",
+          position: "relative",
           top: String(grayTop) + ea,
-          left: String(leftGrayType0) + ea,
+          marginLeft: String(careerBlockMarginLeft) + ea,
           width: withOut(leftGrayType0, ea),
           "min-height": String(grayHeight) + ea,
           background: colorChip.gray1,
@@ -1983,14 +2152,26 @@ JobPostingJs.prototype.insertAspirantBox = function () {
       },
     ]
   });
+  careerBlocksRender([{
+    title: [
+      "회사",
+      "담당 업무",
+      "기간",
+    ],
+    value: [
+      "회사명",
+      "담당 업무 상세",
+      "총 기간",
+    ]
+  }], tempBlock.children[3]);
+
   // 8
-  createNode({
+  tempBlock = createNode({
     mother: rightBox,
     style: {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight) + ea,
     },
     children: [
       {
@@ -2020,10 +2201,39 @@ JobPostingJs.prototype.insertAspirantBox = function () {
       },
       {
         style: {
+          display: "inline-flex",
+          verticalAlign: "top",
+          position: "relative",
+          background: colorChip.green,
+          width: String(noticeCircleWidth) + ea,
+          height: String(noticeCircleWidth) + ea,
+          borderRadius: String(noticeCircleWidth) + ea,
+          top: String(noticeCircleTop) + ea,
+          marginLeft: String(noticeCircleMargin) + ea,
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+        },
+        child: {
+          text: "+",
+          style: {
+            position: "relative",
+            fontSize: String(plusSize) + ea,
+            fontWeight: String(questionWeight),
+            top: String(plusTextTop) + ea,
+            color: colorChip.white,
+            fontFamily: "graphik",
+          }
+        }
+      },
+      {
+        style: {
           display: "inline-block",
-          position: "absolute",
+          verticalAlign: "top",
+          position: "relative",
           top: String(grayTop) + ea,
-          left: String(leftGrayType0) + ea,
+          marginLeft: String(careerBlockMarginLeft) + ea,
           width: withOut(leftGrayType0, ea),
           "min-height": String(grayHeight) + ea,
           background: colorChip.gray1,
@@ -2032,6 +2242,19 @@ JobPostingJs.prototype.insertAspirantBox = function () {
       },
     ]
   });
+  careerBlocksRender([{
+    title: [
+      "학교",
+      "전공",
+      "졸업",
+    ],
+    value: [
+      "학교명",
+      "전공명",
+      "총 기간",
+    ]
+  }], tempBlock.children[3]);
+
 
   // 9 : margin
   createNode({
