@@ -130,13 +130,8 @@ JobPostingJs.prototype.insertInitBox = function () {
   tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  if (generalMode) {
-    titleWording = "디자이너 파트너십 신청";
-    subTitleContents = "신청서를 남겨주시면, 확인 후 연락드립니다!";
-  } else {
-    titleWording = "추가 포트폴리오 전송";
-    subTitleContents = "추가적으로 포트폴리오를 전송하실 수 있습니다!";  
-  }
+  titleWording = "CX 마케터 채용";
+  subTitleContents = "지원서를 남겨주시면, 확인 후 연락드립니다!";
 
   mobileBlockTop = 4.5;
 
@@ -225,6 +220,95 @@ JobPostingJs.prototype.insertInitBox = function () {
         }
       }
     ]
+  });
+
+}
+
+JobPostingJs.prototype.insertPostingBox = function () {
+  const instance = this;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson, cleanChildren } = GeneralJs;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  let mainBlock;
+  let mainPaddingTop, mainPaddingBottom;
+  let contentsAreaMarginTop;
+  let titleArea, contentsArea;
+  let innerPadding;
+  let blockHeight;
+  let bottomMargin;
+  let margin;
+  let baseUrl;
+  let frontSource, backSource;
+
+  blockHeight = <%% 784, 765, 725, 710, 176 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 52, 52, 44, 32, 52 %%>;
+  
+  contentsAreaMarginTop = <%% 45, 40, 34, 28, 6 %%>;
+
+  mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
+  mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 20 %%>;
+
+  innerPadding = <%% 60, 50, 45, 40, 6 %%>;
+
+  baseUrl = BRIDGEHOST.replace(/\:3000$/gi, '') + "/temporaryPage/cx2307/image/";
+  frontSource = <&& "big_desktop_front.png" | "middle_desktop_front.png" | "small_desktop_front.png" | "micro_desktop_front.png" | "general_mobile_front.png" &&>;
+  backSource = <&& "big_desktop_back.jpg" | "middle_desktop_back.jpg" | "small_desktop_back.jpg" | "micro_desktop_back.jpg" | "general_mobile_back.jpg" &&>;
+
+  mainBlock = createNode({
+    mother: this.baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+    }
+  });
+
+  contentsArea = createNode({
+    mother: mainBlock,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(innerPadding * 2, ea),
+      marginTop: String(contentsAreaMarginTop) + ea,
+      background: colorChip.white,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      paddingTop: String(innerPadding) + ea,
+      paddingBottom: String(innerPadding) + ea,
+      paddingLeft: String(innerPadding) + ea,
+      paddingRight: String(innerPadding) + ea,
+    }
+  });
+
+  createNode({
+    mother: contentsArea,
+    mode: "img",
+    attribute: {
+      src: baseUrl + backSource,
+    },
+    style: {
+      display: "block",
+      width: withOut(0, ea),
+      position: "relative",
+      borderRadius: String(5) + "px",
+    }
+  });
+
+  createNode({
+    mother: contentsArea,
+    mode: "img",
+    attribute: {
+      src: baseUrl + frontSource,
+    },
+    style: {
+      display: "block",
+      width: withOut(innerPadding * 2, ea),
+      position: "absolute",
+      top: String(innerPadding) + ea,
+      left: String(innerPadding) + ea,
+      borderRadius: String(5) + "px",
+    }
   });
 
 }
@@ -613,7 +697,7 @@ JobPostingJs.prototype.insertAspirantBox = function () {
   numberWeight = <%% 700, 700, 700, 700, 700 %%>;
   numberLineHeight = <%% 1.4, 1.4, 1.4, 1.4, 1.4 %%>;
 
-  contentsAreaMarginTop = <%% 45, 40, 34, 28, 6 %%>;
+  contentsAreaMarginTop = <%% 15, 15, 12, 10, 2 %%>;
 
   mainPaddingTop = <%% (isMac() ? 133 : 131), (isMac() ? 135 : 135), (isMac() ? 103 : 102), (isMac() ? 83 : 82), 10 %%>;
   mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 20 %%>;
@@ -668,11 +752,7 @@ JobPostingJs.prototype.insertAspirantBox = function () {
   agreeCircleMarginRight = <%% 5, 5, 5, 5, 1 %%>;
 
   submitTongMarginTop = <%% 20, 20, 20, 20, 6 %%>;
-  if (generalMode) {
-    submitButtonWidth = <%% 180, 180, 160, 145, 36 %%>;
-  } else {
-    submitButtonWidth = <%% 200, 200, 170, 155, 39 %%>;
-  }
+  submitButtonWidth = <%% 110, 110, 110, 110, 36 %%>;
   submitButtonHeight = <%% 47, 47, 42, 38, 10 %%>;
   submitSize = <%% 20, 20, 17, 16, 4 %%>;
   submitWeight = <%% 400, 400, 400, 400, 400 %%>;
@@ -771,10 +851,10 @@ JobPostingJs.prototype.insertAspirantBox = function () {
         "홈리에종 파트너십 신청",
       ],
       sub: [
-        <&& "홈리에종의 파트너십 신청을 위해서는" | "홈리에종 파트너십 신청을 위해서는" | "파트너십 신청을 위해서는" | "파트너십 신청을 위해서는" | "홈리에종 파트너십 신청을 위해서는" &&>,
-        <&& "다음과 같이 기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." &&>,
-        <&& "파트너십 신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," | "신청서를 간단히 작성 후," &&>,
-        <&& "<b%디자이너 활동%b>을 시작해보세요!" | "<b%디자이너 활동%b>을 시작해보세요!" | "<b%디자이너 활동%b>을 시작해보세요!" | "<b%활동%b>을 시작해보세요!" | "<b%활동%b>을 시작해보세요!" &&>,
+        "홈리에종 CX 마케터 지원을 위해서는",
+        <&& "다음과 같은 기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." &&>,
+        "지원서를 작성해주시면,",
+        "확인 후 연락 드리겠습니다.",
       ]
     };
   } else {
@@ -824,108 +904,6 @@ JobPostingJs.prototype.insertAspirantBox = function () {
 
   emailBlurEvent = function () {
     this.value = this.value.replace(/[\=\+\?\#\&\(\)]/gi, '');
-  }
-
-  addressButtonEvent = async function (e) {
-    try {
-      const totalContents = document.getElementById("totalcontents");
-      const removeTargets = "removeTargets";
-      const zIndex = 4;
-      let cancelBack, whitePrompt;
-
-      GeneralJs.stacks["addressEvent"] = async function (e) {
-        try {
-          if (typeof e.data === "string") {
-            findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address0").value = e.data.trim();
-            findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address1").value = '';
-            findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "address1").focus();
-          }
-          const targets = document.querySelectorAll('.' + removeTargets);
-          for (let dom of targets) {
-            dom.remove();
-          }
-          window.removeEventListener("message", GeneralJs.stacks["addressEvent"]);
-          GeneralJs.stacks["addressEvent"] = null;
-        } catch (e) {
-          await GeneralJs.ajaxJson({ message: "JobPostingJs.addressEvent : " + e.message }, BACKHOST + "/errorLog");
-        }
-      }
-      window.addEventListener("message", GeneralJs.stacks["addressEvent"]);
-
-      cancelBack = createNode({
-        mother: totalContents,
-        class: [ removeTargets ],
-        event: {
-          click: (e) => {
-            const targets = document.querySelectorAll('.' + removeTargets);
-            for (let dom of targets) {
-              dom.remove();
-            }
-            if (GeneralJs.stacks["addressEvent"] !== null && GeneralJs.stacks["addressEvent"] !== undefined) {
-              window.removeEventListener("message", GeneralJs.stacks["addressEvent"]);
-              GeneralJs.stacks["addressEvent"] = null;
-            }
-          }
-        },
-        style: {
-          position: "fixed",
-          top: String(0),
-          left: String(0),
-          zIndex: String(zIndex),
-          width: String(100) + '%',
-          height: String(100) + '%',
-          background: "transparent",
-        }
-      });
-
-      whitePrompt = createNode({
-        mother: totalContents,
-        class: [ removeTargets ],
-        event: {
-          click: (e) => { e.stopPropagation() }
-        },
-        style: {
-          position: "fixed",
-          left: "calc(50% - " + String(addressPromptWidth / 2) + ea + ")",
-          top: "calc(50% - " + String(addressPromptHeight / 2) + ea + ")",
-          width: String(addressPromptWidth) + ea,
-          height: String(addressPromptHeight) + ea,
-          zIndex: String(zIndex),
-          background: colorChip.white,
-          borderRadius: String(3) + "px",
-          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          animation: "fadeuphard 0.3s ease forwards",
-          overflow: "hidden",
-        },
-        children: [
-          {
-            mode: "iframe",
-            attribute: [
-              { src: FRONTHOST + "/engine/address.php" },
-              { width: String(100) + '%' },
-              { height: String(100) + '%' },
-            ],
-            style: {
-              position: "absolute",
-              top: String(0) + ea,
-              left: String(0) + ea,
-              border: String(0),
-            }
-          }
-        ]
-      });
-
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  addressBlurEvent = function (e) {
-    this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
-  }
-
-  addressFocusEvent = function (e) {
-    this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
   }
 
   commentsFocusEvent = function (e) {
@@ -2164,7 +2142,6 @@ JobPostingJs.prototype.insertAspirantBox = function () {
       "총 기간",
     ]
   }], tempBlock.children[3]);
-
   // 8
   tempBlock = createNode({
     mother: rightBox,
@@ -2254,19 +2231,7 @@ JobPostingJs.prototype.insertAspirantBox = function () {
       "총 기간",
     ]
   }], tempBlock.children[3]);
-
-
-  // 9 : margin
-  createNode({
-    mother: rightBox,
-    style: {
-      display: "block",
-      position: "relative",
-      marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight * marginRatio) + ea,
-    }
-  });
-  // 10
+  // 9
   createNode({
     mother: rightBox,
     style: {
@@ -2479,7 +2444,7 @@ JobPostingJs.prototype.insertAspirantBox = function () {
         },
         children: [
           {
-            text: generalMode ? "디자이너 신청하기" : "포트폴리오 전송하기",
+            text: "지원하기",
             style: {
               display: "inline-block",
               position: "relative",
@@ -3215,6 +3180,7 @@ JobPostingJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
+          instance.insertPostingBox();
           instance.insertAspirantBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "JobPostingJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
