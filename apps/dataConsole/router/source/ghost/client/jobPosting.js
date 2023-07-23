@@ -529,6 +529,12 @@ JobPostingJs.prototype.insertAspirantBox = function () {
   let blockCancelTop;
   let tempBlock;
   let careerBlockMarginLeft;
+  let propertyWidth;
+  let yearWidth, monthWidth;
+  let yearMonthTextWidth;
+  let yearMonthTextMargin;
+  let careerBlockLeftMinus;
+  let textareaVisualTop;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -826,14 +832,14 @@ JobPostingJs.prototype.insertAspirantBox = function () {
 
   questionWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  plusTextTop = <%% -1.5, -1.5, -1.5, -1.5, -0.1 %%>;
+  plusTextTop = <%% -1.5, -1.5, -1.5, -1.5, -0.2 %%>;
 
   noticeCircleWidth = <%% 12, 12, 12, 12, 2.8 %%>;
-  noticeCircleTop = <%% (isMac() ? 9 : 6.5), (isMac() ? 8.5 : 6), (isMac() ? 8 : 5.5), (isMac() ? 7.5 : 5), (isIphone() ? 1.3 : 1.1) %%>;
+  noticeCircleTop = <%% (isMac() ? 9 : 6.5), (isMac() ? 9 : 6.5), (isMac() ? 8.5 : 6), (isMac() ? 8 : 5.5), 2 %%>;
   noticeCircleMargin = <%% 5, 5, 5, 5, 1 %%>;
 
   careerBlockGrayOuterMargin = <%% 10, 10, 9, 8, 0 %%>;
-  careerBlockOuterMargin = <%% 14, 14, 14, 12, 2 %%>;
+  careerBlockOuterMargin = <%% 14, 14, 14, 12, 2.5 %%>;
   careerBlockOuterMarginTop = <%% (isMac() ? 10 : 12), (isMac() ? 10 : 12), (isMac() ? 10 : 12), (isMac() ? 10 : 12), 2 %%>;
   careerBlockOuterMarginBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), 2 %%>;
   careerBlockInnerMargin = <%% 6, 6, 6, 4, 1 %%>;
@@ -843,7 +849,16 @@ JobPostingJs.prototype.insertAspirantBox = function () {
   blockCancelWidth = <%% 12, 12, 12, 12, 2.8 %%>;
   blockCancelTop = <%% 14, 14, 13, 12, 2 %%>;
 
-  careerBlockMarginLeft = <%% 38, 38, 38, 38, 38 %%>;
+  careerBlockMarginLeft = <%% 38, 30, 22, 22, 4.9 %%>;
+
+  propertyWidth = <%% 91, 79, 69, 69, 15.7 %%>;
+  yearWidth = <%% 72, 72, 64, 56, 13 %%>;
+  monthWidth = <%% 40, 40, 36, 32, 8 %%>;
+
+  yearMonthTextWidth = <%% 32, 32, 30, 24, 6 %%>;
+  yearMonthTextMargin = <%% 6, 6, 5, 4, 1 %%>;
+
+  textareaVisualTop = <%% 38, 35, 34, 32, 8 %%>;
 
   if (generalMode) {
     contents = {
@@ -851,10 +866,10 @@ JobPostingJs.prototype.insertAspirantBox = function () {
         "홈리에종 파트너십 신청",
       ],
       sub: [
-        "홈리에종 CX 마케터 지원을 위해서는",
+        <&& "홈리에종 CX 마케터 지원을 위해서는" | "CX 마케터 지원을 위해서는" | "CX 마케터 지원을 위해서는" | "CX 지원을 위해서는" | "CX 마케터 지원을 위해서는"&&>,
         <&& "다음과 같은 기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." &&>,
         "지원서를 작성해주시면,",
-        "확인 후 연락 드리겠습니다.",
+        <&& "확인 후 연락 드리겠습니다." | "확인 후 연락 드리겠습니다." | "확인 후 연락 드리겠습니다." | "연락 드리겠습니다." | "확인 후 연락 드리겠습니다." &&>,
       ]
     };
   } else {
@@ -1731,7 +1746,7 @@ JobPostingJs.prototype.insertAspirantBox = function () {
           fontWeight: String(mainWeight),
           color: colorChip.black,
           verticalAlign: "top",
-          width: String(91) + ea,
+          width: String(propertyWidth) + ea,
         }
       },
       {
@@ -1882,7 +1897,7 @@ JobPostingJs.prototype.insertAspirantBox = function () {
         }
       },
       {
-        text: "생년월일",
+        text: "생일",
         style: {
           display: "inline-block",
           position: "relative",
@@ -1891,7 +1906,7 @@ JobPostingJs.prototype.insertAspirantBox = function () {
           fontWeight: String(mainWeight),
           color: colorChip.black,
           verticalAlign: "top",
-          width: String(91) + ea,
+          width: String(propertyWidth) + ea,
         }
       },
       {
@@ -1899,7 +1914,7 @@ JobPostingJs.prototype.insertAspirantBox = function () {
           display: "inline-block",
           position: "relative",
           top: String(grayTop) + ea,
-          width: String(80) + ea,
+          width: String(yearWidth) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
@@ -1918,7 +1933,7 @@ JobPostingJs.prototype.insertAspirantBox = function () {
             top: String(0) + ea,
             left: String(0) + ea,
             width: withOut(0, ea),
-            height: withOut(2, ea),
+            height: withOut((desktop ? 2 : 0.3), ea),
             outline: String(0),
             border: String(0),
             fontSize: String(inputSize) + ea,
@@ -1939,8 +1954,8 @@ JobPostingJs.prototype.insertAspirantBox = function () {
           fontWeight: String(300),
           color: colorChip.black,
           verticalAlign: "top",
-          marginLeft: String(6) + ea,
-          width: String(32) + ea,
+          marginLeft: String(yearMonthTextMargin) + ea,
+          width: String(yearMonthTextWidth) + ea,
         }
       },
       {
@@ -1948,7 +1963,7 @@ JobPostingJs.prototype.insertAspirantBox = function () {
           display: "inline-block",
           position: "relative",
           top: String(grayTop) + ea,
-          width: String(46) + ea,
+          width: String(monthWidth) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
@@ -1967,7 +1982,7 @@ JobPostingJs.prototype.insertAspirantBox = function () {
             top: String(0) + ea,
             left: String(0) + ea,
             width: withOut(0, ea),
-            height: withOut(2, ea),
+            height: withOut((desktop ? 2 : 0.3), ea),
             outline: String(0),
             border: String(0),
             fontSize: String(inputSize) + ea,
@@ -1988,8 +2003,8 @@ JobPostingJs.prototype.insertAspirantBox = function () {
           fontWeight: String(300),
           color: colorChip.black,
           verticalAlign: "top",
-          marginLeft: String(6) + ea,
-          width: String(32) + ea,
+          marginLeft: String(yearMonthTextMargin) + ea,
+          width: String(yearMonthTextWidth) + ea,
         }
       },
       {
@@ -1997,7 +2012,7 @@ JobPostingJs.prototype.insertAspirantBox = function () {
           display: "inline-block",
           position: "relative",
           top: String(grayTop) + ea,
-          width: String(36) + ea,
+          width: String(monthWidth) + ea,
           height: String(grayHeight) + ea,
           background: colorChip.gray1,
           borderRadius: String(3) + "px",
@@ -2016,7 +2031,7 @@ JobPostingJs.prototype.insertAspirantBox = function () {
             top: String(0) + ea,
             left: String(0) + ea,
             width: withOut(0, ea),
-            height: withOut(2, ea),
+            height: withOut((desktop ? 2 : 0.3), ea),
             outline: String(0),
             border: String(0),
             fontSize: String(inputSize) + ea,
@@ -2037,8 +2052,8 @@ JobPostingJs.prototype.insertAspirantBox = function () {
           fontWeight: String(300),
           color: colorChip.black,
           verticalAlign: "top",
-          marginLeft: String(6) + ea,
-          width: String(32) + ea,
+          marginLeft: String(yearMonthTextMargin) + ea,
+          width: String(yearMonthTextWidth) + ea,
         }
       },
     ]
@@ -2254,7 +2269,7 @@ JobPostingJs.prototype.insertAspirantBox = function () {
         }
       },
       {
-        text: "자기소개",
+        text: "자기소개서",
         style: {
           display: "inline-block",
           position: "relative",
@@ -2283,13 +2298,9 @@ JobPostingJs.prototype.insertAspirantBox = function () {
         attribute: {
           property: "etc",
         },
-        event: {
-          focus: commentsFocusEvent,
-          blur: commentsBlurEvent,
-        },
         style: {
           position: "absolute",
-          top: String(38 + textareaTop) + ea,
+          top: String(textareaVisualTop + textareaTop) + ea,
           left: String(0 + textareaLeft) + ea,
           width: withOut(textareaLeft * 2, ea),
           height: String(grayBigHeight - (textareaTop * 1)) + ea,

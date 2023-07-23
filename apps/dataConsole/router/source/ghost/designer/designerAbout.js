@@ -6453,15 +6453,15 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   questionSize = <%% 10, 10, 10, 10, 2.5 %%>;
   plusSize = <%% 13, 13, 13, 13, 2.5 %%>;
   questionWeight = <%% 500, 500, 500, 500, 500 %%>;
-  questionTextTop = <%% -1, -1, -1, -1, -0.1 %%>;
-  plusTextTop = <%% -1.5, -1.5, -1.5, -1.5, -0.1 %%>;
+  questionTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
+  plusTextTop = <%% -1.5, -1.5, -1.5, -1.5, -0.2 %%>;
 
   noticeCircleWidth = <%% 12, 12, 12, 12, 2.8 %%>;
-  noticeCircleTop = <%% (isMac() ? 6 : 3.5), (isMac() ? 5.5 : 3), (isMac() ? 5 : 2.5), (isMac() ? 4.5 : 2), (isIphone() ? 1.3 : 1.1) %%>;
+  noticeCircleTop = <%% (isMac() ? 6 : 3.5), (isMac() ? 5.5 : 3), (isMac() ? 5 : 2.5), (isMac() ? 4.5 : 2), (isIphone() ? 1.3 : 1.2) %%>;
   noticeCircleMargin = <%% 5, 5, 5, 5, 1 %%>;
 
   careerBlockGrayOuterMargin = <%% 10, 10, 9, 8, 0 %%>;
-  careerBlockOuterMargin = <%% 14, 14, 14, 12, 2 %%>;
+  careerBlockOuterMargin = <%% 14, 14, 14, 12, 2.5 %%>;
   careerBlockOuterMarginTop = <%% (isMac() ? 10 : 12), (isMac() ? 10 : 12), (isMac() ? 10 : 12), (isMac() ? 10 : 12), 2 %%>;
   careerBlockOuterMarginBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), 2 %%>;
   careerBlockInnerMargin = <%% 6, 6, 6, 4, 1 %%>;
