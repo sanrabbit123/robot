@@ -2183,7 +2183,7 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
       if (!instance.fireWall(req)) {
         throw new Error("post ban");
       }
-      if (req.body.mode === undefined || req.body.desid === undefined) {
+      if (req.body.mode === undefined) {
         throw new Error("invaild post");
       }
       const selfMongo = instance.mongolocal;
@@ -2193,7 +2193,7 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
       const idWords = "noticeDesignerConsoleSend_";
       const voice = true;
       const fairy = true;
-      const { mode, desid } = equalJson(req.body);
+      const { mode } = equalJson(req.body);
       let logDefaultObj;
       let thisJson;
       let rows;
@@ -2201,7 +2201,7 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
       let thisHistory;
 
       if (mode === "send") {
-        const { designer, type } = equalJson(req.body);
+        const { desid, designer, type } = equalJson(req.body);
 
         logDefaultObj = {
           id: idWords + uniqueValue("hex"),
@@ -2230,7 +2230,7 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
             { date: new Date(), history: thisHistory },
           ], { selfMongo });
         }
-        
+
         if (type === "checklist") {
 
           await messageSend({
@@ -2285,6 +2285,19 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
 
         } else {
           throw new Error("invalid type");
+        }
+
+      } else if (mode === "get") {
+        if (req.body.desid === undefined) {
+          rows = await back.mongoRead(collection, { "designer.desid": req.body.desid }, { selfMongo });
+          if (rows.length > 0) {
+            res.send(JSON.stringify(rows[0]));
+          } else {
+            throw new Error("invalid desid");
+          }
+        } else {
+          rows = await back.mongoRead(collection, {}, { selfMongo });
+          res.send(JSON.stringify(rows));
         }
       } else {
         throw new Error("invalid mode");
