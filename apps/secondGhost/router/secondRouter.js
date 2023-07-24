@@ -2233,6 +2233,7 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
 
         if (type === "checklist") {
 
+          await kakao.sendTalk("noticeDesignerChecklist", "배창규", "010-2747-3403", { designer, host: address.frontinfo.host, path: "about", desid });
           await messageSend({
             text: designer + " 실장님께 체크리스트 요청 알림톡을 전송하였습니다!",
             channel,
@@ -2240,12 +2241,11 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
             fairy
           });
 
-          // kakao
-
           res.send(JSON.stringify({ message: "success" }));
 
         } else if (type === "console") {
 
+          await kakao.sendTalk("noticeDesignerConsole", "배창규", "010-2747-3403", { designer, host: address.frontinfo.host, path: "dashboard", desid });
           await messageSend({
             text: designer + " 실장님께 디자이너 콘솔 알림톡을 전송하였습니다!",
             channel,
@@ -2253,12 +2253,11 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
             fairy
           });
 
-          // kakao
-
           res.send(JSON.stringify({ message: "success" }));
 
         } else if (type === "profile") {
 
+          await kakao.sendTalk("noticeDesignerProfile", "배창규", "010-2747-3403", { designer, host: address.frontinfo.host, path: "about", desid });
           await messageSend({
             text: designer + " 실장님께 프로필 사진 업로드 알림톡을 전송하였습니다!",
             channel,
@@ -2266,20 +2265,17 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
             fairy
           });
 
-          // kakao
-
           res.send(JSON.stringify({ message: "success" }));
           
         } else if (type === "work") {
 
+          await kakao.sendTalk("noticeDesignerWork", "배창규", "010-2747-3403", { designer, host: address.frontinfo.host, path: "about", desid });
           await messageSend({
             text: designer + " 실장님께 작업 사진 업로드 알림톡을 전송하였습니다!",
             channel,
             voice,
             fairy
           });
-
-          // kakao
 
           res.send(JSON.stringify({ message: "success" }));
 
