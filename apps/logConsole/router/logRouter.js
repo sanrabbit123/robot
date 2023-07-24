@@ -1125,6 +1125,92 @@ LogRouter.prototype.rou_post_extractAnalytics = function () {
   return obj;
 }
 
+LogRouter.prototype.rou_post_designerAboutComplete = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/designerAboutComplete" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongo;
+      const collection = "homeliaisonAnalytics";
+      const completeStandardNumber = 10;
+      const targetPageName = "designerAbout";
+      const { mode } = equalJson(req.body);
+      let rows;
+      let profileComplete, workComplete, aboutUpdateComplete;
+      let resultObj;
+      let desidToResult;
+
+      desidToResult = async (desid) => {
+        try {
+          rows = await back.mongoPick(collection, [ {
+            $and: [
+              {
+                page: targetPageName,
+              },
+              {
+                "data.desid": desid,
+              }
+            ]
+          }, {
+            page: 1,
+            action: 1,
+            data: 1,
+            id: 1,
+            date: 1,
+          } ], { selfMongo });
+    
+          profileComplete = rows.filter((o) => { return o.action === "profilePhotoUpload" }).length > 0;
+          workComplete = [ ...new Set(rows.filter((o) => { return o.action === "workPhotoUpload" }).map((o) => { return o.data.index })) ].length >= 4;
+          aboutUpdateComplete = [ ...new Set(rows.filter((o) => { return o.action === "designerAboutUpdate" }).map((o) => { return o.data.property })) ].length >= completeStandardNumber;
+      
+          resultObj = {
+            profileComplete: profileComplete ? 1 : 0,
+            workComplete: workComplete ? 1 : 0,
+            aboutUpdateComplete: aboutUpdateComplete ? 1 : 0,
+          };
+
+          return resultObj;
+
+        } catch (e) {
+          return null;
+        }
+      }
+
+      if (mode === "total") {
+        const designers = await back.mongoPick("designer", [ {}, { desid: 1 } ], { selfMongo });
+
+        console.log(designers);
+
+        res.send(JSON.stringify({ message: "done" }));
+      } else if (mode === "pick") {
+        const { desid } = equalJson(req.body);
+        const targetResult = await desidToResult(desid);
+        res.send(JSON.stringify(targetResult));
+      } else {
+        throw new Error("invalid mode");
+      }
+
+    } catch (e) {
+      logger.error("Log console 문제 생김 (rou_post_designerAboutComplete): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 LogRouter.policy = function () {
