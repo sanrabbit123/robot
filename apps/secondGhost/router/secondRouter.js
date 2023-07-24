@@ -2164,6 +2164,119 @@ SecondRouter.prototype.rou_post_projectDesignerDownloadLog = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const kakao = this.kakao;
+  const { equalJson, messageSend } = this.mother;
+  let obj = {};
+  obj.link = [ "/noticeDesignerConsole" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.mode === undefined || req.body.desid === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      const collection = "noticeDesignerConsole";
+      const channel = "#300_designer";
+      const voice = true;
+      const fairy = true;
+      const { mode, desid } = equalJson(req.body);
+      let logDefaultObj;
+      let thisJson;
+
+      if (mode === "send") {
+        const { designer, type } = equalJson(req.body);
+
+        logDefaultObj = {
+          type,
+          date: new Date(),
+          designer: {
+            desid,
+            designer,
+          }
+        };
+        thisJson = equalJson(JSON.stringify(logDefaultObj));
+        await back.mongoCreate(collection, thisJson, { selfMongo });
+
+        if (type === "checklist") {
+
+          await messageSend({
+            text: designer + " 실장님께 체크리스트 요청 알림톡을 전송하였습니다!",
+            channel,
+            voice,
+            fairy
+          });
+
+          // kakao
+
+          res.send(JSON.stringify({ message: "success" }));
+
+        } else if (type === "console") {
+
+          await messageSend({
+            text: designer + " 실장님께 디자이너 콘솔 알림톡을 전송하였습니다!",
+            channel,
+            voice,
+            fairy
+          });
+
+          // kakao
+
+          res.send(JSON.stringify({ message: "success" }));
+
+        } else if (type === "profile") {
+
+          await messageSend({
+            text: designer + " 실장님께 프로필 사진 업로드 알림톡을 전송하였습니다!",
+            channel,
+            voice,
+            fairy
+          });
+
+          // kakao
+
+          res.send(JSON.stringify({ message: "success" }));
+          
+        } else if (type === "work") {
+
+          await messageSend({
+            text: designer + " 실장님께 작업 사진 업로드 알림톡을 전송하였습니다!",
+            channel,
+            voice,
+            fairy
+          });
+
+          // kakao
+
+          res.send(JSON.stringify({ message: "success" }));
+
+        } else {
+          throw new Error("invalid type");
+        }
+      } else {
+        throw new Error("invalid mode");
+      }
+
+    } catch (e) {
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_noticeDesignerConsole): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_voice = function () {
   const instance = this;
   const address = this.address;

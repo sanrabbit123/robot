@@ -1226,6 +1226,102 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
   }
 }
 
+DesignerJs.prototype.normalSendNotice = function (method, desid) {
+  const instance = this;
+  const { ea, totalContents, designers } = this;
+  const { ajaxJson } = GeneralJs;
+  if (method === "checklist") {
+    return async function () {
+      try {
+        const designer = designers.find((d) => { return d.desid === desid });
+        if (designer === undefined) {
+          throw new Error("invalid desid");
+        }
+
+        if (window.confirm(designer.designer + " 실장님께 체크리스트 알림톡을 전송할까요?")) {
+          const response = await ajaxJson({
+            mode: "send",
+            desid: designer.desid,
+            designer: designer.designer,
+            type: "checklist",
+          }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+          if (response.message === "success") {
+            window.alert("전송에 성공하였습니다!");
+          } else {
+            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+          }
+          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+        }
+        
+      } catch (e) {
+        window.alert(e.message);
+        console.log(e);
+        return null;
+      }
+    }
+  } else if (method === "console") {
+    return async function () {
+      try {
+        const designer = designers.find((d) => { return d.desid === desid });
+        if (designer === undefined) {
+          throw new Error("invalid desid");
+        }
+
+
+
+
+
+
+        
+      } catch (e) {
+        window.alert(e.message);
+        console.log(e);
+        return null;
+      }
+    }
+  } else if (method === "profile") {
+    return async function () {
+      try {
+        const designer = designers.find((d) => { return d.desid === desid });
+        if (designer === undefined) {
+          throw new Error("invalid desid");
+        }
+
+
+
+
+
+
+        
+      } catch (e) {
+        window.alert(e.message);
+        console.log(e);
+        return null;
+      }
+    }
+  } else if (method === "work") {
+    return async function () {
+      try {
+        const designer = designers.find((d) => { return d.desid === desid });
+        if (designer === undefined) {
+          throw new Error("invalid desid");
+        }
+
+
+
+
+
+
+        
+      } catch (e) {
+        window.alert(e.message);
+        console.log(e);
+        return null;
+      }
+    }
+  }
+}
+
 DesignerJs.prototype.normalBase = async function () {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName } = this;
@@ -1233,6 +1329,7 @@ DesignerJs.prototype.normalBase = async function () {
   const moveTargetClassName = "moveTarget";
   const menuPromptClassName = "menuPromptClassName";
   const importantCircleClassName = "importantCircleClassName";
+  const designerSubMenuEventFactorClassName = "designerSubMenuEventFactorClassName";
   try {
     let totalMother;
     let grayArea, whiteArea;
@@ -1264,6 +1361,15 @@ DesignerJs.prototype.normalBase = async function () {
     let normalContentsLoad;
     let circleRight, circleTop;
     let importantMarkingEvent;
+    let designerSubMenuEvent;
+    let contextIndent;
+    let contextButtonOuterMargin;
+    let contextButtonInnerMargin;
+    let contextButtonWidth;
+    let contextButtonHeight;
+    let contextButtonSize;
+    let contextButtonWeight;
+    let contextButtonTextTop;
   
     totalPaddingTop = 38;
     columnAreaHeight = 32;
@@ -1295,6 +1401,15 @@ DesignerJs.prototype.normalBase = async function () {
 
     circleRight = 2.5;
     circleTop = isMac() ? 3 : 1;
+
+    contextIndent = 5;
+    contextButtonOuterMargin = 8;
+    contextButtonInnerMargin = 3;
+    contextButtonWidth = 230;
+    contextButtonHeight = 28;
+    contextButtonSize = 12;
+    contextButtonWeight = 700;
+    contextButtonTextTop = isMac() ? -1 : 1;
 
     ({ standards, columns, values } = await this.normalDataRender(true));
   
@@ -1626,6 +1741,143 @@ DesignerJs.prototype.normalBase = async function () {
       }
     }
 
+    designerSubMenuEvent = (desid, designer) => {
+      return async function (e) {
+        e.preventDefault();
+        try {
+          const px = "px";
+          const zIndex = 4;
+          const contextMenu = [
+            {
+              title: designer + " 실장님께 체크리스트 요청하기",
+              func: (desid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.normalSendNotice("checklist", desid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
+              title: designer + " 실장님께 디자이너 콘솔 보내기",
+              func: (desid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.normalSendNotice("console", desid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
+              title: designer + " 실장님께 프로필 업로드 요청하기",
+              func: (desid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.normalSendNotice("profile", desid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
+              title: designer + " 실장님께 작업 사진 업로드 요청하기",
+              func: (desid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.normalSendNotice("work", desid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+          ];
+          const thisBox = this.getBoundingClientRect();
+          const { x, y } = e;
+          let cancelBack, contextBase;
+
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ designerSubMenuEventFactorClassName ],
+            event: {
+              click: (e) => { removeByClass(designerSubMenuEventFactorClassName) },
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              background: "transparent",
+              zIndex: String(zIndex),
+            }
+          });
+
+          contextBase = createNode({
+            mother: totalContents,
+            class: [ designerSubMenuEventFactorClassName ],
+            style: {
+              display: "inline-block",
+              position: "fixed",
+              top: String(y + contextIndent) + px,
+              left: String(x + (contextIndent / 2)) + px,
+              padding: String(contextButtonOuterMargin) + ea,
+              paddingBottom: String(contextButtonOuterMargin - contextButtonInnerMargin) + ea,
+              background: colorChip.white,
+              borderRadius: String(5) + px,
+              boxShadow: "3px 0px 15px -9px " + colorChip.shadow,
+              zIndex: String(zIndex),
+              animation: "fadeuplite 0.3s ease forwards",
+            }
+          })
+
+          for (let obj of contextMenu) {
+            createNode({
+              mother: contextBase,
+              event: {
+                click: obj.func(desid),
+              },
+              style: {
+                display: "flex",
+                width: String(contextButtonWidth) + ea,
+                height: String(contextButtonHeight) + ea,
+                background: colorChip.gradientGray,
+                borderRadius: String(5) + px,
+                marginBottom: String(contextButtonInnerMargin) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                cursor: "pointer",
+              },
+              child: {
+                text: obj.title,
+                style: {
+                  fontSize: String(contextButtonSize) + ea,
+                  fontWeight: String(contextButtonWeight),
+                  color: colorChip.white,
+                  position: "relative",
+                  display: "inline-block",
+                  top: String(contextButtonTextTop) + ea,
+                }
+              }
+            });
+          }
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
     totalMother = createNode({
       mother: totalContents,
       class: [ "totalMother" ],
@@ -1819,7 +2071,8 @@ DesignerJs.prototype.normalBase = async function () {
             attribute: { desid: designer.desid, lastfilter: "none", important: designer.important ? "true" : "false" },
             event: {
               click: instance.normalWhiteCard(designer.desid),
-              contextmenu: importantMarkingEvent(designer.desid),
+              dblclick: importantMarkingEvent(designer.desid),
+              contextmenu: designerSubMenuEvent(designer.desid, designer.designer),
             },
             class: [ standardCaseClassName ],
             style: {
