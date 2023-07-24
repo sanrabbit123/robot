@@ -1151,6 +1151,7 @@ LogRouter.prototype.rou_post_designerAboutComplete = function () {
       let profileComplete, workComplete, aboutUpdateComplete;
       let resultObj;
       let desidToResult;
+      let finalObj;
 
       desidToResult = async (desid) => {
         try {
@@ -1190,10 +1191,15 @@ LogRouter.prototype.rou_post_designerAboutComplete = function () {
 
       if (mode === "total") {
         const designers = await back.mongoPick("designer", [ {}, { desid: 1 } ], { selfMongo });
+        finalObj = {};
+        for (let { desid } of designers) {
+          finalObj[desid] = await desidToResult(desid);
+        }
 
-        console.log(designers);
 
-        res.send(JSON.stringify({ message: "done" }));
+        console.log(finalObj);
+
+        res.send(JSON.stringify(finalObj));
       } else if (mode === "pick") {
         const { desid } = equalJson(req.body);
         const targetResult = await desidToResult(desid);
