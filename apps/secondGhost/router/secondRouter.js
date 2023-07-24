@@ -2288,7 +2288,7 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
         }
 
       } else if (mode === "get") {
-        if (req.body.desid === undefined) {
+        if (req.body.desid !== undefined) {
           rows = await back.mongoRead(collection, { "designer.desid": req.body.desid }, { selfMongo });
           if (rows.length > 0) {
             res.send(JSON.stringify(rows[0]));

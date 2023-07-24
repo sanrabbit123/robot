@@ -29,6 +29,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
     let thisDate;
     let standards;
     let thisValueTemp;
+    let noticeSendRows;
 
     past.setFullYear(past.getFullYear() - agoYearDelta);
     past.setMonth(0);
@@ -619,8 +620,15 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
     if (firstLoad) {
 
-      ajaxJson({ noFlat: true, whereQuery: { $or: [ { "proposal.date": { $gte: past } }, { "process.status": { $regex: "^[대진]" } } ] } }, BACKHOST + "/getProjects", { equal: true }).then((projects) => {
+      ajaxJson({ mode: "get" }, SECONDHOST + "/noticeDesignerConsole", { equal: true }).then((r) => {
+        noticeSendRows = r;
+        return ajaxJson({ noFlat: true, whereQuery: { $or: [ { "proposal.date": { $gte: past } }, { "process.status": { $regex: "^[대진]" } } ] } }, BACKHOST + "/getProjects", { equal: true });
+      }).then((projects) => {
 
+        console.log(noticeSendRows);
+
+
+        instance.noticeSendRows = noticeSendRows;
         instance.projects = projects;
         instance.normalMatrix = {};
         for (let designer of instance.designers) {
