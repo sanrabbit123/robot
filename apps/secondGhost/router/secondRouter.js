@@ -2198,6 +2198,7 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
       let thisJson;
       let rows;
       let thisId;
+      let thisHistory;
 
       if (mode === "send") {
         const { designer, type } = equalJson(req.body);
@@ -2209,7 +2210,8 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
           designer: {
             desid,
             designer,
-          }
+          },
+          history: [],
         };
         thisJson = equalJson(JSON.stringify(logDefaultObj));
 
@@ -2221,12 +2223,14 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
           await back.mongoCreate(collection, thisJson, { selfMongo });
         } else {
           thisId = rows[0].id;
+          thisHistory = rows[0].history;
+          thisHistory.unshift(rows[0].date);
           await back.mongoUpdate(collection, [
             { id: thisId },
-            { date: new Date() },
+            { date: new Date(), history: thisHistory },
           ], { selfMongo });
         }
-
+        
         if (type === "checklist") {
 
           await messageSend({
