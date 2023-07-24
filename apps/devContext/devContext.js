@@ -146,7 +146,49 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
+
+    // await this.MONGOLOGC.connect();
+
+
+
+    // const selfMongo = this.MONGOLOGC;
+    // const collection = "homeliaisonAnalytics";
+    // const desid = "d1701_aa01s";
+    // let rows;
+
+    // rows = await back.mongoPick(collection, [ {
+    //   $and: [
+    //     {
+    //       page: "designerAbout",
+    //     },
+    //     {
+    //       "data.desid": desid,
+    //     }
+    //   ]
+    // }, {
+    //   page: 1,
+    //   action: 1,
+    //   data: 1,
+    //   id: 1,
+    //   date: 1,
+    // } ], { selfMongo });
+
+
+
+    // console.log(rows.filter((o) => { return o.action === "profilePhotoUpload" }));
+
+
+
+
+
+
+
+
+
+
+
+    // await this.MONGOLOGC.close();
     
     
 
