@@ -562,6 +562,7 @@ DataConsole.prototype.renderFrontPhp = async function () {
       { from: "projectDetail", to: "project", path: "/middle/projectDetail" },
       { from: "serviceDetail", to: "service", path: "/middle/serviceDetail" },
       { from: "firstResponse", to: "response", path: "/middle/firstResponse" },
+      { from: "jobPosting", to: "job", path: "/middle/jobPosting" },
     ];
     const ghostTargets = (await fileSystem(`readDir`, [ ghostDir + "/client" ])).filter((str) => { return str !== ".DS_Store" }).filter((str) => {
       const fromArr = targetMap.map((obj) => { return obj.from });
