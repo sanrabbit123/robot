@@ -2169,7 +2169,7 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
   const back = this.back;
   const address = this.address;
   const kakao = this.kakao;
-  const { equalJson, messageSend } = this.mother;
+  const { equalJson, messageSend, uniqueValue } = this.mother;
   let obj = {};
   obj.link = [ "/noticeDesignerConsole" ];
   obj.func = async function (req, res, logger) {
@@ -2190,16 +2190,20 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
       const selfCoreMongo = instance.mongo;
       const collection = "noticeDesignerConsole";
       const channel = "#300_designer";
+      const idWords = "noticeDesignerConsoleSend_";
       const voice = true;
       const fairy = true;
       const { mode, desid } = equalJson(req.body);
       let logDefaultObj;
       let thisJson;
+      let rows;
+      let thisId;
 
       if (mode === "send") {
         const { designer, type } = equalJson(req.body);
 
         logDefaultObj = {
+          id: idWords + uniqueValue("hex"),
           type,
           date: new Date(),
           designer: {
@@ -2208,7 +2212,20 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
           }
         };
         thisJson = equalJson(JSON.stringify(logDefaultObj));
-        await back.mongoCreate(collection, thisJson, { selfMongo });
+
+        rows = await back.mongoRead(collection, { $and: [
+          { type },
+          { "designer.desid": desid },
+        ] }, { selfMongo });
+        if (rows.length === 0) {
+          await back.mongoCreate(collection, thisJson, { selfMongo });
+        } else {
+          thisId = rows[0].id;
+          await back.mongoUpdate(collection, [
+            { id: thisId },
+            { date: new Date() },
+          ], { selfMongo });
+        }
 
         if (type === "checklist") {
 

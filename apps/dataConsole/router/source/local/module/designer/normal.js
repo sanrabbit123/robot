@@ -1267,11 +1267,20 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
           throw new Error("invalid desid");
         }
 
-
-
-
-
-
+        if (window.confirm(designer.designer + " 실장님께 디자이너 콘솔 알림톡을 전송할까요?")) {
+          const response = await ajaxJson({
+            mode: "send",
+            desid: designer.desid,
+            designer: designer.designer,
+            type: "console",
+          }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+          if (response.message === "success") {
+            window.alert("전송에 성공하였습니다!");
+          } else {
+            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+          }
+          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+        }
         
       } catch (e) {
         window.alert(e.message);
@@ -1287,11 +1296,20 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
           throw new Error("invalid desid");
         }
 
-
-
-
-
-
+        if (window.confirm(designer.designer + " 실장님께 프로필 사진 업로드 알림톡을 전송할까요?")) {
+          const response = await ajaxJson({
+            mode: "send",
+            desid: designer.desid,
+            designer: designer.designer,
+            type: "profile",
+          }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+          if (response.message === "success") {
+            window.alert("전송에 성공하였습니다!");
+          } else {
+            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+          }
+          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+        }
         
       } catch (e) {
         window.alert(e.message);
@@ -1307,11 +1325,20 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
           throw new Error("invalid desid");
         }
 
-
-
-
-
-
+        if (window.confirm(designer.designer + " 실장님께 작업 사진 업로드 알림톡을 전송할까요?")) {
+          const response = await ajaxJson({
+            mode: "send",
+            desid: designer.desid,
+            designer: designer.designer,
+            type: "work",
+          }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+          if (response.message === "success") {
+            window.alert("전송에 성공하였습니다!");
+          } else {
+            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+          }
+          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+        }
         
       } catch (e) {
         window.alert(e.message);
