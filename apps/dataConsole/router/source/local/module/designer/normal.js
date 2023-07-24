@@ -33,6 +33,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
     let filteredChecklistSendRows;
     let filteredProfileSendRows;
     let filteredWorkSendRows;
+    let completeAnalyticsRows;
 
     past.setFullYear(past.getFullYear() - agoYearDelta);
     past.setMonth(0);
@@ -110,7 +111,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         title: "체크리스트",
         width: 100,
         name: "checklistDone",
-        type: "boolean",
+        type: "string",
         menu: [
           {
             value: "전체 보기",
@@ -118,11 +119,11 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           },
           {
             value: "완료",
-            functionName: "filterEvent_올림",
+            functionName: "filterEvent_완료",
           },
           {
             value: "미완료",
-            functionName: "filterEvent_안올림",
+            functionName: "filterEvent_미완료",
           },
         ],
       },
@@ -136,7 +137,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         title: "프로필 사진",
         width: 100,
         name: "profilePhotoDone",
-        type: "boolean",
+        type: "string",
         menu: [
           {
             value: "전체 보기",
@@ -162,7 +163,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         title: "작업물",
         width: 100,
         name: "workingPhotoDone",
-        type: "boolean",
+        type: "string",
         menu: [
           {
             value: "전체 보기",
@@ -653,11 +654,15 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
     if (firstLoad) {
 
-      ajaxJson({ mode: "get" }, SECONDHOST + "/noticeDesignerConsole", { equal: true }).then((r) => {
+      ajaxJson({ mode: "total" }, S3HOST + "/designerAboutComplete", { equal: true }).then((c) => {
+        completeAnalyticsRows = c;
+        return ajaxJson({ mode: "get" }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+      }).then((r) => {
         noticeSendRows = r;
         return ajaxJson({ noFlat: true, whereQuery: { $or: [ { "proposal.date": { $gte: past } }, { "process.status": { $regex: "^[대진]" } } ] } }, BACKHOST + "/getProjects", { equal: true });
       }).then((projects) => {
 
+        instance.completeAnalyticsRows = completeAnalyticsRows;
         instance.noticeSendRows = noticeSendRows;
         instance.projects = projects;
         instance.normalMatrix = {};
@@ -696,13 +701,28 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           thisTarget.textContent = String(thisValueTemp);
           thisTarget.style.color = colorChip.black;
 
+          thisTarget = findByAttribute(thisValueDoms, "name", "checklistDone");
+          thisValueTemp = (completeAnalyticsRows[designer.desid]?.aboutUpdateComplete === 1) ? "완료" : "미완료";
+          thisTarget.textContent = String(thisValueTemp);
+          thisTarget.style.color = colorChip.black;
+
           thisTarget = findByAttribute(thisValueDoms, "name", "profilePhotoNoticeSend");
           thisValueTemp = filteredProfileSendRows.length > 0 ? dateToString(filteredProfileSendRows[0].date) : "-";
           thisTarget.textContent = String(thisValueTemp);
           thisTarget.style.color = colorChip.black;
 
+          thisTarget = findByAttribute(thisValueDoms, "name", "profilePhotoDone");
+          thisValueTemp = (completeAnalyticsRows[designer.desid]?.profileComplete === 1) ? "올림" : "안올림";
+          thisTarget.textContent = String(thisValueTemp);
+          thisTarget.style.color = colorChip.black;
+
           thisTarget = findByAttribute(thisValueDoms, "name", "workingPhotoNoticeSend");
           thisValueTemp = filteredWorkSendRows.length > 0 ? dateToString(filteredWorkSendRows[0].date) : "-";
+          thisTarget.textContent = String(thisValueTemp);
+          thisTarget.style.color = colorChip.black;
+
+          thisTarget = findByAttribute(thisValueDoms, "name", "workingPhotoDone");
+          thisValueTemp = (completeAnalyticsRows[designer.desid]?.workComplete === 1) ? "올림" : "안올림";
           thisTarget.textContent = String(thisValueTemp);
           thisTarget.style.color = colorChip.black;
 

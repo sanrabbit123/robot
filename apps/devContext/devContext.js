@@ -151,8 +151,10 @@ DevContext.prototype.launching = async function () {
 
     
 
-
-    
+    const res = await requestSystem("https://home-liaison.serveftp.com/designerAboutComplete", { mode: "total" }, { headers: {
+      "Content-Type": "application/json",
+    } })
+    console.log(res.data);
 
 
 
