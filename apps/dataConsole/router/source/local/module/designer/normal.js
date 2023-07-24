@@ -1295,6 +1295,7 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
             mode: "send",
             desid: designer.desid,
             designer: designer.designer,
+            phone: designer.information.phone,
             type: "checklist",
           }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
           if (response.message === "success") {
@@ -1324,6 +1325,7 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
             mode: "send",
             desid: designer.desid,
             designer: designer.designer,
+            phone: designer.information.phone,
             type: "console",
           }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
           if (response.message === "success") {
@@ -1353,6 +1355,7 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
             mode: "send",
             desid: designer.desid,
             designer: designer.designer,
+            phone: designer.information.phone,
             type: "profile",
           }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
           if (response.message === "success") {
@@ -1382,6 +1385,7 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
             mode: "send",
             desid: designer.desid,
             designer: designer.designer,
+            phone: designer.information.phone,
             type: "work",
           }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
           if (response.message === "success") {
@@ -1406,6 +1410,7 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
           mode: "send",
           desid: designer.desid,
           designer: designer.designer,
+          phone: designer.information.phone,
           type: "checklist",
         }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
         return true;
@@ -1422,6 +1427,7 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
           mode: "send",
           desid: designer.desid,
           designer: designer.designer,
+          phone: designer.information.phone,
           type: "profile",
         }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
         return true;
@@ -1438,6 +1444,7 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
           mode: "send",
           desid: designer.desid,
           designer: designer.designer,
+          phone: designer.information.phone,
           type: "work",
         }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
         return true;
