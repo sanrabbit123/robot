@@ -313,7 +313,7 @@ JobPostingJs.prototype.insertPostingBox = function () {
 
 }
 
-JobPostingJs.prototype.insertAspirantBox = function () {
+JobPostingJs.prototype.insertApplyBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson, cleanChildren } = GeneralJs;
   const { ea, media, standardWidth, portfolioMode } = this;
@@ -3192,7 +3192,7 @@ JobPostingJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertPostingBox();
-          instance.insertAspirantBox();
+          instance.insertApplyBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "JobPostingJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
