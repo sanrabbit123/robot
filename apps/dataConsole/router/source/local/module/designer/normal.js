@@ -30,6 +30,9 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
     let standards;
     let thisValueTemp;
     let noticeSendRows;
+    let filteredChecklistSendRows;
+    let filteredProfileSendRows;
+    let filteredWorkSendRows;
 
     past.setFullYear(past.getFullYear() - agoYearDelta);
     past.setMonth(0);
@@ -98,6 +101,12 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         type: "number",
       },
       {
+        title: "체크리스트 전송",
+        width: 100,
+        name: "checklistNoticeSend",
+        type: "date",
+      },
+      {
         title: "체크리스트",
         width: 100,
         name: "checklistDone",
@@ -118,6 +127,12 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         ],
       },
       {
+        title: "프로필 안내 전송",
+        width: 100,
+        name: "profilePhotoNoticeSend",
+        type: "date",
+      },
+      {
         title: "프로필 사진",
         width: 100,
         name: "profilePhotoDone",
@@ -136,6 +151,12 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
             functionName: "filterEvent_안올림",
           },
         ],
+      },
+      {
+        title: "작업물 안내 전송",
+        width: 100,
+        name: "workingPhotoNoticeSend",
+        type: "date",
       },
       {
         title: "작업물",
@@ -500,11 +521,23 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         },
         {
           value: asyncProcessText,
+          name: "checklistNoticeSend",
+        },
+        {
+          value: asyncProcessText,
           name: "checklistDone",
         },
         {
           value: asyncProcessText,
+          name: "profilePhotoNoticeSend",
+        },
+        {
+          value: asyncProcessText,
           name: "profilePhotoDone",
+        },
+        {
+          value: asyncProcessText,
+          name: "workingPhotoNoticeSend",
         },
         {
           value: asyncProcessText,
@@ -625,9 +658,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         return ajaxJson({ noFlat: true, whereQuery: { $or: [ { "proposal.date": { $gte: past } }, { "process.status": { $regex: "^[대진]" } } ] } }, BACKHOST + "/getProjects", { equal: true });
       }).then((projects) => {
 
-        console.log(noticeSendRows);
-
-
         instance.noticeSendRows = noticeSendRows;
         instance.projects = projects;
         instance.normalMatrix = {};
@@ -647,6 +677,9 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
             return p.desid === designer.desid;
           });
   
+          filteredChecklistSendRows = noticeSendRows.filter((o) => { return o.type === "checklist" }).filter((o) => { return o.designer.desid === designer.desid });
+          filteredProfileSendRows = noticeSendRows.filter((o) => { return o.type === "profile" }).filter((o) => { return o.designer.desid === designer.desid });
+          filteredWorkSendRows = noticeSendRows.filter((o) => { return o.type === "work" }).filter((o) => { return o.designer.desid === designer.desid });
 
           thisTarget = findByAttribute(thisValueDoms, "name", "processPending");
           thisValueTemp = filteredProjectsContract.filter((p) => { return /^대/.test(p.process.status) }).length;
@@ -658,9 +691,20 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           thisTarget.textContent = String(thisValueTemp);
           thisTarget.style.color = colorChip.black;
 
-          
+          thisTarget = findByAttribute(thisValueDoms, "name", "checklistNoticeSend");
+          thisValueTemp = filteredChecklistSendRows.length > 0 ? dateToString(filteredChecklistSendRows[0].date) : "-";
+          thisTarget.textContent = String(thisValueTemp);
+          thisTarget.style.color = colorChip.black;
 
+          thisTarget = findByAttribute(thisValueDoms, "name", "profilePhotoNoticeSend");
+          thisValueTemp = filteredProfileSendRows.length > 0 ? dateToString(filteredProfileSendRows[0].date) : "-";
+          thisTarget.textContent = String(thisValueTemp);
+          thisTarget.style.color = colorChip.black;
 
+          thisTarget = findByAttribute(thisValueDoms, "name", "workingPhotoNoticeSend");
+          thisValueTemp = filteredWorkSendRows.length > 0 ? dateToString(filteredWorkSendRows[0].date) : "-";
+          thisTarget.textContent = String(thisValueTemp);
+          thisTarget.style.color = colorChip.black;
 
           thisTarget = findByAttribute(thisValueDoms, "name", "proposalNumber");
           thisTarget.textContent = String(filteredProjectsProposal.length);
@@ -1350,6 +1394,54 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
         
       } catch (e) {
         window.alert(e.message);
+        console.log(e);
+        return null;
+      }
+    }
+  } else if (method === "totalChecklist") {
+    return async function () {
+      try {
+        const designer = designers.find((d) => { return d.desid === desid });
+        await ajaxJson({
+          mode: "send",
+          desid: designer.desid,
+          designer: designer.designer,
+          type: "checklist",
+        }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+        return true;
+      } catch (e) {
+        console.log(e);
+        return null;
+      }
+    }
+  } else if (method === "totalProfile") {
+    return async function () {
+      try {
+        const designer = designers.find((d) => { return d.desid === desid });
+        await ajaxJson({
+          mode: "send",
+          desid: designer.desid,
+          designer: designer.designer,
+          type: "profile",
+        }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+        return true;
+      } catch (e) {
+        console.log(e);
+        return null;
+      }
+    }
+  } else if (method === "totalWork") {
+    return async function () {
+      try {
+        const designer = designers.find((d) => { return d.desid === desid });
+        await ajaxJson({
+          mode: "send",
+          desid: designer.desid,
+          designer: designer.designer,
+          type: "work",
+        }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+        return true;
+      } catch (e) {
         console.log(e);
         return null;
       }
@@ -3216,6 +3308,169 @@ DesignerJs.prototype.normalReportEvent = async function () {
   }
 }
 
+DesignerJs.prototype.communicationRender = function () {
+  const instance = this;
+  const { communication } = this.mother;
+  const { ajaxJson, sleep, blankHref } = GeneralJs;
+  communication.setItem([
+    () => { return "체크리스트 전체 발송"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        const targetDesigners = instance.designers.filter((d) => { return /협약 완료/gi.test(d.information.contract.status) });
+        let asyncTempFunc;
+        let tempRes;
+        for (let designer of targetDesigners) {
+          asyncTempFunc = instance.normalSendNotice("totalChecklist", designer.desid);
+          tempRes = await asyncTempFunc();
+          if (tempRes === null) {
+            throw new Error("send fail");
+          }
+        }
+        window.alert("체크리스트 전체 발송에 성공하였습니다!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+      } catch (e) {
+        console.log(e);
+        window.alert("체크리스트 전체 발송에 실패하였습니다!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "미완료 대상 체크리스트 발송"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        const logs = await ajaxJson({ mode: "get" }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+        const sendDesids = logs.filter((o) => { return o.type === "checklist" }).map((o) => { return o.designer.desid });
+        const targetDesigners = instance.designers.filter((d) => { return /협약 완료/gi.test(d.information.contract.status) }).filter((d) => { return !sendDesids.includes(d.desid) });
+        let asyncTempFunc;
+        for (let designer of targetDesigners) {
+          asyncTempFunc = instance.normalSendNotice("totalChecklist", designer.desid);
+          tempRes = await asyncTempFunc();
+          if (tempRes === null) {
+            throw new Error("send fail");
+          }
+        }
+        window.alert("미완료 대상 체크리스트 발송에 성공하였습니다!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+      } catch (e) {
+        console.log(e);
+        window.alert("미완료 대상 체크리스트 발송에 실패하였습니다!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "프로필 요청 전체 발송"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        const targetDesigners = instance.designers.filter((d) => { return /협약 완료/gi.test(d.information.contract.status) });
+        let asyncTempFunc;
+        for (let designer of targetDesigners) {
+          asyncTempFunc = instance.normalSendNotice("totalProfile", designer.desid);
+          tempRes = await asyncTempFunc();
+          if (tempRes === null) {
+            throw new Error("send fail");
+          }
+        }
+        window.alert("프로필 요청 전체 발송에 성공하였습니다!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+      } catch (e) {
+        console.log(e);
+        window.alert("프로필 요청 전체 발송에 실패하였습니다!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "미완료 대상 프로필 요청 발송"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        const logs = await ajaxJson({ mode: "get" }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+        const sendDesids = logs.filter((o) => { return o.type === "profile" }).map((o) => { return o.designer.desid });
+        const targetDesigners = instance.designers.filter((d) => { return /협약 완료/gi.test(d.information.contract.status) }).filter((d) => { return !sendDesids.includes(d.desid) });
+        let asyncTempFunc;
+        for (let designer of targetDesigners) {
+          asyncTempFunc = instance.normalSendNotice("totalProfile", designer.desid);
+          tempRes = await asyncTempFunc();
+          if (tempRes === null) {
+            throw new Error("send fail");
+          }
+        }
+        window.alert("미완료 대상 프로필 요청 발송에 성공하였습니다!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+      } catch (e) {
+        console.log(e);
+        window.alert("미완료 대상 프로필 요청 발송에 성공하였습니다!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "작업물 요청 전체 발송"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        const targetDesigners = instance.designers.filter((d) => { return /협약 완료/gi.test(d.information.contract.status) });
+        let asyncTempFunc;
+        for (let designer of targetDesigners) {
+          asyncTempFunc = instance.normalSendNotice("totalWork", designer.desid);
+          tempRes = await asyncTempFunc();
+          if (tempRes === null) {
+            throw new Error("send fail");
+          }
+        }
+        window.alert("작업물 요청 전체 발송에 성공하였습니다!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+      } catch (e) {
+        console.log(e);
+        window.alert("작업물 요청 전체 발송에 실패하였습니다!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "미완료 대상 작업물 요청 발송"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        const logs = await ajaxJson({ mode: "get" }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+        const sendDesids = logs.filter((o) => { return o.type === "work" }).map((o) => { return o.designer.desid });
+        const targetDesigners = instance.designers.filter((d) => { return /협약 완료/gi.test(d.information.contract.status) }).filter((d) => { return !sendDesids.includes(d.desid) });
+        let asyncTempFunc;
+        for (let designer of targetDesigners) {
+          asyncTempFunc = instance.normalSendNotice("totalWork", designer.desid);
+          tempRes = await asyncTempFunc();
+          if (tempRes === null) {
+            throw new Error("send fail");
+          }
+        }
+        window.alert("미완료 대상 작업물 요청 발송에 성공하였습니다!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+      } catch (e) {
+        console.log(e);
+        window.alert("미완료 대상 작업물 요청 발송에 실패하였습니다!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+      }
+    }
+  ]);
+}
+
 DesignerJs.prototype.normalView = async function () {
   const instance = this;
   try {
@@ -3263,6 +3518,7 @@ DesignerJs.prototype.normalView = async function () {
     await this.normalMessageEvent();
     await this.normalExtractEvent();
     await this.normalReportEvent();
+    this.communicationRender();
 
     loading.parentNode.removeChild(loading);
 
