@@ -832,7 +832,7 @@ JobPostingJs.prototype.insertAspirantBox = function () {
 
   questionWeight = <%% 500, 500, 500, 500, 500 %%>;
 
-  plusTextTop = <%% -1.5, -1.5, -1.5, -1.5, -0.2 %%>;
+  plusTextTop = <%% -1, -1.5, -1.5, -1.5, -0.2 %%>;
 
   noticeCircleWidth = <%% 12, 12, 12, 12, 2.8 %%>;
   noticeCircleTop = <%% (isMac() ? 9 : 6.5), (isMac() ? 9 : 6.5), (isMac() ? 8.5 : 6), (isMac() ? 8 : 5.5), 2 %%>;

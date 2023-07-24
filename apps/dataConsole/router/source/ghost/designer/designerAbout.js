@@ -6453,8 +6453,8 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
   questionSize = <%% 10, 10, 10, 10, 2.5 %%>;
   plusSize = <%% 13, 13, 13, 13, 2.5 %%>;
   questionWeight = <%% 500, 500, 500, 500, 500 %%>;
-  questionTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
-  plusTextTop = <%% -1.5, -1.5, -1.5, -1.5, -0.2 %%>;
+  questionTextTop = <%% -1, -1, -1, -1, (isIphone() ? -0.1 : -0.2) %%>;
+  plusTextTop = <%% -1.5, -1.5, -1.5, -1.5, (isIphone() ? -0.1 : -0.2) %%>;
 
   noticeCircleWidth = <%% 12, 12, 12, 12, 2.8 %%>;
   noticeCircleTop = <%% (isMac() ? 6 : 3.5), (isMac() ? 5.5 : 3), (isMac() ? 5 : 2.5), (isMac() ? 4.5 : 2), (isIphone() ? 1.3 : 1.2) %%>;
