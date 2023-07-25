@@ -339,7 +339,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
       if (rows.length === 0) {
         const selfMongo = instance.mongo;
         const { officeinfo: { widsign: { id, key, endPoint } } } = address;
-        const title = "2023디자인계약서_000고객님_주홈리에종_YYMMDD";
+        const title = "홈스타일링계약서_000고객님_주홈리에종_YYMMDD";
         const project = await back.getProjectById(proid, { selfMongo });
         const client = await back.getClientById(project.cliid, { selfMongo });
         const designer = await back.getDesignerById(project.desid, { selfMongo });
@@ -403,8 +403,37 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
           }
 
           tempArr = dateToString(today).split('-');
-          formTitle = "2023디자인계약서_" + titleName + "고객님_주홈리에종_";
+          formTitle = "홈스타일링계약서_" + titleName + "고객님_주홈리에종_";
           formTitle = formTitle + tempArr[0].slice(2) + tempArr[1] + tempArr[2];
+
+          map = [
+            { id: "5faa618f9da73962a9050ef4", value: titleName === '' ? '-' : titleName },
+            { id: "5faa6196b3c0673961000001", value: titleAddress === '' ? '-' : titleAddress },
+            { id: "5faa618f9da73962a9050ef6", value: client.phone === '' ? '-' : client.phone },
+            { id: "5faa618f9da73962a9050ef7", value: dateToString(project.process.contract.first.date) === '' ? '-' : dateToString(project.process.contract.first.date) },
+            { id: "5faa618f9da73962a9050ef9", value: dateToString(project.process.contract.form.date.from) === '' ? '-' : dateToString(project.process.contract.form.date.from) },
+            { id: "5faa618f9da73962a9050efa", value: dateToString(project.process.contract.form.date.to) === '' ? '-' : dateToString(project.process.contract.form.date.to) },
+            { id: "5faa618f9da73962a9050ef5", value: titleName === '' ? '-' : titleName },
+            { id: "5faa618f9da73962a9050ef8", value: request.family === '' ? "알 수 없음" : request.family },
+            { id: "5faa618f9da73962a9050f04", value: titleAddress === '' ? '-' : titleAddress },
+            { id: "5faa618f9da73962a9050f01", value: request.budget + " (디자이너 논의 및 조정)" },
+            { id: "5faa618f9da73962a9050f02", value: designer.designer + ", " + designer.information.phone },
+            { id: "5faa618f9da73962a9050efb", value: request.space.contract === '' ? '-' : request.space.contract },
+            { id: "5faa618f9da73962a9050efd", value: (/없/gi.test(dateToString(analytics.date.space.precheck)) ? '-' : dateToString(analytics.date.space.precheck)) },
+            { id: "5faa618f9da73962a9050efe", value: (/없/gi.test(dateToString(analytics.date.space.empty)) ? '-' : dateToString(analytics.date.space.empty)) },
+            { id: "5faa618f9da73962a9050efc", value: (/없/gi.test(dateToString(request.space.resident.expected)) ? '-' : dateToString(request.space.resident.expected)) },
+            { id: "5faa618f9da73962a9050eff", value: String(request.space.pyeong) + "평" },
+            { id: "5faa618f9da73962a9050f00", value: "방 " + String(request.space.spec.room) + "개 / 화장실 " + String(request.space.spec.bathroom) + "개" },
+            { id: "5faa618f9da73962a9050f03", value: serviceParsing(project.service) === '' ? '-' : serviceParsing(project.service) },
+            { id: "5faa618f9da73962a9050f05", value: autoComma(project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount) === '' ? '-' : autoComma(project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount) },
+            { id: "5faa618f9da73962a9050f06", value: autoComma(project.process.contract.remain.calculation.amount.consumer) === '' ? '-' : autoComma(project.process.contract.remain.calculation.amount.consumer) },
+            { id: "5faa618f9da73962a9050f16", value: titleName === '' ? '-' : titleName },
+            { id: "5faa618f9da73962a9050f1a", value: client.phone === '' ? '-' : client.phone },
+            { id: "5faa61beb3c0673961000002", value: titleAddress === '' ? '-' : titleAddress },
+            { id: "5faa618f9da73962a9050f19", value: titleName === '' ? '-' : titleName },
+          ];
+
+          /*
           map = [
             { id: "64b632ca5a0805f9d77e5520", value: todayYear },
             { id: "64b632ca5a0805f9d77e5521", value: todayMonth },
@@ -507,6 +536,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
 
           map.push({ id: "64b632ca5a0805f9d77e5557", value: titleAddress === '' ? '-' : titleAddress });
           map.push({ id: "64b632ca5a0805f9d77e5558", value: titleName === '' ? '-' : titleName });
+          */
 
           data = {
             form_id: targetFormId,
