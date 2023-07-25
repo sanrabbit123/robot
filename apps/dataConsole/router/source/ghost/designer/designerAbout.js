@@ -221,7 +221,7 @@ DesignerAboutJs.prototype.insertInitBox = function () {
 
 }
 
-DesignerAboutJs.prototype.contentsCenter = function () {
+DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
   const instance = this;
   const mother = this.mother;
   const { ea, baseTong, media, designer } = this;
@@ -3788,8 +3788,13 @@ DesignerAboutJs.prototype.contentsCenter = function () {
     }
     this.contents = contents;
   }
-  for (let i = 0; i < contents.length; i++) {
-    this.renderWhite(contents[i].whiteType, contents[i].title, contents[i].contents, contents[i].notice, i + 1, i === (contents.length - 1));
+
+  if (!detailSearchMode) {
+    for (let i = 0; i < contents.length; i++) {
+      this.renderWhite(contents[i].whiteType, contents[i].title, contents[i].contents, contents[i].notice, i + 1, i === (contents.length - 1));
+    }
+  } else {
+    return contents;
   }
 
 }
@@ -7905,8 +7910,15 @@ DesignerAboutJs.prototype.boxToPossible = async function () {
     this.realtimeDesigner.possible.sort((a, b) => { return a.start.valueOf() - b.start.valueOf() });
     updateQuery = {};
     updateQuery["possible"] = this.realtimeDesigner.possible;
-    await ajaxJson({ mode: "update", desid: instance.designer.desid, updateQuery }, BACKHOST + "/realtimeDesigner");
 
+    await ajaxJson({ mode: "update", desid: instance.designer.desid, updateQuery }, BACKHOST + "/realtimeDesigner");
+    await ajaxJson({
+      message: instance.designer.designer + " 실장님이 디자이너 콘솔을 통해 일정을 업데이트 하셨습니다!",
+      channel: "#300_designer",
+      voice: true,
+      fairy: true,
+    }, BACKHOST + "/realtimeDesigner");
+    
   } catch (e) {
     console.log(e);
   }
@@ -8602,6 +8614,7 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     const entireMode = (getObj.entire === "true");
     const normalMode = (entireMode && getObj.normal === "true");
     const adminMode = (getObj.admin === "true");
+    const searchMode = (normalMode && getObj.detailsearch === "true");
     let cliid, clients, client;
     let proid, projects, project;
     let whereQuery;
@@ -8738,10 +8751,18 @@ DesignerAboutJs.prototype.launching = async function (loading) {
         }
       });
     } else {
-      instance.contentsCenter();
-      instance.insertProfileBox();
-      instance.insertWorkingBox();
-      instance.insertIntroduceBox();
+      if (!searchMode) {
+        instance.contentsCenter();
+        instance.insertProfileBox();
+        instance.insertWorkingBox();
+        instance.insertIntroduceBox();
+      } else {
+        const thisStandards = instance.contentsCenter(true);
+        console.log(thisStandards);
+        // dev
+
+
+      }
     }
 
     loading.parentNode.removeChild(loading);

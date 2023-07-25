@@ -2498,6 +2498,11 @@ DesignerJs.prototype.normalDetailSearchEvent = async function () {
         });
 
 
+        
+
+
+
+
 
 
       } catch (e) {
