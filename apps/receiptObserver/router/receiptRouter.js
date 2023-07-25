@@ -423,33 +423,33 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
           ];
 
           if (/홈퍼니싱/gi.test(serviceParsing(project.service))) {
-            map.push({ id: "64b632ca5a0805f9d77e552e", value: "true" });
-            map.push({ id: "64b632ca5a0805f9d77e552f", value: "false" });
-            map.push({ id: "64b632ca5a0805f9d77e5530", value: "false" });
-            map.push({ id: "64b632ca5a0805f9d77e5531", value: "false" });
+            map.push({ id: "64b632ca5a0805f9d77e552e", value: "1" });
+            map.push({ id: "64b632ca5a0805f9d77e552f", value: "0" });
+            map.push({ id: "64b632ca5a0805f9d77e5530", value: "0" });
+            map.push({ id: "64b632ca5a0805f9d77e5531", value: "0" });
           } else if (/홈스타일링/gi.test(serviceParsing(project.service))) {
-            map.push({ id: "64b632ca5a0805f9d77e552e", value: "false" });
-            map.push({ id: "64b632ca5a0805f9d77e552f", value: "true" });
-            map.push({ id: "64b632ca5a0805f9d77e5530", value: "false" });
-            map.push({ id: "64b632ca5a0805f9d77e5531", value: "false" });
+            map.push({ id: "64b632ca5a0805f9d77e552e", value: "0" });
+            map.push({ id: "64b632ca5a0805f9d77e552f", value: "1" });
+            map.push({ id: "64b632ca5a0805f9d77e5530", value: "0" });
+            map.push({ id: "64b632ca5a0805f9d77e5531", value: "0" });
           } else if (/토탈/gi.test(serviceParsing(project.service))) {
-            map.push({ id: "64b632ca5a0805f9d77e552e", value: "false" });
-            map.push({ id: "64b632ca5a0805f9d77e552f", value: "false" });
-            map.push({ id: "64b632ca5a0805f9d77e5530", value: "true" });
-            map.push({ id: "64b632ca5a0805f9d77e5531", value: "false" });
+            map.push({ id: "64b632ca5a0805f9d77e552e", value: "0" });
+            map.push({ id: "64b632ca5a0805f9d77e552f", value: "0" });
+            map.push({ id: "64b632ca5a0805f9d77e5530", value: "1" });
+            map.push({ id: "64b632ca5a0805f9d77e5531", value: "0" });
           } else {
-            map.push({ id: "64b632ca5a0805f9d77e552e", value: "false" });
-            map.push({ id: "64b632ca5a0805f9d77e552f", value: "false" });
-            map.push({ id: "64b632ca5a0805f9d77e5530", value: "false" });
-            map.push({ id: "64b632ca5a0805f9d77e5531", value: "true" });
+            map.push({ id: "64b632ca5a0805f9d77e552e", value: "0" });
+            map.push({ id: "64b632ca5a0805f9d77e552f", value: "0" });
+            map.push({ id: "64b632ca5a0805f9d77e5530", value: "0" });
+            map.push({ id: "64b632ca5a0805f9d77e5531", value: "1" });
           }
 
           if (project.service.online) {
-            map.push({ id: "64b632ca5a0805f9d77e5532", value: "false" });
-            map.push({ id: "64b632ca5a0805f9d77e5533", value: "true" });
+            map.push({ id: "64b632ca5a0805f9d77e5532", value: "0" });
+            map.push({ id: "64b632ca5a0805f9d77e5533", value: "1" });
           } else {
-            map.push({ id: "64b632ca5a0805f9d77e5532", value: "true" });
-            map.push({ id: "64b632ca5a0805f9d77e5533", value: "false" });
+            map.push({ id: "64b632ca5a0805f9d77e5532", value: "1" });
+            map.push({ id: "64b632ca5a0805f9d77e5533", value: "0" });
           }
 
           map.push({ id: "64b632ca5a0805f9d77e5534", value: designer.designer });
@@ -475,11 +475,9 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
           map.push({ id: "64b632ca5a0805f9d77e5541", value: "02-2039-2252" });
           map.push({ id: "64b632ca5a0805f9d77e5542", value: "help@home-liaison.com" });
 
-          map.push({ id: "64b632ca5a0805f9d77e5543", value: "true" });
-
           map.push({ id: "64b632ca5a0805f9d77e5544", value: todayYear });
-          map.push({ id: "64b632ca5a0805f9d77e5545", value: todayMonth });
-          map.push({ id: "64b632ca5a0805f9d77e5546", value: todayDate });
+          map.push({ id: "64b632ca5a0805f9d77e5546", value: todayMonth });
+          map.push({ id: "64b632ca5a0805f9d77e5545", value: todayDate });
           map.push({ id: "64b632ca5a0805f9d77e5547", value: titleName === '' ? '-' : titleName });
 
           map.push({ id: "64b632ca5a0805f9d77e5549", value: titleName === '' ? '-' : titleName });
