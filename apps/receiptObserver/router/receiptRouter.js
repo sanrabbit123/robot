@@ -403,7 +403,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
           }
 
           tempArr = dateToString(today).split('-');
-          formTitle = "홈스타일링계약서_" + titleName + "고객님_주홈리에종_";
+          formTitle = "2023디자인계약서_" + titleName + "고객님_주홈리에종_";
           formTitle = formTitle + tempArr[0].slice(2) + tempArr[1] + tempArr[2];
           map = [
             { id: "64b632ca5a0805f9d77e5520", value: todayYear },
@@ -508,6 +508,8 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
           map.push({ id: "64b632ca5a0805f9d77e5557", value: titleAddress === '' ? '-' : titleAddress });
           map.push({ id: "64b632ca5a0805f9d77e5558", value: titleName === '' ? '-' : titleName });
 
+          console.log(map);
+
           data = {
             form_id: targetFormId,
             title: formTitle,
@@ -525,6 +527,8 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
           }
 
           widsignRes = await requestSystem(endPoint + "/v2/form/send", data, { headers: { "x-api-key": key, "x-access-token": token, "Content-Type": "application/json" } });
+
+          console.log(widsignRes);
 
           await bill.createBill("stylingForm", [ {
             name: widsignRes.data.result[0].doc_name,
