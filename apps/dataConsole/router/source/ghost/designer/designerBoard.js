@@ -596,7 +596,7 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
 DesignerBoardJs.prototype.insertProcessBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { clients, projects, requestNumber, ea, baseTong, media } = this;
+  const { clients, projects, requestNumber, ea, baseTong, media, entireMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -851,7 +851,9 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
       }
     };
     analyticsData = equalJson(JSON.stringify(analyticsData));
-    homeliaisonAnalytics({ page: instance.pageName, standard: instance.firstPageViewTime, action: "processLoad", data: analyticsData }).catch((err) => { console.log(err); });
+    if (!entireMode) {
+      homeliaisonAnalytics({ page: instance.pageName, standard: instance.firstPageViewTime, action: "processLoad", data: analyticsData }).catch((err) => { console.log(err); });
+    }
 
     targetLength = targets.length;
     if (targetLength < minimalLength) {
