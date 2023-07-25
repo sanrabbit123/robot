@@ -2282,6 +2282,17 @@ ProcessDetailJs.prototype.insertScheduleBox = async function () {
 
                   if (window.confirm(instance.client.name + " 고객님께 일정 알림톡을 보낼까요?")) {
                     await ajaxJson({ mode: "send", type: "schedule", proid, desid, designer: instance.designer.designer, name: instance.client.name, phone: instance.client.phone }, SECONDHOST + "/projectDesignerStatus");
+                    await homeliaisonAnalytics({
+                      page: instance.pageName,
+                      standard: instance.firstPageViewTime,
+                      action: "sendDesignerSchedule",
+                      data: {
+                        desid: desid,
+                        cliid: instance.client.cliid,
+                        proid: proid,
+                        date: new Date(),
+                      }
+                    });
                     window.alert(instance.client.name + " 고객님에게 일정 알림톡을 전송하였습니다!");  
                   }
 
@@ -4859,6 +4870,21 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                         parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true });
                         await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe, loading.progress.firstChild);
                       }
+
+                      await homeliaisonAnalytics({
+                        page: instance.pageName,
+                        standard: instance.firstPageViewTime,
+                        action: "downloadDesignerFile",
+                        data: {
+                          desid: instance.designer.desid,
+                          cliid: instance.client.cliid,
+                          proid: instance.project.proid,
+                          original,
+                          type,
+                          date: new Date(),
+                        }
+                      });
+
                       loading.remove();
                     }
                     cancelEvent.call(self, e);
@@ -4914,6 +4940,18 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                         }
                       });
                       await ajaxJson({ targets: fileMap }, BRIDGEHOST + "/middlePhotoRemove");
+                      await homeliaisonAnalytics({
+                        page: instance.pageName,
+                        standard: instance.firstPageViewTime,
+                        action: "deleteDesignFile",
+                        data: {
+                          desid: instance.designer.desid,
+                          cliid: instance.client.cliid,
+                          proid: instance.project.proid,
+                          fileMap: fileMap,
+                          date: new Date(),
+                        }
+                      });
                     }
                     cancelEvent.call(self, e);
                     await instance.setPanBlocks();
@@ -5010,6 +5048,18 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                         }
                       });
                       await ajaxJson({ targets: fileMap }, BRIDGEHOST + "/middlePhotoRemove");
+                      await homeliaisonAnalytics({
+                        page: instance.pageName,
+                        standard: instance.firstPageViewTime,
+                        action: "deleteDesignFile",
+                        data: {
+                          desid: instance.designer.desid,
+                          cliid: instance.client.cliid,
+                          proid: instance.project.proid,
+                          fileMap: fileMap,
+                          date: new Date(),
+                        }
+                      });
                     }
                     cancelEvent.call(self, e);
                     await instance.setPanBlocks();
@@ -5153,6 +5203,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                 } else {
                   const targets = equalJson(JSON.stringify(instance.panContents));
                   const target = targets.find((obj) => { return obj.key === instance.itemList[0].key });
+                  const loading = instance.mother.grayLoading();
 
                   await ajaxJson({
                     mode: "send",
@@ -5165,6 +5216,19 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                     file: target.action[0].name,
                     itemKey: instance.itemList[0].key,
                   }, SECONDHOST + "/projectDesignerStatus");
+                  await homeliaisonAnalytics({
+                    page: instance.pageName,
+                    standard: instance.firstPageViewTime,
+                    action: "sendDesignerFile",
+                    data: {
+                      desid: instance.designer.desid,
+                      cliid: instance.client.cliid,
+                      proid: instance.project.proid,
+                      date: new Date(),
+                    }
+                  });
+
+                  loading.remove();
 
                   window.alert(instance.client.name + " 고객님에게 알림톡을 전송하였습니다!");
                   cancelEvent.call(self, e);
@@ -8241,6 +8305,21 @@ ProcessDetailJs.prototype.returnButtonList = function () {
                   blankHref(parsedObject[0].link);
                 }
               }
+
+              await homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "downloadDesignerFile",
+                data: {
+                  desid: instance.designer.desid,
+                  cliid: instance.client.cliid,
+                  proid: instance.project.proid,
+                  original,
+                  type,
+                  date: new Date(),
+                }
+              });
+
               loading.remove();
             }
           }
@@ -8276,6 +8355,18 @@ ProcessDetailJs.prototype.returnButtonList = function () {
                 }
               });
               await ajaxJson({ targets: fileMap }, BRIDGEHOST + "/middlePhotoRemove");
+              await homeliaisonAnalytics({
+                page: instance.pageName,
+                standard: instance.firstPageViewTime,
+                action: "deleteDesignFile",
+                data: {
+                  desid: instance.designer.desid,
+                  cliid: instance.client.cliid,
+                  proid: instance.project.proid,
+                  fileMap: fileMap,
+                  date: new Date(),
+                }
+              });
             }
             await instance.setPanBlocks();
           }
@@ -8373,6 +8464,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
       return async function (e) {
         try {
           const targets = equalJson(JSON.stringify(instance.panContents));
+          const loading = instance.mother.grayLoading();
           let target;
 
           if (instance.itemList.length === 0) {
@@ -8393,7 +8485,20 @@ ProcessDetailJs.prototype.returnButtonList = function () {
               file: target.action[0].name,
               itemKey: target.key,
             }, SECONDHOST + "/projectDesignerStatus");
-  
+            await homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "sendDesignerFile",
+              data: {
+                desid: instance.designer.desid,
+                cliid: instance.client.cliid,
+                proid: instance.project.proid,
+                date: new Date(),
+              }
+            });
+
+            loading.remove();
+
             window.alert(instance.client.name + " 고객님에게 알림톡을 전송하였습니다!");
           }
 
@@ -8909,6 +9014,17 @@ ProcessDetailJs.prototype.insertRawUploadBox = function () {
                   channel: "#301_console",
                   target: instance.manager !== null ? [ instance.manager ] : null,
                 }, BACKHOST + "/sendSlack");
+                await homeliaisonAnalytics({
+                  page: instance.pageName,
+                  standard: instance.firstPageViewTime,
+                  action: "uploadDesignerRaw",
+                  data: {
+                    desid: instance.designer.desid,
+                    cliid: instance.client.cliid,
+                    proid: proid,
+                    date: new Date(),
+                  }
+                });
 
                 loading.remove();
 
@@ -9425,6 +9541,19 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                       res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
                       await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
                       await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
+                      await homeliaisonAnalytics({
+                        page: instance.pageName,
+                        standard: instance.firstPageViewTime,
+                        action: "uploadDesignFile",
+                        data: {
+                          desid: desid,
+                          cliid: instance.client.cliid,
+                          proid: proid,
+                          key: thisKey,
+                          title: thisTitle,
+                          date: new Date(),
+                        }
+                      });
 
                       window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
   
@@ -9534,6 +9663,19 @@ ProcessDetailJs.prototype.uploadFiles = function (thisStatusNumber, photoBoo) {
                       res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
                       await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
                       await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
+                      await homeliaisonAnalytics({
+                        page: instance.pageName,
+                        standard: instance.firstPageViewTime,
+                        action: "uploadDesignFile",
+                        data: {
+                          desid: desid,
+                          cliid: instance.client.cliid,
+                          proid: proid,
+                          key: thisKey,
+                          title: thisTitle,
+                          date: new Date(),
+                        }
+                      });
     
                       window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
   
@@ -9656,7 +9798,20 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
                   res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
                   await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
                   await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
-    
+                  await homeliaisonAnalytics({
+                    page: instance.pageName,
+                    standard: instance.firstPageViewTime,
+                    action: "uploadDesignFile",
+                    data: {
+                      desid: desid,
+                      cliid: instance.client.cliid,
+                      proid: proid,
+                      key: thisKey,
+                      title: thisTitle,
+                      date: new Date(),
+                    }
+                  });
+
                   window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
   
                 } else {
@@ -9770,7 +9925,20 @@ ProcessDetailJs.prototype.dropFiles = function (thisStatusNumber, photoBoo) {
                   res = await ajaxForm(formData, BRIDGEHOST + "/middlePhotoBinary", loading.progress);
                   await ajaxJson({ designer, desid, client, proid, title: thisTitle, mode: "designer" }, BRIDGEHOST + "/middlePhotoAlarm");
                   await ajaxJson({ mode: "chain", proid, desid, key: thisKey }, SECONDHOST + "/projectDesignerStatus");
-    
+                  await homeliaisonAnalytics({
+                    page: instance.pageName,
+                    standard: instance.firstPageViewTime,
+                    action: "uploadDesignFile",
+                    data: {
+                      desid: desid,
+                      cliid: instance.client.cliid,
+                      proid: proid,
+                      key: thisKey,
+                      title: thisTitle,
+                      date: new Date(),
+                    }
+                  });
+                  
                   window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
   
                 } else {
@@ -15798,6 +15966,19 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                           desid,
                           matrix
                         }, SECONDHOST + "/projectDesignerStatus").then(() => {
+                          return homeliaisonAnalytics({
+                            page: instance.pageName,
+                            standard: instance.firstPageViewTime,
+                            action: "updateDesignStatus",
+                            data: {
+                              desid: desid,
+                              cliid: instance.client.cliid,
+                              proid: proid,
+                              matrix: matrix,
+                              date: new Date(),
+                            }
+                          });
+                        }).then(() => {
                           setQueue(() => {
                             self.parentElement.style.animation = "fadedownlite 0.3s ease forwards";
                             setQueue(() => {
@@ -16037,6 +16218,19 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
             matrix
           }, SECONDHOST + "/projectDesignerStatus");
 
+          await homeliaisonAnalytics({
+            page: instance.pageName,
+            standard: instance.firstPageViewTime,
+            action: "updateDesignStatus",
+            data: {
+              desid: desid,
+              cliid: instance.client.cliid,
+              proid: proid,
+              matrix: matrix,
+              date: new Date(),
+            }
+          });
+
           reloadBarArr(barArrBase, matrix);
 
         } catch (e) {
@@ -16174,6 +16368,19 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
                           desid,
                           matrix
                         }, SECONDHOST + "/projectDesignerStatus");
+
+                        await homeliaisonAnalytics({
+                          page: instance.pageName,
+                          standard: instance.firstPageViewTime,
+                          action: "updateDesignStatus",
+                          data: {
+                            desid: desid,
+                            cliid: instance.client.cliid,
+                            proid: proid,
+                            matrix: matrix,
+                            date: new Date(),
+                          }
+                        });
 
                         setQueue(() => {
                           self.parentElement.style.animation = "fadedownlite 0.3s ease forwards";
@@ -16626,6 +16833,17 @@ ProcessDetailJs.prototype.insertFormStatusBox = async function () {
               const desid = this.getAttribute("desid");
               if (window.confirm(instance.client.name + " 고객님께 프로젝트 진행율 알림톡을 보낼까요?")) {
                 await ajaxJson({ mode: "send", type: "status", proid, desid, designer: instance.designer.designer, name: instance.client.name, phone: instance.client.phone }, SECONDHOST + "/projectDesignerStatus");
+                await homeliaisonAnalytics({
+                  page: instance.pageName,
+                  standard: instance.firstPageViewTime,
+                  action: "sendDesignerStatus",
+                  data: {
+                    desid: desid,
+                    cliid: instance.client.cliid,
+                    proid: proid,
+                    date: new Date(),
+                  }
+                });
                 window.alert(instance.client.name + " 고객님에게 프로젝트 진행율 알림톡을 전송하였습니다!");  
               }
             } catch (e) {

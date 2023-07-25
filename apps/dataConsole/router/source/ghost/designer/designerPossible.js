@@ -303,7 +303,24 @@ DesignerPossibleJs.prototype.boxToPossible = async function () {
     updateQuery = {};
     updateQuery["possible"] = this.realtimeDesigner.possible;
     await ajaxJson({ mode: "update", desid: instance.designer.desid, updateQuery }, BACKHOST + "/realtimeDesigner");
-
+    if (!entireMode) {
+      await ajaxJson({
+        message: instance.designer.designer + " 실장님이 디자이너 콘솔을 통해 일정을 업데이트 하셨습니다!",
+        channel: "#300_designer",
+        voice: true,
+        fairy: true,
+      }, BACKHOST + "/sendSlack");
+      await homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "realtimeDesigner",
+        data: {
+          desid: instance.designer.desid,
+          date: new Date(),
+          possible: this.realtimeDesigner.possible
+        }
+      });
+    }
 
   } catch (e) {
     console.log(e);
