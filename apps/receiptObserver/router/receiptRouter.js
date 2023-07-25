@@ -477,8 +477,8 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
           map.push({ id: "64bf8cb27209e5dd5601ac7a", value: todayMonth });
           map.push({ id: "64bf8cb27209e5dd5601ac7b", value: todayDate });
 
-          map.push({ id: "64bf8cb27209e5dd5601ac77", value: titleAddress === '' ? '-' : titleAddress });
-          map.push({ id: "64bf8cb27209e5dd5601ac78", value: titleName === '' ? '-' : titleName });
+          map.push({ id: "64bf8cb27209e5dd5601ac76", value: titleAddress === '' ? '-' : titleAddress });
+          map.push({ id: "64bf8cb27209e5dd5601ac77", value: titleName === '' ? '-' : titleName });
 
           data = {
             form_id: targetFormId,
