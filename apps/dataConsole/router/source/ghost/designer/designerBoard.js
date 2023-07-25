@@ -3218,6 +3218,9 @@ DesignerBoardJs.prototype.launching = async function (loading) {
     }
 
     const getObj = returnGet();
+    const entireMode = (getObj.entire === "true");
+    const normalMode = (entireMode && getObj.normal === "true");
+    const adminMode = (getObj.admin === "true");
     let cliid, clients, client;
     let proid, projects, project;
     let whereQuery;
@@ -3282,32 +3285,40 @@ DesignerBoardJs.prototype.launching = async function (loading) {
 
     this.contents = await ajaxJson({}, SECONDHOST + "/getChecklist", { equal: true });
 
-    await this.mother.ghostDesignerLaunching({
-      name: "designerBoard",
-      designer: this.designer,
-      base: {
-        instance: this,
-        binaryPath: DesignerBoardJs.binaryPath,
-        subTitle: "",
-      },
-      local: async () => {
-        try {
-          let whiteBlock;
-          instance.insertInitBox();
-          if (getObj.mode === "status") {
-            await instance.insertFormsBox();
-          }
-          instance.insertRouterBox();
-          instance.insertProcessBox();
-          instance.insertReleaseBox();
-          instance.insertPortfolioBase();
-          // instance.popupLaunching();
+    this.entireMode = entireMode;
+    this.normalMode = normalMode;
+    this.adminMode = adminMode;
 
-        } catch (e) {
-          await GeneralJs.ajaxJson({ message: "DesignerBoardJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+    if (!entireMode) {
+      await this.mother.ghostDesignerLaunching({
+        name: "designerBoard",
+        designer: this.designer,
+        base: {
+          instance: this,
+          binaryPath: DesignerBoardJs.binaryPath,
+          subTitle: "",
+        },
+        local: async () => {
+          try {
+            let whiteBlock;
+            instance.insertInitBox();
+            if (getObj.mode === "status") {
+              await instance.insertFormsBox();
+            }
+            instance.insertRouterBox();
+            instance.insertProcessBox();
+            instance.insertReleaseBox();
+            instance.insertPortfolioBase();
+            // instance.popupLaunching();
+  
+          } catch (e) {
+            await GeneralJs.ajaxJson({ message: "DesignerBoardJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+          }
         }
-      }
-    });
+      });
+    } else {
+      instance.insertProcessBox();
+    }
 
     loading.parentNode.removeChild(loading);
 

@@ -901,6 +901,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
 
       linkDictionary = {
         checklist: BACKHOST + "/middle/designerAbout?desid=" + designer.desid + "&entire=true&normal=true",
+        process: BACKHOST + "/middle/designerBoard?desid=" + designer.desid + "&entire=true&normal=true",
         possible: BACKHOST + "/middle/designerPossible?desid=" + designer.desid + "&entire=true&normal=true",
         portfolio: BACKHOST + "/designer?mode=general&desid=" + designer.desid + "&dataonly=true&entire=true&normal=true",
         report: BACKHOST + "/middle/designerReport?desid=" + designer.desid + "&entire=true&normal=true",
@@ -1111,6 +1112,34 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                       marginLeft: String(fontBetween) + ea,
                       fontWeight: String(fontWeight),
                       color: instance.whiteCardMode === "checklist" ? colorChip.green : colorChip.black,
+                      cursor: "pointer",
+                    }
+                  },
+                  {
+                    text: blank,
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: colorChip.gray3,
+                    }
+                  },
+                  {
+                    class: [ titleButtonsClassName ],
+                    attribute: { toggle: (instance.whiteCardMode === "possible" ? "on" : "off"), desid, mode: "process" },
+                    event: {
+                      click: iframeMaker("process"),
+                    },
+                    text: "진행중 프로젝트",
+                    style: {
+                      position: "relative",
+                      top: String(fontTextTop) + ea,
+                      fontSize: String(fontSize) + ea,
+                      marginLeft: String(fontBetween) + ea,
+                      fontWeight: String(fontWeight),
+                      color: instance.whiteCardMode === "process" ? colorChip.green : colorChip.black,
                       cursor: "pointer",
                     }
                   },
