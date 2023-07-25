@@ -7163,7 +7163,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
                   targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
                   targetIndex = targets.findIndex((d) => { return d === self });
                   for (let s = 0; s < targets.length; s++) {
-                    if (s <= targetIndex) {
+                    if (s < targetIndex) {
                       targets[s].style.color = colorChip.green;
                       targets[s].setAttribute("toggle", "on");
                     } else {
