@@ -423,33 +423,33 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
           ];
 
           if (/홈퍼니싱/gi.test(serviceParsing(project.service))) {
-            map.push({ id: "64b632ca5a0805f9d77e552e", value: true });
-            map.push({ id: "64b632ca5a0805f9d77e552f", value: false });
-            map.push({ id: "64b632ca5a0805f9d77e5530", value: false });
-            map.push({ id: "64b632ca5a0805f9d77e5531", value: false });
+            map.push({ id: "64b632ca5a0805f9d77e552e", value: "true" });
+            map.push({ id: "64b632ca5a0805f9d77e552f", value: "false" });
+            map.push({ id: "64b632ca5a0805f9d77e5530", value: "false" });
+            map.push({ id: "64b632ca5a0805f9d77e5531", value: "false" });
           } else if (/홈스타일링/gi.test(serviceParsing(project.service))) {
-            map.push({ id: "64b632ca5a0805f9d77e552e", value: false });
-            map.push({ id: "64b632ca5a0805f9d77e552f", value: true });
-            map.push({ id: "64b632ca5a0805f9d77e5530", value: false });
-            map.push({ id: "64b632ca5a0805f9d77e5531", value: false });
+            map.push({ id: "64b632ca5a0805f9d77e552e", value: "false" });
+            map.push({ id: "64b632ca5a0805f9d77e552f", value: "true" });
+            map.push({ id: "64b632ca5a0805f9d77e5530", value: "false" });
+            map.push({ id: "64b632ca5a0805f9d77e5531", value: "false" });
           } else if (/토탈/gi.test(serviceParsing(project.service))) {
-            map.push({ id: "64b632ca5a0805f9d77e552e", value: false });
-            map.push({ id: "64b632ca5a0805f9d77e552f", value: false });
-            map.push({ id: "64b632ca5a0805f9d77e5530", value: true });
-            map.push({ id: "64b632ca5a0805f9d77e5531", value: false });
+            map.push({ id: "64b632ca5a0805f9d77e552e", value: "false" });
+            map.push({ id: "64b632ca5a0805f9d77e552f", value: "false" });
+            map.push({ id: "64b632ca5a0805f9d77e5530", value: "true" });
+            map.push({ id: "64b632ca5a0805f9d77e5531", value: "false" });
           } else {
-            map.push({ id: "64b632ca5a0805f9d77e552e", value: false });
-            map.push({ id: "64b632ca5a0805f9d77e552f", value: false });
-            map.push({ id: "64b632ca5a0805f9d77e5530", value: false });
-            map.push({ id: "64b632ca5a0805f9d77e5531", value: true });
+            map.push({ id: "64b632ca5a0805f9d77e552e", value: "false" });
+            map.push({ id: "64b632ca5a0805f9d77e552f", value: "false" });
+            map.push({ id: "64b632ca5a0805f9d77e5530", value: "false" });
+            map.push({ id: "64b632ca5a0805f9d77e5531", value: "true" });
           }
 
           if (project.service.online) {
-            map.push({ id: "64b632ca5a0805f9d77e5532", value: false });
-            map.push({ id: "64b632ca5a0805f9d77e5533", value: true });
+            map.push({ id: "64b632ca5a0805f9d77e5532", value: "false" });
+            map.push({ id: "64b632ca5a0805f9d77e5533", value: "true" });
           } else {
-            map.push({ id: "64b632ca5a0805f9d77e5532", value: true });
-            map.push({ id: "64b632ca5a0805f9d77e5533", value: false });
+            map.push({ id: "64b632ca5a0805f9d77e5532", value: "true" });
+            map.push({ id: "64b632ca5a0805f9d77e5533", value: "false" });
           }
 
           map.push({ id: "64b632ca5a0805f9d77e5534", value: designer.designer });
@@ -475,7 +475,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
           map.push({ id: "64b632ca5a0805f9d77e5541", value: "02-2039-2252" });
           map.push({ id: "64b632ca5a0805f9d77e5542", value: "help@home-liaison.com" });
 
-          map.push({ id: "64b632ca5a0805f9d77e5543", value: true });
+          map.push({ id: "64b632ca5a0805f9d77e5543", value: "true" });
 
           map.push({ id: "64b632ca5a0805f9d77e5544", value: todayYear });
           map.push({ id: "64b632ca5a0805f9d77e5545", value: todayMonth });
@@ -508,8 +508,6 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
           map.push({ id: "64b632ca5a0805f9d77e5557", value: titleAddress === '' ? '-' : titleAddress });
           map.push({ id: "64b632ca5a0805f9d77e5558", value: titleName === '' ? '-' : titleName });
 
-          console.log(map);
-
           data = {
             form_id: targetFormId,
             title: formTitle,
@@ -527,8 +525,6 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
           }
 
           widsignRes = await requestSystem(endPoint + "/v2/form/send", data, { headers: { "x-api-key": key, "x-access-token": token, "Content-Type": "application/json" } });
-
-          console.log(widsignRes);
 
           await bill.createBill("stylingForm", [ {
             name: widsignRes.data.result[0].doc_name,
