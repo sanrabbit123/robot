@@ -440,7 +440,6 @@ JobPostingJs.prototype.insertApplyBox = function () {
   let greenNoticeWidth0, greenNoticeWidth1, greenNoticeWidth2;
   let addressBlurEvent;
   let addressFocusEvent;
-  let calendarViewEvent;
   let calendarWidth;
   let calendarTop;
   let nameBlurEvent;
@@ -464,7 +463,6 @@ JobPostingJs.prototype.insertApplyBox = function () {
   let agreeToggleEvent;
   let emailBlurEvent;
   let bigAddressBlurEvent;
-  let commentsFocusEvent, commentsBlurEvent;
   let greenNoticeWidth3, greenNoticeBottom3;
   let barDescriptionLingHeight;
   let barDescriptionTextTop;
@@ -478,13 +476,11 @@ JobPostingJs.prototype.insertApplyBox = function () {
   let barFactorB0Left;
   let mobileGrayTextAreaTop;
   let defaultRatio;
-  let barClickEvent;
   let factorBetween;
   let inputTop;
   let titleWidth;
   let grayWidth;
   let subFontSize, subFontTop, subFontBetween;
-  let fileChangeEvent;
   let grayTextTop;
   let grayMargin;
   let portfolioBlock;
@@ -500,17 +496,6 @@ JobPostingJs.prototype.insertApplyBox = function () {
   let xIconWidth;
   let xIconTop;
   let xVisual;
-  let greenBasicFocusEvent;
-  let greenBasicBlurEvent;
-  let greenNumberFocusEvent;
-  let greenNumberBlurEvent;
-  let greenDateFocusEvent;
-  let greenDateBlurEvent;
-  let greenCareerFocusEvent;
-  let greenCareerBlurEvent;
-  let textareaBlurEvent;
-  let greenLinkFocusEvent;
-  let greenLinkBlurEvent;
   let plusSize;
   let questionWeight;
   let plusTextTop;
@@ -535,6 +520,8 @@ JobPostingJs.prototype.insertApplyBox = function () {
   let yearMonthTextMargin;
   let careerBlockLeftMinus;
   let textareaVisualTop;
+  let plusBlockEvent;
+  let plusValueCareer;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -860,50 +847,19 @@ JobPostingJs.prototype.insertApplyBox = function () {
 
   textareaVisualTop = <%% 38, 35, 34, 32, 8 %%>;
 
-  if (generalMode) {
-    contents = {
-      main: [
-        "홈리에종 파트너십 신청",
-      ],
-      sub: [
-        <&& "홈리에종 CX 마케터 지원을 위해서는" | "CX 마케터 지원을 위해서는" | "CX 마케터 지원을 위해서는" | "CX 지원을 위해서는" | "CX 마케터 지원을 위해서는"&&>,
-        <&& "다음과 같은 기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." &&>,
-        "지원서를 작성해주시면,",
-        <&& "확인 후 연락 드리겠습니다." | "확인 후 연락 드리겠습니다." | "확인 후 연락 드리겠습니다." | "연락 드리겠습니다." | "확인 후 연락 드리겠습니다." &&>,
-      ]
-    };
-  } else {
-    contents = {
-      main: [
-        "추가 포트폴리오 전송",
-      ],
-      sub: [
-        <&& "신청시 못 보낸 포트폴리오가 있다면," | "못 보낸 포트폴리오가 있다면," | "못 보낸 포트폴리오가 있다면," | "포트폴리오가 있다면," | "못 보낸 포트폴리오가 있다면," &&>,
-        <&& "추가로 전송하실 수 있습니다!" | "추가로 전송하실 수 있습니다!" | "추가로 전송하실 수 있습니다!" | "전송하실 수 있습니다!" | "추가로 전송하실 수 있습니다!" &&>,
-        <&& "포트폴리오를 최대한 많이 보내주시면," | "포트폴리오를 최대한 보내주시면," | "포트폴리오를 최대한 보내주시면," | "포트폴리오를 보내주시면," | "포트폴리오를 최대한 보내주시면," &&>,
-        <&& "홈리에종에서 모두 검토 후 연락드립니다." | "홈리에종에서 검토 후 연락드립니다." | "홈리에종에서 검토 후 연락드립니다." | "검토 후 연락드립니다." | "홈리에종에서 검토 후 연락드립니다." &&>,
-      ]
-    };
-  }
+  contents = {
+    main: [
+      "홈리에종 CX 지원",
+    ],
+    sub: [
+      <&& "홈리에종 CX 마케터 지원을 위해서는" | "CX 마케터 지원을 위해서는" | "CX 마케터 지원을 위해서는" | "CX 지원을 위해서는" | "CX 마케터 지원을 위해서는"&&>,
+      <&& "다음과 같은 기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "기본 정보가 필요합니다." | "다음 기본 정보가 필요합니다." &&>,
+      "지원서를 작성해주시면,",
+      <&& "확인 후 연락 드리겠습니다." | "확인 후 연락 드리겠습니다." | "확인 후 연락 드리겠습니다." | "연락 드리겠습니다." | "확인 후 연락 드리겠습니다." &&>,
+    ]
+  };
 
   careerBlocksRender = () => {};
-
-  barClickEvent = (arr) => {
-    const valuesArr = equalJson(JSON.stringify(arr));
-    return function (e) {
-      const bar = this.querySelector("." + variableBarClassName);
-      const box = this.getBoundingClientRect();
-      let thisLength;
-      let ratio;
-
-      thisLength = e.x - box.x;
-      ratio = Math.round((thisLength / box.width) * 1000000) / 1000000;
-
-      bar.style.width = String(ratio * 100) + '%';
-      this.setAttribute("ratio", String(ratio));
-      this.setAttribute("value", valuesArr[Math.round((valuesArr.length - 1) * ratio)].value);
-    }
-  }
 
   phoneHypenEvent = function (e) {
     this.value = autoHypenPhone(this.value);
@@ -919,61 +875,6 @@ JobPostingJs.prototype.insertApplyBox = function () {
 
   emailBlurEvent = function () {
     this.value = this.value.replace(/[\=\+\?\#\&\(\)]/gi, '');
-  }
-
-  commentsFocusEvent = function (e) {
-    const self = this;
-    const mother = this.previousElementSibling;
-
-    this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
-
-    createNode({
-      mode: "aside",
-      mother,
-      style: {
-        position: "relative",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(100) + '%',
-        textAlign: "center",
-      },
-      children: [
-        {
-          text: "(예시)\n=> 시공: 도배, 조명만 부분적으로 원해요.\n=> 스타일링: 가구, 패브릭, 소품 전체 구매\n=> 예산: 최대 00만원 이내로 하고 싶어요.",
-          style: {
-            position: "absolute",
-            width: String(greenNoticeWidth3) + ea,
-            left: "calc(50% - " + String((greenNoticeWidth3 / 2) + greenNoticePaddingLeft) + ea + ")",
-            background: colorChip.gradientGreen,
-            fontSize: String(greenNoticeSize) + ea,
-            fontWeight: String(greenNoticeWeight),
-            color: colorChip.white,
-            paddingTop: String(greenNoticePaddingTop) + ea,
-            paddingBottom: String(greenNoticePaddingBottom) + ea,
-            paddingLeft: String(greenNoticePaddingLeft) + ea,
-            paddingRight: String(greenNoticePaddingLeft) + ea,
-            bottom: String(greenNoticeBottom3) + ea,
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
-            animation: "fadeuplite 0.3s ease forwards",
-            lineHeight: String(greenNoticeLineHeight),
-            textAlign: "left",
-          }
-        }
-      ]
-    });
-
-  }
-
-  commentsBlurEvent = function (e) {
-    const self = this;
-    const mother = this.previousElementSibling;
-    const targets = [ ...mother.children ];
-    for (let dom of targets) {
-      dom.remove();
-    }
-    this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
   }
 
   checkboxClickEvent0 = async function (e) {
@@ -1002,80 +903,6 @@ JobPostingJs.prototype.insertApplyBox = function () {
     }
   }
 
-  calendarViewEvent = async function (e) {
-    try {
-      this.blur();
-      const mother = this.previousElementSibling;
-      const removeTargets = "removeTargets";
-      const zIndex = 4;
-      let cancelBack, whitePrompt;
-      let calendar;
-
-      cancelBack = createNode({
-        mother,
-        class: [ removeTargets ],
-        event: {
-          click: (e) => {
-            const targets = document.querySelectorAll('.' + removeTargets);
-            for (let dom of targets) {
-              dom.remove();
-            }
-          }
-        },
-        style: {
-          position: "fixed",
-          top: String(0),
-          left: String(0),
-          zIndex: String(zIndex),
-          width: String(100) + '%',
-          height: String(100) + '%',
-          background: "transparent",
-        }
-      });
-
-      whitePrompt = createNode({
-        mother,
-        class: [ removeTargets ],
-        style: {
-          position: "relative",
-          top: String(0),
-          left: String(0),
-          width: String(100) + '%',
-          height: String(100) + '%',
-        },
-        children: [
-          {
-            style: {
-              position: "absolute",
-              left: "calc(50% - " + String(calendarWidth / 2) + ea + ")",
-              top: String(calendarTop) + ea,
-              width: String(calendarWidth) + ea,
-              zIndex: String(zIndex),
-              background: colorChip.white,
-              borderRadius: String(3) + "px",
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              animation: "fadeuphard 0.3s ease forwards",
-              transition: "all 0s ease",
-            },
-          }
-        ]
-      }).firstChild;
-
-      calendar = instance.mother.makeCalendar(stringToDate(new Date()), function (e) {
-        let targets;
-        findByAttribute(document.querySelectorAll('.' + inputClassName), "property", "movein").value = this.getAttribute("buttonValue");
-        targets = document.querySelectorAll('.' + removeTargets);
-        for (let dom of targets) {
-          dom.remove();
-        }
-      }, { width: calendarWidth, mobile });
-      whitePrompt.appendChild(calendar.calendarBase);
-
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
   agreeToggleEvent = function () {
     const children = [ ...this.parentElement.children ];
     const [ words, circle ] = children;
@@ -1098,217 +925,142 @@ JobPostingJs.prototype.insertApplyBox = function () {
     }
   }
 
-  fileChangeEvent = function (e) {
-    const self = this;
-    const mother = document.querySelector('.' + fileTongClassName);
-    const cardMaker = (fileObj, index) => {
-      createNode({
-        mother,
-        events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: "calc(calc(100% - " + String(cardMargin * (cardWidthNumber - 1)) + ea + ") / " + String(cardWidthNumber) + ")",
-          height: String(cardHeight) + ea,
-          marginRight: String(index % cardWidthNumber === cardWidthNumber - 1 ? 0 : cardMargin) + ea,
-          marginBottom: String(cardMargin) + ea,
-          background: colorChip.white,
-          borderRadius: String(3) + "px",
-        },
-        children: [
-          {
-            style: {
-              position: "relative",
-              top: String(cardInnerMarginTop) + ea,
-              left: String(cardInnerMargin) + ea,
-              width: withOut(xIconWidth + (cardInnerMargin * 2.8), ea),
-              height: withOut(cardInnerMarginTop, ea),
-              overflow: "hidden",
-            },
-            children: [
-              {
-                text: fileObj.name,
-                style: {
-                  position: "absolute",
-                  fontSize: String(cardWordingSize) + ea,
-                  fontWeight: String(400),
-                  color: colorChip.black,
-                  width: String(900) + ea,
-                }
-              }
-            ]
-          },
-          {
-            attribute: [
-              { index }
-            ],
-            events: [
-              {
-                type: "click",
-                event: function (e) {
-                  const index = Number(this.getAttribute("index"));
-                  let cancel;
-                  cancel = JSON.parse(instance.fileInput.getAttribute("cancel"));
-                  cancel.push(index);
-                  instance.fileInput.setAttribute("cancel", JSON.stringify(cancel));
-                  this.parentElement.parentElement.removeChild(this.parentElement);
-                }
-              }
-            ],
-            style: {
-              position: "absolute",
-              background: colorChip.white,
-              width: String(xIconWidth) + ea,
-              height: String(xIconWidth) + ea,
-              right: String(cardInnerMargin) + ea,
-              top: String(xIconTop) + ea,
-            },
-            children: [
-              {
-                style: {
-                  position: "absolute",
-                  background: colorChip.white,
-                  width: String(xIconWidth + (xVisual * 2)) + ea,
-                  height: String(xIconWidth + (xVisual * 2)) + ea,
-                  right: String(-1 * xVisual) + ea,
-                  top: String(-1 * xVisual) + ea,
-                }
-              },
-              {
-                mode: "svg",
-                source: instance.mother.returnCancel(colorChip.green),
-                style: {
-                  position: "absolute",
-                  background: colorChip.white,
-                  width: String(xIconWidth) + ea,
-                  right: String(0) + ea,
-                  top: String(0) + ea,
-                }
-              }
-            ]
-          }
-        ]
+  plusValueCareer = async (matrix, tong) => {
+    try {
+      const pipe = "&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;";
+      const titleArr = [
+        "회사",
+        "담당 업무",
+        "기간",
+      ];
+      let company, team, role, start, end;
+      let block;
+      let original;
+      let whereQuery, updateQuery;
+      let endMatrix;
+
+      company = matrix[0][1];
+      team = matrix[1][1];
+      role = matrix[2][1];
+      start = matrix[3][1];
+      end = matrix[4][1];
+
+      block = {
+        company,
+        team,
+        role,
+        date: { start, end }
+      };
+
+      original = [];
+      original.push(block);
+      original.sort((a, b) => { return b.date.start.valueOf() - a.date.start.valueOf() });
+
+      endMatrix = original.map((obj) => {
+        const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
+        const startDate = obj.date.start;
+        const startWords = (String(obj.date.start.getFullYear()).slice(2) + "." + String(obj.date.start.getMonth() + 1));
+        const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "." + String(obj.date.end.getMonth() + 1));
+        const delta = endDate.valueOf() - startDate.valueOf();
+        const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
+        const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월" + "&nbsp;&nbsp;(" + startWords + " ~ " + endWords + ")";
+        return {
+          title: titleArr,
+          value: [
+            obj.company + pipe + obj.team,
+            obj.role,
+            rangeWords,
+            obj.tag,
+          ]
+        };
       });
+      careerBlocksRender(endMatrix, tong);
+
+    } catch (e) {
+      console.log(e);
     }
-    instance.fileInput.setAttribute("cancel", JSON.stringify([]));
-    cleanChildren(mother);
-    for (let i = 0; i < this.files.length; i++) {
-      cardMaker(this.files[i], i);
-    }
-    if (this.files.length === 0) {
-      this.previousElementSibling.style.display = "flex";
+  }
+
+  plusBlockEvent = (mode, index = -1, method = 0) => {
+    let valueTargets;
+    if (method === 0) {
+      valueTargets = [
+        { name: "회사", type: "string" },
+        { name: "부서", type: "string" },
+        { name: "담당 업무", type: "string" },
+        { name: "시작일", type: "date", progressBoo: false, progressName: "" },
+        { name: "종료일", type: "date", progressBoo: true, progressName: "재직중" },
+      ];
     } else {
-      this.previousElementSibling.style.display = "none";
+      valueTargets = [
+        { name: "학교", type: "string" },
+        { name: "전공", type: "string" },
+        { name: "입학일", type: "date", progressBoo: false, progressName: "" },
+        { name: "졸업일", type: "date", progressBoo: true, progressName: "재학중" },
+      ];
     }
-  }
+    return async function (e) {
+      try {
+        let valueMatrix;
+        let tempArr;
+        let tempValue;
+  
+        valueMatrix = [];
+  
+        for (let obj of valueTargets) {
+          tempArr = [];
+          if (obj.type === "string") {
+            tempArr.push(obj.name);
+            do {
+              tempValue = await GeneralJs.prompt(obj.name + "명을 알려주세요!");
+              if (typeof tempValue !== "string") {
+                throw new Error("cancel");
+              }
+            } while (tempValue.trim() === "")
+            tempArr.push(tempValue.trim());
+          } else if (obj.type === "date") {
+            tempArr.push(obj.name);
+            do {
+              tempValue = await GeneralJs.promptDate(obj.name + "을(를) 알려주세요!", obj.progressBoo, obj.progressName);
+              if (tempValue === null) {
+                throw new Error("cancel");
+              }
+            } while (tempValue === null)
+            tempArr.push(tempValue);
 
-  greenBasicFocusEvent = function (e) {
-    const motherBlock = this.parentElement.parentElement;
-    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
-    this.value = this.value.trim().replace(/[^a-zA-Z가-힣0-9\(\)-_\[\]\!\~\*\,\.\:\; ]/gi, '');
-    if (noticeTarget !== null) {
-      noticeTarget.style.color = colorChip.green;
-    }
-  }
+          } else if (obj.type === "button") {
+            tempArr.push(obj.name);
+            do {
+              tempValue = await GeneralJs.promptButtons(obj.name + "을(를) 선택해주세요!", obj.buttons);
+              if (tempValue === null) {
+                throw new Error("cancel");
+              }
+            } while (tempValue === null)
+            tempArr.push(tempValue);
 
-  greenBasicBlurEvent = function (e) {
-    const motherBlock = this.parentElement.parentElement;
-    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
-    this.value = this.value.trim().replace(/[^a-zA-Z가-힣0-9\(\)-_\[\]\!\~\*\,\.\:\; ]/gi, '');
-    if (noticeTarget !== null) {
-      noticeTarget.style.color = colorChip.deactive;
-    }
-  }
+          } else {
+            throw new Error("invalid type");
+          }
+          valueMatrix.push(tempArr);
+        }
+  
+        if (mode === "create") {
 
-  greenNumberFocusEvent = function (e) {
-    const motherBlock = this.parentElement.parentElement;
-    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
-    this.value = this.value.trim().replace(/[^0-9\-\.]/gi, '');
-    if (noticeTarget !== null) {
-      noticeTarget.style.color = colorChip.green;
-    }
-  }
 
-  greenNumberBlurEvent = function (e) {
-    const motherBlock = this.parentElement.parentElement;
-    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
-    this.value = this.value.trim().replace(/[^0-9\-\.]/gi, '');
-    if (noticeTarget !== null) {
-      noticeTarget.style.color = colorChip.deactive;
-    }
-  }
 
-  greenDateFocusEvent = function (e) {
-    const motherBlock = this.parentElement.parentElement;
-    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
-    this.value = this.value.trim().replace(/[^0-9\-\.]/gi, '');
-    if (noticeTarget !== null) {
-      noticeTarget.style.color = colorChip.green;
+          // await instance.contents[x].contents[z].plusValue(valueMatrix, instance.designer, this.parentElement.nextElementSibling);
+        } else {
+          // await instance.contents[x].contents[z].updateValue({
+          //   mode: "update",
+          //   index,
+          //   value: valueMatrix,
+          //   tong: this.parentElement.parentElement.parentElement,
+          // }, instance.designer);
+        }
+      } catch (e) {
+        window.alert("입력을 취소하셨습니다! 처음부터 다시 진행해주세요!");
+      }
     }
-  }
-
-  greenDateBlurEvent = function (e) {
-    const motherBlock = this.parentElement.parentElement;
-    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
-    this.value = this.value.trim().replace(/[^0-9\-\.]/gi, '');
-    if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(this.value)) {
-      window.alert("'yyyy-mm-dd' 형태로 적어주세요!");
-      this.value = dateToString(new Date());
-    }
-    if (noticeTarget !== null) {
-      noticeTarget.style.color = colorChip.deactive;
-    }
-  }
-
-  greenCareerFocusEvent = function (e) {
-    const motherBlock = this.parentElement.parentElement;
-    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
-    this.value = this.value.trim().replace(/[^0-9년개월위와같음 ]/gi, '').trim();
-    if (noticeTarget !== null) {
-      noticeTarget.style.color = colorChip.green;
-    }
-  }
-
-  greenCareerBlurEvent = function (e) {
-    const motherBlock = this.parentElement.parentElement;
-    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
-    this.value = this.value.trim().replace(/[^0-9년개월위와같음 ]/gi, '').trim();
-    if (!((/^[0-9]+년( [0-9]개월)?/.test(this.value.trim()) && !/[0-9개]$/.test(this.value.trim())) || this.value.trim() === "위와 같음" || /^[0-9]+개월$/.test(this.value.trim()))) {
-      window.alert("'y년 m개월' 형태로 적어주세요!");
-      this.value = "0년 0개월";
-    }
-    if (noticeTarget !== null) {
-      noticeTarget.style.color = colorChip.deactive;
-    }
-  }
-
-  greenLinkFocusEvent = function (e) {
-    const motherBlock = this.parentElement.parentElement;
-    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
-    this.value = window.decodeURIComponent(this.value.trim().replace(/ /gi, '').trim());
-    this.style.color = colorChip.black;
-    if (noticeTarget !== null) {
-      noticeTarget.style.color = colorChip.green;
-    }
-  }
-
-  greenLinkBlurEvent = function (e) {
-    const motherBlock = this.parentElement.parentElement;
-    const noticeTarget = motherBlock.querySelector('.' + noticeClassName);
-    this.value = window.encodeURIComponent(this.value.trim().replace(/ /gi, '').trim());
-    if (!/^http/.test(this.value)) {
-      window.alert("http로 시작하는 전체 링크를 복사 붙여넣기 해주세요!");
-      this.value = "";
-    } else {
-      this.style.color = colorChip.gray4;
-    }
-    if (noticeTarget !== null) {
-      noticeTarget.style.color = colorChip.deactive;
-    }
-  }
-
-  textareaBlurEvent = function (e) {
-    this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
   }
 
   careerBlocksRender = (value, tong) => {
@@ -1349,7 +1101,7 @@ JobPostingJs.prototype.insertApplyBox = function () {
                 click: async function (e) {
                   try {
                     const index = Number(this.parentElement.getAttribute("index"));
-                    const updateFunction = plusBlockEvent("update", index);
+                    const updateFunction = plusBlockEvent("create", index, 0);
                     await updateFunction.call(this, e);
                   } catch (e) {
                     console.log(e);

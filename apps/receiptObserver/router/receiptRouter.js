@@ -339,7 +339,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
       if (rows.length === 0) {
         const selfMongo = instance.mongo;
         const { officeinfo: { widsign: { id, key, endPoint } } } = address;
-        const title = "홈스타일링계약서_000고객님_주홈리에종_YYMMDD";
+        const title = "2023디자인계약서_000고객님_주홈리에종_YYMMDD";
         const project = await back.getProjectById(proid, { selfMongo });
         const client = await back.getClientById(project.cliid, { selfMongo });
         const designer = await back.getDesignerById(project.desid, { selfMongo });
@@ -351,6 +351,12 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
         let tempArr;
         let map;
         let data;
+        let todayYear, todayMonth ,todayDate;
+        let delta;
+
+        todayYear = String(today.getFullYear());
+        todayMonth = String(today.getMonth() + 1);
+        todayDate = String(today.getDate());
 
         proposalDate = project.proposal.date.valueOf();
 
@@ -400,31 +406,107 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
           formTitle = "홈스타일링계약서_" + titleName + "고객님_주홈리에종_";
           formTitle = formTitle + tempArr[0].slice(2) + tempArr[1] + tempArr[2];
           map = [
-            { id: "5faa618f9da73962a9050ef4", value: titleName === '' ? '-' : titleName },
-            { id: "5faa6196b3c0673961000001", value: titleAddress === '' ? '-' : titleAddress },
-            { id: "5faa618f9da73962a9050ef6", value: client.phone === '' ? '-' : client.phone },
-            { id: "5faa618f9da73962a9050ef7", value: dateToString(project.process.contract.first.date) === '' ? '-' : dateToString(project.process.contract.first.date) },
-            { id: "5faa618f9da73962a9050ef9", value: dateToString(project.process.contract.form.date.from) === '' ? '-' : dateToString(project.process.contract.form.date.from) },
-            { id: "5faa618f9da73962a9050efa", value: dateToString(project.process.contract.form.date.to) === '' ? '-' : dateToString(project.process.contract.form.date.to) },
-            { id: "5faa618f9da73962a9050ef5", value: titleName === '' ? '-' : titleName },
-            { id: "5faa618f9da73962a9050ef8", value: request.family === '' ? "알 수 없음" : request.family },
-            { id: "5faa618f9da73962a9050f04", value: titleAddress === '' ? '-' : titleAddress },
-            { id: "5faa618f9da73962a9050f01", value: request.budget + " (디자이너 논의 및 조정)" },
-            { id: "5faa618f9da73962a9050f02", value: designer.designer + ", " + designer.information.phone },
-            { id: "5faa618f9da73962a9050efb", value: request.space.contract === '' ? '-' : request.space.contract },
-            { id: "5faa618f9da73962a9050efd", value: (/없/gi.test(dateToString(analytics.date.space.precheck)) ? '-' : dateToString(analytics.date.space.precheck)) },
-            { id: "5faa618f9da73962a9050efe", value: (/없/gi.test(dateToString(analytics.date.space.empty)) ? '-' : dateToString(analytics.date.space.empty)) },
-            { id: "5faa618f9da73962a9050efc", value: (/없/gi.test(dateToString(request.space.resident.expected)) ? '-' : dateToString(request.space.resident.expected)) },
-            { id: "5faa618f9da73962a9050eff", value: String(request.space.pyeong) + "평" },
-            { id: "5faa618f9da73962a9050f00", value: "방 " + String(request.space.spec.room) + "개 / 화장실 " + String(request.space.spec.bathroom) + "개" },
-            { id: "5faa618f9da73962a9050f03", value: serviceParsing(project.service) === '' ? '-' : serviceParsing(project.service) },
-            { id: "5faa618f9da73962a9050f05", value: autoComma(project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount) === '' ? '-' : autoComma(project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount) },
-            { id: "5faa618f9da73962a9050f06", value: autoComma(project.process.contract.remain.calculation.amount.consumer) === '' ? '-' : autoComma(project.process.contract.remain.calculation.amount.consumer) },
-            { id: "5faa618f9da73962a9050f16", value: titleName === '' ? '-' : titleName },
-            { id: "5faa618f9da73962a9050f1a", value: client.phone === '' ? '-' : client.phone },
-            { id: "5faa61beb3c0673961000002", value: titleAddress === '' ? '-' : titleAddress },
-            { id: "5faa618f9da73962a9050f19", value: titleName === '' ? '-' : titleName },
+            { id: "64b632ca5a0805f9d77e5520", value: todayYear },
+            { id: "64b632ca5a0805f9d77e5521", value: todayMonth },
+            { id: "64b632ca5a0805f9d77e5522", value: todayDate },
+            { id: "64b632ca5a0805f9d77e5523", value: titleName === '' ? '-' : titleName },
+            { id: "64b632ca5a0805f9d77e5524", value: client.phone === '' ? '-' : client.phone },
+            { id: "64b632ca5a0805f9d77e5525", value: request.family === '' ? "알 수 없음" : request.family },
+            { id: "64b632ca5a0805f9d77e5526", value: titleAddress === '' ? '-' : titleAddress },
+            { id: "64b632ca5a0805f9d77e5527", value: request.budget + " (디자이너 논의 및 조정)" },
+            { id: "64b632ca5a0805f9d77e5528", value: request.space.contract === '' ? '-' : request.space.contract },
+            { id: "64b632ca5a0805f9d77e5529", value: "방 " + String(request.space.spec.room) + "개 / 화장실 " + String(request.space.spec.bathroom) + "개" },
+            { id: "64b632ca5a0805f9d77e552a", value: String(request.space.pyeong) },
+            { id: "64b632ca5a0805f9d77e552b", value: (/없/gi.test(dateToString(analytics.date.space.precheck)) ? '-' : dateToString(analytics.date.space.precheck)) },
+            { id: "64b632ca5a0805f9d77e552c", value: (/없/gi.test(dateToString(analytics.date.space.empty)) ? '-' : dateToString(analytics.date.space.empty)) },
+            { id: "64b632ca5a0805f9d77e552d", value: (/없/gi.test(dateToString(request.space.resident.expected)) ? '-' : dateToString(request.space.resident.expected)) },
           ];
+
+          if (/홈퍼니싱/gi.test(serviceParsing(project.service))) {
+            map.push({ id: "64b632ca5a0805f9d77e552e", value: true });
+            map.push({ id: "64b632ca5a0805f9d77e552f", value: false });
+            map.push({ id: "64b632ca5a0805f9d77e5530", value: false });
+            map.push({ id: "64b632ca5a0805f9d77e5531", value: false });
+          } else if (/홈스타일링/gi.test(serviceParsing(project.service))) {
+            map.push({ id: "64b632ca5a0805f9d77e552e", value: false });
+            map.push({ id: "64b632ca5a0805f9d77e552f", value: true });
+            map.push({ id: "64b632ca5a0805f9d77e5530", value: false });
+            map.push({ id: "64b632ca5a0805f9d77e5531", value: false });
+          } else if (/토탈/gi.test(serviceParsing(project.service))) {
+            map.push({ id: "64b632ca5a0805f9d77e552e", value: false });
+            map.push({ id: "64b632ca5a0805f9d77e552f", value: false });
+            map.push({ id: "64b632ca5a0805f9d77e5530", value: true });
+            map.push({ id: "64b632ca5a0805f9d77e5531", value: false });
+          } else {
+            map.push({ id: "64b632ca5a0805f9d77e552e", value: false });
+            map.push({ id: "64b632ca5a0805f9d77e552f", value: false });
+            map.push({ id: "64b632ca5a0805f9d77e5530", value: false });
+            map.push({ id: "64b632ca5a0805f9d77e5531", value: true });
+          }
+
+          if (project.service.online) {
+            map.push({ id: "64b632ca5a0805f9d77e5532", value: false });
+            map.push({ id: "64b632ca5a0805f9d77e5533", value: true });
+          } else {
+            map.push({ id: "64b632ca5a0805f9d77e5532", value: true });
+            map.push({ id: "64b632ca5a0805f9d77e5533", value: false });
+          }
+
+          map.push({ id: "64b632ca5a0805f9d77e5534", value: designer.designer });
+
+          map.push({ id: "64b632ca5a0805f9d77e5535", value: todayYear });
+          map.push({ id: "64b632ca5a0805f9d77e5536", value: todayMonth });
+          map.push({ id: "64b632ca5a0805f9d77e5537", value: todayDate });
+
+          map.push({ id: "64b632ca5a0805f9d77e5538", value: String(project.process.contract.form.date.from.getFullYear()) });
+          map.push({ id: "64b632ca5a0805f9d77e5539", value: String(project.process.contract.form.date.from.getMonth() + 1) });
+          map.push({ id: "64b632ca5a0805f9d77e553a", value: String(project.process.contract.form.date.from.getDate()) });
+
+          map.push({ id: "64b632ca5a0805f9d77e553b", value: String(project.process.contract.form.date.to.getFullYear()) });
+          map.push({ id: "64b632ca5a0805f9d77e553c", value: String(project.process.contract.form.date.to.getMonth() + 1) });
+          map.push({ id: "64b632ca5a0805f9d77e553d", value: String(project.process.contract.form.date.to.getDate()) });
+
+          delta = (((((project.process.contract.form.date.to.valueOf() - project.process.contract.form.date.from.valueOf()) / 1000) / 60) / 60) / 24) / 30;
+          map.push({ id: "64b632ca5a0805f9d77e553e", value: String(Math.round(delta * 10) / 10) });
+
+          map.push({ id: "64b632ca5a0805f9d77e553f", value: autoComma(project.process.contract.remain.calculation.amount.consumer) === '' ? '-' : autoComma(project.process.contract.remain.calculation.amount.consumer) });
+
+          map.push({ id: "64b632ca5a0805f9d77e5540", value: "이지안" });
+          map.push({ id: "64b632ca5a0805f9d77e5541", value: "02-2039-2252" });
+          map.push({ id: "64b632ca5a0805f9d77e5542", value: "help@home-liaison.com" });
+
+          map.push({ id: "64b632ca5a0805f9d77e5543", value: true });
+
+          map.push({ id: "64b632ca5a0805f9d77e5544", value: todayYear });
+          map.push({ id: "64b632ca5a0805f9d77e5545", value: todayMonth });
+          map.push({ id: "64b632ca5a0805f9d77e5546", value: todayDate });
+          map.push({ id: "64b632ca5a0805f9d77e5547", value: titleName === '' ? '-' : titleName });
+
+          map.push({ id: "64b632ca5a0805f9d77e5549", value: titleName === '' ? '-' : titleName });
+
+          map.push({ id: "64b632ca5a0805f9d77e554a", value: String(project.process.contract.form.date.from.getFullYear()) });
+          map.push({ id: "64b632ca5a0805f9d77e554b", value: String(project.process.contract.form.date.from.getMonth() + 1) });
+          map.push({ id: "64b632ca5a0805f9d77e554c", value: String(project.process.contract.form.date.from.getDate()) });
+
+          map.push({ id: "64b632ca5a0805f9d77e554d", value: String(project.process.contract.form.date.to.getFullYear()) });
+          map.push({ id: "64b632ca5a0805f9d77e554e", value: String(project.process.contract.form.date.to.getMonth() + 1) });
+          map.push({ id: "64b632ca5a0805f9d77e554f", value: String(project.process.contract.form.date.to.getDate()) });
+
+          map.push({ id: "64b632ca5a0805f9d77e5550", value: autoComma(project.process.contract.remain.calculation.amount.consumer) === '' ? '-' : autoComma(project.process.contract.remain.calculation.amount.consumer) });
+
+          map.push({ id: "64b632ca5a0805f9d77e5554", value: todayYear });
+          map.push({ id: "64b632ca5a0805f9d77e5555", value: todayMonth });
+          map.push({ id: "64b632ca5a0805f9d77e5556", value: todayDate });
+
+          map.push({ id: "64b632ca5a0805f9d77e5551", value: titleAddress === '' ? '-' : titleAddress });
+          map.push({ id: "64b632ca5a0805f9d77e5552", value: titleName === '' ? '-' : titleName });
+
+          map.push({ id: "64b632ca5a0805f9d77e555a", value: todayYear });
+          map.push({ id: "64b632ca5a0805f9d77e555b", value: todayMonth });
+          map.push({ id: "64b632ca5a0805f9d77e555c", value: todayDate });
+
+          map.push({ id: "64b632ca5a0805f9d77e5557", value: titleAddress === '' ? '-' : titleAddress });
+          map.push({ id: "64b632ca5a0805f9d77e5558", value: titleName === '' ? '-' : titleName });
 
           data = {
             form_id: targetFormId,
