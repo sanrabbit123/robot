@@ -428,10 +428,10 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
             map.push({ id: "64b632ca5a0805f9d77e5530", value: "0" });
             map.push({ id: "64b632ca5a0805f9d77e5531", value: "0" });
           } else if (/홈스타일링/gi.test(serviceParsing(project.service))) {
-            map.push({ id: "64b632ca5a0805f9d77e552e", value: "0" });
-            map.push({ id: "64b632ca5a0805f9d77e552f", value: "1" });
-            map.push({ id: "64b632ca5a0805f9d77e5530", value: "0" });
-            map.push({ id: "64b632ca5a0805f9d77e5531", value: "0" });
+            map.push({ id: "64b632ca5a0805f9d77e552e", value: "FBAPtSYhrdJhZpGqmmT9hXaOcOAJXKP0D3US" });
+            map.push({ id: "64b632ca5a0805f9d77e552f", value: "체크박스2" });
+            map.push({ id: "64b632ca5a0805f9d77e5530", value: "check" });
+            map.push({ id: "64b632ca5a0805f9d77e5531", value: "checked" });
           } else if (/토탈/gi.test(serviceParsing(project.service))) {
             map.push({ id: "64b632ca5a0805f9d77e552e", value: "0" });
             map.push({ id: "64b632ca5a0805f9d77e552f", value: "0" });
