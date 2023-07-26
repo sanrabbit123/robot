@@ -2653,44 +2653,44 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
     blockClickEvent = async function (e) {
       e.preventDefault();
       try {
-        const uniqueId = this.getAttribute("unique");
-        const scheduleTarget = scheduleTargets.find(({ id }) => { return id === uniqueId });
-        let start, end;
-        let newTargets;
-        let newChildren;
-        let pastIndex;
-        if (scheduleTarget !== undefined) {
-          start = await GeneralJs.promptDate("새로 설정할 시작일을 알려주세요!");
-          end = await GeneralJs.promptDate("새로 설정할 종료일을 알려주세요!");
+        // const uniqueId = this.getAttribute("unique");
+        // const scheduleTarget = scheduleTargets.find(({ id }) => { return id === uniqueId });
+        // let start, end;
+        // let newTargets;
+        // let newChildren;
+        // let pastIndex;
+        // if (scheduleTarget !== undefined) {
+        //   start = await GeneralJs.promptDate("새로 설정할 시작일을 알려주세요!");
+        //   end = await GeneralJs.promptDate("새로 설정할 종료일을 알려주세요!");
 
-          pastIndex = scheduleTargets.findIndex((o) => { return o.id === uniqueId });
-          newTargets = scheduleTargets.filter((o) => { return o.id !== uniqueId });
-          newTargets.splice(pastIndex, 0, {
-            start,
-            end,
-            title: scheduleTarget.title,
-            color: scheduleTarget.color,
-            description: scheduleTarget.description,
-            id: scheduleTarget.id,
-          });
+        //   pastIndex = scheduleTargets.findIndex((o) => { return o.id === uniqueId });
+        //   newTargets = scheduleTargets.filter((o) => { return o.id !== uniqueId });
+        //   newTargets.splice(pastIndex, 0, {
+        //     start,
+        //     end,
+        //     title: scheduleTarget.title,
+        //     color: scheduleTarget.color,
+        //     description: scheduleTarget.description,
+        //     id: scheduleTarget.id,
+        //   });
           
-          newChildren = [];
-          for (let obj of newTargets) {
-            newChildren.push({
-              contents: {
-                color: obj.color,
-                description: obj.description,
-                title: obj.title,
-              },
-              date: {
-                start: obj.start,
-                end: obj.end,
-              }
-            })
-          }
+        //   newChildren = [];
+        //   for (let obj of newTargets) {
+        //     newChildren.push({
+        //       contents: {
+        //         color: obj.color,
+        //         description: obj.description,
+        //         title: obj.title,
+        //       },
+        //       date: {
+        //         start: obj.start,
+        //         end: obj.end,
+        //       }
+        //     })
+        //   }
 
-          blockInsert(dateMatrix, newChildren, bigCalendarContentsZone);
-        }
+        //   blockInsert(dateMatrix, newChildren, bigCalendarContentsZone);
+        // }
       } catch (e) {
         console.log(e);
       }
