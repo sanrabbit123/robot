@@ -1132,7 +1132,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                     event: {
                       click: iframeMaker("process"),
                     },
-                    text: "진행중 프로젝트",
+                    text: "프로젝트",
                     style: {
                       position: "relative",
                       top: String(fontTextTop) + ea,

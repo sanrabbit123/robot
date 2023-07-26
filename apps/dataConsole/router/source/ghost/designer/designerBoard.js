@@ -596,7 +596,7 @@ DesignerBoardJs.prototype.insertRouterBox = function () {
 DesignerBoardJs.prototype.insertProcessBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { clients, projects, requestNumber, ea, baseTong, media, entireMode } = this;
+  const { clients, projects, requestNumber, ea, baseTong, media, entireMode, totalContents, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -648,28 +648,38 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   let numbersTop;
   let middleState;
   let analyticsData;
+  let defaultViewLength;
 
   grayBetween = <%% 40, 40, 36, 36, 5 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
 
-  whiteBottomMargin = <%% 58, 56, 50, 44, 6 %%>;
+  if (normalMode) {
+    margin = 24;
+    paddingTop = 14;
+    whiteBottomMargin = 0;
+    titleFontSize = 18;
+    titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 10 : 8), (isMac() ? 10 : 8), 2.5 %%>;
+    titleTopNumber = <%% isMac() ? 2 : 3, isMac() ? 2 : 3, isMac() ? 2 : 3, isMac() ? 2 : 3, 0 %%>;
+    grayMargin = 8;
+    grayPadding = 10;
+  } else {
+    margin = <%% 55, 55, 47, 39, 6 %%>;
+    paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
+    whiteBottomMargin = <%% 58, 56, 50, 44, 6 %%>;
+    titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+    titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 2.5 %%>;
+    titleTopNumber = <%% isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, 0 %%>;
+    grayMargin = <%% 12, 12, 10, 10, 2 %%>;
+    grayPadding = <%% 14, 14, 10, 10, 2.5 %%>;
+  }
 
-  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   printSize = <%% 14, 14, 13, 12, 2.7 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
-  titleTopNumber = <%% isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 2.5 %%>;
-
   mobileTitleLeft = 6;
-
-  grayMargin = <%% 12, 12, 10, 10, 2 %%>;
-  grayPadding = <%% 14, 14, 10, 10, 2.5 %%>;
 
   tongMargin = <%% 2, 2, 2, 2, 1 %%>;
 
@@ -701,6 +711,8 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   numbersTop = <%% 9, 9, 7, 5, (isIphone() ? 1.6 : 1.5) %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
+
+  defaultViewLength = entireMode ? 9999 : 16;
 
   contentsMap = (project, index) => {
     let map;
@@ -784,16 +796,16 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   }
 
   whiteBlock = createNode({
-    mother: baseTong,
+    mother: entireMode ? totalContents : baseTong,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
       background: colorChip.white,
       paddingTop: String(paddingTop) + ea,
-      paddingBottom: String(whiteBottomMargin) + ea,
+      paddingBottom: entireMode ? "" : String(whiteBottomMargin) + ea,
       marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      boxShadow: entireMode ? "" : "0px 5px 12px -10px " + colorChip.gray5,
     },
     children: [
       {
@@ -864,8 +876,8 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
     circleColor = colorChip.deactive;
     if (!total) {
-      if (targets.length > 16) {
-        targets = targets.slice(0, 16);
+      if (targets.length > defaultViewLength) {
+        targets = targets.slice(0, defaultViewLength);
         circleColor = colorChip.green;
       }
     }
@@ -902,7 +914,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
                 display: "inline-block",
                 top: String(titleTopNumber) + ea,
                 fontSize: String(titleFontSize) + ea,
-                fontWeight: String(600),
+                fontWeight: String(normalMode ? 800 : 600),
                 background: colorChip.white,
                 paddingRight: String(numberRight) + ea,
                 color: colorChip.black,
@@ -910,7 +922,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
               bold: {
                 background: colorChip.white,
                 color: circleColor,
-                fontSize: String(printSize) + ea,
+                fontSize: entireMode ? String(0) : String(printSize) + ea,
                 fontWeight: String(300),
                 cursor: "pointer",
               }
@@ -1165,59 +1177,61 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
       }
     }
 
-    createNode({
-      mother: tong,
-      event: {
-        click: function (e) {
-          setContents(/모두/gi.test(block.firstChild.firstChild.textContent));
+    if (!entireMode) {
+      createNode({
+        mother: tong,
+        event: {
+          click: function (e) {
+            setContents(/모두/gi.test(block.firstChild.firstChild.textContent));
+          },
         },
-      },
-      style: {
-        display: "flex",
-        marginTop: String(circleBoxTop) + ea,
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        cursor: "pointer",
-        paddingBottom: desktop ? "" : String(mobileCircleBoxPaddingBottom) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleWidth) + ea,
-            height: String(circleWidth) + ea,
-            background: circleColor,
-            borderRadius: String(circleWidth) + ea,
-          }
+        style: {
+          display: "flex",
+          marginTop: String(circleBoxTop) + ea,
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+          paddingBottom: desktop ? "" : String(mobileCircleBoxPaddingBottom) + ea,
         },
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleWidth) + ea,
-            height: String(circleWidth) + ea,
-            background: circleColor,
-            borderRadius: String(circleWidth) + ea,
-            marginLeft: String(circleBetween) + ea,
-            marginRight: String(circleBetween) + ea,
-          }
-        },
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleWidth) + ea,
-            height: String(circleWidth) + ea,
-            background: circleColor,
-            borderRadius: String(circleWidth) + ea,
-          }
-        },
-      ]
-    });
-
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleWidth) + ea,
+              height: String(circleWidth) + ea,
+              background: circleColor,
+              borderRadius: String(circleWidth) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleWidth) + ea,
+              height: String(circleWidth) + ea,
+              background: circleColor,
+              borderRadius: String(circleWidth) + ea,
+              marginLeft: String(circleBetween) + ea,
+              marginRight: String(circleBetween) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleWidth) + ea,
+              height: String(circleWidth) + ea,
+              background: circleColor,
+              borderRadius: String(circleWidth) + ea,
+            }
+          },
+        ]
+      });
+  
+    }
   }
 
   setContents();
@@ -1228,7 +1242,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 DesignerBoardJs.prototype.insertReleaseBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { clients, projects, requestNumber, ea, baseTong, media } = this;
+  const { clients, projects, requestNumber, ea, baseTong, media, entireMode, totalContents, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
@@ -1279,14 +1293,21 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
   let mobileCircleBoxPaddingBottom;
   let numbersTop;
   let analyticsData;
+  let defaultViewLength;
 
   grayBetween = <%% 40, 40, 36, 36, 5 %%>;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 6 %%>;
-  paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
 
-  whiteBottomMargin = <%% 58, 56, 50, 44, 6 %%>;
+  if (normalMode) {
+    margin = 24;
+    paddingTop = 14;
+    whiteBottomMargin = 0;
+  } else {
+    margin = <%% 55, 55, 47, 39, 6 %%>;
+    paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
+    whiteBottomMargin = <%% 58, 56, 50, 44, 6 %%>;
+  }
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   printSize = <%% 14, 14, 13, 12, 2.7 %%>;
@@ -1332,6 +1353,8 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
   numbersTop = <%% 9, 9, 7, 5, (isIphone() ? 1.6 : 1.5) %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
+
+  defaultViewLength = entireMode ? 9999 : 16;
 
   contentsMap = (project, index) => {
     let map;
@@ -1415,16 +1438,16 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
   }
 
   whiteBlock = createNode({
-    mother: baseTong,
+    mother: entireMode ? totalContents : baseTong,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
       background: colorChip.white,
       paddingTop: String(paddingTop) + ea,
-      paddingBottom: String(whiteBottomMargin) + ea,
+      paddingBottom: entireMode ? "" : String(whiteBottomMargin) + ea,
       marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      boxShadow: entireMode ? "" : "0px 5px 12px -10px " + colorChip.gray5,
     },
     children: [
       {
@@ -1472,7 +1495,6 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
       return ((b.process.contract.form.date.from.valueOf() + emptyValue) * bConst) - ((a.process.contract.form.date.from.valueOf() + emptyValue) * aConst);
     });
 
-
     analyticsData = {
       desid: instance.designer.desid,
       href: window.encodeURIComponent(window.location.href),
@@ -1514,7 +1536,9 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
         };
       }
     }
-    homeliaisonAnalytics({ page: instance.pageName, standard: instance.firstPageViewTime, action: "contentsLoad", data: analyticsData }).catch((err) => { console.log(err); });
+    if (!entireMode) {
+      homeliaisonAnalytics({ page: instance.pageName, standard: instance.firstPageViewTime, action: "contentsLoad", data: analyticsData }).catch((err) => { console.log(err); });
+    }
 
     targetLength = targets.length;
     if (targetLength < minimalLength) {
@@ -1525,8 +1549,8 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
 
     circleColor = colorChip.deactive;
     if (!total) {
-      if (targets.length > 16) {
-        targets = targets.slice(0, 16);
+      if (targets.length > defaultViewLength) {
+        targets = targets.slice(0, defaultViewLength);
         circleColor = colorChip.green;
       }
     }
@@ -1571,7 +1595,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
               bold: {
                 background: colorChip.white,
                 color: circleColor,
-                fontSize: String(printSize) + ea,
+                fontSize: entireMode ? String(0) : String(printSize) + ea,
                 fontWeight: String(300),
                 cursor: "pointer",
               }
@@ -1797,58 +1821,60 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
       }
     }
 
-    createNode({
-      mother: tong,
-      event: {
-        click: function (e) {
-          setContents(/모두/gi.test(block.firstChild.firstChild.textContent));
+    if (!entireMode) {
+      createNode({
+        mother: tong,
+        event: {
+          click: function (e) {
+            setContents(/모두/gi.test(block.firstChild.firstChild.textContent));
+          },
         },
-      },
-      style: {
-        display: "flex",
-        marginTop: String(circleBoxTop) + ea,
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        cursor: "pointer",
-        paddingBottom: desktop ? "" : String(mobileCircleBoxPaddingBottom) + ea,
-      },
-      children: [
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleWidth) + ea,
-            height: String(circleWidth) + ea,
-            background: circleColor,
-            borderRadius: String(circleWidth) + ea,
-          }
+        style: {
+          display: "flex",
+          marginTop: String(circleBoxTop) + ea,
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+          paddingBottom: desktop ? "" : String(mobileCircleBoxPaddingBottom) + ea,
         },
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleWidth) + ea,
-            height: String(circleWidth) + ea,
-            background: circleColor,
-            borderRadius: String(circleWidth) + ea,
-            marginLeft: String(circleBetween) + ea,
-            marginRight: String(circleBetween) + ea,
-          }
-        },
-        {
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(circleWidth) + ea,
-            height: String(circleWidth) + ea,
-            background: circleColor,
-            borderRadius: String(circleWidth) + ea,
-          }
-        },
-      ]
-    });
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleWidth) + ea,
+              height: String(circleWidth) + ea,
+              background: circleColor,
+              borderRadius: String(circleWidth) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleWidth) + ea,
+              height: String(circleWidth) + ea,
+              background: circleColor,
+              borderRadius: String(circleWidth) + ea,
+              marginLeft: String(circleBetween) + ea,
+              marginRight: String(circleBetween) + ea,
+            }
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(circleWidth) + ea,
+              height: String(circleWidth) + ea,
+              background: circleColor,
+              borderRadius: String(circleWidth) + ea,
+            }
+          },
+        ]
+      });
+    }
 
   }
 
@@ -3320,6 +3346,7 @@ DesignerBoardJs.prototype.launching = async function (loading) {
       });
     } else {
       instance.insertProcessBox();
+      instance.insertReleaseBox();
     }
 
     loading.parentNode.removeChild(loading);
