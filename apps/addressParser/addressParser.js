@@ -468,6 +468,17 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false,
     let index;
     let firstBoo;
     let tempResult, convertResult;
+    let tempValue0, tempValue1;
+
+    if (/[가-힣]+로[0-9]+ /gi.test(address)) {
+      [ , tempValue0, tempValue1 ] = [ .../([가-힣]+로)([0-9]+) /g.exec(address) ];
+      address = address.replace(/[가-힣]+로[0-9]+ /g, tempValue0 + " " + tempValue1 + " ");
+    }
+
+    if (/[가-힣]+로 [0-9]+길/gi.test(address)) {
+      [ , tempValue0, tempValue1 ] = [ .../([가-힣]+로) ([0-9]+길)/g.exec(address) ];
+      address = address.replace(/[가-힣]+로 [0-9]+길/g, tempValue0 + tempValue1);
+    }
 
     tempArr = address.split(' ');
     roadBoo = true;

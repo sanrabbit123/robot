@@ -901,7 +901,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
 
       linkDictionary = {
         checklist: BACKHOST + "/middle/designerAbout?desid=" + designer.desid + "&entire=true&normal=true",
-        process: "/middle/designerBoard?desid=" + designer.desid + "&entire=true&normal=true",
+        process: BACKHOST + "/middle/designerBoard?desid=" + designer.desid + "&entire=true&normal=true",
         possible: BACKHOST + "/middle/designerPossible?desid=" + designer.desid + "&entire=true&normal=true",
         portfolio: BACKHOST + "/designer?mode=general&desid=" + designer.desid + "&dataonly=true&entire=true&normal=true",
         report: BACKHOST + "/middle/designerReport?desid=" + designer.desid + "&entire=true&normal=true",
@@ -2527,12 +2527,6 @@ DesignerJs.prototype.normalDetailSearchEvent = async function () {
         });
 
 
-        
-
-
-
-
-
 
       } catch (e) {
         console.log(e);
@@ -2543,17 +2537,105 @@ DesignerJs.prototype.normalDetailSearchEvent = async function () {
   }
 }
 
+DesignerJs.prototype.normalProcessDetailEvent = async function (proid, desid) {
+  const instance = this;
+  const { ea, totalContents, totalMother, belowHeight, grayBarWidth, processDetailEventClassName } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, setQueue } = GeneralJs;
+  try {
+    const zIndex = 4;
+    let cancelBack, whiteBase;
+    let margin;
+    let titleSize;
+    let titleWeight;
+    let fontSize;
+    let fontWeight;
+
+    margin = 30;
+
+    titleSize = 21;
+    titleWeight = 800;
+
+    fontSize = 14;
+    fontWeight = 400;
+
+    cancelBack = createNode({
+      mother: totalMother,
+      class: [ processDetailEventClassName ],
+      attribute: {
+        proid,
+        desid,
+      },
+      event: {
+        click: (e) => {
+          removeByClass(processDetailEventClassName);
+        },
+      },
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(grayBarWidth) + ea,
+        width: withOut(grayBarWidth, ea),
+        height: withOut(0, ea),
+        background: colorChip.black,
+        opacity: String(0.3),
+        zIndex: String(zIndex),
+      }
+    });
+
+    whiteBase = createNode({
+      mother: totalMother,
+      class: [ processDetailEventClassName ],
+      attribute: {
+        proid,
+        desid,
+      },
+      style: {
+        position: "fixed",
+        top: String(margin) + ea,
+        left: String(grayBarWidth + margin) + ea,
+        width: withOut((margin * 2) + grayBarWidth, ea),
+        height: withOut((margin * 2) + belowHeight, ea),
+        zIndex: String(zIndex),
+        background: colorChip.white,
+        animation: "fadeuplite 0.3s ease forwards",
+        boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+        borderRadius: String(5) + "px",
+        overflow: "hidden",
+      }
+    });
+
+    createNode({
+      mother: whiteBase,
+      mode: "iframe",
+      attribute: {
+        src: BACKHOST + "/process?proid=" + proid + "&entire=true&dataonly=true",
+      },
+      style: {
+        display: "display",
+        position: "relative",
+        top: String(0),
+        left: String(0),
+        width: withOut(0, ea),
+        height: withOut(0, ea),
+        border: String(0),
+        outline: String(0),
+        borderRadius: String(5) + "px",
+      }
+    })
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.normalMessageEvent = async function () {
   const instance = this;
-  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
-  const { findByAttribute, ajaxJson } = GeneralJs;
+  const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName, processDetailEventClassName } = this;
+  const { findByAttribute, ajaxJson, removeByClass } = GeneralJs;
   try {
-    window.addEventListener("message", function (e) {
+    window.addEventListener("message", async function (e) {
       try {
         const data = JSON.parse(e.data);
-
-        console.log(data);
-
         if (typeof data === "object" && data !== null) {
           if (data.type === "whiteConverting") {
             if (document.querySelector('.' + whiteBaseClassName) !== null) {
@@ -2584,6 +2666,13 @@ DesignerJs.prototype.normalMessageEvent = async function () {
               console.log(err);
             });
 
+          } else if (data.type === "processDetail") {
+            removeByClass(whiteCardClassName);
+            await instance.normalProcessDetailEvent(data.proid, data.desid);
+          } else if (data.type === "returnToPast") {
+            const tempFunction = instance.normalWhiteCard(document.querySelectorAll('.' + processDetailEventClassName)[1].getAttribute("desid"));
+            removeByClass(processDetailEventClassName);
+            await tempFunction({});
           }
         }
       } catch {}
@@ -3573,6 +3662,7 @@ DesignerJs.prototype.normalView = async function () {
     this.titleButtonsClassName = "titleButtonsClassName";
     this.whiteCardClassName = "whiteCardClassName";
     this.whiteBaseClassName = "whiteBaseClassName";
+    this.processDetailEventClassName = "processDetailEventClassName";
     this.whiteCardMode = "checklist";
     this.asyncProcessText = "로드중..";
 

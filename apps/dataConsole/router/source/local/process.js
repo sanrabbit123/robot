@@ -3400,6 +3400,7 @@ ProcessJs.prototype.whiteCardView = function (proid, columnArr, valueArr) {
               const proid = this.getAttribute("proid");
               if (getObj.proid === proid) {
                 globalThis.window.parent.postMessage(JSON.stringify({
+                  type: "returnToPast",
                   proid: proid,
                   mode: "reset",
                   to: getObj.proid === proid ? "general" : "list",

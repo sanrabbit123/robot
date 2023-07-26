@@ -1015,9 +1015,13 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
                 let analytics;
 
                 if (normalMode) {
-
-                  window.parent.postMessage(JSON.stringify({ proid: proid }));
-
+                  if (typeof window.parent.postMessage === "function") {
+                    window.parent.postMessage(JSON.stringify({
+                      type: "processDetail",
+                      proid: proid,
+                      desid: instance.designer.desid,
+                    }), "*");
+                  }
                 } else {
                   if (state === 0) {
                     selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
@@ -1041,7 +1045,13 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
               e.preventDefault();
               const proid = this.getAttribute("proid");
               if (normalMode) {
-
+                if (typeof window.parent.postMessage === "function") {
+                  window.parent.postMessage(JSON.stringify({
+                    type: "processDetail",
+                    proid: proid,
+                    desid: instance.designer.desid,
+                  }), "*");
+                }
               } else {
                 selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
               }
@@ -1688,12 +1698,32 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
           event: {
             click: function (e) {
               const proid = this.getAttribute("proid");
-              selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+              if (normalMode) {
+                if (typeof window.parent.postMessage === "function") {
+                  window.parent.postMessage(JSON.stringify({
+                    type: "processDetail",
+                    proid: proid,
+                    desid: instance.designer.desid,
+                  }), "*");
+                }
+              } else {
+                selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+              }
             },
             contextmenu: function (e) {
               e.preventDefault();
               const proid = this.getAttribute("proid");
-              selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+              if (normalMode) {
+                if (typeof window.parent.postMessage === "function") {
+                  window.parent.postMessage(JSON.stringify({
+                    type: "processDetail",
+                    proid: proid,
+                    desid: instance.designer.desid,
+                  }), "*");
+                }
+              } else {
+                selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+              }
             }
           },
           style: {
