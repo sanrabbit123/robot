@@ -2622,6 +2622,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
       "startend",
       "blank"
     ];
+    const blankFactor = "blank_#2fa678_블랭크_1_schedule000000000000000000000000000000000000000000000";
     let scheduleTargets;
     let dateStart, dateEnd, wordingTitle, wordingDescription, barColor;
     let barMatrix, barMatrix_final;
@@ -2642,6 +2643,8 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
     let tempArr2;
     let targetNumber;
     let tempMatrix;
+    let thisId;
+    let targetNewIndex;
 
     scheduleTargets = {};
 
@@ -2946,7 +2949,11 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
             for (let j = 0; j < sevenArr[i].length; j++) {
               if (/^(middle|end)/g.test(sevenArr[i][j].split("_")[0])) {
                 if (sevenArr[i - 1][j].split("_")[sevenArr[i - 1][j].split("_").length - 1] !== sevenArr[i][j].split("_")[sevenArr[i][j].split("_").length - 1]) {
-                  console.log(i, j);
+                  thisId = sevenArr[i][j].split("_")[sevenArr[i][j].split("_").length - 1];
+                  targetNewIndex = sevenArr[i - 1].findIndex((k) => { return k.split("_")[k.split("_").length - 1] === thisId });
+                  for (let k = 0; k < Math.abs(targetNewIndex - j); k++) {
+                    sevenArr[i].splice(j, 0, blankFactor);
+                  }
                 }
               }
             }
