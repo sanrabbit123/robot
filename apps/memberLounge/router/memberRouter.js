@@ -92,7 +92,7 @@ MemberRouter.prototype.rou_post_printText = function () {
 
       lpstat.stdout.on("data", (data) => {
         const arr = String(data).split("\n").map((i) => { return i.trim(); });
-        const printerRaw = arr.find((i) => { return /HP/gi.test(i); });
+        const printerRaw = arr.find((i) => { return /Brother/gi.test(i); });
         printer = printerRaw.trim().split(' ')[0];
         lpstat.kill();
         fileSystem(`write`, [ targetFile, req.body.text ]).then(() => {
