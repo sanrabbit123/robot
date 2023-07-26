@@ -5584,9 +5584,6 @@ DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
-
-    console.log(req.body);
-
     try {
       if (req.body.mode === undefined) {
         throw new Error("invaild post");
