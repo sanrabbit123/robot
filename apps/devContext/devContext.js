@@ -146,8 +146,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-    
+    const image = new ImageReader();
+    console.log(await image.pdfToJpg(`${process.cwd()}/temp/target.pdf`));
 
 
 

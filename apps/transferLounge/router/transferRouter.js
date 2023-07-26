@@ -176,7 +176,8 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
                     pureFolderConst = pureConst.split("/").slice(0, -1).join("/");
                     [ jpgKey, jpgDateValue, jpgOrder, jpgName ] = pureFileConst.split(token);
                     newOrder = String(((Number(jpgOrder) + 1) * digitTenConst) + (index + 1));
-                    await shellExec(`mv ${shellLink(past)} ${shellLink(pureFolderConst)}/${jpgKey}${token}${jpgDateValue}${token}${newOrder}${token}${jpgName}.${exeConst}`);
+                    console.log(pureFileConst);
+                    await shellExec(`mv ${shellLink(past)} ${shellLink(pureFolderConst)}/${jpgKey}${token}${jpgDateValue}${token}${newOrder}${token}${name}.${exeConst}`);
                   }
                 }
               }
