@@ -2301,44 +2301,50 @@ Mother.prototype.decryptoHash = function (password, hash, option = { algorithm: 
   iv = option.iv;
   digest = option.digest;
 
-  if (option.makeKey) {
-    return new Promise(function (resolve, reject) {
-      crypto.scrypt(password, "salt", 24, function (err, key) {
-        if (err) {
-          reject(err);
-        } else {
-          const decipher = crypto.createDecipheriv(algorithm, key, iv);
-          let decrypted = '';
-          decipher.on("readable", () => {
-            let chunk;
-            chunk = decipher.read();
-            while (chunk !== null) {
-              decrypted += chunk.toString("utf8");
-              chunk = decipher.read();
-            }
-          });
-          decipher.on("end", () => { resolve(decrypted); });
-          decipher.write(hash, digest);
-          decipher.end();
-        }
-      });
+  if (digest === "hex" && hash.replace(/[0-9a-f]/g, '') !== '') {
+    return new Promise((resolve, reject) => {
+      resolve(hash);
     });
   } else {
-    return new Promise(function (resolve, reject) {
-      const decipher = crypto.createDecipheriv(algorithm, password, iv);
-      let decrypted = '';
-      decipher.on("readable", () => {
-        let chunk;
-        chunk = decipher.read();
-        while (chunk !== null) {
-          decrypted += chunk.toString("utf8");
-          chunk = decipher.read();
-        }
+    if (option.makeKey) {
+      return new Promise(function (resolve, reject) {
+        crypto.scrypt(password, "salt", 24, function (err, key) {
+          if (err) {
+            reject(err);
+          } else {
+            const decipher = crypto.createDecipheriv(algorithm, key, iv);
+            let decrypted = '';
+            decipher.on("readable", () => {
+              let chunk;
+              chunk = decipher.read();
+              while (chunk !== null) {
+                decrypted += chunk.toString("utf8");
+                chunk = decipher.read();
+              }
+            });
+            decipher.on("end", () => { resolve(decrypted); });
+            decipher.write(hash, digest);
+            decipher.end();
+          }
+        });
       });
-      decipher.on("end", () => { resolve(decrypted); });
-      decipher.write(hash, digest);
-      decipher.end();
-    });
+    } else {
+      return new Promise(function (resolve, reject) {
+        const decipher = crypto.createDecipheriv(algorithm, password, iv);
+        let decrypted = '';
+        decipher.on("readable", () => {
+          let chunk;
+          chunk = decipher.read();
+          while (chunk !== null) {
+            decrypted += chunk.toString("utf8");
+            chunk = decipher.read();
+          }
+        });
+        decipher.on("end", () => { resolve(decrypted); });
+        decipher.write(hash, digest);
+        decipher.end();
+      });
+    }
   }
 }
 

@@ -146,44 +146,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const { officeinfo: { widsign: { id, key, endPoint } } } = address;
-    // const title = "2023디자인계약서_000고객님_주홈리에종_YYMMDD";
-    // let widsignRes;
-    // let token;
-    // let num, safeNum;
-    // let targetFormId;
-
-    // widsignRes = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
-    // token = widsignRes.data.access_token;
-
-    // num = 1;
-    // safeNum = 0;
-    // do {
-    //   widsignRes = await requestSystem(endPoint + "/v2/form", { page: num, page_size: 30, title }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-    //   target = widsignRes.data.result.filter((obj) => { return obj.title === title });
-    //   num++;
-    //   safeNum++;
-    //   if (safeNum > 1000) {
-    //     throw new Error("title name error");
-    //   }
-    // } while (target.length === 0);
-
-    // [ { id: targetFormId } ] = target;
-
-    // widsignRes = await requestSystem(endPoint + "/v2/form/detail", { form_id: targetFormId }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-    
-    // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/contract.json`, widsignRes.data ]);
-
-    // console.log(widsignRes.data);
 
     
-
-
-
-
-
-
-
 
 
 

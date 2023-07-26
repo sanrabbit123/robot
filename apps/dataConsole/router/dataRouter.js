@@ -6449,10 +6449,17 @@ DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
             throw new Error("invaild post");
           }
           for (let { hash, target } of targets) {
-            resultObj.push({
-              string: await decryptoHash(password, hash),
-              target
-            });
+            if (hash.replace(/[0-9a-f]/g, '') !== "") {
+              resultObj.push({
+                string: hash,
+                target
+              });
+            } else {
+              resultObj.push({
+                string: await decryptoHash(password, hash),
+                target
+              });
+            }
           }
         }
 
@@ -6470,7 +6477,11 @@ DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
           if (req.body.hash === undefined) {
             throw new Error("invaild post");
           }
-          result = await decryptoHash(password, req.body.hash);
+          if (req.body.hash.replace(/[0-9a-f]/g, '') !== "") {
+            result = req.body.hash;
+          } else {
+            result = await decryptoHash(password, req.body.hash);
+          }
           resultObj = { string: result };
         } else {
           throw new Error("invaild mode");

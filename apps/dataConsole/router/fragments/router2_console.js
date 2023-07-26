@@ -5584,9 +5584,6 @@ DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
-
-    console.log(req.body);
-
     try {
       if (req.body.mode === undefined) {
         throw new Error("invaild post");
@@ -5617,10 +5614,17 @@ DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
             throw new Error("invaild post");
           }
           for (let { hash, target } of targets) {
-            resultObj.push({
-              string: await decryptoHash(password, hash),
-              target
-            });
+            if (hash.replace(/[0-9a-f]/g, '') !== "") {
+              resultObj.push({
+                string: hash,
+                target
+              });
+            } else {
+              resultObj.push({
+                string: await decryptoHash(password, hash),
+                target
+              });
+            }
           }
         }
 
@@ -5638,7 +5642,11 @@ DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
           if (req.body.hash === undefined) {
             throw new Error("invaild post");
           }
-          result = await decryptoHash(password, req.body.hash);
+          if (req.body.hash.replace(/[0-9a-f]/g, '') !== "") {
+            result = req.body.hash;
+          } else {
+            result = await decryptoHash(password, req.body.hash);
+          }
           resultObj = { string: result };
         } else {
           throw new Error("invaild mode");
@@ -5653,7 +5661,6 @@ DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
       res.send(JSON.stringify(resultObj));
 
     } catch (e) {
-      console.log(e)
       await logger.error("Console 서버 문제 생김 (rou_post_homeliaisonCrypto): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
