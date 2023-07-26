@@ -2241,6 +2241,8 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
               instance.designer.analytics.construct.level = targetIndex;
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await ajaxJson({ data: null }, BACKHOST + "/designerLevelMatrixSync");
+              
               if (!entireMode) {
                 await homeliaisonAnalytics({
                   page: pageName,
@@ -2293,6 +2295,8 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
               updateQuery["analytics.project.partial"] = (text === "가능");
 
               await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+              await ajaxJson({ data: null }, BACKHOST + "/designerLevelMatrixSync");
+
               if (!entireMode) {
                 await homeliaisonAnalytics({
                   page: pageName,

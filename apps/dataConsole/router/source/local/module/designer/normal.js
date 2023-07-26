@@ -901,7 +901,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
 
       linkDictionary = {
         checklist: BACKHOST + "/middle/designerAbout?desid=" + designer.desid + "&entire=true&normal=true",
-        process: BACKHOST + "/middle/designerBoard?desid=" + designer.desid + "&entire=true&normal=true",
+        process: "/middle/designerBoard?desid=" + designer.desid + "&entire=true&normal=true",
         possible: BACKHOST + "/middle/designerPossible?desid=" + designer.desid + "&entire=true&normal=true",
         portfolio: BACKHOST + "/designer?mode=general&desid=" + designer.desid + "&dataonly=true&entire=true&normal=true",
         report: BACKHOST + "/middle/designerReport?desid=" + designer.desid + "&entire=true&normal=true",
@@ -2551,6 +2551,9 @@ DesignerJs.prototype.normalMessageEvent = async function () {
     window.addEventListener("message", function (e) {
       try {
         const data = JSON.parse(e.data);
+
+        console.log(data);
+
         if (typeof data === "object" && data !== null) {
           if (data.type === "whiteConverting") {
             if (document.querySelector('.' + whiteBaseClassName) !== null) {

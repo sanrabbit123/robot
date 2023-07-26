@@ -2920,7 +2920,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       div_clone2.setAttribute("cus_value", designer.designer);
       div_clone2.setAttribute("cus_num", String(n));
 
-      if (!designer.analytics.project.matrix[Number(instance.serid.replace(/[^0-9]/gi, '')) - 1].some((n) => { return n === 1 })) {
+      if (designer.analytics.construct.level < Number(instance.serid.replace(/[^0-9]/gi, '')) - 1) {
         div_clone2.style.background = GeneralJs.colorChip.gray3;
         div_clone2.style.color = GeneralJs.colorChip.deactive;
       }

@@ -5365,7 +5365,7 @@ DataPatch.prototype.projectMap = function () {
         }
 
         totalString = onoffLine + " " + totalString;
-        designerAble = (designer.analytics.project.matrix[x][y] === 1);
+        designerAble = (designer.analytics.construct.level >= x);
 
         if (onlineAble && designerAble) {
           if (window.confirm("서비스를 바꾸시겠습니까?")) {
@@ -5757,9 +5757,9 @@ DataPatch.prototype.projectMap = function () {
         y = project.service.xValue === 'M' ? 0 : (project.service.xValue === 'B' ? 1 : 2);
 
         if (project.service.online) {
-          designerAble = (selectedDesigner.analytics.project.matrix[x][y] === 1) && selectedDesigner.analytics.project.online;
+          designerAble = (selectedDesigner.analytics.construct.level >= x) && selectedDesigner.analytics.project.online;
         } else {
-          designerAble = (selectedDesigner.analytics.project.matrix[x][y] === 1);
+          designerAble = (selectedDesigner.analytics.construct.level >= x);
         }
 
         if (designerAble) {

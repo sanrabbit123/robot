@@ -658,11 +658,15 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     margin = 24;
     paddingTop = 14;
     whiteBottomMargin = 0;
-    titleFontSize = 18;
-    titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 10 : 8), (isMac() ? 10 : 8), 2.5 %%>;
+    titleFontSize = 16;
+    titleBottom = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), 2.5 %%>;
     titleTopNumber = <%% isMac() ? 2 : 3, isMac() ? 2 : 3, isMac() ? 2 : 3, isMac() ? 2 : 3, 0 %%>;
     grayMargin = 8;
     grayPadding = 10;
+    tongHeight = 42;
+    whiteSize = 14;
+    numbersTop = 7;
+    circleTop = 16;
   } else {
     margin = <%% 55, 55, 47, 39, 6 %%>;
     paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
@@ -672,6 +676,10 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     titleTopNumber = <%% isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, 0 %%>;
     grayMargin = <%% 12, 12, 10, 10, 2 %%>;
     grayPadding = <%% 14, 14, 10, 10, 2.5 %%>;
+    tongHeight = <%% 50, 50, 42, 42, 15.64 %%>;
+    whiteSize = <%% 15, 15, 13, 13, 3 %%>;
+    numbersTop = <%% 9, 9, 7, 5, (isIphone() ? 1.6 : 1.5) %%>;
+    circleTop = <%% 20, 20, 17, 17, 3 %%>;
   }
 
   printSize = <%% 14, 14, 13, 12, 2.7 %%>;
@@ -683,15 +691,11 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
   tongMargin = <%% 2, 2, 2, 2, 1 %%>;
 
-  tongHeight = <%% 50, 50, 42, 42, 15.64 %%>;
-
-  whiteSize = <%% 15, 15, 13, 13, 3 %%>;
   whiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
 
   arrowWidth = <%% 21, 21, 20, 16, 4 %%>;
-  circleTop = <%% 20, 20, 17, 17, 3 %%>;
   circleRight = <%% 20, 20, 20, 12, 2.7 %%>;
   arrowHeight = <%% 8, 8, 8, 6, 1.5 %%>;
 
@@ -707,8 +711,6 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   circleBetween = <%% 5, 5, 4, 4, 1 %%>;
   circleBoxTop = <%% 30, 30, 28, 24, 4 %%>;
   mobileCircleBoxPaddingBottom = 1.4;
-
-  numbersTop = <%% 9, 9, 7, 5, (isIphone() ? 1.6 : 1.5) %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -1012,17 +1014,23 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
                 let thisProject;
                 let analytics;
 
-                if (state === 0) {
-                  selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+                if (normalMode) {
+
+                  window.parent.postMessage(JSON.stringify({ proid: proid }));
+
                 } else {
-  
-                  [ thisProject ] = await ajaxJson({ noFlat: true, whereQuery: { proid } }, BACKHOST + "/getProjects", { equal: true });
-                  analytics = await ajaxJson({ desid: instance.desid, mode: "request", type: "send", cliid: thisProject.cliid }, BACKHOST + "/ghostDesigner_getAnalytics", { equal: true });
-                  
-                  if (analytics.length > 0) {
-                    selfHref(FRONTHOST + "/designer/process.php?proid=" + proid + "&mode=request");
-                  } else {
+                  if (state === 0) {
                     selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+                  } else {
+    
+                    [ thisProject ] = await ajaxJson({ noFlat: true, whereQuery: { proid } }, BACKHOST + "/getProjects", { equal: true });
+                    analytics = await ajaxJson({ desid: instance.desid, mode: "request", type: "send", cliid: thisProject.cliid }, BACKHOST + "/ghostDesigner_getAnalytics", { equal: true });
+                    
+                    if (analytics.length > 0) {
+                      selfHref(FRONTHOST + "/designer/process.php?proid=" + proid + "&mode=request");
+                    } else {
+                      selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+                    }
                   }
                 }
               } catch (e) {
@@ -1032,7 +1040,11 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
             contextmenu: function (e) {
               e.preventDefault();
               const proid = this.getAttribute("proid");
-              selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+              if (normalMode) {
+
+              } else {
+                selfHref(FRONTHOST + "/designer/process.php?proid=" + proid);
+              }
             }
           },
           style: {
@@ -1301,33 +1313,41 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
 
   if (normalMode) {
     margin = 24;
-    paddingTop = 14;
-    whiteBottomMargin = 0;
+    paddingTop = 0;
+    whiteBottomMargin = 24;
+    titleFontSize = 16;
+    titleBottom = <%% (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), (isMac() ? 10 : 8), 2.5 %%>;
+    titleTopNumber = <%% isMac() ? 2 : 3, isMac() ? 2 : 3, isMac() ? 2 : 3, isMac() ? 2 : 3, 0 %%>;
+    grayMargin = 8;
+    grayPadding = 10;
+    tongHeight = 42;
+    whiteSize = 14;
+    numbersTop = 7;
+    circleTop = 16;
   } else {
     margin = <%% 55, 55, 47, 39, 6 %%>;
     paddingTop =  <%% 52, 52, 44, 36, 6 %%>;
     whiteBottomMargin = <%% 58, 56, 50, 44, 6 %%>;
+    titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+    titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 2.5 %%>;
+    titleTopNumber = <%% isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, 0 %%>;
+    grayMargin = <%% 12, 12, 10, 10, 2 %%>;
+    grayPadding = <%% 14, 14, 10, 10, 2.5 %%>;
+    tongHeight = <%% 50, 50, 42, 42, 15.64 %%>;
+    whiteSize = <%% 15, 15, 13, 13, 3 %%>;
+    numbersTop = <%% 9, 9, 7, 5, (isIphone() ? 1.6 : 1.5) %%>;
+    circleTop = <%% 20, 20, 17, 17, 3 %%>;
   }
 
-  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   printSize = <%% 14, 14, 13, 12, 2.7 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
-  titleTopNumber = <%% isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, isMac() ? 0 : 1, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
-
-  titleBottom = <%% (isMac() ? 18 : 16), (isMac() ? 18 : 16), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 2.5 %%>;
 
   mobileTitleLeft = 6;
 
-  grayMargin = <%% 12, 12, 10, 10, 2 %%>;
-  grayPadding = <%% 14, 14, 10, 10, 2.5 %%>;
-
   tongMargin = <%% 2, 2, 2, 2, 1 %%>;
 
-  tongHeight = <%% 50, 50, 42, 42, 15.64 %%>;
-
-  whiteSize = <%% 15, 15, 13, 13, 3 %%>;
   whiteWeight = <%% 400, 400, 400, 400, 400 %%>;
   whiteColumnWeight = <%% 200, 200, 200, 200, 200 %%>;
   whiteTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
@@ -1349,8 +1369,6 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
   circleBetween = <%% 5, 5, 4, 4, 1 %%>;
   circleBoxTop = <%% 30, 30, 28, 24, 4 %%>;
   mobileCircleBoxPaddingBottom = 1.4;
-
-  numbersTop = <%% 9, 9, 7, 5, (isIphone() ? 1.6 : 1.5) %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -1445,7 +1463,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
       width: String(100) + '%',
       background: colorChip.white,
       paddingTop: String(paddingTop) + ea,
-      paddingBottom: entireMode ? "" : String(whiteBottomMargin) + ea,
+      paddingBottom: String(whiteBottomMargin) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: entireMode ? "" : "0px 5px 12px -10px " + colorChip.gray5,
     },
@@ -1587,7 +1605,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
                 display: "inline-block",
                 top: String(titleTopNumber) + ea,
                 fontSize: String(titleFontSize) + ea,
-                fontWeight: String(600),
+                fontWeight: String(normalMode ? 800 : 600),
                 background: colorChip.white,
                 paddingRight: String(numberRight) + ea,
                 color: colorChip.black,

@@ -805,6 +805,19 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                           return obj.date.valueOf() > thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf()
                         }
                       }).length > 0);
+                      if (!condition) {
+                        condition = (taxBills.filter((obj) => {
+                          return obj.who.from.business.replace(/\-/gi, '') === businessNumber
+                        }).filter((obj) => {
+                          return obj.sum.total === itemAmount
+                        }).filter((obj) => {
+                          if (thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf() < emptyDateValue) {
+                            return false;
+                          } else {
+                            return obj.date.valueOf() > thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf()
+                          }
+                        }).length > 0);
+                      }
                     } else {
                       condition = (taxBills.filter((obj) => {
                         return obj.who.from.business.replace(/\-/gi, '') === businessNumber
@@ -836,6 +849,19 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                             return obj.date.valueOf() > thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf()
                           }
                         }).length > 0);
+                        if (!condition) {
+                          condition = (taxBills.filter((obj) => {
+                            return obj.who.from.business.replace(/\-/gi, '') === businessNumber
+                          }).filter((obj) => {
+                            return obj.sum.total === itemAmount
+                          }).filter((obj) => {
+                            if (thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf() < emptyDateValue) {
+                              return false;
+                            } else {
+                              return obj.date.valueOf() > thisTargetDesigner.projects[i].process.contract.meeting.date.valueOf()
+                            }
+                          }).length > 0);
+                        }
                       } else {
                         condition = (taxBills.filter((obj) => {
                           return obj.who.from.business.replace(/\-/gi, '') === businessNumber
@@ -907,6 +933,19 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                         return obj.date.valueOf() > thisTargetDesigner.projects[i].process.calculation.payments.first.date.valueOf()
                       }
                     }).length > 0);
+                    if (!condition) {
+                      condition = (taxBills.filter((obj) => {
+                        return obj.who.from.business.replace(/\-/gi, '') === businessNumber
+                      }).filter((obj) => {
+                        return obj.sum.total === itemAmount
+                      }).filter((obj) => {
+                        if (thisTargetDesigner.projects[i].process.calculation.payments.first.date.valueOf() < emptyDateValue) {
+                          return false;
+                        } else {
+                          return obj.date.valueOf() > thisTargetDesigner.projects[i].process.calculation.payments.first.date.valueOf()
+                        }
+                      }).length > 0);
+                    }
                   } else {
                     condition = (taxBills.filter((obj) => {
                       return obj.who.from.business.replace(/\-/gi, '') === businessNumber
@@ -962,6 +1001,15 @@ BackWorker.prototype.designerCalculation = async function (alarm = true) {
                     }).filter((obj) => {
                       return obj.date.valueOf() > requestTravel.pay[0].date.valueOf()
                     }).length > 0);
+                    if (!condition) {
+                      condition = (taxBills.filter((obj) => {
+                        return obj.who.from.business.replace(/\-/gi, '') === businessNumber
+                      }).filter((obj) => {
+                        return obj.sum.total === itemAmount
+                      }).filter((obj) => {
+                        return obj.date.valueOf() > requestTravel.pay[0].date.valueOf()
+                      }).length > 0);
+                    }
                   } else {
                     condition = (taxBills.filter((obj) => {
                       return obj.who.from.business.replace(/\-/gi, '') === businessNumber
@@ -1170,7 +1218,7 @@ BackWorker.prototype.designerFeeTable = async function (desid, option = { selfMo
       if (Number.isNaN(y)) {
         throw new Error("service error");
       }
-      serviceMatchBoo = designer.analytics.project.matrix[y].some((s) => { return s === 1; });
+      serviceMatchBoo = (y <= designer.analytics.construct.level);
 
       res = await this.getDesignerFee(desid, cliidConst, serid, xValueConst, { selfMongo: MONGOC, selfLocalMongo: MONGOLOCALC, generalPriceView: true });
       result.alphaPercentage = res.alphaPercentage;
@@ -1440,7 +1488,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     clientAddress = null;
     for (let designer of designers) {
 
-      serviceMatchBoo = designer.analytics.project.matrix[y].some((s) => { return s === 1; });
+      serviceMatchBoo = (y <= designer.analytics.construct.level);
 
       if (client.requests[requestNumber].request.space.resident.living) {
         if (designer.analytics.project.living) {
@@ -1455,7 +1503,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       partialMatchBoo = true;
       if (client.requests[requestNumber].request.space.partial.boo === true) {
         partialMatchBoo = false;
-        if (designer.analytics.project.matrix[y][0] === 1) {
+        if (designer.analytics.project.partial) {
           partialMatchBoo = true;
         }
       }
@@ -3355,6 +3403,56 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
 
   } catch (e) {
     console.log(e);
+  }
+}
+
+BackWorker.prototype.designerLevelMatrixSync = async function (selfMongo) {
+  const instance = this;
+  const { equalJson } = this.mother;
+  try {
+    const db = "miro81";
+    const collection = "designer";
+    const designers = await selfMongo.db(db).collection(collection).find({}).toArray();
+    let whereQuery, updateQuery;
+    let copiedMatrix;
+
+    for (let designer of designers) {
+      whereQuery = { desid: designer.desid };
+      updateQuery = {};
+
+      copiedMatrix = equalJson(JSON.stringify(designer.analytics.project.matrix));
+      if (designer.analytics.construct.level === 0) {
+        copiedMatrix[0] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+        copiedMatrix[1] = [ 0, 0, 0 ];
+        copiedMatrix[2] = [ 0, 0, 0 ];
+        copiedMatrix[3] = [ 0, 0, 0 ];
+      } else if (designer.analytics.construct.level === 1) {
+        copiedMatrix[0] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+        copiedMatrix[1] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+        copiedMatrix[2] = [ 0, 0, 0 ];
+        copiedMatrix[3] = [ 0, 0, 0 ];
+      } else if (designer.analytics.construct.level === 2) {
+        copiedMatrix[0] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+        copiedMatrix[1] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+        copiedMatrix[2] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+        copiedMatrix[3] = [ 0, 0, 0 ];
+      } else if (designer.analytics.construct.level === 3) {
+        copiedMatrix[0] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+        copiedMatrix[1] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+        copiedMatrix[2] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+        copiedMatrix[3] = [ (designer.analytics.project.partial ? 1 : 0), 1, 1 ];
+      }
+
+      updateQuery["analytics.project.matrix"] = equalJson(JSON.stringify(copiedMatrix));
+      await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+      console.log(whereQuery, updateQuery);
+    }
+
+    return true;
+
+  } catch (e) {
+    console.log(e);
+    return false;
   }
 }
 

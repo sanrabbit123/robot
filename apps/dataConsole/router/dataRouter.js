@@ -8408,6 +8408,35 @@ DataRouter.prototype.rou_post_proposalGeneration = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_designerLevelMatrixSync = function () {
+  const instance = this;
+  const work = this.work;
+  const { equalJson, messageSend, dateToString, stringToDate, sleep } = this.mother;
+  let obj = {};
+  obj.link = [ "/designerLevelMatrixSync" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      const result = await work.designerLevelMatrixSync(selfMongo);
+      if (!result) {
+        throw new Error("designer level matrix sync fail");
+      }
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      await logger.error("Console 서버 문제 생김 (rou_post_designerLevelMatrixSync): " + e.message);
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 DataRouter.policy = function () {
   let text = '';
   text += "<b>개인정보 수집 및 이용 동의서</b><br><br>주식회사 홈리에종은 아래의 목적으로 수집, 이용하며 고객님의 소중한 개인정보를 보호함으로써 안심하고 법률서비스를 이용할 수 있도록 최선을 다합니다.<br><br>";

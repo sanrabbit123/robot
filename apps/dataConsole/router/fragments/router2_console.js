@@ -7572,3 +7572,32 @@ DataRouter.prototype.rou_post_proposalGeneration = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_designerLevelMatrixSync = function () {
+  const instance = this;
+  const work = this.work;
+  const { equalJson, messageSend, dateToString, stringToDate, sleep } = this.mother;
+  let obj = {};
+  obj.link = [ "/designerLevelMatrixSync" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const selfMongo = instance.mongo;
+      const result = await work.designerLevelMatrixSync(selfMongo);
+      if (!result) {
+        throw new Error("designer level matrix sync fail");
+      }
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      await logger.error("Console 서버 문제 생김 (rou_post_designerLevelMatrixSync): " + e.message);
+      console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
