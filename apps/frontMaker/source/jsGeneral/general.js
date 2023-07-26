@@ -2634,8 +2634,64 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
     let sevenDeleteIndex;
     let sevenDeleteBooArr;
     let barMother;
+    let blockClickEvent;
+    let thisCountNumber;
+    let tempLength;
+    let tempIndex;
+    let secondIndex;
+    let tempArr2;
+    let targetNumber;
+    let tempMatrix;
+
+    scheduleTargets = {};
 
     GeneralJs.cleanChildren(bigCalendarContentsZone);
+
+    blockClickEvent = async function (e) {
+      e.preventDefault();
+      try {
+        const uniqueId = this.getAttribute("unique");
+        const scheduleTarget = scheduleTargets.find(({ id }) => { return id === uniqueId });
+        let start, end;
+        let newTargets;
+        let newChildren;
+        let pastIndex;
+        if (scheduleTarget !== undefined) {
+          start = await GeneralJs.promptDate("새로 설정할 시작일을 알려주세요!");
+          end = await GeneralJs.promptDate("새로 설정할 종료일을 알려주세요!");
+
+          pastIndex = scheduleTargets.findIndex((o) => { return o.id === uniqueId });
+          newTargets = scheduleTargets.filter((o) => { return o.id !== uniqueId });
+          newTargets.splice(pastIndex, 0, {
+            start,
+            end,
+            title: scheduleTarget.title,
+            color: scheduleTarget.color,
+            description: scheduleTarget.description,
+            id: scheduleTarget.id,
+          });
+          
+          newChildren = [];
+          for (let obj of newTargets) {
+            newChildren.push({
+              contents: {
+                color: obj.color,
+                description: obj.description,
+                title: obj.title,
+              },
+              date: {
+                start: obj.start,
+                end: obj.end,
+              }
+            })
+          }
+
+          blockInsert(dateMatrix, newChildren, bigCalendarContentsZone);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
 
     scheduleTargets = [];
     for (let i = 0; i < children.length; i++) {
@@ -2645,6 +2701,8 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
         end: new Date(JSON.stringify(dateEnd).slice(1, -1)),
         title: wordingTitle,
         color: barColor,
+        description: wordingDescription,
+        id: "schedule0000" + String(i) + "0000" + GeneralJs.uniqueValue("hex"),
       });
     }
 
@@ -2712,6 +2770,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
           style: {
             display: "inline-block",
             position: "relative",
+            verticalAlign: "top",
             width: "calc(100% / " + String(dateMatrix.matrix[i].length) + ")",
             paddingTop: String(dateBlockPaddingTop) + ea,
             paddingBottom: String(dateBlockPaddingBottom) + ea,
@@ -2752,7 +2811,6 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
           }
         }
         barMatrix.push(tempArr);
-
       }
     }
 
@@ -2762,14 +2820,14 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
         if (arr[i] !== calendarMethods[3]) {
           noneDeleteArr[i] = noneDeleteArr[i] + 1;
         }
-        arr[i] = arr[i] + "_" + scheduleTargets[i].color + "_" + scheduleTargets[i].title;
+        arr[i] = arr[i] + "_" + scheduleTargets[i].color + "_" + scheduleTargets[i].title + "__split__" + scheduleTargets[i].id;
       }
     }
 
     barMatrix_final = [];
     for (let arr of barMatrix) {
       for (let i = 0; i < arr.length; i++) {
-        arr[i] = arr[i] + "_" + String(noneDeleteArr[i]);
+        arr[i] = arr[i].split("__split__")[0] + "_" + String(noneDeleteArr[i]) + "_" + arr[i].split("__split__")[1]
       }
       barMatrix_final.push(arr.filter((str) => { return Number(str.split("_")[str.split("_").length - 1]) !== 0 }));
     }
@@ -2779,7 +2837,6 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
       for (let i = 0; i < 7; i++) {
         sevenArr.push(barMatrix_final[(7 * z) + i]);
       }
-
       sevenLength = sevenArr[0].length;
       sevenDeleteIndex = [];
       for (let j = 0; j < sevenLength; j++) {
@@ -2799,10 +2856,115 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
         }
       }
     }
+    
+
+    // unstable ================================================================================================================================================
+    /*
+    for (let z = 0; z < (barMatrix_final.length / 7); z++) {
+      sevenArr = [];
+      for (let i = 0; i < 7; i++) {
+        sevenArr.push(barMatrix_final[(7 * z) + i]);
+      }
+
+      if (!sevenArr.every((a) => { return a.length === 0 })) {
+
+        for (let i = 0; i < 7; i++) {
+          if (sevenArr[i].findIndex((str) => { return !/^(none|blank)/g.test(str) }) > 0) {
+            const target = sevenArr[i][sevenArr[i].findIndex((str) => { return !/^(none|blank)/g.test(str) })];
+            const [ method, color, title, number, id ] = target.split("_");
+            const thisIndex = sevenArr[i].findIndex((s) => { return (new RegExp(id, "g")).test(s) });
+
+            thisCountNumber = 0;
+            for (let j = 0; j < i; j++) {
+              const methodArr = [];
+              for (let str of sevenArr[j].slice(0, thisIndex + 1)) {
+                const [ method ] = str.split("_");
+                methodArr.push(method);
+              }
+              if (methodArr.filter((s) => { return s !== "none" && s !== "blank" }).length - 1 > 0) {
+                thisCountNumber = methodArr.filter((s) => { return s !== "none" && s !== "blank" }).length - 1;
+              }
+            }
+            sevenArr[i].splice(0, sevenArr[i].findIndex((str) => { return !/^(none|blank)/g.test(str) }) - thisCountNumber);
+          }
+        }
+
+        for (let i = 0; i < 7; i++) {
+          tempLength = null;
+          tempIndex = null;
+          secondIndex = null;
+          for (let j = 0; j < sevenArr[i].length; j++) {
+            if (tempLength === null && !/^none/.test(sevenArr[i][j])) {
+              tempLength = 0;
+              tempIndex = j;
+            } else if (/^none/.test(sevenArr[i][j])) {
+              if (tempLength !== null) {
+                tempLength = tempLength + 1;
+              }
+            }
+            if (tempLength !== null && secondIndex === null && tempLength > 0 && !/^none/.test(sevenArr[i][j])) {
+              secondIndex = j;
+            }
+          }
+          sevenArr[i].splice(tempIndex + 1, secondIndex - tempIndex - 1);
+        }
+
+        tempArr2 = [];
+        for (let i = 0; i < 7; i++) {
+          tempIndex = null;
+          for (let j = 0; j < sevenArr[i].length; j++) {
+            if (!/^none/.test(sevenArr[i][j])) {
+              tempIndex = j
+            }
+          }
+          if (tempIndex !== null) {
+            tempArr2.push(tempIndex);
+          }
+        }
+
+        targetNumber = null;
+        if (tempArr2.length > 0) {
+          targetNumber = tempArr2.reduce((acc, curr) => { return acc > curr ? acc : curr }, 0);
+        }
+
+        if (typeof targetNumber === "number") {
+          for (let i = 0; i < 7; i++) {
+            sevenArr[i].splice(targetNumber + 1, sevenArr[i].length - targetNumber);
+          }
+        }
+        
+        tempMatrix = [];
+        for (let i = 0; i < 7; i++) {
+          tempMatrix.push(sevenArr[i]);
+        }
+
+
+        // case 1
+        if (!tempMatrix.every((arr) => { return arr.length === tempMatrix[0].length })) {
+
+          for (let i = 1; i < 7; i++) {
+            for (let j = 0; j < sevenArr[i].length; j++) {
+              if (/^(middle|end)/g.test(sevenArr[i][j].split("_")[0])) {
+                if (sevenArr[i - 1][j].split("_")[sevenArr[i - 1][j].split("_").length - 1] !== sevenArr[i][j].split("_")[sevenArr[i][j].split("_").length - 1]) {
+                  console.log(i, j);
+                }
+              }
+            }
+          }
+
+
+        }
+        
+        // case 2
+
+      }
+    }
+    */
+    // unstable ================================================================================================================================================
 
     for (let i = 0; i < barMatrix_final.length; i++) {
       for (let j = 0; j < barMatrix_final[i].length; j++) {
-        const [ method, color, title ] = barMatrix_final[i][j].split('_');
+        const [ method, color, title, unusedNumber, unique ] = barMatrix_final[i][j].split('_');
         barMother = GeneralJs.createNode({
           mother: dateBlocks[i],
           style: {
@@ -2816,7 +2978,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
         if (method === "start") {
           GeneralJs.createNode({
             mother: barMother,
-            attribute: { title, color, method },
+            attribute: { title, color, method, unique },
             event: {
               mouseenter: function (e) {
                 e.stopPropagation();
@@ -2862,6 +3024,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
                   this.parentElement.removeChild(target);
                 }
               },
+              click: blockClickEvent,
             },
             style: {
               position: "relative",
@@ -2894,7 +3057,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
         } else if (method === "end") {
           GeneralJs.createNode({
             mother: barMother,
-            attribute: { title, color, method },
+            attribute: { title, color, method, unique },
             event: {
               mouseenter: function (e) {
                 e.stopPropagation();
@@ -2940,6 +3103,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
                   this.parentElement.removeChild(target);
                 }
               },
+              click: blockClickEvent,
             },
             style: {
               position: "relative",
@@ -2972,7 +3136,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
         } else if (method === "middle") {
           GeneralJs.createNode({
             mother: barMother,
-            attribute: { title, color, method },
+            attribute: { title, color, method, unique },
             event: {
               mouseenter: function (e) {
                 e.stopPropagation();
@@ -3018,6 +3182,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
                   this.parentElement.removeChild(target);
                 }
               },
+              click: blockClickEvent,
             },
             style: {
               position: "absolute",
@@ -3032,7 +3197,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
         } else if (method === "startend") {
           GeneralJs.createNode({
             mother: barMother,
-            attribute: { title, color, method },
+            attribute: { title, color, method, unique },
             event: {
               mouseenter: function (e) {
                 e.stopPropagation();
@@ -3078,6 +3243,7 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
                   this.parentElement.removeChild(target);
                 }
               },
+              click: blockClickEvent,
             },
             style: {
               position: "absolute",
@@ -3146,7 +3312,6 @@ GeneralJs.colorCalendar = function (mother, children, option = {}) {
       }
 
     }
-
   }
 
   dateMatrix = GeneralJs.getDateMatrix(standardDate).sundayConvert();
