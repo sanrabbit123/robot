@@ -5584,6 +5584,9 @@ DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
+
+    console.log(req.body);
+
     try {
       if (req.body.mode === undefined) {
         throw new Error("invaild post");
@@ -5650,7 +5653,7 @@ DataRouter.prototype.rou_post_homeliaisonCrypto = function () {
       res.send(JSON.stringify(resultObj));
 
     } catch (e) {
-      console.log(e);
+      console.log(e)
       await logger.error("Console 서버 문제 생김 (rou_post_homeliaisonCrypto): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }
