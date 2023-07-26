@@ -145,12 +145,12 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
+    // const password = "homeliaison";
+    // let result;
+    
+    // result = await cryptoString(password, "dddd");
 
-    const image = new ImageReader();
-    console.log(await image.pdfToJpg(`${process.cwd()}/temp/target.pdf`));
-
-
-
+    // console.log(result.toUpperCase());
 
     
     // /designer path => desid injection
