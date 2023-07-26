@@ -145,12 +145,6 @@ DevContext.prototype.launching = async function () {
     // =======================================================================================================================================================
 
 
-    // const password = "homeliaison";
-    // let result;
-    
-    // result = await cryptoString(password, "dddd");
-
-    // console.log(result.toUpperCase());
 
     
     // /designer path => desid injection

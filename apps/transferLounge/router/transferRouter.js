@@ -150,6 +150,10 @@ TransferRouter.prototype.rou_post_middlePhotoBinary = function () {
             let jpgKey, jpgDateValue, jpgOrder, jpgName;
             let newOrder;
 
+            if (name.replace(/[0-9a-f]/g, '') !== '') {
+              logger.error("Transfer lounge rou_post_middlePhotoBinary: 이상한 이름 발견" + name + " / " + desid + " / " + proid).catch((e) => { console.log(e); });
+            }
+
             for (let key in files) {
               file = files[key];
               [ fileNameConst, positionKey, order ] = key.split("_");
