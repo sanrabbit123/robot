@@ -8630,7 +8630,6 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     const entireMode = (getObj.entire === "true");
     const normalMode = (entireMode && getObj.normal === "true");
     const adminMode = (getObj.admin === "true");
-    const searchMode = (normalMode && getObj.detailsearch === "true");
     let cliid, clients, client;
     let proid, projects, project;
     let whereQuery;
@@ -8767,18 +8766,10 @@ DesignerAboutJs.prototype.launching = async function (loading) {
         }
       });
     } else {
-      if (!searchMode) {
-        instance.contentsCenter();
-        instance.insertProfileBox();
-        instance.insertWorkingBox();
-        instance.insertIntroduceBox();
-      } else {
-        const thisStandards = instance.contentsCenter(true);
-        console.log(thisStandards);
-        // dev
-
-
-      }
+      instance.contentsCenter();
+      instance.insertProfileBox();
+      instance.insertWorkingBox();
+      instance.insertIntroduceBox();
     }
 
     loading.parentNode.removeChild(loading);
