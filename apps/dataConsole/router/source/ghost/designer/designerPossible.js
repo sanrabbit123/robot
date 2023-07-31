@@ -596,6 +596,7 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
   let thisDate;
   let thisPossible;
   let blankBoxes;
+  let justNow;
 
   grayBetween = <%% 40, 40, 36, 36, 3 %%>;
 
@@ -624,7 +625,8 @@ DesignerPossibleJs.prototype.insertCalendarBox = function (standardIndex = 0) {
 
   this.whiteMargin = (desktop ? margin : 0);
 
-  standardDate = new Date();
+  justNow = new Date();
+  standardDate = new Date(justNow.getFullYear(), justNow.getMonth(), 1);
   for (let i = 0; i < standardIndex; i++) {
     standardDate.setMonth(standardDate.getMonth() + 1);
   }
