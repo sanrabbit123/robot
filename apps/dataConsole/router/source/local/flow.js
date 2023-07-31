@@ -111,7 +111,29 @@ FlowJs.prototype.calendarRender = async function () {
         },
         date: {
           start: new Date(2023, 6, 23),
-          end: new Date(2023, 6, 25),
+          end: new Date(2023, 6, 26),
+        },
+      },
+      {
+        contents: {
+          color: colorChip.yellow,
+          description: "",
+          title: "디자이너 경력 데이터 동기화",
+        },
+        date: {
+          start: new Date(2023, 7, 1),
+          end: new Date(2023, 7, 3),
+        },
+      },
+      {
+        contents: {
+          color: colorChip.green,
+          description: "",
+          title: "신청자 신청 페이지 업데이트",
+        },
+        date: {
+          start: new Date(2023, 7, 2),
+          end: new Date(2023, 7, 4),
         },
       },
       {
@@ -121,19 +143,8 @@ FlowJs.prototype.calendarRender = async function () {
           title: "체크리스트 요청 일괄 발송",
         },
         date: {
-          start: new Date(2023, 6, 26),
-          end: new Date(2023, 6, 26),
-        },
-      },
-      {
-        contents: {
-          color: colorChip.green,
-          description: "",
-          title: "체크리스트 신청자용으로 확장",
-        },
-        date: {
-          start: new Date(2023, 6, 25),
-          end: new Date(2023, 6, 28),
+          start: new Date(2023, 7, 4),
+          end: new Date(2023, 7, 4),
         },
       },
       {
@@ -143,8 +154,8 @@ FlowJs.prototype.calendarRender = async function () {
           title: "신청자 안내 페이지 구현",
         },
         date: {
-          start: new Date(2023, 6, 30),
-          end: new Date(2023, 7, 4),
+          start: new Date(2023, 7, 7),
+          end: new Date(2023, 7, 11),
         },
       },
       {
@@ -154,19 +165,19 @@ FlowJs.prototype.calendarRender = async function () {
           title: "신청자 제어 콘솔 구현",
         },
         date: {
-          start: new Date(2023, 7, 4),
-          end: new Date(2023, 7, 8),
+          start: new Date(2023, 7, 14),
+          end: new Date(2023, 7, 18),
         },
       },
       {
         contents: {
           color: colorChip.green,
           description: "",
-          title: "디자이너 신청 페이지 수정",
+          title: "체크리스트 신청자용으로 확장",
         },
         date: {
-          start: new Date(2023, 7, 9),
-          end: new Date(2023, 7, 15),
+          start: new Date(2023, 7, 16),
+          end: new Date(2023, 7, 18),
         },
       },
       {
@@ -176,8 +187,8 @@ FlowJs.prototype.calendarRender = async function () {
           title: "새로운 추천서 구현",
         },
         date: {
-          start: new Date(2023, 7, 16),
-          end: new Date(2023, 7, 21),
+          start: new Date(2023, 7, 21),
+          end: new Date(2023, 7, 29),
         },
       },
       {
@@ -187,8 +198,8 @@ FlowJs.prototype.calendarRender = async function () {
           title: "프로필, 작업 사진 업로드 마감",
         },
         date: {
-          start: new Date(2023, 7, 21),
-          end: new Date(2023, 7, 21),
+          start: new Date(2023, 7, 29),
+          end: new Date(2023, 7, 29),
         },
       },
       {
@@ -198,8 +209,8 @@ FlowJs.prototype.calendarRender = async function () {
           title: "새로운 추천서 런칭",
         },
         date: {
-          start: new Date(2023, 7, 22),
-          end: new Date(2023, 7, 22),
+          start: new Date(2023, 7, 30),
+          end: new Date(2023, 7, 30),
         },
       },
     ];

@@ -7672,6 +7672,7 @@ ClientJs.prototype.communicationRender = function () {
                 cliid: cliid,
               }
             }, BACKHOST + "/alimTalk");
+            window.alert(thisCase.name + " 고객님께 스타일 찾기 페이지 완료 안내 알림톡을 보냈습니다!");
           }
         }
       } catch (e) {
