@@ -838,7 +838,7 @@ JobPostingJs.prototype.insertApplyBox = function () {
 
   careerBlockMarginLeft = <%% 38, 30, 22, 22, 4.9 %%>;
 
-  propertyWidth = <%% 91, 79, 69, 69, 15.7 %%>;
+  propertyWidth = <%% 90, 79, 69, 69, 15.7 %%>;
   yearWidth = <%% 72, 72, 64, 56, 13 %%>;
   monthWidth = <%% 40, 40, 36, 32, 8 %%>;
 
@@ -1820,6 +1820,9 @@ JobPostingJs.prototype.insertApplyBox = function () {
       height: String(moduleHeight * marginRatio) + ea,
     }
   });
+
+  
+
   // 7
   tempBlock = createNode({
     mother: rightBox,
@@ -1998,6 +2001,10 @@ JobPostingJs.prototype.insertApplyBox = function () {
       "총 기간",
     ]
   }], tempBlock.children[3]);
+
+
+
+
   // 9
   createNode({
     mother: rightBox,
