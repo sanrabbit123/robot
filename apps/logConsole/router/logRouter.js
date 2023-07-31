@@ -684,6 +684,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
     try {
       const collection = "homeliaisonAnalytics";
       const rawUserAgent = req.useragent;
+      const emptyIp = address.frontinfo.ip.outer;
       const { source: userAgent, browser, os, platform } = rawUserAgent;
       let name;
       let custom;
@@ -694,17 +695,28 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
       let safeNum;
       let parserResult;
       let user;
+      let temp;
 
       thisData = equalJson(req.body);
 
+      ip = null;
       if (typeof thisData.info === "object" && thisData.info !== null) {
         ip = thisData.info.ip;
         referer = thisData.info.referer;
         user = thisData.info.userAgent;
       } else {
-        ip = String(req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"]).trim().replace(/[^0-9\.]/gi, '');
+        temp = (req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"]);
+        if (typeof temp !== "string") {
+          ip = emptyIp;
+        } else {
+          ip = temp.trim().replace(/[^0-9\.]/gi, '');
+        }
         referer = (req.headers.referer === undefined ? "" : req.headers.referer);  
         user = userAgent;
+      }
+
+      if (typeof ip !== "string") {
+        ip = emptyIp;
       }
 
       if (typeof thisData.id === "string") {
@@ -749,6 +761,7 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
 
       thisData.date = new Date();
       thisData.network = { ...ipObj };
+      thisData.network.ip = ip;
 
       try {
         parserResult = parser(user);
@@ -788,8 +801,12 @@ LogRouter.prototype.rou_post_getAnalytics = function () {
       } catch {
         thisData.device = {};
       }
-      if (thisData.network.ip.trim().replace(/[^0-9\.]/gi, '') !== address.officeinfo.ghost.outer.trim().replace(/[^0-9\.]/gi, '') && thisData.network.ip.trim().replace(/[^0-9\.]/gi, '') !== address.memberinfo.ip.outer.trim().replace(/[^0-9\.]/gi, '')) {
-        await back.mongoCreate(collection, thisData, { selfMongo: instance.mongo });
+      if (thisData.network.ip.trim().replace(/[^0-9\.]/gi, '') !== address.officeinfo.ghost.outer.trim().replace(/[^0-9\.]/gi, '')) {
+        if (thisData.network.ip.trim().replace(/[^0-9\.]/gi, '') !== address.memberinfo.ip.outer.trim().replace(/[^0-9\.]/gi, '')) {
+          if (thisData.network.ip.trim().replace(/[^0-9\.]/gi, '') !== address.homeinfo.ip.outer.trim().replace(/[^0-9\.]/gi, '')) {
+            await back.mongoCreate(collection, thisData, { selfMongo: instance.mongo });
+          }
+        }
       }
       instance.facebook.conversionEvent({
         name,

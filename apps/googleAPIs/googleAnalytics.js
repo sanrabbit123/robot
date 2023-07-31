@@ -19,15 +19,6 @@ const GoogleAnalytics = function () {
   this.realtimeCollection = "realtimeAnalytics";
   this.unknownKeyword = "(not set)";
   this.nullWords = "null";
-  this.nonIpList = [
-    "2101784253",
-    "21121014882",
-    "21121014885",
-    "21839149210",
-  ];
-  this.nonIpList.push(this.address.memberinfo.ip.outer.replace(/[^0-9]/gi, ''));
-  this.nonIpList.push(this.address.officeinfo.ip.outer.replace(/[^0-9]/gi, ''));
-  this.nonIpList = [ ...new Set(this.nonIpList) ];
 }
 
 GoogleAnalytics.prototype.returnDate = function (str) {
@@ -331,7 +322,19 @@ GoogleAnalytics.prototype.getSessionObjectByCliid = async function (cliid, selfM
     }).filter((obj) => {
       return !/\&view\=test/g.test(obj.info.requestUrl);
     }).filter((obj) => {
-      return !instance.nonIpList.includes(obj.network.ip.trim().replace(/[^0-9]/gi, ''));
+      const thisDateValue = obj.date.valueOf();
+      let histories0, histories1;
+      let nonIpList;
+      histories0 = address.homeinfo.history.filter((obj) => {
+        return obj.date.from <= thisDateValue && thisDateValue <= obj.date.to
+      })
+      histories1 = address.memberinfo.history.filter((obj) => {
+        return obj.date.from <= thisDateValue && thisDateValue <= obj.date.to
+      })
+      nonIpList = histories0.concat(histories1).map((o) => {
+        return o.ip.trim().replace(/[^0-9]/gi, '');
+      })
+      return !nonIpList.includes(obj.network.ip.trim().replace(/[^0-9]/gi, ''));
     }).map((obj) => { return obj.id });
     sessionIds = [ ...new Set(rows) ];
 
@@ -1175,7 +1178,21 @@ GoogleAnalytics.prototype.realtimeMetric = async function (selfCoreMongo, selfMo
     ago.setMinutes(ago.getMinutes() - delta);
 
     agoHistory = await back.mongoRead(collection, { date: { $gte: ago } }, { selfMongo });
-    agoHistory = agoHistory.filter((obj) => { return !instance.nonIpList.includes(obj.network.ip.trim().replace(/[^0-9]/gi, '')); })
+    agoHistory = agoHistory.filter((obj) => {
+      const thisDateValue = obj.date.valueOf();
+      let histories0, histories1;
+      let nonIpList;
+      histories0 = address.homeinfo.history.filter((obj) => {
+        return obj.date.from <= thisDateValue && thisDateValue <= obj.date.to
+      })
+      histories1 = address.memberinfo.history.filter((obj) => {
+        return obj.date.from <= thisDateValue && thisDateValue <= obj.date.to
+      })
+      nonIpList = histories0.concat(histories1).map((o) => {
+        return o.ip.trim().replace(/[^0-9]/gi, '');
+      })
+      return !nonIpList.includes(obj.network.ip.trim().replace(/[^0-9]/gi, ''));
+    });
 
     cliids = agoHistory.filter((obj) => { return (typeof obj.data.cliid === "string" && /^c/i.test(obj.data.cliid)) }).map((obj) => {
       return {
@@ -1211,7 +1228,21 @@ GoogleAnalytics.prototype.realtimeMetric = async function (selfCoreMongo, selfMo
     }
 
     targetHistories = await back.mongoPick(collection, [ { id: { $regex: "(" + sessions.map(({ id }) => { return id }).join("|") + ")" } }, { page: 1, action: 1, data: 1, id: 1, info: 1, date: 1 } ], { selfMongo });
-    targetHistories = targetHistories.filter((o) => { return o.action === "pageInit" && !instance.nonIpList.includes(o.info.ip.trim().replace(/[^0-9]/gi, '')) });
+    targetHistories = targetHistories.filter((o) => {
+      const thisDateValue = o.date.valueOf();
+      let histories0, histories1;
+      let nonIpList;
+      histories0 = address.homeinfo.history.filter((obj) => {
+        return obj.date.from <= thisDateValue && thisDateValue <= obj.date.to
+      })
+      histories1 = address.memberinfo.history.filter((obj) => {
+        return obj.date.from <= thisDateValue && thisDateValue <= obj.date.to
+      })
+      nonIpList = histories0.concat(histories1).map((o) => {
+        return o.ip.trim().replace(/[^0-9]/gi, '');
+      })
+      return o.action === "pageInit" && !nonIpList.includes(o.info.ip.trim().replace(/[^0-9]/gi, ''))
+    });
 
     cliidsTarget = sessions.map((o) => { return o.cliid }).filter((str) => { return str !== nullWords });
     if (cliidsTarget.length === 0) {
