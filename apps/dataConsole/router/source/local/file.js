@@ -236,6 +236,89 @@ FileJs.prototype.imageViewing = function (images, convertMode = true) {
   }
 }
 
+FileJs.prototype.scheduleViewing = function () {
+  const instance = this;
+  const { ea, totalContents, belowHeight } = this;
+  const { createNode, withOut, colorChip, equalJson, downloadFile, removeByClass, sleep } = GeneralJs;
+  const className = "scheduleSelectedTarget";
+  const zIndex = 3;
+  return async function (e) {
+    e.stopPropagation();
+    try {
+      let cancelBack, whitePrompt;
+      let height;
+      let outerMargin;
+      let innerMargin;
+
+      height = 90;
+      outerMargin = 30;
+      innerMargin = 30;
+
+      cancelBack = createNode({
+        mother: totalContents,
+        class: [ className ],
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              removeByClass(className);
+            }
+          }
+        ],
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: colorChip.darkDarkShadow,
+          zIndex: String(zIndex),
+          animation: "justfadeineight 0.2s ease forwards",
+        }
+      });
+  
+      whitePrompt = createNode({
+        mother: totalContents,
+        class: [ className ],
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          width: withOut(outerMargin * 2, ea),
+          height: withOut((outerMargin * 2) + belowHeight, ea),
+          top: String(outerMargin) + ea,
+          left: String(outerMargin) + ea,
+          zIndex: String(zIndex),
+          background: colorChip.white,
+          borderRadius: String(3) + "px",
+          animation: "fadeuplite 0.3s ease forwards",
+          overflow: "scroll",
+        }
+      });
+
+      createNode({
+        mother: whitePrompt,
+        mode: "iframe",
+        attribute: {
+          src: BACKHOST + "/flow?entire=true&dataonly=true",
+        },
+        style: {
+          position: "absolute",
+          top: String(innerMargin) + ea,
+          left: String(innerMargin) + ea,
+          width: withOut(innerMargin * 2, ea),
+          height: withOut(innerMargin * 2, ea),
+          border: String(0),
+          outline: String(0),
+          borderRadius: String(3) + "px",
+        }
+      });
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 FileJs.prototype.baseMaker = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight, searchModeButtonsClassName, thisMember, memberTongClassName, intervalDelta } = this;
@@ -3182,6 +3265,11 @@ FileJs.prototype.fileLoad = async function (path, searchMode = "none") {
                     loading.remove();
                   } else if (/pdf$/.test(absolute)) {
                     blankHref(absolute.split("/").map((str) => { return window.encodeURIComponent(str) }).join("/").replace(new RegExp("^" + instance.rootToken), S3HOST));
+                  } else if (/hlschedule$/.test(absolute)) {
+                    fileContents = await ajaxJson({ path: absolute }, S3HOST + ":3000/readFile", { equal: true });
+                    console.log(fileContents);
+                    tempFunction = instance.scheduleViewing();
+                    await tempFunction(new Event("click"));
                   } else if (/\.(png|psd|iff|pcx|raw|tga|psb)$/gi.test(absolute) || /\.(jpg|jpeg|gif|jpf|jps|bmp|heic|jfif)$/gi.test(absolute)) {
                     tempFunction = instance.imageViewing([
                       {
@@ -3412,7 +3500,7 @@ FileJs.prototype.fileSearchEvent = function () {
 FileJs.prototype.launching = async function () {
   const instance = this;
   const { ea } = this;
-  const { returnGet, ajaxJson, withOut } = GeneralJs;
+  const { returnGet, ajaxJson, withOut, setQueue } = GeneralJs;
   try {
     const getObj = returnGet();
     const entireMode = (getObj.dataonly === "true" && getObj.entire === "true");
