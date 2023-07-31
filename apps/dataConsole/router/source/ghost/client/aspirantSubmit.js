@@ -452,6 +452,8 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   let tempBlock;
   let careerBlocksRender;
   let careerBlockMinus;
+  let plusValueCareer;
+  let plusBlockEvent;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -807,6 +809,10 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
       ]
     };
   }
+
+  careerBlocksRender = () => {}
+  plusValueCareer = () => {}
+  plusBlockEvent = () => {}
 
   barClickEvent = (arr) => {
     const valuesArr = equalJson(JSON.stringify(arr));
@@ -1431,6 +1437,196 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
     });
   };
 
+  plusValueCareer = async (matrix, tong, method = 0) => {
+    try {
+      if (method === 0) {
+        const pipe = "&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;";
+        const titleArr = [
+          "회사",
+          "담당 업무",
+          "기간",
+          "태그",
+        ];
+        let company, team, role, start, end;
+        let tag;
+        let block;
+        let original;
+        let whereQuery, updateQuery;
+        let endMatrix;
+  
+        company = matrix[0][1];
+        team = matrix[1][1];
+        role = matrix[2][1];
+        tag = matrix[3][1];
+        start = matrix[4][1];
+        end = matrix[5][1];
+  
+        block = {
+          company,
+          team,
+          role,
+          tag,
+          date: { start, end }
+        };
+  
+        original = [];
+        original.push(block);
+        original.sort((a, b) => { return b.date.start.valueOf() - a.date.start.valueOf() });
+  
+        endMatrix = original.map((obj) => {
+          const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
+          const startDate = obj.date.start;
+          const startWords = (String(obj.date.start.getFullYear()).slice(2) + "." + String(obj.date.start.getMonth() + 1));
+          const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "." + String(obj.date.end.getMonth() + 1));
+          const delta = endDate.valueOf() - startDate.valueOf();
+          const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
+          const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월" + "&nbsp;&nbsp;(" + startWords + " ~ " + endWords + ")";
+          return {
+            title: titleArr,
+            value: [
+              obj.company + pipe + obj.team,
+              obj.role,
+              rangeWords,
+              obj.tag,
+            ]
+          };
+        });
+        careerBlocksRender(endMatrix, tong);
+      } else {
+        const titleArr = [
+          "학교",
+          "전공",
+          "졸업",
+        ];
+        let school, major, start, end;
+        let block;
+        let original;
+        let whereQuery, updateQuery;
+        let endMatrix;
+
+        school = matrix[0][1];
+        major = matrix[1][1];
+        start = matrix[2][1];
+        end = matrix[3][1];
+
+        block = {
+          school,
+          major,
+          date: { start, end }
+        };
+  
+        original = [];
+        original.push(block);
+        original.sort((a, b) => { return b.date.start.valueOf() - a.date.start.valueOf() });
+  
+        endMatrix = original.map((obj) => {
+          return {
+            title: titleArr,
+            value: [
+              obj.school,
+              obj.major,
+              ((obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재학중" : dateToString(obj.date.end).split("-").slice(0, 2).join("년 ") + "월"),
+            ]
+          };
+        });
+        careerBlocksRender(endMatrix, tong);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  plusBlockEvent = (mode, index = -1, method = 0, tong = null) => {
+    let valueTargets;
+    if (method === 0) {
+      valueTargets = [
+        { name: "회사", type: "string" },
+        { name: "부서", type: "string" },
+        { name: "담당 업무", type: "string" },
+        { name: "업무 태그", type: "button", buttons: [
+          "리모델링",
+          "건축 설계",
+          "홈스타일링",
+          "전시",
+          "디스플레이",
+          "모델하우스",
+          "가구",
+          "패브릭",
+          "조명",
+          "기타 디자인",
+          "기타 업무",
+        ] },
+        { name: "시작일", type: "date", progressBoo: false, progressName: "" },
+        { name: "종료일", type: "date", progressBoo: true, progressName: "재직중" },
+      ];
+    } else {
+      valueTargets = [
+        { name: "학교", type: "string" },
+        { name: "전공", type: "string" },
+        { name: "입학일", type: "date", progressBoo: false, progressName: "" },
+        { name: "졸업일", type: "date", progressBoo: true, progressName: "재학중" },
+      ];
+    }
+    return async function (e) {
+      try {
+        let valueMatrix;
+        let tempArr;
+        let tempValue;
+  
+        valueMatrix = [];
+  
+        for (let obj of valueTargets) {
+          tempArr = [];
+          if (obj.type === "string") {
+            tempArr.push(obj.name);
+            do {
+              tempValue = await GeneralJs.prompt(obj.name + "명을 알려주세요!");
+              if (typeof tempValue !== "string") {
+                throw new Error("cancel");
+              }
+            } while (tempValue.trim() === "")
+            tempArr.push(tempValue.trim());
+          } else if (obj.type === "date") {
+            tempArr.push(obj.name);
+            do {
+              tempValue = await GeneralJs.promptDate(obj.name + "을(를) 알려주세요!", obj.progressBoo, obj.progressName);
+              if (tempValue === null) {
+                throw new Error("cancel");
+              }
+            } while (tempValue === null)
+            tempArr.push(tempValue);
+
+          } else if (obj.type === "button") {
+            tempArr.push(obj.name);
+            do {
+              tempValue = await GeneralJs.promptButtons(obj.name + "을(를) 선택해주세요!", obj.buttons);
+              if (tempValue === null) {
+                throw new Error("cancel");
+              }
+            } while (tempValue === null)
+            tempArr.push(tempValue);
+
+          } else {
+            throw new Error("invalid type");
+          }
+          valueMatrix.push(tempArr);
+        }
+  
+        if (mode === "create") {
+          await plusValueCareer(valueMatrix, tong, method);
+        } else {
+          // await instance.contents[x].contents[z].updateValue({
+          //   mode: "update",
+          //   index,
+          //   value: valueMatrix,
+          //   tong: this.parentElement.parentElement.parentElement,
+          // }, instance.designer);
+        }
+      } catch (e) {
+        window.alert("입력을 취소하셨습니다! 처음부터 다시 진행해주세요!");
+      }
+    }
+  }
 
   mainBlock = createNode({
     mother: this.baseTong,
@@ -3251,16 +3447,19 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         },
       ]
     });
+    tempBlock.children[2].addEventListener("click", plusBlockEvent("create", -1, 0, tempBlock.children[3]));
     careerBlocksRender([{
       title: [
         "회사",
         "담당 업무",
         "기간",
+        "태그",
       ],
       value: [
         "회사명",
         "담당 업무 상세",
         "총 기간",
+        "태그",
       ]
     }], tempBlock.children[3]);
     // 18
@@ -3340,6 +3539,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         },
       ]
     });
+    tempBlock.children[2].addEventListener("click", plusBlockEvent("create", -1, 1, tempBlock.children[3]));
     careerBlocksRender([{
       title: [
         "학교",
