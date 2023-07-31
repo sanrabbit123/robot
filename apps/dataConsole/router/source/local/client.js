@@ -7636,7 +7636,7 @@ ClientJs.prototype.communicationRender = function () {
     }
   ]);
   communication.setItem([
-    () => { return "스타일 찾기 페이지"; },
+    () => { return "스타일 찾기 보내기"; },
     function () {
       return true;
     },
@@ -7660,7 +7660,19 @@ ClientJs.prototype.communicationRender = function () {
           }
         }
         if (thisCase !== null) {
-          blankHref(FRONTHOST + "/curation.php?cliid=" + cliid);
+          if (window.confirm(thisCase.name + " 고객님께 스타일 찾기 페이지 완료 안내 알림톡을 전송합니다. 확실합니까?")) {
+            await ajaxJson({
+              method: "pushClient",
+              name: thisCase.name,
+              phone: thisCase.phone,
+              option: {
+                client: thisCase.name,
+                host: FRONTHOST.replace(/^https\:\/\//i, ''),
+                path: "curation",
+                cliid: cliid,
+              }
+            }, BACKHOST + "/alimTalk");
+          }
         }
       } catch (e) {
         console.log(e);
