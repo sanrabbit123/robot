@@ -188,7 +188,7 @@ FlowJs.prototype.calendarRender = async function () {
         },
         date: {
           start: new Date(2023, 7, 21),
-          end: new Date(2023, 7, 29),
+          end: new Date(2023, 7, 30),
         },
       },
       {
@@ -198,8 +198,8 @@ FlowJs.prototype.calendarRender = async function () {
           title: "프로필, 작업 사진 업로드 마감",
         },
         date: {
-          start: new Date(2023, 7, 29),
-          end: new Date(2023, 7, 29),
+          start: new Date(2023, 7, 30),
+          end: new Date(2023, 7, 30),
         },
       },
       {
@@ -209,13 +209,83 @@ FlowJs.prototype.calendarRender = async function () {
           title: "새로운 추천서 런칭",
         },
         date: {
-          start: new Date(2023, 7, 30),
-          end: new Date(2023, 7, 30),
+          start: new Date(2023, 7, 31),
+          end: new Date(2023, 7, 31),
+        },
+      },
+      // 9월
+      {
+        contents: {
+          color: colorChip.green,
+          description: "",
+          title: "프로젝트 검사 체계 구축",
+        },
+        date: {
+          start: new Date(2023, 8, 4),
+          end: new Date(2023, 8, 15),
+        },
+      },
+      {
+        contents: {
+          color: colorChip.yellow,
+          description: "",
+          title: "디자이너 고객 평가 시스템 구축",
+        },
+        date: {
+          start: new Date(2023, 8, 18),
+          end: new Date(2023, 8, 29),
+        },
+      },
+      {
+        contents: {
+          color: colorChip.red,
+          description: "",
+          title: "디자이너 콘솔 1차 활성화",
+        },
+        date: {
+          start: new Date(2023, 8, 29),
+          end: new Date(2023, 8, 29),
+        },
+      },
+      // 10월
+      {
+        contents: {
+          color: colorChip.green,
+          description: "",
+          title: "시공 견적 시스템 구축",
+        },
+        date: {
+          start: new Date(2023, 9, 2),
+          end: new Date(2023, 9, 31),
+        },
+      },
+      // 11월
+      {
+        contents: {
+          color: colorChip.red,
+          description: "",
+          title: "시공 의뢰서 시스템 구축",
+        },
+        date: {
+          start: new Date(2023, 10, 1),
+          end: new Date(2023, 10, 30),
+        },
+      },
+      // 12월
+      {
+        contents: {
+          color: colorChip.yellow,
+          description: "",
+          title: "홈리에종 자동 시공 견적 시스템 구현",
+        },
+        date: {
+          start: new Date(2023, 11, 1),
+          end: new Date(2023, 11, 29),
         },
       },
     ];
 
-    colorCalendar(calendarMother, calendarDateArr, { standardDate: new Date(2023, 6, 10) });
+    colorCalendar(calendarMother, calendarDateArr, { standardDate: new Date() });
 
   } catch (e) {
     console.log(e);
