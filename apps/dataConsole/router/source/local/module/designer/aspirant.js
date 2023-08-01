@@ -375,9 +375,9 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
       },
       {
         name: "birth",
-        type: "date",
+        type: "string",
         title: "생일",
-        value: dateToString(aspirant.birth),
+        value: dateToString(aspirant.birth) + " (" + String((new Date()).getFullYear() - aspirant.birth.getFullYear()) + "세)",
       },
       {
         name: "email",
