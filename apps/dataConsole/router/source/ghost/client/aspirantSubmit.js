@@ -778,8 +778,8 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   blockCancelWidth = <%% 12, 12, 12, 12, 2.8 %%>;
   blockCancelTop = <%% 14, 14, 13, 12, 2 %%>;
 
-  careerBlockMarginLeft = <%% 113, 30, 22, 22, 4.9 %%>;
-  careerBlockMinus = <%% 176, 176, 176, 176, 176 %%>;
+  careerBlockMarginLeft = <%% 113, 117, 85, 69, 19.4 %%>;
+  careerBlockMinus = <%% 177, 178, 142, 124, 32.6 %%>;
 
   propertyWidth = <%% 90, 79, 69, 69, 15.7 %%>;
   yearWidth = <%% 72, 72, 64, 56, 13 %%>;
@@ -4610,7 +4610,7 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
               }
             });
           }
-          
+
         }
       }
 
