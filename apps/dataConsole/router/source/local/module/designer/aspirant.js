@@ -13,27 +13,9 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
     const agoYearDelta = 1;
     let columns;
     let values;
-    let timeDelta;
-    let year, month;
-    let filteredProjectsProposal;
-    let filteredProjectsContract;
-    let thisTarget;
-    let thisValueDoms;
     let yearDelta;
     let monthDelta;
-    let tempDate;
-    let tempString;
-    let thisYear, from, to;
-    let filteredFilteredProjectsProposal;
-    let filteredFilteredProjectsContract;
-    let thisDate;
     let standards;
-    let thisValueTemp;
-    let noticeSendRows;
-    let filteredChecklistSendRows;
-    let filteredProfileSendRows;
-    let filteredWorkSendRows;
-    let completeAnalyticsRows;
 
     past.setFullYear(past.getFullYear() - agoYearDelta);
     past.setMonth(0);
@@ -274,6 +256,258 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
   }
 }
 
+DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
+  const instance = this;
+  const { ea, totalContents, grayBarWidth, belowHeight } = this;
+  const { createNode, withOut, colorChip, dateToString } = GeneralJs;
+  try {
+    const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
+    let dataMatrix;
+    let careerToBlock;
+    let schoolToBlock;
+
+    careerToBlock = (aspirant) => {
+      const pipe = "&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;";
+      let endMatrix;
+
+      endMatrix = aspirant.information.career.detail.map((obj) => {
+        const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
+        const startDate = obj.date.start;
+        const startWords = (String(obj.date.start.getFullYear()).slice(2) + "." + String(obj.date.start.getMonth() + 1));
+        const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "." + String(obj.date.end.getMonth() + 1));
+        const delta = endDate.valueOf() - startDate.valueOf();
+        const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
+        const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월" + "&nbsp;&nbsp;(" + startWords + " ~ " + endWords + ")";
+        return {
+          title: [
+            "회사",
+            "담당 업무",
+            "기간",
+            "태그",
+          ],
+          value: [
+            obj.company + pipe + obj.team,
+            obj.role,
+            rangeWords,
+            obj.tag,
+          ]
+        };
+      });
+      return endMatrix;
+    }
+
+    schoolToBlock = (aspirant) => {
+      let endMatrix;
+      endMatrix = aspirant.information.career.school.map((obj) => {
+        return {
+          title: [
+            "학교",
+            "전공",
+            "졸업",
+          ],
+          value: [
+            obj.school,
+            obj.major,
+            ((obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재학중" : dateToString(obj.date.end).split("-").slice(0, 2).join("년 ") + "월"),
+          ]
+        };
+      });
+      return endMatrix;
+    }
+
+    dataMatrix = [
+      {
+        name: "name",
+        type: "string",
+        title: "성함",
+        value: aspirant.designer,
+      },
+      {
+        name: "phone",
+        type: "string",
+        title: "연락처",
+        value: aspirant.phone,
+      },
+      {
+        name: "apply",
+        type: "date",
+        title: "신청일",
+        value: dateToString(aspirant.submit.partnership.date),
+      },
+      {
+        name: "status",
+        type: "select",
+        columns: [
+          "조정 필요",
+          "조정중",
+          "미팅 대기",
+          "미팅 완료",
+          "계약서 발송",
+          "계약 합의중",
+          "계약 완료",
+          "메뉴얼 발송",
+          "드랍",
+        ],
+        title: "상태",
+        value: [
+          "조정 필요",
+          "조정중",
+          "미팅 대기",
+          "미팅 완료",
+          "계약서 발송",
+          "계약 합의중",
+          "계약 완료",
+          "메뉴얼 발송",
+          "드랍",
+        ].map((str) => {
+          return str === aspirant.meeting.status ? 1 : 0;
+        }),
+      },
+      {
+        name: "gender",
+        type: "select",
+        title: "성별",
+        columns: [
+          "여성",
+          "남성"
+        ],
+        value: aspirant.gender === "여성" ? [ 1, 0 ] : [ 0, 1 ],
+      },
+      {
+        name: "birth",
+        type: "date",
+        title: "생일",
+        value: dateToString(aspirant.birth),
+      },
+      {
+        name: "email",
+        type: "string",
+        title: "이메일",
+        value: aspirant.email,
+      },
+      {
+        name: "address",
+        type: "string",
+        title: "주소",
+        value: aspirant.address,
+      },
+      {
+        name: "margin",
+        type: "margin",
+        title: "",
+        value: "",
+      },
+      {
+        name: "classification",
+        type: "select",
+        title: "사업자 구분",
+        columns: [
+          "법인(일반)",
+          "개인(일반)",
+          "개인(간이)",
+          "프리랜서",
+        ],
+        value: (/법인/gi.test(aspirant.information.company.classification) ? [ 1, 0, 0, 0 ] : (/일반/gi.test(aspirant.information.company.classification) ? [ 0, 1, 0, 0 ] : (/간이/gi.test(aspirant.information.company.classification) ? [ 0, 0, 1, 0 ] : [ 0, 0, 0, 1 ]))),
+      },
+      {
+        name: "company",
+        type: "string",
+        title: "회사명",
+        value: aspirant.information.company.name,
+      },
+      {
+        name: "businessNumber",
+        type: "string",
+        title: "사업자 등록번호",
+        value: aspirant.information.company.businessNumber,
+      },
+      {
+        name: "businessStart",
+        type: "date",
+        title: "사업자 개업일",
+        value: dateToString(aspirant.information.company.start),
+      },
+      {
+        name: "representative",
+        type: "string",
+        title: "대표자 성함",
+        value: aspirant.information.company.representative,
+      },
+      {
+        name: "margin",
+        type: "margin",
+        title: "",
+        value: "",
+      },
+      {
+        name: "accountBank",
+        type: "string",
+        title: "은행명",
+        value: aspirant.information.account.bank,
+      },
+      {
+        name: "accountNumber",
+        type: "string",
+        title: "계좌 번호",
+        value: aspirant.information.account.number,
+      },
+      {
+        name: "accountTo",
+        type: "string",
+        title: "예금주",
+        value: aspirant.information.account.to,
+      },
+      {
+        name: "margin",
+        type: "margin",
+        title: "",
+        value: "",
+      },
+      {
+        name: "career",
+        type: "block",
+        title: "경력",
+        value: careerToBlock(aspirant),
+      },
+      {
+        name: "school",
+        type: "block",
+        title: "학력",
+        value: schoolToBlock(aspirant),
+      },
+      {
+        name: "margin",
+        type: "margin",
+        title: "",
+        value: "",
+      },
+      {
+        name: "homepage",
+        type: "array",
+        title: "홈페이지",
+        value: aspirant.information.channel.web,
+      },
+      {
+        name: "sns",
+        type: "array",
+        title: "SNS",
+        value: aspirant.information.channel.sns,
+      },
+      {
+        name: "margin",
+        type: "margin",
+        title: "",
+        value: "",
+      },
+    ];
+
+    return dataMatrix;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+}
+
 DesignerJs.prototype.aspirantColorSync = async function () {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText } = this;
@@ -311,7 +545,23 @@ DesignerJs.prototype.aspirantColorSync = async function () {
   }
 }
 
-DesignerJs.prototype.normalWhiteCard = function (desid) {
+DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
+  const instance = this;
+  const { ea, totalContents, grayBarWidth, belowHeight } = this;
+  try {
+    const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
+    const dataArr = await instance.aspirantWhiteData(aspid);
+
+    console.log(dataArr);
+
+    
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
   const { titleButtonsClassName, whiteCardClassName, whiteBaseClassName } = this;
@@ -319,8 +569,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
   return async function (e) {
     try {
       const zIndex = 4;
-      const blank = "&nbsp;/&nbsp;";
-      const designer = instance.designers.find((d) => { return d.desid === desid });
+      const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
       let cancelBack, whitePrompt;
       let titleWhite;
       let margin;
@@ -331,16 +580,6 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
       let titleWeight;
       let fontTextTop, fontSize, fontBetween, fontWeight;
       let whiteMaker;
-      let iframeMaker;
-      let linkDictionary;
-
-      linkDictionary = {
-        checklist: BACKHOST + "/middle/designerAbout?desid=" + designer.desid + "&entire=true&normal=true",
-        process: BACKHOST + "/middle/designerBoard?desid=" + designer.desid + "&entire=true&normal=true",
-        possible: BACKHOST + "/middle/designerPossible?desid=" + designer.desid + "&entire=true&normal=true",
-        portfolio: BACKHOST + "/designer?mode=general&desid=" + designer.desid + "&dataonly=true&entire=true&normal=true",
-        report: BACKHOST + "/middle/designerReport?desid=" + designer.desid + "&entire=true&normal=true",
-      }
 
       margin = 30;
       titleHeight = 50;
@@ -355,40 +594,6 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
       fontSize = 14;
       fontBetween = 8;
       fontWeight = 400;
-
-      iframeMaker = (mode) => {
-        const src = linkDictionary[mode];
-        return function (e) {
-          const whiteTong = document.querySelector('.' + whiteBaseClassName);
-          const toggle = this.getAttribute("off");
-          const desid = this.getAttribute("desid");
-          const siblings = Array.from(document.querySelectorAll('.' + titleButtonsClassName));
-          whiteTong.removeChild(whiteTong.firstChild);
-          createNode({
-            mother: whiteTong,
-            mode: "iframe",
-            attribute: { src },
-            style: {
-              position: "absolute",
-              display: "block",
-              top: String(0),
-              left: String(0),
-              width: withOut(0, ea),
-              height: withOut(0, ea),
-              border: String(0),
-            }
-          });
-          this.setAttribute("toggle", "on");
-          this.style.color = colorChip.green;
-          for (let dom of siblings) {
-            if (dom !== this) {
-              dom.setAttribute("toggle", "off");
-              dom.style.color = colorChip.black;    
-            }
-          }
-          instance.whiteCardMode = mode;
-        }
-      }
 
       whiteMaker = (reload = false) => {
 
@@ -415,8 +620,8 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
             position: "fixed",
             top: String(0 + margin + titleHeight) + ea,
             left: String(grayBarWidth + margin) + ea,
-            width: withOut((margin * 2) + grayBarWidth, ea),
-            height: withOut(0 + (margin * 2) + titleHeight + belowHeight, ea),
+            width: withOut((margin * 2) + grayBarWidth + (innerMargin * 2), ea),
+            height: withOut(0 + (margin * 2) + titleHeight + belowHeight + (innerMargin * 2), ea),
             background: colorChip.white,
             zIndex: String(zIndex),
             borderBottomLeftRadius: String(5) + "px",
@@ -424,20 +629,22 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
             animation: "fadeuplite 0.3s ease forwards",
             boxShadow: "0 2px 10px -6px " + colorChip.shadow,
             overflow: "hidden",
+            padding: String(innerMargin) + ea,
           },
           child: {
-            mode: "iframe",
-            attribute: {
-              src: linkDictionary[instance.whiteCardMode],
-            },
             style: {
-              position: "absolute",
               display: "block",
-              top: String(0),
-              left: String(0),
+              position: "relative",
               width: withOut(0, ea),
               height: withOut(0, ea),
-              border: String(0),
+              overflow: "scroll",
+            },
+            child: {
+              style: {
+                display: "flex",
+                position: "relative",
+                width: withOut(0, ea),
+              }
             }
           }
         });
@@ -474,7 +681,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
             },
             children: [
               {
-                attribute: { designer: designer.designer, phone: designer.information.phone.replace(/[^0-9]/gi, '') },
+                attribute: { designer: aspirant.designer, phone: aspirant.phone.replace(/[^0-9]/gi, '') },
                 event: {
                   click: function (e) {
                     const designer = this.getAttribute("designer");
@@ -488,7 +695,7 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                     }
                   }
                 },
-                text: designer.designer,
+                text: aspirant.designer,
                 style: {
                   position: "relative",
                   top: String(titleTextTop) + ea,
@@ -499,19 +706,19 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                 }
               },
               {
-                attribute: { desid: desid },
+                attribute: { aspid: aspid },
                 event: {
                   click: async function (e) {
                     try {
-                      const desid = this.getAttribute("desid");
-                      await window.navigator.clipboard.writeText(desid);
+                      const aspid = this.getAttribute("aspid");
+                      await window.navigator.clipboard.writeText(aspid);
                       instance.mother.greenAlert("클립보드에 저장되었습니다!");
                     } catch (e) {
                       console.log(e);
                     }
                   },
                 },
-                text: designer.desid,
+                text: aspirant.aspid,
                 style: {
                   position: "relative",
                   top: String(fontTextTop) + ea,
@@ -522,213 +729,11 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
                   cursor: "pointer",
                 }
               },
-              {
-                style: {
-                  display: "flex",
-                  position: "absolute",
-                  bottom: String(0),
-                  right: String(0),
-                  flexDirection: "row",
-                  alignItems: "end",
-                  justifyContent: "end",
-                },
-                children: [
-                  {
-                    class: [ titleButtonsClassName ],
-                    attribute: { toggle: (instance.whiteCardMode === "checklist" ? "on" : "off"), desid, mode: "checklist" },
-                    event: {
-                      click: iframeMaker("checklist"),
-                    },
-                    text: "체크리스트",
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: instance.whiteCardMode === "checklist" ? colorChip.green : colorChip.black,
-                      cursor: "pointer",
-                    }
-                  },
-                  {
-                    text: blank,
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: colorChip.gray3,
-                    }
-                  },
-                  {
-                    class: [ titleButtonsClassName ],
-                    attribute: { toggle: (instance.whiteCardMode === "possible" ? "on" : "off"), desid, mode: "process" },
-                    event: {
-                      click: iframeMaker("process"),
-                    },
-                    text: "프로젝트",
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: instance.whiteCardMode === "process" ? colorChip.green : colorChip.black,
-                      cursor: "pointer",
-                    }
-                  },
-                  {
-                    text: blank,
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: colorChip.gray3,
-                    }
-                  },
-                  {
-                    class: [ titleButtonsClassName ],
-                    attribute: { toggle: (instance.whiteCardMode === "possible" ? "on" : "off"), desid, mode: "possible" },
-                    event: {
-                      click: iframeMaker("possible"),
-                    },
-                    text: "일정 관리",
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: instance.whiteCardMode === "possible" ? colorChip.green : colorChip.black,
-                      cursor: "pointer",
-                    }
-                  },
-                  {
-                    text: blank,
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: colorChip.gray3,
-                    }
-                  },
-                  {
-                    class: [ titleButtonsClassName ],
-                    attribute: { toggle: (instance.whiteCardMode === "portfolio" ? "on" : "off"), desid, mode: "portfolio" },
-                    event: {
-                      click: iframeMaker("portfolio"),
-                    },
-                    text: "포트폴리오",
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: instance.whiteCardMode === "portfolio" ? colorChip.green : colorChip.black,
-                      cursor: "pointer",
-                    }
-                  },
-                  {
-                    text: blank,
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: colorChip.gray3,
-                    }
-                  },
-                  {
-                    class: [ titleButtonsClassName ],
-                    attribute: { toggle: (instance.whiteCardMode === "report" ? "on" : "off"), desid, mode: "report" },
-                    event: {
-                      click: iframeMaker("report"),
-                    },
-                    text: "리포트",
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: instance.whiteCardMode === "report" ? colorChip.green : colorChip.black,
-                      cursor: "pointer",
-                    }
-                  },
-                  {
-                    text: blank,
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: colorChip.gray3,
-                    }
-                  },
-                  {
-                    class: [ titleButtonsClassName ],
-                    attribute: { toggle: "off", desid },
-                    event: {
-                      click: function (e) {
-                        const desid = this.getAttribute("desid");
-                        blankHref("/file?mode=designer&desid=" + desid);
-                      }
-                    },
-                    text: "디자이너 폴더",
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: colorChip.black,
-                      cursor: "pointer",
-                    }
-                  },
-                  {
-                    text: blank,
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: colorChip.gray3,
-                    }
-                  },
-                  {
-                    class: [ titleButtonsClassName ],
-                    attribute: { toggle: "off", desid },
-                    event: {
-                      click: function (e) {
-                        const desid = this.getAttribute("desid");
-                        blankHref(FRONTHOST + "/designer/dashboard.php?desid=" + desid);
-                      }
-                    },
-                    text: "디자이너 콘솔",
-                    style: {
-                      position: "relative",
-                      top: String(fontTextTop) + ea,
-                      fontSize: String(fontSize) + ea,
-                      marginLeft: String(fontBetween) + ea,
-                      fontWeight: String(fontWeight),
-                      color: colorChip.black,
-                      cursor: "pointer",
-                    }
-                  },
-                ]
-              }
             ]
           }
         });
+
+        instance.aspirantWhiteContents(whitePrompt.firstChild.firstChild, aspid).catch((err) => { console.log(err); });
       }
 
       instance.whiteMaker = whiteMaker;
@@ -796,7 +801,7 @@ DesignerJs.prototype.aspirantBase = async function () {
     let menuBetween;
     let menuTextTop, menuSize, menuWeight;
     let columnsMenuEvent;
-    let normalContentsLoad;
+    let aspirantContentsLoad;
     let circleRight, circleTop;
     let contextIndent;
     let contextButtonOuterMargin;
@@ -985,7 +990,7 @@ DesignerJs.prototype.aspirantBase = async function () {
     });
     this.totalMother = totalMother;
 
-    normalContentsLoad = async (reload = false) => {
+    aspirantContentsLoad = async (reload = false) => {
       try {
 
         if (reload) {
@@ -1164,6 +1169,9 @@ DesignerJs.prototype.aspirantBase = async function () {
           createNode({
             mother: idNameArea,
             attribute: { aspid: aspirant.aspid, lastfilter: "none" },
+            event: {
+              click: instance.aspirantWhiteCard(aspirant.aspid),
+            },
             class: [ standardCaseClassName ],
             style: {
               display: "flex",
@@ -1293,8 +1301,8 @@ DesignerJs.prototype.aspirantBase = async function () {
       }
     }
 
-    await normalContentsLoad(false);
-    this.normalContentsLoad = normalContentsLoad;
+    await aspirantContentsLoad(false);
+    this.aspirantContentsLoad = aspirantContentsLoad;
 
   } catch (e) {
     console.log(e);
@@ -1347,12 +1355,12 @@ DesignerJs.prototype.normalSearchEvent = async function () {
           }
 
           instance.designers = designers;
-          await instance.normalContentsLoad(true);
+          await instance.aspirantContentsLoad(true);
           
           setQueue(async () => {
             try {
               if (instance.designers.length === 1) {
-                const tempFunc = instance.normalWhiteCard(instance.designers[0].desid);
+                const tempFunc = instance.aspirantWhiteCard(instance.designers[0].desid);
                 await tempFunc({});
               }
             } catch (e) {
@@ -1567,7 +1575,7 @@ DesignerJs.prototype.normalMessageEvent = async function () {
                 designer.important = histories[designer.desid].important;
               }
               instance.designers = designers;
-              return instance.normalContentsLoad(true);
+              return instance.aspirantContentsLoad(true);
             }).catch((err) => {
               console.log(err);
             });
@@ -1576,7 +1584,7 @@ DesignerJs.prototype.normalMessageEvent = async function () {
             removeByClass(whiteCardClassName);
             await instance.normalProcessDetailEvent(data.proid, data.desid);
           } else if (data.type === "returnToPast") {
-            const tempFunction = instance.normalWhiteCard(document.querySelectorAll('.' + processDetailEventClassName)[1].getAttribute("desid"));
+            const tempFunction = instance.aspirantWhiteCard(document.querySelectorAll('.' + processDetailEventClassName)[1].getAttribute("desid"));
             removeByClass(processDetailEventClassName);
             await tempFunction({});
           }
@@ -1735,7 +1743,6 @@ DesignerJs.prototype.normalReportWhite = function () {
       let fontTextTop, fontSize, fontBetween, fontWeight;
       let whiteReportMaker;
       let iframeMaker;
-      let linkDictionary;
       let base, scrollBox;
       let titleArea;
       let basePaddingTop;
@@ -2373,15 +2380,9 @@ DesignerJs.prototype.aspirantView = async function () {
     const { colorChip, ajaxJson, returnGet } = GeneralJs;
     let loading;
     let aspirants;
-    let histories;
-    let members;
-    let importants;
 
     loading = await this.mother.loadingRun();
-
     aspirants = await ajaxJson({ noFlat: true, whereQuery: {} }, "/getAspirants", { equal: true });
-
-    console.log(aspirants);
 
     this.aspirants = aspirants;
     this.normalMatrix = null;
