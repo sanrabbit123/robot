@@ -332,7 +332,7 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         name: "apply",
         type: "date",
         title: "신청일",
-        value: dateToString(aspirant.submit.partnership.date),
+        value: dateToString(aspirant.submit.partnership.date, true),
       },
       {
         name: "status",
@@ -548,14 +548,266 @@ DesignerJs.prototype.aspirantColorSync = async function () {
 DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson } = GeneralJs;
   try {
     const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
     const dataArr = await instance.aspirantWhiteData(aspid);
+    const maxColumnsNumber = 9;
+    let name;
+    let type;
+    let title;
+    let value;
+    let motherBlock;
+    let blockHeight;
+    let titleWidth;
+    let titleArea;
+    let titleSize, titleWeight;
+    let num;
+    let marginPercentage;
+    let careerBlockGrayOuterMargin;
+    let careerBlockOuterMargin;
+    let careerBlockOuterMarginTop;
+    let careerBlockOuterMarginBottom;
+    let careerBlockInnerMargin;
+    let careerBlockInnerMarginSmall;
+    let careerBlockSize;
+    let blockBottom;
 
-    console.log(dataArr);
+    blockHeight = 32;
+    titleWidth = 180;
 
+    titleSize = 15;
+    titleWeight = 700;
+
+    marginPercentage = 33;
+
+    careerBlockGrayOuterMargin = <%% 10, 10, 9, 8, 0 %%>;
+    careerBlockOuterMargin = <%% 14, 14, 14, 12, 2.5 %%>;
+    careerBlockOuterMarginTop = <%% (isMac() ? 10 : 12), (isMac() ? 10 : 12), (isMac() ? 10 : 12), (isMac() ? 10 : 12), 2 %%>;
+    careerBlockOuterMarginBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), 2 %%>;
+    careerBlockInnerMargin = <%% 6, 6, 6, 4, 1 %%>;
+    careerBlockInnerMarginSmall = <%% 2, 2, 2, 2, 0 %%>;
+    careerBlockSize = <%% 13, 13, 13, 13, 2.5 %%>;
+
+    blockBottom = 20;
+  
+    for (let obj of dataArr) {
+      name = obj.name;
+      type = obj.type;
+      title = obj.title;
+      value = obj.value;
+
+      motherBlock = createNode({
+        mother: tong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(0, ea),
+          "min-height": String(blockHeight) + ea,
+        }
+      });
+
+      titleArea = createNode({
+        mother: motherBlock,
+        style: {
+          display: "inline-flex",
+          verticalAlign: "top",
+          position: "relative",
+          width: String(titleWidth) + ea,
+          height: String(blockHeight) + ea,
+          justifyContent: "start",
+          alignItems: "start",
+          flexDirection: "row",
+        },
+        child: {
+          text: title,
+          style: {
+            display: "inline-block",
+            verticalAlign: "top",
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(titleWeight),
+            color: colorChip.black,
+          }
+        }
+      })
+
+      if (type === "string") {
+
+        createNode({
+          mother: motherBlock,
+          style: {
+            display: "inline-block",
+            verticalAlign: "top",
+            position: "relative",
+            width: withOut(titleWidth, ea),
+          },
+          child: {
+            text: value,
+            style: {
+              display: "inline-block",
+              verticalAlign: "top",
+              position: "relative",
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+            }
+          }
+        });
+
+      } else if (type === "date") {
+
+        createNode({
+          mother: motherBlock,
+          style: {
+            display: "inline-block",
+            verticalAlign: "top",
+            position: "relative",
+            width: withOut(titleWidth, ea),
+          },
+          child: {
+            text: value,
+            style: {
+              display: "inline-block",
+              verticalAlign: "top",
+              position: "relative",
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+            }
+          }
+        });
+
+      } else if (type === "select") {
+        
+        num = 0;
+        for (let str of obj.columns) {
+          createNode({
+            mother: motherBlock,
+            style: {
+              display: "inline-block",
+              verticalAlign: "top",
+              position: "relative",
+              width: "calc(" + withOut(titleWidth, ea) + " / " + String(maxColumnsNumber) + ")",
+            },
+            child: {
+              text: str,
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                position: "relative",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(value[num] === 1 ? 400 : 200),
+                color: value[num] === 1 ? colorChip.green : colorChip.deactive,
+              }
+            }
+          });
+          num++;
+        }
+
+      } else if (type === "block") {
+        
+        createNode({
+          mother: motherBlock,
+          style: {
+            display: "inline-block",
+            verticalAlign: "top",
+            position: "relative",
+            padding: String(careerBlockGrayOuterMargin) + ea,
+            width: withOut(titleWidth + (careerBlockGrayOuterMargin * 2), ea),
+            borderRadius: String(5) + "px",
+            background: colorChip.gray0,
+            marginBottom: String(blockBottom) + ea,
+          },
+          children: value.map((obj, index) => {
+            const { title, value: factorValue } = obj;
+            const lastBoo = (index === value.length - 1);
+            return {
+              attribute: {
+                index: String(index),
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                padding: String(careerBlockOuterMargin) + ea,
+                paddingTop: String(careerBlockOuterMarginTop) + ea,
+                paddingBottom: String(careerBlockOuterMarginBottom) + ea,
+                width: withOut(careerBlockOuterMargin * 2, ea),
+                borderRadius: String(5) + "px",
+                marginBottom: !lastBoo ? String(careerBlockInnerMargin) + ea : "",
+                background: colorChip.white,
+                boxShadow: "0px 2px 11px -9px " + colorChip.shadow,
+              },
+              children: factorValue.map((str, index) => {
+                const lastBoo = (index === factorValue.length - 1);
+                return {
+                  text: "<b%" + title[index] + " %b>:" + "&nbsp;&nbsp;&nbsp;" + str,
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    fontSize: String(careerBlockSize) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.black,
+                    marginBottom: !lastBoo ? String(careerBlockInnerMarginSmall) + ea : "",
+                  },
+                  bold: {
+                    fontSize: String(careerBlockSize) + ea,
+                    fontWeight: String(800),
+                    color: colorChip.black,
+                  },
+                  under: {
+                    fontSize: String(careerBlockSize) + ea,
+                    fontWeight: String(200),
+                    color: colorChip.green,
+                  }
+                }
+              })
+            }
+          })
+        });
+
+      } else if (type === "margin") {
+
+        createNode({
+          mother: motherBlock,
+          style: {
+            display: "block",
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            height: String(marginPercentage) + '%',
+            width: withOut(0, ea),
+            borderBottom: "1px dashed " + colorChip.gray3,
+          }
+        })
+
+      } else if (type === "array") {
+
+        if (value.length > 0) {
+          createNode({
+            mother: motherBlock,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: withOut(titleWidth, ea),
+            },
+            child: {
+              text: value[0],
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+              }
+            }
+          });
+        }
+
+      }
+
+    }
     
-
   } catch (e) {
     console.log(e);
   }
@@ -580,10 +832,12 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
       let titleWeight;
       let fontTextTop, fontSize, fontBetween, fontWeight;
       let whiteMaker;
+      let innerMarginTop;
 
       margin = 30;
       titleHeight = 50;
       innerMargin = 24;
+      innerMarginTop = 20;
       overlap = 12;
 
       titleTextTop = isMac() ? 2 : 2;
@@ -635,15 +889,21 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
             style: {
               display: "block",
               position: "relative",
-              width: withOut(0, ea),
-              height: withOut(0, ea),
+              width: withOut(innerMargin * 2, ea),
+              height: withOut(innerMargin + innerMarginTop, ea),
               overflow: "scroll",
+              border: "1px solid " + colorChip.gray3,
+              borderRadius: String(5) + "px",
+              boxSizing: "border-box",
+              padding: String(innerMargin) + ea,
+              paddingTop: String(innerMarginTop) + ea,
             },
             child: {
               style: {
                 display: "flex",
                 position: "relative",
                 width: withOut(0, ea),
+                flexDirection: "column",
               }
             }
           }
