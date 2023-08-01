@@ -889,8 +889,8 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
             style: {
               display: "block",
               position: "relative",
-              width: withOut(innerMargin * 2, ea),
-              height: withOut(innerMargin + innerMarginTop, ea),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
               overflow: "scroll",
               border: "1px solid " + colorChip.gray3,
               borderRadius: String(5) + "px",
