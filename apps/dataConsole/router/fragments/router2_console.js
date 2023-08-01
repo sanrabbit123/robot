@@ -1644,7 +1644,7 @@ DataRouter.prototype.rou_post_getAspirantInfo = function () {
         rows = await back.getAspirantsByQuery(whereQuery, { selfMongo: instance.mongo });
       }
 
-      res.send(JSON.stringify(rows));
+      res.send(JSON.stringify(rows.toNormal()));
     } catch (e) {
       logger.error("Console 서버 문제 생김 (rou_post_getAspirantInfo): " + e.message).catch((e) => { console.log(e); });
       console.log(e);

@@ -4359,14 +4359,9 @@ DesignerJs.prototype.launching = async function () {
 
     } else if (getObj.mode === "aspirant") {
 
-      this.grayBarWidth = 0;
-      this.mother.grayBarWidth = 0;
       await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
       document.getElementById("grayLeftOpenButton").remove();
       await this.aspirantView();
-      this.addTransFormEvent();
-      document.getElementById("moveRightArea").style.display = "none";
-      document.getElementById("moveLeftArea").style.display = "none";
 
     } else if (getObj.mode === "calendar") {
 
