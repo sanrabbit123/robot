@@ -151,7 +151,7 @@ PortfolioFilter.prototype.just_filter = function (str) {
 
 PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
   const instance = this;
-  const { fileSystem, shell, shellLink, todayMaker } = this.mother;
+  const { fileSystem, shellExec, shellLink, todayMaker } = this.mother;
   let options = {
     home_dir: this.options.home_dir,
     apart_name: this.apartName,
@@ -166,21 +166,14 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     let photo_sizes;
     let resultFolder;
 
-    file_list = await fileSystem(`readDir`, [ this.options.photo_dir ]);
-    for (let i = 0; i < file_list.length; i++) {
-      if (file_list[i] === '.DS_Store') {
-        file_list.splice(i, 1);
-      }
-    }
-
+    file_list = (await fileSystem(`readDir`, [ this.options.photo_dir ])).filter((str) => { return str !== ".DS_Store" });
     if (file_list.length === 0) {
       throw new Error(`There is no photo.\nPlease give me photos. in : ${this.options.photo_dir}`);
-      process.exit();
     }
 
     file_list.sort((a, b) => { return Number(instance.just_filter(a)) - Number(instance.just_filter(b)); });
     for (let i = 0; i < file_list.length; i++) {
-      shell.exec(`mv ${shellLink(this.options.photo_dir + "/" + file_list[i])} ${shellLink(this.options.photo_dir)}/photo${String(i + 1)}.jpg`);
+      await shellExec(`mv ${shellLink(this.options.photo_dir + "/" + file_list[i])} ${shellLink(this.options.photo_dir)}/photo${String(i + 1)}.jpg`);
       file_list[i] = "photo" + String(i + 1) + ".jpg";
     }
     options.photo_list = file_list;
@@ -193,13 +186,13 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     console.log(rawFix_file_list);
 
     await fileSystem(`write`, [ `${this.options.home_dir}/script/raw.js`, this.generator.factory.rawFilter(rawFix_file_list, options) ]);
-    shell.exec(`osascript ${this.options.home_dir}/factory/applescript/raw.scpt`);
+    await shellExec(`osascript ${this.options.home_dir}/factory/applescript/raw.scpt`);
 
     photo_sizes = liteMode ? [ "780", "1500" ] : [ "780", "3508" ];
 
     resultFolderBoo = await fileSystem(`readDir`, [ this.options.result_dir ]);
     for (let i of resultFolderBoo) {
-      shell.exec(`rm -rf ${shellLink(this.options.result_dir)}/${i};`);
+      await shellExec(`rm -rf ${shellLink(this.options.result_dir)}/${i};`);
     }
 
     if (!this.clientNullATarget.includes(this.clientName) && !/없/gi.test(this.clientName)) {
@@ -209,24 +202,24 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     }
     resultFolder = `${this.options.result_dir}/${this.folderName}`;
     this.resultFolder = resultFolder;
-    shell.exec(`mkdir ${shellLink(resultFolder)}`);
+    await shellExec(`mkdir ${shellLink(resultFolder)}`);
 
     for (let i of photo_sizes) {
       new_photo_name_list = [];
-      shell.exec(`mkdir ${shellLink(resultFolder)}/${i}`);
+      await shellExec(`mkdir ${shellLink(resultFolder)}/${i}`);
       for (let photo of file_list) {
         new_photo_name = this.image_filter(photo, i);
-        shell.exec(`cp ${shellLink(this.options.photo_dir)}/${photo} ${shellLink(resultFolder)}/${i}/${new_photo_name}`);
+        await shellExec(`cp ${shellLink(this.options.photo_dir)}/${photo} ${shellLink(resultFolder)}/${i}/${new_photo_name}`);
         new_photo_name_list.push(`${resultFolder}/${i}/${new_photo_name}`);
       }
       options.size = i;
       await fileSystem(`write`, [ `${this.options.home_dir}/script/to_portfolio.js`, this.generator.factory.to_portfolio(new_photo_name_list, options) ]);
-      shell.exec(`osascript ${this.options.home_dir}/factory/applescript/to_portfolio.scpt`);
+      await shellExec(`osascript ${this.options.home_dir}/factory/applescript/to_portfolio.scpt`);
     }
 
     if (!liteMode) {
       await fileSystem(`write`, [ `${this.options.home_dir}/script/to_png.js`, this.generator.factory.to_png({}, options) ]);
-      shell.exec(`osascript ${this.options.home_dir}/factory/applescript/to_png.scpt`);
+      await shellExec(`osascript ${this.options.home_dir}/factory/applescript/to_png.scpt`);
     }
 
     return resultFolder;
