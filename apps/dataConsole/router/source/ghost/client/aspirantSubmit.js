@@ -4538,80 +4538,79 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
               tempObj.value = firstDom.getAttribute("value");
   
             } else if (/ARTICLE/gi.test(nodeName)) {
-              tempObj.value = equalJson(firstDom.getAttribute("block"));
+              tempObj.value = JSON.stringify(equalJson(firstDom.getAttribute("block")));
             }
   
             map.push(tempObj)
           }
   
-          // if (typeof instance.clientSessionId === "string") {
-          //   map.push({
-          //     property: "sessionId",
-          //     value: instance.clientSessionId,
-          //   });
-          // } else {
-          //   if (typeof window.homeliaisonSessionId === "string") {
-          //     map.push({
-          //       property: "sessionId",
-          //       value: window.homeliaisonSessionId,
-          //     });
-          //   } else {
-          //     window.location.href = FRONTHOST + "/sessionClear.php";
-          //   }
-          // }
-
-          console.log(map);
+          if (typeof instance.clientSessionId === "string") {
+            map.push({
+              property: "sessionId",
+              value: instance.clientSessionId,
+            });
+          } else {
+            if (typeof window.homeliaisonSessionId === "string") {
+              map.push({
+                property: "sessionId",
+                value: window.homeliaisonSessionId,
+              });
+            } else {
+              window.location.href = FRONTHOST + "/sessionClear.php";
+            }
+          }
     
-          // if (boo) {
-          //   instance.mother.certificationBox(name, phone, async function (back, box) {
-          //     try {
-          //       const { aspid } = await ajaxJson({ map, mode: (generalMode ? "general" : "portfolio") }, BACKHOST + "/aspirantSubmit");
-          //       if (typeof aspid !== "string") {
-          //         window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
-          //         window.location.reload();
-          //       }
-          //       homeliaisonAnalytics({
-          //         page: instance.pageName,
-          //         standard: instance.firstPageViewTime,
-          //         action: generalMode ? "aspirantSubmit" : "aspirantPortfolioSend",
-          //         data: {
-          //           aspid,
-          //           date: dateToString(new Date(), true),
-          //         },
-          //       }).then(() => {
-          //         document.body.removeChild(box);
-          //         document.body.removeChild(back);
-          //         grayLoading = instance.mother.whiteProgressLoading();
-          //         formData = new FormData();
-          //         formData.enctype = "multipart/form-data";
-          //         formData.append("name", name);
-          //         formData.append("aspid", aspid);
-          //         cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
-          //         for (let i = 0; i < instance.fileInput.files.length; i++) {
-          //           if (!cancelPhoto.includes(i)) {
-          //             formData.append("upload0", instance.fileInput.files[i]);
-          //           }
-          //         }
-          //         return ajaxForm(formData, BRIDGEHOST + "/aspirantBinary", grayLoading.progress.firstChild);
-          //       }).then(() => {
-          //         grayLoading.remove();
-          //         GeneralJs.scrollTo(window, 0);
-          //         if (generalMode) {
-          //           window.alert("신청이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
-          //         } else {
-          //           window.alert("전송이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
-          //         }
-          //         selfHref(FRONTHOST);
-          //       }).catch((err) => {
-          //         window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
-          //         window.location.reload();
-          //       });
+          if (boo) {
+            instance.mother.certificationBox(name, phone, async function (back, box) {
+              try {
+                const { aspid } = await ajaxJson({ map, mode: (generalMode ? "general" : "portfolio") }, BACKHOST + "/aspirantSubmit");
+                if (typeof aspid !== "string") {
+                  window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                  window.location.reload();
+                }
+                homeliaisonAnalytics({
+                  page: instance.pageName,
+                  standard: instance.firstPageViewTime,
+                  action: generalMode ? "aspirantSubmit" : "aspirantPortfolioSend",
+                  data: {
+                    aspid,
+                    date: dateToString(new Date(), true),
+                  },
+                }).then(() => {
+                  document.body.removeChild(box);
+                  document.body.removeChild(back);
+                  grayLoading = instance.mother.whiteProgressLoading();
+                  formData = new FormData();
+                  formData.enctype = "multipart/form-data";
+                  formData.append("name", name);
+                  formData.append("aspid", aspid);
+                  cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
+                  for (let i = 0; i < instance.fileInput.files.length; i++) {
+                    if (!cancelPhoto.includes(i)) {
+                      formData.append("upload0", instance.fileInput.files[i]);
+                    }
+                  }
+                  return ajaxForm(formData, BRIDGEHOST + "/aspirantBinary", grayLoading.progress.firstChild);
+                }).then(() => {
+                  grayLoading.remove();
+                  GeneralJs.scrollTo(window, 0);
+                  if (generalMode) {
+                    window.alert("신청이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
+                  } else {
+                    window.alert("전송이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
+                  }
+                  selfHref(FRONTHOST);
+                }).catch((err) => {
+                  window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                  window.location.reload();
+                });
 
-          //     } catch (e) {
-          //       await ajaxJson({ message: "front aspirantSubmit.certificationBox : " + e.message }, BACKHOST + "/errorLog");
-          //     }
-          //   });
-          // }
+              } catch (e) {
+                await ajaxJson({ message: "front aspirantSubmit.certificationBox : " + e.message }, BACKHOST + "/errorLog");
+              }
+            });
+          }
+          
         }
       }
 

@@ -6,6 +6,8 @@ module.exports = {
         aspid: "",
         designer: "",
         phone: "",
+        gender: "여성",
+        birth: new Date(1800, 0, 1),
         address: "",
         email: "",
         meeting: {
@@ -55,7 +57,8 @@ module.exports = {
               year: 0,
               month: 0
             },
-            detail: "",
+            detail: [],
+            school: [],
           },
           channel: {
             web: [],

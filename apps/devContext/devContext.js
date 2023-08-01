@@ -158,14 +158,27 @@ DevContext.prototype.launching = async function () {
     
 
 
-
+    const selfMongo = this.MONGOC;
+    const db = "miro81";
+    const collection = "aspirant";
+    let rows;
+    let whereQuery, updateQuery;
     
-
-
-
-
     
+    rows = await selfMongo.db(db).collection(collection).find({}).toArray();
 
+    for (let row of rows) {
+      whereQuery = {};
+      whereQuery["aspid"] = row.aspid;
+      updateQuery = {};
+      updateQuery["gender"] = "여성";
+      updateQuery["birth"] = new Date(1800, 0, 1);
+      updateQuery["information.career.detail"] = [];
+      updateQuery["information.career.school"] = [];
+
+      await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+      console.log(whereQuery, updateQuery);
+    }
 
 
 

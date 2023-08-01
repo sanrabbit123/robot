@@ -2898,15 +2898,6 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
       }
       const selfMongo = instance.mongo;
       const { map, mode } = equalJson(req.body);
-      const stringToCareer = function (str) {
-        let temp;
-        temp = str.split(" ");
-        if (temp.length === 2) {
-          return { year: Number(temp[0].replace(/[^0-9]/g, '')), month: Number(temp[1].replace(/[^0-9]/g, '')) };
-        } else {
-          return { year: 0, month: 0 };
-        }
-      }
       let name;
       let phone;
       let email;
@@ -2920,9 +2911,6 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
       let bankname;
       let banknumber;
       let bankto;
-      let interior;
-      let styling;
-      let career;
       let homepage;
       let sns;
       let sessionId;
@@ -2931,11 +2919,19 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
       let message;
       let rows;
       let thisAspirant;
+      let careerDetail, schoolDetail;
+      let gender;
+      let birth;
+      let birth_y, birth_m, birth_d;
 
       if (mode === "general") {
 
         name = map.find((obj) => { return obj.property === "name" });
         phone = map.find((obj) => { return obj.property === "phone" });
+        gender = map.find((obj) => { return obj.property === "gender" });
+        birth_y = map.find((obj) => { return obj.property === "birth_y" });
+        birth_m = map.find((obj) => { return obj.property === "birth_m" });
+        birth_d = map.find((obj) => { return obj.property === "birth_d" });
         email = map.find((obj) => { return obj.property === "email" });
         address0 = map.find((obj) => { return obj.property === "address0" });
         address1 = map.find((obj) => { return obj.property === "address1" });
@@ -2947,14 +2943,13 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         bankname = map.find((obj) => { return obj.property === "bankname" });
         banknumber = map.find((obj) => { return obj.property === "banknumber" });
         bankto = map.find((obj) => { return obj.property === "bankto" });
-        interior = map.find((obj) => { return obj.property === "interior" });
-        styling = map.find((obj) => { return obj.property === "styling" });
-        career = map.find((obj) => { return obj.property === "career" });
+        careerDetail = map.find((obj) => { return obj.property === "careerdetail" });
+        schoolDetail = map.find((obj) => { return obj.property === "schooldetail" });
         homepage = map.find((obj) => { return obj.property === "homepage" });
         sns = map.find((obj) => { return obj.property === "sns" });
         sessionId = map.find((obj) => { return obj.property === "sessionId" });
   
-        if (name === undefined || phone === undefined || email === undefined || address0 === undefined || address1 === undefined || business === undefined || company === undefined || numbers === undefined || start === undefined || representative === undefined || bankname === undefined || banknumber === undefined || bankto === undefined || interior === undefined || styling === undefined || career === undefined || homepage === undefined || sns === undefined || sessionId === undefined) {
+        if (name === undefined || phone === undefined || email === undefined || address0 === undefined || address1 === undefined || business === undefined || company === undefined || numbers === undefined || start === undefined || representative === undefined || bankname === undefined || banknumber === undefined || bankto === undefined || homepage === undefined || sns === undefined || sessionId === undefined) {
           throw new Error("invalid map post");
         }
   
@@ -2969,19 +2964,27 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         address0 = address0.value.trim();
         address1 = address1.value.trim();
         email = email.value.trim();
-  
-  
+        gender = gender.value.trim();
+        birth_y = birth_y.value.trim();
+        if (Number(birth_y) < 1000) {
+          birth_y = "19" + birth_y;
+        }
+        birth_m = birth_m.value.trim();
+        birth_d = birth_d.value.trim();
+        birth = new Date(Number(birth_y), Number(birth_m) - 1, Number(birth_d));
+
         updateQuery = {};
   
         updateQuery["designer"] = name.replace(/[^가-힣]/gi, '')
         updateQuery["phone"] = phone.replace(/[^0-9\-]/gi, '');
+        updateQuery["gender"] = gender;
         updateQuery["email"] = email;
         updateQuery["address"] = address0 + " " + address1;
+        updateQuery["birth"] = birth;
   
         updateQuery["submit.partnership.date"] = new Date();
         updateQuery["submit.partnership.boo"] = true;
         updateQuery["submit.comeFrom"] = "";
-  
   
         if (/개인/gi.test(business.value.trim())) {
           if (/일반/gi.test(business.value.trim())) {
@@ -3008,10 +3011,9 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         updateQuery["information.account.to"] = bankto.value.trim();
         updateQuery["information.account.etc"] = "";
   
-        updateQuery["information.career.interior"] = stringToCareer(interior.value.trim());
-        updateQuery["information.career.styling"] = stringToCareer(/위와 같음/gi.test(styling.value.trim()) ? interior.value.trim() : styling.value.trim());
-        updateQuery["information.career.detail"] = career.value.trim();
-  
+        updateQuery["information.career.detail"] = equalJson(careerDetail.value.trim());
+        updateQuery["information.career.school"] = equalJson(schoolDetail.value.trim());
+
         updateQuery["information.channel.web"] = [];
         updateQuery["information.channel.sns"] = [];
         updateQuery["information.channel.cloud"] = [];
@@ -3045,6 +3047,8 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         message += "문의일 : " + dateToString(new Date()) + "\n";
         message += "성함 : " + updateQuery.designer + "\n";
         message += "연락처 : " + updateQuery.phone + "\n";
+        message += "성별 : " + updateQuery.gender + "\n";
+        message += "생일 : " + dateToString(updateQuery.birth) + "\n";
         message += "이메일 : " + updateQuery.email + "\n";
         message += "주소 : " + updateQuery.address + "\n";
         message += "사업자 분류 : " + updateQuery["information.company.classification"] + "\n";
@@ -3055,9 +3059,6 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         message += "은행명 : " + updateQuery["information.account.bank"] + "\n";
         message += "계좌번호 : " + updateQuery["information.account.number"] + "\n";
         message += "예금주 : " + updateQuery["information.account.to"] + "\n";
-        message += "인테리어 경력 : " + interior.value.trim() + "\n";
-        message += "스타일링 경력 : " + styling.value.trim() + "\n";
-        message += "경력 상세 : " + updateQuery["information.career.detail"] + "\n";
         message += "홈페이지 : " + updateQuery["information.channel.web"].join(", ") + "\n";
         message += "SNS 채널 : " + updateQuery["information.channel.sns"].join(", ") + "\n";
         message += "세션 아이디 : " + sessionId.join(", ");
@@ -6267,336 +6268,6 @@ DataRouter.prototype.rou_post_processConsole = function () {
 
     } catch (e) {
       await logger.error("Console 서버 문제 생김 (rou_post_processConsole): " + e.message);
-      res.send(JSON.stringify({ error: e.message }));
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_designerSubmit = function () {
-  const instance = this;
-  const back = this.back;
-  const address = this.address;
-  const kakao = this.kakao;
-  const ignorePhone = [ "010-2747-3403" ];
-  const { equalJson, requestSystem, dateToString, stringToDate, messageSend } = this.mother;
-  let obj = {};
-  obj.link = [ "/designerSubmit" ];
-  obj.func = async function (req, res, logger) {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      const resultObj = equalJson(req.body);
-      const dictionary = {
-        partnership: { name: "partnership", db: "designerPartnershipRaw", kakao: "designerPartnership", opposite: "presentation", oppositeDb: "designerPresentationRaw" },
-        presentation: { name: "presentation", db: "designerPresentationRaw", kakao: "designerPresentation", opposite: "partnership", oppositeDb: "designerPartnershipRaw" }
-      };
-      const stringToCareer = function (str) {
-        let temp;
-        temp = str.split(" ");
-        if (temp.length === 2) {
-          return { year: Number(temp[0].replace(/[^0-9]/g, '')), month: Number(temp[1].replace(/[^0-9]/g, '')) };
-        } else {
-          return { year: 0, month: 0 };
-        }
-      }
-      const wordingToDate = function (str) {
-        if (str === "기타") {
-          return new Date(1800, 0, 1);
-        } else {
-          const today = new Date();
-          let temp;
-          temp = str.split(" ");
-          if (temp.length >= 4) {
-            return new Date(today.getFullYear(), Number(temp[0].replace(/[^0-9]/g, '')) - 1, Number(temp[1].replace(/[^0-9]/g, '')), Number(temp[3].replace(/[^0-9]/g, '')));
-          } else {
-            return new Date(1800, 0, 1);
-          }
-        }
-      }
-
-      let filteredObj, message;
-      let tempArr;
-      let tempArr0, tempArr1, tempArr2;
-      let already, oppositeExist;
-      let whereQuery, updateQuery;
-      let tempAspirants, tempAspirant;
-
-      filteredObj = {};
-      for (let i in resultObj) {
-        if (i !== "mode") {
-          filteredObj[i] = resultObj[i].replace(/[ㄱ-ㅎㅏ-ㅣ\#\$\%\^\&\*\+\`\=\[\]\{\}\\\|\"\'\;\<\>]/gi, '').replace(/\t/g, ' ').replace(/  /g, ' ').replace(/__space__/g, '\n').trim();
-        }
-      }
-
-      //date parsing
-      filteredObj.date = new Date();
-
-      //address parsing
-      if (filteredObj.address !== undefined && filteredObj.detailAddress !== undefined) {
-        filteredObj.address = filteredObj.address + " " + filteredObj.detailAddress;
-        delete filteredObj.detailAddress;
-      }
-
-      //channel parsing
-      filteredObj.webChannel = [];
-      filteredObj.snsChannel = [];
-      filteredObj.cloudChannel = [];
-      if (filteredObj.channel !== undefined) {
-        tempArr = filteredObj.channel.split("__input__");
-
-        if (tempArr.length > 0) {
-          tempArr0 = tempArr[0].split("__split__");
-          if (tempArr0.length === 1 && tempArr0[0] === '') {
-            filteredObj.webChannel = [];
-          } else {
-            filteredObj.webChannel = tempArr0;
-          }
-        } else {
-          filteredObj.webChannel = [];
-        }
-
-        if (tempArr.length > 1) {
-          tempArr1 = tempArr[1].split("__split__");
-          if (tempArr1.length === 1 && tempArr1[0] === '') {
-            filteredObj.snsChannel = [];
-          } else {
-            filteredObj.snsChannel = tempArr1;
-          }
-        } else {
-          filteredObj.snsChannel = [];
-        }
-
-        if (tempArr.length > 2) {
-          tempArr2 = tempArr[2].split("__split__");
-          if (tempArr2.length === 1 && tempArr2[0] === '') {
-            filteredObj.cloudChannel = [];
-          } else {
-            filteredObj.cloudChannel = tempArr2;
-          }
-        } else {
-          filteredObj.cloudChannel = [];
-        }
-
-        delete filteredObj.channel;
-      }
-
-      if (resultObj.mode === "partnership") {
-
-        filteredObj.status = "조정 필요";
-        filteredObj.meetingTime = "기타";
-
-        message = "새로운 디자이너 파트너십 신청서가 도착했습니다! \n";
-        message += "문의일 : " + dateToString(filteredObj.date) + "\n";
-        message += "성함 : " + filteredObj.designer + "\n";
-        message += "연락처 : " + filteredObj.phone + "\n";
-        message += "이메일 : " + filteredObj.email + "\n";
-        message += "주소 : " + filteredObj.address + "\n";
-        message += "사업자 분류 : " + filteredObj.classification + "\n";
-        message += "회사명 : " + filteredObj.company + "\n";
-        message += "사업자 등록번호 : " + filteredObj.businessNumber + "\n";
-        message += "개업일 : " + filteredObj.startDate + "\n";
-        message += "대표자 성함 : " + filteredObj.representative + "\n";
-        message += "은행명 : " + filteredObj.bankName + "\n";
-        message += "계좌번호 : " + filteredObj.bankAccount + "\n";
-        message += "예금주 : " + filteredObj.bankTo + "\n";
-        message += "기타 사항 : " + filteredObj.bankEtc + "\n";
-        message += "인테리어 경력 : " + filteredObj.interiorCareer + "\n";
-        message += "스타일링 경력 : " + filteredObj.stylingCareer + "\n";
-        message += "경력 상세 : " + filteredObj.careerDetail + "\n";
-        message += "홈페이지 : " + (filteredObj.webChannel.length > 0 ? filteredObj.webChannel.join(", ") : filteredObj.webChannel) + "\n";
-        message += "SNS 채널 : " + (filteredObj.snsChannel.length > 0 ? filteredObj.snsChannel.join(", ") : filteredObj.snsChannel) + "\n";
-        message += "클라우드 : " + (filteredObj.cloudChannel.length > 0 ? filteredObj.cloudChannel.join(", ") : filteredObj.cloudChannel) + "\n";
-        message += "유입 경로 : " + filteredObj.comeFrom;
-
-      } else if (resultObj.mode === "presentation") {
-
-        if (filteredObj.presentationTimes !== "기타") {
-          filteredObj.status = "미팅 대기";
-        } else {
-          filteredObj.status = "조정 필요";
-        }
-
-        message = "새로운 디자이너 설명회 참여 신청서가 도착했습니다!\n";
-        message += "문의일 : " + dateToString(filteredObj.date) + "\n";
-        message += "성함 : " + filteredObj.designer + "\n";
-        message += "연락처 : " + filteredObj.phone + "\n";
-        message += "이메일 : " + filteredObj.email + "\n";
-        message += "주소 : " + filteredObj.address + "\n";
-        message += "설명회 신청 시간 : " + filteredObj.presentationTimes + "\n";
-        message += "홈페이지 : " + (filteredObj.webChannel.length > 0 ? filteredObj.webChannel.join(", ") : filteredObj.webChannel) + "\n";
-        message += "SNS 채널 : " + (filteredObj.snsChannel.length > 0 ? filteredObj.snsChannel.join(", ") : filteredObj.snsChannel) + "\n";
-        message += "클라우드 : " + (filteredObj.cloudChannel.length > 0 ? filteredObj.cloudChannel.join(", ") : filteredObj.cloudChannel) + "\n";
-        message += "유입 경로 : " + filteredObj.comeFrom;
-
-      } else if (resultObj.mode === "portfolio") {
-
-        message = filteredObj.designer + " 디자이너님이 추가 포트폴리오를 전송하셨습니다!";
-
-      }
-
-      if (resultObj.mode !== "portfolio") {
-
-        kakao.sendTalk(dictionary[resultObj.mode].kakao, filteredObj["designer"], filteredObj["phone"]).catch((err) => { console.log(err) });
-
-        whereQuery = { phone: filteredObj["phone"] };
-        already = await back.getAspirantsByQuery(whereQuery);
-
-        updateQuery = {};
-        if (resultObj.mode === "partnership") {
-
-          updateQuery["designer"] = filteredObj.designer;
-          updateQuery["phone"] = filteredObj.phone;
-          updateQuery["email"] = filteredObj.email;
-          updateQuery["address"] = filteredObj.address;
-
-          updateQuery["submit.partnership.date"] = new Date();
-          updateQuery["submit.partnership.boo"] = true;
-          updateQuery["submit.comeFrom"] = filteredObj.comeFrom;
-
-          updateQuery["information.company.classification"] = filteredObj.classification;
-          updateQuery["information.company.name"] = filteredObj.company;
-          updateQuery["information.company.businessNumber"] = filteredObj.businessNumber;
-          updateQuery["information.company.start"] = stringToDate(filteredObj.startDate);
-          updateQuery["information.company.representative"] = filteredObj.representative;
-
-          updateQuery["information.account.bank"] = filteredObj.bankName;
-          updateQuery["information.account.number"] = filteredObj.bankAccount;
-          updateQuery["information.account.to"] = filteredObj.bankTo;
-          updateQuery["information.account.etc"] = filteredObj.bankEtc;
-
-          updateQuery["information.career.interior"] = stringToCareer(filteredObj.interiorCareer);
-          updateQuery["information.career.styling"] = stringToCareer(filteredObj.stylingCareer);
-          updateQuery["information.career.detail"] = filteredObj.careerDetail;
-
-          if (already.length === 0) {
-            updateQuery["information.channel.web"] = filteredObj.webChannel;
-            updateQuery["information.channel.sns"] = filteredObj.snsChannel;
-            updateQuery["information.channel.cloud"] = filteredObj.cloudChannel;
-
-            updateQuery["meeting.status"] = filteredObj.status;
-            updateQuery["meeting.date"] = new Date(1800, 0, 1);
-            updateQuery["submit.firstRequest.date"] = new Date();
-            updateQuery["submit.firstRequest.method"] = "partnership";
-            if (!ignorePhone.includes(filteredObj.phone)) {
-              await back.createAspirant(updateQuery);
-            } else {
-              console.log(updateQuery);
-            }
-          } else {
-            if (already[0].information.channel.web.length <= filteredObj.webChannel.length) {
-              updateQuery["information.channel.web"] = filteredObj.webChannel;
-            }
-            if (already[0].information.channel.sns.length <= filteredObj.snsChannel.length) {
-              updateQuery["information.channel.sns"] = filteredObj.snsChannel;
-            }
-            if (already[0].information.channel.cloud.length <= filteredObj.cloudChannel.length) {
-              updateQuery["information.channel.cloud"] = filteredObj.cloudChannel;
-            }
-            if (!ignorePhone.includes(filteredObj.phone)) {
-              await back.updateAspirant([ whereQuery, updateQuery ]);
-            } else {
-              console.log([ whereQuery, updateQuery ]);
-            }
-          }
-
-        } else {
-
-          updateQuery["designer"] = filteredObj.designer;
-          updateQuery["phone"] = filteredObj.phone;
-          updateQuery["email"] = filteredObj.email;
-          updateQuery["address"] = filteredObj.address;
-
-          updateQuery["submit.presentation.date"] = new Date();
-          updateQuery["submit.presentation.boo"] = true;
-          updateQuery["submit.comeFrom"] = filteredObj.comeFrom;
-
-          if (already.length === 0) {
-            updateQuery["information.channel.web"] = filteredObj.webChannel;
-            updateQuery["information.channel.sns"] = filteredObj.snsChannel;
-            updateQuery["information.channel.cloud"] = filteredObj.cloudChannel;
-
-            updateQuery["meeting.status"] = filteredObj.status;
-            updateQuery["meeting.date"] = wordingToDate(filteredObj.presentationTimes);
-            updateQuery["submit.firstRequest.date"] = new Date();
-            updateQuery["submit.firstRequest.method"] = "presentation";
-            if (!ignorePhone.includes(filteredObj.phone)) {
-              await back.createAspirant(updateQuery);
-            } else {
-              console.log(updateQuery);
-            }
-          } else {
-            if (already[0].information.channel.web.length <= filteredObj.webChannel.length) {
-              updateQuery["information.channel.web"] = filteredObj.webChannel;
-            }
-            if (already[0].information.channel.sns.length <= filteredObj.snsChannel.length) {
-              updateQuery["information.channel.sns"] = filteredObj.snsChannel;
-            }
-            if (already[0].information.channel.cloud.length <= filteredObj.cloudChannel.length) {
-              updateQuery["information.channel.cloud"] = filteredObj.cloudChannel;
-            }
-            if (filteredObj.presentationTimes !== "기타") {
-              updateQuery["meeting.status"] = filteredObj.status;
-              updateQuery["meeting.date"] = wordingToDate(filteredObj.presentationTimes);
-            }
-            if (!ignorePhone.includes(filteredObj.phone)) {
-              await back.updateAspirant([ whereQuery, updateQuery ]);
-            } else {
-              console.log([ whereQuery, updateQuery ]);
-            }
-          }
-        }
-
-        if (!ignorePhone.includes(filteredObj.phone)) {
-          await messageSend({ text: message, channel: "#300_designer" });
-
-          tempAspirants = await back.getAspirantsByQuery(whereQuery);
-
-        } else {
-          await messageSend({ text: message, channel: "#error_log" });
-        }
-
-      } else if (resultObj.mode === "portfolio") {
-
-        whereQuery = { phone: filteredObj["phone"] };
-        already = await back.getAspirantsByQuery(whereQuery);
-
-        updateQuery = {};
-
-        if (already.length > 0) {
-          if (already[0].information.channel.web.length <= filteredObj.webChannel.length) {
-            updateQuery["information.channel.web"] = filteredObj.webChannel;
-          }
-          if (already[0].information.channel.sns.length <= filteredObj.snsChannel.length) {
-            updateQuery["information.channel.sns"] = filteredObj.snsChannel;
-          }
-          if (already[0].information.channel.cloud.length <= filteredObj.cloudChannel.length) {
-            updateQuery["information.channel.cloud"] = filteredObj.cloudChannel;
-          }
-          if (!ignorePhone.includes(filteredObj.phone)) {
-            await instance.back.updateAspirant([ whereQuery, updateQuery ]);
-          } else {
-            console.log([ whereQuery, updateQuery ]);
-          }
-        }
-
-        if (!ignorePhone.includes(filteredObj.phone)) {
-          await messageSend({ text: message, channel: "#300_designer" });
-        } else {
-          await messageSend({ text: message, channel: "#error_log" });
-        }
-
-      }
-
-      res.send(JSON.stringify({ message: "success" }));
-
-    } catch (e) {
-      await logger.error("Console 서버 문제 생김 (rou_post_designerSubmit): " + e.message);
-      console.log(e);
       res.send(JSON.stringify({ error: e.message }));
     }
   }
