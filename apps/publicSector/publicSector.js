@@ -51,8 +51,8 @@ PublicSector.prototype.staticRender = async function () {
       await shellExec(`mkdir`, [ staticDir ]);
     }
 
-    svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
-    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
+    svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/svgTong.js` ]);
+    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${process.cwd()}/apps/dataConsole/router/source/general/general.js` ]);
     publicGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
     trapString = await this.back.setAjaxAuthorization();

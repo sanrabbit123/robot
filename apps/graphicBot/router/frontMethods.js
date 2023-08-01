@@ -1,7 +1,7 @@
 const FrontMethods = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   this.mother = new Mother();
-  this.generalPath = `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js`;
+  this.generalPath = `${process.cwd()}/apps/abstractNode/source/general.js`;
 }
 
 FrontMethods.prototype.addFrontMethods = async function () {

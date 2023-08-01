@@ -264,32 +264,6 @@ Clown.prototype.portfolioFilter = function (boo, clientName, apartName, designer
   }
 }
 
-Clown.prototype.frontSource = function (argv) {
-  const AiFront = require(process.cwd() + "/apps/contentsMaker/aiFront.js");
-  let fobot = new AiFront();
-  fobot.front_maker(argv);
-}
-
-Clown.prototype.frontTest = async function () {
-  try {
-    const FrontMaker = require(process.cwd() + "/apps/frontMaker/frontMaker.js");
-    let fobot = new FrontMaker();
-    await fobot.totalUpdate(true);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Clown.prototype.frontUpdate = async function () {
-  try {
-    const FrontMaker = require(process.cwd() + "/apps/frontMaker/frontMaker.js");
-    let fobot = new FrontMaker();
-    await fobot.totalUpdate(false);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Clown.prototype.logConnect = async function () {
   try {
     const LogConsole = require(process.cwd() + "/apps/logConsole/logConsole.js");
@@ -848,31 +822,6 @@ const MENU = {
   request: async function () {
     try {
       await robot.requestMaker(process.argv[3]);
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  front: async function () {
-    try {
-      await robot.frontTest();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  frontsource: async function () {
-    try {
-      if (process.argv[3] !== undefined) {
-        robot.frontSource(process.argv[3].replace(/-/g, ''));
-      } else {
-        robot.frontSource("general");
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  frontUpdate: async function () {
-    try {
-      await robot.frontUpdate();
     } catch (e) {
       console.log(e);
     }

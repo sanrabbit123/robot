@@ -243,6 +243,10 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   const variableBarClassName = "variableBarClassName";
   const fileTongClassName = "fileTongClassName";
   const noticeClassName = "noticeClassName";
+  const blockTargetClassName = {
+    career: "careerBlockTargetClassName",
+    school: "schoolBlockTargetClassName",
+  };
   let mainBlock;
   let mainPaddingTop, mainPaddingBottom;
   let contents;
@@ -454,6 +458,8 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   let careerBlockMinus;
   let plusValueCareer;
   let plusBlockEvent;
+  let updateValueCareer;
+  let deleteValueCareer;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -813,6 +819,8 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
   careerBlocksRender = () => {}
   plusValueCareer = () => {}
   plusBlockEvent = () => {}
+  updateValueCareer = () => {}
+  deleteValueCareer = () => {}
 
   barClickEvent = (arr) => {
     const valuesArr = equalJson(JSON.stringify(arr));
@@ -1339,10 +1347,108 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
     this.value = this.value.replace(/[\=\+\?\#\&]/gi, '');
   }
 
-  careerBlocksRender = (value, tong) => {
+  careerBlocksRender = (tong, method = 0) => {
+    const pipe = "&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;";
+    let pureValue;
+    let value;
+    let targetDom;
+    let title;
+    let emptyValue;
+    let endMatrix;
+    let emptyBoo;
+
     cleanChildren(tong);
+
+    value = [];
+    if (method === 0) {
+      title = [
+        "회사",
+        "담당 업무",
+        "기간",
+        "태그",
+      ];
+      emptyValue = [
+        "회사명",
+        "담당 업무 상세",
+        "총 기간",
+        "태그",
+      ];
+
+      targetDom = document.querySelector('.' + blockTargetClassName.career);
+      pureValue = equalJson(targetDom.getAttribute("block"));
+      endMatrix = pureValue.map((obj) => {
+        const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
+        const startDate = obj.date.start;
+        const startWords = (String(obj.date.start.getFullYear()).slice(2) + "." + String(obj.date.start.getMonth() + 1));
+        const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "." + String(obj.date.end.getMonth() + 1));
+        const delta = endDate.valueOf() - startDate.valueOf();
+        const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
+        const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월" + "&nbsp;&nbsp;(" + startWords + " ~ " + endWords + ")";
+        return {
+          title: equalJson(JSON.stringify(title)),
+          value: [
+            obj.company + pipe + obj.team,
+            obj.role,
+            rangeWords,
+            obj.tag,
+          ]
+        };
+      });
+
+      for (let o of endMatrix) {
+        value.push(o);
+      }
+      if (value.length === 0) {
+        value.push({
+          title: equalJson(JSON.stringify(title)),
+          value: emptyValue,
+        });
+        emptyBoo = true;
+      } else {
+        emptyBoo = false;
+      }
+
+    } else if (method === 1) {
+      title = [
+        "학교",
+        "전공",
+        "졸업",
+      ];
+      emptyValue = [
+        "학교명",
+        "전공명",
+        "총 기간",
+      ];
+      targetDom = document.querySelector('.' + blockTargetClassName.school);
+      pureValue = equalJson(targetDom.getAttribute("block"));
+      endMatrix = pureValue.map((obj) => {
+        return {
+          title: title,
+          value: [
+            obj.school,
+            obj.major,
+            ((obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재학중" : dateToString(obj.date.end).split("-").slice(0, 2).join("년 ") + "월"),
+          ]
+        };
+      });
+
+      for (let o of endMatrix) {
+        value.push(o);
+      }
+      if (value.length === 0) {
+        value.push({
+          title: equalJson(JSON.stringify(title)),
+          value: emptyValue,
+        });
+        emptyBoo = true;
+      } else {
+        emptyBoo = false;
+      }
+    }
+
     createNode({
       mother: tong,
+      attribute: { empty: emptyBoo ? "true" : "false" },
       style: {
         display: "block",
         position: "relative",
@@ -1373,11 +1479,22 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           children: factorValue.map((str, index) => {
             const lastBoo = (index === factorValue.length - 1);
             return {
+              attribute: {
+                method: String(method),
+              },
               event: {
                 click: async function (e) {
                   try {
+                    const method = Number(this.getAttribute("method"));
                     const index = Number(this.parentElement.getAttribute("index"));
-                    const updateFunction = plusBlockEvent("create", index, 0);
+                    const emptyBoo = (this.parentElement.parentElement.getAttribute("empty") === "true");
+                    let targetDom;
+                    if (method === 0) {
+                      targetDom = document.querySelector('.' + blockTargetClassName.career);
+                    } else {
+                      targetDom = document.querySelector('.' + blockTargetClassName.school);
+                    }
+                    const updateFunction = plusBlockEvent("update", index, method, targetDom, emptyBoo);
                     await updateFunction.call(this, e);
                   } catch (e) {
                     console.log(e);
@@ -1409,13 +1526,20 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
               mode: "svg",
               attribute: {
                 index: String(index),
+                method: String(method),
               },
               event: {
                 click: async function (e) {
                   try {
                     const index = Number(this.getAttribute("index"));
-
-                    
+                    const method = Number(this.getAttribute("method"));
+                    let targetDom;
+                    if (method === 0) {
+                      targetDom = document.querySelector('.' + blockTargetClassName.career);
+                    } else {
+                      targetDom = document.querySelector('.' + blockTargetClassName.school);
+                    }
+                    await deleteValueCareer(targetDom, index, method);
                   } catch (e) {
                     console.log(e);
                   }
@@ -1435,7 +1559,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         }
       })
     });
-  };
+  }
 
   plusValueCareer = async (matrix, tong, method = 0) => {
     try {
@@ -1447,6 +1571,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           "기간",
           "태그",
         ];
+        const targetDom = document.querySelector('.' + blockTargetClassName.career);
         let company, team, role, start, end;
         let tag;
         let block;
@@ -1469,35 +1594,19 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           date: { start, end }
         };
   
-        original = [];
+        original = equalJson(targetDom.getAttribute("block"));
         original.push(block);
         original.sort((a, b) => { return b.date.start.valueOf() - a.date.start.valueOf() });
-  
-        endMatrix = original.map((obj) => {
-          const endDate = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? new Date() : obj.date.end;
-          const startDate = obj.date.start;
-          const startWords = (String(obj.date.start.getFullYear()).slice(2) + "." + String(obj.date.start.getMonth() + 1));
-          const endWords = (obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재직중" : (String(obj.date.end.getFullYear()).slice(2) + "." + String(obj.date.end.getMonth() + 1));
-          const delta = endDate.valueOf() - startDate.valueOf();
-          const deltaDates = Math.round((((delta / 1000) / 60) / 60) / 24);
-          const rangeWords = String(Math.floor(deltaDates / 365)) + "년 " + String(Math.floor((deltaDates % 365) / 30)) + "개월" + "&nbsp;&nbsp;(" + startWords + " ~ " + endWords + ")";
-          return {
-            title: titleArr,
-            value: [
-              obj.company + pipe + obj.team,
-              obj.role,
-              rangeWords,
-              obj.tag,
-            ]
-          };
-        });
-        careerBlocksRender(endMatrix, tong);
+
+        targetDom.setAttribute("block", JSON.stringify(original));
+        careerBlocksRender(tong, method);
       } else {
         const titleArr = [
           "학교",
           "전공",
           "졸업",
         ];
+        const targetDom = document.querySelector('.' + blockTargetClassName.school);
         let school, major, start, end;
         let block;
         let original;
@@ -1515,28 +1624,131 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           date: { start, end }
         };
   
-        original = [];
+        original = equalJson(targetDom.getAttribute("block"));
         original.push(block);
         original.sort((a, b) => { return b.date.start.valueOf() - a.date.start.valueOf() });
   
-        endMatrix = original.map((obj) => {
-          return {
-            title: titleArr,
-            value: [
-              obj.school,
-              obj.major,
-              ((obj.date.end.valueOf() > (new Date(3000, 0, 1)).valueOf()) ? "재학중" : dateToString(obj.date.end).split("-").slice(0, 2).join("년 ") + "월"),
-            ]
-          };
-        });
-        careerBlocksRender(endMatrix, tong);
+        targetDom.setAttribute("block", JSON.stringify(original));
+        careerBlocksRender(tong, method);
       }
     } catch (e) {
       console.log(e);
     }
   }
 
-  plusBlockEvent = (mode, index = -1, method = 0, tong = null) => {
+  updateValueCareer = async (matrix, tong, index, method = 0) => {
+    try {
+      if (method === 0) {
+        const pipe = "&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;";
+        const titleArr = [
+          "회사",
+          "담당 업무",
+          "기간",
+          "태그",
+        ];
+        const targetDom = document.querySelector('.' + blockTargetClassName.career);
+        let company, team, role, start, end;
+        let tag;
+        let block;
+        let original;
+        let whereQuery, updateQuery;
+        let endMatrix;
+  
+        company = matrix[0][1];
+        team = matrix[1][1];
+        role = matrix[2][1];
+        tag = matrix[3][1];
+        start = matrix[4][1];
+        end = matrix[5][1];
+  
+        block = {
+          company,
+          team,
+          role,
+          tag,
+          date: { start, end }
+        };
+  
+        original = equalJson(targetDom.getAttribute("block"));
+        original.splice(index, 1);
+        original.push(block);
+        original.sort((a, b) => { return b.date.start.valueOf() - a.date.start.valueOf() });
+
+        targetDom.setAttribute("block", JSON.stringify(original));
+        careerBlocksRender(tong, method);
+      } else {
+        const titleArr = [
+          "학교",
+          "전공",
+          "졸업",
+        ];
+        const targetDom = document.querySelector('.' + blockTargetClassName.school);
+        let school, major, start, end;
+        let block;
+        let original;
+        let whereQuery, updateQuery;
+        let endMatrix;
+
+        school = matrix[0][1];
+        major = matrix[1][1];
+        start = matrix[2][1];
+        end = matrix[3][1];
+
+        block = {
+          school,
+          major,
+          date: { start, end }
+        };
+  
+        original = equalJson(targetDom.getAttribute("block"));
+        original.splice(index, 1);
+        original.push(block);
+        original.sort((a, b) => { return b.date.start.valueOf() - a.date.start.valueOf() });
+  
+        targetDom.setAttribute("block", JSON.stringify(original));
+        careerBlocksRender(tong, method);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  deleteValueCareer = async (tong, index, method = 0) => {
+    try {
+      if (method === 0) {
+        const targetDom = document.querySelector('.' + blockTargetClassName.career);
+        let company, team, role, start, end;
+        let tag;
+        let block;
+        let original;
+        let whereQuery, updateQuery;
+        let endMatrix;
+  
+        original = equalJson(targetDom.getAttribute("block"));
+        original.splice(index, 1);
+        original.sort((a, b) => { return b.date.start.valueOf() - a.date.start.valueOf() });
+        targetDom.setAttribute("block", JSON.stringify(original));
+        careerBlocksRender(tong, method);
+      } else {
+        const targetDom = document.querySelector('.' + blockTargetClassName.school);
+        let school, major, start, end;
+        let block;
+        let original;
+        let whereQuery, updateQuery;
+        let endMatrix;
+  
+        original = equalJson(targetDom.getAttribute("block"));
+        original.splice(index, 1);
+        original.sort((a, b) => { return b.date.start.valueOf() - a.date.start.valueOf() });
+        targetDom.setAttribute("block", JSON.stringify(original));
+        careerBlocksRender(tong, method);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  plusBlockEvent = (mode, index = -1, method = 0, tong = null, emptyBoo = false) => {
     let valueTargets;
     if (method === 0) {
       valueTargets = [
@@ -1615,12 +1827,11 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         if (mode === "create") {
           await plusValueCareer(valueMatrix, tong, method);
         } else {
-          // await instance.contents[x].contents[z].updateValue({
-          //   mode: "update",
-          //   index,
-          //   value: valueMatrix,
-          //   tong: this.parentElement.parentElement.parentElement,
-          // }, instance.designer);
+          if (emptyBoo) {
+            await plusValueCareer(valueMatrix, tong, method);
+          } else {
+            await updateValueCareer(valueMatrix, tong, index, method);
+          }
         }
       } catch (e) {
         window.alert("입력을 취소하셨습니다! 처음부터 다시 진행해주세요!");
@@ -3433,6 +3644,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           }
         },
         {
+          mode: "article",
+          class: [ blockTargetClassName.career, inputClassName ],
+          attribute: {
+            block: JSON.stringify([]),
+            property: "careerdetail",
+          },
           style: {
             display: "inline-block",
             verticalAlign: "top",
@@ -3447,21 +3664,9 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         },
       ]
     });
-    tempBlock.children[2].addEventListener("click", plusBlockEvent("create", -1, 0, tempBlock.children[3]));
-    careerBlocksRender([{
-      title: [
-        "회사",
-        "담당 업무",
-        "기간",
-        "태그",
-      ],
-      value: [
-        "회사명",
-        "담당 업무 상세",
-        "총 기간",
-        "태그",
-      ]
-    }], tempBlock.children[3]);
+    tempBlock.children[2].addEventListener("click", plusBlockEvent("create", -1, 0, tempBlock.children[3]), false);
+    careerBlocksRender(tempBlock.children[3], 0);
+
     // 18
     tempBlock = createNode({
       mother: rightBox,
@@ -3525,6 +3730,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           }
         },
         {
+          mode: "article",
+          class: [ blockTargetClassName.school, inputClassName ],
+          attribute: {
+            block: JSON.stringify([]),
+            property: "schooldetail",
+          },
           style: {
             display: "inline-block",
             verticalAlign: "top",
@@ -3539,19 +3750,8 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         },
       ]
     });
-    tempBlock.children[2].addEventListener("click", plusBlockEvent("create", -1, 1, tempBlock.children[3]));
-    careerBlocksRender([{
-      title: [
-        "학교",
-        "전공",
-        "졸업",
-      ],
-      value: [
-        "학교명",
-        "전공명",
-        "총 기간",
-      ]
-    }], tempBlock.children[3]);
+    tempBlock.children[2].addEventListener("click", plusBlockEvent("create", -1, 1, tempBlock.children[3]), false);
+    careerBlocksRender(tempBlock.children[3], 1);
 
     // 20 : margin
     createNode({
@@ -4185,7 +4385,7 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
   const instance = this;
   const inputClassName = "inputClassName";
   const agreeTargetClassName = "agreeTargetClassName";
-  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue, ajaxForm } = GeneralJs;
+  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue, ajaxForm, equalJson } = GeneralJs;
   const { portfolioMode } = this;
   const generalMode = !portfolioMode;
   return async function (e) {
@@ -4295,21 +4495,6 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
                   if (firstDom.value.trim() === '') {
                     throw new Error("예금주를 적어주세요!");
                   }
-                } else if (p === "interior") {
-                  firstDom.value = firstDom.value.trim();
-                  if (firstDom.value.trim() === '') {
-                    throw new Error("인테리어 경력을 적어주세요!");
-                  }
-                } else if (p === "styling") {
-                  firstDom.value = firstDom.value.trim();
-                  if (firstDom.value.trim() === '') {
-                    throw new Error("스타일링 경력을 적어주세요!");
-                  }
-                } else if (p === "career") {
-                  firstDom.value = firstDom.value.trim();
-                  if (firstDom.value.trim() === '') {
-                    throw new Error("경력 상세를 적어주세요!");
-                  }
                 }
   
                 tempObj.value = firstDom.value.replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
@@ -4352,77 +4537,81 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
   
               tempObj.value = firstDom.getAttribute("value");
   
+            } else if (/ARTICLE/gi.test(nodeName)) {
+              tempObj.value = equalJson(firstDom.getAttribute("block"));
             }
   
             map.push(tempObj)
           }
   
-          if (typeof instance.clientSessionId === "string") {
-            map.push({
-              property: "sessionId",
-              value: instance.clientSessionId,
-            });
-          } else {
-            if (typeof window.homeliaisonSessionId === "string") {
-              map.push({
-                property: "sessionId",
-                value: window.homeliaisonSessionId,
-              });
-            } else {
-              window.location.href = FRONTHOST + "/sessionClear.php";
-            }
-          }
-    
-          if (boo) {
-            instance.mother.certificationBox(name, phone, async function (back, box) {
-              try {
-                const { aspid } = await ajaxJson({ map, mode: (generalMode ? "general" : "portfolio") }, BACKHOST + "/aspirantSubmit");
-                if (typeof aspid !== "string") {
-                  window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
-                  window.location.reload();
-                }
-                homeliaisonAnalytics({
-                  page: instance.pageName,
-                  standard: instance.firstPageViewTime,
-                  action: generalMode ? "aspirantSubmit" : "aspirantPortfolioSend",
-                  data: {
-                    aspid,
-                    date: dateToString(new Date(), true),
-                  },
-                }).then(() => {
-                  document.body.removeChild(box);
-                  document.body.removeChild(back);
-                  grayLoading = instance.mother.whiteProgressLoading();
-                  formData = new FormData();
-                  formData.enctype = "multipart/form-data";
-                  formData.append("name", name);
-                  formData.append("aspid", aspid);
-                  cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
-                  for (let i = 0; i < instance.fileInput.files.length; i++) {
-                    if (!cancelPhoto.includes(i)) {
-                      formData.append("upload0", instance.fileInput.files[i]);
-                    }
-                  }
-                  return ajaxForm(formData, BRIDGEHOST + "/aspirantBinary", grayLoading.progress.firstChild);
-                }).then(() => {
-                  grayLoading.remove();
-                  GeneralJs.scrollTo(window, 0);
-                  if (generalMode) {
-                    window.alert("신청이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
-                  } else {
-                    window.alert("전송이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
-                  }
-                  selfHref(FRONTHOST);
-                }).catch((err) => {
-                  window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
-                  window.location.reload();
-                });
+          // if (typeof instance.clientSessionId === "string") {
+          //   map.push({
+          //     property: "sessionId",
+          //     value: instance.clientSessionId,
+          //   });
+          // } else {
+          //   if (typeof window.homeliaisonSessionId === "string") {
+          //     map.push({
+          //       property: "sessionId",
+          //       value: window.homeliaisonSessionId,
+          //     });
+          //   } else {
+          //     window.location.href = FRONTHOST + "/sessionClear.php";
+          //   }
+          // }
 
-              } catch (e) {
-                await ajaxJson({ message: "front aspirantSubmit.certificationBox : " + e.message }, BACKHOST + "/errorLog");
-              }
-            });
-          }
+          console.log(map);
+    
+          // if (boo) {
+          //   instance.mother.certificationBox(name, phone, async function (back, box) {
+          //     try {
+          //       const { aspid } = await ajaxJson({ map, mode: (generalMode ? "general" : "portfolio") }, BACKHOST + "/aspirantSubmit");
+          //       if (typeof aspid !== "string") {
+          //         window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+          //         window.location.reload();
+          //       }
+          //       homeliaisonAnalytics({
+          //         page: instance.pageName,
+          //         standard: instance.firstPageViewTime,
+          //         action: generalMode ? "aspirantSubmit" : "aspirantPortfolioSend",
+          //         data: {
+          //           aspid,
+          //           date: dateToString(new Date(), true),
+          //         },
+          //       }).then(() => {
+          //         document.body.removeChild(box);
+          //         document.body.removeChild(back);
+          //         grayLoading = instance.mother.whiteProgressLoading();
+          //         formData = new FormData();
+          //         formData.enctype = "multipart/form-data";
+          //         formData.append("name", name);
+          //         formData.append("aspid", aspid);
+          //         cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
+          //         for (let i = 0; i < instance.fileInput.files.length; i++) {
+          //           if (!cancelPhoto.includes(i)) {
+          //             formData.append("upload0", instance.fileInput.files[i]);
+          //           }
+          //         }
+          //         return ajaxForm(formData, BRIDGEHOST + "/aspirantBinary", grayLoading.progress.firstChild);
+          //       }).then(() => {
+          //         grayLoading.remove();
+          //         GeneralJs.scrollTo(window, 0);
+          //         if (generalMode) {
+          //           window.alert("신청이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
+          //         } else {
+          //           window.alert("전송이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
+          //         }
+          //         selfHref(FRONTHOST);
+          //       }).catch((err) => {
+          //         window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+          //         window.location.reload();
+          //       });
+
+          //     } catch (e) {
+          //       await ajaxJson({ message: "front aspirantSubmit.certificationBox : " + e.message }, BACKHOST + "/errorLog");
+          //     }
+          //   });
+          // }
         }
       }
 
@@ -4431,430 +4620,6 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
       window.location.reload();
     }
   }
-}
-
-AspirantSubmitJs.prototype.insertPannelBox = function () {
-  const instance = this;
-  const { ea, baseTong, media } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, isIphone } = GeneralJs;
-  let whiteBlock;
-  let style;
-  let blockHeight, blockMarginBottom;
-  let designerButtonTong;
-  let designerButtonBar;
-  let designerButtonBarHead;
-  let designerButton;
-  let designerButtonText;
-  let buttonHeight, buttonWidth;
-  let buttonMargin;
-  let buttonTextTop, buttonTextSize;
-  let headWidth, headVisual;
-  let informationArea;
-  let wordSpacing;
-  let finalBottom;
-  let grayTong, grayTextScroll, grayTextTong;
-  let grayHeight, grayTop, grayTextTop, grayTextLeft, grayTextSize;
-  let buttonOff, buttonOn;
-  let buttonTongHeight, grayButtonHeight;
-  let margin, paddingTop;
-
-  margin = <%% 52, 52, 44, 36, 4.7 %%>;
-  paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
-
-  blockHeight = <%% 820, 820, 820, 820, 820 %%>;
-  blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
-
-  buttonHeight = <%% 47, 48, 48, 40, 8.4 %%>;
-  buttonWidth = <%% 156, 156, 156, 126, 28 %%>;
-  buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
-
-  buttonTextTop = <%% 8, 8, 8, 8, (isIphone() ? 1.1 : 1.3) %%>;
-  buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
-
-  if (desktop) {
-    buttonTextTop = buttonTextTop + (isMac() ? 0 : 1);
-  }
-
-  headWidth = <%% 10, 10, 10, 10, 2 %%>;
-  headVisual = <%% 11, 11, 11, 11, 11 %%>;
-
-  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
-
-  finalBottom = <%% paddingTop + 6, paddingTop + 6, paddingTop + 6, paddingTop + 6, 8 %%>;
-
-  grayHeight = <%% 180, 180, 180, 180, 42 %%>;
-  grayTop = <%% 5, 5, 5, 5, 0 %%>;
-  grayTextTop = <%% 22, 22, 20, 20, 3 %%>;
-  grayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
-  grayTextSize = <%% 12, 12, 10, 10, 2 %%>;
-
-  buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
-  grayButtonHeight = <%% 13, 13, 12, 11, 2.5 %%>;
-
-  buttonOn = {};
-
-  whiteBlock = createNode({
-    mother: this.baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 3) + "px",
-      paddingTop: String(paddingTop) + ea,
-      paddingLeft: String(margin) + ea,
-      paddingRight: String(margin) + ea,
-      width: withOut(margin * 2, ea),
-      height: String(blockHeight) + ea,
-      background: colorChip.white,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-      marginBottom: String(blockMarginBottom) + ea,
-    }
-  });
-
-  [ grayTong, grayTextScroll, grayTextTong ] = createNodes([
-    {
-      mother: whiteBlock,
-      style: {
-        position: "relative",
-        left: String(0) + ea,
-        width: withOut(0 * 2, ea),
-        marginTop: String(grayTop) + ea,
-        marginBottom: String(desktop ? 15 : 2.5) + ea,
-        height: String(grayHeight) + ea,
-        background: colorChip.gray1,
-        borderRadius: String(3) + "px",
-      }
-    },
-    {
-      mother: -1,
-      style: {
-        position: "absolute",
-        top: String(grayTextTop) + ea,
-        left: String(grayTextLeft) + ea,
-        width: withOut(grayTextLeft * 2, ea),
-        height: withOut(grayTextTop * 2, ea),
-        overflow: "scroll",
-      }
-    },
-    {
-      mother: -1,
-      style: {
-        position: "absolute",
-        top: String(0) + ea,
-        left: String(0) + ea,
-        width: String(100) + '%',
-        height: "auto",
-        fontSize: String(grayTextSize) + ea,
-        fontWeight: String(300),
-        lineHeight: String(1.6),
-      }
-    },
-  ]);
-
-  [ buttonTong ] = createNodes([
-    {
-      mother: whiteBlock,
-      attribute: [
-        { toggle: "on" }
-      ],
-      events: [
-        {
-          type: "click",
-          event: function (e) {
-            if (buttonOn.style !== undefined) {
-              if (this.getAttribute("toggle") === "on") {
-                buttonOn.style.opacity = String(0);
-                this.setAttribute("toggle", "off");
-              } else {
-                buttonOn.style.opacity = String(1);
-                this.setAttribute("toggle", "on");
-              }
-            }
-          }
-        }
-      ],
-      style: {
-        position: "relative",
-        left: String(0) + ea,
-        width: withOut(0 * 2, ea),
-        height: String(buttonTongHeight) + ea,
-        cursor: "pointer",
-      }
-    },
-  ]);
-
-  ajaxJson({}, BACKHOST + "/designerProposal_policy").then(function (res) {
-    const { policy, button } = res;
-    let bTags;
-
-    grayTextTong.insertAdjacentHTML("beforeend", policy);
-    bTags = grayTextTong.querySelectorAll("b");
-    for (let b of bTags) {
-      b.style.color = colorChip.black;
-      b.style.fontWeight = String(600);
-    }
-
-    [ buttonOff, buttonOn ] = createNodes([
-      {
-        mother: buttonTong,
-        mode: "svg",
-        source: button.off,
-        style: {
-          position: "absolute",
-          height: String(grayButtonHeight) + ea,
-          right: String(0) + ea,
-          top: String(0) + ea,
-        }
-      },
-      {
-        mother: buttonTong,
-        mode: "svg",
-        source: button.on,
-        style: {
-          position: "absolute",
-          height: String(grayButtonHeight) + ea,
-          right: String(0) + ea,
-          top: String(0) + ea,
-          background: colorChip.white,
-        }
-      },
-    ]);
-
-  }).catch(function (err) {
-    throw new Error(err);
-  });
-
-  createNode({
-    mother: whiteBlock,
-    style: {
-      position: "relative",
-      height: String(buttonHeight) + ea,
-      textAlign: "center",
-      marginTop: desktop ? "" : String(3) + ea,
-    },
-    children: [
-      {
-        class: [ "submitButtonClassName" ],
-        events: [
-          {
-            type: "click",
-            event: instance.finalSubmit(),
-          }
-        ],
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(buttonWidth) + ea,
-          height: String(100) + '%',
-          background: colorChip.gradientGreen,
-          borderRadius: String(5) + "px",
-          cursor: "pointer",
-        },
-        children: [
-          {
-            text: "상담 신청하기",
-            style: {
-              position: "absolute",
-              top: String(buttonTextTop) + ea,
-              fontSize: String(buttonTextSize) + ea,
-              fontWeight: String(400),
-              color: colorChip.white,
-              width: String(100) + '%',
-              textAlign: "center",
-            }
-          }
-        ]
-      }
-    ]
-  });
-
-  whiteBlock.style.paddingBottom = String(finalBottom) + ea;
-  whiteBlock.style.height = "";
-
-}
-
-AspirantSubmitJs.prototype.insertStrongBox = function () {
-  const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
-  const { ea, media, totalContents, standardWidth } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  let speed;
-  let mainHeight;
-  let mainTong;
-  let blockTong;
-  let blockNumber;
-  let tongPaddingLeft;
-  let tongPaddingTop, tongPaddingBottom;
-  let strongContents;
-  let whiteTongPaddingLeft, whiteTongPaddingTop, whiteTongPaddingRight, whiteTongPaddingBottom;
-  let whiteTongTitleSize;
-  let iconWidth;
-  let whiteTongTitleWeight;
-  let whiteTongDescriptionSize;
-  let whiteTongDescriptionWeight;
-  let whiteTongDescriptionMarginTop;
-  let whiteTongDescriptionLineHeight;
-  let iconBottom;
-  let iconRight;
-  let blockMarginBottom;
-
-  if (media[0]) {
-    strongContents = [
-      {
-        title: "디자이너 추천",
-        description: "선호하는 스타일과 역량이 맞는\n디자이너를 추천받을 수 있어요.",
-        icon: "icons0.png",
-      },
-      {
-        title: "홈리에종 케어",
-        description: "예상하지 못한 상황에도 안심하고\n인테리어를 진행할 수 있어요.",
-        icon: "icons1.png",
-      },
-      {
-        title: "원스탑 서비스",
-        description: "시공부터 스타일링까지 원스탑\n서비스를 경험할 수 있어요.",
-        icon: "icons2.png",
-      },
-      {
-        title: "선 기획 후 시공",
-        description: "디자인 선 기획 후 꼭 필요한 시공\n부터 효율적으로 진행할 수 있어요.",
-        icon: "icons3.png",
-      },
-    ]
-  } else {
-    strongContents = [
-      {
-        title: "디자이너 추천",
-        description: "선호하는 스타일이 맞는\n디자이너를 추천받아요.",
-        icon: "icons0.png",
-      },
-      {
-        title: "홈리에종 케어",
-        description: "문제 상황에도 안심하고\n진행할 수 있어요.",
-        icon: "icons1.png",
-      },
-      {
-        title: "원스탑 서비스",
-        description: "시공부터 스타일링까지\n원스탑으로 진행해요.",
-        icon: "icons2.png",
-      },
-      {
-        title: "선 기획 후 시공",
-        description: "디자인 후 꼭 필요한 시공\n부터 진행할 수 있어요.",
-        icon: "icons3.png",
-      },
-    ]
-  }
-
-  speed = <%% 0.8, 0.8, 0.8, 0.8, 0.8 %%>;
-  mainHeight = <%% 240, 240, 240, 240, 40 %%>;
-  margin = <%% 12, 12, 10, 10, 2 %%>;
-  blockNumber = desktop ? strongContents.length : 2;
-
-  tongPaddingLeft = 0;
-  tongPaddingTop = <%% 16, 16, 16, 12, 3 %%>;
-  tongPaddingBottom = <%% 180, 160, 150, 80, 14 %%>;
-
-  whiteTongPaddingLeft = <%% 32, 26, 26, 21, 4 %%>;
-  whiteTongPaddingTop = <%% 21, 18, 18, 15, 3.5 %%>;
-  whiteTongPaddingRight = <%% 84, 50, 50, 42, 5 %%>;
-  whiteTongPaddingBottom = <%% 28, 25, 24, 20, 4 %%>;
-
-  whiteTongTitleSize = <%% 18, 16, 16, 14, 3.5 %%>;
-  whiteTongTitleWeight = <%% 700, 700, 700, 700, 700 %%>;
-
-  whiteTongDescriptionSize = <%% 14, 13, 13, 11, 2.5 %%>;
-  whiteTongDescriptionWeight = <%% 400, 400, 400, 400, 400 %%>;
-  whiteTongDescriptionMarginTop = <%% 7, 7, 5, 5, 1.2 %%>;
-  whiteTongDescriptionLineHeight = <%% 1.55, 1.55, 1.55, 1.55, 1.55 %%>;
-
-  iconWidth = <%% 24, 24, 24, 18, 5 %%>;
-  iconBottom = <%% 32, 28, 28, 24, 4.8 %%>;
-  iconRight = <%% 28, 20, 20, 18, 2.8 %%>;
-
-  blockMarginBottom = <%% 3, 3, 3, 3, 2 %%>;
-
-  mainTong = createNode({
-    mother: totalContents,
-    style: {
-      display: "block",
-      position: "relative",
-      animation: "justfadeinoriginal " + String(speed) + "s ease forwards",
-    },
-  });
-
-  blockTong = createNode({
-    mother: mainTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String((standardWidth - (tongPaddingLeft * 2)) + margin) + ea,
-      paddingTop: String(tongPaddingTop) + ea,
-      paddingBottom: String(tongPaddingBottom) + ea,
-      left: "calc(50% - " + String((standardWidth - (tongPaddingLeft * 2)) / 2) + ea + ")",
-    }
-  });
-
-  for (let i = 0; i < strongContents.length; i++) {
-    createNode({
-      mother: blockTong,
-      style: {
-        display: "inline-block",
-        position: "relative",
-        width: "calc(calc(calc(100% - " + String(margin * blockNumber) + ea + ") / " + String(blockNumber) + ") - " + String(whiteTongPaddingLeft + whiteTongPaddingRight) + ea + ")",
-        paddingTop: String(whiteTongPaddingTop) + ea,
-        paddingLeft: String(whiteTongPaddingLeft) + ea,
-        paddingRight: String(whiteTongPaddingRight) + ea,
-        paddingBottom: String(whiteTongPaddingBottom) + ea,
-        marginRight: String(margin) + ea,
-        borderRadius: String(5) + "px",
-        background: colorChip.white,
-        boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
-        marginBottom: desktop ? "" : String(blockMarginBottom) + ea,
-      },
-      children: [
-        {
-          text: strongContents[i].title,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: (isMac() || mobile ? "" : String(2) + ea),
-            fontSize: String(whiteTongTitleSize) + ea,
-            fontWeight: String(whiteTongTitleWeight),
-            color: colorChip.black,
-          }
-        },
-        {
-          text: strongContents[i].description,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: (isMac() || mobile ? "" : String(2) + ea),
-            marginTop: String(whiteTongDescriptionMarginTop) + ea,
-            fontSize: String(whiteTongDescriptionSize) + ea,
-            fontWeight: String(whiteTongDescriptionWeight),
-            lineHeight: String(whiteTongDescriptionLineHeight),
-            color: colorChip.black,
-          }
-        },
-        {
-          mode: "img",
-          attribute: {
-            src: (FRONTHOST + "/middle/index") + "/" + strongContents[i].icon,
-          },
-          style: {
-            position: "absolute",
-            bottom: String(iconBottom) + ea,
-            right: String(iconRight) + ea,
-            width: String(iconWidth) + ea,
-            height: "auto",
-          }
-        }
-      ]
-    });
-  }
-
 }
 
 AspirantSubmitJs.prototype.launching = async function (loading) {

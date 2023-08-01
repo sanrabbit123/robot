@@ -143,8 +143,8 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     backString = "const BACKHOST = \"" + BACKHOST + "\";";
     secondString = "const SECONDHOST = \"" + SECONDHOST + "\";";
     officeString = "const FILEHOST = \"" + FILEHOST + "\";";
-    svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
-    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
+    svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/svgTong.js` ]);
+    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
 
     //write local js
@@ -353,9 +353,9 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     secondString = "const SECONDHOST = \"" + SECONDHOST + "\";";
     frontWebString = "const FRONTHOST = \"" + FRONTHOST + "\";";
     officeString = "const FILEHOST = \"" + FILEHOST + "\";";
-    svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
+    svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/svgTong.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
-    polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);
+    polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/polyfill.js` ]);
 
     //write local js
     console.log(`set middle target :`, staticDirList);
@@ -387,7 +387,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       moduleBoo = meta.module;
 
       //set browser js
-      generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
+      generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
 
       execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/middleExec.js` ]);
       execString = execString.replace(/\/<%name%>\//, (name.slice(0, 1).toUpperCase() + name.slice(1)));

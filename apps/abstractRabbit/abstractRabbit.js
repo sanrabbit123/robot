@@ -29,8 +29,8 @@ AbstractRabbit.prototype.renderStatic = async function (staticFolder) {
     console.log(`set static`);
 
     //set general js
-    svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
-    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
+    svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/svgTong.js` ]);
+    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/abstractNode/source/general.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.console}/router/source/general/general.js` ]);
     rabbitGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
 
