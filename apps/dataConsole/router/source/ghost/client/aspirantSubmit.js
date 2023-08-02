@@ -4078,6 +4078,89 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
         },
       ]
     });
+
+    // 24 : margin
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+        height: String(moduleHeight * marginRatio) + ea,
+      }
+    });
+
+    // 25
+    createNode({
+      mother: rightBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(blockMarginBottom) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(circleRadius * 2) + ea,
+            height: String(circleRadius * 2) + ea,
+            marginRight: String(circleBetween) + ea,
+            borderRadius: String(circleRadius) + ea,
+            background: colorChip.green,
+            top: String(circleTop) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          text: "자기 소개",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(mainTop) + ea,
+            fontSize: String(mainSize) + ea,
+            fontWeight: String(mainWeight),
+            color: colorChip.black,
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            marginTop: String(desktop ? 12 : mobileGrayTextAreaTop) + ea,
+            left: String(0) + ea,
+            width: withOut(0, ea),
+            height: String((grayBigHeight * 2)) + ea,
+            background: colorChip.gray1,
+            borderRadius: String(3) + "px",
+          }
+        },
+        {
+          mode: "textarea",
+          class: [ inputClassName ],
+          attribute: {
+            property: "etc",
+          },
+          style: {
+            position: "absolute",
+            top: String(textareaVisualTop + textareaTop) + ea,
+            left: String(0 + textareaLeft) + ea,
+            width: withOut(textareaLeft * 2, ea),
+            height: String((grayBigHeight * 2) - (textareaTop * 1)) + ea,
+            fontSize: String(grayLineBlockFontSize) + ea,
+            fontWeight: String(grayLineBlockFontWeight),
+            border: String(0),
+            background: "transparent",
+            outline: String(0),
+            overflow: "scroll",
+            lineHeight: String(1.6),
+            color: colorChip.black,
+          }
+        }
+      ]
+    });
+
   } else {
     portfolioBlock = createNode({
       mother: rightBox,
@@ -4495,6 +4578,11 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
                   if (firstDom.value.trim() === '') {
                     throw new Error("예금주를 적어주세요!");
                   }
+                } else if (p === "etc") {
+                  firstDom.value = firstDom.value.trim().replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
+                  if (firstDom.value.trim() === '') {
+                    throw new Error("자기 소개를 적어주세요!");
+                  }
                 }
   
                 tempObj.value = firstDom.value.replace(/[\=\+\&\>\<\/\\\{\}\[\]\`]/gi, '');
@@ -4538,7 +4626,23 @@ AspirantSubmitJs.prototype.finalSubmit = function () {
               tempObj.value = firstDom.getAttribute("value");
   
             } else if (/ARTICLE/gi.test(nodeName)) {
-              tempObj.value = JSON.stringify(equalJson(firstDom.getAttribute("block")));
+              try {
+                if (p === "careerdetail") {
+                  if (equalJson(firstDom.getAttribute("block")).length === 0) {
+                    throw new Error("경력 사항을 적어주세요!");
+                  }
+                } else if (p === "schooldetail") {
+                  if (equalJson(firstDom.getAttribute("block")).length === 0) {
+                    throw new Error("학력 사항을 적어주세요!");
+                  }
+                }
+                tempObj.value = JSON.stringify(equalJson(firstDom.getAttribute("block")));
+              } catch (e) {
+                window.alert(e.message);
+                boo = false;
+                scrollTo(window, firstDom, visualSpecific);
+                break;
+              }
             }
   
             map.push(tempObj)

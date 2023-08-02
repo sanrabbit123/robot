@@ -2923,6 +2923,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
       let gender;
       let birth;
       let birth_y, birth_m, birth_d;
+      let etc;
 
       if (mode === "general") {
 
@@ -2947,6 +2948,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         schoolDetail = map.find((obj) => { return obj.property === "schooldetail" });
         homepage = map.find((obj) => { return obj.property === "homepage" });
         sns = map.find((obj) => { return obj.property === "sns" });
+        etc = map.find((obj) => { return obj.property === "etc" });
         sessionId = map.find((obj) => { return obj.property === "sessionId" });
   
         if (name === undefined || phone === undefined || email === undefined || address0 === undefined || address1 === undefined || business === undefined || company === undefined || numbers === undefined || start === undefined || representative === undefined || bankname === undefined || banknumber === undefined || bankto === undefined || homepage === undefined || sns === undefined || sessionId === undefined) {
@@ -2972,6 +2974,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         birth_m = birth_m.value.trim();
         birth_d = birth_d.value.trim();
         birth = new Date(Number(birth_y), Number(birth_m) - 1, Number(birth_d));
+        etc = etc.value.trim();
 
         updateQuery = {};
   
@@ -3005,7 +3008,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         updateQuery["information.company.businessNumber"] = numbers.value.trim();
         updateQuery["information.company.start"] = stringToDate(start.value.trim());
         updateQuery["information.company.representative"] = representative.value.trim();
-  
+
         updateQuery["information.account.bank"] = bankname.value.trim();
         updateQuery["information.account.number"] = banknumber.value.trim();
         updateQuery["information.account.to"] = bankto.value.trim();
@@ -3013,6 +3016,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
   
         updateQuery["information.career.detail"] = equalJson(careerDetail.value.trim());
         updateQuery["information.career.school"] = equalJson(schoolDetail.value.trim());
+        updateQuery["information.career.about"] = etc;
 
         updateQuery["information.channel.web"] = [];
         updateQuery["information.channel.sns"] = [];
@@ -3061,6 +3065,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         message += "예금주 : " + updateQuery["information.account.to"] + "\n";
         message += "홈페이지 : " + updateQuery["information.channel.web"].join(", ") + "\n";
         message += "SNS 채널 : " + updateQuery["information.channel.sns"].join(", ") + "\n";
+        message += "자기 소개 : " + etc + "\n";
         message += "세션 아이디 : " + sessionId.join(", ");
   
         await messageSend({ text: message, channel: "#301_apply", voice: false });
