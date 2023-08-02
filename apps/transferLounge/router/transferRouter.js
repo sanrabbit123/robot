@@ -540,12 +540,10 @@ TransferRouter.prototype.rou_post_aspirantPortfolio = function () {
           return linkToString("https://" + address.transinfo.host + path);
         });
 
-        console.log(targetImages);
-
         totalImages = totalImages.concat(equalJson(JSON.stringify(targetImages)));
       }
 
-      res.send(JSON.stringify({ link: targetImages }));
+      res.send(JSON.stringify({ link: totalImages }));
 
     } catch (e) {
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_aspirantPortfolio): " + e.message).catch((e) => { console.log(e); });
