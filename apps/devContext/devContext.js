@@ -7615,7 +7615,6 @@ DevContext.prototype.aspirantToDesigner = async function (nameList) {
       let temp = str.split('-');
       return new Date(Number(temp[0]), Number(temp[1].replace(/^0/g, '')) - 1, Number(temp[2].replace(/^0/g, '')));
     }
-
     let whereQuery, updateQuery;
     let aspirants, aspirant;
     let aspidArr;
