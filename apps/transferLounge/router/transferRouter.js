@@ -606,7 +606,7 @@ TransferRouter.prototype.rou_post_aspirantPortfolioDownload = function () {
         commands += `zip ${shellLink(tempConst)}/${tempFolderName}.zip ./*;`;  
         await shellExec(commands);
   
-        path = String(`${tempConst}/${tempFolderName}`).replace(new RegExp("^" + staticConst, "g"), "");
+        path = String(`${tempConst}/${tempFolderName}.zip`).replace(new RegExp("^" + staticConst, "g"), "");
         await shellExec(`rm`, [ `-rf`, `${tempConst}/${tempFolderName}` ]);
 
         res.send(JSON.stringify({ link: linkToString("https://" + address.transinfo.host + path) }));

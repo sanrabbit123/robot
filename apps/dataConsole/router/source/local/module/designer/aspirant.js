@@ -548,7 +548,7 @@ DesignerJs.prototype.aspirantColorSync = async function () {
 DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, stringToLink, variableArray } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, stringToLink, variableArray, downloadFile } = GeneralJs;
   try {
     const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
     const dataArr = await instance.aspirantWhiteData(aspid);
@@ -843,13 +843,14 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
           click: async function (e) {
             try {
               const aspid = this.getAttribute("aspid");
-              const loading = instance.mother.grayLoading();
+              const loading = instance.mother.whiteProgressLoading(null, true);
               const response = await ajaxJson({ aspid, mode: "create" }, BRIDGEHOST + "/aspirantPortfolioDownload", { equal: true });
-
               loading.remove();
-              console.log(response);
+              const loading2 = instance.mother.whiteProgressLoading();
+              await downloadFile(stringToLink(response.link), aspid + "_portfolio" + ".zip", loading2.progress.firstChild);
+              loading2.remove();
 
-
+              console.log(stringToLink(response.link));
 
             } catch (e) {
               console.log(e);
