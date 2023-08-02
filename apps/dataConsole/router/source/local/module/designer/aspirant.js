@@ -833,12 +833,14 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
       let fontTextTop, fontSize, fontBetween, fontWeight;
       let whiteMaker;
       let innerMarginTop;
+      let basePaddingTop;
 
       margin = 30;
       titleHeight = 50;
       innerMargin = 24;
       innerMarginTop = 20;
       overlap = 12;
+      basePaddingTop = 12;
 
       titleTextTop = isMac() ? 2 : 2;
       titleSize = 21;
@@ -875,7 +877,7 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
             top: String(0 + margin + titleHeight) + ea,
             left: String(grayBarWidth + margin) + ea,
             width: withOut((margin * 2) + grayBarWidth + (innerMargin * 2), ea),
-            height: withOut(0 + (margin * 2) + titleHeight + belowHeight + (innerMargin * 2), ea),
+            height: withOut(0 + (margin * 2) + titleHeight + belowHeight + (innerMargin + basePaddingTop), ea),
             background: colorChip.white,
             zIndex: String(zIndex),
             borderBottomLeftRadius: String(5) + "px",
@@ -884,6 +886,7 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
             boxShadow: "0 2px 10px -6px " + colorChip.shadow,
             overflow: "hidden",
             padding: String(innerMargin) + ea,
+            paddingTop: String(basePaddingTop) + ea,
           },
           child: {
             style: {

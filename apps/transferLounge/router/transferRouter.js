@@ -363,7 +363,6 @@ TransferRouter.prototype.rou_post_clientBinary = function () {
               upload1: "preferredPhoto"
             };
             let list, clientFolder;
-            let clientRows;
 
             clientFolder = `${clientConst}/${clientFolderName}`;
 
@@ -448,7 +447,6 @@ TransferRouter.prototype.rou_post_aspirantBinary = function () {
               upload0: "portfolio",
             };
             let list, aspirantFolder;
-            let clientRows;
 
             aspirantFolder = `${aspirantConst}/${aspirantFolderName}`;
 
@@ -498,6 +496,58 @@ TransferRouter.prototype.rou_post_aspirantBinary = function () {
     } catch (e) {
       console.log(e);
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_aspirantBinary 3): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_aspirantPortfolio = function () {
+  const instance = this;
+  const address = this.address;
+  const { fileSystem, shellExec, shellLink, equalJson, linkToString } = this.mother;
+  const { aspirantConst, staticConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/aspirantPortfolio" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.aspid === undefined) {
+        throw new Error("invalid post");
+      }
+      const { aspid } = equalJson(req.body);
+      const folderList = await fileSystem(`readDir`, [ aspirantConst ]);
+      const uploadMapConst = "portfolio";
+      const targetFolders = folderList.filter((str) => { return (new RegExp(aspid, "g").test(str)) }).map((str) => { return `${aspirantConst}/${str}/${uploadMapConst}` });
+      let targetImages;
+      let totalImages;
+
+      totalImages = [];
+      for (let folder of targetFolders) {
+        targetImages = (await fileSystem(`readDir`, [ folder ])).filter((str) => { return str !== ".DS_Store" }).map((str) => { return `${folder}/${global.encodeURIComponent(str)}`; }).map((path) => {
+          const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
+          const targetPathArr = targetPath.split("/");
+          const fileName = targetPathArr.pop();
+          return targetPathArr.split("/").map((str) => { return global.encodeURIComponent(str) }).join("/") + "/" + fileName;
+        }).map((path) => {
+          return linkToString("https://" + address.transinfo.host + path);
+        });
+        totalImages = totalImages.concat(equalJson(JSON.stringify(targetImages)));
+      }
+
+      res.send(JSON.stringify({ link: targetImages }));
+
+    } catch (e) {
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_aspirantPortfolio): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
