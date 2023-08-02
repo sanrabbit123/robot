@@ -533,11 +533,11 @@ TransferRouter.prototype.rou_post_aspirantPortfolio = function () {
 
       totalImages = [];
       for (let folder of targetFolders) {
-        targetImages = (await fileSystem(`readDir`, [ folder ])).filter((str) => { return str !== ".DS_Store" }).map((str) => { return `${folder}/${global.encodeURIComponent(str)}`; }).map((path) => {
+        targetImages = (await fileSystem(`readDir`, [ folder ])).filter((str) => { return str !== ".DS_Store" }).map((str) => { return `${folder}/${global.encodeURI(str)}`; }).map((path) => {
           const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
           const targetPathArr = targetPath.split("/");
           const fileName = targetPathArr.pop();
-          return targetPathArr.map((str) => { return global.encodeURIComponent(str) }).join("/") + "/" + fileName;
+          return targetPathArr.map((str) => { return global.encodeURI(str) }).join("/") + "/" + fileName;
         }).map((path) => {
           return linkToString("https://" + address.transinfo.host + path);
         });
