@@ -32,7 +32,7 @@ const KakaoTalk = function () {
     member: new RegExp(this.ip.member, 'gi'),
   };
   this.token = {
-    office: "7829d9602cd0693e7abb59bef2e04462616452513da0c1e98c8108b0b621bef4076a805d1d33b6ae993704bb1b65cc86e8d4fd70f7a0ce268a46c55374927717IW34u8h3oiyTB1MFh2my8JhoPfLof3wCjoJIKIrB9KcF52LGnlnctws4AvzRxYoxM3sCEnObrDuZ0i76QeJSzA==",
+    office: "b264d72b44dde4663f7a3b6b7e56cd335134bbd62a36c8038f761e11d4b241fdc647a40ac7e658bb63d81efe72c98eefafa6adc423ba5bfa44b2e30ca039f3f1TKi0eIQUIc4hQqCusGbRL+RzNnEAUgUqq4ci5UXFOuLuUipVERMC0jgxPv/cZ3bJkRsv/h331DrNt4PTJckrng==",
     console: "6ad473ee3ee5204be0366f42c5c829fe51422c0ac1e11c47dfdff1260a18c57828b1f24ab9abb734580f2495d1e669daec9bd1fb943758ee404f68aaa38f723684RPfkMpDTdS9t0AHpsuKwzQzEgNLKyAbuAL3qxRi1covI3GKinIvGwEc5l7X2kPN4Rc06NAg2VNS4GsKFpKaQ==",
     python: "2c539b19ee2c6ce7791eaba7dc05d8a1a4083aa158041f3556e8947a341729b3b2f7357771c766d4cf137975419b60d163c83c4f55fba5c0600d5c05c0a43adaC3bcQz6ZvgQdBKVeMpvlUlRVZ7qrCywzicxvsAToUxkwfk+sYs4hwaGK/9Z75CWEuNQCVjlJvQHV4sM3RN7wrg==",
     test: "5a959c082796503b39d3835f213453722b1c28b2c0131c3921564a7443275d5f19a66059c32dd83064d8ab0126a94d8799bc755b04e983eac59166184b14b8f0QAvFhaS5EBT7OfEdK0lCzo1W+3s8uWz5bi3lf4n0tQVmJO1Soth6yPxPvwCzyp8kQH3Yp0a1KeKsB0mnYXYDRg==",
@@ -1595,8 +1595,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       }
     },
     "finalPush": {
-      "name": "드랍시 서비스 안내",
-      "id": "TJ_5864",
+      "name": "드랍시 서비스 안내 수정",
+      "id": "TO_3238",
       "needs": [
         "client",
         "host",
@@ -1604,8 +1604,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       ],
       "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n        ];\n      }",
       "raw": {
-        "templtContent": "안녕하세요, #{client}님!\n홈리에종에 문의주셔서 감사드립니다 :)\n\n유선으로 말씀드린 자세한 서비스 안내 페이지 보내드립니다. 확인해보시고 궁금하신 내용은 문의주세요!\n\n* 홈리에종 서비스 안내\nhttps://#{host}/#{path}.php\n\n\n정해진 시간 내 할 것 많고 알 것 많은 인테리어,\n\n1. 시공부터 스타일링까지 한 번에\n2. 전문 디자이너가 우리 집 맞춤으로 한땀한땀 정성스럽게\n3. 홈리에종의 시스템과 케어로 안정감 있게\n4. 실제 우리 집에 만족스러운 변화를 가져오는\n\n홈리에종과 함께 하세요!",
-        "templtName": "드랍시 서비스 안내",
+        "templtContent": "안녕하세요, #{client}님!\n홈리에종에 문의주셔서 감사드립니다 :)\n\n모바일로도 알 수 있는 자세한 서비스 안내 페이지 보내드립니다. 확인해보시고 궁금하신 내용은 문의주세요!\n\n* 홈리에종 서비스 안내\nhttps://#{host}/#{path}.php\n\n\n정해진 시간 내 할 것 많고 알 것 많은 인테리어,\n\n1. 시공부터 스타일링까지 한 번에\n2. 전문 디자이너가 우리 집 맞춤으로 한땀한땀 정성스럽게\n3. 홈리에종의 시스템과 케어로 안정감 있게\n4. 실제 우리 집에 만족스러운 변화를 가져오는\n\n홈리에종과 함께 하세요!",
+        "templtName": "드랍시 서비스 안내 수정",
         "templateType": "BA",
         "templateEmType": "NONE",
         "templateExtra": "",
@@ -1617,13 +1617,23 @@ KakaoTalk.prototype.templateTong = function (target) {
         "block": "N",
         "dormant": "N",
         "securityFlag": "N",
-        "status": "A",
+        "status": "R",
         "inspStatus": "APR",
         "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
         "buttons": [],
-        "cdate": "2022-08-04 12:53:50",
-        "templtCode": "TJ_5864",
-        "comments": []
+        "cdate": "2023-08-01 11:40:29",
+        "templtCode": "TO_3238",
+        "comments": [
+          {
+            "cdate": "2023-08-02 11:12:37",
+            "name": "검수자",
+            "id": "2755913",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2023-08-02 11:12:37",
+            "status": "APR"
+          }
+        ]
       }
     },
     "designerConsoleRequest": {
