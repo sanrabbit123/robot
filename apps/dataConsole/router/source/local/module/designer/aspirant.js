@@ -572,6 +572,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     let careerBlockInnerMarginSmall;
     let careerBlockSize;
     let blockBottom;
+    let portfolioImages;
 
     blockHeight = 32;
     titleWidth = 180;
@@ -808,6 +809,10 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
 
     }
     
+    portfolioImages = await ajaxJson({ aspid }, BRIDGEHOST + "/aspirantPortfolio", { equal: true });
+
+    console.log(portfolioImages);
+
   } catch (e) {
     console.log(e);
   }

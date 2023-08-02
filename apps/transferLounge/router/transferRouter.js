@@ -537,7 +537,7 @@ TransferRouter.prototype.rou_post_aspirantPortfolio = function () {
           const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
           const targetPathArr = targetPath.split("/");
           const fileName = targetPathArr.pop();
-          return targetPathArr.split("/").map((str) => { return global.encodeURIComponent(str) }).join("/") + "/" + fileName;
+          return targetPathArr.map((str) => { return global.encodeURIComponent(str) }).join("/") + "/" + fileName;
         }).map((path) => {
           return linkToString("https://" + address.transinfo.host + path);
         });
