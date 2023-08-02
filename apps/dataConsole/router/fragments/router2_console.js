@@ -2974,7 +2974,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         birth_m = birth_m.value.trim();
         birth_d = birth_d.value.trim();
         birth = new Date(Number(birth_y), Number(birth_m) - 1, Number(birth_d));
-        etc = etc.value.trim();
+        etc = etc === undefined ? "" : etc.value.trim();
 
         updateQuery = {};
   
