@@ -13,6 +13,7 @@ module.exports = {
         meeting: {
           date: new Date(1800, 0, 1),
           status: "",
+          memo: "",
         },
         calendar: {
           mother: "designerMeeting",
@@ -59,6 +60,7 @@ module.exports = {
             },
             detail: [],
             school: [],
+            about: "",
           },
           channel: {
             web: [],

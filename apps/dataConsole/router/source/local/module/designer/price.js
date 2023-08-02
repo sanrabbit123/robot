@@ -697,16 +697,16 @@ DesignerJs.prototype.priceAllCase = function (remove = false) {
 
                       updateQuery = {};
                       updateQuery["matrix." + String(x) + '.' + String(y)] = finalValue;
-                      await ajaxJson({
-                        mode: "update",
-                        db: "console",
-                        collection: "designerPrice",
-                        whereQuery: { key: key },
-                        updateQuery
-                      }, BACKHOST + "/generalMongo");
-                      instance.price.pick(Math.floor(key / 10), key % 10).matrix[x][y] = finalValue;
-                      self.setAttribute("value", String(finalValue));
-                      self.textContent = String(finalValue);
+                      // await ajaxJson({
+                      //   mode: "update",
+                      //   db: "console",
+                      //   collection: "designerPrice",
+                      //   whereQuery: { key: key },
+                      //   updateQuery
+                      // }, BACKHOST + "/generalMongo");
+                      // instance.price.pick(Math.floor(key / 10), key % 10).matrix[x][y] = finalValue;
+                      // self.setAttribute("value", String(finalValue));
+                      // self.textContent = String(finalValue);
                       for (let dom of removeTargets) {
                         dom.remove();
                       }

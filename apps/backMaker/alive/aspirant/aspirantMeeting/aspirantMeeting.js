@@ -5,12 +5,14 @@ const { DateParse } = require(GENERAL_DIR + "/generator.js");
 const AspirantMeeting = function (json) {
   this.status = json.status;
   this.date = new DateParse(json.date);
+  this.memo = json.memo;
 }
 
 AspirantMeeting.prototype.toNormal = function () {
   let obj = {};
   obj.status = this.status;
   obj.date = this.date.toNormal();
+  obj.memo = this.memo;
   return obj;
 }
 

@@ -145,6 +145,7 @@ const Career = function (json) {
   this.styling = new CareerYearMonth(json.styling);
   this.detail = new CareerDetail(json.detail);
   this.school = new SchoolDetail(json.school);
+  this.about = json.about;
 }
 
 Career.prototype.toNormal = function () {
@@ -153,6 +154,7 @@ Career.prototype.toNormal = function () {
   obj.styling = this.styling.toNormal();
   obj.detail = this.detail.toNormal();
   obj.school = this.school.toNormal();
+  obj.about = this.about;
   return obj;
 }
 

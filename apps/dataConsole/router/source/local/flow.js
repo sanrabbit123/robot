@@ -176,7 +176,7 @@ FlowJs.prototype.calendarRender = async function () {
           title: "체크리스트 신청자용으로 확장",
         },
         date: {
-          start: new Date(2023, 7, 16),
+          start: new Date(2023, 7, 14),
           end: new Date(2023, 7, 18),
         },
       },
