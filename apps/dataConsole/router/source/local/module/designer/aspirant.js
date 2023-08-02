@@ -548,10 +548,11 @@ DesignerJs.prototype.aspirantColorSync = async function () {
 DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, stringToLink, variableArray, downloadFile } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, stringToLink, variableArray, downloadFile, uniqueValue, sleep } = GeneralJs;
   try {
     const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
     const dataArr = await instance.aspirantWhiteData(aspid);
+    const bigPhotoClassName = "bigPhotoClassName";
     const maxColumnsNumber = 9;
     let name;
     let type;
@@ -584,6 +585,13 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     let targetNumberArr;
     let downloadButton;
     let buttonWidth, buttonHeight, buttonTextTop, buttonSize, buttonWeight;
+    let idList;
+    let thisId;
+    let bigPhotoEvent;
+    let heightRatio;
+    let thisWidth;
+    let arrowHeight;
+    let arrowMargin;
 
     blockHeight = 32;
     titleWidth = 180;
@@ -612,7 +620,130 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
 
     imagesNumber = 3;
     imageInnerBetween = 8;
+
+    heightRatio = 0.9;
+
+    arrowHeight = 12;
+    arrowMargin = 20;
   
+    idList = {};
+
+    bigPhotoEvent = function (e) {
+      const self = this;
+      const gs = this.getAttribute("gs");
+      const zIndex = 4;
+      let domList;
+      let thisIndex;
+      let thisHeight;
+      let renderPhoto;
+
+
+      if (gs !== "null") {
+        domList = idList.map((id) => { return document.getElementById(id) });
+        thisIndex = domList.findIndex((dom) => { return dom === self });
+
+        renderPhoto = (index) => {
+          return function (e) {
+            removeByClass(bigPhotoClassName);
+            createNode({
+              mother: totalContents,
+              class: [ bigPhotoClassName ],
+              event: {
+                click: (e) => { removeByClass(bigPhotoClassName) }
+              },
+              style: {
+                display: "block",
+                position: "fixed",
+                top: String(0),
+                left: String(0) + ea,
+                width: withOut(0, ea),
+                height: withOut(0, ea),
+                background: "transparent",
+                zIndex: String(zIndex),
+              }
+            });
+            createNode({
+              mother: totalContents,
+              class: [ bigPhotoClassName ],
+              event: {
+                click: (e) => { removeByClass(bigPhotoClassName) }
+              },
+              style: {
+                display: "block",
+                position: "fixed",
+                top: String(0),
+                left: String(grayBarWidth) + ea,
+                width: withOut(grayBarWidth, ea),
+                height: withOut(belowHeight, ea),
+                background: colorChip.realBlack,
+                opacity: String(0.6),
+                zIndex: String(zIndex),
+              }
+            });
+            thisHeight = (window.innerHeight - belowHeight) * heightRatio;
+            thisWidth = thisHeight / (Number(domList[index].getAttribute("ratio")));
+            createNode({
+              mode: "img",
+              mother: totalContents,
+              class: [ bigPhotoClassName ],
+              attribute: {
+                src: domList[index].getAttribute("src"),
+              },
+              style: {
+                position: "fixed",
+                height: String(thisHeight) + "px",
+                zIndex: String(zIndex),
+                top: "calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 2) - " + String(thisHeight / 2) + "px" + ")",
+                left: "calc(calc(calc(calc(100% - " + String(grayBarWidth) + ea + ") / 2) - " + String(thisWidth / 2) + "px" + ") + " + String(grayBarWidth) + ea + ")",
+                borderRadius: String(5) + "px",
+              }
+            });
+            createNode({
+              mother: totalContents,
+              class: [ bigPhotoClassName ],
+              mode: "svg",
+              source: instance.mother.returnArrow("left", colorChip.white),
+              event: {
+                selectstart: (e) => { e.preventDefault(); },
+                click: renderPhoto(domList[index - 1] === undefined ? domList.length - 1 : index - 1),
+              },
+              style: {
+                display: "block",
+                position: "fixed",
+                top: "calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 2) - " + String(arrowHeight / 2) + "px" + ")",
+                left: String(grayBarWidth + arrowMargin) + ea,
+                width: String(arrowHeight) + ea,
+                zIndex: String(zIndex),
+                cursor: "pointer",
+              }
+            });
+            createNode({
+              mother: totalContents,
+              class: [ bigPhotoClassName ],
+              mode: "svg",
+              source: instance.mother.returnArrow("right", colorChip.white),
+              event: {
+                selectstart: (e) => { e.preventDefault(); },
+                click: renderPhoto(domList[index + 1] === undefined ? 0 : index + 1),
+              },
+              style: {
+                display: "block",
+                position: "fixed",
+                top: "calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 2) - " + String(arrowHeight / 2) + "px" + ")",
+                right: String(arrowMargin) + ea,
+                width: String(arrowHeight) + ea,
+                zIndex: String(zIndex),
+                cursor: "pointer",
+              }
+            });
+          }
+        }
+        
+        renderPhoto(thisIndex)({});
+
+      }
+    }
+
     for (let obj of dataArr) {
       name = obj.name;
       type = obj.type;
@@ -921,16 +1052,23 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     }
 
     num = 0;
+    idList = [];
     for (let link of imageTargets) {
       targetNumberArr = imageTongChildren.map((dom, index) => { return { height: dom.getBoundingClientRect().height, index } });
       targetNumberArr.sort((a, b) => { return a.height - b.height });
       targetNumber = targetNumberArr[0].index;
+      thisId = aspid + "_" + "portfolio" + "_" + uniqueValue("hex");
 
       imageNode = createNode({
+        id: thisId,
         mode: "img",
         mother: imageTongChildren[targetNumber],
         attribute: {
           src: link,
+          gs: "null",
+        },
+        event: {
+          click: bigPhotoEvent,
         },
         style: {
           display: "inline-block",
@@ -940,8 +1078,31 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
           marginBottom: String(imageInnerBetween) + ea,
         }
       });
+
+      idList.push(thisId);
+
       num++;
     }
+
+    setQueue(async () => {
+      try {
+        let domList;
+        domList = idList.map((id) => { return document.getElementById(id) });
+        while (domList.some((dom) => { return dom.getBoundingClientRect().height === 0 })) {
+          await sleep(500);
+          domList = idList.map((id) => { return document.getElementById(id) });
+        }
+        domList.forEach((dom) => {
+          const { width, height } = dom.getBoundingClientRect();
+          dom.setAttribute("width", String(width));
+          dom.setAttribute("height", String(height));
+          dom.setAttribute("gs", (width >= height ? "g" : "s"));
+          dom.setAttribute("ratio", String(height / width));
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }, 500);
 
   } catch (e) {
     console.log(e);
