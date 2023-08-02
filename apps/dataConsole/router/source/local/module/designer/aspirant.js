@@ -833,6 +833,8 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     portfolioImages = await ajaxJson({ aspid }, BRIDGEHOST + "/aspirantPortfolio", { equal: true });
     imageTargets = portfolioImages.link.map((str) => { return stringToLink(str) });
 
+    console.log(imageTargets);
+
     if (imageTargets.length > 0) {
       downloadButton = createNode({
         mother: tong,

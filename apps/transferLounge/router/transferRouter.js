@@ -539,6 +539,9 @@ TransferRouter.prototype.rou_post_aspirantPortfolio = function () {
         }).map((path) => {
           return linkToString("https://" + address.transinfo.host + path);
         });
+
+        console.log(targetImages);
+
         totalImages = totalImages.concat(equalJson(JSON.stringify(targetImages)));
       }
 
@@ -586,16 +589,12 @@ TransferRouter.prototype.rou_post_aspirantPortfolioDownload = function () {
 
       if (mode === "create") {
 
-        console.log(targetFolders);
-
         totalImages = [];
         for (let folder of targetFolders) {
           targetImages = (await fileSystem(`readDir`, [ folder ])).filter((str) => { return str !== ".DS_Store" }).map((str) => { return `${folder}/${str}`; });
           totalImages = totalImages.concat(equalJson(JSON.stringify(targetImages)));
         }
   
-        console.log(totalImages);
-
         if (await fileSystem(`exist`, [ `${tempConst}/${tempFolderName}` ])) {
           await shellExec(`rm`, [ `-rf`, `${tempConst}/${tempFolderName}` ]);
         }
