@@ -833,8 +833,6 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     portfolioImages = await ajaxJson({ aspid }, BRIDGEHOST + "/aspirantPortfolio", { equal: true });
     imageTargets = portfolioImages.link.map((str) => { return stringToLink(str) });
 
-    console.log(imageTargets);
-
     if (imageTargets.length > 0) {
       downloadButton = createNode({
         mother: tong,
@@ -851,9 +849,8 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
               const loading2 = instance.mother.whiteProgressLoading();
               await downloadFile(stringToLink(response.link), aspid + "_portfolio" + ".zip", loading2.progress.firstChild);
               loading2.remove();
-
-              console.log(stringToLink(response.link));
-
+              const fileName = stringToLink(response.link).split("/")[stringToLink(response.link).split("/").length - 1];
+              await ajaxJson({ aspid, mode: "delete", file: fileName }, BRIDGEHOST + "/aspirantPortfolioDownload", { equal: true });
             } catch (e) {
               console.log(e);
             }

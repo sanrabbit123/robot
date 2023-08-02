@@ -612,6 +612,14 @@ TransferRouter.prototype.rou_post_aspirantPortfolioDownload = function () {
 
         res.send(JSON.stringify({ link: linkToString("https://" + address.transinfo.host + path) }));
 
+      } else if (mode === "delete") {
+
+        const { file } = equalJson(req.body);
+        await shellExec(`rm`, [ `-rf`, `${tempConst}/${file}` ]);
+        res.send(JSON.stringify({ message: "done" }));
+
+      } else {
+        throw new Error("invalid mode");
       }
 
     } catch (e) {
