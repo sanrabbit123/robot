@@ -116,46 +116,13 @@ FlowJs.prototype.calendarRender = async function () {
       },
       {
         contents: {
-          color: colorChip.yellow,
-          description: "",
-          title: "디자이너 경력 데이터 동기화",
-        },
-        date: {
-          start: new Date(2023, 7, 1),
-          end: new Date(2023, 7, 3),
-        },
-      },
-      {
-        contents: {
           color: colorChip.green,
           description: "",
           title: "신청자 신청 페이지 업데이트",
         },
         date: {
-          start: new Date(2023, 7, 2),
-          end: new Date(2023, 7, 4),
-        },
-      },
-      {
-        contents: {
-          color: colorChip.red,
-          description: "",
-          title: "체크리스트 요청 일괄 발송",
-        },
-        date: {
-          start: new Date(2023, 7, 4),
-          end: new Date(2023, 7, 4),
-        },
-      },
-      {
-        contents: {
-          color: colorChip.green,
-          description: "",
-          title: "신청자 안내 페이지 구현",
-        },
-        date: {
-          start: new Date(2023, 7, 7),
-          end: new Date(2023, 7, 11),
+          start: new Date(2023, 6, 31),
+          end: new Date(2023, 7, 2),
         },
       },
       {
@@ -165,8 +132,41 @@ FlowJs.prototype.calendarRender = async function () {
           title: "신청자 제어 콘솔 구현",
         },
         date: {
-          start: new Date(2023, 7, 14),
-          end: new Date(2023, 7, 18),
+          start: new Date(2023, 7, 1),
+          end: new Date(2023, 7, 2),
+        },
+      },
+      {
+        contents: {
+          color: colorChip.green,
+          description: "",
+          title: "신청자 안내 페이지 구현",
+        },
+        date: {
+          start: new Date(2023, 7, 3),
+          end: new Date(2023, 7, 9),
+        },
+      },
+      {
+        contents: {
+          color: colorChip.yellow,
+          description: "",
+          title: "디자이너 경력 데이터 동기화",
+        },
+        date: {
+          start: new Date(2023, 7, 7),
+          end: new Date(2023, 7, 10),
+        },
+      },
+      {
+        contents: {
+          color: colorChip.red,
+          description: "",
+          title: "체크리스트 요청 일괄 발송",
+        },
+        date: {
+          start: new Date(2023, 7, 11),
+          end: new Date(2023, 7, 11),
         },
       },
       {
