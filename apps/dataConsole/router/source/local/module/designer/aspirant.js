@@ -548,7 +548,7 @@ DesignerJs.prototype.aspirantColorSync = async function () {
 DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, stringToLink } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, stringToLink, variableArray } = GeneralJs;
   try {
     const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
     const dataArr = await instance.aspirantWhiteData(aspid);
@@ -573,6 +573,15 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     let careerBlockSize;
     let blockBottom;
     let portfolioImages;
+    let imageTargets;
+    let imageTong;
+    let imageTongPadding;
+    let imagesNumber;
+    let imageInnerBetween;
+    let imageTongChildren;
+    let targetNumber;
+    let imageNode;
+    let targetNumberArr;
 
     blockHeight = 32;
     titleWidth = 180;
@@ -581,6 +590,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     titleWeight = 700;
 
     marginPercentage = 33;
+    imageTongPadding = 16;
 
     careerBlockGrayOuterMargin = <%% 10, 10, 9, 8, 0 %%>;
     careerBlockOuterMargin = <%% 14, 14, 14, 12, 2.5 %%>;
@@ -591,6 +601,9 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     careerBlockSize = <%% 13, 13, 13, 13, 2.5 %%>;
 
     blockBottom = 20;
+
+    imagesNumber = 3;
+    imageInnerBetween = 8;
   
     for (let obj of dataArr) {
       name = obj.name;
@@ -810,8 +823,57 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     }
     
     portfolioImages = await ajaxJson({ aspid }, BRIDGEHOST + "/aspirantPortfolio", { equal: true });
+    imageTargets = portfolioImages.link.map((str) => { return stringToLink(str) });
 
-    console.log(portfolioImages.link.map((str) => { return stringToLink(str) }));
+    imageTong = createNode({
+      mother: tong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(imageTongPadding * 2, ea),
+        background: colorChip.gray1,
+        padding: String(imageTongPadding) + ea,
+        paddingRight: String(imageTongPadding - imageInnerBetween) + ea,
+        borderRadius: String(5) + "px",
+      }
+    });
+
+    imageTongChildren = [];
+    for (let num of variableArray(imagesNumber)) {
+      imageTongChildren.push(createNode({
+        mother: imageTong,
+        style: {
+          display: "inline-block",
+          verticalAlign: "top",
+          position: "relative",
+          marginRight: String(imageInnerBetween) + ea,
+          width: "calc(calc(calc(100% - " + String(imageInnerBetween * (imagesNumber)) + ea + ") - " + String(0) + ea + ") / " + String(imagesNumber) + ")",
+        }
+      }))
+    }
+
+    num = 0;
+    for (let link of imageTargets) {
+      targetNumberArr = imageTongChildren.map((dom, index) => { return { height: dom.getBoundingClientRect().height, index } });
+      targetNumberArr.sort((a, b) => { return a.height - b.height });
+      targetNumber = targetNumberArr[0].index;
+
+      imageNode = createNode({
+        mode: "img",
+        mother: imageTongChildren[targetNumber],
+        attribute: {
+          src: link,
+        },
+        style: {
+          display: "inline-block",
+          verticalAlign: "top",
+          position: "relative",
+          width: withOut(0, ea),
+          marginBottom: String(imageInnerBetween) + ea,
+        }
+      });
+      num++;
+    }
 
   } catch (e) {
     console.log(e);

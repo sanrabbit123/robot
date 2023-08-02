@@ -649,6 +649,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
   let middleState;
   let analyticsData;
   let defaultViewLength;
+  let entireKeywords;
 
   grayBetween = <%% 40, 40, 36, 36, 5 %%>;
 
@@ -721,7 +722,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
 
     if (big) {
       map = [
-        project.process.action,
+        project.process.status,
         serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
         project.name,
         "<b%시작일 : %b>" + dateToString(project.process.contract.form.date.from, false).slice(2),
@@ -732,7 +733,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     } else {
       if (desktop) {
         map = [
-          project.process.action,
+          project.process.status,
           serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
           project.name,
           "<b%시작일 : %b>" + dateToString(project.process.contract.form.date.from, false).slice(2),
@@ -742,7 +743,7 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
       } else {
         map = [
           project.name + " <b%고객님%b>",
-          project.process.action,
+          project.process.status,
           serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
           "선금 : " + (/없음/gi.test(dateToString(project.process.calculation.payments.first.date, false).slice(2)) ? "예정" : dateToString(project.process.calculation.payments.first.date, false).slice(2)),
         ];
@@ -877,10 +878,12 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     }
 
     circleColor = colorChip.deactive;
+    entireKeywords = false;
     if (!total) {
       if (targets.length > defaultViewLength) {
         targets = targets.slice(0, defaultViewLength);
         circleColor = colorChip.green;
+        entireKeywords = true;
       }
     }
 
@@ -1202,9 +1205,10 @@ DesignerBoardJs.prototype.insertProcessBox = function () {
     if (!entireMode) {
       createNode({
         mother: tong,
+        attribute: { entire: entireKeywords ? "true" : "false" },
         event: {
           click: function (e) {
-            setContents(/모두/gi.test(block.firstChild.firstChild.textContent));
+            setContents(this.getAttribute("entire") === "true");
           },
         },
         style: {
@@ -1316,6 +1320,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
   let numbersTop;
   let analyticsData;
   let defaultViewLength;
+  let entireKeywords;
 
   grayBetween = <%% 40, 40, 36, 36, 5 %%>;
 
@@ -1389,7 +1394,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
 
     if (big) {
       map = [
-        project.process.action,
+        project.process.status,
         serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
         project.name,
         "<b%시작일 : %b>" + dateToString(project.process.contract.form.date.from, false).slice(2),
@@ -1400,7 +1405,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
     } else {
       if (desktop) {
         map = [
-          project.process.action,
+          project.process.status,
           serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
           project.name,
           "<b%시작일 : %b>" + dateToString(project.process.contract.form.date.from, false).slice(2),
@@ -1410,7 +1415,7 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
       } else {
         map = [
           project.name + " <b%고객님%b>",
-          project.process.action,
+          project.process.status,
           serviceParsing(project.service).replace(/[a-zA-Z]/gi, '').trim().split(' ').slice(1).join(' '),
           "선금 : " + (/없음/gi.test(dateToString(project.process.calculation.payments.first.date, false).slice(2)) ? "예정" : dateToString(project.process.calculation.payments.first.date, false).slice(2)),
         ];
@@ -1576,10 +1581,12 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
     }
 
     circleColor = colorChip.deactive;
+    entireKeywords = false;
     if (!total) {
       if (targets.length > defaultViewLength) {
         targets = targets.slice(0, defaultViewLength);
         circleColor = colorChip.green;
+        entireKeywords = true;
       }
     }
 
@@ -1872,9 +1879,10 @@ DesignerBoardJs.prototype.insertReleaseBox = function () {
     if (!entireMode) {
       createNode({
         mother: tong,
+        attribute: { entire: entireKeywords ? "true" : "false" },
         event: {
           click: function (e) {
-            setContents(/모두/gi.test(block.firstChild.firstChild.textContent));
+            setContents(this.getAttribute("entire") === "true");
           },
         },
         style: {
