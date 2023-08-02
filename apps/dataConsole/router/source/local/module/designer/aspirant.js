@@ -582,6 +582,8 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     let targetNumber;
     let imageNode;
     let targetNumberArr;
+    let downloadButton;
+    let buttonWidth, buttonHeight, buttonTextTop, buttonSize, buttonWeight;
 
     blockHeight = 32;
     titleWidth = 180;
@@ -591,6 +593,12 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
 
     marginPercentage = 33;
     imageTongPadding = 16;
+
+    buttonWidth = 150;
+    buttonHeight = 30;
+    buttonTextTop = -1;
+    buttonSize = 13;
+    buttonWeight = 700;
 
     careerBlockGrayOuterMargin = <%% 10, 10, 9, 8, 0 %%>;
     careerBlockOuterMargin = <%% 14, 14, 14, 12, 2.5 %%>;
@@ -825,12 +833,70 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     portfolioImages = await ajaxJson({ aspid }, BRIDGEHOST + "/aspirantPortfolio", { equal: true });
     imageTargets = portfolioImages.link.map((str) => { return stringToLink(str) });
 
+    if (imageTargets.length > 0) {
+      downloadButton = createNode({
+        mother: tong,
+        attribute: {
+          aspid
+        },
+        event: {
+          click: async function (e) {
+            try {
+              const aspid = this.getAttribute("aspid");
+              const response = await ajaxJson({ aspid, mode: "create" }, BRIDGEHOST + "/aspirantPortfolioDownload", { equal: true });
+
+
+              console.log(response);
+
+
+
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
+        style: {
+          display: "flex",
+          position: "relative",
+          width: String(100) + '%',
+          height: String(buttonHeight) + ea,
+          justifyContent: "end",
+          alignItems: "center",
+          marginBottom: String(imageInnerBetween) + ea,
+          cursor: "pointer",
+        },
+        child: {
+          style: {
+            display: "inline-flex",
+            position: "relative",
+            width: String(buttonWidth) + ea,
+            height: String(buttonHeight) + ea,
+            background: colorChip.green,
+            borderRadius: String(5) + "px",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          child: {
+            text: "모든 사진 일괄 다운로드",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              top: String(buttonTextTop) + ea,
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(buttonWeight),
+              color: colorChip.white,
+            }
+          }
+        }
+      })
+    }
+
     imageTong = createNode({
       mother: tong,
       style: {
         display: "block",
         position: "relative",
-        width: withOut(imageTongPadding * 2, ea),
+        width: withOut(imageTongPadding + imageTongPadding - imageInnerBetween, ea),
         background: colorChip.gray1,
         padding: String(imageTongPadding) + ea,
         paddingRight: String(imageTongPadding - imageInnerBetween) + ea,
@@ -848,6 +914,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
           position: "relative",
           marginRight: String(imageInnerBetween) + ea,
           width: "calc(calc(calc(100% - " + String(imageInnerBetween * (imagesNumber)) + ea + ") - " + String(0) + ea + ") / " + String(imagesNumber) + ")",
+          borderRadius: String(5) + "px",
         }
       }))
     }
