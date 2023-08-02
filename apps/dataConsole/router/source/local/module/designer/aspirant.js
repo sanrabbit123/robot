@@ -258,8 +258,8 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
 
 DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
   const instance = this;
-  const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, withOut, colorChip, dateToString } = GeneralJs;
+  const { ea, totalContents, grayBarWidth, belowHeight, valueTargetClassName } = this;
+  const { createNode, withOut, colorChip, dateToString, ajaxJson } = GeneralJs;
   try {
     const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
     let dataMatrix;
@@ -362,6 +362,29 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         ].map((str) => {
           return str === aspirant.meeting.status ? 1 : 0;
         }),
+        editable: true,
+        update: async (columns, newValue, aspid) => {
+          try {
+            const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
+            let whereQuery, updateQuery;
+
+            whereQuery = {};
+            whereQuery["aspid"] = aspid;
+
+            updateQuery = {};
+            updateQuery["meeting.status"] = columns.find((str, index) => {
+              return newValue[index] === 1;
+            });
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((d) => { return d.aspid === aspid }).meeting.status = updateQuery["meeting.status"];
+            document.querySelector('.' + aspid).children[1].querySelector('.' + valueTargetClassName).textContent = updateQuery["meeting.status"];
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
       },
       {
         name: "gender",
@@ -548,7 +571,7 @@ DesignerJs.prototype.aspirantColorSync = async function () {
 DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, stringToLink, variableArray, downloadFile, uniqueValue, sleep } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, stringToLink, variableArray, downloadFile, uniqueValue, sleep, equalJson } = GeneralJs;
   try {
     const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
     const dataArr = await instance.aspirantWhiteData(aspid);
@@ -592,6 +615,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     let thisWidth;
     let arrowHeight;
     let arrowMargin;
+    let motherNum;
 
     blockHeight = 32;
     titleWidth = 180;
@@ -744,6 +768,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
       }
     }
 
+    motherNum = 0;
     for (let obj of dataArr) {
       name = obj.name;
       type = obj.type;
@@ -833,29 +858,103 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
 
       } else if (type === "select") {
         
-        num = 0;
-        for (let str of obj.columns) {
-          createNode({
-            mother: motherBlock,
-            style: {
-              display: "inline-block",
-              verticalAlign: "top",
-              position: "relative",
-              width: "calc(" + withOut(titleWidth, ea) + " / " + String(maxColumnsNumber) + ")",
-            },
-            child: {
-              text: str,
+        if (obj.editable === true) {
+          num = 0;
+          for (let str of obj.columns) {
+            createNode({
+              mother: motherBlock,
+              attribute: {
+                toggle: value[num] === 1 ? "on" : "off",
+                mother: String(motherNum),
+                index: String(num),
+                aspid: aspid,
+              },
+              event: {
+                click: async function (e) {
+                  try {
+                    const self = this;
+                    const aspid = this.getAttribute("aspid");
+                    const mother = Number(this.getAttribute("mother"));
+                    const obj = dataArr[mother];
+                    const index = Number(this.getAttribute("index"));
+                    const pastValue = equalJson(JSON.stringify(obj.value));
+                    const length = pastValue.length;
+                    const siblings = [ ...this.parentNode.children ].filter((dom) => { return dom.getAttribute("toggle") !== null });
+                    let newValue;
+  
+                    newValue = (new Array(length)).fill(0, 0);
+                    newValue[index] = 1;
+                    
+                    for (let i = 0; i < length; i++) {
+                      if (newValue[i] === 1) {
+                        siblings[i].firstChild.style.color = colorChip.green;
+                        siblings[i].setAttribute("toggle", "on");
+                      } else {
+                        siblings[i].firstChild.style.color = colorChip.deactive;
+                        siblings[i].setAttribute("toggle", "off");
+                      }
+                    }
+
+                    await obj.update(obj.columns, newValue, aspid);
+                    
+                  } catch (e) {
+                    console.log(e);
+                  }
+                },
+                selectstart: (e) => { e.preventDefault() },
+              },
               style: {
                 display: "inline-block",
                 verticalAlign: "top",
                 position: "relative",
-                fontSize: String(titleSize) + ea,
-                fontWeight: String(value[num] === 1 ? 400 : 200),
-                color: value[num] === 1 ? colorChip.green : colorChip.deactive,
+                width: "calc(" + withOut(titleWidth, ea) + " / " + String(maxColumnsNumber) + ")",
+              },
+              child: {
+                text: str,
+                event: {
+                  selectstart: (e) => { e.preventDefault() },
+                },
+                style: {
+                  display: "inline-block",
+                  verticalAlign: "top",
+                  position: "relative",
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(400),
+                  color: value[num] === 1 ? colorChip.green : colorChip.deactive,
+                  cursor: "pointer",
+                }
               }
-            }
-          });
-          num++;
+            });
+            num++;
+          }
+
+        } else {
+
+          num = 0;
+          for (let str of obj.columns) {
+            createNode({
+              mother: motherBlock,
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                position: "relative",
+                width: "calc(" + withOut(titleWidth, ea) + " / " + String(maxColumnsNumber) + ")",
+              },
+              child: {
+                text: str,
+                style: {
+                  display: "inline-block",
+                  verticalAlign: "top",
+                  position: "relative",
+                  fontSize: String(titleSize) + ea,
+                  fontWeight: String(value[num] === 1 ? 400 : 200),
+                  color: value[num] === 1 ? colorChip.green : colorChip.deactive,
+                }
+              }
+            });
+            num++;
+          }
+
         }
 
       } else if (type === "block") {
@@ -959,6 +1058,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
 
       }
 
+      motherNum++;
     }
     
     portfolioImages = await ajaxJson({ aspid }, BRIDGEHOST + "/aspirantPortfolio", { equal: true });
@@ -2941,7 +3041,7 @@ DesignerJs.prototype.aspirantView = async function () {
     let aspirants;
 
     loading = await this.mother.loadingRun();
-    aspirants = await ajaxJson({ noFlat: true, whereQuery: {} }, "/getAspirants", { equal: true });
+    aspirants = await ajaxJson({ noFlat: true, whereQuery: {} }, BACKHOST + "/getAspirants", { equal: true });
 
     this.aspirants = aspirants;
     this.normalMatrix = null;
