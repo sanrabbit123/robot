@@ -585,7 +585,7 @@ TransferRouter.prototype.rou_post_aspirantPortfolioDownload = function () {
       let path;
 
       if (mode === "create") {
-        
+
         totalImages = [];
         for (let folder of targetFolders) {
           targetImages = (await fileSystem(`readDir`, [ folder ])).filter((str) => { return str !== ".DS_Store" }).map((str) => { return `${folder}/${str}`; });
@@ -606,8 +606,9 @@ TransferRouter.prototype.rou_post_aspirantPortfolioDownload = function () {
         commands += `zip ${shellLink(tempConst)}/${tempFolderName}.zip ./*;`;  
         await shellExec(commands);
   
-        path = String(`${tempConst}/${tempFolderName}`).replace(new RegExp("^" + staticConst, "g"), "")
-  
+        path = String(`${tempConst}/${tempFolderName}`).replace(new RegExp("^" + staticConst, "g"), "");
+        await shellExec(`rm`, [ `-rf`, `${tempConst}/${tempFolderName}` ]);
+
         res.send(JSON.stringify({ link: linkToString("https://" + address.transinfo.host + path) }));
 
       }

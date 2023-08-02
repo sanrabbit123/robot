@@ -843,9 +843,10 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
           click: async function (e) {
             try {
               const aspid = this.getAttribute("aspid");
+              const loading = instance.mother.grayLoading();
               const response = await ajaxJson({ aspid, mode: "create" }, BRIDGEHOST + "/aspirantPortfolioDownload", { equal: true });
 
-
+              loading.remove();
               console.log(response);
 
 
