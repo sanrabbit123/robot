@@ -126,6 +126,12 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         type: "string",
       },
       {
+        title: "응대 메모",
+        width: 400,
+        name: "memo",
+        type: "string",
+      },
+      {
         title: "주소",
         width: 400,
         name: "address",
@@ -208,6 +214,10 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         {
           value: aspirant.phone,
           name: "phone",
+        },
+        {
+          value: aspirant.meeting.memo,
+          name: "memo",
         },
         {
           value: aspirant.address,
@@ -335,6 +345,34 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         value: dateToString(aspirant.submit.partnership.date, true),
       },
       {
+        name: "gender",
+        type: "select",
+        title: "성별",
+        columns: [
+          "여성",
+          "남성"
+        ],
+        value: aspirant.gender === "여성" ? [ 1, 0 ] : [ 0, 1 ],
+      },
+      {
+        name: "birth",
+        type: "string",
+        title: "생일",
+        value: dateToString(aspirant.birth) + " (" + String((new Date()).getFullYear() - aspirant.birth.getFullYear()) + "세)",
+      },
+      {
+        name: "email",
+        type: "string",
+        title: "이메일",
+        value: aspirant.email,
+      },
+      {
+        name: "address",
+        type: "string",
+        title: "주소",
+        value: aspirant.address,
+      },
+      {
         name: "status",
         type: "select",
         columns: [
@@ -387,32 +425,31 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         }
       },
       {
-        name: "gender",
-        type: "select",
-        title: "성별",
-        columns: [
-          "여성",
-          "남성"
-        ],
-        value: aspirant.gender === "여성" ? [ 1, 0 ] : [ 0, 1 ],
-      },
-      {
-        name: "birth",
-        type: "string",
-        title: "생일",
-        value: dateToString(aspirant.birth) + " (" + String((new Date()).getFullYear() - aspirant.birth.getFullYear()) + "세)",
-      },
-      {
-        name: "email",
-        type: "string",
-        title: "이메일",
-        value: aspirant.email,
-      },
-      {
-        name: "address",
-        type: "string",
-        title: "주소",
-        value: aspirant.address,
+        name: "memo",
+        type: "long",
+        title: "응대 메모",
+        value: aspirant.meeting.memo,
+        editable: true,
+        update: async (newValue, aspid) => {
+          try {
+            const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
+            let whereQuery, updateQuery;
+
+            whereQuery = {};
+            whereQuery["aspid"] = aspid;
+
+            updateQuery = {};
+            updateQuery["meeting.memo"] = newValue.trim();
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((d) => { return d.aspid === aspid }).meeting.memo = updateQuery["meeting.memo"];
+            document.querySelector('.' + aspid).children[3].querySelector('.' + valueTargetClassName).textContent = updateQuery["meeting.memo"];
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
       },
       {
         name: "margin",
@@ -499,6 +536,12 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         value: schoolToBlock(aspirant),
       },
       {
+        name: "about",
+        type: "long",
+        title: "자기 소개",
+        value: aspirant.information.career.about,
+      },
+      {
         name: "margin",
         type: "margin",
         title: "",
@@ -576,6 +619,8 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
     const dataArr = await instance.aspirantWhiteData(aspid);
     const bigPhotoClassName = "bigPhotoClassName";
+    const longTextEditClassName = "longTextEditClassName";
+    const longEmptyText = "메모를 클릭하여 입력해주세요.";
     const maxColumnsNumber = 9;
     let name;
     let type;
@@ -616,6 +661,9 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     let arrowHeight;
     let arrowMargin;
     let motherNum;
+    let longMarginBottom;
+    let longLineHeight;
+    let emptyValueBoo;
 
     blockHeight = 32;
     titleWidth = 180;
@@ -650,6 +698,9 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     arrowHeight = 12;
     arrowMargin = 20;
   
+    longMarginBottom = 10;
+    longLineHeight = 1.6;
+
     idList = {};
 
     bigPhotoEvent = function (e) {
@@ -1058,6 +1109,175 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
           });
         }
 
+      } else if (type === "long") {
+
+        if (obj.editable === true) {
+
+          emptyValueBoo = (value.trim() === '');
+          createNode({
+            mother: motherBlock,
+            attribute: {
+              empty: emptyValueBoo ? "true" : "false",
+              value: value.trim(),
+              mother: String(motherNum),
+              aspid: aspid,
+            },
+            event: {
+              click: async function (e) {
+                try {
+                  const emptyValueBoo = (this.getAttribute("empty") === "true");
+                  const value = this.getAttribute("value");
+                  const box = this.getBoundingClientRect();
+                  const motherBox = this.parentNode.getBoundingClientRect();
+                  const mother = Number(this.getAttribute("mother"));
+                  const obj = dataArr[mother];
+                  const aspid = this.getAttribute("aspid");
+                  let thisLeft;
+                  let thisInput;
+
+                  thisLeft = box.left - motherBox.left;
+
+                  createNode({
+                    mother: this.parentNode,
+                    class: [ longTextEditClassName ],
+                    event: {
+                      click: (e) => { removeByClass(longTextEditClassName); }
+                    },
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0) + ea,
+                      height: withOut(0, ea),
+                      width: withOut(0, ea),
+                      background: "transparent",
+                      zIndex: String(1),
+                    }
+                  });
+
+                  thisInput = createNode({
+                    mother: this.parentNode,
+                    class: [ longTextEditClassName ],
+                    style: {
+                      display: "inline-block",
+                      verticalAlign: "top",
+                      position: "absolute",
+                      top: String(0),
+                      left: String(thisLeft) + ea,
+                      height: String(blockHeight) + ea,
+                      width: withOut(titleWidth, ea),
+                      background: colorChip.white,
+                      zIndex: String(1),
+                    },
+                    child: {
+                      mode: "input",
+                      attribute: {
+                        value,
+                        aspid,
+                        mother: String(mother),
+                      },
+                      event: {
+                        keypress: async function (e) {
+                          try {
+                            if (e.key === "Enter") {
+                              this.value = this.value.trim().replace(/[\=\&\+\#\<\>\/\\\n\t]/gi, '').replace(/  /gi, ' ');
+
+                              const mother = Number(this.getAttribute("mother"));
+                              const obj = dataArr[mother];
+                              const aspid = this.getAttribute("aspid");
+                              const newValue = this.value;
+
+                              if (newValue !== "") {
+                                this.parentNode.parentNode.children[1].setAttribute("empty", "false");
+                                this.parentNode.parentNode.children[1].firstChild.style.color = colorChip.black;
+                                this.parentNode.parentNode.children[1].firstChild.textContent = newValue;
+                              } else {
+                                this.parentNode.parentNode.children[1].setAttribute("empty", "true");
+                                this.parentNode.parentNode.children[1].firstChild.style.color = colorChip.deactive;
+                                this.parentNode.parentNode.children[1].firstChild.textContent = longEmptyText;
+                              }
+
+                              this.parentNode.parentNode.children[1].setAttribute("value", newValue);
+
+                              await obj.update(newValue, aspid);
+
+                              removeByClass(longTextEditClassName);
+                            }
+                          } catch (e) {
+                            console.log(e);
+                          }
+                        }
+                      },
+                      style: {
+                        display: "inline-block",
+                        verticalAlign: "top",
+                        position: "relative",
+                        fontSize: String(titleSize) + ea,
+                        fontWeight: String(400),
+                        color: colorChip.green,
+                        width: withOut(0, ea),
+                        lineHeight: String(longLineHeight),
+                        background: colorChip.white,
+                        outline: String(0),
+                        border: String(0),
+                      }
+                    }
+                  }).firstChild;
+
+                  thisInput.focus();
+
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
+            style: {
+              display: "inline-block",
+              verticalAlign: "top",
+              position: "relative",
+              width: withOut(titleWidth, ea),
+            },
+            child: {
+              text: emptyValueBoo ? longEmptyText : value,
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                position: "relative",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(400),
+                color: emptyValueBoo ? colorChip.deactive : colorChip.black,
+                marginBottom: String(longMarginBottom) + ea,
+                lineHeight: String(longLineHeight),
+              }
+            }
+          });
+
+        } else {
+
+          createNode({
+            mother: motherBlock,
+            style: {
+              display: "inline-block",
+              verticalAlign: "top",
+              position: "relative",
+              width: withOut(titleWidth, ea),
+            },
+            child: {
+              text: value,
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                position: "relative",
+                fontSize: String(titleSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                marginBottom: String(longMarginBottom) + ea,
+                lineHeight: String(longLineHeight),
+              }
+            }
+          });
+
+        }
+
       }
 
       motherNum++;
@@ -1190,21 +1410,23 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
       try {
         let domList;
         domList = idList.map((id) => { return document.getElementById(id) });
-        while (domList.some((dom) => { return dom.getBoundingClientRect().height === 0 })) {
-          await sleep(100);
-          domList = idList.map((id) => { return document.getElementById(id) });
+        if (domList.every((dom) => { return dom !== null })) {
+          while (domList.some((dom) => { return dom.getBoundingClientRect().height === 0 })) {
+            await sleep(100);
+            domList = idList.map((id) => { return document.getElementById(id) });
+          }
+          domList.forEach((dom) => {
+            const { width, height } = dom.getBoundingClientRect();
+            dom.setAttribute("width", String(width));
+            dom.setAttribute("height", String(height));
+            dom.setAttribute("gs", (width >= height ? "g" : "s"));
+            dom.setAttribute("ratio", String(height / width));
+          });
         }
-        domList.forEach((dom) => {
-          const { width, height } = dom.getBoundingClientRect();
-          dom.setAttribute("width", String(width));
-          dom.setAttribute("height", String(height));
-          dom.setAttribute("gs", (width >= height ? "g" : "s"));
-          dom.setAttribute("ratio", String(height / width));
-        });
       } catch (e) {
         console.log(e);
       }
-    }, 0);
+    }, 100);
 
   } catch (e) {
     console.log(e);
