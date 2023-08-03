@@ -1911,6 +1911,19 @@ AspirantNoticeJs.prototype.launching = async function (loading) {
     const { returnGet, ajaxJson } = GeneralJs;
     const getObj = returnGet();
 
+    if (typeof getObj.aspid !== "string") {
+      this.aspid = "a2101_aa01s";
+    } else {
+      this.aspid = getObj.aspid;
+    }
+    this.aspirants = await ajaxJson({ whereQuery: { aspid: this.aspid } }, SECONDHOST + "/getAspirants", { equal: true });
+    if (this.aspirants.length > 0) {
+      this.aspirant = this.aspirants[0];
+    } else {
+      this.aspid = "a2101_aa01s";
+      this.aspirants = await ajaxJson({ whereQuery: { aspid: this.aspid } }, SECONDHOST + "/getAspirants", { equal: true });
+      this.aspirant = this.aspirants[0];
+    }
     this.inputClassName = "consultingInput";
 
     await this.mother.ghostClientLaunching({

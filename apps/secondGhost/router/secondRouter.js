@@ -607,7 +607,7 @@ SecondRouter.prototype.rou_post_getDocuments = function () {
   const back = this.back;
   const { equalJson } = this.mother;
   let obj = {};
-  obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getBuilders" ];
+  obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getBuilders", "/getAspirants" ];
   obj.func = async function (req, res, logger) {
     res.set({
       "Content-Type": "application/json",
@@ -644,6 +644,8 @@ SecondRouter.prototype.rou_post_getDocuments = function () {
         rows = await back.getContentsArrByQuery(whereQuery, { selfMongo });
       } else if (req.url === "/getBuilders") {
         rows = await back.getBuildersByQuery(whereQuery, { selfMongo });
+      } else if (req.url === "/getAspirants") {
+        rows = await back.getAspirantsByQuery(whereQuery, { selfMongo });
       }
 
       res.send(JSON.stringify(rows.toNormal()));
