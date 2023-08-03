@@ -137,7 +137,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
   }
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, messageSend, requestSystem } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, messageSend, requestSystem, equalJson } = this.mother;
   const toUpdateQuery = async function (aspirant, contractDay) {
     const today = new Date();
     const thisDesigner = aspirant.designer + " (" + aspirant.aspid + ")";
@@ -168,6 +168,11 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
     }
     updateQuery["information.address"] = [ aspirant.address ];
 
+    //birth
+    if (aspirant.birth.valueOf() > (new Date(1920, 0, 1).valueOf())) {
+      updateQuery["information.birth"] = new Date(JSON.stringify(aspirant.birth).slice(1, -1));
+    }
+
     //web and sns
     updateQuery["information.personalSystem.webPage"] = aspirant.information.channel.web;
     updateQuery["information.personalSystem.sns"] = [];
@@ -184,18 +189,19 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
     }
 
     //career
-    if (aspirant.information.career.styling.year === 0 && aspirant.information.career.styling.month === 0 && aspirant.information.career.interior.year === 0 && aspirant.information.career.interior.month === 0) {
-      await messageSend({ text: thisDesigner + " 디자이너의 경력 사항이 없습니다!", channel: "#300_designer" });
-      return null;
-    }
-    if (aspirant.information.career.styling.year === 0 && aspirant.information.career.styling.month === 0) {
-      today.setMonth(today.getMonth() - ((aspirant.information.career.interior.year * 12) + aspirant.information.career.interior.month));
-      updateQuery["information.business.career.startY"] = today.getFullYear();
-      updateQuery["information.business.career.startM"] = today.getMonth() + 1;
+    if (aspirant.information.career.detail.length > 0 || aspirant.information.career.school.length > 0) {
+      updateQuery["information.business.career.detail"] = equalJson(JSON.stringify(aspirant.information.career.detail));
+      updateQuery["information.business.career.school"] = equalJson(JSON.stringify(aspirant.information.career.school));
     } else {
-      today.setMonth(today.getMonth() - ((aspirant.information.career.styling.year * 12) + aspirant.information.career.styling.month));
-      updateQuery["information.business.career.startY"] = today.getFullYear();
-      updateQuery["information.business.career.startM"] = today.getMonth() + 1;
+      if (aspirant.information.career.styling.year === 0 && aspirant.information.career.styling.month === 0) {
+        today.setMonth(today.getMonth() - ((aspirant.information.career.interior.year * 12) + aspirant.information.career.interior.month));
+        updateQuery["information.business.career.startY"] = today.getFullYear();
+        updateQuery["information.business.career.startM"] = today.getMonth() + 1;
+      } else {
+        today.setMonth(today.getMonth() - ((aspirant.information.career.styling.year * 12) + aspirant.information.career.styling.month));
+        updateQuery["information.business.career.startY"] = today.getFullYear();
+        updateQuery["information.business.career.startM"] = today.getMonth() + 1;
+      }
     }
 
     //account
@@ -275,6 +281,11 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
         designerFolderResponse.date = new Date();
         console.log(designerFolderResponse);
         await back.mongoCreate("folderDesigner", designerFolderResponse, { console: true });
+        await back.mongoCreate("realtimeDesigner", {
+          desid: newDesid,
+          possible: [],
+          projects: [],
+        }, { console: true });
       }
     }
 
