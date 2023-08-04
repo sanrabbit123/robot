@@ -33,6 +33,18 @@ module.exports = {
             date: new Date(1800, 0, 1),
             method: "",
           },
+          documents: {
+            date: new Date(1800, 0, 1),
+            boo: false,
+          },
+          registration: {
+            date: new Date(1800, 0, 1),
+            boo: false,
+          },
+          meeting: {
+            date: new Date(1800, 0, 1),
+            boo: false,
+          },
           comeFrom: "",
         },
         information: {

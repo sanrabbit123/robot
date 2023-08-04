@@ -157,7 +157,53 @@ DevContext.prototype.launching = async function () {
     // 3 delete cron
     
 
-    
+
+    // const selfMongo = this.MONGOC;
+    // const aspirants = await back.getAspirantsByQuery({}, { selfMongo });
+
+    // const db = "miro81";
+    // const collection = "aspirant";
+    // let rows;
+    // let whereQuery, updateQuery;
+
+    // rows = await selfMongo.db(db).collection(collection).find({}).toArray();
+
+    // for (let row of rows) {
+    //   whereQuery = {};
+    //   whereQuery["aspid"] = row.aspid;
+    //   updateQuery = {};
+    //   updateQuery["submit.documents"] = {
+    //     date: new Date(1800, 0, 1),
+    //     boo: false,
+    //   }
+    //   updateQuery["submit.registration"] = {
+    //     date: new Date(1800, 0, 1),
+    //     boo: false,
+    //   }
+    //   updateQuery["submit.meeting"] = {
+    //     date: new Date(1800, 0, 1),
+    //     boo: false,
+    //   }
+
+    //   await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+    //   console.log(whereQuery, updateQuery);
+
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     
