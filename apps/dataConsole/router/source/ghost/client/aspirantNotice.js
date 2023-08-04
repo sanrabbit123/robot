@@ -2092,10 +2092,16 @@ AspirantNoticeJs.prototype.finalSubmit = function () {
       formData.append("identity", identity);
 
       ajaxForm(formData, BRIDGEHOST + "/aspirantDocuments", grayLoading.progress.firstChild).then((res) => {
-
-        console.log(res);
-        
-
+        const { message } = JSON.parse(res);
+        if (message !== "done") {
+          throw new Error("file posting fail");
+        }
+        return ajaxJson({ aspid }, BACKHOST + "/aspirantDocuments", { equal: true });
+      }).then(() => {
+        grayLoading.remove();
+        GeneralJs.scrollTo(window, 0);
+        window.alert("전송이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
+        selfHref(FRONTHOST);
       }).catch((err) => {
         window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
         window.location.reload();
