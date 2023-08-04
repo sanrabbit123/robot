@@ -226,7 +226,7 @@ AspirantNoticeJs.prototype.insertInitBox = function () {
 AspirantNoticeJs.prototype.insertNoticeBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { ea, baseTong, media } = this;
+  const { ea, baseTong, media, aspirant } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker } = GeneralJs;
@@ -242,7 +242,7 @@ AspirantNoticeJs.prototype.insertNoticeBox = function () {
     {
       title: "기본 서류 업로드",
       contents: [
-        "홈리에종에서 활동하기 위해선 <b%통장 사본과 사업자등록증(사업자일 경우), 주민등록증(신분증) 사본%b>이 필요합니다.",
+        "홈리에종에서 활동하기 위해선 <b%통장 사본과 사업자등록증(프리랜서의 경우 주민등록증), 신분증 사본%b>이 필요합니다.",
       ],
     },
     {
@@ -457,10 +457,10 @@ AspirantNoticeJs.prototype.insertNoticeBox = function () {
           },
           {
             text: (desktop ? [
-              "배창규 실장님, 안녕하세요! 홈리에종은 새롭게 인연이 닿은 실장님과",
+              aspirant.designer + " 디자이너님, 안녕하세요! 홈리에종은 새롭게 인연이 닿은 실장님과",
               "홈스타일링 프로젝트를 함께 하게 되어 기대가 매우 큽니다!",
             ] : [
-              "배창규 실장님, 안녕하세요!",
+              aspirant.designer + " 디자이너님, 안녕하세요!",
               "홈리에종은 새롭게 인연이 닿은 실장님과",
               "홈스타일링 프로젝트를 함께",
               "하게 되어 기대가 매우 큽니다!",
@@ -687,6 +687,9 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
   let boxBetween;
   let boxLength;
   let bigSize, bigTextTop;
+  let accountFileChangeEvent;
+  let businessFileChangeEvent;
+  let identityFileChangeEvent;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -741,7 +744,7 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
   linePadding = <%% 12, 12, 12, 12, 12 %%>;
 
-  grayBigHeight = <%% 164, 137, 136, 135, 38 %%>;
+  grayBigHeight = <%% 164, 130, 110, 80, 38 %%>;
 
   boxBetween = <%% 10, 10, 9, 8, 1 %%>;
 
@@ -750,10 +753,46 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
 
   mobileContentsWordingSize = 3.2;
 
-  bigSize = <%% 23, 23, 23, 21, 4.5 %%>;
+  bigSize = <%% 23, 19, 17, 13, 4.5 %%>;
   bigTextTop = <%% -3, -3, -3, -2, -0.3 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
+
+  accountFileChangeEvent = function (e) {
+    if (this.files.length === 0) {
+      this.previousElementSibling.style.background = colorChip.gray1;
+      this.previousElementSibling.firstChild.style.color = colorChip.gray4;
+      this.previousElementSibling.firstChild.textContent = "통장 사본 업로드...";
+    } else {
+      this.previousElementSibling.style.background = colorChip.green;
+      this.previousElementSibling.firstChild.style.color = colorChip.white;
+      this.previousElementSibling.firstChild.textContent = "통장 사본 업로드 완료";
+    }
+  }
+
+  businessFileChangeEvent = function (e) {
+    if (this.files.length === 0) {
+      this.previousElementSibling.style.background = colorChip.gray1;
+      this.previousElementSibling.firstChild.style.color = colorChip.gray4;
+      this.previousElementSibling.firstChild.textContent = "사업자등록증(주민등록증) 업로드...";
+    } else {
+      this.previousElementSibling.style.background = colorChip.green;
+      this.previousElementSibling.firstChild.style.color = colorChip.white;
+      this.previousElementSibling.firstChild.textContent = "사업자등록증(주민등록증) 업로드 완료";
+    }
+  }
+
+  identityFileChangeEvent = function (e) {
+    if (this.files.length === 0) {
+      this.previousElementSibling.style.background = colorChip.gray1;
+      this.previousElementSibling.firstChild.style.color = colorChip.gray4;
+      this.previousElementSibling.firstChild.textContent = "신분증 사본 업로드...";
+    } else {
+      this.previousElementSibling.style.background = colorChip.green;
+      this.previousElementSibling.firstChild.style.color = colorChip.white;
+      this.previousElementSibling.firstChild.textContent = "신분증 사본 업로드 완료";
+    }
+  }
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -838,6 +877,20 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
 
   createNode({
     mother: tong,
+    event: {
+      click: function (e) {
+        instance.accountInput.click();
+      },
+      dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
+      dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
+      dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
+      drop: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        instance.accountInput.files = e.dataTransfer.files;
+        accountFileChangeEvent.call(instance.accountInput, e);
+      }
+    },
     style: {
       display: "inline-flex",
       width: desktop ? "calc(calc(100% - " + String(boxBetween * (boxLength - 1)) + ea + ") / " + String(boxLength) + ")" : withOut(0, ea),
@@ -864,8 +917,41 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
     }
   });
 
+  this.accountInput = createNode({
+    mode: "input",
+    mother: tong,
+    attribute: {
+      type: "file",
+      name: "account",
+      accept: "image/*,  application/pdf",
+      multiple: "false",
+      cancel: JSON.stringify([]),
+    },
+    event: {
+      change: accountFileChangeEvent,
+    },
+    style: {
+      position: "absolute",
+      display: "none",
+    }
+  });
+
   createNode({
     mother: tong,
+    event: {
+      click: function (e) {
+        instance.businessInput.click();
+      },
+      dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
+      dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
+      dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
+      drop: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        instance.businessInput.files = e.dataTransfer.files;
+        businessFileChangeEvent.call(instance.businessInput, e);
+      }
+    },
     style: {
       display: "inline-flex",
       width: desktop ? "calc(calc(100% - " + String(boxBetween * (boxLength - 1)) + ea + ") / " + String(boxLength) + ")" : withOut(0, ea),
@@ -880,7 +966,7 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
       cursor: "pointer",
     },
     child: {
-      text: "사업자등록증 업로드...",
+      text: "사업자등록증(주민등록증) 업로드...",
       style: {
         display: "inline-block",
         position: "relative",
@@ -892,8 +978,41 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
     }
   });
 
+  this.businessInput = createNode({
+    mode: "input",
+    mother: tong,
+    attribute: {
+      type: "file",
+      name: "business",
+      accept: "image/*,  application/pdf",
+      multiple: "false",
+      cancel: JSON.stringify([]),
+    },
+    event: {
+      change: businessFileChangeEvent,
+    },
+    style: {
+      position: "absolute",
+      display: "none",
+    }
+  });
+
   createNode({
     mother: tong,
+    event: {
+      click: function (e) {
+        instance.identityInput.click();
+      },
+      dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
+      dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
+      dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
+      drop: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        instance.identityInput.files = e.dataTransfer.files;
+        identityFileChangeEvent.call(instance.identityInput, e);
+      }
+    },
     style: {
       display: "inline-flex",
       width: desktop ? "calc(calc(100% - " + String(boxBetween * (boxLength - 1)) + ea + ") / " + String(boxLength) + ")" : withOut(0, ea),
@@ -906,7 +1025,7 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
       cursor: "pointer",
     },
     child: {
-      text: "주민등록증 업로드...",
+      text: "신분증 사본 업로드...",
       style: {
         display: "inline-block",
         position: "relative",
@@ -918,7 +1037,24 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
     }
   });
 
-
+  this.identityInput = createNode({
+    mode: "input",
+    mother: tong,
+    attribute: {
+      type: "file",
+      name: "identity",
+      accept: "image/*,  application/pdf",
+      multiple: "false",
+      cancel: JSON.stringify([]),
+    },
+    event: {
+      change: identityFileChangeEvent,
+    },
+    style: {
+      position: "absolute",
+      display: "none",
+    }
+  });
 
 }
 
@@ -1869,9 +2005,9 @@ AspirantNoticeJs.prototype.insertAspirantBox = function () {
     children: [
       {
         class: [ "submitButtonClassName" ],
-        // event: {
-        //   click: instance.finalSubmit()
-        // },
+        event: {
+          click: instance.finalSubmit()
+        },
         style: {
           display: "inline-flex",
           width: String(submitButtonWidth) + ea,
@@ -1901,6 +2037,74 @@ AspirantNoticeJs.prototype.insertAspirantBox = function () {
     ]
   });
 
+}
+
+AspirantNoticeJs.prototype.finalSubmit = function () {
+  const instance = this;
+  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue, ajaxForm, equalJson } = GeneralJs;
+  const { aspid, aspirant } = this;
+  return async function (e) {
+    try {
+      if (instance.accountInput.files.length === 0) {
+        throw new Error("통장 사본을 업로드해주세요!");
+      }
+      if (instance.businessInput.files.length === 0) {
+        throw new Error("사업자등록증(주민등록증)을 업로드해주세요!");
+      }
+      if (instance.identityInput.files.length === 0) {
+        throw new Error("신분증 사본을 업로드해주세요!");
+      }
+      let account, business, identity;
+      let portfolioFiles;
+      let grayLoading;
+      let formData;
+      let cancelPhoto;
+
+      [ account ] = instance.accountInput.files;
+      [ business ] = instance.businessInput.files;
+      [ identity ] = instance.identityInput.files;
+      portfolioFiles = instance.fileInput.files;
+
+      grayLoading = instance.mother.whiteProgressLoading();
+
+      await homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "aspirantDocumentsSend",
+        data: {
+          aspid,
+          date: dateToString(new Date(), true),
+        },
+      })
+
+      formData = new FormData();
+      formData.enctype = "multipart/form-data";
+      formData.append("name", aspirant.designer);
+      formData.append("aspid", aspid);
+      cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
+      for (let i = 0; i < instance.fileInput.files.length; i++) {
+        if (!cancelPhoto.includes(i)) {
+          formData.append("upload0", instance.fileInput.files[i]);
+        }
+      }
+      formData.append("account", account);
+      formData.append("business", business);
+      formData.append("identity", identity);
+
+      ajaxForm(formData, BRIDGEHOST + "/aspirantDocuments", grayLoading.progress.firstChild).then((res) => {
+
+        console.log(res);
+
+
+      }).catch((err) => {
+        window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+        window.location.reload();
+      });
+
+    } catch (e) {
+      window.alert(e.message);
+    }
+  }
 }
 
 AspirantNoticeJs.prototype.launching = async function (loading) {
