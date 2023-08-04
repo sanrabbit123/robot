@@ -2094,7 +2094,7 @@ AspirantNoticeJs.prototype.finalSubmit = function () {
       ajaxForm(formData, BRIDGEHOST + "/aspirantDocuments", grayLoading.progress.firstChild).then((res) => {
 
         console.log(res);
-
+        
 
       }).catch((err) => {
         window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
