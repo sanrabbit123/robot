@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return ('홈리에종 디자이너 등록 안내 | 홈리에종');"
+      "return ('홈리에종 디자이너 등록비 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return ('홈리에종 디자이너 등록 안내 페이지 입니다! | 홈리에종');"
+      "return ('홈리에종 디자이너 등록비 안내 페이지 입니다! | 홈리에종');"
     ],
     "image": [
       "thisPerson",
@@ -30,20 +30,20 @@
     ],
     "module": false
   },
-  "name": "aspirantNotice",
-  "hangul": "디자이너 등록 안내",
+  "name": "aspirantPayment",
+  "hangul": "디자이너 등록비",
   "route": [
-    "aspirantNotice"
+    "aspirantPayment"
   ]
 } %/%/g
 
-const AspirantNoticeJs = function () {
+const AspirantPaymentJs = function () {
   this.mother = new GeneralJs();
 }
 
-AspirantNoticeJs.binaryPath = FRONTHOST + "/middle/aspnotice";
+AspirantPaymentJs.binaryPath = FRONTHOST + "/middle/asppayment";
 
-AspirantNoticeJs.prototype.insertInitBox = function () {
+AspirantPaymentJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics } = GeneralJs;
   const { ea, media } = this;
@@ -129,8 +129,8 @@ AspirantNoticeJs.prototype.insertInitBox = function () {
   tagTongBottom = <%% 3, 3, 1, 1, 0 %%>;
   boxTopVisual = <%% 1, 1, 0, 0, 0 %%>;
 
-  titleWording = "디자이너 등록 안내";
-  subTitleContents = "홈리에종 디자이너 등록에 대한 안내 사항입니다.";
+  titleWording = "디자이너 등록비";
+  subTitleContents = "등록비에 대한 설명과 결제 페이지입니다.";
 
   mobileBlockTop = 4.5;
 
@@ -223,7 +223,7 @@ AspirantNoticeJs.prototype.insertInitBox = function () {
 
 }
 
-AspirantNoticeJs.prototype.insertNoticeBox = function () {
+AspirantPaymentJs.prototype.insertNoticeBox = function () {
   const instance = this;
   const mother = this.mother;
   const { ea, baseTong, media, aspirant } = this;
@@ -424,7 +424,7 @@ AspirantNoticeJs.prototype.insertNoticeBox = function () {
           height: String(backImageHeight) + ea,
           backgroundPosition: "50% 50%",
           backgroundSize: "101% auto",
-          backgroundImage: "url('" + AspirantNoticeJs.binaryPath + "/noticeBack.jpg" + "')",
+          backgroundImage: "url('" + AspirantPaymentJs.binaryPath + "/noticeBack.jpg" + "')",
           marginBottom: String(backImageMarginBottom) + ea,
           borderRadius: String(5) + "px",
           overflow: "hidden",
@@ -488,7 +488,7 @@ AspirantNoticeJs.prototype.insertNoticeBox = function () {
         },
         children: [
           {
-            text: "디자이너 등록 과정 안내",
+            text: "디자이너 등록비 안내",
             style: {
               position: "relative",
               display: "inline-block",
@@ -638,7 +638,7 @@ AspirantNoticeJs.prototype.insertNoticeBox = function () {
 
 }
 
-AspirantNoticeJs.prototype.insertContractBox = function () {
+AspirantPaymentJs.prototype.insertContractBox = function () {
   const instance = this;
   const mother = this.mother;
   const { ea, baseTong, media } = this;
@@ -743,12 +743,12 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
   linePadding = <%% 12, 12, 12, 12, 12 %%>;
 
-  grayBigHeight = <%% 164, 130, 110, 80, 38 %%>;
+  grayBigHeight = <%% 200, 230, 210, 180, 45 %%>;
 
-  boxBetween = <%% 10, 10, 9, 8, 1 %%>;
+  boxBetween = <%% 72, 20, 9, 8, 1 %%>;
 
   mobilePaddingLeft = 6;
-  boxLength = 3;
+  boxLength = 5;
 
   mobileContentsWordingSize = 3.2;
 
@@ -756,42 +756,6 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
   bigTextTop = <%% -3, -3, -3, -2, -0.3 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
-
-  accountFileChangeEvent = function (e) {
-    if (this.files.length === 0) {
-      this.previousElementSibling.style.background = colorChip.gray1;
-      this.previousElementSibling.firstChild.style.color = colorChip.gray4;
-      this.previousElementSibling.firstChild.textContent = "통장 사본 업로드...";
-    } else {
-      this.previousElementSibling.style.background = colorChip.green;
-      this.previousElementSibling.firstChild.style.color = colorChip.white;
-      this.previousElementSibling.firstChild.textContent = "통장 사본 업로드 완료";
-    }
-  }
-
-  businessFileChangeEvent = function (e) {
-    if (this.files.length === 0) {
-      this.previousElementSibling.style.background = colorChip.gray1;
-      this.previousElementSibling.firstChild.style.color = colorChip.gray4;
-      this.previousElementSibling.firstChild.textContent = "사업자등록증(주민등록증) 업로드...";
-    } else {
-      this.previousElementSibling.style.background = colorChip.green;
-      this.previousElementSibling.firstChild.style.color = colorChip.white;
-      this.previousElementSibling.firstChild.textContent = "사업자등록증(주민등록증) 업로드 완료";
-    }
-  }
-
-  identityFileChangeEvent = function (e) {
-    if (this.files.length === 0) {
-      this.previousElementSibling.style.background = colorChip.gray1;
-      this.previousElementSibling.firstChild.style.color = colorChip.gray4;
-      this.previousElementSibling.firstChild.textContent = "신분증 사본 업로드...";
-    } else {
-      this.previousElementSibling.style.background = colorChip.green;
-      this.previousElementSibling.firstChild.style.color = colorChip.white;
-      this.previousElementSibling.firstChild.textContent = "신분증 사본 업로드 완료";
-    }
-  }
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -802,7 +766,6 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
       background: colorChip.white,
       paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
       paddingBottom: String(whiteBottomMargin) + ea,
-      marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },
     children: [
@@ -838,7 +801,7 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
         },
         children: [
           {
-            text: "기본 서류 업로드",
+            text: "디자이너 등록비 요약",
             style: {
               position: "relative",
               display: "inline-block",
@@ -876,26 +839,13 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
 
   createNode({
     mother: tong,
-    event: {
-      click: function (e) {
-        instance.accountInput.click();
-      },
-      dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
-      dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
-      dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
-      drop: function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        instance.accountInput.files = e.dataTransfer.files;
-        accountFileChangeEvent.call(instance.accountInput, e);
-      }
-    },
     style: {
       display: "inline-flex",
+      position: "relative",
       width: desktop ? "calc(calc(100% - " + String(boxBetween * (boxLength - 1)) + ea + ") / " + String(boxLength) + ")" : withOut(0, ea),
       height: String(grayBigHeight) + ea,
-      background: colorChip.gray1,
-      borderRadius: String(5) + "px",
+      background: colorChip.gradientGray,
+      borderRadius: String(grayBigHeight) + "px",
       marginRight: desktop ? String(boxBetween) + ea : "",
       marginBottom: mobile ? String(boxBetween) + ea : "",
       flexDirection: "column",
@@ -904,59 +854,45 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
       cursor: "pointer",
     },
     child: {
-      text: "통장 사본 업로드...",
+      text: "디자이너\nPool 진입\n등록비",
       style: {
         display: "inline-block",
         position: "relative",
-        top: String(bigTextTop) + ea,
-        fontSize: String(bigSize) + ea,
-        fontWeight: String(200),
-        color: colorChip.gray4,
+        top: String(-1) + ea,
+        fontSize: String(22) + ea,
+        fontWeight: String(800),
+        color: colorChip.white,
+        lineHeight: String(1.4),
+        textAlign: "center",
+        boxSizing: "border-box",
+      },
+      next: {
+        text: "+",
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          top: String(54) + ea,
+          left: String(221) + ea,
+          fontSize: String(60) + ea,
+          fontWeight: String(800),
+          color: colorChip.gray3,
+          lineHeight: String(1.4),
+          textAlign: "center",
+          boxSizing: "border-box",
+        },
       }
     }
   });
-
-  this.accountInput = createNode({
-    mode: "input",
-    mother: tong,
-    attribute: {
-      type: "file",
-      name: "account",
-      accept: "image/*,  application/pdf",
-      multiple: "false",
-      cancel: JSON.stringify([]),
-    },
-    event: {
-      change: accountFileChangeEvent,
-    },
-    style: {
-      position: "absolute",
-      display: "none",
-    }
-  });
-
+  
   createNode({
     mother: tong,
-    event: {
-      click: function (e) {
-        instance.businessInput.click();
-      },
-      dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
-      dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
-      dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
-      drop: function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        instance.businessInput.files = e.dataTransfer.files;
-        businessFileChangeEvent.call(instance.businessInput, e);
-      }
-    },
     style: {
       display: "inline-flex",
+      position: "relative",
       width: desktop ? "calc(calc(100% - " + String(boxBetween * (boxLength - 1)) + ea + ") / " + String(boxLength) + ")" : withOut(0, ea),
       height: String(grayBigHeight) + ea,
-      background: colorChip.gray1,
-      borderRadius: String(5) + "px",
+      background: colorChip.gradientGray,
+      borderRadius: String(grayBigHeight) + "px",
       marginRight: desktop ? String(boxBetween) + ea : "",
       marginBottom: mobile ? String(boxBetween) + ea : "",
       flexDirection: "column",
@@ -965,99 +901,163 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
       cursor: "pointer",
     },
     child: {
-      text: "사업자등록증(주민등록증) 업로드...",
+      text: "포트폴리오\n플랫폼 등록\n및 업데이트",
       style: {
         display: "inline-block",
         position: "relative",
-        top: String(bigTextTop) + ea,
-        fontSize: String(bigSize) + ea,
-        fontWeight: String(200),
-        color: colorChip.gray4,
+        top: String(-1) + ea,
+        fontSize: String(22) + ea,
+        fontWeight: String(800),
+        color: colorChip.white,
+        lineHeight: String(1.4),
+        textAlign: "center",
+        boxSizing: "border-box",
+      },
+      next: {
+        text: "+",
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          top: String(54) + ea,
+          left: String(221) + ea,
+          fontSize: String(60) + ea,
+          fontWeight: String(800),
+          color: colorChip.gray3,
+          lineHeight: String(1.4),
+          textAlign: "center",
+          boxSizing: "border-box",
+        },
       }
-    }
-  });
-
-  this.businessInput = createNode({
-    mode: "input",
-    mother: tong,
-    attribute: {
-      type: "file",
-      name: "business",
-      accept: "image/*,  application/pdf",
-      multiple: "false",
-      cancel: JSON.stringify([]),
-    },
-    event: {
-      change: businessFileChangeEvent,
-    },
-    style: {
-      position: "absolute",
-      display: "none",
     }
   });
 
   createNode({
     mother: tong,
-    event: {
-      click: function (e) {
-        instance.identityInput.click();
-      },
-      dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
-      dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
-      dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
-      drop: function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        instance.identityInput.files = e.dataTransfer.files;
-        identityFileChangeEvent.call(instance.identityInput, e);
-      }
-    },
     style: {
       display: "inline-flex",
+      position: "relative",
       width: desktop ? "calc(calc(100% - " + String(boxBetween * (boxLength - 1)) + ea + ") / " + String(boxLength) + ")" : withOut(0, ea),
       height: String(grayBigHeight) + ea,
-      background: colorChip.gray1,
-      borderRadius: String(5) + "px",
+      background: colorChip.gradientGray,
+      borderRadius: String(grayBigHeight) + "px",
+      marginRight: desktop ? String(boxBetween) + ea : "",
+      marginBottom: mobile ? String(boxBetween) + ea : "",
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
       cursor: "pointer",
     },
     child: {
-      text: "신분증 사본 업로드...",
+      text: "디자이너\n제안서 폼\n지원",
       style: {
         display: "inline-block",
         position: "relative",
-        top: String(bigTextTop) + ea,
-        fontSize: String(bigSize) + ea,
-        fontWeight: String(200),
-        color: colorChip.gray4,
+        top: String(-1) + ea,
+        fontSize: String(22) + ea,
+        fontWeight: String(800),
+        color: colorChip.white,
+        lineHeight: String(1.4),
+        textAlign: "center",
+        boxSizing: "border-box",
+      },
+      next: {
+        text: "+",
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          top: String(54) + ea,
+          left: String(221) + ea,
+          fontSize: String(60) + ea,
+          fontWeight: String(800),
+          color: colorChip.gray3,
+          lineHeight: String(1.4),
+          textAlign: "center",
+          boxSizing: "border-box",
+        },
       }
     }
   });
 
-  this.identityInput = createNode({
-    mode: "input",
+  createNode({
     mother: tong,
-    attribute: {
-      type: "file",
-      name: "identity",
-      accept: "image/*,  application/pdf",
-      multiple: "false",
-      cancel: JSON.stringify([]),
-    },
-    event: {
-      change: identityFileChangeEvent,
-    },
     style: {
-      position: "absolute",
-      display: "none",
+      display: "inline-flex",
+      position: "relative",
+      width: desktop ? "calc(calc(100% - " + String(boxBetween * (boxLength - 1)) + ea + ") / " + String(boxLength) + ")" : withOut(0, ea),
+      height: String(grayBigHeight) + ea,
+      background: colorChip.gradientGray,
+      borderRadius: String(grayBigHeight) + "px",
+      marginRight: desktop ? String(boxBetween) + ea : "",
+      marginBottom: mobile ? String(boxBetween) + ea : "",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      cursor: "pointer",
+    },
+    child: {
+      text: "홈리에종\n디자이너\n교육",
+      style: {
+        display: "inline-block",
+        position: "relative",
+        top: String(-1) + ea,
+        fontSize: String(22) + ea,
+        fontWeight: String(800),
+        color: colorChip.white,
+        lineHeight: String(1.3),
+        textAlign: "center",
+        boxSizing: "border-box",
+      },
+      next: {
+        text: "+",
+        style: {
+          display: "inline-block",
+          position: "absolute",
+          top: String(54) + ea,
+          left: String(221) + ea,
+          fontSize: String(60) + ea,
+          fontWeight: String(800),
+          color: colorChip.gray3,
+          lineHeight: String(1.4),
+          textAlign: "center",
+          boxSizing: "border-box",
+        },
+      }
+    }
+  });
+
+  createNode({
+    mother: tong,
+    style: {
+      display: "inline-flex",
+      width: desktop ? "calc(calc(100% - " + String(boxBetween * (boxLength - 1)) + ea + ") / " + String(boxLength) + ")" : withOut(0, ea),
+      height: String(grayBigHeight) + ea,
+      background: colorChip.gradientGray,
+      borderRadius: String(grayBigHeight) + "px",
+      marginBottom: mobile ? String(boxBetween) + ea : "",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      cursor: "pointer",
+    },
+    child: {
+      text: "디자이너\n단계별\n성장 지원",
+      style: {
+        display: "inline-block",
+        position: "relative",
+        top: String(-1) + ea,
+        fontSize: String(22) + ea,
+        fontWeight: String(800),
+        color: colorChip.white,
+        lineHeight: String(1.4),
+        textAlign: "center",
+        boxSizing: "border-box",
+      },
     }
   });
 
 }
 
-AspirantNoticeJs.prototype.insertAspirantBox = function () {
+AspirantPaymentJs.prototype.insertAspirantBox = function () {
   const instance = this;
   const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson, cleanChildren } = GeneralJs;
   const { ea, media, standardWidth } = this;
@@ -1753,6 +1753,8 @@ AspirantNoticeJs.prototype.insertAspirantBox = function () {
     }
   });
 
+  /*
+
   contentsArea = createNode({
     mother: mainBlock,
     style: {
@@ -1982,6 +1984,8 @@ AspirantNoticeJs.prototype.insertAspirantBox = function () {
 
   this.fileInput = portfolioBlock.querySelector("input");
 
+  */
+
   // policy and submit
   policyArea = createNode({
     mother: mainBlock,
@@ -2020,7 +2024,7 @@ AspirantNoticeJs.prototype.insertAspirantBox = function () {
         },
         children: [
           {
-            text: "파일 전송하기",
+            text: "카드 결제하기",
             style: {
               display: "inline-block",
               position: "relative",
@@ -2038,7 +2042,7 @@ AspirantNoticeJs.prototype.insertAspirantBox = function () {
 
 }
 
-AspirantNoticeJs.prototype.finalSubmit = function () {
+AspirantPaymentJs.prototype.finalSubmit = function () {
   const instance = this;
   const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue, ajaxForm, equalJson } = GeneralJs;
   const { aspid, aspirant } = this;
@@ -2112,7 +2116,7 @@ AspirantNoticeJs.prototype.finalSubmit = function () {
   }
 }
 
-AspirantNoticeJs.prototype.launching = async function (loading) {
+AspirantPaymentJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
     this.mother.setGeneralProperties(this);
@@ -2137,11 +2141,11 @@ AspirantNoticeJs.prototype.launching = async function (loading) {
 
     await this.mother.ghostClientLaunching({
       mode: "front",
-      name: "aspirantNotice",
+      name: "aspirantPayment",
       client: null,
       base: {
         instance: this,
-        binaryPath: AspirantNoticeJs.binaryPath,
+        binaryPath: AspirantPaymentJs.binaryPath,
         subTitle: "",
         secondBackground: false,
         backgroundType: 0,
@@ -2153,7 +2157,7 @@ AspirantNoticeJs.prototype.launching = async function (loading) {
           instance.insertContractBox();
           instance.insertAspirantBox();
         } catch (e) {
-          await GeneralJs.ajaxJson({ message: "AspirantNoticeJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
+          await GeneralJs.ajaxJson({ message: "AspirantPaymentJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
         }
       }
     });
@@ -2162,6 +2166,6 @@ AspirantNoticeJs.prototype.launching = async function (loading) {
 
   } catch (err) {
     console.log(err);
-    await GeneralJs.ajaxJson({ message: "AspirantNoticeJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
+    await GeneralJs.ajaxJson({ message: "AspirantPaymentJs.launching 에러 일어남 => " + err.message }, BACKHOST + "/errorLog");
   }
 }
