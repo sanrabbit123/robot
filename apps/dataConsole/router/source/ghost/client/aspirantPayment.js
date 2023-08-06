@@ -644,6 +644,7 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
   const { ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const veryBig = (media[0] || media[1]);
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   let paddingTop;
@@ -749,9 +750,9 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
   linePadding = <%% 12, 12, 12, 12, 12 %%>;
 
-  grayBigHeight = <%% 153, 230, 210, 180, 45 %%>;
+  grayBigHeight = <%% 153, 107, 106, 79, 12 %%>;
 
-  boxBetween = <%% 60, 20, 9, 8, 1 %%>;
+  boxBetween = <%% 60, 30, 10, 8, 8 %%>;
 
   mobilePaddingLeft = 6;
   boxLength = 5;
@@ -762,14 +763,14 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
   bigTextTop = <%% -3, -3, -3, -2, -0.3 %%>;
 
   mainTextTextTop = <%% 0, 0, 0, 0, 0 %%>;
-  mainTextSize = <%% 17, 17, 17, 17, 17 %%>;
+  mainTextSize = <%% 17, 14, 13, 11, 3.5 %%>;
   mainTextWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-  textAreaWidth = <%% 283, 263, 263, 263, 263 %%>;
+  textAreaWidth = <%% 283, 283, 233, 213, 263 %%>;
 
-  plusTop = <%% 34, 34, 34, 34, 34 %%>;
-  plusLeft = <%% 168, 168, 168, 168, 168 %%>;
-  plusSize = <%% 50, 50, 50, 50, 50 %%>;
+  plusTop = <%% 34, 30, 30, 30, 11 %%>;
+  plusLeft = <%% 168, 114, 108, 108, 36 %%>;
+  plusSize = <%% 50, 30, 24, 12, 6 %%>;
   plusWeight = <%% 800, 800, 800, 800, 800 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
@@ -858,7 +859,7 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
   textArea = createNode({
     mother: tong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "none",
       position: "relative",
       width: String(textAreaWidth) + ea,
       height: String(grayBigHeight) + ea,
@@ -871,7 +872,7 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
   createNode({
     mother: textArea,
     style: {
-      display: "block",
+      display: desktop ? "block" : "none",
       width: withOut(25, ea),
       position: "relative",
     },
@@ -902,15 +903,14 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
     ]
   })
 
-
-
   circleArea = createNode({
     mother: tong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       position: "relative",
-      width: withOut(textAreaWidth, ea),
+      width: desktop ? withOut(textAreaWidth, ea) : withOut(0, ea),
       verticalAlign: "top",
+      flexDirection: desktop ? "row" : "column",
     }
   });
 
@@ -922,7 +922,7 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
       width: desktop ? "calc(calc(100% - " + String(boxBetween * (boxLength - 1)) + ea + ") / " + String(boxLength) + ")" : withOut(0, ea),
       height: String(grayBigHeight) + ea,
       background: colorChip.gradientGray,
-      borderRadius: String(grayBigHeight) + "px",
+      borderRadius: String(grayBigHeight) + ea,
       marginRight: desktop ? String(boxBetween) + ea : "",
       marginBottom: mobile ? String(boxBetween) + ea : "",
       flexDirection: "column",
@@ -931,7 +931,7 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
       cursor: "pointer",
     },
     child: {
-      text: "디자이너\nPool 진입\n등록비",
+      text: desktop ? "디자이너\nPool 진입\n등록비" : "디자이너 Pool 진입 등록비",
       style: {
         display: "inline-block",
         position: "relative",
@@ -946,14 +946,14 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
       next: {
         text: "+",
         style: {
-          display: "inline-block",
+          display: veryBig ? "inline-block" : (desktop ? "none" : "block"),
           position: "absolute",
           fontFamily: "graphik",
           top: String(plusTop) + ea,
           left: String(plusLeft) + ea,
           fontSize: String(plusSize) + ea,
           fontWeight: String(plusWeight),
-          color: colorChip.gray3,
+          color: colorChip.gray4,
           lineHeight: String(1.4),
           textAlign: "center",
           boxSizing: "border-box",
@@ -970,7 +970,7 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
       width: desktop ? "calc(calc(100% - " + String(boxBetween * (boxLength - 1)) + ea + ") / " + String(boxLength) + ")" : withOut(0, ea),
       height: String(grayBigHeight) + ea,
       background: colorChip.gradientGray,
-      borderRadius: String(grayBigHeight) + "px",
+      borderRadius: String(grayBigHeight) + ea,
       marginRight: desktop ? String(boxBetween) + ea : "",
       marginBottom: mobile ? String(boxBetween) + ea : "",
       flexDirection: "column",
@@ -979,7 +979,7 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
       cursor: "pointer",
     },
     child: {
-      text: "포트폴리오\n플랫폼 등록\n및 업데이트",
+      text: desktop ? "포트폴리오\n플랫폼 등록\n및 업데이트" : "포트폴리오\ 플랫폼 등록\ 및 업데이트",
       style: {
         display: "inline-block",
         position: "relative",
@@ -994,14 +994,14 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
       next: {
         text: "+",
         style: {
-          display: "inline-block",
+          display: veryBig ? "inline-block" : (desktop ? "none" : "block"),
           position: "absolute",
           fontFamily: "graphik",
           top: String(plusTop) + ea,
           left: String(plusLeft) + ea,
           fontSize: String(plusSize) + ea,
           fontWeight: String(plusWeight),
-          color: colorChip.gray3,
+          color: colorChip.gray4,
           lineHeight: String(1.4),
           textAlign: "center",
           boxSizing: "border-box",
@@ -1018,7 +1018,7 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
       width: desktop ? "calc(calc(100% - " + String(boxBetween * (boxLength - 1)) + ea + ") / " + String(boxLength) + ")" : withOut(0, ea),
       height: String(grayBigHeight) + ea,
       background: colorChip.gradientGray,
-      borderRadius: String(grayBigHeight) + "px",
+      borderRadius: String(grayBigHeight) + ea,
       marginRight: desktop ? String(boxBetween) + ea : "",
       marginBottom: mobile ? String(boxBetween) + ea : "",
       flexDirection: "column",
@@ -1027,7 +1027,7 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
       cursor: "pointer",
     },
     child: {
-      text: "디자이너\n제안서 폼\n지원",
+      text: desktop ? "디자이너\n제안서 폼\n지원" : "디자이너 제안서 폼 지원",
       style: {
         display: "inline-block",
         position: "relative",
@@ -1042,14 +1042,14 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
       next: {
         text: "+",
         style: {
-          display: "inline-block",
+          display: veryBig ? "inline-block" : (desktop ? "none" : "block"),
           position: "absolute",
           fontFamily: "graphik",
           top: String(plusTop) + ea,
           left: String(plusLeft) + ea,
           fontSize: String(plusSize) + ea,
           fontWeight: String(plusWeight),
-          color: colorChip.gray3,
+          color: colorChip.gray4,
           lineHeight: String(1.4),
           textAlign: "center",
           boxSizing: "border-box",
@@ -1066,7 +1066,7 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
       width: desktop ? "calc(calc(100% - " + String(boxBetween * (boxLength - 1)) + ea + ") / " + String(boxLength) + ")" : withOut(0, ea),
       height: String(grayBigHeight) + ea,
       background: colorChip.gradientGray,
-      borderRadius: String(grayBigHeight) + "px",
+      borderRadius: String(grayBigHeight) + ea,
       marginRight: desktop ? String(boxBetween) + ea : "",
       marginBottom: mobile ? String(boxBetween) + ea : "",
       flexDirection: "column",
@@ -1075,7 +1075,7 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
       cursor: "pointer",
     },
     child: {
-      text: "홈리에종\n디자이너\n교육",
+      text: desktop ? "홈리에종\n디자이너\n교육" : "홈리에종 디자이너 교육",
       style: {
         display: "inline-block",
         position: "relative",
@@ -1090,14 +1090,14 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
       next: {
         text: "+",
         style: {
-          display: "inline-block",
+          display: veryBig ? "inline-block" : (desktop ? "none" : "block"),
           position: "absolute",
           fontFamily: "graphik",
           top: String(plusTop) + ea,
           left: String(plusLeft) + ea,
           fontSize: String(plusSize) + ea,
           fontWeight: String(plusWeight),
-          color: colorChip.gray3,
+          color: colorChip.gray4,
           lineHeight: String(1.4),
           textAlign: "center",
           boxSizing: "border-box",
@@ -1113,7 +1113,7 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
       width: desktop ? "calc(calc(100% - " + String(boxBetween * (boxLength - 1)) + ea + ") / " + String(boxLength) + ")" : withOut(0, ea),
       height: String(grayBigHeight) + ea,
       background: colorChip.gradientGray,
-      borderRadius: String(grayBigHeight) + "px",
+      borderRadius: String(grayBigHeight) + ea,
       marginBottom: mobile ? String(boxBetween) + ea : "",
       flexDirection: "column",
       justifyContent: "center",
@@ -1121,7 +1121,7 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
       cursor: "pointer",
     },
     child: {
-      text: "디자이너\n단계별\n성장 지원",
+      text: desktop ?"디자이너\n단계별\n성장 지원" : "디자이너 단계별 성장 지원",
       style: {
         display: "inline-block",
         position: "relative",
@@ -1836,239 +1836,6 @@ AspirantPaymentJs.prototype.insertAspirantBox = function () {
       paddingBottom: String(mainPaddingBottom) + ea,
     }
   });
-
-  /*
-
-  contentsArea = createNode({
-    mother: mainBlock,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-      background: colorChip.white,
-      borderRadius: String(5) + "px",
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-      paddingTop: String(innerPadding) + ea,
-      paddingBottom: String(innerPadding) + ea,
-    }
-  });
-
-  createNode({
-    mother: contentsArea,
-    style: {
-      display: "block",
-      position: "relative",
-      width: withOut(innerPadding * 2, ea),
-      marginLeft: String(innerPadding) + ea,
-      marginRight: String(innerPadding) + ea,
-      paddingBottom: String(titleBottom) + ea,
-      marginBottom: String(contentsAreaPaddingTop) + ea,
-      paddingBottom: mobile ? String(1.5) + ea : "",
-      borderBottom: "1px solid " + colorChip.shadow,
-    },
-    children: [
-      {
-        text: "추가 포트폴리오 업로드",
-        style: {
-          position: "relative",
-          display: "inline-block",
-          top: String(titleTopNumber) + ea,
-          fontSize: String(titleFontSize) + ea,
-          fontWeight: String(800),
-          background: colorChip.white,
-          paddingRight: String(numberRight) + ea,
-          color: colorChip.black,
-        }
-      },
-    ]
-  })
-
-  leftBox = createNode({
-    mother: contentsArea,
-    style: {
-      display: desktop ? "inline-block" : "none",
-      position: "relative",
-      marginLeft: String(innerPadding) + ea,
-      width: String(leftBoxWidth) + ea,
-      verticalAlign: "top",
-    }
-  });
-
-  createNode({
-    mother: leftBox,
-    mode: "svg",
-    source: svgMaker.doubleQuote(colorChip.green),
-    style: {
-      display: "block",
-      position: "relative",
-      height: String(quoteHeight) + ea,
-      marginLeft: String(quoteLeft) + ea,
-    }
-  });
-
-  createNode({
-    mother: leftBox,
-    text: contents.sub.join("\n"),
-    style: {
-      display: "block",
-      position: "relative",
-      fontSize: String(descriptionSize) + ea,
-      fontWeight: String(descriptionWeight),
-      color: colorChip.black,
-      lineHeight: String(descriptionLineHeight),
-      marginTop: String(descriptionMarginTop) + ea,
-    },
-    bold: {
-      fontWeight: String(descriptionBoldWeight),
-      color: colorChip.black,
-    }
-  })
-
-  rightBox = createNode({
-    mother: contentsArea,
-    style: {
-      display: "inline-block",
-      position: "relative",
-      width: withOut(leftBoxWidth + (innerPadding * 2), ea),
-      verticalAlign: "top",
-      marginLeft: desktop ? "" : String(innerPadding) + ea,
-      paddingTop: desktop ? "" : String(1) + ea,
-    }
-  });
-
-  portfolioBlock = createNode({
-    mother: rightBox,
-    style: {
-      display: "block",
-      position: "relative",
-      marginBottom: String(blockMarginBottom) + ea,
-      height: String(textAreaBlockHeight) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(circleRadius * 2) + ea,
-          height: String(circleRadius * 2) + ea,
-          marginRight: String(circleBetween) + ea,
-          borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
-          top: String(circleTop) + ea,
-          verticalAlign: "top",
-        }
-      },
-      {
-        text: desktop ? "파일" : "포트폴리오",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(mainTop) + ea,
-          fontSize: String(mainSize) + ea,
-          fontWeight: String(mainWeight),
-          color: colorChip.black,
-          verticalAlign: "top",
-          width: String(titleWidth) + ea,
-        }
-      },
-      {
-        event: {
-          click: function (e) {
-            this.querySelector("input").click();
-          },
-          dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
-          dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
-          dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
-          drop: function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            this.querySelector("input").files = e.dataTransfer.files;
-            fileChangeEvent.call(this.querySelector("input"), e);
-          }
-        },
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
-          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth, ea) : withOut(0, ea),
-          height: String(grayBigHeight) + ea,
-          background: colorChip.gray1,
-          borderRadius: String(3) + "px",
-          cursor: "pointer",
-        },
-        children: [
-          {
-            style: {
-              position: "absolute",
-              top: String(grayMargin + (desktop ? 0 : 2)) + ea,
-              left: String(grayMargin) + ea,
-              width: withOut(grayMargin * 2, ea),
-              height: withOut(grayMargin + grayMargin + (desktop ? 0 : 2), ea),
-              overflow: "scroll",
-              zIndex: String(1),
-            },
-            children: [
-              {
-                class: [ fileTongClassName ],
-                style: {
-                  position: "relative",
-                  width: String(100) + '%',
-                  top: String(0),
-                  left: String(0),
-                }
-              }
-            ]
-          },
-          {
-            style: {
-              display: "flex",
-              position: "absolute",
-              width: withOut(0, ea),
-              height: withOut(0, ea),
-              top: String(0),
-              left: String(0),
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            },
-            child: {
-              text: desktop ? "클릭 또는 드래그하여 파일 업로드..." : "클릭하여 파일 업로드...",
-              style: {
-                display: "inline-block",
-                position: "relative",
-                top: String(desktop ? -3 : -0.3) + ea,
-                fontSize: String(desktop ? 23 : 4.5) + ea,
-                fontWeight: String(200),
-                color: colorChip.gray4,
-              }
-            }
-          },
-          {
-            mode: "input",
-            attribute: {
-              type: "file",
-              name: "upload",
-              accept: "image/*,  application/pdf",
-              multiple: "true",
-              cancel: JSON.stringify([]),
-              property: "portfolio",
-            },
-            event: {
-              change: fileChangeEvent,
-            },
-            style: {
-              position: "absolute",
-              display: "none",
-            }
-          }
-        ]
-      },
-    ]
-  });
-
-  this.fileInput = portfolioBlock.querySelector("input");
-
-  */
 
   // policy and submit
   policyArea = createNode({
