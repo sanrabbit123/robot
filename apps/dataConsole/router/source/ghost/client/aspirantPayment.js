@@ -233,41 +233,41 @@ AspirantPaymentJs.prototype.insertNoticeBox = function () {
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainContents = [
     {
-      title: "등록 프로세스",
+      title: "등록비의 개념",
       contents: [
-        "홈리에종 디자이너 등록을 위해서는 아래 5가지 과정이 필요합니다. 서류 업로드와 등록비 입금을 해주시면 홈리에종 대표님과 미팅을 하게 되고, 미팅 후 계약서를 작성합니다.",
-        "전자 계약서의 서명이 완료되면 홈리에종에서 실장님께 기본적으로 요구하는 정보의 항목이 나열된 체크리스트를 보내드립니다. 이렇게 계약과 체크리스트까지 모두 작성이 완료되면 홈리에종에서 파트너 디자이너로 활동하실 수 있습니다!"
+        "등록비는 <b%350,000원(vat별도)%b>입니다. 총 385,000원을 입금해 주시면 됩니다. 등록비는 실장님을 플랫폼에 등록하고, 돋보이게 하기 위한 작업을 해드리는 비용입니다.",
+        "홈리에종은 디자이너님께 모든 일을 떠넘기고, 고객을 매칭시켜주시만 하는 단순 플랫폼이 아니라 디자이너님과 함께 파트너로서 인테리어 프로젝트를 이끌어가는 플랫폼이기에 등록비와 수수료가 존재합니다."
       ]
     },
     {
-      title: "기본 서류 업로드",
+      title: "디자이너 Pool 진입",
       contents: [
-        "홈리에종에서 활동하기 위해선 <b%통장 사본과 사업자등록증(프리랜서의 경우 주민등록증), 신분증 사본%b>이 필요합니다.",
+        "홈리에종은 디자이너님을 홈스타일링 디자이너 Pool에 진입시켜드리기 위해, 사진 보정, 자료 조사, 소개글 편집, 추천서 조합 작업 등을 수행합니다.",
+        "이 모든 과정은 디자이너님이 자율적으로 혼자 진행하는 것이 아니라 디자이너님의 협조 아래 홈리에종이 적극적으로 지원해드리는 영역입니다.",
       ],
     },
     {
-      title: "등록비 입금",
+      title: "포트폴리오 등록 및 업데이트",
       contents: [
-        "등록비는 <b%350,000원(vat별도)%b>입니다. 총 385,000원을 입금해 주시면 됩니다. 등록비는 실장님을 플랫폼에 등록하고, 돋보이게 하기 위한 작업을 해드리는 비용입니다.",
+        "홈리에종에서 계약한 홈스타일링 프로젝트의 경우 사진 작가가 가서 촬영하고, 사진 선별 및 보정 및 컨텐츠화 작업을 홈리에종측에서 진행해드립니다. 기본적인 글 편집도 해드리며 디자이너님께선 러프한 디자인 의도 글만 남겨주시면 됩니다.",
       ],
     },
     {
-      title: "대면 미팅",
+      title: "디자이너 제안서 폼 지원",
       contents: [
-        "서류 업로드와 등록비 입금이 모두 확인되면, 실장님께 연락을 드려 오프라인 대면 미팅 날짜를 잡습니다. 미팅일에 홈리에종 대표님을 만나 파트너십에 대한 교육을 받게 됩니다."
+        "홈리에종에서 계약한 홈스타일링 프로젝트의 경우 기본적인 디자이너 제안서 폼과 시스템을 제공해드립니다."
       ],
     },
     {
-      title: "계약서 작성",
+      title: "홈리에종 디자이너 교육",
       contents: [
-        "오프라인 미팅 후, 계약서를 작성하시게 됩니다. 계약서는 총 2가지로 '디자이너 파트너십 계약서'와 '디자인 서비스 제휴 계약서'를 작성하시게 됩니다.",
-        "계약 기간은 기본 1년, 이후 자동 연장되는 형태로 설정되어 있으며, 계약서 기본 설정되는 수수료의 값은 30% 입니다."
+        "홈스타일링 프로젝트를 진행하면서 첫 프로젝트의 현장 미팅, 첫 디자인 제안서 제공 등과 같이 교육이 필요한 시점에 홈리에종에서 어떻게 진행하면 되는지 교육해드립니다."
       ],
     },
     {
-      title: "체크리스트 작성",
+      title: "디자이너 단계별 성장 지원",
       contents: [
-        "계약서 서명이 완료되면 체크리스트를 작성하시게 됩니다. 프로필 사진 업로드, 기본 정보 체크, 작업물 사진 업로드 등을 통해 디자이너로 활동할 준비를 하게 됩니다."
+        "디자이너의 홈스타일링 프로젝트 개수와 경력, 서비스 제공 범위와 같이 디자이너 단계별 성장 지원을 해드립니다."
       ],
     },
   ];
@@ -456,13 +456,13 @@ AspirantPaymentJs.prototype.insertNoticeBox = function () {
           },
           {
             text: (desktop ? [
-              aspirant.designer + " 디자이너님, 안녕하세요! 홈리에종은 새롭게 인연이 닿은 실장님과",
-              "홈스타일링 프로젝트를 함께 하게 되어 기대가 매우 큽니다!",
+              aspirant.designer + " 디자이너님, 홈리에종의 파트너십 등록 비용에 대해서 안내드립니다.",
+              "등록비는 다음과 같이 5가지의 항목을 포함하고 있으며, 총 385,000원 입니다!",
             ] : [
-              aspirant.designer + " 디자이너님, 안녕하세요!",
-              "홈리에종은 새롭게 인연이 닿은 실장님과",
-              "홈스타일링 프로젝트를 함께",
-              "하게 되어 기대가 매우 큽니다!",
+              aspirant.designer + " 디자이너님, 홈리에종의",
+              "파트너십 등록 비용에 대해서 안내드립니다.",
+              "등록비는 다음과 같이 5가지의 항목을",
+              "포함하고 있으며, 총 385,000원 입니다!",
             ]).join("\n"),
             style: {
               display: "inline-block",
@@ -638,7 +638,7 @@ AspirantPaymentJs.prototype.insertNoticeBox = function () {
 
 }
 
-AspirantPaymentJs.prototype.insertContractBox = function () {
+AspirantPaymentJs.prototype.insertCircleBox = function () {
   const instance = this;
   const mother = this.mother;
   const { ea, baseTong, media } = this;
@@ -689,6 +689,12 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
   let accountFileChangeEvent;
   let businessFileChangeEvent;
   let identityFileChangeEvent;
+  let mainTextTextTop;
+  let mainTextSize;
+  let mainTextWeight;
+  let textArea, circleArea;
+  let textAreaWidth;
+  let plusTop, plusLeft, plusSize, plusWeight;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -743,9 +749,9 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
   linePadding = <%% 12, 12, 12, 12, 12 %%>;
 
-  grayBigHeight = <%% 200, 230, 210, 180, 45 %%>;
+  grayBigHeight = <%% 153, 230, 210, 180, 45 %%>;
 
-  boxBetween = <%% 72, 20, 9, 8, 1 %%>;
+  boxBetween = <%% 60, 20, 9, 8, 1 %%>;
 
   mobilePaddingLeft = 6;
   boxLength = 5;
@@ -754,6 +760,17 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
 
   bigSize = <%% 23, 19, 17, 13, 4.5 %%>;
   bigTextTop = <%% -3, -3, -3, -2, -0.3 %%>;
+
+  mainTextTextTop = <%% 0, 0, 0, 0, 0 %%>;
+  mainTextSize = <%% 17, 17, 17, 17, 17 %%>;
+  mainTextWeight = <%% 800, 800, 800, 800, 800 %%>;
+
+  textAreaWidth = <%% 283, 263, 263, 263, 263 %%>;
+
+  plusTop = <%% 34, 34, 34, 34, 34 %%>;
+  plusLeft = <%% 168, 168, 168, 168, 168 %%>;
+  plusSize = <%% 50, 50, 50, 50, 50 %%>;
+  plusWeight = <%% 800, 800, 800, 800, 800 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -837,8 +854,68 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
   });
   tong = block.lastChild;
 
-  createNode({
+
+  textArea = createNode({
     mother: tong,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: String(textAreaWidth) + ea,
+      height: String(grayBigHeight) + ea,
+      verticalAlign: "top",
+      justifyContent: "start",
+      alignItems: "center",
+    }
+  });
+
+  createNode({
+    mother: textArea,
+    style: {
+      display: "block",
+      width: withOut(25, ea),
+      position: "relative",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "absolute",
+          top: String(lineTop) + ea,
+          left: String(0),
+          width: withOut(0, ea),
+          height: String(0),
+          borderBottom: "1px solid " + colorChip.gray3,
+        }
+      },
+      {
+        text: "등록비의 5가지 포함 항목",
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(contentsWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black,
+          background: colorChip.white,
+          paddingRight: String(linePadding) + ea,
+        }
+      }
+    ]
+  })
+
+
+
+  circleArea = createNode({
+    mother: tong,
+    style: {
+      display: "inline-flex",
+      position: "relative",
+      width: withOut(textAreaWidth, ea),
+      verticalAlign: "top",
+    }
+  });
+
+  createNode({
+    mother: circleArea,
     style: {
       display: "inline-flex",
       position: "relative",
@@ -858,9 +935,9 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        top: String(-1) + ea,
-        fontSize: String(21) + ea,
-        fontWeight: String(800),
+        top: String(mainTextTextTop) + ea,
+        fontSize: String(mainTextSize) + ea,
+        fontWeight: String(mainTextWeight),
         color: colorChip.white,
         lineHeight: String(1.5),
         textAlign: "center",
@@ -871,10 +948,11 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
         style: {
           display: "inline-block",
           position: "absolute",
-          top: String(54) + ea,
-          left: String(221) + ea,
-          fontSize: String(60) + ea,
-          fontWeight: String(800),
+          fontFamily: "graphik",
+          top: String(plusTop) + ea,
+          left: String(plusLeft) + ea,
+          fontSize: String(plusSize) + ea,
+          fontWeight: String(plusWeight),
           color: colorChip.gray3,
           lineHeight: String(1.4),
           textAlign: "center",
@@ -885,7 +963,7 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
   });
   
   createNode({
-    mother: tong,
+    mother: circleArea,
     style: {
       display: "inline-flex",
       position: "relative",
@@ -905,9 +983,9 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        top: String(-1) + ea,
-        fontSize: String(21) + ea,
-        fontWeight: String(800),
+        top: String(mainTextTextTop) + ea,
+        fontSize: String(mainTextSize) + ea,
+        fontWeight: String(mainTextWeight),
         color: colorChip.white,
         lineHeight: String(1.5),
         textAlign: "center",
@@ -918,10 +996,11 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
         style: {
           display: "inline-block",
           position: "absolute",
-          top: String(54) + ea,
-          left: String(221) + ea,
-          fontSize: String(60) + ea,
-          fontWeight: String(800),
+          fontFamily: "graphik",
+          top: String(plusTop) + ea,
+          left: String(plusLeft) + ea,
+          fontSize: String(plusSize) + ea,
+          fontWeight: String(plusWeight),
           color: colorChip.gray3,
           lineHeight: String(1.4),
           textAlign: "center",
@@ -932,7 +1011,7 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
   });
 
   createNode({
-    mother: tong,
+    mother: circleArea,
     style: {
       display: "inline-flex",
       position: "relative",
@@ -952,9 +1031,9 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        top: String(-1) + ea,
-        fontSize: String(21) + ea,
-        fontWeight: String(800),
+        top: String(mainTextTextTop) + ea,
+        fontSize: String(mainTextSize) + ea,
+        fontWeight: String(mainTextWeight),
         color: colorChip.white,
         lineHeight: String(1.5),
         textAlign: "center",
@@ -965,10 +1044,11 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
         style: {
           display: "inline-block",
           position: "absolute",
-          top: String(54) + ea,
-          left: String(221) + ea,
-          fontSize: String(60) + ea,
-          fontWeight: String(800),
+          fontFamily: "graphik",
+          top: String(plusTop) + ea,
+          left: String(plusLeft) + ea,
+          fontSize: String(plusSize) + ea,
+          fontWeight: String(plusWeight),
           color: colorChip.gray3,
           lineHeight: String(1.4),
           textAlign: "center",
@@ -979,7 +1059,7 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
   });
 
   createNode({
-    mother: tong,
+    mother: circleArea,
     style: {
       display: "inline-flex",
       position: "relative",
@@ -999,9 +1079,9 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        top: String(-1) + ea,
-        fontSize: String(21) + ea,
-        fontWeight: String(800),
+        top: String(mainTextTextTop) + ea,
+        fontSize: String(mainTextSize) + ea,
+        fontWeight: String(mainTextWeight),
         color: colorChip.white,
         lineHeight: String(1.5),
         textAlign: "center",
@@ -1012,10 +1092,11 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
         style: {
           display: "inline-block",
           position: "absolute",
-          top: String(54) + ea,
-          left: String(221) + ea,
-          fontSize: String(60) + ea,
-          fontWeight: String(800),
+          fontFamily: "graphik",
+          top: String(plusTop) + ea,
+          left: String(plusLeft) + ea,
+          fontSize: String(plusSize) + ea,
+          fontWeight: String(plusWeight),
           color: colorChip.gray3,
           lineHeight: String(1.4),
           textAlign: "center",
@@ -1026,7 +1107,7 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
   });
 
   createNode({
-    mother: tong,
+    mother: circleArea,
     style: {
       display: "inline-flex",
       width: desktop ? "calc(calc(100% - " + String(boxBetween * (boxLength - 1)) + ea + ") / " + String(boxLength) + ")" : withOut(0, ea),
@@ -1044,9 +1125,9 @@ AspirantPaymentJs.prototype.insertContractBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        top: String(-1) + ea,
-        fontSize: String(21) + ea,
-        fontWeight: String(800),
+        top: String(mainTextTextTop) + ea,
+        fontSize: String(mainTextSize) + ea,
+        fontWeight: String(mainTextWeight),
         color: colorChip.white,
         lineHeight: String(1.5),
         textAlign: "center",
@@ -1294,6 +1375,7 @@ AspirantPaymentJs.prototype.insertAspirantBox = function () {
   let titleBottom;
   let contentsAreaPaddingTop;
   let finalAreaPaddingTop;
+  let submitButtonBetween;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
@@ -1627,6 +1709,8 @@ AspirantPaymentJs.prototype.insertAspirantBox = function () {
   textareaVisualTop = <%% 38, 35, 34, 32, 8 %%>;
 
   finalAreaPaddingTop = <%% 36, 36, 30, 24, 6 %%>;
+
+  submitButtonBetween = <%% 8, 8, 6, 4, 1 %%>;
 
   contents = {
     main: [
@@ -2008,9 +2092,6 @@ AspirantPaymentJs.prototype.insertAspirantBox = function () {
     children: [
       {
         class: [ "submitButtonClassName" ],
-        event: {
-          click: instance.finalSubmit()
-        },
         style: {
           display: "inline-flex",
           width: String(submitButtonWidth) + ea,
@@ -2021,6 +2102,7 @@ AspirantPaymentJs.prototype.insertAspirantBox = function () {
           alignItems: "center",
           textAlign: "center",
           cursor: "pointer",
+          marginRight: String(submitButtonBetween) + ea,
         },
         children: [
           {
@@ -2036,84 +2118,38 @@ AspirantPaymentJs.prototype.insertAspirantBox = function () {
             }
           }
         ]
-      }
+      },
+      {
+        class: [ "submitButtonClassName" ],
+        style: {
+          display: "inline-flex",
+          width: String(submitButtonWidth) + ea,
+          height: String(submitButtonHeight) + ea,
+          background: colorChip.gradientGreen,
+          borderRadius: String(5) + "px",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            text: "무통장 입금하기",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(submitSize) + ea,
+              fontWeight: String(submitWeight),
+              color: colorChip.white,
+              lineHeight: String(submitLineHeight),
+              top: String(submitTextTop) + ea,
+            }
+          }
+        ]
+      },
     ]
   });
 
-}
-
-AspirantPaymentJs.prototype.finalSubmit = function () {
-  const instance = this;
-  const { ajaxJson, colorChip, findByAttribute, scrollTo, dateToString, sleep, selfHref, homeliaisonAnalytics, setQueue, ajaxForm, equalJson } = GeneralJs;
-  const { aspid, aspirant } = this;
-  return async function (e) {
-    try {
-      if (instance.accountInput.files.length === 0) {
-        throw new Error("통장 사본을 업로드해주세요!");
-      }
-      if (instance.businessInput.files.length === 0) {
-        throw new Error("사업자등록증(주민등록증)을 업로드해주세요!");
-      }
-      if (instance.identityInput.files.length === 0) {
-        throw new Error("신분증 사본을 업로드해주세요!");
-      }
-      let account, business, identity;
-      let portfolioFiles;
-      let grayLoading;
-      let formData;
-      let cancelPhoto;
-
-      [ account ] = instance.accountInput.files;
-      [ business ] = instance.businessInput.files;
-      [ identity ] = instance.identityInput.files;
-      portfolioFiles = instance.fileInput.files;
-
-      grayLoading = instance.mother.whiteProgressLoading();
-
-      await homeliaisonAnalytics({
-        page: instance.pageName,
-        standard: instance.firstPageViewTime,
-        action: "aspirantDocumentsSend",
-        data: {
-          aspid,
-          date: dateToString(new Date(), true),
-        },
-      })
-
-      formData = new FormData();
-      formData.enctype = "multipart/form-data";
-      formData.append("name", aspirant.designer);
-      formData.append("aspid", aspid);
-      cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
-      for (let i = 0; i < instance.fileInput.files.length; i++) {
-        if (!cancelPhoto.includes(i)) {
-          formData.append("upload0", instance.fileInput.files[i]);
-        }
-      }
-      formData.append("account", account);
-      formData.append("business", business);
-      formData.append("identity", identity);
-
-      ajaxForm(formData, BRIDGEHOST + "/aspirantDocuments", grayLoading.progress.firstChild).then((res) => {
-        const { message } = JSON.parse(res);
-        if (message !== "done") {
-          throw new Error("file posting fail");
-        }
-        return ajaxJson({ aspid }, BACKHOST + "/aspirantDocuments", { equal: true });
-      }).then(() => {
-        grayLoading.remove();
-        GeneralJs.scrollTo(window, 0);
-        window.alert("전송이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
-        selfHref(FRONTHOST);
-      }).catch((err) => {
-        window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
-        window.location.reload();
-      });
-
-    } catch (e) {
-      window.alert(e.message);
-    }
-  }
 }
 
 AspirantPaymentJs.prototype.launching = async function (loading) {
@@ -2154,7 +2190,7 @@ AspirantPaymentJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertNoticeBox();
-          instance.insertContractBox();
+          instance.insertCircleBox();
           instance.insertAspirantBox();
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "AspirantPaymentJs.launching.ghostClientLaunching : " + e.message }, BACKHOST + "/errorLog");
