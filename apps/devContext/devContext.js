@@ -163,16 +163,16 @@ DevContext.prototype.launching = async function () {
 
 
     
-    // const { response: { access_token } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
-    //   imp_key: address.officeinfo.import.key,
-    //   imp_secret: address.officeinfo.import.secret,
-    // }, { headers: { "Content-Type": "application/json" } })).data;
-    // const oid = "designerRegistration_a2101_aa01s_1691394";
+    const { response: { access_token } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
+      imp_key: address.officeinfo.import.key,
+      imp_secret: address.officeinfo.import.secret,
+    }, { headers: { "Content-Type": "application/json" } })).data;
+    const oid = "designerRegistration_a2101_aa01s_1691398";
 
-    // const { data: { response: rsp } } = await requestSystem("https://api.iamport.kr/payments/find/" + oid, {}, { method: "get", headers: { "Authorization": access_token } });
+    const { data: { response: rsp } } = await requestSystem("https://api.iamport.kr/payments/find/" + oid, {}, { method: "get", headers: { "Authorization": access_token } });
 
 
-    // console.log(rsp)
+    console.log(rsp)
 
 
     

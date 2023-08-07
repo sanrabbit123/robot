@@ -17192,49 +17192,49 @@ ProcessDetailJs.prototype.launching = async function (loading) {
     homeliaisonAnalytics({ page: instance.pageName, standard: instance.firstPageViewTime, action: "processDetail", data: analyticsData }).catch((err) => { console.log(err); });
 
     // mobile payment
-    if (typeof getObj.mobilecard === "string") {
-      const grayLoadingIcon = instance.mother.grayLoading();
-      const response = await ajaxJson({ mode: "open", key: getObj.mobilecard }, BACKHOST + "/generalImpPayment", { equal: true });
-      if (response.data !== undefined && response.rsp !== undefined) {
-        const { data, rsp } = response;
-        let whereQuery, updateQuery;
-        let amount;
+    // if (typeof getObj.mobilecard === "string") {
+    //   const grayLoadingIcon = instance.mother.grayLoading();
+    //   const response = await ajaxJson({ mode: "open", key: getObj.mobilecard }, BACKHOST + "/generalImpPayment", { equal: true });
+    //   if (response.data !== undefined && response.rsp !== undefined) {
+    //     const { data, rsp } = response;
+    //     let whereQuery, updateQuery;
+    //     let amount;
 
-        if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+    //     if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
 
-          whereQuery = { proid: instance.project.proid };
-          updateQuery = {};
+    //       whereQuery = { proid: instance.project.proid };
+    //       updateQuery = {};
 
-          if (typeof rsp.amount === "string") {
-            amount = Number(rsp.amount.replace(/[^0-9]/gi, ''));
-          } else if (typeof rsp.amount === "number") {
-            amount = rsp.amount
-          } else {
-            amount = 165000;
-          }
+    //       if (typeof rsp.amount === "string") {
+    //         amount = Number(rsp.amount.replace(/[^0-9]/gi, ''));
+    //       } else if (typeof rsp.amount === "number") {
+    //         amount = rsp.amount
+    //       } else {
+    //         amount = 165000;
+    //       }
 
-          updateQuery["contents.payment.status"] = "결제 완료";
-          updateQuery["contents.payment.date"] = new Date();
-          updateQuery["contents.payment.calculation.amount"] = amount;
-          updateQuery["contents.payment.calculation.info.method"] = `카드(${rsp.card_name.replace(/카드/gi, '')})`;
-          updateQuery["contents.payment.calculation.info.proof"] = "이니시스";
-          updateQuery["contents.payment.calculation.info.to"] = instance.designer.designer;
+    //       updateQuery["contents.payment.status"] = "결제 완료";
+    //       updateQuery["contents.payment.date"] = new Date();
+    //       updateQuery["contents.payment.calculation.amount"] = amount;
+    //       updateQuery["contents.payment.calculation.info.method"] = `카드(${rsp.card_name.replace(/카드/gi, '')})`;
+    //       updateQuery["contents.payment.calculation.info.proof"] = "이니시스";
+    //       updateQuery["contents.payment.calculation.info.to"] = instance.designer.designer;
 
-          await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
-          await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + instance.client.name + " 고객님 카드 촬영비를 결제하셨습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
-          await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + instance.client.name + " 고객님 카드 촬영비를 결제하셨습니다!", channel: "#700_operation" }, BACKHOST + "/sendSlack");
+    //       await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateProject");
+    //       await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + instance.client.name + " 고객님 카드 촬영비를 결제하셨습니다!", channel: "#301_console" }, BACKHOST + "/sendSlack");
+    //       await ajaxJson({ message: instance.designer.designer + " 실장님이 콘솔을 통해 " + instance.client.name + " 고객님 카드 촬영비를 결제하셨습니다!", channel: "#700_operation" }, BACKHOST + "/sendSlack");
 
-          window.alert("결제가 완료 되었습니다!");
-          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
+    //       window.alert("결제가 완료 되었습니다!");
+    //       window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + instance.project.proid;
 
-        } else {
-          window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-        }
-      } else {
-        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-      }
-      grayLoadingIcon.remove();
-    }
+    //     } else {
+    //       window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+    //     }
+    //   } else {
+    //     window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+    //   }
+    //   grayLoadingIcon.remove();
+    // }
 
     // auto download
     if (typeof getObj.download === "string") {

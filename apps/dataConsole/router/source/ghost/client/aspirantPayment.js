@@ -1937,7 +1937,7 @@ AspirantPaymentJs.prototype.paymentByCard = function () {
   return async function (e) {
     try {
       const aspid = aspirant.aspid;
-      const amount = 385000;
+      const amount = 33;
       const impKey = "imp71921105";
       const loading = instance.mother.grayLoading();
       const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "designerRegistration" }, BACKHOST + "/generalImpPayment");
@@ -1978,8 +1978,6 @@ AspirantPaymentJs.prototype.paymentByCard = function () {
         });
       } else {
 
-        ({ key } = await ajaxJson({ mode: "store", oid: oid, data: { oid } }, BACKHOST + "/generalImpPayment"));
-
         window.IMP.request_pay({
             pg: "inicis",
             pay_method: "card",
@@ -1989,7 +1987,7 @@ AspirantPaymentJs.prototype.paymentByCard = function () {
             buyer_email: aspirant.email,
             buyer_name: aspirant.designer,
             buyer_tel: aspirant.phone,
-            m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=" + key,
+            m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true",
         }, (rsp) => {});
 
       }
@@ -2052,8 +2050,6 @@ AspirantPaymentJs.prototype.paymentByVaccount = function () {
         });
       } else {
 
-        ({ key } = await ajaxJson({ mode: "store", oid: oid, data: { oid } }, BACKHOST + "/generalImpPayment"));
-
         window.IMP.request_pay({
             pg: "inicis",
             pay_method: "vbank",
@@ -2063,7 +2059,7 @@ AspirantPaymentJs.prototype.paymentByVaccount = function () {
             buyer_email: aspirant.email,
             buyer_name: aspirant.designer,
             buyer_tel: aspirant.phone,
-            m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilevbank=" + key,
+            m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilevbank=true",
         }, (rsp) => {});
 
       }
@@ -2124,7 +2120,7 @@ AspirantPaymentJs.prototype.launching = async function (loading) {
     // mobile payment
     if (typeof getObj.mobilecard === "string") {
       const grayLoadingIcon = instance.mother.grayLoading();
-      const response = await ajaxJson({ mode: "open", key: getObj.mobilecard }, BACKHOST + "/generalImpPayment", { equal: true });
+      const response = await ajaxJson({ mode: "oid", oid: getObj.merchant_uid }, BACKHOST + "/generalImpPayment", { equal: true });
       if (response.data !== undefined && response.rsp !== undefined) {
         const { data, rsp } = response;
         if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
@@ -2146,7 +2142,7 @@ AspirantPaymentJs.prototype.launching = async function (loading) {
     if (typeof getObj.mobilevbank === "string") {
 
       const grayLoadingIcon = instance.mother.grayLoading();
-      const response = await ajaxJson({ mode: "open", key: getObj.mobilevbank }, BACKHOST + "/generalImpPayment", { equal: true });
+      const response = await ajaxJson({ mode: "oid", oid: getObj.merchant_uid }, BACKHOST + "/generalImpPayment", { equal: true });
 
       console.log(response);
 

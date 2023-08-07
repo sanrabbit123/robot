@@ -5503,6 +5503,15 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
           res.send(JSON.stringify({ data: equalJson(data), oid, rsp }));
         }
 
+      } else if (mode === "oid") {
+        const { response: { access_token } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
+          imp_key: address.officeinfo.import.key,
+          imp_secret: address.officeinfo.import.secret,
+        }, { headers: { "Content-Type": "application/json" } })).dat
+        const { oid } = equalJson(req.body);
+        const { data: { response: rsp } } = await requestSystem("https://api.iamport.kr/payments/find/" + oid, {}, { method: "get", headers: { "Authorization": access_token } });
+        res.send(JSON.stringify({ data: { oid }, oid, rsp }));
+
       } else {
         throw new Error("invaild mode");
       }
