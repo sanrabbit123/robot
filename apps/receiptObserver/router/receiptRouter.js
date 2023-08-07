@@ -2167,7 +2167,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
         });
 
         const oid = paymentData.merchant_uid;
-        if (!/designerRegistration_/g.test(oid)) {
+        if (/designerRegistration_/g.test(oid)) {
           const [ oidConst, aspid ] = oid.split("_");
           await requestSystem(impWebhookUrl, req.body, {
             headers: { "Content-Type": "application/json" }
