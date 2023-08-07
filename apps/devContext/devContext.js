@@ -159,13 +159,6 @@ DevContext.prototype.launching = async function () {
 
     
     
-    // bill.taxBill([ 1 ]).catch((err) => {
-    //   logger.error("Python 서버 문제 생김 (rou_post_taxBill): " + err.message).catch((e) => { console.log(e); });
-    // })
-
-
-
-
 
 
     

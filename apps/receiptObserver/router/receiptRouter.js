@@ -3118,11 +3118,7 @@ ReceiptRouter.prototype.rou_post_taxBill = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (req.body.count === undefined) {
-        throw new Error("invaild post");
-      }
-      const count = Number(req.body.count);
-      bill.taxBill([ count ]).catch((err) => {
+      bill.taxBill().catch((err) => {
         logger.error("Python 서버 문제 생김 (rou_post_taxBill): " + err.message).catch((e) => { console.log(e); });
       })
       res.send(JSON.stringify({ message: "will do" }));
