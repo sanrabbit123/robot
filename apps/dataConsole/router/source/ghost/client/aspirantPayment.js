@@ -2056,7 +2056,7 @@ AspirantPaymentJs.prototype.paymentByVaccount = function () {
 
         window.IMP.request_pay({
             pg: "inicis",
-            pay_method: "card",
+            pay_method: "vbank",
             merchant_uid: oid,
             name: "디자이너 등록비",
             amount: Math.floor(amount),
@@ -2146,10 +2146,9 @@ AspirantPaymentJs.prototype.launching = async function (loading) {
     if (typeof getObj.mobilevbank === "string") {
 
       const grayLoadingIcon = instance.mother.grayLoading();
-      const response = await ajaxJson({ mode: "open", key: getObj.mobilevbank }, BACKHOST + "/generalImpPayment", { equal: true });
+      const response = await ajaxJson({ mode: "open", key: getObj.mobilevbank }, "/generalImpPayment", { equal: true });
 
       console.log(response);
-
 
       // if (response.data !== undefined && response.rsp !== undefined) {
       //   const { data, rsp } = response;
