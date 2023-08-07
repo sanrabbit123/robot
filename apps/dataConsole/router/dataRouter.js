@@ -4036,6 +4036,9 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
         if (status === "ready") {
 
           const { data } = equalJson(req.body);
+
+          console.log(data);
+
           await kakao.sendTalk("designerAccount", aspirant.designer, aspirant.phone, {
             designer: aspirant.designer,
             goodName: data.name,
