@@ -6246,7 +6246,6 @@ BillMaker.prototype.taxBill = async function () {
 
     for (let i = 0; i < count; i++) {
       [ newMail ] = await human.getMails(id0, password0, [ count - i ]);
-      console.log(newMail.from);
       if ((new RegExp(targetEmail, "gi")).test(newMail.from)) {
         await readTaxBill(newMail);
       }
@@ -6257,7 +6256,7 @@ BillMaker.prototype.taxBill = async function () {
     console.log(e);
   } finally {
     await MONGOLOCALC.close();
-    await errorLog("taxBill done : " + JSON.stringify(new Date()));
+    await errorLog("taxBill success : " + JSON.stringify(new Date()));
   }
 }
 
