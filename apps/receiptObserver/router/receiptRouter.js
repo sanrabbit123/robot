@@ -2166,6 +2166,10 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
         });
 
         const oid = paymentData.merchant_uid;
+
+        console.log(oid);
+
+
         if (/dreg_/g.test(oid)) {
           const [ oidConst, aspid0, aspid1 ] = oid.split("_");
           const aspid = aspid0 + "_" + aspid1;

@@ -4037,15 +4037,13 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
 
           const { data } = equalJson(req.body);
 
-          console.log(data);
-
           await kakao.sendTalk("designerAccount", aspirant.designer, aspirant.phone, {
             designer: aspirant.designer,
             goodName: data.name,
             bankName: data.vbank_name,
             account: data.vbank_num,
             to: data.vbank_holder,
-            amount: data.paid_amount,
+            amount: data.paid_amount === undefined ? data.amount : data.paid_amount,
           });
 
         } else if (status === "paid") {
