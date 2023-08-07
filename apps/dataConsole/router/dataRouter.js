@@ -4142,7 +4142,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
       const status = req.body.status;
       if (typeof status === "string") {
         if (/paid/gi.test(status)) {
-          if (!/mini_/g.test(oid) && !/designerRegistration_/g.test(oid)) {
+          if (!/mini_/g.test(oid) && !/dreg_/g.test(oid)) {
 
             const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
             const bill = new BillMaker();
@@ -6305,7 +6305,7 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
       const oidConstDictionary = {
         mini: "mini_",
         designerPhoto: "designerPhoto_",
-        designerRegistration: "designerRegistration_",
+        designerRegistration: "dreg_",
       };
       let pluginScript;
 
@@ -6342,7 +6342,7 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
         const { response: { access_token } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
           imp_key: address.officeinfo.import.key,
           imp_secret: address.officeinfo.import.secret,
-        }, { headers: { "Content-Type": "application/json" } })).dat
+        }, { headers: { "Content-Type": "application/json" } })).data;
         const { oid } = equalJson(req.body);
         const { data: { response: rsp } } = await requestSystem("https://api.iamport.kr/payments/find/" + oid, {}, { method: "get", headers: { "Authorization": access_token } });
         res.send(JSON.stringify({ data: { oid }, oid, rsp }));
