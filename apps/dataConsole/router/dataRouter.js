@@ -6329,6 +6329,7 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
       const oidConstDictionary = {
         mini: "mini_",
         designerPhoto: "designerPhoto_",
+        designerRegistration: "designerRegistration_",
       };
       let pluginScript;
 

@@ -3306,6 +3306,9 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
       const mid = address.officeinfo.inicis.mid;
       const status = req.body.status;
       if (typeof status === "string") {
+
+        console.log(oid);
+
         if (/paid/gi.test(status)) {
           if (!/mini_/g.test(oid)) {
             if (!/designerRegistration_/g.test(oid)) {
