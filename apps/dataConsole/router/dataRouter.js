@@ -4045,7 +4045,7 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
             amount: data.paid_amount,
           });
 
-        } else {
+        } else if (status === "paid") {
 
           whereQuery = { aspid };
           updateQuery = {};
