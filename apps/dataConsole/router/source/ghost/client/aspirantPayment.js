@@ -2146,7 +2146,7 @@ AspirantPaymentJs.prototype.launching = async function (loading) {
     if (typeof getObj.mobilevbank === "string") {
 
       const grayLoadingIcon = instance.mother.grayLoading();
-      const response = await ajaxJson({ mode: "open", key: getObj.mobilevbank }, "/generalImpPayment", { equal: true });
+      const response = await ajaxJson({ mode: "open", key: getObj.mobilevbank }, BACKHOST + "/generalImpPayment", { equal: true });
 
       console.log(response);
 

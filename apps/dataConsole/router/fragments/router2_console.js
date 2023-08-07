@@ -5508,6 +5508,7 @@ DataRouter.prototype.rou_post_generalImpPayment = function () {
       }
 
     } catch (e) {
+      console.log(e);
       await logger.error("Console 서버 문제 생김 (rou_post_generalImpPayment): " + e.message);
       res.send(JSON.stringify({ error: e.message }));
     }

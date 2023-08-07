@@ -161,18 +161,21 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await findCode("iamport")
+
+    
+    // const { response: { access_token } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
+    //   imp_key: address.officeinfo.import.key,
+    //   imp_secret: address.officeinfo.import.secret,
+    // }, { headers: { "Content-Type": "application/json" } })).data;
+    // const oid = "designerRegistration_a2101_aa01s_1691394";
+
+    // const { data: { response: rsp } } = await requestSystem("https://api.iamport.kr/payments/find/" + oid, {}, { method: "get", headers: { "Authorization": access_token } });
 
 
-
-
-
+    // console.log(rsp)
 
 
     
-
-    
-
     
 
 
