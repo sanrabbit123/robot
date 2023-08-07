@@ -2012,13 +2012,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       let accountTransferCollection;
       let transferRows, transferRows2;
 
-
-
-      console.log(oid);
-
-
-
-      if (!/designerRegistration_/g.test(oid)) {
+      if (!/imp_/g.test(oid)) {
 
         bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: oid } } }, { selfMongo: instance.mongolocal });
 
@@ -2158,13 +2152,21 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
         await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal }, logger);
   
       } else {
-       
-        const [ oidConst, aspid ] = oid.split("_");
-        await requestSystem("https://" + instance.address.backinfo.host + ":3000/aspirantPayment", {
-          aspid,
-          mode: "vbank",
-          status: "paid"
-        }, { headers: { "Content-Type": "application/json" } });
+        
+
+
+
+
+        console.log(req.body);
+        
+
+
+        // const [ oidConst, aspid ] = oid.split("_");
+        // await requestSystem("https://" + instance.address.backinfo.host + ":3000/aspirantPayment", {
+        //   aspid,
+        //   mode: "vbank",
+        //   status: "paid"
+        // }, { headers: { "Content-Type": "application/json" } });
 
       }
 
