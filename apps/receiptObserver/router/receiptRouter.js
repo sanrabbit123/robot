@@ -1997,6 +1997,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
 ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
   const instance = this;
   const back = this.back;
+  const address = this.address;
   const bill = this.bill;
   const { equalJson, requestSystem, messageSend } = this.mother;
   let obj = {};
@@ -2011,6 +2012,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       let bills;
       let accountTransferCollection;
       let transferRows, transferRows2;
+      let impId;
 
       if (!/imp_/g.test(oid)) {
 
@@ -2152,12 +2154,20 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
         await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal }, logger);
   
       } else {
-        
+
+        const impId = oid;
+        const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
+          imp_key: address.officeinfo.import.key,
+          imp_secret: address.officeinfo.import.secret
+        }, { headers: { "Content-Type": "application/json" } }));
+        const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
+          method: "get",
+          headers: { "Authorization": accessToken }
+        });
 
 
 
-
-        console.log(req.body);
+        console.log(paymentData);
         
 
 
