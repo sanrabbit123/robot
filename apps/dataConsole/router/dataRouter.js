@@ -4029,7 +4029,7 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
         updateQuery["submit.registration.boo"] = true;
   
         await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
-        await messageSend({ message: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 카드 결제하셨습니다!", channel: "#301_apply", voice: true });
+        await messageSend({ text: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 카드 결제하셨습니다!", channel: "#301_apply", voice: true });
   
         // kakao
       } else if (mode === "vbank") {
@@ -4053,7 +4053,7 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
           updateQuery["submit.registration.boo"] = true;
     
           await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
-          await messageSend({ message: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 무통장 입금하셨습니다!", channel: "#301_apply", voice: true });
+          await messageSend({ text: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 무통장 입금하셨습니다!", channel: "#301_apply", voice: true });
     
           // kakao
   

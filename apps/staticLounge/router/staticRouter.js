@@ -80,7 +80,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
     this.address.officeinfo.ghost.host,
     "home-liaison.servehttp.com",
     "localhost:3000",
-    "192.168.0.14:3000",
+    "192.168.0.90:3000",
   ];
 }
 
