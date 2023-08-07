@@ -3179,24 +3179,43 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (req.body.aspid === undefined) {
+      if (req.body.aspid === undefined || req.body.mode === undefined || req.body.status === undefined) {
         throw new Error("invalid post");
       }
       const selfMongo = instance.mongo;
-      const { aspid } = equalJson(req.body);
+      const { aspid, mode, status } = equalJson(req.body);
       const [ aspirant ] = await back.getAspirantsByQuery({ aspid }, { selfMongo });
       let whereQuery, updateQuery;
 
-      whereQuery = { aspid };
-      updateQuery = {};
-      updateQuery["submit.registration.date"] = new Date();
-      updateQuery["submit.registration.boo"] = true;
+      if (mode === "card") {
+        whereQuery = { aspid };
+        updateQuery = {};
+        updateQuery["submit.registration.date"] = new Date();
+        updateQuery["submit.registration.boo"] = true;
+  
+        await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
+        await messageSend({ message: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 카드 결제하셨습니다!", channel: "#301_apply", voice: true });
+  
+        // kakao
+      } else if (mode === "vbank") {
+        if (status === "ready") {
 
-      await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
-      await messageSend({ message: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 카드 결제하셨습니다!", channel: "#301_apply", voice: true });
+          const { data } = equalJson(req.body);
+          await kakao.sendTalk("designerAccount", aspirant.designer, aspirant.phone, {
+            designer: aspirant.designer,
+            goodName: data.name,
+            bankName: data.vbank_name,
+            account: data.vbank_num,
+            to: data.vbank_holder,
+            amount: data.paid_amount,
+          });
 
-      // kakao
+        } else {
 
+        }
+      } else {
+        throw new Error("invalid mode");
+      }
 
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {

@@ -1891,6 +1891,9 @@ AspirantPaymentJs.prototype.insertAspirantBox = function () {
       },
       {
         class: [ "submitButtonClassName" ],
+        event: {
+          click: instance.paymentByVaccount(),
+        },
         style: {
           display: "inline-flex",
           width: String(submitButtonWidth) + ea,
@@ -1960,7 +1963,7 @@ AspirantPaymentJs.prototype.paymentByCard = function () {
           try {
             if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
               
-              await ajaxJson({ aspid }, BACKHOST + "/aspirantPayment");
+              await ajaxJson({ aspid, mode: "card", status: "paid" }, BACKHOST + "/aspirantPayment");
               window.alert("감사합니다, 결제가 완료 되었습니다! 곧 디자이너님께 연락을 드릴 예정이니 잠시만 기다려주세요!");
               selfHref(FRONTHOST);
 
@@ -1988,6 +1991,80 @@ AspirantPaymentJs.prototype.paymentByCard = function () {
             buyer_tel: aspirant.phone,
             m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=" + key,
         }, (rsp) => {});
+
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+AspirantPaymentJs.prototype.paymentByVaccount = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { ea, baseTong, media, contentsRawInfo, totalContents, requestNumber, aspirant } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const manyBig = media[0];
+  const generalSmall = !manyBig;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, homeliaisonAnalytics, selfHref } = GeneralJs;
+  return async function (e) {
+    try {
+      const aspid = aspirant.aspid;
+      const amount = 10;
+      const impKey = "imp71921105";
+      const loading = instance.mother.grayLoading();
+      const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "designerPhoto" }, BACKHOST + "/generalImpPayment");
+      let oid, plugin;
+      let whereQuery, updateQuery;
+
+      oid = oidConst + aspid + "_" + String((new Date()).valueOf());
+      plugin = new Function(pluginScript);
+      plugin();
+      window.IMP.init(impKey);
+      if (desktop) {
+
+        window.IMP.request_pay({
+            pg: "inicis",
+            pay_method: "vbank",
+            merchant_uid: oid,
+            name: "디자이너 등록비",
+            amount: Math.floor(amount),
+            buyer_email: aspirant.email,
+            buyer_name: aspirant.designer,
+            buyer_tel: aspirant.phone,
+        }, async (rsp) => {
+          try {
+            if (rsp.success && typeof rsp.status === "string" && /ready/gi.test(rsp.status)) {
+
+              await ajaxJson({ aspid, mode: "vbank", status: "ready", data: rsp }, BACKHOST + "/aspirantPayment");
+              window.alert("감사합니다, 카카오 알림톡으로 가상 계좌 정보를 보내드렸습니다! 결제를 진행해주시면, 디자이너님께 연락을 드릴 예정입니다!");
+              selfHref(FRONTHOST);
+
+            } else {
+              window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+              loading.remove();
+            }
+          } catch (e) {
+            window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+            loading.remove();
+          }
+        });
+      } else {
+
+        ({ key } = await ajaxJson({ mode: "store", oid: oid, data: { oid } }, BACKHOST + "/generalImpPayment"));
+
+        // window.IMP.request_pay({
+        //     pg: "inicis",
+        //     pay_method: "card",
+        //     merchant_uid: oid,
+        //     name: "디자이너 등록비",
+        //     amount: Math.floor(amount),
+        //     buyer_email: aspirant.email,
+        //     buyer_name: aspirant.designer,
+        //     buyer_tel: aspirant.phone,
+        //     m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=" + key,
+        // }, (rsp) => {});
 
       }
     } catch (e) {
@@ -2052,7 +2129,7 @@ AspirantPaymentJs.prototype.launching = async function (loading) {
         const { data, rsp } = response;
         if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
 
-          await ajaxJson({ aspid }, BACKHOST + "/aspirantPayment");
+          await ajaxJson({ aspid: this.aspid, mode: "card", status: "paid" }, BACKHOST + "/aspirantPayment");
           window.alert("감사합니다, 결제가 완료 되었습니다! 곧 디자이너님께 연락을 드릴 예정이니 잠시만 기다려주세요!");
           selfHref(FRONTHOST);
 
