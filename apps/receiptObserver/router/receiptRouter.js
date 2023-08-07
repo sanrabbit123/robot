@@ -2012,142 +2012,155 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       let accountTransferCollection;
       let transferRows, transferRows2;
 
-      bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: oid } } }, { selfMongo: instance.mongolocal });
+      if (!/designerRegistration_/g.test(oid)) {
 
-      if (bills.length === 0) {
-        accountTransferCollection = "accountTransfer";
-        transferRows = await back.mongoRead(accountTransferCollection, { "accountInfo.no_oid": oid }, { selfMongo: instance.mongolocal });
-        if (transferRows.length > 0) {
-          transferRows2 = await back.mongoRead(accountTransferCollection, {
-            $and: [
-              { name: transferRows[0].name },
-              { phone: transferRows[0].phone },
-              { amount: transferRows[0].amount },
-              { goodname: transferRows[0].goodname },
-            ]
-          }, { selfMongo: instance.mongolocal });
-          if (transferRows2.length > 1) {
-            transferRows2.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
-            for (let obj of transferRows2) {
-              bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: obj.accountInfo.no_oid } } }, { selfMongo: instance.mongolocal });
-              if (bills.length !== 0) {
-                break;
+        bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: oid } } }, { selfMongo: instance.mongolocal });
+
+        if (bills.length === 0) {
+          accountTransferCollection = "accountTransfer";
+          transferRows = await back.mongoRead(accountTransferCollection, { "accountInfo.no_oid": oid }, { selfMongo: instance.mongolocal });
+          if (transferRows.length > 0) {
+            transferRows2 = await back.mongoRead(accountTransferCollection, {
+              $and: [
+                { name: transferRows[0].name },
+                { phone: transferRows[0].phone },
+                { amount: transferRows[0].amount },
+                { goodname: transferRows[0].goodname },
+              ]
+            }, { selfMongo: instance.mongolocal });
+            if (transferRows2.length > 1) {
+              transferRows2.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+              for (let obj of transferRows2) {
+                bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: obj.accountInfo.no_oid } } }, { selfMongo: instance.mongolocal });
+                if (bills.length !== 0) {
+                  break;
+                }
               }
-            }
-            if (bills.length === 0) {
-              throw new Error("invaild oid 3");
+              if (bills.length === 0) {
+                throw new Error("invaild oid 3");
+              }
+            } else {
+              throw new Error("invaild oid 2");
             }
           } else {
-            throw new Error("invaild oid 2");
+            throw new Error("invaild oid 1");
           }
-        } else {
-          throw new Error("invaild oid 1");
         }
-      }
-
-      if (bills[0].links.proid === undefined || bills[0].links.desid === undefined || bills[0].links.cliid === undefined) {
-        throw new Error("invaild bill");
-      }
-
-      const { proid, cliid, desid, method } = bills[0].links;
-      let infoArr, index;
-      let bilid;
-      let client, designer, project, proposal;
-      let requestNumber;
-      let data;
-      let thisBill;
-      let projectQuery;
-      let amount;
-      let pureDesignFee;
-      let vat, consumer;
-      let classification, percentage;
-      let businessMethod;
-      let bankName, bankTo;
-      let calculate;
-      let whereQuery, updateQuery;
-      let proofs;
-      let itemArr, payArr, cancelArr;
-      let itemNum, payNum, cancelNum;
-      let payObject;
-      let message;
-
-      thisBill = bills[0];
-      thisBill = thisBill.toNormal();
-      bilid = thisBill.bilid;
-
-      client = await back.getClientById(cliid, { selfMongo: instance.mongo });
-      designer = await back.getDesignerById(desid, { selfMongo: instance.mongo });
-      project = await back.getProjectById(proid, { selfMongo: instance.mongo });
-      proposal = project.selectProposal(desid);
-
-      if (client === null || designer === null || project === null) {
-        throw new Error("invaild id");
-      }
-
-      requestNumber = null;
-      for (let i = 0; i < thisBill.requests.length; i++) {
-        for (let obj of thisBill.requests[i].info) {
-          if (obj.oid === oid) {
-            requestNumber = i;
+  
+        if (bills[0].links.proid === undefined || bills[0].links.desid === undefined || bills[0].links.cliid === undefined) {
+          throw new Error("invaild bill");
+        }
+  
+        const { proid, cliid, desid, method } = bills[0].links;
+        let infoArr, index;
+        let bilid;
+        let client, designer, project, proposal;
+        let requestNumber;
+        let data;
+        let thisBill;
+        let projectQuery;
+        let amount;
+        let pureDesignFee;
+        let vat, consumer;
+        let classification, percentage;
+        let businessMethod;
+        let bankName, bankTo;
+        let calculate;
+        let whereQuery, updateQuery;
+        let proofs;
+        let itemArr, payArr, cancelArr;
+        let itemNum, payNum, cancelNum;
+        let payObject;
+        let message;
+  
+        thisBill = bills[0];
+        thisBill = thisBill.toNormal();
+        bilid = thisBill.bilid;
+  
+        client = await back.getClientById(cliid, { selfMongo: instance.mongo });
+        designer = await back.getDesignerById(desid, { selfMongo: instance.mongo });
+        project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+        proposal = project.selectProposal(desid);
+  
+        if (client === null || designer === null || project === null) {
+          throw new Error("invaild id");
+        }
+  
+        requestNumber = null;
+        for (let i = 0; i < thisBill.requests.length; i++) {
+          for (let obj of thisBill.requests[i].info) {
+            if (obj.oid === oid) {
+              requestNumber = i;
+              break;
+            }
+          }
+        }
+  
+        if (requestNumber === null) {
+          throw new Error("invaild request");
+        }
+  
+        for (let obj of thisBill.requests[requestNumber].info) {
+          if (obj.data !== undefined && typeof obj.data === "object" && obj.data !== null) {
+            data = equalJson(JSON.stringify(obj.data));
             break;
           }
         }
-      }
-
-      if (requestNumber === null) {
-        throw new Error("invaild request");
-      }
-
-      for (let obj of thisBill.requests[requestNumber].info) {
-        if (obj.data !== undefined && typeof obj.data === "object" && obj.data !== null) {
-          data = equalJson(JSON.stringify(obj.data));
-          break;
-        }
-      }
-
-      infoArr = equalJson(JSON.stringify(thisBill.requests[requestNumber].info));
-      infoArr.unshift({ virtualAccount: equalJson(JSON.stringify(req.body)) });
-
-      whereQuery = { bilid };
-      updateQuery = {};
-      updateQuery["requests." + String(requestNumber) + ".info"] = infoArr;
-
-      amount = Number(equalJson(JSON.stringify(req.body)).amt_input.replace(/[^0-9]/gi, ''));
-
-      itemArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].items));
-      payArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].pay));
-      cancelArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].cancel));
-      payObject = bill.returnBillDummies("pay");
-      payObject.oid = oid;
-      payObject.amount = amount;
-      payArr.unshift(payObject);
-
-      updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
-      updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
-
-      proofs = bill.returnBillDummies("proofs");
-
-      if (!(typeof req.body.real_account === "string")) {
-        if (typeof bankFrom === "string") {
-          proofs.method = "무통장 입금(" + bankFrom.replace(/은행/gi, '') + ")";
+  
+        infoArr = equalJson(JSON.stringify(thisBill.requests[requestNumber].info));
+        infoArr.unshift({ virtualAccount: equalJson(JSON.stringify(req.body)) });
+  
+        whereQuery = { bilid };
+        updateQuery = {};
+        updateQuery["requests." + String(requestNumber) + ".info"] = infoArr;
+  
+        amount = Number(equalJson(JSON.stringify(req.body)).amt_input.replace(/[^0-9]/gi, ''));
+  
+        itemArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].items));
+        payArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].pay));
+        cancelArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].cancel));
+        payObject = bill.returnBillDummies("pay");
+        payObject.oid = oid;
+        payObject.amount = amount;
+        payArr.unshift(payObject);
+  
+        updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
+        updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
+  
+        proofs = bill.returnBillDummies("proofs");
+  
+        if (!(typeof req.body.real_account === "string")) {
+          if (typeof bankFrom === "string") {
+            proofs.method = "무통장 입금(" + bankFrom.replace(/은행/gi, '') + ")";
+          } else {
+            proofs.method = "무통장 입금(알 수 없음)";
+          }
         } else {
-          proofs.method = "무통장 입금(알 수 없음)";
+          proofs.method = "계좌 이체";
         }
+  
+        proofs.proof = inisis;
+        proofs.to = nameFrom;
+        thisBill.requests[requestNumber].proofs.unshift(proofs);
+        updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[requestNumber].proofs;
+  
+        message = client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
+        messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
+          console.log(err);
+        });
+        await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+        await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal }, logger);
+  
       } else {
-        proofs.method = "계좌 이체";
+       
+        const [ oidConst, aspid ] = oid.split("_");
+        await requestSystem("https://" + instance.address.backinfo.host + ":3000/aspirantPayment", {
+          aspid,
+          mode: "vbank",
+          status: "paid"
+        }, { headers: { "Content-Type": "application/json" } });
+
       }
-
-      proofs.proof = inisis;
-      proofs.to = nameFrom;
-      thisBill.requests[requestNumber].proofs.unshift(proofs);
-      updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[requestNumber].proofs;
-
-      message = client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
-      messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
-        console.log(err);
-      });
-      await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-      await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal }, logger);
 
       res.set({ "Content-Type": "text/plain" });
       res.send("OK");
