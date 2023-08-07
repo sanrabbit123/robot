@@ -2144,23 +2144,21 @@ AspirantPaymentJs.prototype.launching = async function (loading) {
       const grayLoadingIcon = instance.mother.grayLoading();
       const response = await ajaxJson({ mode: "oid", oid: getObj.merchant_uid }, BACKHOST + "/generalImpPayment", { equal: true });
 
-      console.log(response);
+      if (response.data !== undefined && response.rsp !== undefined) {
+        const { data, rsp } = response;
+        if (typeof rsp.status === "string" && /ready/gi.test(rsp.status)) {
 
-      // if (response.data !== undefined && response.rsp !== undefined) {
-      //   const { data, rsp } = response;
-      //   if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+          await ajaxJson({ aspid: this.aspid, mode: "vbank", status: "ready", data: rsp }, BACKHOST + "/aspirantPayment");
+          window.alert("감사합니다, 카카오 알림톡으로 가상 계좌 정보를 보내드렸습니다! 결제를 진행해주시면, 디자이너님께 연락을 드릴 예정입니다!");
+          selfHref(FRONTHOST);
 
-      //     await ajaxJson({ aspid: this.aspid, mode: "card", status: "paid" }, BACKHOST + "/aspirantPayment");
-      //     window.alert("감사합니다, 결제가 완료 되었습니다! 곧 디자이너님께 연락을 드릴 예정이니 잠시만 기다려주세요!");
-      //     selfHref(FRONTHOST);
-
-      //   } else {
-      //     window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-      //   }
-      // } else {
-      //   window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-      // }
-      // grayLoadingIcon.remove();
+        } else {
+          window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+        }
+      } else {
+        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+      }
+      grayLoadingIcon.remove();
     }
 
   } catch (err) {
