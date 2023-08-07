@@ -4142,7 +4142,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
       const status = req.body.status;
       if (typeof status === "string") {
         if (/paid/gi.test(status)) {
-          if (!/mini_/g.test(oid)) {
+          if (!/mini_/g.test(oid) && !/designerRegistration_/g.test(oid)) {
 
             const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
             const bill = new BillMaker();
