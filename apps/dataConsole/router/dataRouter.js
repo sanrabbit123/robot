@@ -4220,6 +4220,16 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
               }
             }
 
+          } else if (/dreg_/g.test(oid)) {
+
+            const [ oidConst, aspid0, aspid1 ] = oid.split("_");
+            const aspid = aspid0 + "_" + aspid1;
+            await requestSystem("https://" + address.backinfo.host + ":3000/aspirantPayment", {
+              aspid,
+              mode: "vbank",
+              status: "paid"
+            }, { headers: { "Content-Type": "application/json" } });
+            
           }
         }
       }
