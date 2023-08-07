@@ -2012,6 +2012,12 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       let accountTransferCollection;
       let transferRows, transferRows2;
 
+
+
+      console.log(oid);
+
+
+
       if (!/designerRegistration_/g.test(oid)) {
 
         bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: oid } } }, { selfMongo: instance.mongolocal });
