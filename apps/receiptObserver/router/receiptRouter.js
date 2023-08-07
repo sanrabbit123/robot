@@ -2156,6 +2156,10 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
   
       } else {
 
+        console.log(await requestSystem(impWebhookUrl, req.body, {
+          headers: { "Content-Type": "application/json" }
+        }));
+
         const impId = req.body.no_oid;
         const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
           imp_key: address.officeinfo.import.key,
@@ -2168,10 +2172,9 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
 
         const oid = paymentData.merchant_uid;
         if (/designerRegistration_/g.test(oid)) {
-          const [ oidConst, aspid ] = oid.split("_");
-          await requestSystem(impWebhookUrl, req.body, {
-            headers: { "Content-Type": "application/json" }
-          });
+          const [ oidConst, aspid0, aspid1 ] = oid.split("_");
+          const aspid = aspid0 + "_" + aspid1;
+          console.log(aspid);
           await requestSystem("https://" + address.backinfo.host + ":3000/aspirantPayment", {
             aspid,
             mode: "vbank",
