@@ -3150,10 +3150,58 @@ DataRouter.prototype.rou_post_aspirantDocuments = function () {
 
       await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
       
+      // kakao
+
+      
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       console.log(e);
       logger.error("Console 서버 문제 생김 (rou_post_aspirantDocuments): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_aspirantPayment = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const kakao = this.kakao;
+  const { equalJson, stringToDate, messageSend, messageLog, requestSystem, dateToString, sleep } = this.mother;
+  let obj = {};
+  obj.link = [ "/aspirantPayment" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.aspid === undefined) {
+        throw new Error("invalid post");
+      }
+      const selfMongo = instance.mongo;
+      const { aspid } = equalJson(req.body);
+      const [ aspirant ] = await back.getAspirantsByQuery({ aspid }, { selfMongo });
+      let whereQuery, updateQuery;
+
+      whereQuery = { aspid };
+      updateQuery = {};
+      updateQuery["submit.registration.date"] = new Date();
+      updateQuery["submit.registration.boo"] = true;
+
+      await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
+      await messageSend({ message: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 카드 결제하셨습니다!", channel: "#301_apply", voice: true });
+
+      // kakao
+
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      console.log(e);
+      logger.error("Console 서버 문제 생김 (rou_post_aspirantPayment): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ error: e.message }));
     }
   }

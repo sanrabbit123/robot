@@ -418,6 +418,8 @@ Alien.prototype.smsLaunching = async function () {
         let newMail;
         let length;
 
+        console.log("this");
+
         const { data } = await client.list();
         const arr = data.split("\r\n").map((str) => { return str.trim() }).filter((str) => { return str !== '' });
         standardString = JSON.stringify(arr);

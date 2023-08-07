@@ -762,7 +762,7 @@ AspirantPaymentJs.prototype.insertCircleBox = function () {
   bigSize = <%% 23, 19, 17, 13, 4.5 %%>;
   bigTextTop = <%% -3, -3, -3, -2, -0.3 %%>;
 
-  mainTextTextTop = <%% 0, 0, 0, 0, 0 %%>;
+  mainTextTextTop = <%% (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 2), (isMac() ? 0 : 1), -0.2 %%>;
   mainTextSize = <%% 17, 14, 13, 11, 3.5 %%>;
   mainTextWeight = <%% 800, 800, 800, 800, 800 %%>;
 
@@ -1859,6 +1859,9 @@ AspirantPaymentJs.prototype.insertAspirantBox = function () {
     children: [
       {
         class: [ "submitButtonClassName" ],
+        event: {
+          click: instance.paymentByCard(),
+        },
         style: {
           display: "inline-flex",
           width: String(submitButtonWidth) + ea,
@@ -1919,12 +1922,86 @@ AspirantPaymentJs.prototype.insertAspirantBox = function () {
 
 }
 
+AspirantPaymentJs.prototype.paymentByCard = function () {
+  const instance = this;
+  const mother = this.mother;
+  const { ea, baseTong, media, contentsRawInfo, totalContents, requestNumber, aspirant } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const manyBig = media[0];
+  const generalSmall = !manyBig;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, ajaxForm, serviceParsing, stringToDate, dateToString, cleanChildren, isMac, isIphone, autoComma, downloadFile, blankHref, removeByClass, equalJson, svgMaker, homeliaisonAnalytics, selfHref } = GeneralJs;
+  return async function (e) {
+    try {
+      const aspid = aspirant.aspid;
+      const amount = 385000;
+      const impKey = "imp71921105";
+      const loading = instance.mother.grayLoading();
+      const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "designerPhoto" }, BACKHOST + "/generalImpPayment");
+      let oid, plugin;
+      let whereQuery, updateQuery;
+
+      oid = oidConst + aspid + "_" + String((new Date()).valueOf());
+      plugin = new Function(pluginScript);
+      plugin();
+      window.IMP.init(impKey);
+      if (desktop) {
+
+        window.IMP.request_pay({
+            pg: "inicis",
+            pay_method: "card",
+            merchant_uid: oid,
+            name: "디자이너 등록비",
+            amount: Math.floor(amount),
+            buyer_email: aspirant.email,
+            buyer_name: aspirant.designer,
+            buyer_tel: aspirant.phone,
+        }, async (rsp) => {
+          try {
+            if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+              
+              await ajaxJson({ aspid }, BACKHOST + "/aspirantPayment");
+              window.alert("감사합니다, 결제가 완료 되었습니다! 곧 디자이너님께 연락을 드릴 예정이니 잠시만 기다려주세요!");
+              selfHref(FRONTHOST);
+
+            } else {
+              window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+              loading.remove();
+            }
+          } catch (e) {
+            window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+            loading.remove();
+          }
+        });
+      } else {
+
+        ({ key } = await ajaxJson({ mode: "store", oid: oid, data: { oid } }, BACKHOST + "/generalImpPayment"));
+
+        window.IMP.request_pay({
+            pg: "inicis",
+            pay_method: "card",
+            merchant_uid: oid,
+            name: "디자이너 등록비",
+            amount: Math.floor(amount),
+            buyer_email: aspirant.email,
+            buyer_name: aspirant.designer,
+            buyer_tel: aspirant.phone,
+            m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=" + key,
+        }, (rsp) => {});
+
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 AspirantPaymentJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson } = GeneralJs;
+    const { returnGet, ajaxJson, selfHref } = GeneralJs;
     const getObj = returnGet();
 
     if (typeof getObj.aspid !== "string") {
@@ -1966,6 +2043,27 @@ AspirantPaymentJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
+
+    // mobile payment
+    if (typeof getObj.mobilecard === "string") {
+      const grayLoadingIcon = instance.mother.grayLoading();
+      const response = await ajaxJson({ mode: "open", key: getObj.mobilecard }, BACKHOST + "/generalImpPayment", { equal: true });
+      if (response.data !== undefined && response.rsp !== undefined) {
+        const { data, rsp } = response;
+        if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+
+          await ajaxJson({ aspid }, BACKHOST + "/aspirantPayment");
+          window.alert("감사합니다, 결제가 완료 되었습니다! 곧 디자이너님께 연락을 드릴 예정이니 잠시만 기다려주세요!");
+          selfHref(FRONTHOST);
+
+        } else {
+          window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+        }
+      } else {
+        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+      }
+      grayLoadingIcon.remove();
+    }
 
   } catch (err) {
     console.log(err);
