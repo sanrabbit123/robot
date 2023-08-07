@@ -2000,6 +2000,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
   const address = this.address;
   const bill = this.bill;
   const { equalJson, requestSystem, messageSend } = this.mother;
+  const impWebhookUrl = "https://service.iamport.kr/inicis_payments/notice_vbank";
   let obj = {};
   obj.link = "/webHookVAccount";
   obj.public = true;
@@ -2165,18 +2166,18 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
           headers: { "Authorization": accessToken }
         });
 
-
-
-        console.log(paymentData);
-        
-
-
-        // const [ oidConst, aspid ] = oid.split("_");
-        // await requestSystem("https://" + instance.address.backinfo.host + ":3000/aspirantPayment", {
-        //   aspid,
-        //   mode: "vbank",
-        //   status: "paid"
-        // }, { headers: { "Content-Type": "application/json" } });
+        const oid = paymentData.merchant_uid;
+        if (!/designerRegistration_/g.test(oid)) {
+          const [ oidConst, aspid ] = oid.split("_");
+          await requestSystem(impWebhookUrl, req.body, {
+            headers: { "Content-Type": "application/json" }
+          });
+          await requestSystem("https://" + address.backinfo.host + ":3000/aspirantPayment", {
+            aspid,
+            mode: "vbank",
+            status: "paid"
+          }, { headers: { "Content-Type": "application/json" } });
+        }
 
       }
 
