@@ -2156,7 +2156,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
   
       } else {
 
-        const impId = oid;
+        const impId = req.body.no_oid;
         const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
           imp_key: address.officeinfo.import.key,
           imp_secret: address.officeinfo.import.secret
