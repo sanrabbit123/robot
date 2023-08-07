@@ -2142,25 +2142,30 @@ AspirantPaymentJs.prototype.launching = async function (loading) {
       grayLoadingIcon.remove();
     }
 
-    // mobile payment
-    if (typeof getObj.mobilecard === "string") {
+    // mobile vbank
+    if (typeof getObj.mobilevbank === "string") {
+
       const grayLoadingIcon = instance.mother.grayLoading();
-      const response = await ajaxJson({ mode: "open", key: getObj.mobilecard }, BACKHOST + "/generalImpPayment", { equal: true });
-      if (response.data !== undefined && response.rsp !== undefined) {
-        const { data, rsp } = response;
-        if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+      const response = await ajaxJson({ mode: "open", key: getObj.mobilevbank }, BACKHOST + "/generalImpPayment", { equal: true });
 
-          await ajaxJson({ aspid: this.aspid, mode: "card", status: "paid" }, BACKHOST + "/aspirantPayment");
-          window.alert("감사합니다, 결제가 완료 되었습니다! 곧 디자이너님께 연락을 드릴 예정이니 잠시만 기다려주세요!");
-          selfHref(FRONTHOST);
+      console.log(response);
 
-        } else {
-          window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-        }
-      } else {
-        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
-      }
-      grayLoadingIcon.remove();
+
+      // if (response.data !== undefined && response.rsp !== undefined) {
+      //   const { data, rsp } = response;
+      //   if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
+
+      //     await ajaxJson({ aspid: this.aspid, mode: "card", status: "paid" }, BACKHOST + "/aspirantPayment");
+      //     window.alert("감사합니다, 결제가 완료 되었습니다! 곧 디자이너님께 연락을 드릴 예정이니 잠시만 기다려주세요!");
+      //     selfHref(FRONTHOST);
+
+      //   } else {
+      //     window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+      //   }
+      // } else {
+      //   window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+      // }
+      // grayLoadingIcon.remove();
     }
 
   } catch (err) {
