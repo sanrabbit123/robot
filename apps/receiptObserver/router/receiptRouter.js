@@ -2170,16 +2170,23 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
         if (/dreg_/g.test(oid)) {
           const [ oidConst, aspid0, aspid1 ] = oid.split("_");
           const aspid = aspid0 + "_" + aspid1;
-
           if (/paid/g.test(paymentData.status)) {
-            await requestSystem("https://" + address.backinfo.host + ":3000/aspirantPayment", {
-              aspid,
-              mode: "vbank",
-              status: "paid"
-            }, { headers: { "Content-Type": "application/json" } });
+            if (paymentData.pay_method === "card") {
+              await requestSystem("https://" + address.backinfo.host + ":3000/aspirantPayment", {
+                aspid,
+                mode: "card",
+                status: "paid"
+              }, { headers: { "Content-Type": "application/json" } });
+            } else {
+              await requestSystem("https://" + address.backinfo.host + ":3000/aspirantPayment", {
+                aspid,
+                mode: "vbank",
+                status: "paid"
+              }, { headers: { "Content-Type": "application/json" } });
+            }
           }
+          
         }
-
       }
 
       res.set({ "Content-Type": "text/plain" });

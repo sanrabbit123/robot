@@ -456,13 +456,13 @@ AspirantNoticeJs.prototype.insertNoticeBox = function () {
           },
           {
             text: (desktop ? [
-              aspirant.designer + " 디자이너님, 안녕하세요! 홈리에종은 새롭게 인연이 닿은 실장님과",
-              "홈스타일링 프로젝트를 함께 하게 되어 기대가 매우 큽니다!",
+              aspirant.designer + " 디자이너님, 안녕하세요! 디자이너님께 파트너십 등록 절차 설명과",
+              "업로드해주셔야 할 행정 서류에 대해 안내와 요청을 드립니다!",
             ] : [
               aspirant.designer + " 디자이너님, 안녕하세요!",
-              "홈리에종은 새롭게 인연이 닿은 실장님과",
-              "홈스타일링 프로젝트를 함께",
-              "하게 되어 기대가 매우 큽니다!",
+              "디자이너님께 파트너십 등록 절차 설명과",
+              "업로드해주셔야 할 행정 서류에",
+              "대해 안내와 요청을 드립니다!",
             ]).join("\n"),
             style: {
               display: "inline-block",
