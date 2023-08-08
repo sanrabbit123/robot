@@ -3321,6 +3321,89 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       },
     },
+    "aspirantRequestDocuments": {
+      "name": "파트너십 등록 안내",
+      "id": "TO_3805",
+      "needs": [
+        "client",
+        "host",
+        "path",
+        "aspid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"aspid\", to: obj.aspid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님!\n홈리에종 디자이너 파트너십에 신청해 주셔서 감사합니다 :)\n\n아래 링크를 통해, 디자이너 등록 안내 페이지에 들어가실 수 있습니다. 안내 페이지를 통해 디자이너 등록 안내를 받으실 수 있고, 등록 서류 업로드, 등록비 안내, 추가 포트폴리오 전송을 하실 수 있습니다. \n\n원활한 디자이너 등록을 위해, 안내 페이지의 설명대로 진행 부탁드릴게요~! \n\n*디자이너 등록 안내\nhttps://#{host}/#{path}.php?aspid=#{aspid}",
+        "templtName": "파트너십 등록 안내",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-08-03 19:02:28",
+        "templtCode": "TO_3805",
+        "comments": [
+          {
+            "cdate": "2023-08-07 10:37:57",
+            "name": "검수자",
+            "id": "2763033",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-08-07 10:37:57",
+            "status": "APR"
+          }
+        ]
+      },
+    },
+    "aspirantPaymentComplete": {
+      "name": "파트너십 결제 완료",
+      "id": "TO_3997",
+      "needs": [
+        "client"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client }        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님! 등록비 결제 확인이 완료되었습니다 :)\n\n홈리에종에서 디자이너님과 미팅 날짜를 잡기 위해 직접 연락을 드릴 예정입니다.\n\n미팅을 통해 홈리에종 파트너십 교육을 받으시고, 기본 정보 입력과 프로필, 제안 문서 사진 업로드를 마치시면 본격적으로 홈리에종 파트너 디자이너로 활동하실 수 있게 됩니다!\n\n곧 연락드릴 예정이니, 잠시만 기다려주세요! 감사합니다 :)",
+        "templtName": "파트너십 결제 완료",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-08-04 18:54:02",
+        "templtCode": "TO_3997",
+        "comments": [
+          {
+            "cdate": "2023-08-07 16:08:16",
+            "name": "검수자",
+            "id": "2764598",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-08-07 16:08:16",
+            "status": "APR"
+          }
+        ]
+      },
+    },
     "noticeDesignerChecklist": {
       "name": "디자이너 요청 전송 체크리스트",
       "id": "TO_1919",
