@@ -1962,11 +1962,7 @@ AspirantPaymentJs.prototype.paymentByCard = function () {
         }, async (rsp) => {
           try {
             if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
-              
-              await ajaxJson({ aspid, mode: "card", status: "paid" }, BACKHOST + "/aspirantPayment");
-              window.alert("감사합니다, 결제가 완료 되었습니다! 곧 디자이너님께 연락을 드릴 예정이니 잠시만 기다려주세요!");
-              selfHref(FRONTHOST);
-
+              window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true" + "&imp_uid=" + rsp.imp_uid + "&merchant_uid=" + oid + "&imp_success=true";
             } else {
               window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
               loading.remove();
@@ -2124,11 +2120,8 @@ AspirantPaymentJs.prototype.launching = async function (loading) {
       if (response.data !== undefined && response.rsp !== undefined) {
         const { data, rsp } = response;
         if (typeof rsp.status === "string" && /paid/gi.test(rsp.status)) {
-
-          await ajaxJson({ aspid: this.aspid, mode: "card", status: "paid" }, BACKHOST + "/aspirantPayment");
           window.alert("감사합니다, 결제가 완료 되었습니다! 곧 디자이너님께 연락을 드릴 예정이니 잠시만 기다려주세요!");
           selfHref(FRONTHOST);
-
         } else {
           window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
         }

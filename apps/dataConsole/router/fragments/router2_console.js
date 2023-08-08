@@ -3207,7 +3207,7 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
             bankName: data.vbank_name,
             account: data.vbank_num,
             to: data.vbank_holder,
-            amount: data.paid_amount === undefined ? data.amount : data.paid_amount,
+            amount: (data.paid_amount === undefined || Number.isNaN(Number(data.paid_amount))) ? data.amount : data.paid_amount,
           });
 
         } else if (status === "paid") {
@@ -3384,15 +3384,30 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
             }
 
           } else if (/dreg_/g.test(oid)) {
-
+            const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
+              imp_key: address.officeinfo.import.key,
+              imp_secret: address.officeinfo.import.secret
+            }, { headers: { "Content-Type": "application/json" } }));
+            const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
+              method: "get",
+              headers: { "Authorization": accessToken }
+            });
             const [ oidConst, aspid0, aspid1 ] = oid.split("_");
             const aspid = aspid0 + "_" + aspid1;
-            await requestSystem("https://" + address.backinfo.host + ":3000/aspirantPayment", {
-              aspid,
-              mode: "vbank",
-              status: "paid"
-            }, { headers: { "Content-Type": "application/json" } });
-            
+
+            if (paymentData.pay_method === "card") {
+              await requestSystem("https://" + address.backinfo.host + ":3000/aspirantPayment", {
+                aspid,
+                mode: "card",
+                status: "paid"
+              }, { headers: { "Content-Type": "application/json" } });
+            } else {
+              await requestSystem("https://" + address.backinfo.host + ":3000/aspirantPayment", {
+                aspid,
+                mode: "vbank",
+                status: "paid"
+              }, { headers: { "Content-Type": "application/json" } });
+            }
           }
         }
       }
