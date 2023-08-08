@@ -601,33 +601,37 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false,
         errorformat: "json",
         category: (roadBoo ? "road" : "parcel")
       };
-      res = await requestSystem(vworldUrl, data, { method: "get" });
 
       result = null;
-
-      if (res.data.response.status === "OK") {
-        if (res.data.response.result !== undefined) {
-          if (Array.isArray(res.data.response.result.items)) {
-            if (res.data.response.result.items.length > 0) {
-              result = res.data.response.result.items[0];
-              result.queryResult = JSON.parse(JSON.stringify(res.data.response.result.items));
-              result.point.value = result.point.y + "," + result.point.x;
-              convertResult = this.convertXY(Number(result.point.x), Number(result.point.y));
-              result.point.x = Number(result.point.x);
-              result.point.y = Number(result.point.y);
-              result.point.h = convertResult.x;
-              result.point.v = convertResult.y;
-              result.info = {};
-              result.info.bldnm = result.address.bldnm;
-              result.info.bldnmdc = result.address.bldnmdc;
-              delete result.id;
-              delete result.address.category;
-              delete result.address.bldnm;
-              delete result.address.bldnmdc;
+      try {
+        res = await requestSystem(vworldUrl, data, { method: "get" });
+        if (res.data.response.status === "OK") {
+          if (res.data.response.result !== undefined) {
+            if (Array.isArray(res.data.response.result.items)) {
+              if (res.data.response.result.items.length > 0) {
+                result = res.data.response.result.items[0];
+                result.queryResult = JSON.parse(JSON.stringify(res.data.response.result.items));
+                result.point.value = result.point.y + "," + result.point.x;
+                convertResult = this.convertXY(Number(result.point.x), Number(result.point.y));
+                result.point.x = Number(result.point.x);
+                result.point.y = Number(result.point.y);
+                result.point.h = convertResult.x;
+                result.point.v = convertResult.y;
+                result.info = {};
+                result.info.bldnm = result.address.bldnm;
+                result.info.bldnmdc = result.address.bldnmdc;
+                delete result.id;
+                delete result.address.category;
+                delete result.address.bldnm;
+                delete result.address.bldnmdc;
+              }
             }
           }
         }
+      } catch (e) {
+        result = null;
       }
+
     }
 
     //third search

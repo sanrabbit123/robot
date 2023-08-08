@@ -1775,9 +1775,8 @@ AspirantNoticeJs.prototype.insertAspirantBox = function () {
       width: withOut(innerPadding * 2, ea),
       marginLeft: String(innerPadding) + ea,
       marginRight: String(innerPadding) + ea,
-      paddingBottom: String(titleBottom) + ea,
+      paddingBottom: mobile ? String(1.5) + ea : String(titleBottom) + ea,
       marginBottom: String(contentsAreaPaddingTop) + ea,
-      paddingBottom: mobile ? String(1.5) + ea : "",
       borderBottom: "1px solid " + colorChip.shadow,
     },
     children: [
