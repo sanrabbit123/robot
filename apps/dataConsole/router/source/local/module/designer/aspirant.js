@@ -110,6 +110,12 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         }))
       },
       {
+        title: "유출 이유",
+        width: 130,
+        name: "outreason",
+        type: "string",
+      },
+      {
         title: "연락처",
         width: 130,
         name: "phone",
@@ -140,31 +146,13 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         type: "date",
       },
       {
-        title: "리모델링 가능",
-        width: 100,
-        name: "portfolioRemodeling",
+        title: "주요 특징",
+        width: 200,
+        name: "portfolioCharacter",
         type: "string",
       },
       {
-        title: "스타일링 가능",
-        width: 100,
-        name: "portfolioStyling",
-        type: "string",
-      },
-      {
-        title: "주거 인테리어",
-        width: 100,
-        name: "portfolioHome",
-        type: "string",
-      },
-      {
-        title: "세트 준비",
-        width: 100,
-        name: "portfolioSet",
-        type: "string",
-      },
-      {
-        title: "추가 포폴 필요",
+        title: "추가 포폴",
         width: 100,
         name: "portfolioPlus",
         type: "string",
@@ -173,6 +161,30 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         title: "추가 포폴 전송",
         width: 100,
         name: "portfolioPlusDate",
+        type: "date",
+      },
+      {
+        title: "준비된 세트",
+        width: 100,
+        name: "portfolioSet",
+        type: "string",
+      },
+      {
+        title: "세트 촬영",
+        width: 100,
+        name: "portfolioSetPhoto",
+        type: "date",
+      },
+      {
+        title: "공통 교육",
+        width: 100,
+        name: "commonMeeting",
+        type: "string",
+      },
+      {
+        title: "공통 교육일",
+        width: 100,
+        name: "commonMeetingDate",
         type: "date",
       },
       {
@@ -256,6 +268,10 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           name: "status",
         },
         {
+          value: aspirant.response.outreason === "" ? "해당 없음" : aspirant.response.outreason,
+          name: "outreason",
+        },
+        {
           value: aspirant.phone,
           name: "phone",
         },
@@ -276,20 +292,8 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           name: "paymentBoo",
         },
         {
-          value: aspirant.response.portfolio.proper.remodeling ? "가능" : "불가능",
-          name: "portfolioRemodeling",
-        },
-        {
-          value: aspirant.response.portfolio.proper.styling ? "가능" : "불가능",
-          name: "portfolioStyling",
-        },
-        {
-          value: aspirant.response.portfolio.ready.home ? "가능" : "불가능",
-          name: "portfolioHome",
-        },
-        {
-          value: aspirant.response.portfolio.ready.set ? "있음" : "없음",
-          name: "portfolioSet",
+          value: aspirant.response.portfolio.summary === "" ? "알 수 없음" : aspirant.response.portfolio.summary,
+          name: "portfolioCharacter",
         },
         {
           value: aspirant.response.portfolio.plus.needs ? "필요" : "충분",
@@ -298,6 +302,22 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         {
           value: dateToString(aspirant.response.portfolio.plus.request),
           name: "portfolioPlusDate",
+        },
+        {
+          value: aspirant.response.portfolio.ready.set ? "있음" : "없음",
+          name: "portfolioSet",
+        },
+        {
+          value: dateToString(aspirant.response.portfolio.plus.photo),
+          name: "portfolioSetPhoto",
+        },
+        {
+          value: aspirant.meeting.common.status === "" ? "알 수 없음" : aspirant.meeting.common.status,
+          name: "commonMeeting",
+        },
+        {
+          value: dateToString(aspirant.meeting.common.date),
+          name: "commonMeetingDate",
         },
         {
           value: aspirant.address,
