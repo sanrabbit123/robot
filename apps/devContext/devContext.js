@@ -171,9 +171,9 @@ DevContext.prototype.launching = async function () {
     //   updateQuery = {};
 
       
-    //   if (row.meeting.status === "계약서 발송") {
+    //   if (row.meeting.status === "응대중") {
 
-    //     updateQuery["meeting.status"] = "미팅 완료";
+    //     updateQuery["meeting.status"] = "검토중";
 
     //     await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
     //     console.log(whereQuery, updateQuery);

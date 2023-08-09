@@ -3864,12 +3864,11 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
           updateQuery["information.channel.sns"].push(sns.value.trim());
         }
   
-        updateQuery["meeting.status"] = "조정 필요";
+        updateQuery["meeting.status"] = "검토중";
         updateQuery["meeting.date"] = new Date(1800, 0, 1);
         updateQuery["submit.firstRequest.date"] = new Date();
         updateQuery["submit.firstRequest.method"] = "partnership";
   
-
         rows = await back.getAspirantsByQuery({ phone: phone.replace(/[^0-9\-]/gi, '') }, { selfMongo });
         message = '';
 

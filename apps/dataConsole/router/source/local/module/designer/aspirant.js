@@ -60,6 +60,10 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         colorStandard: true,
         colorMap: [
           {
+            value: "검토중",
+            color: colorChip.black,
+          },
+          {
             value: "응대중",
             color: colorChip.black,
           },
@@ -69,6 +73,10 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           },
           {
             value: "미팅 완료",
+            color: colorChip.black,
+          },
+          {
+            value: "등록 요청",
             color: colorChip.black,
           },
           {
@@ -87,9 +95,11 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             functionName: "filterEvent_$all",
           }
         ].concat([
+          "검토중",
           "응대중",
           "미팅 대기",
           "미팅 완료",
+          "등록 요청",
           "계약 완료",
           "드랍",
         ].map((str) => {
@@ -113,21 +123,21 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
       },
       {
         title: "유선 상담",
-        width: 120,
+        width: 100,
         name: "responseDate",
         type: "date",
       },
       {
-        title: "경력 작성",
+        title: "서류 제출",
         width: 100,
-        name: "careerBoo",
-        type: "string",
+        name: "documentsBoo",
+        type: "date",
       },
       {
-        title: "포폴 적합도",
+        title: "등록비 결제",
         width: 100,
-        name: "portfolioProper",
-        type: "string",
+        name: "paymentBoo",
+        type: "date",
       },
       {
         title: "리모델링 가능",
@@ -258,12 +268,12 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           name: "responseDate",
         },
         {
-          value: aspirant.information.career.detail.length > 0 ? "작성" : "미작성",
-          name: "careerBoo",
+          value: dateToString(aspirant.submit.documents.date),
+          name: "documentsBoo",
         },
         {
-          value: [ "부적절", "애매", "적절" ][aspirant.response.portfolio.proper.status],
-          name: "portfolioProper",
+          value: dateToString(aspirant.submit.registration.date),
+          name: "paymentBoo",
         },
         {
           value: aspirant.response.portfolio.proper.remodeling ? "가능" : "불가능",
@@ -446,17 +456,21 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         name: "status",
         type: "select",
         columns: [
+          "검토중",
           "응대중",
           "미팅 대기",
           "미팅 완료",
+          "등록 요청",
           "계약 완료",
           "드랍",
         ],
         title: "상태",
         value: [
+          "검토중",
           "응대중",
           "미팅 대기",
           "미팅 완료",
+          "등록 요청",
           "계약 완료",
           "드랍",
         ].map((str) => {
@@ -683,7 +697,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     const bigPhotoClassName = "bigPhotoClassName";
     const longTextEditClassName = "longTextEditClassName";
     const longEmptyText = "메모를 클릭하여 입력해주세요.";
-    const maxColumnsNumber = 5;
+    const maxColumnsNumber = 7;
     let name;
     let type;
     let title;
