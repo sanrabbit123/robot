@@ -1,6 +1,6 @@
 DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
   const instance = this;
-  const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows } = this;
+  const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows, profileList, workList } = this;
   const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute } = GeneralJs;
   try {
     const calcMonthDelta = (from, to) => {
@@ -33,6 +33,10 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
     let filteredProfileSendRows;
     let filteredWorkSendRows;
     let completeAnalyticsRows;
+    let profileListSet;
+    let workListSet0, workListSet1, workListSet2, workListSet3;
+    let filteredCareerSendRows;
+    let filteredEntireSendRows;
 
     past.setFullYear(past.getFullYear() - agoYearDelta);
     past.setMonth(0);
@@ -44,6 +48,12 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
     yearsAgo.setMonth(yearsAgo.getMonth() - agoDelta);
     yearDelta = now.getFullYear() - past.getFullYear() + 1
     monthDelta = calcMonthDelta(yearsAgo, now);
+
+    profileListSet = [ ...new Set(profileList.map((o) => { return o.desid })) ];
+    workListSet0 = [ ...new Set(workList[0].map((o) => { return o.desid })) ];
+    workListSet1 = [ ...new Set(workList[1].map((o) => { return o.desid })) ];
+    workListSet2 = [ ...new Set(workList[2].map((o) => { return o.desid })) ];
+    workListSet3 = [ ...new Set(workList[3].map((o) => { return o.desid })) ];
 
     standards = {
       columns: [
@@ -116,6 +126,18 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         title: "작업물 안내 전송",
         width: 100,
         name: "workingPhotoNoticeSend",
+        type: "date",
+      },
+      {
+        title: "경력 안내 전송",
+        width: 100,
+        name: "careerSchoolNoticeSend",
+        type: "date",
+      },
+      {
+        title: "일괄 안내 전송",
+        width: 100,
+        name: "entireNoticeSend",
         type: "date",
       },
       {
@@ -498,6 +520,8 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
       filteredChecklistSendRows = noticeSendRows.filter((o) => { return o.type === "checklist" }).filter((o) => { return o.designer.desid === designer.desid });
       filteredProfileSendRows = noticeSendRows.filter((o) => { return o.type === "profile" }).filter((o) => { return o.designer.desid === designer.desid });
       filteredWorkSendRows = noticeSendRows.filter((o) => { return o.type === "work" }).filter((o) => { return o.designer.desid === designer.desid });
+      filteredCareerSendRows = noticeSendRows.filter((o) => { return o.type === "career" }).filter((o) => { return o.designer.desid === designer.desid });
+      filteredEntireSendRows = noticeSendRows.filter((o) => { return o.type === "entire" }).filter((o) => { return o.designer.desid === designer.desid });
 
       standards.values[designer.desid] = [
         {
@@ -536,15 +560,23 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           name: "workingPhotoNoticeSend",
         },
         {
+          value: filteredCareerSendRows.length > 0 ? dateToString(filteredCareerSendRows[0].date) : "-",
+          name: "careerSchoolNoticeSend",
+        },
+        {
+          value: filteredEntireSendRows.length > 0 ? dateToString(filteredEntireSendRows[0].date) : "-",
+          name: "entireNoticeSend",
+        },
+        {
           value: asyncProcessText,
           name: "checklistDone",
         },
         {
-          value: asyncProcessText,
+          value: profileListSet.includes(designer.desid) ? "올림" : "안올림",
           name: "profilePhotoDone",
         },
         {
-          value: asyncProcessText,
+          value: (workListSet0.includes(designer.desid) && workListSet1.includes(designer.desid) && workListSet2.includes(designer.desid) && workListSet3.includes(designer.desid)) ? "올림" : "안올림",
           name: "workingPhotoDone",
         },
         {
@@ -693,16 +725,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
           thisTarget = findByAttribute(thisValueDoms, "name", "checklistDone");
           thisValueTemp = (completeAnalyticsRows[designer.desid]?.aboutUpdateComplete === 1) ? "완료" : "미완료";
-          thisTarget.textContent = String(thisValueTemp);
-          thisTarget.style.color = colorChip.black;
-
-          thisTarget = findByAttribute(thisValueDoms, "name", "profilePhotoDone");
-          thisValueTemp = (completeAnalyticsRows[designer.desid]?.profileComplete === 1) ? "올림" : "안올림";
-          thisTarget.textContent = String(thisValueTemp);
-          thisTarget.style.color = colorChip.black;
-
-          thisTarget = findByAttribute(thisValueDoms, "name", "workingPhotoDone");
-          thisValueTemp = (completeAnalyticsRows[designer.desid]?.workComplete === 1) ? "올림" : "안올림";
           thisTarget.textContent = String(thisValueTemp);
           thisTarget.style.color = colorChip.black;
 
@@ -3614,6 +3636,7 @@ DesignerJs.prototype.normalView = async function () {
     let members;
     let importants;
     let noticeSendRows;
+    let profileList, workList;
 
     loading = await this.mother.loadingRun();
 
@@ -3631,6 +3654,8 @@ DesignerJs.prototype.normalView = async function () {
 
     members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
     noticeSendRows = await ajaxJson({ mode: "get" }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+    profileList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerProfileList", { equal: true });
+    workList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerWorksList", { equal: true });
 
     this.members = members;
     this.designers = designers;
@@ -3648,6 +3673,8 @@ DesignerJs.prototype.normalView = async function () {
     this.whiteCardMode = "checklist";
     this.asyncProcessText = "로드중..";
     this.noticeSendRows = noticeSendRows;
+    this.profileList = profileList;
+    this.workList = workList;
 
     await this.normalBase();
     await this.normalSearchEvent();

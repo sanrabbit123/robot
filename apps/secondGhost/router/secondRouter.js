@@ -2281,6 +2281,30 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
 
           res.send(JSON.stringify({ message: "success" }));
 
+        } else if (type === "career") {
+
+          // await kakao.sendTalk("noticeDesignerCareer", designer, phone, { designer, host: address.frontinfo.host, path: "about", desid });
+          await messageSend({
+            text: designer + " 실장님께 경력 학력 업데이트 요청 알림톡을 전송하였습니다!",
+            channel,
+            voice,
+            fairy
+          });
+
+          res.send(JSON.stringify({ message: "success" }));
+
+        } else if (type === "entire") {
+
+          // await kakao.sendTalk("noticeDesignerEntire", designer, phone, { designer, host: address.frontinfo.host, path: "about", desid });
+          await messageSend({
+            text: designer + " 실장님께 일괄 체크리스트 업로드 및 업데이트 알림톡을 전송하였습니다!",
+            channel,
+            voice,
+            fairy
+          });
+
+          res.send(JSON.stringify({ message: "success" }));
+
         } else {
           throw new Error("invalid type");
         }
