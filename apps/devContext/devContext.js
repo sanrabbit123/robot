@@ -163,42 +163,27 @@ DevContext.prototype.launching = async function () {
     // let rows, responseObj;
     // let whereQuery, updateQuery;
 
-    // responseObj = {
-    //   date: new Date(1800, 0, 1),
-    //   long: "",
-    //   portfolio: {
-    //     proper: {
-    //       status: 0,
-    //       remodeling: false,
-    //       styling: false,
-    //     },
-    //     ready: {
-    //       home: false,
-    //       furnishing: false,
-    //       set: false,
-    //     },
-    //     plus: {
-    //       needs: false,
-    //       request: new Date(1800, 0, 1),
-    //     }
-    //   },
-    // };
-
     // rows = await selfMongo.db(db).collection(collection).find({}).toArray();
 
     // for (let row of rows) {
     //   whereQuery = {};
     //   whereQuery["aspid"] = row.aspid;
     //   updateQuery = {};
-    //   updateQuery["response"] = equalJson(JSON.stringify(responseObj));
-    //   await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
-    //   console.log(whereQuery, updateQuery);
+
+      
+    //   if (row.meeting.status === "계약서 발송") {
+
+    //     updateQuery["meeting.status"] = "미팅 완료";
+
+    //     await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+    //     console.log(whereQuery, updateQuery);
+
+    //   }
     // }
 
   
 
     
-
 
 
 

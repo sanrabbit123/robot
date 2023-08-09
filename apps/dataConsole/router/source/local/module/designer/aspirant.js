@@ -60,11 +60,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         colorStandard: true,
         colorMap: [
           {
-            value: "조정 필요",
-            color: colorChip.black,
-          },
-          {
-            value: "조정중",
+            value: "응대중",
             color: colorChip.black,
           },
           {
@@ -76,20 +72,8 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             color: colorChip.black,
           },
           {
-            value: "계약서 발송",
-            color: colorChip.black,
-          },
-          {
-            value: "계약 합의중",
-            color: colorChip.black,
-          },
-          {
             value: "계약 완료",
-            color: colorChip.black,
-          },
-          {
-            value: "메뉴얼 발송",
-            color: colorChip.black,
+            color: colorChip.green,
           },
           {
             value: "드랍",
@@ -103,14 +87,10 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             functionName: "filterEvent_$all",
           }
         ].concat([
-          "조정 필요",
-          "조정중",
+          "응대중",
           "미팅 대기",
           "미팅 완료",
-          "계약서 발송",
-          "계약 합의중",
           "계약 완료",
-          "메뉴얼 발송",
           "드랍",
         ].map((str) => {
           return {
@@ -130,6 +110,60 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         width: 400,
         name: "memo",
         type: "string",
+      },
+      {
+        title: "유선 상담",
+        width: 120,
+        name: "responseDate",
+        type: "date",
+      },
+      {
+        title: "경력 작성",
+        width: 100,
+        name: "careerBoo",
+        type: "string",
+      },
+      {
+        title: "포폴 적합도",
+        width: 100,
+        name: "portfolioProper",
+        type: "string",
+      },
+      {
+        title: "리모델링 가능",
+        width: 100,
+        name: "portfolioRemodeling",
+        type: "string",
+      },
+      {
+        title: "스타일링 가능",
+        width: 100,
+        name: "portfolioStyling",
+        type: "string",
+      },
+      {
+        title: "주거 인테리어",
+        width: 100,
+        name: "portfolioHome",
+        type: "string",
+      },
+      {
+        title: "세트 준비",
+        width: 100,
+        name: "portfolioSet",
+        type: "string",
+      },
+      {
+        title: "추가 포폴 필요",
+        width: 100,
+        name: "portfolioPlus",
+        type: "string",
+      },
+      {
+        title: "추가 포폴 전송",
+        width: 100,
+        name: "portfolioPlusDate",
+        type: "date",
       },
       {
         title: "주소",
@@ -218,6 +252,42 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         {
           value: aspirant.meeting.memo,
           name: "memo",
+        },
+        {
+          value: dateToString(aspirant.response.date),
+          name: "responseDate",
+        },
+        {
+          value: aspirant.information.career.detail.length > 0 ? "작성" : "미작성",
+          name: "careerBoo",
+        },
+        {
+          value: [ "부적절", "애매", "적절" ][aspirant.response.portfolio.proper.status],
+          name: "portfolioProper",
+        },
+        {
+          value: aspirant.response.portfolio.proper.remodeling ? "가능" : "불가능",
+          name: "portfolioRemodeling",
+        },
+        {
+          value: aspirant.response.portfolio.proper.styling ? "가능" : "불가능",
+          name: "portfolioStyling",
+        },
+        {
+          value: aspirant.response.portfolio.ready.home ? "가능" : "불가능",
+          name: "portfolioHome",
+        },
+        {
+          value: aspirant.response.portfolio.ready.set ? "준비됨" : "미흡",
+          name: "portfolioSet",
+        },
+        {
+          value: aspirant.response.portfolio.plus.needs ? "필요" : "불필요",
+          name: "portfolioPlus",
+        },
+        {
+          value: dateToString(aspirant.response.portfolio.plus.request),
+          name: "portfolioPlusDate",
         },
         {
           value: aspirant.address,
@@ -376,26 +446,18 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         name: "status",
         type: "select",
         columns: [
-          "조정 필요",
-          "조정중",
+          "응대중",
           "미팅 대기",
           "미팅 완료",
-          "계약서 발송",
-          "계약 합의중",
           "계약 완료",
-          "메뉴얼 발송",
           "드랍",
         ],
         title: "상태",
         value: [
-          "조정 필요",
-          "조정중",
+          "응대중",
           "미팅 대기",
           "미팅 완료",
-          "계약서 발송",
-          "계약 합의중",
           "계약 완료",
-          "메뉴얼 발송",
           "드랍",
         ].map((str) => {
           return str === aspirant.meeting.status ? 1 : 0;
@@ -621,7 +683,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     const bigPhotoClassName = "bigPhotoClassName";
     const longTextEditClassName = "longTextEditClassName";
     const longEmptyText = "메모를 클릭하여 입력해주세요.";
-    const maxColumnsNumber = 9;
+    const maxColumnsNumber = 5;
     let name;
     let type;
     let title;
