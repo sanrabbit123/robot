@@ -157,7 +157,7 @@ DevContext.prototype.launching = async function () {
     // 3 delete cron
     
 
-    
+
 
 
 
@@ -6439,8 +6439,8 @@ DevContext.prototype.launching = async function () {
 
 
     // // send sms
-    // const name = "황준호";
-    // const amount = 6050000;
+    // const name = "조성은";
+    // const amount = 3191430;
     // await human.sendSms({
     //   to: "01055432039",
     //   body: dateToString(new Date(), true).replace(/\-/gi, '/').slice(0, -3) + `\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,

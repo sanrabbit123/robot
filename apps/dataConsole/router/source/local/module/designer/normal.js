@@ -1,6 +1,6 @@
 DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
   const instance = this;
-  const { ea, totalContents, valueTargetClassName, asyncProcessText } = this;
+  const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows } = this;
   const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute } = GeneralJs;
   try {
     const calcMonthDelta = (from, to) => {
@@ -29,7 +29,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
     let thisDate;
     let standards;
     let thisValueTemp;
-    let noticeSendRows;
     let filteredChecklistSendRows;
     let filteredProfileSendRows;
     let filteredWorkSendRows;
@@ -108,6 +107,18 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         type: "date",
       },
       {
+        title: "프로필 안내 전송",
+        width: 100,
+        name: "profilePhotoNoticeSend",
+        type: "date",
+      },
+      {
+        title: "작업물 안내 전송",
+        width: 100,
+        name: "workingPhotoNoticeSend",
+        type: "date",
+      },
+      {
         title: "체크리스트",
         width: 100,
         name: "checklistDone",
@@ -128,12 +139,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         ],
       },
       {
-        title: "프로필 안내 전송",
-        width: 100,
-        name: "profilePhotoNoticeSend",
-        type: "date",
-      },
-      {
         title: "프로필 사진",
         width: 100,
         name: "profilePhotoDone",
@@ -152,12 +157,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
             functionName: "filterEvent_안올림",
           },
         ],
-      },
-      {
-        title: "작업물 안내 전송",
-        width: 100,
-        name: "workingPhotoNoticeSend",
-        type: "date",
       },
       {
         title: "작업물",
@@ -496,6 +495,10 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
     for (let designer of instance.designers) {
 
+      filteredChecklistSendRows = noticeSendRows.filter((o) => { return o.type === "checklist" }).filter((o) => { return o.designer.desid === designer.desid });
+      filteredProfileSendRows = noticeSendRows.filter((o) => { return o.type === "profile" }).filter((o) => { return o.designer.desid === designer.desid });
+      filteredWorkSendRows = noticeSendRows.filter((o) => { return o.type === "work" }).filter((o) => { return o.designer.desid === designer.desid });
+
       standards.values[designer.desid] = [
         {
           value: designer.desid,
@@ -521,8 +524,16 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           name: "processDoing",
         },
         {
-          value: asyncProcessText,
+          value: filteredChecklistSendRows.length > 0 ? dateToString(filteredChecklistSendRows[0].date) : "-",
           name: "checklistNoticeSend",
+        },
+        {
+          value: filteredProfileSendRows.length > 0 ? dateToString(filteredProfileSendRows[0].date) : "-",
+          name: "profilePhotoNoticeSend",
+        },
+        {
+          value: filteredWorkSendRows.length > 0 ? dateToString(filteredWorkSendRows[0].date) : "-",
+          name: "workingPhotoNoticeSend",
         },
         {
           value: asyncProcessText,
@@ -530,15 +541,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         },
         {
           value: asyncProcessText,
-          name: "profilePhotoNoticeSend",
-        },
-        {
-          value: asyncProcessText,
           name: "profilePhotoDone",
-        },
-        {
-          value: asyncProcessText,
-          name: "workingPhotoNoticeSend",
         },
         {
           value: asyncProcessText,
@@ -656,14 +659,10 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
       ajaxJson({ mode: "total" }, S3HOST + "/designerAboutComplete", { equal: true }).then((c) => {
         completeAnalyticsRows = c;
-        return ajaxJson({ mode: "get" }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
-      }).then((r) => {
-        noticeSendRows = r;
         return ajaxJson({ noFlat: true, whereQuery: { $or: [ { "proposal.date": { $gte: past } }, { "process.status": { $regex: "^[대진]" } } ] } }, BACKHOST + "/getProjects", { equal: true });
       }).then((projects) => {
 
         instance.completeAnalyticsRows = completeAnalyticsRows;
-        instance.noticeSendRows = noticeSendRows;
         instance.projects = projects;
         instance.normalMatrix = {};
         for (let designer of instance.designers) {
@@ -682,10 +681,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
             return p.desid === designer.desid;
           });
   
-          filteredChecklistSendRows = noticeSendRows.filter((o) => { return o.type === "checklist" }).filter((o) => { return o.designer.desid === designer.desid });
-          filteredProfileSendRows = noticeSendRows.filter((o) => { return o.type === "profile" }).filter((o) => { return o.designer.desid === designer.desid });
-          filteredWorkSendRows = noticeSendRows.filter((o) => { return o.type === "work" }).filter((o) => { return o.designer.desid === designer.desid });
-
           thisTarget = findByAttribute(thisValueDoms, "name", "processPending");
           thisValueTemp = filteredProjectsContract.filter((p) => { return /^대/.test(p.process.status) }).length;
           thisTarget.textContent = String(thisValueTemp);
@@ -696,28 +691,13 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           thisTarget.textContent = String(thisValueTemp);
           thisTarget.style.color = colorChip.black;
 
-          thisTarget = findByAttribute(thisValueDoms, "name", "checklistNoticeSend");
-          thisValueTemp = filteredChecklistSendRows.length > 0 ? dateToString(filteredChecklistSendRows[0].date) : "-";
-          thisTarget.textContent = String(thisValueTemp);
-          thisTarget.style.color = colorChip.black;
-
           thisTarget = findByAttribute(thisValueDoms, "name", "checklistDone");
           thisValueTemp = (completeAnalyticsRows[designer.desid]?.aboutUpdateComplete === 1) ? "완료" : "미완료";
           thisTarget.textContent = String(thisValueTemp);
           thisTarget.style.color = colorChip.black;
 
-          thisTarget = findByAttribute(thisValueDoms, "name", "profilePhotoNoticeSend");
-          thisValueTemp = filteredProfileSendRows.length > 0 ? dateToString(filteredProfileSendRows[0].date) : "-";
-          thisTarget.textContent = String(thisValueTemp);
-          thisTarget.style.color = colorChip.black;
-
           thisTarget = findByAttribute(thisValueDoms, "name", "profilePhotoDone");
           thisValueTemp = (completeAnalyticsRows[designer.desid]?.profileComplete === 1) ? "올림" : "안올림";
-          thisTarget.textContent = String(thisValueTemp);
-          thisTarget.style.color = colorChip.black;
-
-          thisTarget = findByAttribute(thisValueDoms, "name", "workingPhotoNoticeSend");
-          thisValueTemp = filteredWorkSendRows.length > 0 ? dateToString(filteredWorkSendRows[0].date) : "-";
           thisTarget.textContent = String(thisValueTemp);
           thisTarget.style.color = colorChip.black;
 
@@ -3633,6 +3613,7 @@ DesignerJs.prototype.normalView = async function () {
     let histories;
     let members;
     let importants;
+    let noticeSendRows;
 
     loading = await this.mother.loadingRun();
 
@@ -3649,6 +3630,7 @@ DesignerJs.prototype.normalView = async function () {
     }
 
     members = await ajaxJson({ type: "get" }, BACKHOST + "/getMembers", { equal: true });
+    noticeSendRows = await ajaxJson({ mode: "get" }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
 
     this.members = members;
     this.designers = designers;
@@ -3665,6 +3647,7 @@ DesignerJs.prototype.normalView = async function () {
     this.processDetailEventClassName = "processDetailEventClassName";
     this.whiteCardMode = "checklist";
     this.asyncProcessText = "로드중..";
+    this.noticeSendRows = noticeSendRows;
 
     await this.normalBase();
     await this.normalSearchEvent();

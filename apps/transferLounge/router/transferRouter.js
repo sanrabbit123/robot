@@ -1841,13 +1841,16 @@ TransferRouter.prototype.rou_post_designerProfileList = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (req.body.desid === undefined) {
-        throw new Error("invalid post");
-      }
-      const { desid } = req.body;
       const splitToken = "__split__";
       const rawList = await fileSystem("readDir", [ designerProfileConst ]);
       let result;
+      let mode;
+
+      if (req.body.mode === undefined) {
+        mode = "pick";
+      } else {
+        mode = req.body.mode;
+      }
 
       result = rawList.filter((str) => { return !/^\./.test(str) }).map((rawString) => {
         const [ desid, gs, timeNumber, xPosition, yPosition, size, uniqueExe ] = rawString.split(splitToken);
@@ -1870,10 +1873,18 @@ TransferRouter.prototype.rou_post_designerProfileList = function () {
         }
       });
 
-      result = result.filter((obj) => { return obj.desid === desid });
-      result.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+      if (mode === "pick") {
+        const { desid } = req.body;
+        result = result.filter((obj) => { return obj.desid === desid });
+        result.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        res.send(JSON.stringify(result));
+      } else if (mode === "entire" || mode === "list") {
 
-      res.send(JSON.stringify(result));
+        res.send(JSON.stringify(result));
+
+      } else {
+        throw new Error("invalid mode");
+      }
 
     } catch (e) {
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerProfileList): " + e.message).catch((e) => { console.log(e); });
@@ -2070,10 +2081,6 @@ TransferRouter.prototype.rou_post_designerWorksList = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (req.body.desid === undefined) {
-        throw new Error("invalid post");
-      }
-      const { desid } = req.body;
       const splitToken = "__split__";
       const rawList0 = await fileSystem("readDir", [ designerWorksConst + "/" + designerWorksConstFactors[0] ]);
       const rawList1 = await fileSystem("readDir", [ designerWorksConst + "/" + designerWorksConstFactors[1] ]);
@@ -2082,6 +2089,13 @@ TransferRouter.prototype.rou_post_designerWorksList = function () {
       let result0, result1, result2, result3;
       let filterFunction;
       let mapFunction;
+      let mode;
+
+      if (req.body.mode === undefined) {
+        mode = "pick";
+      } else {
+        mode = req.body.mode;
+      }
 
       filterFunction = (str) => { return !/^\./.test(str) };
       mapFunction = (index) => {
@@ -2112,19 +2126,32 @@ TransferRouter.prototype.rou_post_designerWorksList = function () {
       result2 = rawList2.filter(filterFunction).map(mapFunction(2));
       result3 = rawList3.filter(filterFunction).map(mapFunction(3));
 
-      result0 = result0.filter((obj) => { return obj.desid === desid });
-      result0.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
 
-      result1 = result1.filter((obj) => { return obj.desid === desid });
-      result1.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+      if (mode === "pick") {
 
-      result2 = result2.filter((obj) => { return obj.desid === desid });
-      result2.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        const { desid } = req.body;
 
-      result3 = result3.filter((obj) => { return obj.desid === desid });
-      result3.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+        result0 = result0.filter((obj) => { return obj.desid === desid });
+        result0.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+  
+        result1 = result1.filter((obj) => { return obj.desid === desid });
+        result1.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+  
+        result2 = result2.filter((obj) => { return obj.desid === desid });
+        result2.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+  
+        result3 = result3.filter((obj) => { return obj.desid === desid });
+        result3.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
+  
+        res.send(JSON.stringify([ result0, result1, result2, result3 ]));
 
-      res.send(JSON.stringify([ result0, result1, result2, result3 ]));
+      } else if (mode === "entire" || mode === "list") {
+
+        res.send(JSON.stringify([ result0, result1, result2, result3 ]));
+
+      } else {
+        throw new Error("invalid mode");
+      }
 
     } catch (e) {
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_designerWorksList): " + e.message).catch((e) => { console.log(e); });
