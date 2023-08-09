@@ -14,6 +14,10 @@ module.exports = {
           date: new Date(1800, 0, 1),
           status: "",
           memo: "",
+          common: {
+            date: new Date(1800, 0, 1),
+            status: "",
+          }
         },
         calendar: {
           mother: "designerMeeting",
@@ -83,7 +87,9 @@ module.exports = {
         response: {
           date: new Date(1800, 0, 1),
           long: "",
+          outreason: "",
           portfolio: {
+            summary: "",
             proper: {
               status: 0,
               remodeling: false,
@@ -97,6 +103,7 @@ module.exports = {
             plus: {
               needs: false,
               request: new Date(1800, 0, 1),
+              photo: new Date(1800, 0, 1),
             }
           },
         }

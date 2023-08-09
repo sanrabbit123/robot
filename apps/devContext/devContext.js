@@ -169,21 +169,25 @@ DevContext.prototype.launching = async function () {
     //   whereQuery = {};
     //   whereQuery["aspid"] = row.aspid;
     //   updateQuery = {};
+    //   updateQuery["meeting.common"] = {
+    //     date: new Date(1800, 0, 1),
+    //     status: "",
+    //   };
+    //   updateQuery["response.outreason"] = "";
+    //   updateQuery["response.portfolio.summary"] = "";
+    //   updateQuery["response.portfolio.plus.photo"] = new Date(1800, 0, 1);
 
-      
-    //   if (row.meeting.status === "응대중") {
-
-    //     updateQuery["meeting.status"] = "검토중";
-
-    //     await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
-    //     console.log(whereQuery, updateQuery);
-
-    //   }
+    //   await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+    //   console.log(whereQuery, updateQuery);
     // }
 
-  
-
     
+    // const selfMongo = this.MONGOC;
+
+    // const aspirants = await back.getAspirantsByQuery({}, { selfMongo });
+
+    // console.log(aspirants[40].response);
+    // console.log(aspirants[40].toNormal().response);
 
 
 

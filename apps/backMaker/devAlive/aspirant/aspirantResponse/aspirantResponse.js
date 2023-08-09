@@ -33,16 +33,19 @@ AspirantResponsePortfolioReady.prototype.toNormal = function () {
 const AspirantResponsePortfolioPlus = function (json) {
   this.needs = json.needs;
   this.request = new DateParse(json.request);
+  this.photo = new DateParse(json.photo);
 }
 
 AspirantResponsePortfolioPlus.prototype.toNormal = function () {
   let obj = {};
   obj.needs = this.needs;
   obj.request = this.request.toNormal();
+  obj.photo = this.photo.toNormal();
   return obj;
 }
 
 const AspirantResponsePortfolio = function (json) {
+  this.summary = json.summary;
   this.proper = new AspirantResponsePortfolioProper(json.proper);
   this.ready = new AspirantResponsePortfolioReady(json.ready);
   this.plus = new AspirantResponsePortfolioPlus(json.plus);
@@ -50,6 +53,7 @@ const AspirantResponsePortfolio = function (json) {
 
 AspirantResponsePortfolio.prototype.toNormal = function () {
   let obj = {};
+  obj.summary = this.summary;
   obj.proper = this.proper.toNormal();
   obj.ready = this.ready.toNormal();
   obj.plus = this.plus.toNormal();
@@ -59,6 +63,7 @@ AspirantResponsePortfolio.prototype.toNormal = function () {
 const AspirantResponse = function (json) {
   this.date = new DateParse(json.date);
   this.long = json.long;
+  this.outreason = json.outreason;
   this.portfolio = new AspirantResponsePortfolio(json.portfolio);
 }
 
@@ -66,6 +71,7 @@ AspirantResponse.prototype.toNormal = function () {
   let obj = {};
   obj.date = this.date.toNormal();
   obj.long = this.long;
+  obj.outreason = this.outreason;
   obj.portfolio = this.portfolio.toNormal();
   return obj;
 }

@@ -288,11 +288,11 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           name: "portfolioHome",
         },
         {
-          value: aspirant.response.portfolio.ready.set ? "준비됨" : "미흡",
+          value: aspirant.response.portfolio.ready.set ? "있음" : "없음",
           name: "portfolioSet",
         },
         {
-          value: aspirant.response.portfolio.plus.needs ? "필요" : "불필요",
+          value: aspirant.response.portfolio.plus.needs ? "필요" : "충분",
           name: "portfolioPlus",
         },
         {
