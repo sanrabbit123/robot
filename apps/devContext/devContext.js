@@ -157,6 +157,50 @@ DevContext.prototype.launching = async function () {
     // 3 delete cron
     
 
+    // const selfMongo = this.MONGOC;
+    // const db = "miro81";
+    // const collection = "aspirant";
+    // let rows, responseObj;
+    // let whereQuery, updateQuery;
+
+    // responseObj = {
+    //   date: new Date(1800, 0, 1),
+    //   long: "",
+    //   portfolio: {
+    //     proper: {
+    //       status: 0,
+    //       remodeling: false,
+    //       styling: false,
+    //     },
+    //     ready: {
+    //       home: false,
+    //       furnishing: false,
+    //       set: false,
+    //     },
+    //     plus: {
+    //       needs: false,
+    //       request: new Date(1800, 0, 1),
+    //     }
+    //   },
+    // };
+
+    // rows = await selfMongo.db(db).collection(collection).find({}).toArray();
+
+    // for (let row of rows) {
+    //   whereQuery = {};
+    //   whereQuery["aspid"] = row.aspid;
+    //   updateQuery = {};
+    //   updateQuery["response"] = equalJson(JSON.stringify(responseObj));
+    //   await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+    //   console.log(whereQuery, updateQuery);
+    // }
+
+  
+
+    
+
+
+
 
 
 

@@ -5,6 +5,7 @@ const AspirantCalendar = require(PROJECT_DIR + "/aspirantCalendar/aspirantCalend
 const AspirantPortfolio = require(PROJECT_DIR + "/aspirantPortfolio/aspirantPortfolio.js");
 const AspirantSubmit = require(PROJECT_DIR + "/aspirantSubmit/aspirantSubmit.js");
 const AspirantInformation = require(PROJECT_DIR + "/aspirantInformation/aspirantInformation.js");
+const AspirantResponse = require(PROJECT_DIR + "/aspirantResponse/aspirantResponse.js");
 const { DateParse } = require(GENERAL_DIR + "/generator.js");
 
 const Aspirant = function (json) {
@@ -20,6 +21,7 @@ const Aspirant = function (json) {
   this.portfolio = new AspirantPortfolio(json.portfolio);
   this.submit = new AspirantSubmit(json.submit);
   this.information = new AspirantInformation(json.information);
+  this.response = new AspirantResponse(json.response);
 }
 
 Aspirant.prototype.toNormal = function () {
@@ -36,6 +38,7 @@ Aspirant.prototype.toNormal = function () {
   obj.portfolio = this.portfolio.toNormal();
   obj.submit = this.submit.toNormal();
   obj.information = this.information.toNormal();
+  obj.response = this.response.toNormal();
   return obj;
 }
 

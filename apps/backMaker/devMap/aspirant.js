@@ -79,6 +79,26 @@ module.exports = {
             sns: [],
             cloud: []
           }
+        },
+        response: {
+          date: new Date(1800, 0, 1),
+          long: "",
+          portfolio: {
+            proper: {
+              status: 0,
+              remodeling: false,
+              styling: false,
+            },
+            ready: {
+              home: false,
+              furnishing: false,
+              set: false,
+            },
+            plus: {
+              needs: false,
+              request: new Date(1800, 0, 1),
+            }
+          },
         }
       }
     };
