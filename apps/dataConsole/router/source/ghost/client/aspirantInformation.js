@@ -235,13 +235,13 @@ AspirantInformationJs.prototype.insertNoticeBox = function () {
     {
       title: "홈리에종 파트너십",
       contents: [
-        "홈리에종의 디자이너 파트너십은 타 플랫폼의 파트너십과 개념이 다릅니다. 단순한 플랫폼과 생산자의 관계가 아니라 하나의 홈스타일링 프로젝트를 완벽히 끝내기 위한 협업 파트너로, 홈리에종의 룰과 케어에 따라 인테리어 디자인을 진행해 주시게 됩니다. 이는 홈리에종이 단순 매칭 플랫폼이 아니라 '고객 중심의 인테리어'라는 뚜렷한 미션을 가지고 인테리어 업계에 꼭 필요한 변화를 이끌어가고 있는 기업이기 때문이며, 제대로 된 홈스타일링 프로젝트 방식의 보존과 대중화에 힘쓰고 있는 플랫폼의 역할을 하고 있기 때문입니다."
+        "홈리에종의 디자이너 파트너십은 타 플랫폼의 파트너십과 개념이 다릅니다. 단순한 플랫폼과 생산자의 관계가 아니라 하나의 홈스타일링 프로젝트를 완벽히 끝내기 위한 협업 파트너로, 홈리에종의 룰과 케어에 따라 디자인을 진행해 주시게 됩니다. 이는 홈리에종이 단순 매칭 플랫폼이 아니라 '고객 중심의 인테리어'라는 뚜렷한 미션을 가지고 인테리어 업계에 꼭 필요한 변화를 이끌어가고 있는 기업이고, 제대로 된 홈스타일링 프로젝트 방식의 보존과 대중화에 힘쓰고 있는 플랫폼의 역할을 하고 있기 때문입니다."
       ]
     },
     {
       title: "파트너십 등록 과정",
       contents: [
-        "신규 디자이너 파트너십 신청을 해주시면, 먼저 유선상의 파트너십 설명과 동의 및 진행 여부를 확인하게 됩니다. 그 후, 파트너십을 진행하기로 한 디자이너님들을 대상으로 행정 서류 제출과 등록비 입금이 이루어지고 대표님 미팅 및 교육까지 마치시면, 기본 정보 체크와 프로필 사진 업로드를 통해 본격적으로 홈리에종 디자이너로서 활동할 수 있게 됩니다."
+        "신규 디자이너 파트너십 신청을 해주시면, 먼저 유선상의 파트너십 설명과 동의 및 진행 여부를 확인하게 됩니다. 그 후, 파트너십을 진행하기로 한 디자이너님들을 대상으로 행정 서류 제출과 등록비 입금이 이루어지고 대표님 미팅 및 교육까지 마치시면, 정보 체크와 프로필 업로드를 통해 본격적으로 디자이너로서 활동할 수 있게 됩니다."
       ]
     },
   ];
@@ -618,6 +618,7 @@ AspirantInformationJs.prototype.insertHomeLiaisonBox = function () {
   const { ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const veryBig = (media[0] || media[1]);
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   let paddingTop;
@@ -667,6 +668,7 @@ AspirantInformationJs.prototype.insertHomeLiaisonBox = function () {
   let contentsWordingLineHeight;
   let contentsWordingMarginTop;
   let imagePosition;
+  let mobileMargin;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -689,7 +691,7 @@ AspirantInformationJs.prototype.insertHomeLiaisonBox = function () {
   secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
   secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
 
-  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.2 %%>;
   contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
 
   contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
@@ -721,7 +723,7 @@ AspirantInformationJs.prototype.insertHomeLiaisonBox = function () {
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
   linePadding = <%% 12, 12, 12, 12, 12 %%>;
 
-  grayBigHeight = <%% 336, 400, 170, 140, 38 %%>;
+  grayBigHeight = <%% 336, 400, 400, 360, 42 %%>;
 
   boxBetween = <%% 10, 10, 9, 8, 1 %%>;
 
@@ -733,13 +735,15 @@ AspirantInformationJs.prototype.insertHomeLiaisonBox = function () {
   bigSize = <%% 23, 19, 17, 13, 4.5 %%>;
   bigTextTop = <%% -3, -3, -3, -2, -0.3 %%>;
 
-  imageWidth = <%% 720, 620, 560, 480, 72 %%>;
-  imageBetween = <%% 30, 28, 20, 16, 1 %%>;
+  imageWidth = <%% 720, 620, 480, 360, 72 %%>;
+  imageBetween = <%% 30, 25, 24, 20, 1 %%>;
 
   contentsWordingWeight = <%% 400, 400, 400, 400, 400 %%>;
   contentsWordingMarginTop = <%% 22, 22, 21, 20, 4 %%>;
   contentsWordingLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   imagePosition = <%% 42, 42, 42, 42, 2 %%>;
+
+  mobileMargin = 6;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -750,7 +754,7 @@ AspirantInformationJs.prototype.insertHomeLiaisonBox = function () {
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
       background: colorChip.white,
-      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : String(mobileMargin) + ea,
       paddingBottom: String(paddingTop) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
@@ -770,29 +774,33 @@ AspirantInformationJs.prototype.insertHomeLiaisonBox = function () {
   createNode({
     mother: whiteTong,
     style: {
-      display: "inline-block",
+      display: desktop ? "inline-block" : "block",
       verticalAlign: "top",
-      width: String(imageWidth) + ea,
+      width: desktop ? String(imageWidth) + ea : withOut(mobileMargin * 2, ea),
+      marginLeft: desktop ? "" : String(mobileMargin) + ea,
       height: String(grayBigHeight) + ea,
       position: "relative",
       borderRadius: String(5) + "px",
       backgroundImage: "url('" + AspirantInformationJs.binaryPath + "/a1.jpg" + "')",
       backgroundPosition: "50% " + String(imagePosition) + "%",
-      backgroundSize: "100% auto",
+      backgroundSize: veryBig ? "100% auto" : (desktop ? "auto 100%" : "100% auto"),
     }
   });
 
   textTong = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
+      position: "relative",
       verticalAlign: "top",
-      width: withOut(imageWidth + imageBetween, ea),
-      height: String(grayBigHeight) + ea,
-      marginLeft: String(imageBetween) + ea,
+      width: desktop ?withOut(imageWidth + imageBetween, ea) : withOut(mobileMargin * 2, ea),
+      height: desktop ? String(grayBigHeight) + ea : "",
+      marginLeft: String(desktop ? imageBetween : mobileMargin) + ea,
       flexDirection: "column",
-      justifyContent: "end",
+      justifyContent: desktop ? "end" : "start",
       alignItems: "start",
+      marginTop: desktop ? "" : String(6) + ea,
+      paddingBottom: desktop ? "" : String(3) + ea,
     }
   });
 
@@ -817,11 +825,25 @@ AspirantInformationJs.prototype.insertHomeLiaisonBox = function () {
     }
   });
 
+  if (mobile) {
+    createNode({
+      mother: textTong,
+      style: {
+        position: "absolute",
+        top: String(8.4) + ea,
+        left: String(34) + ea,
+        width: String(42) + ea,
+        borderBottom: "1px solid " + colorChip.black,
+        height: String(0) + ea,
+      }
+    });
+  }
+
   createNode({
     mother: textTong,
     text: [
-      "홈리에종은 '고객 중심의 인테리어'라는 미션을 가지고 인테리어 업계에 꼭 필요한 변화를 이끌어가고 있습니다. 홈리에종은 18년 7월 법인으로 설립 후, 다양한 B2B 기관과 협력 중에 있으며 단순한 커머스와 제조 관련의 플랫폼이 아니라 인테리어 컨시어지 서비스로 도약하기 위해 다양한 시도를 하며 성장하고 있습니다.",
-      "홈리에종은 단순 매칭이 아니라, 디자이너 큐레이션부터 프로젝트 케어까지, 홈스타일링 프로젝트 연결과 진행에 걸쳐 전반적으로 운영하고 있습니다. 디자이너님께서는 홈리에종의 특징을 잘 파악해 주셔야 합니다."
+      "홈리에종은 '고객 중심의 인테리어'라는 미션을 가지고 인테리어 업계에 꼭 필요한 변화를 이끌어가고 있습니다. 홈리에종은 18년 7월 법인으로 설립 후, 다양한 B2B 기관과 협력 중에 있으며 단순 커머스 플랫폼이 아니라 인테리어 컨시어지 서비스로 도약하기 위해 다양한 시도를 하며 성장하고 있습니다.",
+      "홈리에종은 단순 매칭이 아니라, 디자이너 큐레이션부터 프로젝트 케어까지, 홈스타일링 연결과 진행에 걸쳐 전반적으로 운영하고 있습니다. 디자이너님께서는 홈리에종의 특징을 잘 파악해 주셔야 합니다."
     ].join("\n\n"),
     style: {
       display: "block",
@@ -848,6 +870,8 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
   const { ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const veryBig = (media[0] || media[1]);
+  const big = (media[0] || media[1] || media[2]);
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, svgMaker, variableArray } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   let paddingTop;
@@ -913,6 +937,12 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
   let bottomLineLeft, bottomLineWidth;
   let standardWidth2;
   let numberBoxWidth2;
+  let titleHeight;
+  let mobileMargin;
+  let mobileTitleBetween;
+  let titleTong;
+  let mobileLineTop, mobileLineLeft, mobileLineWidth;
+  let mobileTextTongMarginBottom;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -920,7 +950,7 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
 
   whiteBottomMargin = <%% 40, 36, 30, 22, 0 %%>;
 
-  titleFontSize = <%% 21, 20, 19, 17, 4 %%>;
+  titleFontSize = <%% 21, 20, 17, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
@@ -935,7 +965,7 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
   secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
   secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
 
-  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.2 %%>;
   contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
 
   contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
@@ -967,7 +997,7 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
   lineTop = <%% 10, 10, 10, 10, 10 %%>;
   linePadding = <%% 12, 12, 12, 12, 12 %%>;
 
-  grayBigHeight = <%% 224, 190, 170, 140, 38 %%>;
+  grayBigHeight = <%% 224, 190, 170, 140, 36 %%>;
 
   boxBetween = <%% 5, 5, 4, 3, 1 %%>;
 
@@ -980,29 +1010,29 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
   bigTextTop = <%% -3, -3, -3, -2, -0.3 %%>;
 
   imageWidth = <%% 720, 720, 720, 720, 72 %%>;
-  imageBetween = <%% 30, 25, 20, 16, 1 %%>;
+  imageBetween = <%% 30, 25, 24, 20, 1 %%>;
 
   contentsWordingWeight = <%% 400, 400, 400, 400, 400 %%>;
-  contentsWordingMarginTop = <%% 8, 6, 5, 4, 4 %%>;
+  contentsWordingMarginTop = <%% 8, 6, 5, 4, 1 %%>;
   contentsWordingLineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.6 %%>;
   imagePosition = <%% 26, 26, 26, 26, 2 %%>;
 
-  titleBoxWidth = <%% 273, 233, 273, 273, 27 %%>;
-  factorBetween = <%% 12, 10, 8, 6, 6 %%>;
+  titleBoxWidth = <%% 273, 233, 190, 200, 27 %%>;
+  factorBetween = <%% 12, 10, 8, 6, 1 %%>;
 
-  numberBoxWidth = <%% 32, 32, 32, 24, 6 %%>;
-  numberBoxWidth2 = <%% 100, 80, 80, 80, 80 %%>;
+  numberBoxWidth = <%% 32, 32, 28, 24, 6 %%>;
+  numberBoxWidth2 = <%% 100, 80, 64, 72, 13.5 %%>;
 
-  factorSize = <%% 18, 16, 15, 14, 18 %%>;
+  factorSize = <%% 18, 16, 14, 13, 3.2 %%>;
   factorWeight = <%% 300, 300, 300, 300, 300 %%>;
   factorBoldWeight = <%% 800, 800, 800, 800, 800 %%>;
 
-  standardWidth = <%% 447, 388, 377, 377, 44 %%>;
-  standardWidth2 = <%% 707, 510, 527, 527, 44 %%>;
+  standardWidth = <%% 447, 388, 290, 360, 44 %%>;
+  standardWidth2 = <%% 707, 510, 430, 440, 44 %%>;
   lineWidth = <%% 64, 0, 0, 0, 6 %%>;
 
   numberTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  factorTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), 0 %%>;
+  factorTextTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.2 %%>;
 
   textBottomLineTop = <%% 65, 65, 65, 65, 65 %%>;
   centerToLeftLineWidth = <%% 169, 169, 169, 169, 169 %%>;
@@ -1011,6 +1041,16 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
 
   bottomLineLeft = <%% -272, -272, -272, -272, -272 %%>;
   bottomLineWidth = <%% 209, 209, 209, 209, 209 %%>;
+
+  titleHeight = (desktop ? 63 : 6);
+
+  mobileMargin = 6;
+  mobileTitleBetween = 3;
+
+  mobileLineTop = 8.4;
+  mobileLineLeft = 34;
+  mobileLineWidth = 42;
+  mobileTextTongMarginBottom = 2;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -1022,16 +1062,16 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
       "<b%선 기획 후 시공,%b> 디자인 프로세스",
     ],
     essential: [
-      [ "마인드", "프로젝트 진행 시, 개인 브랜드가 아닌 <b%홈리에종의 디자이너%b>입니다." ],
-      [ "협업", "진행할 프로젝트의 <b%고객은 홈리에종의 고객%b>입니다." ],
-      [ "일관성", "<b%60명의 디자이너가 같은 마음%b>으로 홈리에종 고객을 대합니다." ],
-      [ "안내", "서비스의 부족함이 없도록 <b%명확하게 안내%b>합니다." ],
+      desktop ? [ "마인드", "프로젝트 진행 시, 개인 브랜드가 아닌 <b%홈리에종 디자이너%b>입니다." ] : [ "마인드", "개인 브랜드가 아닌 <b%홈리에종의 디자이너%b>입니다." ],
+      desktop ? [ "협업", "진행할 프로젝트의 <b%고객은 홈리에종의 고객%b>입니다." ] : [ "협업", "진행할 <b%고객은 홈리에종의 고객%b>입니다." ],
+      desktop ? [ "일관성", "<b%모든 디자이너가 같은 마음%b>으로 홈리에종 고객을 대합니다." ] : [ "일관성", "<b%모든 디자이너가 한 마음%b>으로 고객을 대합니다." ],
+      desktop ? [ "안내", "서비스의 부족함이 없도록 <b%명확하게 안내%b>합니다." ] : [ "안내", "부족함이 없도록 <b%명확하게 안내%b>합니다." ],
     ],
     homeliaison: [
-      "단순 서비스가 아닌, 여러 상황을 포함하고 있는 <b%인테리어 고관여 서비스%b>입니다.",
-      "홈리에종은 <b%갈등이 최소화되도록 프로젝트 케어를 진행%b>합니다.",
-      "촬영까지 안전하고 <b%완벽하게 마무리 될 수 있도록%b> 관리하고 있습니다.",
-      "예외의 상황에 유연하게 대처할 수 있는 <b%디자이너의 협력 태도가 필요%b>합니다.",
+      desktop ? "단순 서비스가 아닌, 여러 상황을 포함하고 있는 <b%고관여 서비스%b>입니다." : "여러 상황을 포함한 <b%고관여 서비스%b>입니다.",
+      desktop ? "홈리에종은 <b%갈등이 최소화되도록 프로젝트 케어를 진행%b>합니다." : "홈리에종은 <b%갈등이 최소화되도록 케어를 진행%b>합니다.",
+      desktop ? "촬영까지 안전하고 <b%완벽하게 마무리 될 수 있도록%b> 관리하고 있습니다." : "촬영까지 <b%완벽히 마무리 될 수 있도록%b> 관리하고 있습니다.",
+      desktop ? "상황에 유연하게 대처할 수 있는 <b%디자이너의 협력 태도가 필요%b>합니다." : "상황에 대처할 수 있는 <b%디자이너의 협력이 필요%b>합니다.",
     ]
   }
 
@@ -1044,7 +1084,7 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
       background: colorChip.white,
-      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : String(mobileMargin) + ea,
       paddingBottom: String(paddingTop) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
@@ -1061,14 +1101,16 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
   });
   whiteTong = whiteBlock.firstChild;
 
-  createNode({
+  titleTong = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-flex",
+      display: big ? "inline-flex" : "flex",
+      position: "relative",
       verticalAlign: "top",
-      width: String(titleBoxWidth - imageBetween) + ea,
-      height: String(grayBigHeight) + ea,
-      marginRight: String(imageBetween) + ea,
+      width: desktop ? String(titleBoxWidth - imageBetween) + ea : withOut(mobileMargin * 2, ea),
+      height: big ? String(grayBigHeight) + ea : (desktop ? String(titleHeight) + ea : ""),
+      marginRight: desktop ? String(imageBetween) + ea : "",
+      marginLeft: desktop ? "" : String(mobileMargin) + ea,
       flexDirection: "column",
       justifyContent: "start",
       alignItems: "start",
@@ -1076,7 +1118,7 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
     child: {
       text: [
         "<b%타 플랫폼과 핵심 차별점,%b>",
-        "모든 홈리에종 디자이너는",
+        (veryBig ? "모든 " : "") + "홈리에종 디자이너는",
       ].join("\n"),
       style: {
         display: "block",
@@ -1094,6 +1136,20 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
     }
   });
 
+  if (mobile) {
+    createNode({
+      mother: titleTong,
+      style: {
+        position: "absolute",
+        top: String(mobileLineTop) + ea,
+        left: String(mobileLineLeft) + ea,
+        width: String(mobileLineWidth) + ea,
+        borderBottom: "1px solid " + colorChip.black,
+        height: String(0) + ea,
+      }
+    });
+  }
+  
   lineBox = createNode({
     mother: whiteTong,
     style: {
@@ -1172,13 +1228,16 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
   factorBox = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       verticalAlign: "top",
-      width: String(standardWidth - lineWidth) + ea,
+      width: desktop ? String(standardWidth - lineWidth) + ea : withOut(mobileMargin * 2, ea),
+      marginLeft: desktop ? "" : String(mobileMargin) + ea,
       height: String(grayBigHeight) + ea,
       flexDirection: "column",
       justifyContent: "start",
       alignItems: "start",
+      marginTop: desktop ? "" : String(mobileTitleBetween) + ea,
+      marginBottom: desktop ? "" : String(mobileMargin) + ea,
     },
     children: variableArray(contents.factors.length).map((index) => {
       return {
@@ -1247,14 +1306,15 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
   textTong = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       verticalAlign: "top",
-      width: withOut(standardWidth + titleBoxWidth + imageBetween, ea),
-      height: String(grayBigHeight) + ea,
-      marginLeft: String(imageBetween) + ea,
+      width: desktop ? withOut(standardWidth + imageBetween + (big ? titleBoxWidth : 0), ea) : withOut(mobileMargin * 2, ea),
+      height: desktop ? String(grayBigHeight) + ea : "",
+      marginLeft: String(desktop ? imageBetween : mobileMargin) + ea,
       flexDirection: "column",
       justifyContent: "end",
       alignItems: "start",
+      marginBottom: desktop ? "" : String(mobileTextTongMarginBottom) + ea,
     }
   });
 
@@ -1301,7 +1361,7 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
       background: colorChip.white,
-      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : String(mobileMargin) + ea,
       paddingBottom: String(paddingTop) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
@@ -1318,14 +1378,16 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
   });
   whiteTong = whiteBlock.firstChild;
 
-  createNode({
+  titleTong = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-flex",
+      display: big ? "inline-flex" : "flex",
+      position: "relative",
       verticalAlign: "top",
-      width: String(titleBoxWidth - imageBetween) + ea,
-      height: String(grayBigHeight) + ea,
-      marginRight: String(imageBetween) + ea,
+      width: desktop ? String(titleBoxWidth - imageBetween) + ea : withOut(mobileMargin * 2, ea),
+      height: big ? String(grayBigHeight) + ea : (desktop ? String(titleHeight) + ea : ""),
+      marginRight: desktop ? String(imageBetween) + ea : "",
+      marginLeft: desktop ? "" : String(mobileMargin) + ea,
       flexDirection: "column",
       justifyContent: "start",
       alignItems: "start",
@@ -1333,7 +1395,7 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
     child: {
       text: [
         "<b%파트너십의 4가지 요소,%b>",
-        "모든 홈리에종 디자이너는",
+        (veryBig ? "모든 " : "") + "홈리에종 디자이너는",
       ].join("\n"),
       style: {
         display: "block",
@@ -1350,6 +1412,20 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
       }
     }
   });
+
+  if (mobile) {
+    createNode({
+      mother: titleTong,
+      style: {
+        position: "absolute",
+        top: String(mobileLineTop) + ea,
+        left: String(mobileLineLeft) + ea,
+        width: String(mobileLineWidth) + ea,
+        borderBottom: "1px solid " + colorChip.black,
+        height: String(0) + ea,
+      }
+    });
+  }
 
   lineBox = createNode({
     mother: whiteTong,
@@ -1429,13 +1505,16 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
   factorBox = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       verticalAlign: "top",
-      width: String(standardWidth2 - lineWidth) + ea,
+      width: desktop ? String(standardWidth2 - lineWidth) + ea : withOut(mobileMargin * 2, ea),
+      marginLeft: desktop ? "" : String(mobileMargin) + ea,
       height: String(grayBigHeight) + ea,
       flexDirection: "column",
       justifyContent: "start",
       alignItems: "start",
+      marginTop: desktop ? "" : String(mobileTitleBetween) + ea,
+      marginBottom: desktop ? "" : String(mobileMargin) + ea,
     },
     children: variableArray(contents.essential.length).map((index) => {
       return {
@@ -1506,14 +1585,15 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
   textTong = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       verticalAlign: "top",
-      width: withOut(standardWidth2 + titleBoxWidth + imageBetween, ea),
-      height: String(grayBigHeight) + ea,
-      marginLeft: String(imageBetween) + ea,
+      width: desktop ? withOut(standardWidth2 + imageBetween + (big ? titleBoxWidth : 0), ea) : withOut(mobileMargin * 2, ea),
+      height: desktop ? String(grayBigHeight) + ea : "",
+      marginLeft: String(desktop ? imageBetween : mobileMargin) + ea,
       flexDirection: "column",
       justifyContent: "end",
       alignItems: "start",
+      marginBottom: desktop ? "" : String(mobileTextTongMarginBottom) + ea,
     }
   });
 
@@ -1559,7 +1639,7 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
       background: colorChip.white,
-      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : String(mobileMargin) + ea,
       paddingBottom: String(paddingTop) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
@@ -1576,22 +1656,24 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
   });
   whiteTong = whiteBlock.firstChild;
 
-  createNode({
+  titleTong = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-flex",
+      display: big ? "inline-flex" : "flex",
+      position: "relative",
       verticalAlign: "top",
-      width: String(titleBoxWidth - imageBetween) + ea,
-      height: String(grayBigHeight) + ea,
-      marginRight: String(imageBetween) + ea,
+      width: desktop ? String(titleBoxWidth - imageBetween) + ea : withOut(mobileMargin * 2, ea),
+      height: big ? String(grayBigHeight) + ea : (desktop ? String(titleHeight) + ea : ""),
+      marginRight: desktop ? String(imageBetween) + ea : "",
+      marginLeft: desktop ? "" : String(mobileMargin) + ea,
       flexDirection: "column",
       justifyContent: "start",
       alignItems: "start",
     },
     child: {
       text: [
-        "<b%홈리에종 프로젝트의 특징,%b>",
-        "모든 홈리에종 프로젝트는",
+        "<b%홈리에종 프로젝트 특징,%b>",
+        (veryBig ? "모든 " : "") + "홈리에종 프로젝트는",
       ].join("\n"),
       style: {
         display: "block",
@@ -1608,6 +1690,20 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
       }
     }
   });
+
+  if (mobile) {
+    createNode({
+      mother: titleTong,
+      style: {
+        position: "absolute",
+        top: String(mobileLineTop) + ea,
+        left: String(mobileLineLeft) + ea,
+        width: String(mobileLineWidth) + ea,
+        borderBottom: "1px solid " + colorChip.black,
+        height: String(0) + ea,
+      }
+    });
+  }
 
   lineBox = createNode({
     mother: whiteTong,
@@ -1687,13 +1783,17 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
   factorBox = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       verticalAlign: "top",
-      width: String(standardWidth2 - lineWidth) + ea,
+      width: desktop ? String(standardWidth2 - lineWidth) + ea : withOut(mobileMargin * 2, ea),
+      marginLeft: desktop ? "" : String(mobileMargin) + ea,
       height: String(grayBigHeight) + ea,
       flexDirection: "column",
       justifyContent: "start",
       alignItems: "start",
+      marginTop: desktop ? "" : String(mobileTitleBetween) + ea,
+      marginBottom: desktop ? "" : String(mobileMargin) + ea,
+
     },
     children: variableArray(contents.homeliaison.length).map((index) => {
       return {
@@ -1741,14 +1841,15 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
   textTong = createNode({
     mother: whiteTong,
     style: {
-      display: "inline-flex",
+      display: desktop ? "inline-flex" : "flex",
       verticalAlign: "top",
-      width: withOut(standardWidth2 + titleBoxWidth + imageBetween, ea),
-      height: String(grayBigHeight) + ea,
-      marginLeft: String(imageBetween) + ea,
+      width: desktop ? withOut(standardWidth2 + imageBetween + (big ? titleBoxWidth : 0), ea) : withOut(mobileMargin * 2, ea),
+      height: desktop ? String(grayBigHeight) + ea : "",
+      marginLeft: String(desktop ? imageBetween : mobileMargin) + ea,
       flexDirection: "column",
       justifyContent: "end",
       alignItems: "start",
+      marginBottom: desktop ? "" : String(mobileTextTongMarginBottom) + ea,
     }
   });
 
@@ -1767,7 +1868,7 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
 
   createNode({
     mother: textTong,
-    text: "모든 홈스타일링 프로젝트는 홈리에종 케어 아래 운영됩니다. 디자이너님께선 홈리에종과 협업한다는 마인드로 임해주셔서 함께 잘 끝낼 수 있도록 해주시면 됩니다!",
+    text: "모든 홈스타일링 프로젝트는 홈리에종 케어 아래 운영됩니다. 디자이너님께선 홈리에종과 협업하며 함께 잘 끝낼 수 있도록 해주시면 됩니다!",
     style: {
       display: "block",
       position: "relative",
