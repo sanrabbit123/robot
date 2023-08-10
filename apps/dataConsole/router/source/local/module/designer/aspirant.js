@@ -132,9 +132,48 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
       },
       {
         title: "유출 이유",
-        width: 130,
+        width: 120,
         name: "outreason",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+            columnOnly: true,
+          }
+        ].concat([
+          "해당 없음",
+          "연락 안 됨",
+          "조건 미달",
+          "파트너십 거부",
+          "기타 이유",
+        ].map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        })),
+        menuWidth: 100,
+        update: async (aspid, value, menu) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = /해당 없음/gi.test(value) ? "" : value;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["response.outreason"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).response.outreason = finalValue;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        },
       },
       {
         title: "연락처",
@@ -147,12 +186,50 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         width: 400,
         name: "memo",
         type: "string",
+        update: async (aspid, value) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = value;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["meeting.memo"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.memo = finalValue;
+            await instance.aspirantColorSync();
+          } catch (e) {
+            console.log(e);
+          }
+        },
       },
       {
         title: "유선 상담",
         width: 100,
         name: "responseDate",
         type: "date",
+        update: async (aspid, value) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = value;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["response.date"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).response.date = finalValue;
+            await instance.aspirantColorSync();
+          } catch (e) {
+            console.log(e);
+          }
+        },
       },
       {
         title: "서류 제출",
@@ -168,15 +245,91 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
       },
       {
         title: "주요 특징",
-        width: 200,
+        width: 140,
         name: "portfolioCharacter",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+            columnOnly: true,
+          }
+        ].concat([
+          "알 수 없음",
+          "리모델링 위주",
+          "상공간 위주",
+          "유관 경력만",
+          "홈퍼니싱 위주",
+          "홈스타일링 경험자",
+        ].map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        })),
+        menuWidth: 130,
+        update: async (aspid, value, menu) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = /알 수 없음/gi.test(value) ? "" : value;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["response.portfolio.summary"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.summary = finalValue;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        },
       },
       {
         title: "추가 포폴",
         width: 100,
         name: "portfolioPlus",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+            columnOnly: true,
+          }
+        ].concat([
+          "필요",
+          "충분",
+        ].map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        })),
+        menuWidth: 80,
+        update: async (aspid, value, menu) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = /필요/gi.test(value);
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["response.portfolio.plus.needs"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.plus.needs = finalValue;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        },
       },
       {
         title: "추가 포폴 전송",
@@ -189,24 +342,136 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         width: 100,
         name: "portfolioSet",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+            columnOnly: true,
+          }
+        ].concat([
+          "있음",
+          "없음",
+        ].map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        })),
+        menuWidth: 80,
+        update: async (aspid, value, menu) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = /있음/gi.test(value);
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["response.portfolio.ready.set"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.ready.set = finalValue;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        },
       },
       {
         title: "세트 촬영",
         width: 100,
         name: "portfolioSetPhoto",
         type: "date",
+        update: async (aspid, value) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = value;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["response.portfolio.plus.photo"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.plus.photo = finalValue;
+            await instance.aspirantColorSync();
+          } catch (e) {
+            console.log(e);
+          }
+        },
       },
       {
         title: "공통 교육",
         width: 100,
         name: "commonMeeting",
         type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+            columnOnly: true,
+          }
+        ].concat([
+          "해당 없음",
+          "미팅 조율",
+          "참석 확정",
+          "교육 완료",
+        ].map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        })),
+        menuWidth: 100,
+        update: async (aspid, value, menu) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = /해당 없음/gi.test(value) ? "" : value;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["meeting.common.status"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.common.status = finalValue;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        },
       },
       {
         title: "공통 교육일",
         width: 100,
         name: "commonMeetingDate",
         type: "date",
+        update: async (aspid, value) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = value;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["meeting.common.date"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.common.date = finalValue;
+            await instance.aspirantColorSync();
+          } catch (e) {
+            console.log(e);
+          }
+        },
       },
       {
         title: "주소",
@@ -333,7 +598,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           name: "portfolioSetPhoto",
         },
         {
-          value: aspirant.meeting.common.status === "" ? "알 수 없음" : aspirant.meeting.common.status,
+          value: aspirant.meeting.common.status === "" ? "해당 없음" : aspirant.meeting.common.status,
           name: "commonMeeting",
         },
         {
@@ -542,6 +807,112 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         }
       },
       {
+        name: "outreason",
+        type: "select",
+        columns: [
+          "해당 없음",
+          "연락 안 됨",
+          "조건 미달",
+          "파트너십 거부",
+          "기타 이유",
+        ],
+        title: "유출 이유",
+        value: [
+          "",
+          "연락 안 됨",
+          "조건 미달",
+          "파트너십 거부",
+          "기타 이유",
+        ].map((str) => {
+          return str === aspirant.response.outreason ? 1 : 0;
+        }),
+        editable: true,
+        update: async (columns, newValue, aspid) => {
+          try {
+            const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
+            let whereQuery, updateQuery;
+            let textValue;
+
+            whereQuery = {};
+            whereQuery["aspid"] = aspid;
+
+            updateQuery = {};
+            updateQuery["response.outreason"] = columns.find((str, index) => {
+              return newValue[index] === 1;
+            });
+
+            if (updateQuery["response.outreason"] === undefined || updateQuery["response.outreason"] === "해당 없음") {
+              updateQuery["response.outreason"] = "";
+              textValue = "해당 없음";
+            } else {
+              textValue = updateQuery["response.outreason"];
+            }
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((d) => { return d.aspid === aspid }).response.outreason = updateQuery["response.outreason"];
+            document.querySelector('.' + aspid).children[2].querySelector('.' + valueTargetClassName).textContent = textValue;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      {
+        name: "portfolioCharacter",
+        type: "select",
+        columns: [
+          "알 수 없음",
+          "리모델링 위주",
+          "상공간 위주",
+          "유관 경력만",
+          "홈퍼니싱 위주",
+          "홈스타일링 경험자",
+        ],
+        title: "주요 특징",
+        value: [
+          "",
+          "리모델링 위주",
+          "상공간 위주",
+          "유관 경력만",
+          "홈퍼니싱 위주",
+          "홈스타일링 경험자",
+        ].map((str) => {
+          return str === aspirant.response.portfolio.summary ? 1 : 0;
+        }),
+        editable: true,
+        update: async (columns, newValue, aspid) => {
+          try {
+            const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
+            let whereQuery, updateQuery;
+            let textValue;
+
+            whereQuery = {};
+            whereQuery["aspid"] = aspid;
+
+            updateQuery = {};
+            updateQuery["response.portfolio.summary"] = columns.find((str, index) => {
+              return newValue[index] === 1;
+            });
+
+            if (updateQuery["response.portfolio.summary"] === undefined || updateQuery["response.portfolio.summary"] === "알 수 없음") {
+              updateQuery["response.portfolio.summary"] = "";
+              textValue = "알 수 없음";
+            } else {
+              textValue = updateQuery["response.portfolio.summary"];
+            }
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((d) => { return d.aspid === aspid }).response.portfolio.summary = updateQuery["response.portfolio.summary"];
+            document.querySelector('.' + aspid).children[8].querySelector('.' + valueTargetClassName).textContent = textValue;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      {
         name: "memo",
         type: "long",
         title: "응대 메모",
@@ -567,6 +938,53 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
             console.log(e);
           }
         }
+      },
+      {
+        name: "margin",
+        type: "margin",
+        title: "",
+        value: "",
+      },
+      {
+        name: "responseDate",
+        type: "date",
+        title: "유선 상담",
+        value: dateToString(aspirant.response.date),
+        editable: true,
+        update: async (aspid, newValue) => {
+          try {
+            const instance = this;
+            const { valueTargetClassName } = this;
+            const { ajaxJson, dateToString } = GeneralJs;
+            const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
+            const finalValue = newValue;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["response.date"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).response.date = finalValue;
+            document.querySelector('.' + aspid).children[5].querySelector('.' + valueTargetClassName).textContent = dateToString(finalValue);
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      {
+        name: "documentsBoo",
+        type: "date",
+        title: "서류 제출",
+        value: dateToString(aspirant.submit.documents.date),
+      },
+      {
+        name: "paymentBoo",
+        type: "date",
+        title: "등록비 결제",
+        value: dateToString(aspirant.submit.registration.date),
       },
       {
         name: "margin",
@@ -682,6 +1100,228 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         title: "",
         value: "",
       },
+      {
+        name: "portfolioPlus",
+        type: "select",
+        columns: [
+          "필요",
+          "충분",
+        ],
+        title: "추가 포폴",
+        value: [
+          "필요",
+          "충분",
+        ].map((str) => {
+          return str === (aspirant.response.portfolio.plus.needs ? "필요" : "충분") ? 1 : 0;
+        }),
+        editable: true,
+        update: async (columns, newValue, aspid) => {
+          try {
+            const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
+            let whereQuery, updateQuery;
+            let textValue;
+
+            whereQuery = {};
+            whereQuery["aspid"] = aspid;
+
+            updateQuery = {};
+            updateQuery["response.portfolio.plus.needs"] = (columns.find((str, index) => {
+              return newValue[index] === 1;
+            }) === "필요");
+
+            if (updateQuery["response.portfolio.plus.needs"]) {
+              textValue = "필요";
+            } else {
+              textValue = "충분"
+            }
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((d) => { return d.aspid === aspid }).response.portfolio.plus.needs = updateQuery["response.portfolio.plus.needs"];
+            document.querySelector('.' + aspid).children[9].querySelector('.' + valueTargetClassName).textContent = textValue;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      {
+        name: "portfolioPlusDate",
+        type: "date",
+        title: "추가 포폴 전송",
+        value: dateToString(aspirant.response.portfolio.plus.request),
+      },
+      {
+        name: "margin",
+        type: "margin",
+        title: "",
+        value: "",
+      },
+      {
+        name: "portfolioSet",
+        type: "select",
+        columns: [
+          "있음",
+          "없음",
+        ],
+        title: "준비된 세트",
+        value: [
+          "있음",
+          "없음",
+        ].map((str) => {
+          return str === (aspirant.response.portfolio.ready.set ? "있음" : "없음") ? 1 : 0;
+        }),
+        editable: true,
+        update: async (columns, newValue, aspid) => {
+          try {
+            const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
+            let whereQuery, updateQuery;
+            let textValue;
+
+            whereQuery = {};
+            whereQuery["aspid"] = aspid;
+
+            updateQuery = {};
+            updateQuery["response.portfolio.ready.set"] = (columns.find((str, index) => {
+              return newValue[index] === 1;
+            }) === "있음");
+
+            if (updateQuery["response.portfolio.ready.set"]) {
+              textValue = "있음";
+            } else {
+              textValue = "없음"
+            }
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((d) => { return d.aspid === aspid }).response.portfolio.ready.set = updateQuery["response.portfolio.ready.set"];
+            document.querySelector('.' + aspid).children[11].querySelector('.' + valueTargetClassName).textContent = textValue;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      {
+        name: "portfolioSetPhoto",
+        type: "date",
+        title: "세트 촬영",
+        value: dateToString(aspirant.response.portfolio.plus.photo),
+        editable: true,
+        update: async (aspid, newValue) => {
+          try {
+            const instance = this;
+            const { valueTargetClassName } = this;
+            const { ajaxJson, dateToString } = GeneralJs;
+            const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
+            const finalValue = newValue;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["response.portfolio.plus.photo"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.plus.photo = finalValue;
+            document.querySelector('.' + aspid).children[12].querySelector('.' + valueTargetClassName).textContent = dateToString(finalValue);
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      {
+        name: "margin",
+        type: "margin",
+        title: "",
+        value: "",
+      },
+      {
+        name: "commonMeeting",
+        type: "select",
+        columns: [
+          "해당 없음",
+          "미팅 조율",
+          "참석 확정",
+          "교육 완료",
+        ],
+        title: "공통 교육",
+        value: [
+          "",
+          "미팅 조율",
+          "참석 확정",
+          "교육 완료",
+        ].map((str) => {
+          return str === aspirant.meeting.common.status ? 1 : 0;
+        }),
+        editable: true,
+        update: async (columns, newValue, aspid) => {
+          try {
+            const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
+            let whereQuery, updateQuery;
+            let textValue;
+
+            whereQuery = {};
+            whereQuery["aspid"] = aspid;
+
+            updateQuery = {};
+            updateQuery["meeting.common.status"] = columns.find((str, index) => {
+              return newValue[index] === 1;
+            });
+
+            if (updateQuery["meeting.common.status"] === undefined || updateQuery["meeting.common.status"] === "해당 없음") {
+              updateQuery["meeting.common.status"] = "";
+              textValue = "해당 없음";
+            } else {
+              textValue = updateQuery["meeting.common.status"];
+            }
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((d) => { return d.aspid === aspid }).meeting.common.status = updateQuery["meeting.common.status"];
+            document.querySelector('.' + aspid).children[13].querySelector('.' + valueTargetClassName).textContent = textValue;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      {
+        name: "commonMeetingDate",
+        type: "date",
+        title: "공통 교육일",
+        value: dateToString(aspirant.meeting.common.date),
+        editable: true,
+        update: async (aspid, newValue) => {
+          try {
+            const instance = this;
+            const { valueTargetClassName } = this;
+            const { ajaxJson, dateToString } = GeneralJs;
+            const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
+            const finalValue = newValue;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["meeting.common.date"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.common.date = finalValue;
+            document.querySelector('.' + aspid).children[14].querySelector('.' + valueTargetClassName).textContent = dateToString(finalValue);
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      {
+        name: "margin",
+        type: "margin",
+        title: "",
+        value: "",
+      },
     ];
 
     return dataMatrix;
@@ -731,12 +1371,14 @@ DesignerJs.prototype.aspirantColorSync = async function () {
 DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, stringToLink, variableArray, downloadFile, uniqueValue, sleep, equalJson } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, setQueue, blankHref, ajaxJson, stringToLink, variableArray, downloadFile, uniqueValue, sleep, equalJson, hexaJson } = GeneralJs;
   try {
     const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
     const dataArr = await instance.aspirantWhiteData(aspid);
     const bigPhotoClassName = "bigPhotoClassName";
     const longTextEditClassName = "longTextEditClassName";
+    const menuValuePromptClassName = "menuValuePromptClassName";
+    const valueTargetClassName = "valueTargetClassName";
     const longEmptyText = "메모를 클릭하여 입력해주세요.";
     const maxColumnsNumber = 7;
     let name;
@@ -781,6 +1423,15 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     let longMarginBottom;
     let longLineHeight;
     let emptyValueBoo;
+    let dateDom;
+    let menuVisual;
+    let menuBetween;
+    let menuTextTop;
+    let menuSize;
+    let menuWeight;
+    let calendarWidth;
+    let calendarBoxBetween;
+    let calendarBoxHeight;
 
     blockHeight = 32;
     titleWidth = 180;
@@ -817,6 +1468,17 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
   
     longMarginBottom = 10;
     longLineHeight = 1.6;
+
+    menuVisual = 4;
+    menuBetween = 3;
+
+    menuTextTop = isMac() ? -1 : 1,
+    menuSize = 13;
+    menuWeight = 600;
+
+    calendarWidth = 260;
+    calendarBoxBetween = 4;
+    calendarBoxHeight = 32;
 
     idList = {};
 
@@ -1005,7 +1667,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
 
       } else if (type === "date") {
 
-        createNode({
+        dateDom = createNode({
           mother: motherBlock,
           style: {
             display: "inline-block",
@@ -1014,6 +1676,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
             width: withOut(titleWidth, ea),
           },
           child: {
+            class: [ valueTargetClassName ],
             text: value,
             style: {
               display: "inline-block",
@@ -1022,9 +1685,175 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
               fontSize: String(titleSize) + ea,
               fontWeight: String(400),
               color: colorChip.black,
+              cursor: obj.editable ? "pointer" : "",
             }
           }
         });
+
+        if (obj.editable) {
+          dateDom.setAttribute("aspid", aspid);
+          dateDom.setAttribute("update", (await hexaJson({ update: obj.update })));
+          dateDom.addEventListener("click", async function (e) {
+            try {
+              const self = this;
+              const zIndex = 4;
+              const aspid = this.getAttribute("aspid");
+              const thisUpdateFunction = (await hexaJson(this.getAttribute("update"))).update.bind(instance);
+              let cancelBack, calendarPrompt;                  
+              let calendar;
+
+              cancelBack = createNode({
+                mother: totalContents,
+                class: [ menuValuePromptClassName ],
+                event: (e) => {
+                  self.querySelector("." + valueTargetClassName).style.color = colorChip.black;
+                  removeByClass(menuValuePromptClassName);
+                },
+                style: {
+                  position: "fixed",
+                  top: String(0),
+                  left: String(0),
+                  width: withOut(0, ea),
+                  height: withOut(0, ea),
+                  background: "transparent",
+                  zIndex: String(zIndex),
+                }
+              });
+
+              calendarPrompt = createNode({
+                mother: totalContents,
+                class: [ menuValuePromptClassName ],
+                style: {
+                  position: "fixed",
+                  top: String(e.y + menuVisual) + "px",
+                  left: String(e.x + menuVisual - (300 / 2)) + "px",
+                  paddingTop: String(calendarBoxBetween) + ea,
+                  width: String(calendarWidth) + ea,
+                  animation: "fadeuplite 0.3s ease forwards",
+                  zIndex: String(zIndex),
+                },
+                children: [
+                  {
+                    event: {
+                      click: async function (e) {
+                        try {
+                          const thisValue = new Date(1800, 0, 1);
+                          self.querySelector("." + valueTargetClassName).textContent = "해당 없음";
+                          self.querySelector("." + valueTargetClassName).style.color = colorChip.black;
+                          await thisUpdateFunction(aspid, thisValue);
+                          removeByClass(menuValuePromptClassName);
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    },
+                    style: {
+                      display: "inline-flex",
+                      verticalAlign: "top",
+                      position: "relative",
+                      width: String((calendarWidth - calendarBoxBetween) / 2) + ea,
+                      background: colorChip.white,
+                      boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+                      borderRadius: String(5) + "px",
+                      height: String(calendarBoxHeight) + ea,
+                      marginBottom: String(calendarBoxBetween) + ea,
+                      marginRight: String(calendarBoxBetween) + ea,
+                      cursor: "pointer",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    child: {
+                      text: "해당 없음",
+                      style: {
+                        position: "relative",
+                        top: String(menuTextTop) + ea,
+                        fontSize: String(menuSize) + ea,
+                        fontWeight: String(menuWeight),
+                        color: colorChip.black,
+                      }
+                    }
+                  },
+                  {
+                    event: {
+                      click: async function (e) {
+                        try {
+                          const thisValue = new Date(3800, 0, 1);
+                          self.querySelector("." + valueTargetClassName).textContent = "예정";
+                          self.querySelector("." + valueTargetClassName).style.color = colorChip.black;
+                          await thisUpdateFunction(aspid, thisValue);
+                          removeByClass(menuValuePromptClassName);
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    },
+                    style: {
+                      display: "inline-flex",
+                      verticalAlign: "top",
+                      position: "relative",
+                      width: String((calendarWidth - calendarBoxBetween) / 2) + ea,
+                      background: colorChip.white,
+                      boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+                      borderRadius: String(5) + "px",
+                      height: String(calendarBoxHeight) + ea,
+                      marginBottom: String(calendarBoxBetween) + ea,
+                      cursor: "pointer",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    child: {
+                      text: "예정",
+                      style: {
+                        position: "relative",
+                        top: String(menuTextTop) + ea,
+                        fontSize: String(menuSize) + ea,
+                        fontWeight: String(menuWeight),
+                        color: colorChip.black,
+                      }
+                    }
+                  },
+                  {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      width: String(calendarWidth) + ea,
+                      background: colorChip.white,
+                      boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+                      borderRadius: String(5) + "px",
+                    },
+                  }
+                ]
+              });
+
+              calendar = instance.mother.makeCalendar(new Date(), async function (e) {
+                try {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  const stringValue = this.getAttribute("buttonValue");
+                  const thisValue = stringToDate(stringValue);
+                  this.setAttribute("value", stringValue);
+                  self.querySelector("." + valueTargetClassName).textContent = stringValue;
+                  self.querySelector("." + valueTargetClassName).style.color = colorChip.black;
+                  await thisUpdateFunction(aspid, thisValue);
+                  removeByClass(menuValuePromptClassName);
+                } catch (e) {
+                  console.log(e);
+                }
+              });
+              calendarPrompt.lastChild.appendChild(calendar.calendarBase);
+
+              setQueue(() => {
+                self.querySelector("." + valueTargetClassName).style.color = colorChip.green;
+              });
+
+            } catch (e) {
+              console.log(e);
+            }
+          });
+        }
+
 
       } else if (type === "select") {
         
@@ -1813,7 +2642,13 @@ DesignerJs.prototype.aspirantBase = async function () {
     let contextButtonWeight;
     let contextButtonTextTop;
     let valueDom;
-  
+    let menuEventTong;
+    let calendarWidth;
+    let calendarBoxBetween;
+    let calendarBoxHeight;
+    let longTextWidth;
+    let longTextHeight;
+
     totalPaddingTop = 38;
     columnAreaHeight = 32;
   
@@ -1854,6 +2689,13 @@ DesignerJs.prototype.aspirantBase = async function () {
     contextButtonWeight = 700;
     contextButtonTextTop = isMac() ? -1 : 1;
 
+    calendarWidth = 260;
+    calendarBoxBetween = 4;
+    calendarBoxHeight = 32;
+
+    longTextWidth = 750;
+    longTextHeight = 36;
+
     ({ standards, columns, values } = await this.aspirantDataRender(true));
   
     hoverEvent = () => {
@@ -1876,6 +2718,168 @@ DesignerJs.prototype.aspirantBase = async function () {
           dom.style.color = dom.getAttribute("color") !== null ? dom.getAttribute("color") : colorChip.black;
         }
       }
+    }
+
+    menuEventTong = {
+      sortEvent: (thisType, name, index) => {
+        return async function (e) {
+          try {
+            const idNameArea = document.querySelector('.' + idNameAreaClassName);
+            const valueArea = document.querySelector('.' + valueAreaClassName);
+            const idNameDoms = Array.from(document.querySelectorAll('.' + standardCaseClassName));
+            const valueDoms = Array.from(document.querySelectorAll('.' + valueCaseClassName));
+            const type = columns[index].type;
+            let domMatrix;
+            let thisAspid;
+            let thisValueDom;
+  
+            domMatrix = [];
+            for (let i = 0; i < idNameDoms.length; i++) {
+              thisAspid = idNameDoms[i].getAttribute("aspid");
+              thisValueDom = findByAttribute(valueDoms, "aspid", thisAspid);
+              domMatrix.push([
+                idNameDoms[i],
+                thisValueDom
+              ]);
+            }
+  
+            domMatrix.sort((a, b) => {
+              let aValue, bValue;
+              let aSortValue, bSortValue;
+              let tempArr;
+  
+              aValue = findByAttribute([ ...a[1].querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent;
+              bValue = findByAttribute([ ...b[1].querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent;
+              
+              if (type === "string") {
+                aSortValue = aValue !== '' ? aValue.charCodeAt(0) : 0;
+                bSortValue = bValue !== '' ? bValue.charCodeAt(0) : 0;
+              } else if (type === "number") {
+                aValue = aValue.replace(/[^0-9]/gi, '')
+                bValue = bValue.replace(/[^0-9]/gi, '')
+                aSortValue = aValue !== '' ? Number(aValue) : 0;
+                bSortValue = bValue !== '' ? Number(bValue) : 0;
+              } else if (type === "percentage") {
+                aValue = aValue.replace(/[^0-9\.]/gi, '')
+                bValue = bValue.replace(/[^0-9\.]/gi, '')
+                aSortValue = aValue !== '' ? Number(aValue) : 0;
+                bSortValue = bValue !== '' ? Number(bValue) : 0;
+              } else if (type === "date") {
+                aSortValue = aValue !== '' ? stringToDate(aValue) : stringToDate("1800-01-01");
+                bSortValue = bValue !== '' ? stringToDate(bValue) : stringToDate("1800-01-01");
+                aSortValue = aSortValue.valueOf();
+                bSortValue = bSortValue.valueOf();
+              } else if (type === "during") {
+  
+                if (/년/gi.test(aValue)) {
+                  tempArr = aValue.split('년');
+                  if (tempArr.length > 1) {
+                    aSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12) + Number(tempArr[1].replace(/[^0-9]/gi, ''));
+                  } else {
+                    aSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12);
+                  }
+                } else {
+                  aSortValue = Number(aValue.replace(/[^0-9]/gi, ''));
+                }
+  
+                if (/년/gi.test(bValue)) {
+                  tempArr = bValue.split('년');
+                  if (tempArr.length > 1) {
+                    bSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12) + Number(tempArr[1].replace(/[^0-9]/gi, ''));
+                  } else {
+                    bSortValue = (Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12);
+                  }
+                } else {
+                  bSortValue = Number(bValue.replace(/[^0-9]/gi, ''));
+                }
+  
+              } else {
+                aSortValue = aValue !== '' ? aValue.charCodeAt(0) : 0;
+                bSortValue = bValue !== '' ? bValue.charCodeAt(0) : 0;
+              }
+              
+              if (thisType === "down") {
+                return bSortValue - aSortValue;
+              } else {
+                return aSortValue - bSortValue;
+              }
+            });
+  
+            for (let [ standard, value ] of domMatrix) {
+              idNameArea.appendChild(standard);
+              valueArea.appendChild(value);
+            }
+  
+            removeByClass(menuPromptClassName);
+  
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      filterEvent: (thisValue, name, index) => {
+        return async function (e) {
+          try {
+            const idNameArea = document.querySelector('.' + idNameAreaClassName);
+            const valueArea = document.querySelector('.' + valueAreaClassName);
+            const idNameDoms = Array.from(document.querySelectorAll('.' + standardCaseClassName));
+            const valueDoms = Array.from(document.querySelectorAll('.' + valueCaseClassName));
+            const last = "lastfilter";
+            const type = columns[index].type;
+            let domMatrix;
+            let thisAspid;
+            let thisValueDom;
+  
+            domMatrix = [];
+            for (let i = 0; i < idNameDoms.length; i++) {
+              thisAspid = idNameDoms[i].getAttribute("aspid");
+              thisValueDom = findByAttribute(valueDoms, "aspid", thisAspid);
+              domMatrix.push([
+                idNameDoms[i],
+                thisValueDom
+              ]);
+            }
+
+            if (thisValue === "$all") {
+              for (let [ standard, value ] of domMatrix) {
+                standard.style.display = "flex";
+                value.style.display = "flex";
+                standard.setAttribute(last, "none");
+                value.setAttribute(last, "none");
+              }
+            } else {
+              for (let [ standard, value ] of domMatrix) {
+                if (standard.getAttribute(last) === name) {
+                  if (findByAttribute([ ...value.querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent.trim() === thisValue) {
+                    standard.style.display = "flex";
+                    value.style.display = "flex";
+                  } else {
+                    standard.style.display = "none";
+                    value.style.display = "none";
+                  }
+                } else {
+                  if (findByAttribute([ ...value.querySelectorAll('.' + valueTargetClassName) ], "name", name).textContent.trim() === thisValue) {
+                    if (standard.style.display !== "none") {
+                      standard.style.display = "flex";
+                      value.style.display = "flex";
+                    }
+                  } else {
+                    standard.style.display = "none";
+                    value.style.display = "none";
+                  }
+                }
+                standard.setAttribute(last, name);
+                value.setAttribute(last, name);
+              }
+            }
+
+            removeByClass(menuPromptClassName);
+  
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
     }
 
     columnsMenuEvent = (index) => {
@@ -1950,6 +2954,7 @@ DesignerJs.prototype.aspirantBase = async function () {
               return {
                 event: {
                   selectstart: (e) => { e.preventDefault() },
+                  click: menuEventTong[thisFunctionName](...thisArguments),
                 },
                 style: {
                   display: "flex",
@@ -2406,6 +3411,281 @@ DesignerJs.prototype.aspirantBase = async function () {
                   console.log(e);
                 }
               });
+            } else if (columns[i].type === "date" && typeof columns[i].update === "function") {
+              valueDom.setAttribute("update", (await hexaJson({ update: columns[i].update })));
+              valueDom.addEventListener("click", async function (e) {
+                try {
+                  const self = this;
+                  const zIndex = 4;
+                  const aspid = this.getAttribute("aspid");
+                  const thisUpdateFunction = (await hexaJson(this.getAttribute("update"))).update.bind(instance);
+                  let cancelBack, calendarPrompt;                  
+                  let calendar;
+
+                  cancelBack = createNode({
+                    mother: totalContents,
+                    class: [ menuValuePromptClassName ],
+                    event: (e) => {
+                      self.querySelector("." + valueTargetClassName).style.color = self.querySelector("." + valueTargetClassName).getAttribute("color");
+                      removeByClass(menuValuePromptClassName);
+                    },
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      width: withOut(0, ea),
+                      height: withOut(0, ea),
+                      background: "transparent",
+                      zIndex: String(zIndex),
+                    }
+                  });
+
+                  calendarPrompt = createNode({
+                    mother: totalContents,
+                    class: [ menuValuePromptClassName ],
+                    style: {
+                      position: "fixed",
+                      top: String(e.y + menuVisual) + "px",
+                      left: String(e.x + menuVisual - (300 / 2)) + "px",
+                      paddingTop: String(calendarBoxBetween) + ea,
+                      width: String(calendarWidth) + ea,
+                      animation: "fadeuplite 0.3s ease forwards",
+                      zIndex: String(zIndex),
+                    },
+                    children: [
+                      {
+                        event: {
+                          click: async function (e) {
+                            try {
+                              const thisValue = new Date(1800, 0, 1);
+                              self.querySelector("." + valueTargetClassName).textContent = "해당 없음";
+                              self.querySelector("." + valueTargetClassName).style.color = self.querySelector("." + valueTargetClassName).getAttribute("color");
+                              await thisUpdateFunction(aspid, thisValue);
+                              removeByClass(menuValuePromptClassName);
+                            } catch (e) {
+                              console.log(e);
+                            }
+                          }
+                        },
+                        style: {
+                          display: "inline-flex",
+                          verticalAlign: "top",
+                          position: "relative",
+                          width: String((calendarWidth - calendarBoxBetween) / 2) + ea,
+                          background: colorChip.white,
+                          boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+                          borderRadius: String(5) + "px",
+                          height: String(calendarBoxHeight) + ea,
+                          marginBottom: String(calendarBoxBetween) + ea,
+                          marginRight: String(calendarBoxBetween) + ea,
+                          cursor: "pointer",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        },
+                        child: {
+                          text: "해당 없음",
+                          style: {
+                            position: "relative",
+                            top: String(menuTextTop) + ea,
+                            fontSize: String(menuSize) + ea,
+                            fontWeight: String(menuWeight),
+                            color: colorChip.black,
+                          }
+                        }
+                      },
+                      {
+                        event: {
+                          click: async function (e) {
+                            try {
+                              const thisValue = new Date(3800, 0, 1);
+                              self.querySelector("." + valueTargetClassName).textContent = "예정";
+                              self.querySelector("." + valueTargetClassName).style.color = self.querySelector("." + valueTargetClassName).getAttribute("color");
+                              await thisUpdateFunction(aspid, thisValue);
+                              removeByClass(menuValuePromptClassName);
+                            } catch (e) {
+                              console.log(e);
+                            }
+                          }
+                        },
+                        style: {
+                          display: "inline-flex",
+                          verticalAlign: "top",
+                          position: "relative",
+                          width: String((calendarWidth - calendarBoxBetween) / 2) + ea,
+                          background: colorChip.white,
+                          boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+                          borderRadius: String(5) + "px",
+                          height: String(calendarBoxHeight) + ea,
+                          marginBottom: String(calendarBoxBetween) + ea,
+                          cursor: "pointer",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        },
+                        child: {
+                          text: "예정",
+                          style: {
+                            position: "relative",
+                            top: String(menuTextTop) + ea,
+                            fontSize: String(menuSize) + ea,
+                            fontWeight: String(menuWeight),
+                            color: colorChip.black,
+                          }
+                        }
+                      },
+                      {
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          width: String(calendarWidth) + ea,
+                          background: colorChip.white,
+                          boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+                          borderRadius: String(5) + "px",
+                        },
+                      }
+                    ]
+                  });
+
+                  calendar = instance.mother.makeCalendar(new Date(), async function (e) {
+                    try {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      const stringValue = this.getAttribute("buttonValue");
+                      const thisValue = stringToDate(stringValue);
+                      this.setAttribute("value", stringValue);
+                      self.querySelector("." + valueTargetClassName).textContent = stringValue;
+                      self.querySelector("." + valueTargetClassName).style.color = self.querySelector("." + valueTargetClassName).getAttribute("color");
+                      await thisUpdateFunction(aspid, thisValue);
+                      removeByClass(menuValuePromptClassName);
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  });
+                  calendarPrompt.lastChild.appendChild(calendar.calendarBase);
+
+                  setQueue(() => {
+                    self.querySelector("." + valueTargetClassName).style.color = colorChip.green;
+                  });
+
+                } catch (e) {
+                  console.log(e);
+                }
+              });
+            } else if (typeof columns[i].update === "function") {
+              valueDom.setAttribute("update", (await hexaJson({ update: columns[i].update })));
+              valueDom.addEventListener("click", async function (e) {
+                try {
+                  const self = this;
+                  const zIndex = 4;
+                  const aspid = this.getAttribute("aspid");
+                  const thisUpdateFunction = (await hexaJson(this.getAttribute("update"))).update.bind(instance);
+                  let cancelBack, longTextPrompt;                  
+
+                  cancelBack = createNode({
+                    mother: totalContents,
+                    class: [ menuValuePromptClassName ],
+                    event: (e) => {
+                      self.querySelector("." + valueTargetClassName).style.color = self.querySelector("." + valueTargetClassName).getAttribute("color");
+                      removeByClass(menuValuePromptClassName);
+                    },
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      width: withOut(0, ea),
+                      height: withOut(0, ea),
+                      background: "transparent",
+                      zIndex: String(zIndex),
+                    }
+                  });
+
+                  longTextPrompt = createNode({
+                    mother: totalContents,
+                    class: [ menuValuePromptClassName ],
+                    style: {
+                      position: "fixed",
+                      top: String(e.y + menuVisual) + "px",
+                      left: String(e.x + menuVisual) + "px",
+                      width: String(longTextWidth) + ea,
+                      background: colorChip.white,
+                      animation: "fadeuplite 0.3s ease forwards",
+                      zIndex: String(zIndex),
+                    },
+                    child: {
+                      style: {
+                        display: "flex",
+                        position: "relative",
+                        width: String(longTextWidth) + ea,
+                        height: String(longTextHeight) + ea,
+                        borderRadius: String(5) + "px",
+                        background: colorChip.white,
+                        boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+                        borderRadius: String(5) + "px",
+                        marginBottom: String(menuBetween) + ea,
+                        justifyContent: "start",
+                        alignItems: "center",
+                        textAlign: "center",
+                        cursor: "pointer",
+                        paddingLeft: String(12) + ea,
+                      },
+                      child: {
+                        mode: "input",
+                        attribute: {
+                          type: "text",
+                          value: self.querySelector("." + valueTargetClassName).textContent,
+                        },
+                        event: {
+                          keydown: async function (e) {
+                            try {
+                              if (e.key === "Enter" || e.key === "Tab") {
+                                e.preventDefault();
+                              }
+                            } catch (e) {
+                              console.log(e);
+                            }
+                          },
+                          keyup: async function (e) {
+                            try {
+                              if (e.key === "Enter" || e.key === "Tab") {
+                                e.preventDefault();
+                                const thisValue = this.value.trim().replace(/[\&\=\+\/\\\#]/gi, '');
+                                self.querySelector("." + valueTargetClassName).textContent = thisValue;
+                                self.querySelector("." + valueTargetClassName).style.color = self.querySelector("." + valueTargetClassName).getAttribute("color");
+                                await thisUpdateFunction(aspid, thisValue);
+                                removeByClass(menuValuePromptClassName);
+                              }
+                            } catch (e) {
+                              console.log(e);
+                            }
+                          }
+                        },
+                        style: {
+                          position: "relative",
+                          top: String(menuTextTop) + ea,
+                          fontSize: String(menuSize) + ea,
+                          fontWeight: String(menuWeight),
+                          color: colorChip.green,
+                          border: String(0),
+                          outline: String(0),
+                          width: withOut(0, ea),
+                          height: withOut(0, ea),
+                        }
+                      }
+                    }
+                  });
+
+                  longTextPrompt.querySelector("input").focus();
+
+                  setQueue(() => {
+                    self.querySelector("." + valueTargetClassName).style.color = colorChip.green;
+                  });
+
+                } catch (e) {
+                  console.log(e);
+                }
+              });
+
             }
 
           }
