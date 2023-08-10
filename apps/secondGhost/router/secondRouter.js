@@ -2404,7 +2404,7 @@ SecondRouter.prototype.rou_post_noticeAspirantConsole = function () {
 
           await kakao.sendTalk("aspirantRequestDocuments", designer, phone, { client: designer, host: address.frontinfo.host, path: "aspnotice", aspid });
           await messageSend({
-            text: designer + " 실장님께 체크리스트 요청 알림톡을 전송하였습니다!",
+            text: designer + " 실장님께 등록 서류 업로드 요청 알림톡을 전송하였습니다!",
             channel,
             voice,
             fairy
@@ -2416,7 +2416,7 @@ SecondRouter.prototype.rou_post_noticeAspirantConsole = function () {
 
           await kakao.sendTalk("aspirantRequestPayment", designer, phone, { client: designer, host: address.frontinfo.host, path: "asppayment", aspid });
           await messageSend({
-            text: designer + " 실장님께 디자이너 콘솔 알림톡을 전송하였습니다!",
+            text: designer + " 실장님께 등록비 결제 요청 알림톡을 전송하였습니다!",
             channel,
             voice,
             fairy
