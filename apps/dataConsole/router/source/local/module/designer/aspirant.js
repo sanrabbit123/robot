@@ -57,7 +57,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
       },
       {
         title: "응대 상태",
-        width: 90,
+        width: 100,
         name: "status",
         colorStandard: true,
         colorMap: [
@@ -144,7 +144,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
       },
       {
         title: "1차 판단",
-        width: 90,
+        width: 100,
         name: "firstStatus",
         type: "string",
         menu: [
@@ -156,6 +156,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         ].concat([
           "합격",
           "반려",
+          "확인",
           "불합격",
         ].map((str) => {
           return {
@@ -984,12 +985,14 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         columns: [
           "합격",
           "반려",
+          "확인",
           "불합격",
         ],
         title: "1차 판단",
         value: [
           "합격",
           "반려",
+          "확인",
           "불합격",
         ].map((str) => {
           return str === aspirant.response.first.status ? 1 : 0;
