@@ -2333,6 +2333,136 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_noticeAspirantConsole = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const kakao = this.kakao;
+  const { equalJson, messageSend, uniqueValue } = this.mother;
+  let obj = {};
+  obj.link = [ "/noticeAspirantConsole" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.mode === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const selfCoreMongo = instance.mongo;
+      const collection = "noticeAspirantConsole";
+      const channel = "#301_apply";
+      const idWords = "noticeAspirantConsoleSend_";
+      const voice = true;
+      const fairy = true;
+      const { mode } = equalJson(req.body);
+      let logDefaultObj;
+      let thisJson;
+      let rows;
+      let thisId;
+      let thisHistory;
+
+      if (mode === "send") {
+        const { aspid, designer, type, phone } = equalJson(req.body);
+
+        logDefaultObj = {
+          id: idWords + uniqueValue("hex"),
+          type,
+          date: new Date(),
+          aspirant: {
+            aspid,
+            designer,
+          },
+          history: [],
+        };
+        thisJson = equalJson(JSON.stringify(logDefaultObj));
+
+        rows = await back.mongoRead(collection, { $and: [
+          { type },
+          { "aspirant.aspid": aspid },
+        ] }, { selfMongo });
+        if (rows.length === 0) {
+          await back.mongoCreate(collection, thisJson, { selfMongo });
+        } else {
+          thisId = rows[0].id;
+          thisHistory = rows[0].history;
+          thisHistory.unshift(rows[0].date);
+          await back.mongoUpdate(collection, [
+            { id: thisId },
+            { date: new Date(), history: thisHistory },
+          ], { selfMongo });
+        }
+
+        if (type === "documents") {
+
+          await kakao.sendTalk("aspirantRequestDocuments", designer, phone, { client: designer, host: address.frontinfo.host, path: "aspnotice", aspid });
+          await messageSend({
+            text: designer + " 실장님께 체크리스트 요청 알림톡을 전송하였습니다!",
+            channel,
+            voice,
+            fairy
+          });
+
+          res.send(JSON.stringify({ message: "success" }));
+
+        } else if (type === "payment") {
+
+          await kakao.sendTalk("aspirantRequestPayment", designer, phone, { client: designer, host: address.frontinfo.host, path: "asppayment", aspid });
+          await messageSend({
+            text: designer + " 실장님께 디자이너 콘솔 알림톡을 전송하였습니다!",
+            channel,
+            voice,
+            fairy
+          });
+
+          res.send(JSON.stringify({ message: "success" }));
+
+
+          // await kakao.sendTalk("noticeDesignerEntire", designer, phone, { designer, host: address.frontinfo.host, path: "about", desid });
+          await messageSend({
+            text: designer + " 실장님께 일괄 체크리스트 업로드 및 업데이트 알림톡을 전송하였습니다!",
+            channel,
+            voice,
+            fairy
+          });
+
+          res.send(JSON.stringify({ message: "success" }));
+
+        } else {
+          throw new Error("invalid type");
+        }
+
+      } else if (mode === "get") {
+        if (req.body.aspid !== undefined) {
+          rows = await back.mongoRead(collection, { "aspirant.aspid": req.body.aspid }, { selfMongo });
+          if (rows.length > 0) {
+            res.send(JSON.stringify(rows[0]));
+          } else {
+            throw new Error("invalid aspid");
+          }
+        } else {
+          rows = await back.mongoRead(collection, {}, { selfMongo });
+          res.send(JSON.stringify(rows));
+        }
+      } else {
+        throw new Error("invalid mode");
+      }
+
+    } catch (e) {
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_noticeAspirantConsole): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ error: e.message }));
+    }
+  }
+  return obj;
+}
+
 SecondRouter.prototype.rou_post_voice = function () {
   const instance = this;
   const address = this.address;

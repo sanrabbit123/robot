@@ -3148,10 +3148,15 @@ DataRouter.prototype.rou_post_aspirantDocuments = function () {
       updateQuery["submit.documents.boo"] = true;
 
       await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
-      
-      // kakao
+      await kakao.sendTalk("aspirantNoticeComplete", aspirant.designer, aspirant.phone, {
+        client: aspirant.designer,
+        host: address.frontinfo.host,
+        path: "asppayment",
+        aspid: aspid,
+      });
 
-      
+      await messageSend({ text: aspirant.designer + " 디자이너 신청자님이 행정 서류를 업로드하셨습니다!", channel: "#301_apply", voice: true });
+
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       console.log(e);

@@ -3364,6 +3364,49 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       },
     },
+    "aspirantRequestPayment": {
+      "name": "파트너십 등록비 별도 안내",
+      "id": "TO_4236",
+      "needs": [
+        "client",
+        "host",
+        "path",
+        "aspid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"aspid\", to: obj.aspid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요 #{client}님! 홈리에종 파트너십에 신청해주셔서 감사합니다 :)\n\n홈리에종 파트너십 신청이 완료되기 위해선, 등록비 결제가 필요합니다. 등록비는 실장님을 플랫폼에 등록하고, 돋보이게 하기 위한 작업을 해드리는 비용입니다.\n\n등록비 결제가 모두 완료되면, 직접 디자이너님께 연락을 드려 대면 미팅 안내를 드릴 예정입니다.\n\n감사합니다 :)\n\n*등록비 구성 안내\nhttps://#{host}/#{path}.php?aspid=#{aspid}",
+        "templtName": "파트너십 등록비 별도 안내",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-08-07 18:13:38",
+        "templtCode": "TO_4236",
+        "comments": [
+          {
+            "cdate": "2023-08-09 14:39:58",
+            "name": "검수자",
+            "id": "2769018",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-08-09 14:39:58",
+            "status": "APR"
+          }
+        ]
+      },
+    },
     "aspirantPaymentComplete": {
       "name": "파트너십 결제 완료",
       "id": "TO_3997",
@@ -3399,6 +3442,49 @@ KakaoTalk.prototype.templateTong = function (target) {
             "userName": "검수자",
             "commentContent": "",
             "createdAt": "2023-08-07 16:08:16",
+            "status": "APR"
+          }
+        ]
+      },
+    },
+    "aspirantNoticeComplete": {
+      "name": "파트너십 서류 접수 등록비 안내",
+      "id": "TO_4234",
+      "needs": [
+        "client",
+        "host",
+        "path",
+        "aspid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"aspid\", to: obj.aspid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요 #{client}님! 서류 업로드 및 접수 완료되었습니다 :)\n\n서류 확인 및 등록비 결제까지 모두 완료되면, 직접 디자이너님께 연락을 드려 대면 미팅 안내를 드릴 예정입니다. 보내주신 자료 꼼꼼히 확인 후 연락드리겠습니다!\n\n감사합니다 :)\n\n*등록비 구성 안내\nhttps://#{host}/#{path}.php?aspid=#{aspid}",
+        "templtName": "파트너십 서류 접수 등록비 안내",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-08-07 18:11:25",
+        "templtCode": "TO_4234",
+        "comments": [
+          {
+            "cdate": "2023-08-09 14:39:07",
+            "name": "검수자",
+            "id": "2769015",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-08-09 14:39:07",
             "status": "APR"
           }
         ]

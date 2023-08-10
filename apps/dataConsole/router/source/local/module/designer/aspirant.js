@@ -2604,6 +2604,7 @@ DesignerJs.prototype.aspirantBase = async function () {
   const menuPromptClassName = "menuPromptClassName";
   const menuValuePromptClassName = "menuValuePromptClassName";
   const importantCircleClassName = "importantCircleClassName";
+  const aspirantSubMenuEventFactorClassName = "aspirantSubMenuEventFactorClassName";
   try {
     let totalMother;
     let grayArea, whiteArea;
@@ -2648,6 +2649,7 @@ DesignerJs.prototype.aspirantBase = async function () {
     let calendarBoxHeight;
     let longTextWidth;
     let longTextHeight;
+    let aspirantSubMenuEvent;
 
     totalPaddingTop = 38;
     columnAreaHeight = 32;
@@ -2992,6 +2994,117 @@ DesignerJs.prototype.aspirantBase = async function () {
       }
     }
 
+    aspirantSubMenuEvent = (aspid, designer) => {
+      return async function (e) {
+        e.preventDefault();
+        try {
+          const px = "px";
+          const zIndex = 4;
+          const contextMenu = [
+            {
+              title: designer + " 실장님께 등록 서류 요청하기",
+              func: (aspid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.aspirantSendNotice("documents", aspid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
+              title: designer + " 실장님께 등록비 결제 요청하기",
+              func: (aspid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.aspirantSendNotice("payment", aspid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+          ];
+          const thisBox = this.getBoundingClientRect();
+          const { x, y } = e;
+          let cancelBack, contextBase;
+
+          cancelBack = createNode({
+            mother: totalContents,
+            class: [ aspirantSubMenuEventFactorClassName ],
+            event: {
+              click: (e) => { removeByClass(aspirantSubMenuEventFactorClassName) },
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: withOut(0, ea),
+              height: withOut(0, ea),
+              background: "transparent",
+              zIndex: String(zIndex),
+            }
+          });
+
+          contextBase = createNode({
+            mother: totalContents,
+            class: [ aspirantSubMenuEventFactorClassName ],
+            style: {
+              display: "inline-block",
+              position: "fixed",
+              top: String(y + contextIndent) + px,
+              left: String(x + (contextIndent / 2)) + px,
+              padding: String(contextButtonOuterMargin) + ea,
+              paddingBottom: String(contextButtonOuterMargin - contextButtonInnerMargin) + ea,
+              background: colorChip.white,
+              borderRadius: String(5) + px,
+              boxShadow: "3px 0px 15px -9px " + colorChip.shadow,
+              zIndex: String(zIndex),
+              animation: "fadeuplite 0.3s ease forwards",
+            }
+          })
+
+          for (let obj of contextMenu) {
+            createNode({
+              mother: contextBase,
+              event: {
+                click: obj.func(aspid),
+              },
+              style: {
+                display: "flex",
+                width: String(contextButtonWidth) + ea,
+                height: String(contextButtonHeight) + ea,
+                background: colorChip.gradientGray,
+                borderRadius: String(5) + px,
+                marginBottom: String(contextButtonInnerMargin) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                cursor: "pointer",
+              },
+              child: {
+                text: obj.title,
+                style: {
+                  fontSize: String(contextButtonSize) + ea,
+                  fontWeight: String(contextButtonWeight),
+                  color: colorChip.white,
+                  position: "relative",
+                  display: "inline-block",
+                  top: String(contextButtonTextTop) + ea,
+                }
+              }
+            });
+          }
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
     totalMother = createNode({
       mother: totalContents,
       class: [ "totalMother" ],
@@ -3185,6 +3298,7 @@ DesignerJs.prototype.aspirantBase = async function () {
             attribute: { aspid: aspirant.aspid, lastfilter: "none" },
             event: {
               click: instance.aspirantWhiteCard(aspirant.aspid),
+              contextmenu: aspirantSubMenuEvent(aspirant.aspid, aspirant.designer),
             },
             class: [ standardCaseClassName ],
             style: {
@@ -3772,6 +3886,73 @@ DesignerJs.prototype.aspirantSearchEvent = async function () {
     });
   } catch (e) {
     console.log(e);
+  }
+}
+
+DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
+  const instance = this;
+  const { ea, totalContents, aspirants } = this;
+  const { ajaxJson } = GeneralJs;
+  if (method === "documents") {
+    return async function () {
+      try {
+        const aspirant = aspirants.find((d) => { return d.aspid === aspid });
+        if (aspirant === undefined) {
+          throw new Error("invalid aspid");
+        }
+
+        if (window.confirm(aspirant.designer + " 실장님께 등록 서류 업로드 알림톡을 전송할까요?")) {
+          const response = await ajaxJson({
+            mode: "send",
+            aspid: aspirant.aspid,
+            designer: aspirant.designer,
+            phone: aspirant.phone,
+            type: "documents",
+          }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
+          if (response.message === "success") {
+            window.alert("전송에 성공하였습니다!");
+          } else {
+            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+          }
+          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant";
+        }
+        
+      } catch (e) {
+        window.alert(e.message);
+        console.log(e);
+        return null;
+      }
+    }
+  } else if (method === "payment") {
+    return async function () {
+      try {
+        const aspirant = aspirants.find((d) => { return d.aspid === aspid });
+        if (aspirant === undefined) {
+          throw new Error("invalid aspid");
+        }
+
+        if (window.confirm(aspirant.designer + " 실장님께 등록비 결제 알림톡을 전송할까요?")) {
+          const response = await ajaxJson({
+            mode: "send",
+            aspid: aspirant.aspid,
+            designer: aspirant.designer,
+            phone: aspirant.phone,
+            type: "payment",
+          }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
+          if (response.message === "success") {
+            window.alert("전송에 성공하였습니다!");
+          } else {
+            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+          }
+          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant";
+        }
+        
+      } catch (e) {
+        window.alert(e.message);
+        console.log(e);
+        return null;
+      }
+    }
   }
 }
 
