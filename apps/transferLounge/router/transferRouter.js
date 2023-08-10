@@ -620,14 +620,17 @@ TransferRouter.prototype.rou_post_aspirantPortfolio = function () {
 
       totalImages = [];
       for (let folder of targetFolders) {
-        targetImages = (await fileSystem(`readDir`, [ folder ])).filter((str) => { return str !== ".DS_Store" }).map((str) => { return `${folder}/${str}`; }).map((path) => {
-          const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
-          return targetPath;
-        }).map((path) => {
-          return linkToString("https://" + address.transinfo.host + path);
-        });
-
-        totalImages = totalImages.concat(equalJson(JSON.stringify(targetImages)));
+        try {
+          targetImages = (await fileSystem(`readDir`, [ folder ])).filter((str) => { return str !== ".DS_Store" }).map((str) => { return `${folder}/${str}`; }).map((path) => {
+            const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
+            return targetPath;
+          }).map((path) => {
+            return linkToString("https://" + address.transinfo.host + path);
+          });
+          totalImages = totalImages.concat(equalJson(JSON.stringify(targetImages)));
+        } catch (e) {
+          totalImages = totalImages.concat([]);
+        }
       }
 
       res.send(JSON.stringify({ link: totalImages }));

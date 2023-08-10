@@ -1,6 +1,6 @@
 DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
   const instance = this;
-  const { ea, totalContents, valueTargetClassName, asyncProcessText } = this;
+  const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows } = this;
   const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute } = GeneralJs;
   try {
     const calcMonthDelta = (from, to) => {
@@ -16,6 +16,8 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
     let yearDelta;
     let monthDelta;
     let standards;
+    let thisSendRows;
+    let thisDocumentsSend;
 
     past.setFullYear(past.getFullYear() - agoYearDelta);
     past.setMonth(0);
@@ -80,6 +82,14 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             color: colorChip.black,
           },
           {
+            value: "등록 완료",
+            color: colorChip.black,
+          },
+          {
+            value: "계약 요청",
+            color: colorChip.black,
+          },
+          {
             value: "계약 완료",
             color: colorChip.green,
           },
@@ -101,6 +111,8 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           "미팅 대기",
           "미팅 완료",
           "등록 요청",
+          "등록 완료",
+          "계약 요청",
           "계약 완료",
           "드랍",
         ].map((str) => {
@@ -230,6 +242,12 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             console.log(e);
           }
         },
+      },
+      {
+        title: "서류 요청",
+        width: 100,
+        name: "documentsSend",
+        type: "date",
       },
       {
         title: "서류 제출",
@@ -533,6 +551,12 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
 
     for (let aspirant of instance.aspirants) {
 
+      thisSendRows = noticeSendRows.filter((o) => { return o.type === "documents" }).filter((o) => { return o.aspirant.aspid === aspirant.aspid });
+      thisDocumentsSend = new Date(1800, 0, 1);
+      if (thisSendRows.length > 0 && thisSendRows[0].history.length > 0) {
+        thisDocumentsSend = thisSendRows[0].history[0];
+      }
+      
       standards.values[aspirant.aspid] = [
         {
           value: aspirant.aspid,
@@ -568,6 +592,10 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         {
           value: dateToString(aspirant.response.date),
           name: "responseDate",
+        },
+        {
+          value: dateToString(thisDocumentsSend),
+          name: "documentsSend",
         },
         {
           value: dateToString(aspirant.submit.documents.date),
@@ -767,6 +795,8 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
           "미팅 대기",
           "미팅 완료",
           "등록 요청",
+          "등록 완료",
+          "계약 요청",
           "계약 완료",
           "드랍",
         ],
@@ -777,6 +807,8 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
           "미팅 대기",
           "미팅 완료",
           "등록 요청",
+          "등록 완료",
+          "계약 요청",
           "계약 완료",
           "드랍",
         ].map((str) => {
@@ -1380,7 +1412,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     const menuValuePromptClassName = "menuValuePromptClassName";
     const valueTargetClassName = "valueTargetClassName";
     const longEmptyText = "메모를 클릭하여 입력해주세요.";
-    const maxColumnsNumber = 7;
+    const maxColumnsNumber = 9;
     let name;
     let type;
     let title;
@@ -3962,9 +3994,11 @@ DesignerJs.prototype.aspirantView = async function () {
     const { colorChip, ajaxJson, returnGet } = GeneralJs;
     let loading;
     let aspirants;
+    let noticeSendRows;
 
     loading = await this.mother.loadingRun();
     aspirants = await ajaxJson({ noFlat: true, whereQuery: {} }, BACKHOST + "/getAspirants", { equal: true });
+    noticeSendRows = await ajaxJson({ mode: "get" }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
 
     this.aspirants = aspirants;
     this.normalMatrix = null;
@@ -3979,6 +4013,7 @@ DesignerJs.prototype.aspirantView = async function () {
     this.processDetailEventClassName = "processDetailEventClassName";
     this.whiteCardMode = "checklist";
     this.asyncProcessText = "로드중..";
+    this.noticeSendRows = noticeSendRows;
 
     await this.aspirantBase();
     await this.aspirantSearchEvent();

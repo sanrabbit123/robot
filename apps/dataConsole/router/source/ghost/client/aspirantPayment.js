@@ -1937,7 +1937,7 @@ AspirantPaymentJs.prototype.paymentByCard = function () {
   return async function (e) {
     try {
       const aspid = aspirant.aspid;
-      const amount = 38500;
+      const amount = 385000;
       const impKey = "imp71921105";
       const loading = instance.mother.grayLoading();
       const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "designerRegistration" }, BACKHOST + "/generalImpPayment");
@@ -2005,7 +2005,7 @@ AspirantPaymentJs.prototype.paymentByVaccount = function () {
   return async function (e) {
     try {
       const aspid = aspirant.aspid;
-      const amount = 38500;
+      const amount = 385000;
       const impKey = "imp71921105";
       const loading = instance.mother.grayLoading();
       const { pluginScript, oidConst } = await ajaxJson({ mode: "script", oidKey: "designerRegistration" }, BACKHOST + "/generalImpPayment");
