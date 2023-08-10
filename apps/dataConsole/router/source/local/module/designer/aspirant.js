@@ -239,55 +239,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         },
       },
       {
-        title: "추가 포폴",
-        width: 100,
-        name: "portfolioPlus",
-        type: "string",
-        menu: [
-          {
-            value: "전체 보기",
-            functionName: "filterEvent_$all",
-            columnOnly: true,
-          }
-        ].concat([
-          "필요",
-          "충분",
-        ].map((str) => {
-          return {
-            value: str,
-            functionName: "filterEvent_" + str,
-          }
-        })),
-        menuWidth: 80,
-        update: async (aspid, value, menu) => {
-          try {
-            const instance = this;
-            const { ajaxJson } = GeneralJs;
-            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
-            const finalValue = /필요/gi.test(value);
-            let whereQuery, updateQuery;
-
-            whereQuery = { aspid };
-            updateQuery = {};
-            updateQuery["response.portfolio.plus.needs"] = finalValue;
-
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.plus.needs = finalValue;
-            await instance.aspirantColorSync();
-
-          } catch (e) {
-            console.log(e);
-          }
-        },
-      },
-      {
-        title: "추가 포폴 전송",
-        width: 100,
-        name: "portfolioPlusDate",
-        type: "date",
-      },
-      {
-        title: "응대 메모",
+        title: "대표님 메모",
         width: 400,
         name: "memo",
         type: "string",
@@ -382,6 +334,12 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         },
       },
       {
+        title: "추가 포폴 전송",
+        width: 100,
+        name: "portfolioPlusDate",
+        type: "date",
+      },
+      {
         title: "서류 요청",
         width: 100,
         name: "documentsSend",
@@ -398,73 +356,6 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         width: 100,
         name: "paymentBoo",
         type: "date",
-      },
-      {
-        title: "준비된 세트",
-        width: 100,
-        name: "portfolioSet",
-        type: "string",
-        menu: [
-          {
-            value: "전체 보기",
-            functionName: "filterEvent_$all",
-            columnOnly: true,
-          }
-        ].concat([
-          "있음",
-          "없음",
-        ].map((str) => {
-          return {
-            value: str,
-            functionName: "filterEvent_" + str,
-          }
-        })),
-        menuWidth: 80,
-        update: async (aspid, value, menu) => {
-          try {
-            const instance = this;
-            const { ajaxJson } = GeneralJs;
-            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
-            const finalValue = /있음/gi.test(value);
-            let whereQuery, updateQuery;
-
-            whereQuery = { aspid };
-            updateQuery = {};
-            updateQuery["response.portfolio.ready.set"] = finalValue;
-
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.ready.set = finalValue;
-            await instance.aspirantColorSync();
-
-          } catch (e) {
-            console.log(e);
-          }
-        },
-      },
-      {
-        title: "세트 촬영",
-        width: 100,
-        name: "portfolioSetPhoto",
-        type: "date",
-        update: async (aspid, value) => {
-          try {
-            const instance = this;
-            const { ajaxJson } = GeneralJs;
-            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
-            const finalValue = value;
-            let whereQuery, updateQuery;
-
-            whereQuery = { aspid };
-            updateQuery = {};
-            updateQuery["response.portfolio.plus.photo"] = finalValue;
-
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.plus.photo = finalValue;
-            await instance.aspirantColorSync();
-          } catch (e) {
-            console.log(e);
-          }
-        },
       },
       {
         title: "공통 교육",
@@ -529,6 +420,73 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
 
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
             instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.common.date = finalValue;
+            await instance.aspirantColorSync();
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      },
+      {
+        title: "준비된 세트",
+        width: 100,
+        name: "portfolioSet",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+            columnOnly: true,
+          }
+        ].concat([
+          "있음",
+          "없음",
+        ].map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        })),
+        menuWidth: 80,
+        update: async (aspid, value, menu) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = /있음/gi.test(value);
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["response.portfolio.ready.set"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.ready.set = finalValue;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      },
+      {
+        title: "세트 촬영",
+        width: 100,
+        name: "portfolioSetPhoto",
+        type: "date",
+        update: async (aspid, value) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = value;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["response.portfolio.plus.photo"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.plus.photo = finalValue;
             await instance.aspirantColorSync();
           } catch (e) {
             console.log(e);
@@ -634,14 +592,6 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           name: "portfolioCharacter",
         },
         {
-          value: aspirant.response.portfolio.plus.needs ? "필요" : "충분",
-          name: "portfolioPlus",
-        },
-        {
-          value: dateToString(aspirant.response.portfolio.plus.request),
-          name: "portfolioPlusDate",
-        },
-        {
           value: aspirant.meeting.memo,
           name: "memo",
         },
@@ -652,6 +602,10 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         {
           value: dateToString(aspirant.response.date),
           name: "responseDate",
+        },
+        {
+          value: dateToString(aspirant.response.portfolio.plus.request),
+          name: "portfolioPlusDate",
         },
         {
           value: dateToString(thisDocumentsSend),
@@ -666,20 +620,20 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           name: "paymentBoo",
         },
         {
-          value: aspirant.response.portfolio.ready.set ? "있음" : "없음",
-          name: "portfolioSet",
-        },
-        {
-          value: dateToString(aspirant.response.portfolio.plus.photo),
-          name: "portfolioSetPhoto",
-        },
-        {
           value: aspirant.meeting.common.status === "" ? "해당 없음" : aspirant.meeting.common.status,
           name: "commonMeeting",
         },
         {
           value: dateToString(aspirant.meeting.common.date),
           name: "commonMeetingDate",
+        },
+        {
+          value: aspirant.response.portfolio.ready.set ? "있음" : "없음",
+          name: "portfolioSet",
+        },
+        {
+          value: dateToString(aspirant.response.portfolio.plus.photo),
+          name: "portfolioSetPhoto",
         },
         {
           value: aspirant.address,
@@ -1278,51 +1232,6 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         type: "margin",
         title: "",
         value: "",
-      },
-      {
-        name: "portfolioPlus",
-        type: "select",
-        columns: [
-          "필요",
-          "충분",
-        ],
-        title: "추가 포폴",
-        value: [
-          "필요",
-          "충분",
-        ].map((str) => {
-          return str === (aspirant.response.portfolio.plus.needs ? "필요" : "충분") ? 1 : 0;
-        }),
-        editable: true,
-        update: async (columns, newValue, aspid) => {
-          try {
-            const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
-            let whereQuery, updateQuery;
-            let textValue;
-
-            whereQuery = {};
-            whereQuery["aspid"] = aspid;
-
-            updateQuery = {};
-            updateQuery["response.portfolio.plus.needs"] = (columns.find((str, index) => {
-              return newValue[index] === 1;
-            }) === "필요");
-
-            if (updateQuery["response.portfolio.plus.needs"]) {
-              textValue = "필요";
-            } else {
-              textValue = "충분"
-            }
-
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((d) => { return d.aspid === aspid }).response.portfolio.plus.needs = updateQuery["response.portfolio.plus.needs"];
-            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "portfolioPlus").querySelector('.' + valueTargetClassName).textContent = textValue;
-            await instance.aspirantColorSync();
-
-          } catch (e) {
-            console.log(e);
-          }
-        }
       },
       {
         name: "portfolioPlusDate",
