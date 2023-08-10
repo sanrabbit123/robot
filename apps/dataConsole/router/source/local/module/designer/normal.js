@@ -1575,8 +1575,8 @@ DesignerJs.prototype.normalBase = async function () {
   
     valueColumnsAreaPaddingLeft = 20;
 
-    menuPromptWidth = 90;
-    menuPromptHeight = 32;
+    menuPromptWidth = 80;
+    menuPromptHeight = 28;
     menuVisual = 4;
     menuBetween = 3;
 

@@ -93,6 +93,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           {
             value: "전체 보기",
             functionName: "filterEvent_$all",
+            columnOnly: true,
           }
         ].concat([
           "검토중",
@@ -107,7 +108,27 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             value: str,
             functionName: "filterEvent_" + str,
           }
-        }))
+        })),
+        menuWidth: 80,
+        update: async (aspid, value, menu) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["meeting.status"] = value;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.status = value;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        },
       },
       {
         title: "유출 이유",
@@ -1749,9 +1770,10 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
 DesignerJs.prototype.aspirantBase = async function () {
   const instance = this;
   const { ea, totalContents, valueTargetClassName, valueCaseClassName, standardCaseClassName, asyncProcessText, idNameAreaClassName, valueAreaClassName } = this;
-  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson } = GeneralJs;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, equalJson, setQueue, hexaJson } = GeneralJs;
   const moveTargetClassName = "moveTarget";
   const menuPromptClassName = "menuPromptClassName";
+  const menuValuePromptClassName = "menuValuePromptClassName";
   const importantCircleClassName = "importantCircleClassName";
   try {
     let totalMother;
@@ -1790,6 +1812,7 @@ DesignerJs.prototype.aspirantBase = async function () {
     let contextButtonSize;
     let contextButtonWeight;
     let contextButtonTextTop;
+    let valueDom;
   
     totalPaddingTop = 38;
     columnAreaHeight = 32;
@@ -1810,8 +1833,8 @@ DesignerJs.prototype.aspirantBase = async function () {
   
     valueColumnsAreaPaddingLeft = 20;
 
-    menuPromptWidth = 90;
-    menuPromptHeight = 32;
+    menuPromptWidth = 80;
+    menuPromptHeight = 28;
     menuVisual = 4;
     menuBetween = 3;
 
@@ -1865,6 +1888,7 @@ DesignerJs.prototype.aspirantBase = async function () {
           const zIndex = 4;
           let cancelBack, blackPrompt;
           let thisMenu;
+          let thisMenuWidth;
 
           thisMenu = [
             {
@@ -1879,6 +1903,12 @@ DesignerJs.prototype.aspirantBase = async function () {
 
           if (Array.isArray(thisObject.menu)) {
             thisMenu = thisMenu.concat(thisObject.menu);
+          }
+
+          if (typeof thisObject.menuWidth === "number") {
+            thisMenuWidth = thisObject.menuWidth;
+          } else {
+            thisMenuWidth = menuPromptWidth;
           }
 
           cancelBack = createNode({
@@ -1903,7 +1933,7 @@ DesignerJs.prototype.aspirantBase = async function () {
               position: "fixed",
               top: String(e.y + menuVisual) + "px",
               left: String(e.x + menuVisual) + "px",
-              width: String(menuPromptWidth) + ea,
+              width: String(thisMenuWidth) + ea,
               background: colorChip.white,
               animation: "fadeuplite 0.3s ease forwards",
               zIndex: String(zIndex),
@@ -1924,7 +1954,7 @@ DesignerJs.prototype.aspirantBase = async function () {
                 style: {
                   display: "flex",
                   position: "relative",
-                  width: String(menuPromptWidth) + ea,
+                  width: String(thisMenuWidth) + ea,
                   height: String(menuPromptHeight) + ea,
                   borderRadius: String(5) + "px",
                   background: colorChip.gradientGray,
@@ -1949,7 +1979,7 @@ DesignerJs.prototype.aspirantBase = async function () {
                 }
               }
             })
-          })
+          });
 
         } catch (e) {
           console.log(e);
@@ -2142,7 +2172,7 @@ DesignerJs.prototype.aspirantBase = async function () {
             }
           ]
         }).children;
-      
+
         for (let aspirant of instance.aspirants) {
       
           createNode({
@@ -2223,8 +2253,12 @@ DesignerJs.prototype.aspirantBase = async function () {
           })
     
           for (let i = 0; i < columns.length; i++) {
-            createNode({
+            valueDom = createNode({
               mother: thisTong,
+              attribute: {
+                aspid: aspirant.aspid,
+                name: values[aspirant.aspid][i].name,
+              },
               style: {
                 display: "inline-flex",
                 flexDirection: "row",
@@ -2269,6 +2303,111 @@ DesignerJs.prototype.aspirantBase = async function () {
                 }
               }
             });
+
+            if (Array.isArray(columns[i].menu)) {
+              valueDom.setAttribute("menu", JSON.stringify(columns[i].menu));
+              valueDom.setAttribute("menuwidth", String(columns[i].menuWidth));
+              valueDom.setAttribute("update", (await hexaJson({ update: columns[i].update })));
+              valueDom.addEventListener("click", async function (e) {
+                try {
+                  const self = this;
+                  const zIndex = 4;
+                  const aspid = this.getAttribute("aspid");
+                  const menu = equalJson(this.getAttribute("menu"));
+                  const menuWidth = Number(this.getAttribute("menuwidth"));
+                  const menuTargets = menu.filter((o) => { return (o.columnOnly !== true) });
+                  const thisUpdateFunction = (await hexaJson(this.getAttribute("update"))).update.bind(instance);
+                  let cancelBack, menuPrompt;                  
+
+                  cancelBack = createNode({
+                    mother: totalContents,
+                    class: [ menuValuePromptClassName ],
+                    event: (e) => {
+                      self.querySelector("." + valueTargetClassName).style.color = self.querySelector("." + valueTargetClassName).getAttribute("color");
+                      removeByClass(menuValuePromptClassName);
+                    },
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      width: withOut(0, ea),
+                      height: withOut(0, ea),
+                      background: "transparent",
+                      zIndex: String(zIndex),
+                    }
+                  });
+        
+                  menuPrompt = createNode({
+                    mother: totalContents,
+                    class: [ menuValuePromptClassName ],
+                    style: {
+                      position: "fixed",
+                      top: String(e.y + menuVisual) + "px",
+                      left: String(e.x + menuVisual) + "px",
+                      width: String(menuWidth) + ea,
+                      background: colorChip.white,
+                      animation: "fadeuplite 0.3s ease forwards",
+                      zIndex: String(zIndex),
+                    },
+                    children: menuTargets.map(({ value }) => {
+                      return {
+                        attribute: {
+                          value,
+                        },
+                        event: {
+                          selectstart: (e) => { e.preventDefault() },
+                          click: async function (e) {
+                            try {
+                              const thisValue = this.getAttribute("value");
+                              self.querySelector("." + valueTargetClassName).textContent = thisValue;
+                              self.querySelector("." + valueTargetClassName).style.color = self.querySelector("." + valueTargetClassName).getAttribute("color");
+                              await thisUpdateFunction(aspid, thisValue, menuTargets);
+                              removeByClass(menuValuePromptClassName);
+                            } catch (e) {
+                              console.log(e);
+                            }
+                          }
+                        },
+                        style: {
+                          display: "flex",
+                          position: "relative",
+                          width: String(menuWidth) + ea,
+                          height: String(menuPromptHeight) + ea,
+                          borderRadius: String(5) + "px",
+                          background: colorChip.gradientGreen,
+                          marginBottom: String(menuBetween) + ea,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          textAlign: "center",
+                          cursor: "pointer",
+                        },
+                        child: {
+                          text: value,
+                          event: {
+                            selectstart: (e) => { e.preventDefault() },
+                          },
+                          style: {
+                            position: "relative",
+                            top: String(menuTextTop) + ea,
+                            fontSize: String(menuSize) + ea,
+                            fontWeight: String(menuWeight),
+                            color: colorChip.white,
+                          }
+                        }
+                      }
+                    })
+                  });
+
+                  setQueue(() => {
+                    self.querySelector("." + valueTargetClassName).style.color = colorChip.green;
+                  });
+
+                } catch (e) {
+                  console.log(e);
+                }
+              });
+            }
+
           }
     
         }

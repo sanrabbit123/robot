@@ -4203,49 +4203,31 @@ GeneralJs.hexaJson = async function (input, middleMode = false) {
   const tokenEnd = ">>>__hexaFunctionEnd__";
   const hexaFunction = async function (input) {
     try {
-      const crypto = require("crypto");
-      const password = "homeliaison";
-      const algorithm = "aes-192-cbc";
-      const iv = Buffer.alloc(16, 0);
-      const digest = "hex";
+      const hexEncode = (str) => {
+        let hex;
+        let result = "";
+        for (let i = 0; i < str.length; i++) {
+          hex = str.charCodeAt(i).toString(16);
+          result += String("000" + hex).slice(-4);
+        }
+        return result
+      }
+      const hexDecode = (hash) => {
+        let hexes = (hash.match(/.{1,4}/g) || []);
+        let back = "";
+        for(let j = 0; j < hexes.length; j++) {
+          back += String.fromCharCode(parseInt(hexes[j], 16));
+        }
+        return back;
+      }
       const toHex = (string) => {
         return new Promise((resolve, reject) => {
-          crypto.scrypt(password, "salt", 24, (err, key) => {
-            if (err) {
-              reject(err);
-            } else {
-              const cipher = crypto.createCipheriv(algorithm, key, iv);
-              let encrypted = '';
-              cipher.setEncoding(digest);
-              cipher.on("data", (chunk) => { encrypted += chunk; });
-              cipher.on("end", () => { resolve(encrypted); });
-              cipher.write(string);
-              cipher.end();
-            }
-          });
+          resolve(hexEncode(string));
         });
       }
       const toFunction = (hash) => {
         return new Promise((resolve, reject) => {
-          crypto.scrypt(password, "salt", 24, (err, key) => {
-            if (err) {
-              reject(err);
-            } else {
-              const decipher = crypto.createDecipheriv(algorithm, key, iv);
-              let decrypted = '';
-              decipher.on("readable", () => {
-                let chunk;
-                chunk = decipher.read();
-                while (chunk !== null) {
-                  decrypted += chunk.toString("utf8");
-                  chunk = decipher.read();
-                }
-              });
-              decipher.on("end", () => { resolve(decrypted); });
-              decipher.write(hash, digest);
-              decipher.end();
-            }
-          });
+          resolve(hexDecode(hash));
         });
       }
       let functionString, functionString_copied;
