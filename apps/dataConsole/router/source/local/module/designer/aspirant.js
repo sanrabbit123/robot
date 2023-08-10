@@ -57,7 +57,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
       },
       {
         title: "응대 상태",
-        width: 100,
+        width: 90,
         name: "status",
         colorStandard: true,
         colorMap: [
@@ -143,14 +143,103 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         },
       },
       {
+        title: "1차 판단",
+        width: 90,
+        name: "firstStatus",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+            columnOnly: true,
+          }
+        ].concat([
+          "합격",
+          "반려",
+          "불합격",
+        ].map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        })),
+        menuWidth: 80,
+        update: async (aspid, value, menu) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = value;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["response.first.status"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).response.first.status = finalValue;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      },
+      {
+        title: "반려 사유",
+        width: 140,
+        name: "returnReason",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+            columnOnly: true,
+          }
+        ].concat([
+          "해당 없음",
+          "포트폴리오 부족",
+          "리모델링 위주만",
+          "상업 공간 위주만",
+          "경력 정보 부족",
+          "총체적 정보 불충분",
+        ].map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        })),
+        menuWidth: 120,
+        update: async (aspid, value, menu) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = /해당 없음/gi.test(value) ? "" : value;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["response.first.reason"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).response.first.reason = finalValue;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      },
+      {
         title: "연락처",
-        width: 130,
+        width: 120,
         name: "phone",
         type: "string",
       },
       {
         title: "주요 특징",
-        width: 140,
+        width: 130,
         name: "portfolioCharacter",
         type: "string",
         menu: [
@@ -578,6 +667,14 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           name: "status",
         },
         {
+          value: aspirant.response.first.status,
+          name: "firstStatus",
+        },
+        {
+          value: aspirant.response.first.reason === "" ? "해당 없음" : aspirant.response.first.reason,
+          name: "returnReason",
+        },
+        {
           value: aspirant.phone,
           name: "phone",
         },
@@ -824,6 +921,12 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         value: aspirant.address,
       },
       {
+        name: "margin",
+        type: "margin",
+        title: "",
+        value: "",
+      },
+      {
         name: "status",
         type: "select",
         columns: [
@@ -876,24 +979,66 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         }
       },
       {
-        name: "outreason",
+        name: "firstStatus",
+        type: "select",
+        columns: [
+          "합격",
+          "반려",
+          "불합격",
+        ],
+        title: "1차 판단",
+        value: [
+          "합격",
+          "반려",
+          "불합격",
+        ].map((str) => {
+          return str === aspirant.response.first.status ? 1 : 0;
+        }),
+        editable: true,
+        update: async (columns, newValue, aspid) => {
+          try {
+            const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
+            let whereQuery, updateQuery;
+
+            whereQuery = {};
+            whereQuery["aspid"] = aspid;
+
+            updateQuery = {};
+            updateQuery["response.first.status"] = columns.find((str, index) => {
+              return newValue[index] === 1;
+            });
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((d) => { return d.aspid === aspid }).response.first.status = updateQuery["response.first.status"];
+            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "firstStatus").querySelector('.' + valueTargetClassName).textContent = updateQuery["response.first.status"];
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      {
+        name: "returnReason",
         type: "select",
         columns: [
           "해당 없음",
-          "연락 안 됨",
-          "조건 미달",
-          "파트너십 거부",
-          "기타 이유",
+          "포트폴리오 부족",
+          "리모델링 위주만",
+          "상업 공간 위주만",
+          "경력 정보 부족",
+          "총체적 정보 불충분",
         ],
-        title: "유출 이유",
+        title: "반려 사유",
         value: [
           "",
-          "연락 안 됨",
-          "조건 미달",
-          "파트너십 거부",
-          "기타 이유",
+          "포트폴리오 부족",
+          "리모델링 위주만",
+          "상업 공간 위주만",
+          "경력 정보 부족",
+          "총체적 정보 불충분",
         ].map((str) => {
-          return str === aspirant.response.outreason ? 1 : 0;
+          return str === aspirant.response.first.reason ? 1 : 0;
         }),
         editable: true,
         update: async (columns, newValue, aspid) => {
@@ -906,26 +1051,32 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
             whereQuery["aspid"] = aspid;
 
             updateQuery = {};
-            updateQuery["response.outreason"] = columns.find((str, index) => {
+            updateQuery["response.first.reason"] = columns.find((str, index) => {
               return newValue[index] === 1;
             });
 
-            if (updateQuery["response.outreason"] === undefined || updateQuery["response.outreason"] === "해당 없음") {
-              updateQuery["response.outreason"] = "";
+            if (updateQuery["response.first.reason"] === undefined || updateQuery["response.first.reason"] === "해당 없음") {
+              updateQuery["response.first.reason"] = "";
               textValue = "해당 없음";
             } else {
-              textValue = updateQuery["response.outreason"];
+              textValue = updateQuery["response.first.reason"];
             }
 
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((d) => { return d.aspid === aspid }).response.outreason = updateQuery["response.outreason"];
-            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "outreason").querySelector('.' + valueTargetClassName).textContent = textValue;
+            instance.aspirants.find((d) => { return d.aspid === aspid }).response.first.reason = updateQuery["response.first.reason"];
+            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "returnReason").querySelector('.' + valueTargetClassName).textContent = textValue;
             await instance.aspirantColorSync();
 
           } catch (e) {
             console.log(e);
           }
         }
+      },
+      {
+        name: "margin",
+        type: "margin",
+        title: "",
+        value: "",
       },
       {
         name: "portfolioCharacter",
@@ -974,6 +1125,58 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
             instance.aspirants.find((d) => { return d.aspid === aspid }).response.portfolio.summary = updateQuery["response.portfolio.summary"];
             findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "portfolioCharacter").querySelector('.' + valueTargetClassName).textContent = textValue;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      {
+        name: "outreason",
+        type: "select",
+        columns: [
+          "해당 없음",
+          "연락 안 됨",
+          "조건 미달",
+          "파트너십 거부",
+          "기타 이유",
+        ],
+        title: "유출 이유",
+        value: [
+          "",
+          "연락 안 됨",
+          "조건 미달",
+          "파트너십 거부",
+          "기타 이유",
+        ].map((str) => {
+          return str === aspirant.response.outreason ? 1 : 0;
+        }),
+        editable: true,
+        update: async (columns, newValue, aspid) => {
+          try {
+            const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
+            let whereQuery, updateQuery;
+            let textValue;
+
+            whereQuery = {};
+            whereQuery["aspid"] = aspid;
+
+            updateQuery = {};
+            updateQuery["response.outreason"] = columns.find((str, index) => {
+              return newValue[index] === 1;
+            });
+
+            if (updateQuery["response.outreason"] === undefined || updateQuery["response.outreason"] === "해당 없음") {
+              updateQuery["response.outreason"] = "";
+              textValue = "해당 없음";
+            } else {
+              textValue = updateQuery["response.outreason"];
+            }
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((d) => { return d.aspid === aspid }).response.outreason = updateQuery["response.outreason"];
+            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "outreason").querySelector('.' + valueTargetClassName).textContent = textValue;
             await instance.aspirantColorSync();
 
           } catch (e) {
