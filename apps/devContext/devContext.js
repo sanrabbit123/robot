@@ -169,13 +169,10 @@ DevContext.prototype.launching = async function () {
     //   whereQuery = {};
     //   whereQuery["aspid"] = row.aspid;
     //   updateQuery = {};
-    //   updateQuery["meeting.common"] = {
-    //     date: new Date(1800, 0, 1),
-    //     status: "",
+    //   updateQuery["response.first"] = {
+    //     status: "불합격",
+    //     reason: "",
     //   };
-    //   updateQuery["response.outreason"] = "";
-    //   updateQuery["response.portfolio.summary"] = "";
-    //   updateQuery["response.portfolio.plus.photo"] = new Date(1800, 0, 1);
 
     //   await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
     //   console.log(whereQuery, updateQuery);
@@ -188,6 +185,10 @@ DevContext.prototype.launching = async function () {
 
     // console.log(aspirants[40].response);
     // console.log(aspirants[40].toNormal().response);
+
+
+
+
 
 
 

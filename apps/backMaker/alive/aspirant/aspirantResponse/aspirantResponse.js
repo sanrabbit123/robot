@@ -60,10 +60,23 @@ AspirantResponsePortfolio.prototype.toNormal = function () {
   return obj;
 }
 
+const AspirantResponseFirst = function (json) {
+  this.status = json.status;
+  this.reason = json.reason;
+}
+
+AspirantResponseFirst.prototype.toNormal = function () {
+  let obj = {};
+  obj.status = this.status;
+  obj.reason = this.reason;
+  return obj;
+}
+
 const AspirantResponse = function (json) {
   this.date = new DateParse(json.date);
   this.long = json.long;
   this.outreason = json.outreason;
+  this.first = new AspirantResponseFirst(json.first);
   this.portfolio = new AspirantResponsePortfolio(json.portfolio);
 }
 
@@ -72,6 +85,7 @@ AspirantResponse.prototype.toNormal = function () {
   obj.date = this.date.toNormal();
   obj.long = this.long;
   obj.outreason = this.outreason;
+  obj.first = this.first.toNormal();
   obj.portfolio = this.portfolio.toNormal();
   return obj;
 }

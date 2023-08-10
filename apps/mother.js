@@ -2760,7 +2760,7 @@ Mother.prototype.stringToDate = function (str) {
   }
 
   const zeroAddition = function (num) { return (num < 10) ? `0${String(num)}` : String(num); };
-  let tempArr, tempArr2, tempArr3;
+  let tempArr, tempArr2, tempArr3, tempArr4;
   str = str.trim();
 
   if (/T/g.test(str) && /Z$/.test(str) && /^[0-9]/.test(str) && /\-/g.test(str) && /\:/g.test(str)) {
@@ -2777,10 +2777,32 @@ Mother.prototype.stringToDate = function (str) {
       str = "20" + str + "-01";
     } else if (/^[0-9][0-9][년] ?[0-9]/.test(str)) {
       tempArr = str.split("년");
-      str = String(Number(tempArr[0].replace(/[^0-9]/gi, '')) + 2000) + "-" + zeroAddition(Number(tempArr[1].replace(/[^0-9]/gi, ''))) + "-01";
+      if (/월/gi.test(str)) {
+        tempArr4 = tempArr[1].trim().split("월");
+        if (/일/gi.test(str)) {
+          str = String(Number(tempArr[0].replace(/[^0-9]/gi, '')) + 2000) + "-" + zeroAddition(Number(tempArr4[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr4[1].replace(/[^0-9]/gi, '')));
+        } else {  
+          str = String(Number(tempArr[0].replace(/[^0-9]/gi, '')) + 2000) + "-" + zeroAddition(Number(tempArr4[0].replace(/[^0-9]/gi, ''))) + "-01";
+        }
+      } else {
+        str = String(Number(tempArr[0].replace(/[^0-9]/gi, '')) + 2000) + "-" + zeroAddition(Number(tempArr[1].replace(/[^0-9]/gi, ''))) + "-01";
+      }
     } else if (/^[0-9][0-9][0-9][0-9][년] ?[0-9]/.test(str)) {
       tempArr = str.split("년");
-      str = String(Number(tempArr[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr[1].replace(/[^0-9]/gi, ''))) + "-01";
+      if (/월/gi.test(str)) {
+        tempArr4 = tempArr[1].trim().split("월");
+        if (/일/gi.test(str)) {
+          str = String(Number(tempArr[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr4[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr4[1].replace(/[^0-9]/gi, '')));
+        } else {  
+          str = String(Number(tempArr[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr4[0].replace(/[^0-9]/gi, ''))) + "-01";
+        }
+      } else {
+        str = String(Number(tempArr[0].replace(/[^0-9]/gi, ''))) + "-" + zeroAddition(Number(tempArr[1].replace(/[^0-9]/gi, ''))) + "-01";
+      }
+    } else if (/^[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]$/.test(str.trim())) {
+      str = str.slice(0, 4) + "-" + str.slice(4, 6) + "-" + str.slice(6);
+    } else if (/^[0-9][0-9][0-9][0-9][0-9][0-9]$/.test(str.trim())) {
+      str = "20" + str.slice(0, 2) + "-" + str.slice(2, 4) + "-" + str.slice(4);
     } else {
       throw new Error("not date string : " + str);
     }

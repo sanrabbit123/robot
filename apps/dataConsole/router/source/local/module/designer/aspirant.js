@@ -70,11 +70,11 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             color: colorChip.black,
           },
           {
-            value: "미팅 대기",
+            value: "추가 요청",
             color: colorChip.black,
           },
           {
-            value: "미팅 완료",
+            value: "수집 완료",
             color: colorChip.black,
           },
           {
@@ -108,8 +108,8 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         ].concat([
           "검토중",
           "응대중",
-          "미팅 대기",
-          "미팅 완료",
+          "추가 요청",
+          "수집 완료",
           "등록 요청",
           "등록 완료",
           "계약 요청",
@@ -143,123 +143,10 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         },
       },
       {
-        title: "유출 이유",
-        width: 120,
-        name: "outreason",
-        type: "string",
-        menu: [
-          {
-            value: "전체 보기",
-            functionName: "filterEvent_$all",
-            columnOnly: true,
-          }
-        ].concat([
-          "해당 없음",
-          "연락 안 됨",
-          "조건 미달",
-          "파트너십 거부",
-          "기타 이유",
-        ].map((str) => {
-          return {
-            value: str,
-            functionName: "filterEvent_" + str,
-          }
-        })),
-        menuWidth: 100,
-        update: async (aspid, value, menu) => {
-          try {
-            const instance = this;
-            const { ajaxJson } = GeneralJs;
-            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
-            const finalValue = /해당 없음/gi.test(value) ? "" : value;
-            let whereQuery, updateQuery;
-
-            whereQuery = { aspid };
-            updateQuery = {};
-            updateQuery["response.outreason"] = finalValue;
-
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.outreason = finalValue;
-            await instance.aspirantColorSync();
-
-          } catch (e) {
-            console.log(e);
-          }
-        },
-      },
-      {
         title: "연락처",
         width: 130,
         name: "phone",
         type: "string",
-      },
-      {
-        title: "응대 메모",
-        width: 400,
-        name: "memo",
-        type: "string",
-        update: async (aspid, value) => {
-          try {
-            const instance = this;
-            const { ajaxJson } = GeneralJs;
-            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
-            const finalValue = value;
-            let whereQuery, updateQuery;
-
-            whereQuery = { aspid };
-            updateQuery = {};
-            updateQuery["meeting.memo"] = finalValue;
-
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.memo = finalValue;
-            await instance.aspirantColorSync();
-          } catch (e) {
-            console.log(e);
-          }
-        },
-      },
-      {
-        title: "유선 상담",
-        width: 100,
-        name: "responseDate",
-        type: "date",
-        update: async (aspid, value) => {
-          try {
-            const instance = this;
-            const { ajaxJson } = GeneralJs;
-            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
-            const finalValue = value;
-            let whereQuery, updateQuery;
-
-            whereQuery = { aspid };
-            updateQuery = {};
-            updateQuery["response.date"] = finalValue;
-
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.date = finalValue;
-            await instance.aspirantColorSync();
-          } catch (e) {
-            console.log(e);
-          }
-        },
-      },
-      {
-        title: "서류 요청",
-        width: 100,
-        name: "documentsSend",
-        type: "date",
-      },
-      {
-        title: "서류 제출",
-        width: 100,
-        name: "documentsBoo",
-        type: "date",
-      },
-      {
-        title: "등록비 결제",
-        width: 100,
-        name: "paymentBoo",
-        type: "date",
       },
       {
         title: "주요 특징",
@@ -353,6 +240,119 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         title: "추가 포폴 전송",
         width: 100,
         name: "portfolioPlusDate",
+        type: "date",
+      },
+      {
+        title: "응대 메모",
+        width: 400,
+        name: "memo",
+        type: "string",
+        update: async (aspid, value) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = value;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["meeting.memo"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.memo = finalValue;
+            await instance.aspirantColorSync();
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      },
+      {
+        title: "유출 이유",
+        width: 120,
+        name: "outreason",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+            columnOnly: true,
+          }
+        ].concat([
+          "해당 없음",
+          "연락 안 됨",
+          "조건 미달",
+          "파트너십 거부",
+          "기타 이유",
+        ].map((str) => {
+          return {
+            value: str,
+            functionName: "filterEvent_" + str,
+          }
+        })),
+        menuWidth: 100,
+        update: async (aspid, value, menu) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = /해당 없음/gi.test(value) ? "" : value;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["response.outreason"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).response.outreason = finalValue;
+            await instance.aspirantColorSync();
+
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      },
+      {
+        title: "유선 상담",
+        width: 100,
+        name: "responseDate",
+        type: "date",
+        update: async (aspid, value) => {
+          try {
+            const instance = this;
+            const { ajaxJson } = GeneralJs;
+            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
+            const finalValue = value;
+            let whereQuery, updateQuery;
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["response.date"] = finalValue;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).response.date = finalValue;
+            await instance.aspirantColorSync();
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      },
+      {
+        title: "서류 요청",
+        width: 100,
+        name: "documentsSend",
+        type: "date",
+      },
+      {
+        title: "서류 제출",
+        width: 100,
+        name: "documentsBoo",
+        type: "date",
+      },
+      {
+        title: "등록비 결제",
+        width: 100,
+        name: "paymentBoo",
         type: "date",
       },
       {
@@ -578,16 +578,28 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           name: "status",
         },
         {
-          value: aspirant.response.outreason === "" ? "해당 없음" : aspirant.response.outreason,
-          name: "outreason",
-        },
-        {
           value: aspirant.phone,
           name: "phone",
         },
         {
+          value: aspirant.response.portfolio.summary === "" ? "알 수 없음" : aspirant.response.portfolio.summary,
+          name: "portfolioCharacter",
+        },
+        {
+          value: aspirant.response.portfolio.plus.needs ? "필요" : "충분",
+          name: "portfolioPlus",
+        },
+        {
+          value: dateToString(aspirant.response.portfolio.plus.request),
+          name: "portfolioPlusDate",
+        },
+        {
           value: aspirant.meeting.memo,
           name: "memo",
+        },
+        {
+          value: aspirant.response.outreason === "" ? "해당 없음" : aspirant.response.outreason,
+          name: "outreason",
         },
         {
           value: dateToString(aspirant.response.date),
@@ -604,18 +616,6 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         {
           value: dateToString(aspirant.submit.registration.date),
           name: "paymentBoo",
-        },
-        {
-          value: aspirant.response.portfolio.summary === "" ? "알 수 없음" : aspirant.response.portfolio.summary,
-          name: "portfolioCharacter",
-        },
-        {
-          value: aspirant.response.portfolio.plus.needs ? "필요" : "충분",
-          name: "portfolioPlus",
-        },
-        {
-          value: dateToString(aspirant.response.portfolio.plus.request),
-          name: "portfolioPlusDate",
         },
         {
           value: aspirant.response.portfolio.ready.set ? "있음" : "없음",
@@ -682,13 +682,21 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
 
 DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
   const instance = this;
-  const { ea, totalContents, grayBarWidth, belowHeight, valueTargetClassName } = this;
-  const { createNode, withOut, colorChip, dateToString, ajaxJson } = GeneralJs;
+  const { ea, totalContents, grayBarWidth, belowHeight, valueTargetClassName, noticeSendRows } = this;
+  const { createNode, withOut, colorChip, dateToString, ajaxJson, findByAttribute, stringToDate } = GeneralJs;
   try {
     const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
     let dataMatrix;
     let careerToBlock;
     let schoolToBlock;
+    let thisSendRows;
+    let thisDocumentsSend;
+
+    thisSendRows = noticeSendRows.filter((o) => { return o.type === "documents" }).filter((o) => { return o.aspirant.aspid === aspid });
+    thisDocumentsSend = new Date(1800, 0, 1);
+    if (thisSendRows.length > 0 && thisSendRows[0].history.length > 0) {
+      thisDocumentsSend = thisSendRows[0].history[0];
+    }
 
     careerToBlock = (aspirant) => {
       const pipe = "&nbsp;&nbsp;<u%|%u>&nbsp;&nbsp;";
@@ -773,6 +781,35 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         type: "string",
         title: "생일",
         value: dateToString(aspirant.birth) + " (" + String((new Date()).getFullYear() - aspirant.birth.getFullYear()) + "세)",
+        editable: true,
+        update: async (aspid, newValue, targetDom) => {
+          try {
+            const instance = this;
+            const { valueTargetClassName } = this;
+            const { ajaxJson, dateToString, stringToDate, findByAttribute } = GeneralJs;
+            const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
+            let birthDate;
+            let whereQuery, updateQuery;
+            try {
+              birthDate = stringToDate(newValue);
+            } catch (e) {
+              window.alert("날짜 형식이 올바르지 않습니다!");
+              birthDate = new Date(1800, 0, 1);
+            }
+
+            whereQuery = { aspid };
+            updateQuery = {};
+            updateQuery["birth"] = birthDate;
+
+            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            instance.aspirants.find((a) => { return a.aspid === aspid }).birth = birthDate;
+            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "birth").querySelector('.' + valueTargetClassName).textContent = dateToString(birthDate);
+            targetDom.textContent = dateToString(birthDate) + " (" + String((new Date()).getFullYear() - birthDate.getFullYear()) + "세)",
+            await instance.aspirantColorSync();
+          } catch (e) {
+            console.log(e);
+          }
+        }
       },
       {
         name: "email",
@@ -792,8 +829,8 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         columns: [
           "검토중",
           "응대중",
-          "미팅 대기",
-          "미팅 완료",
+          "추가 요청",
+          "수집 완료",
           "등록 요청",
           "등록 완료",
           "계약 요청",
@@ -804,8 +841,8 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         value: [
           "검토중",
           "응대중",
-          "미팅 대기",
-          "미팅 완료",
+          "추가 요청",
+          "수집 완료",
           "등록 요청",
           "등록 완료",
           "계약 요청",
@@ -830,7 +867,7 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
 
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
             instance.aspirants.find((d) => { return d.aspid === aspid }).meeting.status = updateQuery["meeting.status"];
-            document.querySelector('.' + aspid).children[1].querySelector('.' + valueTargetClassName).textContent = updateQuery["meeting.status"];
+            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "status").querySelector('.' + valueTargetClassName).textContent = updateQuery["meeting.status"];
             await instance.aspirantColorSync();
 
           } catch (e) {
@@ -882,7 +919,7 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
 
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
             instance.aspirants.find((d) => { return d.aspid === aspid }).response.outreason = updateQuery["response.outreason"];
-            document.querySelector('.' + aspid).children[2].querySelector('.' + valueTargetClassName).textContent = textValue;
+            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "outreason").querySelector('.' + valueTargetClassName).textContent = textValue;
             await instance.aspirantColorSync();
 
           } catch (e) {
@@ -936,7 +973,7 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
 
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
             instance.aspirants.find((d) => { return d.aspid === aspid }).response.portfolio.summary = updateQuery["response.portfolio.summary"];
-            document.querySelector('.' + aspid).children[8].querySelector('.' + valueTargetClassName).textContent = textValue;
+            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "portfolioCharacter").querySelector('.' + valueTargetClassName).textContent = textValue;
             await instance.aspirantColorSync();
 
           } catch (e) {
@@ -963,7 +1000,8 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
 
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
             instance.aspirants.find((d) => { return d.aspid === aspid }).meeting.memo = updateQuery["meeting.memo"];
-            document.querySelector('.' + aspid).children[3].querySelector('.' + valueTargetClassName).textContent = updateQuery["meeting.memo"];
+            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "memo").querySelector('.' + valueTargetClassName).textContent = updateQuery["meeting.memo"];
+            
             await instance.aspirantColorSync();
 
           } catch (e) {
@@ -998,13 +1036,20 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
 
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
             instance.aspirants.find((a) => { return a.aspid === aspid }).response.date = finalValue;
-            document.querySelector('.' + aspid).children[5].querySelector('.' + valueTargetClassName).textContent = dateToString(finalValue);
+            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "responseDate").querySelector('.' + valueTargetClassName).textContent = dateToString(finalValue);
+
             await instance.aspirantColorSync();
 
           } catch (e) {
             console.log(e);
           }
         }
+      },
+      {
+        name: "documentsSend",
+        type: "date",
+        title: "서류 요청",
+        value: dateToString(thisDocumentsSend),
       },
       {
         name: "documentsBoo",
@@ -1169,7 +1214,7 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
 
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
             instance.aspirants.find((d) => { return d.aspid === aspid }).response.portfolio.plus.needs = updateQuery["response.portfolio.plus.needs"];
-            document.querySelector('.' + aspid).children[9].querySelector('.' + valueTargetClassName).textContent = textValue;
+            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "portfolioPlus").querySelector('.' + valueTargetClassName).textContent = textValue;
             await instance.aspirantColorSync();
 
           } catch (e) {
@@ -1226,7 +1271,8 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
 
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
             instance.aspirants.find((d) => { return d.aspid === aspid }).response.portfolio.ready.set = updateQuery["response.portfolio.ready.set"];
-            document.querySelector('.' + aspid).children[11].querySelector('.' + valueTargetClassName).textContent = textValue;
+            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "portfolioSet").querySelector('.' + valueTargetClassName).textContent = textValue;
+
             await instance.aspirantColorSync();
 
           } catch (e) {
@@ -1255,7 +1301,7 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
 
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
             instance.aspirants.find((a) => { return a.aspid === aspid }).response.portfolio.plus.photo = finalValue;
-            document.querySelector('.' + aspid).children[12].querySelector('.' + valueTargetClassName).textContent = dateToString(finalValue);
+            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "portfolioSetPhoto").querySelector('.' + valueTargetClassName).textContent = dateToString(finalValue);
             await instance.aspirantColorSync();
 
           } catch (e) {
@@ -1311,7 +1357,7 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
 
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
             instance.aspirants.find((d) => { return d.aspid === aspid }).meeting.common.status = updateQuery["meeting.common.status"];
-            document.querySelector('.' + aspid).children[13].querySelector('.' + valueTargetClassName).textContent = textValue;
+            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "commonMeeting").querySelector('.' + valueTargetClassName).textContent = textValue;
             await instance.aspirantColorSync();
 
           } catch (e) {
@@ -1340,7 +1386,7 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
 
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
             instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.common.date = finalValue;
-            document.querySelector('.' + aspid).children[14].querySelector('.' + valueTargetClassName).textContent = dateToString(finalValue);
+            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "commonMeetingDate").querySelector('.' + valueTargetClassName).textContent = dateToString(finalValue);
             await instance.aspirantColorSync();
 
           } catch (e) {
@@ -1464,6 +1510,9 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     let calendarWidth;
     let calendarBoxBetween;
     let calendarBoxHeight;
+    let stringDom;
+    let longTextWidth;
+    let longTextHeight;
 
     blockHeight = 32;
     titleWidth = 180;
@@ -1479,6 +1528,9 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     buttonTextTop = -1;
     buttonSize = 13;
     buttonWeight = 700;
+
+    longTextWidth = 240;
+    longTextHeight = 36;
 
     careerBlockGrayOuterMargin = <%% 10, 10, 9, 8, 0 %%>;
     careerBlockOuterMargin = <%% 14, 14, 14, 12, 2.5 %%>;
@@ -1676,7 +1728,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
 
       if (type === "string") {
 
-        createNode({
+        stringDom = createNode({
           mother: motherBlock,
           style: {
             display: "inline-block",
@@ -1685,6 +1737,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
             width: withOut(titleWidth, ea),
           },
           child: {
+            class: [ valueTargetClassName ],
             text: value,
             style: {
               display: "inline-block",
@@ -1696,6 +1749,120 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
             }
           }
         });
+
+        if (obj.editable) {
+          stringDom.setAttribute("aspid", aspid);
+          stringDom.setAttribute("update", (await hexaJson({ update: obj.update })));
+          stringDom.addEventListener("click", async function (e) {
+            try {
+              const self = this;
+              const zIndex = 4;
+              const aspid = this.getAttribute("aspid");
+              const thisUpdateFunction = (await hexaJson(this.getAttribute("update"))).update.bind(instance);
+              let cancelBack, longTextPrompt;                  
+
+              cancelBack = createNode({
+                mother: totalContents,
+                class: [ menuValuePromptClassName ],
+                event: (e) => {
+                  self.querySelector("." + valueTargetClassName).style.color = colorChip.black;
+                  removeByClass(menuValuePromptClassName);
+                },
+                style: {
+                  position: "fixed",
+                  top: String(0),
+                  left: String(0),
+                  width: withOut(0, ea),
+                  height: withOut(0, ea),
+                  background: "transparent",
+                  zIndex: String(zIndex),
+                }
+              });
+
+              longTextPrompt = createNode({
+                mother: totalContents,
+                class: [ menuValuePromptClassName ],
+                style: {
+                  position: "fixed",
+                  top: String(e.y + menuVisual) + "px",
+                  left: String(e.x + menuVisual) + "px",
+                  width: String(longTextWidth) + ea,
+                  background: colorChip.white,
+                  animation: "fadeuplite 0.3s ease forwards",
+                  zIndex: String(zIndex),
+                },
+                child: {
+                  style: {
+                    display: "flex",
+                    position: "relative",
+                    width: String(longTextWidth) + ea,
+                    height: String(longTextHeight) + ea,
+                    borderRadius: String(5) + "px",
+                    background: colorChip.white,
+                    boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+                    borderRadius: String(5) + "px",
+                    marginBottom: String(menuBetween) + ea,
+                    justifyContent: "start",
+                    alignItems: "center",
+                    textAlign: "center",
+                    cursor: "pointer",
+                    paddingLeft: String(12) + ea,
+                  },
+                  child: {
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                      value: self.querySelector("." + valueTargetClassName).textContent,
+                    },
+                    event: {
+                      keydown: async function (e) {
+                        try {
+                          if (e.key === "Enter" || e.key === "Tab") {
+                            e.preventDefault();
+                          }
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      },
+                      keyup: async function (e) {
+                        try {
+                          if (e.key === "Enter" || e.key === "Tab") {
+                            e.preventDefault();
+                            const thisValue = this.value.trim().replace(/[\&\=\+\/\\\#]/gi, '');
+                            self.querySelector("." + valueTargetClassName).style.color = colorChip.black;
+                            await thisUpdateFunction(aspid, thisValue, self.querySelector("." + valueTargetClassName));
+                            removeByClass(menuValuePromptClassName);
+                          }
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    },
+                    style: {
+                      position: "relative",
+                      top: String(menuTextTop) + ea,
+                      fontSize: String(15) + ea,
+                      fontWeight: String(300),
+                      color: colorChip.green,
+                      border: String(0),
+                      outline: String(0),
+                      width: withOut(0, ea),
+                      height: withOut(0, ea),
+                    }
+                  }
+                }
+              });
+              longTextPrompt.querySelector("input").focus();
+
+              setQueue(() => {
+                self.querySelector("." + valueTargetClassName).style.color = colorChip.green;
+              });
+
+            } catch (e) {
+              console.log(e);
+            }
+          });
+        }
 
       } else if (type === "date") {
 
@@ -1885,7 +2052,6 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
             }
           });
         }
-
 
       } else if (type === "select") {
         
@@ -2594,7 +2760,110 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
           }
         });
 
-        instance.aspirantWhiteContents(whitePrompt.firstChild.firstChild, aspid).catch((err) => { console.log(err); });
+        instance.aspirantWhiteContents(whitePrompt.firstChild.firstChild, aspid).then(() => {
+          const targetMother = whitePrompt.firstChild;
+          setQueue(() => {
+            createNode({
+              mother: targetMother,
+              style: {
+                display: "inline-flex",
+                position: "fixed",
+                bottom: String(45) + ea,
+                right: String(45) + ea,
+                width: String(520) + ea,
+                height: String(360) + ea,
+                borderRadius: String(5) + "px",
+                background: colorChip.gradientGreen,
+                animation: "fadeuplite 0.5s ease forwards",
+                flexDirection: "column",
+                justifyContent: "end",
+                alignItems: "start",
+                boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+                paddingBottom: String(15) + ea,
+                paddingLeft: String(15) + ea,
+              },
+              children: [
+                {
+                  text: "응대 메모",
+                  style: {
+                    position: "relative",
+                    fontSize: String(15) + ea,
+                    fontWeight: String(700),
+                    color: colorChip.white,
+                    marginBottom: String(8) + ea,
+                    top: String(isMac() ? 0 : 2) + ea,
+                  }
+                },
+                {
+                  style: {
+                    position: "relative",
+                    width: withOut(15, ea),
+                    height: withOut(38, ea),
+                    borderRadius: String(5) + "px",
+                    background: colorChip.white,
+                    boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+                  },
+                  child: {
+                    mode: "textarea",
+                    attribute: {
+                      aspid: aspirant.aspid
+                    },
+                    text: aspirant.response.long,
+                    event: {
+                      keydown: function (e) {
+                        if (e.key === "Tab") {
+                          e.preventDefault();
+                        }
+                      },
+                      keyup: async function (e) {
+                        try {
+                          if (e.key === "Tab") {
+                            e.preventDefault();
+                            this.blur();
+                          }
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      },
+                      blur: async function (e) {
+                        try {
+                          const aspid = this.getAttribute("aspid");
+                          let whereQuery, updateQuery;
+
+                          this.value = this.value.trim().replace(/[\#\&\=\+\\\/]/gi, '');
+
+                          whereQuery = {};
+                          whereQuery["aspid"] = aspid;
+                          updateQuery = {};
+                          updateQuery["response.long"] = this.value;
+
+                          await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+                          instance.aspirants.find((a) => { return a.aspid === aspid }).response.long = this.value;
+
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    },
+                    style: {
+                      position: "absolute",
+                      width: withOut(20 * 2, ea),
+                      height: withOut(16 * 1, ea),
+                      left: String(20) + ea,
+                      top: String(16) + ea,
+                      fontSize: String(14) + ea,
+                      fontWeight: String(400),
+                      color: colorChip.black,
+                      lineHeight: String(1.6),
+                      border: String(0),
+                      outline: String(0),
+                    }
+                  }
+                }
+              ]
+            })
+          }, 500);
+        }).catch((err) => { console.log(err); });
       }
 
       instance.whiteMaker = whiteMaker;
@@ -3820,7 +4089,6 @@ DesignerJs.prototype.aspirantBase = async function () {
                       }
                     }
                   });
-
                   longTextPrompt.querySelector("input").focus();
 
                   setQueue(() => {
