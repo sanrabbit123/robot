@@ -3870,7 +3870,8 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         updateQuery["submit.firstRequest.method"] = "partnership";
 
         updateQuery["response.manager"] = "박혜연";
-  
+        updateQuery["response.first.status"] = "검토중";
+
         rows = await back.getAspirantsByQuery({ phone: phone.replace(/[^0-9\-]/gi, '') }, { selfMongo });
         message = '';
 

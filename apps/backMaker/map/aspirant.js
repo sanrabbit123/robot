@@ -90,7 +90,7 @@ module.exports = {
           outreason: "",
           manager: "",
           first: {
-            status: "불합격",
+            status: "검토중",
             reason: "",
           },
           portfolio: {

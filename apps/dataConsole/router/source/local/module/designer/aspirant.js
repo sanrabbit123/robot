@@ -112,11 +112,11 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             color: colorChip.black,
           },
           {
-            value: "추가 요청",
+            value: "추가 필요",
             color: colorChip.purple,
           },
           {
-            value: "수집 완료",
+            value: "추가 요청",
             color: colorChip.black,
           },
           {
@@ -150,8 +150,8 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         ].concat([
           "검토중",
           "응대중",
+          "추가 필요",
           "추가 요청",
-          "수집 완료",
           "등록 요청",
           "등록 완료",
           "계약 요청",
@@ -221,6 +221,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             columnOnly: true,
           }
         ].concat([
+          "검토중",
           "합격",
           "반려",
           "확인",
@@ -260,11 +261,14 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
               chainValue = "응대중";
               chainManager = teamLeader;
             } else if (finalValue === "반려") {
-              chainValue = "추가 요청";
+              chainValue = "추가 필요";
               chainManager = teamLeader;
             } else if (finalValue === "불합격") {
               chainValue = "드랍";
               chainManager = hlBot;
+            } else {
+              chainValue = "검토중";
+              chainManager = "박혜연";
             }
 
             updateQuery["meeting.status"] = chainValue;
@@ -956,8 +960,8 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         columns: [
           "검토중",
           "응대중",
+          "추가 필요",
           "추가 요청",
-          "수집 완료",
           "등록 요청",
           "등록 완료",
           "계약 요청",
@@ -968,8 +972,8 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         value: [
           "검토중",
           "응대중",
+          "추가 필요",
           "추가 요청",
-          "수집 완료",
           "등록 요청",
           "등록 완료",
           "계약 요청",
@@ -1006,6 +1010,7 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         name: "firstStatus",
         type: "select",
         columns: [
+          "검토중",
           "합격",
           "반려",
           "확인",
@@ -1013,6 +1018,7 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
         ],
         title: "1차 판단",
         value: [
+          "검토중",
           "합격",
           "반려",
           "확인",
@@ -1051,11 +1057,14 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
               chainValue = "응대중";
               chainManager = teamLeader;
             } else if (finalValue === "반려") {
-              chainValue = "추가 요청";
+              chainValue = "추가 필요";
               chainManager = teamLeader;
             } else if (finalValue === "불합격") {
               chainValue = "드랍";
               chainManager = hlBot;
+            } else {
+              chainValue = "검토중";
+              chainManager = "박혜연";
             }
 
             updateQuery["meeting.status"] = chainValue;
