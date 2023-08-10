@@ -187,52 +187,6 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         },
       },
       {
-        title: "반려 사유",
-        width: 140,
-        name: "returnReason",
-        type: "string",
-        menu: [
-          {
-            value: "전체 보기",
-            functionName: "filterEvent_$all",
-            columnOnly: true,
-          }
-        ].concat([
-          "해당 없음",
-          "포트폴리오 부족",
-          "리모델링 위주만",
-          "상업 공간 위주만",
-          "경력 정보 부족",
-          "총체적 정보 불충분",
-        ].map((str) => {
-          return {
-            value: str,
-            functionName: "filterEvent_" + str,
-          }
-        })),
-        menuWidth: 120,
-        update: async (aspid, value, menu) => {
-          try {
-            const instance = this;
-            const { ajaxJson } = GeneralJs;
-            const aspirant = this.aspirants.find((a) => { return a.aspid === aspid });
-            const finalValue = /해당 없음/gi.test(value) ? "" : value;
-            let whereQuery, updateQuery;
-
-            whereQuery = { aspid };
-            updateQuery = {};
-            updateQuery["response.first.reason"] = finalValue;
-
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((a) => { return a.aspid === aspid }).response.first.reason = finalValue;
-            await instance.aspirantColorSync();
-
-          } catch (e) {
-            console.log(e);
-          }
-        },
-      },
-      {
         title: "연락처",
         width: 120,
         name: "phone",
@@ -672,10 +626,6 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           name: "firstStatus",
         },
         {
-          value: aspirant.response.first.reason === "" ? "해당 없음" : aspirant.response.first.reason,
-          name: "returnReason",
-        },
-        {
           value: aspirant.phone,
           name: "phone",
         },
@@ -1014,60 +964,6 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
             instance.aspirants.find((d) => { return d.aspid === aspid }).response.first.status = updateQuery["response.first.status"];
             findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "firstStatus").querySelector('.' + valueTargetClassName).textContent = updateQuery["response.first.status"];
-            await instance.aspirantColorSync();
-
-          } catch (e) {
-            console.log(e);
-          }
-        }
-      },
-      {
-        name: "returnReason",
-        type: "select",
-        columns: [
-          "해당 없음",
-          "포트폴리오 부족",
-          "리모델링 위주만",
-          "상업 공간 위주만",
-          "경력 정보 부족",
-          "총체적 정보 불충분",
-        ],
-        title: "반려 사유",
-        value: [
-          "",
-          "포트폴리오 부족",
-          "리모델링 위주만",
-          "상업 공간 위주만",
-          "경력 정보 부족",
-          "총체적 정보 불충분",
-        ].map((str) => {
-          return str === aspirant.response.first.reason ? 1 : 0;
-        }),
-        editable: true,
-        update: async (columns, newValue, aspid) => {
-          try {
-            const aspirant = instance.aspirants.find((d) => { return d.aspid === aspid });
-            let whereQuery, updateQuery;
-            let textValue;
-
-            whereQuery = {};
-            whereQuery["aspid"] = aspid;
-
-            updateQuery = {};
-            updateQuery["response.first.reason"] = columns.find((str, index) => {
-              return newValue[index] === 1;
-            });
-
-            if (updateQuery["response.first.reason"] === undefined || updateQuery["response.first.reason"] === "해당 없음") {
-              updateQuery["response.first.reason"] = "";
-              textValue = "해당 없음";
-            } else {
-              textValue = updateQuery["response.first.reason"];
-            }
-
-            await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-            instance.aspirants.find((d) => { return d.aspid === aspid }).response.first.reason = updateQuery["response.first.reason"];
-            findByAttribute([ ...document.querySelector('.' + aspid).children ], "name", "returnReason").querySelector('.' + valueTargetClassName).textContent = textValue;
             await instance.aspirantColorSync();
 
           } catch (e) {
