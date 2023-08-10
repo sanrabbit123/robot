@@ -169,10 +169,7 @@ DevContext.prototype.launching = async function () {
     //   whereQuery = {};
     //   whereQuery["aspid"] = row.aspid;
     //   updateQuery = {};
-    //   updateQuery["response.first"] = {
-    //     status: "불합격",
-    //     reason: "",
-    //   };
+    //   updateQuery["response.manager"] = "박혜연";
 
     //   await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
     //   console.log(whereQuery, updateQuery);

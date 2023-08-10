@@ -88,6 +88,7 @@ module.exports = {
           date: new Date(1800, 0, 1),
           long: "",
           outreason: "",
+          manager: "",
           first: {
             status: "불합격",
             reason: "",

@@ -3033,6 +3033,8 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         updateQuery["meeting.date"] = new Date(1800, 0, 1);
         updateQuery["submit.firstRequest.date"] = new Date();
         updateQuery["submit.firstRequest.method"] = "partnership";
+
+        updateQuery["response.manager"] = "박혜연";
   
         rows = await back.getAspirantsByQuery({ phone: phone.replace(/[^0-9\-]/gi, '') }, { selfMongo });
         message = '';
