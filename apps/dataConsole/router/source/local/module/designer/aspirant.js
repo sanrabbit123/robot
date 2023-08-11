@@ -4888,7 +4888,11 @@ DesignerJs.prototype.communicationRender = function () {
       return document.querySelector('.' + whiteCardClassName) === null;
     },
     async function (e) {
-
+      try {
+        blankHref("https://docs.google.com/document/d/1GyQ-ptfy1QaM5ciaIi_QZjuQ6hwruTB4WDmscieNxLY/edit?usp=sharing");
+      } catch (e) {
+        console.log(e);
+      }
     }
   ]);
 
@@ -4898,7 +4902,11 @@ DesignerJs.prototype.communicationRender = function () {
       return document.querySelector('.' + whiteCardClassName) === null;
     },
     async function (e) {
-
+      try {
+        blankHref("https://docs.google.com/document/d/1GyQ-ptfy1QaM5ciaIi_QZjuQ6hwruTB4WDmscieNxLY/edit?usp=sharing");
+      } catch (e) {
+        console.log(e);
+      }
     }
   ]);
 
@@ -4908,7 +4916,11 @@ DesignerJs.prototype.communicationRender = function () {
       return document.querySelector('.' + whiteCardClassName) === null;
     },
     async function (e) {
-
+      try {
+        blankHref("https://docs.google.com/document/d/1GyQ-ptfy1QaM5ciaIi_QZjuQ6hwruTB4WDmscieNxLY/edit?usp=sharing");
+      } catch (e) {
+        console.log(e);
+      }
     }
   ]);
 
@@ -4918,7 +4930,11 @@ DesignerJs.prototype.communicationRender = function () {
       return document.querySelector('.' + whiteCardClassName) === null;
     },
     async function (e) {
-
+      try {
+        blankHref("https://docs.google.com/document/d/1GyQ-ptfy1QaM5ciaIi_QZjuQ6hwruTB4WDmscieNxLY/edit?usp=sharing");
+      } catch (e) {
+        console.log(e);
+      }
     }
   ]);
 
