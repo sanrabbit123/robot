@@ -2440,7 +2440,7 @@ SecondRouter.prototype.rou_post_noticeAspirantConsole = function () {
             "만약 포트폴리오로 쓸 현장의 사진이 부족하다면, 디자이너님의 스타일링 능력을 판단할 수 있는 이미지라도 최대한 전송해주시길 부탁드릴게요! 감사합니다 :)\n" + 
             "\n" + 
             "*추가 포트폴리오 전송\n" + 
-            "https://" + address.frontinfo.host + "/" + aspportfolio + ".php?aspid=" + aspid),
+            "https://" + address.frontinfo.host + "/" + "aspportfolio" + ".php?aspid=" + aspid),
           });
           await messageSend({
             text: designer + " 실장님께 추가 포트폴리오 요청 알림톡을 전송하였습니다!",
