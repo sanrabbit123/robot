@@ -16,8 +16,9 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
     let yearDelta;
     let monthDelta;
     let standards;
-    let thisSendRows;
+    let thisSendRows, thisSendRows2;
     let thisDocumentsSend;
+    let thisPortfolioSend;
     let targetMembers;
 
     targetMembers = GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX"); }).map((obj) => { return obj.name });
@@ -413,7 +414,13 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         },
       },
       {
-        title: "추가 포폴 전송",
+        title: "추가 포폴 요청",
+        width: 100,
+        name: "portfolioSend",
+        type: "date",
+      },
+      {
+        title: "추가 포폴 수신",
         width: 100,
         name: "portfolioPlusDate",
         type: "date",
@@ -637,7 +644,13 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
       if (thisSendRows.length > 0 && thisSendRows[0].history.length > 0) {
         thisDocumentsSend = thisSendRows[0].history[0];
       }
-      
+
+      thisSendRows2 = noticeSendRows.filter((o) => { return o.type === "plus" }).filter((o) => { return o.aspirant.aspid === aspirant.aspid });
+      thisPortfolioSend = new Date(1800, 0, 1);
+      if (thisSendRows.length > 0 && thisSendRows2[0].history.length > 0) {
+        thisPortfolioSend = thisSendRows2[0].history[0];
+      }
+
       standards.values[aspirant.aspid] = [
         {
           value: aspirant.aspid,
@@ -685,6 +698,10 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         {
           value: aspirant.response.outreason === "" ? "해당 없음" : aspirant.response.outreason,
           name: "outreason",
+        },
+        {
+          value: dateToString(thisPortfolioSend),
+          name: "portfolioSend",
         },
         {
           value: dateToString(aspirant.response.portfolio.plus.request),
