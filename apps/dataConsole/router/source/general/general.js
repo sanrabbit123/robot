@@ -4983,6 +4983,7 @@ GeneralJs.prototype.communicationBox = function () {
     const { createNode, colorChip, withOut } = GeneralJs;
     const { communication } = instance;
     const ea = "px";
+    const zIndex = 5;
     const mother = document.getElementById("totalcontents");
     let visual, vaild, action;
     let cancelBox, whiteBox;
@@ -5035,7 +5036,7 @@ GeneralJs.prototype.communicationBox = function () {
         left: String(0) + ea,
         background: "transparent",
         opacity: String(0),
-        zIndex: String(3),
+        zIndex: String(zIndex),
       }
     });
 
@@ -5052,7 +5053,7 @@ GeneralJs.prototype.communicationBox = function () {
         animation: "communicationfadeup 0.4s ease forwards",
         overflow: "hidden",
         transition: "all 0s ease",
-        zIndex: String(3),
+        zIndex: String(zIndex),
       },
       children: [
         {
@@ -5173,6 +5174,7 @@ GeneralJs.prototype.communicationBox = function () {
     const { createNode, colorChip, withOut } = GeneralJs;
     const { belowHeight } = instance;
     const ea = "px";
+    const zIndex = 5;
     const mother = document.getElementById("totalcontents");
     let margin;
 
@@ -5187,7 +5189,7 @@ GeneralJs.prototype.communicationBox = function () {
         width: String(100) + '%',
         height: withOut(belowHeight, ea),
         background: colorChip.black,
-        zIndex: String(3),
+        zIndex: String(zIndex),
         animation: "justfadein 0.3s ease forwards",
       }
     });
@@ -5201,7 +5203,7 @@ GeneralJs.prototype.communicationBox = function () {
         width: withOut(margin * 2, ea),
         height: withOut(belowHeight + (margin * 2), ea),
         background: colorChip.black,
-        zIndex: String(3),
+        zIndex: String(zIndex),
         animation: "fadeup 0.3s ease forwards",
         borderRadius: String(5) + "px",
         boxShadow: "0px 3px 15px -9px " + colorChip.black,

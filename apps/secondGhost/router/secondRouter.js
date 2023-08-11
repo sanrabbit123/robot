@@ -209,6 +209,8 @@ SecondRouter.prototype.rou_post_messageLog = function () {
         fairyMode = false;
       }
 
+      fairyMode = false;
+
       slackText = text;
       if (Array.isArray(equalJson(req.body).target)) {
 
@@ -2362,7 +2364,7 @@ SecondRouter.prototype.rou_post_noticeAspirantConsole = function () {
       const channel = "#301_apply";
       const idWords = "noticeAspirantConsoleSend_";
       const voice = true;
-      const fairy = true;
+      const fairy = false;
       const { mode } = equalJson(req.body);
       let logDefaultObj;
       let thisJson;
@@ -2442,6 +2444,25 @@ SecondRouter.prototype.rou_post_noticeAspirantConsole = function () {
           });
           await messageSend({
             text: designer + " 실장님께 추가 포트폴리오 요청 알림톡을 전송하였습니다!",
+            channel,
+            voice,
+            fairy
+          });
+
+          res.send(JSON.stringify({ message: "success" }));
+
+        } else if (type === "fail") {
+
+          // await kakao.sendTalk("aspirantRequestPortfolio", designer, phone, { client: designer, host: address.frontinfo.host, path: "aspportfolio", aspid });
+          await human.sendSms({
+            to: phone.replace(/[^0-9]/gi, ''),
+            body: ("안녕하세요, " + designer + "님!\n" + 
+            "안녕하세요. 홈리에종입니다. 보내주신 신청서를 확인해 보았으나 아쉽게도 저희와 함께 홈스타일링 서비스를 적합하지 않다고 판단되어 연락드립니다.\n\n" +
+            "혹시 추가적으로 포트폴리오 및 경력사항을 상세히 다시 보내주시면 다시 한 번 검토 후에 연락드리도록 하겠습니다.\n" + 
+            "궁금한 사항이 있으시면 플러스친구에 [홈리에종]을 검색하셔서 친구 추가 후 문의 사항 남겨주세요. 순차적으로 답변드리도록 하겠습니다!")
+          });
+          await messageSend({
+            text: designer + " 실장님께 불합격 통지 알림톡을 전송하였습니다!",
             channel,
             voice,
             fairy

@@ -186,7 +186,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         },
       },
       {
-        title: "유선 상담",
+        title: "1차 통화",
         width: 100,
         name: "responseDate",
         type: "date",
@@ -246,37 +246,50 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             let targetMembers;
             let chainManager;
             let teamLeader;
+            let teamLeaderId;
             let hlBot;
+            let chainMessage;
+            let ceo, ceoId;
 
             targetMembers = GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX") && !obj.roles.includes("CEO"); });
             targetMembers.sort((a, b) => { return b.level - a.level });
             hlBot = GeneralJs.stacks.members.find((obj) => { return obj.roles.includes("Bot"); }).name;
             teamLeader = targetMembers[0].name;
+            teamLeaderId = targetMembers[0].slack.id;
+            ceo = GeneralJs.stacks.members.find((obj) => { return obj.roles.includes("CEO"); });
+            ceoId = ceo.slack.id;
 
             whereQuery = { aspid };
             updateQuery = {};
             updateQuery["response.first.status"] = finalValue;
 
             chainValue = "검토중";
+            chainMessage = "";
             if (finalValue === "합격" || finalValue === "확인") {
               chainValue = "응대중";
               chainManager = teamLeader;
+              chainMessage = "대표님께서 " + aspirant.designer + " 신청자를 합격으로 설정하셨습니다! 응대를 부탁드리겠습니다! <@" + teamLeaderId + ">";
             } else if (finalValue === "반려") {
               chainValue = "추가 필요";
               chainManager = teamLeader;
+              chainMessage = "대표님께서 " + aspirant.designer + " 신청자를 합격으로 설정하셨습니다! 응대를 부탁드리겠습니다! <@" + teamLeaderId + ">";
             } else if (finalValue === "불합격") {
               chainValue = "드랍";
               chainManager = hlBot;
+              chainMessage = "";
             } else {
               chainValue = "검토중";
               chainManager = "박혜연";
+              chainMessage =  aspirant.designer + " 신청자님의 상태가 검토중이 되었습니다! 검토를 부탁드리겠습니다! <@" + ceoId + ">";
             }
 
             updateQuery["meeting.status"] = chainValue;
             updateQuery["response.manager"] = chainManager;
 
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
-
+            if (chainMessage !== "") {
+              await ajaxJson({ message: chainMessage, channel: "#301_apply", voice: false }, "/sendSlack");
+            }
             instance.aspirants.find((a) => { return a.aspid === aspid }).response.first.status = finalValue;
             instance.aspirants.find((a) => { return a.aspid === aspid }).meeting.status = chainValue;
             instance.aspirants.find((a) => { return a.aspid === aspid }).response.manager = chainManager;
@@ -1052,13 +1065,19 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
             let targetMembers;
             let chainManager;
             let teamLeader;
+            let teamLeaderId;
             let hlBot;
             let finalValue;
+            let chainMessage;
+            let ceo, ceoId;
 
             targetMembers = GeneralJs.stacks.members.filter((obj) => { return obj.roles.includes("CX") && !obj.roles.includes("CEO"); });
             targetMembers.sort((a, b) => { return b.level - a.level });
             hlBot = GeneralJs.stacks.members.find((obj) => { return obj.roles.includes("Bot"); }).name;
             teamLeader = targetMembers[0].name;
+            teamLeaderId = targetMembers[0].slack.id;
+            ceo = GeneralJs.stacks.members.find((obj) => { return obj.roles.includes("CEO"); });
+            ceoId = ceo.slack.id;
 
             whereQuery = {};
             whereQuery["aspid"] = aspid;
@@ -1070,24 +1089,33 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
             finalValue = updateQuery["response.first.status"];
 
             chainValue = "검토중";
+            chainMessage = "";
             if (finalValue === "합격" || finalValue === "확인") {
               chainValue = "응대중";
               chainManager = teamLeader;
+              chainMessage = "대표님께서 " + aspirant.designer + " 신청자를 합격으로 설정하셨습니다! 응대를 부탁드리겠습니다! <@" + teamLeaderId + ">";
             } else if (finalValue === "반려") {
               chainValue = "추가 필요";
               chainManager = teamLeader;
+              chainMessage = "대표님께서 " + aspirant.designer + " 신청자를 합격으로 설정하셨습니다! 응대를 부탁드리겠습니다! <@" + teamLeaderId + ">";
             } else if (finalValue === "불합격") {
               chainValue = "드랍";
               chainManager = hlBot;
+              chainMessage = "";
             } else {
               chainValue = "검토중";
               chainManager = "박혜연";
+              chainMessage =  aspirant.designer + " 신청자님의 상태가 검토중이 되었습니다! 검토를 부탁드리겠습니다! <@" + ceoId + ">";
             }
 
             updateQuery["meeting.status"] = chainValue;
             updateQuery["response.manager"] = chainManager;
 
             await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+            if (chainMessage !== "") {
+              await ajaxJson({ message: chainMessage, channel: "#301_apply", voice: false }, "/sendSlack");
+            }
+
             selfHref(window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid);
 
           } catch (e) {
@@ -1244,7 +1272,7 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
       {
         name: "responseDate",
         type: "date",
-        title: "유선 상담",
+        title: "1차 통화",
         value: dateToString(aspirant.response.date),
         editable: true,
         update: async (aspid, newValue) => {
@@ -2806,6 +2834,9 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
         if (!reload) {
           cancelBack = createNode({
             mother: totalContents,
+            attribute: {
+              aspid: aspid
+            },
             class: [ "justfadein", whiteCardClassName ],
             event: (e) => { removeByClass(whiteCardClassName) },
             style: {
@@ -2821,6 +2852,9 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
   
         whitePrompt = createNode({
           mother: totalContents,
+          attribute: {
+            aspid: aspid
+          },
           class: [ whiteCardClassName, whiteBaseClassName ],
           style: {
             position: "fixed",
@@ -2864,6 +2898,9 @@ DesignerJs.prototype.aspirantWhiteCard = function (aspid) {
   
         titleWhite = createNode({
           mother: totalContents,
+          attribute: {
+            aspid: aspid
+          },
           class: [ whiteCardClassName ],
           style: {
             display: "flex",
@@ -3524,6 +3561,27 @@ DesignerJs.prototype.aspirantBase = async function () {
           const zIndex = 4;
           const contextMenu = [
             {
+              title: designer + " 실장님 1차 유선 통화 완료",
+              func: (aspid) => {
+                return async function (e) {
+                  try {
+                    let whereQuery, updateQuery;
+
+                    whereQuery = {};
+                    whereQuery["aspid"] = aspid;
+                    updateQuery = {};
+                    updateQuery["response.date"] = new Date();
+
+                    await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+
+                    window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
               title: designer + " 실장님께 추가 포트폴리오 요청하기",
               func: (aspid) => {
                 return async function (e) {
@@ -3555,6 +3613,19 @@ DesignerJs.prototype.aspirantBase = async function () {
                 return async function (e) {
                   try {
                     const sendFunc = instance.aspirantSendNotice("payment", aspid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
+              title: designer + " 실장님께 불합격 통지",
+              func: (aspid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.aspirantSendNotice("fail", aspid);
                     await sendFunc();
                   } catch (e) {
                     console.log(e);
@@ -4517,7 +4588,170 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
         return null;
       }
     }
+  } else if (method === "fail") {
+    return async function () {
+      try {
+        const aspirant = aspirants.find((d) => { return d.aspid === aspid });
+        if (aspirant === undefined) {
+          throw new Error("invalid aspid");
+        }
+
+        if (window.confirm(aspirant.designer + " 실장님께 불합격 통지를 전송할까요?")) {
+          const response = await ajaxJson({
+            mode: "send",
+            aspid: aspirant.aspid,
+            designer: aspirant.designer,
+            phone: aspirant.phone,
+            type: "fail",
+          }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
+          if (response.message === "success") {
+            window.alert("전송에 성공하였습니다!");
+          } else {
+            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+          }
+
+
+
+          
+
+
+          
+
+
+
+        }
+        
+      } catch (e) {
+        window.alert(e.message);
+        console.log(e);
+        return null;
+      }
+    }
   }
+}
+
+DesignerJs.prototype.communicationRender = function () {
+  const instance = this;
+  const { communication } = this.mother;
+  const { whiteCardClassName } = this;
+  const { ajaxJson, sleep, blankHref } = GeneralJs;
+
+  communication.setItem([
+    () => { return "합격 응대 스트립트 보기"; },
+    function () {
+      return document.querySelector('.' + whiteCardClassName) === null;
+    },
+    async function (e) {
+
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "반려 응대 스트립트 보기"; },
+    function () {
+      return document.querySelector('.' + whiteCardClassName) === null;
+    },
+    async function (e) {
+
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "확인 응대 스트립트 보기"; },
+    function () {
+      return document.querySelector('.' + whiteCardClassName) === null;
+    },
+    async function (e) {
+
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "QnA 보기"; },
+    function () {
+      return document.querySelector('.' + whiteCardClassName) === null;
+    },
+    async function (e) {
+
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "1차 유선 통화 완료"; },
+    function () {
+      return document.querySelector('.' + whiteCardClassName) !== null;
+    },
+    async function (e) {
+      const aspid = document.querySelector('.' + whiteCardClassName).getAttribute("aspid");
+      try {
+        let whereQuery, updateQuery;
+
+        whereQuery = {};
+        whereQuery["aspid"] = aspid;
+        updateQuery = {};
+        updateQuery["response.date"] = new Date();
+
+        await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "추가 포트폴리오 요청하기"; },
+    function () {
+      return document.querySelector('.' + whiteCardClassName) !== null;
+    },
+    async function (e) {
+      const aspid = document.querySelector('.' + whiteCardClassName).getAttribute("aspid");
+      try {
+        const sendFunc = instance.aspirantSendNotice("plus", aspid);
+        await sendFunc();
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "등록 서류 요청하기"; },
+    function () {
+      return document.querySelector('.' + whiteCardClassName) !== null;
+    },
+    async function (e) {
+      const aspid = document.querySelector('.' + whiteCardClassName).getAttribute("aspid");
+      try {
+        const sendFunc = instance.aspirantSendNotice("documents", aspid);
+        await sendFunc();
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "등록비 결제 요청하기"; },
+    function () {
+      return document.querySelector('.' + whiteCardClassName) !== null;
+    },
+    async function (e) {
+      const aspid = document.querySelector('.' + whiteCardClassName).getAttribute("aspid");
+      try {
+        const sendFunc = instance.aspirantSendNotice("payment", aspid);
+        await sendFunc();
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
+      }
+    }
+  ]);
+
 }
 
 DesignerJs.prototype.aspirantView = async function () {
@@ -4553,6 +4787,7 @@ DesignerJs.prototype.aspirantView = async function () {
 
     await this.aspirantBase();
     await this.aspirantSearchEvent();
+    this.communicationRender();
 
     loading.parentNode.removeChild(loading);
 

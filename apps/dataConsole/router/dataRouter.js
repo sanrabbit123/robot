@@ -2917,7 +2917,7 @@ DataRouter.prototype.rou_post_sendSlack = function () {
       if (channel === "#error_log") {
         await logger.error(text);
       } else {
-        await messageSend({ text, channel, voice: (req.body.voice !== undefined ? true : false), target: (req.body.target !== undefined ? equalJson(req.body).target : null), fairy: true });
+        await messageSend({ text, channel, voice: (req.body.voice !== undefined ? true : false), target: (req.body.target !== undefined ? equalJson(req.body).target : null), fairy: false });
       }
 
       res.send(JSON.stringify({ message: "success" }));
