@@ -3075,6 +3075,8 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         message += "세션 아이디 : " + sessionId.join(", ");
   
         await messageSend({ text: message, channel: "#301_apply", voice: false });
+        await messageSend({ text: name + " 디자이너 신청자님의 검토를 부탁드리겠습니다! <@" + ceoId + ">\nlink: https://" + instance.address.backinfo.host + "/designer?mode=aspirant&aspid=" + aspid, channel: "#301_apply", voice: true });
+
         requestSystem("https://" + instance.address.secondinfo.host + ":" + String(3000) + "/voice", { text: message.split("\n")[0] + " 성함은 " + updateQuery.designer + "입니다!" }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
         kakao.sendTalk("aspirantSubmit", updateQuery.designer, updateQuery.phone, {
           client: updateQuery.designer,

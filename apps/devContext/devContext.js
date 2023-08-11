@@ -815,7 +815,7 @@ DevContext.prototype.launching = async function () {
 
     requests = [ ...clients.getRequestsTong() ];
 
-    from = new Date(2022, 4, 12);
+    from = new Date(2020, 0, 1);
     to = new Date();
     requests = requests.filter(({ request }) => {
       return request.timeline.valueOf() >= from.valueOf() && request.timeline.valueOf() < to.valueOf()

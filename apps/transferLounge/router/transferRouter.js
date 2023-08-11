@@ -589,6 +589,98 @@ TransferRouter.prototype.rou_post_aspirantDocuments = function () {
   return obj;
 }
 
+TransferRouter.prototype.rou_post_aspirantDocumentsList = function () {
+  const instance = this;
+  const address = this.address;
+  const { fileSystem, shellExec, shellLink, equalJson, linkToString } = this.mother;
+  const { aspirantConst, staticConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/aspirantDocumentsList" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.aspid === undefined) {
+        throw new Error("invalid post");
+      }
+      const { aspid } = equalJson(req.body);
+      const folderList = await fileSystem(`readDir`, [ aspirantConst ]);
+      const target0Folders = folderList.filter((str) => { return (new RegExp(aspid, "g").test(str)) });
+      const targetFolders = target0Folders.map((str) => { return `${aspirantConst}/${str}` });
+      let tempArr, tempArr2;
+      let accountList;      
+      let businessList;
+      let identityList;
+      let tempAccountList;
+      let tempBusinessList;
+      let tempIdentityList;
+
+      accountList = [];
+      businessList = [];
+      identityList = [];
+
+      for (let folder of targetFolders) {
+        tempArr = (await fileSystem(`readDir`, [ folder ])).filter((str) => { return str !== ".DS_Store" });
+
+        tempAccountList = [];
+        tempBusinessList = [];
+        tempIdentityList = [];
+
+        if (tempArr.includes("account")) {
+          tempArr2 = (await fileSystem(`readDir`, [ folder + "/account" ])).filter((str) => { return str !== ".DS_Store" })
+          tempAccountList = tempArr2.map((str) => { return `${folder}/account/${str}`; }).map((path) => {
+            const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
+            return targetPath;
+          }).map((path) => {
+            return linkToString("https://" + address.transinfo.host + path);
+          });
+        }
+        if (tempArr.includes("business")) {
+          tempArr2 = (await fileSystem(`readDir`, [ folder + "/business" ])).filter((str) => { return str !== ".DS_Store" })
+          tempBusinessList = tempArr2.map((str) => { return `${folder}/business/${str}`; }).map((path) => {
+            const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
+            return targetPath;
+          }).map((path) => {
+            return linkToString("https://" + address.transinfo.host + path);
+          });
+        }
+        if (tempArr.includes("identity")) {
+          tempArr2 = (await fileSystem(`readDir`, [ folder + "/identity" ])).filter((str) => { return str !== ".DS_Store" })
+          tempIdentityList = tempArr2.map((str) => { return `${folder}/identity/${str}`; }).map((path) => {
+            const targetPath = path.replace(new RegExp("^" + staticConst, "g"), "");
+            return targetPath;
+          }).map((path) => {
+            return linkToString("https://" + address.transinfo.host + path);
+          });
+        }
+
+        accountList = accountList.concat(tempAccountList);
+        businessList = businessList.concat(tempBusinessList);
+        identityList = identityList.concat(tempIdentityList);
+      }
+
+      res.send(JSON.stringify({
+        account: accountList,
+        business: businessList,
+        identity: identityList,
+      }));
+
+    } catch (e) {
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_aspirantDocumentsList): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 TransferRouter.prototype.rou_post_aspirantPortfolio = function () {
   const instance = this;
   const address = this.address;
