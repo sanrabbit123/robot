@@ -107,7 +107,7 @@ def searchDir(target, detail=False):
     return tempArr4
 
 try:
-    BUCKETNAMECONST = "homeliaisonbucket"
+    BUCKETNAMECONST = "homeliaison"
     data = getBridge()
 
     if argv[1] == "fileUpload":

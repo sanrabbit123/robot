@@ -6500,8 +6500,8 @@ DevContext.prototype.launching = async function () {
 
 
     // voice to text
-    const audio = new PlayAudio();
-    await audio.voiceToText();
+    // const audio = new PlayAudio();
+    // await audio.voiceToText();
 
 
     // send native alarm
