@@ -1722,6 +1722,14 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     let stringDom;
     let longTextWidth;
     let longTextHeight;
+    let documentsImages;
+    let documentsTong;
+    let documentsFactorHeight;
+    let documentsFactorTongPaddingTop;
+    let documentsFactorTongMarginTop;
+    let documentsFactorTongMarginBottom;
+    let documentsTitleSize, documentsTitleTextTop, documentsTitleLeft, documentsTitleWeight;
+    let documentsTitle;
 
     blockHeight = 32;
     titleWidth = 180;
@@ -1772,6 +1780,15 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
     calendarWidth = 260;
     calendarBoxBetween = 4;
     calendarBoxHeight = 32;
+
+    documentsFactorHeight = 120;
+    documentsFactorTongPaddingTop = 40;
+    documentsFactorTongMarginTop = 4;
+    documentsFactorTongMarginBottom = 14;
+    documentsTitleSize = 15;
+    documentsTitleTextTop = isMac() ? -27 : -29;
+    documentsTitleLeft = 1;
+    documentsTitleWeight = 700;
 
     idList = {};
 
@@ -2641,6 +2658,222 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
       motherNum++;
     }
     
+    // documents
+
+    documentsImages = await ajaxJson({ aspid }, BRIDGEHOST + "/aspirantDocumentsList", { equal: true });
+    documentsImages = {
+      account: documentsImages.account.map((str) => { return stringToLink(str) }),
+      business: documentsImages.business.map((str) => { return stringToLink(str) }),
+      identity: documentsImages.identity.map((str) => { return stringToLink(str) }),
+    };
+    documentsTitle = {
+      account: "통장 사본",
+      business: "사업자등록증(주민등록증)",
+      identity: "신분증 사본",
+    };
+
+    documentsTong = createNode({
+      mother: tong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(imageTongPadding + imageTongPadding - imageInnerBetween, ea),
+        background: colorChip.gray1,
+        padding: String(imageTongPadding) + ea,
+        paddingRight: String(imageTongPadding - imageInnerBetween) + ea,
+        paddingTop: String(documentsFactorTongPaddingTop) + ea,
+        borderRadius: String(5) + "px",
+        marginTop: String(documentsFactorTongMarginTop) + ea,
+        marginBottom: String(documentsFactorTongMarginBottom) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            verticalAlign: "top",
+            position: "relative",
+            marginRight: String(imageInnerBetween) + ea,
+            width: "calc(calc(calc(calc(100% - " + String(imageInnerBetween * (imagesNumber)) + ea + ") - " + String(0) + ea + ") / " + String(imagesNumber) + ") - " + String(imageInnerBetween * 2) + ea + ")",
+            "min-height": String(documentsFactorHeight) + ea,
+            padding: String(imageInnerBetween) + ea,
+            paddingBottom: String(0),
+            background: colorChip.gray3,
+            borderRadius: String(5) + "px",
+          },
+          children: [
+            {
+              text: documentsTitle.account,
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: String(documentsTitleTextTop) + ea,
+                left: String(documentsTitleLeft) + ea,
+                fontSize: String(documentsTitleSize) + ea,
+                fontWeight: String(documentsTitleWeight),
+                color: colorChip.black,
+              }
+            }
+          ].concat(documentsImages.account.map((link) => {
+            return {
+              mode: "img",
+              attribute: {
+                src: link,
+              },
+              event: async function (e) {
+                try {
+                  const link = this.getAttribute("src");
+                  const loading2 = instance.mother.whiteProgressLoading();
+                  await downloadFile(link, loading2.progress.firstChild);
+                  loading2.remove();
+                } catch (e) {
+                  console.log(e);
+                }
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0, ea),
+                marginBottom: String(imageInnerBetween) + ea,
+                borderRadius: String(5) + "px",
+                cursor: "pointer",
+              }
+            }
+          }))
+        },
+        {
+          style: {
+            display: "inline-block",
+            verticalAlign: "top",
+            position: "relative",
+            marginRight: String(imageInnerBetween) + ea,
+            width: "calc(calc(calc(calc(100% - " + String(imageInnerBetween * (imagesNumber)) + ea + ") - " + String(0) + ea + ") / " + String(imagesNumber) + ") - " + String(imageInnerBetween * 2) + ea + ")",
+            "min-height": String(documentsFactorHeight) + ea,
+            padding: String(imageInnerBetween) + ea,
+            paddingBottom: String(0),
+            background: colorChip.gray3,
+            borderRadius: String(5) + "px",
+          },
+          children: [
+            {
+              text: documentsTitle.business,
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: String(documentsTitleTextTop) + ea,
+                left: String(documentsTitleLeft) + ea,
+                fontSize: String(documentsTitleSize) + ea,
+                fontWeight: String(documentsTitleWeight),
+                color: colorChip.black,
+              }
+            }
+          ].concat(documentsImages.business.map((link) => {
+            return {
+              mode: "img",
+              attribute: {
+                src: link,
+              },
+              event: async function (e) {
+                try {
+                  const link = this.getAttribute("src");
+                  const loading2 = instance.mother.whiteProgressLoading();
+                  await downloadFile(link, loading2.progress.firstChild);
+                  loading2.remove();
+                } catch (e) {
+                  console.log(e);
+                }
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0, ea),
+                marginBottom: String(imageInnerBetween) + ea,
+                borderRadius: String(5) + "px",
+                cursor: "pointer",
+              }
+            }
+          }))
+        },
+        {
+          style: {
+            display: "inline-block",
+            verticalAlign: "top",
+            position: "relative",
+            marginRight: String(imageInnerBetween) + ea,
+            width: "calc(calc(calc(calc(100% - " + String(imageInnerBetween * (imagesNumber)) + ea + ") - " + String(0) + ea + ") / " + String(imagesNumber) + ") - " + String(imageInnerBetween * 2) + ea + ")",
+            "min-height": String(documentsFactorHeight) + ea,
+            padding: String(imageInnerBetween) + ea,
+            paddingBottom: String(0),
+            background: colorChip.gray3,
+            borderRadius: String(5) + "px",
+          },
+          children: [
+            {
+              text: documentsTitle.identity,
+              style: {
+                display: "inline-block",
+                position: "absolute",
+                top: String(documentsTitleTextTop) + ea,
+                left: String(documentsTitleLeft) + ea,
+                fontSize: String(documentsTitleSize) + ea,
+                fontWeight: String(documentsTitleWeight),
+                color: colorChip.black,
+              }
+            }
+          ].concat(documentsImages.identity.map((link) => {
+            return {
+              mode: "img",
+              attribute: {
+                src: link,
+              },
+              event: async function (e) {
+                try {
+                  const link = this.getAttribute("src");
+                  const loading2 = instance.mother.whiteProgressLoading();
+                  await downloadFile(link, loading2.progress.firstChild);
+                  loading2.remove();
+                } catch (e) {
+                  console.log(e);
+                }
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                width: withOut(0, ea),
+                marginBottom: String(imageInnerBetween) + ea,
+                borderRadius: String(5) + "px",
+                cursor: "pointer",
+              }
+            }
+          }))
+        },
+      ]
+    });
+
+    // margin and line
+
+    createNode({
+      mother: tong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(0, ea),
+        "min-height": String(blockHeight) + ea,
+      },
+      child: {
+        style: {
+          display: "block",
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          height: String(marginPercentage) + '%',
+          width: withOut(0, ea),
+          borderBottom: "1px dashed " + colorChip.gray3,
+        }
+      }
+    });
+
+    // portfolio
+
     portfolioImages = await ajaxJson({ aspid }, BRIDGEHOST + "/aspirantPortfolio", { equal: true });
     imageTargets = portfolioImages.link.map((str) => { return stringToLink(str) });
 
@@ -2756,6 +2989,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
           position: "relative",
           width: withOut(0, ea),
           marginBottom: String(imageInnerBetween) + ea,
+          borderRadius: String(5) + "px",
         }
       });
 
