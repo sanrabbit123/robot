@@ -3759,6 +3759,10 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
       let birth;
       let birth_y, birth_m, birth_d;
       let etc;
+      let ceoName, ceoId;
+
+      ceoName = instance.members.find((o) => { return o.roles.includes("CEO") }).name;
+      ceoId = instance.members.find((o) => { return o.roles.includes("CEO") }).slack.id;
 
       if (mode === "general") {
 
@@ -3869,7 +3873,7 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         updateQuery["submit.firstRequest.date"] = new Date();
         updateQuery["submit.firstRequest.method"] = "partnership";
 
-        updateQuery["response.manager"] = "박혜연";
+        updateQuery["response.manager"] = ceoName;
         updateQuery["response.first.status"] = "검토중";
 
         rows = await back.getAspirantsByQuery({ phone: phone.replace(/[^0-9\-]/gi, '') }, { selfMongo });
@@ -3920,9 +3924,25 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
 
         name = map.find((obj) => { return obj.property === "name" });
         phone = map.find((obj) => { return obj.property === "phone" });
+        careerDetail = map.find((obj) => { return obj.property === "careerdetail" });
+        schoolDetail = map.find((obj) => { return obj.property === "schooldetail" });
+        etc = map.find((obj) => { return obj.property === "etc" });
 
         name = name.value.trim();
         phone = phone.value.trim();
+        etc = etc === undefined ? "" : etc.value.trim();
+
+        updateQuery = {};
+        updateQuery["designer"] = name.replace(/[^가-힣]/gi, '')
+
+        updateQuery["information.career.detail"] = equalJson(careerDetail.value.trim());
+        updateQuery["information.career.school"] = equalJson(schoolDetail.value.trim());
+        updateQuery["information.career.about"] = etc;
+
+        updateQuery["response.portfolio.plus.request"] = new Date();
+        updateQuery["response.manager"] = ceoName;
+        updateQuery["response.first.status"] = "검토중";
+        updateQuery["meeting.status"] = "검토중";
 
         rows = await back.getAspirantsByQuery({ phone: phone.replace(/[^0-9\-]/gi, '') }, { selfMongo });
         if (rows.length === 0) {
@@ -3931,6 +3951,10 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
           [ thisAspirant ] = rows.toNormal();
           aspid = thisAspirant.aspid;
         }
+
+        await back.updateAspirant([ { aspid }, updateQuery ], { selfMongo });
+        await messageSend({ text: thisAspirant.designer + " 디자이너 신청자님이 추가 포트폴리오를 전송하였습니다!", channel: "#301_apply", voice: true });
+        await messageSend({ text: thisAspirant.designer + " 디자이너 신청자님의 추가 포트폴리오 검토를 부탁드리겠습니다! <@" + ceoId + ">\nlink: https://" + instance.address.backinfo.host + "/designer?mode=aspirant&aspid=" + aspid, channel: "#301_apply", voice: false });
 
         sleep(5000).then(() => {
           return kakao.sendTalk("aspirantPortfolio", name, phone, {
