@@ -3901,6 +3901,19 @@ DesignerJs.prototype.aspirantBase = async function () {
                 }
               }
             },
+            {
+              title: designer + " 실장님께 부재중 알림",
+              func: (aspid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.aspirantSendNotice("pure", aspid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
           ];
           const thisBox = this.getBoundingClientRect();
           const { x, y } = e;
@@ -4926,6 +4939,37 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
         return null;
       }
     }
+  } else if (method === "pure") {
+    return async function () {
+      try {
+        const aspirant = aspirants.find((d) => { return d.aspid === aspid });
+        if (aspirant === undefined) {
+          throw new Error("invalid aspid");
+        }
+
+        if (window.confirm(aspirant.designer + " 실장님께 부재중 알림을 전송할까요?")) {
+          const response = await ajaxJson({
+            mode: "send",
+            aspid: aspirant.aspid,
+            designer: aspirant.designer,
+            phone: aspirant.phone,
+            type: "pure",
+          }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
+          if (response.message === "success") {
+            window.alert("전송에 성공하였습니다!");
+          } else {
+            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+          }
+
+          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspirant.aspid;
+        }
+        
+      } catch (e) {
+        window.alert(e.message);
+        console.log(e);
+        return null;
+      }
+    }
   }
 }
 
@@ -5042,6 +5086,23 @@ DesignerJs.prototype.communicationRender = function () {
       const aspid = document.querySelector('.' + whiteCardClassName).getAttribute("aspid");
       try {
         const sendFunc = instance.aspirantSendNotice("documents", aspid);
+        await sendFunc();
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "부재중 알림"; },
+    function () {
+      return document.querySelector('.' + whiteCardClassName) !== null;
+    },
+    async function (e) {
+      const aspid = document.querySelector('.' + whiteCardClassName).getAttribute("aspid");
+      try {
+        const sendFunc = instance.aspirantSendNotice("pure", aspid);
         await sendFunc();
       } catch (e) {
         console.log(e);

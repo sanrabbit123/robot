@@ -2475,6 +2475,25 @@ SecondRouter.prototype.rou_post_noticeAspirantConsole = function () {
 
           res.send(JSON.stringify({ message: "success" }));
 
+        } else if (type === "pure") {
+
+          // await kakao.sendTalk("aspirantFail", designer, phone, { client: designer, host: address.frontinfo.host, path: "aspportfolio", aspid });
+          await human.sendSms({
+            to: phone.replace(/[^0-9]/gi, ''),
+            body: ("안녕하세요, " + designer + "님! 홈리에종입니다.\n" + 
+            "홈스타일링 디자이너 신청해주신 홈리에종입니다. 연락드렸으나 통화가 어려우신 듯하여 메세지 남겨 드립니다.\n" + 
+            "\n" + 
+            "02-2039-2252로 전화주시거나, 홈리에종 카카오 채널을 통해 통화 가능 시간을 남겨주시면, 확인 후 연락드리겠습니다!"),
+          });
+          await messageSend({
+            text: designer + " 실장님께 부재중 알림 알림톡을 전송하였습니다!",
+            channel,
+            voice,
+            fairy
+          });
+
+          res.send(JSON.stringify({ message: "success" }));
+
         } else {
           throw new Error("invalid type");
         }
