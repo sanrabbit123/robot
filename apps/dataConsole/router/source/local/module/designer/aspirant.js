@@ -4771,11 +4771,19 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
     return async function () {
       try {
         const aspirant = aspirants.find((d) => { return d.aspid === aspid });
+        let whereQuery, updateQuery;
         if (aspirant === undefined) {
           throw new Error("invalid aspid");
         }
 
         if (window.confirm(aspirant.designer + " 실장님께 등록 서류 업로드 알림톡을 전송할까요?")) {
+
+          whereQuery = {};
+          whereQuery["aspid"] = aspid;
+          updateQuery = {};
+          updateQuery["meeting.status"] = "등록 요청";
+          await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+
           const response = await ajaxJson({
             mode: "send",
             aspid: aspirant.aspid,
@@ -4801,11 +4809,19 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
     return async function () {
       try {
         const aspirant = aspirants.find((d) => { return d.aspid === aspid });
+        let whereQuery, updateQuery;
         if (aspirant === undefined) {
           throw new Error("invalid aspid");
         }
 
         if (window.confirm(aspirant.designer + " 실장님께 등록비 결제 알림톡을 전송할까요?")) {
+
+          whereQuery = {};
+          whereQuery["aspid"] = aspid;
+          updateQuery = {};
+          updateQuery["meeting.status"] = "등록 요청";
+          await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+
           const response = await ajaxJson({
             mode: "send",
             aspid: aspirant.aspid,
@@ -5026,23 +5042,6 @@ DesignerJs.prototype.communicationRender = function () {
       const aspid = document.querySelector('.' + whiteCardClassName).getAttribute("aspid");
       try {
         const sendFunc = instance.aspirantSendNotice("documents", aspid);
-        await sendFunc();
-      } catch (e) {
-        console.log(e);
-        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
-      }
-    }
-  ]);
-
-  communication.setItem([
-    () => { return "등록비 결제 요청하기"; },
-    function () {
-      return document.querySelector('.' + whiteCardClassName) !== null;
-    },
-    async function (e) {
-      const aspid = document.querySelector('.' + whiteCardClassName).getAttribute("aspid");
-      try {
-        const sendFunc = instance.aspirantSendNotice("payment", aspid);
         await sendFunc();
       } catch (e) {
         console.log(e);
