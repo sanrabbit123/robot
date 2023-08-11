@@ -357,7 +357,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         },
       },
       {
-        title: "대표님 메모",
+        title: "1차 판단",
         width: 400,
         name: "memo",
         type: "string",
@@ -1238,7 +1238,7 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
       {
         name: "memo",
         type: "long",
-        title: "대표님 메모",
+        title: "1차 판단",
         value: aspirant.meeting.memo,
         editable: true,
         update: async (newValue, aspid) => {
@@ -3499,7 +3499,6 @@ DesignerJs.prototype.aspirantBase = async function () {
               top: String(e.y + menuVisual) + "px",
               left: String(e.x + menuVisual) + "px",
               width: String(thisMenuWidth) + ea,
-              background: colorChip.white,
               animation: "fadeuplite 0.3s ease forwards",
               zIndex: String(zIndex),
             },
@@ -4070,7 +4069,6 @@ DesignerJs.prototype.aspirantBase = async function () {
                       top: String(e.y + menuVisual) + "px",
                       left: String(e.x + menuVisual) + "px",
                       width: String(menuWidth) + ea,
-                      background: colorChip.white,
                       animation: "fadeuplite 0.3s ease forwards",
                       zIndex: String(zIndex),
                     },
@@ -4562,11 +4560,19 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
     return async function () {
       try {
         const aspirant = aspirants.find((d) => { return d.aspid === aspid });
+        let whereQuery, updateQuery;
         if (aspirant === undefined) {
           throw new Error("invalid aspid");
         }
 
         if (window.confirm(aspirant.designer + " 실장님께 추가 포트폴리오 요청 알림톡을 전송할까요?")) {
+
+          whereQuery = {};
+          whereQuery["aspid"] = aspid;
+          updateQuery = {};
+          updateQuery["meeting.status"] = "추가 요청";
+          await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
+
           const response = await ajaxJson({
             mode: "send",
             aspid: aspirant.aspid,

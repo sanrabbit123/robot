@@ -1831,7 +1831,6 @@ DesignerJs.prototype.normalBase = async function () {
               top: String(e.y + menuVisual) + "px",
               left: String(e.x + menuVisual) + "px",
               width: String(menuPromptWidth) + ea,
-              background: colorChip.white,
               animation: "fadeuplite 0.3s ease forwards",
               zIndex: String(zIndex),
             },
