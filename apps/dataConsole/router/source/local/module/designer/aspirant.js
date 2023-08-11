@@ -268,11 +268,11 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             if (finalValue === "합격" || finalValue === "확인") {
               chainValue = "응대중";
               chainManager = teamLeader;
-              chainMessage = "대표님께서 " + aspirant.designer + " 신청자를 합격으로 설정하셨습니다! 응대를 부탁드리겠습니다! <@" + teamLeaderId + ">";
+              chainMessage = "대표님께서 " + aspirant.designer + " 신청자를 합격으로 설정하셨습니다! 합격 응대를 부탁드리겠습니다! <@" + teamLeaderId + ">";
             } else if (finalValue === "반려") {
               chainValue = "추가 필요";
               chainManager = teamLeader;
-              chainMessage = "대표님께서 " + aspirant.designer + " 신청자를 합격으로 설정하셨습니다! 응대를 부탁드리겠습니다! <@" + teamLeaderId + ">";
+              chainMessage = "대표님께서 " + aspirant.designer + " 신청자를 반려로 설정하셨습니다! 반려 응대를 부탁드리겠습니다! <@" + teamLeaderId + ">";
             } else if (finalValue === "불합격") {
               chainValue = "드랍";
               chainManager = hlBot;
@@ -357,10 +357,11 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
         },
       },
       {
-        title: "1차 판단",
+        title: "판단 메모",
         width: 400,
         name: "memo",
         type: "string",
+        long: true,
         update: async (aspid, value) => {
           try {
             const instance = this;
@@ -1238,7 +1239,8 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
       {
         name: "memo",
         type: "long",
-        title: "1차 판단",
+        title: "판단 메모",
+        long: true,
         value: aspirant.meeting.memo,
         editable: true,
         update: async (newValue, aspid) => {
@@ -2500,8 +2502,10 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
             event: {
               click: async function (e) {
                 try {
+                  const self = this;
                   const emptyValueBoo = (this.getAttribute("empty") === "true");
                   const value = this.getAttribute("value");
+                  const pastValue = value;
                   const box = this.getBoundingClientRect();
                   const motherBox = this.parentNode.getBoundingClientRect();
                   const mother = Number(this.getAttribute("mother"));
@@ -2512,11 +2516,20 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
 
                   thisLeft = box.left - motherBox.left;
 
+                  this.firstChild.textContent = "";
+
                   createNode({
-                    mother: this.parentNode,
+                    mother: this,
                     class: [ longTextEditClassName ],
                     event: {
-                      click: (e) => { removeByClass(longTextEditClassName); }
+                      click: function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setQueue(() => {
+                          self.firstChild.insertAdjacentHTML("beforeend", pastValue.replace(/\n/gi, "<br>"));
+                        })
+                        removeByClass(longTextEditClassName);
+                      }
                     },
                     style: {
                       position: "fixed",
@@ -2524,63 +2537,83 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
                       left: String(0) + ea,
                       height: withOut(0, ea),
                       width: withOut(0, ea),
-                      background: "transparent",
+                      background: "trasparent",
                       zIndex: String(1),
                     }
                   });
 
                   thisInput = createNode({
-                    mother: this.parentNode,
+                    mother: this,
                     class: [ longTextEditClassName ],
+                    event: {
+                      click: (e) => { e.preventDefault(); e.stopPropagation(); }
+                    },
                     style: {
                       display: "inline-block",
                       verticalAlign: "top",
-                      position: "absolute",
+                      position: "relative",
                       top: String(0),
-                      left: String(thisLeft) + ea,
-                      height: String(blockHeight) + ea,
                       width: withOut(titleWidth, ea),
                       background: colorChip.white,
-                      zIndex: String(1),
+                      zIndex: String(2),
                     },
                     child: {
-                      mode: "input",
+                      mode: "textarea",
+                      text: value,
                       attribute: {
                         value,
                         aspid,
                         mother: String(mother),
                       },
                       event: {
-                        keypress: async function (e) {
+                        keydown: async function (e) {
                           try {
-                            if (e.key === "Enter") {
-                              this.value = this.value.trim().replace(/[\=\&\+\#\<\>\/\\\n\t]/gi, '').replace(/  /gi, ' ');
-
-                              const mother = Number(this.getAttribute("mother"));
-                              const obj = dataArr[mother];
-                              const aspid = this.getAttribute("aspid");
-                              const newValue = this.value;
-
-                              if (newValue !== "") {
-                                this.parentNode.parentNode.children[1].setAttribute("empty", "false");
-                                this.parentNode.parentNode.children[1].firstChild.style.color = colorChip.black;
-                                this.parentNode.parentNode.children[1].firstChild.textContent = newValue;
-                              } else {
-                                this.parentNode.parentNode.children[1].setAttribute("empty", "true");
-                                this.parentNode.parentNode.children[1].firstChild.style.color = colorChip.deactive;
-                                this.parentNode.parentNode.children[1].firstChild.textContent = longEmptyText;
-                              }
-
-                              this.parentNode.parentNode.children[1].setAttribute("value", newValue);
-
-                              await obj.update(newValue, aspid);
-
-                              removeByClass(longTextEditClassName);
+                            if (e.key === "Tab") {
+                              e.preventDefault();
                             }
                           } catch (e) {
                             console.log(e);
                           }
-                        }
+                        },
+                        keyup: async function (e) {
+                          try {
+                            if (e.key === "Tab") {
+                              this.blur();
+                            }
+                          } catch (e) {
+                            console.log(e);
+                          }
+                        },
+                        blur: async function (e) {
+                          try {
+                            // this.value = this.value.trim().replace(/[\=\&\+\#\<\>\/\\]/gi, '').replace(/  /gi, ' ');
+
+                            // const mother = Number(this.getAttribute("mother"));
+                            // const obj = dataArr[mother];
+                            // const aspid = this.getAttribute("aspid");
+                            // const newValue = this.value;
+
+                            // if (newValue !== "") {
+                            //   this.parentNode.parentNode.children[1].setAttribute("empty", "false");
+                            //   this.parentNode.parentNode.children[1].firstChild.style.color = colorChip.black;
+                            //   this.parentNode.parentNode.children[1].firstChild.textContent = "";
+                            //   this.parentNode.parentNode.children[1].firstChild.insertAdjacentHTML("beforeend", newValue.replace(/\n/gi, "<br>"));
+                            // } else {
+                            //   this.parentNode.parentNode.children[1].setAttribute("empty", "true");
+                            //   this.parentNode.parentNode.children[1].firstChild.style.color = colorChip.deactive;
+                            //   this.parentNode.parentNode.children[1].firstChild.textContent = "";
+                            //   this.parentNode.parentNode.children[1].firstChild.insertAdjacentHTML("beforeend", longEmptyText);
+                            // }
+
+                            // this.parentNode.parentNode.children[1].setAttribute("value", newValue);
+
+                            // await obj.update(newValue, aspid);
+
+                            // removeByClass(longTextEditClassName);
+                          } catch (e) {
+                            console.log(e);
+                          }
+                        },
                       },
                       style: {
                         display: "inline-block",
@@ -3443,6 +3476,8 @@ DesignerJs.prototype.aspirantBase = async function () {
     let longTextWidth;
     let longTextHeight;
     let aspirantSubMenuEvent;
+    let valueLongMaxWidth;
+    let thisMaxWidth;
 
     totalPaddingTop = 38;
     columnAreaHeight = 32;
@@ -3460,6 +3495,7 @@ DesignerJs.prototype.aspirantBase = async function () {
     idNamePaddingBottom = 400;
     maxWidth = 8000;
     valueMaxWidth = 1000;
+    valueLongMaxWidth = 3000;
   
     valueColumnsAreaPaddingLeft = 20;
 
@@ -4208,9 +4244,11 @@ DesignerJs.prototype.aspirantBase = async function () {
               paddingLeft: String(valueColumnsAreaPaddingLeft) + ea,
               cursor: "pointer",
             }
-          })
+          });
     
           for (let i = 0; i < columns.length; i++) {
+
+            thisMaxWidth = (columns[i].long === true ? valueLongMaxWidth : valueMaxWidth);
             valueDom = createNode({
               mother: thisTong,
               attribute: {
@@ -4236,9 +4274,9 @@ DesignerJs.prototype.aspirantBase = async function () {
                 child: {
                   style: {
                     display: "flex",
-                    width: String(valueMaxWidth) + ea,
+                    width: String(thisMaxWidth) + ea,
                     position: "relative",
-                    left: withOut(50, valueMaxWidth / 2, ea),
+                    left: withOut(50, thisMaxWidth / 2, ea),
                     textAlign: "center",
                     justifyContent: "center",
                     alignItems: "center",

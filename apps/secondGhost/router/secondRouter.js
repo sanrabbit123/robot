@@ -2224,11 +2224,12 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
           { "designer.desid": desid },
         ] }, { selfMongo });
         if (rows.length === 0) {
+          thisJson.history.unshift(new Date());
           await back.mongoCreate(collection, thisJson, { selfMongo });
         } else {
           thisId = rows[0].id;
           thisHistory = rows[0].history;
-          thisHistory.unshift(rows[0].date);
+          thisHistory.unshift(new Date());
           await back.mongoUpdate(collection, [
             { id: thisId },
             { date: new Date(), history: thisHistory },
@@ -2392,11 +2393,12 @@ SecondRouter.prototype.rou_post_noticeAspirantConsole = function () {
           { "aspirant.aspid": aspid },
         ] }, { selfMongo });
         if (rows.length === 0) {
+          thisJson.history.unshift(new Date());
           await back.mongoCreate(collection, thisJson, { selfMongo });
         } else {
           thisId = rows[0].id;
           thisHistory = rows[0].history;
-          thisHistory.unshift(rows[0].date);
+          thisHistory.unshift(new Date());
           await back.mongoUpdate(collection, [
             { id: thisId },
             { date: new Date(), history: thisHistory },
