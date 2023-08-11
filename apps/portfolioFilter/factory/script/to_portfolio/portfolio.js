@@ -24,7 +24,6 @@ ExecMain.prototype.start = function () {
   }
 }
 
-
     `;
     return h;
   }

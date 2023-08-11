@@ -4780,6 +4780,7 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
   const instance = this;
   const { ea, totalContents, aspirants } = this;
   const { ajaxJson } = GeneralJs;
+
   if (method === "documents") {
     return async function () {
       try {
@@ -4976,13 +4977,13 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
 DesignerJs.prototype.communicationRender = function () {
   const instance = this;
   const { communication } = this.mother;
-  const { whiteCardClassName } = this;
+  const { whiteCardClassName, whiteBaseClassName } = this;
   const { ajaxJson, sleep, blankHref } = GeneralJs;
 
   communication.setItem([
     () => { return "합격 응대 스트립트 보기"; },
     function () {
-      return document.querySelector('.' + whiteCardClassName) === null;
+      return document.querySelector('.' + whiteBaseClassName) === null;
     },
     async function (e) {
       try {
@@ -4996,7 +4997,7 @@ DesignerJs.prototype.communicationRender = function () {
   communication.setItem([
     () => { return "반려 응대 스트립트 보기"; },
     function () {
-      return document.querySelector('.' + whiteCardClassName) === null;
+      return document.querySelector('.' + whiteBaseClassName) === null;
     },
     async function (e) {
       try {
@@ -5010,7 +5011,7 @@ DesignerJs.prototype.communicationRender = function () {
   communication.setItem([
     () => { return "확인 응대 스트립트 보기"; },
     function () {
-      return document.querySelector('.' + whiteCardClassName) === null;
+      return document.querySelector('.' + whiteBaseClassName) === null;
     },
     async function (e) {
       try {
@@ -5024,7 +5025,7 @@ DesignerJs.prototype.communicationRender = function () {
   communication.setItem([
     () => { return "QnA 보기"; },
     function () {
-      return document.querySelector('.' + whiteCardClassName) === null;
+      return document.querySelector('.' + whiteBaseClassName) === null;
     },
     async function (e) {
       try {
@@ -5038,10 +5039,10 @@ DesignerJs.prototype.communicationRender = function () {
   communication.setItem([
     () => { return "1차 유선 통화 완료"; },
     function () {
-      return document.querySelector('.' + whiteCardClassName) !== null;
+      return document.querySelector('.' + whiteBaseClassName) !== null;
     },
     async function (e) {
-      const aspid = document.querySelector('.' + whiteCardClassName).getAttribute("aspid");
+      const aspid = document.querySelector('.' + whiteBaseClassName).getAttribute("aspid");
       try {
         let whereQuery, updateQuery;
 
@@ -5063,10 +5064,10 @@ DesignerJs.prototype.communicationRender = function () {
   communication.setItem([
     () => { return "추가 포트폴리오 요청하기"; },
     function () {
-      return document.querySelector('.' + whiteCardClassName) !== null;
+      return document.querySelector('.' + whiteBaseClassName) !== null;
     },
     async function (e) {
-      const aspid = document.querySelector('.' + whiteCardClassName).getAttribute("aspid");
+      const aspid = document.querySelector('.' + whiteBaseClassName).getAttribute("aspid");
       try {
         const sendFunc = instance.aspirantSendNotice("plus", aspid);
         await sendFunc();
@@ -5080,10 +5081,10 @@ DesignerJs.prototype.communicationRender = function () {
   communication.setItem([
     () => { return "등록 서류 요청하기"; },
     function () {
-      return document.querySelector('.' + whiteCardClassName) !== null;
+      return document.querySelector('.' + whiteBaseClassName) !== null;
     },
     async function (e) {
-      const aspid = document.querySelector('.' + whiteCardClassName).getAttribute("aspid");
+      const aspid = document.querySelector('.' + whiteBaseClassName).getAttribute("aspid");
       try {
         const sendFunc = instance.aspirantSendNotice("documents", aspid);
         await sendFunc();
@@ -5097,10 +5098,10 @@ DesignerJs.prototype.communicationRender = function () {
   communication.setItem([
     () => { return "부재중 알림"; },
     function () {
-      return document.querySelector('.' + whiteCardClassName) !== null;
+      return document.querySelector('.' + whiteBaseClassName) !== null;
     },
     async function (e) {
-      const aspid = document.querySelector('.' + whiteCardClassName).getAttribute("aspid");
+      const aspid = document.querySelector('.' + whiteBaseClassName).getAttribute("aspid");
       try {
         const sendFunc = instance.aspirantSendNotice("pure", aspid);
         await sendFunc();
@@ -5114,10 +5115,10 @@ DesignerJs.prototype.communicationRender = function () {
   communication.setItem([
     () => { return "불합격 통지"; },
     function () {
-      return document.querySelector('.' + whiteCardClassName) !== null;
+      return document.querySelector('.' + whiteBaseClassName) !== null;
     },
     async function (e) {
-      const aspid = document.querySelector('.' + whiteCardClassName).getAttribute("aspid");
+      const aspid = document.querySelector('.' + whiteBaseClassName).getAttribute("aspid");
       try {
         const sendFunc = instance.aspirantSendNotice("fail", aspid);
         await sendFunc();

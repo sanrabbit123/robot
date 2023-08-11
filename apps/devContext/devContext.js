@@ -183,7 +183,7 @@ DevContext.prototype.launching = async function () {
     // console.log(aspirants[40].response);
     // console.log(aspirants[40].toNormal().response);
 
-    
+
 
 
 
@@ -6500,8 +6500,8 @@ DevContext.prototype.launching = async function () {
 
 
     // voice to text
-    // const audio = new PlayAudio();
-    // await audio.voiceToText();
+    const audio = new PlayAudio();
+    await audio.voiceToText();
 
 
     // send native alarm
