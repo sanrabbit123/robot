@@ -706,7 +706,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
           name: "portfolioCharacter",
         },
         {
-          value: aspirant.meeting.memo,
+          value: aspirant.meeting.memo.replace(/\n/gi, " "),
           name: "memo",
         },
         {
@@ -2497,7 +2497,6 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
       } else if (type === "long") {
 
         if (obj.editable === true) {
-
           emptyValueBoo = (value.trim() === '');
           createNode({
             mother: motherBlock,
@@ -2562,7 +2561,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
                       position: "relative",
                       top: String(0),
                       width: withOut(titleWidth, ea),
-                      height: String(400) + ea,
+                      height: String(100) + ea,
                       background: colorChip.white,
                       zIndex: String(2),
                     },
@@ -2595,30 +2594,20 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
                         },
                         blur: async function (e) {
                           try {
-                            // this.value = this.value.trim().replace(/[\=\&\+\#\<\>\/\\]/gi, '').replace(/  /gi, ' ');
+                            this.value = this.value.trim().replace(/[\=\&\+\#\<\>\/\\]/gi, '').replace(/  /gi, ' ');
 
-                            // const mother = Number(this.getAttribute("mother"));
-                            // const obj = dataArr[mother];
-                            // const aspid = this.getAttribute("aspid");
-                            // const newValue = this.value;
+                            const mother = Number(this.getAttribute("mother"));
+                            const obj = dataArr[mother];
+                            const aspid = this.getAttribute("aspid");
+                            const newValue = this.value;
+                            this.parentNode.parentNode.setAttribute("value", newValue);
 
-                            // if (newValue !== "") {
-                            //   this.parentNode.parentNode.children[1].setAttribute("empty", "false");
-                            //   this.parentNode.parentNode.children[1].firstChild.style.color = colorChip.black;
-                            //   this.parentNode.parentNode.children[1].firstChild.textContent = "";
-                            //   this.parentNode.parentNode.children[1].firstChild.insertAdjacentHTML("beforeend", newValue.replace(/\n/gi, "<br>"));
-                            // } else {
-                            //   this.parentNode.parentNode.children[1].setAttribute("empty", "true");
-                            //   this.parentNode.parentNode.children[1].firstChild.style.color = colorChip.deactive;
-                            //   this.parentNode.parentNode.children[1].firstChild.textContent = "";
-                            //   this.parentNode.parentNode.children[1].firstChild.insertAdjacentHTML("beforeend", longEmptyText);
-                            // }
+                            await obj.update(newValue, aspid);
 
-                            // this.parentNode.parentNode.children[1].setAttribute("value", newValue);
-
-                            // await obj.update(newValue, aspid);
-
-                            // removeByClass(longTextEditClassName);
+                            setQueue(() => {
+                              self.firstChild.insertAdjacentHTML("beforeend", newValue.replace(/\n/gi, "<br>"));
+                            })
+                            removeByClass(longTextEditClassName);
                           } catch (e) {
                             console.log(e);
                           }
@@ -2632,7 +2621,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
                         fontWeight: String(400),
                         color: colorChip.green,
                         width: withOut(0, ea),
-                        height: String(400) + ea,
+                        height: String(100) + ea,
                         lineHeight: String(longLineHeight),
                         background: colorChip.white,
                         outline: String(0),
