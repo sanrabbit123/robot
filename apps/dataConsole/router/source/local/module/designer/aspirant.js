@@ -4592,6 +4592,9 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
     return async function () {
       try {
         const aspirant = aspirants.find((d) => { return d.aspid === aspid });
+        let whereQuery;
+        let updateQuery;
+        let hlBot;
         if (aspirant === undefined) {
           throw new Error("invalid aspid");
         }
@@ -4610,15 +4613,18 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
             window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
           }
 
+          hlBot = GeneralJs.stacks.members.find((obj) => { return obj.roles.includes("Bot"); }).name;
 
+          whereQuery = { aspid: aspirant.aspid };
 
-          
+          updateQuery = {};
+          updateQuery["response.first.status"] = "불합격";
+          updateQuery["meeting.status"] = "드랍";
+          updateQuery["response.manager"] = hlBot;
 
+          await ajaxJson({ whereQuery, updateQuery }, BACKHOST + "/rawUpdateAspirant");
 
-          
-
-
-
+          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspirant.aspid;
         }
         
       } catch (e) {
@@ -4744,6 +4750,23 @@ DesignerJs.prototype.communicationRender = function () {
       const aspid = document.querySelector('.' + whiteCardClassName).getAttribute("aspid");
       try {
         const sendFunc = instance.aspirantSendNotice("payment", aspid);
+        await sendFunc();
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspid;
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "불합격 통지"; },
+    function () {
+      return document.querySelector('.' + whiteCardClassName) !== null;
+    },
+    async function (e) {
+      const aspid = document.querySelector('.' + whiteCardClassName).getAttribute("aspid");
+      try {
+        const sendFunc = instance.aspirantSendNotice("fail", aspid);
         await sendFunc();
       } catch (e) {
         console.log(e);
