@@ -2407,13 +2407,13 @@ SecondRouter.prototype.rou_post_noticeAspirantConsole = function () {
 
         if (type === "documents") {
 
-          // await kakao.sendTalk("aspirantRequestDocuments", designer, phone, { client: designer, host: address.frontinfo.host, path: "aspnotice", aspid });
-          // await messageSend({
-          //   text: designer + " 실장님께 등록 서류 업로드 요청 알림톡을 전송하였습니다!",
-          //   channel,
-          //   voice,
-          //   fairy
-          // });
+          await kakao.sendTalk("aspirantRequestDocuments", designer, phone, { client: designer, host: address.frontinfo.host, path: "aspnotice", aspid });
+          await messageSend({
+            text: designer + " 실장님께 등록 서류 업로드 요청 알림톡을 전송하였습니다!",
+            channel,
+            voice,
+            fairy
+          });
 
           res.send(JSON.stringify({ message: "success" }));
 
