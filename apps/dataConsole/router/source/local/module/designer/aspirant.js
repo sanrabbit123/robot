@@ -661,7 +661,7 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
 
       thisSendRows2 = noticeSendRows.filter((o) => { return o.type === "plus" }).filter((o) => { return o.aspirant.aspid === aspirant.aspid });
       thisPortfolioSend = new Date(1800, 0, 1);
-      if (thisSendRows.length > 0 && thisSendRows2[0].history.length > 0) {
+      if (thisSendRows2.length > 0 && thisSendRows2[0].history.length > 0) {
         thisPortfolioSend = thisSendRows2[0].history[0];
       }
 
@@ -807,11 +807,19 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
     let schoolToBlock;
     let thisSendRows;
     let thisDocumentsSend;
+    let thisSendRows2;
+    let thisPortfolioSend;
 
     thisSendRows = noticeSendRows.filter((o) => { return o.type === "documents" }).filter((o) => { return o.aspirant.aspid === aspid });
     thisDocumentsSend = new Date(1800, 0, 1);
     if (thisSendRows.length > 0 && thisSendRows[0].history.length > 0) {
       thisDocumentsSend = thisSendRows[0].history[0];
+    }
+
+    thisSendRows2 = noticeSendRows.filter((o) => { return o.type === "plus" }).filter((o) => { return o.aspirant.aspid === aspirant.aspid });
+    thisPortfolioSend = new Date(1800, 0, 1);
+    if (thisSendRows2.length > 0 && thisSendRows2[0].history.length > 0) {
+      thisPortfolioSend = thisSendRows2[0].history[0];
     }
 
     careerToBlock = (aspirant) => {
@@ -2554,6 +2562,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
                       position: "relative",
                       top: String(0),
                       width: withOut(titleWidth, ea),
+                      height: String(400) + ea,
                       background: colorChip.white,
                       zIndex: String(2),
                     },
@@ -2623,6 +2632,7 @@ DesignerJs.prototype.aspirantWhiteContents = async function (tong, aspid) {
                         fontWeight: String(400),
                         color: colorChip.green,
                         width: withOut(0, ea),
+                        height: String(400) + ea,
                         lineHeight: String(longLineHeight),
                         background: colorChip.white,
                         outline: String(0),
