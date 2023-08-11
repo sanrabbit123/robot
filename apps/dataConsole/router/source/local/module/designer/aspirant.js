@@ -3507,6 +3507,19 @@ DesignerJs.prototype.aspirantBase = async function () {
           const zIndex = 4;
           const contextMenu = [
             {
+              title: designer + " 실장님께 추가 포트폴리오 요청하기",
+              func: (aspid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.aspirantSendNotice("plus", aspid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
               title: designer + " 실장님께 등록 서류 요청하기",
               func: (aspid) => {
                 return async function (e) {
@@ -4418,7 +4431,7 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
           } else {
             window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
           }
-          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant";
+          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspirant.aspid;
         }
         
       } catch (e) {
@@ -4448,7 +4461,37 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
           } else {
             window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
           }
-          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant";
+          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspirant.aspid;
+        }
+        
+      } catch (e) {
+        window.alert(e.message);
+        console.log(e);
+        return null;
+      }
+    }
+  } else if (method === "plus") {
+    return async function () {
+      try {
+        const aspirant = aspirants.find((d) => { return d.aspid === aspid });
+        if (aspirant === undefined) {
+          throw new Error("invalid aspid");
+        }
+
+        if (window.confirm(aspirant.designer + " 실장님께 추가 포트폴리오 요청 알림톡을 전송할까요?")) {
+          const response = await ajaxJson({
+            mode: "send",
+            aspid: aspirant.aspid,
+            designer: aspirant.designer,
+            phone: aspirant.phone,
+            type: "plus",
+          }, SECONDHOST + "/noticeAspirantConsole", { equal: true });
+          if (response.message === "success") {
+            window.alert("전송에 성공하였습니다!");
+          } else {
+            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+          }
+          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=aspirant&aspid=" + aspirant.aspid;
         }
         
       } catch (e) {

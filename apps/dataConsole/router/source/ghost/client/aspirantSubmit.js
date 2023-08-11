@@ -4730,7 +4730,7 @@ AspirantSubmitJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson } = GeneralJs;
+    const { returnGet, ajaxJson, selfHref } = GeneralJs;
     const getObj = returnGet();
 
     this.inputClassName = "consultingInput";
