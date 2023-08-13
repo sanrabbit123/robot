@@ -188,10 +188,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-
-
-
 
 
     
@@ -7914,6 +7910,8 @@ DevContext.prototype.setProposalSettingForDesigner = async function (desid, file
 
     console.log(proposalArr[0]);
     await this.back.updateDesigner([ { desid }, { "setting.proposal": proposalArr } ]);
+    await this.back.updateDesigner([ { desid }, { "setting.description": JSON.parse(JSON.stringify(description)) } ]);
+    
     console.log("injection success");
   } catch (e) {
     console.log(e);
