@@ -6999,6 +6999,35 @@ DesignerAboutJs.prototype.insertRepresentativeBox = function () {
   let mobileContentsWordingSize;
   let wordings;
   let lineTop, linePadding;
+  let panMother;
+  let panMotherInnerPadding;
+  let basePan;
+  let panBetween;
+  let panTitleBoxWidth;
+  let panTitleBoxHeight;
+  let contentsTextTop;
+  let subButtonsBasePan;
+  let subButtonPaddingRight;
+  let subButtonSize;
+  let subButtonWeight;
+  let subButtonVisualTop;
+  let subButtonPaddingBottom;
+  let subButtonPaddingTop;
+  let subButtonPaddingLeft;
+  let subButtonsVisualTop;
+  let contentsPan;
+  let contentsPanPaddingTop;
+  let contentsPanPaddingBottom;
+  let itemBetween;
+  let uploadCircleWidth;
+  let uploadCirclePadding;
+  let uploadIconWidth;
+  let uploadIconTop;
+  let linkIconWidth;
+  let linkIconTop;
+  let plusIconTop;
+  let plusIconWidth;
+  let panList;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -7056,6 +7085,57 @@ DesignerAboutJs.prototype.insertRepresentativeBox = function () {
   mobilePaddingLeft = 6;
 
   mobileContentsWordingSize = 3.2;
+
+  panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
+  panBetween = <%% 8, 8, 8, 8, 1 %%>;
+  panTitleBoxWidth = <%% 124, 120, 114, 108, 21 %%>;
+  panTitleBoxHeight = <%% 52, 48, 45, 40, 8.2 %%>;
+
+  contentsWordingSize = <%% 15, 15, 14, 13, 2.9 %%>;
+  contentsTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), -0.2 %%>;
+
+  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+  subButtonPaddingRight = <%% 18, 18, 16, 12, 1.6 %%>;
+  subButtonSize = <%% 12, 12, 11, 10, 2.4 %%>;
+  subButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
+  subButtonVisualTop = <%% 3, 3, 2, 1, 0.3 %%>;
+  subButtonPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 5 : 4), (isIphone() ? 1.2 : 1.4) %%>;
+  subButtonPaddingTop = <%% (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 3 : 5), (isIphone() ? 1.2 : 1.2) %%>;
+  subButtonPaddingLeft = <%% 11, 11, 10, 9, 2 %%>;
+  subButtonsVisualTop = <%% 2, 3, 3, 1, 0 %%>;
+
+  contentsPanPaddingTop = <%% 18, 18, 16, 12, 3 %%>;
+  contentsPanPaddingBottom = <%% 60, 60, 60, 54, 12 %%>;
+  itemBetween = <%% 6, 6, 5, 4, 1 %%>;
+
+  uploadCircleWidth = <%% 28, 28, 28, 24, 6 %%>;
+  uploadCirclePadding = <%% 16, 16, 16, 12, 4 %%>;
+  uploadIconWidth = <%% 13, 13, 13, 12, 3 %%>;
+  uploadIconTop = <%% 0, 0, 0, 0, 0 %%>;
+
+  linkIconWidth = <%% 15.5, 15.5, 15.5, 14, 3.4 %%>;
+  linkIconTop = <%% 0, 0, 0, 0, 0 %%>;
+
+  plusIconTop = <%% 0, 0, 0, 0, 0 %%>;
+  plusIconWidth = <%% 14, 14, 13, 12, 3.2 %%>;
+
+  panList = [
+    {
+      title: "컨셉 제안서",
+    },
+    {
+      title: "디자인 제안서",
+    },
+    {
+      title: "3D 제안서",
+    },
+    {
+      title: "도면",
+    },
+    {
+      title: "시공 의뢰서",
+    },
+  ]
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -7252,86 +7332,6 @@ DesignerAboutJs.prototype.insertRepresentativeBox = function () {
   }
 
   // upload box
-  let panMother;
-  let panMotherInnerPadding;
-  let basePan;
-  let panBetween;
-  let panTitleBoxWidth;
-  let panTitleBoxHeight;
-  let contentsTextTop;
-  let subButtonsBasePan;
-  let subButtonPaddingRight;
-  let subButtonSize;
-  let subButtonWeight;
-  let subButtonVisualTop;
-  let subButtonPaddingBottom;
-  let subButtonPaddingTop;
-  let subButtonPaddingLeft;
-  let subButtonsVisualTop;
-  let contentsPan;
-  let contentsPanPaddingTop;
-  let contentsPanPaddingBottom;
-  let itemBetween;
-  let uploadCircleWidth;
-  let uploadCirclePadding;
-  let uploadIconWidth;
-  let uploadIconTop;
-  let linkIconWidth;
-  let linkIconTop;
-  let plusIconTop;
-  let plusIconWidth;
-  let panList;
-
-  panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
-  panBetween = <%% 8, 8, 8, 8, 1 %%>;
-  panTitleBoxWidth = <%% 124, 120, 114, 108, 21 %%>;
-  panTitleBoxHeight = <%% 52, 48, 45, 40, 8.2 %%>;
-
-  contentsWordingSize = <%% 15, 15, 14, 13, 2.9 %%>;
-  contentsTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), -0.2 %%>;
-
-  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
-  subButtonPaddingRight = <%% 18, 18, 16, 12, 1.6 %%>;
-  subButtonSize = <%% 12, 12, 11, 10, 2.4 %%>;
-  subButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
-  subButtonVisualTop = <%% 3, 3, 2, 1, 0.3 %%>;
-  subButtonPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 5 : 4), (isIphone() ? 1.2 : 1.4) %%>;
-  subButtonPaddingTop = <%% (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 3 : 5), (isIphone() ? 1.2 : 1.2) %%>;
-  subButtonPaddingLeft = <%% 11, 11, 10, 9, 2 %%>;
-  subButtonsVisualTop = <%% 2, 3, 3, 1, 0 %%>;
-
-  contentsPanPaddingTop = <%% 18, 18, 16, 12, 3 %%>;
-  contentsPanPaddingBottom = <%% 60, 60, 60, 54, 12 %%>;
-  itemBetween = <%% 6, 6, 5, 4, 1 %%>;
-
-  uploadCircleWidth = <%% 28, 28, 28, 24, 6 %%>;
-  uploadCirclePadding = <%% 16, 16, 16, 12, 4 %%>;
-  uploadIconWidth = <%% 13, 13, 13, 12, 3 %%>;
-  uploadIconTop = <%% 0, 0, 0, 0, 0 %%>;
-
-  linkIconWidth = <%% 15.5, 15.5, 15.5, 14, 3.4 %%>;
-  linkIconTop = <%% 0, 0, 0, 0, 0 %%>;
-
-  plusIconTop = <%% 0, 0, 0, 0, 0 %%>;
-  plusIconWidth = <%% 14, 14, 13, 12, 3.2 %%>;
-
-  panList = [
-    {
-      title: "컨셉 제안서",
-    },
-    {
-      title: "디자인 제안서",
-    },
-    {
-      title: "3D 제안서",
-    },
-    {
-      title: "도면",
-    },
-    {
-      title: "시공 의뢰서",
-    },
-  ]
 
   panMother = createNode({
     mother: whiteTong,
