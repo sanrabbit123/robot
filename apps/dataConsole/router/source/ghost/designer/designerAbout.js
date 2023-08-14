@@ -6500,9 +6500,10 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
   const veryBig = (media[0] || media[1]);
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent, homeliaisonAnalytics } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent, homeliaisonAnalytics, removeByClass } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const photoWithWordsClassName = "photoWithWordsClassName";
+  const strengthUpdateEventInputClassName = "strengthUpdateEventInputClassName";
   const mainContents = [
     {
       contents: [
@@ -6578,6 +6579,9 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
   let factorBetween;
   let factorNumbersSize, factorNumbersWeight, factorNumbersTextTop;
   let factorDescriptionTextIndent, factorDescriptionTextTop, factorDescriptionSize, factorDescriptionWeight;
+  let strengthUpdateEvent;
+  let factorDoms;
+  let factorDom;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
 
@@ -6708,6 +6712,107 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
 
   this.whiteMargin = (desktop ? margin : 0);
 
+  strengthUpdateEvent = (index) => {
+    return async function (e) {
+      try {
+        const self = this;
+        const zIndex = 4;
+        const i = index;
+        const designer = instance.designer;
+        const original = designer.setting.description[i];
+        const desid = instance.designer.desid;
+        let cancelBack;
+        let updateInput;
+
+        cancelBack = createNode({
+          mother: self,
+          class: [ strengthUpdateEventInputClassName ],
+          event: {
+            click: function (e) {
+              e.stopPropagation();
+              removeByClass(strengthUpdateEventInputClassName);
+            }
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            background: "transparent",
+            zIndex: String(zIndex),
+          }
+        });
+
+        updateInput = createNode({
+          mother: self,
+          mode: "input",
+          class: [ strengthUpdateEventInputClassName ],
+          event: {
+            click: function (e) {
+              e.stopPropagation();
+            },
+            keydown: function (e) {
+              if (e.key === "Tab") {
+                e.preventDefault();
+              }
+            },
+            keyup: function (e) {
+              if (e.key === "Tab" || e.key === "Enter") {
+                this.value = this.value.replace(/[\n\t\\\/\(\)\#\=\+\&\*\<\>\[\]\{\}]/gi, '').replace(/  /gi, ' ').trim();
+                this.blur();
+              }
+            },
+            blur: async function (e) {
+              try {
+                this.value = this.value.replace(/[\n\t\\\/\(\)\#\=\+\&\*\<\>\[\]\{\}]/gi, '').replace(/  /gi, ' ').trim();
+                const finalValue = this.value;
+                const index = Number(this.getAttribute("index"));
+                const desid = this.getAttribute("desid");
+                let whereQuery, updateQuery;
+                self.firstChild.firstChild.firstChild.textContent = finalValue;
+                instance.designer.setting.description[index] = finalValue;
+                whereQuery = { desid };
+                updateQuery = {};
+                updateQuery["setting.description." + String(index)] = finalValue;
+                await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+                removeByClass(strengthUpdateEventInputClassName);
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          },
+          attribute: {
+            type: "text",
+            index: String(i),
+            desid: desid,
+          },
+          style: {
+            display: "block",
+            position: "absolute",
+            top: String(factorDescriptionTextTop) + ea,
+            left: String(factorDescriptionTextIndent) + ea,
+            width: withOut(factorDescriptionTextIndent, ea),
+            height: withOut(0, ea),
+            fontSize: String(factorDescriptionSize) + ea,
+            fontWeight: String(factorDescriptionWeight),
+            color: colorChip.green,
+            border: String(0),
+            outline: String(0),
+            background: colorChip.gray0,
+            zIndex: String(zIndex),
+          }
+        })
+
+        updateInput.value = original;
+        updateInput.focus();
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
   whiteBlock = createNode({
     mother: entireMode ? totalContents : baseTong,
     style: {
@@ -6748,8 +6853,9 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
     }
   });
 
+  factorDoms = [];
   for (let i = 0; i < 3; i++) {
-    createNode({
+    factorDom = createNode({
       mother: descriptionZone,
       style: {
         display: "flex",
@@ -6788,6 +6894,12 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
           }
         },
         {
+          attribute: {
+            index: String(i),
+          },
+          event: {
+            click: strengthUpdateEvent(i),
+          },
           style: {
             display: "inline-flex",
             position: "relative",
@@ -6819,7 +6931,8 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
           }
         },
       ]
-    })
+    });
+    factorDoms.push(factorDom);
   }
 
   block = createNode({
@@ -6860,7 +6973,7 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
           {
             event: {
               click: function (e) {
-                fireEvent(photoZone.querySelector("textarea"), "focus");
+                fireEvent(factorDoms[0].children[1], "click");
               }
             },
             style: {
