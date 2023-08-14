@@ -305,29 +305,77 @@ TransferRouter.prototype.rou_post_representativeFileBinary = function () {
                 await fileSystem(`mkdir`, [ `${designerRepresentativeFolderConst}/${desid}` ]);
               }
 
-              if (!(await fileSystem(`exist`, [ `${designerRepresentativeFolderConst}/${desid}/${positionKey}` ]))) {
-                await fileSystem(`mkdir`, [ `${designerRepresentativeFolderConst}/${desid}/${positionKey}` ]);
-              }
-
-              await shellExec(`mv ${shellLink(file.filepath)} ${designerRepresentativeFolderConst}/${desid}/${positionKey}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName};`);
+              await shellExec(`mv ${shellLink(file.filepath)} ${designerRepresentativeFolderConst}/${desid}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName};`);
             }
 
             res.send(JSON.stringify({ message: "success" }));
 
           } else {
             console.log(err);
-            logger.error("Transfer lounge 서버 문제 생김 (rou_post_representativeFileBinary 1): " + err.message + " / " + desid + " / " + proid).catch((e) => { console.log(e); });
+            logger.error("Transfer lounge 서버 문제 생김 (rou_post_representativeFileBinary 1): " + err.message + " / " + desid).catch((e) => { console.log(e); });
             res.send(JSON.stringify({ message: "error : " + err.message }));
           }
         } catch (e) {
           console.log(e);
           logger.error("Transfer lounge 서버 문제 생김 (rou_post_representativeFileBinary 2): " + e.message).catch((e) => { console.log(e); });
-          res.send(JSON.stringify({ message: "error : " + e.message + " / " + desid + " / " + proid }));
+          res.send(JSON.stringify({ message: "error : " + e.message + " / " + desid }));
         }
       });
     } catch (e) {
       console.log(e);
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_representativeFileBinary 3): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_representativeFileRead = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink } = this.mother;
+  const designerRepresentativeFolderConst = this.designerRepresentativeFolderConst;
+  let obj;
+  obj = {};
+  obj.link = [ "/representativeFileRead" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.target === undefined) {
+        throw new Error("invaild post");
+      }
+      const { target } = req.body;
+      let list;
+      let finalTarget;
+      let tempArr;
+      let tempDir;
+      let tempString;
+
+      finalTarget = "/" + (/^\//.test(target) ? target.slice(1) : target);
+
+      tempArr = finalTarget.split("/");
+      tempString = designerRepresentativeFolderConst;
+      for (let i = 0; i < tempArr.length; i++) {
+        tempDir = await fileSystem(`readDir`, [ tempString ]);
+        if (!tempDir.includes(tempArr[i]) && tempArr[i] !== "") {
+          await shellExec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
+        }
+        tempString += '/';
+        tempString += tempArr[i];
+      }
+
+      list = (await fileSystem(`readDir`, [ designerRepresentativeFolderConst + finalTarget ])).filter((str) => { return (!/^\._/.test(str) && !/DS_Store/gi.test(str)) });
+
+      res.send(JSON.stringify(list));
+    } catch (e) {
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_representativeFileRead): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
