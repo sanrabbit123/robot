@@ -6499,6 +6499,7 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
+  const veryBig = (media[0] || media[1]);
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent, homeliaisonAnalytics } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const photoWithWordsClassName = "photoWithWordsClassName";
@@ -6691,16 +6692,16 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
 
   blockMarginTop = <%% 0, 0, 0, 30, 4 %%>;
 
-  factorHeight = <%% 48, 36, 36, 36, 36 %%>;
-  factorBetween = <%% 6, 6, 6, 6, 4 %%>;
+  factorHeight = <%% 48, 47, 44, 36, 9 %%>;
+  factorBetween = <%% 6, 4, 3, 2, 1 %%>;
 
-  factorNumbersSize = <%% 17, 17, 17, 17, 17 %%>;
+  factorNumbersSize = <%% 17, 16, 15, 14, 3.4 %%>;
   factorNumbersWeight = <%% 500, 500, 500, 500, 500 %%>;
-  factorNumbersTextTop = <%% -1, -1, -1, -1, -1 %%>;
+  factorNumbersTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
 
-  factorDescriptionTextIndent = <%% 16, 16, 16, 16, 16 %%>;
-  factorDescriptionTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  factorDescriptionSize = <%% 16, 16, 16, 16, 16 %%>;
+  factorDescriptionTextIndent = <%% 16, 14, 13, 13, 3 %%>;
+  factorDescriptionTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
+  factorDescriptionSize = <%% 16, 15, 14, 13, 3.2 %%>;
   factorDescriptionWeight = <%% 300, 300, 300, 300, 300 %%>;
 
   mobilePhotoZonePadding = 6;
@@ -6741,9 +6742,9 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
       height: desktop ? String(profileWidth) + ea : "",
       marginRight: desktop ? String(leftTotalMarginRight) + ea : "",
       padding: desktop ? "" : String(mobilePhotoZonePadding) + ea,
-      paddingTop: desktop ? "" : String(7.5) + ea,
+      paddingTop: desktop ? "" : String(7) + ea,
       alignItems: desktop ? "" : "center",
-      paddingBottom: desktop ? "" : String(3) + ea,
+      paddingBottom: desktop ? "" : String(5) + ea,
     }
   });
 
@@ -6799,13 +6800,21 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
             paddingLeft: String(factorDescriptionTextIndent) + ea,
           },
           child: {
-            text: designer.setting.description[i],
             style: {
-              position: "relative",
-              top: String(factorDescriptionTextTop) + ea,
-              fontSize: String(factorDescriptionSize) + ea,
-              fontWeight: String(factorDescriptionWeight),
               color: colorChip.black,
+              width: withOut(factorDescriptionTextIndent, ea),
+              overflow: "scroll",
+            },
+            child: {
+              text: designer.setting.description[i],
+              style: {
+                position: "relative",
+                top: String(factorDescriptionTextTop) + ea,
+                fontSize: String(factorDescriptionSize) + ea,
+                fontWeight: String(factorDescriptionWeight),
+                color: colorChip.black,
+                width: String(desktop ? 1000 : 200) + ea,
+              },
             }
           }
         },
@@ -6953,13 +6962,13 @@ DesignerAboutJs.prototype.insertRepresentativeBox = function () {
   const { client, ea, baseTong, media, project } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, isIphone } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const mainContents = [
     {
       title: "대표 작업물 업로드",
       contents: [
-        "각 영역별로 디자이너님의 페이퍼워크 실력을 잘 보여줄 수 있는 작업물을 파일 형태(pdf 권장)으로 올려주세요! 해당 파일은 홈리에종이 디자이너님을 이해하고, 고객님께 디자이너님을 어필하는 데 중요한 근거가 됩니다.",
+        "각 영역별로 디자이너님의 페이퍼워크 실력을 잘 보여줄 수 있는 작업물을 파일 형태(pdf 권장)으로 올려주세요! 해당 파일은 홈리에종이 디자이너님을 이해하고, 고객님께 디자이너님을 어필하는 중요한 근거가 됩니다.",
       ],
     },
   ];
@@ -7028,12 +7037,13 @@ DesignerAboutJs.prototype.insertRepresentativeBox = function () {
   let plusIconTop;
   let plusIconWidth;
   let panList;
+  let panContentsWordingSize;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
-  paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
+  paddingTop = <%% 52, 52, 44, 36, 4.7 %%>;
 
-  whiteBottomMargin = <%% 40, 36, 30, 22, 0 %%>;
+  whiteBottomMargin = <%% 56, 54, 46, 38, 4.7 %%>;
 
   titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
   numberRight = <%% 12, 12, 12, 12, 2 %%>;
@@ -7088,10 +7098,10 @@ DesignerAboutJs.prototype.insertRepresentativeBox = function () {
 
   panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
   panBetween = <%% 8, 8, 8, 8, 1 %%>;
-  panTitleBoxWidth = <%% 124, 120, 114, 108, 21 %%>;
-  panTitleBoxHeight = <%% 52, 48, 45, 40, 8.2 %%>;
+  panTitleBoxWidth = <%% 124, 120, 108, 96, 21 %%>;
+  panTitleBoxHeight = <%% 52, 48, 40, 36, 8.2 %%>;
 
-  contentsWordingSize = <%% 15, 15, 14, 13, 2.9 %%>;
+  panContentsWordingSize = <%% 15, 15, 13, 12, 2.9 %%>;
   contentsTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), -0.2 %%>;
 
   contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
@@ -7127,10 +7137,7 @@ DesignerAboutJs.prototype.insertRepresentativeBox = function () {
       title: "디자인 제안서",
     },
     {
-      title: "3D 제안서",
-    },
-    {
-      title: "도면",
+      title: "3D와 도면",
     },
     {
       title: "시공 의뢰서",
@@ -7342,6 +7349,7 @@ DesignerAboutJs.prototype.insertRepresentativeBox = function () {
       background: desktop ? colorChip.gray3 : colorChip.gray1,
       width: withOut(panMotherInnerPadding * 2, ea),
       padding: String(panMotherInnerPadding) + ea,
+      marginTop: desktop ? "" : String(2.5) + ea,
     }
   });
 
@@ -7381,7 +7389,7 @@ DesignerAboutJs.prototype.insertRepresentativeBox = function () {
           style: {
             position: "relative",
             top: String(contentsTextTop) + ea,
-            fontSize: String(contentsWordingSize) + ea,
+            fontSize: String(panContentsWordingSize) + ea,
             fontWeight: String(800),
             color: colorChip.black,
           }
