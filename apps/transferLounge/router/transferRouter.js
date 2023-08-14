@@ -33,6 +33,7 @@ const TransferRouter = function (MONGOC, MONGOLOCALC) {
   this.designerProfileConst = this.folderConst + "/profile";
   this.designerWorksConst = this.folderConst + "/works";
   this.designerWorksConstFactors = [ "w0", "w1", "w2", "w3" ];
+  this.designerRepresentativeFolderConst = this.folderConst + "/representative";
 
   this.vaildHost = [
     this.address.frontinfo.host,
@@ -255,6 +256,78 @@ TransferRouter.prototype.rou_post_middlePhotoRead = function () {
       res.send(JSON.stringify(list));
     } catch (e) {
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_middlePhotoRead): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_representativeFileBinary = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink } = this.mother;
+  const folderConst = this.folderConst;
+  const designerRepresentativeFolderConst = this.designerRepresentativeFolderConst;
+  let obj;
+  obj = {};
+  obj.link = [ "/representativeFileBinary" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (90000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        const { desid, name, type } = fields;
+        try {
+          if (!err) {
+            const requestNow = new Date();
+            const requestNowValue = requestNow.valueOf();
+            const token = "_";
+            let execName, file;
+            let fileNameConst, positionKey, order;
+
+            if (name.replace(/[0-9a-f]/g, '') !== '') {
+              logger.error("Transfer lounge rou_post_representativeFileBinary: 이상한 이름 발견" + name + " / " + desid).catch((e) => { console.log(e); });
+            }
+
+            for (let key in files) {
+              file = files[key];
+              [ fileNameConst, positionKey, order ] = key.split("_");
+              execName = file.originalFilename.split(".")[file.originalFilename.split(".").length - 1];
+
+              if (!(await fileSystem(`exist`, [ `${designerRepresentativeFolderConst}/${desid}` ]))) {
+                await fileSystem(`mkdir`, [ `${designerRepresentativeFolderConst}/${desid}` ]);
+              }
+
+              if (!(await fileSystem(`exist`, [ `${designerRepresentativeFolderConst}/${desid}/${positionKey}` ]))) {
+                await fileSystem(`mkdir`, [ `${designerRepresentativeFolderConst}/${desid}/${positionKey}` ]);
+              }
+
+              await shellExec(`mv ${shellLink(file.filepath)} ${designerRepresentativeFolderConst}/${desid}/${positionKey}/${positionKey}${token}${String(requestNowValue)}${token}${order}${token}${name}.${execName};`);
+            }
+
+            res.send(JSON.stringify({ message: "success" }));
+
+          } else {
+            console.log(err);
+            logger.error("Transfer lounge 서버 문제 생김 (rou_post_representativeFileBinary 1): " + err.message + " / " + desid + " / " + proid).catch((e) => { console.log(e); });
+            res.send(JSON.stringify({ message: "error : " + err.message }));
+          }
+        } catch (e) {
+          console.log(e);
+          logger.error("Transfer lounge 서버 문제 생김 (rou_post_representativeFileBinary 2): " + e.message).catch((e) => { console.log(e); });
+          res.send(JSON.stringify({ message: "error : " + e.message + " / " + desid + " / " + proid }));
+        }
+      });
+    } catch (e) {
+      console.log(e);
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_representativeFileBinary 3): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

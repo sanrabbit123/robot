@@ -7245,15 +7245,19 @@ DesignerAboutJs.prototype.insertRepresentativeBox = function () {
   panList = [
     {
       title: "컨셉 제안서",
+      key: "concept",
     },
     {
       title: "디자인 제안서",
+      key: "design",
     },
     {
       title: "3D와 도면",
+      key: "modeling",
     },
     {
       title: "시공 의뢰서",
+      key: "construct",
     },
   ]
 
@@ -7539,6 +7543,10 @@ DesignerAboutJs.prototype.insertRepresentativeBox = function () {
   
     createNode({
       mother: basePan,
+      event: {
+        click: instance.uploadFiles(panList[i].key),
+        touchstart: instance.uploadFiles(panList[i].key),
+      },
       style: {
         display: "flex",
         justifyContent: "center",
@@ -7566,6 +7574,124 @@ DesignerAboutJs.prototype.insertRepresentativeBox = function () {
       ]
     });
 
+  }
+
+}
+
+DesignerAboutJs.prototype.uploadFiles = function (fileKind) {
+  const instance = this;
+  const mother = this.mother;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, homeliaisonAnalytics } = GeneralJs;
+  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const fileInputClassName = "fileInputClassName";
+  return async function (e) {
+    try {
+      let input, removeTargets;
+
+      if (!instance.nowUploading) {
+
+        removeTargets = [ ...document.querySelectorAll('.' + fileInputClassName) ];
+        for (let dom of removeTargets) {
+          dom.remove();
+        }
+
+        input = createNode({
+          mother: document.body,
+          class: [ fileInputClassName ],
+          mode: "input",
+          event: {
+            change: async function (e) {
+              try {
+                const thisKey = this.getAttribute("name");
+                let thisFiles, formData, res;
+                let removeTargets;
+                let loading;
+                let hash;
+                let rawResponse;
+
+                thisFiles = [ ...this.files ];
+
+                if (thisFiles.length >= 1) {
+                  formData = new FormData();
+                  formData.enctype = "multipart/form-data";
+                  formData.append("desid", instance.designer.desid);
+                  formData.append("type", "file");
+                  formData.append("file_" + thisKey + "_" + String(0), thisFiles[0]);
+
+                  if (!instance.nowUploading) {
+
+                    rawResponse = null;
+                    rawResponse = await GeneralJs.prompt("파일에 대한 간단한 이름을 적어주세요! (예) 주방_시공의뢰서_1");
+                    if (typeof rawResponse !== "string" || rawResponse.trim() === '') {
+                      rawResponse = "메모 없음";
+                    }
+                    rawResponse = rawResponse.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
+
+                    loading = instance.mother.whiteProgressLoading();
+
+                    ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                    formData.append("name", hash);
+  
+                    res = await ajaxForm(formData, BRIDGEHOST + "/representativeFileBinary", loading.progress);
+
+                    // await homeliaisonAnalytics({
+                    //   page: instance.pageName,
+                    //   standard: instance.firstPageViewTime,
+                    //   action: "uploadDesignFile",
+                    //   data: {
+                    //     desid: desid,
+                    //     cliid: instance.client.cliid,
+                    //     proid: proid,
+                    //     key: thisKey,
+                    //     title: thisTitle,
+                    //     date: new Date(),
+                    //   }
+                    // });
+  
+
+                    // refresh needs
+
+
+
+                  } else {
+                    instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+                  }
+
+                }
+
+              } catch (e) {
+                console.log(e);
+                window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
+            }
+          },
+          attribute: {
+            type: "file",
+            name: fileKind,
+          },
+          style: {
+            display: "none",
+          }
+        });
+
+        input.click();
+
+      } else {
+
+        instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+
+      }
+
+    } catch (e) {
+      console.log(e);
+      window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+      window.location.reload();
+    }
   }
 
 }
@@ -9799,6 +9925,8 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     this.entireMode = entireMode;
     this.normalMode = normalMode;
     this.adminMode = adminMode;
+
+    this.nowUploading = false;
 
     document.body.addEventListener("mouseup", (e) => {
       instance.isMouseDown = false;
