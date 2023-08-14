@@ -7069,513 +7069,743 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
 
 }
 
-DesignerAboutJs.prototype.insertRepresentativeBox = function () {
+DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
   const instance = this;
   const mother = this.mother;
-  const { client, ea, baseTong, media, project } = this;
+  const { client, ea, baseTong, media, project, targetHref } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, isIphone } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
-  const mainContents = [
-    {
-      title: "대표 작업물 업로드",
-      contents: [
-        "각 영역별로 디자이너님의 페이퍼워크 실력을 잘 보여줄 수 있는 작업물을 파일 형태(pdf 권장)으로 올려주세요! 해당 파일은 홈리에종이 디자이너님을 이해하고, 고객님께 디자이너님을 어필하는 중요한 근거가 됩니다.",
-      ],
-    },
-  ];
-  let paddingTop;
-  let block;
-  let whiteBlock, whiteTong;
-  let bottomMargin;
-  let titleFontSize;
-  let num, num2;
-  let numberRight;
-  let titleTop, titleTopNumber;
-  let titleBottom;
-  let index;
-  let mobileTitleLeft, mobileTitleTop;
-  let secondBlockWidth, secondBlockMargin;
-  let tong;
-  let contentsWordingSize;
-  let contentsBottom;
-  let whiteBottomMargin;
-  let contentsTitleMarginTop, contentsMarginTop;
-  let contentsPaddingLeft;
-  let arrowWidth;
-  let arrowTop;
-  let arrorLeft;
-  let bigNumberSize;
-  let bigNumberBetween;
-  let bigNumberMargin;
-  let bigNumberBetweenMargin;
-  let matrix;
-  let firstWidth, secondWidth, secondMarginRight;
-  let contentsAreaPaddingTop;
-  let zeroWidth, zeroMarginRight;
-  let checkBoxWidth, checkBoxTop;
-  let arrowBoxWidth, arrowBoxTop;
-  let contentsMarginBottom0, contentsMarginBottom1;
-  let mobilePaddingLeft;
-  let mobileContentsWordingSize;
-  let wordings;
-  let lineTop, linePadding;
-  let panMother;
-  let panMotherInnerPadding;
-  let basePan;
-  let panBetween;
-  let panTitleBoxWidth;
-  let panTitleBoxHeight;
-  let contentsTextTop;
-  let subButtonsBasePan;
-  let subButtonPaddingRight;
-  let subButtonSize;
-  let subButtonWeight;
-  let subButtonVisualTop;
-  let subButtonPaddingBottom;
-  let subButtonPaddingTop;
-  let subButtonPaddingLeft;
-  let subButtonsVisualTop;
-  let contentsPan;
-  let contentsPanPaddingTop;
-  let contentsPanPaddingBottom;
-  let itemBetween;
-  let uploadCircleWidth;
-  let uploadCirclePadding;
-  let uploadIconWidth;
-  let uploadIconTop;
-  let linkIconWidth;
-  let linkIconTop;
-  let plusIconTop;
-  let plusIconWidth;
-  let panList;
-  let panContentsWordingSize;
-
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 55, 55, 47, 39, 4.7 %%>;
-  paddingTop = <%% 52, 52, 44, 36, 4.7 %%>;
-
-  whiteBottomMargin = <%% 56, 54, 46, 38, 4.7 %%>;
-
-  titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
-  numberRight = <%% 12, 12, 12, 12, 2 %%>;
-
-  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
-  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
-
-  titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 10 : 8), 0 %%>;
-  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6.5 %%>;
-
-  mobileTitleLeft = 1.5;
-  mobileTitleTop = -8.7;
-
-  secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
-  secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
-
-  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
-  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
-
-  contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
-  contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
-  contentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
-  arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
-  arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
-  arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
-
-  bigNumberSize = <%% 37, 37, 37, 37, 5 %%>;
-  bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
-  bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
-  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
-
-  zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
-  zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
-  secondWidth = <%% 15, 15, 15, 15, 2 %%>;
-  secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
-
-  checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
-  arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
-  checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
-  arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
-
-  contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
-  contentsMarginBottom1 = <%% 36, 36, 34, 32, 3 %%>;
-
-  lineTop = <%% 10, 10, 10, 10, 10 %%>;
-  linePadding = <%% 12, 12, 12, 12, 12 %%>;
-
-  mobilePaddingLeft = 6;
-
-  mobileContentsWordingSize = 3.2;
-
-  panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
-  panBetween = <%% 8, 8, 8, 8, 1 %%>;
-  panTitleBoxWidth = <%% 124, 120, 108, 96, 21 %%>;
-  panTitleBoxHeight = <%% 52, 48, 40, 36, 8.2 %%>;
-
-  panContentsWordingSize = <%% 15, 15, 13, 12, 2.9 %%>;
-  contentsTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), -0.2 %%>;
-
-  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
-  subButtonPaddingRight = <%% 18, 18, 16, 12, 1.6 %%>;
-  subButtonSize = <%% 12, 12, 11, 10, 2.4 %%>;
-  subButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
-  subButtonVisualTop = <%% 3, 3, 2, 1, 0.3 %%>;
-  subButtonPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 5 : 4), (isIphone() ? 1.2 : 1.4) %%>;
-  subButtonPaddingTop = <%% (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 3 : 5), (isIphone() ? 1.2 : 1.2) %%>;
-  subButtonPaddingLeft = <%% 11, 11, 10, 9, 2 %%>;
-  subButtonsVisualTop = <%% 2, 3, 3, 1, 0 %%>;
-
-  contentsPanPaddingTop = <%% 18, 18, 16, 12, 3 %%>;
-  contentsPanPaddingBottom = <%% 60, 60, 60, 54, 12 %%>;
-  itemBetween = <%% 6, 6, 5, 4, 1 %%>;
-
-  uploadCircleWidth = <%% 28, 28, 28, 24, 6 %%>;
-  uploadCirclePadding = <%% 16, 16, 16, 12, 4 %%>;
-  uploadIconWidth = <%% 13, 13, 13, 12, 3 %%>;
-  uploadIconTop = <%% 0, 0, 0, 0, 0 %%>;
-
-  linkIconWidth = <%% 15.5, 15.5, 15.5, 14, 3.4 %%>;
-  linkIconTop = <%% 0, 0, 0, 0, 0 %%>;
-
-  plusIconTop = <%% 0, 0, 0, 0, 0 %%>;
-  plusIconWidth = <%% 14, 14, 13, 12, 3.2 %%>;
-
-  panList = [
-    {
-      title: "컨셉 제안서",
-      key: "concept",
-    },
-    {
-      title: "디자인 제안서",
-      key: "design",
-    },
-    {
-      title: "3D와 도면",
-      key: "modeling",
-    },
-    {
-      title: "시공 의뢰서",
-      key: "construct",
-    },
-  ]
-
-  this.whiteMargin = (desktop ? margin : 0);
-
-  whiteBlock = createNode({
-    mother: baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      background: desktop ? colorChip.white : "",
-      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
-      paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
-    },
-    children: [
+  const fileNameClassName = "fileNameClassName";
+  const filePannelDateClassName = "filePannelDateClassName";
+  const filePannelCircleClassName = "filePannelCircleClassName";
+  try {
+    const mainContents = [
       {
+        title: "대표 작업물 업로드",
+        contents: [
+          "각 영역별로 디자이너님의 페이퍼워크 실력을 잘 보여줄 수 있는 작업물을 파일 형태(pdf 권장)으로 올려주세요! 해당 파일은 홈리에종이 디자이너님을 이해하고, 고객님께 디자이너님을 어필하는 중요한 근거가 됩니다.",
+        ],
+      },
+    ];
+    let paddingTop;
+    let block;
+    let whiteBlock, whiteTong;
+    let bottomMargin;
+    let titleFontSize;
+    let num, num2;
+    let numberRight;
+    let titleTop, titleTopNumber;
+    let titleBottom;
+    let index;
+    let mobileTitleLeft, mobileTitleTop;
+    let secondBlockWidth, secondBlockMargin;
+    let tong;
+    let contentsWordingSize;
+    let contentsBottom;
+    let whiteBottomMargin;
+    let contentsTitleMarginTop, contentsMarginTop;
+    let contentsPaddingLeft;
+    let arrowWidth;
+    let arrowTop;
+    let arrorLeft;
+    let bigNumberSize;
+    let bigNumberBetween;
+    let bigNumberMargin;
+    let bigNumberBetweenMargin;
+    let matrix;
+    let firstWidth, secondWidth, secondMarginRight;
+    let contentsAreaPaddingTop;
+    let zeroWidth, zeroMarginRight;
+    let checkBoxWidth, checkBoxTop;
+    let arrowBoxWidth, arrowBoxTop;
+    let contentsMarginBottom0, contentsMarginBottom1;
+    let mobilePaddingLeft;
+    let mobileContentsWordingSize;
+    let wordings;
+    let lineTop, linePadding;
+    let panMother;
+    let panMotherInnerPadding;
+    let basePan;
+    let panBetween;
+    let panTitleBoxWidth;
+    let panTitleBoxHeight;
+    let contentsTextTop;
+    let subButtonsBasePan;
+    let subButtonPaddingRight;
+    let subButtonSize;
+    let subButtonWeight;
+    let subButtonVisualTop;
+    let subButtonPaddingBottom;
+    let subButtonPaddingTop;
+    let subButtonPaddingLeft;
+    let subButtonsVisualTop;
+    let contentsPan;
+    let contentsPanPaddingTop;
+    let contentsPanPaddingBottom;
+    let itemBetween;
+    let uploadCircleWidth;
+    let uploadCirclePadding;
+    let uploadIconWidth;
+    let uploadIconTop;
+    let linkIconWidth;
+    let linkIconTop;
+    let plusIconTop;
+    let plusIconWidth;
+    let panList;
+    let panContentsWordingSize;
+    let itemList;
+    let mothers;
+    let itemBlock;
+    let itemTongHeight;
+    let itemTongMarginLeft;
+    let itemDivide;
+    let textTop;
+    let textSize;
+    let textWeight;
+    let titlePadding;
+    let titlePannelWidth;
+    let titlePannelBetween;
+    let titleMaxWidth;
+    let pannelSize;
+    let pannelTextTop;
+    let pannelCircleWidth;
+    let pannelCircleBetween;
+    let pannelCircleTop;
+    let motherMatrix;
+    let fileItemList;
+    let setPanBlocks;
+  
+    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+    margin = <%% 55, 55, 47, 39, 4.7 %%>;
+    paddingTop = <%% 52, 52, 44, 36, 4.7 %%>;
+  
+    whiteBottomMargin = <%% 56, 54, 46, 38, 4.7 %%>;
+  
+    titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
+    numberRight = <%% 12, 12, 12, 12, 2 %%>;
+  
+    titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+    titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+  
+    titleBottom = <%% (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 12 : 10), (isMac() ? 10 : 8), 0 %%>;
+    contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6.5 %%>;
+  
+    mobileTitleLeft = 1.5;
+    mobileTitleTop = -8.7;
+  
+    secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
+    secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
+  
+    contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+    contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+  
+    contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
+    contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
+    contentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
+    arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
+    arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
+    arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
+  
+    bigNumberSize = <%% 37, 37, 37, 37, 5 %%>;
+    bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
+    bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
+    bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
+  
+    zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
+    zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+    firstWidth = <%% 240, 240, 190, 170, 10 %%>;
+    secondWidth = <%% 15, 15, 15, 15, 2 %%>;
+    secondMarginRight = <%% 10, 10, 10, 10, 2 %%>;
+  
+    checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
+    arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
+    checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
+    arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
+  
+    contentsMarginBottom0 = <%% 4, 4, 4, 4, 2 %%>;
+    contentsMarginBottom1 = <%% 36, 36, 34, 32, 3 %%>;
+  
+    lineTop = <%% 10, 10, 10, 10, 10 %%>;
+    linePadding = <%% 12, 12, 12, 12, 12 %%>;
+  
+    mobilePaddingLeft = 6;
+  
+    mobileContentsWordingSize = 3.2;
+  
+    panMotherInnerPadding = <%% 12, 12, 10, 8, 0 %%>;
+    panBetween = <%% 8, 8, 8, 8, 1 %%>;
+    panTitleBoxWidth = <%% 124, 120, 108, 96, 21 %%>;
+    panTitleBoxHeight = <%% 52, 48, 40, 36, 8.2 %%>;
+  
+    panContentsWordingSize = <%% 15, 15, 13, 12, 2.9 %%>;
+    contentsTextTop = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), -0.2 %%>;
+  
+    contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
+    subButtonPaddingRight = <%% 18, 18, 16, 12, 1.6 %%>;
+    subButtonSize = <%% 12, 12, 11, 10, 2.4 %%>;
+    subButtonWeight = <%% 800, 800, 800, 800, 800 %%>;
+    subButtonVisualTop = <%% 3, 3, 2, 1, 0.3 %%>;
+    subButtonPaddingBottom = <%% (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), (isMac() ? 5 : 4), (isIphone() ? 1.2 : 1.4) %%>;
+    subButtonPaddingTop = <%% (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 4 : 6), (isMac() ? 3 : 5), (isIphone() ? 1.2 : 1.2) %%>;
+    subButtonPaddingLeft = <%% 11, 11, 10, 9, 2 %%>;
+    subButtonsVisualTop = <%% 2, 3, 3, 1, 0 %%>;
+  
+    contentsPanPaddingTop = <%% 18, 18, 16, 12, 3 %%>;
+    contentsPanPaddingBottom = <%% 60, 60, 60, 54, 12 %%>;
+    itemBetween = <%% 6, 6, 5, 4, 1 %%>;
+  
+    uploadCircleWidth = <%% 28, 28, 28, 24, 6 %%>;
+    uploadCirclePadding = <%% 16, 16, 16, 12, 4 %%>;
+    uploadIconWidth = <%% 13, 13, 13, 12, 3 %%>;
+    uploadIconTop = <%% 0, 0, 0, 0, 0 %%>;
+  
+    linkIconWidth = <%% 15.5, 15.5, 15.5, 14, 3.4 %%>;
+    linkIconTop = <%% 0, 0, 0, 0, 0 %%>;
+  
+    plusIconTop = <%% 0, 0, 0, 0, 0 %%>;
+    plusIconWidth = <%% 14, 14, 13, 12, 3.2 %%>;
+  
+    itemTongHeight = <%% 40, 40, 36, 32, 8 %%>;
+    itemTongMarginLeft = <%% 12, 12, 12, 10, 1 %%>;
+    itemDivide = <%% 5, 4, 3, 3, 2 %%>;
+
+    textTop = <%% (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.3 %%>;
+    textSize = <%% 14, 14, 13, 12, 2.7 %%>;
+    textWeight = <%% 500, 500, 500, 500, 500 %%>;
+
+    titlePadding = <%% 16, 16, 15, 14, 3.1 %%>;
+    titlePannelWidth = <%% 54, 54, 50, 48, 9.8 %%>;
+    titlePannelBetween = <%% 8, 8, 6, 4, 1 %%>;
+    titleMaxWidth = <%% 1000, 1000, 900, 800, 100 %%>;
+
+    pannelSize = <%% 12, 12, 11, 10, 2.5 %%>;
+    pannelTextTop = <%% (isMac() ? -1.5 : 0.5), (isMac() ? -1.5 : 0.5), (isMac() ? -1.5 : 0.5), (isMac() ? -1.5 : 0.5), -0.3 %%>;
+
+    pannelCircleWidth = <%% 6, 6, 6, 5, 1.2 %%>;
+    pannelCircleBetween = <%% 6, 6, 6, 5, 1.2 %%>;
+    pannelCircleTop = <%% (isMac() ? -1 : -0.5), (isMac() ? -1 : -0.5), (isMac() ? -1 : -0.5), (isMac() ? -1 : -0.5), (isIphone() ? -0.25 : -0.2) %%>;
+
+    panList = [
+      {
+        title: "컨셉 제안서",
+        key: "concept",
+      },
+      {
+        title: "디자인 제안서",
+        key: "design",
+      },
+      {
+        title: "3D와 도면",
+        key: "modeling",
+      },
+      {
+        title: "시공 의뢰서",
+        key: "construct",
+      },
+    ]
+  
+    this.whiteMargin = (desktop ? margin : 0);
+  
+    whiteBlock = createNode({
+      mother: baseTong,
+      style: {
+        position: "relative",
+        borderRadius: String(desktop ? 8 : 1) + ea,
+        width: String(100) + '%',
+        background: desktop ? colorChip.white : "",
+        paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+        paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
+        marginBottom: String(bottomMargin) + ea,
+        boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+      },
+      children: [
+        {
+          display: "block",
+          position: "relative",
+          width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+          height: String(100) + '%',
+          marginLeft: String(desktop ? margin : 0) + ea,
+        }
+      ]
+    });
+    whiteTong = whiteBlock.firstChild;
+  
+    block = createNode({
+      mother: whiteTong,
+      style: {
         display: "block",
         position: "relative",
-        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
-        height: String(100) + '%',
-        marginLeft: String(desktop ? margin : 0) + ea,
+        width: String(100) + '%',
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: mobile ? "absolute" : "relative",
+            left: desktop ? "" : String(mobileTitleLeft) + ea,
+            top: desktop ? "" : String(mobileTitleTop) + ea,
+            width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
+            marginBottom: desktop ? String(titleBottom) + ea : "",
+            zIndex: mobile ? String(1) : "",
+            textAlign: desktop ? "" : "center",
+          },
+          children: [
+            {
+              style: {
+                display: desktop ? "none" : "block",
+                position: "absolute",
+                borderBottom: "1px dashed " + colorChip.gray4,
+                height: String(2.7) + ea,
+                top: String(0),
+                left: String(0),
+                width: withOut(0, ea),
+              }
+            },
+            {
+              text: "대표 작업물 업로드",
+              style: {
+                position: "relative",
+                display: "inline-block",
+                top: String(titleTopNumber) + ea,
+                fontSize: String(titleFontSize) + ea,
+                fontWeight: String(800),
+                background: desktop ? colorChip.white : colorChip.gray1,
+                paddingRight: String(numberRight) + ea,
+                paddingLeft: desktop ? "" : String(numberRight) + ea,
+                color: colorChip.black,
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
+            background: desktop ? "" : colorChip.white,
+            boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+            borderRadius: mobile ? String(1) + ea : "",
+            overflow: "hidden",
+            marginBottom: String(0) + ea,
+            marginTop: desktop ? "" : String(19) + ea,
+            paddingTop: String(contentsAreaPaddingTop) + ea,
+            borderTop: desktop ? "1px solid " + colorChip.shadow : "",
+            paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
+            paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
+            paddingBottom: desktop ? "" : String(4.5) + ea,
+          }
+        },
+      ]
+    });
+    tong = block.lastChild;
+  
+    num = 0;
+    for (let { title, contents } of mainContents) {
+      num2 = 0;
+      for (let str of contents) {
+        createNode({
+          mother: tong,
+          style: {
+            display: "block",
+            position: "relative",
+            marginBottom: String(num2 === contents.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
+            marginTop: desktop ? "" : ((num === 0 || num2 !== 0) ? "" : String(6) + ea)
+          },
+          children: [
+            {
+              style: {
+                display: desktop ? "inline-block" : "block",
+                position: "relative",
+                verticalAlign: "top",
+                width: desktop ? String(firstWidth + zeroWidth + zeroMarginRight) + ea : String(100) + '%',
+                marginBottom: desktop ? "" : String(1.5) + ea,
+              },
+              children: [
+                {
+                  style: {
+                    display: num2 === 0 ? "block" : "none",
+                    position: "absolute",
+                    top: String(0),
+                    left: String(0),
+                    height: String(lineTop) + ea,
+                    width: withOut(0),
+                    borderBottom: desktop ? "1px solid " + colorChip.gray3 : "",
+                  }
+                },
+                {
+                  text: (num2 === 0 ? (desktop ? title : "<b%" + String(num + 1) + "%b>" + blank + title) : ""),
+                  style: {
+                    display: desktop ? "inline-block" : "block",
+                    position: "relative",
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(600),
+                    lineHeight: String(1.6),
+                    color: colorChip.black,
+                    textAlign: "left",
+                    background: colorChip.white,
+                    paddingRight: String(linePadding) + ea,
+                  },
+                  bold: {
+                    fontSize: String(contentsWordingSize) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.green,
+                  },
+                }
+              ]
+            },
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(contentsWordingSize) + ea,
+                fontWeight: String(600),
+                verticalAlign: "top",
+                lineHeight: String(1.6),
+                width: String(secondWidth) + ea,
+                marginRight: String(secondMarginRight) + ea,
+                textAlign: desktop ? "right" : "left",
+                color: colorChip.green,
+              },
+            },
+            {
+              text: str,
+              style: {
+                display: "inline-block",
+                fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+                fontWeight: String(400),
+                verticalAlign: "top",
+                lineHeight: String(1.6),
+                width: withOut(desktop ? zeroWidth + zeroMarginRight + firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
+                textAlign: "left",
+                color: colorChip.black,
+              },
+              bold: {
+                fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+              },
+              under: {
+                fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.green,
+              },
+            },
+          ]
+        });
+  
+        num2++;
       }
-    ]
-  });
-  whiteTong = whiteBlock.firstChild;
-
-  block = createNode({
-    mother: whiteTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-    },
-    children: [
-      {
+      num++;
+    }
+  
+    // upload box  
+    panMother = createNode({
+      mother: whiteTong,
+      style: {
+        display: "block",
+        position: "relative",
+        borderRadius: String(5) + "px",
+        background: desktop ? colorChip.gray3 : colorChip.gray1,
+        width: withOut(panMotherInnerPadding * 2, ea),
+        padding: String(panMotherInnerPadding) + ea,
+        marginTop: desktop ? "" : String(2.5) + ea,
+      }
+    });
+  
+    mothers = [];
+    for (let i = 0; i < panList.length; i++) {
+  
+      basePan = createNode({
+        mother: panMother,
         style: {
-          display: "block",
-          position: mobile ? "absolute" : "relative",
-          left: desktop ? "" : String(mobileTitleLeft) + ea,
-          top: desktop ? "" : String(mobileTitleTop) + ea,
-          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
-          marginBottom: desktop ? String(titleBottom) + ea : "",
-          zIndex: mobile ? String(1) : "",
-          textAlign: desktop ? "" : "center",
+          display: "inline-block",
+          verticalAlign: "top",
+          position: "relative",
+          width: withOut(0),
+          marginBottom: String(i === panList.length - 1 ? 0 : panBetween) + ea,
+          background: desktop ? colorChip.gray1 : colorChip.gray3,
+          borderRadius: String(5) + "px",
+          transition: "all 0.5s ease",
+        }
+      });
+    
+      createNode({
+        mother: basePan,
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          width: String(panTitleBoxWidth) + ea,
+          height: String(panTitleBoxHeight) + ea,
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
         },
         children: [
           {
-            style: {
-              display: desktop ? "none" : "block",
-              position: "absolute",
-              borderBottom: "1px dashed " + colorChip.gray4,
-              height: String(2.7) + ea,
-              top: String(0),
-              left: String(0),
-              width: withOut(0, ea),
-            }
-          },
-          {
-            text: "대표 작업물 업로드",
+            text: panList[i].title,
             style: {
               position: "relative",
-              display: "inline-block",
-              top: String(titleTopNumber) + ea,
-              fontSize: String(titleFontSize) + ea,
+              top: String(contentsTextTop) + ea,
+              fontSize: String(panContentsWordingSize) + ea,
               fontWeight: String(800),
-              background: desktop ? colorChip.white : colorChip.gray1,
-              paddingRight: String(numberRight) + ea,
-              paddingLeft: desktop ? "" : String(numberRight) + ea,
               color: colorChip.black,
             }
-          },
+          }
         ]
-      },
-      {
+      });
+    
+      subButtonsBasePan = createNode({
+        mother: basePan,
+        style: {
+          display: "inline-flex",
+          position: "absolute",
+          alignItems: "center",
+          flexDirection: "row",
+          height: String(panTitleBoxHeight) + ea,
+          paddingRight: String(subButtonPaddingRight) + ea,
+          right: String(0),
+          top: String(subButtonVisualTop) + ea,
+        },
+      });
+    
+      contentsPan = createNode({
+        mother: basePan,
         style: {
           display: "block",
           position: "relative",
-          width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
-          background: desktop ? "" : colorChip.white,
-          boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
-          borderRadius: mobile ? String(1) + ea : "",
-          overflow: "hidden",
-          marginBottom: String(0) + ea,
-          marginTop: desktop ? "" : String(19) + ea,
-          paddingTop: String(contentsAreaPaddingTop) + ea,
-          borderTop: desktop ? "1px solid " + colorChip.shadow : "",
-          paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
-          paddingBottom: desktop ? "" : String(4.5) + ea,
+          width: withOut((contentsPanPaddingTop * 2) - itemBetween, ea),
+          paddingTop: String(contentsPanPaddingTop) + ea,
+          paddingBottom: String(contentsPanPaddingBottom) + ea,
+          paddingLeft: String(contentsPanPaddingTop) + ea,
+          paddingRight: String(contentsPanPaddingTop - itemBetween) + ea,
         }
-      },
-    ]
-  });
-  tong = block.lastChild;
-
-  num = 0;
-  for (let { title, contents } of mainContents) {
-    num2 = 0;
-    for (let str of contents) {
+      });
+    
       createNode({
-        mother: tong,
+        mother: basePan,
+        event: {
+          click: instance.uploadFiles(panList[i].key),
+          touchstart: instance.uploadFiles(panList[i].key),
+        },
         style: {
-          display: "block",
-          position: "relative",
-          marginBottom: String(num2 === contents.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
-          marginTop: desktop ? "" : ((num === 0 || num2 !== 0) ? "" : String(6) + ea)
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: String(uploadCircleWidth) + ea,
+          height: String(uploadCircleWidth) + ea,
+          position: "absolute",
+          bottom: String(uploadCirclePadding) + ea,
+          right: String(uploadCirclePadding) + ea,
+          borderRadius: String(uploadCircleWidth) + ea,
+          background: colorChip.gradientGray,
+          cursor: "pointer",
         },
         children: [
           {
+            mode: "svg",
+            source: instance.mother.returnExtract(colorChip.white),
             style: {
-              display: desktop ? "inline-block" : "block",
+              display: "inline-block",
               position: "relative",
+              top: String(uploadIconTop) + ea,
+              width: String(uploadIconWidth) + ea,
+            }
+          }
+        ]
+      });
+  
+      mothers.push(contentsPan);
+    }
+
+    // set pan blocks
+
+    setPanBlocks = async () => {
+      try {
+
+        for (let panMother of mothers) {
+          cleanChildren(panMother);
+        }
+
+        itemList = await ajaxJson({ target: "/" + instance.designer.desid }, BRIDGEHOST + "/representativeFileRead", { equal: true });
+        itemList = itemList.map((raw) => {
+          const original = raw;
+          const [ key, time, order, hex ] = raw.split("_");
+          const [ hexId, exe ] = hex.split(".");
+          const id = key + "_" + time + "_" + String(order) + "_" + hexId;
+          return [ key, new Date(Number(time)), String(Number(order) + 1) + "." + exe, Number(order), targetHref + "/" + original, exe, id, hexId ];
+        }).map(([ key, date, name, order, original, exe, id, hexId ]) => {
+          return { key, date, name, order, original, exe, id, hexId };
+        });
+        itemList.sort((a, b) => { return a.order - b.order });
+        itemList.sort((a, b) => { return a.date.valueOf() - b.date.valueOf() });
+    
+        for (let item of itemList) {
+          for (let i = 0; i < panList.length; i++) {
+            if (panList[i].key === item.key) {
+              item.mother = mothers[i];
+              item.motherNumber = i;
+              item.type = "file";
+            }
+          }
+        }
+    
+        motherMatrix = (new Array(panList.length)).fill(0, 0);
+    
+        fileItemList = [];
+        for (let { mother, key, date, name, order, motherNumber, type, original, exe, id, hexId } of itemList) {
+          itemBlock = createNode({
+            mother,
+            attribute: {
+              original,
+              key,
+              hex: hexId,
+              exe,
+              type,
+              toggle: "off",
+              date: dateToString(date).split("-").slice(1).join("/"),
+            },
+            // event: {
+            //   click: fileItemSelectEvent,
+            //   contextmenu: contextmenuEvent(type),
+            // },
+            style: {
+              display: "inline-flex",
+              justifyContent: "start",
+              paddingLeft: String(titlePadding) + ea,
+              paddingRight: String(titlePadding) + ea,
+              alignItems: "center",
+              width: "calc(calc(calc(100% - " + String(itemBetween * itemDivide) + ea + ") / " + String(itemDivide) + ") - " + String(titlePadding * 2) + ea + ")",
+              marginRight: String(itemBetween) + ea,
+              height: String(itemTongHeight) + ea,
+              marginBottom: String(itemBetween) + ea,
+              borderRadius: String(5) + "px",
+              background: desktop ? colorChip.white : colorChip.gray0,
+              cursor: "pointer",
+              textAlign: "center",
               verticalAlign: "top",
-              width: desktop ? String(firstWidth + zeroWidth + zeroMarginRight) + ea : String(100) + '%',
-              marginBottom: desktop ? "" : String(1.5) + ea,
+              overflow: "hidden",
+              boxShadow: "0px 1px 8px -6px " + colorChip.shadow,
             },
             children: [
               {
                 style: {
-                  display: num2 === 0 ? "block" : "none",
-                  position: "absolute",
-                  top: String(0),
-                  left: String(0),
-                  height: String(lineTop) + ea,
-                  width: withOut(0),
-                  borderBottom: desktop ? "1px solid " + colorChip.gray3 : "",
+                  display: "inline-block",
+                  position: "relative",
+                  width: withOut(titlePannelWidth + titlePannelBetween, ea),
+                  height: withOut(0, ea),
+                  overflow: "hidden",
+                  marginRight: String(titlePannelBetween) + ea,
+                },
+                child: {
+                  style: {
+                    display: "inline-flex",
+                    position: "relative",
+                    width: String(titleMaxWidth) + ea,
+                    height: withOut(0, ea),
+                    justifyContent: "start",
+                    textAlign: "left",
+                    alignItems: "center",    
+                  },
+                  child: {
+                    id,
+                    class: [ fileNameClassName ],
+                    attribute: {
+                      exe,
+                      date: dateToString(date).split("-").slice(1).join("/"),
+                    },
+                    text: dateToString(date).slice(2) + "_" + name,
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(textTop) + ea,
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.black,
+                    },
+                    bold: {
+                      fontSize: String(textSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.deactive,
+                    }
+                  }
                 }
               },
               {
-                text: (num2 === 0 ? (desktop ? title : "<b%" + String(num + 1) + "%b>" + blank + title) : ""),
                 style: {
-                  display: desktop ? "inline-block" : "block",
+                  display: "inline-flex",
                   position: "relative",
-                  fontSize: String(contentsWordingSize) + ea,
-                  fontWeight: String(600),
-                  lineHeight: String(1.6),
-                  color: colorChip.black,
-                  textAlign: "left",
-                  background: colorChip.white,
-                  paddingRight: String(linePadding) + ea,
+                  width: String(titlePannelWidth) + ea,
+                  height: withOut(0, ea),
+                  justifyContent: "end",
+                  alignItems: "center",
+                  textAlign: "right",
                 },
-                bold: {
-                  fontSize: String(contentsWordingSize) + ea,
-                  fontWeight: String(600),
-                  color: colorChip.green,
-                },
+                children: [
+                  {
+                    class: [ filePannelDateClassName ],
+                    text: dateToString(date).split("-").slice(1).join("/"),
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      top: String(pannelTextTop) + ea,
+                      fontSize: String(pannelSize) + ea,
+                      fontWeight: String(textWeight),
+                      color: colorChip.deactive,
+                    },
+                  },
+                  {
+                    class: [ filePannelCircleClassName ],
+                    style: {
+                      display: "inline-block",
+                      position: "relative",
+                      marginLeft: String(pannelCircleBetween) + ea,
+                      width: String(pannelCircleWidth) + ea,
+                      height: String(pannelCircleWidth) + ea,
+                      borderRadius: String(pannelCircleWidth) + ea,
+                      top: String(pannelCircleTop) + ea,
+                      background: colorChip.green,
+                    }
+                  }
+                ]
               }
             ]
-          },
-          {
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(contentsWordingSize) + ea,
-              fontWeight: String(600),
-              verticalAlign: "top",
-              lineHeight: String(1.6),
-              width: String(secondWidth) + ea,
-              marginRight: String(secondMarginRight) + ea,
-              textAlign: desktop ? "right" : "left",
-              color: colorChip.green,
-            },
-          },
-          {
-            text: str,
-            style: {
-              display: "inline-block",
-              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-              fontWeight: String(400),
-              verticalAlign: "top",
-              lineHeight: String(1.6),
-              width: withOut(desktop ? zeroWidth + zeroMarginRight + firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
-              textAlign: "left",
-              color: colorChip.black,
-            },
-            bold: {
-              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-              fontWeight: String(600),
-              color: colorChip.black,
-            },
-            under: {
-              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-              fontWeight: String(600),
-              color: colorChip.green,
-            },
-          },
-        ]
-      });
-
-      num2++;
-    }
-    num++;
-  }
-
-  // upload box
-
-  panMother = createNode({
-    mother: whiteTong,
-    style: {
-      display: "block",
-      position: "relative",
-      borderRadius: String(5) + "px",
-      background: desktop ? colorChip.gray3 : colorChip.gray1,
-      width: withOut(panMotherInnerPadding * 2, ea),
-      padding: String(panMotherInnerPadding) + ea,
-      marginTop: desktop ? "" : String(2.5) + ea,
-    }
-  });
-
-  for (let i = 0; i < panList.length; i++) {
-
-    basePan = createNode({
-      mother: panMother,
-      style: {
-        display: "inline-block",
-        verticalAlign: "top",
-        position: "relative",
-        width: withOut(0),
-        marginBottom: String(i === panList.length - 1 ? 0 : panBetween) + ea,
-        background: desktop ? colorChip.gray1 : colorChip.gray3,
-        borderRadius: String(5) + "px",
-        transition: "all 0.5s ease",
-      }
-    });
-  
-    createNode({
-      mother: basePan,
-      style: {
-        display: "inline-flex",
-        position: "relative",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-        width: String(panTitleBoxWidth) + ea,
-        height: String(panTitleBoxHeight) + ea,
-        background: colorChip.white,
-        borderRadius: String(5) + "px",
-        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-      },
-      children: [
-        {
-          text: panList[i].title,
-          style: {
-            position: "relative",
-            top: String(contentsTextTop) + ea,
-            fontSize: String(panContentsWordingSize) + ea,
-            fontWeight: String(800),
-            color: colorChip.black,
-          }
+          });
+    
+          fileItemList.push({
+            hash: hexId,
+            target: id
+          });
+    
+          motherMatrix[motherNumber] = motherMatrix[motherNumber] + 1;
         }
-      ]
-    });
-  
-    subButtonsBasePan = createNode({
-      mother: basePan,
-      style: {
-        display: "inline-flex",
-        position: "absolute",
-        alignItems: "center",
-        flexDirection: "row",
-        height: String(panTitleBoxHeight) + ea,
-        paddingRight: String(subButtonPaddingRight) + ea,
-        right: String(0),
-        top: String(subButtonVisualTop) + ea,
-      },
-    });
-  
-    contentsPan = createNode({
-      mother: basePan,
-      style: {
-        display: "block",
-        position: "relative",
-        width: withOut((contentsPanPaddingTop * 2) - itemBetween, ea),
-        paddingTop: String(contentsPanPaddingTop) + ea,
-        paddingBottom: String(contentsPanPaddingBottom) + ea,
-        paddingLeft: String(contentsPanPaddingTop) + ea,
-        paddingRight: String(contentsPanPaddingTop - itemBetween) + ea,
-      }
-    });
-  
-    createNode({
-      mother: basePan,
-      event: {
-        click: instance.uploadFiles(panList[i].key),
-        touchstart: instance.uploadFiles(panList[i].key),
-      },
-      style: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: String(uploadCircleWidth) + ea,
-        height: String(uploadCircleWidth) + ea,
-        position: "absolute",
-        bottom: String(uploadCirclePadding) + ea,
-        right: String(uploadCirclePadding) + ea,
-        borderRadius: String(uploadCircleWidth) + ea,
-        background: colorChip.gradientGray,
-        cursor: "pointer",
-      },
-      children: [
-        {
-          mode: "svg",
-          source: instance.mother.returnExtract(colorChip.white),
-          style: {
-            display: "inline-block",
-            position: "relative",
-            top: String(uploadIconTop) + ea,
-            width: String(uploadIconWidth) + ea,
+    
+        ajaxJson({ mode: "decrypto", targets: fileItemList }, BACKHOST + "/homeliaisonCrypto", { equal: true }).then((targets) => {
+          for (let { string, target } of targets) {
+            target = document.querySelector('#' + target);
+            if (string.trim() !== "" && target !== null) {
+              target.textContent = "";
+              target.insertAdjacentHTML("beforeend", string);
+            }
           }
-        }
-      ]
-    });
+        }).catch((err) => {
+          console.log(err);
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    this.setPanBlocks = setPanBlocks;
 
+    await setPanBlocks();
+
+  } catch (e) {
+    console.log(e);
   }
-
 }
 
 DesignerAboutJs.prototype.uploadFiles = function (fileKind) {
@@ -7638,24 +7868,19 @@ DesignerAboutJs.prototype.uploadFiles = function (fileKind) {
   
                     res = await ajaxForm(formData, BRIDGEHOST + "/representativeFileBinary", loading.progress);
 
-                    // await homeliaisonAnalytics({
-                    //   page: instance.pageName,
-                    //   standard: instance.firstPageViewTime,
-                    //   action: "uploadDesignFile",
-                    //   data: {
-                    //     desid: desid,
-                    //     cliid: instance.client.cliid,
-                    //     proid: proid,
-                    //     key: thisKey,
-                    //     title: thisTitle,
-                    //     date: new Date(),
-                    //   }
-                    // });
+                    await homeliaisonAnalytics({
+                      page: instance.pageName,
+                      standard: instance.firstPageViewTime,
+                      action: "uploadRepresentativeFile",
+                      data: {
+                        desid: instance.designer.desid,
+                        key: thisKey,
+                        date: new Date(),
+                      }
+                    });
   
-
-                    // refresh needs
-
-
+                    await instance.setPanBlocks();
+                    loading.remove();
 
                   } else {
                     instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
@@ -9927,6 +10152,8 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     this.adminMode = adminMode;
 
     this.nowUploading = false;
+    this.targetKeywords = "/photo/designer/representative";
+    this.targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + this.targetKeywords + "/" + this.designer.desid;
 
     document.body.addEventListener("mouseup", (e) => {
       instance.isMouseDown = false;
@@ -9966,7 +10193,7 @@ DesignerAboutJs.prototype.launching = async function (loading) {
             instance.insertIntroduceBox();
             instance.insertThreeStrongBox();
             instance.contentsCenter();
-            instance.insertRepresentativeBox();
+            await instance.insertRepresentativeBox();
             instance.insertPossibleNoticeBox();
             instance.calendarChain();
           } catch (e) {
