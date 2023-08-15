@@ -1247,6 +1247,134 @@ TransferRouter.prototype.rou_post_middlePhotoUpdate = function () {
   return obj;
 }
 
+TransferRouter.prototype.rou_post_representativeFileRemove = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { designerRepresentativeFolderConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/representativeFileRemove" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.targets === undefined) {
+        throw new Error("invaild post, must be targets");
+      }
+      const { targets } = equalJson(req.body);
+      if (!Array.isArray(targets)) {
+        throw new Error("invaild post, must be targets");
+      }
+      if (targets.some((obj) => { return typeof obj !== "object" })) {
+        throw new Error("invaild post, must be targets");
+      }
+      if (targets.some((obj) => { return obj === null })) {
+        throw new Error("invaild post, must be targets");
+      }
+
+      let desid, fileName;
+
+      for (let obj of targets) {
+        if (typeof obj !== "object" || obj === null) {
+          throw new Error("invaild post, must be targets");
+        }
+
+        desid = obj.desid;
+        fileName = obj.fileName;
+
+        if (await fileSystem(`exist`, [ designerRepresentativeFolderConst + "/" + desid ])) {
+          if (await fileSystem(`exist`, [ designerRepresentativeFolderConst + "/" + desid + "/" + fileName ])) {
+            await shellExec(`rm`, [ `-rf`, designerRepresentativeFolderConst + "/" + desid + "/" + fileName ]);
+          }
+        }
+
+      }
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_representativeFileRemove): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+TransferRouter.prototype.rou_post_representativeFileUpdate = function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, equalJson } = this.mother;
+  const { designerRepresentativeFolderConst } = this;
+  let obj;
+  obj = {};
+  obj.link = [ "/representativeFileUpdate" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (req.body.targets === undefined) {
+        throw new Error("invaild post, must be targets");
+      }
+      const { targets } = equalJson(req.body);
+      if (!Array.isArray(targets)) {
+        throw new Error("invaild post, must be targets");
+      }
+      if (targets.some((obj) => { return typeof obj !== "object" })) {
+        throw new Error("invaild post, must be targets");
+      }
+      if (targets.some((obj) => { return obj === null })) {
+        throw new Error("invaild post, must be targets");
+      }
+      let key, date, order, hashRaw, pastHash, exe;
+      let newFileName;
+      let desid, fileName;
+      let hash, mode;
+
+      for (let obj of targets) {
+        if (typeof obj !== "object" || obj === null) {
+          throw new Error("invaild post, must be targets");
+        }
+
+        hash = obj.hash;
+        mode = obj.mode;
+
+        desid = obj.desid;
+        fileName = obj.fileName;
+
+        if (await fileSystem(`exist`, [ designerRepresentativeFolderConst + "/" + desid ])) {
+          if (await fileSystem(`exist`, [ designerRepresentativeFolderConst + "/" + desid + "/" + fileName ])) {
+            [ key, date, order, hashRaw ] = fileName.split("_");
+            [ pastHash, exe ] = hashRaw.split(".");
+            newFileName = key + "_" + date + "_" + order + "_" + hash + "." + exe;
+            if (pastHash !== hash) {
+              await shellExec(`mv`, [ designerRepresentativeFolderConst + "/" + desid + "/" + fileName, designerRepresentativeFolderConst + "/" + desid + "/" + newFileName ]);
+            }
+          }
+        }
+      }
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      console.log(e);
+      logger.error("Transfer lounge 서버 문제 생김 (rou_post_representativeFileUpdate): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 TransferRouter.prototype.rou_post_generalFileUpload = function () {
   const instance = this;
   const { fileSystem, shellExec, shellLink } = this.mother;

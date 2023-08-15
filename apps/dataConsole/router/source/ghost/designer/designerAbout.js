@@ -7072,14 +7072,15 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
 DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
   const instance = this;
   const mother = this.mother;
-  const { client, ea, baseTong, media, project, targetHref } = this;
+  const { client, ea, baseTong, media, project, targetHref, totalContents } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, isIphone } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, isIphone, removeByClass, homeliaisonAnalytics, downloadFile } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const fileNameClassName = "fileNameClassName";
   const filePannelDateClassName = "filePannelDateClassName";
   const filePannelCircleClassName = "filePannelCircleClassName";
+  const whiteContextmenuClassName = "whiteContextmenuClassName";
   try {
     const mainContents = [
       {
@@ -7176,6 +7177,12 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
     let motherMatrix;
     let fileItemList;
     let setPanBlocks;
+    let contextmenuEvent;
+    let contextmenuPadding;
+    let contextSize;
+    let contextWidth;
+    let contextHeight;
+    let fileItemSelectEvent;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
     margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -7287,6 +7294,11 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
     pannelCircleBetween = <%% 6, 6, 6, 5, 1.2 %%>;
     pannelCircleTop = <%% (isMac() ? -1 : -0.5), (isMac() ? -1 : -0.5), (isMac() ? -1 : -0.5), (isMac() ? -1 : -0.5), (isIphone() ? -0.25 : -0.2) %%>;
 
+    contextmenuPadding = <%% 8, 8, 7, 6, 1 %%>;
+    contextSize = <%% 13, 13, 12, 11, 2.5 %%>;
+    contextWidth = <%% 130, 130, 120, 100, 20 %%>;
+    contextHeight = <%% 32, 32, 30, 28, 6 %%>;
+
     panList = [
       {
         title: "컨셉 제안서",
@@ -7305,6 +7317,311 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
         key: "construct",
       },
     ]
+
+    setPanBlocks = () => {};
+
+    fileItemSelectEvent = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const original = this.getAttribute("original");
+      const key = this.getAttribute("key");
+      const toggle = this.getAttribute("toggle");
+      const hex = this.getAttribute("hex");
+      const exe = this.getAttribute("exe");
+      const type = this.getAttribute("type");
+      if (toggle === "off") {
+        this.style.background = colorChip.green;
+        this.querySelector('.' + fileNameClassName).style.color = colorChip.white;
+        this.querySelector('.' + filePannelDateClassName).style.color = colorChip.liteGreen;
+        this.querySelector('.' + filePannelCircleClassName).style.background = colorChip.liteGreen;
+        this.setAttribute("toggle", "on");
+        instance.itemList.push({ original, key, hex, exe, type });
+      } else {
+        this.style.background = desktop ? colorChip.white : colorChip.gray0;
+        this.querySelector('.' + fileNameClassName).style.color = colorChip.black;
+        this.querySelector('.' + filePannelDateClassName).style.color = colorChip.deactive;
+        this.querySelector('.' + filePannelCircleClassName).style.background = colorChip.green;
+        instance.itemList.splice(instance.itemList.findIndex((obj) => {
+          return obj.original === original;
+        }), 1);
+        this.setAttribute("toggle", "off");
+      }
+    }
+
+    contextmenuEvent = () => {
+      return function (e) {
+        e.preventDefault();
+        const self = this;
+        const { top, left, height, width } = this.getBoundingClientRect();
+        let cancelBack, whitePrompt;
+        let cancelEvent;
+        let link, original, key;
+        let forceSelect;
+
+        forceSelect = 0;
+        if (this.getAttribute("toggle") === "off") {
+          fileItemSelectEvent.call(this, e);
+          forceSelect = 1;
+        }
+
+        cancelEvent = function (e) {
+          removeByClass(whiteContextmenuClassName);
+          if (forceSelect === 1) {
+            fileItemSelectEvent.call(self, e);
+          }
+        }
+
+        cancelBack = createNode({
+          mother: totalContents,
+          class: [ whiteContextmenuClassName ],
+          event: {
+            click: cancelEvent
+          },
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: withOut(0, ea),
+            height: withOut(0, ea),
+            background: "transparent",
+          }
+        });
+
+        whitePrompt = createNode({
+          mother: totalContents,
+          class: [ whiteContextmenuClassName ],
+          style: {
+            display: "block",
+            position: "fixed",
+            top: String(e.y) + "px",
+            left: String(e.x) + "px",
+            padding: String(contextmenuPadding) + ea,
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 3px 15px -9px " + colorChip.darkShadow,
+            animation: "fadeuplite 0.3s ease forwards",
+          }
+        });
+
+        createNode({
+          mother: whitePrompt,
+          event: {
+            click: async function (e) {
+              let parsedString, loading;
+              let downloadArr;
+              try {
+                if (instance.itemList.length === 0) {
+                  window.alert("파일을 먼저 선택해주세요!");
+                } else {
+                  for (let { original, type, hex, exe } of instance.itemList) {
+                    loading = instance.mother.whiteProgressLoading();
+                    parsedString = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true });
+                    await downloadFile(original, parsedString.string.replace(/ /gi, "_") + "." + exe, loading.progress.firstChild);
+                    await homeliaisonAnalytics({
+                      page: instance.pageName,
+                      standard: instance.firstPageViewTime,
+                      action: "downloadDesignerRepresentativeFile",
+                      data: {
+                        desid: instance.designer.desid,
+                        original,
+                        date: new Date(),
+                      }
+                    });
+
+                    loading.remove();
+                  }
+                  cancelEvent.call(self, e);
+                  await instance.setPanBlocks();
+                }
+              } catch (e) {
+                console.log(e);
+                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
+            }
+          },
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            width: String(contextWidth) + ea,
+            height: String(contextHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gray1,
+            marginBottom: String(itemBetween) + ea,
+            cursor: "pointer",
+          },
+          child: {
+            text: "파일 다운로드",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contextSize) + ea,
+              fontWeight: String(textWeight),
+              color: colorChip.black,
+              top: String(textTop) + ea,
+            }
+          }
+        });
+        createNode({
+          mother: whitePrompt,
+          event: {
+            click: async function (e) {
+              let parsedString, fileMap;
+              try {
+                if (instance.itemList.length === 0) {
+                  window.alert("파일을 먼저 선택해주세요!");
+                } else {
+                  if (window.confirm("선택한 파일을 삭제하시겠습니까?")) {
+                    fileMap = instance.itemList.map(({ original, hex }) => {
+                      const [ protocol, host, const1, const2, const3, desid, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                      return { desid, fileName, hex };
+                    });
+                    await ajaxJson({ targets: fileMap }, BRIDGEHOST + "/representativeFileRemove");
+                    await homeliaisonAnalytics({
+                      page: instance.pageName,
+                      standard: instance.firstPageViewTime,
+                      action: "deleteDesignRepresentativeFile",
+                      data: {
+                        desid: instance.designer.desid,
+                        fileMap: fileMap,
+                        date: new Date(),
+                      }
+                    });
+                  }
+                  cancelEvent.call(self, e);
+                  await instance.setPanBlocks();
+                }
+              } catch (e) {
+                console.log(e);
+                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                window.location.reload();
+              }
+            }
+          },
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            width: String(contextWidth) + ea,
+            height: String(contextHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gray1,
+            marginBottom: String(itemBetween) + ea,
+            cursor: "pointer",
+          },
+          child: {
+            text: "파일 삭제",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contextSize) + ea,
+              fontWeight: String(textWeight),
+              color: colorChip.black,
+              top: String(textTop) + ea,
+            }
+          }
+        });
+        
+        createNode({
+          mother: whitePrompt,
+          event: {
+            click: async function (e) {
+              let parsedString, fileMap;
+              let string;
+              let newString;
+              let updateMap;
+              let hash;
+              let loading;
+              let hex, desid, proid, fileName;
+              let folder, kind;
+              let mode;
+
+              try {
+                if (instance.itemList.length === 0) {
+                  window.alert("파일을 먼저 선택해주세요!");
+                } else {
+
+                  fileMap = instance.itemList.map(({ original, hex }) => {
+                    const [ protocol, host, const1, const2, const3, desid, fileName ] = original.split("/").filter((str) => { return str !== '' });
+                    return { desid, fileName, hex };
+                  });
+
+                  updateMap = [];
+
+                  for (let obj of fileMap) {
+                    hex = obj.hex;
+                    fileName = obj.fileName;
+
+                    ({ string } = await ajaxJson({ mode: "decrypto", hash: hex }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                    if (instance.isEmptyString(string)) {
+                      string = '';
+                    }
+
+                    newString = null;
+                    newString = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1", string);
+                    if (typeof newString !== "string" || newString.trim() === '') {
+                      newString = "메모 없음";
+                    }
+
+                    newString = newString.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
+                    ({ hash } = await ajaxJson({ mode: "crypto", string: newString }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+
+                    desid = obj.desid;
+                    updateMap.push({ desid, fileName, hash });
+                  }
+
+                  loading = instance.mother.grayLoading();
+                  await ajaxJson({ targets: updateMap }, BRIDGEHOST + "/representativeFileUpdate");
+                  await homeliaisonAnalytics({
+                    page: instance.pageName,
+                    standard: instance.firstPageViewTime,
+                    action: "updateDesignRepresentativeFile",
+                    data: {
+                      desid: instance.designer.desid,
+                      updateMap: updateMap,
+                      date: new Date(),
+                    }
+                  });
+                  cancelEvent.call(self, e);
+                  await instance.setPanBlocks();
+
+                  loading.remove();
+                }
+              } catch (e) {
+                console.log(e);
+                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+              }
+            }
+          },
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            width: String(contextWidth) + ea,
+            height: String(contextHeight) + ea,
+            borderRadius: String(5) + "px",
+            background: colorChip.gray1,
+            cursor: "pointer",
+          },
+          child: {
+            text: "메모 수정",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(contextSize) + ea,
+              fontWeight: String(textWeight),
+              color: colorChip.black,
+              top: String(textTop) + ea,
+            }
+          }
+        });
+
+      }
+    }
   
     this.whiteMargin = (desktop ? margin : 0);
   
@@ -7630,6 +7947,7 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
         for (let panMother of mothers) {
           cleanChildren(panMother);
         }
+        instance.itemList = [];
 
         itemList = await ajaxJson({ target: "/" + instance.designer.desid }, BRIDGEHOST + "/representativeFileRead", { equal: true });
         itemList = itemList.map((raw) => {
@@ -7669,10 +7987,10 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
               toggle: "off",
               date: dateToString(date).split("-").slice(1).join("/"),
             },
-            // event: {
-            //   click: fileItemSelectEvent,
-            //   contextmenu: contextmenuEvent(type),
-            // },
+            event: {
+              click: contextmenuEvent(),
+              contextmenu: contextmenuEvent(),
+            },
             style: {
               display: "inline-flex",
               justifyContent: "start",
@@ -10154,6 +10472,7 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     this.nowUploading = false;
     this.targetKeywords = "/photo/designer/representative";
     this.targetHref = BRIDGEHOST.replace(/\:3000/gi, '') + this.targetKeywords + "/" + this.designer.desid;
+    this.itemList = [];
 
     document.body.addEventListener("mouseup", (e) => {
       instance.isMouseDown = false;

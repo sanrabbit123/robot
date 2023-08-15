@@ -4893,6 +4893,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                 } catch (e) {
                   console.log(e);
                   window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                  window.location.reload();
                 }
               }
             },
@@ -4959,6 +4960,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                 } catch (e) {
                   console.log(e);
                   window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                  window.location.reload();
                 }
               }
             },
@@ -5067,6 +5069,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
                 } catch (e) {
                   console.log(e);
                   window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                  window.location.reload();
                 }
               }
             },
@@ -5158,6 +5161,18 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
 
                   loading = instance.mother.grayLoading();
                   await ajaxJson({ targets: updateMap }, BRIDGEHOST + "/middlePhotoUpdate");
+                  await homeliaisonAnalytics({
+                    page: instance.pageName,
+                    standard: instance.firstPageViewTime,
+                    action: "updateDesignFile",
+                    data: {
+                      desid: instance.designer.desid,
+                      cliid: instance.client.cliid,
+                      proid: instance.project.proid,
+                      updateMap: updateMap,
+                      date: new Date(),
+                    }
+                  });
                   cancelEvent.call(self, e);
                   await instance.setPanBlocks();
 
@@ -5166,6 +5181,7 @@ ProcessDetailJs.prototype.setPanBlocks = async function () {
               } catch (e) {
                 console.log(e);
                 window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                window.location.reload();
               }
             }
           },
@@ -8327,6 +8343,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
         } catch (e) {
           console.log(e);
           window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+          window.location.reload();
         }
       }
     }
@@ -8373,6 +8390,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
         } catch (e) {
           console.log(e);
           window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+          window.location.reload();
         }
       }
     }
@@ -8443,6 +8461,18 @@ ProcessDetailJs.prototype.returnButtonList = function () {
 
             loading = instance.mother.grayLoading();
             await ajaxJson({ targets: updateMap }, BRIDGEHOST + "/middlePhotoUpdate");
+            await homeliaisonAnalytics({
+              page: instance.pageName,
+              standard: instance.firstPageViewTime,
+              action: "updateDesignFile",
+              data: {
+                desid: instance.designer.desid,
+                cliid: instance.client.cliid,
+                proid: instance.project.proid,
+                updateMap: updateMap,
+                date: new Date(),
+              }
+            });
             await instance.setPanBlocks();
 
             loading.remove();
@@ -8450,6 +8480,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
         } catch (e) {
           console.log(e);
           window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+          window.location.reload();
         }
       }
     }
@@ -8505,6 +8536,7 @@ ProcessDetailJs.prototype.returnButtonList = function () {
         } catch (e) {
           console.log(e);
           window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+          window.location.reload();
         }
       }
     }
