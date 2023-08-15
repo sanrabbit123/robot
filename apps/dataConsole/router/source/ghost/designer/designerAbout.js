@@ -7593,6 +7593,7 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
               } catch (e) {
                 console.log(e);
                 window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
+                window.location.reload();
               }
             }
           },
@@ -8237,6 +8238,15 @@ DesignerAboutJs.prototype.uploadFiles = function (fileKind) {
     }
   }
 
+}
+
+DesignerAboutJs.prototype.isEmptyString = function (string) {
+  const instance = this;
+  if (/^[0-9]/.test(string) && /[0-9]$/.test(string) && string.length > 5 && string.replace(/[0-9]/gi, '') === '') {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBox, x, lastBoo) {
