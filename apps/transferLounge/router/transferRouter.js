@@ -358,7 +358,7 @@ TransferRouter.prototype.rou_post_representativeFileRead = function () {
       let tempDir;
       let tempString;
 
-      if (target !== "$all") {
+      if (target === "$all") {
 
         list = (await fileSystem(`readDir`, [ designerRepresentativeFolderConst ])).filter((str) => { return (!/^\._/.test(str) && !/DS_Store/gi.test(str)) });
 

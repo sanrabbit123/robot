@@ -3786,6 +3786,7 @@ DesignerJs.prototype.normalView = async function () {
     let importants;
     let noticeSendRows;
     let profileList, workList;
+    let representativeList;
 
     loading = await this.mother.loadingRun();
 
@@ -3805,6 +3806,9 @@ DesignerJs.prototype.normalView = async function () {
     noticeSendRows = await ajaxJson({ mode: "get" }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
     profileList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerProfileList", { equal: true });
     workList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerWorksList", { equal: true });
+    representativeList = await ajaxJson({ target: "$all" }, BRIDGEHOST + "/representativeFileRead", { equal: true });
+
+    console.log(representativeList)
 
     this.members = members;
     this.designers = designers;
