@@ -967,6 +967,9 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
   
         whitePrompt = createNode({
           mother: totalContents,
+          attribute: {
+            desid: desid
+          },
           class: [ whiteCardClassName, whiteBaseClassName ],
           style: {
             position: "fixed",
@@ -1443,6 +1446,36 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
         return null;
       }
     }
+  } else if (method === "career") {
+    return async function () {
+      try {
+        const designer = designers.find((d) => { return d.desid === desid });
+        if (designer === undefined) {
+          throw new Error("invalid desid");
+        }
+
+        if (window.confirm(designer.designer + " 실장님께 경력 및 학력 업데이트 요청 알림톡을 전송할까요?")) {
+          const response = await ajaxJson({
+            mode: "send",
+            desid: designer.desid,
+            designer: designer.designer,
+            phone: designer.information.phone,
+            type: "career",
+          }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+          if (response.message === "success") {
+            window.alert("전송에 성공하였습니다!");
+          } else {
+            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+          }
+          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+        }
+        
+      } catch (e) {
+        window.alert(e.message);
+        console.log(e);
+        return null;
+      }
+    }
   } else if (method === "totalChecklist") {
     return async function () {
       try {
@@ -1452,7 +1485,7 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
           desid: designer.desid,
           designer: designer.designer,
           phone: designer.information.phone,
-          type: "checklist",
+          type: "entire",
         }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
         return true;
       } catch (e) {
@@ -1967,6 +2000,19 @@ DesignerJs.prototype.normalBase = async function () {
                 return async function (e) {
                   try {
                     const sendFunc = instance.normalSendNotice("work", desid);
+                    await sendFunc();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            },
+            {
+              title: designer + " 실장님께 경력 업데이트 요청하기",
+              func: (desid) => {
+                return async function (e) {
+                  try {
+                    const sendFunc = instance.normalSendNotice("career", desid);
                     await sendFunc();
                   } catch (e) {
                     console.log(e);
@@ -3455,11 +3501,12 @@ DesignerJs.prototype.normalReportEvent = async function () {
 DesignerJs.prototype.communicationRender = function () {
   const instance = this;
   const { communication } = this.mother;
+  const { whiteCardClassName, whiteBaseClassName } = this;
   const { ajaxJson, sleep, blankHref } = GeneralJs;
   communication.setItem([
     () => { return "체크리스트 전체 발송"; },
     function () {
-      return true;
+      return document.querySelector('.' + whiteBaseClassName) === null;
     },
     async function (e) {
       try {
@@ -3485,7 +3532,7 @@ DesignerJs.prototype.communicationRender = function () {
   communication.setItem([
     () => { return "미완료 대상 체크리스트 발송"; },
     function () {
-      return true;
+      return document.querySelector('.' + whiteBaseClassName) === null;
     },
     async function (e) {
       try {
@@ -3512,7 +3559,7 @@ DesignerJs.prototype.communicationRender = function () {
   communication.setItem([
     () => { return "프로필 요청 전체 발송"; },
     function () {
-      return true;
+      return document.querySelector('.' + whiteBaseClassName) === null;
     },
     async function (e) {
       try {
@@ -3535,36 +3582,9 @@ DesignerJs.prototype.communicationRender = function () {
     }
   ]);
   communication.setItem([
-    () => { return "미완료 대상 프로필 요청 발송"; },
-    function () {
-      return true;
-    },
-    async function (e) {
-      try {
-        const logs = await ajaxJson({ mode: "get" }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
-        const sendDesids = logs.filter((o) => { return o.type === "profile" }).map((o) => { return o.designer.desid });
-        const targetDesigners = instance.designers.filter((d) => { return /협약 완료/gi.test(d.information.contract.status) }).filter((d) => { return !sendDesids.includes(d.desid) });
-        let asyncTempFunc;
-        for (let designer of targetDesigners) {
-          asyncTempFunc = instance.normalSendNotice("totalProfile", designer.desid);
-          tempRes = await asyncTempFunc();
-          if (tempRes === null) {
-            throw new Error("send fail");
-          }
-        }
-        window.alert("미완료 대상 프로필 요청 발송에 성공하였습니다!");
-        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
-      } catch (e) {
-        console.log(e);
-        window.alert("미완료 대상 프로필 요청 발송에 성공하였습니다!");
-        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
-      }
-    }
-  ]);
-  communication.setItem([
     () => { return "작업물 요청 전체 발송"; },
     function () {
-      return true;
+      return document.querySelector('.' + whiteBaseClassName) === null;
     },
     async function (e) {
       try {
@@ -3587,29 +3607,66 @@ DesignerJs.prototype.communicationRender = function () {
     }
   ]);
   communication.setItem([
-    () => { return "미완료 대상 작업물 요청 발송"; },
+    () => { return "체크리스트 요청하기"; },
     function () {
-      return true;
+      return document.querySelector('.' + whiteBaseClassName) !== null;
     },
     async function (e) {
+      const desid = document.querySelector('.' + whiteBaseClassName).getAttribute("desid");
       try {
-        const logs = await ajaxJson({ mode: "get" }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
-        const sendDesids = logs.filter((o) => { return o.type === "work" }).map((o) => { return o.designer.desid });
-        const targetDesigners = instance.designers.filter((d) => { return /협약 완료/gi.test(d.information.contract.status) }).filter((d) => { return !sendDesids.includes(d.desid) });
-        let asyncTempFunc;
-        for (let designer of targetDesigners) {
-          asyncTempFunc = instance.normalSendNotice("totalWork", designer.desid);
-          tempRes = await asyncTempFunc();
-          if (tempRes === null) {
-            throw new Error("send fail");
-          }
-        }
-        window.alert("미완료 대상 작업물 요청 발송에 성공하였습니다!");
-        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+        const sendFunc = instance.normalSendNotice("checklist", desid);
+        await sendFunc();
       } catch (e) {
         console.log(e);
-        window.alert("미완료 대상 작업물 요청 발송에 실패하였습니다!");
-        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal&desid=" + desid;
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "프로필 업로드 요청하기"; },
+    function () {
+      return document.querySelector('.' + whiteBaseClassName) !== null;
+    },
+    async function (e) {
+      const desid = document.querySelector('.' + whiteBaseClassName).getAttribute("desid");
+      try {
+        const sendFunc = instance.normalSendNotice("profile", desid);
+        await sendFunc();
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal&desid=" + desid;
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "작업 사진 업로드 요청하기"; },
+    function () {
+      return document.querySelector('.' + whiteBaseClassName) !== null;
+    },
+    async function (e) {
+      const desid = document.querySelector('.' + whiteBaseClassName).getAttribute("desid");
+      try {
+        const sendFunc = instance.normalSendNotice("work", desid);
+        await sendFunc();
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal&desid=" + desid;
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "경력 업데이트 요청하기"; },
+    function () {
+      return document.querySelector('.' + whiteBaseClassName) !== null;
+    },
+    async function (e) {
+      const desid = document.querySelector('.' + whiteBaseClassName).getAttribute("desid");
+      try {
+        const sendFunc = instance.normalSendNotice("career", desid);
+        await sendFunc();
+      } catch (e) {
+        console.log(e);
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal&desid=" + desid;
       }
     }
   ]);
