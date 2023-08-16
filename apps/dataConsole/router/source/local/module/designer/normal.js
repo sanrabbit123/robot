@@ -1,6 +1,6 @@
 DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
   const instance = this;
-  const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows, profileList, workList } = this;
+  const { ea, totalContents, valueTargetClassName, asyncProcessText, noticeSendRows, profileList, workList, representativeList } = this;
   const { createNode, colorChip, withOut, dateToString, designerCareer, ajaxJson, autoComma, findByAttribute } = GeneralJs;
   try {
     const calcMonthDelta = (from, to) => {
@@ -40,6 +40,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
     let careerUpdateBoo;
     let schoolUpdateBoo;
     let threeStrengthBoo;
+    let representativeBoo;
 
     past.setFullYear(past.getFullYear() - agoYearDelta);
     past.setMonth(0);
@@ -603,6 +604,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
       careerUpdateBoo = designer.information.business.career.detail.length > 0;
       schoolUpdateBoo = designer.information.business.career.school.length > 0;
       threeStrengthBoo = designer.setting.description.filter((str) => { return !/null/gi.test(str); }).length > 0;
+      representativeBoo = representativeList.filter((o) => { return o.boo }).map(({ desid }) => { return desid }).includes(designer.desid);
 
       standards.values[designer.desid] = [
         {
@@ -669,7 +671,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           name: "threeStrengthUpdate",
         },
         {
-          value: "안올림",
+          value: representativeBoo ? "올림" : "안올림",
           name: "representativeUpdate",
         },
         {
@@ -3808,8 +3810,6 @@ DesignerJs.prototype.normalView = async function () {
     workList = await ajaxJson({ mode: "entire" }, BRIDGEHOST + "/designerWorksList", { equal: true });
     representativeList = await ajaxJson({ target: "$all" }, BRIDGEHOST + "/representativeFileRead", { equal: true });
 
-    console.log(representativeList)
-
     this.members = members;
     this.designers = designers;
     this.projects = null;
@@ -3828,6 +3828,7 @@ DesignerJs.prototype.normalView = async function () {
     this.noticeSendRows = noticeSendRows;
     this.profileList = profileList;
     this.workList = workList;
+    this.representativeList = representativeList;
 
     await this.normalBase();
     await this.normalSearchEvent();

@@ -7859,6 +7859,28 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
   
       basePan = createNode({
         mother: panMother,
+        attribute: {
+          index: String(i),
+          name: panList[i].key,
+          key: panList[i].key,
+        },
+        event: {
+          drop: instance.dropFiles(panList[i].key),
+          dragenter: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.style.background = colorChip.whiteGreen;
+          },
+          dragover: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+          },
+          dragleave: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.style.background = colorChip.gray1;
+          },
+        },
         style: {
           display: "inline-block",
           verticalAlign: "top",
@@ -8208,7 +8230,6 @@ DesignerAboutJs.prototype.uploadFiles = function (fileKind) {
                     formData.append("name", hash);
   
                     res = await ajaxForm(formData, BRIDGEHOST + "/representativeFileBinary", loading.progress);
-
                     await homeliaisonAnalytics({
                       page: instance.pageName,
                       standard: instance.firstPageViewTime,
@@ -8257,6 +8278,127 @@ DesignerAboutJs.prototype.uploadFiles = function (fileKind) {
         instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
 
       }
+
+    } catch (e) {
+      console.log(e);
+      window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+      window.location.reload();
+    }
+  }
+
+}
+
+DesignerAboutJs.prototype.dropFiles = function (fileKind) {
+  const instance = this;
+  const mother = this.mother;
+  const { createNode, createNodes, withOut, colorChip, serviceParsing, ajaxJson, ajaxForm, stringToDate, dateToString, cleanChildren, isMac, equalJson, isIphone, svgMaker, removeByClass, homeliaisonAnalytics } = GeneralJs;
+  const { project, requestNumber, ea, baseTong, media, totalContents } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const fileInputClassName = "fileInputClassName";
+  return async function (e) {
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      let input, changeEvent;
+
+      if (!instance.nowUploading) {
+
+        removeByClass(fileInputClassName);
+
+        changeEvent = async function (e) {
+          try {
+            const thisKey = this.getAttribute("name");
+            let thisFiles, formData, res;
+            let removeTargets;
+            let loading;
+            let hash;
+            let rawResponse;
+
+            thisFiles = [ ...this.files ];
+
+            if (thisFiles.length >= 1) {
+              formData = new FormData();
+              formData.enctype = "multipart/form-data";
+              formData.append("desid", instance.designer.desid);
+              formData.append("type", "file");
+              formData.append("file_" + thisKey + "_" + String(0), thisFiles[0]);
+
+              if (!instance.nowUploading) {
+
+                rawResponse = null;
+                rawResponse = await GeneralJs.prompt("파일에 대한 간단한 이름 또는 메모를 적어주세요! (예) 주방_시공의뢰서_1");
+                if (typeof rawResponse !== "string" || rawResponse.trim() === '') {
+                  rawResponse = "메모 없음";
+                }
+                rawResponse = rawResponse.replace(/[\=\/\\\(\)\?\+\&]/gi, '').replace(/ /gi, '_');
+  
+                loading = instance.mother.whiteProgressLoading();
+  
+                ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
+                formData.append("name", hash);
+  
+                res = await ajaxForm(formData, BRIDGEHOST + "/representativeFileBinary", loading.progress);
+                await homeliaisonAnalytics({
+                  page: instance.pageName,
+                  standard: instance.firstPageViewTime,
+                  action: "uploadRepresentativeFile",
+                  data: {
+                    desid: instance.designer.desid,
+                    key: thisKey,
+                    date: new Date(),
+                  }
+                });
+
+                if (mobile) {
+                  window.location.reload();
+                } else {
+                  await instance.setPanBlocks();
+                }
+
+                loading.remove();
+
+              } else {
+                instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+              }
+
+            }
+
+          } catch (e) {
+            console.log(e);
+            window.alert("파일 전송에 실패하였습니다! 다시 시도해주세요!");
+            window.location.reload();
+          }
+        }
+
+        input = createNode({
+          mother: document.body,
+          class: [ fileInputClassName ],
+          mode: "input",
+          event: {
+            change: changeEvent
+          },
+          attribute: {
+            type: "file",
+            name: fileKind,
+            multiple: "true",
+          },
+          style: {
+            display: "none",
+          }
+        });
+        input.files = e.dataTransfer.files;
+        changeEvent.call(input, e);
+
+      } else {
+
+        instance.mother.greenAlert("업로드를 마치고 다시 시도해주세요!");
+
+      }
+
+      this.style.background = colorChip.gray1;
 
     } catch (e) {
       console.log(e);
