@@ -886,8 +886,12 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
       drop: function (e) {
         e.preventDefault();
         e.stopPropagation();
-        instance.accountInput.files = e.dataTransfer.files;
-        accountFileChangeEvent.call(instance.accountInput, e);
+        if ([ ...e.dataTransfer.files ].map((file) => { return file.type }).filter((str) => { return !/^image/.test(str) }).filter((str) => { return !/pdf/.test(str) }).length > 0) {
+          window.alert("이미지 또는 pdf 파일로만 올려주세요!");
+        } else {
+          instance.accountInput.files = e.dataTransfer.files;
+          accountFileChangeEvent.call(instance.accountInput, e);
+        }
       }
     },
     style: {
@@ -947,8 +951,12 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
       drop: function (e) {
         e.preventDefault();
         e.stopPropagation();
-        instance.businessInput.files = e.dataTransfer.files;
-        businessFileChangeEvent.call(instance.businessInput, e);
+        if ([ ...e.dataTransfer.files ].map((file) => { return file.type }).filter((str) => { return !/^image/.test(str) }).filter((str) => { return !/pdf/.test(str) }).length > 0) {
+          window.alert("이미지 또는 pdf 파일로만 올려주세요!");
+        } else {
+          instance.businessInput.files = e.dataTransfer.files;
+          businessFileChangeEvent.call(instance.businessInput, e);
+        }
       }
     },
     style: {
@@ -1008,8 +1016,12 @@ AspirantNoticeJs.prototype.insertContractBox = function () {
       drop: function (e) {
         e.preventDefault();
         e.stopPropagation();
-        instance.identityInput.files = e.dataTransfer.files;
-        identityFileChangeEvent.call(instance.identityInput, e);
+        if ([ ...e.dataTransfer.files ].map((file) => { return file.type }).filter((str) => { return !/^image/.test(str) }).filter((str) => { return !/pdf/.test(str) }).length > 0) {
+          window.alert("이미지 또는 pdf 파일로만 올려주세요!");
+        } else {
+          instance.identityInput.files = e.dataTransfer.files;
+          identityFileChangeEvent.call(instance.identityInput, e);
+        }
       }
     },
     style: {
@@ -1895,8 +1907,12 @@ AspirantNoticeJs.prototype.insertAspirantBox = function () {
           drop: function (e) {
             e.preventDefault();
             e.stopPropagation();
-            this.querySelector("input").files = e.dataTransfer.files;
-            fileChangeEvent.call(this.querySelector("input"), e);
+            if ([ ...e.dataTransfer.files ].map((file) => { return file.type }).filter((str) => { return !/^image/.test(str) }).filter((str) => { return !/pdf/.test(str) }).length > 0) {
+              window.alert("이미지 또는 pdf 파일로만 올려주세요!");
+            } else {
+              this.querySelector("input").files = e.dataTransfer.files;
+              fileChangeEvent.call(this.querySelector("input"), e);
+            }
           }
         },
         style: {

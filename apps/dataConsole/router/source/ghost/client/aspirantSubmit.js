@@ -3995,8 +3995,12 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
             drop: function (e) {
               e.preventDefault();
               e.stopPropagation();
-              this.querySelector("input").files = e.dataTransfer.files;
-              fileChangeEvent.call(this.querySelector("input"), e);
+              if ([ ...e.dataTransfer.files ].map((file) => { return file.type }).filter((str) => { return !/^image/.test(str) }).filter((str) => { return !/pdf/.test(str) }).length > 0) {
+                window.alert("이미지 또는 pdf 파일로만 올려주세요!");
+              } else {
+                this.querySelector("input").files = e.dataTransfer.files;
+                fileChangeEvent.call(this.querySelector("input"), e);
+              }
             }
           },
           style: {
