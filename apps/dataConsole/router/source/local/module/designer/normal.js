@@ -37,6 +37,8 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
     let workListSet0, workListSet1, workListSet2, workListSet3;
     let filteredCareerSendRows;
     let filteredEntireSendRows;
+    let careerUpdateBoo;
+    let schoolUpdateBoo;
 
     past.setFullYear(past.getFullYear() - agoYearDelta);
     past.setMonth(0);
@@ -178,6 +180,86 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         title: "작업물",
         width: 100,
         name: "workingPhotoDone",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "올림",
+            functionName: "filterEvent_올림",
+          },
+          {
+            value: "안올림",
+            functionName: "filterEvent_안올림",
+          },
+        ],
+      },
+      {
+        title: "경력 정보",
+        width: 100,
+        name: "careerUpdate",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "올림",
+            functionName: "filterEvent_올림",
+          },
+          {
+            value: "안올림",
+            functionName: "filterEvent_안올림",
+          },
+        ],
+      },
+      {
+        title: "학력 정보",
+        width: 100,
+        name: "schoolUpdate",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "올림",
+            functionName: "filterEvent_올림",
+          },
+          {
+            value: "안올림",
+            functionName: "filterEvent_안올림",
+          },
+        ],
+      },
+      {
+        title: "3가지 강점",
+        width: 100,
+        name: "threeStrengthUpdate",
+        type: "string",
+        menu: [
+          {
+            value: "전체 보기",
+            functionName: "filterEvent_$all",
+          },
+          {
+            value: "올림",
+            functionName: "filterEvent_올림",
+          },
+          {
+            value: "안올림",
+            functionName: "filterEvent_안올림",
+          },
+        ],
+      },
+      {
+        title: "대표 작업물",
+        width: 100,
+        name: "representativeUpdate",
         type: "string",
         menu: [
           {
@@ -517,6 +599,9 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
       filteredCareerSendRows = noticeSendRows.filter((o) => { return o.type === "career" }).filter((o) => { return o.designer.desid === designer.desid });
       filteredEntireSendRows = noticeSendRows.filter((o) => { return o.type === "entire" }).filter((o) => { return o.designer.desid === designer.desid });
 
+      careerUpdateBoo = designer.information.business.career.detail.length > 0;
+      schoolUpdateBoo = designer.information.business.career.school.length > 0;
+
       standards.values[designer.desid] = [
         {
           value: designer.desid,
@@ -568,6 +653,22 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         {
           value: (workListSet0.includes(designer.desid) && workListSet1.includes(designer.desid) && workListSet2.includes(designer.desid) && workListSet3.includes(designer.desid)) ? "올림" : "안올림",
           name: "workingPhotoDone",
+        },
+        {
+          value: careerUpdateBoo ? "올림" : "안올림",
+          name: "careerUpdate",
+        },
+        {
+          value: schoolUpdateBoo ? "올림" : "안올림",
+          name: "schoolUpdate",
+        },
+        {
+          value: "안올림",
+          name: "threeStrengthUpdate",
+        },
+        {
+          value: "안올림",
+          name: "representativeUpdate",
         },
         {
           value: designer.information.contract.status,
