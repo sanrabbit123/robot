@@ -2190,6 +2190,8 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
       if (req.body.mode === undefined) {
         throw new Error("invaild post");
       }
+      const testDesid = "d1701_aa01s";
+      const testPhone = "010-2747-3403";
       const selfMongo = instance.mongolocal;
       const selfCoreMongo = instance.mongo;
       const collection = "noticeDesignerConsole";
@@ -2205,7 +2207,8 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
       let thisHistory;
 
       if (mode === "send") {
-        const { desid, designer, type, phone } = equalJson(req.body);
+        const { desid, designer, type } = equalJson(req.body);
+        const phone = (desid !== testDesid) ? req.body.phone : testPhone;
 
         logDefaultObj = {
           id: idWords + uniqueValue("hex"),
@@ -2286,7 +2289,7 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
 
         } else if (type === "career") {
 
-          // await kakao.sendTalk("noticeDesignerCareer", designer, phone, { designer, host: address.frontinfo.host, path: "about", desid });
+          await kakao.sendTalk("noticeDesignerCareer", designer, phone, { designer, host: address.frontinfo.host, path: "about", desid });
           await messageSend({
             text: designer + " 실장님께 경력 학력 업데이트 요청 알림톡을 전송하였습니다!",
             channel,
@@ -2298,7 +2301,7 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
 
         } else if (type === "entire") {
 
-          // await kakao.sendTalk("noticeDesignerEntire", designer, phone, { designer, host: address.frontinfo.host, path: "about", desid });
+          await kakao.sendTalk("noticeDesignerEntire", designer, phone, { designer, host: address.frontinfo.host, path: "about", desid });
           await messageSend({
             text: designer + " 실장님께 일괄 체크리스트 업로드 및 업데이트 알림톡을 전송하였습니다!",
             channel,

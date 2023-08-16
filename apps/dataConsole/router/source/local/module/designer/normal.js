@@ -111,9 +111,9 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         type: "number",
       },
       {
-        title: "체크리스트 전송",
+        title: "일괄 안내 전송",
         width: 100,
-        name: "checklistNoticeSend",
+        name: "entireNoticeSend",
         type: "date",
       },
       {
@@ -132,12 +132,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         title: "경력 안내 전송",
         width: 100,
         name: "careerSchoolNoticeSend",
-        type: "date",
-      },
-      {
-        title: "일괄 안내 전송",
-        width: 100,
-        name: "entireNoticeSend",
         type: "date",
       },
       {
@@ -548,8 +542,8 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           name: "processDoing",
         },
         {
-          value: filteredChecklistSendRows.length > 0 ? dateToString(filteredChecklistSendRows[0].date) : "-",
-          name: "checklistNoticeSend",
+          value: filteredEntireSendRows.length > 0 ? dateToString(filteredEntireSendRows[0].date) : "-",
+          name: "entireNoticeSend",
         },
         {
           value: filteredProfileSendRows.length > 0 ? dateToString(filteredProfileSendRows[0].date) : "-",
@@ -562,10 +556,6 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
         {
           value: filteredCareerSendRows.length > 0 ? dateToString(filteredCareerSendRows[0].date) : "-",
           name: "careerSchoolNoticeSend",
-        },
-        {
-          value: filteredEntireSendRows.length > 0 ? dateToString(filteredEntireSendRows[0].date) : "-",
-          name: "entireNoticeSend",
         },
         {
           value: asyncProcessText,
@@ -1341,13 +1331,13 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
           throw new Error("invalid desid");
         }
 
-        if (window.confirm(designer.designer + " 실장님께 체크리스트 알림톡을 전송할까요?")) {
+        if (window.confirm(designer.designer + " 실장님께 체크리스트 기입 요청 알림톡을 전송할까요?")) {
           const response = await ajaxJson({
             mode: "send",
             desid: designer.desid,
             designer: designer.designer,
             phone: designer.information.phone,
-            type: "checklist",
+            type: "entire",
           }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
           if (response.message === "success") {
             window.alert("전송에 성공하였습니다!");
