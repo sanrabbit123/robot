@@ -6023,7 +6023,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   if (normalMode) {
     margin = 24;
     paddingTop = 52;
-    whiteBottomMargin = 42;
+    whiteBottomMargin = 0;
   } else {
     margin = <%% 55, 55, 47, 39, 4.7 %%>;
     paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
@@ -6588,7 +6588,7 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
   if (normalMode) {
     margin = 24;
     paddingTop = 52;
-    whiteBottomMargin = 42;
+    whiteBottomMargin = 0;
   } else {
     margin = <%% 55, 55, 47, 39, 4.7 %%>;
     paddingTop =  <%% 52, 52, 44, 36, 4.7 %%>;
@@ -6704,7 +6704,7 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
   factorNumbersTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
 
   factorDescriptionTextIndent = <%% 16, 14, 13, 13, 3 %%>;
-  factorDescriptionTextTop = <%% -1, -1, -1, -1, -0.2 %%>;
+  factorDescriptionTextTop = <%% (isMac() ? -1 : 2), (isMac() ? -1 : 2), (isMac() ? -1 : 1), (isMac() ? -1 : 1), -0.1 %%>;
   factorDescriptionSize = <%% 16, 15, 14, 13, 3.2 %%>;
   factorDescriptionWeight = <%% 300, 300, 300, 300, 300 %%>;
 
@@ -7072,9 +7072,12 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
 DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
   const instance = this;
   const mother = this.mother;
-  const { client, ea, baseTong, media, project, targetHref, totalContents } = this;
+  const { client, ea, baseTong, media, project, targetHref, totalContents, entireMode, normalMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const big = (media[0] || media[1] || media[2]);
+  const small = !big;
+  const veryBig = (media[0] || media[1]);
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, isIphone, removeByClass, homeliaisonAnalytics, downloadFile } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const fileNameClassName = "fileNameClassName";
@@ -7185,10 +7188,16 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
     let fileItemSelectEvent;
   
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-    margin = <%% 55, 55, 47, 39, 4.7 %%>;
-    paddingTop = <%% 52, 52, 44, 36, 4.7 %%>;
-  
-    whiteBottomMargin = <%% 56, 54, 46, 38, 4.7 %%>;
+
+    if (normalMode) {
+      margin = 24;
+      paddingTop = 52;
+      whiteBottomMargin = 48;
+    } else {
+      margin = <%% 55, 55, 47, 39, 4.7 %%>;
+      paddingTop = <%% 52, 52, 44, 36, 4.7 %%>;
+      whiteBottomMargin = <%% 56, 54, 46, 38, 4.7 %%>;
+    }
   
     titleFontSize = <%% 21, 21, 19, 17, 4 %%>;
     numberRight = <%% 12, 12, 12, 12, 2 %%>;
@@ -7431,7 +7440,11 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
                     loading.remove();
                   }
                   cancelEvent.call(self, e);
-                  await instance.setPanBlocks();
+                  if (mobile) {
+                    window.location.reload();
+                  } else {
+                    await instance.setPanBlocks();
+                  }
                 }
               } catch (e) {
                 console.log(e);
@@ -7491,7 +7504,11 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
                     });
                   }
                   cancelEvent.call(self, e);
-                  await instance.setPanBlocks();
+                  if (mobile) {
+                    window.location.reload();
+                  } else {
+                    await instance.setPanBlocks();
+                  }
                 }
               } catch (e) {
                 console.log(e);
@@ -7586,7 +7603,12 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
                     }
                   });
                   cancelEvent.call(self, e);
-                  await instance.setPanBlocks();
+
+                  if (mobile) {
+                    window.location.reload();
+                  } else {
+                    await instance.setPanBlocks();
+                  }
 
                   loading.remove();
                 }
@@ -7627,7 +7649,7 @@ DesignerAboutJs.prototype.insertRepresentativeBox = async function () {
     this.whiteMargin = (desktop ? margin : 0);
   
     whiteBlock = createNode({
-      mother: baseTong,
+      mother: entireMode ? totalContents : baseTong,
       style: {
         position: "relative",
         borderRadius: String(desktop ? 8 : 1) + ea,
@@ -8198,7 +8220,12 @@ DesignerAboutJs.prototype.uploadFiles = function (fileKind) {
                       }
                     });
   
-                    await instance.setPanBlocks();
+                    if (mobile) {
+                      window.location.reload();
+                    } else {
+                      await instance.setPanBlocks();
+                    }
+
                     loading.remove();
 
                   } else {
@@ -10535,6 +10562,8 @@ DesignerAboutJs.prototype.launching = async function (loading) {
       instance.insertProfileBox();
       instance.insertWorkingBox();
       instance.insertIntroduceBox();
+      instance.insertThreeStrongBox();
+      await instance.insertRepresentativeBox();
     }
 
     loading.parentNode.removeChild(loading);
