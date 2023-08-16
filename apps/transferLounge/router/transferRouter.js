@@ -358,22 +358,32 @@ TransferRouter.prototype.rou_post_representativeFileRead = function () {
       let tempDir;
       let tempString;
 
-      finalTarget = "/" + (/^\//.test(target) ? target.slice(1) : target);
+      if (target !== "$all") {
 
-      tempArr = finalTarget.split("/");
-      tempString = designerRepresentativeFolderConst;
-      for (let i = 0; i < tempArr.length; i++) {
-        tempDir = await fileSystem(`readDir`, [ tempString ]);
-        if (!tempDir.includes(tempArr[i]) && tempArr[i] !== "") {
-          await shellExec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
+        list = (await fileSystem(`readDir`, [ designerRepresentativeFolderConst ])).filter((str) => { return (!/^\._/.test(str) && !/DS_Store/gi.test(str)) });
+
+        res.send(JSON.stringify(list));
+
+      } else {
+
+        finalTarget = "/" + (/^\//.test(target) ? target.slice(1) : target);
+
+        tempArr = finalTarget.split("/");
+        tempString = designerRepresentativeFolderConst;
+        for (let i = 0; i < tempArr.length; i++) {
+          tempDir = await fileSystem(`readDir`, [ tempString ]);
+          if (!tempDir.includes(tempArr[i]) && tempArr[i] !== "") {
+            await shellExec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
+          }
+          tempString += '/';
+          tempString += tempArr[i];
         }
-        tempString += '/';
-        tempString += tempArr[i];
+  
+        list = (await fileSystem(`readDir`, [ designerRepresentativeFolderConst + finalTarget ])).filter((str) => { return (!/^\._/.test(str) && !/DS_Store/gi.test(str)) });
+  
+        res.send(JSON.stringify(list));
+
       }
-
-      list = (await fileSystem(`readDir`, [ designerRepresentativeFolderConst + finalTarget ])).filter((str) => { return (!/^\._/.test(str) && !/DS_Store/gi.test(str)) });
-
-      res.send(JSON.stringify(list));
     } catch (e) {
       logger.error("Transfer lounge 서버 문제 생김 (rou_post_representativeFileRead): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));

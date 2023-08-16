@@ -39,6 +39,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
     let filteredEntireSendRows;
     let careerUpdateBoo;
     let schoolUpdateBoo;
+    let threeStrengthBoo;
 
     past.setFullYear(past.getFullYear() - agoYearDelta);
     past.setMonth(0);
@@ -601,6 +602,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
 
       careerUpdateBoo = designer.information.business.career.detail.length > 0;
       schoolUpdateBoo = designer.information.business.career.school.length > 0;
+      threeStrengthBoo = designer.setting.description.filter((str) => { return !/null/gi.test(str); }).length > 0;
 
       standards.values[designer.desid] = [
         {
@@ -663,7 +665,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
           name: "schoolUpdate",
         },
         {
-          value: "안올림",
+          value: threeStrengthBoo ? "올림" : "안올림",
           name: "threeStrengthUpdate",
         },
         {
