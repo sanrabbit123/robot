@@ -357,12 +357,21 @@ TransferRouter.prototype.rou_post_representativeFileRead = function () {
       let tempArr;
       let tempDir;
       let tempString;
+      let tempList;
+      let resultList;
 
       if (target === "$all") {
 
         list = (await fileSystem(`readDir`, [ designerRepresentativeFolderConst ])).filter((str) => { return (!/^\._/.test(str) && !/DS_Store/gi.test(str)) });
-
-        res.send(JSON.stringify(list));
+        resultList = [];
+        for (let desid of list) {
+          tempList = (await fileSystem(`readDir`, [ designerRepresentativeFolderConst + "/" + desid ])).filter((str) => { return (!/^\._/.test(str) && !/DS_Store/gi.test(str)) });
+          resultList.push({
+            desid,
+            boo: (tempList.length > 0),
+          })
+        }
+        res.send(JSON.stringify(tempList));
 
       } else {
 
