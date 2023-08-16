@@ -371,7 +371,7 @@ TransferRouter.prototype.rou_post_representativeFileRead = function () {
             boo: (tempList.length > 0),
           })
         }
-        res.send(JSON.stringify(tempList));
+        res.send(JSON.stringify(resultList));
 
       } else {
 
