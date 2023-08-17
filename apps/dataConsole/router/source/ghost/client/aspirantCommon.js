@@ -225,7 +225,7 @@ AspirantCommonJs.prototype.insertInitBox = function () {
 
 AspirantCommonJs.prototype.insertAspirantBox = function () {
   const instance = this;
-  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson, cleanChildren } = GeneralJs;
+  const { withOut, returnGet, createNode, colorChip, isMac, isIphone, setDebounce, sleep, svgMaker, serviceParsing, dateToString, stringToDate, findByAttribute, autoHypenPhone, setQueue, uniqueValue, homeliaisonAnalytics, ajaxJson, equalJson, cleanChildren, colorCalendar, zeroAddition } = GeneralJs;
   const { ea, media, standardWidth, portfolioMode, aspirant } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -454,6 +454,11 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   let updateValueCareer;
   let deleteValueCareer;
   let nameDom, phoneDom, longDom;
+  let factorVerticalBetween;
+  let calendarMother;
+  let calendarBottom;
+  let eightMatrix;
+  let dateToLongText;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -532,7 +537,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   checkboxWidth = <%% 9, 9, 9, 8, 2 %%>;
   checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 9 : 9), (isMac() ? 9 : 9), (isMac() ? 9 : 9), (isIphone() ? 2.5 : 2.5) %%>;
   checkboxBetween = <%% 8, 8, 8, 6, 1.5 %%>;
-  checkboxWeight = <%% 300, 300, 300, 300, 300 %%>;
+  checkboxWeight = <%% 200, 200, 200, 200, 200 %%>;
 
   marginRatio = <%% 1.2, 1.2, 1.1, 1.1, 0.8 %%>;
 
@@ -677,7 +682,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   agreeCircleMarginRight = <%% 5, 5, 5, 5, 1 %%>;
 
   submitTongMarginTop = <%% 20, 20, 20, 20, 6 %%>;
-  submitButtonWidth = <%% 200, 200, 170, 155, 39 %%>;
+  submitButtonWidth = <%% 190, 190, 170, 155, 39 %%>;
 
   submitButtonHeight = <%% 47, 47, 42, 38, 10 %%>;
   submitSize = <%% 20, 20, 17, 16, 4 %%>;
@@ -769,7 +774,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   careerBlockMarginLeft = <%% 64, 52, 50, 44, 5 %%>;
   careerBlockMinus = <%% 128, 112, 106, 98, 18.2 %%>;
 
-  propertyWidth = <%% 90, 79, 69, 69, 15.7 %%>;
+  propertyWidth = <%% 185, 79, 69, 69, 15.7 %%>;
   yearWidth = <%% 72, 72, 64, 56, 13 %%>;
   monthWidth = <%% 40, 40, 36, 32, 8 %%>;
 
@@ -778,17 +783,42 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
 
   textareaVisualTop = <%% 38, 35, 34, 32, 8 %%>;
 
+  factorVerticalBetween = <%% 10, 8, 4, 3, 1 %%>;
+
+  calendarBottom = <%% 42, 42, 42, 42, 42 %%>;
+
   contents = {
     main: [
       "공통 교육 참석 안내",
     ],
     sub: [
-      <&& "추가 포트폴리오를 요청드립니다." | "추가 포트폴리오를 요청드립니다." | "추가 포트폴리오를 요청드립니다." | "포트폴리오를 요청드립니다." | "추가 포트폴리오를 요청드립니다." &&>,
-      <&& "포트폴리오는 주거 인테리어 위주의" | "포트폴리오는 주거 인테리어 위주의" | "포트폴리오는 주거 인테리어의" | "주로 주거 인테리어의" | "포트폴리오는 주거 인테리어의" &&>,
-      <&& "스타일링 능력을 최대한 보여줄 수 있는" | "스타일링 능력을 최대한 보여줄 수 있는" | "스타일링을 최대한 보여줄 수 있는" | "스타일링을 보여줄 수 있는" | "스타일링을 최대한 보여줄 수 있는" &&>,
-      <&& "자료로 부탁드리겠습니다!" | "자료로 부탁드리겠습니다!" | "자료로 부탁드리겠습니다!" | "자료로 부탁드리겠습니다!" | "자료로 부탁드리겠습니다!" &&>,
+      "공통 교육 참석이 가능한 일정을",
+      "선택을 통해 알려주세요! 다음 8가지의",
+      "선택지가 있으며, 만약 8개의 시간이",
+      "모두 안 된다면 문의 부탁드립니다."
     ]
   };
+
+  eightMatrix = [
+    new Date(2023, 7, 22, 17, 0, 0),
+    new Date(2023, 7, 24, 17, 0, 0),
+    new Date(2023, 7, 29, 17, 0, 0),
+    new Date(2023, 7, 31, 17, 0, 0),
+    new Date(2023, 8, 5, 17, 0, 0),
+    new Date(2023, 8, 7, 17, 0, 0),
+    new Date(2023, 8, 12, 17, 0, 0),
+    new Date(2023, 8, 14, 17, 0, 0),
+  ];
+
+  dateToLongText = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const dateNumber = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const day = [ "일", "월", "화", "수", "목", "금", "토" ][date.getDay()];
+    return `${String(year).slice(2)}년 ${String(month)}월 ${String(dateNumber)}일 ${day}요일 ${String(hours)}시 ${zeroAddition(minutes)}분`;
+  }
 
   careerBlocksRender = () => {}
   plusValueCareer = () => {}
@@ -996,14 +1026,14 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
         for (let dom of targets) {
           if (dom === this) {
             dom.setAttribute("toggle", "on");
-            dom.children[0].style.opacity = String(0);
-            dom.children[1].style.opacity = String(1);
-            dom.children[2].style.color = colorChip.green;
+            dom.firstChild.children[0].style.opacity = String(0);
+            dom.firstChild.children[1].style.opacity = String(1);
+            dom.children[1].style.color = colorChip.green;
           } else {
             dom.setAttribute("toggle", "off");
-            dom.children[0].style.opacity = String(1);
-            dom.children[1].style.opacity = String(0);
-            dom.children[2].style.color = colorChip.black;
+            dom.firstChild.children[0].style.opacity = String(1);
+            dom.firstChild.children[1].style.opacity = String(0);
+            dom.children[1].style.color = colorChip.black;
           }
         }
       }
@@ -1890,352 +1920,49 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
     }
   });
 
-  // 1
-  nameDom = createNode({
+  // calendar
+  calendarMother = createNode({
     mother: rightBox,
     style: {
       display: "block",
       position: "relative",
-      marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight) + ea,
+      marginBottom: String(calendarBottom) + ea,
     },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(circleRadius * 2) + ea,
-          height: String(circleRadius * 2) + ea,
-          marginRight: String(circleBetween) + ea,
-          borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
-          top: String(circleTop) + ea,
-          verticalAlign: "top",
-        }
-      },
-      {
-        text: "성함",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(mainTop) + ea,
-          fontSize: String(mainSize) + ea,
-          fontWeight: String(mainWeight),
-          color: colorChip.black,
-          verticalAlign: "top",
-        }
-      },
-      {
-        style: {
-          position: "absolute",
-          top: String(grayTop) + ea,
-          left: String(leftGrayType0) + ea,
-          width: String(widthGrayType0) + ea,
-          height: String(grayHeight) + ea,
-          background: colorChip.gray1,
-          borderRadius: String(3) + "px",
-        }
-      },
-      {
-        mode: "input",
-        class: [ inputClassName ],
-        attribute: {
-          type: "text",
-          placeholder: "성함",
-          property: "name",
-          value: "",
-        },
-        event: {
-          blur: nameBlurEvent,
-        },
-        style: {
-          position: "absolute",
-          top: String(grayInputTop) + ea,
-          left: String(leftGrayType0) + ea,
-          width: String(widthGrayType0) + ea,
-          height: String(grayHeight) + ea,
-          outline: String(0),
-          border: String(0),
-          fontSize: String(inputSize) + ea,
-          fontWeight: String(inputWeight),
-          color: colorChip.black,
-          textAlign: "center",
-          background: "transparent",
-        }
-      },
-    ]
   });
-  nameDom.querySelector("." + inputClassName).value = aspirant.designer;
 
-  // 2
-  phoneDom = createNode({
-    mother: rightBox,
-    style: {
-      display: "block",
-      position: "relative",
-      marginBottom: String(blockMarginBottom) + ea,
-      height: String(moduleHeight) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(circleRadius * 2) + ea,
-          height: String(circleRadius * 2) + ea,
-          marginRight: String(circleBetween) + ea,
-          borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
-          top: String(circleTop) + ea,
-          verticalAlign: "top",
-        }
+  colorCalendar(calendarMother, [
+    {
+      contents: {
+        color: colorChip.yellow,
+        description: "",
+        title: "오늘",
       },
-      {
-        text: "연락처",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(mainTop) + ea,
-          fontSize: String(mainSize) + ea,
-          fontWeight: String(mainWeight),
-          color: colorChip.black,
-          verticalAlign: "top",
-        }
-      },
-      {
-        style: {
-          position: "absolute",
-          top: String(grayTop) + ea,
-          left: String(leftGrayType0) + ea,
-          width: String(widthGrayType0) + ea,
-          height: String(grayHeight) + ea,
-          background: colorChip.gray1,
-          borderRadius: String(3) + "px",
-        }
-      },
-      {
-        mode: "input",
-        class: [ inputClassName ],
-        attribute: {
-          type: "text",
-          placeholder: "010-0000-0000",
-          property: "phone",
-          value: "",
-        },
-        event: {
-          keyup: phoneHypenEvent,
-          blur: phoneBlurEvent,
-        },
-        style: {
-          position: "absolute",
-          top: String(grayInputTop) + ea,
-          left: String(leftGrayType0) + ea,
-          width: String(widthGrayType0) + ea,
-          height: String(grayHeight) + ea,
-          outline: String(0),
-          border: String(0),
-          fontSize: String(inputSize) + ea,
-          fontWeight: String(inputWeight),
-          color: colorChip.black,
-          textAlign: "center",
-          background: "transparent",
-        }
-      },
-    ]
-  });
-  phoneDom.querySelector("." + inputClassName).value = aspirant.phone;
-
-  // 17
-  tempBlock = createNode({
-    mother: rightBox,
-    style: {
-      display: "block",
-      position: "relative",
-      marginBottom: String(blockMarginBottom) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(circleRadius * 2) + ea,
-          height: String(circleRadius * 2) + ea,
-          marginRight: String(circleBetween) + ea,
-          borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
-          top: String(circleTop) + ea,
-          verticalAlign: "top",
-        }
-      },
-      {
-        text: "경력",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(mainTop) + ea,
-          fontSize: String(mainSize) + ea,
-          fontWeight: String(mainWeight),
-          color: colorChip.black,
-          verticalAlign: "top",
-        }
-      },
-      {
-        style: {
-          display: "inline-flex",
-          verticalAlign: "top",
-          position: "relative",
-          background: colorChip.green,
-          width: String(noticeCircleWidth) + ea,
-          height: String(noticeCircleWidth) + ea,
-          borderRadius: String(noticeCircleWidth) + ea,
-          top: String(noticeCircleTop) + ea,
-          marginLeft: String(noticeCircleMargin) + ea,
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-        },
-        child: {
-          text: "+",
-          style: {
-            position: "relative",
-            fontSize: String(plusSize) + ea,
-            fontWeight: String(questionWeight),
-            top: String(plusTextTop) + ea,
-            color: colorChip.white,
-            fontFamily: "graphik",
-          }
-        }
-      },
-      {
-        mode: "article",
-        class: [ blockTargetClassName.career, inputClassName ],
-        attribute: {
-          block: JSON.stringify(aspirant.information.career.detail),
-          property: "careerdetail",
-        },
-        style: {
-          display: "inline-block",
-          verticalAlign: "top",
-          position: "relative",
-          top: String(grayTop) + ea,
-          marginLeft: String(careerBlockMarginLeft) + ea,
-          width: withOut(careerBlockMinus, ea),
-          "min-height": String(grayHeight) + ea,
-          background: colorChip.gray1,
-          borderRadius: String(3) + "px",
-        }
-      },
-    ]
-  });
-  tempBlock.children[2].addEventListener("click", plusBlockEvent("create", -1, 0, tempBlock.children[3]), false);
-  careerBlocksRender(tempBlock.children[3], 0);
-
-  // 18
-  tempBlock = createNode({
-    mother: rightBox,
-    style: {
-      display: "block",
-      position: "relative",
-      marginBottom: String(blockMarginBottom) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(circleRadius * 2) + ea,
-          height: String(circleRadius * 2) + ea,
-          marginRight: String(circleBetween) + ea,
-          borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
-          top: String(circleTop) + ea,
-          verticalAlign: "top",
-        }
-      },
-      {
-        text: "학력",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(mainTop) + ea,
-          fontSize: String(mainSize) + ea,
-          fontWeight: String(mainWeight),
-          color: colorChip.black,
-          verticalAlign: "top",
-        }
-      },
-      {
-        style: {
-          display: "inline-flex",
-          verticalAlign: "top",
-          position: "relative",
-          background: colorChip.green,
-          width: String(noticeCircleWidth) + ea,
-          height: String(noticeCircleWidth) + ea,
-          borderRadius: String(noticeCircleWidth) + ea,
-          top: String(noticeCircleTop) + ea,
-          marginLeft: String(noticeCircleMargin) + ea,
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-        },
-        child: {
-          text: "+",
-          style: {
-            position: "relative",
-            fontSize: String(plusSize) + ea,
-            fontWeight: String(questionWeight),
-            top: String(plusTextTop) + ea,
-            color: colorChip.white,
-            fontFamily: "graphik",
-          }
-        }
-      },
-      {
-        mode: "article",
-        class: [ blockTargetClassName.school, inputClassName ],
-        attribute: {
-          block: JSON.stringify(aspirant.information.career.school),
-          property: "schooldetail",
-        },
-        style: {
-          display: "inline-block",
-          verticalAlign: "top",
-          position: "relative",
-          top: String(grayTop) + ea,
-          marginLeft: String(careerBlockMarginLeft) + ea,
-          width: withOut(careerBlockMinus, ea),
-          "min-height": String(grayHeight) + ea,
-          background: colorChip.gray1,
-          borderRadius: String(3) + "px",
-        }
-      },
-    ]
-  });
-  tempBlock.children[2].addEventListener("click", plusBlockEvent("create", -1, 1, tempBlock.children[3]), false);
-  careerBlocksRender(tempBlock.children[3], 1);
-
-  if (mobile) {
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        height: String(1) + ea,
+      date: {
+        start: new Date(),
+        end: new Date(),
       }
-    });
-  }
+    }
+  ].concat(equalJson(JSON.stringify(eightMatrix)).map((date, index) => {
+    return {
+      contents: {
+        color: colorChip.red,
+        description: "",
+        title: "선택 " + String(index + 1),
+      },
+      date: {
+        start: date,
+        end: date,
+      }
+    }
+  })), { standardDate: eightMatrix[0] });
 
-  // 23
-  portfolioBlock = createNode({
+  // possible dates
+  createNode({
     mother: rightBox,
     style: {
       display: "block",
       position: "relative",
       marginBottom: String(blockMarginBottom) + ea,
-      height: String(textAreaBlockHeight) + ea,
     },
     children: [
       {
@@ -2252,7 +1979,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
         }
       },
       {
-        text: "포트폴리오",
+        text: "가능 일자",
         style: {
           display: "inline-block",
           position: "relative",
@@ -2261,194 +1988,106 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
           fontWeight: String(mainWeight),
           color: colorChip.black,
           verticalAlign: "top",
-          width: String(titleWidth) + ea,
+          width: String(propertyWidth) + ea,
+        },
+        child: {
+          mode: "svg",
+          source: svgMaker.horizontalArrow(132, 10, colorChip.gray3),
+          style: {
+            width: String(132) + ea,
+            height: String(10) + ea,
+            position: "absolute",
+            top: String(8) + ea,
+            left: String(88) + ea,
+          }
         }
       },
-      {
-        event: {
-          click: function (e) {
-            this.querySelector("input").click();
+      ...(eightMatrix.map((date) => {
+        return dateToLongText(date);
+      }).map((str, index) => {
+        return {
+          class: [ inputClassName ],
+          attribute: {
+            toggle: index === 0 ? "on" : "off",
+            property: "possible",
           },
-          dragenter: (e) => { e.preventDefault(); e.stopPropagation(); },
-          dragover: (e) => { e.preventDefault(); e.stopPropagation(); },
-          dragleave: (e) => { e.preventDefault(); e.stopPropagation(); },
-          drop: function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            if ([ ...e.dataTransfer.files ].map((file) => { return file.type }).filter((str) => { return !/^image/.test(str) }).filter((str) => { return !/pdf/.test(str) }).length > 0) {
-              window.alert("이미지 또는 pdf 파일로만 올려주세요!");
-            } else {
-              this.querySelector("input").files = e.dataTransfer.files;
-              fileChangeEvent.call(this.querySelector("input"), e);
-            }
-          }
-        },
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(desktop ? grayTextAreaTop : mobileGrayTextAreaTop) + ea,
-          width: desktop ? withOut((circleRadius * 2) + circleBetween + titleWidth, ea) : withOut(0, ea),
-          height: String(grayBigHeight) + ea,
-          background: colorChip.gray1,
-          borderRadius: String(3) + "px",
-          cursor: "pointer",
-        },
-        children: [
-          {
-            style: {
-              position: "absolute",
-              top: String(grayMargin + (desktop ? 0 : 2)) + ea,
-              left: String(grayMargin) + ea,
-              width: withOut(grayMargin * 2, ea),
-              height: withOut(grayMargin + grayMargin + (desktop ? 0 : 2), ea),
-              overflow: "scroll",
-              zIndex: String(1),
-            },
-            children: [
-              {
-                class: [ fileTongClassName ],
-                style: {
-                  position: "relative",
-                  width: String(100) + '%',
-                  top: String(0),
-                  left: String(0),
-                }
-              }
-            ]
+          event: {
+            click: checkboxClickEvent0
           },
-          {
-            style: {
-              display: "flex",
-              position: "absolute",
-              width: withOut(0, ea),
-              height: withOut(0, ea),
-              top: String(0),
-              left: String(0),
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            },
-            child: {
-              text: desktop ? "클릭 또는 드래그하여 파일 업로드..." : "클릭하여 파일 업로드...",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            top: String(0),
+            height: String(100) + '%',
+            verticalAlign: "top",
+            cursor: "pointer",
+            width: "calc(" + withOut((circleRadius * 2) + circleBetween + propertyWidth, ea) + " / 2)",
+            marginLeft: (index > 1 && index % 2 === 1) ? "" : ((index === 0 || index === 1) ? "" : String((circleRadius * 2) + circleBetween + propertyWidth) + ea),
+            marginBottom: String(factorVerticalBetween) + ea,
+            textAlign: "right",
+          },
+          children: [
+            {
               style: {
                 display: "inline-block",
                 position: "relative",
-                top: String(desktop ? -3 : -0.3) + ea,
-                fontSize: String(desktop ? 23 : 4.5) + ea,
-                fontWeight: String(200),
-                color: colorChip.gray4,
+                width: String(checkboxWidth) + ea,
+                height: String(checkboxWidth) + ea,
+                top: String(checkboxTop) + ea,
+                verticalAlign: "top",
+                cursor: "pointer",
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.gray3),
+                  style: {
+                    display: "inline-block",
+                    position: "absolute",
+                    width: String(checkboxWidth) + ea,
+                    top: String(0) + ea,
+                    left: String(0),
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(index !== 0 ? 1 : 0),
+                  }
+                },
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckBox(colorChip.green),
+                  style: {
+                    display: "inline-block",
+                    position: "absolute",
+                    width: String(checkboxWidth) + ea,
+                    top: String(0) + ea,
+                    left: String(0),
+                    verticalAlign: "top",
+                    cursor: "pointer",
+                    opacity: String(index !== 0 ? 0 : 1),
+                  }
+                },
+              ]
+            },
+            {
+              text: str,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                marginLeft: String(checkboxBetween) + ea,
+                width: String(270) + ea,
+                top: String(mainTop) + ea,
+                fontSize: String(mainSize) + ea,
+                fontWeight: String(checkboxWeight),
+                color: index === 0 ? colorChip.green : colorChip.black,
+                verticalAlign: "top",
+                cursor: "pointer",
               }
-            }
-          },
-          {
-            mode: "input",
-            attribute: {
-              type: "file",
-              name: "upload",
-              accept: "image/*,  application/pdf",
-              multiple: "true",
-              cancel: JSON.stringify([]),
-              property: "portfolio",
             },
-            event: {
-              change: fileChangeEvent,
-            },
-            style: {
-              position: "absolute",
-              display: "none",
-            }
-          }
-        ]
-      },
+          ]
+        }
+      }))
     ]
   });
-
-  if (mobile) {
-    createNode({
-      mother: rightBox,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(blockMarginBottom) + ea,
-        height: String(0.6) + ea,
-      }
-    });
-  }
-
-  // 25
-  longDom = createNode({
-    mother: rightBox,
-    style: {
-      display: "block",
-      position: "relative",
-      marginBottom: String(blockMarginBottom) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(circleRadius * 2) + ea,
-          height: String(circleRadius * 2) + ea,
-          marginRight: String(circleBetween) + ea,
-          borderRadius: String(circleRadius) + ea,
-          background: colorChip.green,
-          top: String(circleTop) + ea,
-          verticalAlign: "top",
-        }
-      },
-      {
-        text: "자기 소개",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          top: String(mainTop) + ea,
-          fontSize: String(mainSize) + ea,
-          fontWeight: String(mainWeight),
-          color: colorChip.black,
-          verticalAlign: "top",
-        }
-      },
-      {
-        style: {
-          display: "block",
-          position: "relative",
-          marginTop: String(desktop ? 12 : mobileGrayTextAreaTop) + ea,
-          left: String(0) + ea,
-          width: withOut(0, ea),
-          height: String((grayBigHeight * 2)) + ea,
-          background: colorChip.gray1,
-          borderRadius: String(3) + "px",
-        }
-      },
-      {
-        mode: "textarea",
-        class: [ inputClassName ],
-        attribute: {
-          property: "etc",
-        },
-        style: {
-          position: "absolute",
-          top: String(textareaVisualTop + textareaTop) + ea,
-          left: String(0 + textareaLeft) + ea,
-          width: withOut(textareaLeft * 2, ea),
-          height: String((grayBigHeight * 2) - (textareaTop * 1)) + ea,
-          fontSize: String(grayLineBlockFontSize) + ea,
-          fontWeight: String(grayLineBlockFontWeight),
-          border: String(0),
-          background: "transparent",
-          outline: String(0),
-          overflow: "scroll",
-          lineHeight: String(1.6),
-          color: colorChip.black,
-        }
-      }
-    ]
-  });
-  longDom.querySelector("." + inputClassName).insertAdjacentHTML("beforeend", aspirant.information.career.about);
-  longDom.querySelector("." + inputClassName).value = aspirant.information.career.about;
-
-  this.fileInput = portfolioBlock.querySelector("input");
 
   // policy and submit
   policyArea = createNode({
@@ -2466,107 +2105,11 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
     }
   });
 
-  policyTong = createNode({
-    mother: policyArea,
-    style: {
-      display: "block",
-      position: "relative",
-      marginLeft: String(innerPadding) + ea,
-      width: withOut(innerPadding * 2, ea),
-      height: String(policyGrayHeight) + ea,
-      background: colorChip.gray1,
-      borderRadius: String(3) + "px",
-    },
-    children: [
-      {
-        style: {
-          position: "absolute",
-          top: String(policyGrayTextTop) + ea,
-          left: String(policyGrayTextLeft) + ea,
-          width: withOut(policyGrayTextLeft * 2, ea),
-          height: withOut(policyGrayTextTop * 2, ea),
-          overflow: "scroll",
-        },
-        children: [
-          {
-            position: "absolute",
-            top: String(0) + ea,
-            left: String(0) + ea,
-            width: String(100) + '%',
-            height: "auto",
-            fontSize: String(policyGrayTextSize) + ea,
-            fontWeight: String(300),
-            lineHeight: String(1.6),
-            color: colorChip.black,
-          }
-        ]
-      }
-    ]
-  }).firstChild.firstChild;
-
-  agreeTong = createNode({
-    mother: policyArea,
-    attribute: {
-      toggle: "on",
-    },
-    style: {
-      display: "flex",
-      position: "relative",
-      flexDirection: "row-reverse",
-      marginLeft: String(innerPadding) + ea,
-      width: withOut(innerPadding * 2, ea),
-      marginTop: String(agreeTongMarginTop) + ea,
-      cursor: "pointer",
-    },
-    children: [
-      {
-        class: [ agreeTargetClassName ],
-        attribute: {
-          toggle: "on",
-        },
-        event: {
-          click: agreeToggleEvent
-        },
-        text: "상기 개인정보 취급 방침에 동의합니다.",
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(agreeSize) + ea,
-          fontWeight: String(agreeWeight),
-          color: colorChip.green,
-          lineHeight: String(agreeLineHeight),
-          cursor: "pointer",
-        }
-      },
-      {
-        class: [ agreeTargetClassName ],
-        attribute: {
-          toggle: "on",
-        },
-        event: {
-          click: agreeToggleEvent
-        },
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: String(agreeCircleRadius) + ea,
-          height: String(agreeCircleRadius) + ea,
-          borderRadius: String(agreeCircleRadius) + ea,
-          background: colorChip.green,
-          top: String(agreeCircleTop) + ea,
-          marginRight: String(agreeCircleMarginRight) + ea,
-          cursor: "pointer",
-        }
-      }
-    ]
-  });
-
   submitTong = createNode({
     mother: policyArea,
     style: {
       display: "block",
       position: "relative",
-      marginTop: String(submitTongMarginTop) + ea,
       textAlign: "center",
     },
     children: [
@@ -2588,7 +2131,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
         },
         children: [
           {
-            text: "포트폴리오 전송하기",
+            text: "가능 일자 전송하기",
             style: {
               display: "inline-block",
               position: "relative",
@@ -2602,19 +2145,6 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
         ]
       }
     ]
-  });
-
-  ajaxJson({}, BACKHOST + "/designerProposal_policy").then(function (res) {
-    const { policy } = res;
-    let bTags;
-    policyTong.insertAdjacentHTML("beforeend", policy);
-    bTags = policyTong.querySelectorAll("b");
-    for (let b of bTags) {
-      b.style.color = colorChip.black;
-      b.style.fontWeight = String(600);
-    }
-  }).catch(function (err) {
-    console.log(err);
   });
 
 }
