@@ -5259,7 +5259,7 @@ StaticRouter.prototype.rou_post_receiveSms = function () {
         await back.mongoCreate(collection, obj, { selfMongo });
         await sleep(500);
       }
-      res.send(JSON.stringify({ message: "error : " + e.message }));
+      res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_receiveSms): " + e.message);
