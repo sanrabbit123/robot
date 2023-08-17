@@ -3916,6 +3916,8 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         kakao.sendTalk("aspirantSubmit", updateQuery.designer, updateQuery.phone, {
           client: updateQuery.designer,
           host: address.frontinfo.host,
+          path: "aspinformation",
+          aspid: aspid,
         }).catch((err) => {
           console.log(err);
         });
@@ -3962,6 +3964,8 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
           return kakao.sendTalk("aspirantPortfolio", name, phone, {
             client: name,
             host: address.frontinfo.host,
+            path: "aspportfolio",
+            aspid: aspid,
           })
         }).catch((err) => {
           console.log(err);
@@ -4061,6 +4065,7 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
         updateQuery["submit.registration.date"] = new Date();
         updateQuery["submit.registration.boo"] = true;
         updateQuery["meeting.status"] = "등록 완료";
+        updateQuery["meeting.common.status"] = "미팅 조율";
   
         await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
         await messageSend({ text: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 카드 결제하셨습니다!", channel: "#301_apply", voice: true });
@@ -4086,6 +4091,7 @@ DataRouter.prototype.rou_post_aspirantPayment = function () {
           updateQuery["submit.registration.date"] = new Date();
           updateQuery["submit.registration.boo"] = true;
           updateQuery["meeting.status"] = "등록 완료";
+          updateQuery["meeting.common.status"] = "미팅 조율";
     
           await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo });
           await messageSend({ text: aspirant.designer + " 디자이너 신청자님이 디자이너 등록비를 무통장 입금하셨습니다!", channel: "#301_apply", voice: true });
