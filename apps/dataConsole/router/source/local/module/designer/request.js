@@ -112,14 +112,14 @@ DesignerJs.prototype.requestReturnStatic = function (designer, project, client, 
   }
   const mainContents = [
     {
-      title: "현장 미팅",
+      title: "현장 미팅 시간",
       className: "mainContents_when",
       position: "request.about.when",
       contents: emptyReload(projectHistory.request.about.when, [ dateToString(project.process.contract.meeting.date, true, true) ]),
       spread: true,
     },
     {
-      title: "현장 주소",
+      title: "현장 미팅 주소",
       className: "mainContents_where",
       position: "request.about.where",
       contents: emptyReload(projectHistory.request.about.where, [ client.requests[requestNumber].request.space.address ]),
