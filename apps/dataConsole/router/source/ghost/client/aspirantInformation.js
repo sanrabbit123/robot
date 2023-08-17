@@ -235,13 +235,13 @@ AspirantInformationJs.prototype.insertNoticeBox = function () {
     {
       title: "홈리에종 파트너십",
       contents: [
-        "홈리에종의 디자이너 파트너십은 타 플랫폼의 파트너십과 개념이 다릅니다. 단순한 플랫폼과 생산자의 관계가 아니라 하나의 홈스타일링 프로젝트를 완벽히 끝내기 위한 협업 파트너로, 홈리에종의 룰과 케어에 따라 디자인을 진행해 주시게 됩니다. 이는 홈리에종이 단순 매칭 플랫폼이 아니라 '고객 중심의 인테리어'라는 뚜렷한 미션을 가지고 인테리어 업계에 꼭 필요한 변화를 이끌어가고 있는 기업이고, 제대로 된 홈스타일링 프로젝트 방식의 보존과 대중화에 힘쓰고 있는 플랫폼의 역할을 하고 있기 때문입니다."
+        "홈리에종이 단순 매칭 플랫폼이 아닙니다. 홈리에종은 '고객 중심의 인테리어'라는 뚜렷한 미션을 가지고 인테리어 업계에 꼭 필요한 변화를 이끌어가고 있는 기업이고, 제대로 된 홈스타일링 프로젝트 방식의 보존과 대중화에 힘쓰고 있는 플랫폼의 역할을 하고 있습니다.",
       ]
     },
     {
       title: "파트너십 등록 과정",
       contents: [
-        "신규 디자이너 파트너십 신청을 해주시면, 먼저 유선상의 파트너십 설명과 동의 및 진행 여부를 확인하게 됩니다. 그 후, 파트너십을 진행하기로 한 디자이너님들을 대상으로 행정 서류 제출과 등록비 입금이 이루어지고 대표님 미팅 및 교육까지 마치시면, 정보 체크와 프로필 업로드를 통해 본격적으로 디자이너로서 활동할 수 있게 됩니다."
+        "신규 디자이너 파트너십 신청을 해주시면, 먼저 유선상의 파트너십 설명과 동의 및 진행 여부를 확인하게 됩니다. 그 후, 파트너십을 진행하기로 한 디자이너님들을 대상으로 행정 서류 제출과 등록비 입금이 이루어지고, 대표님 미팅 및 교육까지 마치시면, 정보 체크와 프로필 업로드를 통해 본격적으로 디자이너로서 활동할 수 있게 됩니다."
       ]
     },
   ];
@@ -1062,7 +1062,7 @@ AspirantInformationJs.prototype.insertDifferentBox = function () {
       "<b%선 기획 후 시공,%b> 디자인 프로세스",
     ],
     essential: [
-      desktop ? [ "마인드", "프로젝트 진행 시, 개인 브랜드가 아닌 <b%홈리에종 디자이너%b>입니다." ] : [ "마인드", "개인 브랜드가 아닌 <b%홈리에종의 디자이너%b>입니다." ],
+      desktop ? [ "마인드", "프로젝트 진행 시, 개인이 아닌 <b%홈리에종 디자이너%b>입니다." ] : [ "마인드", "개인이 아닌 <b%홈리에종의 디자이너%b>입니다." ],
       desktop ? [ "협업", "진행할 프로젝트의 <b%고객은 홈리에종의 고객%b>입니다." ] : [ "협업", "진행할 <b%고객은 홈리에종의 고객%b>입니다." ],
       desktop ? [ "일관성", "<b%모든 디자이너가 같은 마음%b>으로 홈리에종 고객을 대합니다." ] : [ "일관성", "<b%모든 디자이너가 한 마음%b>으로 고객을 대합니다." ],
       desktop ? [ "안내", "서비스의 부족함이 없도록 <b%명확하게 안내%b>합니다." ] : [ "안내", "부족함이 없도록 <b%명확하게 안내%b>합니다." ],
@@ -2878,24 +2878,12 @@ AspirantInformationJs.prototype.finalSubmit = function () {
   const { aspid, aspirant } = this;
   return async function (e) {
     try {
-      if (instance.accountInput.files.length === 0) {
-        throw new Error("통장 사본을 업로드해주세요!");
-      }
-      if (instance.businessInput.files.length === 0) {
-        throw new Error("사업자등록증(주민등록증)을 업로드해주세요!");
-      }
-      if (instance.identityInput.files.length === 0) {
-        throw new Error("신분증 사본을 업로드해주세요!");
-      }
       let account, business, identity;
       let portfolioFiles;
       let grayLoading;
       let formData;
       let cancelPhoto;
 
-      [ account ] = instance.accountInput.files;
-      [ business ] = instance.businessInput.files;
-      [ identity ] = instance.identityInput.files;
       portfolioFiles = instance.fileInput.files;
 
       grayLoading = instance.mother.whiteProgressLoading();
@@ -2903,7 +2891,7 @@ AspirantInformationJs.prototype.finalSubmit = function () {
       await homeliaisonAnalytics({
         page: instance.pageName,
         standard: instance.firstPageViewTime,
-        action: "aspirantDocumentsSend",
+        action: "aspirantPortfolioSend",
         data: {
           aspid,
           date: dateToString(new Date(), true),
@@ -2920,17 +2908,8 @@ AspirantInformationJs.prototype.finalSubmit = function () {
           formData.append("upload0", instance.fileInput.files[i]);
         }
       }
-      formData.append("account", account);
-      formData.append("business", business);
-      formData.append("identity", identity);
 
-      ajaxForm(formData, BRIDGEHOST + "/aspirantDocuments", grayLoading.progress.firstChild).then((res) => {
-        const { message } = JSON.parse(res);
-        if (message !== "done") {
-          throw new Error("file posting fail");
-        }
-        return ajaxJson({ aspid }, BACKHOST + "/aspirantDocuments", { equal: true });
-      }).then(() => {
+      ajaxForm(formData, BRIDGEHOST + "/aspirantBinary", grayLoading.progress.firstChild).then((res) => {
         grayLoading.remove();
         GeneralJs.scrollTo(window, 0);
         window.alert("전송이 완료되었습니다! 확인 후 연락드리겠습니다 :)");
@@ -2941,6 +2920,7 @@ AspirantInformationJs.prototype.finalSubmit = function () {
       });
 
     } catch (e) {
+      console.log(e);
       window.alert(e.message);
     }
   }
