@@ -5245,6 +5245,16 @@ StaticRouter.prototype.rou_post_receiveSms = function () {
       res.send(JSON.stringify(textArr));
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_receiveSms): " + e.message);
+
+
+      console.log(req.body);
+
+
+
+
+
+
+
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
