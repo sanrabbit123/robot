@@ -1106,7 +1106,7 @@ DesignerJs.prototype.aspirantWhiteData = async function (aspid) {
             } else if (finalValue === "반려") {
               chainValue = "추가 필요";
               chainManager = teamLeader;
-              chainMessage = "대표님께서 " + aspirant.designer + " 신청자를 합격으로 설정하셨습니다! 응대를 부탁드리겠습니다! <@" + teamLeaderId + ">";
+              chainMessage = "대표님께서 " + aspirant.designer + " 신청자를 반려로 설정하셨습니다! 응대를 부탁드리겠습니다! <@" + teamLeaderId + ">";
             } else if (finalValue === "불합격") {
               chainValue = "드랍";
               chainManager = hlBot;

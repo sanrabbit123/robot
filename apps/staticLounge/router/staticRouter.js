@@ -2207,20 +2207,21 @@ StaticRouter.prototype.rou_post_textToVoice = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const thisBody = equalJson(req.body);
-      requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/textToVoice", thisBody, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err) });
-      res.send(JSON.stringify({ message: "toss" }));
+      // const thisBody = equalJson(req.body);
+      // requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/textToVoice", thisBody, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err) });
+      // res.send(JSON.stringify({ message: "toss" }));
       
-      // if (!instance.fireWall(req)) {
-      //   throw new Error("post ban");
-      // }
-      // if (typeof req.body.text !== "string") {
-      //   throw new Error("invalid post");
-      // }
-      // audio.textToVoice(req.body.text).catch((err) => {
-      //   console.log(err);
-      // })
-      // res.send(JSON.stringify({ message: "will do" }));
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (typeof req.body.text !== "string") {
+        throw new Error("invalid post");
+      }
+      audio.textToVoice(req.body.text).catch((err) => {
+        console.log(err);
+      })
+      res.send(JSON.stringify({ message: "will do" }));
+
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_textToVoice): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -2245,39 +2246,39 @@ StaticRouter.prototype.rou_post_printText = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const thisBody = equalJson(req.body);
-      requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/printText", thisBody, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err) });
-      res.send(JSON.stringify({ message: "toss" }));
+      // const thisBody = equalJson(req.body);
+      // requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/printText", thisBody, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err) });
+      // res.send(JSON.stringify({ message: "toss" }));
 
-      // if (!instance.fireWall(req)) {
-      //   throw new Error("post ban");
-      // }
-      // if (typeof req.body.text !== "string") {
-      //   throw new Error("invalid post");
-      // }
-      // const { spawn } = require("child_process");
-      // const lpstat = spawn("lpstat", [ "-p" ]);
-      // const fontName = `/home/homeliaison/font/NanumGothicEco.ttf`;
-      // let printer;
-      // let targetFile;
+      if (!instance.fireWall(req)) {
+        throw new Error("post ban");
+      }
+      if (typeof req.body.text !== "string") {
+        throw new Error("invalid post");
+      }
+      const { spawn } = require("child_process");
+      const lpstat = spawn("lpstat", [ "-p" ]);
+      const fontName = `/home/homeliaison/font/NanumGothicEco.ttf`;
+      let printer;
+      let targetFile;
 
-      // targetFile = process.cwd() + "/temp/printerTemp_" + uniqueValue("hex") + ".txt";
+      targetFile = process.cwd() + "/temp/printerTemp_" + uniqueValue("hex") + ".txt";
 
-      // lpstat.stdout.on("data", (data) => {
-      //   const arr = String(data).split("\n").map((i) => { return i.trim(); });
-      //   const printerRaw = arr.find((i) => { return /hp/gi.test(i); });
-      //   printer = printerRaw.trim().split(' ')[1];
-      //   lpstat.kill();
-      //   fileSystem(`write`, [ targetFile, req.body.text ]).then(() => {
-      //     return shellExec(`uniprint -printer ${printer} -size 9 -hsize 0 ${req.body.landScape !== undefined ? String("-L ") : ""}-media A4 -wrap -font ${fontName} ${shellLink(targetFile)}`);
-      //   }).then(() => {
-      //     return shellExec("rm", [ "-rf", targetFile ]);
-      //   }).catch((err) => {
-      //     console.log(err);
-      //   });
-      // });
+      lpstat.stdout.on("data", (data) => {
+        const arr = String(data).split("\n").map((i) => { return i.trim(); });
+        const printerRaw = arr.find((i) => { return /hp/gi.test(i); });
+        printer = printerRaw.trim().split(' ')[1];
+        lpstat.kill();
+        fileSystem(`write`, [ targetFile, req.body.text ]).then(() => {
+          return shellExec(`uniprint -printer ${printer} -size 9 -hsize 0 ${req.body.landScape !== undefined ? String("-L ") : ""}-media A4 -wrap -font ${fontName} ${shellLink(targetFile)}`);
+        }).then(() => {
+          return shellExec("rm", [ "-rf", targetFile ]);
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
 
-      // res.send(JSON.stringify({ message: "will do" }));
+      res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       logger.error("Static lounge 서버 문제 생김 (rou_post_printText): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -4281,7 +4282,8 @@ StaticRouter.prototype.rou_post_printComplex = function () {
         return back.updateClient([ whereQuery, updateQuery ], { selfMongo });
       }).then(() => {
         if (mode === "general") {
-          return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+          // return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.wss) + "/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+          return requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(3000) + "/printText", { text: finalText }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
         } else if (mode === "update") {
           if (naverId !== "") {
             logger.log("Static lounge 네이버 부동산 아이디 찾고 업데이트 성공함 : " + cliid + " / " + naverId).catch((err) => {
