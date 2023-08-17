@@ -5172,11 +5172,11 @@ StaticRouter.prototype.rou_post_receiveSms = function () {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
+    const selfMongo = instance.mongolocal;
+    const idKeyword = "sms_";
+    const path = "/permanents";
+    const collection = "accountSms";
     try {
-      const selfMongo = instance.mongolocal;
-      const idKeyword = "sms_";
-      const path = "/permanents";
-      const collection = "accountSms";
       let response0, response1;
       let textArr;
       let headers;
@@ -5246,15 +5246,19 @@ StaticRouter.prototype.rou_post_receiveSms = function () {
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_receiveSms): " + e.message);
 
-
-      console.log(req.body);
-
-
-
-
-
-
-
+      const { date, amount, name } = equalJson(req.body);
+      const obj = {
+        id: idKeyword + String(date.valueOf()) + "_" + String(amount),
+        date,
+        amount,
+        name
+      }
+      rows = await back.mongoRead(collection, { id: obj.id }, { selfMongo });
+      if (rows.length === 0) {
+        await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/smsParsing", { date: obj.date, amount: obj.amount, name: obj.name }, { headers: { "Content-Type": "application/json" } });
+        await back.mongoCreate(collection, obj, { selfMongo });
+        await sleep(500);
+      }
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
