@@ -2434,19 +2434,7 @@ SecondRouter.prototype.rou_post_noticeAspirantConsole = function () {
 
         } else if (type === "plus") {
 
-          // await kakao.sendTalk("aspirantRequestPortfolio", designer, phone, { client: designer, host: address.frontinfo.host, path: "aspportfolio", aspid });
-          await human.sendSms({
-            to: phone.replace(/[^0-9]/gi, ''),
-            body: ("안녕하세요, " + designer + "님!\n" + 
-            "홈리에종 디자이너 파트너십에 신청해 주셔서 감사합니다 :) 홈리에종에서 디자이너님에 대해 좀 더 정확히 판단하기 위해 추가 포트폴리오 업로드를 요청 드립니다! \n" + 
-            "\n" + 
-            "추가 포트폴리오는 주거 인테리어에 홈스타일링까지 완료된 포트폴리오로 부탁드리며, 실제로 완료된 현장의 사진이 가장 좋습니다. \n" + 
-            "\n" + 
-            "만약 포트폴리오로 쓸 현장의 사진이 부족하다면, 디자이너님의 스타일링 능력을 판단할 수 있는 이미지라도 최대한 전송해주시길 부탁드릴게요! 감사합니다 :)\n" + 
-            "\n" + 
-            "*추가 포트폴리오 전송\n" + 
-            "https://" + address.frontinfo.host + "/" + "aspportfolio" + ".php?aspid=" + aspid),
-          });
+          await kakao.sendTalk("aspirantRequestPortfolio", designer, phone, { client: designer, host: address.frontinfo.host, path: "aspportfolio", aspid });
           await messageSend({
             text: designer + " 실장님께 추가 포트폴리오 요청 알림톡을 전송하였습니다!",
             channel,
@@ -2458,7 +2446,6 @@ SecondRouter.prototype.rou_post_noticeAspirantConsole = function () {
 
         } else if (type === "fail") {
 
-          // await kakao.sendTalk("aspirantFail", designer, phone, { client: designer, host: address.frontinfo.host, path: "aspportfolio", aspid });
           await human.sendSms({
             to: phone.replace(/[^0-9]/gi, ''),
             body: ("안녕하세요, " + designer + "님! 홈리에종입니다.\n" + 
@@ -2480,14 +2467,7 @@ SecondRouter.prototype.rou_post_noticeAspirantConsole = function () {
 
         } else if (type === "pure") {
 
-          // await kakao.sendTalk("aspirantFail", designer, phone, { client: designer, host: address.frontinfo.host, path: "aspportfolio", aspid });
-          await human.sendSms({
-            to: phone.replace(/[^0-9]/gi, ''),
-            body: ("안녕하세요, " + designer + "님! 홈리에종입니다.\n" + 
-            "홈스타일링 디자이너 신청해주신 홈리에종입니다. 연락드렸으나 통화가 어려우신 듯하여 메세지 남겨 드립니다.\n" + 
-            "\n" + 
-            "02-2039-2252로 전화주시거나, 홈리에종 카카오 채널을 통해 통화 가능 시간을 남겨주시면, 확인 후 연락드리겠습니다!"),
-          });
+          await kakao.sendTalk("aspirantRequestPure", designer, phone, { client: designer });
           await messageSend({
             text: designer + " 실장님께 부재중 알림 알림톡을 전송하였습니다!",
             channel,

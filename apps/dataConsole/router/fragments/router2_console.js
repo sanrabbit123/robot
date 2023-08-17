@@ -3081,6 +3081,8 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
         kakao.sendTalk("aspirantSubmit", updateQuery.designer, updateQuery.phone, {
           client: updateQuery.designer,
           host: address.frontinfo.host,
+          path: "aspinformation",
+          aspid: aspid,
         }).catch((err) => {
           console.log(err);
         });
@@ -3127,6 +3129,8 @@ DataRouter.prototype.rou_post_aspirantSubmit = function () {
           return kakao.sendTalk("aspirantPortfolio", name, phone, {
             client: name,
             host: address.frontinfo.host,
+            path: "aspportfolio",
+            aspid: aspid,
           })
         }).catch((err) => {
           console.log(err);

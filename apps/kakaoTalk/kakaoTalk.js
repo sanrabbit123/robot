@@ -3240,16 +3240,18 @@ KakaoTalk.prototype.templateTong = function (target) {
       }
     },
     "aspirantSubmit": {
-      "name": "파트너십 신청 완료",
-      "id": "TN_3473",
+      "name": "파트너십 신청 완료 진짜 최종",
+      "id": "TO_4442",
       "needs": [
         "client",
-        "host"
+        "host",
+        "path",
+        "aspid"
       ],
-      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host }\n        ];\n      }",
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"aspid\", to: obj.aspid }\n        ];\n      }",
       "raw": {
-        "templtContent": "안녕하세요 #{client}님!\n작성하신 디자이너 파트너십 신청서는 접수 완료되었습니다 :)\n\n추가적인 포트폴리오 발송이 필요하시다면, 아래 링크를 통해 보내주세요! 검토 후 확인 연락드리겠습니다.\n\n*추가 포트폴리오 전송\nhttps://#{host}/aspirant.php?mode=portfolio",
-        "templtName": "파트너십 신청 완료",
+        "templtContent": "안녕하세요 #{client}님!\n작성하신 디자이너 파트너십 신청서는 접수 완료되었습니다 :)\n\n아래 링크를 통해, 홈리에종 파트너십에 대한 설명을 보실 수 있습니다. \n\n홈리에종과의 파트너십 계약 여부를 결정할 수 있도록 몇 가지 중요한 특징을 안내해드립니다. 검토하셔서 홈리에종의 취지 및 내용에 동의하시는지 확인 부탁드릴게요!\n\n동시에 홈리에종은 디자이너님이 남겨주신 신청 내용 및 포트폴리오를 확인하여 파트너십 계약 가능 여부를 검토하겠습니다!\n\n이후 신규 디자이너 등록 안내를 위해 유선으로 연락 드릴 예정(영업일 기준 최대 7일 이내)이니, 잠시만 기다려주세요!\n\n[향후 진행 과정]\n상호 검토 -> 유선 안내 -> 파트너십 계약 여부 결정 -> 등록비 납입 및 상세 정보 입력 -> 디자이너 공통교육 참석 -> 고객 추천 대기\n\n감사합니다 :)\n\n*홈리에종 파트너십\nhttps://#{host}/#{path}.php?aspid=#{aspid}",
+        "templtName": "파트너십 신청 완료 진짜 최종",
         "templateType": "BA",
         "templateEmType": "NONE",
         "templateExtra": "",
@@ -3265,32 +3267,34 @@ KakaoTalk.prototype.templateTong = function (target) {
         "inspStatus": "APR",
         "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
         "buttons": [],
-        "cdate": "2023-05-25 15:57:46",
-        "templtCode": "TN_3473",
+        "cdate": "2023-08-08 18:21:54",
+        "templtCode": "TO_4442",
         "comments": [
           {
-            "cdate": "2023-05-25 16:40:16",
+            "cdate": "2023-08-10 11:28:28",
             "name": "검수자",
-            "id": "2636062",
+            "id": "2771088",
             "userName": "검수자",
             "commentContent": "",
-            "createdAt": "2023-05-25 16:40:16",
+            "createdAt": "2023-08-10 11:28:28",
             "status": "APR"
           }
         ]
       },
     },
     "aspirantPortfolio": {
-      "name": "추가 포트폴리오 전송",
-      "id": "TN_3474",
+      "name": "파트너십 추가 포트폴리오 접수 완료 수정",
+      "id": "TO_4897",
       "needs": [
         "client",
-        "host"
+        "host",
+        "path",
+        "aspid"
       ],
-      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host }\n        ];\n      }",
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"aspid\", to: obj.aspid }\n        ];\n      }",
       "raw": {
-        "templtContent": "안녕하세요 #{client}님!\n보내주신 추가 포트폴리오는 접수 완료되었습니다 :)\n\n또 추가적인 포트폴리오 발송이 필요하시다면, 아래 링크를 통해 보내주세요! 최대한 많이 보내주시면 모두 검토 후, 확인 연락드리겠습니다!\n\n*추가 포트폴리오 전송\nhttps://#{host}/aspirant.php?mode=portfolio",
-        "templtName": "추가 포트폴리오 전송",
+        "templtContent": "안녕하세요 #{client}님! 보내주신 추가 포트폴리오는 접수 완료되었습니다 :)\n\n또 추가적인 포트폴리오 발송이 필요하시다면, 아래 링크를 통해 보내주세요! 최대한 많이 보내주시면 모두 검토 후, 확인 연락드리겠습니다!\n\n*추가 포트폴리오 전송\nhttps://#{host}/#{path}.php?aspid=#{aspid}",
+        "templtName": "파트너십 추가 포트폴리오 접수 완료 수정",
         "templateType": "BA",
         "templateEmType": "NONE",
         "templateExtra": "",
@@ -3306,16 +3310,16 @@ KakaoTalk.prototype.templateTong = function (target) {
         "inspStatus": "APR",
         "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
         "buttons": [],
-        "cdate": "2023-05-25 15:59:44",
-        "templtCode": "TN_3474",
+        "cdate": "2023-08-11 10:36:24",
+        "templtCode": "TO_4897",
         "comments": [
           {
-            "cdate": "2023-05-25 16:40:21",
+            "cdate": "2023-08-14 11:29:43",
             "name": "검수자",
-            "id": "2636064",
+            "id": "2775921",
             "userName": "검수자",
             "commentContent": "",
-            "createdAt": "2023-05-25 16:40:21",
+            "createdAt": "2023-08-14 11:29:43",
             "status": "APR"
           }
         ]
@@ -3485,6 +3489,89 @@ KakaoTalk.prototype.templateTong = function (target) {
             "userName": "검수자",
             "commentContent": "",
             "createdAt": "2023-08-09 14:39:07",
+            "status": "APR"
+          }
+        ]
+      },
+    },
+    "aspirantRequestPortfolio": {
+      "name": "파트너십 추가 포트폴리오 요청",
+      "id": "TO_4842",
+      "needs": [
+        "client",
+        "host",
+        "path",
+        "aspid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"aspid\", to: obj.aspid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님!\n홈리에종 디자이너 파트너십에 신청해 주셔서 감사합니다 :)\n\n홈리에종에서 디자이너님에 대해 좀 더 정확히 판단하기 위해 추가 포트폴리오 업로드를 요청 드립니다! \n\n추가 포트폴리오는 주거 인테리어에 홈스타일링까지 완료된 포트폴리오로 부탁드리며, 실제로 완료된 현장의 사진이 가장 좋습니다. \n\n만약 포트폴리오로 쓸 현장의 사진이 부족하다면, 디자이너님의 스타일링 능력을 판단할 수 있는 이미지라도 최대한 전송해주시길 부탁드릴게요! 감사합니다 :)\n\n*추가 포트폴리오 전송\nhttps://#{host}/#{path}.php?aspid=#{aspid}",
+        "templtName": "파트너십 추가 포트폴리오 요청",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-08-10 17:21:12",
+        "templtCode": "TO_4842",
+        "comments": [
+          {
+            "cdate": "2023-08-14 10:16:05",
+            "name": "검수자",
+            "id": "2775606",
+            "userName": "검수자",
+            "commentContent": "",
+            "createdAt": "2023-08-14 10:16:05",
+            "status": "APR"
+          }
+        ]
+      },
+    },
+    "aspirantRequestPure": {
+      "name": "파트너십 부재중 알림",
+      "id": "TO_5056",
+      "needs": [
+        "client"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"client\", to: obj.client }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{client}님!\n홈스타일링 디자이너 신청해주신 홈리에종입니다. 연락드렸으나 통화가 어려우신 듯하여 메세지 남겨 드립니다.\n\n02-2039-2252로 전화주시거나, 홈리에종 카카오 채널을 통해 통화 가능 시간을 남겨주시면, 확인 후 연락드리겠습니다!",
+        "templtName": "파트너십 부재중 알림",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-08-11 16:38:44",
+        "templtCode": "TO_5056",
+        "comments": [
+          {
+            "cdate": "2023-08-14 17:48:49",
+            "name": "검수자",
+            "id": "2778346",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n\r\n참고로 승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 알림톡 운영 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2023-08-14 17:48:49",
             "status": "APR"
           }
         ]

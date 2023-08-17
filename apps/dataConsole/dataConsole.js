@@ -538,6 +538,7 @@ DataConsole.prototype.renderFrontPhp = async function () {
       { from: "aspirantNotice", to: "aspnotice", path: "/middle/aspirantNotice" },
       { from: "aspirantPayment", to: "asppayment", path: "/middle/aspirantPayment" },
       { from: "aspirantPortfolio", to: "aspportfolio", path: "/middle/aspirantPortfolio" },
+      { from: "aspirantInformation", to: "aspinformation", path: "/middle/aspirantInformation" },
       { from: "frontIndex", to: "index", path: "/middle/frontIndex" },
       { from: "portfolioList", to: "portfolio", path: "/middle/portfolioList" },
       { from: "portfolioDetail", to: "portdetail", path: "/middle/portfolioDetail" },
