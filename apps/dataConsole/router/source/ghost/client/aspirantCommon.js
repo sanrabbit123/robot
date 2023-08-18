@@ -459,6 +459,10 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   let calendarBottom;
   let eightMatrix;
   let dateToLongText;
+  let factorWidth;
+  let arrowLeft;
+  let arrowTop;
+  let innerPaddingBottom;
 
   blockHeight = <%% 784, 765, 725, 710, 176 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -535,7 +539,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   leftCheck0 = <%% 125, 112, 98, 98, 22.8 %%>;
   leftCheck1 = <%% 195, 176, 156, 152, 36.5 %%>;
   checkboxWidth = <%% 9, 9, 9, 8, 2 %%>;
-  checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 9 : 9), (isMac() ? 9 : 9), (isMac() ? 9 : 9), (isIphone() ? 2.5 : 2.5) %%>;
+  checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 11 : 11), (isMac() ? 9 : 9), (isMac() ? 9 : 9), (isIphone() ? 2.5 : 2.5) %%>;
   checkboxBetween = <%% 8, 8, 8, 6, 1.5 %%>;
   checkboxWeight = <%% 200, 200, 200, 200, 200 %%>;
 
@@ -633,6 +637,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   mainPaddingBottom = <%% (isMac() ? 153 : 151), (isMac() ? 155 : 155), (isMac() ? 118 : 117), (isMac() ? 98 : 97), 20 %%>;
 
   innerPadding = <%% 60, 50, 45, 40, 6 %%>;
+  innerPaddingBottom = <%% 55, 42, 40, 40, 6 %%>;
 
   imageWidthRatio = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
 
@@ -774,7 +779,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   careerBlockMarginLeft = <%% 64, 52, 50, 44, 5 %%>;
   careerBlockMinus = <%% 128, 112, 106, 98, 18.2 %%>;
 
-  propertyWidth = <%% 185, 79, 69, 69, 15.7 %%>;
+  propertyWidth = <%% 185, 120, 69, 69, 15.7 %%>;
   yearWidth = <%% 72, 72, 64, 56, 13 %%>;
   monthWidth = <%% 40, 40, 36, 32, 8 %%>;
 
@@ -783,9 +788,14 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
 
   textareaVisualTop = <%% 38, 35, 34, 32, 8 %%>;
 
-  factorVerticalBetween = <%% 10, 8, 4, 3, 1 %%>;
+  factorVerticalBetween = <%% 10, 9, 6, 4, 1 %%>;
 
-  calendarBottom = <%% 42, 42, 42, 42, 42 %%>;
+  calendarBottom = <%% 42, 36, 32, 28, 3 %%>;
+  factorWidth = <%% 270, 240, 240, 220, 22 %%>;
+
+  arrowLeft = <%% 88, 77, 76, 70, 4 %%>;
+  arrowTop = <%% 8, 7, 7, 6, 1 %%>;
+  arrowWidth = <%% 132, 60, 52, 52, 52 %%>;
 
   contents = {
     main: [
@@ -800,7 +810,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   };
 
   eightMatrix = [
-    new Date(2023, 7, 22, 17, 0, 0),
+    new Date(2023, 11, 22, 22, 22, 0),
     new Date(2023, 7, 24, 17, 0, 0),
     new Date(2023, 7, 29, 17, 0, 0),
     new Date(2023, 7, 31, 17, 0, 0),
@@ -1863,7 +1873,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
       borderRadius: String(5) + "px",
       boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
       paddingTop: String(innerPadding) + ea,
-      paddingBottom: String(innerPadding) + ea,
+      paddingBottom: String(innerPaddingBottom) + ea,
     }
   });
 
@@ -1992,13 +2002,13 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
         },
         child: {
           mode: "svg",
-          source: svgMaker.horizontalArrow(132, 10, colorChip.gray3),
+          source: svgMaker.horizontalArrow(arrowWidth, 10, colorChip.gray3),
           style: {
-            width: String(132) + ea,
+            width: String(arrowWidth) + ea,
             height: String(10) + ea,
             position: "absolute",
-            top: String(8) + ea,
-            left: String(88) + ea,
+            top: String(arrowTop) + ea,
+            left: String(arrowLeft) + ea,
           }
         }
       },
@@ -2074,7 +2084,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
                 display: "inline-block",
                 position: "relative",
                 marginLeft: String(checkboxBetween) + ea,
-                width: String(270) + ea,
+                width: String(factorWidth) + ea,
                 top: String(mainTop) + ea,
                 fontSize: String(mainSize) + ea,
                 fontWeight: String(checkboxWeight),
