@@ -8554,12 +8554,15 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
           tempArr = [];
           if (obj.type === "string") {
             tempArr.push(obj.name);
-            do {
-              tempValue = await GeneralJs.prompt(obj.name + "명을 알려주세요!");
-              if (typeof tempValue !== "string") {
-                throw new Error("cancel");
-              }
-            } while (tempValue.trim() === "")
+            tempValue = await GeneralJs.prompt(obj.name + "명을 알려주세요!");
+            if (typeof tempValue !== "string") {
+              throw new Error("cancel");
+            }
+            if (tempValue.trim() === "") {
+              tempValue = '-';
+            } else {
+              tempValue = tempValue.trim();
+            }
             tempArr.push(tempValue.trim());
           } else if (obj.type === "date") {
             tempArr.push(obj.name);
