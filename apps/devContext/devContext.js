@@ -122,24 +122,20 @@ DevContext.prototype.launching = async function () {
     // kakao friend send
     // const kakao = new KakaoTalk();
     // console.log(await kakao.friendsTalk([
-    //   // {
-    //   //   name: "배창규",
-    //   //   phone: "010-2747-3403",
-    //   // },
-    //   // {
-    //   //   name: "임혜령",
-    //   //   phone: "010-6367-1297",
-    //   // },
+    //   {
+    //     name: "김혜숙",
+    //     phone: "010-6473-9615",
+    //   },
     // ], {
-    //   title: `23년 5월 가정의 달 프로모션`,
-    //   body: `#{name}님, 입주를 준비하는 가족에게\n홈스타일링을 소개해주세요 (방긋)\n\n홈리에종 계약하면\n모두에게 혜택을 드려요! (선물)\n\n- 추천자에게 3만원 백화점 상품권 즉시 발송 (하트)\n- 계약하신 가족(지인)에게는 디자인비 5% 할인 적용 (꽃)\n\n* 이 메시지를 가족(지인)에게 지금 공유해 주세요 :)\n* 상담 시 추천자 성함을 말씀해 주세요.\n* 이 프로모션은 2023년 6월 16일까지 계약 성사 시 유효합니다.`,
+    //   title: `홈리에종 메세지 테스트`,
+    //   body: `안녕하세요! 홈리에종입니다. 현재 김혜숙 고객님의 채팅창이 홈리에종 카카오 채널 관리자 센터에서 검색이 되질 않아 CX 담당자 분께서 채팅 시도를 하지 못하고 있습니다. 이용에 불편을 드려 죄송합니다.\n\n아래 링크를 클릭하셔서 누르셔서 채팅방 다시 열어주세요! 채팅방을 다시 열어 이름을 남겨주시면, 새로 채팅방이 갱신되어 채팅이 가능해집니다. 번거롭더라도 갱신 부탁드리겠습니다.\n\nhttp://pf.kakao.com/_vxixkjxl/chat`,
     //   image: `${process.cwd()}/temp/target.jpg`,
     //   convert: {
     //     name: (name, phone) => { return name; },
     //   },
     //   button: {
-    //     title: "상담 신청하기",
-    //     link: "https://home-liaison.com/consulting.php",
+    //     title: "채팅방 열기",
+    //     link: "http://pf.kakao.com/_vxixkjxl/chat",
     //   }
     // }));
     // =======================================================================================================================================================
@@ -169,24 +165,26 @@ DevContext.prototype.launching = async function () {
     //   whereQuery = {};
     //   whereQuery["aspid"] = row.aspid;
     //   updateQuery = {};
-    //   updateQuery["response.manager"] = "박혜연";
+    //   updateQuery["meeting.common.eight"] = [];
 
     //   await selfMongo.db(db).collection(collection).updateOne(whereQuery, { $set: updateQuery });
     //   console.log(whereQuery, updateQuery);
     // }
 
-    
     // const selfMongo = this.MONGOC;
 
     // const aspirants = await back.getAspirantsByQuery({}, { selfMongo });
 
-    // console.log(aspirants[40].response);
-    // console.log(aspirants[40].toNormal().response);
+    // console.log(aspirants[40].meeting.common);
+    // console.log(aspirants[40].toNormal().meeting.common);
 
 
 
 
     
+
+
+
 
 
     

@@ -17,7 +17,8 @@ module.exports = {
           common: {
             date: new Date(1800, 0, 1),
             status: "",
-          }
+            eight: [],
+          },
         },
         calendar: {
           mother: "designerMeeting",
@@ -90,7 +91,7 @@ module.exports = {
           outreason: "",
           manager: "",
           first: {
-            status: "불합격",
+            status: "검토중",
             reason: "",
           },
           portfolio: {
@@ -128,6 +129,12 @@ module.exports = {
           }
         ],
         folderId: "1j-mLXZszbWNqq_xhXVPtm4MW5QOm5sZ2"
+      };
+    } else if (subject === "meeting.common.eight") {
+      dummy = {
+        date: new Date(),
+        priority: 0,
+        name: "",
       };
     }
     return dummy;
