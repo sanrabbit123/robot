@@ -4551,6 +4551,18 @@ GeneralJs.stringToDate = function (str) {
     } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]$/.test(str)) {
       tempArr5 = str.split(".");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9]\. [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\. [0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9]\. [0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\. [0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
     } else {
       throw new Error("not date string : " + str);
     }
