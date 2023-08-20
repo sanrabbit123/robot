@@ -1801,7 +1801,7 @@ AspirantSubmitJs.prototype.insertAspirantBox = function () {
           } else if (obj.type === "date") {
             tempArr.push(obj.name);
             do {
-              tempValue = await GeneralJs.promptDate(obj.name + "을(를) 알려주세요!", obj.progressBoo, obj.progressName);
+              tempValue = await GeneralJs.promptYearMonth(obj.name + "을(를) 알려주세요!", obj.progressBoo, obj.progressName);
               if (tempValue === null) {
                 throw new Error("cancel");
               }
