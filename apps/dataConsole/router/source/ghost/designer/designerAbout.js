@@ -8567,7 +8567,7 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
           } else if (obj.type === "date") {
             tempArr.push(obj.name);
             do {
-              tempValue = await GeneralJs.promptDate(obj.name + "을(를) 알려주세요!", obj.progressBoo, obj.progressName);
+              tempValue = await GeneralJs.promptYearMonth(obj.name + "을(를) 알려주세요!", obj.progressBoo, obj.progressName);
               if (tempValue === null) {
                 throw new Error("cancel");
               }
@@ -9061,6 +9061,8 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
         mother: baseBlock,
         attribute: {
           width: withOut(firstWidth + circleBoxWidth, ea),
+          x: String(x),
+          z: String(z),
         },
         style: {
           display: "inline-block",
@@ -9285,7 +9287,6 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
 
 
     } else if (Array.isArray(value)) {
-
       valueBlock = createNode({
         mother: baseBlock,
         attribute: { value, x: String(x), z: String(z) },

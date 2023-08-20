@@ -4466,6 +4466,7 @@ GeneralJs.stringToDate = function (str) {
 
   const zeroAddition = function (num) { return (num < 10) ? `0${String(num)}` : String(num); };
   let tempArr, tempArr2, tempArr3, tempArr4;
+  let tempArr5;
   str = str.trim();
 
   if (/T/g.test(str) && /Z$/.test(str) && /^[0-9]/.test(str) && /\-/g.test(str) && /\:/g.test(str)) {
@@ -4508,6 +4509,36 @@ GeneralJs.stringToDate = function (str) {
       str = str.slice(0, 4) + "-" + str.slice(4, 6) + "-" + str.slice(6);
     } else if (/^[0-9][0-9][0-9][0-9][0-9][0-9]$/.test(str.trim())) {
       str = "20" + str.slice(0, 2) + "-" + str.slice(2, 4) + "-" + str.slice(4);
+    } else if (/^[0-9][0-9]\-[0-9]$/.test(str)) {
+      tempArr5 = str.split("-");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]$/.test(str)) {
+      tempArr5 = str.split("-");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9] [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9] [0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9] [0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9] [0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9]\/[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9]\/[0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
     } else {
       throw new Error("not date string : " + str);
     }
@@ -5335,6 +5366,288 @@ GeneralJs.prompt = function (message, preValue = '') {
   });
 }
 
+GeneralJs.promptWithButton = function (message, progressName = "NULL", preValue = '') {
+  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
+  const ea = "px";
+  const promptAsideClassName = "promptAsideClassName";
+  const mobile = window.innerWidth <= 900;
+  const desktop = !mobile;
+  let whiteTongBase;
+  let whiteTong;
+  let whiteWidth, whiteHeight;
+  let paddingTop, paddingLeft;
+  let paddingBottom;
+  let size0, size1;
+  let marginLeft;
+  let bottomVisual;
+  let inputBoxHeight;
+  let input;
+  let inputIndent;
+  let inputBottomVisual;
+  let greenBarHeight;
+  let lineHeight;
+  let wordingVisual;
+  let finalEvent;
+  let inputSize;
+  let toTextButton;
+  let buttonBetween;
+  let buttonTop;
+  let buttonRight;
+  let buttonHeight;
+  let buttonPadding;
+  let buttonWidth;
+  let size2;
+  let textTop;
+  let processButtonBoo;
+  
+  whiteWidth = 372;
+  whiteHeight = 150;
+  paddingTop = 17;
+  paddingLeft = 23;
+  paddingBottom = 62;
+  size0 = 14;
+  size1 = 15;
+  inputSize = 13;
+  marginLeft = 18;
+  bottomVisual = 7;
+  inputBoxHeight = 30;
+  inputIndent = 9;
+  inputBottomVisual = 0;
+  lineHeight = 1.5;
+  wordingVisual = GeneralJs.isMac() ? 0 : 2;
+  buttonBetween = 4;
+  buttonTop = 20;
+  buttonRight = 23;
+  buttonHeight = 19;
+  buttonPadding = 7;
+  buttonWidth = 49;
+  size2 = desktop ? 9 : 9;
+  textTop = GeneralJs.isMac() ? -1 : 1;
+  processButtonBoo = (typeof progressName === "string" && !/null/gi.test(progressName));
+
+  greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
+  if (Number.isNaN(greenBarHeight)) {
+    greenBarHeight = 0;
+  }
+
+  whiteTongBase = createNode({
+    mode: "aside",
+    mother: document.body,
+    class: [ promptAsideClassName ],
+    event: {
+      contextmenu: (e) => { e.stopPropagation(); },
+      dblclick: (e) => { e.stopPropagation(); },
+      drop: (e) => { e.stopPropagation(); },
+      keyup: (e) => { e.stopPropagation(); },
+      keydown: (e) => { e.stopPropagation(); },
+      keypress: (e) => { e.stopPropagation(); },
+    },
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "fixed",
+      top: String(0) + "vh",
+      left: String(1) + "vw",
+      width: String(98) + "vw",
+      height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
+      background: "transparent",
+      zIndex: String(900)
+    }
+  });
+
+  whiteTong = createNode({
+    mother: whiteTongBase,
+    event: {
+      click: (e) => { e.stopPropagation(); },
+    },
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(whiteWidth - (paddingLeft * 2)) + ea,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(paddingBottom) + ea,
+      paddingLeft: String(paddingLeft) + ea,
+      paddingRight: String(paddingLeft) + ea,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      background: colorChip.white,
+      animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    text: "Q",
+    style: {
+      fontSize: String(size0) + ea,
+      fontWeight: String(400),
+      color: colorChip.green,
+      fontFamily: "graphik",
+      position: "absolute",
+      top: String(paddingTop) + ea,
+      left: String(paddingLeft) + ea,
+      lineHeight: String(lineHeight),
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    text: message,
+    style: {
+      position: "relative",
+      marginLeft: String(marginLeft) + ea,
+      fontSize: String(size1) + ea,
+      fontWeight: String(500),
+      color: colorChip.black,
+      lineHeight: String(lineHeight),
+      top: String(wordingVisual) + ea,
+    }
+  });
+
+  if (processButtonBoo) {
+    toTextButton = createNode({
+      mother: whiteTong,
+      style: {
+        display: "inline-flex",
+        textAlign: "center",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "absolute",
+        top: String(buttonTop) + ea,
+        right: String(buttonRight) + ea,
+        height: String(buttonHeight) + ea,
+        paddingLeft: String(buttonPadding) + ea,
+        paddingRight: String(buttonPadding) + ea,
+        background: colorChip.gradientGreen,
+        borderRadius: String(5) + "px",
+        zIndex: String(1),
+      },
+      child: {
+        text: progressName,
+        style: {
+          position: "relative",
+          fontSize: String(size2) + ea,
+          fontWeight: String(700),
+          color: colorChip.white,
+          top: String(textTop) + ea,
+        }
+      }
+    });
+  }
+
+  createNode({
+    mother: whiteTong,
+    style: {
+      position: "absolute",
+      bottom: String(paddingTop + bottomVisual) + ea,
+      left: String(paddingLeft + marginLeft) + ea,
+      width: withOut((paddingLeft * 2) + marginLeft, ea),
+      height: String(inputBoxHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gray1,
+    }
+  });
+
+  input = createNode({
+    mother: whiteTong,
+    mode: "input",
+    attribute: {
+      type: "text",
+    },
+    style: {
+      position: "absolute",
+      bottom: String(paddingTop + bottomVisual + inputBottomVisual) + ea,
+      left: String(paddingLeft + marginLeft + inputIndent) + ea,
+      width: withOut((paddingLeft * 2) + marginLeft + (inputIndent * 2), ea),
+      height: String(inputBoxHeight) + ea,
+      background: "transparent",
+      fontSize: String(inputSize) + ea,
+      fontWeight: String(400),
+      color: colorChip.black,
+      border: String(0),
+      outline: String(0),
+    }
+  });
+
+  input.value = (typeof preValue === "string" ? preValue : "");
+  input.focus();
+
+  return new Promise((resolve, reject) => {
+
+    whiteTongBase.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+      for (let z = 0; z < targets.length; z++) {
+        try {
+          targets[z].remove();
+        } catch {}
+      }
+      resolve(null);
+    });
+
+    input.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        const finalValue = this.value.trim();
+        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+        for (let z = 0; z < targets.length; z++) {
+          try {
+            targets[z].remove();
+          } catch {}
+        }
+        resolve(finalValue);
+      }
+    });
+
+    if (processButtonBoo) {
+
+      toTextButton.addEventListener("click", function (e) {
+        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+        for (let z = 0; z < targets.length; z++) {
+          try {
+            targets[z].remove();
+          } catch {}
+        }
+        resolve(progressName);
+      });
+
+      if (mobile) {
+        input.addEventListener("blur", function (e) {
+          setTimeout(() => {
+            if (document.querySelector('.' + promptAsideClassName) !== null) {
+              const finalValue = this.value.trim();
+              const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+              for (let z = 0; z < targets.length; z++) {
+                try {
+                  targets[z].remove();
+                } catch {}
+              }
+              resolve(finalValue === '' ? null : finalValue);
+            }
+          }, 500);
+        });
+      }
+
+    } else {
+      if (mobile) {
+        input.addEventListener("blur", function (e) {
+          if (document.querySelector('.' + promptAsideClassName) !== null) {
+            const finalValue = this.value.trim();
+            const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+            for (let z = 0; z < targets.length; z++) {
+              try {
+                targets[z].remove();
+              } catch {}
+            }
+            resolve(finalValue === '' ? null : finalValue);
+          }
+        });
+      }
+    }
+
+  });
+}
+
 GeneralJs.promptButtons = function (message, buttons) {
   const { createNode, colorChip, withOut, setQueue } = GeneralJs;
   const ea = "px";
@@ -5877,6 +6190,294 @@ GeneralJs.promptDate = function (message, progressPossible = false, progressName
       });
     });
 
+  });
+}
+
+GeneralJs.promptYearMonth = function (message, progressPossible = false, progressName = "") {
+  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
+  const ea = "px";
+  const promptAsideClassName = "promptAsideClassName";
+  const mobile = window.innerWidth <= 900;
+  const desktop = !mobile;
+  let whiteTongBase;
+  let whiteTong;
+  let whiteWidth, whiteHeight;
+  let paddingTop, paddingLeft;
+  let paddingBottom;
+  let size0, size1;
+  let marginLeft;
+  let bottomVisual;
+  let inputBoxHeight;
+  let input;
+  let inputIndent;
+  let inputBottomVisual;
+  let greenBarHeight;
+  let lineHeight;
+  let wordingVisual;
+  let finalEvent;
+  let inputSize;
+  let buttonsBaseTong;
+  let buttonBetween;
+  let num;
+  let buttonSize;
+  let textTop;
+  let buttonsChildren;
+  let size2;
+  let buttonTop;
+  let buttonRight;
+  let buttonHeight;
+  let buttonPadding;
+  let subButton;
+  let baseBox;
+  let whiteTotalHeight;
+  let toTextButton;
+  let buttonWidth;
+
+  whiteWidth = 320;
+  whiteTotalHeight = 314;
+  whiteHeight = 150;
+  paddingTop = 17;
+  paddingLeft = 23;
+  paddingBottom = 15;
+  size0 = 14;
+  size1 = 15;
+  size2 = desktop ? 10 : 10;
+  inputSize = 13;
+  buttonSize = 12;
+  marginLeft = 18;
+  bottomVisual = 7;
+  inputBoxHeight = 30;
+  inputIndent = 9;
+  inputBottomVisual = 0;
+  lineHeight = 1.5;
+  wordingVisual = GeneralJs.isMac() ? 0 : 2;
+  textTop = GeneralJs.isMac() ? -1 : 1;
+  buttonBetween = 4;
+  buttonTop = 20;
+  buttonRight = 21;
+  buttonHeight = 21;
+  buttonPadding = 7;
+  buttonWidth = 49;
+
+  greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
+  if (Number.isNaN(greenBarHeight)) {
+    greenBarHeight = 0;
+  }
+
+  whiteTongBase = createNode({
+    mode: "aside",
+    mother: document.body,
+    class: [ promptAsideClassName ],
+    event: {
+      contextmenu: (e) => { e.stopPropagation(); },
+      dblclick: (e) => { e.stopPropagation(); },
+      drop: (e) => { e.stopPropagation(); },
+      keyup: (e) => { e.stopPropagation(); },
+      keydown: (e) => { e.stopPropagation(); },
+      keypress: (e) => { e.stopPropagation(); },
+    },
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "start",
+      position: "fixed",
+      top: String(0) + "vh",
+      left: String(1) + "vw",
+      width: String(98) + "vw",
+      height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
+      background: "transparent",
+      zIndex: String(900)
+    }
+  });
+
+  baseBox = whiteTongBase.getBoundingClientRect();
+
+  whiteTong = createNode({
+    mother: whiteTongBase,
+    event: {
+      click: (e) => { e.stopPropagation(); },
+    },
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(whiteWidth - (paddingLeft * 2)) + ea,
+      top: String((baseBox.height / 2) - (whiteTotalHeight / 2)) + "px",
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(paddingBottom) + ea,
+      paddingLeft: String(paddingLeft) + ea,
+      paddingRight: String(paddingLeft) + ea,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      background: colorChip.white,
+      animation: desktop ? "fadeuplite 0.4s ease forwards" : "fadeuplite 0.3s ease forwards",
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    text: "Q",
+    style: {
+      fontSize: String(size0) + ea,
+      fontWeight: String(400),
+      color: colorChip.green,
+      fontFamily: "graphik",
+      position: "absolute",
+      top: String(paddingTop) + ea,
+      left: String(paddingLeft) + ea,
+      lineHeight: String(lineHeight),
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    text: message,
+    style: {
+      position: "relative",
+      marginLeft: String(marginLeft) + ea,
+      fontSize: String(size1) + ea,
+      fontWeight: String(500),
+      color: colorChip.black,
+      lineHeight: String(lineHeight),
+      top: String(wordingVisual) + ea,
+    }
+  });
+
+  toTextButton = createNode({
+    mother: whiteTong,
+    style: {
+      display: "inline-flex",
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "absolute",
+      top: String(buttonTop) + ea,
+      right: String(buttonRight) + ea,
+      height: String(buttonHeight) + ea,
+      paddingLeft: String(buttonPadding) + ea,
+      paddingRight: String(buttonPadding) + ea,
+      background: colorChip.gradientGray,
+      borderRadius: String(5) + "px",
+      zIndex: String(1),
+    },
+    child: {
+      text: "직접 입력",
+      style: {
+        position: "relative",
+        fontSize: String(size2) + ea,
+        fontWeight: String(700),
+        color: colorChip.white,
+        top: String(textTop) + ea,
+      }
+    }
+  });
+
+  subButton = null;
+  if (progressPossible && progressName !== "") {
+    subButton = createNode({
+      mother: whiteTong,
+      style: {
+        display: "inline-flex",
+        textAlign: "center",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "absolute",
+        top: String(buttonTop) + ea,
+        right: String(buttonRight + buttonWidth + buttonBetween) + ea,
+        height: String(buttonHeight) + ea,
+        paddingLeft: String(buttonPadding) + ea,
+        paddingRight: String(buttonPadding) + ea,
+        background: colorChip.gradientGreen,
+        borderRadius: String(5) + "px",
+        zIndex: String(1),
+      },
+      child: {
+        text: progressName,
+        style: {
+          position: "relative",
+          fontSize: String(size2) + ea,
+          fontWeight: String(700),
+          color: colorChip.white,
+          top: String(textTop) + ea,
+        }
+      }
+    });
+  }
+
+  buttonsBaseTong = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: withOut(0, ea),
+      borderRadius: String(5) + "px",
+      background: colorChip.white,
+    }
+  });
+
+  return new Promise((resolve, reject) => {
+
+    whiteTongBase.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+      for (let z = 0; z < targets.length; z++) {
+        try {
+          targets[z].remove();
+        } catch {}
+      }
+      resolve(null);
+    });
+
+    GeneralJs.generalCalendar(buttonsBaseTong, new Date(), function (e) {
+      const value = this.getAttribute("buttonValue");
+      const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+      for (let z = 0; z < targets.length; z++) {
+        try {
+          targets[z].remove();
+        } catch {}
+      }
+      resolve(GeneralJs.stringToDate(value));
+    }, {});
+
+    if (subButton !== null) {
+      subButton.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+        for (let z = 0; z < targets.length; z++) {
+          try {
+            targets[z].remove();
+          } catch {}
+        }
+        resolve(new Date(3800, 0, 1));
+      });
+    }
+
+    toTextButton.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const targets = [ ...document.querySelectorAll('.' + promptAsideClassName) ];
+      for (let z = 0; z < targets.length; z++) {
+        try {
+          targets[z].remove();
+        } catch {}
+      }
+      GeneralJs.promptWithButton(message + ` ("yyyy-mm" 형태)`, progressPossible ? progressName : "NULL").then((result) => {
+        try {
+          if (progressName === result) {
+            resolve(new Date());
+          } else {
+            const parsedResult = GeneralJs.stringToDate(result);
+            resolve(parsedResult);
+          }
+        } catch (e) {
+          console.log(e);
+          window.alert("올바른 날짜 형식이 아닙니다! => 'yyyy-mm' 형태");
+          resolve(null);
+        }
+      }).catch((err) => {
+        reject(err);
+      });
+    });
+
+    toTextButton.click();
   });
 }
 
