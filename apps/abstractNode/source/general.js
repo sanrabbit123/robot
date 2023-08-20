@@ -6462,7 +6462,7 @@ GeneralJs.promptYearMonth = function (message, progressPossible = false, progres
       GeneralJs.promptWithButton(message + ` ("yyyy-mm" 형태)`, progressPossible ? progressName : "NULL").then((result) => {
         try {
           if (progressName === result) {
-            resolve(new Date());
+            resolve(new Date(3800, 0, 1));
           } else {
             const parsedResult = GeneralJs.stringToDate(result);
             resolve(parsedResult);
