@@ -2761,13 +2761,15 @@ Mother.prototype.stringToDate = function (str) {
 
   const zeroAddition = function (num) { return (num < 10) ? `0${String(num)}` : String(num); };
   let tempArr, tempArr2, tempArr3, tempArr4;
-  str = str.trim();
+  let tempArr5;
+  str = str.trim().replace(/[\~\t]/gi, '').trim();
 
   if (/T/g.test(str) && /Z$/.test(str) && /^[0-9]/.test(str) && /\-/g.test(str) && /\:/g.test(str)) {
     if (!Number.isNaN((new Date(str)).getTime())) {
       return new Date(str);
     }
   }
+
   if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str) && !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(str)) {
     if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str)) {
       str = "20" + str;
@@ -2803,6 +2805,156 @@ Mother.prototype.stringToDate = function (str) {
       str = str.slice(0, 4) + "-" + str.slice(4, 6) + "-" + str.slice(6);
     } else if (/^[0-9][0-9][0-9][0-9][0-9][0-9]$/.test(str.trim())) {
       str = "20" + str.slice(0, 2) + "-" + str.slice(2, 4) + "-" + str.slice(4);
+    } else if (/^[0-9][0-9]\-[0-9]$/.test(str)) {
+      tempArr5 = str.split("-");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\-[0-9]$/.test(str)) {
+      tempArr5 = str.split("-");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9] [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9] [0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9] [0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9] [0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9] [0-9][0-9] [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9] [0-9] [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9] [0-9][0-9] [0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9] [0-9] [0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\/[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9]\/[0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\/[0-9]\/[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\/[0-9]\/[0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\.[0-9][0-9]\.?$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.?$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9]\.[0-9]\.?$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.?$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\.[0-9]\.[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\.[0-9]\.[0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\. [0-9][0-9]\.?$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\. [0-9][0-9]\.?$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9]\. [0-9]\.?$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\. [0-9]\.?$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\. [0-9][0-9]\. [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\. [0-9]\. [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\. [0-9][0-9]\. [0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\. [0-9]\. [0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\. [0-9][0-9]\. [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\. [0-9]\. [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\. [0-9][0-9]\. [0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\. [0-9]\. [0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
     } else {
       throw new Error("not date string : " + str);
     }

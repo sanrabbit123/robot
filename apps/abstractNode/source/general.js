@@ -4474,6 +4474,7 @@ GeneralJs.stringToDate = function (str) {
       return new Date(str);
     }
   }
+
   if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str) && !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(str)) {
     if (/^[0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str)) {
       str = "20" + str;
@@ -4527,6 +4528,30 @@ GeneralJs.stringToDate = function (str) {
     } else if (/^[0-9][0-9][0-9][0-9] [0-9]$/.test(str)) {
       tempArr5 = str.split(" ");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9] [0-9][0-9] [0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9] [0-9] [0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9] [0-9][0-9] [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9] [0-9] [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9] [0-9][0-9] [0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9] [0-9] [0-9]$/.test(str)) {
+      tempArr5 = str.split(" ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
     } else if (/^[0-9][0-9]\/[0-9][0-9]$/.test(str)) {
       tempArr5 = str.split("/");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
@@ -4539,6 +4564,30 @@ GeneralJs.stringToDate = function (str) {
     } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]$/.test(str)) {
       tempArr5 = str.split("/");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\/[0-9]\/[0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\/[0-9]\/[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\/[0-9][0-9]\/[0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\/[0-9]\/[0-9]$/.test(str)) {
+      tempArr5 = str.split("/");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
     } else if (/^[0-9][0-9]\.[0-9][0-9]\.?$/.test(str)) {
       tempArr5 = str.split(".");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
@@ -4551,6 +4600,30 @@ GeneralJs.stringToDate = function (str) {
     } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.?$/.test(str)) {
       tempArr5 = str.split(".");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\.[0-9]\.[0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\.[0-9]\.[0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\.[0-9][0-9]\.[0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\.[0-9]\.[0-9]$/.test(str)) {
+      tempArr5 = str.split(".");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
     } else if (/^[0-9][0-9]\. [0-9][0-9]\.?$/.test(str)) {
       tempArr5 = str.split(". ");
       str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
@@ -4563,6 +4636,30 @@ GeneralJs.stringToDate = function (str) {
     } else if (/^[0-9][0-9][0-9][0-9]\. [0-9]\.?$/.test(str)) {
       tempArr5 = str.split(". ");
       str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + "01";
+    } else if (/^[0-9][0-9][0-9][0-9]\. [0-9][0-9]\. [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\. [0-9]\. [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\. [0-9][0-9]\. [0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9][0-9][0-9]\. [0-9]\. [0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\. [0-9][0-9]\. [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\. [0-9]\. [0-9][0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\. [0-9][0-9]\. [0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
+    } else if (/^[0-9][0-9]\. [0-9]\. [0-9]$/.test(str)) {
+      tempArr5 = str.split(". ");
+      str = "20" + tempArr5[0] + "-" + zeroAddition(Number(tempArr5[1])) + "-" + zeroAddition(Number(tempArr5[2]));
     } else {
       throw new Error("not date string : " + str);
     }

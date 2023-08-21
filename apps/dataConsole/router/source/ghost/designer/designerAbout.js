@@ -346,18 +346,19 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           updateValue: async (raw, designer) => {
             try {
-              if (!/년/gi.test(raw)) {
-                throw new Error("올바른 형태로 적어주세요! => 0000년 00월 00일");
-              }
-              if (!/월/gi.test(raw)) {
-                throw new Error("올바른 형태로 적어주세요! => 0000년 00월 00일");
-              }
-              if (!/일/gi.test(raw)) {
-                throw new Error("올바른 형태로 적어주세요! => 0000년 00월 00일");
-              }
-              const [ year, month, date ] = raw.split(/[년월]/gi).map((str) => { return Number(str.replace(/[^0-9]/gi, '')) });
+              let birthDate;
+              let year, month, date;
               let newDate;
               let whereQuery, updateQuery;
+              
+              try {
+                birthDate = stringToDate(raw);
+                year = birthDate.getFullYear();
+                month = birthDate.getMonth() + 1;
+                date = birthDate.getDate();  
+              } catch (e) {
+                throw new Error("올바른 형태로 적어주세요! => 0000년 00월 00일");
+              }
 
               if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(date)) {
                 throw new Error("올바른 형태로 적어주세요! => 0000년 00월 00일");
