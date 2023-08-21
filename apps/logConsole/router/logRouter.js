@@ -96,6 +96,51 @@ LogRouter.prototype.dailyCampaign = async function (selfMongo) {
   }
 }
 
+LogRouter.prototype.dailyAspirantCampaign = async function (selfMongo) {
+  const instance = this;
+  const { equalJson } = this.mother;
+  const back = this.back;
+  const address = this.address;
+  try {
+    const fromCollection = "dailyCampaign";
+    const toCollection = "dailyAspirantCampaign";
+    let rows;
+    let targets;
+    let tempRows;
+    let json;
+
+    rows = await back.mongoRead(fromCollection, {}, { selfMongo });
+    
+    targets = [];
+    for (let row of rows) {
+      if (/디자이너/gi.test(row.information.name)) {
+        if (/모객/gi.test(row.information.name) || /모집/gi.test(row.information.name) || /신청/gi.test(row.information.name) || /채용/gi.test(row.information.name) || /전환/gi.test(row.information.name) || /캠패인/gi.test(row.information.name)) {
+          targets.push(row);
+        }
+      }
+    }
+
+    for (let row of targets) {
+      json = equalJson(JSON.stringify(row));
+      tempRows = await back.mongoRead(toCollection, { key: row.key }, { selfMongo });
+      if (tempRows.length !== 0) {
+        await back.mongoDelete(toCollection, { key: row.key }, { selfMongo });
+      }
+      await back.mongoCreate(toCollection, json, { selfMongo });
+      tempRows = await back.mongoRead(fromCollection, { key: row.key }, { selfMongo });
+      if (tempRows.length !== 0) {
+        await back.mongoDelete(fromCollection, { key: row.key }, { selfMongo });
+      }
+    }
+
+    return true;
+
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
 LogRouter.prototype.dailyChannel = async function (selfMongo) {
   const instance = this;
   try {
@@ -155,6 +200,8 @@ LogRouter.prototype.rou_get_First = function () {
         const disk = await diskReading();
         reflection.frontReflection().then(() => {
           return instance.dailyCampaign(instance.mongo);
+        }).then(() => {
+          return instance.dailyAspirantCampaign(instance.mongo);
         }).then(() => {
           return instance.dailyChannel(instance.mongo);
         }).then(() => {
