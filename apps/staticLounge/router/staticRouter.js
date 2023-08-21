@@ -5283,6 +5283,77 @@ StaticRouter.prototype.rou_post_receiveSms = function () {
   return obj;
 }
 
+StaticRouter.prototype.rou_post_refreshDesignerCareer = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, dateToString, stringToDate, requestSystem, cryptoString, sleep } = this.mother;
+  let obj;
+  obj = {};
+  obj.link = [ "/refreshDesignerCareer" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    const selfMongo = instance.mongo;
+    try {
+      const designers = await back.getDesignersByQuery({}, { selfMongo });
+      const future = new Date(3000, 0, 1);
+      const futureValue = future.valueOf();
+      let targetDate;
+      let targetYear, targetMonth;
+      let whereQuery, updateQuery;
+      let updateQuery2;
+      let relatedY, relatedM;
+      let dateValue;
+      let monthDelta;
+      for (let designer of designers) {
+
+        targetDate = new Date(JSON.stringify(designer.information.contract.date).slice(1, -1));
+        targetYear = targetDate.getFullYear();
+        targetMonth = targetDate.getMonth() + 1;
+        whereQuery = {};
+        whereQuery["desid"] = designer.desid;
+        updateQuery = {};
+        updateQuery["information.business.career.startY"] = targetYear;
+        updateQuery["information.business.career.startM"] = targetMonth;
+        await back.updateDesigner([ whereQuery, updateQuery ], { selfMongo });
+
+        if (designer.information.business.career.detail.length > 0) {
+          dateValue = 0;
+          for (let obj of designer.information.business.career.detail) {
+            if (!/기타 업무/gi.test(obj.tag)) {
+              if (obj.date.end.valueOf() > futureValue) {
+                dateValue += (new Date()).valueOf() - obj.date.start.valueOf();
+              } else {
+                dateValue += obj.date.end.valueOf() - obj.date.start.valueOf();
+              }
+            }
+          }
+          monthDelta = Math.floor(((((dateValue / 1000) / 60) / 60) / 24) / 30);
+          relatedY = Math.floor(monthDelta / 12);
+          relatedM = monthDelta % 12;
+          updateQuery2 = {};
+          updateQuery2["information.business.career.relatedY"] = relatedY;
+          updateQuery2["information.business.career.relatedM"] = relatedM;
+          await back.updateDesigner([ whereQuery, updateQuery2 ], { selfMongo });
+        }
+
+      }
+
+      await logger.cron("refresh designer career success : " + JSON.stringify(new Date()));
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+
+    } catch (e) {
+      await logger.error("Static lounge 서버 문제 생김 (rou_post_refreshDesignerCareer): " + e.message);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 StaticRouter.prototype.setMembers = async function () {
