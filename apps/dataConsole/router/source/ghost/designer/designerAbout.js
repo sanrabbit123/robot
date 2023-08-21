@@ -901,79 +901,6 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
         },
         {
-          property: "파트너십 기간",
-          admin: false,
-          returnValue: (designer) => {
-            return `시작일 : ${String(designer.information.business.career.startY)}년 ${String(designer.information.business.career.startM)}월`;
-          },
-          renderValue: (text) => {
-            return text.replace(/년/i, '-').replace(/[^0-9\-]/gi, '').trim();
-          },
-          updateValue: async (raw, designer) => {
-            try {
-              let text, whereQuery, updateQuery;
-              let arr;
-
-              whereQuery = { desid };
-              updateQuery = {};
-
-              arr = raw.trim().split("-");
-              if (arr.length !== 2) {
-                throw new Error("invalid text");
-              }
-
-              arr = arr.map((str) => { return Number(str.replace(/[^0-9]/gi, '')) });
-              if (arr.some(Number.isNaN)) {
-                throw new Error("invalid text");
-              }
-
-              if (arr[1] >= 13) {
-                throw new Error("invalid text");
-              }
-
-              if (arr[0] < 2000) {
-                throw new Error("invalid text");
-              }
-
-              if (arr[0] < 0 || arr[1] < 0) {
-                throw new Error("invalid text");
-              }
-
-              updateQuery["information.business.career.startY"] = arr[0];
-              updateQuery["information.business.career.startM"] = arr[1];
-
-              instance.designer.information.business.career.startY = arr[0];
-              instance.designer.information.business.career.startM = arr[1];
-
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-              if (!entireMode) {
-                await homeliaisonAnalytics({
-                  page: pageName,
-                  standard: firstPageViewTime,
-                  action: "designerAboutUpdate",
-                  data: {
-                    desid: desid,
-                    date: new Date(),
-                    type: "text",
-                    property: "파트너십 기간",
-                    column: "information.business.career",
-                    value: `시작일 : ${String(arr[0])}년 ${String(arr[1])}월`,
-                  }
-                });
-              }
-
-              return `시작일 : ${String(arr[0])}년 ${String(arr[1])}월`;
-
-            } catch (e) {
-              window.alert("형식에 맞게 적어주세요! '0000(년도)-00(월)'");
-              return `시작일 : ${String(designer.information.business.career.startY)}년 ${String(designer.information.business.career.startM)}월`;
-            }
-          },
-          noticeText: (designer) => {
-            return "홈리에종에서 홈스타일링을 본격적으로 시작한 날짜입니다.";
-          },
-        },
-        {
           property: "경력 상세",
           admin: false,
           returnValue: (designer) => {
@@ -1044,6 +971,10 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
               careerData.sort((a, b) => {
                 return b.date.start.valueOf() - a.date.start.valueOf();
               });
+              const pastValue = equalJson(JSON.stringify(designer.information.business.career.detail));
+              pastValue.sort((a, b) => {
+                return b.date.start.valueOf() - a.date.start.valueOf();
+              });
               let newData, whereQuery, updateQuery, endMatrix;
               let newValue;
               let company;
@@ -1101,6 +1032,16 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                       column: "information.business.career.detail",
                       value: newData,
                     }
+                  });
+                  await instance.sendSlackAlarm({
+                    desid: desid,
+                    date: new Date(),
+                    type: "block",
+                    property: "경력 상세",
+                    column: "information.business.career.detail",
+                    value: newData,
+                    designer: designer.designer,
+                    pastValue: pastValue,
                   });
                 }
 
@@ -1173,6 +1114,16 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                       value: newData,
                     }
                   });
+                  await instance.sendSlackAlarm({
+                    desid: desid,
+                    date: new Date(),
+                    type: "block",
+                    property: "경력 상세",
+                    column: "information.business.career.detail",
+                    value: newData,
+                    designer: designer.designer,
+                    pastValue: pastValue,
+                  });
                 }
               }
 
@@ -1189,6 +1140,10 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                 "기간",
                 "태그",
               ];
+              const pastValue = equalJson(JSON.stringify(designer.information.business.career.detail));
+              pastValue.sort((a, b) => {
+                return b.date.start.valueOf() - a.date.start.valueOf();
+              });
               let company, team, role, start, end;
               let tag;
               let block;
@@ -1255,6 +1210,16 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: original,
                   }
                 });
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "block",
+                  property: "경력 상세",
+                  column: "information.business.career.detail",
+                  value: original,
+                  designer: designer.designer,
+                  pastValue: pastValue,
+                });
               }
 
             } catch (e) {
@@ -1308,6 +1273,10 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
               schoolData.sort((a, b) => {
                 return b.date.start.valueOf() - a.date.start.valueOf();
               });
+              const pastValue = equalJson(JSON.stringify(designer.information.business.career.school));
+              pastValue.sort((a, b) => {
+                return b.date.start.valueOf() - a.date.start.valueOf();
+              });
               let newData, whereQuery, updateQuery, endMatrix;
               let newValue;
               let school;
@@ -1354,6 +1323,16 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                       column: "information.business.career.school",
                       value: newData,
                     }
+                  });
+                  await instance.sendSlackAlarm({
+                    desid: desid,
+                    date: new Date(),
+                    type: "block",
+                    property: "학력 상세",
+                    column: "information.business.career.school",
+                    value: newData,
+                    designer: designer.designer,
+                    pastValue: pastValue,
                   });
                 }
               } else if (raw.mode === "update") {
@@ -1412,6 +1391,16 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                       value: newData,
                     }
                   });
+                  await instance.sendSlackAlarm({
+                    desid: desid,
+                    date: new Date(),
+                    type: "block",
+                    property: "학력 상세",
+                    column: "information.business.career.school",
+                    value: newData,
+                    designer: designer.designer,
+                    pastValue: pastValue,
+                  });
                 }
               }
 
@@ -1426,6 +1415,10 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                 "전공",
                 "졸업",
               ];
+              const pastValue = equalJson(JSON.stringify(designer.information.business.career.school));
+              pastValue.sort((a, b) => {
+                return b.date.start.valueOf() - a.date.start.valueOf();
+              });
               let school, major, start, end;
               let block;
               let original;
@@ -1478,6 +1471,16 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     column: "information.business.career.school",
                     value: original,
                   }
+                });
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "block",
+                  property: "학력 상세",
+                  column: "information.business.career.school",
+                  value: original,
+                  designer: designer.designer,
+                  pastValue: pastValue,
                 });
               }
             } catch (e) {
@@ -1570,6 +1573,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           updateValue: async (raw, designer) => {
             try {
+              const pastValue = equalJson(JSON.stringify(instance.designer.information.business.account));
               let text, whereQuery, updateQuery;
               let arr;
               let obj;
@@ -1615,6 +1619,16 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: obj.bankName + " " + obj.accountNumber,
                   }
                 });
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "계좌번호",
+                  column: "information.business.account",
+                  value: updateQuery["information.business.account"],
+                  designer: designer.designer,
+                  pastValue: pastValue,
+                });
               }
 
               return obj.bankName + " " + obj.accountNumber;
@@ -1641,6 +1655,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           updateValue: async (raw, designer) => {
             try {
+              const pastValue = instance.designer.information.business.businessInfo.businessNumber;
               let text, whereQuery, updateQuery;
               let arr;
               let obj;
@@ -1668,6 +1683,16 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "사업자 등록번호",
+                  column: "information.business.businessInfo.businessNumber",
+                  value: updateQuery["information.business.businessInfo.businessNumber"],
+                  designer: designer.designer,
+                  pastValue: pastValue,
+                });
               }
 
               return text;
@@ -1692,6 +1717,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           updateValue: async (raw, designer) => {
             try {
+              const pastValue = instance.designer.information.residentNunber;
               let text, whereQuery, updateQuery;
               let arr;
               let obj;
@@ -1718,6 +1744,16 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     column: "information.residentNunber",
                     value: text,
                   }
+                });
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "주민등록번호",
+                  column: "information.residentNunber",
+                  value: updateQuery["information.residentNunber"],
+                  designer: designer.designer,
+                  pastValue: pastValue,
                 });
               }
 
@@ -1754,6 +1790,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           multiple: false,
           divideNumber: (<&& 4 | 4 | 4 | 3 | 1 &&>),
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.information.business.businessInfo.classification;
             try {
               let text, whereQuery, updateQuery;
 
@@ -1779,6 +1816,16 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     column: "information.business.businessInfo.classification",
                     value: text,
                   }
+                });
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "사업자 종류",
+                  column: "information.business.businessInfo.classification",
+                  value: text,
+                  designer: designer.designer,
+                  pastValue: pastValue,
                 });
               }
 
