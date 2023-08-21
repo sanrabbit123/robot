@@ -489,7 +489,7 @@ DesignerProposalJs.prototype.proposalMapGenerator = function (designer) {
   constructTong = Array.from(new Set(constructTong));
 
   map.set("career", {
-    name: "스타일링 경력",
+    name: "파트너십 기간",
     type: "string",
     standard: null,
     value: career
