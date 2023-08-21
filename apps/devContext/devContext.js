@@ -180,9 +180,60 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const selfMongo = this.MONGOC;
+    const designers = await back.getDesignersByQuery({}, { selfMongo });
+    const future = new Date(3000, 0, 1);
+    const futureValue = future.valueOf();
+    let targetDate;
+    let targetYear, targetMonth;
+    let whereQuery, updateQuery;
+    let updateQuery2;
+    let relatedY, relatedM;
+    let dateValue;
+    let monthDelta;
 
+    for (let designer of designers) {
+      targetDate = new Date(JSON.stringify(designer.information.contract.date).slice(1, -1));
 
+      targetYear = targetDate.getFullYear();
+      targetMonth = targetDate.getMonth() + 1;
 
+      whereQuery = {};
+      whereQuery["desid"] = designer.desid;
+      updateQuery = {};
+      updateQuery["information.business.career.startY"] = targetYear;
+      updateQuery["information.business.career.startM"] = targetMonth;
+
+      await back.updateDesigner([ whereQuery, updateQuery ], { selfMongo });
+      console.log(whereQuery, updateQuery);
+
+      if (designer.information.business.career.detail.length > 0) {
+
+        dateValue = 0;
+        for (let obj of designer.information.business.career.detail) {
+          if (!/기타 업무/gi.test(obj.tag)) {
+            if (obj.date.end.valueOf() > futureValue) {
+              dateValue += (new Date()).valueOf() - obj.date.start.valueOf();
+            } else {
+              dateValue += obj.date.end.valueOf() - obj.date.start.valueOf();
+            }
+          }
+        }
+
+        monthDelta = Math.floor(((((dateValue / 1000) / 60) / 60) / 24) / 30);
+        relatedY = Math.floor(monthDelta / 12);
+        relatedM = monthDelta % 12;
+
+        updateQuery2 = {};
+        updateQuery2["information.business.career.relatedY"] = relatedY;
+        updateQuery2["information.business.career.relatedM"] = relatedM;
+
+        await back.updateDesigner([ whereQuery, updateQuery2 ], { selfMongo });
+        console.log(whereQuery, updateQuery2);
+      }
+
+    }
+    
 
 
 

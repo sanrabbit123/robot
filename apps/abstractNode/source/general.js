@@ -4467,7 +4467,7 @@ GeneralJs.stringToDate = function (str) {
   const zeroAddition = function (num) { return (num < 10) ? `0${String(num)}` : String(num); };
   let tempArr, tempArr2, tempArr3, tempArr4;
   let tempArr5;
-  str = str.trim();
+  str = str.trim().replace(/[\~\t]/gi, '').trim();
 
   if (/T/g.test(str) && /Z$/.test(str) && /^[0-9]/.test(str) && /\-/g.test(str) && /\:/g.test(str)) {
     if (!Number.isNaN((new Date(str)).getTime())) {

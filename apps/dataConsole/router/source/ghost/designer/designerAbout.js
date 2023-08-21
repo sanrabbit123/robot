@@ -1382,75 +1382,75 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             }
           }
         },
-        {
-          property: "유관 경력",
-          admin: false,
-          returnValue: (designer) => {
-            return `총 ${String(designer.information.business.career.relatedY)}년 ${String(designer.information.business.career.relatedM)}개월`;
-          },
-          renderValue: (text) => {
-            return text.replace(/^총 /gi, '').trim();
-          },
-          updateValue: async (raw, designer) => {
-            try {
-              let text, whereQuery, updateQuery;
-              let arr;
+        // {
+        //   property: "유관 경력",
+        //   admin: false,
+        //   returnValue: (designer) => {
+        //     return `총 ${String(designer.information.business.career.relatedY)}년 ${String(designer.information.business.career.relatedM)}개월`;
+        //   },
+        //   renderValue: (text) => {
+        //     return text.replace(/^총 /gi, '').trim();
+        //   },
+        //   updateValue: async (raw, designer) => {
+        //     try {
+        //       let text, whereQuery, updateQuery;
+        //       let arr;
 
-              whereQuery = { desid };
-              updateQuery = {};
+        //       whereQuery = { desid };
+        //       updateQuery = {};
 
-              arr = raw.trim().split("년");
-              if (arr.length !== 2) {
-                throw new Error("invalid text");
-              }
+        //       arr = raw.trim().split("년");
+        //       if (arr.length !== 2) {
+        //         throw new Error("invalid text");
+        //       }
 
-              arr = arr.map((str) => { return Number(str.replace(/[^0-9]/gi, '')) });
-              if (arr.some(Number.isNaN)) {
-                throw new Error("invalid text");
-              }
+        //       arr = arr.map((str) => { return Number(str.replace(/[^0-9]/gi, '')) });
+        //       if (arr.some(Number.isNaN)) {
+        //         throw new Error("invalid text");
+        //       }
 
-              if (arr[1] >= 12) {
-                throw new Error("invalid text");
-              }
+        //       if (arr[1] >= 12) {
+        //         throw new Error("invalid text");
+        //       }
 
-              if (arr[0] < 0 || arr[1] < 0) {
-                throw new Error("invalid text");
-              }
+        //       if (arr[0] < 0 || arr[1] < 0) {
+        //         throw new Error("invalid text");
+        //       }
 
-              updateQuery["information.business.career.relatedY"] = arr[0];
-              updateQuery["information.business.career.relatedM"] = arr[1];
+        //       updateQuery["information.business.career.relatedY"] = arr[0];
+        //       updateQuery["information.business.career.relatedM"] = arr[1];
 
-              instance.designer.information.business.career.relatedY = arr[0];
-              instance.designer.information.business.career.relatedM = arr[1];
+        //       instance.designer.information.business.career.relatedY = arr[0];
+        //       instance.designer.information.business.career.relatedM = arr[1];
 
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-              if (!entireMode) {
-                await homeliaisonAnalytics({
-                  page: pageName,
-                  standard: firstPageViewTime,
-                  action: "designerAboutUpdate",
-                  data: {
-                    desid: desid,
-                    date: new Date(),
-                    type: "text",
-                    property: "유관 경력",
-                    column: "information.business.career",
-                    value: `총 ${String(arr[0])}년 ${String(arr[1])}개월`,
-                  }
-                });
-              }
+        //       await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+        //       if (!entireMode) {
+        //         await homeliaisonAnalytics({
+        //           page: pageName,
+        //           standard: firstPageViewTime,
+        //           action: "designerAboutUpdate",
+        //           data: {
+        //             desid: desid,
+        //             date: new Date(),
+        //             type: "text",
+        //             property: "유관 경력",
+        //             column: "information.business.career",
+        //             value: `총 ${String(arr[0])}년 ${String(arr[1])}개월`,
+        //           }
+        //         });
+        //       }
 
-              return `총 ${String(arr[0])}년 ${String(arr[1])}개월`;
+        //       return `총 ${String(arr[0])}년 ${String(arr[1])}개월`;
 
-            } catch (e) {
-              window.alert("형식에 맞게 적어주세요! '00년 00개월'");
-              return `총 ${String(designer.information.business.career.relatedY)}년 ${String(designer.information.business.career.relatedM)}개월`;
-            }
-          },
-          noticeText: (designer) => {
-            return "홈스타일링과 관련이 있는 리모델링(시공) 회사 경험을 총합하여 적어주세요!";
-          },
-        },
+        //     } catch (e) {
+        //       window.alert("형식에 맞게 적어주세요! '00년 00개월'");
+        //       return `총 ${String(designer.information.business.career.relatedY)}년 ${String(designer.information.business.career.relatedM)}개월`;
+        //     }
+        //   },
+        //   noticeText: (designer) => {
+        //     return "홈스타일링과 관련이 있는 리모델링(시공) 회사 경험을 총합하여 적어주세요!";
+        //   },
+        // },
         {
           property: "계좌번호",
           admin: false,
