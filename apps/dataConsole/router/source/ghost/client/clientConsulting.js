@@ -3060,6 +3060,11 @@ ClientConsultingJs.prototype.finalSubmit = function () {
           instance.mother.certificationBox(name, phone, async function (back, box) {
             try {
               const { cliid } = await ajaxJson({ map }, BACKHOST + "/clientSubmit");
+              window.gtag("event", "conversion", {
+                "send_to": window.gadsConverting,
+                "value": 1.0,
+                "currency": 'KRW'
+              });
               homeliaisonAnalytics({
                 page: instance.pageName,
                 standard: instance.firstPageViewTime,

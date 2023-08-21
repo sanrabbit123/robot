@@ -13,6 +13,8 @@ class GeneralPhp {
   public function bastHtml($name, $titleString, $descriptionString, $hiddenString, $imageString, $fullLink, $sessionId, $clientInfo) {
 
     $gtagId = "G-XCNTB3TRCK";
+    $gadsId = "AW-652862533";
+    $gadsConverting = "AW-652862533/7uUPCMKJ7bADEMXIp7cC";
     $googleSearchId = "YRxCc6xhQlM3qTygta5Qw0CObJJrLDYmUE8_wCR0AQc";
     $naverSearchId = "59096f538ddb9a8704025cefc11269d504f62aac";
     $naverLogId = "s_dc977e44f53";
@@ -57,9 +59,12 @@ class GeneralPhp {
     $html .= '<script>'."\n";
     $html .= 'window.dataLayer = window.dataLayer || [];'."\n";
     $html .= 'window.gtagId = "'.$gtagId.'";'."\n";
+    $html .= 'window.gadsId = "'.$gadsId.'";'."\n";
+    $html .= 'window.gadsConverting = "'.$gadsConverting.'";'."\n";    
     $html .= 'window.gtag = function () { window.dataLayer.push(arguments); }'."\n";
     $html .= 'window.gtag("js", new Date());'."\n";
     $html .= 'window.gtag("config", "'.$gtagId.'");'."\n";
+    $html .= 'window.gtag("config", "'.$gadsId.'");'."\n";
     $html .= 'window.gtagPage = function () {'."\n";
     $html .= '  window.gtag("config", "'.$gtagId.'");'."\n";
     $html .= '}'."\n";
