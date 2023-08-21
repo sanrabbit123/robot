@@ -52,8 +52,6 @@ GoogleAds.prototype.dailyCampaign = async function (selfMongo, dayNumber = 3) {
 
       res = await pythonExecute(`${this.dir}/python/app.py`, [ "ads", "getCampaignList" ], { date: dateToString(from) });
 
-      console.log(res);
-
       if (Array.isArray(res)) {
         targetRows = res.map((obj) => {
           return {

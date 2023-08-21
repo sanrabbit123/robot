@@ -181,10 +181,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const ads = new GoogleAds();
-    await ads.dailyCampaign(this.MONGOLOCALC, 10);
 
-
+    
     
 
 
