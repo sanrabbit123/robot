@@ -5344,7 +5344,7 @@ StaticRouter.prototype.rou_post_refreshDesignerCareer = function () {
       }
 
       await logger.cron("refresh designer career success : " + JSON.stringify(new Date()));
-      res.send(JSON.stringify({ message: "error : " + e.message }));
+      res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
       await logger.error("Static lounge 서버 문제 생김 (rou_post_refreshDesignerCareer): " + e.message);
