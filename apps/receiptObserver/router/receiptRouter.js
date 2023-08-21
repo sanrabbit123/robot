@@ -2184,8 +2184,15 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
                 status: "paid"
               }, { headers: { "Content-Type": "application/json" } });
             }
+          } else {
+            if (paymentData.pay_method !== "card") {
+              await requestSystem("https://" + address.backinfo.host + ":3000/aspirantPayment", {
+                aspid,
+                mode: "vbank",
+                status: "paid"
+              }, { headers: { "Content-Type": "application/json" } });
+            }
           }
-          
         }
       }
 

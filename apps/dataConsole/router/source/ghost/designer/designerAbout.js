@@ -221,6 +221,19 @@ DesignerAboutJs.prototype.insertInitBox = function () {
 
 }
 
+DesignerAboutJs.prototype.sendSlackAlarm = async function (obj) {
+  const instance = this;
+  const { ajaxJson } = GeneralJs;
+  try {
+
+    console.log(obj);
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
   const instance = this;
   const mother = this.mother;
@@ -270,10 +283,23 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "성함",
+                  column: "designer",
+                  value: text,
+                  designer: designer.designer,
+                  pastValue: designer.designer,
+                });
               }
+              instance.designer.designer = text;
+
               return text;
             } catch (e) {
               console.log(e);
+              return designer.designer;
             }
           },
         },
@@ -291,6 +317,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
               return designer.desid;
             } catch (e) {
               console.log(e);
+              return designer.desid;
             }
           },
         },
@@ -308,30 +335,11 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           updateValue: async (raw, designer) => {
             try {
-              const text = raw.replace(/[^0-9\-]/gi, '');
-              let whereQuery, updateQuery;
-              whereQuery = { desid };
-              updateQuery = {};
-              updateQuery["information.phone"] = text;
-              await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
-              if (!entireMode) {
-                await homeliaisonAnalytics({
-                  page: pageName,
-                  standard: firstPageViewTime,
-                  action: "designerAboutUpdate",
-                  data: {
-                    desid: desid,
-                    date: new Date(),
-                    type: "text",
-                    property: "연락처",
-                    column: "information.phone",
-                    value: text,
-                  }
-                });
-              }
-              return text;
+              window.alert("핸드폰 번호 변경시, 관리자에게 직접 문의해주세요!")
+              return designer.information.phone;
             } catch (e) {
               console.log(e);
+              return designer.information.phone;
             }
           },
         },
@@ -385,7 +393,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: new Date(year, month - 1, date),
                   }
                 });
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "생일",
+                  column: "information.birth",
+                  value: new Date(year, month - 1, date),
+                  designer: designer.designer,
+                  pastValue: designer.information.birth,
+                });
               }
+              instance.designer.information.birth = updateQuery["information.birth"];
 
               return `${String(year)}년 ${String(month)}월 ${String(date)}일`;
             } catch (e) {
@@ -425,11 +444,23 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "이메일",
+                  column: "information.email",
+                  value: text,
+                  designer: designer.designer,
+                  pastValue: designer.information.email,
+                });
               }
+              instance.designer.information.email = text;
 
               return text;
             } catch (e) {
               console.log(e);
+              return designer.information.email;
             }
           },
         },
@@ -443,11 +474,13 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             return text;
           },
           updateValue: async (raw, designer) => {
+            const pastWebpage = equalJson(JSON.stringify(instance.designer.information.personalSystem.webPage));
             try {
               let text, whereQuery, updateQuery;
 
               whereQuery = { desid };
               updateQuery = {};
+              updateQuery["information.personalSystem.webPage"] = [];
 
               text = raw.split('?')[0].trim();
               if (text === '' || text === "없음") {
@@ -465,6 +498,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   text = designer.information.personalSystem.webPage.length === 0 ? "없음" : designer.information.personalSystem.webPage[0];
                 }
               }
+
               if (!entireMode) {
                 await homeliaisonAnalytics({
                   page: pageName,
@@ -479,11 +513,22 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "웹페이지",
+                  column: "information.personalSystem.webPage",
+                  value: updateQuery["information.personalSystem.webPage"],
+                  designer: designer.designer,
+                  pastValue: pastWebpage,
+                });
               }
 
               return text;
             } catch (e) {
               console.log(e);
+              return (pastWebpage.length === 0) ? "없음" : pastWebpage[0];
             }
           },
           noticeText: (designer) => {
@@ -505,6 +550,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             return text;
           },
           updateValue: async (raw, designer) => {
+            const pastSns = equalJson(JSON.stringify(instance.designer.information.personalSystem.sns));
             try {
               let text, whereQuery, updateQuery;
               let target;
@@ -548,6 +594,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 }
               }
+
               if (!entireMode) {
                 await homeliaisonAnalytics({
                   page: pageName,
@@ -562,11 +609,27 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "인스타그램",
+                  column: "information.personalSystem.sns",
+                  value: arr,
+                  designer: designer.designer,
+                  pastValue: pastSns,
+                });
               }
 
               return text;
             } catch (e) {
               console.log(e);
+              const target = pastSns.find((obj) => { return /Insta/gi.test(obj.kind) });
+              if (target === undefined) {
+                return "없음";
+              } else {
+                return target.href;
+              }
             }
           },
           noticeText: (designer) => {
@@ -588,6 +651,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             return text;
           },
           updateValue: async (raw, designer) => {
+            const pastSns = equalJson(JSON.stringify(instance.designer.information.personalSystem.sns));
             try {
               let text, whereQuery, updateQuery;
               let target;
@@ -646,11 +710,27 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "text",
+                  property: "블로그",
+                  column: "information.personalSystem.sns",
+                  value: arr,
+                  designer: designer.designer,
+                  pastValue: pastSns,
+                });
               }
 
               return text;
             } catch (e) {
               console.log(e);
+              const target = pastSns.find((obj) => { return /Naver/gi.test(obj.kind) });
+              if (target === undefined) {
+                return "없음";
+              } else {
+                return target.href;
+              }
             }
           },
           noticeText: (designer) => {
@@ -699,6 +779,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.information.contract.status;
             try {
               let text, whereQuery, updateQuery;
 
@@ -728,6 +809,16 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "업무 정보",
+                  column: "information.contract.status",
+                  value: text,
+                  designer: designer.designer,
+                  pastValue: pastValue,
+                });
               }
 
             } catch (e) {
@@ -749,6 +840,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           multiple: false,
           divideNumber: (<&& 4 | 4 | 4 | 4 | 3 &&>),
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.grade;
             try {
               let text, whereQuery, updateQuery;
 
@@ -779,6 +871,16 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                       column: "analytics.grade",
                       value: columns.findIndex((str) => { return str === text }) - 1,
                     }
+                  });
+                  await instance.sendSlackAlarm({
+                    desid: desid,
+                    date: new Date(),
+                    type: "selection",
+                    property: "상태",
+                    column: "analytics.grade",
+                    value: columns.findIndex((str) => { return str === text }) - 1,
+                    designer: designer.designer,
+                    pastValue: pastValue,
                   });
                 }
 
@@ -10648,6 +10750,7 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     this.careerBlocksRender = (value, tong) => {};
     this.grayLoading = null;
     this.profileUploadProcess = false;
+    this.alarmChannel = "#checklist_log";
 
     this.entireMode = entireMode;
     this.normalMode = normalMode;
