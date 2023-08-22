@@ -599,7 +599,7 @@ DesignerJs.prototype.normalDataRender = async function (firstLoad = true) {
       filteredProfileSendRows = noticeSendRows.filter((o) => { return o.type === "profile" }).filter((o) => { return o.designer.desid === designer.desid });
       filteredWorkSendRows = noticeSendRows.filter((o) => { return o.type === "work" }).filter((o) => { return o.designer.desid === designer.desid });
       filteredCareerSendRows = noticeSendRows.filter((o) => { return o.type === "career" }).filter((o) => { return o.designer.desid === designer.desid });
-      filteredEntireSendRows = noticeSendRows.filter((o) => { return o.type === "entire" }).filter((o) => { return o.designer.desid === designer.desid });
+      filteredEntireSendRows = noticeSendRows.filter((o) => { return o.type === "until" }).filter((o) => { return o.designer.desid === designer.desid });
 
       careerUpdateBoo = designer.information.business.career.detail.length > 0;
       schoolUpdateBoo = designer.information.business.career.school.length > 0;
@@ -1427,10 +1427,25 @@ DesignerJs.prototype.normalWhiteCard = function (desid) {
   }
 }
 
-DesignerJs.prototype.normalSendNotice = function (method, desid) {
+DesignerJs.prototype.normalSendNotice = function (method, desid, untilDate) {
   const instance = this;
   const { ea, totalContents, designers } = this;
   const { ajaxJson } = GeneralJs;
+  const dateToUntilString = (date) => {
+    let temp;
+    temp = String(date.getFullYear()).slice(2);
+    temp += "년";
+    temp += " ";
+    temp += String(date.getMonth() + 1);
+    temp += "월";
+    temp += " ";
+    temp += String(date.getDate());
+    temp += "일";
+    temp += "까지";
+    return temp;
+  }
+  let tempValue;
+  let untilString;
   if (method === "checklist") {
     return async function () {
       try {
@@ -1438,22 +1453,25 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
         if (designer === undefined) {
           throw new Error("invalid desid");
         }
-
         if (window.confirm(designer.designer + " 실장님께 체크리스트 기입 요청 알림톡을 전송할까요?")) {
-          const response = await ajaxJson({
-            mode: "send",
-            desid: designer.desid,
-            designer: designer.designer,
-            phone: designer.information.phone,
-            type: "until",
-            until: "23년 8월 23일까지",
-          }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
-          if (response.message === "success") {
-            window.alert("전송에 성공하였습니다!");
-          } else {
-            window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+          tempValue = await GeneralJs.promptDate("마감일을 언제로 설정할까요?");
+          if (tempValue !== null) {
+            untilString = dateToUntilString(tempValue);
+            const response = await ajaxJson({
+              mode: "send",
+              desid: designer.desid,
+              designer: designer.designer,
+              phone: designer.information.phone,
+              type: "until",
+              until: untilString,
+            }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
+            if (response.message === "success") {
+              window.alert("전송에 성공하였습니다!");
+            } else {
+              window.alert("전송에 실패하였습니다! 다시 시도해주세요.");
+            }
+            window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
           }
-          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
         }
         
       } catch (e) {
@@ -1592,7 +1610,7 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
           designer: designer.designer,
           phone: designer.information.phone,
           type: "until",
-          until: "23년 8월 23일까지",
+          until: dateToUntilString(untilDate),
         }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
         return true;
       } catch (e) {
@@ -3620,29 +3638,25 @@ DesignerJs.prototype.communicationRender = function () {
         const targetDesigners = instance.designers.filter((d) => { return /협약 완료/gi.test(d.information.contract.status) });
         let asyncTempFunc;
         let tempRes;
+        let untilDate;
+        untilDate = await GeneralJs.promptDate("마감일을 언제로 설정할까요?");
 
+        if (untilDate !== null) {
+          for (let designer of targetDesigners) {
+            asyncTempFunc = instance.normalSendNotice("totalChecklist", designer.desid, untilDate);
+            tempRes = await asyncTempFunc();
+            if (tempRes === null) {
+              throw new Error("send fail");
+            }
+          }
+          window.alert("체크리스트 전체 발송에 성공하였습니다!");
+          window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+        }
 
-
-
-        console.log(targetDesigners);
-
-
-
-
-
-        // for (let designer of targetDesigners) {
-        //   asyncTempFunc = instance.normalSendNotice("totalChecklist", designer.desid);
-        //   tempRes = await asyncTempFunc();
-        //   if (tempRes === null) {
-        //     throw new Error("send fail");
-        //   }
-        // }
-        // window.alert("체크리스트 전체 발송에 성공하였습니다!");
-        // window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
       } catch (e) {
-        // console.log(e);
-        // window.alert("체크리스트 전체 발송에 실패하였습니다!");
-        // window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+        console.log(e);
+        window.alert("체크리스트 전체 발송에 실패하였습니다!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
       }
     }
   ]);
@@ -3657,11 +3671,16 @@ DesignerJs.prototype.communicationRender = function () {
         const sendDesids = logs.filter((o) => { return o.type === "checklist" }).map((o) => { return o.designer.desid });
         const targetDesigners = instance.designers.filter((d) => { return /협약 완료/gi.test(d.information.contract.status) }).filter((d) => { return !sendDesids.includes(d.desid) });
         let asyncTempFunc;
-        for (let designer of targetDesigners) {
-          asyncTempFunc = instance.normalSendNotice("totalChecklist", designer.desid);
-          tempRes = await asyncTempFunc();
-          if (tempRes === null) {
-            throw new Error("send fail");
+        let tempRes;
+        let untilDate;
+        untilDate = await GeneralJs.promptDate("마감일을 언제로 설정할까요?");
+        if (untilDate !== null) {
+          for (let designer of targetDesigners) {
+            asyncTempFunc = instance.normalSendNotice("totalChecklist", designer.desid);
+            tempRes = await asyncTempFunc();
+            if (tempRes === null) {
+              throw new Error("send fail");
+            }
           }
         }
         window.alert("미완료 대상 체크리스트 발송에 성공하였습니다!");

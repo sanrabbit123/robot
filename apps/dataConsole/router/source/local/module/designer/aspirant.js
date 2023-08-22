@@ -268,11 +268,11 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             if (finalValue === "합격" || finalValue === "확인") {
               chainValue = "응대중";
               chainManager = teamLeader;
-              chainMessage = "대표님께서 " + aspirant.designer + " 신청자를 합격으로 설정하셨습니다! 합격 응대를 부탁드리겠습니다! <@" + teamLeaderId + ">";
+              chainMessage = "대표님께서 " + aspirant.designer + " 신청자를 합격으로 설정하셨습니다! 합격 응대를 부탁드리겠습니다!";
             } else if (finalValue === "반려") {
               chainValue = "추가 필요";
               chainManager = teamLeader;
-              chainMessage = "대표님께서 " + aspirant.designer + " 신청자를 반려로 설정하셨습니다! 반려 응대를 부탁드리겠습니다! <@" + teamLeaderId + ">";
+              chainMessage = "대표님께서 " + aspirant.designer + " 신청자를 반려로 설정하셨습니다! 반려 응대를 부탁드리겠습니다!";
             } else if (finalValue === "불합격") {
               chainValue = "드랍";
               chainManager = hlBot;
