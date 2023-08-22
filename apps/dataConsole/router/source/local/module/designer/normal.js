@@ -1446,6 +1446,7 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
             designer: designer.designer,
             phone: designer.information.phone,
             type: "until",
+            until: "23년 8월 23일까지",
           }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
           if (response.message === "success") {
             window.alert("전송에 성공하였습니다!");
@@ -1591,6 +1592,7 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
           designer: designer.designer,
           phone: designer.information.phone,
           type: "until",
+          until: "23년 8월 23일까지",
         }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
         return true;
       } catch (e) {

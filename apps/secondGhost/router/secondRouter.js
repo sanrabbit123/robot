@@ -2314,7 +2314,7 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
 
         } else if (type === "until") {
 
-          await kakao.sendTalk("noticeDesignerEntireUntil", designer, phone, { designer, date: "23년 8월 23일까지", host: address.frontinfo.host, path: "about", desid });
+          await kakao.sendTalk("noticeDesignerEntireUntil", designer, phone, { designer, date: req.body.until, host: address.frontinfo.host, path: "about", desid });
           await messageSend({
             text: designer + " 실장님께 일괄 체크리스트 업로드 및 업데이트 알림톡을 전송하였습니다!",
             channel,
