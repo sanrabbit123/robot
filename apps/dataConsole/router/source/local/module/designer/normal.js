@@ -1445,7 +1445,7 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
             desid: designer.desid,
             designer: designer.designer,
             phone: designer.information.phone,
-            type: "entire",
+            type: "until",
           }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
           if (response.message === "success") {
             window.alert("전송에 성공하였습니다!");
@@ -1590,7 +1590,7 @@ DesignerJs.prototype.normalSendNotice = function (method, desid) {
           desid: designer.desid,
           designer: designer.designer,
           phone: designer.information.phone,
-          type: "entire",
+          type: "until",
         }, SECONDHOST + "/noticeDesignerConsole", { equal: true });
         return true;
       } catch (e) {
@@ -3618,19 +3618,29 @@ DesignerJs.prototype.communicationRender = function () {
         const targetDesigners = instance.designers.filter((d) => { return /협약 완료/gi.test(d.information.contract.status) });
         let asyncTempFunc;
         let tempRes;
-        for (let designer of targetDesigners) {
-          asyncTempFunc = instance.normalSendNotice("totalChecklist", designer.desid);
-          tempRes = await asyncTempFunc();
-          if (tempRes === null) {
-            throw new Error("send fail");
-          }
-        }
-        window.alert("체크리스트 전체 발송에 성공하였습니다!");
-        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+
+
+
+
+        console.log(targetDesigners);
+
+
+
+
+
+        // for (let designer of targetDesigners) {
+        //   asyncTempFunc = instance.normalSendNotice("totalChecklist", designer.desid);
+        //   tempRes = await asyncTempFunc();
+        //   if (tempRes === null) {
+        //     throw new Error("send fail");
+        //   }
+        // }
+        // window.alert("체크리스트 전체 발송에 성공하였습니다!");
+        // window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
       } catch (e) {
-        console.log(e);
-        window.alert("체크리스트 전체 발송에 실패하였습니다!");
-        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
+        // console.log(e);
+        // window.alert("체크리스트 전체 발송에 실패하였습니다!");
+        // window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=normal";
       }
     }
   ]);

@@ -3835,6 +3835,50 @@ KakaoTalk.prototype.templateTong = function (target) {
         ]
       }
     },
+    "noticeDesignerEntireUntil": {
+      "name": "체크리스트 일괄 전송 마감 추가 수정",
+      "id": "TO_5750",
+      "needs": [
+        "designer",
+        "date",
+        "host",
+        "path",
+        "desid"
+      ],
+      "convert": "function (obj) {\n        return [\n          { from: \"designer\", to: obj.designer },\n          { from: \"date\", to: obj.date },\n          { from: \"host\", to: obj.host },\n          { from: \"path\", to: obj.path },\n          { from: \"desid\", to: obj.desid }\n        ];\n      }",
+      "raw": {
+        "templtContent": "안녕하세요, #{designer} 디자이너님!\n홈리에종입니다 :)\n\n홈리에종이 실장님들을 더 잘 이해하고, 더 적합한 고객을 연결시켜 드리기 위해, 체크리스트를 전송해 드립니다.\n\n체크리스트 페이지에서는 프로필 사진 업로드, 작업 사진 업로드, 그리고 기본 체크리스트 업데이트 작업을 수행하실 수 있습니다.\n\n체크리스트 페이지에 있는 모든 정보는 디자이너님을 고객님께 어필할 때 반드시 필요한 내용들이므로 디자이너님께서 자세하고 정확히 적어주실수록, 더 많은 고객님께, 더 적합한 고객님께 연결시켜 드릴 수 있습니다. \n\n따라서 프로필 사진 업로드, 작업 사진 업로드, 체크리스트 기입을 마감기한 내까지 꼭 해주시길 요청드릴게요 :)\n\n체크리스트는 아래 링크를 통해 들어가실 수 있으며, 항목마다 자세한 설명은 물음표 아이콘을 눌러보시면 팝업 형태로 나옵니다. 각 설명을 참고하셔서 모두 체크해주시길 바랍니다! 기타 문의 사항은 홈리에종 채널을 통해 문의 부탁드립니다~!\n\n* 마감 기한\n- #{date}\n\n* 체크리스트 페이지\nhttps://#{host}/designer/#{path}.php?desid=#{desid}",
+        "templtName": "체크리스트 일괄 전송 마감 추가 수정",
+        "templateType": "BA",
+        "templateEmType": "NONE",
+        "templateExtra": "",
+        "templateAdvert": "",
+        "templtTitle": "",
+        "templtSubtitle": "",
+        "templtImageName": "",
+        "templtImageUrl": "",
+        "block": "N",
+        "dormant": "N",
+        "securityFlag": "N",
+        "status": "R",
+        "inspStatus": "APR",
+        "senderKey": "dd2f3f0b034a044b16531e5171cbcc764fb716eb",
+        "buttons": [],
+        "cdate": "2023-08-17 16:40:46",
+        "templtCode": "TO_5750",
+        "comments": [
+          {
+            "cdate": "2023-08-18 17:37:47",
+            "name": "검수자",
+            "id": "2785938",
+            "userName": "검수자",
+            "commentContent": "안녕하세요. 카카오톡 알림톡 검수 담당자입니다.\r\n\r\n신청하신 메시지 확인하여 승인되었습니다.\r\n참고로 상기와 같은 공지성 및 안내성 메시지는 수신자액션(수신자의 요청 및 신청 또는 계약관계 등)에 의해 발송하는 메시지에 한하여 가능합니다. 이점, 상기하시어 알림톡 운영 바랍니다.\r\n\r\n승인 이후 발송되는 메시지의 책임은 발송자에게 있으며, 이후 어뷰징 확인 또는 신고가 다수 접수될 경우 해당 프로필에 대한 차단이 이루어집니다. \r\n또한 차단된 프로필은 사업자등록번호 기준으로 관리되기에 해당 사업자등록번호로는 영구적으로 알림톡 사용이 불가한 점 참고하여 주시기 바랍니다.\r\n\r\n감사합니다.",
+            "createdAt": "2023-08-18 17:37:47",
+            "status": "APR"
+          }
+        ]
+      }
+    },
   };
   if (target === "$all") {
     return tong;
