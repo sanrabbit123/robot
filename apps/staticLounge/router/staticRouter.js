@@ -58,7 +58,7 @@ const StaticRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOLOGC) {
   this.centrex = {
     host: "centrex.uplus.co.kr",
     sessionConst: "PHPSESSID",
-    sessionValue: "de8ce3e7e43acabe99e0298a9d58b378",
+    sessionValue: "0a8e61db12b9509736fe663638716fac",
   };
 
   this.pushbullet = {
