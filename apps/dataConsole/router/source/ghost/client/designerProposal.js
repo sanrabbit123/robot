@@ -3947,26 +3947,21 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
       window.alert("디자이너를 선택해주세요!");
       return;
     } else {
-      if (!instance.designers.pick(desid).end) {
-        if (window.confirm(target.textContent.trim() + " 디자이너를 선택하시겠습니까?")) {
+      if (window.confirm(target.textContent.trim() + " 디자이너를 선택하시겠습니까?")) {
 
-          for (let p of instance.proposal.detail) {
-            if (p.desid === desid) {
-              thisProposal = p;
-            }
+        for (let p of instance.proposal.detail) {
+          if (p.desid === desid) {
+            thisProposal = p;
           }
-          if (thisProposal.fee.length === 1) {
-            method = thisProposal.fee[0].method;
-          } else if (thisProposal.fee.length > 1) {
-            method = (window.confirm("오프라인 서비스를 선택하시겠습니까? (온라인을 희망하실 경우, '취소' 버튼을 눌러주세요!)") ? "offline" : "online");
-          }
-
-          instance.submitEvent(desid, realName, method);
-        } else {
-          return;
         }
+        if (thisProposal.fee.length === 1) {
+          method = thisProposal.fee[0].method;
+        } else if (thisProposal.fee.length > 1) {
+          method = (window.confirm("오프라인 서비스를 선택하시겠습니까? (온라인을 희망하실 경우, '취소' 버튼을 눌러주세요!)") ? "offline" : "online");
+        }
+
+        instance.submitEvent(desid, realName, method);
       } else {
-        window.alert("해당 디자이너는 일정이 마감되었습니다!");
         return;
       }
     }
@@ -4022,9 +4017,20 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
 
     window.localStorage.clear();
 
-    instance.mother.certificationBox(name, phone, async function (back, box) {
-      try {
-        await ajaxJson({
+    ajaxJson({
+      cliid: instance.client.cliid,
+      proid: instance.project.proid,
+      desid: desid,
+      name: name,
+      phone: phone,
+      designer: designer,
+      method: method,
+    }, BACKHOST + "/designerProposal_submit").then(() => {
+      return homeliaisonAnalytics({
+        page: instance.pageName,
+        standard: instance.firstPageViewTime,
+        action: "designerSelect",
+        data: {
           cliid: instance.client.cliid,
           proid: instance.project.proid,
           desid: desid,
@@ -4032,39 +4038,16 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
           phone: phone,
           designer: designer,
           method: method,
-        }, BACKHOST + "/designerProposal_submit");
-
-        homeliaisonAnalytics({
-          page: instance.pageName,
-          standard: instance.firstPageViewTime,
-          action: "designerSelect",
-          data: {
-            cliid: instance.client.cliid,
-            proid: instance.project.proid,
-            desid: desid,
-            name: name,
-            phone: phone,
-            designer: designer,
-            method: method,
-          },
-        }).catch((err) => {
-          console.log(err);
-        })
-
-        await sleep(500);
-
-        document.body.removeChild(box);
-        document.body.removeChild(back);
-        window.localStorage.clear();
-
-        await sleep(500);
-
-        selfHref(FRONTHOST + "/estimation.php?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method);
-
-      } catch (e) {
-        await ajaxJson({ message: "DesignerProposalJs.submitEvent.certificationBox : " + e.message }, BACKHOST + "/errorLog");
-      }
-    });
+        },
+      })
+    }).then(() => {
+      window.localStorage.clear();
+      selfHref(FRONTHOST + "/estimation.php?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method);
+    }).catch((err) => {
+      window.alert("오류가 일어났습니다! 다시 시도해주세요!");
+      window.localStorage.clear();
+      window.location.reload();
+    })
 
   }
 
