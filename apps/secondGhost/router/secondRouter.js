@@ -3514,9 +3514,9 @@ SecondRouter.prototype.rou_post_designerChecklistLog = function () {
         };
   
         if (data.entire === 1) {
-          text += "홈리에종에서 " + designer + "실장님의 체크리스트를 업데이트 : \n";
+          text += "홈리에종에서 " + designer + " 실장님의 체크리스트를 업데이트 : \n";
         } else {
-          text += designer + "실장님이 체크리스트 업데이트를 직접 수행함 : \n";
+          text += designer + " 실장님이 체크리스트 업데이트를 직접 수행함 : \n";
         }
         text += JSON.stringify(data, null, 2);
   
