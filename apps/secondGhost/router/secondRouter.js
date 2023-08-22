@@ -3493,38 +3493,41 @@ SecondRouter.prototype.rou_post_designerChecklistLog = function () {
       const ip = String(req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"]).trim().replace(/[^0-9\.]/gi, '');
       const rawUserAgent = req.useragent;
       const { source: userAgent, browser, os, platform } = rawUserAgent;
-      let ipObj, text;
-
-      ipObj = await ipParsing(ip);
-      if (ipObj === null) {
-        ipObj = { ip };
-      }
-
-      data.id = desid + "_" + String((new Date()).valueOf()) + "_" + uniqueValue("hex");
-      data.date = new Date();
-      data.entire = data.data.entireMode ? 1 : 0;
-      data.network = {
-        userAgent,
-        browser,
-        os,
-        platform,
-        mobile: rawUserAgent.isMobile,
-        ...ipObj
-      };
-
-      await back.mongoCreate(collection, data, { selfMongo });
+      let text;
 
       text = "";
-      if (data.entire === 1) {
-        text += "홈리에종에서 " + designer + "실장님의 체크리스트를 업데이트 : \n";
-      } else {
-        text += designer + "실장님이 체크리스트 업데이트를 직접 수행함 : \n";
-      }
-      text += JSON.stringify(data, null, 2);
+      ipParsing(ip).then((ipObj) => {
+        if (ipObj === null) {
+          ipObj = { ip };
+        }
+  
+        data.id = desid + "_" + String((new Date()).valueOf()) + "_" + uniqueValue("hex");
+        data.date = new Date();
+        data.entire = data.data.entireMode ? 1 : 0;
+        data.network = {
+          userAgent,
+          browser,
+          os,
+          platform,
+          mobile: rawUserAgent.isMobile,
+          ...ipObj
+        };
+  
+        if (data.entire === 1) {
+          text += "홈리에종에서 " + designer + "실장님의 체크리스트를 업데이트 : \n";
+        } else {
+          text += designer + "실장님이 체크리스트 업데이트를 직접 수행함 : \n";
+        }
+        text += JSON.stringify(data, null, 2);
+  
+        return back.mongoCreate(collection, data, { selfMongo });
+      }).then(() => {
+        return messageSend({ text, channel, voice });
+      }).catch((err) => {
+        console.log(err);
+      });
 
-      await messageSend({ text, channel, voice });
-
-      res.send(JSON.stringify({ message: "done" }));
+      res.send(JSON.stringify({ message: "will do" }));
     } catch (e) {
       console.log(e);
       logger.error("Second Ghost 서버 문제 생김 (rou_post_designerChecklistLog): " + e.message).catch((e) => { console.log(e); });
