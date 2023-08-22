@@ -3467,6 +3467,61 @@ SecondRouter.prototype.rou_post_fairyAi = function () {
   return obj;
 }
 
+SecondRouter.prototype.rou_post_designerChecklistLog = function () {
+  const instance = this;
+  const { equalJson, uniqueValue, ipParsing } = this.mother;
+  const back = this.back;
+  let obj;
+  obj = {};
+  obj.link = [ "/designerChecklistLog" ];
+  obj.func = async function (req, res, logger) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.desid === undefined || req.body.designer === undefined || req.body.data === undefined) {
+        throw new Error("invalid post");
+      }
+      const { desid, designer, data } = equalJson(req.body);
+      const collection = "designerChecklistLog";
+      const selfMongo = instance.mongolocal;
+      const ip = String(req.headers["x-forwarded-for"] === undefined ? req.socket.remoteAddress : req.headers["x-forwarded-for"]).trim().replace(/[^0-9\.]/gi, '');
+      const rawUserAgent = req.useragent;
+      const { source: userAgent, browser, os, platform } = rawUserAgent;
+      let ipObj;
+
+      ipObj = await ipParsing(ip);
+      if (ipObj === null) {
+        ipObj = { ip };
+      }
+
+      data.id = desid + "_" + String((new Date()).valueOf()) + "_" + uniqueValue("hex");
+      data.date = new Date();
+      data.entire = data.data.entireMode ? 1 : 0;
+      data.network = {
+        userAgent,
+        browser,
+        os,
+        platform,
+        mobile: rawUserAgent.isMobile,
+        ...ipObj
+      };
+
+      await back.mongoCreate(collection, data, { selfMongo });
+
+      res.send(JSON.stringify({ message: "done" }));
+    } catch (e) {
+      console.log(e);
+      logger.error("Second Ghost 서버 문제 생김 (rou_post_designerChecklistLog): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 //ROUTING ----------------------------------------------------------------------
 
 SecondRouter.prototype.setMembers = async function () {

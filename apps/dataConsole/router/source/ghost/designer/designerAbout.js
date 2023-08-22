@@ -221,14 +221,29 @@ DesignerAboutJs.prototype.insertInitBox = function () {
 
 }
 
+DesignerAboutJs.prototype.sendChecklistLog = async function (obj) {
+  const instance = this;
+  const { ajaxJson, equalJson } = GeneralJs;
+  try {
+    const finalData = equalJson(JSON.stringify(obj));
+    await ajaxJson({
+      desid: instance.designer.desid,
+      designer: instance.designer.designer,
+      data: finalData,
+    }, SECONDHOST + "/designerChecklistLog");
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerAboutJs.prototype.sendSlackAlarm = async function (obj) {
   const instance = this;
-  const { ajaxJson } = GeneralJs;
+  const { ajaxJson, equalJson } = GeneralJs;
   try {
-
-    console.log(obj);
-
-
+    await instance.sendChecklistLog({
+      mode: "checklist",
+      data: equalJson(JSON.stringify(obj)),
+    });
   } catch (e) {
     console.log(e);
   }
@@ -283,17 +298,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
-                await instance.sendSlackAlarm({
-                  desid: desid,
-                  date: new Date(),
-                  type: "text",
-                  property: "성함",
-                  column: "designer",
-                  value: text,
-                  designer: designer.designer,
-                  pastValue: designer.designer,
-                });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "text",
+                property: "성함",
+                column: "designer",
+                value: text,
+                designer: designer.designer,
+                pastValue: designer.designer,
+                entireMode: entireMode,
+              });
               instance.designer.designer = text;
 
               return text;
@@ -393,17 +409,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: new Date(year, month - 1, date),
                   }
                 });
-                await instance.sendSlackAlarm({
-                  desid: desid,
-                  date: new Date(),
-                  type: "text",
-                  property: "생일",
-                  column: "information.birth",
-                  value: new Date(year, month - 1, date),
-                  designer: designer.designer,
-                  pastValue: designer.information.birth,
-                });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "text",
+                property: "생일",
+                column: "information.birth",
+                value: new Date(year, month - 1, date),
+                designer: designer.designer,
+                pastValue: designer.information.birth,
+                entireMode: entireMode,
+              });
               instance.designer.information.birth = updateQuery["information.birth"];
 
               return `${String(year)}년 ${String(month)}월 ${String(date)}일`;
@@ -444,17 +461,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
-                await instance.sendSlackAlarm({
-                  desid: desid,
-                  date: new Date(),
-                  type: "text",
-                  property: "이메일",
-                  column: "information.email",
-                  value: text,
-                  designer: designer.designer,
-                  pastValue: designer.information.email,
-                });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "text",
+                property: "이메일",
+                column: "information.email",
+                value: text,
+                designer: designer.designer,
+                pastValue: designer.information.email,
+                entireMode: entireMode,
+              });
               instance.designer.information.email = text;
 
               return text;
@@ -513,17 +531,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
-                await instance.sendSlackAlarm({
-                  desid: desid,
-                  date: new Date(),
-                  type: "text",
-                  property: "웹페이지",
-                  column: "information.personalSystem.webPage",
-                  value: updateQuery["information.personalSystem.webPage"],
-                  designer: designer.designer,
-                  pastValue: pastWebpage,
-                });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "text",
+                property: "웹페이지",
+                column: "information.personalSystem.webPage",
+                value: updateQuery["information.personalSystem.webPage"],
+                designer: designer.designer,
+                pastValue: pastWebpage,
+                entireMode: entireMode,
+              });
 
               return text;
             } catch (e) {
@@ -609,17 +628,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
-                await instance.sendSlackAlarm({
-                  desid: desid,
-                  date: new Date(),
-                  type: "text",
-                  property: "인스타그램",
-                  column: "information.personalSystem.sns",
-                  value: arr,
-                  designer: designer.designer,
-                  pastValue: pastSns,
-                });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "text",
+                property: "인스타그램",
+                column: "information.personalSystem.sns",
+                value: arr,
+                designer: designer.designer,
+                pastValue: pastSns,
+                entireMode: entireMode,
+              });
 
               return text;
             } catch (e) {
@@ -710,17 +730,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
-                await instance.sendSlackAlarm({
-                  desid: desid,
-                  date: new Date(),
-                  type: "text",
-                  property: "블로그",
-                  column: "information.personalSystem.sns",
-                  value: arr,
-                  designer: designer.designer,
-                  pastValue: pastSns,
-                });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "text",
+                property: "블로그",
+                column: "information.personalSystem.sns",
+                value: arr,
+                designer: designer.designer,
+                pastValue: pastSns,
+                entireMode: entireMode,
+              });
 
               return text;
             } catch (e) {
@@ -809,17 +830,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
-                await instance.sendSlackAlarm({
-                  desid: desid,
-                  date: new Date(),
-                  type: "selection",
-                  property: "업무 정보",
-                  column: "information.contract.status",
-                  value: text,
-                  designer: designer.designer,
-                  pastValue: pastValue,
-                });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "업무 정보",
+                column: "information.contract.status",
+                value: text,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -872,17 +894,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                       value: columns.findIndex((str) => { return str === text }) - 1,
                     }
                   });
-                  await instance.sendSlackAlarm({
-                    desid: desid,
-                    date: new Date(),
-                    type: "selection",
-                    property: "상태",
-                    column: "analytics.grade",
-                    value: columns.findIndex((str) => { return str === text }) - 1,
-                    designer: designer.designer,
-                    pastValue: pastValue,
-                  });
                 }
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "selection",
+                  property: "상태",
+                  column: "analytics.grade",
+                  value: columns.findIndex((str) => { return str === text }) - 1,
+                  designer: designer.designer,
+                  pastValue: pastValue,
+                  entireMode: entireMode,
+                });
 
               } else {
 
@@ -1033,17 +1056,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                       value: newData,
                     }
                   });
-                  await instance.sendSlackAlarm({
-                    desid: desid,
-                    date: new Date(),
-                    type: "block",
-                    property: "경력 상세",
-                    column: "information.business.career.detail",
-                    value: newData,
-                    designer: designer.designer,
-                    pastValue: pastValue,
-                  });
                 }
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "block",
+                  property: "경력 상세",
+                  column: "information.business.career.detail",
+                  value: newData,
+                  designer: designer.designer,
+                  pastValue: pastValue,
+                  entireMode: entireMode,
+                });
 
               } else if (raw.mode === "update") {
                 newData = [];
@@ -1114,17 +1138,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                       value: newData,
                     }
                   });
-                  await instance.sendSlackAlarm({
-                    desid: desid,
-                    date: new Date(),
-                    type: "block",
-                    property: "경력 상세",
-                    column: "information.business.career.detail",
-                    value: newData,
-                    designer: designer.designer,
-                    pastValue: pastValue,
-                  });
                 }
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "block",
+                  property: "경력 상세",
+                  column: "information.business.career.detail",
+                  value: newData,
+                  designer: designer.designer,
+                  pastValue: pastValue,
+                  entireMode: entireMode,
+                });
               }
 
             } catch (e) {
@@ -1210,17 +1235,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: original,
                   }
                 });
-                await instance.sendSlackAlarm({
-                  desid: desid,
-                  date: new Date(),
-                  type: "block",
-                  property: "경력 상세",
-                  column: "information.business.career.detail",
-                  value: original,
-                  designer: designer.designer,
-                  pastValue: pastValue,
-                });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "block",
+                property: "경력 상세",
+                column: "information.business.career.detail",
+                value: original,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -1324,17 +1350,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                       value: newData,
                     }
                   });
-                  await instance.sendSlackAlarm({
-                    desid: desid,
-                    date: new Date(),
-                    type: "block",
-                    property: "학력 상세",
-                    column: "information.business.career.school",
-                    value: newData,
-                    designer: designer.designer,
-                    pastValue: pastValue,
-                  });
                 }
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "block",
+                  property: "학력 상세",
+                  column: "information.business.career.school",
+                  value: newData,
+                  designer: designer.designer,
+                  pastValue: pastValue,
+                  entireMode: entireMode,
+                });
               } else if (raw.mode === "update") {
                 newData = [];
                 for (let i = 0; i < schoolData.length; i++) {
@@ -1391,17 +1418,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                       value: newData,
                     }
                   });
-                  await instance.sendSlackAlarm({
-                    desid: desid,
-                    date: new Date(),
-                    type: "block",
-                    property: "학력 상세",
-                    column: "information.business.career.school",
-                    value: newData,
-                    designer: designer.designer,
-                    pastValue: pastValue,
-                  });
                 }
+                await instance.sendSlackAlarm({
+                  desid: desid,
+                  date: new Date(),
+                  type: "block",
+                  property: "학력 상세",
+                  column: "information.business.career.school",
+                  value: newData,
+                  designer: designer.designer,
+                  pastValue: pastValue,
+                  entireMode: entireMode,
+                });
               }
 
             } catch (e) {
@@ -1472,17 +1500,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: original,
                   }
                 });
-                await instance.sendSlackAlarm({
-                  desid: desid,
-                  date: new Date(),
-                  type: "block",
-                  property: "학력 상세",
-                  column: "information.business.career.school",
-                  value: original,
-                  designer: designer.designer,
-                  pastValue: pastValue,
-                });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "block",
+                property: "학력 상세",
+                column: "information.business.career.school",
+                value: original,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
             } catch (e) {
               console.log(e);
             }
@@ -1619,17 +1648,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: obj.bankName + " " + obj.accountNumber,
                   }
                 });
-                await instance.sendSlackAlarm({
-                  desid: desid,
-                  date: new Date(),
-                  type: "text",
-                  property: "계좌번호",
-                  column: "information.business.account",
-                  value: updateQuery["information.business.account"],
-                  designer: designer.designer,
-                  pastValue: pastValue,
-                });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "text",
+                property: "계좌번호",
+                column: "information.business.account",
+                value: updateQuery["information.business.account"],
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
               return obj.bankName + " " + obj.accountNumber;
 
@@ -1683,17 +1713,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
-                await instance.sendSlackAlarm({
-                  desid: desid,
-                  date: new Date(),
-                  type: "text",
-                  property: "사업자 등록번호",
-                  column: "information.business.businessInfo.businessNumber",
-                  value: updateQuery["information.business.businessInfo.businessNumber"],
-                  designer: designer.designer,
-                  pastValue: pastValue,
-                });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "text",
+                property: "사업자 등록번호",
+                column: "information.business.businessInfo.businessNumber",
+                value: updateQuery["information.business.businessInfo.businessNumber"],
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
               return text;
 
@@ -1745,17 +1776,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
-                await instance.sendSlackAlarm({
-                  desid: desid,
-                  date: new Date(),
-                  type: "text",
-                  property: "주민등록번호",
-                  column: "information.residentNunber",
-                  value: updateQuery["information.residentNunber"],
-                  designer: designer.designer,
-                  pastValue: pastValue,
-                });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "text",
+                property: "주민등록번호",
+                column: "information.residentNunber",
+                value: updateQuery["information.residentNunber"],
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
               return text;
 
@@ -1817,17 +1849,18 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                     value: text,
                   }
                 });
-                await instance.sendSlackAlarm({
-                  desid: desid,
-                  date: new Date(),
-                  type: "selection",
-                  property: "사업자 종류",
-                  column: "information.business.businessInfo.classification",
-                  value: text,
-                  designer: designer.designer,
-                  pastValue: pastValue,
-                });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "사업자 종류",
+                column: "information.business.businessInfo.classification",
+                value: text,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -1994,6 +2027,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             return text;
           },
           updateValue: async (raw, designer) => {
+            const pastValue = equalJson(JSON.stringify(instance.designer.information.address));
             try {
               let text, whereQuery, updateQuery;
 
@@ -2036,6 +2070,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "text",
+                property: "주소",
+                column: "information.address",
+                value: [ text ],
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
               return text;
 
@@ -2055,6 +2100,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             return text.replace(/[^0-9\-\.]/gi, '');
           },
           updateValue: async (raw, designer) => {
+            const pastValue = instance.designer.analytics.region.range;
             try {
               let text, whereQuery, updateQuery;
 
@@ -2090,6 +2136,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "text",
+                property: "유효 범위",
+                column: "analytics.region.range",
+                value: text,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
               return String(text) + "km";
 
@@ -2115,6 +2172,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             return text.replace(/[^0-9\-\.]/gi, '');
           },
           updateValue: async (raw, designer) => {
+            const pastValue = instance.designer.analytics.region.expenses;
             try {
               let text, whereQuery, updateQuery;
 
@@ -2150,6 +2208,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "text",
+                property: "한계 범위",
+                column: "analytics.region.expenses",
+                value: text,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
               return String(text) + "km";
 
@@ -2172,6 +2241,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             return text.replace(/[^0-9\-\.]/gi, '');
           },
           updateValue: async (raw, designer) => {
+            const pastValue = instance.designer.analytics.region.construct;
             try {
               let text, whereQuery, updateQuery;
 
@@ -2207,6 +2277,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "text",
+                property: "시공 한계",
+                column: "analytics.region.construct",
+                value: text,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
               return String(text) + "km";
 
@@ -2237,6 +2318,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.region.transportation;
             try {
               let text, whereQuery, updateQuery;
 
@@ -2264,6 +2346,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "이동 수단",
+                column: "analytics.region.transportation",
+                value: text,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -2312,6 +2405,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           multiple: true,
           range: true,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.construct.ability;
             try {
               let targetIndex;
               let whereQuery, updateQuery;
@@ -2344,6 +2438,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "역량 범위",
+                column: "analytics.construct.ability",
+                value: targetIndex,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -2374,6 +2479,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           multiple: true,
           range: true,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.construct.level;
             try {
               let targetIndex;
               let whereQuery, updateQuery;
@@ -2408,6 +2514,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "진행 범위",
+                column: "analytics.construct.level",
+                value: targetIndex,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -2433,6 +2550,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.project.partial;
             try {
               let text, whereQuery, updateQuery;
 
@@ -2462,6 +2580,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "부분 공간",
+                column: "analytics.project.partial",
+                value: (text === "가능"),
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -2487,6 +2616,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.project.online;
             try {
               let text, whereQuery, updateQuery;
 
@@ -2514,6 +2644,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "온라인",
+                column: "analytics.project.online",
+                value: (text === "가능"),
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -2536,6 +2677,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.project.living;
             try {
               let text, whereQuery, updateQuery;
 
@@ -2563,6 +2705,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "거주중",
+                column: "analytics.project.living",
+                value: (text === "가능"),
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -2594,6 +2747,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.project.time.first;
             try {
               let number, whereQuery, updateQuery;
               let numberColumns;
@@ -2629,6 +2783,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "1차 제안 시간",
+                column: "analytics.project.time.first",
+                value: number,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -2660,6 +2825,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.styling.method;
             try {
               let text, whereQuery, updateQuery;
 
@@ -2687,6 +2853,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "제안 방식",
+                column: "analytics.styling.method",
+                value: text,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -2709,6 +2886,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.project.cad;
             try {
               let text, whereQuery, updateQuery;
 
@@ -2736,6 +2914,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "CAD 도면",
+                column: "analytics.project.cad",
+                value: (text === "가능"),
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -2761,6 +2950,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.project.collage;
             try {
               let text, whereQuery, updateQuery;
 
@@ -2788,6 +2978,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "콜라주",
+                column: "analytics.project.collage",
+                value: (text === "가능"),
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -2808,6 +3009,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.project.modeling;
             try {
               let index, whereQuery, updateQuery;
 
@@ -2837,6 +3039,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "3D",
+                column: "analytics.project.modeling",
+                value: index,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -2884,6 +3097,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.construct.partner;
             try {
               let text, whereQuery, updateQuery;
 
@@ -2911,6 +3125,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "협업 시공사",
+                column: "analytics.construct.partner",
+                value: (text === "있음"),
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -2930,6 +3155,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             return text === '-' ? "" : text;
           },
           updateValue: async (raw, designer) => {
+            const pastValue = instance.designer.analytics.construct.partnerName;
             try {
               let whereQuery, updateQuery;
 
@@ -2957,6 +3183,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "text",
+                property: "협업 시공사명",
+                column: "analytics.construct.partnerName",
+                value: text,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
               return text === '' ? '-' : text;
 
@@ -2982,6 +3219,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.construct.own;
             try {
               let text, whereQuery, updateQuery;
 
@@ -3009,6 +3247,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "자체 시공사",
+                column: "analytics.construct.own",
+                value: (text === "있음"),
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3028,6 +3277,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             return text === '-' ? "" : text;
           },
           updateValue: async (raw, designer) => {
+            const pastValue = instance.designer.analytics.construct.ownName;
             try {
               let whereQuery, updateQuery;
 
@@ -3055,6 +3305,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "text",
+                property: "자체 시공사명",
+                column: "analytics.construct.ownName",
+                value: text,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
               return text === '' ? '-' : text;
 
@@ -3080,6 +3341,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.construct.possible.supervision;
             try {
               let text, whereQuery, updateQuery;
 
@@ -3107,6 +3369,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "시공 감리",
+                column: "analytics.construct.possible.supervision",
+                value: (text === "가능"),
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3135,6 +3408,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.styling.furniture.builtin;
             try {
               let index, whereQuery, updateQuery;
 
@@ -3164,6 +3438,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "빌트인 가구",
+                column: "analytics.styling.furniture.builtin",
+                value: index,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3195,6 +3480,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.styling.furniture.design;
             try {
               let index, whereQuery, updateQuery;
 
@@ -3224,6 +3510,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "디자인 가구",
+                column: "analytics.styling.furniture.design",
+                value: index,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3255,6 +3552,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.styling.fabric.level;
             try {
               let index, whereQuery, updateQuery;
 
@@ -3284,6 +3582,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "제작 패브릭",
+                column: "analytics.styling.fabric.level",
+                value: index,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3314,6 +3623,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.purchase.setting.install;
             try {
               let text, whereQuery, updateQuery;
 
@@ -3341,6 +3651,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "설치 서비스",
+                column: "analytics.purchase.setting.install",
+                value: (text === "직접"),
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3363,6 +3684,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.purchase.setting.storage;
             try {
               let text, whereQuery, updateQuery;
 
@@ -3390,6 +3712,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "정리 수납",
+                column: "analytics.purchase.setting.storage",
+                value: (text === "연결"),
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3427,6 +3760,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.personality.operation;
             try {
               let index, whereQuery, updateQuery;
 
@@ -3456,6 +3790,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "운영 전문성",
+                column: "analytics.personality.operation",
+                value: index,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3476,6 +3821,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.personality.design;
             try {
               let index, whereQuery, updateQuery;
 
@@ -3505,6 +3851,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "디자인 전문성",
+                column: "analytics.personality.design",
+                value: index,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3525,6 +3882,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.personality.efficient;
             try {
               let index, whereQuery, updateQuery;
 
@@ -3554,6 +3912,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "업무 효율",
+                column: "analytics.personality.efficient",
+                value: index,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3574,6 +3943,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.personality.communication;
             try {
               let index, whereQuery, updateQuery;
 
@@ -3603,6 +3973,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "소통 스타일",
+                column: "analytics.personality.communication",
+                value: index,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3623,6 +4004,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.personality.homeliaison;
             try {
               let index, whereQuery, updateQuery;
 
@@ -3652,6 +4034,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "홈리에종 관계",
+                column: "analytics.personality.homeliaison",
+                value: index,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3679,6 +4072,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
           },
           multiple: false,
           updateValue: async (raw, columns, designer) => {
+            const pastValue = instance.designer.analytics.styling.level;
             try {
               let targetIndex;
               let whereQuery, updateQuery;
@@ -3712,6 +4106,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "selection",
+                property: "스타일링",
+                column: "analytics.styling.level",
+                value: targetIndex + 1,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3743,6 +4148,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             __color__: colorChip.green,
           } },
           updateValue: async (raw, target, designer) => {
+            const pastValue = instance.designer.analytics.styling.tendency.style[target];
             try {
               let whereQuery, updateQuery;
 
@@ -3768,6 +4174,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "tendency",
+                property: "스타일 경향성",
+                column: "analytics.styling.tendency.style." + target,
+                value: raw,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3791,6 +4208,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             __color__: colorChip.green,
           } },
           updateValue: async (raw, target, designer) => {
+            const pastValue = instance.designer.analytics.styling.tendency.texture[target];
             try {
               let whereQuery, updateQuery;
 
@@ -3816,6 +4234,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "tendency",
+                property: "텍스처 경향성",
+                column: "analytics.styling.tendency.texture." + target,
+                value: raw,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3847,6 +4276,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             __color__: colorChip.green,
           } },
           updateValue: async (raw, target, designer) => {
+            const pastValue = instance.designer.analytics.styling.tendency.color[target];
             try {
               let whereQuery, updateQuery;
 
@@ -3872,6 +4302,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "tendency",
+                property: "컬러톤 경향성",
+                column: "analytics.styling.tendency.color." + target,
+                value: raw,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -3891,6 +4332,7 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
             __color__: colorChip.green,
           } },
           updateValue: async (raw, target, designer) => {
+            const pastValue = instance.designer.analytics.styling.tendency.density[target];
             try {
               let whereQuery, updateQuery;
 
@@ -3916,6 +4358,17 @@ DesignerAboutJs.prototype.contentsCenter = function (detailSearchMode = false) {
                   }
                 });
               }
+              await instance.sendSlackAlarm({
+                desid: desid,
+                date: new Date(),
+                type: "tendency",
+                property: "밀도 경향성",
+                column: "analytics.styling.tendency.density." + target,
+                value: raw,
+                designer: designer.designer,
+                pastValue: pastValue,
+                entireMode: entireMode,
+              });
 
             } catch (e) {
               console.log(e);
@@ -4982,6 +5435,18 @@ DesignerAboutJs.prototype.insertProfileBox = function () {
             formData.append("desid", instance.designer.desid);
             formData.append("exe", thisExe);
 
+            await instance.sendChecklistLog({
+              mode: "profile",
+              data: {
+                date: new Date(),
+                desid: instance.designer.desid,
+                designer: instance.designer.designer,
+                entireMode: entireMode,
+                gs: (garoBoo ? "g" : "s"),
+                exe: thisExe,
+              }
+            });
+
             response = await ajaxForm(formData, BRIDGEHOST + "/designerProfilePhoto");
             responseObj = equalJson(response);
             responseObj.link = stringToLink(responseObj.link);
@@ -5703,6 +6168,20 @@ DesignerAboutJs.prototype.insertWorkingBox = function () {
             formData.append("index", index);
 
             whiteLoading = instance.mother.whiteProgressLoading();
+
+            await instance.sendChecklistLog({
+              mode: "work",
+              data: {
+                date: new Date(),
+                desid: instance.designer.desid,
+                designer: instance.designer.designer,
+                entireMode: entireMode,
+                gs: (garoBoo ? "g" : "s"),
+                exe: thisExe,
+                index: index,
+              }
+            });
+
             response = await ajaxForm(formData, BRIDGEHOST + "/designerWorksPhoto", whiteLoading.progress.firstChild);
             responseObj = equalJson(response);
 
@@ -6093,7 +6572,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   const desktop = !mobile;
   const big = (media[0] || media[1] || media[2]);
   const small = !big;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent, homeliaisonAnalytics } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, autoComma, fireEvent, homeliaisonAnalytics, equalJson } = GeneralJs;
   const blank = "&nbsp;&nbsp;&nbsp;";
   const photoWithWordsClassName = "photoWithWordsClassName";
   const mainContents = [
@@ -6297,6 +6776,7 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
   }
   introductionBlurEvent = () => {
     return async function (e) {
+      const pastValue = equalJson(JSON.stringify(instance.designer.setting.front.introduction.desktop));
       const originalValue = instance.designer.setting.front.introduction.desktop.join("\n");
       try {
         const minimum = 80;
@@ -6317,6 +6797,21 @@ DesignerAboutJs.prototype.insertIntroduceBox = function () {
         updateQuery = {};
         updateQuery["setting.front.introduction.desktop"] = this.value.split("\n").map((str) => { return str.trim() });
         updateQuery["setting.front.introduction.mobile"] = this.value.split("\n").map((str) => { return str.trim() });
+
+        await instance.sendChecklistLog({
+          mode: "introduction",
+          data: {
+            date: new Date(),
+            desid: instance.designer.desid,
+            designer: instance.designer.designer,
+            entireMode: entireMode,
+            type: "long",
+            property: "소개글",
+            column: "setting.front.introduction",
+            pastValue: pastValue,
+            value: updateQuery["setting.front.introduction.desktop"]
+          }
+        });
 
         await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
         instance.designer.setting.front.introduction.desktop = updateQuery["setting.front.introduction.desktop"];
@@ -6915,9 +7410,10 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
             },
             blur: async function (e) {
               try {
+                const index = Number(this.getAttribute("index"));
+                const pastValue = instance.designer.setting.description[index];
                 this.value = this.value.replace(/[\n\t\\\/\(\)\#\=\+\&\*\<\>\[\]\{\}]/gi, '').replace(/  /gi, ' ').trim();
                 const finalValue = this.value;
-                const index = Number(this.getAttribute("index"));
                 const desid = this.getAttribute("desid");
                 let whereQuery, updateQuery;
                 self.firstChild.firstChild.firstChild.textContent = finalValue;
@@ -6925,7 +7421,45 @@ DesignerAboutJs.prototype.insertThreeStrongBox = function () {
                 whereQuery = { desid };
                 updateQuery = {};
                 updateQuery["setting.description." + String(index)] = finalValue;
+
+                await instance.sendChecklistLog({
+                  mode: "strong",
+                  data: {
+                    date: new Date(),
+                    desid: desid,
+                    designer: instance.designer.designer,
+                    entireMode: entireMode,
+                    type: "long",
+                    property: "강점",
+                    column: "setting.description." + String(index),
+                    pastValue: pastValue,
+                    value: finalValue,
+                    index: index,
+                  }
+                });
+
                 await ajaxJson({ whereQuery, updateQuery }, SECONDHOST + "/updateDesigner");
+
+                if (!entireMode) {
+                  await homeliaisonAnalytics({
+                    page: instance.pageName,
+                    standard: instance.firstPageViewTime,
+                    action: "threeStrongUpdate",
+                    data: {
+                      desid: instance.designer.desid,
+                      date: new Date(),
+                      designer: instance.designer.designer,
+                      index: index,
+                      type: "long",
+                      property: "강점",
+                      column: "setting.description." + String(index),
+                      pastValue: pastValue,
+                      value: finalValue,
+                      index: index,
+                    }
+                  });
+                }
+
                 removeByClass(strengthUpdateEventInputClassName);
               } catch (e) {
                 console.log(e);
@@ -8379,6 +8913,17 @@ DesignerAboutJs.prototype.uploadFiles = function (fileKind) {
                     ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
                     formData.append("name", hash);
   
+                    await instance.sendChecklistLog({
+                      mode: "representative",
+                      data: {
+                        date: new Date(),
+                        desid: instance.designer.desid,
+                        designer: instance.designer.designer,
+                        entireMode: instance.entireMode,
+                        key: thisKey,
+                      }
+                    });
+
                     res = await ajaxForm(formData, BRIDGEHOST + "/representativeFileBinary", loading.progress);
                     await homeliaisonAnalytics({
                       page: instance.pageName,
@@ -8490,6 +9035,17 @@ DesignerAboutJs.prototype.dropFiles = function (fileKind) {
                 ({ hash } = await ajaxJson({ mode: "crypto", string: rawResponse }, BACKHOST + "/homeliaisonCrypto", { equal: true }));
                 formData.append("name", hash);
   
+                await instance.sendChecklistLog({
+                  mode: "representative",
+                  data: {
+                    date: new Date(),
+                    desid: instance.designer.desid,
+                    designer: instance.designer.designer,
+                    entireMode: instance.entireMode,
+                    key: thisKey,
+                  }
+                });
+
                 res = await ajaxForm(formData, BRIDGEHOST + "/representativeFileBinary", loading.progress);
                 await homeliaisonAnalytics({
                   page: instance.pageName,
@@ -8840,14 +9396,16 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
               event: {
                 click: async function (e) {
                   try {
-                    const index = Number(this.getAttribute("index"));
-                    const x = Number(this.getAttribute("x"));
-                    const z = Number(this.getAttribute("z"));
-                    await instance.contents[x].contents[z].updateValue({
-                      mode: "delete",
-                      index,
-                      tong: tong,
-                    }, instance.designer);  
+                    if (window.confirm("해당 경력을 삭제하시겠습니까?")) {
+                      const index = Number(this.getAttribute("index"));
+                      const x = Number(this.getAttribute("x"));
+                      const z = Number(this.getAttribute("z"));
+                      await instance.contents[x].contents[z].updateValue({
+                        mode: "delete",
+                        index,
+                        tong: tong,
+                      }, instance.designer);  
+                    }
                   } catch (e) {
                     console.log(e);
                   }
@@ -9143,7 +9701,9 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
                     if (e.key === "Enter" || e.key === "Tab") {
                       e.preventDefault();
                       if (this.value.trim() !== instance.contents[x].contents[z].renderValue(self.getAttribute("value"))) {
-                        await saveEvent(this.value.trim());
+                        if (window.confirm("수정하시겠습니까?")) {
+                          await saveEvent(this.value.trim());
+                        }
                       }
                       const removeTargets = document.querySelectorAll('.' + removePopupTargetClassName);
                       for (let dom of removeTargets) {
@@ -9239,85 +9799,87 @@ DesignerAboutJs.prototype.renderBlock = function (contents, notice, tong, grayBo
             selectstart: (e) => { e.preventDefault(); },
             click: function (e) {
               e.stopPropagation();
-              const self = this;
-              const toggle = this.getAttribute("toggle");
-              const x = Number(this.getAttribute("x"));
-              const z = Number(this.getAttribute("z"));
-              const index = Number(this.getAttribute("index"));
-              let targets;
-              let finalTargets;
-              let finalNumbers;
-              let targetIndex;
-              
-              if (toggle === "on") {
-                if (instance.contents[x].contents[z].range === true) {
-                  targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-                  targetIndex = targets.findIndex((d) => { return d === self });
-                  for (let s = 0; s < targets.length; s++) {
-                    if (s < targetIndex) {
-                      targets[s].style.color = colorChip.green;
-                      targets[s].setAttribute("toggle", "on");
-                    } else {
-                      targets[s].style.color = colorChip.deactive;
-                      targets[s].setAttribute("toggle", "off");
-                    }
-                  }
-                } else {
-                  if (instance.contents[x].contents[z].multiple) {
-                    self.style.color = colorChip.deactive;
-                    self.setAttribute("toggle", "off");
-                  }
-                }
-              } else {
-                if (instance.contents[x].contents[z].range === true) {
-                  targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-                  targetIndex = targets.findIndex((d) => { return d === self });
-                  for (let s = 0; s < targets.length; s++) {
-                    if (s <= targetIndex) {
-                      targets[s].style.color = colorChip.green;
-                      targets[s].setAttribute("toggle", "on");
-                    } else {
-                      targets[s].style.color = colorChip.deactive;
-                      targets[s].setAttribute("toggle", "off");
-                    }
-                  }
-                } else {
-                  if (instance.contents[x].contents[z].multiple) {
-                    self.style.color = colorChip.green;
-                  } else {
+              if (window.confirm("수정하시겠습니까?")) {
+                const self = this;
+                const toggle = this.getAttribute("toggle");
+                const x = Number(this.getAttribute("x"));
+                const z = Number(this.getAttribute("z"));
+                const index = Number(this.getAttribute("index"));
+                let targets;
+                let finalTargets;
+                let finalNumbers;
+                let targetIndex;
+                
+                if (toggle === "on") {
+                  if (instance.contents[x].contents[z].range === true) {
                     targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-                    for (let dom of targets) {
-                      if (dom === self) {
-                        dom.style.color = colorChip.green;
+                    targetIndex = targets.findIndex((d) => { return d === self });
+                    for (let s = 0; s < targets.length; s++) {
+                      if (s <= targetIndex) {
+                        targets[s].style.color = colorChip.green;
+                        targets[s].setAttribute("toggle", "on");
                       } else {
-                        dom.style.color = colorChip.deactive;
-                        dom.setAttribute("toggle", "off");
+                        targets[s].style.color = colorChip.deactive;
+                        targets[s].setAttribute("toggle", "off");
                       }
                     }
+                  } else {
+                    if (instance.contents[x].contents[z].multiple) {
+                      self.style.color = colorChip.deactive;
+                      self.setAttribute("toggle", "off");
+                    }
                   }
-                  self.setAttribute("toggle", "on");
-                  if (typeof instance.contents[x].contents[z].fourStepValue === "function") {
-                    for (let i of variableArray(4)) {
-                      if (i === index) {
-                        if (document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)) !== null) {
-                          document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)).style.background = colorChip.green;
-                        }
+                } else {
+                  if (instance.contents[x].contents[z].range === true) {
+                    targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+                    targetIndex = targets.findIndex((d) => { return d === self });
+                    for (let s = 0; s < targets.length; s++) {
+                      if (s <= targetIndex) {
+                        targets[s].style.color = colorChip.green;
+                        targets[s].setAttribute("toggle", "on");
                       } else {
-                        if (document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)) !== null) {
-                          document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)).style.background = colorChip.gray4;
+                        targets[s].style.color = colorChip.deactive;
+                        targets[s].setAttribute("toggle", "off");
+                      }
+                    }
+                  } else {
+                    if (instance.contents[x].contents[z].multiple) {
+                      self.style.color = colorChip.green;
+                    } else {
+                      targets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+                      for (let dom of targets) {
+                        if (dom === self) {
+                          dom.style.color = colorChip.green;
+                        } else {
+                          dom.style.color = colorChip.deactive;
+                          dom.setAttribute("toggle", "off");
+                        }
+                      }
+                    }
+                    self.setAttribute("toggle", "on");
+                    if (typeof instance.contents[x].contents[z].fourStepValue === "function") {
+                      for (let i of variableArray(4)) {
+                        if (i === index) {
+                          if (document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)) !== null) {
+                            document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)).style.background = colorChip.green;
+                          }
+                        } else {
+                          if (document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)) !== null) {
+                            document.querySelector("." + fourStepClassName + String(x) + String(z) + String(i)).style.background = colorChip.gray4;
+                          }
                         }
                       }
                     }
                   }
                 }
+                
+                finalTargets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
+                finalNumbers = finalTargets.map((dom) => { return dom.getAttribute("toggle") === "on" ? 1 : 0 });
+                
+                instance.contents[x].contents[z].updateValue(finalNumbers, instance.contents[x].contents[z].returnValue(instance.designer), instance.designer).catch((err) => {
+                  console.log(err);
+                });
               }
-              
-              finalTargets = [ ...document.querySelectorAll('.' + menuTargetClassName + String(x) + String(z)) ];
-              finalNumbers = finalTargets.map((dom) => { return dom.getAttribute("toggle") === "on" ? 1 : 0 });
-              
-              instance.contents[x].contents[z].updateValue(finalNumbers, instance.contents[x].contents[z].returnValue(instance.designer), instance.designer).catch((err) => {
-                console.log(err);
-              });
             }
           },
           style: {
@@ -10797,7 +11359,6 @@ DesignerAboutJs.prototype.launching = async function (loading) {
     this.careerBlocksRender = (value, tong) => {};
     this.grayLoading = null;
     this.profileUploadProcess = false;
-    this.alarmChannel = "#checklist_log";
 
     this.entireMode = entireMode;
     this.normalMode = normalMode;
