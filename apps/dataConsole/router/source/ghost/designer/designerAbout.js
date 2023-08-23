@@ -10562,9 +10562,8 @@ DesignerAboutJs.prototype.boxToPossible = async function () {
     if (!entireMode) {
       await ajaxJson({
         message: instance.designer.designer + " 실장님이 디자이너 콘솔을 통해 일정을 업데이트 하셨습니다!",
-        channel: "#300_designer",
-        voice: true,
-        fairy: true,
+        channel: "#checklist_log",
+        voice: false,
       }, BACKHOST + "/sendSlack");
       await homeliaisonAnalytics({
         page: instance.pageName,
