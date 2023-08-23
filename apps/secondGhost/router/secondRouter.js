@@ -2209,7 +2209,8 @@ SecondRouter.prototype.rou_post_noticeDesignerConsole = function () {
 
       if (mode === "send") {
         const { desid, designer, type } = equalJson(req.body);
-        const phone = (desid !== testDesid) ? req.body.phone : testPhone;
+        // const phone = (desid !== testDesid) ? req.body.phone : testPhone;
+        const phone = req.body.phone;
 
         logDefaultObj = {
           id: idWords + uniqueValue("hex"),
