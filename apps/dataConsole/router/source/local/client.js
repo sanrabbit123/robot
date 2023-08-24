@@ -7636,7 +7636,7 @@ ClientJs.prototype.communicationRender = function () {
     }
   ]);
   communication.setItem([
-    () => { return "스타일 찾기 보내기"; },
+    () => { return "스타일 찾기 페이지"; },
     function () {
       return true;
     },
