@@ -500,6 +500,16 @@ DesignerJs.prototype.aspirantDataRender = async function (firstLoad = true) {
             console.log(e);
           }
         },
+        script: (aspid) => {
+          return async function (e) {
+            e.preventDefault();
+            try {
+              await instance.aspirantCommonMeetingSetting(aspid);
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        }
       },
       {
         title: "공통 교육일",
@@ -4689,6 +4699,10 @@ DesignerJs.prototype.aspirantBase = async function () {
 
             }
 
+            if (typeof columns[i].script === "function") {
+              valueDom.addEventListener("contextmenu", columns[i].script(aspirant.aspid));
+            }
+
           }
     
         }
@@ -4971,6 +4985,37 @@ DesignerJs.prototype.aspirantSendNotice = function (method, aspid) {
         return null;
       }
     }
+  }
+}
+
+DesignerJs.prototype.aspirantCommonMeetingSetting = async function (aspid) {
+  const instance = this;
+  const { ea, totalContents, aspirants } = this;
+  const { createNode, colorChip, withOut, findByAttribute, removeByClass, isMac, dateToString, stringToDate, cleanChildren, ajaxJson, equalJson, setQueue, hexaJson } = GeneralJs;
+  try {
+    const zIndex = 5;
+    const aspirant = aspirants.find((a) => { return a.aspid === aspid });
+
+
+
+
+    
+
+
+
+
+    console.log(aspirant);
+
+
+
+
+
+
+
+
+
+  } catch (e) {
+    console.log(e);
   }
 }
 
