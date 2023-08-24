@@ -457,7 +457,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   let factorVerticalBetween;
   let calendarMother;
   let calendarBottom;
-  let eightMatrix;
+  let selectionMatrix;
   let dateToLongText;
   let factorWidth;
   let arrowLeft;
@@ -504,7 +504,6 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
 
   mainSize = <%% 20, 18, 17, 16, 4 %%>;
   mainWeight = <%% 500, 500, 500, 500, 500 %%>;
-  mainTop = <%% (isMac() ? 0 : 3), (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 4), 0.5 %%>;
   inputSize = <%% 13, 13, 12, 12, 3 %%>;
   inputWeight = <%% 400, 400, 400, 400, 400 %%>;
   inputIndent = <%% 10, 10, 10, 10, 2.5 %%>;
@@ -538,8 +537,8 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
 
   leftCheck0 = <%% 125, 112, 98, 98, 22.8 %%>;
   leftCheck1 = <%% 195, 176, 156, 152, 36.5 %%>;
-  checkboxWidth = <%% 9, 9, 9, 8, 2 %%>;
-  checkboxTop = <%% (isMac() ? 9 : 10), (isMac() ? 11 : 11), (isMac() ? 9 : 9), (isMac() ? 9 : 9), (isIphone() ? 2.5 : 2.5) %%>;
+  checkboxWidth = <%% 13, 12, 9, 8, 2 %%>;
+  checkboxTop = <%% 15, 15, 15, 15, 2.5 %%>;
   checkboxBetween = <%% 8, 8, 8, 6, 1.5 %%>;
   checkboxWeight = <%% 200, 200, 200, 200, 200 %%>;
 
@@ -779,7 +778,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   careerBlockMarginLeft = <%% 64, 52, 50, 44, 5 %%>;
   careerBlockMinus = <%% 128, 112, 106, 98, 18.2 %%>;
 
-  propertyWidth = <%% 185, 120, 69, 69, 15.7 %%>;
+  propertyWidth = <%% 110, 110, 69, 69, 15.7 %%>;
   yearWidth = <%% 72, 72, 64, 56, 13 %%>;
   monthWidth = <%% 40, 40, 36, 32, 8 %%>;
 
@@ -788,10 +787,10 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
 
   textareaVisualTop = <%% 38, 35, 34, 32, 8 %%>;
 
-  factorVerticalBetween = <%% 10, 9, 6, 4, 1 %%>;
+  factorVerticalBetween = <%% 8, 7, 6, 4, 1 %%>;
 
   calendarBottom = <%% 42, 36, 32, 28, 3 %%>;
-  factorWidth = <%% 270, 240, 240, 220, 22 %%>;
+  factorWidth = <%% 715, 700, 580, 580, 22 %%>;
 
   arrowLeft = <%% 88, 77, 76, 70, 4 %%>;
   arrowTop = <%% 8, 7, 7, 6, 1 %%>;
@@ -809,15 +808,11 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
     ]
   };
 
-  eightMatrix = [
+  selectionMatrix = [
     new Date(2023, 11, 22, 22, 22, 0),
     new Date(2023, 7, 24, 17, 0, 0),
     new Date(2023, 7, 29, 17, 0, 0),
     new Date(2023, 7, 31, 17, 0, 0),
-    new Date(2023, 8, 5, 17, 0, 0),
-    new Date(2023, 8, 7, 17, 0, 0),
-    new Date(2023, 8, 12, 17, 0, 0),
-    new Date(2023, 8, 14, 17, 0, 0),
   ];
 
   dateToLongText = (date) => {
@@ -827,7 +822,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const day = [ "일", "월", "화", "수", "목", "금", "토" ][date.getDay()];
-    return `${String(year).slice(2)}년 ${String(month)}월 ${String(dateNumber)}일 ${day}요일 ${String(hours)}시 ${zeroAddition(minutes)}분`;
+    return `${String(year)}년 ${String(month)}월 ${String(dateNumber)}일 ${day}요일 ${String(hours)}시 ${zeroAddition(minutes)}분`;
   }
 
   careerBlocksRender = () => {}
@@ -1952,7 +1947,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
         end: new Date(),
       }
     }
-  ].concat(equalJson(JSON.stringify(eightMatrix)).map((date, index) => {
+  ].concat(equalJson(JSON.stringify(selectionMatrix)).map((date, index) => {
     return {
       contents: {
         color: colorChip.red,
@@ -1964,7 +1959,7 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
         end: date,
       }
     }
-  })), { standardDate: eightMatrix[0] });
+  })), { standardDate: selectionMatrix[0] });
 
   // possible dates
   createNode({
@@ -2000,19 +1995,8 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
           verticalAlign: "top",
           width: String(propertyWidth) + ea,
         },
-        child: {
-          mode: "svg",
-          source: svgMaker.horizontalArrow(arrowWidth, 10, colorChip.gray3),
-          style: {
-            width: String(arrowWidth) + ea,
-            height: String(10) + ea,
-            position: "absolute",
-            top: String(arrowTop) + ea,
-            left: String(arrowLeft) + ea,
-          }
-        }
       },
-      ...(eightMatrix.map((date) => {
+      ...(selectionMatrix.map((date) => {
         return dateToLongText(date);
       }).map((str, index) => {
         return {
@@ -2031,8 +2015,8 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
             height: String(100) + '%',
             verticalAlign: "top",
             cursor: "pointer",
-            width: "calc(" + withOut((circleRadius * 2) + circleBetween + propertyWidth, ea) + " / 2)",
-            marginLeft: (index > 1 && index % 2 === 1) ? "" : ((index === 0 || index === 1) ? "" : String((circleRadius * 2) + circleBetween + propertyWidth) + ea),
+            width: withOut((circleRadius * 2) + circleBetween + propertyWidth, ea),
+            marginLeft: index === 0 ? "" : String((circleRadius * 2) + circleBetween + propertyWidth) + ea,
             marginBottom: String(factorVerticalBetween) + ea,
             textAlign: "right",
           },
@@ -2085,12 +2069,17 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
                 position: "relative",
                 marginLeft: String(checkboxBetween) + ea,
                 width: String(factorWidth) + ea,
-                top: String(mainTop) + ea,
                 fontSize: String(mainSize) + ea,
                 fontWeight: String(checkboxWeight),
-                color: index === 0 ? colorChip.green : colorChip.black,
+                color: index === 0 ? colorChip.white : colorChip.deactive,
                 verticalAlign: "top",
                 cursor: "pointer",
+                padding: String(6) + ea,
+                paddingLeft: String(14) + ea,
+                paddingBottom: String(10) + ea,
+                borderRadius: String(5) + "px",
+                background: index === 0 ? colorChip.gradientGreen : colorChip.gray1,
+                textAlign: "left",
               }
             },
           ]
