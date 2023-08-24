@@ -498,7 +498,6 @@ AspirantCommonJs.prototype.insertAspirantBox = function () {
   initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
 
   indexNumberBottom = <%% 3, 4, 6, 4, 0 %%>;
-
   mobileRightBoxHeight = <%% 78, 78, 78, 78, 78 %%>;
 
   rightBoxPaddingTop = <%% 136, 126, 116, 108, 25 %%>;
